@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 
 import { getAllDevices, getAllDevicesByStatus, getDeviceCount } from '../../actions/deviceActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
-import AppStore from '../../stores/app-store';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import AcceptedDevices from './widgets/accepteddevices';
 import RedirectionWidget from './widgets/redirectionwidget';
 import PendingDevices from './widgets/pendingdevices';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+
+const refreshDevicesLength = 30000;
 
 export class Devices extends React.Component {
   constructor(props, state) {
@@ -19,22 +20,21 @@ export class Devices extends React.Component {
       loading: null
     };
     self.timer = null;
-    self.refreshDevicesLength = 30000;
-    // on render the store might not be updated so we resort to the API and let all later request go through the store
-    // to be in sync with the rest of the UI
-    self._refreshDevices();
   }
 
   componentDidMount() {
     var self = this;
-    self.timer = setInterval(() => self._refreshDevices(), self.refreshDevicesLength);
+    self.timer = setInterval(() => self._refreshDevices(), refreshDevicesLength);
+    // on render the store might not be updated so we resort to the API and let all later request go through the store
+    // to be in sync with the rest of the UI
+    self._refreshDevices();
   }
   componentWillUnmount() {
     clearInterval(this.timer);
   }
 
   _refreshDevices() {
-    if (this.props.devices.length > AppStore.getDeploymentDeviceLimit()) {
+    if (this.props.devices.length > this.props.deploymentDeviceLimit) {
       return;
     }
     this.props.getAllDevicesByStatus(DEVICE_STATES.accepted);
@@ -137,8 +137,9 @@ const actionCreators = { getAllDevices, getAllDevicesByStatus, getDeviceCount, s
 const mapStateToProps = state => {
   return {
     activeDevicesCount: state.devices.byStatus.active.total,
-    inactiveDevicesCount: state.devices.byStatus.inactive.total,
+    deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
     devices: state.devices.byStatus.accepted.deviceIds,
+    inactiveDevicesCount: state.devices.byStatus.inactive.total,
     onboardingComplete: state.users.onboarding.complete,
     pendingDevicesCount: state.devices.byStatus.pending.total,
     showHelptips: state.users.showHelptips

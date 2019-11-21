@@ -4,13 +4,12 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@material-ui/core';
 
-import AppStore from '../../stores/app-store';
 import { getAllGroupDevices, selectDevice } from '../../actions/deviceActions';
 import { selectRelease } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { setSnackbar } from '../../actions/appActions';
+import { abortDeployment, getDeploymentCount, getDeploymentsByStatus, selectDeployment } from '../../actions/deploymentActions';
 
-import AppActions from '../../actions/app-actions';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 
 import Loader from '../common/loader';
@@ -59,12 +58,8 @@ export class Deployments extends React.Component {
       refreshDeploymentsLength: 30000,
       reportDialog: false,
       createDialog: false,
-      ...this._getInitialState()
+      tabIndex: this._updateActive()
     };
-  }
-
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
   }
 
   componentDidMount() {
@@ -79,7 +74,7 @@ export class Deployments extends React.Component {
       const params = new URLSearchParams(this.props.location.search);
       if (params && params.get('open')) {
         if (params.get('id')) {
-          self._getReportById(params.get('id'));
+          self.props.selectDeployment(params.get('id')).then(() => self._showReport(self.state.reportType));
         } else if (params.get('release')) {
           self.props.selectRelease(params.get('release'));
         } else if (params.get('deviceId')) {
@@ -97,25 +92,14 @@ export class Deployments extends React.Component {
     this.setState({
       reportType: this.props.match ? this.props.match.params.tab : 'active',
       createDialog: Boolean(query.get('open')),
-      doneLoading: true
+      doneLoading: true,
+      tabIndex: this._updateActive()
     });
   }
 
   componentWillUnmount() {
     clearInterval(this.timer);
     clearAllRetryTimers(this.props.setSnackbar);
-    AppStore.removeChangeListener(this._onChange.bind(this));
-  }
-
-  _getInitialState() {
-    return {
-      tabIndex: this._updateActive(),
-      past: AppStore.getPastDeployments(),
-      pending: AppStore.getPendingDeployments(),
-      progress: AppStore.getDeploymentsInProgress() || [],
-      events: AppStore.getEventLog(),
-      hasDeployments: AppStore.getHasDeployments()
-    };
   }
 
   _refreshDeployments() {
@@ -142,16 +126,15 @@ export class Deployments extends React.Component {
     }
 
     return Promise.all([
-      AppActions.getDeploymentsInProgress(page, per_page),
+      self.props.getDeploymentsByStatus('inprogress', page, per_page),
       // Get full count of deployments for pagination
-      AppActions.getDeploymentCount('inprogress')
+      self.props.getDeploymentCount('inprogress')
     ])
       .then(results => {
         const deployments = results[0];
-        const progressCount = results[1];
-        self.setState({ doneLoading: true, progressCount });
+        self.setState({ doneLoading: true });
         clearRetryTimer('progress', self.props.setSnackbar);
-        if (progressCount && !deployments.length) {
+        if (self.props.progressCount && !deployments.length) {
           self._refreshInProgress(1);
         }
       })
@@ -173,23 +156,8 @@ export class Deployments extends React.Component {
       page = self.state.pendPage;
     }
 
-    return AppActions.getPendingDeployments(page, per_page)
-      .then(result => {
-        self.props.setSnackbar('');
-        const { deployments, links } = result;
-
-        // Get full count of deployments for pagination
-        if (links.next || links.prev) {
-          return AppActions.getDeploymentCount('pending').then(pendingCount => {
-            self.setState({ pendingCount });
-            if (pendingCount && !deployments.length) {
-              self._refreshPending(1);
-            }
-          });
-        } else {
-          self.setState({ pendingCount: deployments.length });
-        }
-      })
+    return Promise.all([self.props.getDeploymentsByStatus('pending', page, per_page), self.props.getDeploymentCount('pending')])
+      .then(() => self.props.setSnackbar(''))
       .catch(err => {
         console.log(err);
         var errormsg = err.error || 'Please check your connection';
@@ -218,7 +186,6 @@ export class Deployments extends React.Component {
     */
     var self = this;
 
-    var oldCount = self.state.pastCount;
     var oldPage = self.state.pastPage;
 
     startDate = startDate || self.state.startDate;
@@ -231,13 +198,14 @@ export class Deployments extends React.Component {
     endDate = Math.round(Date.parse(endDate) / 1000);
 
     // get total count of past deployments first
-    return AppActions.getDeploymentCount('finished', startDate, endDate, group)
-      .then(count => {
+    return self.props
+      .getDeploymentCount('finished', startDate, endDate, group)
+      .then(() => {
         page = page || self.state.pastPage || 1;
-        self.setState({ pastCount: count, pastPage: page });
+        self.setState({ pastPage: page });
         // only refresh deployments if page, count or date range has changed
-        if (oldPage !== page || oldCount !== count || !self.state.doneLoading) {
-          return AppActions.getPastDeployments(page, per_page, startDate, endDate, group).then(AppActions.getDeploymentsWithStats);
+        if (oldPage !== page || !self.state.doneLoading) {
+          return self.props.getDeploymentsByStatus('finished', page, per_page, startDate, endDate, group);
         }
       })
       .then(() => {
@@ -250,10 +218,6 @@ export class Deployments extends React.Component {
         var errormsg = err.error || 'Please check your connection';
         setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, self.state.refreshDeploymentsLength, self.props.setSnackbar);
       });
-  }
-
-  _onChange() {
-    this.setState(this._getInitialState());
   }
 
   _retryDeployment(deployment, devices) {
@@ -279,30 +243,23 @@ export class Deployments extends React.Component {
     };
     self.setState({ doneLoading: false, createDialog: false, reportDialog: false });
 
-    return AppActions.createDeployment(newDeployment)
-      .then(data => {
-        var lastslashindex = data.lastIndexOf('/');
-        var id = data.substring(lastslashindex + 1);
+    return self.props
+      .createDeployment(newDeployment)
+      .then(() => {
         clearInterval(self.timer);
 
-        return AppActions.getSingleDeployment(id).then(data => {
-          if (data) {
-            // successfully retrieved new deployment
-            if (self._getCurrentLabel() !== routes.active.title) {
-              self.context.router.history.push(routes.active.route);
-              self._changeTab(routes.active.route);
-            } else {
-              self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
-              self._refreshDeployments();
-            }
-            self.props.setSnackbar('Deployment created successfully', 8000);
-          } else {
-            self.props.setSnackbar('Error while creating deployment');
-          }
-          return Promise.resolve();
-        });
+        // successfully retrieved new deployment
+        if (self._getCurrentLabel() !== routes.active.title) {
+          self.context.router.history.push(routes.active.route);
+          self._changeTab(routes.active.route);
+        } else {
+          self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
+          self._refreshDeployments();
+        }
+        self.props.setSnackbar('Deployment created successfully', 8000);
       })
       .catch(err => {
+        self.props.setSnackbar('Error while creating deployment');
         var errMsg = err.res.body.error || '';
         self.props.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard');
       })
@@ -317,26 +274,23 @@ export class Deployments extends React.Component {
         self.props.saveGlobalSettings({ previousPhases: previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT) });
       });
   }
-  _getReportById(id) {
-    var self = this;
-    return AppActions.getSingleDeployment(id).then(data => self._showReport(data, self.state.reportType));
-  }
-  _showReport(selectedDeployment, reportType) {
-    this.setState({ createDialog: false, selectedDeployment, reportType, reportDialog: true });
+  _showReport(reportType) {
+    this.setState({ createDialog: false, reportType, reportDialog: true });
   }
   _showProgress(rowNumber) {
-    var deployment = this.state.progress[rowNumber];
-    this._showReport(deployment, 'active');
+    const self = this;
+    const deployment = this.state.progress[rowNumber];
+    this.props.selectDeployment(deployment.id).then(() => self._showReport('active'));
   }
   _abortDeployment(id) {
     var self = this;
-    return AppActions.abortDeployment(id)
+    return self.props
+      .abortDeployment(id)
       .then(() => {
-        self.setState({ doneLoading: false });
         clearInterval(self.timer);
         self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
         self._refreshDeployments();
-        self.setState({ createDialog: false });
+        self.setState({ createDialog: false, doneLoading: false });
         self.props.setSnackbar('The deployment was successfully aborted');
       })
       .catch(err => {
@@ -372,17 +326,22 @@ export class Deployments extends React.Component {
     self.props.setSnackbar('');
   }
 
+  closeReport() {
+    this.setState({ reportDialog: false, selectedDeployment: null });
+    this.props.selectDeployment();
+  }
+
   render() {
     const self = this;
     var reportActions = [
-      <Button key="report-action-button-1" onClick={() => self.setState({ reportDialog: false })}>
+      <Button key="report-action-button-1" onClick={() => self.closeReport()}>
         Close
       </Button>
     ];
 
     const dialogProps = {
       updated: () => this.setState({ updated: true }),
-      deployment: this.state.selectedDeployment
+      deployment: this.props.selectedDeployment
     };
     let dialogContent = <Report retry={(deployment, devices) => this._retryDeployment(deployment, devices)} past={true} {...dialogProps} />;
     if (this.state.reportType === 'active') {
@@ -390,7 +349,23 @@ export class Deployments extends React.Component {
     }
 
     // tabs
-    const { past, per_page, pastCount, tabIndex } = this.state;
+    const { groups, isEnterprise, past, pastCount, pending, pendingCount, progress, progressCount } = self.props;
+    const {
+      contentClass,
+      createDialog,
+      deploymentObject,
+      doneLoading,
+      groupFilter,
+      per_page,
+      pastPage,
+      pendPage,
+      progPage,
+      reportDialog,
+      reportType,
+      startDate,
+      endDate,
+      tabIndex
+    } = this.state;
     let onboardingComponent = null;
     if (past.length || pastCount) {
       onboardingComponent = getOnboardingComponentFor('deployments-past', { anchor: { left: 240, top: 50 } });
@@ -419,28 +394,28 @@ export class Deployments extends React.Component {
               <div className="margin-top">
                 <DeploymentsList
                   abort={id => this._abortDeployment(id)}
-                  count={this.state.pendingCount || this.state.pending.length}
-                  items={this.state.pending}
-                  page={this.state.pendPage}
+                  count={pendingCount || pending.length}
+                  items={pending}
+                  page={pendPage}
                   refreshItems={(...args) => this._refreshPending(...args)}
-                  isEnterprise={this.props.isEnterprise}
+                  isEnterprise={isEnterprise}
                   isActiveTab={self._getCurrentLabel() === routes.active.title}
                   title="pending"
                   type="pending"
                 />
                 <Progress
                   abort={id => this._abortDeployment(id)}
-                  count={this.state.progressCount || this.state.progress.length}
-                  items={this.state.progress}
-                  page={this.state.progPage}
+                  count={progressCount || progress.length}
+                  items={progress}
+                  page={progPage}
                   refreshItems={(...args) => this._refreshInProgress(...args)}
                   isActiveTab={self._getCurrentLabel() === routes.active.title}
                   openReport={rowNum => this._showProgress(rowNum)}
                   title="In progress"
                   type="progress"
                 />
-                {!(this.state.progressCount || this.state.progress.length || this.state.pendingCount || this.state.pending.length) && (
-                  <div className={this.state.progress.length || !this.state.doneLoading ? 'hidden' : 'dashboard-placeholder'}>
+                {!(progressCount || progress.length || pendingCount || pending.length) && (
+                  <div className={progress.length || !doneLoading ? 'hidden' : 'dashboard-placeholder'}>
                     <p>Pending and ongoing deployments will appear here. </p>
                     <p>
                       <a onClick={() => this.setState({ createDialog: true })}>Create a deployment</a> to get started
@@ -450,44 +425,44 @@ export class Deployments extends React.Component {
                 )}
               </div>
             ) : (
-              <Loader show={this.state.doneLoading} />
+              <Loader show={doneLoading} />
             )}
           </>
         )}
         {tabIndex === routes.finished.route && (
           <div className="margin-top">
             <Past
-              groups={this.props.groups}
-              deviceGroup={this.state.groupFilter}
+              groups={groups}
+              deviceGroup={groupFilter}
               createClick={() => this.setState({ createDialog: true })}
               pageSize={per_page}
               onChangeRowsPerPage={perPage => self.setState({ per_page: perPage, pastPage: 1 }, () => self._changePastPage())}
-              startDate={this.state.startDate}
-              endDate={this.state.endDate}
-              page={this.state.pastPage}
+              startDate={startDate}
+              endDate={endDate}
+              page={pastPage}
               isActiveTab={self._getCurrentLabel() === routes.finished.title}
               count={pastCount}
-              loading={!this.state.doneLoading}
+              loading={!doneLoading}
               past={past}
               refreshPast={(...args) => this._changePastPage(...args)}
-              showReport={(deployment, type) => this._showReport(deployment, type)}
+              showReport={type => this._showReport(type)}
             />
           </div>
         )}
 
-        <Dialog open={self.state.reportDialog} fullWidth={true} maxWidth="lg">
-          <DialogTitle>{self.state.reportType === 'active' ? 'Deployment progress' : 'Results of deployment'}</DialogTitle>
-          <DialogContent className={self.state.contentClass} style={{ overflow: 'hidden' }}>
+        <Dialog open={reportDialog} fullWidth={true} maxWidth="lg">
+          <DialogTitle>{reportType === 'active' ? 'Deployment progress' : 'Results of deployment'}</DialogTitle>
+          <DialogContent className={contentClass} style={{ overflow: 'hidden' }}>
             {dialogContent}
           </DialogContent>
           <DialogActions>{reportActions}</DialogActions>
         </Dialog>
 
         <CreateDialog
-          open={this.state.createDialog}
+          open={createDialog}
           onDismiss={() => self.setState({ createDialog: false, deploymentObject: null })}
           onScheduleSubmit={(...args) => this._onScheduleSubmit(...args)}
-          deploymentObject={self.state.deploymentObject}
+          deploymentObject={deploymentObject}
         />
         {onboardingComponent}
       </div>
@@ -495,14 +470,35 @@ export class Deployments extends React.Component {
   }
 }
 
-const actionCreators = { getAllGroupDevices, saveGlobalSettings, selectDevice, selectRelease, setSnackbar };
+const actionCreators = {
+  abortDeployment,
+  getAllGroupDevices,
+  getDeploymentCount,
+  getDeploymentsByStatus,
+  saveGlobalSettings,
+  selectDevice,
+  selectDeployment,
+  selectRelease,
+  setSnackbar
+};
 
 const mapStateToProps = state => {
+  const progress = state.deployments.byStatus.inprogress.deploymentIds.map(id => state.deployments.byId[id]);
+  const pending = state.deployments.byStatus.pending.deploymentIds.map(id => state.deployments.byId[id]);
+  const past = state.deployments.byStatus.finished.deploymentIds.map(id => state.deployments.byId[id]);
   return {
+    finishedCount: state.deployments.byStatus.finished.total,
     groups: Object.keys(state.devices.groups.byId),
     groupDevices: state.devices.groups.byId,
+    hasDeployments: Object.keys(state.deployments.byId).length > 0,
     isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,
     onboardingComplete: state.users.onboarding.complete,
+    past,
+    pending,
+    pendingCount: state.deployments.byStatus.pending.total,
+    progress,
+    progressCount: state.deployments.byStatus.inprogress.total,
+    selectedDeployment: state.deployments.byId[state.deployments.selectedDeployment],
     settings: state.users.globalSettings,
     showHelptips: state.users.showHelptips,
     user: state.users.byId[state.users.currentUser] || {}

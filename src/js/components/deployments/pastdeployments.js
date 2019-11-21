@@ -9,6 +9,7 @@ import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
 import { setSnackbar } from '../../actions/appActions';
+import { selectDeployment, getSingleDeploymentStats } from '../../actions/deploymentActions';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import AutoSelect from '../common/forms/autoselect';
@@ -67,8 +68,9 @@ export class Past extends React.Component {
   }
   _pastCellClick(rowNumber) {
     // adjust index to allow for client side pagination
-    var report = this.props.past[rowNumber];
-    this.props.showReport(report, 'past');
+    var deployment = this.props.past[rowNumber];
+    this.props.selectDeployment(deployment.id);
+    this.props.showReport('past');
   }
   _handleDateChange(pageNo, createdAfter, createdBefore) {
     createdAfter = createdAfter || this.props.startDate;
@@ -109,14 +111,22 @@ export class Past extends React.Component {
 
   render() {
     const self = this;
-    var pastMap = this.props.past.map(function(deployment, index) {
-      var time = '-';
+    const pastMap = this.props.past.map((deployment, index) => {
+      let time = '-';
       if (deployment.finished) {
         time = <Time value={formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" />;
       }
 
       //  get statistics
-      var status = <DeploymentStatus isActiveTab={this.props.isActiveTab} id={deployment.id} setFinished={() => {}} />;
+      const status = (
+        <DeploymentStatus
+          isActiveTab={this.props.isActiveTab}
+          id={deployment.id}
+          stats={deployment.stats}
+          setFinished={() => {}}
+          refreshStatus={id => self.props.getSingleDeploymentStats(id)}
+        />
+      );
 
       return (
         <TableRow hover key={index} onClick={() => this._pastCellClick(index)}>
@@ -130,7 +140,7 @@ export class Past extends React.Component {
           <TableCell style={{ overflow: 'visible', minWidth: '400px' }}>{status}</TableCell>
         </TableRow>
       );
-    }, this);
+    });
 
     const menuItems = this.props.groups
       ? this.props.groups.reduce(
@@ -250,7 +260,7 @@ export class Past extends React.Component {
   }
 }
 
-const actionCreators = { setSnackbar };
+const actionCreators = { setSnackbar, selectDeployment, getSingleDeploymentStats };
 
 const mapStateToProps = state => {
   return {

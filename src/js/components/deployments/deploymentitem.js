@@ -8,7 +8,6 @@ import { CancelOutlined as CancelOutlinedIcon } from '@material-ui/icons';
 import Confirm from './confirm';
 import ProgressChart from './progressChart';
 import { formatTime, groupDeploymentStats } from '../../helpers';
-import AppActions from '../../actions/app-actions';
 
 const deploymentTypeClasses = {
   past: 'past-item',
@@ -34,22 +33,10 @@ export default class DeploymentItem extends React.Component {
     };
   }
 
-  // get statistics for each in progress
-  componentDidMount() {
-    this.timer = setInterval(() => this.refreshDeploymentDevices(), 30000);
-    this.refreshDeploymentDevices();
-  }
-  componentWillUnmount() {
-    clearInterval(this.timer);
-  }
-  refreshDeploymentDevices() {
-    const self = this;
-    return AppActions.getSingleDeploymentStats(self.props.deployment.id).then(stats => self.setState({ stats }));
-  }
-
   handleAbort(id) {
     this.props.abort(id);
   }
+
   toggleConfirm(id) {
     var self = this;
     setTimeout(() => {
@@ -60,8 +47,8 @@ export default class DeploymentItem extends React.Component {
   render() {
     const self = this;
     const { columnHeaders, deployment, index, isEnterprise, openReport, type } = self.props;
-    const { abort, stats } = self.state;
-    const { inprogress: current, successes, failures } = groupDeploymentStats(stats);
+    const { abort } = self.state;
+    const { inprogress: current, successes, failures } = groupDeploymentStats(deployment.stats);
 
     const { artifact_name, name, created, device_count, id, status, phases } = deployment;
 

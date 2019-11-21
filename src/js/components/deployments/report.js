@@ -13,10 +13,9 @@ import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle } f
 import { Block as BlockIcon, Timelapse as TimelapseIcon, Refresh as RefreshIcon } from '@material-ui/icons';
 
 import { getDeviceById } from '../../actions/deviceActions';
-import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
+import { getDeviceLog, getSingleDeploymentDevices, getSingleDeploymentStats } from '../../actions/deploymentActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
-import { formatTime } from '../../helpers';
+import { formatTime, sortDeploymentDevices } from '../../helpers';
 import Pagination from '../common/pagination';
 import DeploymentStatus from './deploymentstatus';
 import DeviceList from './deploymentdevicelist';
@@ -26,16 +25,11 @@ export class DeploymentReport extends React.Component {
   constructor(props, state) {
     super(props, state);
     this.state = {
-      stats: {
-        failure: null
-      },
       showDialog: false,
-      logData: '',
       elapsed: 0,
       currentPage: 1,
       start: 0,
       perPage: 20,
-      deviceCount: 0,
       showPending: true,
       abort: false,
       finished: false
@@ -45,7 +39,7 @@ export class DeploymentReport extends React.Component {
     var self = this;
     self.timer;
     if (self.props.past) {
-      AppActions.getSingleDeploymentStats(self.props.deployment.id).then(stats => self.setState({ stats, finished: true }));
+      self.setState({ finished: true });
     } else {
       self.timer = setInterval(() => this.tick(), 50);
     }
@@ -88,17 +82,10 @@ export class DeploymentReport extends React.Component {
   refreshDeploymentDevices() {
     var self = this;
 
-    return AppActions.getSingleDeploymentDevices(self.props.deployment.id).then(devices => {
-      var sortedDevices = AppStore.getOrderedDeploymentDevices(devices);
-      sortedDevices = self.state.showPending ? sortedDevices : sortedDevices.filter(self._filterPending);
-      self.setState({ allDevices: sortedDevices, deviceCount: devices.length });
-      self._handlePageChange(self.state.currentPage);
-    });
+    return self.props.getSingleDeploymentDevices(self.props.deployment.id).then(() => self._handlePageChange(self.state.currentPage));
   }
   _getDeviceAttribute(device, attributeName) {
-    var none = '-';
-    const artifact = device.attributes ? device.attributes.find(attribute => attribute.name === attributeName) : null;
-    return artifact ? artifact.value : none;
+    return device.attributes ? device.attributes[attributeName] : '-';
   }
   _getDeviceDetails(devices) {
     // get device artifact and inventory details not listed in schedule data
@@ -114,19 +101,14 @@ export class DeploymentReport extends React.Component {
   }
   viewLog(id) {
     const self = this;
-    return AppActions.getDeviceLog(this.props.deployment.id, id).then(logData => self.setState({ showDialog: true, logData, copied: false }));
+    return self.props.getDeviceLog(this.props.deployment.id, id).then(() => self.setState({ showDialog: true, copied: false }));
   }
   exportLog() {
-    var content = this.state.logData;
+    var content = this.props.logData;
     var uriContent = `data:application/octet-stream,${encodeURIComponent(content)}`;
     window.open(uriContent, 'deviceLog');
   }
-  dialogDismiss() {
-    this.setState({
-      showDialog: false,
-      logData: null
-    });
-  }
+
   _setFinished(bool) {
     // deployment has finished, stop counter
     clearInterval(this.timer);
@@ -135,9 +117,10 @@ export class DeploymentReport extends React.Component {
   }
   _handlePageChange(pageNo) {
     var start = pageNo * this.state.perPage - this.state.perPage;
-    var end = Math.min(this.state.allDevices.length, pageNo * this.state.perPage);
+    var end = Math.min(this.props.deviceCount, pageNo * this.state.perPage);
     // cut slice from full list of devices
-    var slice = this.state.allDevices.slice(start, end);
+    const devices = this.state.showPending ? this.props.allDevices.filter(this._filterPending) : this.props.allDevices;
+    const slice = devices.slice(start, end);
     if (!isEqual(slice, this.state.pagedDevices)) {
       var diff = differenceWith(slice, this.state.pagedDevices, isEqual);
       // only update those that have changed
@@ -150,13 +133,14 @@ export class DeploymentReport extends React.Component {
   }
   render() {
     const self = this;
+    const { allDevices, deployment, deviceCount } = self.props;
+    const { stats } = deployment;
     var deviceList = this.state.pagedDevices || [];
-    var allDevices = this.state.allDevices || [];
 
-    var encodedArtifactName = encodeURIComponent(this.props.deployment.artifact_name);
+    var encodedArtifactName = encodeURIComponent(deployment.artifact_name);
     var artifactLink = (
       <Link style={{ fontWeight: '500' }} to={`/releases/${encodedArtifactName}`}>
-        {this.props.deployment.artifact_name}
+        {deployment.artifact_name}
       </Link>
     );
 
@@ -164,12 +148,12 @@ export class DeploymentReport extends React.Component {
 
     var logActions = [
       <div key="log-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <Button onClick={() => this.dialogDismiss('dialog')}>Cancel</Button>
+        <Button onClick={() => self.setState({ showDialog: false })}>Cancel</Button>
       </div>,
       <CopyToClipboard
         key="log-action-button-2"
         style={{ marginRight: '10px', display: 'inline-block' }}
-        text={this.state.logData}
+        text={this.props.logData}
         onCopy={() => this.setState({ copied: true })}
       >
         <Button>Copy to clipboard</Button>
@@ -195,8 +179,8 @@ export class DeploymentReport extends React.Component {
     }
 
     var finished = '-';
-    if (this.props.deployment.finished) {
-      finished = <Time value={formatTime(this.props.deployment.finished)} format="YYYY-MM-DD HH:mm" />;
+    if (deployment.finished) {
+      finished = <Time value={formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" />;
     }
 
     return (
@@ -209,11 +193,11 @@ export class DeploymentReport extends React.Component {
             </div>
             <div>
               <div className="progressLabel">Device group:</div>
-              <span>{this.props.deployment.name}</span>
+              <span>{deployment.name}</span>
             </div>
             <div>
               <div className="progressLabel"># devices:</div>
-              <span>{this.state.deviceCount}</span>
+              <span>{deviceCount}</span>
             </div>
           </div>
 
@@ -225,11 +209,11 @@ export class DeploymentReport extends React.Component {
                   style={{ width: '260px', height: 'auto', margin: '30px 30px 30px 0', display: 'inline-block', verticalAlign: 'top' }}
                 >
                   <div>
-                    <div className="progressLabel">Status:</div>Finished {this.state.stats.failure ? <span className="failures">with failures</span> : null}
+                    <div className="progressLabel">Status:</div>Finished {stats.failure ? <span className="failures">with failures</span> : null}
                   </div>
                   <div>
                     <div className="progressLabel">Started:</div>
-                    <Time value={formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" />
+                    <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
                   </div>
                   <div>
                     <div className="progressLabel">Finished:</div>
@@ -237,12 +221,11 @@ export class DeploymentReport extends React.Component {
                   </div>
                 </div>
                 <div className="deploymentInfo" style={{ height: 'auto', margin: '30px 30px 30px 0', display: 'inline-block', verticalAlign: 'top' }}>
-                  {this.state.stats.failure || this.state.stats.aborted ? (
+                  {stats.failure || stats.aborted ? (
                     <div className="statusLarge">
                       <img src="assets/img/largeFail.png" />
                       <div className="statusWrapper">
-                        <b className="red">{this.state.stats.failure || this.state.stats.aborted}</b> {pluralize('devices', this.state.stats.failure)} failed to
-                        update
+                        <b className="red">{stats.failure || stats.aborted}</b> {pluralize('devices', stats.failure)} failed to update
                       </div>
 
                       <div>
@@ -258,7 +241,7 @@ export class DeploymentReport extends React.Component {
                           <Button
                             color="secondary"
                             icon={<RefreshIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
-                            onClick={() => self.props.retry(self.props.deployment, self.state.allDevices)}
+                            onClick={() => self.props.retry(deployment, allDevices)}
                           >
                             Retry deployment?
                           </Button>
@@ -266,15 +249,15 @@ export class DeploymentReport extends React.Component {
                       </div>
                     </div>
                   ) : null}
-                  {this.state.stats.success ? (
+                  {stats.success ? (
                     <div className="statusLarge">
                       <img src="assets/img/largeSuccess.png" />
                       <div className="statusWrapper">
                         <b className="green">
-                          {this.state.stats.success === deviceList.length ? <span>All </span> : null}
-                          {this.state.stats.success}
+                          {stats.success === deviceList.length ? <span>All </span> : null}
+                          {stats.success}
                         </b>{' '}
-                        {pluralize('devices', this.state.stats.success)} updated successfully
+                        {pluralize('devices', stats.success)} updated successfully
                       </div>
                     </div>
                   ) : null}
@@ -296,7 +279,7 @@ export class DeploymentReport extends React.Component {
                   </h2>
                   <div>
                     Started:
-                    <Time value={formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" />
+                    <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
                   </div>
                 </div>
                 <div className="inline-block">
@@ -306,15 +289,17 @@ export class DeploymentReport extends React.Component {
                     finished={this.state.finished}
                     refresh={true}
                     vertical={true}
-                    id={this.props.deployment.id}
+                    id={deployment.id}
+                    stats={stats}
+                    refreshStatus={id => self.props.getSingleDeploymentStats(id)}
                   />
                 </div>
               </div>
 
               <div className="hidden" style={{ width: '240px', height: 'auto', margin: '30px 0 30px 30px', display: 'inline-block', verticalAlign: 'top' }}>
                 <Checkbox label={checkboxLabel} onChange={(e, checked) => this._handleCheckbox(checked)} />
-                <p style={{ marginLeft: '40px' }} className={this.state.deviceCount - allDevices.length ? 'info' : 'hidden'}>
-                  {this.state.deviceCount - allDevices.length} devices pending
+                <p style={{ marginLeft: '40px' }} className={deviceCount - allDevices.length ? 'info' : 'hidden'}>
+                  {deviceCount - allDevices.length} devices pending
                 </p>
               </div>
 
@@ -332,16 +317,10 @@ export class DeploymentReport extends React.Component {
         </div>
 
         <div style={{ minHeight: '20vh' }}>
-          <DeviceList
-            created={this.props.deployment.created}
-            status={this.props.deployment.status}
-            devices={deviceList}
-            viewLog={id => this.viewLog(id)}
-            past={this.props.past}
-          />
-          {allDevices.length ? (
+          <DeviceList created={deployment.created} status={deployment.status} devices={deviceList} viewLog={id => this.viewLog(id)} past={this.props.past} />
+          {deviceCount ? (
             <Pagination
-              count={allDevices.length}
+              count={deviceCount}
               rowsPerPage={self.state.perPage}
               onChangeRowsPerPage={perPage => self.setState({ currentPage: 1, perPage })}
               page={self.state.currentPage}
@@ -353,7 +332,7 @@ export class DeploymentReport extends React.Component {
         <Dialog open={this.state.showDialog}>
           <DialogTitle>Deployment log for device</DialogTitle>
           <DialogContent>
-            <div className="code log">{this.state.logData}</div>
+            <div className="code log">{this.props.logData}</div>
             <p style={{ marginLeft: '24px' }}>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
           </DialogContent>
           <DialogActions>{logActions}</DialogActions>
@@ -363,11 +342,15 @@ export class DeploymentReport extends React.Component {
   }
 }
 
-const actionCreators = { getDeviceById };
+const actionCreators = { getDeviceById, getDeviceLog, getSingleDeploymentDevices, getSingleDeploymentStats };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
+  const allDevices = sortDeploymentDevices(Object.values(state.deployments.byId[ownProps.deployment.id].devices || {}));
   return {
-    acceptedDevicesCount: state.devices.byStatus.accepted.total
+    acceptedDevicesCount: state.devices.byStatus.accepted.total,
+    allDevices,
+    deviceCount: allDevices.length,
+    logData: state.deployments.byId[ownProps.deployment.id]
   };
 };
 

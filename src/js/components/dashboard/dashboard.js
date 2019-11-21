@@ -16,7 +16,7 @@ const rowBaseStyles = {
   }
 };
 
-export class Dashboard extends React.Component {
+export class Dashboard extends React.PureComponent {
   componentDidMount() {
     const self = this;
     setTimeout(() => {
