@@ -6,9 +6,9 @@ import { compose, setDisplayName } from 'recompose';
 import BaseOnboardingTip from '../components/helptips/baseonboardingtip';
 import DeploymentCompleteTip from '../components/helptips/deploymentcompletetip';
 
-import AppActions from '../actions/app-actions';
 import { getDevicesByStatus, getAllDevices } from '../actions/deviceActions';
 import { getReleases } from '../actions/releaseActions';
+import { getDeploymentsByStatus } from '../actions/deploymentActions';
 import {
   setOnboardingApproach,
   setOnboardingArtifactIncluded,
@@ -154,7 +154,7 @@ const onboardingSteps = {
     ))
   },
   'deployments-inprogress': {
-    condition: () => onboardingTipSanityCheck('upload-new-artifact-tip') && AppStore.getDeploymentsInProgress().length,
+    condition: () => onboardingTipSanityCheck('upload-new-artifact-tip') && store.getState().deployments.byStatus.inprogress.total,
     component: <div>Your deployment is in progress. Click to view a report</div>,
     progress: 2
   },
@@ -186,8 +186,8 @@ const onboardingSteps = {
       <div>
         Now upload your new Artifact here!
         <p>
-          Or <a onClick={() => setShowCreateArtifactDialog(true)}>view the instructions again</a> on how to edit the demo webserver application and create your
-          own Artifact
+          Or <a onClick={() => store.dispatch(setShowCreateArtifactDialog(true))}>view the instructions again</a> on how to edit the demo webserver application
+          and create your own Artifact
         </p>
       </div>
     ),
@@ -205,7 +205,9 @@ const onboardingSteps = {
   },
   'onboarding-finished': {
     condition: () =>
-      onboardingTipSanityCheck('onboarding-finished') && getOnboardingStepCompleted('artifact-modified-onboarding') && AppStore.getPastDeployments().length > 1,
+      onboardingTipSanityCheck('onboarding-finished') &&
+      getOnboardingStepCompleted('artifact-modified-onboarding') &&
+      store.getState().deployments.byStatus.finished.total > 1,
     specialComponent: <OnboardingCompleteTip targetUrl="destination-unreachable" />
   }
 };
@@ -257,14 +259,14 @@ export function getOnboardingState(userId) {
     const userCookie = cookie.load(`${userId}-onboarded`);
     // to prevent tips from showing up for previously onboarded users completion is set explicitly before the additional requests complete
     if (userCookie) {
-      setOnboardingComplete(Boolean(userCookie));
+      store.dispatch(setOnboardingComplete(Boolean(userCookie)));
     }
     const requests = [
-      getDevicesByStatus(DEVICE_STATES.accepted),
-      getDevicesByStatus(DEVICE_STATES.pending),
-      getAllDevices(),
-      getReleases(),
-      AppActions.getPastDeployments(),
+      store.dispatch(getDevicesByStatus(DEVICE_STATES.accepted)),
+      store.dispatch(getDevicesByStatus(DEVICE_STATES.pending)),
+      store.dispatch(getAllDevices()),
+      store.dispatch(getReleases()),
+      store.dispatch(getDeploymentsByStatus('finished')),
       Promise.resolve(userCookie)
     ];
 
@@ -295,14 +297,14 @@ export function getOnboardingState(userId) {
 
   return promises
     .then(state => {
-      setOnboardingComplete(state.complete);
-      setOnboardingDeviceType(state.deviceType);
-      setOnboardingApproach(state.approach);
-      setOnboardingArtifactIncluded(state.artifactIncluded);
-      setShowOnboardingHelp(state.showTips);
-      setOnboardingProgress(state.progress);
+      store.dispatch(setOnboardingComplete(state.complete));
+      store.dispatch(setOnboardingDeviceType(state.deviceType));
+      store.dispatch(setOnboardingApproach(state.approach));
+      store.dispatch(setOnboardingArtifactIncluded(state.artifactIncluded));
+      store.dispatch(setShowOnboardingHelp(state.showTips));
+      store.dispatch(setOnboardingProgress(state.progress));
       const progress = Object.keys(onboardingSteps).findIndex(step => step === 'deployments-past-completed');
-      setShowCreateArtifactDialog(Math.abs(state.progress - progress) <= 1);
+      store.dispatch(setShowCreateArtifactDialog(Math.abs(state.progress - progress) <= 1));
       return Promise.resolve(state);
     })
     .catch(e => console.log(e));
@@ -312,7 +314,7 @@ export function advanceOnboarding(stepId) {
   const progress = store.getState().users.onboarding.progress;
   const stepIndex = Object.keys(onboardingSteps).findIndex(step => step === stepId);
   const madeProgress = progress <= stepIndex ? stepIndex + 1 : progress;
-  setOnboardingProgress(madeProgress);
+  store.dispatch(setOnboardingProgress(madeProgress));
   const state = Object.assign(getCurrentOnboardingState(), { progress: madeProgress });
   state.complete = state.progress >= Object.keys(onboardingSteps).length ? true : state.complete;
   persistOnboardingState(state);
