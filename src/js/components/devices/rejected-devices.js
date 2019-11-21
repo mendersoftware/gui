@@ -48,7 +48,6 @@ export class Rejected extends React.Component {
     var self = this;
     self.props
       .getDevicesByStatus(DEVICE_STATES.rejected, this.state.pageNo, this.state.pageLength)
-      // TODO: get inventory data for all devices retrieved here to get proper updated_ts
       .catch(error => {
         console.log(error);
         var errormsg = error.error || 'Please check your connection.';

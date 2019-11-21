@@ -9,9 +9,9 @@ import { Button, Tooltip, Typography } from '@material-ui/core';
 
 import { CloudUpload as FileIcon, Help as HelpIcon, KeyboardArrowRight as KeyboardArrowRightIcon, Sort as SortIcon } from '@material-ui/icons';
 
-import AppActions from '../../actions/app-actions';
 import { setSnackbar } from '../../actions/appActions';
 import { editArtifact, uploadArtifact, selectArtifact } from '../../actions/releaseActions';
+import { setDeploymentRelease } from '../../actions/deploymentActions';
 import { preformatWithRequestID, customSort } from '../../helpers';
 import { ExpandArtifact } from '../helptips/helptooltips';
 import Loader from '../common/loader';
@@ -89,7 +89,7 @@ export class ReleaseRepository extends React.Component {
     if (!this.props.onboardingComplete && getOnboardingStepCompleted('upload-new-artifact-tip')) {
       advanceOnboarding('artifact-modified-onboarding');
     }
-    AppActions.setDeploymentRelease(release);
+    this.props.setDeploymentRelease(release);
   }
 
   _sortColumn(col) {
@@ -281,7 +281,7 @@ export class ReleaseRepository extends React.Component {
   }
 }
 
-const actionCreators = { editArtifact, uploadArtifact, selectArtifact, setSnackbar };
+const actionCreators = { editArtifact, uploadArtifact, selectArtifact, setSnackbar, setDeploymentRelease };
 
 const mapStateToProps = state => {
   return {

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 // material ui
 import RefreshIcon from '@material-ui/icons/Refresh';
 
-export default class DeploymentNotifications extends React.Component {
+export default class DeploymentNotifications extends React.PureComponent {
   static contextTypes = {
     router: PropTypes.object
   };

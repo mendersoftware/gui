@@ -6,7 +6,6 @@ import pluralize from 'pluralize';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 
-import AppStore from '../../stores/app-store';
 import { setSnackbar } from '../../actions/appActions';
 import { getAllDeviceCounts } from '../../actions/deviceActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
@@ -40,6 +39,8 @@ const routes = {
   }
 };
 
+const refreshLength = 10000;
+
 export class Devices extends React.Component {
   static contextTypes = {
     router: PropTypes.object
@@ -47,33 +48,21 @@ export class Devices extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-    this.state = this._getInitialState();
-    this.props.getAllDeviceCounts();
-  }
-
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
   }
 
   componentDidMount() {
     clearAllRetryTimers(this.props.setSnackbar);
     this._restartInterval();
+    this.setState({
+      currentTab: this._getCurrentLabel(),
+      tabIndex: this._updateActive()
+    });
+    this.props.getAllDeviceCounts();
   }
 
   componentWillUnmount() {
     clearAllRetryTimers(this.props.setSnackbar);
     clearInterval(this.interval);
-    AppStore.removeChangeListener(this._onChange.bind(this));
-  }
-  _getInitialState() {
-    return {
-      currentTab: this._getCurrentLabel(),
-      tabIndex: this._updateActive(),
-      refreshLength: 10000
-    };
-  }
-  _onChange() {
-    this.setState(this._getInitialState());
   }
 
   _restartInterval() {
@@ -81,7 +70,7 @@ export class Devices extends React.Component {
     clearInterval(self.interval);
     self.interval = setInterval(() => {
       self.props.getAllDeviceCounts();
-    }, self.state.refreshLength);
+    }, refreshLength);
     self.props.getAllDeviceCounts();
   }
   _changeTab() {

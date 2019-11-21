@@ -28,8 +28,7 @@ import { getDeviceLimit } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
 import { getUser, getGlobalSettings, setShowHelptips, toggleHelptips } from '../../actions/userActions';
 import { setSnackbar } from '../../actions/appActions';
-import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
+import { getDeployments, getDeploymentCount } from '../../actions/deploymentActions';
 
 export class Header extends React.Component {
   static contextTypes = {
@@ -39,16 +38,14 @@ export class Header extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-    this.state = this._getInitialState();
+    this.state = {
+      anchorEl: null
+    };
   }
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
-  }
-  componentWillUnmount() {
-    AppStore.removeChangeListener(this._onChange.bind(this));
-  }
+
   componentDidUpdate(prevProps, prevState) {
-    if (!this.state.sessionId || isEmpty(this.props.user) || this.props.user === null) {
+    const sessionId = cookie.load('JWT');
+    if (!sessionId || isEmpty(this.props.user) || this.props.user === null) {
       this._updateUsername();
     } else if (prevState.sessionId !== this.state.sessionId) {
       this._hasDeployments();
@@ -62,7 +59,7 @@ export class Header extends React.Component {
     // check logged in user
     if (this.props.isLoggedIn) {
       this._updateUsername();
-      this._hasDeployments();
+      this.props.getDeployments(1, 1);
       this._checkHeaderInfo();
       this.props.getReleases();
       this.props.getDeviceLimit();
@@ -71,17 +68,9 @@ export class Header extends React.Component {
     }
   }
 
-  _getInitialState() {
-    return {
-      sessionId: cookie.load('JWT'),
-      hasDeployments: AppStore.getHasDeployments()
-    };
-  }
-  _onChange() {
-    this.setState(this._getInitialState());
-  }
   _checkHeaderInfo() {
-    this._deploymentsInProgress();
+    // check if deployments in progress
+    this.props.getDeploymentCount('inprogress');
     this._checkAnnouncement();
   }
   _checkShowHelp() {
@@ -109,18 +98,6 @@ export class Header extends React.Component {
       cookie.save(this.props.user.id + this.state.hash, true, { maxAge: 604800 });
     }
     this.setState({ showAnnouncement: false });
-  }
-  _hasDeployments() {
-    // check if *any* deployment exists, for onboarding help tips
-    var self = this;
-    return AppActions.getDeployments(1, 1)
-      .then(deployments => self.setState({ hasDeployments: deployments.length }))
-      .catch(err => console.log(err));
-  }
-  _deploymentsInProgress() {
-    // check if deployments in progress
-    var self = this;
-    AppActions.getDeploymentCount('inprogress').then(inProgress => self.setState({ inProgress }));
   }
 
   _updateUsername() {
@@ -266,7 +243,7 @@ export class Header extends React.Component {
 
           <Toolbar key={2} style={{ flexShrink: '0' }}>
             <DeviceNotifications pending={this.props.pendingDevices} total={this.props.acceptedDevices} limit={this.props.deviceLimit} />
-            <DeploymentNotifications inprogress={this.state.inProgress} />
+            <DeploymentNotifications inprogress={this.props.inProgress} />
             {dropDownElement}
           </Toolbar>
         </Toolbar>
@@ -275,7 +252,17 @@ export class Header extends React.Component {
   }
 }
 
-const actionCreators = { getDeviceLimit, getGlobalSettings, getReleases, getUser, setShowHelptips, setSnackbar, toggleHelptips };
+const actionCreators = {
+  getDeviceLimit,
+  getDeployments,
+  getDeploymentCount,
+  getGlobalSettings,
+  getReleases,
+  getUser,
+  setShowHelptips,
+  setSnackbar,
+  toggleHelptips
+};
 
 const mapStateToProps = state => {
   return {
@@ -284,6 +271,7 @@ const mapStateToProps = state => {
     deviceLimit: state.devices.limit,
     demo: state.app.features.isDemoMode,
     docsVersion: state.app.docsVersion,
+    inProgress: state.deployments.byStatus.inprogress.total,
     multitenancy: state.app.features.hasMultitenancy,
     showHelptips: state.users.showHelptips,
     pendingDevices: state.devices.byStatus.pending.total,

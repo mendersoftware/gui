@@ -12,7 +12,6 @@ import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 import { getDevicesByStatus, updateDeviceAuth } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 
-import AppStore from '../../stores/app-store';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { preformatWithRequestID } from '../../helpers';
 import { getOnboardingComponentFor, advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
@@ -33,15 +32,11 @@ export class Pending extends React.Component {
     };
   }
 
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
-  }
   componentDidMount() {
     this.timer = setInterval(() => this._getDevices(), this.state.refreshDeviceLength);
     this._getDevices();
   }
   componentWillUnmount() {
-    AppStore.removeChangeListener(this._onChange.bind(this));
     clearInterval(this.timer);
   }
 
@@ -49,18 +44,15 @@ export class Pending extends React.Component {
     if (prevProps.count !== this.props.count || (prevProps.currentTab !== this.props.currentTab && this.props.currentTab.indexOf('Pending') !== -1)) {
       this._getDevices();
     }
-  }
-
-  shouldComponentUpdate(nextProps) {
-    return !this.props.devices.every((device, index) => device === nextProps.devices[index]) || true;
-  }
-
-  _onChange() {
     const self = this;
     if (!self.props.devices.length && self.props.count) {
       //if devices empty but count not, put back to first page
       self._handlePageChange(1);
     }
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return !this.props.devices.every((device, index) => device === nextProps.devices[index]) || true;
   }
 
   /*
