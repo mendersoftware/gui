@@ -10,6 +10,16 @@ import { createUser, editUser, getUserList, removeUser } from '../../actions/use
 import { preformatWithRequestID } from '../../helpers';
 
 export class UserManagement extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      editDialog: false,
+      editPass: null,
+      removeDialog: false,
+      user: null
+    };
+  }
+
   componentDidMount() {
     this.props.getUserList();
   }
