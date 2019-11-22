@@ -48,15 +48,15 @@ export class Devices extends React.Component {
 
   constructor(props, context) {
     super(props, context);
+    this.state = {
+      currentTab: this._getCurrentLabel(),
+      tabIndex: this._updateActive()
+    };
   }
 
   componentDidMount() {
     clearAllRetryTimers(this.props.setSnackbar);
     this._restartInterval();
-    this.setState({
-      currentTab: this._getCurrentLabel(),
-      tabIndex: this._updateActive()
-    });
     this.props.getAllDeviceCounts();
   }
 
