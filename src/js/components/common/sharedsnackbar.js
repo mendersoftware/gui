@@ -12,7 +12,8 @@ export class SharedSnackbar extends React.PureComponent {
   }
 
   render() {
-    const { maxWidth, onClick, onClose, setSnackbar, ...snackProps } = this.props.snackbar;
+    const { maxWidth, onClick, onClose, ...snackProps } = this.props.snackbar;
+    const { setSnackbar } = this.props;
     return (
       <Snackbar
         style={{ maxWidth: maxWidth, height: 'auto', lineHeight: '28px', padding: 24, whiteSpace: 'pre-line' }}
