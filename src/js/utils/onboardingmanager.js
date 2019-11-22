@@ -18,7 +18,6 @@ import {
   setShowCreateArtifactDialog,
   setShowOnboardingHelp
 } from '../actions/userActions';
-import AppStore from '../stores/app-store';
 import store from '../reducers';
 
 import { DEVICE_STATES } from '../constants/deviceConstants';
@@ -114,8 +113,12 @@ const onboardingSteps = {
   },
   'scheduling-artifact-selection': {
     condition: () =>
-      onboardingTipSanityCheck('scheduling-artifact-selection') && store.getState().devices.byStatus.accepted.total && AppStore.getDeploymentRelease(),
-    component: compose(setDisplayName('OnboardingTip'))(() => <div>{`Select the ${AppStore.getDeploymentRelease().Name} release we included.`}</div>),
+      onboardingTipSanityCheck('scheduling-artifact-selection') &&
+      store.getState().devices.byStatus.accepted.total &&
+      store.getState().deployments.deploymentRelease,
+    component: compose(setDisplayName('OnboardingTip'))(() => (
+      <div>{`Select the ${store.getState().deployments.deploymentRelease.Name} release we included.`}</div>
+    )),
     progress: 2
   },
   'scheduling-all-devices-selection': {
@@ -146,9 +149,9 @@ const onboardingSteps = {
       onboardingTipSanityCheck('scheduling-release-to-devices') &&
       store.getState().devices.byStatus.accepted.total &&
       (store.getState().devices.groups.selectedGroup || store.getState().devices.selectedDevice) &&
-      AppStore.getDeploymentRelease(),
+      store.getState().deployments.deploymentRelease,
     component: compose(setDisplayName('OnboardingTip'))(() => (
-      <div>{`Create the deployment! This will deploy the ${AppStore.getDeploymentRelease().Name} Artifact to ${
+      <div>{`Create the deployment! This will deploy the ${store.getState().deployments.deploymentRelease.Name} Artifact to ${
         store.getState().devices.selectedDevice ? store.getState().devices.selectedDevice : store.getState().devices.groups.selectedGroup || 'All devices'
       }`}</div>
     ))
@@ -159,23 +162,27 @@ const onboardingSteps = {
     progress: 2
   },
   'deployments-past': {
-    condition: () => onboardingTipSanityCheck('upload-new-artifact-tip') && AppStore.getPastDeployments().length && !window.location.hash.includes('finished'),
+    condition: () =>
+      onboardingTipSanityCheck('upload-new-artifact-tip') && store.getState().deployments.byStatus.finished.total && !window.location.hash.includes('finished'),
     component: <div>Your deployment has finished, click here to view it</div>,
     progress: 3
   },
   'deployments-past-completed': {
-    condition: () => onboardingTipSanityCheck('deployments-past-completed') && AppStore.getPastDeployments().length,
+    condition: () => onboardingTipSanityCheck('deployments-past-completed') && store.getState().deployments.byStatus.finished.total,
     component: <DeploymentCompleteTip targetUrl="destination-unreachable" />
   },
   'deployments-past-completed-failure': {
-    condition: () =>
-      onboardingTipSanityCheck('deployments-past-completed-failure') &&
-      !AppStore.getPastDeployments().reduce((accu, item) => {
+    condition: () => {
+      const deployments = store.getState().deployments;
+      const pastDeploymentsFailed = deployments.byStatus.finished.deploymentIds.reduce((accu, id) => {
+        const item = deployments.byId[id];
         if (item.status === 'failed' || (item.stats && item.stats.noartifact + item.stats.failure + item.stats['already-installed'] + item.stats.aborted > 0)) {
           return false;
         }
         return accu;
-      }, true),
+      }, true);
+      return onboardingTipSanityCheck('deployments-past-completed-failure') && !pastDeploymentsFailed;
+    },
     component: (
       <div>Your deployment has finished, but it looks like there was a problem. Click to view the deployment report, where you can see the error log.</div>
     )
