@@ -44,7 +44,8 @@ exports[`renders correctly 1`] = `
     </li>
   </ul>
   <p>
-    You can learn more about Mender's A/B partition architecture 
+    You can learn more about Mender's A/B partition architecture
+     
     <a
       href="https://docs.mender.io/undefinedarchitecture/overview"
       target="_blank"

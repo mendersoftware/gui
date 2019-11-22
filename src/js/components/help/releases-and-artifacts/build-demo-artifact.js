@@ -34,6 +34,7 @@ export default class BuildDemoArtifact extends React.Component {
   }
 
   render() {
+    const { menderVersion = 'master', menderArtifactVersion = 'master' } = this.props;
     var executable = `
 sudo chmod +x mender-artifact && \\
 sudo mv mender-artifact /usr/local/bin`;
@@ -41,7 +42,7 @@ sudo mv mender-artifact /usr/local/bin`;
     const artifactName = 'demo-webserver-updated';
 
     const file_install = `
-wget https://raw.githubusercontent.com/mendersoftware/mender/${this.props.menderVersion}/support/modules-artifact-gen/${artifactGenerator} && \\
+wget https://raw.githubusercontent.com/mendersoftware/mender/${menderVersion}/support/modules-artifact-gen/${artifactGenerator} && \\
 sudo chmod +x ${artifactGenerator}`;
 
     const generate = `
@@ -78,9 +79,7 @@ EOF
         <p>
           1.{' '}
           <a
-            href={`https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/${this.props.menderArtifactVersion}/${
-              downloadFolder[detectOsIdentifier()]
-            }/mender-artifact`}
+            href={`https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/${menderArtifactVersion}/${downloadFolder[detectOsIdentifier()]}/mender-artifact`}
             target="_blank"
           >
             Download the mender-artifact tool here

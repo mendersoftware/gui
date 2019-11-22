@@ -10,7 +10,8 @@ exports[`renders correctly 1`] = `
     <b>
       Artifact
     </b>
-    . An Artifact is a 
+    . An Artifact is a
+     
     <span
       className="code"
     >

@@ -29,7 +29,8 @@ exports[`renders correctly 1`] = `
     </li>
   </ul>
   <p>
-    General-purpose Update Modules are available and documented together with community-supported Update Modules at 
+    General-purpose Update Modules are available and documented together with community-supported Update Modules at
+     
     <a
       href="https://hub.mender.io/c/update-modules"
       target="_blank"
@@ -45,7 +46,8 @@ exports[`renders correctly 1`] = `
     >
       Read our documentation
     </a>
-     to learn how to develop your own Update Modules.
+     
+    to learn how to develop your own Update Modules.
   </p>
 </div>
 `;
