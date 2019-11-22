@@ -74,7 +74,7 @@ export class OnboardingCompleteTip extends React.Component {
           <p>You&apos;ve now got a good foundation in how to use Mender. Look for more help hints in the UI as you go along.</p>
           What next?
           <div>
-            <a href={`https://docs.mender.io/${docsVersion}getting-started/deploy-to-physical-devices#prepare-the-disk-image`} target="_blank">
+            <a href={`https://docs.mender.io/${docsVersion}getting-started/on-premise-installation/deploy-a-system-update-demo`} target="_blank">
               Learn about full-image updates
             </a>{' '}
             or{' '}

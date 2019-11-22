@@ -45,7 +45,7 @@ export class DeviceConnectionDialog extends React.Component {
 
   render() {
     const self = this;
-    const { onboardingDeviceType, open, onCancel, pendingCount, token } = self.props;
+    const { onboardingDeviceType, open, onCancel, pendingCount } = self.props;
     const { progress, onDevice, virtualDevice } = self.state;
 
     let content = (
@@ -96,9 +96,9 @@ export class DeviceConnectionDialog extends React.Component {
     );
 
     if (onDevice) {
-      content = <PhysicalDeviceOnboarding progress={progress} token={token} />;
+      content = <PhysicalDeviceOnboarding progress={progress} />;
     } else if (virtualDevice) {
-      content = <VirtualDeviceOnboarding token={token} />;
+      content = <VirtualDeviceOnboarding />;
     }
 
     if (open && progress >= 2 && pendingCount && !window.location.hash.includes('pending')) {

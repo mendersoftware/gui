@@ -89,7 +89,8 @@ const actionCreators = { setOnboardingApproach };
 
 const mapStateToProps = state => {
   return {
-    isHosted: state.app.features.isHosted
+    isHosted: state.app.features.isHosted,
+    token: state.users.organization.tenant_token
   };
 };
 

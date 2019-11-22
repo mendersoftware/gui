@@ -137,7 +137,7 @@ export class Authsets extends React.Component {
               <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
               You have reached your limit of authorized devices.
               <p>
-                Contact us by email at <a href="mailto:support@hosted.mender.io">support@hosted.mender.io</a> to request a higher limit.
+                Contact us by email at <a href="mailto:support@mender.io">support@mender.io</a> to request a higher limit.
               </p>
             </div>
           ) : null}

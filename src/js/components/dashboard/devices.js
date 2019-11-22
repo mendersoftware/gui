@@ -34,7 +34,7 @@ export class Devices extends React.Component {
   }
 
   _refreshDevices() {
-    if (this.props.devices.length > this.props.deploymentDeviceLimit) {
+    if (this.state.loading || this.props.devices.length > this.props.deploymentDeviceLimit) {
       return;
     }
     this.props.getAllDevicesByStatus(DEVICE_STATES.accepted);

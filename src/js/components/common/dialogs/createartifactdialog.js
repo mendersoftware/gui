@@ -52,19 +52,19 @@ export class CreateArtifactDialog extends React.Component {
     const artifactGenerator = 'single-file-artifact-gen';
     const artifactName = 'demo-webserver-updated';
     const chmodCode = `
-wget https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/${menderArtifactVersion}/${downloadFolder[detectOsIdentifier()]}/mender-artifact
-chmod +x mender-artifact
-wget https://raw.githubusercontent.com/mendersoftware/mender/${menderVersion}/support/modules-artifact-gen/${artifactGenerator}
-chmod +x ${artifactGenerator}
+wget https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/${menderArtifactVersion}/${downloadFolder[detectOsIdentifier()]}/mender-artifact && \\
+chmod +x mender-artifact && \\
+wget https://raw.githubusercontent.com/mendersoftware/mender/${menderVersion}/support/modules-artifact-gen/${artifactGenerator} && \\
+chmod +x ${artifactGenerator} && \\
 sudo cp mender-artifact ${artifactGenerator} /usr/local/bin/
 `;
 
     const artifactGenCode = `
-ARTIFACT_NAME="${artifactName}"; \
-DEVICE_TYPE="${deviceType}"; \
-OUTPUT_PATH="${artifactName}.mender"; \
-DEST_DIR="/var/www/localhost/htdocs/"; \
-FILE_NAME="index.html"; \
+ARTIFACT_NAME="${artifactName}" && \\
+DEVICE_TYPE="${deviceType}" && \\
+OUTPUT_PATH="${artifactName}.mender" && \\
+DEST_DIR="/var/www/localhost/htdocs/" && \\
+FILE_NAME="index.html" && \\
 ${artifactGenerator} -n \${ARTIFACT_NAME} \
 -t \${DEVICE_TYPE} -d \${DEST_DIR} -o \${OUTPUT_PATH} \
 \${FILE_NAME}

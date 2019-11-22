@@ -263,7 +263,7 @@ export class ExpandedDevice extends React.Component {
                 self.props.setSnackbar('');
               }}
             >
-              {hasPending ? <WarningIcon className="auth" /> : null}
+              {hasPending ? <WarningIcon className="auth" style={iconStyle} /> : null}
               <span className="inline-block">
                 <Typography variant="subtitle2" style={buttonStyle}>
                   {authLabelText}

@@ -18,6 +18,7 @@ import Support from './support';
 import MoreHelp from './more-help-resources';
 import { isEmpty, versionCompare } from '../../helpers';
 
+import { findLocalIpAddress } from '../../actions/appActions';
 import { getUserOrganization } from '../../actions/userActions';
 
 var components = {
@@ -82,7 +83,7 @@ export class Help extends React.PureComponent {
   };
 
   componentDidMount() {
-    if (this.props.hasMultitenancy && this.props.isHosted) {
+    if (this.props.hasMultitenancy || this.props.isEnterprise || this.props.isHosted) {
       this.props.getUserOrganization();
     }
   }
@@ -122,18 +123,20 @@ export class Help extends React.PureComponent {
           <p style={{ color: 'rgba(0, 0, 0, 0.54)', maxWidth: contentWidth }}>Help {breadcrumbs}</p>
           <div style={{ position: 'relative', top: '12px', maxWidth: contentWidth }} className="help-content">
             <ComponentToShow
-              version={this.props.version}
               docsVersion={this.props.docsVersion}
+              findLocalIpAddress={this.props.findLocalIpAddress}
               getLatest={this._getLatest}
-              isHosted={this.props.isHosted}
-              org={this.props.org}
-              links={this.props.links}
               hasMultitenancy={this.props.hasMultitenancy}
+              isHosted={this.props.isHosted}
+              isEnterprise={this.props.isEnterprise}
+              isEmpty={isEmpty}
+              links={this.props.links}
               menderDebPackageVersion={this.props.menderDebPackageVersion}
               menderVersion={this.props.menderVersion}
               menderArtifactVersion={this.props.menderArtifactVersion}
-              isEmpty={isEmpty}
+              org={this.props.org}
               pages={components}
+              version={this.props.version}
             />
           </div>
         </div>
@@ -142,7 +145,7 @@ export class Help extends React.PureComponent {
   }
 }
 
-const actionCreators = { getUserOrganization };
+const actionCreators = { getUserOrganization, findLocalIpAddress };
 
 const mapStateToProps = state => {
   // if hosted, use latest docs version
@@ -150,6 +153,7 @@ const mapStateToProps = state => {
   return {
     docsVersion: state.app.features.hasMultitenancy && state.app.features.isHosted ? '' : docsVersion,
     isHosted: state.app.features.isHosted,
+    isEnterprise: state.app.features.isEnterprise,
     links: state.app.hostedLinks,
     menderVersion: state.app.versionInformation['Mender-Client'],
     menderDebPackageVersion: state.app.menderDebPackageVersion,

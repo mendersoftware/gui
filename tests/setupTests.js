@@ -13,3 +13,11 @@ window.mender_environment = {
     inventoryVersion: null
   }
 };
+
+window.RTCPeerConnection = () => {
+  return {
+    createOffer: () => {},
+    setLocalDescription: () => {},
+    createDataChannel: () => {}
+  };
+};
