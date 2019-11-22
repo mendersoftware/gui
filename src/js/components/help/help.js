@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { matchPath } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import LeftNav from './left-nav';
 import GettingStarted from './getting-started';
 import ApplicationUpdates from './application-updates';
@@ -78,10 +77,6 @@ var components = {
 };
 
 export class Help extends React.PureComponent {
-  static contextTypes = {
-    router: PropTypes.object
-  };
-
   componentDidMount() {
     if (this.props.hasMultitenancy || this.props.isEnterprise || this.props.isHosted) {
       this.props.getUserOrganization();

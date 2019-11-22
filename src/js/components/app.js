@@ -2,41 +2,24 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-
-import PropTypes from 'prop-types';
-import Header from './header/header';
-import LeftNav from './leftnav';
-
 import IdleTimer from 'react-idle-timer';
 
-import { logout, updateMaxAge, expirySet } from '../auth';
-
-import SharedSnackbar from '../components/common/sharedsnackbar';
-
-import { setShowConnectingDialog, setShowCreateArtifactDialog } from '../actions/userActions';
-import { setSnackbar } from '../actions/appActions';
-import { getOnboardingComponentFor } from '../utils/onboardingmanager';
+import Header from './header/header';
+import LeftNav from './leftnav';
 import CreateArtifactDialog from './common/dialogs/createartifactdialog';
 import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
 import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
+import { logout, updateMaxAge, expirySet } from '../auth';
+import { setSnackbar } from '../actions/appActions';
+import { setShowConnectingDialog, setShowCreateArtifactDialog } from '../actions/userActions';
+import SharedSnackbar from '../components/common/sharedsnackbar';
+import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 
 class AppRoot extends React.Component {
-  static childContextTypes = {
-    muiTheme: PropTypes.object,
-    router: PropTypes.object,
-    location: PropTypes.object
-  };
-
   constructor(props, context) {
     super(props, context);
     this.state = {
       timeout: 900000 // 15 minutes idle time,
-    };
-  }
-
-  getChildContext() {
-    return {
-      location: this.props.location
     };
   }
 

@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Time from 'react-time';
 import ReactTooltip from 'react-tooltip';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import pluralize from 'pluralize';
 import copy from 'copy-to-clipboard';
@@ -52,11 +51,6 @@ const states = {
 };
 
 export class ExpandedDevice extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object,
-    location: PropTypes.object
-  };
-
   constructor(props, context) {
     super(props, context);
 

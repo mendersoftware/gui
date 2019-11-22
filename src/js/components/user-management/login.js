@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import cookie from 'react-cookie';
 import ReactTooltip from 'react-tooltip';
 
@@ -20,11 +19,6 @@ import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import { getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 export class Login extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object,
-    location: PropTypes.object
-  };
-
   constructor(props, context) {
     super(props, context);
     this.state = {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, withRouter } from 'react-router-dom';
 import copy from 'copy-to-clipboard';
 
 // material ui
@@ -13,35 +13,21 @@ const listItems = [
   { route: '/deployments', text: 'Deployments' }
 ];
 
-export class LeftNav extends React.Component {
+const listItemStyle = {
+  container: { padding: '16px 16px 16px 42px' }
+};
+
+export class LeftNav extends React.PureComponent {
   render() {
-    const self = this;
-    const { docsVersion, isHosted, versionInformation } = self.props;
+    const { className, docsVersion, versionInformation } = this.props;
 
-    let displayedDocsVersion = '';
-    if (!isHosted) {
-      displayedDocsVersion = docsVersion ? `${docsVersion}/` : 'development/';
-    }
-    const listItemStyle = {
-      container: { padding: '16px 16px 16px 42px' }
-    };
-
-    var list = listItems.map((item, index) => (
-      <ListItem
-        className="navLink leftNav"
-        component={NavLink}
-        exact={item.route === '/'}
-        key={index}
-        style={{ padding: '22px 16px 22px 42px' }}
-        to={item.route}
+    const licenseLink = (
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href={`https://docs.mender.io/${docsVersion}release-information/open-source-licenses`}
+        style={{ fontSize: '13px', position: 'relative', top: '6px', color: '#347A87' }}
       >
-        <ListItemText primary={item.text} style={Object.assign({ textTransform: 'uppercase' })} />
-      </ListItem>
-    ));
-
-    var licenseUrl = `https://docs.mender.io/${displayedDocsVersion}release-information/open-source-licenses`;
-    var licenseLink = (
-      <a target="_blank" rel="noopener noreferrer" href={licenseUrl} style={{ fontSize: '13px', position: 'relative', top: '6px', color: '#347A87' }}>
         License information
       </a>
     );
@@ -68,8 +54,21 @@ export class LeftNav extends React.Component {
     );
 
     return (
-      <div className={self.props.className}>
-        <List style={{ padding: '0' }}>{list}</List>
+      <div className={className}>
+        <List style={{ padding: '0' }}>
+          {listItems.map((item, index) => (
+            <ListItem
+              className="navLink leftNav"
+              component={NavLink}
+              exact={item.route === '/'}
+              key={index}
+              style={{ padding: '22px 16px 22px 42px' }}
+              to={item.route}
+            >
+              <ListItemText primary={item.text} style={Object.assign({ textTransform: 'uppercase' })} />
+            </ListItem>
+          ))}
+        </List>
 
         <List style={{ padding: '0', position: 'absolute', bottom: '30px', left: '0px', right: '0px' }}>
           <ListItem className="navLink leftNav" component={Link} style={listItemStyle.container} to="/help">
@@ -85,11 +84,14 @@ export class LeftNav extends React.Component {
 }
 
 const mapStateToProps = state => {
+  let docsVersion = '';
+  if (!state.app.features.isHosted) {
+    docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
+  }
   return {
-    docsVersion: state.app.docsVersion,
-    isHosted: state.app.features.isHosted,
+    docsVersion,
     versionInformation: state.app.versionInformation
   };
 };
 
-export default connect(mapStateToProps)(LeftNav);
+export default withRouter(connect(mapStateToProps)(LeftNav));

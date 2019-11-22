@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { NavLink, withRouter } from 'react-router-dom';
 import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
 import MyOrganization from './organization';
@@ -24,28 +23,21 @@ const sectionMap = {
 };
 
 export class Settings extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object
-  };
-
   componentDidMount() {
-    if (
-      this.context.router.route.location.pathname === '/settings' ||
-      (this.context.router.route.location.pathname === myOrganization.route && !this.props.hasMultitenancy)
-    ) {
+    if (this.props.location.pathname === '/settings' || (this.props.location.pathname === myOrganization.route && !this.props.hasMultitenancy)) {
       // redirect from organization screen if no multitenancy
-      this.context.router.history.replace(routes.myAccount.route);
+      this.props.history.replace(routes.myAccount.route);
     }
   }
 
-  _getCurrentTab(routeDefinitions, tab = this.props.history.location.pathname) {
+  _getCurrentTab(routeDefinitions, tab = this.props.location.pathname) {
     if (routeDefinitions.hasOwnProperty(tab)) {
       return routeDefinitions[tab];
     }
     return routeDefinitions.myAccount;
   }
 
-  _getCurrentSection(sections, section = this.context.router.route.match.params.section) {
+  _getCurrentSection(sections, section = this.props.match.params.section) {
     if (sections.hasOwnProperty(section)) {
       return sections[section];
     }
@@ -70,7 +62,7 @@ export class Settings extends React.Component {
       return accu;
     }, []);
 
-    const section = self._getCurrentSection(sectionMap, self.context.router.route.match.params.section);
+    const section = self._getCurrentSection(sectionMap, self.props.match.params.section);
     return (
       <div className="margin-top">
         <div className="leftFixed">
@@ -91,4 +83,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(Settings);
+export default withRouter(connect(mapStateToProps)(Settings));

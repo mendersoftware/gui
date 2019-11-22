@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { Link, withRouter } from 'react-router-dom';
 import pluralize from 'pluralize';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
@@ -42,10 +41,6 @@ const routes = {
 const refreshLength = 10000;
 
 export class Devices extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object
-  };
-
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -82,14 +77,14 @@ export class Devices extends React.Component {
     this.setState({ tabIndex: this._updateActive(), currentTab: this._getCurrentLabel() });
   }
 
-  _updateActive(tab = this.context.router.route.match.params.status) {
+  _updateActive(tab = this.props.match.params.status) {
     if (routes.hasOwnProperty(tab)) {
       return routes[tab].route;
     }
     return routes.devices.route;
   }
 
-  _getCurrentLabel(tab = this.context.router.route.match.params.status) {
+  _getCurrentLabel(tab = this.props.match.params.status) {
     if (routes.hasOwnProperty(tab)) {
       return routes[tab].title;
     }
@@ -136,7 +131,7 @@ export class Devices extends React.Component {
 
     var pendingLabel = this.props.pendingCount ? `Pending (${this.props.pendingCount})` : 'Pending';
 
-    const tabIndex = this.context.router.route.match.params.status || 'devices';
+    const tabIndex = this.props.match.params.status || 'devices';
     return (
       <div>
         <Tabs value={tabIndex} onChange={() => this._changeTab()}>
@@ -162,7 +157,7 @@ export class Devices extends React.Component {
         )}
         {tabIndex === routes.devices.status && (
           <DeviceGroups
-            params={this.props.params}
+            params={this.props.match.params}
             acceptedDevices={this.props.acceptedCount}
             currentTab={this.state.currentTab}
             openSettingsDialog={() => this._openSettingsDialog()}
@@ -230,7 +225,9 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(Devices);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    actionCreators
+  )(Devices)
+);

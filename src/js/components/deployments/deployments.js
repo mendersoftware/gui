@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { Link, withRouter } from 'react-router-dom';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@material-ui/core';
 
 import { getAllGroupDevices, selectDevice } from '../../actions/deviceActions';
@@ -37,10 +36,6 @@ const routes = {
 };
 
 export class Deployments extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object
-  };
-
   constructor(props, context) {
     super(props, context);
     const today = new Date();
@@ -304,14 +299,14 @@ export class Deployments extends React.Component {
     this.setState({ updated: true });
   }
 
-  _updateActive(tab = this.context.router.route.match.params.tab) {
+  _updateActive(tab = this.props.match.params.tab) {
     if (routes.hasOwnProperty(tab)) {
       return routes[tab].route;
     }
     return routes.active.route;
   }
 
-  _getCurrentLabel(tab = this.context.router.route.match.params.tab) {
+  _getCurrentLabel(tab = this.props.match.params.tab) {
     if (routes.hasOwnProperty(tab)) {
       return routes[tab].title;
     }
@@ -505,7 +500,9 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(Deployments);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    actionCreators
+  )(Deployments)
+);

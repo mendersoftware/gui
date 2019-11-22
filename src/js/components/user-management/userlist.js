@@ -30,8 +30,8 @@ export default class UserList extends React.PureComponent {
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.props.users.map(user => (
-                <TableRow key={user.id} hover>
+              {this.props.users.map((user, index) => (
+                <TableRow key={user.id || index} hover>
                   <TableCell>{user.email}</TableCell>
                   <TableCell align="left">
                     <Time value={user.created_ts} format="YYYY-MM-DD HH:mm" />

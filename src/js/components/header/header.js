@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import cookie from 'react-cookie';
 import Linkify from 'react-linkify';
 import ReactTooltip from 'react-tooltip';
@@ -31,11 +30,6 @@ import { setSnackbar } from '../../actions/appActions';
 import { getDeployments, getDeploymentCount } from '../../actions/deploymentActions';
 
 export class Header extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object,
-    location: PropTypes.object
-  };
-
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -146,7 +140,7 @@ export class Header extends React.Component {
   render() {
     const self = this;
     const { anchorEl } = self.state;
-    const { user } = self.props;
+    const { location, user } = self.props;
 
     const menuButtonColor = '#c7c7c7';
 
@@ -203,7 +197,7 @@ export class Header extends React.Component {
     const toolbarStyle = { height: '56px', minHeight: 'unset', paddingLeft: '16px', paddingRight: '16px' };
 
     return (
-      <div id="fixedHeader" className={`header ${self.context.location.pathname === '/login' ? 'hidden' : ''}`}>
+      <div id="fixedHeader" className={`header ${location.pathname === '/login' ? 'hidden' : ''}`}>
         <Toolbar style={Object.assign({ backgroundColor: '#fff' }, toolbarStyle)}>
           <Toolbar key={0} style={toolbarStyle}>
             <Link to="/" id="logo" />
@@ -279,7 +273,9 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(Header);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    actionCreators
+  )(Header)
+);

@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
@@ -33,10 +32,6 @@ import { setRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 const UNGROUPED_GROUP = DeviceConstants.UNGROUPED_GROUP;
 
 export class DeviceGroups extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object
-  };
-
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -59,9 +54,9 @@ export class DeviceGroups extends React.Component {
     clearAllRetryTimers(self.props.setSnackbar);
     var filters = [];
 
-    if (self.context.router.route.match.params.filters) {
+    if (self.props.params.filters) {
       self._refreshGroups();
-      var str = decodeURIComponent(self.context.router.route.match.params.filters);
+      var str = decodeURIComponent(self.props.params.filters);
       var obj = str.split('&');
       for (var i = 0; i < obj.length; i++) {
         var f = obj[i].split('=');

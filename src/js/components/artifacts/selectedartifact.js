@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 
 // material ui
 import {
@@ -47,9 +46,6 @@ const styles = {
 };
 
 export class SelectedArtifact extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object
-  };
   constructor(props, context) {
     super(props, context);
     this.state = {
