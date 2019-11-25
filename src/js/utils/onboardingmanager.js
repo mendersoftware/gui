@@ -1,26 +1,13 @@
 import React from 'react';
-import cookie from 'react-cookie';
 import { Link } from 'react-router-dom';
 import { compose, setDisplayName } from 'recompose';
 
 import BaseOnboardingTip from '../components/helptips/baseonboardingtip';
 import DeploymentCompleteTip from '../components/helptips/deploymentcompletetip';
 
-import { getDevicesByStatus, getAllDevices } from '../actions/deviceActions';
-import { getReleases } from '../actions/releaseActions';
-import { getDeploymentsByStatus } from '../actions/deploymentActions';
-import {
-  setOnboardingApproach,
-  setOnboardingArtifactIncluded,
-  setOnboardingComplete,
-  setOnboardingDeviceType,
-  setOnboardingProgress,
-  setShowCreateArtifactDialog,
-  setShowOnboardingHelp
-} from '../actions/userActions';
+import { setOnboardingProgress, setShowCreateArtifactDialog } from '../actions/userActions';
 import store from '../reducers';
 
-import { DEVICE_STATES } from '../constants/deviceConstants';
 import OnboardingCompleteTip from '../components/helptips/onboardingcompletetip';
 
 const demoArtifactLink = 'https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender';
@@ -31,7 +18,7 @@ const onboardingTipSanityCheck = step =>
   store.getState().users.showHelptips &&
   !getOnboardingStepCompleted(step);
 
-const onboardingSteps = {
+export const onboardingSteps = {
   'dashboard-onboarding-start': {
     condition: () => onboardingTipSanityCheck('dashboard-onboarding-start'),
     component: <div>Click here to get started!</div>,
@@ -219,7 +206,7 @@ const onboardingSteps = {
   }
 };
 
-const getCurrentOnboardingState = () => {
+export const getCurrentOnboardingState = () => {
   const { showTipsDialog, showConnectDeviceDialog, showCreateArtifactDialog, ...state } = store.getState().users.onboarding; // eslint-disable-line no-unused-vars
   return state;
 };
@@ -242,7 +229,7 @@ export function getOnboardingStepCompleted(id) {
   return progress > stepIndex;
 }
 
-const determineProgress = (acceptedDevices, pendingDevices, releases, pastDeployments) => {
+export const determineProgress = (acceptedDevices, pendingDevices, releases, pastDeployments) => {
   const steps = Object.keys(onboardingSteps);
   let progress = -1;
   progress = pendingDevices.length > 1 ? steps.findIndex(step => step === 'devices-pending-accepting-onboarding') : progress;
@@ -257,65 +244,6 @@ const determineProgress = (acceptedDevices, pendingDevices, releases, pastDeploy
     acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length > 2 ? steps.findIndex(step => step === 'onboarding-finished') : progress;
   return progress;
 };
-
-export function getOnboardingState(userId) {
-  let promises = Promise.resolve(getCurrentOnboardingState());
-  const onboardingKey = `${userId}-onboarding`;
-  const savedState = JSON.parse(window.localStorage.getItem(onboardingKey)) || {};
-  if (!Object.keys(savedState).length || !savedState.complete) {
-    const userCookie = cookie.load(`${userId}-onboarded`);
-    // to prevent tips from showing up for previously onboarded users completion is set explicitly before the additional requests complete
-    if (userCookie) {
-      store.dispatch(setOnboardingComplete(Boolean(userCookie)));
-    }
-    const requests = [
-      store.dispatch(getDevicesByStatus(DEVICE_STATES.accepted)),
-      store.dispatch(getDevicesByStatus(DEVICE_STATES.pending)),
-      store.dispatch(getAllDevices()),
-      store.dispatch(getReleases()),
-      store.dispatch(getDeploymentsByStatus('finished')),
-      Promise.resolve(userCookie)
-    ];
-
-    promises = Promise.all(requests).then(([acceptedDevices, pendingDevices, devices, releases, pastDeployments, onboardedCookie]) => {
-      const deviceType = acceptedDevices.length && acceptedDevices[0].hasOwnProperty('attributes') ? acceptedDevices[0].attributes.device_type : null;
-      const state = {
-        complete: !!(
-          Boolean(onboardedCookie) ||
-          savedState.complete ||
-          (acceptedDevices.length > 1 && pendingDevices.length > 0 && releases.length > 1 && pastDeployments.length > 1) ||
-          (acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length > 2) ||
-          (acceptedDevices.length >= 1 && pendingDevices.length > 0 && releases.length >= 2 && pastDeployments.length >= 2) ||
-          (mender_environment && mender_environment.disableOnboarding)
-        ),
-        showTips: savedState.showTips != null ? savedState.showTips : onboardedCookie ? !onboardedCookie : true,
-        deviceType: savedState.deviceType || store.getState().users.onboarding.deviceType || deviceType,
-        approach: savedState.approach || (deviceType || '').startsWith('qemu') ? 'virtual' : 'physical' || store.getState().users.onboarding.approach,
-        artifactIncluded: savedState.artifactIncluded || store.getState().users.onboarding.artifactIncluded,
-        progress: savedState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments)
-      };
-      persistOnboardingState(state);
-      state.devices = devices;
-      return Promise.resolve(state);
-    });
-  } else {
-    promises = Promise.resolve(savedState);
-  }
-
-  return promises
-    .then(state => {
-      store.dispatch(setOnboardingComplete(state.complete));
-      store.dispatch(setOnboardingDeviceType(state.deviceType));
-      store.dispatch(setOnboardingApproach(state.approach));
-      store.dispatch(setOnboardingArtifactIncluded(state.artifactIncluded));
-      store.dispatch(setShowOnboardingHelp(state.showTips));
-      store.dispatch(setOnboardingProgress(state.progress));
-      const progress = Object.keys(onboardingSteps).findIndex(step => step === 'deployments-past-completed');
-      store.dispatch(setShowCreateArtifactDialog(Math.abs(state.progress - progress) <= 1));
-      return Promise.resolve(state);
-    })
-    .catch(e => console.log(e));
-}
 
 export function advanceOnboarding(stepId) {
   const progress = store.getState().users.onboarding.progress;

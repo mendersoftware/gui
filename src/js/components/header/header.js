@@ -18,7 +18,6 @@ import {
 } from '@material-ui/icons';
 
 import { isEmpty, decodeSessionToken, hashString } from '../../helpers';
-import { getOnboardingState } from '../../utils/onboardingmanager';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import DeviceNotifications from './devicenotifications';
 import DeploymentNotifications from './deploymentnotifications';
@@ -26,7 +25,7 @@ import DeploymentNotifications from './deploymentnotifications';
 import { getDeviceLimit } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
 import { getUser, getGlobalSettings, setShowHelptips, toggleHelptips } from '../../actions/userActions';
-import { setSnackbar } from '../../actions/appActions';
+import { getOnboardingState, setSnackbar } from '../../actions/appActions';
 import { getDeployments, getDeploymentCount } from '../../actions/deploymentActions';
 
 export class Header extends React.Component {
@@ -40,7 +39,7 @@ export class Header extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     const sessionId = cookie.load('JWT');
     if (!sessionId || isEmpty(this.props.user) || this.props.user === null) {
-      this._updateUsername();
+      this._updateUsername().then(() => getOnboardingState());
     } else if (prevState.sessionId !== this.state.sessionId) {
       this._hasDeployments();
       this.props.getReleases();
@@ -111,7 +110,6 @@ export class Header extends React.Component {
           self.props.getGlobalSettings();
           self._checkHeaderInfo();
         })
-        .then(() => getOnboardingState(userId))
         .catch(err => {
           self.setState({ gettingUser: false });
           var errMsg = err.res.error;
@@ -132,10 +130,10 @@ export class Header extends React.Component {
     this.setState({ anchorEl: null });
   };
   onLogoutClick() {
-    this.setState({ gettingUser: false });
+    this.setState({ gettingUser: false, anchorEl: null });
     clearAllRetryTimers(this.props.setSnackbar);
     cookie.remove('JWT');
-    this.context.router.history.push('/login');
+    this.props.history.push('/login');
   }
   render() {
     const self = this;
@@ -251,6 +249,7 @@ const actionCreators = {
   getDeployments,
   getDeploymentCount,
   getGlobalSettings,
+  getOnboardingState,
   getReleases,
   getUser,
   setShowHelptips,

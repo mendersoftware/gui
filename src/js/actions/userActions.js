@@ -172,3 +172,14 @@ export const setConnectingDialogProgressed = val => dispatch => {
   }
   return dispatch({ type: UserConstants.SET_CONNECT_DEVICE_PROGRESSED, progressed: val });
 };
+
+export const setOnboardingState = state => dispatch =>
+  Promise.all([
+    dispatch(setOnboardingComplete(state.complete)),
+    dispatch(setOnboardingDeviceType(state.deviceType)),
+    dispatch(setOnboardingApproach(state.approach)),
+    dispatch(setOnboardingArtifactIncluded(state.artifactIncluded)),
+    dispatch(setShowOnboardingHelp(state.showTips)),
+    dispatch(setOnboardingProgress(state.progress)),
+    dispatch(setShowCreateArtifactDialog(state.showArtifactCreation))
+  ]);
