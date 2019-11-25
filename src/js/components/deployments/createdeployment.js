@@ -83,15 +83,15 @@ export class CreateDialog extends React.Component {
     const self = this;
     const { device, open, release } = self.props;
     const { activeStep, deploymentDeviceIds, group, phases, steps } = self.state;
-    const disabled = activeStep === 0 ? !(release && deploymentDeviceIds.length) : self.state.disableSchedule;
-    const finalStep = activeStep === steps.length - 1;
     const ComponentToShow = steps[activeStep].component;
     const deploymentSettings = {
       group: device ? device.id : group,
       deploymentDeviceIds,
-      release,
+      release: release || self.state.release,
       phases
     };
+    const disabled = activeStep === 0 ? !(deploymentSettings.release && deploymentDeviceIds.length) : self.state.disableSchedule;
+    const finalStep = activeStep === steps.length - 1;
     return (
       <Dialog open={open || false} fullWidth={false} maxWidth="md">
         <DialogTitle>Create a deployment</DialogTitle>

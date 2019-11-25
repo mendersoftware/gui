@@ -7,7 +7,7 @@ import { getAllGroupDevices, selectDevice } from '../../actions/deviceActions';
 import { selectRelease } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { setSnackbar } from '../../actions/appActions';
-import { abortDeployment, getDeploymentCount, getDeploymentsByStatus, selectDeployment } from '../../actions/deploymentActions';
+import { abortDeployment, createDeployment, getDeploymentCount, getDeploymentsByStatus, selectDeployment } from '../../actions/deploymentActions';
 
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 
@@ -228,38 +228,35 @@ export class Deployments extends React.Component {
   }
 
   _onScheduleSubmit(deploymentObject) {
-    var self = this;
+    const self = this;
     const { group, deploymentDeviceIds, release, phases } = deploymentObject;
-    var newDeployment = {
+    const newDeployment = {
       name: decodeURIComponent(group) || 'All devices',
-      artifact_name: release.name,
+      artifact_name: release.Name,
       devices: deploymentDeviceIds,
-      phases: phases
+      phases
     };
     self.setState({ doneLoading: false, createDialog: false, reportDialog: false });
 
     return self.props
       .createDeployment(newDeployment)
+      .catch(err => {
+        self.props.setSnackbar('Error while creating deployment');
+        var errMsg = err.res.body.error || '';
+        self.props.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard');
+      })
       .then(() => {
         clearInterval(self.timer);
-
         // successfully retrieved new deployment
         if (self._getCurrentLabel() !== routes.active.title) {
-          self.context.router.history.push(routes.active.route);
+          self.props.history.push(routes.active.route);
           self._changeTab(routes.active.route);
         } else {
           self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
           self._refreshDeployments();
         }
         self.props.setSnackbar('Deployment created successfully', 8000);
-      })
-      .catch(err => {
-        self.props.setSnackbar('Error while creating deployment');
-        var errMsg = err.res.body.error || '';
-        self.props.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard');
-      })
-      .then(() => self.setState({ doneLoading: true, deploymentObject: null }))
-      .then(() => {
+        if (phases) {
         const standardPhases = standardizePhases(phases);
         let previousPhases = self.props.settings.previousPhases || [];
         previousPhases = previousPhases.map(standardizePhases);
@@ -267,6 +264,8 @@ export class Deployments extends React.Component {
           previousPhases.push(standardPhases);
         }
         self.props.saveGlobalSettings({ previousPhases: previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT) });
+        }
+        self.setState({ doneLoading: true, deploymentObject: null });
       });
   }
   _showReport(reportType) {
@@ -453,12 +452,14 @@ export class Deployments extends React.Component {
           <DialogActions>{reportActions}</DialogActions>
         </Dialog>
 
+        {createDialog && (
         <CreateDialog
           open={createDialog}
           onDismiss={() => self.setState({ createDialog: false, deploymentObject: null })}
           onScheduleSubmit={(...args) => this._onScheduleSubmit(...args)}
           deploymentObject={deploymentObject}
         />
+        )}
         {onboardingComponent}
       </div>
     );
@@ -467,6 +468,7 @@ export class Deployments extends React.Component {
 
 const actionCreators = {
   abortDeployment,
+  createDeployment,
   getAllGroupDevices,
   getDeploymentCount,
   getDeploymentsByStatus,
