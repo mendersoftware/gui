@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
@@ -46,11 +45,4 @@ export class Progress extends React.PureComponent {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    onboardingComplete: state.users.onboarding.complete,
-    pastDeploymentsCount: state.deployments.byStatus.finished.total
-  };
-};
-
-export default connect(mapStateToProps)(Progress);
+export default Progress;

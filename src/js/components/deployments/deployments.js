@@ -257,13 +257,13 @@ export class Deployments extends React.Component {
         }
         self.props.setSnackbar('Deployment created successfully', 8000);
         if (phases) {
-        const standardPhases = standardizePhases(phases);
-        let previousPhases = self.props.settings.previousPhases || [];
-        previousPhases = previousPhases.map(standardizePhases);
-        if (!previousPhases.find(previousPhaseList => previousPhaseList.every(oldPhase => standardPhases.find(phase => deepCompare(phase, oldPhase))))) {
-          previousPhases.push(standardPhases);
-        }
-        self.props.saveGlobalSettings({ previousPhases: previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT) });
+          const standardPhases = standardizePhases(phases);
+          let previousPhases = self.props.settings.previousPhases || [];
+          previousPhases = previousPhases.map(standardizePhases);
+          if (!previousPhases.find(previousPhaseList => previousPhaseList.every(oldPhase => standardPhases.find(phase => deepCompare(phase, oldPhase))))) {
+            previousPhases.push(standardPhases);
+          }
+          self.props.saveGlobalSettings({ previousPhases: previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT) });
         }
         self.setState({ doneLoading: true, deploymentObject: null });
       });
@@ -321,18 +321,12 @@ export class Deployments extends React.Component {
   }
 
   closeReport() {
-    this.setState({ reportDialog: false, selectedDeployment: null });
-    this.props.selectDeployment();
+    const self = this;
+    self.setState({ reportDialog: false, selectedDeployment: null }, () => self.props.selectDeployment());
   }
 
   render() {
     const self = this;
-    var reportActions = [
-      <Button key="report-action-button-1" onClick={() => self.closeReport()}>
-        Close
-      </Button>
-    ];
-
     const dialogProps = {
       updated: () => this.setState({ updated: true }),
       deployment: this.props.selectedDeployment
@@ -343,7 +337,7 @@ export class Deployments extends React.Component {
     }
 
     // tabs
-    const { groups, isEnterprise, past, pastCount, pending, pendingCount, progress, progressCount } = self.props;
+    const { groups, isEnterprise, onboardingComplete, past, pastCount, pending, pendingCount, progress, progressCount } = self.props;
     const {
       contentClass,
       createDialog,
@@ -359,7 +353,7 @@ export class Deployments extends React.Component {
       startDate,
       endDate,
       tabIndex
-    } = this.state;
+    } = self.state;
     let onboardingComponent = null;
     if (past.length || pastCount) {
       onboardingComponent = getOnboardingComponentFor('deployments-past', { anchor: { left: 240, top: 50 } });
@@ -384,7 +378,7 @@ export class Deployments extends React.Component {
 
         {tabIndex === routes.active.route && (
           <>
-            {this.state.doneLoading ? (
+            {doneLoading ? (
               <div className="margin-top">
                 <DeploymentsList
                   abort={id => this._abortDeployment(id)}
@@ -400,11 +394,13 @@ export class Deployments extends React.Component {
                 <Progress
                   abort={id => this._abortDeployment(id)}
                   count={progressCount || progress.length}
-                  items={progress}
-                  page={progPage}
-                  refreshItems={(...args) => this._refreshInProgress(...args)}
                   isActiveTab={self._getCurrentLabel() === routes.active.title}
+                  items={progress}
+                  onboardingComplete={onboardingComplete}
                   openReport={rowNum => this._showProgress(rowNum)}
+                  page={progPage}
+                  pastDeploymentsCount={pastCount}
+                  refreshItems={(...args) => this._refreshInProgress(...args)}
                   title="In progress"
                   type="progress"
                 />
@@ -444,21 +440,27 @@ export class Deployments extends React.Component {
           </div>
         )}
 
-        <Dialog open={reportDialog} fullWidth={true} maxWidth="lg">
-          <DialogTitle>{reportType === 'active' ? 'Deployment progress' : 'Results of deployment'}</DialogTitle>
-          <DialogContent className={contentClass} style={{ overflow: 'hidden' }}>
-            {dialogContent}
-          </DialogContent>
-          <DialogActions>{reportActions}</DialogActions>
-        </Dialog>
+        {reportDialog && (
+          <Dialog open={reportDialog} fullWidth={true} maxWidth="lg">
+            <DialogTitle>{reportType === 'active' ? 'Deployment progress' : 'Results of deployment'}</DialogTitle>
+            <DialogContent className={contentClass} style={{ overflow: 'hidden' }}>
+              {dialogContent}
+            </DialogContent>
+            <DialogActions>
+              <Button key="report-action-button-1" onClick={() => self.closeReport()}>
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+        )}
 
         {createDialog && (
-        <CreateDialog
-          open={createDialog}
-          onDismiss={() => self.setState({ createDialog: false, deploymentObject: null })}
-          onScheduleSubmit={(...args) => this._onScheduleSubmit(...args)}
-          deploymentObject={deploymentObject}
-        />
+          <CreateDialog
+            open={createDialog}
+            onDismiss={() => self.setState({ createDialog: false, deploymentObject: null })}
+            onScheduleSubmit={(...args) => this._onScheduleSubmit(...args)}
+            deploymentObject={deploymentObject}
+          />
         )}
         {onboardingComponent}
       </div>
@@ -491,6 +493,7 @@ const mapStateToProps = state => {
     isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,
     onboardingComplete: state.users.onboarding.complete,
     past,
+    pastCount: state.deployments.byStatus.finished.total,
     pending,
     pendingCount: state.deployments.byStatus.pending.total,
     progress,

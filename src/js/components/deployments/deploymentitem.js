@@ -48,7 +48,7 @@ export default class DeploymentItem extends React.Component {
     const self = this;
     const { columnHeaders, deployment, index, isEnterprise, openReport, type } = self.props;
     const { abort } = self.state;
-    const { inprogress: current, successes, failures } = groupDeploymentStats(deployment.stats);
+    const { inprogress: current, successes, failures } = groupDeploymentStats(deployment.stats || {});
 
     const { artifact_name, name, created, device_count, id, status, phases } = deployment;
 

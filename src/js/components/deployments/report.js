@@ -25,14 +25,15 @@ export class DeploymentReport extends React.Component {
   constructor(props, state) {
     super(props, state);
     this.state = {
-      showDialog: false,
-      elapsed: 0,
-      currentPage: 1,
-      start: 0,
-      perPage: 20,
-      showPending: true,
       abort: false,
-      finished: false
+      deviceId: null,
+      currentPage: 1,
+      elapsed: 0,
+      finished: false,
+      perPage: 20,
+      showDialog: false,
+      showPending: true,
+      start: 0
     };
   }
   componentDidMount() {
@@ -101,11 +102,10 @@ export class DeploymentReport extends React.Component {
   }
   viewLog(id) {
     const self = this;
-    return self.props.getDeviceLog(this.props.deployment.id, id).then(() => self.setState({ showDialog: true, copied: false }));
+    return self.props.getDeviceLog(this.props.deployment.id, id).then(() => self.setState({ showDialog: true, copied: false, deviceId: id }));
   }
-  exportLog() {
-    var content = this.props.logData;
-    var uriContent = `data:application/octet-stream,${encodeURIComponent(content)}`;
+  exportLog(content) {
+    const uriContent = `data:application/octet-stream,${encodeURIComponent(content)}`;
     window.open(uriContent, 'deviceLog');
   }
 
@@ -134,7 +134,9 @@ export class DeploymentReport extends React.Component {
   render() {
     const self = this;
     const { allDevices, deployment, deviceCount } = self.props;
-    const { stats } = deployment;
+    const { stats, devices } = deployment;
+    const { deviceId, showDialog } = self.state;
+    const logData = deviceId ? devices[deviceId].log : null;
     var deviceList = this.state.pagedDevices || [];
 
     var encodedArtifactName = encodeURIComponent(deployment.artifact_name);
@@ -153,12 +155,12 @@ export class DeploymentReport extends React.Component {
       <CopyToClipboard
         key="log-action-button-2"
         style={{ marginRight: '10px', display: 'inline-block' }}
-        text={this.props.logData}
-        onCopy={() => this.setState({ copied: true })}
+        text={logData}
+        onCopy={() => self.setState({ copied: true })}
       >
         <Button>Copy to clipboard</Button>
       </CopyToClipboard>,
-      <Button variant="contained" key="log-action-button-3" color="primary" onClick={() => this.exportLog()}>
+      <Button variant="contained" key="log-action-button-3" color="primary" onClick={() => self.exportLog(logData)}>
         Export log
       </Button>
     ];
@@ -174,8 +176,8 @@ export class DeploymentReport extends React.Component {
         </Button>
       </div>
     );
-    if (this.state.abort) {
-      abort = <Confirm cancel={() => self.setState({ abort: false })} action={() => this._abortHandler()} type="abort" />;
+    if (self.state.abort) {
+      abort = <Confirm cancel={() => self.setState({ abort: false })} action={() => self._abortHandler()} type="abort" />;
     }
 
     var finished = '-';
@@ -329,10 +331,10 @@ export class DeploymentReport extends React.Component {
           ) : null}
         </div>
 
-        <Dialog open={this.state.showDialog}>
+        <Dialog open={showDialog}>
           <DialogTitle>Deployment log for device</DialogTitle>
           <DialogContent>
-            <div className="code log">{this.props.logData}</div>
+            <div className="code log">{logData}</div>
             <p style={{ marginLeft: '24px' }}>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
           </DialogContent>
           <DialogActions>{logActions}</DialogActions>
@@ -350,7 +352,7 @@ const mapStateToProps = (state, ownProps) => {
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
     allDevices,
     deviceCount: allDevices.length,
-    logData: state.deployments.byId[ownProps.deployment.id]
+    deployment: state.deployments.byId[ownProps.deployment.id]
   };
 };
 
