@@ -18,12 +18,13 @@ export function fullyDecodeURI(uri) {
   return uri;
 }
 
+const statCollector = (items, statistics) => items.reduce((accu, property) => accu + (statistics[property] || 0), 0);
+
 export const groupDeploymentStats = stats => {
-  const collector = items => items.reduce((accu, property) => accu + (stats[property] || 0), 0);
   return {
-    inprogress: collector(['downloading', 'installing', 'rebooting']),
+    inprogress: statCollector(['downloading', 'installing', 'rebooting'], stats),
     successes: stats.success || 0,
-    failures: collector(['failure', 'aborted', 'noartifact', 'already-installed', 'decommissioned'])
+    failures: statCollector(['failure', 'aborted', 'noartifact', 'already-installed', 'decommissioned'], stats)
   };
 };
 
@@ -313,9 +314,8 @@ export const customSort = (direction, field) => (a, b) => {
   return 0;
 };
 
-export const mapDeviceAttributes = (attributes = []) => {
-  return attributes.reduce((accu, attribute) => ({ ...accu, [attribute.name]: attribute.value }), { device_type: '', artifact_name: '' });
-};
+export const mapDeviceAttributes = (attributes = []) =>
+  attributes.reduce((accu, attribute) => ({ ...accu, [attribute.name]: attribute.value }), { device_type: '', artifact_name: '' });
 
 export const deriveAttributesFromDevices = devices => {
   const availableAttributes = devices.reduce(
@@ -343,14 +343,7 @@ export const getFormattedSize = bytes => {
   return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${suffixes[i]}`;
 };
 
-export class FileSize extends React.PureComponent {
-  render() {
-    return <div style={this.props.style}>{getFormattedSize(this.props.fileSize)}</div>;
-  }
-}
-
-export const timeoutPromise = (url, options = {}, timeout = 1000) =>
-  Promise.race([fetch(url, options), new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeout))]);
+export const FileSize = ({ style, fileSize }) => <div style={style}>{getFormattedSize(fileSize)}</div>;
 
 export const collectAddressesFrom = devices =>
   devices.reduce((collector, device) => {

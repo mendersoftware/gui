@@ -70,7 +70,7 @@ export const getDeploymentCount = (status, startDate, endDate, group) => dispatc
 export const createDeployment = deployment => dispatch =>
   DeploymentsApi.post(`${deploymentsApiUrl}/deployments`, deployment).then(data => {
     const lastslashindex = data.location.lastIndexOf('/');
-    const deploymentId = data.substring(lastslashindex + 1);
+    const deploymentId = data.location.substring(lastslashindex + 1);
     return Promise.all([
       dispatch({
         type: DeploymentConstants.CREATE_DEPLOYMENT,
@@ -109,7 +109,7 @@ export const getSingleDeploymentDevices = id => dispatch =>
 
 export const getDeviceLog = (deploymentId, deviceId) => (dispatch, getState) =>
   DeploymentsApi.getText(`${deploymentsApiUrl}/deployments/${deploymentId}/devices/${deviceId}/log`).then(log => {
-    const devices = getState().deployments.byId[deviceId].devices;
+    const devices = getState().deployments.byId[deploymentId].devices;
     devices[deviceId].log = log;
     return dispatch({
       type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICE_LOG,
