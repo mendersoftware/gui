@@ -11,15 +11,14 @@ const apiUrl = '/api/management/v1';
 const tenantadmUrl = `${apiUrl}/tenantadm`;
 const useradmApiUrl = `${apiUrl}/useradm`;
 
-const handleLoginError = err => dispatch => {
-  const self = this;
+const handleLoginError = (err, has2FA) => dispatch => {
   const is2FABackend = err.error.text.error && err.error.text.error.includes('2fa');
-  if (is2FABackend && !self.props.has2FA) {
+  if (is2FABackend && !has2FA) {
     return dispatch(saveGlobalSettings({ '2fa': 'enabled' }));
   }
   let errMsg = 'There was a problem logging in';
   if (err.res && err.res.body && Object.keys(err.res.body).includes('error')) {
-    const twoFAError = is2FABackend || self.props.has2FA ? ' and verification code' : '';
+    const twoFAError = is2FABackend || has2FA ? ' and verification code' : '';
     const errorMessage = `There was a problem logging in. Please check your email${
       twoFAError ? ',' : ' and'
     } password${twoFAError}. If you still have problems, contact an administrator.`;
@@ -34,9 +33,8 @@ const handleLoginError = err => dispatch => {
 /* 
   User management 
 */
-export const loginUser = userData => dispatch =>
+export const loginUser = userData => (dispatch, getState) =>
   UsersApi.postLogin(`${useradmApiUrl}/auth/login`, userData)
-    .catch(err => dispatch(handleLoginError(err)))
     .then(res => {
       const token = res.text;
       if (!token) {
@@ -57,7 +55,10 @@ export const loginUser = userData => dispatch =>
       var userId = decodeSessionToken(token);
       return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), dispatch(getUser(userId))]);
     })
-    .catch(err => dispatch(handleLoginError(err)));
+    .catch(err => {
+      const has2FA = getState().users.globalSettings.hasOwnProperty('2fa') && getState().users.globalSettings['2fa'] === 'enabled';
+      return dispatch(handleLoginError(err, has2FA));
+    });
 
 export const getUserList = () => dispatch =>
   UsersApi.get(`${useradmApiUrl}/users`)
