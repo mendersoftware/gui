@@ -396,7 +396,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(ExpandedDevice);
+export default connect(mapStateToProps, actionCreators)(ExpandedDevice);

@@ -531,7 +531,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(DeviceGroups);
+export default connect(mapStateToProps, actionCreators)(DeviceGroups);

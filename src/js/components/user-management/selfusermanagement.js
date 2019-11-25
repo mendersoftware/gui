@@ -171,7 +171,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(SelfUserManagement);
+export default connect(mapStateToProps, actionCreators)(SelfUserManagement);

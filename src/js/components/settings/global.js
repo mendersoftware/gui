@@ -24,8 +24,10 @@ export class Global extends React.Component {
     };
   }
   componentDidMount() {
-    this.props.getGlobalSettings();
-    this.props.getDevicesByStatus(null, 1, 500);
+    if (!this.props.settings || !this.props.devicesCount > 20) {
+      this.props.getGlobalSettings();
+      this.props.getDevicesByStatus(null, 1, 500);
+    }
   }
   componentDidUpdate(prevProps) {
     if (!deepCompare(prevProps.settings, this.props.settings)) {
@@ -92,14 +94,14 @@ export class Global extends React.Component {
 
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
-        {this.props.dialog ? null : (
-          <div>
+        {!this.props.dialog && (
+          <>
             <h2 style={{ marginTop: '15px' }}>Global settings</h2>
             <p className="info" style={{ marginBottom: '30px' }}>
               <InfoOutlinedIcon fontSize="small" style={{ verticalAlign: 'middle', margin: '0 6px 4px 0' }} />
               {`These settings apply to all users, so changes made here may affect other users' experience.`}
             </p>
-          </div>
+          </>
         )}
 
         <Form>
@@ -115,15 +117,13 @@ export class Global extends React.Component {
           />
         </Form>
 
-        <div className="margin-top-large">
-          <div className="float-right">
-            <Button disabled={!changed && !this.props.dialog} onClick={() => this.undoChanges()} style={{ marginRight: '10px' }}>
-              Cancel
-            </Button>
-            <Button variant="contained" onClick={() => this.saveSettings()} disabled={!changed} color="primary">
-              Save
-            </Button>
-          </div>
+        <div className="margin-top-large float-right">
+          <Button disabled={!changed && !this.props.dialog} onClick={() => this.undoChanges()} style={{ marginRight: '10px' }}>
+            Cancel
+          </Button>
+          <Button variant="contained" onClick={() => this.saveSettings()} disabled={!changed} color="primary">
+            Save
+          </Button>
         </div>
       </div>
     );
@@ -136,11 +136,9 @@ const mapStateToProps = state => {
   return {
     // limit the selection of the available attribute to AVAILABLE_ATTRIBUTE_LIMIT
     attributes: state.devices.filteringAttributes.slice(0, state.devices.filteringAttributesLimit),
+    devicesCount: Object.keys(state.devices.byId).length,
     settings: state.users.globalSettings
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(Global);
+export default connect(mapStateToProps, actionCreators)(Global);

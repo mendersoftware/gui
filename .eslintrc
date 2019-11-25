@@ -19,11 +19,11 @@
   "globals": {
     "mender_environment": "readonly"
   },
-  "plugins": ["react"],
+  "plugins": ["react", "prettier"],
   "rules": {
+    "prettier/prettier": ["error", { "singleQuote": true, "printWidth": 160 }],
     "consistent-this": ["error", "self"],
     "import/no-named-as-default": 0,
-    "indent": ["error", 2],
     "no-console": 0,
     "no-multiple-empty-lines": 2,
     "quotes": [2, "single", { "allowTemplateLiterals": true }],

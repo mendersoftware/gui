@@ -270,7 +270,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(Past);
+export default connect(mapStateToProps, actionCreators)(Past);

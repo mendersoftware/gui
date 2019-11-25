@@ -146,7 +146,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(CreateDialog);
+export default connect(mapStateToProps, actionCreators)(CreateDialog);

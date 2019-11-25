@@ -81,7 +81,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(Dashboard);
+export default connect(mapStateToProps, actionCreators)(Dashboard);

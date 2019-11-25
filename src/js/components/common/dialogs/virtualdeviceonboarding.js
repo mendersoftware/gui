@@ -94,7 +94,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(VirtualDeviceOnboarding);
+export default connect(mapStateToProps, actionCreators)(VirtualDeviceOnboarding);

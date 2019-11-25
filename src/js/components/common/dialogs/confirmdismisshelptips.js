@@ -39,7 +39,4 @@ export class ConfirmDismissHelptips extends React.PureComponent {
 
 const actionCreators = { setShowOnboardingHelp, setShowDismissOnboardingTipsDialog };
 
-export default connect(
-  null,
-  actionCreators
-)(ConfirmDismissHelptips);
+export default connect(null, actionCreators)(ConfirmDismissHelptips);

@@ -97,7 +97,4 @@ export class BaseOnboardingTip extends React.PureComponent {
 
 const actionCreators = { setShowDismissOnboardingTipsDialog };
 
-export default connect(
-  null,
-  actionCreators
-)(BaseOnboardingTip);
+export default connect(null, actionCreators)(BaseOnboardingTip);

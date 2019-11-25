@@ -119,23 +119,23 @@ export default class Form extends React.Component {
 
   getErrorMsg(validateMethod, args) {
     switch (validateMethod) {
-    case 'isLength':
-      if (args[0] === 1) {
-        return 'This field is required';
-      } else if (args[0] > 1) {
-        return `Must be at least ${args[0]} characters long`;
-      }
-      break;
-    case 'isAlpha':
-      return 'This field must contain only letters';
-    case 'isAlphanumeric':
-      return 'This field must contain only letters or numbers';
-    case 'isNumeric':
-      return 'Please enter a valid code';
-    case 'isEmail':
-      return 'Please enter a valid email address';
-    default:
-      return 'There is an error with this field';
+      case 'isLength':
+        if (args[0] === 1) {
+          return 'This field is required';
+        } else if (args[0] > 1) {
+          return `Must be at least ${args[0]} characters long`;
+        }
+        break;
+      case 'isAlpha':
+        return 'This field must contain only letters';
+      case 'isAlphanumeric':
+        return 'This field must contain only letters or numbers';
+      case 'isNumeric':
+        return 'Please enter a valid code';
+      case 'isEmail':
+        return 'Please enter a valid email address';
+      default:
+        return 'There is an error with this field';
     }
   }
 

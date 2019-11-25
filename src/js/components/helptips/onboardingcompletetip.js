@@ -104,7 +104,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(OnboardingCompleteTip);
+export default connect(mapStateToProps, actionCreators)(OnboardingCompleteTip);

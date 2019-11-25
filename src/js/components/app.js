@@ -81,10 +81,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default compose(
-  withRouter,
-  connect(
-    mapStateToProps,
-    actionCreators
-  )
-)(AppRoot);
+export default compose(withRouter, connect(mapStateToProps, actionCreators))(AppRoot);

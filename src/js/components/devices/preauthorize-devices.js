@@ -44,7 +44,7 @@ export class Preauthorize extends React.Component {
       this._getDevices();
     }
     const self = this;
-    if (!self.state.pageLoading && (!self.props.devices.length && self.props.count)) {
+    if (!self.state.pageLoading && !self.props.devices.length && self.props.count) {
       //if devices empty but count not, put back to first page
       self._handlePageChange(1);
     }
@@ -369,7 +369,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(Preauthorize);
+export default connect(mapStateToProps, actionCreators)(Preauthorize);

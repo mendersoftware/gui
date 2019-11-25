@@ -172,7 +172,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(Authsets);
+export default connect(mapStateToProps, actionCreators)(Authsets);

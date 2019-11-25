@@ -134,7 +134,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(Rejected);
+export default connect(mapStateToProps, actionCreators)(Rejected);

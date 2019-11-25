@@ -158,7 +158,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(Help);
+export default connect(mapStateToProps, actionCreators)(Help);

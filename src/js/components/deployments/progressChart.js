@@ -56,10 +56,10 @@ export default class ProgressChart extends React.Component {
     const momentaryTime = moment(time);
     const timeToNext = nextPhaseStart
       ? {
-        days: nextPhaseStart.diff(momentaryTime, 'days'),
-        hours: nextPhaseStart.diff(momentaryTime, 'hours') - nextPhaseStart.diff(momentaryTime, 'days') * 24,
-        minutes: nextPhaseStart.diff(momentaryTime, 'minutes') - nextPhaseStart.diff(momentaryTime, 'hours') * 60
-      }
+          days: nextPhaseStart.diff(momentaryTime, 'days'),
+          hours: nextPhaseStart.diff(momentaryTime, 'hours') - nextPhaseStart.diff(momentaryTime, 'days') * 24,
+          minutes: nextPhaseStart.diff(momentaryTime, 'minutes') - nextPhaseStart.diff(momentaryTime, 'hours') * 60
+        }
       : null;
     return (
       <div className={`flexbox column progress-chart-container ${this.props.className || ''}`}>

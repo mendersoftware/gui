@@ -128,7 +128,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(Artifacts);
+export default connect(mapStateToProps, actionCreators)(Artifacts);

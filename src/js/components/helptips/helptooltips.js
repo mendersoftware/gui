@@ -28,10 +28,7 @@ const AuthButtonComponent = ({ toggleHelptips }) => (
     </p>
   </div>
 );
-export const AuthButton = connect(
-  mapStateToProps,
-  actionCreators
-)(AuthButtonComponent);
+export const AuthButton = connect(mapStateToProps, actionCreators)(AuthButtonComponent);
 
 const AddGroupComponent = ({ toggleHelptips }) => (
   <div>
@@ -49,10 +46,7 @@ const AddGroupComponent = ({ toggleHelptips }) => (
     </p>
   </div>
 );
-export const AddGroup = connect(
-  mapStateToProps,
-  actionCreators
-)(AddGroupComponent);
+export const AddGroup = connect(mapStateToProps, actionCreators)(AddGroupComponent);
 
 const ExpandDeviceComponent = ({ docsVersion, toggleHelptips }) => (
   <div>
@@ -76,10 +70,7 @@ const ExpandDeviceComponent = ({ docsVersion, toggleHelptips }) => (
     </p>
   </div>
 );
-export const ExpandDevice = connect(
-  mapStateToProps,
-  actionCreators
-)(ExpandDeviceComponent);
+export const ExpandDevice = connect(mapStateToProps, actionCreators)(ExpandDeviceComponent);
 
 const ExpandArtifactComponent = ({ toggleHelptips }) => (
   <div>
@@ -97,7 +88,4 @@ const ExpandArtifactComponent = ({ toggleHelptips }) => (
     </p>
   </div>
 );
-export const ExpandArtifact = connect(
-  mapStateToProps,
-  actionCreators
-)(ExpandArtifactComponent);
+export const ExpandArtifact = connect(mapStateToProps, actionCreators)(ExpandArtifactComponent);

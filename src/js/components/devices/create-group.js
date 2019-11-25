@@ -293,7 +293,4 @@ const mapStateToProps = state => {
   return { devices, globalSettings: state.users.globalSettings, userid: state.users.currentUser };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(CreateGroup);
+export default connect(mapStateToProps, actionCreators)(CreateGroup);

@@ -157,7 +157,4 @@ export class SelectedArtifact extends React.Component {
 
 const actionCreators = { getArtifactUrl, showRemoveArtifactDialog };
 
-export default connect(
-  null,
-  actionCreators
-)(SelectedArtifact);
+export default connect(null, actionCreators)(SelectedArtifact);

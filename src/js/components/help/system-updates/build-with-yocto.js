@@ -73,7 +73,7 @@ export default class BuildYocto extends React.Component {
             <div className="code">
               <CopyToClipboard text={codeToCopy1} onCopy={() => this._copied('copied1')}>
                 <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-                  <CopyPasteIcon/>
+                  <CopyPasteIcon />
                 </IconButton>
               </CopyToClipboard>
               <span style={{ wordBreak: 'break-word' }}>{codeToCopy1}</span>
@@ -90,7 +90,7 @@ export default class BuildYocto extends React.Component {
             <div className="code">
               <CopyToClipboard text={codeToCopy2} onCopy={() => this._copied('copied2')}>
                 <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-                  <CopyPasteIcon/>
+                  <CopyPasteIcon />
                 </IconButton>
               </CopyToClipboard>
               <span style={{ wordBreak: 'break-word' }}>{codeToCopy2}</span>

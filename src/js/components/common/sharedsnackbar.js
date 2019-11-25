@@ -33,7 +33,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(SharedSnackbar);
+export default connect(mapStateToProps, actionCreators)(SharedSnackbar);

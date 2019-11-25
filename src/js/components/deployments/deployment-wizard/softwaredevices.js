@@ -210,7 +210,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(SoftwareDevices);
+export default connect(mapStateToProps, actionCreators)(SoftwareDevices);

@@ -163,7 +163,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(DeviceList);
+export default connect(mapStateToProps, actionCreators)(DeviceList);

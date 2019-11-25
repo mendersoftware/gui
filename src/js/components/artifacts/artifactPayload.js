@@ -38,7 +38,10 @@ export default class ArtifactPayload extends React.PureComponent {
     const summedSize = files.reduce((accu, item) => accu + item.size, 0);
     const attributes = ['Name', 'Checksum', 'Build date', 'Size (uncompressed)'];
     const metaDataObject = this.props.payload.meta_data || {};
-    const metaData = [{ title: 'Type', value: this.props.payload.type_info.type }, { title: 'Total Size (uncompressed)', value: getFormattedSize(summedSize) }];
+    const metaData = [
+      { title: 'Type', value: this.props.payload.type_info.type },
+      { title: 'Total Size (uncompressed)', value: getFormattedSize(summedSize) }
+    ];
     return (
       <div className="file-details">
         <h4 style={style.payloadHeader}>Payload {this.props.index}</h4>

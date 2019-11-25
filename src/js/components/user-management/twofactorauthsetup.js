@@ -128,7 +128,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(TwoFactorAuthSetup);
+export default connect(mapStateToProps, actionCreators)(TwoFactorAuthSetup);

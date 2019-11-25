@@ -272,9 +272,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    actionCreators
-  )(Header)
-);
+export default withRouter(connect(mapStateToProps, actionCreators)(Header));

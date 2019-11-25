@@ -142,7 +142,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(PhysicalDeviceOnboarding);
+export default connect(mapStateToProps, actionCreators)(PhysicalDeviceOnboarding);

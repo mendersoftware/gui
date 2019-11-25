@@ -247,7 +247,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(Authorized);
+export default connect(mapStateToProps, actionCreators)(Authorized);

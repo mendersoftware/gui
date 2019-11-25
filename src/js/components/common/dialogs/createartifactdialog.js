@@ -172,7 +172,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(CreateArtifactDialog);
+export default connect(mapStateToProps, actionCreators)(CreateArtifactDialog);

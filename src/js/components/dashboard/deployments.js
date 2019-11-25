@@ -170,7 +170,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreators
-)(Deployments);
+export default connect(mapStateToProps, actionCreators)(Deployments);
