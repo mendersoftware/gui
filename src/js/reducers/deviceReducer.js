@@ -47,13 +47,13 @@ const deviceReducer = (state = initialState, action) => {
     }
     case DeviceConstants.ADD_TO_GROUP: {
       let group = {
-        deviceIds: [action.device.id],
+        deviceIds: [action.deviceId],
         total: 1
       };
       if (state.groups.byId[action.group]) {
         group = {
           ...state.groups.byId[action.group],
-          deviceIds: [...state.groups.byId[action.group].deviceIds, action.device.id],
+          deviceIds: [...state.groups.byId[action.group].deviceIds, action.deviceId],
           total: state.groups.byId[action.group].total + 1
         };
       }
@@ -85,7 +85,7 @@ const deviceReducer = (state = initialState, action) => {
         }
       };
     case DeviceConstants.REMOVE_FROM_GROUP: {
-      const deviceIdsIndex = state.groups.byId[action.group].deviceIds.findIndex(item => item === action.device.id);
+      const deviceIdsIndex = state.groups.byId[action.group].deviceIds.findIndex(item => item === action.deviceId);
       return {
         ...state,
         groups: {

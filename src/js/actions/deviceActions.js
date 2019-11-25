@@ -21,34 +21,34 @@ export const getGroups = () => dispatch =>
     })
   );
 
-export const addDeviceToGroup = (group, device) => dispatch =>
-  DevicesApi.put(`${inventoryApiUrl}/devices/${device}/group`, { group }).then(() =>
+export const addDeviceToGroup = (group, deviceId) => dispatch =>
+  DevicesApi.put(`${inventoryApiUrl}/devices/${deviceId}/group`, { group }).then(() =>
     Promise.all([
       dispatch({
         type: DeviceConstants.ADD_TO_GROUP,
         group,
-        device
+        deviceId
       }),
       dispatch({
         type: DeviceConstants.REMOVE_FROM_GROUP,
         group: DeviceConstants.UNGROUPED_GROUP.id,
-        device
+        deviceId
       })
     ])
   );
 
-export const removeDeviceFromGroup = (device, group) => dispatch =>
-  DevicesApi.delete(`${inventoryApiUrl}/devices/${device}/group/${group}`).then(() =>
+export const removeDeviceFromGroup = (deviceId, group) => dispatch =>
+  DevicesApi.delete(`${inventoryApiUrl}/devices/${deviceId}/group/${group}`).then(() =>
     Promise.all([
       dispatch({
         type: DeviceConstants.REMOVE_FROM_GROUP,
         group,
-        device
+        deviceId
       }),
       dispatch({
         type: DeviceConstants.ADD_TO_GROUP,
         group: DeviceConstants.UNGROUPED_GROUP.id,
-        device
+        deviceId
       })
     ])
   );
@@ -119,10 +119,10 @@ export const getAllGroupDevices = group => dispatch => {
   return getAllDevices();
 };
 
-export const setFilterAttributes = attrs => dispatch =>
+export const setFilterAttributes = attrs => (dispatch, getState) =>
   dispatch({
     type: DeviceConstants.SET_FILTER_ATTRIBUTES,
-    attributes: attrs
+    attributes: [...getState().devices.filteringAttributes, ...attrs].filter((item, index, array) => array.indexOf(item) == index)
   });
 
 export const setDeviceFilters = filters => dispatch =>
@@ -154,7 +154,7 @@ export const getDevices = (page = defaultPage, perPage = defaultPerPage, searchT
       // for each device, get device identity info
       dispatch(getDevicesWithAuth(devices))
     ];
-    if (res.body > 200) {
+    if (devices.length && devices.length < 200) {
       tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(devices))));
     }
     Promise.all(tasks);
@@ -280,7 +280,7 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
           devices: response.body
         })
       );
-      if (response.body.length > 200) {
+      if (response.body.length < 200) {
         tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(response.body))));
       }
       return Promise.all(tasks);
@@ -292,7 +292,13 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
           status
         })
       );
-      if (status === DeviceConstants.DEVICE_STATES.accepted || status === DeviceConstants.DEVICE_STATES.rejected) {
+      if (status === DeviceConstants.DEVICE_STATES.accepted) {
+        tasks.push(dispatch(getDevicesWithInventory(response.body)));
+        if (response.body.length < 200) {
+          tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(response.body))));
+        }
+      }
+      if (status === DeviceConstants.DEVICE_STATES.rejected) {
         tasks.push(dispatch(getDevicesWithInventory(response.body)));
       }
     }

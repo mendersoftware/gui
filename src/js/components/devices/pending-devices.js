@@ -52,7 +52,7 @@ export class Pending extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return !this.props.devices.every((device, index) => device === nextProps.devices[index]) || true;
+    return !this.props.devices.every((device, index) => device === nextProps.devices[index]) || this.props.globalSettings.id_attribute !== nextProps.globalSettings.id_attribute ||  true;
   }
 
   /*

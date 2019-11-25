@@ -46,7 +46,9 @@ export class DeviceGroups extends React.Component {
       refreshDeviceLength: 10000
     };
     this.props.selectDevices(this.props.acceptedDevicesList);
-    this.props.getAllDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted);
+    if (!this.props.acceptedDevicesList.length && this.props.acceptedDevices < this.props.deploymentDeviceLimit) {
+      this.props.getAllDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted);
+    }
   }
 
   componentDidMount() {
@@ -79,20 +81,11 @@ export class DeviceGroups extends React.Component {
     if (prevProps.selectedGroup !== this.props.selectedGroup) {
       this._refreshGroups();
     }
-
-    if (prevProps.acceptedDevices !== this.props.acceptedDevices) {
-      clearInterval(this.deviceTimer);
-      if (this.props.currentTab === 'Device groups') {
-        this.deviceTimer = setInterval(() => this._getDevices(), this.state.refreshDeviceLength);
-        this._refreshAll();
-      }
-    }
-
     if (prevProps.currentTab !== this.props.currentTab) {
+      this.props.setDeviceFilters([]);
+    }
+    if (prevProps.filters !== this.props.filters || prevProps.groupCount !== this.props.groupCount || prevProps.selectedGroup !== this.props.selectedGroup) {
       clearInterval(this.deviceTimer);
-      if (prevProps.currentTab) {
-        this.props.setDeviceFilters([]);
-      }
       if (this.props.currentTab === 'Device groups') {
         this.deviceTimer = setInterval(() => this._getDevices(), this.state.refreshDeviceLength);
         this._refreshAll();
@@ -122,8 +115,7 @@ export class DeviceGroups extends React.Component {
 
   _handleGroupChange(group) {
     var self = this;
-    const isUngroupedGroup = group === DeviceConstants.UNGROUPED_GROUP.id || group === DeviceConstants.UNGROUPED_GROUP.name;
-    if (isUngroupedGroup) {
+    if (group === DeviceConstants.UNGROUPED_GROUP.id || group === DeviceConstants.UNGROUPED_GROUP.name) {
       group = DeviceConstants.UNGROUPED_GROUP.id;
     }
     self.props.selectGroup(group);
@@ -132,9 +124,9 @@ export class DeviceGroups extends React.Component {
 
   _removeCurrentGroup() {
     var self = this;
-    const devices = self.props.groups.byId[self.props.selectedGroup].deviceIds;
+    const deviceIds = this.props.groupDevices;
     // returns all group devices ids
-    return Promise.all(devices.map((device, index) => self._removeSingleDevice(index, devices.length, device.id, true)))
+    return Promise.all(deviceIds.map((id, index) => self._removeSingleDevice(index, deviceIds.length, id, true)))
       .then(() => {
         self.props.setSnackbar('Group was removed successfully', 5000);
         self.props.selectGroup();
@@ -274,16 +266,14 @@ export class DeviceGroups extends React.Component {
 
   _addListOfDevices(rows, group) {
     var self = this;
-    for (var i = 0; i < rows.length; i++) {
-      group = encodeURIComponent(group);
-      self._addDeviceToGroup(group, self.state.devices[rows[i]], i, rows.length);
-    }
+    group = encodeURIComponent(group);
+    rows.map((row, index) => self._addDeviceToGroup(group, self.props.devices[row], index, rows.length));
   }
 
-  _addDeviceToGroup(group, device, idx, length) {
+  _addDeviceToGroup(group, deviceId, idx, length) {
     var self = this;
     self.props
-      .addDeviceToGroup(group, device.id)
+      .addDeviceToGroup(group, deviceId)
       .then(() => {
         if (idx === length - 1) {
           // reached end of list
@@ -306,9 +296,9 @@ export class DeviceGroups extends React.Component {
     var self = this;
     clearInterval(self.deviceTimer);
     const isGroupRemoval = rows.length >= self.props.groupCount;
-    const isPageRemoval = self.state.devices.length <= rows.length;
+    const isPageRemoval = self.props.devices.length === rows.length;
     const refresh = () => self._refreshAll();
-    const deviceRemovals = rows.map((row, i) => self._removeSingleDevice(i, rows.length, self.state.devices[row].id, isGroupRemoval));
+    const deviceRemovals = rows.map((row, i) => self._removeSingleDevice(i, rows.length, self.props.devices[row], isGroupRemoval));
     return Promise.all(deviceRemovals)
       .then(() => {
         // if rows.length = number on page but < groupCount
@@ -320,8 +310,8 @@ export class DeviceGroups extends React.Component {
         // group now empty, go to all devices
         if (isGroupRemoval) {
           self.props.setSnackbar('Group was removed successfully', 5000);
-          self.props.selectGroup();
-          self.setState({ loading: true, pageNo: 1 }, refresh);
+          self.props.getGroups();
+          self._handleGroupChange();
         }
       })
       .catch(err => console.log(err));
@@ -512,9 +502,11 @@ const mapStateToProps = state => {
   let devices = state.devices.selectedDeviceList;
   let groupCount = state.devices.byStatus.accepted.total;
   let selectedGroup;
+  let groupDevices = [];
   if (!isEmpty(state.devices.groups.selectedGroup)) {
-    groupCount = state.devices.groups.byId[state.devices.groups.selectedGroup].total;
     selectedGroup = state.devices.groups.selectedGroup;
+    groupCount = state.devices.groups.byId[selectedGroup].total;
+    groupDevices = state.devices.groups.byId[selectedGroup].deviceIds;
   } else if (!isEmpty(state.devices.selectedDevice)) {
     devices = [state.devices.selectedDevice];
   }
@@ -525,10 +517,12 @@ const mapStateToProps = state => {
     acceptedDevices: state.devices.byStatus.accepted.total || 0,
     acceptedDevicesList: state.devices.byStatus.accepted.deviceIds.slice(0, 20),
     allCount: state.devices.byStatus.accepted.total + state.devices.byStatus.rejected.total || 0,
-    attributes: state.devices.filteringAttributes || [],
+    attributes: state.devices.filteringAttributes.slice(0, state.devices.filteringAttributesLimit) || [],
     devices,
+    deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
     filters: state.devices.filters || [],
     groups: Object.keys(state.devices.groups.byId) || [],
+    groupDevices,
     groupCount,
     isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,
     selectedGroup,

@@ -105,7 +105,7 @@ export class Devices extends React.Component {
   _redirect(route) {
     var self = this;
     self.setState({ openDeviceExists: false });
-    self.context.router.history.push(route);
+    self.props.history.push(route);
   }
 
   _openSettingsDialog() {
