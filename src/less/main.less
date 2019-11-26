@@ -2496,3 +2496,46 @@ div.shake-alert {
     height: 0;
   }
 }
+
+// Billing
+.billing {
+  display: grid;
+  grid-template-columns: (2 * @defaultLeftBarWidth) 1fr;
+  > div {
+    padding: (2 * @defaultGutterWidth) (3 * @defaultGutterWidth);
+  }
+  .usage-report {
+    background-color: @lightestgrey;
+    position: relative;
+    .overlay {
+      position: absolute;
+      margin: (-2 * @defaultGutterWidth) (-3 * @defaultGutterWidth);
+      backdrop-filter: blur(3px);
+      z-index: 100;
+      width: 100%;
+      height: 100%;
+    }
+    .confirmation-information {
+      max-width: 400px;
+      text-align: center;
+    }
+  }
+  .billing-item {
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr 3fr;
+    text-align: end;
+    > div:first-of-type {
+      text-align: start;
+    }
+  }
+  .billing-interaction {
+    padding-bottom: 2 * @defaultGutterWidth;
+    > div {
+      margin: (0.5 * @defaultGutterWidth) @defaultGutterWidth;
+    }
+    .billing-information {
+      padding: (0.5 * @defaultGutterWidth);
+      border-radius: @defaultGutterWidth;
+    }
+  }
+}

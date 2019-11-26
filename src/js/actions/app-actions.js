@@ -544,6 +544,11 @@ const AppActions = {
 
   abortDeployment: deploymentId => DeploymentsApi.put(`${deploymentsApiUrl}/deployments/${deploymentId}/status`, { status: 'aborted' }),
 
+  getBillingStatement: timeframe =>
+    GeneralApi.get(`${apiUrl}/billing?year=${timeframe.year}&month=${timeframe.month}`)
+      .then(() => {})
+      .catch(e => console.log(e)),
+
   sortTable: (table, column, direction) =>
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SORT_TABLE,

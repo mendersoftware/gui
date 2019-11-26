@@ -5,14 +5,12 @@ import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
 import MyOrganization from './organization';
 import Global from './global';
+import Billing from './billing';
 
 import AppStore from '../../stores/app-store';
 
 // material ui
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
+import { List, ListItem, ListSubheader, ListItemText } from '@material-ui/core';
 
 const routes = {
   global: { route: '/settings/global-settings', text: 'Global settings', admin: true, component: <Global /> },
@@ -20,9 +18,11 @@ const routes = {
   userManagement: { route: '/settings/user-management', text: 'User management', admin: true, component: <UserManagement /> }
 };
 const myOrganization = { route: '/settings/my-organization', text: 'My organization', admin: true, component: <MyOrganization /> };
+const billing = { route: '/settings/billing', text: 'Usage and billing', admin: true, component: <Billing /> };
 const sectionMap = {
   'global-settings': 'global',
   'my-account': 'myAccount',
+  billing: 'billing',
   'user-management': 'userManagement',
   'my-organization': 'myOrganization'
 };
@@ -75,10 +75,14 @@ export default class Settings extends React.Component {
 
   render() {
     var self = this;
+    const isEnterprise = AppStore.getIsEnterprise();
     let relevantItems = routes;
 
     if (self.state.hasMultitenancy) {
       relevantItems['myOrganization'] = myOrganization;
+    }
+    if (isEnterprise) {
+      relevantItems['billing'] = billing;
     }
     var list = Object.entries(relevantItems).reduce((accu, entry) => {
       const key = entry[0];
