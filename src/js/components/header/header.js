@@ -39,7 +39,10 @@ export class Header extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     const sessionId = cookie.load('JWT');
     if (!sessionId || isEmpty(this.props.user) || this.props.user === null) {
-      this._updateUsername().then(() => getOnboardingState());
+      this._updateUsername()
+        .then(() => getOnboardingState())
+        // this is allowed to fail if no user information are available
+        .catch(e => console.log(e));
     } else if (prevState.sessionId !== this.state.sessionId) {
       this._hasDeployments();
       this.props.getReleases();
@@ -99,7 +102,7 @@ export class Header extends React.Component {
     if (!self.state.gettingUser) {
       var userId = self.state.sessionId ? decodeSessionToken(self.state.sessionId) : decodeSessionToken(cookie.load('JWT'));
       if (!userId) {
-        return;
+        return Promise.reject();
       }
       self.setState({ gettingUser: true });
       return self.props
