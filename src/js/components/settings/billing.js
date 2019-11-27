@@ -1,11 +1,13 @@
 import React from 'react';
+import moment from 'moment';
 
 // material ui
-import { Divider, List, ListItem, ListItemText, Button } from '@material-ui/core';
+import { Button, Divider, LinearProgress } from '@material-ui/core';
 
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
 import MonthlyBillingInformation from './monthlybillinginformation';
+import PlanNotification from './plannotification';
 
 const information = {
   activation_total_cost: 19356.76,
@@ -28,6 +30,7 @@ const information = {
   tenant_name: 'Mender',
   timestamp: '2019-08-07T18:29:28.459346'
 };
+const totalFreeCredit = 120;
 
 const interactionList = [
   {
@@ -122,9 +125,11 @@ class Billing extends React.Component {
   }
 
   changeTimeframe(offset) {
-    let { updatedDate } = this.state.billingInformation;
-    updatedDate.setMonth(updatedDate.getMonth() + offset);
-    this.updateBillingStatement(updatedDate);
+    let { timeframe } = this.state.billingInformation;
+    // +1 needed here to align moment with js dates
+    const updatedDate = moment(`${timeframe.month + 1}-15-${timeframe.year}`);
+    updatedDate.add(offset, 'months');
+    this.updateBillingStatement(updatedDate.toDate());
   }
 
   render() {
@@ -134,39 +139,54 @@ class Billing extends React.Component {
     const deviceLimit = AppStore.getDeviceLimit();
     const creationDate = new Date(AppStore.getCurrentUser().created_ts);
     const org = AppStore.getOrganization();
-    const leftoverFreeCredit = billingInformation.summary_total_cost;
     const currentPlan = 'Mender Professional';
+    const expirationDate = moment(creationDate).add(1, 'years');
     return (
       <div className="billing">
-        <div>
-          <h4>Billing information</h4>
-          <List>
-            <ListItem key="name" disabled={true}>
-              <ListItemText primary="Organization name:" secondary={org.name} />
-            </ListItem>
+        <div className="margin-right">
+          <h4 className="text-color">Billing information</h4>
+          <div className="margin-top margin-bottom-small">
+            <div className="explanatory-text billing-subtitle">Organization name:</div>
+            <div>{org.name}</div>
+          </div>
             <Divider />
-            <ListItem key="plan" disabled={true}>
-              <ListItemText primary="Current plan:" secondary={currentPlan || 'Mender Professional'} />
-            </ListItem>
-            <Divider />
-            {deviceLimit && (
+          <PlanNotification currentPlan={currentPlan} />
+          {!!deviceLimit && (
               <>
-                <ListItem key="limit" disabled={true}>
-                  <ListItemText primary="Device limit:" secondary={`${deviceCount}/${deviceLimit}`} />
-                </ListItem>
+              <div className="margin-top margin-bottom-small">
+                <div className="flexbox billing-subtitle">
+                  <div className="explanatory-text margin-right-large">Device limit:</div>
+                  <div>{`${deviceCount}/${deviceLimit}`}</div>
+                </div>
+                <LinearProgress color="primary" classes={{ root: 'progress thick' }} value={(100 / deviceLimit) * deviceCount} variant="determinate" />
+                <div>
+                  <span className="explanatory-text">To increase your device limit contact us at </span>
+                  <a href="mailto:support@mender.io">support@mender.io</a>.
+                </div>
+              </div>
                 <Divider />
               </>
             )}
-            {leftoverFreeCredit < 0 && (
+          {billingInformation.total < 0 && (
               <>
-                <ListItem key="credits" disabled={true}>
-                  <ListItemText primary="Free credit" secondary={leftoverFreeCredit} />
-                </ListItem>
+              <div className="margin-top margin-bottom">
+                <div className="explanatory-text billing-subtitle">Free credit:</div>
+                <div className="bordered credit-container">
+                  <b>{`Credit remaining:  $${Math.abs(billingInformation.total)}`}</b>
+                  <LinearProgress
+                    color="secondary"
+                    classes={{ root: 'progress' }}
+                    value={(100 / totalFreeCredit) * Math.abs(billingInformation.total)}
+                    variant="determinate"
+                  />
+                  <div className="explanatory-text">{`Expires: ${moment(expirationDate).format('MMMM Do Y')}`}</div>
+                </div>
+              </div>
                 <Divider />
               </>
             )}
-          </List>
-          <p>
+          <div className="explanatory-text margin-top">
+            <p className="margin-bottom">
             To update your billing details or for any other support questions, contact us at <a href="mailto:support@mender.io">support@mender.io</a>.
           </p>
           <p>
@@ -184,13 +204,14 @@ class Billing extends React.Component {
             for 1-100,000 devices.
           </p>
         </div>
+        </div>
         <div className="usage-report">
           {!showUsage && (
             <div className="overlay flexbox column centered">
-              <div className="confirmation-information margin-bottom">
-                <h3 className="muted margin-bottom">View your usage for the current billing period?</h3>
-                <p className="muted">Note: this feature may show numbers that differ from your actual invoice.</p>
-                <p className="muted">If you receive a discounted rate, it will NOT be taken into account here and the costs shown will be inaccurate.</p>
+              <div className="confirmation-information margin-bottom explanatory-text">
+                <h3 className="margin-bottom">View your usage for the current billing period?</h3>
+                <p>Note: this feature may show numbers that differ from your actual invoice.</p>
+                <p>If you receive a discounted rate, it will NOT be taken into account here and the costs shown will be inaccurate.</p>
               </div>
               <Button variant="contained" onClick={() => self.setState({ showUsage: true })}>
                 View usage

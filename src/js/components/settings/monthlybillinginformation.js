@@ -11,15 +11,15 @@ const MonthlyBillingInformation = ({ billingInformation, changeTimeframe, creati
   const timeframeStart = moment(timeframe);
   const timeframeEnd = moment(timeframe).add(1, 'months');
   return (
-    <div className={isVisible ? '' : 'muted'}>
-      <div className="flexbox centered space-between">
+    <div className={isVisible ? '' : 'explanatory-text'}>
+      <div className="flexbox centered space-between margin-left-small margin-right-small">
         <h2>Monthly usage</h2>
-        <div className="muted">{`Updated ${moment(timestamp).format('MMMM Do Y HH:mm')} UTC`}</div>
+        <div className="explanatory-text">{`Updated ${moment(timestamp).format('MMMM Do Y HH:mm')} UTC`}</div>
       </div>
-      <div className="flexbox centered" style={{ justifyContent: 'flex-start' }}>
+      <div className="flexbox centered margin-left-small" style={{ justifyContent: 'flex-start' }}>
         <h4>Billing Period:</h4>
-        <div className="muted margin-left">
-          <IconButton onClick={() => changeTimeframe(-1)} disabled={isFirst}>
+        <div className="explanatory-text margin-left">
+          <IconButton onClick={() => changeTimeframe(-1)} disabled={false}>
             <KeyboardArrowLeft />
           </IconButton>
           {`${timeframeStart.format('MMMM Do')} - ${timeframeEnd.format('MMMM Do Y')}`}
@@ -32,7 +32,7 @@ const MonthlyBillingInformation = ({ billingInformation, changeTimeframe, creati
           )}
         </div>
       </div>
-      <div className="billing-interaction">
+      <div className="billing-interaction" style={{ paddingBottom: 0 }}>
         <div className="billing-item">
           <div></div>
           <div>Quantity</div>
@@ -51,15 +51,15 @@ const MonthlyBillingInformation = ({ billingInformation, changeTimeframe, creati
                 <div>{`$ ${information.unitFee}`}</div>
                 <div>{`$ ${information.total}`}</div>
               </div>
-              <div className="muted margin-left-small">{information.explanation}</div>
+              <div className="explanatory-text margin-left-small">{information.explanation}</div>
             </div>
           ))}
         </div>
       ))}
       <Divider />
-      <div className="flexbox column" style={{ alignItems: 'flex-end' }}>
+      <div className="flexbox column margin-right margin-top" style={{ alignItems: 'flex-end' }}>
         <div className="flexbox">
-          <h2 className="muted margin-right-small">Total</h2>
+          <h2 className="explanatory-text margin-right-large">Total</h2>
           <h2>{`$${total}`}</h2>
         </div>
         {isCurrent && <div>{`Next payment date: ${timeframeEnd.format('MMMM Do')}`}</div>}
