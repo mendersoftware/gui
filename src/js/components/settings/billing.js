@@ -2,7 +2,8 @@ import React from 'react';
 import moment from 'moment';
 
 // material ui
-import { Button, Divider, LinearProgress } from '@material-ui/core';
+import { Button, Divider, LinearProgress, Tooltip } from '@material-ui/core';
+import WarningIcon from '@material-ui/icons/Warning';
 
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
@@ -137,10 +138,12 @@ class Billing extends React.Component {
     const { billingInformation, showUsage } = self.state;
     const deviceCount = AppStore.getTotalAcceptedDevices();
     const deviceLimit = AppStore.getDeviceLimit();
-    const creationDate = new Date(AppStore.getCurrentUser().created_ts);
+    const userCreationDate = new Date(AppStore.getCurrentUser().created_ts);
     const org = AppStore.getOrganization();
     const currentPlan = 'Mender Professional';
-    const expirationDate = moment(creationDate).add(1, 'years');
+    const expirationDate = moment(userCreationDate).add(1, 'years');
+    const freeCreditConsumed = (100 / totalFreeCredit) * (totalFreeCredit + billingInformation.total);
+    const freeCreditRunningOut = freeCreditConsumed > 90;
     return (
       <div className="billing">
         <div className="margin-right">
@@ -172,11 +175,24 @@ class Billing extends React.Component {
               <div className="margin-top margin-bottom">
                 <div className="explanatory-text billing-subtitle">Free credit:</div>
                 <div className="bordered credit-container">
+                  <div className={`flexbox centered ${freeCreditRunningOut ? 'failure' : ''}`} style={{ justifyContent: 'flex-start' }}>
                   <b>{`Credit remaining:  $${Math.abs(billingInformation.total)}`}</b>
+                    {freeCreditRunningOut && (
+                      <>
+                        <Tooltip
+                          arrow={true}
+                          title={<p>When you run out of credit, you will start to be billed monthly. Minimum monthly fee is $10.00.</p>}
+                          placement="top"
+                        >
+                          <WarningIcon className="margin-left-small" />
+                        </Tooltip>
+                      </>
+                    )}
+                  </div>
                   <LinearProgress
                     color="secondary"
-                    classes={{ root: 'progress' }}
-                    value={(100 / totalFreeCredit) * Math.abs(billingInformation.total)}
+                    classes={{ root: freeCreditRunningOut ? 'progress credit-warning' : 'progress' }}
+                    value={freeCreditConsumed}
                     variant="determinate"
                   />
                   <div className="explanatory-text">{`Expires: ${moment(expirationDate).format('MMMM Do Y')}`}</div>
@@ -221,7 +237,7 @@ class Billing extends React.Component {
           <MonthlyBillingInformation
             billingInformation={billingInformation}
             changeTimeframe={offset => self.changeTimeframe(offset)}
-            creationDate={creationDate}
+            creationDate={userCreationDate}
             isVisible={showUsage}
           />
         </div>
