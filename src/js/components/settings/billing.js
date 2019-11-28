@@ -10,27 +10,6 @@ import AppActions from '../../actions/app-actions';
 import MonthlyBillingInformation from './monthlybillinginformation';
 import PlanNotification from './plannotification';
 
-const information = {
-  activation_total_cost: 19356.76,
-  activation_unit_fee: 0.39,
-  activation_usage: 50111,
-  balance: -19700,
-  data_storage_total_cost: 0,
-  data_storage_unit_fee: 0.03,
-  data_storage_usage: 0.057,
-  data_transfer_total_cost: 0.05,
-  data_transfer_unit_fee: 0.095,
-  data_transfer_usage: 0.577,
-  device_deployment_total_cost: 6489.42,
-  device_deployment_unit_fee: 0.04,
-  device_deployment_usage: 151000,
-  monthly_device_total_cost: 2150.75,
-  monthly_device_unit_fee: 0.04,
-  monthly_device_usage: 50111,
-  summary_total_cost: 27996.98,
-  tenant_name: 'Mender',
-  timestamp: '2019-08-07T18:29:28.459346'
-};
 const totalFreeCredit = 120;
 
 const interactionList = [
@@ -102,8 +81,7 @@ class Billing extends React.Component {
   updateBillingStatement(date = new Date()) {
     const self = this;
     const timeframe = { month: date.getMonth(), year: date.getFullYear() };
-    // AppActions.getBillingStatus(timeframe).then(information => {
-    AppActions.getBillingStatement(timeframe).then(() => {
+    AppActions.getBillingStatus(timeframe).then(information => {
       const interactions = interactionList.map(item => {
         item.billingInformation = item.billingInformation.map(infoItem => ({
           ...infoItem,
@@ -152,10 +130,10 @@ class Billing extends React.Component {
             <div className="explanatory-text billing-subtitle">Organization name:</div>
             <div>{org.name}</div>
           </div>
-            <Divider />
+          <Divider />
           <PlanNotification currentPlan={currentPlan} />
           {!!deviceLimit && (
-              <>
+            <>
               <div className="margin-top margin-bottom-small">
                 <div className="flexbox billing-subtitle">
                   <div className="explanatory-text margin-right-large">Device limit:</div>
@@ -167,16 +145,16 @@ class Billing extends React.Component {
                   <a href="mailto:support@mender.io">support@mender.io</a>.
                 </div>
               </div>
-                <Divider />
-              </>
-            )}
+              <Divider />
+            </>
+          )}
           {billingInformation.total < 0 && (
-              <>
+            <>
               <div className="margin-top margin-bottom">
                 <div className="explanatory-text billing-subtitle">Free credit:</div>
                 <div className="bordered credit-container">
                   <div className={`flexbox centered ${freeCreditRunningOut ? 'failure' : ''}`} style={{ justifyContent: 'flex-start' }}>
-                  <b>{`Credit remaining:  $${Math.abs(billingInformation.total)}`}</b>
+                    <b>{`Credit remaining:  $${Math.abs(billingInformation.total)}`}</b>
                     {freeCreditRunningOut && (
                       <>
                         <Tooltip
@@ -198,28 +176,28 @@ class Billing extends React.Component {
                   <div className="explanatory-text">{`Expires: ${moment(expirationDate).format('MMMM Do Y')}`}</div>
                 </div>
               </div>
-                <Divider />
-              </>
-            )}
+              <Divider />
+            </>
+          )}
           <div className="explanatory-text margin-top">
             <p className="margin-bottom">
-            To update your billing details or for any other support questions, contact us at <a href="mailto:support@mender.io">support@mender.io</a>.
-          </p>
-          <p>
-            For complete information and full definitions of these fees and how they are calculated, see{' '}
-            <a href="https://mender.io/terms/pricing" target="_blank">
-              https://mender.io/terms/pricing
-            </a>
-            .
-          </p>
-          <p>
-            You can also{' '}
-            <a href="https://mender.io" target="_blank">
-              download the full PDF of unit prices
-            </a>{' '}
-            for 1-100,000 devices.
-          </p>
-        </div>
+              To update your billing details or for any other support questions, contact us at <a href="mailto:support@mender.io">support@mender.io</a>.
+            </p>
+            <p>
+              For complete information and full definitions of these fees and how they are calculated, see{' '}
+              <a href="https://mender.io/terms/pricing" target="_blank">
+                https://mender.io/terms/pricing
+              </a>
+              .
+            </p>
+            <p>
+              You can also{' '}
+              <a href="https://mender.io" target="_blank">
+                download the full PDF of unit prices
+              </a>{' '}
+              for 1-100,000 devices.
+            </p>
+          </div>
         </div>
         <div className="usage-report">
           {!showUsage && (

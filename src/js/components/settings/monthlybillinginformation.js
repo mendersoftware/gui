@@ -19,7 +19,7 @@ const MonthlyBillingInformation = ({ billingInformation, changeTimeframe, creati
       <div className="flexbox centered margin-left-small" style={{ justifyContent: 'flex-start' }}>
         <h4>Billing Period:</h4>
         <div className="explanatory-text margin-left">
-          <IconButton onClick={() => changeTimeframe(-1)} disabled={false}>
+          <IconButton onClick={() => changeTimeframe(-1)} disabled={isFirst}>
             <KeyboardArrowLeft />
           </IconButton>
           {`${timeframeStart.format('MMMM Do')} - ${timeframeEnd.format('MMMM Do Y')}`}
