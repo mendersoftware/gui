@@ -12,6 +12,8 @@ import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import InfoIcon from '@material-ui/icons/Info';
 
+import PlanNotification from './plannotification';
+
 export default class MyOrganization extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -40,6 +42,7 @@ export default class MyOrganization extends React.Component {
     }, 5000);
   }
   render() {
+    const currentPlan = 'Mender Enterprise';
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
         <h2 style={{ marginTop: '15px' }}>My organization</h2>
@@ -85,6 +88,15 @@ export default class MyOrganization extends React.Component {
               </div>
               <Divider />
             </List>
+            <PlanNotification
+              className="margin-left-small margin-right-small"
+              currentPlan={currentPlan}
+              defaultPlan="Mender Enterprise"
+              planClass="MuiTypography-body2 MuiTypography-colorTextSecondary"
+            />
+            <p className="margin-left-small margin-right-small">
+              To update your billing details or for any other support questions, contact us at <a href="mailto:support@mender.io">support@mender.io</a>.
+            </p>
           </div>
         ) : null}
       </div>
