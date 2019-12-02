@@ -168,6 +168,44 @@ exports[`renders correctly 1`] = `
         className="MuiDivider-root"
       />
     </ul>
+    <div
+      className="margin-top margin-bottom-small margin-left-small margin-right-small"
+    >
+      <div
+        className="explanatory-text billing-subtitle"
+      >
+        Current plan:
+      </div>
+      <div
+        className="flexbox space-between"
+      >
+        <div
+          className="MuiTypography-body2 MuiTypography-colorTextSecondary"
+        >
+          Mender Enterprise
+        </div>
+        <a
+          href="https://mender.io/terms/pricing"
+          target="_blank"
+        >
+          Compare product plans
+        </a>
+      </div>
+    </div>
+    <hr
+      className="MuiDivider-root"
+    />
+    <p
+      className="margin-left-small margin-right-small"
+    >
+      To update your billing details or for any other support questions, contact us at 
+      <a
+        href="mailto:support@mender.io"
+      >
+        support@mender.io
+      </a>
+      .
+    </p>
   </div>
 </div>
 `;
