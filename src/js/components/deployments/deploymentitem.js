@@ -62,7 +62,7 @@ export default class DeploymentItem extends React.Component {
     const self = this;
     const { deployment, openReport, index, type, columnHeaders } = self.props;
     const { abort, stats } = self.state;
-    const { inprogress: current, successes, failures } = groupDeploymentStats(stats);
+    const { inprogress: current, failures, pending, successes } = groupDeploymentStats(stats);
 
     const { artifact_name, name, created, device_count, id, status, phases } = deployment;
 
@@ -91,8 +91,9 @@ export default class DeploymentItem extends React.Component {
           <>
             <ProgressChart
               className={columnHeaders[4].class}
-              currentSuccessCount={successes}
+              currentPendingCount={pending}
               currentProgressCount={current}
+              totalSuccessCount={successes}
               totalDeviceCount={device_count}
               totalFailureCount={failures}
               phases={phases}
