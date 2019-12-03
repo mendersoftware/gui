@@ -59,7 +59,7 @@ grep "\\sdocker.mender.io" /etc/hosts >/dev/null 2>&1 || echo "$DOCKER_HOST_IP d
 `;
     if (token) {
       connectionInstructions = `
-TENANT_TOKEN="'${token}'"
+TENANT_TOKEN="${token}"
 sed -i "s/Paste your Hosted Mender token here/$TENANT_TOKEN/" /etc/mender/mender.conf
 `;
     }
