@@ -8,7 +8,7 @@ const PlanNotification = ({ className = '', currentPlan, defaultPlan = 'Mender P
       <div className="explanatory-text billing-subtitle">Current plan:</div>
       <div className="flexbox space-between">
         <div className={planClass}>{currentPlan || defaultPlan}</div>
-        <a href="https://mender.io/terms/pricing" target="_blank">
+        <a href="https://mender.io/products/pricing" target="_blank">
           Compare product plans
         </a>
       </div>

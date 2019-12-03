@@ -185,7 +185,7 @@ exports[`renders correctly 1`] = `
           Mender Enterprise
         </div>
         <a
-          href="https://mender.io/terms/pricing"
+          href="https://mender.io/products/pricing"
           target="_blank"
         >
           Compare product plans

@@ -118,7 +118,7 @@ class Billing extends React.Component {
     const deviceLimit = AppStore.getDeviceLimit();
     const userCreationDate = new Date(AppStore.getCurrentUser().created_ts);
     const org = AppStore.getOrganization();
-    const currentPlan = 'Mender Professional';
+    const currentPlan = AppStore.getIsHosted() ? 'Mender Professional' : 'Mender Enterprise';
     const expirationDate = moment(userCreationDate).add(1, 'years');
     const freeCreditConsumed = (100 / totalFreeCredit) * (totalFreeCredit + billingInformation.total);
     const freeCreditRunningOut = freeCreditConsumed > 90;
@@ -185,8 +185,8 @@ class Billing extends React.Component {
             </p>
             <p>
               For complete information and full definitions of these fees and how they are calculated, see{' '}
-              <a href="https://mender.io/terms/pricing" target="_blank">
-                https://mender.io/terms/pricing
+              <a href="https://mender.io/products/pricing" target="_blank">
+                https://mender.io/products/pricing
               </a>
               .
             </p>

@@ -2,6 +2,7 @@ import React from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import ReactTooltip from 'react-tooltip';
 import AppActions from '../../actions/app-actions';
+import AppStore from '../../stores/app-store';
 
 // material ui
 import List from '@material-ui/core/List';
@@ -42,7 +43,7 @@ export default class MyOrganization extends React.Component {
     }, 5000);
   }
   render() {
-    const currentPlan = 'Mender Enterprise';
+    const currentPlan = AppStore.getIsHosted() ? 'Mender Professional' : 'Mender Enterprise';
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
         <h2 style={{ marginTop: '15px' }}>My organization</h2>
