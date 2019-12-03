@@ -98,7 +98,7 @@ class Billing extends React.Component {
           interactions,
           timeframe,
           timestamp: new Date(information.timestamp),
-          total: information.summary_total_cost
+          total: information.summary_total_cost.toFixed(2)
         }
       });
     });
