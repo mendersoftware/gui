@@ -118,32 +118,24 @@ const deviceReducer = (state = initialState, action) => {
       return { ...state, selectedDevice: action.deviceId };
     case DeviceConstants.SELECT_DEVICES:
       return { ...state, selectedDeviceList: action.deviceIds };
-    case DeviceConstants.RECEIVE_GROUP_DEVICES: {
-      const devicesById = action.devices.reduce((accu, device) => {
-        accu[device.id] = { ...state.byId[device.id], ...device };
-        return accu;
-      }, {});
-      const ids = Object.keys(devicesById);
+    case DeviceConstants.RECEIVE_GROUP_DEVICES:
       return {
         ...state,
-        byId: {
-          ...state.byId,
-          ...devicesById
-        },
-        selectedDeviceList: ids,
+        selectedDeviceList: action.deviceIds,
         groups: {
           ...state.groups,
           byId: {
             ...state.groups.byId,
             [action.group]: {
               deviceIds:
-                ids.length === action.total || ids.length > state.groups.byId[action.group].deviceIds ? ids : state.groups.byId[action.group].deviceIds,
+                action.deviceIds.length === action.total || action.deviceIds.length > state.groups.byId[action.group].deviceIds
+                  ? action.deviceIds
+                  : state.groups.byId[action.group].deviceIds,
               total: action.total
             }
           }
         }
       };
-    }
     case DeviceConstants.SET_FILTER_ATTRIBUTES:
       return { ...state, filteringAttributes: action.attributes };
     case DeviceConstants.RECEIVE_DEVICE:
@@ -172,10 +164,17 @@ const deviceReducer = (state = initialState, action) => {
         }
       };
     }
-
-    case DeviceConstants.RECEIVE_ALL_DEVICES: {
-      const devicesById = action.devices.reduce((accu, device) => {
-        accu[device.id] = { ...state.byId[device.id], ...device };
+    case DeviceConstants.RECEIVE_DEVICES:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          ...action.devicesById
+        }
+      };
+    case DeviceConstants.RECEIVE_ALL_DEVICE_IDS: {
+      const devicesById = action.deviceIds.reduce((accu, deviceId) => {
+        accu[deviceId] = state.byId[deviceId];
         return accu;
       }, {});
       return {
@@ -186,7 +185,6 @@ const deviceReducer = (state = initialState, action) => {
         }
       };
     }
-
     case DeviceConstants.SET_DEVICE_FILTERS: {
       return {
         ...state,
@@ -214,21 +212,11 @@ const deviceReducer = (state = initialState, action) => {
     case DeviceConstants.SET_REJECTED_DEVICES:
     case DeviceConstants.SET_PREAUTHORIZED_DEVICES:
     case DeviceConstants.SET_ACCEPTED_DEVICES: {
-      const devicesById = action.devices.reduce((accu, device) => {
-        delete device.updated_ts;
-        accu[device.id] = { ...state.byId[device.id], ...device, status: action.status };
-        return accu;
-      }, {});
-      const deviceIds = Object.keys(devicesById);
-      const deviceListSelection = action.total ? state.selectedDeviceList : deviceIds;
-      const statusDeviceInfo = action.total ? { deviceIds, total: action.total } : state.byStatus[action.status];
+      const deviceListSelection = action.total ? state.selectedDeviceList : action.deviceIds;
+      const statusDeviceInfo = action.total ? { deviceIds: action.deviceIds, total: action.total } : state.byStatus[action.status];
       return {
         ...state,
         selectedDeviceList: deviceListSelection,
-        byId: {
-          ...state.byId,
-          ...devicesById
-        },
         byStatus: {
           ...state.byStatus,
           [action.status]: {
