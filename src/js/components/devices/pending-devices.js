@@ -45,7 +45,7 @@ export class Pending extends React.Component {
       this._getDevices();
     }
     const self = this;
-    if (!self.props.devices.length && self.props.count) {
+    if (!self.props.devices.length && self.props.count && self.state.pageNo !== 1) {
       //if devices empty but count not, put back to first page
       self._handlePageChange(1);
     }
@@ -91,7 +91,7 @@ export class Pending extends React.Component {
   _getDevicesFromSelectedRows() {
     // use selected rows to get device from corresponding position in devices array
     const self = this;
-    const devices = self.state.selectedRows.map(row => self.props.devices[row]);
+    const devices = self.state.selectedRows.map(row => self.props.fullDevices[row]);
     return devices;
   }
 
@@ -294,6 +294,7 @@ const mapStateToProps = state => {
   return {
     acceptedDevices: state.devices.byStatus.accepted.total || 0,
     count: state.devices.byStatus.pending.total,
+    fullDevices: state.devices.selectedDeviceList.map(id => state.devices.byId[id]),
     devices: state.devices.selectedDeviceList,
     deviceLimit: state.devices.limit,
     globalSettings: state.users.globalSettings,
