@@ -86,21 +86,27 @@ const deviceReducer = (state = initialState, action) => {
       };
     case DeviceConstants.REMOVE_FROM_GROUP: {
       const deviceIdsIndex = state.groups.byId[action.group].deviceIds.findIndex(item => item === action.deviceId);
+      const group = {
+        ...state.groups.byId[action.group],
+        deviceIds: [
+          ...state.groups.byId[action.group].deviceIds.slice(0, deviceIdsIndex),
+          ...state.groups.byId[action.group].deviceIds.slice(deviceIdsIndex + 1)
+        ],
+        total: state.groups.byId[action.group].total - 1
+      };
+      let byId = state.groups.byId;
+      let selectedGroup = state.groups.selectedGroup;
+      if (group.total || group.deviceIds.length) {
+        byId[action.group] = group;
+      } else if (state.groups.selectedGroup === action.group) {
+        selectedGroup = null;
+      }
       return {
         ...state,
         groups: {
           ...state.groups,
-          byId: {
-            ...state.groups.byId,
-            [action.group]: {
-              ...state.groups.byId[action.group],
-              deviceIds: [
-                ...state.groups.byId[action.group].deviceIds.slice(0, deviceIdsIndex),
-                ...state.groups.byId[action.group].deviceIds.slice(deviceIdsIndex + 1)
-              ],
-              total: state.groups.byId[action.group].total - 1
-            }
-          }
+          byId,
+          selectedGroup
         }
       };
     }
