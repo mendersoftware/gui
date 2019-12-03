@@ -67,15 +67,6 @@ export class Authorized extends React.Component {
     console.log('sort');
   }
 
-  _getDevicesFromSelectedRows() {
-    // use selected rows to get device from corresponding position in devices array
-    var devices = [];
-    for (var i = 0; i < this.state.selectedRows.length; i++) {
-      devices.push(this.props.devices[this.state.selectedRows[i]]);
-    }
-    return devices;
-  }
-
   _addToGroup() {
     this.props.addDevicesToGroup(this.state.selectedRows);
   }

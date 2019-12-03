@@ -9,10 +9,6 @@ import { Divider, List, ListItem, ListItemIcon, ListItemText } from '@material-u
 import { Add as AddIcon, Help as HelpIcon } from '@material-ui/icons';
 
 export default class Groups extends React.PureComponent {
-  dialogToggle() {
-    this.props.acceptedCount ? this.props.openGroupDialog() : null;
-  }
-
   render() {
     var allLabel = <span>All devices</span>;
 
@@ -65,7 +61,7 @@ export default class Groups extends React.PureComponent {
             classes={{ root: 'grouplist' }}
             disabled={!this.props.acceptedCount}
             style={this.props.acceptedCount ? null : { color: '#d4e9e7' }}
-            onClick={this.props.acceptedCount ? () => this.dialogToggle() : null}
+            onClick={this.props.acceptedCount ? () => this.props.openGroupDialog() : null}
           >
             <ListItemIcon>
               <AddIcon />
