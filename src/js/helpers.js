@@ -454,7 +454,7 @@ DEBIAN_FRONTEND=noninteractive dpkg -i mender-client_${packageVersion}-1_armhf.d
 DEVICE_TYPE="${deviceType}" && \\${
   token
     ? `
-TENANT_TOKEN=${token} && \\`
+TENANT_TOKEN="${token}" && \\`
     : ''
 }
 mender setup \\
