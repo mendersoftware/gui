@@ -77,7 +77,7 @@ export class CreateGroup extends React.Component {
   }
 
   _createGroupFromSelected() {
-    const devices = this.state.selectedRows.map(row => this.props.devices[row]);
+    const devices = this.state.selectedRows.map(row => this.props.devices[row].id);
     // cookie exists || if no other groups exist, continue to create group
     this.props.addListOfDevices(devices, this.state.newGroup);
     this.setState({ showWarning: false });

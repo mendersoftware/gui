@@ -444,23 +444,25 @@ export class DeviceGroups extends React.Component {
           />
         </div>
 
-        <Dialog open={this.state.addGroup} fullWidth={true} maxWidth="sm">
-          <DialogTitle>Add selected devices to group</DialogTitle>
-          <DialogContent>
-            <GroupSelector
-              devices={this.state.tmpDevices.length}
-              willBeEmpty={this.state.willBeEmpty}
-              tmpGroup={this.state.tmpGroup}
-              selectedGroup={this.props.selectedGroup}
-              selectedGroupName={groupName}
-              changeSelect={group => this._changeTmpGroup(group)}
-              validateName={(invalid, group) => this._validate(invalid, group)}
-              groups={this.props.groups.filter(group => !this._isUngroupedGroup(group))}
-              selectedField={this.state.selectedField}
-            />
-          </DialogContent>
-          <DialogActions>{addActions}</DialogActions>
-        </Dialog>
+        {this.state.addGroup && (
+          <Dialog open={this.state.addGroup} fullWidth={true} maxWidth="sm">
+            <DialogTitle>Add selected devices to group</DialogTitle>
+            <DialogContent>
+              <GroupSelector
+                devices={this.state.tmpDevices.length}
+                willBeEmpty={this.state.willBeEmpty}
+                tmpGroup={this.state.tmpGroup}
+                selectedGroup={this.props.selectedGroup}
+                selectedGroupName={groupName}
+                changeSelect={group => this._changeTmpGroup(group)}
+                validateName={(invalid, group) => this._validate(invalid, group)}
+                groups={this.props.groups.filter(group => !this._isUngroupedGroup(group))}
+                selectedField={this.state.selectedField}
+              />
+            </DialogContent>
+            <DialogActions>{addActions}</DialogActions>
+          </Dialog>
+        )}
 
         <Dialog open={this.state.removeGroup}>
           <DialogTitle>Remove this group?</DialogTitle>
