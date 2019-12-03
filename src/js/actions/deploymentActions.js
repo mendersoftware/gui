@@ -118,13 +118,31 @@ export const getDeviceLog = (deploymentId, deviceId) => (dispatch, getState) =>
     });
   });
 
-export const abortDeployment = deploymentId => dispatch =>
-  DeploymentsApi.put(`${deploymentsApiUrl}/deployments/${deploymentId}/status`, { status: 'aborted' }).then(() =>
-    dispatch({
-      type: DeploymentConstants.REMOVE_DEPLOYMENT,
-      deploymentId
-    })
-  );
+export const abortDeployment = deploymentId => (dispatch, getState) =>
+  DeploymentsApi.put(`${deploymentsApiUrl}/deployments/${deploymentId}/status`, { status: 'aborted' }).then(() => {
+    const state = getState();
+    let status = 'pending';
+    let index = state.deployments.byStatus.pending.deploymentIds.findIndex(id => id === deploymentId);
+    if (index < 0) {
+      status = 'inprogress';
+      index = state.deployments.byStatus.inprogress.deploymentIds.findIndex(id => id === deploymentId);
+    }
+    const deploymentIds = [
+      ...state.deployments.byStatus[status].deploymentIds.slice(0, index),
+      ...state.deployments.byStatus[status].deploymentIds.slice(index)
+    ];
+    const deployments = deploymentIds.reduce((accu, id) => {
+      accu[id] = state.deployments.byId[id];
+      return accu;
+    }, {});
+    return Promise.all([
+      dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status }),
+      dispatch({
+        type: DeploymentConstants.REMOVE_DEPLOYMENT,
+        deploymentId
+      })
+    ]);
+  });
 
 export const selectDeployment = deploymentId => dispatch => {
   let tasks = [
