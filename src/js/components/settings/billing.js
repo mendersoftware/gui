@@ -10,6 +10,7 @@ import AppActions from '../../actions/app-actions';
 import MonthlyBillingInformation from './monthlybillinginformation';
 import PlanNotification from './plannotification';
 
+const accuracy = 4;
 const totalFreeCredit = 120;
 
 const interactionList = [
@@ -81,13 +82,13 @@ class Billing extends React.Component {
   updateBillingStatement(date = new Date()) {
     const self = this;
     const timeframe = { month: date.getMonth(), year: date.getFullYear() };
-    AppActions.getBillingStatus(timeframe).then(information => {
+    AppActions.getBillingStatement(timeframe).then(information => {
       const interactions = interactionList.map(item => {
         item.billingInformation = item.billingInformation.map(infoItem => ({
           ...infoItem,
-          unitFee: information[`${infoItem.key}_unit_fee`],
-          total: information[`${infoItem.key}_total_cost`],
-          quantity: information[`${infoItem.key}_usage`]
+          unitFee: parseFloat(information[`${infoItem.key}_unit_fee`].toFixed(accuracy)),
+          total: parseFloat(information[`${infoItem.key}_total_cost`].toFixed(accuracy)),
+          quantity: parseFloat(information[`${infoItem.key}_usage`].toFixed(accuracy))
         }));
         return item;
       });
