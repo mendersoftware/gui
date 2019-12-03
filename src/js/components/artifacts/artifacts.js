@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, LinearProgress } from '@material-ui/core';
 
@@ -19,10 +20,9 @@ export class Artifacts extends React.Component {
       remove: false
     };
   }
-
   componentDidUpdate(prevProps) {
-    if (prevProps.releases.length !== this.props.releases.length) {
-      const selectedRelease = this.props.releases.find(release => prevProps.releases.every(item => item.Name !== release.Name));
+    if (prevProps.releases.length !== this.props.releases.length && this.props.releases.length) {
+      const selectedRelease = this.props.releases.find(release => prevProps.releases.every(item => item.Name !== release.Name)) || this.props.releases[0];
       this.props.selectArtifact(selectedRelease.Artifacts[0]);
     }
     if (this.props.params && this.props.params.artifactVersion && prevProps.params && prevProps.params.artifactVersion !== this.props.params.artifactVersion) {
@@ -31,8 +31,20 @@ export class Artifacts extends React.Component {
     }
   }
   componentDidMount() {
-    this.artifactTimer = setInterval(() => this._getReleases(), this.state.refreshArtifactsLength);
-    this._getReleases();
+    const self = this;
+    const { artifactVersion } = self.props.match.params;
+    if (!this.props.releases.length) {
+      self._getReleases(artifactVersion);
+    } else {
+      self.setState({ doneLoading: true }, () => {
+        if (artifactVersion) {
+          self.props.selectRelease(artifactVersion);
+        } else {
+          self.props.selectArtifact(self.props.releases[0].Artifacts[0]);
+        }
+      });
+    }
+    self.artifactTimer = setInterval(() => self._getReleases(), self.state.refreshArtifactsLength);
   }
   componentWillUnmount() {
     clearInterval(this.artifactTimer);
@@ -48,7 +60,7 @@ export class Artifacts extends React.Component {
     }
   }
 
-  _getReleases() {
+  _getReleases(artifactVersion) {
     var self = this;
     return self.props
       .getReleases()
@@ -58,6 +70,9 @@ export class Artifacts extends React.Component {
         console.log(errormsg);
       })
       .finally(() => {
+        if (artifactVersion) {
+          self.props.selectRelease(artifactVersion);
+        }
         self.setState({ doneLoading: true });
       });
   }
@@ -128,4 +143,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, actionCreators)(Artifacts);
+export default withRouter(connect(mapStateToProps, actionCreators)(Artifacts));
