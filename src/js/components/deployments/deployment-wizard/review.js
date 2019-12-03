@@ -64,7 +64,7 @@ const Review = props => {
             );
           })}
         </div>
-        {!isEnterprise && <EnterpriseNotification isEnterprise={isEnterprise} benefit="choose to roll out their deployments delayed or in multiple phases" />}
+        {!isEnterprise && <EnterpriseNotification isEnterprise={isEnterprise} benefit="choose to schedule or roll out deployments in multiple phases" />}
       </div>
     </div>
   );

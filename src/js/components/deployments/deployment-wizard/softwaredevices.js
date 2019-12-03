@@ -54,32 +54,22 @@ export default class SoftwareDevices extends React.Component {
       currentState.release = state.release = self.props.deploymentRelease;
     }
     if (currentState.group && currentState.release) {
-      self
-        .filterDeploymentDeviceIds(currentState.group, currentState.release, self.props.device)
-        .then(devices => self.props.deploymentSettings(devices, 'deploymentDeviceIds'));
+      self.getDeploymentDeviceIds(currentState.group, self.props.device).then(devices => self.props.deploymentSettings(devices, 'deploymentDeviceIds'));
     }
     self.setState(state);
   }
 
-  filterDeploymentDeviceIds(group, release, device) {
-    // check that device type matches
+  getDeploymentDeviceIds(group, device) {
+    // no device type checking to not hinder deployments to large device counts, just id mapping
     let promisedDevices;
     if (group === allDevices) {
-      promisedDevices = AppActions.getAllDevicesByStatus('accepted').then(devices => AppActions.getDevicesWithInventory(devices));
+      promisedDevices = AppActions.getAllDevicesByStatus('accepted');
     } else if (device) {
       promisedDevices = Promise.resolve([device]);
     } else {
       promisedDevices = AppActions.getAllDevicesInGroup(group);
     }
-    return promisedDevices.then(devices =>
-      devices.reduce((accu, item) => {
-        const deviceType = item.attributes ? item.attributes.find(attribute => attribute.name === 'device_type').value : null;
-        if (release.device_types_compatible.includes(deviceType)) {
-          accu.push(item.id);
-        }
-        return accu;
-      }, [])
-    );
+    return promisedDevices.then(devices => devices.map(item => item.id));
   }
 
   render() {
@@ -185,15 +175,15 @@ export default class SoftwareDevices extends React.Component {
                     <p className="info" style={{ marginTop: '10px' }}>
                       <ErrorOutlineIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)', position: 'relative' }} />
                       There are no connected devices.{' '}
-                      {hasPending ? 
+                      {hasPending ? (
                         <span>
                           <Link to="/devices/pending">Accept pending devices</Link> to get started.
                         </span>
-                        :
+                      ) : (
                         <span>
                           <Link to="/help/getting-started">Read the help pages</Link> for help with connecting devices.
                         </span>
-                      }
+                      )}
                     </p>
                   )}
                 </div>

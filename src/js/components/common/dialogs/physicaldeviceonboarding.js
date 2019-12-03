@@ -34,7 +34,7 @@ export default class PhysicalDeviceOnboarding extends React.Component {
   copied() {
     var self = this;
     self.setState({ copied: true });
-    advanceOnboarding('devices-accepted-onboarding');
+    advanceOnboarding('dashboard-onboarding-start');
     setTimeout(() => {
       self.setState({ copied: false });
     }, 5000);

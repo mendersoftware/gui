@@ -6,12 +6,13 @@ exports[`renders correctly 1`] = `
     Support
   </h2>
   <p>
-    Contact us directly for support with Hosted Mender at: 
+    Contact us directly for support with Hosted Mender at:
+     
     <a
-      href="mailto:support@hosted.mender.io"
+      href="mailto:support@mender.io"
       target="_blank"
     >
-      support@hosted.mender.io
+      support@mender.io
     </a>
     .
   </p>

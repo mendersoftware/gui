@@ -12,7 +12,7 @@ before_script:
   - export SERVICE_IMAGE=$DOCKER_REPOSITORY:$DOCKER_TAG
   - export COMMIT_TAG="$CI_COMMIT_REF_SLUG"_"$CI_COMMIT_SHA";
   - export GIT_REF=${CI_COMMIT_REF_NAME}
-  - export GIT_COMMIT=$(CI_COMMIT_SHORT_SHA)
+  - export GIT_COMMIT=${CI_COMMIT_SHORT_SHA}
 
 build:
   stage: build
