@@ -124,7 +124,7 @@ class Billing extends React.Component {
     const freeCreditRunningOut = freeCreditConsumed > 90;
     return (
       <div className="billing">
-        <div className="margin-right">
+        <div className="information-overview">
           <h4 className="text-color">Billing information</h4>
           <div className="margin-top margin-bottom-small">
             <div className="explanatory-text billing-subtitle">Organization name:</div>
