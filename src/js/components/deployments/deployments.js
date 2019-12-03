@@ -273,7 +273,7 @@ export class Deployments extends React.Component {
   }
   _showProgress(rowNumber) {
     const self = this;
-    const deployment = this.state.progress[rowNumber];
+    const deployment = self.props.progress[rowNumber];
     this.props.selectDeployment(deployment.id).then(() => self._showReport('active'));
   }
   _abortDeployment(id) {
@@ -481,9 +481,16 @@ const actionCreators = {
   setSnackbar
 };
 
+const tryMapDeployments = (accu, id) => {
+  if (accu.state.deployments.byId[id]) {
+    accu.deployments.push(accu.state.deployments.byId[id]);
+  }
+  return accu;
+};
+
 const mapStateToProps = state => {
-  const progress = state.deployments.byStatus.inprogress.deploymentIds.map(id => state.deployments.byId[id]);
-  const pending = state.deployments.byStatus.pending.deploymentIds.map(id => state.deployments.byId[id]);
+  const progress = state.deployments.byStatus.inprogress.deploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
+  const pending = state.deployments.byStatus.pending.deploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   const past = state.deployments.byStatus.finished.deploymentIds.map(id => state.deployments.byId[id]);
   return {
     finishedCount: state.deployments.byStatus.finished.total,

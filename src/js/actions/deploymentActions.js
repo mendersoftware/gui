@@ -136,5 +136,5 @@ export const selectDeployment = deploymentId => dispatch => {
   if (deploymentId) {
     tasks.push(dispatch(getSingleDeployment(deploymentId)));
   }
-  Promise.all(tasks);
+  return Promise.all(tasks);
 };
