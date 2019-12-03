@@ -75,13 +75,13 @@ export default class Settings extends React.Component {
 
   render() {
     var self = this;
-    const isEnterprise = AppStore.getIsEnterprise();
+    const isHosted = AppStore.getIsHosted();
     let relevantItems = routes;
 
     if (self.state.hasMultitenancy) {
       relevantItems['myOrganization'] = myOrganization;
     }
-    if (isEnterprise) {
+    if (isHosted) {
       relevantItems['billing'] = billing;
     }
     var list = Object.entries(relevantItems).reduce((accu, entry) => {
