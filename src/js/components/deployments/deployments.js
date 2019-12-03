@@ -67,19 +67,25 @@ export class Deployments extends React.Component {
     self.props.groups.map(group => self.props.getAllGroupDevices(group));
     if (this.props.match) {
       const params = new URLSearchParams(this.props.location.search);
-      if (params && params.get('open')) {
-        if (params.get('id')) {
-          self.props.selectDeployment(params.get('id')).then(() => self._showReport(self.state.reportType));
-        } else if (params.get('release')) {
-          self.props.selectRelease(params.get('release'));
-        } else if (params.get('deviceId')) {
-          self.props.selectDevice(params.get('deviceId')).catch(err => {
-            console.log(err);
-            var errMsg = err.res.body.error || '';
-            self.props.setSnackbar(preformatWithRequestID(err.res, `Error fetching device details. ${errMsg}`), null, 'Copy to clipboard');
-          });
-        } else {
-          setTimeout(() => self.setState({ createDialog: true }), 400);
+      if (params) {
+        if (params.get('open')) {
+          if (params.get('id')) {
+            self.props.selectDeployment(params.get('id')).then(() => self._showReport(self.state.reportType));
+          } else if (params.get('release')) {
+            self.props.selectRelease(params.get('release'));
+          } else if (params.get('deviceId')) {
+            self.props.selectDevice(params.get('deviceId')).catch(err => {
+              console.log(err);
+              var errMsg = err.res.body.error || '';
+              self.props.setSnackbar(preformatWithRequestID(err.res, `Error fetching device details. ${errMsg}`), null, 'Copy to clipboard');
+            });
+          } else {
+            setTimeout(() => self.setState({ createDialog: true }), 400);
+          }
+        } else if (params.get('from')) {
+          const startDate = new Date(params.get('from'));
+          startDate.setHours(0, 0, 0);
+          self.setState({ startDate });
         }
       }
     }

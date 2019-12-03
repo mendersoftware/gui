@@ -120,7 +120,7 @@ export class Deployments extends React.Component {
           ) : (
             <div style={this.props.styles}>
               <CompletedDeployments
-                onClick={() => self.props.clickHandle({ route: 'deployments/finished' })}
+                onClick={deploymentsTimeframe => self.props.clickHandle(deploymentsTimeframe)}
                 deployments={finished}
                 cutoffDate={lastDeploymentCheck}
                 innerRef={ref => (this.deploymentsRef = ref)}
