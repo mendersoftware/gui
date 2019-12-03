@@ -83,13 +83,15 @@ export const selectDevices = deviceIds => dispatch => dispatch({ type: DeviceCon
 const reduceReceivedDevices = (devices, ids, state, status) =>
   devices.reduce(
     (accu, device) => {
+      const stateDevice = state.devices.byId[device.id];
       if (status) {
         delete device.updated_ts;
         device.status = status;
       } else {
-        device.attributes = mapDeviceAttributes(device.attributes);
+        const attributes = mapDeviceAttributes(device.attributes);
+        device.attributes = stateDevice ? { ...stateDevice.attributes, ...attributes } : attributes;
       }
-      accu.devicesById[device.id] = { ...state.devices.byId[device.id], ...device };
+      accu.devicesById[device.id] = { ...stateDevice, ...device };
       accu.ids.push(device.id);
       return accu;
     },
