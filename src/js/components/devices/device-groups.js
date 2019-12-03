@@ -523,7 +523,7 @@ const mapStateToProps = state => {
     devices,
     deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
     filters: state.devices.filters || [],
-    groups: Object.keys(state.devices.groups.byId) || [],
+    groups: Object.keys(state.devices.groups.byId).sort() || [],
     groupDevices,
     groupCount,
     isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,
