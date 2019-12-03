@@ -26,8 +26,19 @@ export const setDeploymentRelease = release => dispatch => dispatch({ type: Depl
 // all deployments
 export const getDeployments = (page = default_page, per_page = default_per_page) => dispatch =>
   DeploymentsApi.get(`${deploymentsApiUrl}/deployments?page=${page}&per_page=${per_page}`).then(res => {
-    const { deployments, deploymentIds } = transformDeployments(res.body);
-    return dispatch({ type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments, deploymentIds });
+    const deploymentsByStatus = res.body.reduce(
+      (accu, item) => {
+        accu[item.status].push(item);
+        return accu;
+      },
+      { finished: [], inprogress: [], pending: [] }
+    );
+    return Promise.all(
+      Object.entries(deploymentsByStatus).map(([status, value]) => {
+        const { deployments, deploymentIds } = transformDeployments(value);
+        return dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds });
+      })
+    );
   });
 
 export const getDeploymentsByStatus = (status, page = default_page, per_page = default_per_page, startDate, endDate, group) => dispatch => {
@@ -61,9 +72,9 @@ export const getDeploymentCount = (status, startDate, endDate, group) => dispatc
       }
     );
 
-  return DeploymentCount().then(deployments => {
-    const deploymentIds = deployments.sort(startTimeSort).map(deployment => deployment.id);
-    return dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS_COUNT`], deploymentIds, status });
+  return DeploymentCount().then(deploymentList => {
+    const { deployments, deploymentIds } = transformDeployments(deploymentList);
+    return dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS_COUNT`], deployments, deploymentIds, status });
   });
 };
 

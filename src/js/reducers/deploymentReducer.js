@@ -76,16 +76,6 @@ const deploymentReducer = (state = initialState, action) => {
         }
       };
 
-    case DeploymentConstants.RECEIVE_DEPLOYMENTS:
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          ...action.deployments
-        },
-        selectedDeploymentsList: action.deploymentIds
-      };
-
     case DeploymentConstants.RECEIVE_INPROGRESS_DEPLOYMENTS:
     case DeploymentConstants.RECEIVE_PENDING_DEPLOYMENTS:
     case DeploymentConstants.RECEIVE_FINISHED_DEPLOYMENTS:

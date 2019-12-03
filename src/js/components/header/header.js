@@ -26,7 +26,7 @@ import { getDeviceLimit } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
 import { getUser, getGlobalSettings, setShowHelptips, toggleHelptips } from '../../actions/userActions';
 import { getOnboardingState, setSnackbar } from '../../actions/appActions';
-import { getDeployments, getDeploymentCount } from '../../actions/deploymentActions';
+import { getDeploymentCount } from '../../actions/deploymentActions';
 
 export class Header extends React.Component {
   constructor(props, context) {
@@ -55,7 +55,6 @@ export class Header extends React.Component {
     // check logged in user
     if (this.props.isLoggedIn) {
       this._updateUsername();
-      this.props.getDeployments(1, 1);
       this._checkHeaderInfo();
       this.props.getReleases();
       this.props.getDeviceLimit();
@@ -249,7 +248,6 @@ export class Header extends React.Component {
 
 const actionCreators = {
   getDeviceLimit,
-  getDeployments,
   getDeploymentCount,
   getGlobalSettings,
   getOnboardingState,
