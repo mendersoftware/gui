@@ -2518,12 +2518,14 @@ div.shake-alert {
     .overlay {
       position: absolute;
       margin: (-2 * @defaultGutterWidth) (-3 * @defaultGutterWidth);
+      background-color: fade(@lightestgrey, 50%);
       backdrop-filter: blur(3px);
       z-index: 100;
       width: 100%;
       height: 100%;
     }
     .confirmation-information {
+      margin-top: -25vh;
       max-width: 400px;
       text-align: center;
     }
