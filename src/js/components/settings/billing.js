@@ -206,7 +206,6 @@ class Billing extends React.Component {
               <div className="confirmation-information margin-bottom explanatory-text">
                 <h3 className="margin-bottom">View your usage for the current billing period?</h3>
                 <p>Note: this feature may show numbers that differ from your actual invoice.</p>
-                <p>If you receive a discounted rate, it will NOT be taken into account here and the costs shown will be inaccurate.</p>
               </div>
               <Button variant="contained" onClick={() => self.setState({ showUsage: true })}>
                 View usage
