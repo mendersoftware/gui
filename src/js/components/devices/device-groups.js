@@ -54,17 +54,9 @@ export class DeviceGroups extends React.Component {
   componentDidMount() {
     var self = this;
     clearAllRetryTimers(self.props.setSnackbar);
-    var filters = [];
-
-    if (self.props.params.filters) {
+    if (self.props.filters) {
       self._refreshGroups();
-      var str = decodeURIComponent(self.props.params.filters);
-      var obj = str.split('&');
-      for (var i = 0; i < obj.length; i++) {
-        var f = obj[i].split('=');
-        filters.push({ key: f[0], value: f[1] });
-      }
-      self._onFilterChange(filters);
+      self._onFilterChange(self.props.filters);
     } else {
       // no group, no filters, all devices
       this.deviceTimer = setInterval(() => this._getDevices(), this.state.refreshDeviceLength);
@@ -464,22 +456,26 @@ export class DeviceGroups extends React.Component {
           </Dialog>
         )}
 
-        <Dialog open={this.state.removeGroup}>
-          <DialogTitle>Remove this group?</DialogTitle>
-          <DialogContent>
-            <p>This will remove the group from the list. Are you sure you want to continue?</p>
-          </DialogContent>
-          <DialogActions>{removeActions}</DialogActions>
-        </Dialog>
+        {this.state.removeGroup && (
+          <Dialog open={this.state.removeGroup}>
+            <DialogTitle>Remove this group?</DialogTitle>
+            <DialogContent>
+              <p>This will remove the group from the list. Are you sure you want to continue?</p>
+            </DialogContent>
+            <DialogActions>{removeActions}</DialogActions>
+          </Dialog>
+        )}
 
-        <CreateGroup
-          toggleDialog={() => self.setState({ createGroupDialog: !self.state.createGroupDialog })}
-          open={this.state.createGroupDialog}
-          groups={this.props.groups}
-          changeGroup={() => this._handleGroupChange()}
-          addListOfDevices={(devices, group) => this._createGroupFromDialog(devices, group)}
-          acceptedCount={this.props.acceptedDevices}
-        />
+        {this.state.createGroupDialog && (
+          <CreateGroup
+            toggleDialog={() => self.setState({ createGroupDialog: !self.state.createGroupDialog })}
+            open={this.state.createGroupDialog}
+            groups={this.props.groups}
+            changeGroup={() => this._handleGroupChange()}
+            addListOfDevices={(devices, group) => this._createGroupFromDialog(devices, group)}
+            acceptedCount={this.props.acceptedDevices}
+          />
+        )}
       </div>
     );
   }

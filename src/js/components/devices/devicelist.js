@@ -152,8 +152,8 @@ export class DeviceList extends React.Component {
 const actionCreators = { getDeviceAuth, getDeviceById, setSnackbar };
 const mapStateToProps = (state, ownProps) => {
   const devices = ownProps.devices.reduce((accu, deviceId) => {
-    if (deviceId) {
-      accu.push(state.devices.byId[deviceId]);
+    if (deviceId && state.devices.byId[deviceId]) {
+      accu.push({ auth_sets: [], ...state.devices.byId[deviceId] });
     }
     return accu;
   }, []);

@@ -6,7 +6,7 @@ import pluralize from 'pluralize';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getAllDeviceCounts } from '../../actions/deviceActions';
+import { getAllDeviceCounts, selectDevice, setDeviceFilters } from '../../actions/deviceActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Global from '../settings/global';
@@ -53,6 +53,14 @@ export class Devices extends React.Component {
     clearAllRetryTimers(this.props.setSnackbar);
     this._restartInterval();
     this.props.getAllDeviceCounts();
+    if (this.props.match.params.filters) {
+      var str = decodeURIComponent(this.props.match.params.filters);
+      const filters = str.split('&').map(filter => {
+        const filterPair = filter.split('=');
+        return { key: filterPair[0], value: filterPair[1] };
+      });
+      this.props.setDeviceFilters(filters);
+    }
   }
 
   componentWillUnmount() {
@@ -165,56 +173,59 @@ export class Devices extends React.Component {
           />
         )}
 
-        <Dialog open={this.state.openDeviceExists || false}>
-          <DialogTitle>Device with this identity data already exists</DialogTitle>
-          <DialogContent style={{ overflow: 'hidden' }}>
-            <p>This will remove the group from the list. Are you sure you want to continue?</p>
+        {this.state.openDeviceExists && (
+          <Dialog open={this.state.openDeviceExists || false}>
+            <DialogTitle>Device with this identity data already exists</DialogTitle>
+            <DialogContent style={{ overflow: 'hidden' }}>
+              <p>This will remove the group from the list. Are you sure you want to continue?</p>
+              <p>
+                A device with matching identity data already exists. If you still want to accept {pluralize('this', this.state.duplicates)} pending{' '}
+                {pluralize('device', this.state.duplicates)}, you should first remove the following {pluralize('device', this.state.duplicates)}:
+              </p>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell className="columnHeader" tooltip="ID">
+                      ID
+                    </TableCell>
+                    <TableCell className="columnHeader" tooltip="Status">
+                      Status
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {(this.state.duplicates || []).map(function(device) {
+                    var status = device.status === DEVICE_STATES.accepted ? '' : `/${device.status}`;
+                    return (
+                      <TableRow hover key={device.device_id}>
+                        <TableCell>
+                          <a onClick={() => this._redirect(`/devices${status}/id%3D${device.device_id}`)}>{device.device_id}</a>
+                        </TableCell>
+                        <TableCell className="capitalized">{device.status}</TableCell>
+                      </TableRow>
+                    );
+                  }, this)}
+                </TableBody>
+              </Table>
+            </DialogContent>
+            <DialogActions>{duplicateActions}</DialogActions>
+          </Dialog>
+        )}
 
-            <p>
-              A device with matching identity data already exists. If you still want to accept {pluralize('this', this.state.duplicates)} pending{' '}
-              {pluralize('device', this.state.duplicates)}, you should first remove the following {pluralize('device', this.state.duplicates)}:
-            </p>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell className="columnHeader" tooltip="ID">
-                    ID
-                  </TableCell>
-                  <TableCell className="columnHeader" tooltip="Status">
-                    Status
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {(this.state.duplicates || []).map(function(device) {
-                  var status = device.status === DEVICE_STATES.accepted ? '' : `/${device.status}`;
-                  return (
-                    <TableRow hover key={device.device_id}>
-                      <TableCell>
-                        <a onClick={() => this._redirect(`/devices${status}/id%3D${device.device_id}`)}>{device.device_id}</a>
-                      </TableCell>
-                      <TableCell className="capitalized">{device.status}</TableCell>
-                    </TableRow>
-                  );
-                }, this)}
-              </TableBody>
-            </Table>
-          </DialogContent>
-          <DialogActions>{duplicateActions}</DialogActions>
-        </Dialog>
-
-        <Dialog open={this.state.openIdDialog || false}>
-          <DialogTitle>Default device identity attribute</DialogTitle>
-          <DialogContent style={{ overflow: 'hidden' }}>
-            <Global dialog={true} closeDialog={() => this._openSettingsDialog()} />
-          </DialogContent>
-        </Dialog>
+        {this.state.openIdDialog && (
+          <Dialog open={this.state.openIdDialog || false}>
+            <DialogTitle>Default device identity attribute</DialogTitle>
+            <DialogContent style={{ overflow: 'hidden' }}>
+              <Global dialog={true} closeDialog={() => this._openSettingsDialog()} />
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
     );
   }
 }
 
-const actionCreators = { getAllDeviceCounts, setSnackbar };
+const actionCreators = { getAllDeviceCounts, selectDevice, setDeviceFilters, setSnackbar };
 
 const mapStateToProps = state => {
   let devices = state.devices.selectedDeviceList;
