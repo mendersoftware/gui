@@ -35,6 +35,8 @@ const routes = {
   }
 };
 
+const refreshDeploymentsLength = 30000;
+
 export class Deployments extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -50,7 +52,6 @@ export class Deployments extends React.Component {
       progPage: 1,
       pendPage: 1,
       pastPage: 1,
-      refreshDeploymentsLength: 30000,
       reportDialog: false,
       createDialog: false,
       tabIndex: this._updateActive()
@@ -60,11 +61,10 @@ export class Deployments extends React.Component {
   componentDidMount() {
     var self = this;
     clearAllRetryTimers(self.props.setSnackbar);
-    this.timer = setInterval(() => this._refreshDeployments(), this.state.refreshDeploymentsLength);
-    this._refreshDeployments();
     self.props.selectRelease();
     self.props.selectDevice();
     self.props.groups.map(group => self.props.getAllGroupDevices(group));
+    let startDate = self.state.startDate;
     if (this.props.match) {
       const params = new URLSearchParams(this.props.location.search);
       if (params) {
@@ -83,19 +83,24 @@ export class Deployments extends React.Component {
             setTimeout(() => self.setState({ createDialog: true }), 400);
           }
         } else if (params.get('from')) {
-          const startDate = new Date(params.get('from'));
+          startDate = new Date(params.get('from'));
           startDate.setHours(0, 0, 0);
-          self.setState({ startDate });
         }
       }
     }
     const query = new URLSearchParams(this.props.location.search);
-    this.setState({
-      reportType: this.props.match ? this.props.match.params.tab : 'active',
-      createDialog: Boolean(query.get('open')),
-      doneLoading: true,
-      tabIndex: this._updateActive()
-    });
+    self.setState(
+      {
+        createDialog: Boolean(query.get('open')),
+        reportType: this.props.match ? this.props.match.params.tab : 'active',
+        startDate,
+        tabIndex: this._updateActive()
+      },
+      () => {
+        self.timer = setInterval(() => self._refreshDeployments(), refreshDeploymentsLength);
+        self._refreshDeployments();
+      }
+    );
   }
 
   componentWillUnmount() {
@@ -142,7 +147,7 @@ export class Deployments extends React.Component {
       .catch(err => {
         console.log(err);
         var errormsg = err.error || 'Please check your connection';
-        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, self.state.refreshDeploymentsLength, self.props.setSnackbar);
+        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, self.props.setSnackbar);
       });
   }
   _refreshPending(page, per_page = DEFAULT_PENDING_INPROGRESS_COUNT) {
@@ -162,7 +167,7 @@ export class Deployments extends React.Component {
       .catch(err => {
         console.log(err);
         var errormsg = err.error || 'Please check your connection';
-        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, self.state.refreshDeploymentsLength, self.props.setSnackbar);
+        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, self.props.setSnackbar);
       });
   }
 
@@ -177,7 +182,7 @@ export class Deployments extends React.Component {
     self.setState({ doneLoading: false }, () => {
       clearInterval(self.timer);
       self._refreshPast(page, startDate, endDate, per_page, group);
-      self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
+      self.timer = setInterval(() => self._refreshDeployments(), refreshDeploymentsLength);
     });
   }
   _refreshPast(page, startDate, endDate, per_page, group) {
@@ -217,7 +222,7 @@ export class Deployments extends React.Component {
         console.log(err);
         self.setState({ doneLoading: true });
         var errormsg = err.error || 'Please check your connection';
-        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, self.state.refreshDeploymentsLength, self.props.setSnackbar);
+        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, self.props.setSnackbar);
       });
   }
 
@@ -258,7 +263,7 @@ export class Deployments extends React.Component {
           self.props.history.push(routes.active.route);
           self._changeTab(routes.active.route);
         } else {
-          self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
+          self.timer = setInterval(() => self._refreshDeployments(), refreshDeploymentsLength);
           self._refreshDeployments();
         }
         self.props.setSnackbar('Deployment created successfully', 8000);
@@ -288,7 +293,7 @@ export class Deployments extends React.Component {
       .abortDeployment(id)
       .then(() => {
         clearInterval(self.timer);
-        self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
+        self.timer = setInterval(() => self._refreshDeployments(), refreshDeploymentsLength);
         self._refreshDeployments();
         self.setState({ createDialog: false, doneLoading: false });
         self.props.setSnackbar('The deployment was successfully aborted');
@@ -321,7 +326,7 @@ export class Deployments extends React.Component {
   _changeTab(tabIndex) {
     var self = this;
     clearInterval(self.timer);
-    self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
+    self.timer = setInterval(() => self._refreshDeployments(), refreshDeploymentsLength);
     self.setState({ tabIndex, pendPage: 1, pastPage: 1, progPage: 1 }, () => self._refreshDeployments());
     self.props.setSnackbar('');
   }

@@ -48,6 +48,15 @@ export class Past extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      (this.props.startDate !== prevProps.startDate && this.state.startDate && this.state.startDate !== this.props.startDate) ||
+      (this.props.endDate !== prevProps.endDate && this.state.endDate && this.state.endDate !== this.props.endDate)
+    ) {
+      this._handleDateChange(1, this.props.startDate, this.props.endDate);
+    }
+  }
+
   onCloseSnackbar = (_, reason) => {
     if (reason === 'clickaway') {
       return;
