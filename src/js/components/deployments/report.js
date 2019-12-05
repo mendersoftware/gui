@@ -119,7 +119,7 @@ export class DeploymentReport extends React.Component {
     var start = pageNo * this.state.perPage - this.state.perPage;
     var end = Math.min(this.props.deviceCount, pageNo * this.state.perPage);
     // cut slice from full list of devices
-    const devices = this.state.showPending ? this.props.allDevices.filter(this._filterPending) : this.props.allDevices;
+    const devices = this.state.showPending ? this.props.allDevices : this.props.allDevices.filter(this._filterPending);
     const slice = devices.slice(start, end);
     if (!isEqual(slice, this.state.pagedDevices)) {
       var diff = differenceWith(slice, this.state.pagedDevices, isEqual);
