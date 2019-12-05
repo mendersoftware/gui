@@ -46,6 +46,7 @@ export class Deployments extends React.Component {
     const tonight = new Date();
     tonight.setHours(23, 59, 59);
     this.state = {
+      deploymentObject: {},
       invalid: true,
       startDate: today,
       endDate: tonight,
@@ -229,7 +230,7 @@ export class Deployments extends React.Component {
 
   _retryDeployment(deployment, devices) {
     const self = this;
-    const release = { name: deployment.artifact_name, device_types_compatible: deployment.device_types_compatible || [] };
+    const release = { Name: deployment.artifact_name, device_types_compatible: deployment.device_types_compatible || [] };
     const deploymentObject = {
       group: deployment.name,
       deploymentDeviceIds: devices.map(item => item.id),
@@ -277,7 +278,7 @@ export class Deployments extends React.Component {
           }
           self.props.saveGlobalSettings({ previousPhases: previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT) });
         }
-        self.setState({ doneLoading: true, deploymentObject: null });
+        self.setState({ doneLoading: true, deploymentObject: {} });
       });
   }
   _showReport(reportType) {
@@ -469,7 +470,7 @@ export class Deployments extends React.Component {
         {createDialog && (
           <CreateDialog
             open={createDialog}
-            onDismiss={() => self.setState({ createDialog: false, deploymentObject: null })}
+            onDismiss={() => self.setState({ createDialog: false, deploymentObject: {} })}
             onScheduleSubmit={(...args) => this._onScheduleSubmit(...args)}
             deploymentObject={deploymentObject}
           />

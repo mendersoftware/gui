@@ -44,8 +44,8 @@ export class SoftwareDevices extends React.Component {
     }
     const currentState = Object.assign({}, self.state, state);
     if (!currentState.release && property !== 'release') {
-      self.props.deploymentSettings(self.props.deploymentRelease, 'release');
-      currentState.release = state.release = self.props.deploymentRelease;
+      self.props.deploymentSettings(self.props.release, 'release');
+      currentState.release = state.release = self.props.release;
     }
     if ((self.props.device || currentState.group) && currentState.release) {
       state.deploymentDeviceIds = self.props.acceptedDevices;
@@ -63,10 +63,12 @@ export class SoftwareDevices extends React.Component {
 
   render() {
     const self = this;
-    const { device, deploymentAnchor, deploymentRelease, group, groups, hasDevices, hasPending, release, releases } = self.props;
+    const { device, deploymentAnchor, deploymentObject, groups, hasDevices, hasPending, release, releases } = self.props;
     const { deploymentDeviceIds } = self.state;
 
-    const selectedRelease = deploymentRelease ? deploymentRelease : release;
+    const selectedRelease = deploymentObject.release ? deploymentObject.release : release;
+
+    const group = self.props.group;
 
     const releaseDeviceTypes = selectedRelease ? selectedRelease.device_types_compatible : [];
     const devicetypesInfo = (
@@ -126,8 +128,8 @@ export class SoftwareDevices extends React.Component {
         ) : (
           <form className="flexbox centered column">
             <div ref={ref => (this.releaseRef = ref)} style={{ minWidth: 'min-content', minHeight: '105px' }}>
-              {deploymentRelease ? (
-                <TextField value={deploymentRelease.name} label="Release" disabled={true} style={styles.infoStyle} />
+              {selectedRelease ? (
+                <TextField value={selectedRelease.Name} label="Release" disabled={true} style={styles.infoStyle} />
               ) : (
                 <AutoSelect
                   label="Select a Release to deploy"
@@ -135,7 +137,7 @@ export class SoftwareDevices extends React.Component {
                   items={releaseItems}
                   onChange={item => self.deploymentSettingsUpdate(item, 'release')}
                   style={styles.textField}
-                  value={release ? release.name : null}
+                  value={release ? release.Name : null}
                 />
               )}
               {releaseDeviceTypes.length ? (

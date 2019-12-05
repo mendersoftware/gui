@@ -36,13 +36,16 @@ export class CreateDialog extends React.Component {
     };
   }
 
+  componentDidMount() {
+    if (Object.keys(this.props.deploymentObject).length) {
+      this.setState({ ...this.props.deploymentObject });
+    }
+  }
+
   componentDidUpdate(prevProps) {
     // Update state if single device passed from props
     if (prevProps.device !== this.props.device && this.props.device) {
       this.setState({ deploymentDeviceIds: [this.props.device.id] });
-    }
-    if (prevProps.deploymentObject !== this.props.deploymentObject && this.props.deploymentObject) {
-      this.setState({ ...this.props.deploymentObject });
     }
   }
 
@@ -81,16 +84,16 @@ export class CreateDialog extends React.Component {
 
   render() {
     const self = this;
-    const { device, open, release } = self.props;
+    const { device, deploymentObject, open, release } = self.props;
     const { activeStep, deploymentDeviceIds, group, phases, steps } = self.state;
     const ComponentToShow = steps[activeStep].component;
     const deploymentSettings = {
-      group: device ? device.id : group,
-      deploymentDeviceIds,
-      release: release || self.state.release,
+      group: device ? device.id : deploymentObject.group || group,
+      deploymentDeviceIds: deploymentObject.deploymentDeviceIds || deploymentDeviceIds,
+      release: deploymentObject.release || release || self.state.release,
       phases
     };
-    const disabled = activeStep === 0 ? !(deploymentSettings.release && deploymentDeviceIds.length) : self.state.disableSchedule;
+    const disabled = activeStep === 0 ? !(deploymentSettings.release && deploymentSettings.deploymentDeviceIds.length) : self.state.disableSchedule;
     const finalStep = activeStep === steps.length - 1;
     return (
       <Dialog open={open || false} fullWidth={false} maxWidth="md">
@@ -108,6 +111,7 @@ export class CreateDialog extends React.Component {
             deploymentAnchor={this.deploymentRef}
             {...self.props}
             {...self.state}
+            {...deploymentSettings}
             deploymentSettings={(...args) => self.deploymentSettings(...args)}
           />
         </DialogContent>
