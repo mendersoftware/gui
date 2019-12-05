@@ -26,6 +26,7 @@ exports[`renders correctly 1`] = `
         >
           <div
             aria-haspopup="listbox"
+            aria-labelledby=" "
             className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input MuiInputBase-inputSelect MuiInputBase-inputAdornedEnd"
             onBlur={[Function]}
             onClick={[Function]}
@@ -37,6 +38,8 @@ exports[`renders correctly 1`] = `
             testvalue
           </div>
           <input
+            autoFocus={false}
+            onAnimationStart={[Function]}
             type="hidden"
             value="testkey"
           />
@@ -110,6 +113,7 @@ exports[`renders correctly 1`] = `
             className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="filter-undefined"
+            onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}

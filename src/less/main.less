@@ -1300,7 +1300,8 @@ input[required]:-moz-ui-invalid {
   background-color: rgba(66, 66, 66, 0.03);
 }
 
-p.info, span.info {
+p.info,
+span.info {
   margin: 15px 0;
   color: rgba(66, 66, 66, 0.6);
 
@@ -2490,5 +2491,77 @@ div.shake-alert {
   &.shrunk {
     border: none;
     height: 0;
+  }
+}
+
+// Billing
+.billing {
+  display: grid;
+  grid-template-columns: (1.5 * @defaultLeftBarWidth) 1fr;
+  .information-overview {
+    padding: (2 * @defaultGutterWidth) 2.35vw;
+    margin-top: (-2 * @defaultGutterWidth);
+  }
+  .explanatory-text {
+    color: @verylightgrey;
+  }
+  .billing-subtitle {
+    margin-bottom: (0.5 * @defaultGutterWidth);
+  }
+  .usage-report {
+    padding: (2 * @defaultGutterWidth) (3 * @defaultGutterWidth);
+    margin-top: (-2 * @defaultGutterWidth);
+    background-color: @lightestgrey;
+    position: relative;
+    .overlay {
+      position: absolute;
+      margin: (-2 * @defaultGutterWidth) (-3 * @defaultGutterWidth);
+      background-color: fade(@lightestgrey, 50%);
+      backdrop-filter: blur(3px);
+      z-index: 100;
+      width: 100%;
+      height: 100%;
+    }
+    .confirmation-information {
+      margin-top: -25vh;
+      max-width: 400px;
+      text-align: center;
+    }
+  }
+  .credit-container {
+    padding: @defaultGutterWidth (2 * @defaultGutterWidth);
+    border-radius: 50px;
+    border-color: @grey;
+  }
+  .progress {
+    height: (0.5 * @defaultGutterWidth);
+    margin: (0.5 * @defaultGutterWidth) 0;
+    background-color: @bordercolor; // this is unfortunately necessary as mui doesn't apply the grey class after the mui classes otherwise
+    &.thick {
+      height: @defaultGutterWidth;
+    }
+    &.credit-warning .MuiLinearProgress-bar {
+      background-color: @menderwarning;
+    }
+  }
+  .billing-item {
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr 3fr;
+    text-align: end;
+    padding: (0.5 * @defaultGutterWidth) @defaultGutterWidth;
+    > div:first-of-type {
+      text-align: start;
+    }
+  }
+  .billing-interaction {
+    padding-bottom: 2 * @defaultGutterWidth;
+    > div {
+      margin: (0.5 * @defaultGutterWidth) @defaultGutterWidth;
+    }
+    .billing-information {
+      border-radius: @defaultGutterWidth;
+      border-color: @grey;
+      margin-bottom: (0.5 * @defaultGutterWidth);
+    }
   }
 }

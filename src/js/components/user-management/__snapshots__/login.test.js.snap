@@ -46,6 +46,7 @@ exports[`renders correctly 1`] = `
             disabled={false}
             id="email"
             name="email"
+            onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -90,6 +91,7 @@ exports[`renders correctly 1`] = `
               disabled={false}
               id="password"
               name="password"
+              onAnimationStart={[Function]}
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
@@ -159,7 +161,7 @@ exports[`renders correctly 1`] = `
       >
         <span
           aria-disabled={false}
-          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-102 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-107 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
           onBlur={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
@@ -178,8 +180,9 @@ exports[`renders correctly 1`] = `
           >
             <input
               checked={false}
-              className="PrivateSwitchBase-input-105"
+              className="PrivateSwitchBase-input-110"
               data-indeterminate={false}
+              disabled={false}
               id="noExpiry"
               name="noExpiry"
               onChange={[Function]}

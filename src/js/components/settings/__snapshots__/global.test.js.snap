@@ -71,8 +71,9 @@ exports[`renders correctly 1`] = `
       >
         <div
           aria-haspopup="listbox"
+          aria-labelledby=" deviceid"
           className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input MuiInputBase-inputSelect"
-          id="select-selector"
+          id="deviceid"
           onBlur={[Function]}
           onClick={[Function]}
           onFocus={[Function]}
@@ -85,6 +86,7 @@ exports[`renders correctly 1`] = `
         <input
           id="simple-select"
           name="selector"
+          onAnimationStart={[Function]}
           type="hidden"
           value="Device ID"
         />
