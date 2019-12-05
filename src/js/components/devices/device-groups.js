@@ -45,7 +45,6 @@ export class DeviceGroups extends React.Component {
       tmpDevices: [],
       refreshDeviceLength: 10000
     };
-    this.props.selectDevices(this.props.acceptedDevicesList);
     if (!this.props.acceptedDevicesList.length && this.props.acceptedDevices < this.props.deploymentDeviceLimit) {
       this.props.getAllDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted);
     }
@@ -53,6 +52,7 @@ export class DeviceGroups extends React.Component {
 
   componentDidMount() {
     var self = this;
+    self.props.selectDevices(this.props.acceptedDevicesList);
     clearAllRetryTimers(self.props.setSnackbar);
     if (self.props.filters) {
       self._refreshGroups();
