@@ -18,9 +18,7 @@ export class Global extends React.Component {
     super(props, context);
     this.state = {
       disabled: true,
-      updatedSettings: {
-        id_attribute: 'Device ID'
-      }
+      updatedSettings: {}
     };
   }
   componentDidMount() {
@@ -28,6 +26,7 @@ export class Global extends React.Component {
       this.props.getGlobalSettings();
       this.props.getDevicesByStatus(null, 1, 500);
     }
+    this.setState({ updatedSettings: { id_attribute: this.props.settings.id_attribute } });
   }
   componentDidUpdate(prevProps) {
     if (!deepCompare(prevProps.settings, this.props.settings)) {
@@ -36,7 +35,7 @@ export class Global extends React.Component {
   }
 
   changeIdAttribute(value) {
-    const updatedSettings = Object.assign({}, this.state.updatedSettings, { id_attribute: value });
+    const updatedSettings = { ...this.state.updatedSettings, id_attribute: value };
     this.setState({ updatedSettings });
   }
 

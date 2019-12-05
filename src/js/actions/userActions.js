@@ -108,7 +108,7 @@ export const getGlobalSettings = () => dispatch =>
 export const saveGlobalSettings = settings => (dispatch, getState) => {
   const updatedSettings = { ...getState().users.globalSettings, ...settings };
   return UsersApi.post(`${useradmApiUrl}/settings`, updatedSettings).then(() => {
-    let tasks = [dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, updatedSettings })];
+    let tasks = [dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: updatedSettings })];
     if (updatedSettings.hasOwnProperty('2fa') && updatedSettings['2fa'] === 'enabled') {
       const state = getState();
       tasks.push(dispatch(get2FAQRCode(state.users.byId[state.users.currentUser].email)));
