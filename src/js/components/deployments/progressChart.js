@@ -22,28 +22,10 @@ export default class ProgressChart extends React.Component {
   }
 
   render() {
-    let { created, currentProgressCount, currentSuccessCount, id, totalDeviceCount, totalFailureCount, phases } = this.props;
+    let { created, currentProgressCount, id, totalDeviceCount, totalFailureCount, totalSuccessCount, phases } = this.props;
     const { time } = this.state;
 
-    phases = phases && phases.length ? phases : [{ id, device_count: currentSuccessCount, batch_size: totalDeviceCount, start_ts: created }];
-
-    // to display failures per phase we have to approximate the failure count per phase by keeping track of the failures we display in previous phases and
-    // deduct the phase failures from the remainder - so if we have a total of 5 failures reported and are in the 3rd phase, with each phase before reporting
-    // 3 successful deployments -> the 3rd phase should end up with 1 failure so far
-    const displayablePhases = phases.reduce(
-      (accu, phase) => {
-        const possiblePhaseFailures = totalFailureCount - accu.countedFailures;
-        // if there are too few devices in a phase to register, fallback to occured failures, as those have definitely happened
-        const devicesInPhase = Math.max(Math.floor((totalDeviceCount / 100) * phase.batch_size), possiblePhaseFailures);
-        const possiblePhaseSuccesses = Math.max(phase.device_count - possiblePhaseFailures - currentProgressCount, 0);
-        phase.successWidth = (possiblePhaseSuccesses / devicesInPhase) * 100;
-        phase.failureWidth = (possiblePhaseFailures / devicesInPhase) * 100;
-        accu.displayablePhases.push(phase);
-        accu.countedFailures = accu.countedFailures + possiblePhaseFailures;
-        return accu;
-      },
-      { countedFailures: 0, displayablePhases: [] }
-    ).displayablePhases;
+    phases = phases && phases.length ? phases : [{ id, device_count: totalSuccessCount, batch_size: totalDeviceCount, start_ts: created }];
 
     const currentPhase =
       phases
@@ -61,6 +43,39 @@ export default class ProgressChart extends React.Component {
         minutes: nextPhaseStart.diff(momentaryTime, 'minutes') - nextPhaseStart.diff(momentaryTime, 'hours') * 60
       }
       : null;
+
+    // to display failures per phase we have to approximate the failure count per phase by keeping track of the failures we display in previous phases and
+    // deduct the phase failures from the remainder - so if we have a total of 5 failures reported and are in the 3rd phase, with each phase before reporting
+    // 3 successful deployments -> the 3rd phase should end up with 1 failure so far
+    const displayablePhases = phases.reduce(
+      (accu, phase) => {
+        // ongoing phases might not have a device_count yet - so we calculate it
+        let expectedDeviceCountInPhase = Math.floor((totalDeviceCount / 100) * phase.batch_size) || phase.batch_size;
+        // for phases with more successes than phase.device_count or more failures than phase.device_count we have to guess what phase to put them in =>
+        // because of that we have to limit per phase success/ failure counts to the phase.device_count and split the progress between those with a bias for success,
+        // therefore we have to track the remaining width and work with it - until we get per phase success & failure information
+        let leftoverDevices = expectedDeviceCountInPhase;
+        const possiblePhaseSuccesses = Math.max(Math.min(phase.device_count, totalSuccessCount - accu.countedSuccesses), 0);
+        leftoverDevices -= possiblePhaseSuccesses;
+        const possiblePhaseFailures = Math.max(Math.min(leftoverDevices, totalFailureCount - accu.countedFailures), 0);
+        leftoverDevices -= possiblePhaseFailures;
+        const possiblePhaseProgress = Math.max(Math.min(leftoverDevices, currentProgressCount - accu.countedProgress), 0);
+        // if there are too few devices in a phase to register, fallback to occured deployments, as those have definitely happened
+        expectedDeviceCountInPhase = Math.max(expectedDeviceCountInPhase, possiblePhaseSuccesses + possiblePhaseProgress + possiblePhaseFailures, 0);
+        phase.successWidth = (possiblePhaseSuccesses / expectedDeviceCountInPhase) * 100 || 0;
+        phase.failureWidth = (possiblePhaseFailures / expectedDeviceCountInPhase) * 100 || 0;
+        if (phase.id === currentPhase.id || leftoverDevices > 0) {
+          phase.progressWidth = (possiblePhaseProgress / expectedDeviceCountInPhase) * 100;
+          accu.countedProgress += possiblePhaseProgress;
+        }
+        accu.countedFailures += possiblePhaseFailures;
+        accu.countedSuccesses += possiblePhaseSuccesses;
+        accu.displayablePhases.push(phase);
+        return accu;
+      },
+      { countedFailures: 0, countedSuccesses: 0, countedProgress: 0, displayablePhases: [] }
+    ).displayablePhases;
+
     return (
       <div className={`flexbox column progress-chart-container ${this.props.className || ''}`}>
         <div className="flexbox space-between centered">
@@ -73,7 +88,8 @@ export default class ProgressChart extends React.Component {
               return (
                 <div key={`deployment-phase-${index}`} className="progress-step" style={style}>
                   <div className="progress-bar green" style={{ width: `${phase.successWidth}%` }} />
-                  <div className="progress-bar failure" style={{ width: `${phase.failureWidth}%` }} />
+                  <div className="progress-bar warning" style={{ width: `${phase.failureWidth}%` }} />
+                  {!!phase.progressWidth && <div className="progress-bar" style={{ width: `${phase.progressWidth}%`, backgroundColor: '#aaa' }} />}
                 </div>
               );
             })}
@@ -82,10 +98,10 @@ export default class ProgressChart extends React.Component {
             </div>
           </div>
           <div
-            className={`flexbox space-between centered ${totalFailureCount ? 'failure' : 'muted'}`}
+            className={`flexbox space-between centered ${totalFailureCount ? 'warning' : 'muted'}`}
             style={{ width: '60%', marginLeft: 15, justifyContent: 'flex-end' }}
           >
-            <WarningIcon style={{ fontSize: 16, marginRight: 10 }} />
+            {!!totalFailureCount && <WarningIcon style={{ fontSize: 16, marginRight: 10 }} />}
             {`${totalFailureCount} ${pluralize('failure', totalFailureCount)}`}
           </div>
         </div>

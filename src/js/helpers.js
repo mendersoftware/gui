@@ -20,11 +20,13 @@ export function fullyDecodeURI(uri) {
 }
 
 export const groupDeploymentStats = stats => {
-  const collector = items => items.reduce((accu, property) => accu + (stats[property] || 0), 0);
+  const collector = items => items.reduce((accu, property) => accu + Number(stats[property] || 0), 0);
   return {
+    // don't include 'pending' as inprogress, as all remaining devices will be pending - we don't discriminate based on phase membership
     inprogress: collector(['downloading', 'installing', 'rebooting']),
-    successes: stats.success || 0,
-    failures: collector(['failure', 'aborted', 'noartifact', 'already-installed', 'decommissioned'])
+    pending: stats['pending'] || 0,
+    successes: collector(['success', 'already-installed']),
+    failures: collector(['failure', 'aborted', 'noartifact', 'decommissioned'])
   };
 };
 

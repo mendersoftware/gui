@@ -23,15 +23,15 @@ exports[`renders correctly 1`] = `
           className="progress-bar green"
           style={
             Object {
-              "width": "NaN%",
+              "width": "0%",
             }
           }
         />
         <div
-          className="progress-bar failure"
+          className="progress-bar warning"
           style={
             Object {
-              "width": "NaN%",
+              "width": "0%",
             }
           }
         />
@@ -59,23 +59,6 @@ exports[`renders correctly 1`] = `
         }
       }
     >
-      <svg
-        aria-hidden="true"
-        className="MuiSvgIcon-root"
-        focusable="false"
-        role="presentation"
-        style={
-          Object {
-            "fontSize": 16,
-            "marginRight": 10,
-          }
-        }
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
-        />
-      </svg>
       undefined failures
     </div>
   </div>
