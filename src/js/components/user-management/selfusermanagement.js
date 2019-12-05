@@ -25,10 +25,10 @@ export class SelfUserManagement extends React.Component {
     }
   }
 
-  _editSubmit(userData) {
+  _editSubmit(userId, userData) {
     var self = this;
     return self.props
-      .editUser(self.props.currentUser.id, userData)
+      .editUser(userId, userData)
       .then(() => {
         self.props.setSnackbar('The user has been updated.');
         self.setState({ editPass: false, editEmail: false });
@@ -114,7 +114,7 @@ export class SelfUserManagement extends React.Component {
         </Form>
 
         <Form
-          onSubmit={userdata => self._editSubmit(userdata)}
+          onSubmit={userdata => self._editSubmit(currentUser.id, userdata)}
           handleCancel={() => self.handlePass()}
           submitLabel="Save"
           submitButtonId="submit_pass"

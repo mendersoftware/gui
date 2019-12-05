@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 // material ui
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 
 import UserList from './userlist';
 import UserForm from './userform';
@@ -117,12 +117,6 @@ export class UserManagement extends React.Component {
           editUser={user => this._openEdit(user)}
           removeUser={user => this._openRemove(user)}
           currentUser={this.props.currentUser}
-        />
-        <Snackbar
-          bodyStyle={{ maxWidth: this.props.snackbar.maxWidth }}
-          open={this.props.snackbar.open}
-          message={this.props.snackbar.message}
-          autoHideDuration={8000}
         />
 
         <Dialog open={this.state.editDialog || false} fullWidth={true} maxWidth="sm">
