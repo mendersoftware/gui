@@ -134,7 +134,7 @@ export class DeploymentReport extends React.Component {
   render() {
     const self = this;
     const { allDevices, deployment, deviceCount } = self.props;
-    const { stats, devices } = deployment;
+    const { stats = {}, devices } = deployment;
     const { deviceId, showDialog } = self.state;
     const logData = deviceId ? devices[deviceId].log : null;
     var deviceList = this.state.pagedDevices || [];
@@ -318,18 +318,18 @@ export class DeploymentReport extends React.Component {
           )}
         </div>
 
-        <div style={{ minHeight: '20vh' }}>
-          <DeviceList created={deployment.created} status={deployment.status} devices={deviceList} viewLog={id => this.viewLog(id)} past={this.props.past} />
-          {deviceCount ? (
+        {(deviceCount || deployment.deviceCount || !!deviceList.length) && (
+          <div style={{ minHeight: '20vh' }}>
+            <DeviceList created={deployment.created} status={deployment.status} devices={deviceList} viewLog={id => this.viewLog(id)} past={this.props.past} />
             <Pagination
-              count={deviceCount}
+              count={deviceCount || deployment.deviceCount}
               rowsPerPage={self.state.perPage}
               onChangeRowsPerPage={perPage => self.setState({ currentPage: 1, perPage })}
               page={self.state.currentPage}
               onChangePage={page => self._handlePageChange(page)}
             />
-          ) : null}
-        </div>
+          </div>
+        )}
 
         <Dialog open={showDialog}>
           <DialogTitle>Deployment log for device</DialogTitle>

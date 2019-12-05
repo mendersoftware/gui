@@ -174,7 +174,7 @@ export class ExpandedDevice extends React.Component {
     var deviceInventory = [];
 
     var waiting = false;
-    if (attributes && Object.entries(attributes).length > 0) {
+    if (attributes && Object.values(attributes).some(i => i)) {
       var sortedAttributes = Object.entries(attributes).sort((a, b) => a[0].localeCompare(b[0]));
       deviceInventory = sortedAttributes.reduce((accu, attribute, i) => {
         var secondaryText = Array.isArray(attribute[1]) ? attribute[1].join(',') : attribute[1];

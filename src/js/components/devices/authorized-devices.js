@@ -159,7 +159,7 @@ export class Authorized extends React.Component {
       <div className="relative">
         <Loader show={loading} />
 
-        {devices.length > 0 || !loading ? (
+        {devices.length > 0 && !loading ? (
           <div>
             <div style={{ marginLeft: '20px' }}>
               <h2>{this.state.nameEdit ? groupNameInputs : <span>{groupLabel}</span>}</h2>

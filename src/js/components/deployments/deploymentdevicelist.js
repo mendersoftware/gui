@@ -81,7 +81,7 @@ export class ProgressDeviceList extends React.Component {
       );
     });
     const headerStyle = { position: 'sticky', top: 0, background: 'white', zIndex: 1 };
-    return deviceList.length ? (
+    return (
       <div style={{ maxHeight: '40vh', overflowX: 'auto' }}>
         <Table>
           <TableHead>
@@ -99,7 +99,7 @@ export class ProgressDeviceList extends React.Component {
           <TableBody>{deviceList}</TableBody>
         </Table>
       </div>
-    ) : null;
+    );
   }
 }
 

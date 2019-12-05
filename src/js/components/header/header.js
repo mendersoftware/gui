@@ -140,7 +140,20 @@ export class Header extends React.Component {
   render() {
     const self = this;
     const { anchorEl } = self.state;
-    const { location, user } = self.props;
+
+    const {
+      acceptedDevices,
+      announcement,
+      deviceLimit,
+      docsVersion,
+      inProgress,
+      location,
+      multitenancy,
+      pendingDevices,
+      showHelptips,
+      toggleHelptips,
+      user
+    } = self.props;
 
     const menuButtonColor = '#c7c7c7';
 
@@ -170,11 +183,11 @@ export class Header extends React.Component {
           <MenuItem component={Link} to="/settings/my-account">
             My account
           </MenuItem>
-          {this.props.multitenancy ? (
+          {multitenancy && (
             <MenuItem component={Link} to="/settings/my-organization">
               My organization
             </MenuItem>
-          ) : null}
+          )}
           <MenuItem component={Link} to="/settings/user-management">
             User management
           </MenuItem>
@@ -215,7 +228,7 @@ export class Header extends React.Component {
                     Mender is currently running in <b>demo mode</b>.
                   </p>
                   <p>
-                    <a href={`https://docs.mender.io/${this.props.docsVersion}/administration/production-installation`} target="_blank">
+                    <a href={`https://docs.mender.io/${docsVersion}/administration/production-installation`} target="_blank">
                       See the documentation for help switching to production mode
                     </a>
                     .
@@ -226,18 +239,18 @@ export class Header extends React.Component {
           </Toolbar>
 
           <Toolbar key={1} style={{ flexGrow: '2' }}>
-            {this.props.announcement ? (
+            {announcement ? (
               <div id="announcement" className={this.state.showAnnouncement ? 'fadeInSlow' : 'fadeOutSlow'} style={{ display: 'flex', alignItems: 'center' }}>
                 <AnnounceIcon className="red" style={{ marginRight: '4px', height: '18px', minWidth: '24px' }} />
-                <Linkify properties={{ target: '_blank' }}>{this.props.announcement}</Linkify>
+                <Linkify properties={{ target: '_blank' }}>{announcement}</Linkify>
                 <CloseIcon style={{ marginLeft: '4px', height: '16px', verticalAlign: 'bottom' }} onClick={() => this._hideAnnouncement()} />
               </div>
             ) : null}
           </Toolbar>
 
           <Toolbar key={2} style={{ flexShrink: '0' }}>
-            <DeviceNotifications pending={this.props.pendingDevices} total={this.props.acceptedDevices} limit={this.props.deviceLimit} />
-            <DeploymentNotifications inprogress={this.props.inProgress} />
+            <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
+            <DeploymentNotifications inprogress={inProgress} />
             {dropDownElement}
           </Toolbar>
         </Toolbar>
