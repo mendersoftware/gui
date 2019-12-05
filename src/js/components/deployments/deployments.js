@@ -8,6 +8,7 @@ import { selectRelease } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, createDeployment, getDeploymentCount, getDeploymentsByStatus, selectDeployment } from '../../actions/deploymentActions';
+import * as DeviceConstants from '../../constants/deviceConstants';
 
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 
@@ -503,10 +504,15 @@ const mapStateToProps = state => {
   const progress = state.deployments.byStatus.inprogress.deploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   const pending = state.deployments.byStatus.pending.deploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   const past = state.deployments.byStatus.finished.deploymentIds.map(id => state.deployments.byId[id]);
+  const groups = Object.keys(state.devices.groups.byId).reduce((accu, group) => {
+    if (group !== DeviceConstants.UNGROUPED_GROUP.id) {
+      accu.push(group);
+    }
+    return accu;
+  }, []);
   return {
     finishedCount: state.deployments.byStatus.finished.total,
-    groups: Object.keys(state.devices.groups.byId),
-    groupDevices: state.devices.groups.byId,
+    groups,
     hasDeployments: Object.keys(state.deployments.byId).length > 0,
     isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,
     onboardingComplete: state.users.onboarding.complete,

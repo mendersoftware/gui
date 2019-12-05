@@ -511,6 +511,14 @@ const mapStateToProps = state => {
   const ungroupedDevices = state.devices.groups.byId[DeviceConstants.UNGROUPED_GROUP.id]
     ? state.devices.groups.byId[DeviceConstants.UNGROUPED_GROUP.id].deviceIds
     : [];
+  const groups = Object.entries(state.devices.groups.byId)
+    .reduce((accu, [key, value]) => {
+      if (value.total || value.deviceIds.length) {
+        accu.push(key);
+      }
+      return accu;
+    }, [])
+    .sort();
   return {
     acceptedDevices: state.devices.byStatus.accepted.total || 0,
     acceptedDevicesList: state.devices.byStatus.accepted.deviceIds.slice(0, 20),
@@ -519,7 +527,7 @@ const mapStateToProps = state => {
     devices,
     deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
     filters: state.devices.filters || [],
-    groups: Object.keys(state.devices.groups.byId).sort() || [],
+    groups,
     groupDevices,
     groupCount,
     isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,

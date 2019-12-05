@@ -15,10 +15,20 @@ const inventoryApiUrl = `${apiUrl}/inventory`;
 
 export const getGroups = () => dispatch =>
   DevicesApi.get(`${inventoryApiUrl}/groups`).then(res =>
-    dispatch({
-      type: DeviceConstants.RECEIVE_GROUPS,
-      groups: res.body
-    })
+    Promise.all(
+      res.body.reduce(
+        (accu, group) => {
+          accu.push(dispatch(getGroupDevices(group)));
+          return accu;
+        },
+        [
+          dispatch({
+            type: DeviceConstants.RECEIVE_GROUPS,
+            groups: res.body
+          })
+        ]
+      )
+    )
   );
 
 export const addDeviceToGroup = (group, deviceId) => dispatch =>
