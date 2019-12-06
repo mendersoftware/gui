@@ -5,6 +5,7 @@ import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
 import MyOrganization from './organization';
 import Global from './global';
+import Billing from './billing';
 
 // material ui
 import { List, ListItem, ListItemText, ListSubheader } from '@material-ui/core';
@@ -15,9 +16,11 @@ const routes = {
   userManagement: { route: '/settings/user-management', text: 'User management', admin: true, component: <UserManagement /> }
 };
 const myOrganization = { route: '/settings/my-organization', text: 'My organization', admin: true, component: <MyOrganization /> };
+const billing = { route: '/settings/billing', text: 'Usage and billing', admin: true, component: <Billing /> };
 const sectionMap = {
   'global-settings': 'global',
   'my-account': 'myAccount',
+  billing: 'billing',
   'user-management': 'userManagement',
   'my-organization': 'myOrganization'
 };
@@ -46,10 +49,14 @@ export class Settings extends React.Component {
 
   render() {
     var self = this;
+    const isHosted = AppStore.getIsHosted();
     let relevantItems = routes;
 
     if (self.props.hasMultitenancy) {
       relevantItems['myOrganization'] = myOrganization;
+    }
+    if (isHosted) {
+      relevantItems['billing'] = billing;
     }
     var list = Object.entries(relevantItems).reduce((accu, entry) => {
       const key = entry[0];

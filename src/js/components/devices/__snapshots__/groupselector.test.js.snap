@@ -27,6 +27,7 @@ exports[`renders correctly 1`] = `
         className="MuiInputBase-input MuiInput-input"
         disabled={false}
         id="group-name-input"
+        onAnimationStart={[Function]}
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}

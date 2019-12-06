@@ -7,6 +7,7 @@ import { Button, Divider, Icon, List, ListItem, ListItemText } from '@material-u
 import InfoIcon from '@material-ui/icons/Info';
 
 import { getUserOrganization } from '../../actions/userActions';
+import PlanNotification from './plannotification';
 
 export class MyOrganization extends React.Component {
   constructor(props, context) {
@@ -27,6 +28,7 @@ export class MyOrganization extends React.Component {
     }, 5000);
   }
   render() {
+    const currentPlan = AppStore.getIsHosted() ? 'Mender Professional' : 'Mender Enterprise';
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
         <h2 style={{ marginTop: '15px' }}>My organization</h2>
@@ -72,6 +74,15 @@ export class MyOrganization extends React.Component {
               </div>
               <Divider />
             </List>
+            <PlanNotification
+              className="margin-left-small margin-right-small"
+              currentPlan={currentPlan}
+              defaultPlan="Mender Enterprise"
+              planClass="MuiTypography-body2 MuiTypography-colorTextSecondary"
+            />
+            <p className="margin-left-small margin-right-small">
+              To update your billing details or for any other support questions, contact us at <a href="mailto:support@mender.io">support@mender.io</a>.
+            </p>
           </div>
         ) : null}
       </div>

@@ -21,10 +21,13 @@ export function fullyDecodeURI(uri) {
 const statCollector = (items, statistics) => items.reduce((accu, property) => accu + (statistics[property] || 0), 0);
 
 export const groupDeploymentStats = stats => {
+  const collector = items => items.reduce((accu, property) => accu + Number(stats[property] || 0), 0);
   return {
-    inprogress: statCollector(['downloading', 'installing', 'rebooting'], stats),
-    successes: stats.success || 0,
-    failures: statCollector(['failure', 'aborted', 'noartifact', 'already-installed', 'decommissioned'], stats)
+    // don't include 'pending' as inprogress, as all remaining devices will be pending - we don't discriminate based on phase membership
+    inprogress: collector(['downloading', 'installing', 'rebooting']),
+    pending: stats['pending'] || 0,
+    successes: collector(['success', 'already-installed']),
+    failures: collector(['failure', 'aborted', 'noartifact', 'decommissioned'])
   };
 };
 
@@ -528,11 +531,11 @@ ${enterpriseSettings}`;
   let codeToCopy = `sudo bash -c 'wget https://d1b0l86ne08fsf.cloudfront.net/${packageVersion}/dist-packages/debian/armhf/mender-client_${packageVersion}-1_armhf.deb && \\
 DEBIAN_FRONTEND=noninteractive dpkg -i mender-client_${packageVersion}-1_armhf.deb && \\
 DEVICE_TYPE="${deviceType}" && \\${
-    token
-      ? `
-TENANT_TOKEN=${token} && \\`
-      : ''
-  }
+  token
+    ? `
+TENANT_TOKEN="${token}" && \\`
+    : ''
+}
 mender setup \\
   --device-type $DEVICE_TYPE \\
 ${connectionInstructions} && \\

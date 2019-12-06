@@ -46,7 +46,7 @@ exports[`renders correctly 1`] = `
       </th>
       <th
         aria-sort={null}
-        className="MuiTableCell-root columnHeader MuiTableCell-head"
+        className="MuiTableCell-root MuiTableCell-head columnHeader"
         scope="col"
         style={
           Object {

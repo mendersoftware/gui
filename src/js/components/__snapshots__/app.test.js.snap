@@ -170,7 +170,7 @@ Array [
           }
         >
           <button
-            className="MuiButtonBase-root MuiButton-root header-dropdown MuiButton-text"
+            className="MuiButtonBase-root MuiButton-root MuiButton-text header-dropdown"
             disabled={false}
             onBlur={[Function]}
             onClick={[Function]}

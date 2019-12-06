@@ -5,7 +5,7 @@ exports[`renders correctly 1`] = `
   className="tab-container"
 >
   <button
-    className="MuiButtonBase-root MuiButton-root top-right-button MuiButton-contained MuiButton-containedSecondary"
+    className="MuiButtonBase-root MuiButton-root MuiButton-contained top-right-button MuiButton-containedSecondary"
     disabled={false}
     onBlur={[Function]}
     onClick={[Function]}

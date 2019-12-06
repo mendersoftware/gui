@@ -56,7 +56,7 @@ exports[`renders correctly 1`] = `
     className="body"
   />
   <div
-    className="flexbox margin-top "
+    className="MuiTablePagination-root flexbox margin-top "
   >
     <div
       className="MuiToolbar-root MuiToolbar-regular MuiTablePagination-toolbar MuiToolbar-gutters"
@@ -64,17 +64,18 @@ exports[`renders correctly 1`] = `
       <div
         className="MuiTablePagination-spacer flexbox no-basis"
       />
-      <span
-        className="MuiTypography-root MuiTablePagination-caption MuiTypography-caption MuiTypography-colorInherit"
+      <p
+        className="MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit"
       >
         Rows
-      </span>
+      </p>
       <div
         className="MuiInputBase-root MuiTablePagination-input MuiTablePagination-selectRoot"
         onClick={[Function]}
       >
         <div
           aria-haspopup="listbox"
+          aria-labelledby=" "
           className="MuiSelect-root MuiSelect-select MuiTablePagination-select MuiSelect-selectMenu MuiInputBase-input MuiInputBase-inputSelect"
           onBlur={[Function]}
           onClick={[Function]}
@@ -86,6 +87,7 @@ exports[`renders correctly 1`] = `
           10
         </div>
         <input
+          onAnimationStart={[Function]}
           type="hidden"
           value={10}
         />
@@ -101,11 +103,11 @@ exports[`renders correctly 1`] = `
           />
         </svg>
       </div>
-      <span
-        className="MuiTypography-root MuiTablePagination-caption MuiTypography-caption MuiTypography-colorInherit"
+      <p
+        className="MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit"
       >
         
-      </span>
+      </p>
       <div
         className="flexbox"
       >
@@ -206,8 +208,10 @@ exports[`renders correctly 1`] = `
             >
               <input
                 aria-invalid={false}
+                autoFocus={false}
                 className="MuiInputBase-input MuiInput-input MuiInputBase-inputMarginDense MuiInput-inputMarginDense"
                 disabled={false}
+                onAnimationStart={[Function]}
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}

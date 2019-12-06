@@ -44,6 +44,7 @@ exports[`renders correctly 1`] = `
           disabled={false}
           id="email"
           name="email"
+          onAnimationStart={[Function]}
           onBlur={[Function]}
           onChange={[Function]}
           onFocus={[Function]}
@@ -62,7 +63,7 @@ exports[`renders correctly 1`] = `
     className="margin-top flexbox space-between"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root button-holder undefined MuiButton-text MuiButton-textPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-text button-holder undefined MuiButton-textPrimary"
       disabled={false}
       id="change_pass"
       onBlur={[Function]}
