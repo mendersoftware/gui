@@ -314,24 +314,35 @@ export const customSort = (direction, field) => (a, b) => {
   return 0;
 };
 
+export const duplicateFilter = (item, index, array) => array.indexOf(item) == index;
+
 export const mapDeviceAttributes = (attributes = []) =>
   attributes.reduce((accu, attribute) => ({ ...accu, [attribute.name]: attribute.value }), { device_type: '', artifact_name: '' });
 
+const deriveAttributePopularity = (accu, sourceObject = {}) =>
+  Object.keys(sourceObject).reduce((keyAccu, key) => {
+    keyAccu[key] = keyAccu[key] + 1 || 1;
+    return keyAccu;
+  }, accu);
+
 export const deriveAttributesFromDevices = devices => {
   const availableAttributes = devices.reduce(
-    (accu, item) =>
+    (accu, item) => {
       // count popularity of attributes to create attribute sort order
-      Object.keys(item.identity_data).reduce((keyAccu, key) => {
-        keyAccu[key] = keyAccu[key] + 1 || 1;
-        return keyAccu;
-      }, accu),
-    {}
+      accu.identity_data = deriveAttributePopularity(accu.identity_data, item.identity_data);
+      accu.attributes = deriveAttributePopularity(accu.attributes, item.attributes);
+      return accu;
+    },
+    { identity_data: [], attributes: [] }
   );
-  const attributes = Object.entries(availableAttributes)
-    // sort in reverse order, to have most common attribute at the top of the select
+  // sort in reverse order, to have most common attribute at the top of the select
+  const inventoryAttributes = Object.entries(availableAttributes.attributes)
     .sort((a, b) => b[1] - a[1])
     .map(a => a[0]);
-  return attributes;
+  const identityAttributes = Object.entries(availableAttributes.identity_data)
+    .sort((a, b) => b[1] - a[1])
+    .map(a => a[0]);
+  return { identityAttributes, inventoryAttributes };
 };
 
 export const getFormattedSize = bytes => {

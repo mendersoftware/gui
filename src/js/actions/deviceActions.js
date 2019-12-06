@@ -2,7 +2,7 @@ import parse from 'parse-link-header';
 
 import DevicesApi from '../api/devices-api';
 import * as DeviceConstants from '../constants/deviceConstants';
-import { deriveAttributesFromDevices, mapDeviceAttributes } from '../helpers';
+import { deriveAttributesFromDevices, duplicateFilter, mapDeviceAttributes } from '../helpers';
 
 // default per page until pagination and counting integrated
 const defaultPerPage = 20;
@@ -113,6 +113,7 @@ export const getGroupDevices = (group, page = defaultPage, perPage = defaultPerP
   return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${perPage}&page=${page}${forGroup}`).then(res => {
     const deviceAccu = reduceReceivedDevices(res.body, [], getState());
     return Promise.all([
+      dispatch(setFilterAttributes(deriveAttributesFromDevices(Object.values(deviceAccu.devicesById)))),
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICES,
         devicesById: deviceAccu.devicesById
@@ -164,11 +165,15 @@ export const getAllGroupDevices = group => (dispatch, getState) => {
   return getAllDevices();
 };
 
-export const setFilterAttributes = attrs => (dispatch, getState) =>
-  dispatch({
+export const setFilterAttributes = attrs => (dispatch, getState) => {
+  const storedFilteringAttributes = getState().devices.filteringAttributes;
+  const identityAttributes = [...storedFilteringAttributes.identityAttributes, ...attrs.identityAttributes].filter(duplicateFilter);
+  const inventoryAttributes = [...storedFilteringAttributes.inventoryAttributes, ...attrs.inventoryAttributes].filter(duplicateFilter);
+  return dispatch({
     type: DeviceConstants.SET_FILTER_ATTRIBUTES,
-    attributes: [...getState().devices.filteringAttributes, ...attrs].filter((item, index, array) => array.indexOf(item) == index)
+    attributes: { identityAttributes, inventoryAttributes }
   });
+};
 
 export const setDeviceFilters = filters => dispatch =>
   dispatch({
@@ -194,7 +199,7 @@ export const getDeviceById = id => dispatch =>
 
 export const getDevicesWithInventory = devices => dispatch => Promise.all(devices.map(device => dispatch(getDeviceById(device.id))));
 
-export const getDevices = (page = defaultPage, perPage = defaultPerPage, searchTerm) => dispatch => {
+export const getDevices = (page = defaultPage, perPage = defaultPerPage, searchTerm, shouldSelectDevices = false) => dispatch => {
   // get devices from inventory
   var search = searchTerm ? `&${searchTerm}` : '';
   return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${perPage}&page=${page}${search}`).then(res => {
@@ -209,6 +214,9 @@ export const getDevices = (page = defaultPage, perPage = defaultPerPage, searchT
     ];
     if (devices.length && devices.length < 200) {
       tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(devices))));
+    }
+    if (shouldSelectDevices) {
+      tasks.push(dispatch(selectDevices(devices.map(device => device.id))));
     }
     Promise.all(tasks);
   });

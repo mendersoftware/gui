@@ -13,8 +13,11 @@ export default class Filters extends React.Component {
     super(props, context);
     this.state = {
       showFilters: false,
-      filters: this.props.filters
+      filters: []
     };
+  }
+  componentDidMount() {
+    this.setState({ filters: this.props.filters });
   }
   _addFilter() {
     var filterArray = this.state.filters;
@@ -42,19 +45,20 @@ export default class Filters extends React.Component {
   render() {
     const self = this;
     const filters = self.state.filters.length ? self.state.filters : [{ key: '', value: '' }];
-    var filterCount = 0;
-    const filterAttributes = Object.entries(self.props.attributes).map(item => ({ key: item[0], value: item[1] }));
-
-    const remainingFilters = filterAttributes.reduce((accu, item) => {
-      const isInUse = filters.find(filter => filter.key === item.key);
-      if (isInUse) {
-        filterCount = filterCount + 1;
-      } else {
-        accu.push(item);
-      }
-      return accu;
-    }, []);
-
+    const { filterAttributes, filterCount, remainingFilters } = [{ key: 'id', value: 'Device ID' }, ...self.props.attributes].reduce(
+      (accu, value) => {
+        const currentFilter = value.key ? value : { value, key: value };
+        accu.filterAttributes.push(currentFilter);
+        const isInUse = filters.find(filter => filter.key === currentFilter.key);
+        if (isInUse) {
+          accu.filterCount += 1;
+        } else {
+          accu.remainingFilters.push(currentFilter);
+        }
+        return accu;
+      },
+      { filterAttributes: [], filterCount: 0, remainingFilters: [] }
+    );
     const filterItems = filters.map((item, index) => (
       <FilterItem
         key={self.state.filters.length ? index : `refresh-${index}`}

@@ -13,7 +13,7 @@ const initialState = {
   selectedDevice: null,
   selectedDeviceList: [],
   filters: [],
-  filteringAttributes: [],
+  filteringAttributes: { identityAttributes: [], inventoryAttributes: [] },
   filteringAttributesLimit: 10,
   total: 0,
   limit: 500,

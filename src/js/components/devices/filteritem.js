@@ -1,16 +1,7 @@
 import React from 'react';
 
 // material ui
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import InputLabel from '@material-ui/core/InputLabel';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
+import { FormControl, FormHelperText, IconButton, Input, InputAdornment, InputLabel, ListItem, ListItemText, MenuItem, TextField } from '@material-ui/core';
 
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 
@@ -19,8 +10,7 @@ export default class FilterItem extends React.Component {
     super(props, context);
     this.state = {
       selectedFilterKey: this.props.filter.key || '', // this refers to the selected filter with key as the id
-      selectedValue: this.props.filter.value || '', // while this is the value that is applied with the filter
-      filters: this.props.filters || []
+      selectedValue: this.props.filter.value || '' // while this is the value that is applied with the filter
     };
   }
   _updateFilterValue(selectedValue) {

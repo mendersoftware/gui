@@ -134,7 +134,7 @@ const actionCreators = { getDevicesByStatus, getGlobalSettings, saveGlobalSettin
 const mapStateToProps = state => {
   return {
     // limit the selection of the available attribute to AVAILABLE_ATTRIBUTE_LIMIT
-    attributes: state.devices.filteringAttributes.slice(0, state.devices.filteringAttributesLimit),
+    attributes: state.devices.filteringAttributes.identityAttributes.slice(0, state.devices.filteringAttributesLimit),
     devicesCount: Object.keys(state.devices.byId).length,
     settings: state.users.globalSettings
   };

@@ -163,7 +163,7 @@ export class DeviceGroups extends React.Component {
         if (filterId) {
           return selectDevice(filterId.value);
         }
-        request = getDevices(this.state.pageNo, this.state.pageLength, this.encodeFilters(filters));
+        request = getDevices(this.state.pageNo, this.state.pageLength, this.encodeFilters(filters), true);
       }
       // if a group or filters, must use inventory API
       return request
@@ -523,7 +523,7 @@ const mapStateToProps = state => {
     acceptedDevices: state.devices.byStatus.accepted.total || 0,
     acceptedDevicesList: state.devices.byStatus.accepted.deviceIds.slice(0, 20),
     allCount: state.devices.byStatus.accepted.total + state.devices.byStatus.rejected.total || 0,
-    attributes: state.devices.filteringAttributes.slice(0, state.devices.filteringAttributesLimit) || [],
+    attributes: state.devices.filteringAttributes.inventoryAttributes.slice(0, state.devices.filteringAttributesLimit) || [],
     devices,
     deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
     filters: state.devices.filters || [],
