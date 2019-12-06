@@ -9,7 +9,6 @@ const initialState = {
     inprogress: { deploymentIds: [], total: 0 },
     finished: { deploymentIds: [], total: 0 }
   },
-  deploymentRelease: null,
   deploymentDeviceLimit: 5000,
   selectedDeploymentsList: [],
   selectedDeployment: null
@@ -109,11 +108,6 @@ const deploymentReducer = (state = initialState, action) => {
             total: action.deploymentIds.length
           }
         }
-      };
-    case DeploymentConstants.SET_DEPLOYMENT_RELEASE:
-      return {
-        ...state,
-        deploymentRelease: action.release
       };
     case DeploymentConstants.SELECT_DEPLOYMENT:
       return {

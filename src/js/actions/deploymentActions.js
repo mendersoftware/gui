@@ -21,8 +21,6 @@ const transformDeployments = deployments =>
   );
 
 /*Deployments */
-export const setDeploymentRelease = release => dispatch => dispatch({ type: DeploymentConstants.SET_DEPLOYMENT_RELEASE, release });
-
 // all deployments
 export const getDeployments = (page = default_page, per_page = default_per_page) => dispatch =>
   DeploymentsApi.get(`${deploymentsApiUrl}/deployments?page=${page}&per_page=${per_page}`).then(res => {

@@ -102,10 +102,8 @@ export const onboardingSteps = {
     condition: () =>
       onboardingTipSanityCheck('scheduling-artifact-selection') &&
       store.getState().devices.byStatus.accepted.total &&
-      store.getState().deployments.deploymentRelease,
-    component: compose(setDisplayName('OnboardingTip'))(() => (
-      <div>{`Select the ${store.getState().deployments.deploymentRelease.Name} release we included.`}</div>
-    )),
+      store.getState().releases.selectedRelease,
+    component: compose(setDisplayName('OnboardingTip'))(() => <div>{`Select the ${store.getState().releases.selectedRelease} release we included.`}</div>),
     progress: 2
   },
   'scheduling-all-devices-selection': {
@@ -135,10 +133,10 @@ export const onboardingSteps = {
     condition: () =>
       onboardingTipSanityCheck('scheduling-release-to-devices') &&
       store.getState().devices.byStatus.accepted.total &&
-      (store.getState().devices.groups.selectedGroup || store.getState().devices.selectedDevice) &&
-      store.getState().deployments.deploymentRelease,
+      (store.getState().devices.groups.selectedGroup || store.getState().devices.selectedDeviceList.length || store.getState().devices.selectedDevice) &&
+      store.getState().releases.selectedRelease,
     component: compose(setDisplayName('OnboardingTip'))(() => (
-      <div>{`Create the deployment! This will deploy the ${store.getState().deployments.deploymentRelease.Name} Artifact to ${
+      <div>{`Create the deployment! This will deploy the ${store.getState().releases.selectedRelease} Artifact to ${
         store.getState().devices.selectedDevice ? store.getState().devices.selectedDevice : store.getState().devices.groups.selectedGroup || 'All devices'
       }`}</div>
     ))
