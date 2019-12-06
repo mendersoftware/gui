@@ -326,11 +326,10 @@ export const getDeviceLimit = () => dispatch =>
     })
   );
 
-export const getDevicesByStatus = (status, page = defaultPage, perPage = defaultPerPage) => (dispatch, getState) =>
+export const getDevicesByStatus = (status, page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false) => (dispatch, getState) =>
   DevicesApi.get(`${deviceAuthV2}/devices?${status ? `status=${status}` : ''}&per_page=${perPage}&page=${page}`).then(response => {
     let tasks = [];
     if (!status) {
-      // TODO incorporate device attribute setting in here
       tasks.push(
         dispatch({
           type: DeviceConstants.RECEIVE_DEVICES_LIST,
@@ -340,7 +339,6 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
       if (response.body.length < 200) {
         tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(response.body))));
       }
-      return Promise.all(tasks);
     } else {
       const deviceAccu = reduceReceivedDevices(response.body, [], getState(), status);
       tasks = [
@@ -362,6 +360,9 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
       }
       if (status === DeviceConstants.DEVICE_STATES.rejected) {
         tasks.push(dispatch(getDevicesWithInventory(response.body)));
+      }
+      if (shouldSelectDevices) {
+        tasks.push(dispatch(selectDevices(deviceAccu.ids)));
       }
     }
     return Promise.all(tasks);

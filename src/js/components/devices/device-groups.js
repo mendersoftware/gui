@@ -187,7 +187,7 @@ export class DeviceGroups extends React.Component {
         });
     } else {
       // otherwise, show accepted from device adm
-      return getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength)
+      return getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength, true)
         .then(() => self.setState({ loading: false, pageLoading: false }))
         .catch(err => {
           console.log(err);
@@ -404,6 +404,7 @@ export class DeviceGroups extends React.Component {
               attributes={this.props.attributes}
               filters={this.props.filters}
               onFilterChange={filters => this._onFilterChange(filters)}
+              resetIdFilter={() => this.props.selectDevice()}
               isHosted={this.props.isEnterprise}
             />
           ) : null}

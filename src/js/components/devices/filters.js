@@ -12,27 +12,25 @@ export default class Filters extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      showFilters: false,
-      filters: []
+      showFilters: false
     };
   }
-  componentDidMount() {
-    this.setState({ filters: this.props.filters });
-  }
   _addFilter() {
-    var filterArray = this.state.filters;
-    filterArray.push({ key: '', value: '' });
-    this.setState({ filters: filterArray });
+    this.props.onFilterChange([...this.props.filters, { key: '', value: '' }]);
   }
   _updateFilters(filter, index) {
-    let filters = this.state.filters;
+    let filters = this.props.filters;
     filters[index] = filter;
-    this.setState({ filters }, this.props.onFilterChange(filters));
+    this.props.onFilterChange(filters);
   }
   _removeFilter(index) {
-    var filterArray = this.state.filters;
-    filterArray.splice(index, 1);
-    this.setState({ filters: filterArray }, this.props.onFilterChange(filterArray));
+    var filterArray = this.props.filters;
+    const filter = filterArray.splice(index, 1)[0];
+    if (filter.key === 'id') {
+      this.props.resetIdFilter();
+    }
+
+    this.props.onFilterChange(filterArray);
   }
   _toggleNav() {
     this.setState({
@@ -40,11 +38,11 @@ export default class Filters extends React.Component {
     });
   }
   _clearFilters() {
-    this.setState({ filters: [] }, this.props.onFilterChange([]));
+    this.props.onFilterChange([]);
   }
   render() {
     const self = this;
-    const filters = self.state.filters.length ? self.state.filters : [{ key: '', value: '' }];
+    const filters = self.props.filters.length ? self.props.filters : [{ key: '', value: '' }];
     const { filterAttributes, filterCount, remainingFilters } = [{ key: 'id', value: 'Device ID' }, ...self.props.attributes].reduce(
       (accu, value) => {
         const currentFilter = value.key ? value : { value, key: value };
@@ -61,7 +59,7 @@ export default class Filters extends React.Component {
     );
     const filterItems = filters.map((item, index) => (
       <FilterItem
-        key={self.state.filters.length ? index : `refresh-${index}`}
+        key={self.props.filters.length ? index : `refresh-${index}`}
         index={index}
         filter={item}
         filters={remainingFilters}
