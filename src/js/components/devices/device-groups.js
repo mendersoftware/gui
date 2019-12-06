@@ -29,7 +29,7 @@ import * as DeviceConstants from '../../constants/deviceConstants';
 import { isEmpty, preformatWithRequestID } from '../../helpers';
 import { setRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 
-const UNGROUPED_GROUP = DeviceConstants.UNGROUPED_GROUP;
+const refreshDeviceLength = 10000;
 
 export class DeviceGroups extends React.Component {
   constructor(props, context) {
@@ -42,8 +42,7 @@ export class DeviceGroups extends React.Component {
       pageNo: 1,
       pageLength: 20,
       loading: true,
-      tmpDevices: [],
-      refreshDeviceLength: 10000
+      tmpDevices: []
     };
     if (!this.props.acceptedDevicesList.length && this.props.acceptedDevices < this.props.deploymentDeviceLimit) {
       this.props.getAllDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted);
@@ -52,15 +51,19 @@ export class DeviceGroups extends React.Component {
 
   componentDidMount() {
     var self = this;
-    self.props.selectDevices(this.props.acceptedDevicesList);
+    if (self.props.acceptedDevicesList.length < 20) {
+      self._getDevices();
+    } else {
+      self.props.selectDevices(self.props.acceptedDevicesList);
+    }
     clearAllRetryTimers(self.props.setSnackbar);
     if (self.props.filters) {
       self._refreshGroups();
       self._onFilterChange(self.props.filters);
     } else {
       // no group, no filters, all devices
-      this.deviceTimer = setInterval(() => this._getDevices(), this.state.refreshDeviceLength);
-      this._refreshAll();
+      self.deviceTimer = setInterval(() => self._getDevices(), refreshDeviceLength);
+      self._refreshAll();
     }
   }
 
@@ -79,7 +82,7 @@ export class DeviceGroups extends React.Component {
     if (prevProps.filters !== this.props.filters || prevProps.groupCount !== this.props.groupCount || prevProps.selectedGroup !== this.props.selectedGroup) {
       clearInterval(this.deviceTimer);
       if (this.props.currentTab === 'Device groups') {
-        this.deviceTimer = setInterval(() => this._getDevices(), this.state.refreshDeviceLength);
+        this.deviceTimer = setInterval(() => this._getDevices(), refreshDeviceLength);
         this._refreshAll();
       }
     }
@@ -143,7 +146,7 @@ export class DeviceGroups extends React.Component {
     if (!group) {
       return false;
     }
-    return group === UNGROUPED_GROUP.id || group === UNGROUPED_GROUP.name;
+    return group === DeviceConstants.UNGROUPED_GROUP.id || group === DeviceConstants.UNGROUPED_GROUP.name;
   }
 
   /*
@@ -180,7 +183,7 @@ export class DeviceGroups extends React.Component {
           console.log(err);
           var errormsg = err.error || 'Please check your connection.';
           self.setState({ loading: false });
-          setRetryTimer(err, 'devices', `Devices couldn't be loaded. ${errormsg}`, self.state.refreshDeviceLength, self.props.setSnackbar);
+          setRetryTimer(err, 'devices', `Devices couldn't be loaded. ${errormsg}`, refreshDeviceLength, self.props.setSnackbar);
         });
     } else {
       // otherwise, show accepted from device adm
@@ -190,7 +193,7 @@ export class DeviceGroups extends React.Component {
           console.log(err);
           var errormsg = err.error || 'Please check your connection.';
           self.setState({ loading: false });
-          setRetryTimer(err, 'devices', `Devices couldn't be loaded. ${errormsg}`, self.state.refreshDeviceLength, self.props.setSnackbar);
+          setRetryTimer(err, 'devices', `Devices couldn't be loaded. ${errormsg}`, refreshDeviceLength, self.props.setSnackbar);
         });
     }
   }
@@ -217,7 +220,7 @@ export class DeviceGroups extends React.Component {
         var state = { loading: false };
         if (err.res.statusCode === 404) {
           var errormsg = err.error || 'Please check your connection.';
-          setRetryTimer(err, 'devices', `Device couldn't be loaded. ${errormsg}`, self.state.refreshDeviceLength, self.props.setSnackbar);
+          setRetryTimer(err, 'devices', `Device couldn't be loaded. ${errormsg}`, refreshDeviceLength, self.props.setSnackbar);
         }
         self.setState(state);
       });
@@ -336,7 +339,7 @@ export class DeviceGroups extends React.Component {
     } else {
       self.props.setDeviceFilters(filters);
       self.setState({ pageNo: 1 }, () => {
-        self.deviceTimer = setInterval(() => self._getDevices(), self.state.refreshDeviceLength);
+        self.deviceTimer = setInterval(() => self._getDevices(), refreshDeviceLength);
         self._getDevices();
       });
     }
@@ -350,7 +353,7 @@ export class DeviceGroups extends React.Component {
       if (self.state.pause) {
         clearInterval(self.deviceTimer);
       } else {
-        self.deviceTimer = setInterval(() => self._getDevices(), self.state.refreshDeviceLength);
+        self.deviceTimer = setInterval(() => self._getDevices(), refreshDeviceLength);
         self._refreshAll();
       }
     });
@@ -379,7 +382,7 @@ export class DeviceGroups extends React.Component {
 
     var groupCount = this.props.groupCount || this.props.acceptedDevices || 0;
 
-    var groupName = this._isUngroupedGroup(this.props.selectedGroup) ? UNGROUPED_GROUP.name : this.props.selectedGroup;
+    var groupName = this._isUngroupedGroup(this.props.selectedGroup) ? DeviceConstants.UNGROUPED_GROUP.name : this.props.selectedGroup;
     var allowDeviceGroupRemoval = !this._isUngroupedGroup(this.props.selectedGroup);
 
     return (

@@ -94,7 +94,7 @@ export class DeviceList extends React.Component {
 
   render() {
     const self = this;
-    const { className, columnHeaders, devices, pageLength, pageLoading, pageNo, pageTotal, onSelect, onChangeRowsPerPage, selectedRows } = self.props;
+    const { className, columnHeaders, devices, filters, pageLength, pageLoading, pageNo, pageTotal, onSelect, onChangeRowsPerPage, selectedRows } = self.props;
     const { sortCol, sortDown, expandedDeviceId } = self.state;
     const columnWidth = `${(onSelect ? 90 : 100) / columnHeaders.length}%`;
     const numSelected = (selectedRows || []).length;
@@ -132,13 +132,15 @@ export class DeviceList extends React.Component {
             />
           ))}
         </div>
-        <Pagination
-          count={pageTotal}
-          rowsPerPage={pageLength}
-          onChangeRowsPerPage={onChangeRowsPerPage}
-          page={pageNo}
-          onChangePage={page => self.onPageChange(page)}
-        />
+        {filters.length === 0 && (
+          <Pagination
+            count={pageTotal}
+            rowsPerPage={pageLength}
+            onChangeRowsPerPage={onChangeRowsPerPage}
+            page={pageNo}
+            onChangePage={page => self.onPageChange(page)}
+          />
+        )}
         {pageLoading ? (
           <div className="smallLoaderContainer">
             <Loader show={true} />
@@ -159,6 +161,7 @@ const mapStateToProps = (state, ownProps) => {
   }, []);
   return {
     devices,
+    filters: state.devices.filters,
     onboardingComplete: state.users.onboarding.complete
   };
 };
