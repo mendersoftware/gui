@@ -43,7 +43,13 @@ class AppRoot extends React.Component {
 
   render() {
     const { timeout } = this.state;
-    const { showDismissHelptipsDialog, showDeviceConnectionDialog, showCreateArtifactDialog } = this.props;
+    const {
+      setShowConnectingDialog,
+      setShowCreateArtifactDialog,
+      showDismissHelptipsDialog,
+      showDeviceConnectionDialog,
+      showCreateArtifactDialog
+    } = this.props;
 
     const onboardingComponent = getOnboardingComponentFor('application-update-reminder-tip', {
       anchor: {

@@ -10,7 +10,7 @@ import { ArrowUpward as ArrowUpwardIcon, Close as CloseIcon, Schedule as HelpIco
 import { setSnackbar } from '../../actions/appActions';
 import { setShowConnectingDialog, setShowDismissOnboardingTipsDialog } from '../../actions/userActions';
 
-export class WelcomeSnackTip extends React.PureComponent {
+class WelcomeSnackTipComponent extends React.PureComponent {
   onClose(_, reason) {
     if (reason === 'clickaway') {
       return;
@@ -63,6 +63,8 @@ export class WelcomeSnackTip extends React.PureComponent {
     );
   }
 }
+
+export const WelcomeSnackTip = connect(null, { setSnackbar })(WelcomeSnackTipComponent);
 
 class DevicePendingTipComponent extends React.PureComponent {
   componentDidUpdate() {

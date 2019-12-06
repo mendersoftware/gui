@@ -1,11 +1,14 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
 
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import {
+  ArrowUpward as ArrowUpwardIcon,
+  ArrowDownward as ArrowDownwardIcon,
+  ArrowForward as ArrowForwardIcon,
+  ArrowBack as ArrowBackIcon
+} from '@material-ui/icons';
 
 import { setShowDismissOnboardingTipsDialog } from '../../actions/userActions';
 
@@ -47,7 +50,7 @@ const orientations = {
   }
 };
 
-export class BaseOnboardingTip extends React.PureComponent {
+class BaseOnboardingTipComponent extends React.PureComponent {
   componentDidUpdate() {
     ReactTooltip.show(this.tipRef);
   }
@@ -95,6 +98,9 @@ export class BaseOnboardingTip extends React.PureComponent {
   }
 }
 
-const actionCreators = { setShowDismissOnboardingTipsDialog };
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ setShowDismissOnboardingTipsDialog }, dispatch);
+};
 
-export default connect(null, actionCreators)(BaseOnboardingTip);
+export const BaseOnboardingTip = connect(null, mapDispatchToProps)(BaseOnboardingTipComponent);
+export default BaseOnboardingTip;

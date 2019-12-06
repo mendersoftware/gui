@@ -1,12 +1,14 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
 
 import Button from '@material-ui/core/Button';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
-import { getDevices } from '../../actions/deviceActions';
+import { getDevicesByStatus } from '../../actions/deviceActions';
 import { setOnboardingComplete } from '../../actions/userActions';
+import * as DeviceConstants from '../../constants/deviceConstants';
 import { getDemoDeviceAddress } from '../../helpers';
 import Loader from '../common/loader';
 
@@ -17,12 +19,13 @@ export class OnboardingCompleteTip extends React.Component {
       loading: true,
       targetUrl: ''
     };
-    self.props.getDevices();
   }
 
   componentDidMount() {
     const self = this;
-    getDemoDeviceAddress(self.props.acceptedDevices)
+    self.props
+      .getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted)
+      .then(() => getDemoDeviceAddress(self.props.acceptedDevices))
       .catch(e => console.log(e))
       .then(targetUrl => self.setState({ targetUrl, loading: false }, () => setTimeout(() => self.props.setOnboardingComplete(true), 120000)));
   }
@@ -94,7 +97,9 @@ export class OnboardingCompleteTip extends React.Component {
   }
 }
 
-const actionCreators = { getDevices, setOnboardingComplete };
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ getDevicesByStatus, setOnboardingComplete }, dispatch);
+};
 
 const mapStateToProps = state => {
   const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
@@ -104,4 +109,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, actionCreators)(OnboardingCompleteTip);
+export default connect(mapStateToProps, mapDispatchToProps)(OnboardingCompleteTip);

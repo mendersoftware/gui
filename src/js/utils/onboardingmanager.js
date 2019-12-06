@@ -59,7 +59,7 @@ export const onboardingSteps = {
     condition: () =>
       onboardingTipSanityCheck('artifact-included-deploy-onboarding') &&
       window.location.hash.endsWith('#/devices') &&
-      store.getState().devices.byStatus.accepted.total.length > 0 &&
+      store.getState().devices.byStatus.accepted.total > 0 &&
       (Object.values(store.getState().devices.byId).every(item => !!item.attributes) || getOnboardingStepCompleted('devices-accepted-onboarding')),
     component: (
       <div>
@@ -122,7 +122,7 @@ export const onboardingSteps = {
     condition: () =>
       onboardingTipSanityCheck('scheduling-group-selection') &&
       store.getState().devices.byStatus.accepted.total &&
-      !store.getState().devices.selectedDevice &&
+      (store.getState().devices.selectedDeviceList.length || store.getState().devices.selectedDevice) &&
       Object.values(store.getState().devices.groups.byId).length > 1, // group 0 will be the ungrouped group and always present
     component: compose(setDisplayName('OnboardingTip'))(() => (
       <div>{`Select the ${Object.values(store.getState().devices.groups.byId)[1]} device group you just made.`}</div>

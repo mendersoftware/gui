@@ -1,10 +1,12 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import Button from '@material-ui/core/Button';
 
-import { getDevices } from '../../actions/deviceActions';
+import { getDevicesByStatus } from '../../actions/deviceActions';
 import { setOnboardingComplete, setShowOnboardingHelp, setShowCreateArtifactDialog } from '../../actions/userActions';
+import * as DeviceConstants from '../../constants/deviceConstants';
 import { getDemoDeviceAddress } from '../../helpers';
 import { advanceOnboarding } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
@@ -16,11 +18,13 @@ export class DeploymentCompleteTip extends React.Component {
       loading: true,
       targetUrl: ''
     };
-    self.props.getDevices();
   }
+
   componentDidMount() {
     const self = this;
-    getDemoDeviceAddress(self.props.acceptedDevices)
+    self.props
+      .getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted)
+      .then(() => getDemoDeviceAddress(self.props.acceptedDevices))
       .catch(e => console.log(e))
       .then(targetUrl => self.setState({ targetUrl, loading: false }));
   }
@@ -59,7 +63,9 @@ export class DeploymentCompleteTip extends React.Component {
   }
 }
 
-const actionCreators = { getDevices, setOnboardingComplete, setShowOnboardingHelp, setShowCreateArtifactDialog };
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ getDevicesByStatus, setOnboardingComplete, setShowOnboardingHelp, setShowCreateArtifactDialog }, dispatch);
+};
 
 const mapStateToProps = state => {
   return {
@@ -67,4 +73,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, actionCreators)(DeploymentCompleteTip);
+export default connect(mapStateToProps, mapDispatchToProps)(DeploymentCompleteTip);
