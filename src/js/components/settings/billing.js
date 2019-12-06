@@ -1,12 +1,13 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import moment from 'moment';
 
 // material ui
 import { Button, Divider, LinearProgress, Tooltip } from '@material-ui/core';
 import WarningIcon from '@material-ui/icons/Warning';
 
-import AppStore from '../../stores/app-store';
-import AppActions from '../../actions/app-actions';
+import { getBillingStatement } from '../../actions/userActions';
+
 import MonthlyBillingInformation from './monthlybillinginformation';
 import PlanNotification from './plannotification';
 
@@ -66,9 +67,9 @@ class Billing extends React.Component {
     super(props, context);
     this.state = {
       showUsage: false,
+      timeframe: { month: 0, year: 0 },
       billingInformation: {
         interactions: [],
-        timeframe: { month: 0, year: 0 },
         timestamp: new Date(),
         total: 0
       }
@@ -79,10 +80,9 @@ class Billing extends React.Component {
     this.updateBillingStatement();
   }
 
-  updateBillingStatement(date = new Date()) {
-    const self = this;
-    const timeframe = { month: date.getMonth(), year: date.getFullYear() };
-    AppActions.getBillingStatement(timeframe).then(information => {
+  componentDidUpdate(prevProps) {
+    if (prevProps.billingInformation !== this.props.billingInformation) {
+      const information = this.props.billingInformation;
       const interactions = interactionList.map(item => {
         item.billingInformation = item.billingInformation.map(infoItem => ({
           ...infoItem,
@@ -92,20 +92,24 @@ class Billing extends React.Component {
         }));
         return item;
       });
-
-      self.setState({
+      this.setState({
         billingInformation: {
           interactions,
-          timeframe,
           timestamp: new Date(information.timestamp),
           total: information.summary_total_cost.toFixed(2)
         }
       });
-    });
+    }
+  }
+
+  updateBillingStatement(date = new Date()) {
+    const self = this;
+    const timeframe = { month: date.getMonth(), year: date.getFullYear() };
+    self.setState({ timeframe }, () => self.props.getBillingStatement(timeframe));
   }
 
   changeTimeframe(offset) {
-    let { timeframe } = this.state.billingInformation;
+    const { timeframe } = this.state;
     // +1 needed here to align moment with js dates
     const updatedDate = moment(`${timeframe.month + 1}-15-${timeframe.year}`);
     updatedDate.add(offset, 'months');
@@ -114,12 +118,10 @@ class Billing extends React.Component {
 
   render() {
     const self = this;
-    const { billingInformation, showUsage } = self.state;
-    const deviceCount = AppStore.getTotalAcceptedDevices();
-    const deviceLimit = AppStore.getDeviceLimit();
-    const userCreationDate = new Date(AppStore.getCurrentUser().created_ts);
-    const org = AppStore.getOrganization();
-    const currentPlan = AppStore.getIsHosted() ? 'Mender Professional' : 'Mender Enterprise';
+    const { currentUser, deviceCount, deviceLimit, isHosted, org } = self.props;
+    const { billingInformation, showUsage, timeframe } = self.state;
+    const userCreationDate = new Date(currentUser.created_ts);
+    const currentPlan = isHosted ? 'Mender Professional' : 'Mender Enterprise';
     const expirationDate = moment(userCreationDate).add(1, 'years');
     const freeCreditConsumed = (100 / totalFreeCredit) * (totalFreeCredit + billingInformation.total);
     const freeCreditRunningOut = freeCreditConsumed > 90;
@@ -217,6 +219,7 @@ class Billing extends React.Component {
             changeTimeframe={offset => self.changeTimeframe(offset)}
             creationDate={userCreationDate}
             isVisible={showUsage}
+            timeframe={timeframe}
           />
         </div>
       </div>
@@ -224,4 +227,16 @@ class Billing extends React.Component {
   }
 }
 
-export default Billing;
+const actionCreators = { getBillingStatement };
+
+const mapStateToProps = state => {
+  return {
+    billingInformation: state.users.billingStatement,
+    currentUser: state.users.byId[state.users.currentUser],
+    deviceCount: state.devices.byStatus.accepted.total,
+    deviceLimit: state.devices.limit,
+    isHosted: state.app.features.isHosted,
+    org: state.users.organization
+  };
+};
+export default connect(mapStateToProps, actionCreators)(Billing);

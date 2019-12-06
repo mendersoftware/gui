@@ -49,13 +49,12 @@ export class Settings extends React.Component {
 
   render() {
     var self = this;
-    const isHosted = AppStore.getIsHosted();
     let relevantItems = routes;
 
     if (self.props.hasMultitenancy) {
       relevantItems['myOrganization'] = myOrganization;
     }
-    if (isHosted) {
+    if (self.props.isHosted) {
       relevantItems['billing'] = billing;
     }
     var list = Object.entries(relevantItems).reduce((accu, entry) => {
@@ -86,6 +85,7 @@ export class Settings extends React.Component {
 
 const mapStateToProps = state => {
   return {
+    isHosted: state.app.features.isHosted,
     hasMultitenancy: state.app.features.hasMultitenancy
   };
 };

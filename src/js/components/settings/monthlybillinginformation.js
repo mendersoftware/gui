@@ -3,8 +3,8 @@ import moment from 'moment';
 import { Divider, IconButton } from '@material-ui/core';
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons';
 
-const MonthlyBillingInformation = ({ billingInformation, changeTimeframe, creationDate, isVisible }) => {
-  const { interactions, timeframe, timestamp, total } = billingInformation;
+const MonthlyBillingInformation = ({ billingInformation, changeTimeframe, creationDate, isVisible, timeframe }) => {
+  const { interactions, timestamp, total } = billingInformation;
   const today = new Date();
   const isCurrent = timeframe.month === today.getMonth() && timeframe.year === today.getFullYear();
   const isFirst = timeframe.month === creationDate.getMonth() && timeframe.year === creationDate.getFullYear();
