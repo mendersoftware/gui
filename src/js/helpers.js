@@ -358,13 +358,13 @@ export const FileSize = ({ style, fileSize }) => <div style={style}>{getFormatte
 
 export const collectAddressesFrom = devices =>
   devices.reduce((collector, device) => {
-    const ips = device.attributes.reduce((accu, item) => {
-      if (item.name.startsWith('ipv4')) {
-        if (Array.isArray(item.value)) {
-          const texts = item.value.map(text => text.slice(0, text.indexOf('/')));
+    const ips = Object.entries(device.attributes).reduce((accu, [name, value]) => {
+      if (name.startsWith('ipv4')) {
+        if (Array.isArray(value)) {
+          const texts = value.map(text => text.slice(0, text.indexOf('/')));
           accu.push(...texts);
         } else {
-          const text = item.value.slice(0, item.value.indexOf('/'));
+          const text = value.slice(0, value.indexOf('/'));
           accu.push(text);
         }
       }
