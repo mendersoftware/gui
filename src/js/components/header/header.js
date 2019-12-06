@@ -40,7 +40,7 @@ export class Header extends React.Component {
     const sessionId = cookie.load('JWT');
     if (!sessionId || isEmpty(this.props.user) || this.props.user === null) {
       this._updateUsername()
-        .then(() => getOnboardingState())
+        .then(() => this.props.getOnboardingState())
         // this is allowed to fail if no user information are available
         .catch(e => console.log(e));
     } else if (prevState.sessionId !== this.state.sessionId) {
@@ -54,7 +54,7 @@ export class Header extends React.Component {
   componentDidMount() {
     // check logged in user
     if (this.props.isLoggedIn) {
-      this._updateUsername();
+      this._updateUsername().then(() => this.props.getOnboardingState());
       this._checkHeaderInfo();
       this.props.getReleases();
       this.props.getDeviceLimit();
