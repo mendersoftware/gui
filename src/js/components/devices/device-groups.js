@@ -79,6 +79,9 @@ export class DeviceGroups extends React.Component {
     if (prevProps.currentTab !== this.props.currentTab) {
       this.props.setDeviceFilters([]);
     }
+    if (this.props.currentTab !== 'Device groups') {
+      clearInterval(this.deviceTimer);
+    }
     if (prevProps.filters !== this.props.filters || prevProps.groupCount !== this.props.groupCount || prevProps.selectedGroup !== this.props.selectedGroup) {
       clearInterval(this.deviceTimer);
       if (this.props.currentTab === 'Device groups') {
@@ -154,7 +157,7 @@ export class DeviceGroups extends React.Component {
    */
   _getDevices() {
     var self = this;
-    const { filters, getDevices, getDevicesByStatus, getGroupDevices, selectDevice, selectDevices, selectedGroup, ungroupedDevices } = self.props;
+    const { currentTab, filters, getDevices, getDevicesByStatus, getGroupDevices, selectDevice, selectDevices, selectedGroup, ungroupedDevices } = self.props;
     var hasFilters = filters.length && filters[0].value;
 
     if (selectedGroup || hasFilters) {
@@ -187,7 +190,7 @@ export class DeviceGroups extends React.Component {
         });
     } else {
       // otherwise, show accepted from device adm
-      return getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength, true)
+      return getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength, currentTab === 'Device groups')
         .then(() => self.setState({ loading: false, pageLoading: false }))
         .catch(err => {
           console.log(err);

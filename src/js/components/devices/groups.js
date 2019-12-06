@@ -70,7 +70,7 @@ export default class Groups extends React.PureComponent {
           </ListItem>
         </List>
 
-        {this.props.showHelptips && this.props.acceptedCount && !this.props.groups.length ? (
+        {this.props.showHelptips && this.props.acceptedCount && this.props.groups.length <= 1 ? (
           <div>
             <div id="onboard-5" className="tooltip help" data-tip data-for="groups-tip" data-event="click focus" style={{ bottom: '-10px' }}>
               <HelpIcon />
