@@ -150,7 +150,7 @@ DEBIAN_FRONTEND=noninteractive dpkg -i mender-client_master-1_armhf.deb && \\
 DEVICE_TYPE="generic-armv6" && \\
 mender setup \\
   --device-type $DEVICE_TYPE \\
-  --demo  && \\
+  --quiet --demo  && \\
 systemctl restart mender-client'
 
     </span>
