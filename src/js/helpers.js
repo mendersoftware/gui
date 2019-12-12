@@ -438,16 +438,16 @@ export const standardizePhases = phases =>
   });
 
 export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token, packageVersion, deviceType = 'generic-armv6') => {
-  let connectionInstructions = `  --demo ${ipAddress ? `--server-ip ${ipAddress}` : ''}`;
+  let connectionInstructions = `  --quiet --demo ${ipAddress ? `--server-ip ${ipAddress}` : ''}`;
   if (isEnterprise || isHosted) {
     const enterpriseSettings = `  --tenant-token $TENANT_TOKEN \\
   --retry-poll 30 \\
   --update-poll 5 \\
   --inventory-poll 5`;
-    connectionInstructions = `${ipAddress ? `  --server-url ${ipAddress}` : ' '} --server-cert="" \\
-${enterpriseSettings}`;
+    connectionInstructions = `--quiet ${ipAddress ? `  --server-url ${ipAddress}` : ' '} \\
+    --server-cert="" {enterpriseSettings}`;
     if (isHosted) {
-      connectionInstructions = `  --mender-professional \\
+      connectionInstructions = `  --quiet --hosted-mender \\
 ${enterpriseSettings}`;
     }
   }
