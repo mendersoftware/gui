@@ -1,8 +1,17 @@
 import React from 'react';
 import { createMount } from '@material-ui/core/test-utils';
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
 import ConfirmDismissHelptips from './confirmdismisshelptips';
 
+const mockStore = configureStore([]);
+const store = mockStore({});
+
 it('renders correctly', () => {
-  const tree = createMount()(<ConfirmDismissHelptips open={true} />);
+  const tree = createMount()(
+    <Provider store={store}>
+      <ConfirmDismissHelptips open={true} />
+    </Provider>
+  );
   expect(tree.html()).toMatchSnapshot();
 });

@@ -1,8 +1,26 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { OnboardingCompleteTip } from './onboardingcompletetip';
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
+import OnboardingCompleteTip from './onboardingcompletetip';
+
+const mockStore = configureStore([]);
+const store = mockStore({
+  app: { docsVersion: null },
+  devices: {
+    byId: {},
+    byStatus: { accepted: { deviceIds: [] } }
+  }
+});
+store.dispatch = jest.fn();
 
 it('renders correctly', () => {
-  const tree = renderer.create(<OnboardingCompleteTip />).toJSON();
+  const tree = renderer
+    .create(
+      <Provider store={store}>
+        <OnboardingCompleteTip getDevicesByStatus={() => Promise.resolve()} />
+      </Provider>
+    )
+    .toJSON();
   expect(tree).toMatchSnapshot();
 });

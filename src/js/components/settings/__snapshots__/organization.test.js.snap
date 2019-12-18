@@ -117,9 +117,7 @@ exports[`renders correctly 1`] = `
               "wordBreak": "break-all",
             }
           }
-        >
-          
-        </p>
+        />
         <button
           className="MuiButtonBase-root MuiButton-root MuiButton-text"
           disabled={false}

@@ -1,3 +1,242 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `null`;
+exports[`renders correctly 1`] = `
+<div
+  className="header "
+  id="fixedHeader"
+>
+  <div
+    className="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters"
+    style={
+      Object {
+        "backgroundColor": "#fff",
+        "height": "56px",
+        "minHeight": "unset",
+        "paddingLeft": "16px",
+        "paddingRight": "16px",
+      }
+    }
+  >
+    <div
+      className="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters"
+      style={
+        Object {
+          "height": "56px",
+          "minHeight": "unset",
+          "paddingLeft": "16px",
+          "paddingRight": "16px",
+        }
+      }
+    >
+      <a
+        href="/"
+        id="logo"
+        onClick={[Function]}
+      />
+    </div>
+    <div
+      className="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters"
+      style={
+        Object {
+          "flexGrow": "2",
+        }
+      }
+    />
+    <div
+      className="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters"
+      style={
+        Object {
+          "flexShrink": "0",
+        }
+      }
+    >
+      <div>
+        <div
+          data-for="limit-tip"
+          data-offset="{'bottom': 0, 'right': 0}"
+          data-tip={true}
+          data-tip-disable={false}
+          id="limit"
+        >
+          <div
+            className="__react_component_tooltip place-bottom type-dark "
+            data-id="tooltip"
+            id="limit-tip"
+          >
+            <h3>
+              Device limit
+            </h3>
+            <p>
+              You can still connect another 
+              500
+               
+              devices
+              .
+            </p>
+            <p>
+              Contact us by email at 
+              <a
+                href="mailto:support@mender.io"
+              >
+                support@mender.io
+              </a>
+               to request a higher limit.
+            </p>
+            <p>
+              There is no fee for a higher limit; the purpose of the limit is to allow us to plan capacity for scaling Hosted Mender.
+            </p>
+            <p>
+              Billing is based on your usage only. See
+               
+              <a
+                href="https://mender.io/pricing"
+                target="_blank"
+              >
+                pricing
+              </a>
+               
+              for an overview.
+            </p>
+          </div>
+          <div
+            className="header-section"
+          >
+            <a
+              className="inline"
+              href="/devices"
+              onClick={[Function]}
+            >
+              <span>
+                0
+              </span>
+              <span>
+                /
+                500
+              </span>
+              <svg
+                aria-hidden="true"
+                className="MuiSvgIcon-root"
+                focusable="false"
+                role="presentation"
+                style={
+                  Object {
+                    "fontSize": "20px",
+                    "margin": "0 7px 0 10px",
+                  }
+                }
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M22 9V7h-2V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2v-2h-2V9h2zm-4 10H4V5h14v14zM6 13h5v4H6zm6-6h4v3h-4zM6 7h5v5H6zm6 4h4v6h-4z"
+                />
+                <path
+                  d="M0 0h24v24H0zm0 0h24v24H0z"
+                  fill="none"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      <a
+        className="header-section"
+        href="/deployments/"
+        onClick={[Function]}
+      >
+        <span>
+          0
+        </span>
+        <svg
+          aria-hidden="true"
+          className="MuiSvgIcon-root flip-horizontal"
+          focusable="false"
+          role="presentation"
+          style={
+            Object {
+              "color": "#c7c7c7",
+              "fontSize": "20px",
+              "margin": "0 7px 0 10px",
+              "top": "5px",
+            }
+          }
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+          />
+        </svg>
+      </a>
+      <div
+        style={
+          Object {
+            "marginRight": "0",
+            "paddingLeft": "30px",
+          }
+        }
+      >
+        <button
+          className="MuiButtonBase-root MuiButton-root MuiButton-text header-dropdown"
+          disabled={false}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          style={
+            Object {
+              "fill": "rgb(0, 0, 0)",
+              "fontSize": "14px",
+              "textTransform": "none",
+            }
+          }
+          tabIndex={0}
+          type="button"
+        >
+          <span
+            className="MuiButton-label"
+          >
+            <svg
+              aria-hidden="true"
+              className="MuiSvgIcon-root"
+              focusable="false"
+              role="presentation"
+              style={
+                Object {
+                  "color": "#c7c7c7",
+                  "fontSize": "20px",
+                  "marginRight": "8px",
+                  "top": "5px",
+                }
+              }
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"
+              />
+            </svg>
+            a@b.com
+            <svg
+              aria-hidden="true"
+              className="MuiSvgIcon-root"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M7 10l5 5 5-5z"
+              />
+            </svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

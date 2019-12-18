@@ -1,8 +1,31 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { Preauthorize } from './preauthorize-devices';
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
+import Preauthorize from './preauthorize-devices';
+
+const mockStore = configureStore([]);
+const store = mockStore({
+  devices: {
+    byStatus: {
+      accepted: { total: 0 },
+      preauthorized: { total: 0 }
+    },
+    selectedDeviceList: [],
+    limit: 500
+  },
+  users: {
+    globalSettings: { id_attribute: null }
+  }
+});
 
 it('renders correctly', () => {
-  const tree = renderer.create(<Preauthorize />).toJSON();
+  const tree = renderer
+    .create(
+      <Provider store={store}>
+        <Preauthorize />
+      </Provider>
+    )
+    .toJSON();
   expect(tree).toMatchSnapshot();
 });

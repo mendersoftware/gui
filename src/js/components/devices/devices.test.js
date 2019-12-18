@@ -1,32 +1,29 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
 import { createMount } from '@material-ui/core/test-utils';
-import { Devices } from './devices';
+import Devices from './devices';
+
+const mockStore = configureStore([]);
+const store = mockStore({
+  devices: {
+    byStatus: {
+      accepted: { total: 0 },
+      pending: { total: 0 }
+    },
+    selectedDeviceList: []
+  }
+});
+store.dispatch = jest.fn();
 
 it('renders correctly', () => {
-  const context = {
-    childContextTypes: {
-      router: () => {}
-    },
-    context: {
-      router: {
-        route: {
-          location: {
-            hash: '',
-            pathname: '',
-            search: '',
-            state: ''
-          },
-          match: { params: {}, isExact: false, path: '', url: '' }
-        }
-      }
-    }
-  };
   const tree = createMount()(
     <MemoryRouter>
-      <Devices />
-    </MemoryRouter>,
-    context
+      <Provider store={store}>
+        <Devices />
+      </Provider>
+    </MemoryRouter>
   );
   expect(tree.html()).toMatchSnapshot();
 });
