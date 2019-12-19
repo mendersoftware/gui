@@ -7,29 +7,35 @@ import configureStore from 'redux-mock-store';
 import Login from './login';
 
 const mockStore = configureStore([thunk]);
-const store = mockStore({
-  app: { features: { isHosted: false } },
-  users: {
-    byId: {},
-    currentUser: null,
-    globalSettings: {},
-    onboarding: {
-      complete: false,
-      showTips: false
-    },
-    showHelptips: false
-  }
-});
 
-it('renders correctly', () => {
-  const tree = renderer
-    .create(
-      <MemoryRouter>
-        <Provider store={store}>
-          <Login location={{ state: { from: '' } }} />
-        </Provider>
-      </MemoryRouter>
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
+describe('Login Component', () => {
+  let store;
+  beforeEach(() => {
+    store = mockStore({
+      app: { features: { isHosted: false } },
+      users: {
+        byId: {},
+        currentUser: null,
+        globalSettings: {},
+        onboarding: {
+          complete: false,
+          showTips: false
+        },
+        showHelptips: false
+      }
+    });
+  });
+
+  it('renders correctly', () => {
+    const tree = renderer
+      .create(
+        <MemoryRouter>
+          <Provider store={store}>
+            <Login location={{ state: { from: '' } }} />
+          </Provider>
+        </MemoryRouter>
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

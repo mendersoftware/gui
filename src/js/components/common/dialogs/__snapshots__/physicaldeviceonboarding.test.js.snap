@@ -1,3 +1,97 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `<div />`;
+exports[`PhysicalDeviceOnboarding Component renders correctly 1`] = `
+<div>
+  <div
+    className="flexbox column"
+  >
+    <b>
+      1. Enter your device type
+    </b>
+    <p>
+      Setting this attribute on the device ensures that the device will only receive updates for compatible software releases.
+    </p>
+    <div
+      className="flexbox centered"
+    >
+      <div
+        className="MuiFormControl-root"
+      >
+        <label
+          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+          data-shrink={false}
+          htmlFor="adornment-target-select"
+        >
+          Device type
+        </label>
+        <div
+          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+          onClick={[Function]}
+          style={
+            Object {
+              "minWidth": "250px",
+            }
+          }
+        >
+          <input
+            aria-invalid={false}
+            autoComplete="off"
+            className="MuiInputBase-input MuiInput-input"
+            disabled={false}
+            id="adornment-target-select"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder="Device type"
+            required={false}
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      className="tooltip help"
+      data-event="click focus"
+      data-for="physical-device-type-tip"
+      data-tip={true}
+      id="onboard-connect-1"
+    >
+      <svg
+        aria-hidden="true"
+        className="MuiSvgIcon-root"
+        focusable="false"
+        role="presentation"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+        />
+      </svg>
+    </div>
+    <div
+      className="__react_component_tooltip place-bottom type-dark "
+      data-id="tooltip"
+      id="physical-device-type-tip"
+    >
+      <div>
+        <p>
+          If you don't see your exact device on the list, choose 
+          <i>
+            Generic ARMv6 or newer
+          </i>
+           to continue the tutorial for now.
+        </p>
+        <p>
+          (Note: if your device is 
+          <i>
+            not
+          </i>
+           based on ARMv6 or newer, the tutorial won't work - instead, go back and use the virtual device)
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;

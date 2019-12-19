@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ReleasesArtifacts = ({ docsVersion }) => (
+const ReleasesArtifacts = ({ docsVersion = '' }) => (
   <div>
     <h2>Releases and Artifacts</h2>
 

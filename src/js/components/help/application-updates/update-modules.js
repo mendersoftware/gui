@@ -1,6 +1,6 @@
 import React from 'react';
 
-const UpdateModules = ({ docsVersion }) => (
+const UpdateModules = ({ docsVersion = '' }) => (
   <div>
     <h2>Enabling different kinds of updates with Update Modules</h2>
     <p>

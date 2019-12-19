@@ -9,51 +9,57 @@ import { mount } from 'enzyme';
 import Dashboard from './dashboard';
 
 const mockStore = configureStore([thunk]);
-const store = mockStore({
-  devices: {
-    byStatus: {
-      accepted: { deviceIds: [], total: 0 },
-      active: { total: 0 },
-      inactive: { total: 0 },
-      pending: { deviceIds: [], total: 0 }
-    }
-  },
-  deployments: {
-    byId: {},
-    byStatus: {
-      finished: { total: 0 },
-      inprogress: { total: 0 },
-      pending: { total: 0 }
-    },
-    deploymentDeviceLimit: 500
-  },
-  users: {
-    byId: {},
-    currentUser: null,
-    showHelptips: true,
-    onboarding: { complete: false, showTips: true }
-  }
-});
 
-it('renders without crashing', () => {
-  mount(
-    <MemoryRouter>
-      <Provider store={store}>
-        <Dashboard />
-      </Provider>
-    </MemoryRouter>
-  );
-});
+describe('Dashboard Component', () => {
+  let store;
+  beforeEach(() => {
+    store = mockStore({
+      devices: {
+        byStatus: {
+          accepted: { deviceIds: [], total: 0 },
+          active: { total: 0 },
+          inactive: { total: 0 },
+          pending: { deviceIds: [], total: 0 }
+        }
+      },
+      deployments: {
+        byId: {},
+        byStatus: {
+          finished: { total: 0 },
+          inprogress: { total: 0 },
+          pending: { total: 0 }
+        },
+        deploymentDeviceLimit: 500
+      },
+      users: {
+        byId: {},
+        currentUser: null,
+        showHelptips: true,
+        onboarding: { complete: false, showTips: true }
+      }
+    });
+  });
 
-it('renders correctly', () => {
-  const tree = renderer
-    .create(
+  it('renders without crashing', () => {
+    mount(
       <MemoryRouter>
         <Provider store={store}>
           <Dashboard />
         </Provider>
       </MemoryRouter>
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
+    );
+  });
+
+  it('renders correctly', () => {
+    const tree = renderer
+      .create(
+        <MemoryRouter>
+          <Provider store={store}>
+            <Dashboard />
+          </Provider>
+        </MemoryRouter>
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

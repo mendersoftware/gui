@@ -6,24 +6,30 @@ import configureStore from 'redux-mock-store';
 import MyOrganization from './organization';
 
 const mockStore = configureStore([thunk]);
-const store = mockStore({
-  app: {
-    features: {
-      isHosted: false
-    }
-  },
-  users: {
-    organization: {}
-  }
-});
 
-it('renders correctly', () => {
-  const tree = renderer
-    .create(
-      <Provider store={store}>
-        <MyOrganization />
-      </Provider>
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
+describe('MyOrganization Component', () => {
+  let store;
+  beforeEach(() => {
+    store = mockStore({
+      app: {
+        features: {
+          isHosted: false
+        }
+      },
+      users: {
+        organization: {}
+      }
+    });
+  });
+
+  it('renders correctly', () => {
+    const tree = renderer
+      .create(
+        <Provider store={store}>
+          <MyOrganization />
+        </Provider>
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

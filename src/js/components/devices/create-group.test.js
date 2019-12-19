@@ -1,30 +1,34 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { createMount } from '@material-ui/core/test-utils';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import CreateGroup from './create-group';
 
 const mockStore = configureStore([thunk]);
-const store = mockStore({
-  devices: {
-    byId: {},
-    selectedDeviceList: [],
-    limit: 500
-  },
-  users: {
-    globalSettings: {},
-    currentUser: null
-  }
-});
 
-it('renders correctly', () => {
-  const tree = renderer
-    .create(
+describe('CreateGroup Component', () => {
+  let store;
+  beforeEach(() => {
+    store = mockStore({
+      devices: {
+        byId: {},
+        selectedDeviceList: [],
+        limit: 500
+      },
+      users: {
+        globalSettings: {},
+        currentUser: null
+      }
+    });
+  });
+
+  it('renders correctly', () => {
+    const tree = createMount()(
       <Provider store={store}>
-        <CreateGroup open={false} getDevicesByStatus={jest.fn()} />
+        <CreateGroup open={true} />
       </Provider>
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
+    );
+    expect(tree.html()).toMatchSnapshot();
+  });
 });

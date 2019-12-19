@@ -7,7 +7,7 @@ const updateOptions = [
   { content: 'Devices running Debian family OSes', target: '/help/system-updates/integrate-debian' }
 ];
 
-const SystemUpdates = ({ docsVersion }) => (
+const SystemUpdates = ({ docsVersion = '' }) => (
   <div>
     <h2>System Updates</h2>
 

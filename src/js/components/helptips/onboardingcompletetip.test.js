@@ -6,21 +6,27 @@ import configureStore from 'redux-mock-store';
 import OnboardingCompleteTip from './onboardingcompletetip';
 
 const mockStore = configureStore([thunk]);
-const store = mockStore({
-  app: { docsVersion: null, features: { hasMultitenancy: true, isHosted: true } },
-  devices: {
-    byId: {},
-    byStatus: { accepted: { deviceIds: [] } }
-  }
-});
 
-it('renders correctly', () => {
-  const tree = renderer
-    .create(
-      <Provider store={store}>
-        <OnboardingCompleteTip />
-      </Provider>
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
+describe('OnboardingCompleteTip Component', () => {
+  let store;
+  beforeEach(() => {
+    store = mockStore({
+      app: { docsVersion: null, features: { hasMultitenancy: true, isHosted: true } },
+      devices: {
+        byId: {},
+        byStatus: { accepted: { deviceIds: [] } }
+      }
+    });
+  });
+
+  it('renders correctly', () => {
+    const tree = renderer
+      .create(
+        <Provider store={store}>
+          <OnboardingCompleteTip />
+        </Provider>
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

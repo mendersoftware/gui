@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`FilterItem Component renders correctly 1`] = `
 <li
   className="MuiListItem-root filterPair MuiListItem-gutters"
   disabled={false}

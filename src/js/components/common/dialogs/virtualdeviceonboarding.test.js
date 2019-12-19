@@ -7,22 +7,28 @@ import configureStore from 'redux-mock-store';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
 
 const mockStore = configureStore([thunk]);
-const store = mockStore({
-  app: { features: { isHosted: false } },
-  users: {
-    organization: { tenant_token: null }
-  }
-});
 
-it('renders correctly', () => {
-  const tree = renderer
-    .create(
-      <MemoryRouter>
-        <Provider store={store}>
-          <VirtualDeviceOnboarding />
-        </Provider>
-      </MemoryRouter>
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
+describe('VirtualDeviceOnboarding Component', () => {
+  let store;
+  beforeEach(() => {
+    store = mockStore({
+      app: { features: { isHosted: false } },
+      users: {
+        organization: { tenant_token: null }
+      }
+    });
+  });
+
+  it('renders correctly', () => {
+    const tree = renderer
+      .create(
+        <MemoryRouter>
+          <Provider store={store}>
+            <VirtualDeviceOnboarding />
+          </Provider>
+        </MemoryRouter>
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

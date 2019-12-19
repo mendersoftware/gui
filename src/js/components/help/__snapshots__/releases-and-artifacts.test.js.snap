@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`ReleasesArtifacts Component renders correctly 1`] = `
 <div>
   <h2>
     Releases and Artifacts
@@ -32,7 +32,7 @@ exports[`renders correctly 1`] = `
   </p>
   <p>
     <a
-      href="https://docs.mender.io/undefinedartifacts"
+      href="https://docs.mender.io/artifacts"
       target="_blank"
     >
       Read the documentation for more on creating Artifacts

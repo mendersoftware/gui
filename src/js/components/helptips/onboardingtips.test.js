@@ -7,32 +7,38 @@ import configureStore from 'redux-mock-store';
 import { DevicePendingTip, WelcomeSnackTip } from './onboardingtips';
 
 const mockStore = configureStore([thunk]);
-const store = mockStore({});
 
-describe('DevicePendingTip', () => {
-  it('renders correctly', () => {
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <Provider store={store}>
-            <DevicePendingTip />
-          </Provider>
-        </MemoryRouter>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+describe('OnboardingTips Components', () => {
+  let store;
+  beforeEach(() => {
+    store = mockStore({});
   });
-});
 
-describe('WelcomeSnackTip', () => {
-  it('renders correctly', () => {
-    const tree = renderer
-      .create(
-        <Provider store={store}>
-          <WelcomeSnackTip />
-        </Provider>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+  describe('DevicePendingTip', () => {
+    it('renders correctly', () => {
+      const tree = renderer
+        .create(
+          <MemoryRouter>
+            <Provider store={store}>
+              <DevicePendingTip />
+            </Provider>
+          </MemoryRouter>
+        )
+        .toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+  });
+
+  describe('WelcomeSnackTip', () => {
+    it('renders correctly', () => {
+      const tree = renderer
+        .create(
+          <Provider store={store}>
+            <WelcomeSnackTip />
+          </Provider>
+        )
+        .toJSON();
+      expect(tree).toMatchSnapshot();
+    });
   });
 });

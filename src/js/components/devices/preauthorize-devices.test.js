@@ -6,27 +6,33 @@ import configureStore from 'redux-mock-store';
 import Preauthorize from './preauthorize-devices';
 
 const mockStore = configureStore([thunk]);
-const store = mockStore({
-  devices: {
-    byStatus: {
-      accepted: { total: 0 },
-      preauthorized: { total: 0 }
-    },
-    selectedDeviceList: [],
-    limit: 500
-  },
-  users: {
-    globalSettings: { id_attribute: null }
-  }
-});
 
-it('renders correctly', () => {
-  const tree = renderer
-    .create(
-      <Provider store={store}>
-        <Preauthorize />
-      </Provider>
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
+describe('PreauthorizeDevices Component', () => {
+  let store;
+  beforeEach(() => {
+    store = mockStore({
+      devices: {
+        byStatus: {
+          accepted: { total: 0 },
+          preauthorized: { total: 0 }
+        },
+        selectedDeviceList: [],
+        limit: 500
+      },
+      users: {
+        globalSettings: { id_attribute: null }
+      }
+    });
+  });
+
+  it('renders correctly', () => {
+    const tree = renderer
+      .create(
+        <Provider store={store}>
+          <Preauthorize />
+        </Provider>
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

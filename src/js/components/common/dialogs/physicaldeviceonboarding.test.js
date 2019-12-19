@@ -6,24 +6,30 @@ import configureStore from 'redux-mock-store';
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 
 const mockStore = configureStore([thunk]);
-const store = mockStore({
-  app: {
-    features: { isEnterprise: false, isHosted: false },
-    hostAddress: null,
-    menderDebPackageVersion: null
-  },
-  users: {
-    organization: { tenant_token: null }
-  }
-});
 
-it('renders correctly', () => {
-  const tree = renderer
-    .create(
-      <Provider store={store}>
-        <PhysicalDeviceOnboarding />
-      </Provider>
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
+describe('PhysicalDeviceOnboarding Component', () => {
+  let store;
+  beforeEach(() => {
+    store = mockStore({
+      app: {
+        features: { isEnterprise: false, isHosted: false },
+        hostAddress: null,
+        menderDebPackageVersion: null
+      },
+      users: {
+        organization: { tenant_token: null }
+      }
+    });
+  });
+
+  it('renders correctly', () => {
+    const tree = renderer
+      .create(
+        <Provider store={store}>
+          <PhysicalDeviceOnboarding progress={1} />
+        </Provider>
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

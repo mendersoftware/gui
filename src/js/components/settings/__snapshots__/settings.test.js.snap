@@ -1,30 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`Settings Component renders correctly 1`] = `
 <div
-  className="margin-top-small"
-  style={
-    Object {
-      "maxWidth": "750px",
-    }
-  }
+  className="margin-top"
 >
-  <h2
-    style={
-      Object {
-        "marginTop": "15px",
-      }
-    }
+  <div
+    className="leftFixed"
   >
-    My organization
-  </h2>
-  <div>
     <ul
       className="MuiList-root MuiList-padding"
     >
       <li
-        className="MuiListItem-root MuiListItem-gutters Mui-disabled"
-        disabled={true}
+        className="MuiListSubheader-root MuiListSubheader-sticky MuiListSubheader-gutters"
+      >
+        Settings
+      </li>
+      <a
+        aria-current={null}
+        className="MuiListItem-root navLink settingsNav MuiListItem-gutters"
+        disabled={false}
+        href="/settings/global-settings"
+        onClick={[Function]}
       >
         <div
           className="MuiListItemText-root"
@@ -32,102 +28,131 @@ exports[`renders correctly 1`] = `
           <span
             className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
           >
-            Organization name
+            Global settings
           </span>
         </div>
-      </li>
-      <hr
-        className="MuiDivider-root"
-      />
-      <div
-        className="material-list-item"
+      </a>
+      <a
+        aria-current={null}
+        className="MuiListItem-root navLink settingsNav MuiListItem-gutters"
+        disabled={false}
+        href="/settings/my-account"
+        onClick={[Function]}
       >
-        <h4
-          style={
-            Object {
-              "display": "inline",
-              "paddingRight": "10px",
-            }
-          }
-        >
-          Token
-        </h4>
         <div
-          className="tooltip info"
-          data-event="click focus"
-          data-for="token-help"
-          data-tip={true}
-          id="token-info"
-          style={
-            Object {
-              "display": "inline",
-              "position": "relative",
-              "top": "6px",
-            }
-          }
+          className="MuiListItemText-root"
         >
-          <svg
-            aria-hidden="true"
-            className="MuiSvgIcon-root"
-            focusable="false"
-            role="presentation"
-            viewBox="0 0 24 24"
+          <span
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
           >
-            <path
-              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+            My account
+          </span>
+        </div>
+      </a>
+      <a
+        aria-current={null}
+        className="MuiListItem-root navLink settingsNav MuiListItem-gutters"
+        disabled={false}
+        href="/settings/user-management"
+        onClick={[Function]}
+      >
+        <div
+          className="MuiListItemText-root"
+        >
+          <span
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          >
+            User management
+          </span>
+        </div>
+      </a>
+      <a
+        aria-current={null}
+        className="MuiListItem-root navLink settingsNav MuiListItem-gutters"
+        disabled={false}
+        href="/settings/my-organization"
+        onClick={[Function]}
+      >
+        <div
+          className="MuiListItemText-root"
+        >
+          <span
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          >
+            My organization
+          </span>
+        </div>
+      </a>
+    </ul>
+  </div>
+  <div
+    className="rightFluid padding-right"
+  >
+    <div
+      className="margin-top-small"
+      style={
+        Object {
+          "maxWidth": "750px",
+        }
+      }
+    >
+      <h2
+        className="margin-top-small"
+      >
+        My account
+      </h2>
+      <form
+        className="flexbox space-between"
+      >
+        <div
+          className="MuiFormControl-root"
+        >
+          <label
+            className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+            data-shrink={false}
+            htmlFor="email"
+          >
+            Email
+          </label>
+          <div
+            className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+            onClick={[Function]}
+            onKeyPress={[Function]}
+            style={
+              Object {
+                "maxWidth": "100%",
+                "width": "400px",
+              }
+            }
+          >
+            <input
+              aria-invalid={false}
+              className="MuiInputBase-input MuiInput-input"
+              disabled={false}
+              id="email"
+              name="email"
+              onAnimationStart={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder="Email"
+              required={false}
+              type="text"
             />
-          </svg>
-        </div>
-        <div
-          className="__react_component_tooltip place-top type-dark "
-          data-id="tooltip"
-          id="token-help"
-        >
-          <h3>
-            Tenant token
-          </h3>
+          </div>
           <p
-            style={
-              Object {
-                "color": "#DECFD9",
-                "margin": "1em 0",
-              }
-            }
-          >
-            This token is unique for your organization and ensures that only devices that you own are able to connect to your account.
-          </p>
-          <p
-            style={
-              Object {
-                "color": "#DECFD9",
-                "margin": "1em 0",
-              }
-            }
-          >
-            Set this variable in 
-            <i>
-              local.conf
-            </i>
-             in order to make the device recognize the organization to which it belongs.
-          </p>
+            className="MuiFormHelperText-root"
+            id="component-error-text"
+          />
         </div>
-        <p
-          style={
-            Object {
-              "wordBreak": "break-all",
-            }
-          }
-        />
+      </form>
+      <form
+        className="margin-top flexbox space-between"
+      >
         <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-text"
+          className="MuiButtonBase-root MuiButton-root MuiButton-text button-holder undefined MuiButton-textPrimary"
           disabled={false}
-          icon={
-            <ForwardRef(WithStyles)
-              className="material-icons"
-            >
-              content_paste
-            </ForwardRef(WithStyles)>
-          }
+          id="change_pass"
           onBlur={[Function]}
           onClick={[Function]}
           onDragLeave={[Function]}
@@ -140,70 +165,45 @@ exports[`renders correctly 1`] = `
           onTouchEnd={[Function]}
           onTouchMove={[Function]}
           onTouchStart={[Function]}
-          style={
-            Object {
-              "marginTop": "15px",
-            }
-          }
           tabIndex={0}
           type="button"
         >
           <span
             className="MuiButton-label"
           >
-            Copy to clipboard
+            Change password
           </span>
         </button>
-        <p
+      </form>
+      <p
+        className="info icon"
+      >
+        <svg
+          aria-hidden="true"
+          className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+          focusable="false"
+          role="presentation"
           style={
             Object {
-              "marginLeft": "14px",
+              "margin": "0 6px 4px 0",
+              "verticalAlign": "middle",
             }
           }
-        />
-      </div>
-      <hr
-        className="MuiDivider-root"
-      />
-    </ul>
-    <div
-      className="margin-top margin-bottom-small margin-left-small margin-right-small"
-    >
-      <div
-        className="explanatory-text billing-subtitle"
-      >
-        Current plan:
-      </div>
-      <div
-        className="flexbox space-between"
-      >
-        <div
-          className="MuiTypography-body2 MuiTypography-colorTextSecondary"
+          viewBox="0 0 24 24"
         >
-          Mender Enterprise
-        </div>
+          <path
+            d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+          />
+        </svg>
+        With a commercial Mender plan you can set up Two Factor Authentication to add an additional layer of security to accounts. 
         <a
-          href="https://mender.io/products/pricing"
+          href="https://mender.io"
           target="_blank"
         >
-          Compare product plans
+          Learn more
         </a>
-      </div>
+      </p>
     </div>
-    <hr
-      className="MuiDivider-root"
-    />
-    <p
-      className="margin-left-small margin-right-small"
-    >
-      To update your billing details or for any other support questions, contact us at 
-      <a
-        href="mailto:support@mender.io"
-      >
-        support@mender.io
-      </a>
-      .
-    </p>
   </div>
 </div>
 `;

@@ -6,20 +6,26 @@ import configureStore from 'redux-mock-store';
 import DeploymentCompleteTip from './deploymentcompletetip';
 
 const mockStore = configureStore([thunk]);
-const store = mockStore({
-  devices: {
-    byId: {},
-    byStatus: { accepted: { deviceIds: [] } }
-  }
-});
 
-it('renders correctly', () => {
-  const tree = renderer
-    .create(
-      <Provider store={store}>
-        <DeploymentCompleteTip />
-      </Provider>
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
+describe('DeploymentCompleteTip Component', () => {
+  let store;
+  beforeEach(() => {
+    store = mockStore({
+      devices: {
+        byId: {},
+        byStatus: { accepted: { deviceIds: [] } }
+      }
+    });
+  });
+
+  it('renders correctly', () => {
+    const tree = renderer
+      .create(
+        <Provider store={store}>
+          <DeploymentCompleteTip />
+        </Provider>
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

@@ -6,23 +6,29 @@ import configureStore from 'redux-mock-store';
 import UserManagement from './usermanagement';
 
 const mockStore = configureStore([thunk]);
-const store = mockStore({
-  app: {
-    snackbar: {}
-  },
-  users: {
-    currentUser: null,
-    byId: {}
-  }
-});
 
-it('renders correctly', () => {
-  const tree = renderer
-    .create(
-      <Provider store={store}>
-        <UserManagement />
-      </Provider>
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
+describe('UserManagement Component', () => {
+  let store;
+  beforeEach(() => {
+    store = mockStore({
+      app: {
+        snackbar: {}
+      },
+      users: {
+        currentUser: null,
+        byId: {}
+      }
+    });
+  });
+
+  it('renders correctly', () => {
+    const tree = renderer
+      .create(
+        <Provider store={store}>
+          <UserManagement />
+        </Provider>
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

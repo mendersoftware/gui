@@ -6,13 +6,19 @@ import configureStore from 'redux-mock-store';
 import ConfirmDismissHelptips from './confirmdismisshelptips';
 
 const mockStore = configureStore([thunk]);
-const store = mockStore({});
 
-it('renders correctly', () => {
-  const tree = createMount()(
-    <Provider store={store}>
-      <ConfirmDismissHelptips open={true} />
-    </Provider>
-  );
-  expect(tree.html()).toMatchSnapshot();
+describe('ConfirmDismissHelptips Component', () => {
+  let store;
+  beforeEach(() => {
+    store = mockStore({});
+  });
+
+  it('renders correctly', () => {
+    const tree = createMount()(
+      <Provider store={store}>
+        <ConfirmDismissHelptips open={true} />
+      </Provider>
+    );
+    expect(tree.html()).toMatchSnapshot();
+  });
 });
