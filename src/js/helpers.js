@@ -18,18 +18,15 @@ export function fullyDecodeURI(uri) {
   return uri;
 }
 
-const statCollector = (items, statistics) => items.reduce((accu, property) => accu + (statistics[property] || 0), 0);
+const statCollector = (items, statistics) => items.reduce((accu, property) => accu + Number(statistics[property] || 0), 0);
 
-export const groupDeploymentStats = stats => {
-  const collector = items => items.reduce((accu, property) => accu + Number(stats[property] || 0), 0);
-  return {
-    // don't include 'pending' as inprogress, as all remaining devices will be pending - we don't discriminate based on phase membership
-    inprogress: collector(['downloading', 'installing', 'rebooting']),
-    pending: stats['pending'] || 0,
-    successes: collector(['success', 'already-installed']),
-    failures: collector(['failure', 'aborted', 'noartifact', 'decommissioned'])
-  };
-};
+export const groupDeploymentStats = stats => ({
+  // don't include 'pending' as inprogress, as all remaining devices will be pending - we don't discriminate based on phase membership
+  inprogress: statCollector(['downloading', 'installing', 'rebooting'], stats),
+  pending: stats['pending'] || 0,
+  successes: statCollector(['success', 'already-installed'], stats),
+  failures: statCollector(['failure', 'aborted', 'noartifact', 'decommissioned'], stats)
+});
 
 export function statusToPercentage(state, intervals) {
   var time;
@@ -531,11 +528,11 @@ ${enterpriseSettings}`;
   let codeToCopy = `sudo bash -c 'wget https://d1b0l86ne08fsf.cloudfront.net/${packageVersion}/dist-packages/debian/armhf/mender-client_${packageVersion}-1_armhf.deb && \\
 DEBIAN_FRONTEND=noninteractive dpkg -i mender-client_${packageVersion}-1_armhf.deb && \\
 DEVICE_TYPE="${deviceType}" && \\${
-  token
-    ? `
+    token
+      ? `
 TENANT_TOKEN="${token}" && \\`
-    : ''
-}
+      : ''
+  }
 mender setup \\
   --device-type $DEVICE_TYPE \\
 ${connectionInstructions} && \\

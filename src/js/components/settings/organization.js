@@ -28,16 +28,17 @@ export class MyOrganization extends React.Component {
     }, 5000);
   }
   render() {
-    const currentPlan = AppStore.getIsHosted() ? 'Mender Professional' : 'Mender Enterprise';
+    const { org, isHosted } = this.props;
+    const currentPlan = isHosted ? 'Mender Professional' : 'Mender Enterprise';
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
         <h2 style={{ marginTop: '15px' }}>My organization</h2>
 
-        {this.props.org ? (
+        {org ? (
           <div>
             <List>
               <ListItem key="name" disabled={true}>
-                <ListItemText primary="Organization name" secondary={this.props.org.name} />
+                <ListItemText primary="Organization name" secondary={org.name} />
               </ListItem>
               <Divider />
               <div className="material-list-item">
@@ -62,9 +63,9 @@ export class MyOrganization extends React.Component {
                   </p>
                 </ReactTooltip>
 
-                <p style={{ wordBreak: 'break-all' }}>{this.props.org.tenant_token}</p>
+                <p style={{ wordBreak: 'break-all' }}>{org.tenant_token}</p>
 
-                <CopyToClipboard text={this.props.org.tenant_token} onCopy={() => this._copied()}>
+                <CopyToClipboard text={org.tenant_token} onCopy={() => this._copied()}>
                   <Button style={{ marginTop: '15px' }} icon={<Icon className="material-icons">content_paste</Icon>}>
                     Copy to clipboard
                   </Button>
@@ -94,6 +95,7 @@ const actionCreators = { getUserOrganization };
 
 const mapStateToProps = state => {
   return {
+    isHosted: state.app.features.isHosted,
     org: state.users.organization
   };
 };
