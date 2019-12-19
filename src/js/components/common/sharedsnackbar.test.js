@@ -1,10 +1,11 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import SharedSnackbar from './sharedsnackbar';
 
-const mockStore = configureStore([]);
+const mockStore = configureStore([thunk]);
 const store = mockStore({
   app: {
     snackbar: {}

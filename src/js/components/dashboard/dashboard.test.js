@@ -1,13 +1,14 @@
 import React from 'react';
-import { createMount } from '@material-ui/core/test-utils';
 import { MemoryRouter } from 'react-router-dom';
+import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 
 import { mount } from 'enzyme';
 import Dashboard from './dashboard';
 
-const mockStore = configureStore([]);
+const mockStore = configureStore([thunk]);
 const store = mockStore({
   devices: {
     byStatus: {
@@ -19,6 +20,11 @@ const store = mockStore({
   },
   deployments: {
     byId: {},
+    byStatus: {
+      finished: { total: 0 },
+      inprogress: { total: 0 },
+      pending: { total: 0 }
+    },
     deploymentDeviceLimit: 500
   },
   users: {
@@ -40,12 +46,14 @@ it('renders without crashing', () => {
 });
 
 it('renders correctly', () => {
-  const tree = createMount()(
-    <MemoryRouter>
-      <Provider store={store}>
-        <Dashboard />
-      </Provider>
-    </MemoryRouter>
-  );
-  expect(tree.html()).toMatchSnapshot();
+  const tree = renderer
+    .create(
+      <MemoryRouter>
+        <Provider store={store}>
+          <Dashboard />
+        </Provider>
+      </MemoryRouter>
+    )
+    .toJSON();
+  expect(tree).toMatchSnapshot();
 });

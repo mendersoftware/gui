@@ -1,10 +1,11 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import ExpandedDevice from './expanded-device';
 
-const mockStore = configureStore([]);
+const mockStore = configureStore([thunk]);
 const store = mockStore({
   app: { docsVersion: null },
   releases: { artifactsRepo: {} },
@@ -13,7 +14,6 @@ const store = mockStore({
     showHelptips: true
   }
 });
-store.dispatch = jest.fn();
 
 it('renders correctly', () => {
   const tree = renderer

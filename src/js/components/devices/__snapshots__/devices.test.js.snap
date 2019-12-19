@@ -1,3 +1,357 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `"<div><div class=\\"MuiTabs-root\\"><div class=\\"MuiTabs-scroller MuiTabs-fixed\\" style=\\"overflow: hidden;\\"><div class=\\"MuiTabs-flexContainer\\" role=\\"tablist\\"><a class=\\"MuiButtonBase-root MuiTab-root MuiTab-textColorInherit Mui-selected\\" tabindex=\\"0\\" role=\\"tab\\" aria-disabled=\\"false\\" aria-selected=\\"true\\" href=\\"/devices\\"><span class=\\"MuiTab-wrapper\\">Device groups</span><span class=\\"MuiTouchRipple-root\\"></span></a><a class=\\"MuiButtonBase-root MuiTab-root MuiTab-textColorInherit\\" tabindex=\\"0\\" role=\\"tab\\" aria-disabled=\\"false\\" aria-selected=\\"false\\" href=\\"/devices/pending\\"><span class=\\"MuiTab-wrapper\\">Pending</span><span class=\\"MuiTouchRipple-root\\"></span></a><a class=\\"MuiButtonBase-root MuiTab-root MuiTab-textColorInherit\\" tabindex=\\"0\\" role=\\"tab\\" aria-disabled=\\"false\\" aria-selected=\\"false\\" href=\\"/devices/preauthorized\\"><span class=\\"MuiTab-wrapper\\">Preauthorized</span><span class=\\"MuiTouchRipple-root\\"></span></a><a class=\\"MuiButtonBase-root MuiTab-root MuiTab-textColorInherit\\" tabindex=\\"0\\" role=\\"tab\\" aria-disabled=\\"false\\" aria-selected=\\"false\\" href=\\"/devices/rejected\\"><span class=\\"MuiTab-wrapper\\">Rejected</span><span class=\\"MuiTouchRipple-root\\"></span></a></div><span class=\\"PrivateTabIndicator-root-25 PrivateTabIndicator-colorSecondary-27 MuiTabs-indicator\\" style=\\"left: 0px; width: 0px;\\"></span></div></div><div class=\\"tab-container\\"><div class=\\"leftFixed\\"><div><div class=\\"muted margin-bottom-small\\">Groups</div><ul class=\\"MuiList-root MuiList-padding\\"><div class=\\"MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-button\\" tabindex=\\"0\\" role=\\"button\\" aria-disabled=\\"false\\" style=\\"background-color: rgb(231, 231, 231);\\"><div class=\\"MuiListItemText-root\\"><span class=\\"MuiTypography-root MuiListItemText-primary MuiTypography-body1\\"><span>All devices</span></span></div><span class=\\"MuiTouchRipple-root\\"></span></div><hr class=\\"MuiDivider-root\\"><div class=\\"MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters Mui-disabled MuiListItem-button Mui-disabled\\" tabindex=\\"-1\\" role=\\"button\\" aria-disabled=\\"true\\" style=\\"color: rgb(212, 233, 231);\\"><div class=\\"MuiListItemIcon-root\\"><svg class=\\"MuiSvgIcon-root\\" focusable=\\"false\\" viewBox=\\"0 0 24 24\\" aria-hidden=\\"true\\" role=\\"presentation\\"><path d=\\"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\\"></path></svg></div><div class=\\"MuiListItemText-root\\"><span class=\\"MuiTypography-root MuiListItemText-primary MuiTypography-body1\\">Create a group</span></div></div></ul></div></div><div class=\\"rightFluid\\" style=\\"padding-top: 0px;\\"><div style=\\"position: relative;\\"><button class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary\\" tabindex=\\"0\\" type=\\"button\\" style=\\"position: absolute; top: 0px; right: 0px; z-index: 100;\\"><span class=\\"MuiButton-label\\"><svg class=\\"MuiSvgIcon-root buttonLabelIcon\\" focusable=\\"false\\" viewBox=\\"0 0 24 24\\" aria-hidden=\\"true\\" role=\\"presentation\\"><path d=\\"M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z\\"></path></svg>Filters</span><span class=\\"MuiTouchRipple-root\\"></span></button></div><div class=\\"relative\\"><div class=\\"loaderContainer\\"><div class=\\"loader\\"><span class=\\"dot dot_1\\"></span><span class=\\"dot dot_2\\"></span><span class=\\"dot dot_3\\"></span><span class=\\"dot dot_4\\"></span></div></div><div class=\\"hidden\\"><p>No devices found</p><p>No devices have been authorized to connect to the Mender server yet.</p></div><div></div></div></div></div></div>"`;
+exports[`renders correctly 1`] = `
+<div>
+  <div
+    className="MuiTabs-root"
+  >
+    <div
+      className="MuiTabs-scroller MuiTabs-fixed"
+      onScroll={[Function]}
+      style={
+        Object {
+          "marginBottom": null,
+          "overflow": "hidden",
+        }
+      }
+    >
+      <div
+        className="MuiTabs-flexContainer"
+        role="tablist"
+      >
+        <a
+          aria-disabled={false}
+          aria-selected={true}
+          className="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit Mui-selected"
+          href="/devices"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          role="tab"
+          tabIndex={0}
+        >
+          <span
+            className="MuiTab-wrapper"
+          >
+            Device groups
+          </span>
+          <span
+            className="MuiTouchRipple-root"
+          />
+        </a>
+        <a
+          aria-disabled={false}
+          aria-selected={false}
+          className="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit"
+          href="/devices/pending"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          role="tab"
+          tabIndex={0}
+        >
+          <span
+            className="MuiTab-wrapper"
+          >
+            Pending
+          </span>
+          <span
+            className="MuiTouchRipple-root"
+          />
+        </a>
+        <a
+          aria-disabled={false}
+          aria-selected={false}
+          className="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit"
+          href="/devices/preauthorized"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          role="tab"
+          tabIndex={0}
+        >
+          <span
+            className="MuiTab-wrapper"
+          >
+            Preauthorized
+          </span>
+          <span
+            className="MuiTouchRipple-root"
+          />
+        </a>
+        <a
+          aria-disabled={false}
+          aria-selected={false}
+          className="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit"
+          href="/devices/rejected"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          role="tab"
+          tabIndex={0}
+        >
+          <span
+            className="MuiTab-wrapper"
+          >
+            Rejected
+          </span>
+          <span
+            className="MuiTouchRipple-root"
+          />
+        </a>
+      </div>
+      <span
+        className="PrivateTabIndicator-root-25 PrivateTabIndicator-colorSecondary-27 MuiTabs-indicator"
+        style={
+          Object {
+            "left": 0,
+            "width": 0,
+          }
+        }
+      />
+    </div>
+  </div>
+  <div
+    className="tab-container"
+  >
+    <div
+      className="leftFixed"
+    >
+      <div>
+        <div
+          className="muted margin-bottom-small"
+        >
+          Groups
+        </div>
+        <ul
+          className="MuiList-root MuiList-padding"
+        >
+          <div
+            aria-disabled={false}
+            className="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-button"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            role="button"
+            style={
+              Object {
+                "backgroundColor": "#e7e7e7",
+              }
+            }
+            tabIndex={0}
+          >
+            <div
+              className="MuiListItemText-root"
+            >
+              <span
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+              >
+                <span>
+                  All devices
+                </span>
+              </span>
+            </div>
+            <span
+              className="MuiTouchRipple-root"
+            />
+          </div>
+          <hr
+            className="MuiDivider-root"
+          />
+          <div
+            aria-disabled={true}
+            className="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters Mui-disabled MuiListItem-button Mui-disabled"
+            onBlur={[Function]}
+            onClick={null}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            role="button"
+            style={
+              Object {
+                "color": "#d4e9e7",
+              }
+            }
+            tabIndex={-1}
+          >
+            <div
+              className="MuiListItemIcon-root"
+            >
+              <svg
+                aria-hidden="true"
+                className="MuiSvgIcon-root"
+                focusable="false"
+                role="presentation"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                />
+              </svg>
+            </div>
+            <div
+              className="MuiListItemText-root"
+            >
+              <span
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+              >
+                Create a group
+              </span>
+            </div>
+          </div>
+        </ul>
+      </div>
+    </div>
+    <div
+      className="rightFluid"
+      style={
+        Object {
+          "paddingTop": "0",
+        }
+      }
+    >
+      <div
+        style={
+          Object {
+            "position": "relative",
+          }
+        }
+      >
+        <button
+          className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
+          disabled={false}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          style={
+            Object {
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+              "zIndex": 100,
+            }
+          }
+          tabIndex={0}
+          type="button"
+        >
+          <span
+            className="MuiButton-label"
+          >
+            <svg
+              aria-hidden="true"
+              className="MuiSvgIcon-root buttonLabelIcon"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
+              />
+            </svg>
+            Filters
+          </span>
+          <span
+            className="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+      <div
+        className="relative"
+      >
+        <div
+          className="loaderContainer"
+        >
+          <div
+            className="loader"
+          >
+            <span
+              className="dot dot_1"
+            />
+            <span
+              className="dot dot_2"
+            />
+            <span
+              className="dot dot_3"
+            />
+            <span
+              className="dot dot_4"
+            />
+          </div>
+        </div>
+        <div
+          className="hidden"
+        >
+          <p>
+            No devices found
+          </p>
+          <p>
+            No devices have been authorized to connect to the Mender server yet.
+          </p>
+        </div>
+        <div />
+      </div>
+    </div>
+  </div>
+</div>
+`;

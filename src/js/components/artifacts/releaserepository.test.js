@@ -1,10 +1,11 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 import renderer from 'react-test-renderer';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import ReleaseRepository from './releaserepository';
 
-const mockStore = configureStore([]);
+const mockStore = configureStore([thunk]);
 const store = mockStore({
   releases: {
     byId: {},

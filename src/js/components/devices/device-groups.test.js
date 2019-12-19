@@ -1,10 +1,11 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import DeviceGroups from './device-groups';
 
-const mockStore = configureStore([]);
+const mockStore = configureStore([thunk]);
 const store = mockStore({
   devices: {
     groups: {
@@ -15,11 +16,15 @@ const store = mockStore({
       accepted: {
         total: 0,
         deviceIds: []
+      },
+      rejected: {
+        total: 0
       }
     },
     filters: [],
     filteringAttributes: { inventoryAttributes: [] },
-    selectedDevice: null
+    selectedDevice: null,
+    selectedDeviceList: []
   },
   deployments: {
     deploymentDeviceLimit: 5000
@@ -31,6 +36,12 @@ const store = mockStore({
     }
   },
   users: {
+    globalSettings: {
+      id_attribute: null
+    },
+    onboarding: {
+      complete: false
+    },
     showHelptips: false
   }
 });

@@ -2,10 +2,11 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Login from './login';
 
-const mockStore = configureStore([]);
+const mockStore = configureStore([thunk]);
 const store = mockStore({
   app: { features: { isHosted: false } },
   users: {
@@ -19,7 +20,6 @@ const store = mockStore({
     showHelptips: false
   }
 });
-store.dispatch = jest.fn();
 
 it('renders correctly', () => {
   const tree = renderer

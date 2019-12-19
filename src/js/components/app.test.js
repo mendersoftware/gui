@@ -2,13 +2,24 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import App from './app';
 
-const mockStore = configureStore([]);
+const mockStore = configureStore([thunk]);
 const store = mockStore({
   app: {
-    hostedAnnouncement: null
+    hostedAnnouncement: null,
+    features: {
+      isDemoMode: false
+    },
+    snackbar: {},
+    versionInformation: {}
+  },
+  deployments: {
+    byStatus: {
+      inprogress: { total: 0 }
+    }
   },
   devices: {
     byId: {},
@@ -27,6 +38,7 @@ const store = mockStore({
     uploadInProgress: false
   },
   users: {
+    byId: {},
     currentUser: null,
     onboarding: {
       complete: false,

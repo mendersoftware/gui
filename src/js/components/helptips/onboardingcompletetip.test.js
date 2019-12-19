@@ -1,24 +1,24 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import OnboardingCompleteTip from './onboardingcompletetip';
 
-const mockStore = configureStore([]);
+const mockStore = configureStore([thunk]);
 const store = mockStore({
-  app: { docsVersion: null },
+  app: { docsVersion: null, features: { hasMultitenancy: true, isHosted: true } },
   devices: {
     byId: {},
     byStatus: { accepted: { deviceIds: [] } }
   }
 });
-store.dispatch = jest.fn();
 
 it('renders correctly', () => {
   const tree = renderer
     .create(
       <Provider store={store}>
-        <OnboardingCompleteTip getDevicesByStatus={() => Promise.resolve()} />
+        <OnboardingCompleteTip />
       </Provider>
     )
     .toJSON();

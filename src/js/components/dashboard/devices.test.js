@@ -1,11 +1,12 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { createMount } from '@material-ui/core/test-utils';
+import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Devices from './devices';
 
-const mockStore = configureStore([]);
+const mockStore = configureStore([thunk]);
 const store = mockStore({
   deployments: {
     deploymentDeviceLimit: 5000
@@ -16,6 +17,9 @@ const store = mockStore({
       accepted: {
         total: 0,
         deviceIds: []
+      },
+      active: {
+        total: 0
       },
       inactive: {
         total: 0
@@ -32,12 +36,14 @@ const store = mockStore({
 });
 
 it('renders correctly', () => {
-  const tree = createMount()(
-    <MemoryRouter>
-      <Provider store={store}>
-        <Devices />
-      </Provider>
-    </MemoryRouter>
-  );
-  expect(tree.html()).toMatchSnapshot();
+  const tree = renderer
+    .create(
+      <MemoryRouter>
+        <Provider store={store}>
+          <Devices getAllDevicesByStatus={jest.fn()} />
+        </Provider>
+      </MemoryRouter>
+    )
+    .toJSON();
+  expect(tree).toMatchSnapshot();
 });
