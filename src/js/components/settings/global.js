@@ -105,14 +105,13 @@ export class Global extends React.Component {
 
         <Form>
           <SelectInput
-            hint="Device identity attribute"
             label="Device identity attribute"
             id="deviceid"
             onChange={value => this.changeIdAttribute(value)}
             menuItems={id_attributes}
             style={{ width: '400px' }}
             value={this.state.updatedSettings.id_attribute || ''}
-            extraHint={id_hint}
+            hint={id_hint}
           />
         </Form>
 
