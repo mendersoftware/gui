@@ -127,7 +127,7 @@ const deviceReducer = (state = initialState, action) => {
     case DeviceConstants.RECEIVE_GROUP_DEVICES:
       return {
         ...state,
-        selectedDeviceList: action.deviceIds,
+        selectedDeviceList: action.selectDevices ? action.deviceIds : state.selectedDeviceList,
         groups: {
           ...state.groups,
           byId: {

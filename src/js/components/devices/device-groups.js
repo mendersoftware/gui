@@ -164,7 +164,7 @@ export class DeviceGroups extends React.Component {
     if (selectedGroup || hasFilters) {
       let request;
       if (selectedGroup) {
-        request = self._isUngroupedGroup(selectedGroup) ? Promise.resolve() : getGroupDevices(selectedGroup, this.state.pageNo, this.state.pageLength);
+        request = self._isUngroupedGroup(selectedGroup) ? Promise.resolve() : getGroupDevices(selectedGroup, true, this.state.pageNo, this.state.pageLength);
       } else {
         const filterId = filters.find(item => item.key === 'id');
         if (filterId) {

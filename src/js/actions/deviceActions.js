@@ -114,7 +114,7 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
     { ids, devicesById: {} }
   );
 
-export const getGroupDevices = (group, page = defaultPage, perPage = defaultPerPage) => (dispatch, getState) => {
+export const getGroupDevices = (group, selectDevices = false, page = defaultPage, perPage = defaultPerPage) => (dispatch, getState) => {
   var forGroup = group ? `&group=${group}` : '&has_group=false';
   return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${perPage}&page=${page}${forGroup}`).then(res => {
     const deviceAccu = reduceReceivedDevices(res.body, [], getState());
@@ -128,6 +128,7 @@ export const getGroupDevices = (group, page = defaultPage, perPage = defaultPerP
         type: DeviceConstants.RECEIVE_GROUP_DEVICES,
         group,
         deviceIds: deviceAccu.ids,
+        selectDevices,
         total: Number(res.headers['x-total-count'])
       })
     ]);
