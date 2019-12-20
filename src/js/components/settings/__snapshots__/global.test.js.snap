@@ -70,12 +70,12 @@ exports[`GlobalSettings Component renders correctly 1`] = `
         <div
           aria-haspopup="listbox"
           aria-labelledby=" deviceid"
-          className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input MuiInputBase-inputSelect"
+          className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
           id="deviceid"
           onBlur={[Function]}
-          onClick={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
+          onMouseDown={[Function]}
           role="button"
           tabIndex={0}
         >
@@ -92,6 +92,7 @@ exports[`GlobalSettings Component renders correctly 1`] = `
           name="selector"
           onAnimationStart={[Function]}
           type="hidden"
+          value=""
         />
         <svg
           aria-hidden="true"

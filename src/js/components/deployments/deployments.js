@@ -302,7 +302,7 @@ export class Deployments extends React.Component {
       })
       .catch(err => {
         console.log(err);
-        var errMsg = err.res.body.error || '';
+        var errMsg = err.res ? err.res.body.error : '';
         self.props.setSnackbar(preformatWithRequestID(err.res, `There was wan error while aborting the deployment: ${errMsg}`));
       });
   }

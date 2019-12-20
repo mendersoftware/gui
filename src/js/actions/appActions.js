@@ -39,7 +39,10 @@ export const setSnackbar = (message, duration, action, component, onClick, onClo
   });
 
 export const getHostedLinks = id => dispatch =>
-  GeneralApi.getNoauth(`${hostedLinks}${id}/links.json`).then(res => dispatch({ type: AppConstants.RECEIVED_HOSTED_LINKS, links: JSON.parse(res.text) }));
+  GeneralApi.getNoauth(`${hostedLinks}${id}/links.json`)
+    .then(res => dispatch({ type: AppConstants.RECEIVED_HOSTED_LINKS, links: JSON.parse(res.text) }))
+    // to be expected outside of HM, so logging it should be enough
+    .catch(err => console.log(err.error));
 
 export const findLocalIpAddress = () => dispatch =>
   Helpers.findLocalIpAddress().then(ipAddress => dispatch({ type: AppConstants.SET_LOCAL_IPADDRESS, ipAddress }));

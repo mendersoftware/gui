@@ -12,87 +12,92 @@ exports[`FilterItem Component renders correctly 1`] = `
       className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
     >
       <div
-        className="MuiFormControl-root MuiTextField-root"
+        className="flexbox space-between"
+        style={
+          Object {
+            "alignItems": "flex-end",
+          }
+        }
       >
-        <label
-          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
-          data-shrink={true}
-        >
-          Filter by
-        </label>
         <div
-          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
-          onClick={[Function]}
+          className="MuiFormControl-root MuiTextField-root"
         >
+          <label
+            className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+            data-shrink={true}
+          >
+            Filter by
+          </label>
           <div
-            aria-haspopup="listbox"
-            aria-labelledby=" "
-            className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input MuiInputBase-inputSelect MuiInputBase-inputAdornedEnd"
-            onBlur={[Function]}
+            className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
             onClick={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            role="button"
-            tabIndex={0}
           >
-            testvalue
-          </div>
-          <input
-            autoFocus={false}
-            onAnimationStart={[Function]}
-            type="hidden"
-            value="testkey"
-          />
-          <svg
-            aria-hidden="true"
-            className="MuiSvgIcon-root MuiSelect-icon"
-            focusable="false"
-            role="presentation"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M7 10l5 5 5-5z"
-            />
-          </svg>
-          <div
-            className="MuiInputAdornment-root MuiInputAdornment-positionEnd"
-          >
-            <button
-              className="MuiButtonBase-root MuiIconButton-root"
-              disabled={false}
+            <div
+              aria-haspopup="listbox"
+              aria-labelledby=" "
+              className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
               onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
               onFocus={[Function]}
               onKeyDown={[Function]}
-              onKeyUp={[Function]}
               onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
+              role="button"
               tabIndex={0}
-              type="button"
             >
-              <span
-                className="MuiIconButton-label"
-              >
-                <svg
-                  aria-hidden="true"
-                  className="MuiSvgIcon-root"
-                  focusable="false"
-                  role="presentation"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"
-                  />
-                </svg>
-              </span>
-            </button>
+              testvalue
+            </div>
+            <input
+              autoFocus={false}
+              onAnimationStart={[Function]}
+              type="hidden"
+              value="testkey"
+            />
+            <svg
+              aria-hidden="true"
+              className="MuiSvgIcon-root MuiSelect-icon"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M7 10l5 5 5-5z"
+              />
+            </svg>
           </div>
         </div>
+        <button
+          className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
+          disabled={false}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex={0}
+          type="button"
+        >
+          <span
+            className="MuiIconButton-label"
+          >
+            <svg
+              aria-hidden="true"
+              className="MuiSvgIcon-root"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"
+              />
+            </svg>
+          </span>
+        </button>
       </div>
       <div
         className="MuiFormControl-root"

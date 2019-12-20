@@ -18,6 +18,7 @@ describe('PastDeployments Component', () => {
   it('renders correctly', () => {
     const mockDate = new Date('2019-01-01');
     jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
+    Date.now = jest.fn;
     const tree = renderer
       .create(
         <Provider store={store}>

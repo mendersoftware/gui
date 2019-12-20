@@ -118,7 +118,7 @@ exports[`Deployments Component renders correctly 1`] = `
         </a>
       </div>
       <span
-        className="PrivateTabIndicator-root-53 PrivateTabIndicator-colorSecondary-55 MuiTabs-indicator"
+        className="PrivateTabIndicator-root-54 PrivateTabIndicator-colorSecondary-56 MuiTabs-indicator"
         style={
           Object {
             "left": 0,
