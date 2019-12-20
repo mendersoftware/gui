@@ -23,7 +23,7 @@ export class Artifacts extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.releases.length !== this.props.releases.length && this.props.releases.length) {
       const selectedRelease = this.props.releases.find(release => prevProps.releases.every(item => item.Name !== release.Name)) || this.props.releases[0];
-      this.props.selectArtifact(selectedRelease.Artifacts[0]);
+      this.props.selectRelease(selectedRelease);
     }
     if (this.props.params && this.props.params.artifactVersion && prevProps.params && prevProps.params.artifactVersion !== this.props.params.artifactVersion) {
       // selected artifacts
@@ -40,7 +40,7 @@ export class Artifacts extends React.Component {
         if (artifactVersion) {
           self.props.selectRelease(artifactVersion);
         } else {
-          self.props.selectArtifact(self.props.releases[0].Artifacts[0]);
+          self.props.selectRelease(self.props.releases[0]);
         }
       });
     }
