@@ -61,6 +61,7 @@ export class DeviceGroups extends React.Component {
       self._refreshGroups();
       self._onFilterChange(self.props.filters);
     } else {
+      clearInterval(self.deviceTimer);
       // no group, no filters, all devices
       self.deviceTimer = setInterval(() => self._getDevices(), refreshDeviceLength);
       self._refreshAll();
@@ -342,6 +343,7 @@ export class DeviceGroups extends React.Component {
     } else {
       self.props.setDeviceFilters(filters);
       self.setState({ pageNo: 1 }, () => {
+        clearInterval(self.deviceTimer);
         self.deviceTimer = setInterval(() => self._getDevices(), refreshDeviceLength);
         self._getDevices();
       });
@@ -353,9 +355,8 @@ export class DeviceGroups extends React.Component {
     var self = this;
     this.setState({ pause: !self.state.pause }, () => {
       // pause refresh interval when authset dialog is open, restart when it closes
-      if (self.state.pause) {
-        clearInterval(self.deviceTimer);
-      } else {
+      clearInterval(self.deviceTimer);
+      if (!self.state.pause) {
         self.deviceTimer = setInterval(() => self._getDevices(), refreshDeviceLength);
         self._refreshAll();
       }
