@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import cookie from 'react-cookie';
+import Cookies from 'universal-cookie';
 import Linkify from 'react-linkify';
 import ReactTooltip from 'react-tooltip';
 
@@ -34,10 +34,11 @@ export class Header extends React.Component {
     this.state = {
       anchorEl: null
     };
+    this.cookies = new Cookies();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const sessionId = cookie.load('JWT');
+    const sessionId = this.cookies.get('JWT');
     if (!sessionId || isEmpty(this.props.user) || this.props.user === null) {
       this._updateUsername()
         .then(() => this.props.getOnboardingState())
@@ -70,7 +71,7 @@ export class Header extends React.Component {
   }
   _checkShowHelp() {
     //checks if user id is set and if cookie for helptips exists for that user
-    var userCookie = cookie.load(this.props.user.id);
+    var userCookie = this.cookies.get(this.props.user.id);
     // if no user cookie set, do so via togglehelptips
     if (typeof userCookie === 'undefined' || typeof userCookie.help === 'undefined') {
       toggleHelptips();
@@ -81,7 +82,7 @@ export class Header extends React.Component {
   }
   _checkAnnouncement() {
     var hash = this.props.announcement ? hashString(this.props.announcement) : null;
-    var announceCookie = cookie.load(this.props.user.id + hash);
+    var announceCookie = this.cookies.get(this.props.user.id + hash);
     if (hash && typeof announceCookie === 'undefined') {
       this.setState({ showAnnouncement: true, hash: hash });
     } else {
@@ -90,7 +91,7 @@ export class Header extends React.Component {
   }
   _hideAnnouncement() {
     if (this.props.user.id) {
-      cookie.save(this.props.user.id + this.state.hash, true, { maxAge: 604800 });
+      this.cookies.set(this.props.user.id + this.state.hash, true, { maxAge: 604800 });
     }
     this.setState({ showAnnouncement: false });
   }
@@ -99,7 +100,7 @@ export class Header extends React.Component {
     var self = this;
     // get current user
     if (!self.state.gettingUser) {
-      var userId = self.state.sessionId ? decodeSessionToken(self.state.sessionId) : decodeSessionToken(cookie.load('JWT'));
+      var userId = self.state.sessionId ? decodeSessionToken(self.state.sessionId) : decodeSessionToken(self.cookies.get('JWT'));
       if (!userId) {
         return Promise.reject();
       }
@@ -134,7 +135,7 @@ export class Header extends React.Component {
   onLogoutClick() {
     this.setState({ gettingUser: false, anchorEl: null });
     clearAllRetryTimers(this.props.setSnackbar);
-    cookie.remove('JWT');
+    this.cookies.remove('JWT');
     this.props.history.push('/login');
   }
   render() {

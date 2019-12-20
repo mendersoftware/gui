@@ -1,5 +1,5 @@
-import validator from 'validator';
 import React from 'react';
+import validator from 'validator';
 
 import Button from '@material-ui/core/Button';
 
@@ -11,22 +11,20 @@ export default class Form extends React.Component {
       isValid: false
     };
   }
-  componentWillMount() {
+  componentDidMount() {
     this.model = {};
     this.newChildren = {};
     this.inputs = {}; // We create a map of traversed inputs
     this.registerInputs(); // We register inputs from the children
   }
   componentDidUpdate() {
-    this.registerInputs();
-  }
-  componentWillUpdate(nextProps) {
     const self = this;
     self.newChildren = React.Children.map(
       // Use nextprops for registering components cwu
-      nextProps.children,
+      self.props.children,
       child => self._cloneChild(child, self)
     );
+    self.registerInputs();
   }
   registerInputs() {
     const self = this;

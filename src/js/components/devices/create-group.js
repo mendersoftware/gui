@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import cookie from 'react-cookie';
+import Cookies from 'universal-cookie';
 import validator from 'validator';
 import {
   Button,
@@ -31,6 +31,7 @@ export class CreateGroup extends React.Component {
     super(props, context);
     this.state = this._getInitialState();
     this.props.getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength);
+    this.cookies = new Cookies();
   }
 
   componentDidUpdate(prevProps) {
@@ -66,7 +67,7 @@ export class CreateGroup extends React.Component {
   _createGroupHandler() {
     var self = this;
 
-    var gotCookie = cookie.load(`${this.props.userId}-groupHelpText`);
+    var gotCookie = self.cookies.get(`${this.props.userId}-groupHelpText`);
     // if another group exists, check for warning message cookie
     if (this.props.groups.length && !gotCookie && !this.state.showWarning) {
       // if show warning message
@@ -148,7 +149,7 @@ export class CreateGroup extends React.Component {
     var self = this;
     this.setState({ isChecked: isChecked });
     if (isChecked) {
-      cookie.save(`${self.state.userId}-groupHelpText`, true);
+      self.cookies.set(`${self.state.userId}-groupHelpText`, true);
     }
   }
 

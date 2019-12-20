@@ -14,24 +14,24 @@ const defaultStats = {
 };
 
 export default class DeploymentStatus extends React.PureComponent {
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
     var self = this;
-    if (nextProps.id !== this.props.id) {
-      this.props.refreshStatus(nextProps.id);
+    if (prevProps.id !== self.props.id) {
+      self.props.refreshStatus(self.props.id);
     }
-    if (!nextProps.isActiveTab) {
-      clearInterval(this.timer);
+    if (!self.props.isActiveTab) {
+      clearInterval(self.timer);
     }
     // isActive has changed
-    if (nextProps.isActiveTab && !self.props.isActiveTab && self.props.refresh) {
+    if (!prevProps.isActiveTab && self.props.isActiveTab && self.props.refresh) {
       self.timer = setInterval(() => {
         self.props.refreshStatus(self.props.id);
       }, 10000);
     }
     if (
-      nextProps.stats !== self.props.stats &&
-      nextProps.stats &&
-      nextProps.stats.downloading + nextProps.stats.installing + nextProps.stats.rebooting + nextProps.stats.pending <= 0
+      prevProps.stats !== self.props.stats &&
+      self.props.stats &&
+      self.props.stats.downloading + self.props.stats.installing + self.props.stats.rebooting + self.props.stats.pending <= 0
     ) {
       // if no more devices in "progress" statuses, send message to parent that it's finished
       clearInterval(self.timer);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import cookie from 'react-cookie';
+import Cookies from 'universal-cookie';
 import ReactTooltip from 'react-tooltip';
 
 import HelpIcon from '@material-ui/icons/Help';
@@ -21,8 +21,9 @@ import { getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 export class Login extends React.Component {
   constructor(props, context) {
     super(props, context);
+    const cookies = new Cookies();
     this.state = {
-      noExpiry: cookie.load('noExpiry'),
+      noExpiry: cookies.get('noExpiry'),
       redirectToReferrer: false
     };
   }

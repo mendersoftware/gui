@@ -20,7 +20,7 @@ export default class PasswordInput extends React.Component {
     this.state = this._getState();
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.attachToForm(this); // Attaching the component to the form
   }
   componentWillUnmount() {

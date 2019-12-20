@@ -63,6 +63,15 @@ export class Devices extends React.Component {
     }
   }
 
+  // nested tabs
+  componentDidUpdate() {
+    const tabIndex = this._updateActive();
+    const currentTab = this._getCurrentLabel();
+    if (this.state.tabIndex !== tabIndex || this.state.currentTab !== currentTab) {
+      this.setState({ tabIndex, currentTab });
+    }
+  }
+
   componentWillUnmount() {
     clearAllRetryTimers(this.props.setSnackbar);
     clearInterval(this.interval);
@@ -78,11 +87,6 @@ export class Devices extends React.Component {
   }
   _changeTab() {
     this.props.setSnackbar('');
-  }
-
-  // nested tabs
-  componentWillReceiveProps() {
-    this.setState({ tabIndex: this._updateActive(), currentTab: this._getCurrentLabel() });
   }
 
   _updateActive(tab = this.props.match.params.status) {

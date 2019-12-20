@@ -1,4 +1,4 @@
-import cookie from 'react-cookie';
+import Cookies from 'universal-cookie';
 import AppConstants from '../constants/appConstants';
 import * as Helpers from '../helpers';
 import GeneralApi from '../api/general-api';
@@ -9,6 +9,7 @@ import { getDeploymentsByStatus } from './deploymentActions';
 import { setOnboardingComplete, setOnboardingState } from './userActions';
 import { getCurrentOnboardingState, determineProgress, persistOnboardingState, onboardingSteps } from '../utils/onboardingmanager';
 
+const cookies = new Cookies();
 const hostedLinks = 'https://s3.amazonaws.com/hosted-mender-artifacts-onboarding/';
 
 export const sortTable = (table, column, direction) => dispatch =>
@@ -49,7 +50,7 @@ export const getOnboardingState = () => (dispatch, getState) => {
   const onboardingKey = `${userId}-onboarding`;
   const savedState = JSON.parse(window.localStorage.getItem(onboardingKey)) || {};
   if (!Object.keys(savedState).length || !savedState.complete) {
-    const userCookie = cookie.load(`${userId}-onboarded`);
+    const userCookie = cookies.get(`${userId}-onboarded`);
     // to prevent tips from showing up for previously onboarded users completion is set explicitly before the additional requests complete
     if (userCookie) {
       return dispatch(setOnboardingComplete(Boolean(userCookie)));

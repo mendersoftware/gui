@@ -12,7 +12,7 @@ export default class FormCheckbox extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.attachToForm(this); // Attaching the component to the form
   }
   componentWillUnmount() {

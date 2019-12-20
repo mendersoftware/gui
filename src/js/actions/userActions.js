@@ -1,4 +1,4 @@
-import cookie from 'react-cookie';
+import Cookies from 'universal-cookie';
 
 import { getHostedLinks, setSnackbar } from '../actions/appActions';
 import GeneralApi from '../api/general-api';
@@ -7,6 +7,7 @@ import * as UserConstants from '../constants/userConstants';
 import { advanceOnboarding } from '../utils/onboardingmanager';
 import { preformatWithRequestID, decodeSessionToken } from '../helpers';
 
+const cookies = new Cookies();
 const apiUrl = '/api/management/v1';
 const tenantadmUrl = `${apiUrl}/tenantadm`;
 const useradmApiUrl = `${apiUrl}/useradm`;
@@ -46,11 +47,11 @@ export const loginUser = userData => (dispatch, getState) =>
       }
 
       // set no expiry as cookie to remember checkbox value
-      cookie.save('noExpiry', userData.noExpiry.toString());
+      cookies.set('noExpiry', userData.noExpiry.toString());
 
       // save token as cookie
       // set maxAge if noexpiry checkbox not checked
-      cookie.save('JWT', token, options);
+      cookies.set('JWT', token, options);
 
       var userId = decodeSessionToken(token);
       return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), dispatch(getUser(userId))]);
@@ -136,11 +137,11 @@ export const toggleHelptips = () => (dispatch, getState) => {
   const user = state.users.byId[state.users.currentUser] || {};
   if (user.id) {
     // if current user id available from store
-    var userCookie = cookie.load(user.id) || {};
+    var userCookie = cookies.get(user.id) || {};
     var updatedValue = !userCookie.help;
     userCookie.help = updatedValue;
     userCookie = JSON.stringify(userCookie);
-    cookie.save(user.id, userCookie);
+    cookies.set(user.id, userCookie);
     return dispatch(setShowHelptips(updatedValue));
   }
 };

@@ -1,12 +1,13 @@
-import cookie from 'react-cookie';
+import Cookies from 'universal-cookie';
 import { unauthorizedRedirect } from '../auth';
+const cookies = new Cookies();
 var request = require('superagent')
   .agent()
   .use(unauthorizedRedirect);
 
 const Api = {
   get: url => {
-    var token = cookie.load('JWT');
+    var token = cookies.get('JWT');
     return new Promise((resolve, reject) => {
       request
         .get(url)
