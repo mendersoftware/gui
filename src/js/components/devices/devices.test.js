@@ -22,6 +22,7 @@ describe('Devices Component', () => {
           pending: { total: 0 },
           rejected: { total: 0 }
         },
+        filters: [],
         filteringAttributes: { inventoryAttributes: [] },
         groups: {
           byId: {},

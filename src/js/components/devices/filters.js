@@ -59,7 +59,7 @@ export default class Filters extends React.Component {
     );
     const filterItems = filters.map((item, index) => (
       <FilterItem
-        key={self.props.filters.length ? index : `refresh-${index}`}
+        key={self.props.filters.length ? item.key : `refresh-${item.key}`}
         index={index}
         filter={item}
         filters={remainingFilters}
@@ -82,14 +82,14 @@ export default class Filters extends React.Component {
           docked="false"
           anchor="right"
           opensecondary="true"
-          PaperProps={{ style: { width: 320, padding: 20, ...drawerStyles } }}
+          PaperProps={{ style: { width: 335, padding: 15, ...drawerStyles } }}
           BackdropProps={{ style: drawerStyles }}
           onClose={() => self.setState({ showFilters: false })}
         >
           <IconButton
             className="closeSlider"
             onClick={() => self.setState({ showFilters: false })}
-            style={{ position: 'absolute', left: '-25px', background: 'white', top: '20px' }}
+            style={{ position: 'absolute', left: '-25px', background: 'white', top: 15 }}
           >
             <CloseIcon />
           </IconButton>

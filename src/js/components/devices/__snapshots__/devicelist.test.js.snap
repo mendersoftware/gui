@@ -76,11 +76,11 @@ exports[`DeviceList Component renders correctly 1`] = `
         <div
           aria-haspopup="listbox"
           aria-labelledby=" "
-          className="MuiSelect-root MuiSelect-select MuiTablePagination-select MuiSelect-selectMenu MuiInputBase-input MuiInputBase-inputSelect"
+          className="MuiSelect-root MuiSelect-select MuiTablePagination-select MuiSelect-selectMenu MuiInputBase-input"
           onBlur={[Function]}
-          onClick={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
+          onMouseDown={[Function]}
           role="button"
           tabIndex={0}
         >
@@ -203,7 +203,7 @@ exports[`DeviceList Component renders correctly 1`] = `
             }
           >
             <div
-              className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-marginDense"
+              className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-marginDense MuiInput-marginDense"
               onClick={[Function]}
             >
               <input

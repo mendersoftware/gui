@@ -515,6 +515,8 @@ const mapStateToProps = state => {
     groupDevices = state.devices.groups.byId[selectedGroup].deviceIds;
   } else if (!isEmpty(state.devices.selectedDevice)) {
     devices = [state.devices.selectedDevice];
+  } else if (!devices.length && !state.devices.filters.length && state.devices.byStatus.accepted.total) {
+    devices = state.devices.byStatus.accepted.deviceIds.slice(0, 20);
   }
   const ungroupedDevices = state.devices.groups.byId[DeviceConstants.UNGROUPED_GROUP.id]
     ? state.devices.groups.byId[DeviceConstants.UNGROUPED_GROUP.id].deviceIds

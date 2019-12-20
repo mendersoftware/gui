@@ -72,7 +72,13 @@ export const addGroup = group => dispatch =>
 /*
  * Device inventory functions
  */
-export const selectGroup = group => dispatch => dispatch({ type: DeviceConstants.SELECT_GROUP, group });
+export const selectGroup = group => (dispatch, getState) => {
+  const selectedGroup = getState().devices.groups.byId[group] ? group : null;
+  return Promise.all([
+    dispatch({ type: DeviceConstants.SELECT_GROUP, group: selectedGroup }),
+    dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: [] })
+  ]);
+};
 
 export const selectDevice = deviceId => dispatch => {
   let tasks = [

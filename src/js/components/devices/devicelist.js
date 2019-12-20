@@ -94,7 +94,20 @@ export class DeviceList extends React.Component {
 
   render() {
     const self = this;
-    const { className, columnHeaders, devices, filters, pageLength, pageLoading, pageNo, pageTotal, onSelect, onChangeRowsPerPage, selectedRows } = self.props;
+    const {
+      className,
+      columnHeaders,
+      devices,
+      filterable = false,
+      filters,
+      pageLength,
+      pageLoading,
+      pageNo,
+      pageTotal,
+      onSelect,
+      onChangeRowsPerPage,
+      selectedRows
+    } = self.props;
     const { sortCol, sortDown, expandedDeviceId } = self.state;
     const columnWidth = `${(onSelect ? 90 : 100) / columnHeaders.length}%`;
     const numSelected = (selectedRows || []).length;
@@ -132,7 +145,7 @@ export class DeviceList extends React.Component {
             />
           ))}
         </div>
-        {filters.length === 0 && (
+        {(!filterable || filters.length === 0) && (
           <Pagination
             count={pageTotal}
             rowsPerPage={pageLength}
