@@ -61,7 +61,7 @@ export class Past extends React.Component {
     if (reason === 'clickaway') {
       return;
     }
-    self.props.setSnackbar('');
+    this.props.setSnackbar('');
   };
 
   _setDateRange(after, before) {
