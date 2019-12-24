@@ -24,13 +24,12 @@ export default class Filters extends React.Component {
     this.props.onFilterChange(filters);
   }
   _removeFilter(index) {
-    var filterArray = this.props.filters;
-    const filter = filterArray.splice(index, 1)[0];
+    const filter = this.props.filters.splice(index, 1)[0];
     if (filter.key === 'id') {
       this.props.resetIdFilter();
     }
 
-    this.props.onFilterChange(filterArray);
+    this.props.onFilterChange(this.props.filters);
   }
   _toggleNav() {
     this.setState({
