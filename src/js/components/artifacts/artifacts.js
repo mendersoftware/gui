@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, LinearProgress } from '@material-ui/core';
 
 import { setSnackbar } from '../../actions/appActions';
+import { selectDevices } from '../../actions/deviceActions';
 import { getReleases, removeArtifact, selectArtifact, selectRelease, showRemoveArtifactDialog } from '../../actions/releaseActions';
 import { preformatWithRequestID } from '../../helpers';
 
@@ -33,7 +34,10 @@ export class Artifacts extends React.Component {
   componentDidMount() {
     const self = this;
     const { artifactVersion } = self.props.match.params;
-    if (!this.props.releases.length) {
+    if (!self.props.onboardingComplete) {
+      self.props.selectDevices([]);
+    }
+    if (!self.props.releases.length) {
       self._getReleases(artifactVersion);
     } else {
       self.setState({ doneLoading: true }, () => {
@@ -131,12 +135,13 @@ export class Artifacts extends React.Component {
   }
 }
 
-const actionCreators = { getReleases, removeArtifact, selectArtifact, selectRelease, showRemoveArtifactDialog, setSnackbar };
+const actionCreators = { getReleases, removeArtifact, selectArtifact, selectDevices, selectRelease, showRemoveArtifactDialog, setSnackbar };
 
 const mapStateToProps = state => {
   return {
-    releases: Object.values(state.releases.byId),
     artifactProgress: state.releases.uploadProgress,
+    onboardingComplete: state.users.onboarding.complete,
+    releases: Object.values(state.releases.byId),
     selectedArtifact: state.releases.selectedArtifact,
     selectedRelease: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null,
     showRemoveDialog: state.releases.showRemoveDialog

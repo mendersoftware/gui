@@ -8,7 +8,7 @@ import { TextField, Tooltip } from '@material-ui/core';
 import { ErrorOutline as ErrorOutlineIcon, InfoOutlined as InfoOutlinedIcon } from '@material-ui/icons';
 
 import AutoSelect from '../../common/forms/autoselect';
-import { getAllDevicesByStatus, getAllGroupDevices } from '../../../actions/deviceActions';
+import { getAllDevicesByStatus, getAllGroupDevices, selectDevices } from '../../../actions/deviceActions';
 import DeviceConstants from '../../../constants/deviceConstants';
 
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
@@ -39,8 +39,12 @@ export class SoftwareDevices extends React.Component {
     let state = { [property]: value };
     self.props.deploymentSettings(value, property);
 
-    if (property === 'group' && value && value !== allDevices) {
-      self.props.getAllGroupDevices(value);
+    if (property === 'group' && value) {
+      if (value !== allDevices) {
+        self.props.getAllGroupDevices(value);
+      } else {
+        self.props.selectDevices(self.props.acceptedDevices);
+      }
     }
     const currentState = Object.assign({}, self.state, state);
     if (!currentState.release && property !== 'release') {
@@ -197,7 +201,7 @@ export class SoftwareDevices extends React.Component {
   }
 }
 
-const actionCreators = { getAllDevicesByStatus, getAllGroupDevices };
+const actionCreators = { getAllDevicesByStatus, getAllGroupDevices, selectDevices };
 
 const mapStateToProps = state => {
   const { [DeviceConstants.UNGROUPED_GROUP.id]: ungroupedGroup, ...groups } = state.devices.groups.byId;
