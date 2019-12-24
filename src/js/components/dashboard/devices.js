@@ -80,7 +80,7 @@ export class Devices extends React.Component {
 
   render() {
     const { deltaActivity } = this.state;
-    const { devices, inactiveDevicesCount, onboardingComplete, pendingDevicesCount, showHelptips } = this.props;
+    const { devices, inactiveDevicesCount, onboardingComplete, pendingDevicesCount, setShowConnectingDialog, showHelptips } = this.props;
     const noDevicesAvailable = !(devices.length + pendingDevicesCount > 0);
     let onboardingComponent = null;
     if (this.anchor) {
