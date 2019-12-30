@@ -19,7 +19,15 @@ import TwoFactorAuthSetup from './twofactorauthsetup';
 export class SelfUserManagement extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = { qrExpanded: false };
+    this.state = {
+      editEmail: false,
+      editPass: false,
+      emailFormId: new Date(),
+      qrExpanded: false
+    };
+  }
+
+  componentDidMount() {
     if (this.props.isEnterprise && !this.props.has2FA) {
       this.props.saveGlobalSettings({ '2fa': 'disabled' });
     }
@@ -41,7 +49,7 @@ export class SelfUserManagement extends React.Component {
   }
 
   handleEmail() {
-    var uniqueId = this.state.emailFormId;
+    let uniqueId = this.state.emailFormId;
     if (this.state.editEmail) {
       uniqueId = new Date();
       // changing unique id will reset form values
@@ -69,37 +77,36 @@ export class SelfUserManagement extends React.Component {
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
         <h2 className="margin-top-small">My account</h2>
-
-        <Form
-          className="flexbox space-between"
-          onSubmit={userdata => self._editSubmit(currentUser.id, userdata)}
-          handleCancel={() => self.handleEmail()}
-          submitLabel="Save"
-          showButtons={editEmail}
-          buttonColor="secondary"
-          submitButtonId="submit_email"
-          uniqueId={emailFormId}
-        >
-          {!editEmail && currentUser.email ? (
-            <>
-              <TextField
-                label="Email"
-                key={email}
-                InputLabelProps={{ shrink: !!email }}
-                disabled
-                defaultValue={email}
-                style={{ width: '400px', maxWidth: '100%' }}
-              />
-              <FormButton
-                className="inline-block"
-                color="primary"
-                id="change_email"
-                label="Change email"
-                style={{ margin: '30px 0 0 15px' }}
-                handleClick={() => self.handleEmail()}
-              />
-            </>
-          ) : (
+        {!editEmail && currentUser.email ? (
+          <>
+            <TextField
+              label="Email"
+              key={email}
+              InputLabelProps={{ shrink: !!email }}
+              disabled
+              defaultValue={email}
+              style={{ width: '400px', maxWidth: '100%' }}
+            />
+            <FormButton
+              className="inline-block"
+              color="primary"
+              id="change_email"
+              label="Change email"
+              style={{ margin: '30px 0 0 15px' }}
+              handleClick={() => self.handleEmail()}
+            />
+          </>
+        ) : (
+          <Form
+            className="flexbox space-between"
+            onSubmit={userdata => self._editSubmit(currentUser.id, userdata)}
+            handleCancel={() => self.handleEmail()}
+            submitLabel="Save"
+            showButtons={editEmail}
+            buttonColor="secondary"
+            submitButtonId="submit_email"
+            uniqueId={emailFormId}
+          >
             <TextInput
               hint="Email"
               label="Email"
@@ -110,19 +117,28 @@ export class SelfUserManagement extends React.Component {
               focus={true}
               InputLabelProps={{ shrink: !!email }}
             />
-          )}
-        </Form>
-
-        <Form
-          onSubmit={userdata => self._editSubmit(currentUser.id, userdata)}
-          handleCancel={() => self.handlePass()}
-          submitLabel="Save"
-          submitButtonId="submit_pass"
-          buttonColor="secondary"
-          showButtons={editPass}
-          className="margin-top flexbox space-between"
-        >
-          {editPass ? (
+          </Form>
+        )}
+        {!editPass ? (
+          <div>
+            <FormButton
+              color="primary"
+              id="change_password"
+              label="Change password"
+              style={{ margin: '30px 0 0 15px' }}
+              handleClick={() => self.handlePass()}
+            />
+          </div>
+        ) : (
+          <Form
+            onSubmit={userdata => self._editSubmit(currentUser.id, userdata)}
+            handleCancel={() => self.handlePass()}
+            submitLabel="Save"
+            submitButtonId="submit_pass"
+            buttonColor="secondary"
+            showButtons={editPass}
+            className="margin-top flexbox space-between"
+          >
             <PasswordInput
               className="edit-pass"
               id="password"
@@ -133,10 +149,9 @@ export class SelfUserManagement extends React.Component {
               onClear={() => self.handleButton()}
               edit={false}
             />
-          ) : (
-            <FormButton buttonHolder={true} color="primary" id="change_pass" label="Change password" handleClick={() => self.handlePass()} />
-          )}
-        </Form>
+          </Form>
+        )}
+
         {isEnterprise ? (
           <div className="margin-top">
             <div

@@ -59,13 +59,11 @@ exports[`SelfUserManagement Component renders correctly 1`] = `
       />
     </div>
   </form>
-  <form
-    className="margin-top flexbox space-between"
-  >
+  <div>
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-text button-holder undefined MuiButton-textPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary"
       disabled={false}
-      id="change_pass"
+      id="change_password"
       onBlur={[Function]}
       onClick={[Function]}
       onDragLeave={[Function]}
@@ -78,6 +76,11 @@ exports[`SelfUserManagement Component renders correctly 1`] = `
       onTouchEnd={[Function]}
       onTouchMove={[Function]}
       onTouchStart={[Function]}
+      style={
+        Object {
+          "margin": "30px 0 0 15px",
+        }
+      }
       tabIndex={0}
       type="button"
     >
@@ -87,7 +90,7 @@ exports[`SelfUserManagement Component renders correctly 1`] = `
         Change password
       </span>
     </button>
-  </form>
+  </div>
   <p
     className="info icon"
   >

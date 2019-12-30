@@ -10,8 +10,6 @@ export default class Form extends React.Component {
       isSubmitting: false,
       isValid: false
     };
-  }
-  componentDidMount() {
     this.model = {};
     this.newChildren = {};
     this.inputs = {}; // We create a map of traversed inputs
@@ -195,16 +193,16 @@ export default class Form extends React.Component {
     }
   }
   render() {
-    var uploadActions = this.props.showButtons ? (
+    var uploadActions = !!this.props.showButtons && (
       <div
         className="flexbox"
         style={Object.assign({ justifyContent: 'flex-end', height: 'min-content' }, this.props.dialog ? { margin: '24px 0 -16px 0' } : { marginTop: '32px' })}
       >
-        {this.props.handleCancel ? (
+        {!!this.props.handleCancel && (
           <Button key="cancel" onClick={this.props.handleCancel} style={{ marginRight: '10px', display: 'inline-block' }}>
             Cancel
           </Button>
-        ) : null}
+        )}
         <Button
           variant="contained"
           key="submit"
@@ -216,7 +214,7 @@ export default class Form extends React.Component {
           {this.props.submitLabel}
         </Button>
       </div>
-    ) : null;
+    );
 
     return (
       <form key={this.props.uniqueId} className={this.props.className || ''}>

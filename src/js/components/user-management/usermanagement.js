@@ -14,7 +14,7 @@ export class UserManagement extends React.Component {
     super(props, context);
     this.state = {
       editDialog: false,
-      editPass: null,
+      editPass: false,
       removeDialog: false,
       user: null
     };
@@ -24,7 +24,9 @@ export class UserManagement extends React.Component {
     this.props.getUserList();
   }
   componentDidUpdate(prevProps) {
-    const changed = prevProps.currentUser !== this.props.currentUser || prevProps.users.some((user, index) => user !== this.props.users[index]);
+    const changed =
+      prevProps.currentUser.id !== this.props.currentUser.id ||
+      prevProps.users.some((user, index) => user.id !== this.props.users[index].id || user.email !== this.props.users[index].email);
     if (changed) {
       this.props.getUserList();
     }
