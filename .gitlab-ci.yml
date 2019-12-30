@@ -112,5 +112,5 @@ publish:disclaimer:
     expire_in: 2w
     paths:
       - disclaimer.txt
-  # only:
-  #   - /^(master|[0-9]+\.[0-9]+\.x)$/
+  only:
+    - /^(master|[0-9]+\.[0-9]+\.x)$/
