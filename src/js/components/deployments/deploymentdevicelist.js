@@ -15,32 +15,26 @@ const stateTitleMap = {
 };
 
 export default class ProgressDeviceList extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      globalSettings: AppStore.getGlobalSettings() || {}
-    };
-  }
-  shouldComponentUpdate(nextProps, nextState) {
-    return !isEqual(this.props, nextProps) || !isEqual(this.state, nextState);
+  shouldComponentUpdate(nextProps) {
+    return !isEqual(this.props, nextProps);
   }
   render() {
     var self = this;
     var intervalsSinceStart = Math.floor((Date.now() - Date.parse(self.props.created)) / (1000 * 20));
-    const { globalSettings } = self.state;
+    const globalSettings = AppStore.getGlobalSettings();
 
     var deviceList = [];
     var currentArtifactLink;
     if (this.props.devices) {
       deviceList = this.props.devices.map((device, index) => {
         var encodedDevice = `id=${device.id}`;
-        var id_attribute = device.id;
 
-        if (globalSettings.id_attribute && globalSettings.id_attribute !== 'Device ID') {
+        let id_attribute = device.id;
+        if (globalSettings && globalSettings.id_attribute && globalSettings.id_attribute !== 'Device ID') {
           // if global setting is not "Device Id"
-          if ((self.props.deviceIdentity || {})[device.id]) {
+          if ((self.props.deviceInventory || {})[device.id] && (self.props.deviceInventory || {})[device.id].identity_data) {
             // if device identity data is available, set custom attribute
-            id_attribute = self.props.deviceIdentity[device.id][globalSettings.id_attribute];
+            id_attribute = self.props.deviceInventory[device.id].identity_data[globalSettings.id_attribute];
           } else {
             id_attribute = '-';
           }

@@ -41,7 +41,8 @@ export default class DeploymentReport extends React.Component {
       deviceCount: 0,
       showPending: true,
       abort: false,
-      finished: false
+      finished: false,
+      pagedDevices: []
     };
   }
   componentDidMount() {
@@ -107,24 +108,25 @@ export default class DeploymentReport extends React.Component {
     // get device artifact and inventory details not listed in schedule data
     const inventoryRequests = devices.map(device => self._setSingleDeviceDetails(device));
     return Promise.all(inventoryRequests).then(devices => {
-      let deviceInventory = self.state.deviceInventory || {};
-      deviceInventory = devices.reduce((accu, device) => {
-        let inventory = accu[device.id] || {};
-        inventory.artifact = self._getDeviceAttribute(device, 'artifact_name');
-        inventory.device_type = self._getDeviceAttribute(device, 'device_type');
-        accu[device.id] = inventory;
+      const deviceInventory = devices.reduce((accu, device) => {
+        accu[device.id] = device;
         return accu;
-      }, deviceInventory);
+      }, self.state.deviceInventory || {});
       if (!self.state.stopRestCalls) {
         self.setState({ deviceInventory });
       }
     });
   }
   _setSingleDeviceDetails(device) {
-    return AppActions.getDeviceById(device.id)
-      .then(device_inventory => {
+    const self = this;
+    let deviceInventory = self.state.deviceInventory || {};
+    return Promise.all([AppActions.getDeviceById(device.id), AppActions.getDeviceAuth(device.id)])
+      .then(([device_inventory, deviceAuth]) => {
+        const inventory = deviceInventory[device.id] || {};
         device.attributes = device_inventory.attributes;
-        return Promise.resolve(device);
+        device.artifact = self._getDeviceAttribute(device, 'artifact_name');
+        device.device_type = self._getDeviceAttribute(device, 'device_type');
+        return Promise.resolve({ ...inventory, ...deviceAuth, ...device });
       })
       .catch(err => {
         console.log('error ', err);
@@ -165,10 +167,17 @@ export default class DeploymentReport extends React.Component {
     var end = Math.min(this.state.allDevices.length, pageNo * this.state.perPage);
     // cut slice from full list of devices
     var slice = this.state.allDevices.slice(start, end);
-    if (!isEqual(slice, this.state.pagedDevices)) {
+    const self = this;
+    const lackingData = this.state.pagedDevices.reduce((accu, device) => {
+      if (!self.state.deviceInventory[device.id]) {
+        accu.push(device);
+      }
+      return accu;
+    }, []);
+    if (!isEqual(slice, this.state.pagedDevices) || lackingData.length) {
       var diff = differenceWith(slice, this.state.pagedDevices, isEqual);
       // only update those that have changed
-      this._getDeviceDetails(diff);
+      this._getDeviceDetails(diff.concat(lackingData));
     }
     this.setState({ currentPage: pageNo, start: start, end: end, pagedDevices: slice });
   }
@@ -363,7 +372,6 @@ export default class DeploymentReport extends React.Component {
             created={this.props.deployment.created}
             status={this.props.deployment.status}
             devices={deviceList}
-            deviceIdentity={this.state.deviceIdentity}
             deviceInventory={this.state.deviceInventory}
             viewLog={id => this.viewLog(id)}
             past={this.props.past}
