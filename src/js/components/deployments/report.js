@@ -12,7 +12,7 @@ import differenceWith from 'lodash.differencewith';
 import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 import { Block as BlockIcon, Timelapse as TimelapseIcon, Refresh as RefreshIcon } from '@material-ui/icons';
 
-import { getDeviceById } from '../../actions/deviceActions';
+import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
 import { getDeviceLog, getSingleDeploymentDevices, getSingleDeploymentStats } from '../../actions/deploymentActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { formatTime, sortDeploymentDevices } from '../../helpers';
@@ -33,7 +33,8 @@ export class DeploymentReport extends React.Component {
       perPage: 20,
       showDialog: false,
       showPending: true,
-      start: 0
+      start: 0,
+      pagedDevices: []
     };
   }
   componentDidMount() {
@@ -89,8 +90,8 @@ export class DeploymentReport extends React.Component {
     return device.attributes ? device.attributes[attributeName] : '-';
   }
   _getDeviceDetails(devices) {
-    // get device artifact and inventory details not listed in schedule data
-    devices.map(device => this.props.getDeviceById(device.id));
+    // get device artifact, inventory and identity details not listed in schedule data
+    devices.map(device => Promise.all([this.props.getDeviceById(device.id), this.props.getDeviceAuth(device.id)]));
   }
 
   _filterPending(device) {
@@ -121,10 +122,17 @@ export class DeploymentReport extends React.Component {
     // cut slice from full list of devices
     const devices = this.state.showPending ? this.props.allDevices : this.props.allDevices.filter(this._filterPending);
     const slice = devices.slice(start, end);
-    if (!isEqual(slice, this.state.pagedDevices)) {
+    const self = this;
+    const lackingData = this.state.pagedDevices.reduce((accu, device) => {
+      if (!self.props.devicesById[device.id].identity_data || Object.keys(self.props.devicesById[device.id].attributes).length === 0) {
+        accu.push(device);
+      }
+      return accu;
+    }, []);
+    if (!isEqual(slice, this.state.pagedDevices) || lackingData.length) {
       var diff = differenceWith(slice, this.state.pagedDevices, isEqual);
       // only update those that have changed
-      this._getDeviceDetails(diff);
+      this._getDeviceDetails(diff.concat(lackingData));
     }
     this.setState({ currentPage: pageNo, start: start, end: end, pagedDevices: slice });
   }
@@ -322,9 +330,9 @@ export class DeploymentReport extends React.Component {
           <div style={{ minHeight: '20vh' }}>
             <DeviceList created={deployment.created} status={deployment.status} devices={deviceList} viewLog={id => this.viewLog(id)} past={this.props.past} />
             <Pagination
-              count={deviceCount || deployment.deviceCount}
+              count={deviceCount || deployment.device_count}
               rowsPerPage={self.state.perPage}
-              onChangeRowsPerPage={perPage => self.setState({ currentPage: 1, perPage })}
+              onChangeRowsPerPage={perPage => self.setState({ perPage }, () => self._handlePageChange(1))}
               page={self.state.currentPage}
               onChangePage={page => self._handlePageChange(page)}
             />
@@ -344,7 +352,7 @@ export class DeploymentReport extends React.Component {
   }
 }
 
-const actionCreators = { getDeviceById, getDeviceLog, getSingleDeploymentDevices, getSingleDeploymentStats };
+const actionCreators = { getDeviceAuth, getDeviceById, getDeviceLog, getSingleDeploymentDevices, getSingleDeploymentStats };
 
 const mapStateToProps = (state, ownProps) => {
   const allDevices = sortDeploymentDevices(Object.values(state.deployments.byId[ownProps.deployment.id].devices || {}));
@@ -352,6 +360,7 @@ const mapStateToProps = (state, ownProps) => {
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
     allDevices,
     deviceCount: allDevices.length,
+    devicesById: state.devices.byId,
     deployment: state.deployments.byId[ownProps.deployment.id]
   };
 };
