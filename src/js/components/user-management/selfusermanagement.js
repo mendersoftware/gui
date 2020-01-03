@@ -72,7 +72,7 @@ export class SelfUserManagement extends React.Component {
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
         <h2 className="margin-top-small">My account</h2>
         {!editEmail && currentUser.email ? (
-          <>
+          <div className="flexbox space-between">
             <TextField
               label="Email"
               key={email}
@@ -89,7 +89,7 @@ export class SelfUserManagement extends React.Component {
               style={{ margin: '30px 0 0 15px' }}
               handleClick={() => self.handleEmail()}
             />
-          </>
+          </div>
         ) : (
           <Form
             className="flexbox space-between"
@@ -114,7 +114,15 @@ export class SelfUserManagement extends React.Component {
           </Form>
         )}
         {!editPass ? (
-          <div>
+          <form className="flexbox space-between">
+            <TextField
+              label="Password"
+              key="password-placeholder"
+              disabled
+              defaultValue="********"
+              style={{ width: '400px', maxWidth: '100%' }}
+              type="password"
+            />
             <FormButton
               color="primary"
               id="change_password"
@@ -122,7 +130,7 @@ export class SelfUserManagement extends React.Component {
               style={{ margin: '30px 0 0 15px' }}
               handleClick={() => self.handlePass()}
             />
-          </div>
+          </form>
         ) : (
           <Form
             onSubmit={userdata => self._editSubmit(currentUser.id, userdata)}
