@@ -167,6 +167,7 @@ export class Header extends React.Component {
         </Button>
         <Menu
           anchorEl={anchorEl}
+          getContentAnchorEl={null}
           onClose={self.handleClose}
           open={Boolean(anchorEl)}
           anchorOrigin={{
