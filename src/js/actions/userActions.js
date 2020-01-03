@@ -15,7 +15,7 @@ const useradmApiUrl = `${apiUrl}/useradm`;
 const handleLoginError = (err, has2FA) => dispatch => {
   const is2FABackend = err.error.text.error && err.error.text.error.includes('2fa');
   if (is2FABackend && !has2FA) {
-    return dispatch(saveGlobalSettings({ '2fa': 'enabled' }));
+    return dispatch(saveGlobalSettings({ '2fa': 'enabled' }, true));
   }
   let errMsg = 'There was a problem logging in';
   if (err.res && err.res.body && Object.keys(err.res.body).includes('error')) {
@@ -41,24 +41,24 @@ export const loginUser = userData => (dispatch, getState) =>
       if (!token) {
         return;
       }
-      var options = {};
-      if (!userData.noExpiry) {
+      let options = {};
+      if (userData.hasOwnProperty('noExpiry')) {
+        // set no expiry as cookie to remember checkbox value
+        cookies.set('noExpiry', userData.noExpiry.toString());
+      } else {
         options = { maxAge: 900 };
       }
-
-      // set no expiry as cookie to remember checkbox value
-      cookies.set('noExpiry', userData.noExpiry.toString());
 
       // save token as cookie
       // set maxAge if noexpiry checkbox not checked
       cookies.set('JWT', token, options);
 
-      var userId = decodeSessionToken(token);
+      const userId = decodeSessionToken(token);
       return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), dispatch(getUser(userId))]);
     })
     .catch(err => {
       const has2FA = getState().users.globalSettings.hasOwnProperty('2fa') && getState().users.globalSettings['2fa'] === 'enabled';
-      return dispatch(handleLoginError(err, has2FA));
+      return Promise.all([Promise.reject(err), dispatch(handleLoginError(err, has2FA))]);
     });
 
 export const getUserList = () => dispatch =>
@@ -75,7 +75,14 @@ export const getUserList = () => dispatch =>
       dispatch(setSnackbar(preformatWithRequestID(err.res, `Users couldn't be loaded. ${errormsg}`)));
     });
 
-export const getUser = id => dispatch => UsersApi.get(`${useradmApiUrl}/users/${id}`).then(user => dispatch({ type: UserConstants.RECEIVED_USER, user }));
+export const getUser = id => dispatch =>
+  UsersApi.get(`${useradmApiUrl}/users/${id}`).then(user => {
+    let tasks = [dispatch({ type: UserConstants.RECEIVED_USER, user })];
+    if (user.hasOwnProperty('tfasecret')) {
+      tasks.push(dispatch(saveGlobalSettings({ '2fa': user.tfasecret.length ? 'enabled' : 'disabled' })));
+    }
+    return Promise.all(tasks);
+  });
 
 export const createUser = userData => dispatch =>
   UsersApi.post(`${useradmApiUrl}/users`, userData).then(() =>
@@ -111,16 +118,23 @@ export const getBillingStatement = timeframe => dispatch =>
 export const getGlobalSettings = () => dispatch =>
   UsersApi.get(`${useradmApiUrl}/settings`).then(res => dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: res }));
 
-export const saveGlobalSettings = settings => (dispatch, getState) => {
+export const saveGlobalSettings = (settings, beOptimistic = false) => (dispatch, getState) => {
   const updatedSettings = { ...getState().users.globalSettings, ...settings };
-  return UsersApi.post(`${useradmApiUrl}/settings`, updatedSettings).then(() => {
-    let tasks = [dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: updatedSettings })];
-    if (updatedSettings.hasOwnProperty('2fa') && updatedSettings['2fa'] === 'enabled') {
-      const state = getState();
-      tasks.push(dispatch(get2FAQRCode(state.users.byId[state.users.currentUser].email)));
-    }
-    return Promise.all(tasks);
-  });
+  let tasks = [dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: updatedSettings })];
+  return UsersApi.post(`${useradmApiUrl}/settings`, updatedSettings)
+    .then(() => {
+      if (updatedSettings.hasOwnProperty('2fa') && updatedSettings['2fa'] === 'enabled') {
+        const state = getState();
+        tasks.push(dispatch(get2FAQRCode(state.users.byId[state.users.currentUser].email)));
+      }
+      return Promise.all(tasks);
+    })
+    .catch(() => {
+      if (beOptimistic) {
+        return Promise.all([tasks]);
+      }
+      return Promise.reject();
+    });
 };
 
 export const get2FAQRCode = () => dispatch =>

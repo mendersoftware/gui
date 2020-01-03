@@ -27,12 +27,6 @@ export class SelfUserManagement extends React.Component {
     };
   }
 
-  componentDidMount() {
-    if (this.props.isEnterprise && !this.props.has2FA) {
-      this.props.saveGlobalSettings({ '2fa': 'disabled' });
-    }
-  }
-
   _editSubmit(userId, userData) {
     var self = this;
     return self.props
@@ -72,7 +66,7 @@ export class SelfUserManagement extends React.Component {
   render() {
     const self = this;
     const { editEmail, editPass, emailFormId, qrExpanded } = self.state;
-    const { currentUser, has2fa, isEnterprise } = self.props;
+    const { currentUser, has2FA, isEnterprise } = self.props;
     const email = currentUser.email;
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
@@ -156,10 +150,10 @@ export class SelfUserManagement extends React.Component {
           <div className="margin-top">
             <div
               className="clickable flexbox space-between"
-              onClick={() => self.setState({ qrExpanded: has2fa && !qrExpanded ? self.handle2FAState(false) : !qrExpanded })}
+              onClick={() => self.setState({ qrExpanded: has2FA && !qrExpanded ? self.handle2FAState(false) : !qrExpanded })}
             >
               <p className="help-content">Enable Two Factor authentication</p>
-              <Switch checked={has2fa || qrExpanded} />
+              <Switch checked={has2FA || qrExpanded} />
             </div>
             <p className="info" style={{ width: '75%', margin: 0 }}>
               Two Factor Authentication adds a second layer of protection to your account by asking for an additional verification code each time you log in.

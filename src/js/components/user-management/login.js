@@ -72,7 +72,7 @@ export class Login extends React.Component {
     if (self.state.isEnterprise && self.props.has2FA && !formData.hasOwnProperty('token2fa')) {
       return;
     }
-    return self.props.loginUser(formData);
+    return self.props.loginUser(formData).catch(err => console.log(err));
   }
 
   render() {
