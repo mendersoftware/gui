@@ -52,7 +52,7 @@ class TablePaginationActions extends React.Component {
   };
 
   onPaging = newPage => {
-    return this.setState({ pageNo: newPage }, this.props.onChangePage(newPage));
+    return this.setState({ pageNo: newPage }, () => this.props.onChangePage(newPage));
   };
 
   render() {
