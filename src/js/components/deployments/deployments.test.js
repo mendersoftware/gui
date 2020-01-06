@@ -1,32 +1,65 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { createMount } from '@material-ui/core/test-utils';
+import renderer from 'react-test-renderer';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import configureStore from 'redux-mock-store';
 import Deployments from './deployments';
 
-it('renders correctly', () => {
-  const context = {
-    childContextTypes: {
-      router: () => {}
-    },
-    context: {
-      router: {
-        route: {
-          location: {
-            hash: '',
-            pathname: '',
-            search: '',
-            state: ''
+const mockStore = configureStore([thunk]);
+
+describe('Deployments Component', () => {
+  let store;
+  beforeEach(() => {
+    store = mockStore({
+      app: {
+        hostedAnnouncement: null,
+        features: { isEnterprise: false, isHosted: false },
+        docsVersion: null
+      },
+      deployments: {
+        byId: {},
+        byStatus: {
+          finished: { deploymentIds: [], total: 0 },
+          inprogress: { deploymentIds: [], total: 0 },
+          pending: { deploymentIds: [], total: 0 }
+        },
+        selectedDeployment: null
+      },
+      devices: {
+        byId: {},
+        byStatus: {
+          accepted: {
+            total: 0
           },
-          match: { params: {}, isExact: false, path: '', url: '' }
-        }
+          pending: {
+            total: 0
+          }
+        },
+        groups: { byId: {} },
+
+        limit: 500
+      },
+      users: {
+        byId: { a1: { email: 'a@b.com', id: 'a1' } },
+        currentUser: 'a1',
+        globalSettings: {},
+        onboarding: { complete: false },
+        showHelptips: true
       }
-    }
-  };
-  const tree = createMount()(
-    <MemoryRouter>
-      <Deployments location={{ search: '' }} />
-    </MemoryRouter>,
-    context
-  );
-  expect(tree.html()).toMatchSnapshot();
+    });
+  });
+
+  it('renders correctly', () => {
+    const tree = renderer
+      .create(
+        <MemoryRouter>
+          <Provider store={store}>
+            <Deployments location={{ search: '' }} />
+          </Provider>
+        </MemoryRouter>
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

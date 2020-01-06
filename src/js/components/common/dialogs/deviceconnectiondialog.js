@@ -1,29 +1,25 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 
 import HelpIcon from '@material-ui/icons/Help';
 
-import AppActions from '../../../actions/app-actions';
+import { getReleases } from '../../../actions/releaseActions';
+import { getUserOrganization } from '../../../actions/userActions';
 
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
-import AppStore from '../../../stores/app-store';
 import { advanceOnboarding } from '../../../utils/onboardingmanager';
 
-export default class DeviceConnectionDialog extends React.Component {
+export class DeviceConnectionDialog extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       onDevice: false,
       progress: 1,
-      token: null,
       virtualDevice: false
     };
   }
@@ -31,10 +27,10 @@ export default class DeviceConnectionDialog extends React.Component {
   componentDidUpdate(prevProps) {
     const self = this;
     if (self.props.open && self.props.open !== prevProps.open) {
-      if (AppStore.hasMultitenancy() || AppStore.getIsEnterprise() || AppStore.getIsHosted()) {
-        AppActions.getUserOrganization().then(org => (org ? self.setState({ token: org.tenant_token }) : null));
+      if (self.props.isEnterprise) {
+        self.props.getUserOrganization();
       }
-      AppActions.getReleases().then(releases => AppActions.setOnboardingArtifactIncluded(!!releases.length));
+      self.props.getReleases();
     }
   }
 
@@ -49,8 +45,8 @@ export default class DeviceConnectionDialog extends React.Component {
 
   render() {
     const self = this;
-    const { open, onCancel } = self.props;
-    const { progress, onDevice, token, virtualDevice } = self.state;
+    const { onboardingDeviceType, open, onCancel, pendingCount } = self.props;
+    const { progress, onDevice, virtualDevice } = self.state;
 
     let content = (
       <div>
@@ -100,14 +96,16 @@ export default class DeviceConnectionDialog extends React.Component {
     );
 
     if (onDevice) {
-      content = <PhysicalDeviceOnboarding progress={progress} token={token} />;
+      content = <PhysicalDeviceOnboarding progress={progress} />;
     } else if (virtualDevice) {
-      content = <VirtualDeviceOnboarding token={token} />;
+      content = <VirtualDeviceOnboarding />;
     }
 
-    if (open && progress >= 2 && AppStore.getTotalPendingDevices() && !window.location.hash.includes('pending')) {
-      advanceOnboarding('dashboard-onboarding-start');
+    if (pendingCount) {
       setTimeout(() => onCancel(), 2000);
+    }
+    if (open && progress >= 2 && pendingCount && !window.location.hash.includes('pending')) {
+      advanceOnboarding('dashboard-onboarding-start');
       return <Redirect to="/devices/pending" />;
     }
 
@@ -124,7 +122,7 @@ export default class DeviceConnectionDialog extends React.Component {
               {progress < 2 ? (
                 <Button
                   variant="contained"
-                  disabled={!(virtualDevice || (onDevice && AppStore.getOnboardingDeviceType()))}
+                  disabled={!(virtualDevice || (onDevice && onboardingDeviceType))}
                   onClick={() => self.setState({ progress: progress + 1 })}
                 >
                   Next
@@ -141,3 +139,16 @@ export default class DeviceConnectionDialog extends React.Component {
     );
   }
 }
+
+const actionCreators = { getReleases, getUserOrganization };
+
+const mapStateToProps = state => {
+  return {
+    isEnterprise: state.app.features.hasMultitenancy || state.app.features.isEnterprise || state.app.features.isHosted,
+    pendingCount: state.devices.byStatus.pending.total,
+    onboardingDeviceType: state.users.onboarding.deviceType,
+    token: state.users.organization.tenant_token
+  };
+};
+
+export default connect(mapStateToProps, actionCreators)(DeviceConnectionDialog);

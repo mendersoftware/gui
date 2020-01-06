@@ -23,7 +23,7 @@ export default class DeploymentsList extends React.Component {
   render() {
     const self = this;
 
-    const { abort, count, headers, isActiveTab, openReport, page, items, refreshItems, title, type } = self.props;
+    const { abort, count, headers, isActiveTab, openReport, page, items, isEnterprise, refreshItems, title, type } = self.props;
 
     const columnHeaders = headers ? headers : self.state.defaultHeaders;
 
@@ -46,6 +46,7 @@ export default class DeploymentsList extends React.Component {
               key={`${type}-deployment-${deployment.created}`}
               index={index}
               isActiveTab={isActiveTab}
+              isEnterprise={isEnterprise}
               openReport={openReport}
               type={type}
             />

@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Step, StepLabel, Stepper } from '@material-ui/core';
 
@@ -6,7 +7,9 @@ import SoftwareDevices from './deployment-wizard/softwaredevices';
 import ScheduleRollout from './deployment-wizard/schedulerollout';
 import Review from './deployment-wizard/review';
 
-import AppStore from '../../stores/app-store';
+import { selectDevice } from '../../actions/deviceActions';
+import { selectRelease } from '../../actions/releaseActions';
+
 import { getRemainderPercent } from '../../helpers';
 
 const deploymentSteps = [
@@ -15,12 +18,12 @@ const deploymentSteps = [
   { title: 'Review and create', closed: false, component: Review }
 ];
 
-export default class CreateDialog extends React.Component {
+export class CreateDialog extends React.Component {
   constructor(props, context) {
     super(props, context);
-    const isEnterprise = AppStore.getIsEnterprise() || AppStore.getIsHosted();
+    const self = this;
     const steps = deploymentSteps.reduce((accu, step) => {
-      if (step.closed && !isEnterprise) {
+      if (step.closed && !self.props.isEnterprise) {
         return accu;
       }
       accu.push(step);
@@ -29,9 +32,14 @@ export default class CreateDialog extends React.Component {
     this.state = {
       activeStep: 0,
       deploymentDeviceIds: [],
-      isEnterprise,
       steps
     };
+  }
+
+  componentDidMount() {
+    if (Object.keys(this.props.deploymentObject).length) {
+      this.setState({ ...this.props.deploymentObject });
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -39,25 +47,26 @@ export default class CreateDialog extends React.Component {
     if (prevProps.device !== this.props.device && this.props.device) {
       this.setState({ deploymentDeviceIds: [this.props.device.id] });
     }
-    if (prevProps.deploymentObject !== this.props.deploymentObject && this.props.deploymentObject) {
-      this.setState({ ...this.props.deploymentObject });
-    }
   }
 
   deploymentSettings(value, property) {
     this.setState({ [property]: value });
-    if (property==='phases') {
+    if (property === 'phases') {
       this.validatePhases(value);
     }
   }
 
   onScheduleSubmit(settings) {
     this.props.onScheduleSubmit(settings);
-    this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: null, release: null, disableSchedule: false });
+    this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: null, disableSchedule: false });
+    this.props.selectDevice();
+    this.props.selectRelease();
   }
 
   closeWizard() {
-    this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: null, release: null, disableSchedule: false });
+    this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: null, disableSchedule: false });
+    this.props.selectDevice();
+    this.props.selectRelease();
     this.props.onDismiss();
   }
 
@@ -65,25 +74,27 @@ export default class CreateDialog extends React.Component {
     let valid = true;
     const remainder = getRemainderPercent(phases);
     for (var phase of phases) {
-      const deviceCount =  Math.floor((this.state.deploymentDeviceIds.length / 100) * (phase.batch_size || remainder));
-      if (deviceCount<1) { valid = false }
+      const deviceCount = Math.floor((this.state.deploymentDeviceIds.length / 100) * (phase.batch_size || remainder));
+      if (deviceCount < 1) {
+        valid = false;
+      }
     }
-    this.setState({disableSchedule: !valid});
+    this.setState({ disableSchedule: !valid });
   }
 
   render() {
     const self = this;
-    const { device, open } = self.props;
-    const { activeStep, deploymentDeviceIds, release, group, phases, steps } = self.state;
-    const disabled = (activeStep === 0) ? !(release && deploymentDeviceIds.length) : self.state.disableSchedule;
-    const finalStep = activeStep === steps.length - 1;
+    const { device, deploymentObject, open, release } = self.props;
+    const { activeStep, deploymentDeviceIds, group, phases, steps } = self.state;
     const ComponentToShow = steps[activeStep].component;
     const deploymentSettings = {
-      group: device ? device.id : group,
-      deploymentDeviceIds,
-      release,
+      group: device ? device.id : deploymentObject.group || group,
+      deploymentDeviceIds: deploymentObject.deploymentDeviceIds || deploymentDeviceIds,
+      release: deploymentObject.release || release || self.state.release,
       phases
     };
+    const disabled = activeStep === 0 ? !(deploymentSettings.release && deploymentSettings.deploymentDeviceIds.length) : self.state.disableSchedule;
+    const finalStep = activeStep === steps.length - 1;
     return (
       <Dialog open={open || false} fullWidth={false} maxWidth="md">
         <DialogTitle>Create a deployment</DialogTitle>
@@ -95,7 +106,14 @@ export default class CreateDialog extends React.Component {
               </Step>
             ))}
           </Stepper>
-          <ComponentToShow disableSchedule={self.state.disableSchedule} deploymentAnchor={this.deploymentRef} {...self.props} {...self.state} deploymentSettings={(...args) => self.deploymentSettings(...args)} />
+          <ComponentToShow
+            disableSchedule={self.state.disableSchedule}
+            deploymentAnchor={this.deploymentRef}
+            {...self.props}
+            {...self.state}
+            {...deploymentSettings}
+            deploymentSettings={(...args) => self.deploymentSettings(...args)}
+          />
         </DialogContent>
         <DialogActions className="margin-left margin-right">
           <Button key="schedule-action-button-1" onClick={() => self.closeWizard()} style={{ marginRight: '10px', display: 'inline-block' }}>
@@ -119,3 +137,17 @@ export default class CreateDialog extends React.Component {
     );
   }
 }
+
+const actionCreators = { selectDevice, selectRelease };
+
+const mapStateToProps = state => {
+  return {
+    isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,
+    device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
+    groups: Object.keys(state.devices.groups.byId),
+    hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
+    release: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null
+  };
+};
+
+export default connect(mapStateToProps, actionCreators)(CreateDialog);

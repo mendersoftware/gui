@@ -1,38 +1,33 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Time from 'react-time';
 import ReactTooltip from 'react-tooltip';
-import { AuthButton } from '../helptips/helptooltips';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-
-import AppStore from '../../stores/app-store';
-import AppActions from '../../actions/app-actions';
-import Authsets from './authsets';
-import ExpandableDeviceAttribute from './expandable-device-attribute';
-import Loader from '../common/loader';
 import pluralize from 'pluralize';
 import copy from 'copy-to-clipboard';
 
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Icon from '@material-ui/core/Icon';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, List, Typography } from '@material-ui/core';
+import {
+  Block as BlockIcon,
+  Check as CheckIcon,
+  CheckCircle as CheckCircleIcon,
+  Info as InfoIcon,
+  Help as HelpIcon,
+  Link as LinkIcon,
+  Replay as ReplayIcon,
+  Warning as WarningIcon
+} from '@material-ui/icons';
 
-import BlockIcon from '@material-ui/icons/Block';
-import CheckIcon from '@material-ui/icons/Check';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import InfoIcon from '@material-ui/icons/Info';
-import HelpIcon from '@material-ui/icons/Help';
-import LinkIcon from '@material-ui/icons/Link';
-import ReplayIcon from '@material-ui/icons/Replay';
-import WarningIcon from '@material-ui/icons/Warning';
-
+import { decommissionDevice, selectDevice } from '../../actions/deviceActions';
+import { getReleases } from '../../actions/releaseActions';
+import { setSnackbar } from '../../actions/appActions';
+import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { preformatWithRequestID } from '../../helpers';
 import { advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
+import { AuthButton } from '../helptips/helptooltips';
+import Loader from '../common/loader';
+import Authsets from './authsets';
+import ExpandableDeviceAttribute from './expandable-device-attribute';
 
 const iconStyle = { margin: 12 };
 
@@ -55,44 +50,20 @@ const states = {
   }
 };
 
-export default class ExpandedDevice extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object,
-    location: PropTypes.object
-  };
-
+export class ExpandedDevice extends React.Component {
   constructor(props, context) {
     super(props, context);
 
     this.state = {
-      artifacts: AppStore.getArtifactsRepo(),
       authsets: false,
-      docsVersion: AppStore.getDocsVersion(),
       schedule: false,
-      selectedGroup: {
-        payload: '',
-        text: ''
-      },
-      showHelptips: AppStore.showHelptips(),
-      showInput: false,
-      user: AppStore.getCurrentUser()
+      showInput: false
     };
   }
 
   componentDidMount() {
-    this._getArtifacts();
-  }
-
-  _getArtifacts() {
-    var self = this;
-    if (this.props.device.status === 'accepted') {
-      AppActions.getArtifacts()
-        .then(artifacts =>
-          setTimeout(() => {
-            self.setState({ artifacts });
-          }, 300)
-        )
-        .catch(err => console.log(err.error || 'Please check your connection'));
+    if (this.props.device.status === DEVICE_STATES.accepted) {
+      this.props.getReleases();
     }
   }
 
@@ -116,10 +87,9 @@ export default class ExpandedDevice extends React.Component {
   }
 
   _clickListItem() {
-    AppActions.setSnackbar('');
+    this.props.setSnackbar('');
     this.setState({ schedule: false });
   }
-
 
   _handleStopProp(e) {
     e.stopPropagation();
@@ -145,72 +115,70 @@ export default class ExpandedDevice extends React.Component {
     this.setState({ filterByArtifact: filteredDevs });
   }
   _clickLink() {
-    window.location.assign(`https://docs.mender.io/${this.state.docsVersion}/client-configuration/configuration-file/polling-intervals`);
+    window.location.assign(`https://docs.mender.io/${this.props.docsVersion}/client-configuration/configuration-file/polling-intervals`);
   }
   _copyLinkToClipboard() {
     var location = window.location.href.substring(0, window.location.href.indexOf('/devices') + '/devices'.length);
     copy(`${location}/id=${this.props.device.id}`);
-    AppActions.setSnackbar('Link copied to clipboard');
+    this.props.setSnackbar('Link copied to clipboard');
   }
 
   _scheduleDeploymentFor(device) {
-    if (!AppStore.getOnboardingComplete()) {
+    if (!this.props.onboardingComplete) {
       if (!getOnboardingStepCompleted('upload-prepared-artifact-tip')) {
         advanceOnboarding('upload-prepared-artifact-tip');
       }
     }
-    AppActions.selectDevice(device);
+    this.props.selectDevice(device);
     this.setState({ schedule: true });
   }
 
   _decommissionDevice(device_id) {
     var self = this;
-    return AppActions.decommissionDevice(device_id)
+    return self.props
+      .decommissionDevice(device_id)
       .then(() => {
         // close dialog!
         self.toggleAuthsets(false);
         // close expanded device
         // trigger reset of list!
-        AppActions.setSnackbar('Device was decommissioned successfully');
+        self.props.setSnackbar('Device was decommissioned successfully');
       })
       .catch(err => {
         var errMsg = err.res.error.message || '';
         console.log(errMsg);
-        AppActions.setSnackbar(preformatWithRequestID(err.res, `There was a problem decommissioning the device: ${errMsg}`), null, 'Copy to clipboard');
+        self.props.setSnackbar(preformatWithRequestID(err.res, `There was a problem decommissioning the device: ${errMsg}`), null, 'Copy to clipboard');
       })
       .finally(() => self.props.refreshDevices());
   }
 
   render() {
-    var status = this.props.device.status;
+    const self = this;
+    const { attributes, created_ts, identity_data, status } = this.props.device;
 
-    var deviceIdentity = [<ExpandableDeviceAttribute key="id_checksum" primary="Device ID" secondary={(this.props.device || {}).id || '-'} />];
-
-    if ((this.props.device || {}).identity_data) {
-      var data = typeof this.props.device.identity_data == 'object' ? this.props.device.identity_data : JSON.parse(this.props.device.identity_data);
-      deviceIdentity = Object.entries(data).reduce((accu, item) => {
+    let deviceIdentity = [<ExpandableDeviceAttribute key="id_checksum" primary="Device ID" secondary={this.props.device.id || '-'} />];
+    if (identity_data) {
+      deviceIdentity = Object.entries(identity_data).reduce((accu, item) => {
         accu.push(<ExpandableDeviceAttribute key={item[0]} primary={item[0]} secondary={item[1]} />);
         return accu;
       }, deviceIdentity);
     }
 
-    if ((this.props.device || {}).created_ts) {
-      var createdTime = <Time value={this.props.device.created_ts} format="YYYY-MM-DD HH:mm" />;
+    if (created_ts) {
+      var createdTime = <Time value={created_ts} format="YYYY-MM-DD HH:mm" />;
       deviceIdentity.push(
-        <ExpandableDeviceAttribute key="connectionTime" primary={status === 'preauthorized' ? 'Date added' : 'First request'} secondary={createdTime} />
+        <ExpandableDeviceAttribute key="connectionTime" primary={status === DEVICE_STATES.preauth ? 'Date added' : 'First request'} secondary={createdTime} />
       );
     }
 
     var deviceInventory = [];
 
     var waiting = false;
-    if (typeof this.props.attrs !== 'undefined' && this.props.attrs.length > 0) {
-      var sortedAttributes = this.props.attrs.sort((a, b) => {
-        return a.name.localeCompare(b.name);
-      });
+    if (attributes && Object.values(attributes).some(i => i)) {
+      var sortedAttributes = Object.entries(attributes).sort((a, b) => a[0].localeCompare(b[0]));
       deviceInventory = sortedAttributes.reduce((accu, attribute, i) => {
-        var secondaryText = attribute.value instanceof Array ? attribute.value.toString() : attribute.value;
-        accu.push(<ExpandableDeviceAttribute key={i} primary={attribute.name} secondary={secondaryText} textClasses={{ secondary: 'inventory-text' }} />);
+        var secondaryText = Array.isArray(attribute[1]) ? attribute[1].join(',') : attribute[1];
+        accu.push(<ExpandableDeviceAttribute key={i} primary={attribute[0]} secondary={secondaryText} textClasses={{ secondary: 'inventory-text' }} />);
         return accu;
       }, deviceInventory);
     } else {
@@ -246,17 +214,12 @@ export default class ExpandedDevice extends React.Component {
       );
     }
 
-    var deviceInventory2 = [];
-    if (deviceInventory.length > deviceIdentity.length) {
-      deviceInventory2 = deviceInventory.splice(deviceInventory.length / 2 + (deviceInventory.length % 2), deviceInventory.length);
-    }
-
     const statusIcon = states[status].statusIcon;
 
     var hasPending = '';
-    if (status === 'accepted' && this.props.device.auth_sets.length > 1) {
+    if (status === DEVICE_STATES.accepted && this.props.device.auth_sets.length > 1) {
       hasPending = this.props.device.auth_sets.reduce((accu, set) => {
-        return set.status === 'pending' ? 'This device has a pending authentication set' : accu;
+        return set.status === DEVICE_STATES.pending ? 'This device has a pending authentication set' : accu;
       }, '');
     }
 
@@ -291,7 +254,7 @@ export default class ExpandedDevice extends React.Component {
             <Button
               onClick={() => {
                 this.toggleAuthsets(true);
-                AppActions.setSnackbar('');
+                self.props.setSnackbar('');
               }}
             >
               {hasPending ? <WarningIcon className="auth" style={iconStyle} /> : null}
@@ -307,31 +270,22 @@ export default class ExpandedDevice extends React.Component {
           </div>
         </div>
 
-        {this.props.attrs || status === 'accepted' ? (
-          <div className="device-inventory bordered">
-            <div className={this.props.unauthorized ? 'hidden' : 'report-list'}>
-              <h4 className="margin-bottom-none">Device inventory</h4>
-              <List>{deviceInventory}</List>
-            </div>
-
-            <div className={this.props.unauthorized ? 'hidden' : 'report-list'}>
-              <List style={{ marginTop: '34px' }}>{deviceInventory2}</List>
-            </div>
+        {(attributes || status === DEVICE_STATES.accepted) && (
+          <div className={`device-inventory bordered ${this.props.unauthorized ? 'hidden' : 'report-list'}`}>
+            <h4 className="margin-bottom-none">Device inventory</h4>
+            <List>{deviceInventory}</List>
           </div>
-        ) : null}
+        )}
 
-        {status === 'accepted' && !waiting ? (
+        {status === DEVICE_STATES.accepted && !waiting ? (
           <div className="device-actions" style={{ marginTop: '24px' }}>
             <Button onClick={() => this._copyLinkToClipboard()}>
               <LinkIcon className="rotated buttonLabelIcon" />
               Copy link to this device
             </Button>
-            {status === 'accepted' ? (
+            {status === DEVICE_STATES.accepted ? (
               <span className="margin-left">
-                <Button
-                  to={`/deployments?open=true&deviceId=${this.props.device.id}`}
-                  component={ForwardingLink}
-                >
+                <Button to={`/deployments?open=true&deviceId=${this.props.device.id}`} component={ForwardingLink}>
                   <ReplayIcon className="rotated buttonLabelIcon" />
                   Create a deployment for this device
                 </Button>
@@ -350,7 +304,7 @@ export default class ExpandedDevice extends React.Component {
 
     var authsetTitle = (
       <div style={{ width: 'fit-content', position: 'relative' }}>
-        {this.props.device.status === 'pending'
+        {this.props.device.status === DEVICE_STATES.pending
           ? `Authorization ${pluralize('request', this.props.device.auth_sets.length)} for this device`
           : 'Authorization status for this device'}
         <div
@@ -385,7 +339,7 @@ export default class ExpandedDevice extends React.Component {
       <div className={this.props.className}>
         {deviceInfo}
 
-        {this.state.showHelptips && status === 'pending' ? (
+        {this.props.showHelptips && status === DEVICE_STATES.pending ? (
           <div>
             <div
               id="onboard-4"
@@ -430,3 +384,16 @@ export default class ExpandedDevice extends React.Component {
     );
   }
 }
+
+const actionCreators = { decommissionDevice, getReleases, selectDevice, setSnackbar };
+
+const mapStateToProps = state => {
+  return {
+    artifacts: state.releases.artifactsRepo,
+    docsVersion: state.app.docsVersion,
+    onboardingComplete: state.users.onboarding.complete,
+    showHelptips: state.users.showHelptips
+  };
+};
+
+export default connect(mapStateToProps, actionCreators)(ExpandedDevice);

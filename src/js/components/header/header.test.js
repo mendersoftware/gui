@@ -1,16 +1,55 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
-import { AppContext } from '../../contexts/app-context';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import configureStore from 'redux-mock-store';
 import Header from './header';
 
-it('renders correctly', () => {
-  const tree = renderer
-    .create(
-      <MemoryRouter>
-        <AppContext.Provider value={{ location: { pathname: 'test' } }}>{context => <Header {...context} />}</AppContext.Provider>
-      </MemoryRouter>
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
+const mockStore = configureStore([thunk]);
+
+describe('Header Component', () => {
+  let store;
+  beforeEach(() => {
+    store = mockStore({
+      app: {
+        hostedAnnouncement: null,
+        features: { hasMultitenancy: false, isDemoMode: false },
+        docsVersion: null
+      },
+      deployments: {
+        byStatus: { inprogress: { total: 0 } }
+      },
+      devices: {
+        byId: {},
+        byStatus: {
+          accepted: {
+            total: 0
+          },
+          pending: {
+            total: 0
+          }
+        },
+        limit: 500
+      },
+      users: {
+        byId: { a1: { email: 'a@b.com', id: 'a1' } },
+        currentUser: 'a1',
+        showHelptips: true
+      }
+    });
+  });
+
+  it('renders correctly', () => {
+    const tree = renderer
+      .create(
+        <MemoryRouter>
+          <Provider store={store}>
+            <Header />
+          </Provider>
+        </MemoryRouter>
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

@@ -15,13 +15,11 @@ export default class TextInput extends React.Component {
     };
   }
 
-  componentWillMount() {
-    this.props.attachToForm(this); // Attaching the component to the form
-  }
   componentWillUnmount() {
     this.props.detachFromForm(this); // Detaching if unmounting
   }
   componentDidMount() {
+    this.props.attachToForm(this); // Attaching the component to the form
     if (this.props.value) {
       this.props.validate(this, this.props.value);
     }

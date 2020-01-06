@@ -1,74 +1,68 @@
 import React from 'react';
 
-import AppActions from '../../actions/app-actions';
+const defaultStats = {
+  success: 0,
+  decommissioned: 0,
+  pending: 0,
+  failure: 0,
+  downloading: 0,
+  installing: 0,
+  rebooting: 0,
+  noartifact: 0,
+  aborted: 0,
+  'already-installed': 0
+};
 
-export default class DeploymentStatus extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      stats: {
-        success: 0,
-        decommissioned: 0,
-        pending: 0,
-        failure: 0,
-        downloading: 0,
-        installing: 0,
-        rebooting: 0,
-        noartifact: 0,
-        aborted: 0,
-        'already-installed': 0
-      }
-    };
-  }
-  componentWillReceiveProps(nextProps) {
+export default class DeploymentStatus extends React.PureComponent {
+  componentDidUpdate(prevProps) {
     var self = this;
-    if (nextProps.id !== this.props.id) this.refreshStatus(nextProps.id);
-    if (!nextProps.isActiveTab) {
-      clearInterval(this.timer);
+    if (prevProps.id !== self.props.id) {
+      self.props.refreshStatus(self.props.id);
     }
-
-    if (nextProps.isActiveTab && !self.props.isActiveTab) {
-      // isActive has changed
-      if (self.props.refresh) {
-        self.timer = setInterval(() => {
-          self.refreshStatus(self.props.id);
-        }, 10000);
-      }
+    if (!self.props.isActiveTab) {
+      clearInterval(self.timer);
+    }
+    // isActive has changed
+    if (!prevProps.isActiveTab && self.props.isActiveTab && self.props.refresh) {
+      self.timer = setInterval(() => {
+        self.props.refreshStatus(self.props.id);
+      }, 10000);
+    }
+    if (
+      prevProps.stats !== self.props.stats &&
+      self.props.stats &&
+      self.props.stats.downloading + self.props.stats.installing + self.props.stats.rebooting + self.props.stats.pending <= 0
+    ) {
+      // if no more devices in "progress" statuses, send message to parent that it's finished
+      clearInterval(self.timer);
+      self.props.setFinished(true);
     }
   }
   componentDidMount() {
     var self = this;
     if (self.props.refresh) {
       self.timer = setInterval(() => {
-        self.refreshStatus(self.props.id);
+        self.props.refreshStatus(self.props.id);
       }, 10000);
     }
-    self.refreshStatus(self.props.id);
+    self.props.refreshStatus(self.props.id);
   }
   componentWillUnmount() {
     clearInterval(this.timer);
   }
-  refreshStatus(id) {
-    var self = this;
-    return AppActions.getSingleDeploymentStats(id).then(stats => {
-      self.setState({ stats });
-      if (stats.downloading + stats.installing + stats.rebooting + stats.pending <= 0) {
-        // if no more devices in "progress" statuses, send message to parent that it's finished
-        clearInterval(self.timer);
-        self.props.setFinished(true);
-      }
-    });
-  }
+
   render() {
-    var inprogress = this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting;
-    var failed = this.state.stats.failure;
-    var skipped = this.state.stats.aborted + this.state.stats.noartifact + this.state.stats['already-installed'] + this.state.stats.decommissioned;
+    let { stats } = this.props;
+    stats = stats ? stats : defaultStats;
+    var inprogress = stats.downloading + stats.installing + stats.rebooting;
+    var failed = stats.failure;
+    var skipped = stats.aborted + stats.noartifact + stats['already-installed'] + stats.decommissioned;
 
     const phases = [
       { title: 'Skipped', value: skipped, className: 'skipped' },
-      { title: 'Pending', value: this.state.stats.pending, className: 'pending' },
+      { title: 'Pending', value: stats.pending, className: 'pending' },
       { title: 'In progress', value: inprogress, className: 'inprogress' },
-      { title: 'Successful', value: this.state.stats.success, className: 'success' },
+      { title: 'Successful', value: stats.success, className: 'success' },
       { title: 'Failed', value: failed, className: 'failure' }
     ];
     return (

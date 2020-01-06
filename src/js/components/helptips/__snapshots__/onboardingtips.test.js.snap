@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`DevicePendingTip renders correctly 1`] = `
+exports[`OnboardingTips Components DevicePendingTip renders correctly 1`] = `
 <div
   className="onboard-tip"
   style={
@@ -74,7 +74,7 @@ exports[`DevicePendingTip renders correctly 1`] = `
 </div>
 `;
 
-exports[`WelcomeSnackTip renders correctly 1`] = `
+exports[`OnboardingTips Components WelcomeSnackTip renders correctly 1`] = `
 <div
   className="onboard-snack"
 >

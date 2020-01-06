@@ -2,27 +2,21 @@ import React from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import IconButton from '@material-ui/core/IconButton';
 import CopyPasteIcon from '@material-ui/icons/FileCopy';
-import AppActions from '../../../actions/app-actions';
-import AppStore from '../../../stores/app-store';
-import { findLocalIpAddress, getDebConfigurationCode } from '../../../helpers';
+import { getDebConfigurationCode } from '../../../helpers';
 
 export default class DebPackage extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       codeToCopy: false,
-      dpkgCodeCopied: false,
-      ipAddress: AppStore.getHostAddress()
+      dpkgCodeCopied: false
     };
   }
 
   componentDidMount() {
     const self = this;
-    if (!self.state.ipAddress || self.state.ipAddress === 'X.X.X.X') {
-      findLocalIpAddress().then(ipAddress => self.setState({ ipAddress }));
-    }
-    if (AppStore.hasMultitenancy() || AppStore.getIsEnterprise() || AppStore.getIsHosted()) {
-      AppActions.getUserOrganization().then(org => (org ? self.setState({ token: org.tenant_token }) : null));
+    if (!self.props.ipAddress || self.props.ipAddress === 'X.X.X.X') {
+      self.props.findLocalIpAddress();
     }
   }
 
@@ -39,20 +33,17 @@ export default class DebPackage extends React.Component {
 
   render() {
     const self = this;
-    const { codeToCopyCopied, dpkgCodeCopied, ipAddress, token } = self.state;
-    const isHosted = AppStore.getIsHosted();
-    const isEnterprise = AppStore.getIsEnterprise();
-    const debPackageVersion = AppStore.getMenderDebPackageVersion();
+    const { codeToCopyCopied, dpkgCodeCopied } = self.state;
+    const { debPackageVersion, ipAddress, isHosted, isEnterprise, org } = self.props;
+    const token = (org || {}).tenant_token;
     const dpkgCode = `wget https://d1b0l86ne08fsf.cloudfront.net/${debPackageVersion}/dist-packages/debian/armhf/mender-client_${debPackageVersion}-1_armhf.deb &&
     sudo dpkg -i mender-client_${debPackageVersion}-1_armhf.deb`;
-
     const codeToCopy = getDebConfigurationCode(ipAddress, isHosted, isEnterprise, token, debPackageVersion);
     let title = 'Connecting to a demo server with demo settings';
-    if (isEnterprise || isHosted) {
+    if (isEnterprise) {
       title = 'Connecting to an Enterprise server';
-      if (isHosted) {
-        title = 'Connecting to Mender Professional with demo settings';
-      }
+    } else if (isHosted) {
+      title = 'Connecting to Mender Professional with demo settings';
     }
     return (
       <div>

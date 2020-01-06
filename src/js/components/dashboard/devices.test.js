@@ -1,13 +1,55 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { createMount } from '@material-ui/core/test-utils';
+import renderer from 'react-test-renderer';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import configureStore from 'redux-mock-store';
 import Devices from './devices';
 
-it('renders correctly', () => {
-  const tree = createMount()(
-    <MemoryRouter>
-      <Devices />
-    </MemoryRouter>
-  );
-  expect(tree.html()).toMatchSnapshot();
+const mockStore = configureStore([thunk]);
+
+describe('Devices Component', () => {
+  let store;
+  beforeEach(() => {
+    store = mockStore({
+      deployments: {
+        deploymentDeviceLimit: 5000
+      },
+      devices: {
+        byId: {},
+        byStatus: {
+          accepted: {
+            total: 0,
+            deviceIds: []
+          },
+          active: {
+            total: 0
+          },
+          inactive: {
+            total: 0
+          },
+          pending: {
+            total: 0
+          }
+        }
+      },
+      users: {
+        onboarding: { complete: false },
+        showHelptips: true
+      }
+    });
+  });
+
+  it('renders correctly', () => {
+    const tree = renderer
+      .create(
+        <MemoryRouter>
+          <Provider store={store}>
+            <Devices getAllDevicesByStatus={jest.fn()} />
+          </Provider>
+        </MemoryRouter>
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

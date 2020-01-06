@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`MoreHelp Component renders correctly 1`] = `
 <div>
   <h2>
     More resources
@@ -38,7 +38,7 @@ exports[`renders correctly 1`] = `
         Read the
          
         <a
-          href="https://docs.mender.io/undefined"
+          href="https://docs.mender.io/"
           target="_blank"
         >
           Mender documentation

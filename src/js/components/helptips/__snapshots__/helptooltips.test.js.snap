@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AddGroup renders correctly 1`] = `
+exports[`Helptooltips Components AddGroup renders correctly 1`] = `
 <div>
   <h3>
     Device groups
@@ -23,7 +23,7 @@ exports[`AddGroup renders correctly 1`] = `
 </div>
 `;
 
-exports[`AuthButton renders correctly 1`] = `
+exports[`Helptooltips Components AuthButton renders correctly 1`] = `
 <div
   style={
     Object {
@@ -59,7 +59,7 @@ exports[`AuthButton renders correctly 1`] = `
 </div>
 `;
 
-exports[`ExpandArtifact renders correctly 1`] = `
+exports[`Helptooltips Components ExpandArtifact renders correctly 1`] = `
 <div>
   <h3>
     Device type compatibility
@@ -86,7 +86,7 @@ exports[`ExpandArtifact renders correctly 1`] = `
 </div>
 `;
 
-exports[`ExpandDevice renders correctly 1`] = `
+exports[`Helptooltips Components ExpandDevice renders correctly 1`] = `
 <div>
   <h3>
     Device inventory

@@ -16,7 +16,7 @@ const Review = props => {
   const start_time = deploymentPhases[0].start_ts || new Date().toISOString();
 
   const deploymentInformation = [
-    { primary: 'Release', secondary: release.name },
+    { primary: 'Release', secondary: release.Name },
     { primary: 'Device types compatible', secondary: release.device_types_compatible.join(', '), wide: true },
     { primary: `Device${device ? '' : ' group'}`, secondary: device ? device.id : group },
     { primary: '# devices', secondary: deploymentDeviceIds.length },

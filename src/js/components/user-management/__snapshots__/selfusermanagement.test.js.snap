@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`SelfUserManagement Component renders correctly 1`] = `
 <div
   className="margin-top-small"
   style={
@@ -60,12 +60,46 @@ exports[`renders correctly 1`] = `
     </div>
   </form>
   <form
-    className="margin-top flexbox space-between"
+    className="flexbox space-between"
   >
+    <div
+      className="MuiFormControl-root MuiTextField-root"
+      style={
+        Object {
+          "maxWidth": "100%",
+          "width": "400px",
+        }
+      }
+    >
+      <label
+        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink Mui-disabled Mui-disabled MuiFormLabel-filled"
+        data-shrink={true}
+      >
+        Password
+      </label>
+      <div
+        className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl"
+        onClick={[Function]}
+      >
+        <input
+          aria-invalid={false}
+          autoFocus={false}
+          className="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled"
+          defaultValue="********"
+          disabled={true}
+          onAnimationStart={[Function]}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          required={false}
+          type="password"
+        />
+      </div>
+    </div>
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-text button-holder undefined MuiButton-textPrimary"
+      className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary"
       disabled={false}
-      id="change_pass"
+      id="change_password"
       onBlur={[Function]}
       onClick={[Function]}
       onDragLeave={[Function]}
@@ -78,6 +112,11 @@ exports[`renders correctly 1`] = `
       onTouchEnd={[Function]}
       onTouchMove={[Function]}
       onTouchStart={[Function]}
+      style={
+        Object {
+          "margin": "30px 0 0 15px",
+        }
+      }
       tabIndex={0}
       type="button"
     >

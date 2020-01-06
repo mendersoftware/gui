@@ -1,11 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import pluralize from 'pluralize';
 
 import RefreshIcon from '@material-ui/icons/Refresh';
 import UpdateIcon from '@material-ui/icons/Update';
 
-import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
+import { setSnackbar } from '../../actions/appActions';
+import { getDeployments } from '../../actions/deploymentActions';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
@@ -16,52 +17,47 @@ import CompletedDeployments from './widgets/completeddeployments';
 
 const refreshDeploymentsLength = 30000;
 
-export default class Deployments extends React.Component {
+const iconStyles = {
+  fontSize: 48,
+  opacity: 0.5,
+  marginRight: '30px'
+};
+
+const headerStyle = {
+  alignItems: 'center',
+  justifyContent: 'flex-end'
+};
+
+export class Deployments extends React.Component {
   constructor(props, state) {
     super(props, state);
     const self = this;
     self.timer = null;
     const lastDeploymentCheck = self.updateDeploymentCutoff(new Date());
     self.state = {
-      deployments: [],
-      finished: [],
-      inprogress: [],
       lastDeploymentCheck,
-      loading: true,
-      pending: []
+      loading: true
     };
   }
   componentWillUnmount() {
-    AppStore.removeChangeListener(this._onChange.bind(this));
     clearInterval(this.timer);
-    clearAllRetryTimers();
+    clearAllRetryTimers(this.props.setSnackbar);
   }
   componentDidMount() {
     var self = this;
-    AppStore.changeListener(this._onChange.bind(this));
-    clearAllRetryTimers();
+    clearAllRetryTimers(self.props.setSnackbar);
     self.timer = setInterval(() => self.getDeployments(), refreshDeploymentsLength);
     self.getDeployments();
   }
 
-  _onChange() {
-    const deployments = AppStore.getDeployments();
-    const deploymentsByState = deployments.reduce(
-      (accu, item) => {
-        accu[item.status].push(item);
-        return accu;
-      },
-      { inprogress: [], pending: [], finished: [], deployments }
-    );
-    this.setState(deploymentsByState);
-  }
   handleDeploymentError(err) {
     var errormsg = err.error || 'Please check your connection';
-    setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength);
+    setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, this.props.setSnackbar);
   }
   getDeployments() {
     const self = this;
-    return AppActions.getDeployments(1, 20)
+    return self.props
+      .getDeployments(1, 20)
       .then(() => self.setState({ loading: false }))
       .catch(self.handleDeploymentError);
   }
@@ -82,35 +78,25 @@ export default class Deployments extends React.Component {
 
   render() {
     const self = this;
-    const { lastDeploymentCheck, loading, inprogress, pending, finished } = self.state;
-
-    const iconStyles = {
-      fontSize: 48,
-      opacity: 0.5,
-      marginRight: '30px'
-    };
-
-    const headerStyle = {
-      alignItems: 'center',
-      justifyContent: 'flex-end'
-    };
+    const { inprogressCount, pendingCount, finished } = self.props;
+    const { lastDeploymentCheck, loading } = self.state;
 
     const pendingWidgetMain = {
-      counter: pending.length,
+      counter: pendingCount,
       header: (
         <div className="flexbox" style={headerStyle}>
           <UpdateIcon className="flip-horizontal" style={iconStyles} />
-          <div>Pending {pluralize('deployment', pending.length)}</div>
+          <div>Pending {pluralize('deployment', pendingCount)}</div>
         </div>
       ),
       targetLabel: 'View details'
     };
     const activeWidgetMain = {
-      counter: inprogress.length,
+      counter: inprogressCount,
       header: (
         <div className="flexbox" style={headerStyle}>
           <RefreshIcon className="flip-horizontal" style={iconStyles} />
-          <div>{pluralize('Deployment', inprogress.length)} in progress</div>
+          <div>{pluralize('Deployment', inprogressCount)} in progress</div>
         </div>
       ),
       targetLabel: 'View progress'
@@ -134,18 +120,18 @@ export default class Deployments extends React.Component {
           ) : (
             <div style={this.props.styles}>
               <CompletedDeployments
-                onClick={() => self.props.clickHandle({ route: 'deployments/finished' })}
+                onClick={deploymentsTimeframe => self.props.clickHandle(deploymentsTimeframe)}
                 deployments={finished}
                 cutoffDate={lastDeploymentCheck}
                 innerRef={ref => (this.deploymentsRef = ref)}
               />
               <BaseWidget
-                className={inprogress.length ? 'current-widget active' : 'current-widget'}
+                className={inprogressCount ? 'current-widget active' : 'current-widget'}
                 main={activeWidgetMain}
                 onClick={() => self.props.clickHandle({ route: 'deployments/active' })}
               />
               <BaseWidget
-                className={pending.length ? 'current-widget pending' : 'current-widget'}
+                className={pendingCount ? 'current-widget pending' : 'current-widget'}
                 main={pendingWidgetMain}
                 onClick={() => self.props.clickHandle({ route: 'deployments/active' })}
               />
@@ -164,3 +150,24 @@ export default class Deployments extends React.Component {
     );
   }
 }
+
+const actionCreators = { getDeployments, setSnackbar };
+
+const mapStateToProps = state => {
+  const deploymentsByState = Object.values(state.deployments.byId).reduce(
+    (accu, item) => {
+      accu[item.status].push(item);
+      return accu;
+    },
+    { inprogress: [], pending: [], finished: [] }
+  );
+  return {
+    finished: state.deployments.byStatus.finished.total
+      ? state.deployments.byStatus.finished.deploymentIds.map(id => state.deployments.byId[id])
+      : deploymentsByState.finished,
+    inprogressCount: state.deployments.byStatus.inprogress.total ? state.deployments.byStatus.inprogress.total : deploymentsByState.inprogress.length,
+    pendingCount: state.deployments.byStatus.pending.total ? state.deployments.byStatus.pending.total : deploymentsByState.pending.length
+  };
+};
+
+export default connect(mapStateToProps, actionCreators)(Deployments);

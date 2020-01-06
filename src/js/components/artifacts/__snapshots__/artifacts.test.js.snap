@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`Artifacts Component renders correctly 1`] = `
 <div
   style={
     Object {
@@ -119,7 +119,6 @@ exports[`renders correctly 1`] = `
         <input
           accept=".mender"
           autoComplete="off"
-          disabled={false}
           multiple={false}
           onChange={[Function]}
           onClick={[Function]}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import moment from 'moment';
 
 import { FormControl, Grid, InputLabel, ListSubheader, MenuItem, RootRef, Select } from '@material-ui/core';
@@ -6,17 +7,15 @@ import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
 import PhaseSettings from './phasesettings';
-import AppStore from '../../../stores/app-store';
 
-export default class ScheduleRollout extends React.Component {
+export class ScheduleRollout extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       disabled: false,
       isPhasesOpen: false,
       isPickerOpen: false,
-      pattern: '',
-      previousPhases: AppStore.getGlobalSettings().previousPhases || []
+      pattern: ''
     };
   }
 
@@ -70,18 +69,18 @@ export default class ScheduleRollout extends React.Component {
     const phaseStart = this.props.phases ? { start_ts: this.props.phases[0].start_ts } : {};
     // if setting new custom pattern we use default 2 phases
     // for small groups get minimum batch size containing at least 1 device
-    const minBatch = this.props.deploymentDeviceIds.length < 10 ? Math.ceil(1/this.props.deploymentDeviceIds.length*100) : 10;
+    const minBatch = this.props.deploymentDeviceIds.length < 10 ? Math.ceil((1 / this.props.deploymentDeviceIds.length) * 100) : 10;
     switch (value) {
-    case 0:
-      phases = [{ batch_size: 100, ...phaseStart }];
-      return this.props.deploymentSettings(phases, 'phases');
-    case 1:
-      phases = [{ batch_size: minBatch, delay: 2, delayUnit: 'hours', ...phaseStart }, {}];
-      break;
-    default:
-      // have to create a deep copy of the array to prevent overwriting, due to nested objects in the array
-      phases = JSON.parse(JSON.stringify(value));
-      break;
+      case 0:
+        phases = [{ batch_size: 100, ...phaseStart }];
+        return this.props.deploymentSettings(phases, 'phases');
+      case 1:
+        phases = [{ batch_size: minBatch, delay: 2, delayUnit: 'hours', ...phaseStart }, {}];
+        break;
+      default:
+        // have to create a deep copy of the array to prevent overwriting, due to nested objects in the array
+        phases = JSON.parse(JSON.stringify(value));
+        break;
     }
     this.updatePhaseStarts(phases);
   }
@@ -92,8 +91,7 @@ export default class ScheduleRollout extends React.Component {
 
   render() {
     const self = this;
-    const { deploymentDeviceIds = [], phases = [] } = self.props;
-    const { previousPhases } = self.state;
+    const { deploymentDeviceIds = [], phases = [], previousPhases = [] } = self.props;
     const numberDevices = deploymentDeviceIds ? deploymentDeviceIds.length : 0;
     const start_time = phases && phases.length ? phases[0].start_ts : null;
     const customPattern = phases && phases.length > 1 ? 1 : 0;
@@ -111,18 +109,18 @@ export default class ScheduleRollout extends React.Component {
     const previousPhaseOptions =
       previousPhases.length > 0
         ? previousPhases.map((previousPhaseSetting, index) => (
-          <MenuItem key={`previousPhaseSetting-${index}`} value={previousPhaseSetting}>
-            {previousPhaseSetting.reduce((accu, phase) => {
-              const phaseDescription = phase.delay ? `${phase.batch_size}% > ${phase.delay} ${phase.delayUnit || 'hours'} >` : `${phase.batch_size}%`;
-              return `${accu} ${phaseDescription}`;
-            }, `${previousPhaseSetting.length} phases:`)}
-          </MenuItem>
-        ))
+            <MenuItem key={`previousPhaseSetting-${index}`} value={previousPhaseSetting}>
+              {previousPhaseSetting.reduce((accu, phase) => {
+                const phaseDescription = phase.delay ? `${phase.batch_size}% > ${phase.delay} ${phase.delayUnit || 'hours'} >` : `${phase.batch_size}%`;
+                return `${accu} ${phaseDescription}`;
+              }, `${previousPhaseSetting.length} phases:`)}
+            </MenuItem>
+          ))
         : [
-          <MenuItem key="noPreviousPhaseSetting" disabled={true} style={{ opacity: '0.4' }}>
+            <MenuItem key="noPreviousPhaseSetting" disabled={true} style={{ opacity: '0.4' }}>
               No recent patterns
-          </MenuItem>
-        ];
+            </MenuItem>
+          ];
 
     return (
       <div style={{ overflow: 'visible', minHeight: '300px', marginTop: '15px' }}>
@@ -185,7 +183,12 @@ export default class ScheduleRollout extends React.Component {
             {customPattern ? (
               <Grid style={{ marginBottom: '15px' }} container justify="center" alignItems="center">
                 <Grid item>
-                  <PhaseSettings disabled={self.props.disableSchedule} numberDevices={numberDevices} {...self.props} updatePhaseStarts={(...args) => self.updatePhaseStarts(...args)} />
+                  <PhaseSettings
+                    disabled={self.props.disableSchedule}
+                    numberDevices={numberDevices}
+                    {...self.props}
+                    updatePhaseStarts={(...args) => self.updatePhaseStarts(...args)}
+                  />
                 </Grid>
               </Grid>
             ) : null}
@@ -195,3 +198,11 @@ export default class ScheduleRollout extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    previousPhases: state.users.globalSettings.previousPhases
+  };
+};
+
+export default connect(mapStateToProps)(ScheduleRollout);

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`VirtualDevice Component renders correctly 1`] = `
 <div>
   <h2>
     Virtual device
@@ -30,8 +30,7 @@ exports[`renders correctly 1`] = `
     <p>
       To start a virtual device, 
       change directory into the folder where you cloned Mender integration, then
-       paste and run the following command
-       
+       paste and run the following command 
     </p>
     <div>
       <div
@@ -105,15 +104,15 @@ exports[`renders correctly 1`] = `
       Deploying updates
     </h3>
     <p>
-      The next step is to upload an Artifact. Artifacts can be uploaded to the server in the
-       
+      The next step is to upload an Artifact. Artifacts can be uploaded to the server in the 
       <a
         href="/releases"
         onClick={[Function]}
       >
         Releases tab
       </a>
-      . You should see a tooltip which provides a link to a demo Artifact for you to use, or you can learn more about building a demo Artifact 
+      . You should see a tooltip which provides a link to a demo Artifact for you to use, or you can learn more about building a demo Artifact
+       
       <a
         href="/help/releases-artifacts/build-demo-artifact"
         onClick={[Function]}

@@ -1,23 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
 import pluralize from 'pluralize';
 
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableCell from '@material-ui/core/TableCell';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 
-import AppStore from '../../stores/app-store';
-import AppActions from '../../actions/app-actions';
+import { setSnackbar } from '../../actions/appActions';
+import { getAllDeviceCounts, selectDevice, setDeviceFilters } from '../../actions/deviceActions';
+import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Global from '../settings/global';
 import DeviceGroups from './device-groups';
@@ -28,17 +18,17 @@ import PreauthDevices from './preauthorize-devices';
 const routes = {
   pending: {
     route: '/devices/pending',
-    status: 'pending',
+    status: DEVICE_STATES.pending,
     title: 'Pending'
   },
   preauthorized: {
     route: '/devices/preauthorized',
-    status: 'preauthorized',
+    status: DEVICE_STATES.preauth,
     title: 'Preauthorized'
   },
   rejected: {
     route: '/devices/rejected',
-    status: 'rejected',
+    status: DEVICE_STATES.rejected,
     title: 'Rejected'
   },
   devices: {
@@ -48,88 +38,65 @@ const routes = {
   }
 };
 
-export default class Devices extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object
-  };
+const refreshLength = 10000;
 
+export class Devices extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = this._getInitialState();
-  }
-
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
+    this.state = {
+      currentTab: this._getCurrentLabel(),
+      tabIndex: this._updateActive()
+    };
   }
 
   componentDidMount() {
-    clearAllRetryTimers();
+    clearAllRetryTimers(this.props.setSnackbar);
     this._restartInterval();
+    this.props.getAllDeviceCounts();
+    if (this.props.match.params.filters) {
+      var str = decodeURIComponent(this.props.match.params.filters);
+      const filters = str.split('&').map(filter => {
+        const filterPair = filter.split('=');
+        return { key: filterPair[0], value: filterPair[1] };
+      });
+      this.props.setDeviceFilters(filters);
+    }
+  }
+
+  // nested tabs
+  componentDidUpdate() {
+    const tabIndex = this._updateActive();
+    const currentTab = this._getCurrentLabel();
+    if (this.state.tabIndex !== tabIndex || this.state.currentTab !== currentTab) {
+      this.setState({ tabIndex, currentTab });
+    }
   }
 
   componentWillUnmount() {
-    clearAllRetryTimers();
+    clearAllRetryTimers(this.props.setSnackbar);
     clearInterval(this.interval);
-    AppStore.removeChangeListener(this._onChange.bind(this));
-  }
-  _getInitialState() {
-    return {
-      currentTab: this._getCurrentLabel(),
-      tabIndex: this._updateActive(),
-      acceptedCount: AppStore.getTotalAcceptedDevices(),
-      rejectedCount: AppStore.getTotalRejectedDevices(),
-      preauthCount: AppStore.getTotalPreauthDevices(),
-      pendingCount: AppStore.getTotalPendingDevices(),
-      refreshLength: 10000,
-      showHelptips: AppStore.showHelptips(),
-      deviceLimit: AppStore.getDeviceLimit()
-    };
-  }
-  _onChange() {
-    this.setState(this._getInitialState(), this._getAllCount);
-  }
-
-  _refreshAll() {
-    AppActions.getDeviceCount('accepted');
-    AppActions.getDeviceCount('rejected');
-    AppActions.getDeviceCount('pending');
-    AppActions.getDeviceCount('preauthorized');
   }
 
   _restartInterval() {
     var self = this;
     clearInterval(self.interval);
     self.interval = setInterval(() => {
-      self._refreshAll();
-    }, self.state.refreshLength);
-    self._refreshAll();
+      self.props.getAllDeviceCounts();
+    }, refreshLength);
+    self.props.getAllDeviceCounts();
   }
   _changeTab() {
-    AppActions.setSnackbar('');
-  }
-  /*
-   * Get counts of devices
-   */
-  _getAllCount() {
-    var self = this;
-    var accepted = self.state.acceptedCount ? self.state.acceptedCount : 0;
-    var rejected = self.state.rejectedCount ? self.state.rejectedCount : 0;
-    self.setState({ allCount: accepted + rejected });
+    this.props.setSnackbar('');
   }
 
-  // nested tabs
-  componentWillReceiveProps() {
-    this.setState({ tabIndex: this._updateActive(), currentTab: this._getCurrentLabel() });
-  }
-
-  _updateActive(tab = this.context.router.route.match.params.status) {
+  _updateActive(tab = this.props.match.params.status) {
     if (routes.hasOwnProperty(tab)) {
       return routes[tab].route;
     }
     return routes.devices.route;
   }
 
-  _getCurrentLabel(tab = this.context.router.route.match.params.status) {
+  _getCurrentLabel(tab = this.props.match.params.status) {
     if (routes.hasOwnProperty(tab)) {
       return routes[tab].title;
     }
@@ -150,7 +117,7 @@ export default class Devices extends React.Component {
   _redirect(route) {
     var self = this;
     self.setState({ openDeviceExists: false });
-    self.context.router.history.push(route);
+    self.props.history.push(route);
   }
 
   _openSettingsDialog() {
@@ -174,9 +141,9 @@ export default class Devices extends React.Component {
       </div>
     ];
 
-    var pendingLabel = this.state.pendingCount ? `Pending (${this.state.pendingCount})` : 'Pending';
+    var pendingLabel = this.props.pendingCount ? `Pending (${this.props.pendingCount})` : 'Pending';
 
-    const tabIndex = this.context.router.route.match.params.status || 'devices';
+    const tabIndex = this.props.match.params.status || 'devices';
     return (
       <div>
         <Tabs value={tabIndex} onChange={() => this._changeTab()}>
@@ -187,87 +154,90 @@ export default class Devices extends React.Component {
         </Tabs>
         {tabIndex === routes.pending.status && (
           <PendingDevices
-            deviceLimit={this.state.deviceLimit}
             currentTab={this.state.currentTab}
-            highlightHelp={!this.state.acceptedCount}
+            highlightHelp={!this.props.acceptedCount}
             openSettingsDialog={() => this._openSettingsDialog()}
             restart={() => this._restartInterval()}
             pause={() => this._pauseInterval()}
           />
         )}
         {tabIndex === routes.preauthorized.status && (
-          <PreauthDevices
-            deviceLimit={this.state.deviceLimit}
-            currentTab={this.state.currentTab}
-            refreshCount={() => AppActions.getDeviceCount('preauthorized')}
-            openSettingsDialog={() => this._openSettingsDialog()}
-            pause={() => this._pauseInterval()}
-          />
+          <PreauthDevices currentTab={this.state.currentTab} openSettingsDialog={() => this._openSettingsDialog()} pause={() => this._pauseInterval()} />
         )}
         {tabIndex === routes.rejected.status && (
-          <RejectedDevices
-            deviceLimit={this.state.deviceLimit}
-            currentTab={this.state.currentTab}
-            openSettingsDialog={() => this._openSettingsDialog()}
-            pause={() => this._pauseInterval()}
-          />
+          <RejectedDevices currentTab={this.state.currentTab} openSettingsDialog={() => this._openSettingsDialog()} pause={() => this._pauseInterval()} />
         )}
         {tabIndex === routes.devices.status && (
           <DeviceGroups
-            params={this.props.params}
-            acceptedDevices={this.state.acceptedCount}
-            allCount={this.state.allCount}
+            params={this.props.match.params}
+            acceptedDevices={this.props.acceptedCount}
             currentTab={this.state.currentTab}
             openSettingsDialog={() => this._openSettingsDialog()}
             pause={() => this._pauseInterval()}
           />
         )}
 
-        <Dialog open={this.state.openDeviceExists || false}>
-          <DialogTitle>Device with this identity data already exists</DialogTitle>
-          <DialogContent style={{ overflow: 'hidden' }}>
-            <p>This will remove the group from the list. Are you sure you want to continue?</p>
+        {this.state.openDeviceExists && (
+          <Dialog open={this.state.openDeviceExists || false}>
+            <DialogTitle>Device with this identity data already exists</DialogTitle>
+            <DialogContent style={{ overflow: 'hidden' }}>
+              <p>This will remove the group from the list. Are you sure you want to continue?</p>
+              <p>
+                A device with matching identity data already exists. If you still want to accept {pluralize('this', this.state.duplicates)} pending{' '}
+                {pluralize('device', this.state.duplicates)}, you should first remove the following {pluralize('device', this.state.duplicates)}:
+              </p>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell className="columnHeader" tooltip="ID">
+                      ID
+                    </TableCell>
+                    <TableCell className="columnHeader" tooltip="Status">
+                      Status
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {(this.state.duplicates || []).map(function(device) {
+                    var status = device.status === DEVICE_STATES.accepted ? '' : `/${device.status}`;
+                    return (
+                      <TableRow hover key={device.device_id}>
+                        <TableCell>
+                          <a onClick={() => this._redirect(`/devices${status}/id%3D${device.device_id}`)}>{device.device_id}</a>
+                        </TableCell>
+                        <TableCell className="capitalized">{device.status}</TableCell>
+                      </TableRow>
+                    );
+                  }, this)}
+                </TableBody>
+              </Table>
+            </DialogContent>
+            <DialogActions>{duplicateActions}</DialogActions>
+          </Dialog>
+        )}
 
-            <p>
-              A device with matching identity data already exists. If you still want to accept {pluralize('this', this.state.duplicates)} pending{' '}
-              {pluralize('device', this.state.duplicates)}, you should first remove the following {pluralize('device', this.state.duplicates)}:
-            </p>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell className="columnHeader" tooltip="ID">
-                    ID
-                  </TableCell>
-                  <TableCell className="columnHeader" tooltip="Status">
-                    Status
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {(this.state.duplicates || []).map(function(device) {
-                  var status = device.status === 'accepted' ? '' : `/${device.status}`;
-                  return (
-                    <TableRow hover key={device.device_id}>
-                      <TableCell>
-                        <a onClick={() => this._redirect(`/devices${status}/id%3D${device.device_id}`)}>{device.device_id}</a>
-                      </TableCell>
-                      <TableCell className="capitalized">{device.status}</TableCell>
-                    </TableRow>
-                  );
-                }, this)}
-              </TableBody>
-            </Table>
-          </DialogContent>
-          <DialogActions>{duplicateActions}</DialogActions>
-        </Dialog>
-
-        <Dialog open={this.state.openIdDialog || false}>
-          <DialogTitle>Default device identity attribute</DialogTitle>
-          <DialogContent style={{ overflow: 'hidden' }}>
-            <Global dialog={true} closeDialog={() => this._openSettingsDialog()} />
-          </DialogContent>
-        </Dialog>
+        {this.state.openIdDialog && (
+          <Dialog open={this.state.openIdDialog || false}>
+            <DialogTitle>Default device identity attribute</DialogTitle>
+            <DialogContent style={{ overflow: 'hidden' }}>
+              <Global dialog={true} closeDialog={() => this._openSettingsDialog()} />
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
     );
   }
 }
+
+const actionCreators = { getAllDeviceCounts, selectDevice, setDeviceFilters, setSnackbar };
+
+const mapStateToProps = state => {
+  let devices = state.devices.selectedDeviceList;
+  return {
+    acceptedCount: state.devices.byStatus.accepted.total,
+    devices,
+    pendingCount: state.devices.byStatus.pending.total
+  };
+};
+
+export default withRouter(connect(mapStateToProps, actionCreators)(Devices));

@@ -3,10 +3,7 @@ import SearchInput from 'react-search-input';
 import pluralize from 'pluralize';
 
 // material ui
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
+import { List, ListItem, ListItemText, Typography } from '@material-ui/core';
 
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
@@ -16,28 +13,26 @@ export default class ReleasesList extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      sortCol: 'name',
-      sortDown: true,
       searchTerm: null
     };
   }
 
   searchUpdated(term) {
-    this.setState({ searchTerm: term }); // needed to force re-render
+    const self = this;
+    if (self.search) {
+      var filters = ['Name', 'device_types_compatible'];
+      let filteredItems = self.props.releases;
+      filteredItems = self.props.releases.filter(self.search.filter(filters));
+      self.props.onFilter(filteredItems);
+      self.setState({ searchTerm: term, filteredReleases: filteredItems });
+    }
   }
 
   render() {
     const self = this;
+    const { loading, onSelect, releases, selectedRelease } = self.props;
 
-    const { loading, releases } = self.props;
-
-    let filteredItems = releases;
-
-    if (self.search) {
-      var filters = ['Name', 'device_types_compatible'];
-      filteredItems = releases.filter(self.search.filter(filters));
-      self.props.onFilter(filteredItems);
-    }
+    const filteredReleases = self.state.filteredReleases || releases;
 
     return (
       <div className="repository-list">
@@ -45,17 +40,17 @@ export default class ReleasesList extends React.Component {
           <h4>Releases</h4>
           <SearchInput placeholder="Filter by name" className="search" ref={search => (self.search = search)} onChange={term => self.searchUpdated(term)} />
           {self.state.searchTerm ? <p className="muted">{`Filtered from ${releases.length} ${pluralize('Release', releases.length)}`}</p> : null}
-          {!self.props.releases.length ? <p className="margin-top muted align-center margin-right">There are no Releases yet</p> : null}
+          {!releases.length ? <p className="margin-top muted align-center margin-right">There are no Releases yet</p> : null}
         </div>
         {loading ? (
           <Loader show={loading} />
         ) : (
           <List>
-            {filteredItems.map((release, index) => {
+            {filteredReleases.map((release, index) => {
               var isSelected = index === 0;
-              isSelected = self.props.selectedRelease ? (release.Name === self.props.selectedRelease.Name) : isSelected;
+              isSelected = selectedRelease ? release.Name === selectedRelease.Name : isSelected;
               return (
-                <ListItem button className={`repository-list-item ${isSelected ? 'active' : ''}`} key={index} onClick={() => self.props.onSelect(release)}>
+                <ListItem button className={`repository-list-item ${isSelected ? 'active' : ''}`} key={index} onClick={() => onSelect(release)}>
                   <ListItemText>
                     <div className="flexbox">
                       <div className="inline-block">
@@ -65,7 +60,7 @@ export default class ReleasesList extends React.Component {
                           release.Artifacts.length
                         )}`}</Typography>
                       </div>
-                      <KeyboardArrowRightIcon className={isSelected ? null : 'indicator'} />
+                      <KeyboardArrowRightIcon className={isSelected ? '' : 'indicator'} />
                     </div>
                   </ListItemText>
                 </ListItem>

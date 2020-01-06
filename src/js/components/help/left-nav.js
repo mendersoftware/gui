@@ -1,17 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 // material ui
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import ListItemText from '@material-ui/core/ListItemText';
+import { List, ListItem, ListSubheader, ListItemText } from '@material-ui/core';
 
 export default class LeftNav extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object
-  };
   constructor(props, context) {
     super(props, context);
     this.state = {

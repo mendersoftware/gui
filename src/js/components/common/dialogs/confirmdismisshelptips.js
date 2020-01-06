@@ -1,17 +1,20 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 
-import AppActions from '../../../actions/app-actions';
+import { setShowDismissOnboardingTipsDialog, setShowOnboardingHelp } from '../../../actions/userActions';
+
 import { persistOnboardingState } from '../../../utils/onboardingmanager';
 
-export default class ConfirmDismissHelptips extends React.Component {
+export class ConfirmDismissHelptips extends React.PureComponent {
   onClose() {
-    AppActions.setShowOnboardingHelp(false);
-    AppActions.setShowDismissOnboardingTipsDialog(false);
+    this.props.setShowOnboardingHelp(false);
+    this.props.setShowDismissOnboardingTipsDialog(false);
     setTimeout(() => persistOnboardingState(), 500);
   }
   render() {
+    const self = this;
     return (
       <Dialog open={this.props.open}>
         <DialogTitle>Dismiss the Getting Started help?</DialogTitle>
@@ -23,7 +26,7 @@ export default class ConfirmDismissHelptips extends React.Component {
           </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => AppActions.setShowDismissOnboardingTipsDialog(false)}>Cancel</Button>
+          <Button onClick={() => self.props.setShowDismissOnboardingTipsDialog(false)}>Cancel</Button>
           <div style={{ flexGrow: 1 }} />
           <Button variant="contained" color="secondary" onClick={() => this.onClose()}>
             Yes, hide the help
@@ -33,3 +36,7 @@ export default class ConfirmDismissHelptips extends React.Component {
     );
   }
 }
+
+const actionCreators = { setShowOnboardingHelp, setShowDismissOnboardingTipsDialog };
+
+export default connect(null, actionCreators)(ConfirmDismissHelptips);

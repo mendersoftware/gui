@@ -1,5 +1,5 @@
-import validator from 'validator';
 import React from 'react';
+import validator from 'validator';
 
 import Button from '@material-ui/core/Button';
 
@@ -10,23 +10,19 @@ export default class Form extends React.Component {
       isSubmitting: false,
       isValid: false
     };
-  }
-  componentWillMount() {
     this.model = {};
     this.newChildren = {};
     this.inputs = {}; // We create a map of traversed inputs
     this.registerInputs(); // We register inputs from the children
   }
   componentDidUpdate() {
-    this.registerInputs();
-  }
-  componentWillUpdate(nextProps) {
     const self = this;
     self.newChildren = React.Children.map(
       // Use nextprops for registering components cwu
-      nextProps.children,
+      self.props.children,
       child => self._cloneChild(child, self)
     );
+    self.registerInputs();
   }
   registerInputs() {
     const self = this;
@@ -119,23 +115,23 @@ export default class Form extends React.Component {
 
   getErrorMsg(validateMethod, args) {
     switch (validateMethod) {
-    case 'isLength':
-      if (args[0] === 1) {
-        return 'This field is required';
-      } else if (args[0] > 1) {
-        return `Must be at least ${args[0]} characters long`;
-      }
-      break;
-    case 'isAlpha':
-      return 'This field must contain only letters';
-    case 'isAlphanumeric':
-      return 'This field must contain only letters or numbers';
-    case 'isNumeric':
-      return 'Please enter a valid code';
-    case 'isEmail':
-      return 'Please enter a valid email address';
-    default:
-      return 'There is an error with this field';
+      case 'isLength':
+        if (args[0] === 1) {
+          return 'This field is required';
+        } else if (args[0] > 1) {
+          return `Must be at least ${args[0]} characters long`;
+        }
+        break;
+      case 'isAlpha':
+        return 'This field must contain only letters';
+      case 'isAlphanumeric':
+        return 'This field must contain only letters or numbers';
+      case 'isNumeric':
+        return 'Please enter a valid code';
+      case 'isEmail':
+        return 'Please enter a valid email address';
+      default:
+        return 'There is an error with this field';
     }
   }
 
@@ -197,16 +193,16 @@ export default class Form extends React.Component {
     }
   }
   render() {
-    var uploadActions = this.props.showButtons ? (
+    var uploadActions = !!this.props.showButtons && (
       <div
         className="flexbox"
         style={Object.assign({ justifyContent: 'flex-end', height: 'min-content' }, this.props.dialog ? { margin: '24px 0 -16px 0' } : { marginTop: '32px' })}
       >
-        {this.props.handleCancel ? (
+        {!!this.props.handleCancel && (
           <Button key="cancel" onClick={this.props.handleCancel} style={{ marginRight: '10px', display: 'inline-block' }}>
             Cancel
           </Button>
-        ) : null}
+        )}
         <Button
           variant="contained"
           key="submit"
@@ -218,7 +214,7 @@ export default class Form extends React.Component {
           {this.props.submitLabel}
         </Button>
       </div>
-    ) : null;
+    );
 
     return (
       <form key={this.props.uniqueId} className={this.props.className || ''}>

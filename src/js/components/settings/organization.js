@@ -1,38 +1,23 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import ReactTooltip from 'react-tooltip';
-import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
-
 // material ui
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
-import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
+import { Button, Divider, Icon, List, ListItem, ListItemText } from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/Info';
 
+import { getUserOrganization } from '../../actions/userActions';
 import PlanNotification from './plannotification';
 
-export default class MyOrganization extends React.Component {
+export class MyOrganization extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      org: {
-        tenant_token: ''
-      },
       copied: false
     };
   }
   componentDidMount() {
-    this._getUserOrganization();
-  }
-  _getUserOrganization() {
-    var self = this;
-    return AppActions.getUserOrganization()
-      .then(org => self.setState({ org: org }))
-      .catch(err => console.log(`Error: ${err}`));
+    this.props.getUserOrganization();
   }
 
   _copied() {
@@ -43,16 +28,17 @@ export default class MyOrganization extends React.Component {
     }, 5000);
   }
   render() {
-    const currentPlan = AppStore.getIsHosted() ? 'Mender Professional' : 'Mender Enterprise';
+    const { org, isHosted } = this.props;
+    const currentPlan = isHosted ? 'Mender Professional' : 'Mender Enterprise';
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
         <h2 style={{ marginTop: '15px' }}>My organization</h2>
 
-        {this.state.org ? (
+        {org ? (
           <div>
             <List>
               <ListItem key="name" disabled={true}>
-                <ListItemText primary="Organization name" secondary={this.state.org.name} />
+                <ListItemText primary="Organization name" secondary={org.name} />
               </ListItem>
               <Divider />
               <div className="material-list-item">
@@ -77,9 +63,9 @@ export default class MyOrganization extends React.Component {
                   </p>
                 </ReactTooltip>
 
-                <p style={{ wordBreak: 'break-all' }}>{this.state.org.tenant_token}</p>
+                <p style={{ wordBreak: 'break-all' }}>{org.tenant_token}</p>
 
-                <CopyToClipboard text={this.state.org.tenant_token} onCopy={() => this._copied()}>
+                <CopyToClipboard text={org.tenant_token} onCopy={() => this._copied()}>
                   <Button style={{ marginTop: '15px' }} icon={<Icon className="material-icons">content_paste</Icon>}>
                     Copy to clipboard
                   </Button>
@@ -104,3 +90,14 @@ export default class MyOrganization extends React.Component {
     );
   }
 }
+
+const actionCreators = { getUserOrganization };
+
+const mapStateToProps = state => {
+  return {
+    isHosted: state.app.features.isHosted,
+    org: state.users.organization
+  };
+};
+
+export default connect(mapStateToProps, actionCreators)(MyOrganization);

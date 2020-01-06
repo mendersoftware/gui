@@ -1,26 +1,21 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Time from 'react-time';
 
 // material ui
-import Grid from '@material-ui/core/Grid';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableCell from '@material-ui/core/TableCell';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
+import { Grid, RootRef, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
-import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
+import { setSnackbar } from '../../actions/appActions';
+import { selectDeployment, getSingleDeploymentStats } from '../../actions/deploymentActions';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import AutoSelect from '../common/forms/autoselect';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import DeploymentStatus from './deploymentstatus';
 import { formatTime } from '../../helpers';
-import { RootRef } from '@material-ui/core';
 import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 const timeranges = {
@@ -30,7 +25,7 @@ const timeranges = {
   month: { start: 29, end: 0, title: 'Last 30 days' }
 };
 
-export default class Past extends React.Component {
+export class Past extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -42,13 +37,23 @@ export default class Past extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.showHelptips && AppStore.getShowOnboardingTips() && !AppStore.getOnboardingComplete() && this.props.past.length) {
+    const self = this;
+    if (self.props.showHelptips && self.props.showOnboardingTips && !self.props.onboardingComplete && this.props.past.length) {
       const progress = getOnboardingStepCompleted('artifact-modified-onboarding') && this.props.past.length > 1 ? 4 : 3;
       setTimeout(() => {
-        !AppStore.getOnboardingComplete()
-          ? AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={progress} />, () => {}, self.onCloseSnackbar)
+        !self.props.onboardingComplete
+          ? self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={progress} />, () => {}, self.onCloseSnackbar)
           : null;
       }, 400);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      (this.props.startDate !== prevProps.startDate && this.state.startDate && this.state.startDate !== this.props.startDate) ||
+      (this.props.endDate !== prevProps.endDate && this.state.endDate && this.state.endDate !== this.props.endDate)
+    ) {
+      this._handleDateChange(1, this.props.startDate, this.props.endDate);
     }
   }
 
@@ -56,7 +61,7 @@ export default class Past extends React.Component {
     if (reason === 'clickaway') {
       return;
     }
-    AppActions.setSnackbar('');
+    this.props.setSnackbar('');
   };
 
   _setDateRange(after, before) {
@@ -72,8 +77,9 @@ export default class Past extends React.Component {
   }
   _pastCellClick(rowNumber) {
     // adjust index to allow for client side pagination
-    var report = this.props.past[rowNumber];
-    this.props.showReport(report, 'past');
+    var deployment = this.props.past[rowNumber];
+    this.props.selectDeployment(deployment.id);
+    this.props.showReport('past');
   }
   _handleDateChange(pageNo, createdAfter, createdBefore) {
     createdAfter = createdAfter || this.props.startDate;
@@ -114,14 +120,22 @@ export default class Past extends React.Component {
 
   render() {
     const self = this;
-    var pastMap = this.props.past.map(function(deployment, index) {
-      var time = '-';
+    const pastMap = this.props.past.map((deployment, index) => {
+      let time = '-';
       if (deployment.finished) {
         time = <Time value={formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" />;
       }
 
       //  get statistics
-      var status = <DeploymentStatus isActiveTab={this.props.isActiveTab} id={deployment.id} setFinished={() => {}} />;
+      const status = (
+        <DeploymentStatus
+          isActiveTab={this.props.isActiveTab}
+          id={deployment.id}
+          stats={deployment.stats}
+          setFinished={() => {}}
+          refreshStatus={id => self.props.getSingleDeploymentStats(id)}
+        />
+      );
 
       return (
         <TableRow hover key={index} onClick={() => this._pastCellClick(index)}>
@@ -135,17 +149,15 @@ export default class Past extends React.Component {
           <TableCell style={{ overflow: 'visible', minWidth: '400px' }}>{status}</TableCell>
         </TableRow>
       );
-    }, this);
+    });
 
-    const menuItems = this.props.groups
-      ? this.props.groups.reduce(
-        (accu, item) => {
-          accu.push({ title: item, value: item });
-          return accu;
-        },
-        [{ title: 'All devices', value: 'All devices' }]
-      )
-      : [{ title: 'All devices', value: 'All devices' }];
+    const menuItems = this.props.groups.reduce(
+      (accu, item) => {
+        accu.push({ title: item, value: item });
+        return accu;
+      },
+      [{ title: 'All devices', value: 'All devices' }]
+    );
 
     let onboardingComponent = null;
     if (this.deploymentsRef) {
@@ -254,3 +266,15 @@ export default class Past extends React.Component {
     );
   }
 }
+
+const actionCreators = { setSnackbar, selectDeployment, getSingleDeploymentStats };
+
+const mapStateToProps = state => {
+  return {
+    onboardingComplete: state.users.onboarding.complete,
+    showHelptips: state.users.showHelptips,
+    showOnboardingTips: state.users.onboarding.showTips
+  };
+};
+
+export default connect(mapStateToProps, actionCreators)(Past);

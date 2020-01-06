@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`LeftNav Component renders correctly 1`] = `
 <ul
   className="MuiList-root leftFixed MuiList-padding"
 >

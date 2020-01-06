@@ -52,7 +52,7 @@ test:static:
 
 test:lint:
   stage: test
-  image: node
+  image: node:12.14.0-alpine
   script:
     - npm ci
     - npm run lint
@@ -78,13 +78,13 @@ test:acceptance:
     - mender-qa-slave
 
 test:unit:
-  image: node:11.6.0-alpine
+  image: node:12.14.0-alpine
   stage: test
   script:
     - npm install
     - npm run test
 
-publish:
+publish:image:
   stage: publish
   services:
     - docker:dind
@@ -101,3 +101,16 @@ publish:
     - /^(master|[0-9]+\.[0-9]+\.x)$/
   tags:
     - docker
+
+publish:disclaimer:
+  image: node:12.14.0-alpine
+  stage: publish
+  script:
+    - npm ci
+    - npm run disclaim
+  artifacts:
+    expire_in: 2w
+    paths:
+      - disclaimer.txt
+  only:
+    - /^(master|[0-9]+\.[0-9]+\.x)$/

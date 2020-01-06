@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`BuildYocto Component renders correctly 1`] = `
 <div>
   <h2>
     Build with Yocto
@@ -30,10 +30,10 @@ exports[`renders correctly 1`] = `
     Follow the docs at
      
     <a
-      href="https://docs.mender.io/undefinedartifacts/yocto-project/building"
+      href="https://docs.mender.io/artifacts/yocto-project/building"
       target="_blank"
     >
-      https://docs.mender.io/undefinedartifacts/yocto-project/building
+      https://docs.mender.io/artifacts/yocto-project/building
     </a>
      
     to build your .sdimg and .mender files.

@@ -1,16 +1,18 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
 
 import Button from '@material-ui/core/Button';
-
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
-import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
+import { getDevicesByStatus } from '../../actions/deviceActions';
+import { setOnboardingComplete } from '../../actions/userActions';
+import * as DeviceConstants from '../../constants/deviceConstants';
 import { getDemoDeviceAddress } from '../../helpers';
 import Loader from '../common/loader';
 
-export default class OnboardingCompleteTip extends React.Component {
+export class OnboardingCompleteTip extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -21,14 +23,15 @@ export default class OnboardingCompleteTip extends React.Component {
 
   componentDidMount() {
     const self = this;
-    AppActions.getDevicesByStatus('accepted')
-      .then(getDemoDeviceAddress)
+    self.props
+      .getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted)
+      .then(() => getDemoDeviceAddress(self.props.acceptedDevices))
       .catch(e => console.log(e))
-      .then(targetUrl => self.setState({ targetUrl, loading: false }, () => setTimeout(() => AppActions.setOnboardingComplete(true), 120000)));
+      .then(targetUrl => self.setState({ targetUrl, loading: false }, () => setTimeout(() => self.props.setOnboardingComplete(true), 120000)));
   }
 
   componentWillUnmount() {
-    AppActions.setOnboardingComplete(true);
+    this.props.setOnboardingComplete(true);
   }
 
   componentDidUpdate() {
@@ -36,6 +39,7 @@ export default class OnboardingCompleteTip extends React.Component {
   }
 
   render() {
+    const { docsVersion, setOnboardingComplete } = this.props;
     const { loading, targetUrl } = this.state;
     const url = targetUrl ? targetUrl : this.props.targetUrl;
 
@@ -73,10 +77,7 @@ export default class OnboardingCompleteTip extends React.Component {
           <p>You&apos;ve now got a good foundation in how to use Mender. Look for more help hints in the UI as you go along.</p>
           What next?
           <div>
-            <a
-              href={`https://docs.mender.io/${AppStore.getDocsVersion() ? `${AppStore.getDocsVersion()}/` : ''}getting-started/on-premise-installation/deploy-a-system-update-demo`}
-              target="_blank"
-            >
+            <a href={`https://docs.mender.io/${docsVersion}getting-started/on-premise-installation/deploy-a-system-update-demo`} target="_blank">
               Learn about full-image updates
             </a>{' '}
             or{' '}
@@ -86,7 +87,7 @@ export default class OnboardingCompleteTip extends React.Component {
           </div>
           <div className="flexbox">
             <div style={{ flexGrow: 1 }} />
-            <Button variant="contained" color="secondary" onClick={() => AppActions.setOnboardingComplete(true)}>
+            <Button variant="contained" color="secondary" onClick={() => setOnboardingComplete(true)}>
               Close
             </Button>
           </div>
@@ -95,3 +96,17 @@ export default class OnboardingCompleteTip extends React.Component {
     );
   }
 }
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ getDevicesByStatus, setOnboardingComplete }, dispatch);
+};
+
+const mapStateToProps = state => {
+  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
+  return {
+    docsVersion: state.app.features.hasMultitenancy && state.app.features.isHosted ? '' : docsVersion,
+    acceptedDevices: state.devices.byStatus.accepted.deviceIds.map(id => state.devices.byId[id])
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(OnboardingCompleteTip);

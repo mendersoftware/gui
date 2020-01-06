@@ -1,32 +1,55 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { createMount } from '@material-ui/core/test-utils';
+import renderer from 'react-test-renderer';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import configureStore from 'redux-mock-store';
 import Devices from './devices';
 
-it('renders correctly', () => {
-  const context = {
-    childContextTypes: {
-      router: () => {}
-    },
-    context: {
-      router: {
-        route: {
-          location: {
-            hash: '',
-            pathname: '',
-            search: '',
-            state: ''
-          },
-          match: { params: {}, isExact: false, path: '', url: '' }
-        }
+const mockStore = configureStore([thunk]);
+
+describe('Devices Component', () => {
+  let store;
+  beforeEach(() => {
+    store = mockStore({
+      app: { features: { isEnterprise: false, isHosted: false } },
+      deployments: {
+        deploymentDeviceLimit: 5000
+      },
+      devices: {
+        byStatus: {
+          accepted: { total: 0, deviceIds: [] },
+          pending: { total: 0 },
+          rejected: { total: 0 }
+        },
+        filters: [],
+        filteringAttributes: { inventoryAttributes: [] },
+        groups: {
+          byId: {},
+          selectedGroup: {}
+        },
+        selectedDeviceList: []
+      },
+      users: {
+        globalSettings: {},
+        onboarding: {
+          complete: false
+        },
+        showHelptips: true
       }
-    }
-  };
-  const tree = createMount()(
-    <MemoryRouter>
-      <Devices />
-    </MemoryRouter>,
-    context
-  );
-  expect(tree.html()).toMatchSnapshot();
+    });
+  });
+
+  it('renders correctly', () => {
+    const tree = renderer
+      .create(
+        <MemoryRouter>
+          <Provider store={store}>
+            <Devices />
+          </Provider>
+        </MemoryRouter>
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

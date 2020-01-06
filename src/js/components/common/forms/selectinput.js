@@ -14,7 +14,7 @@ export default class SelectInput extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.attachToForm(this); // Attaching the component to the form
   }
   componentWillUnmount() {
@@ -27,21 +27,11 @@ export default class SelectInput extends React.Component {
   }
 
   render() {
-    var menuItems = this.props.menuItems.reduce(
-      (accu, item, index) => {
-        accu.push(
-          <MenuItem key={index} value={item.value}>
-            {item.label}
-          </MenuItem>
-        );
-        return accu;
-      },
-      [
-        <MenuItem key="selection-placeholder" value="" disabled>
-          {this.props.hint}
-        </MenuItem>
-      ]
-    );
+    const menuItems = this.props.menuItems.map((item, index) => (
+      <MenuItem key={index} value={item.value}>
+        {item.label}
+      </MenuItem>
+    ));
 
     return (
       <FormControl>
@@ -49,7 +39,7 @@ export default class SelectInput extends React.Component {
         <Select
           id={this.props.id}
           name={this.props.id}
-          value={this.state.value || this.props.value || this.props.default}
+          value={this.props.value || this.state.value || this.props.default || ''}
           onChange={event => this.setValue(event.target.value)}
           inputProps={{
             name: 'selector',
@@ -59,11 +49,11 @@ export default class SelectInput extends React.Component {
         >
           {menuItems}
         </Select>
-        {this.props.extraHint ? (
+        {!!this.props.hint && (
           <FormHelperText className="info" style={{ width: '500px' }}>
-            {this.props.extraHint}
+            {this.props.hint}
           </FormHelperText>
-        ) : null}
+        )}
       </FormControl>
     );
   }

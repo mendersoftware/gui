@@ -1,121 +1,88 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import cookie from 'react-cookie';
+import { connect } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
+import Cookies from 'universal-cookie';
 import Linkify from 'react-linkify';
 import ReactTooltip from 'react-tooltip';
 
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Toolbar from '@material-ui/core/Toolbar';
+import { Button, IconButton, ListItemText, ListItemSecondaryAction, Menu, MenuItem, Toolbar } from '@material-ui/core';
 
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import AnnounceIcon from '@material-ui/icons/Announcement';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
-import CloseIcon from '@material-ui/icons/Close';
-import ExitIcon from '@material-ui/icons/ExitToApp';
-import InfoIcon from '@material-ui/icons/InfoOutlined';
+import {
+  AccountCircle as AccountCircleIcon,
+  Announcement as AnnounceIcon,
+  ArrowDropDown as ArrowDropDownIcon,
+  ArrowDropUp as ArrowDropUpIcon,
+  Close as CloseIcon,
+  ExitToApp as ExitIcon,
+  InfoOutlined as InfoIcon
+} from '@material-ui/icons';
 
 import { isEmpty, decodeSessionToken, hashString } from '../../helpers';
-import { getOnboardingState } from '../../utils/onboardingmanager';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
-import { toggleHelptips, hideAnnouncement } from '../../utils/toggleuseroptions';
 import DeviceNotifications from './devicenotifications';
 import DeploymentNotifications from './deploymentnotifications';
-import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
 
-export default class Header extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object,
-    location: PropTypes.object
-  };
+import { getDeviceLimit } from '../../actions/deviceActions';
+import { getReleases } from '../../actions/releaseActions';
+import { getUser, getGlobalSettings, setShowHelptips, toggleHelptips } from '../../actions/userActions';
+import { getOnboardingState, setSnackbar } from '../../actions/appActions';
+import { getDeploymentCount } from '../../actions/deploymentActions';
 
+export class Header extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = this._getInitialState();
+    this.state = {
+      anchorEl: null
+    };
+    this.cookies = new Cookies();
   }
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
-  }
-  componentWillUnmount() {
-    AppStore.removeChangeListener(this._onChange.bind(this));
-  }
+
   componentDidUpdate(prevProps, prevState) {
-    if (!this.state.sessionId || isEmpty(this.state.user) || this.state.user === null) {
-      this._updateUsername();
-    } else {
-      if (prevState.sessionId !== this.state.sessionId) {
-        this._hasDeployments();
-        this._hasArtifacts();
-        this._checkShowHelp();
-        this._checkHeaderInfo();
-        this._getGlobalSettings();
-      }
+    const sessionId = this.cookies.get('JWT');
+    if (!sessionId || isEmpty(this.props.user) || this.props.user === null) {
+      this._updateUsername()
+        .then(() => this.props.getOnboardingState())
+        // this is allowed to fail if no user information are available
+        .catch(e => console.log(e));
+    } else if (prevState.sessionId !== this.state.sessionId) {
+      this._hasDeployments();
+      this.props.getReleases();
+      this._checkShowHelp();
+      this._checkHeaderInfo();
+      this.props.getGlobalSettings();
     }
   }
   componentDidMount() {
     // check logged in user
     if (this.props.isLoggedIn) {
-      this._updateUsername();
-      this._hasDeployments();
+      this._updateUsername().then(() => this.props.getOnboardingState());
       this._checkHeaderInfo();
-      this._hasArtifacts();
+      this.props.getReleases();
+      this.props.getDeviceLimit();
       this._checkShowHelp();
-      this._getGlobalSettings();
+      this.props.getGlobalSettings();
     }
   }
-  _getInitialState() {
-    return {
-      sessionId: cookie.load('JWT'),
-      user: AppStore.getCurrentUser(),
-      showHelptips: AppStore.showHelptips(),
-      pendingDevices: AppStore.getTotalPendingDevices(),
-      acceptedDevices: AppStore.getTotalAcceptedDevices(),
-      artifacts: AppStore.getArtifactsRepo(),
-      hasDeployments: AppStore.getHasDeployments(),
-      multitenancy: AppStore.hasMultitenancy(),
-      deviceLimit: AppStore.getDeviceLimit(),
-      inProgress: AppStore.getNumberInProgress(),
-      globalSettings: AppStore.getGlobalSettings()
-    };
-  }
-  _onChange() {
-    this.setState(this._getInitialState());
-  }
+
   _checkHeaderInfo() {
-    this._getDeviceLimit();
-    this._deploymentsInProgress();
-    this._hasDevices();
-    this._hasPendingDevices();
+    // check if deployments in progress
+    this.props.getDeploymentCount('inprogress');
     this._checkAnnouncement();
-  }
-  _getGlobalSettings() {
-    return AppActions.getGlobalSettings().catch(err => console.log('error', err));
-  }
-  _getDeviceLimit() {
-    var self = this;
-    return AppActions.getDeviceLimit().then(limit => self.setState({ deviceLimit: limit ? limit : 500 }));
   }
   _checkShowHelp() {
     //checks if user id is set and if cookie for helptips exists for that user
-    var userCookie = cookie.load(this.state.user.id);
+    var userCookie = this.cookies.get(this.props.user.id);
     // if no user cookie set, do so via togglehelptips
     if (typeof userCookie === 'undefined' || typeof userCookie.help === 'undefined') {
       toggleHelptips();
     } else {
       // got user cookie but help value not set
-      AppActions.setShowHelptips(userCookie.help);
+      this.props.setShowHelptips(userCookie.help);
     }
   }
   _checkAnnouncement() {
     var hash = this.props.announcement ? hashString(this.props.announcement) : null;
-    var announceCookie = cookie.load(this.state.user.id + hash);
+    var announceCookie = this.cookies.get(this.props.user.id + hash);
     if (hash && typeof announceCookie === 'undefined') {
       this.setState({ showAnnouncement: true, hash: hash });
     } else {
@@ -123,59 +90,29 @@ export default class Header extends React.Component {
     }
   }
   _hideAnnouncement() {
-    hideAnnouncement(this.state.hash);
+    if (this.props.user.id) {
+      this.cookies.set(this.props.user.id + this.state.hash, true, { maxAge: 604800 });
+    }
     this.setState({ showAnnouncement: false });
   }
-  _hasDeployments() {
-    // check if *any* deployment exists, for onboarding help tips
-    var self = this;
-    return AppActions.getDeployments(1, 1)
-      .then(deployments => self.setState({ hasDeployments: deployments.length }))
-      .catch(err => console.log(err));
-  }
-  _deploymentsInProgress() {
-    // check if deployments in progress
-    var self = this;
-    AppActions.getDeploymentCount('inprogress').then(inProgress => self.setState({ inProgress }));
-  }
 
-  _hasDevices() {
-    // check if any devices connected + accepted
-    var self = this;
-    return AppActions.getDeviceCount('accepted')
-      .then(acceptedDevices => self.setState({ acceptedDevices }))
-      .catch(err => console.log(err));
-  }
-  _hasPendingDevices() {
-    // check if any devices connected + accepted
-    var self = this;
-    return AppActions.getDeviceCount('pending')
-      .then(pendingDevices => self.setState({ pendingDevices }))
-      .catch(err => console.log(err.error));
-  }
-  _hasArtifacts() {
-    var self = this;
-    AppActions.getArtifacts();
-    return self.state.artifacts.length;
-  }
   _updateUsername() {
     var self = this;
     // get current user
     if (!self.state.gettingUser) {
-      var userId = self.state.sessionId ? decodeSessionToken(self.state.sessionId) : decodeSessionToken(cookie.load('JWT'));
+      var userId = self.state.sessionId ? decodeSessionToken(self.state.sessionId) : decodeSessionToken(self.cookies.get('JWT'));
       if (!userId) {
-        return;
+        return Promise.reject();
       }
       self.setState({ gettingUser: true });
-      return AppActions.getUser(userId)
-        .then(user => {
-          AppActions.setCurrentUser(user);
-          self.setState({ user: user, gettingUser: false });
+      return self.props
+        .getUser(userId)
+        .then(() => {
+          self.setState({ gettingUser: false });
           self._checkShowHelp();
-          self._getGlobalSettings();
+          self.props.getGlobalSettings();
           self._checkHeaderInfo();
         })
-        .then(() => getOnboardingState(userId))
         .catch(err => {
           self.setState({ gettingUser: false });
           var errMsg = err.res.error;
@@ -185,9 +122,9 @@ export default class Header extends React.Component {
   }
 
   changeTab() {
-    this._getGlobalSettings();
+    this.props.getGlobalSettings();
     this._checkHeaderInfo();
-    AppActions.setSnackbar('');
+    this.props.setSnackbar('');
   }
   handleClick = event => {
     this.setState({ anchorEl: event.currentTarget });
@@ -196,14 +133,28 @@ export default class Header extends React.Component {
     this.setState({ anchorEl: null });
   };
   onLogoutClick() {
-    this.setState({ gettingUser: false });
-    clearAllRetryTimers();
-    cookie.remove('JWT');
-    this.context.router.history.push('/login');
+    this.setState({ gettingUser: false, anchorEl: null });
+    clearAllRetryTimers(this.props.setSnackbar);
+    this.cookies.remove('JWT');
+    this.props.history.push('/login');
   }
   render() {
     const self = this;
-    const { anchorEl, user } = self.state;
+    const { anchorEl } = self.state;
+
+    const {
+      acceptedDevices,
+      announcement,
+      deviceLimit,
+      docsVersion,
+      inProgress,
+      location,
+      multitenancy,
+      pendingDevices,
+      showHelptips,
+      toggleHelptips,
+      user
+    } = self.props;
 
     const menuButtonColor = '#c7c7c7';
 
@@ -211,11 +162,12 @@ export default class Header extends React.Component {
       <div style={{ marginRight: '0', paddingLeft: '30px' }}>
         <Button className="header-dropdown" style={{ fontSize: '14px', fill: 'rgb(0, 0, 0)', textTransform: 'none' }} onClick={self.handleClick}>
           <AccountCircleIcon style={{ marginRight: '8px', top: '5px', fontSize: '20px', color: menuButtonColor }} />
-          {(user || {}).email}
+          {user.email}
           {anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
         </Button>
         <Menu
           anchorEl={anchorEl}
+          getContentAnchorEl={null}
           onClose={self.handleClose}
           open={Boolean(anchorEl)}
           anchorOrigin={{
@@ -233,15 +185,15 @@ export default class Header extends React.Component {
           <MenuItem component={Link} to="/settings/my-account">
             My account
           </MenuItem>
-          {this.state.multitenancy ? (
+          {multitenancy && (
             <MenuItem component={Link} to="/settings/my-organization">
               My organization
             </MenuItem>
-          ) : null}
+          )}
           <MenuItem component={Link} to="/settings/user-management">
             User management
           </MenuItem>
-          <MenuItem onClick={toggleHelptips}>{this.state.showHelptips ? 'Hide help tooltips' : 'Show help tooltips'}</MenuItem>
+          <MenuItem onClick={() => toggleHelptips()}>{showHelptips ? 'Hide help tooltips' : 'Show help tooltips'}</MenuItem>
           <MenuItem component={Link} to="/help/getting-started">
             Help
           </MenuItem>
@@ -260,7 +212,7 @@ export default class Header extends React.Component {
     const toolbarStyle = { height: '56px', minHeight: 'unset', paddingLeft: '16px', paddingRight: '16px' };
 
     return (
-      <div id="fixedHeader" className={`header ${self.context.location.pathname === '/login' ? 'hidden' : ''}`}>
+      <div id="fixedHeader" className={`header ${location.pathname === '/login' ? 'hidden' : ''}`}>
         <Toolbar style={Object.assign({ backgroundColor: '#fff' }, toolbarStyle)}>
           <Toolbar key={0} style={toolbarStyle}>
             <Link to="/" id="logo" />
@@ -278,7 +230,7 @@ export default class Header extends React.Component {
                     Mender is currently running in <b>demo mode</b>.
                   </p>
                   <p>
-                    <a href={`https://docs.mender.io/${this.props.docsVersion}/administration/production-installation`} target="_blank">
+                    <a href={`https://docs.mender.io/${docsVersion}/administration/production-installation`} target="_blank">
                       See the documentation for help switching to production mode
                     </a>
                     .
@@ -289,18 +241,18 @@ export default class Header extends React.Component {
           </Toolbar>
 
           <Toolbar key={1} style={{ flexGrow: '2' }}>
-            {this.props.announcement ? (
+            {announcement ? (
               <div id="announcement" className={this.state.showAnnouncement ? 'fadeInSlow' : 'fadeOutSlow'} style={{ display: 'flex', alignItems: 'center' }}>
                 <AnnounceIcon className="red" style={{ marginRight: '4px', height: '18px', minWidth: '24px' }} />
-                <Linkify properties={{ target: '_blank' }}>{this.props.announcement}</Linkify>
+                <Linkify properties={{ target: '_blank' }}>{announcement}</Linkify>
                 <CloseIcon style={{ marginLeft: '4px', height: '16px', verticalAlign: 'bottom' }} onClick={() => this._hideAnnouncement()} />
               </div>
             ) : null}
           </Toolbar>
 
           <Toolbar key={2} style={{ flexShrink: '0' }}>
-            <DeviceNotifications pending={this.state.pendingDevices} total={this.state.acceptedDevices} limit={this.state.deviceLimit} />
-            <DeploymentNotifications inprogress={this.state.inProgress} />
+            <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
+            <DeploymentNotifications inprogress={inProgress} />
             {dropDownElement}
           </Toolbar>
         </Toolbar>
@@ -308,3 +260,32 @@ export default class Header extends React.Component {
     );
   }
 }
+
+const actionCreators = {
+  getDeviceLimit,
+  getDeploymentCount,
+  getGlobalSettings,
+  getOnboardingState,
+  getReleases,
+  getUser,
+  setShowHelptips,
+  setSnackbar,
+  toggleHelptips
+};
+
+const mapStateToProps = state => {
+  return {
+    acceptedDevices: state.devices.byStatus.accepted.total,
+    announcement: state.app.hostedAnnouncement,
+    deviceLimit: state.devices.limit,
+    demo: state.app.features.isDemoMode,
+    docsVersion: state.app.docsVersion,
+    inProgress: state.deployments.byStatus.inprogress.total,
+    multitenancy: state.app.features.hasMultitenancy,
+    showHelptips: state.users.showHelptips,
+    pendingDevices: state.devices.byStatus.pending.total,
+    user: state.users.byId[state.users.currentUser] || { email: '', id: null }
+  };
+};
+
+export default withRouter(connect(mapStateToProps, actionCreators)(Header));

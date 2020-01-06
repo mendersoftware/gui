@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`GlobalSettings Component renders correctly 1`] = `
 <div
   className="margin-top-small"
   style={
@@ -9,44 +9,42 @@ exports[`renders correctly 1`] = `
     }
   }
 >
-  <div>
-    <h2
+  <h2
+    style={
+      Object {
+        "marginTop": "15px",
+      }
+    }
+  >
+    Global settings
+  </h2>
+  <p
+    className="info"
+    style={
+      Object {
+        "marginBottom": "30px",
+      }
+    }
+  >
+    <svg
+      aria-hidden="true"
+      className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+      focusable="false"
+      role="presentation"
       style={
         Object {
-          "marginTop": "15px",
+          "margin": "0 6px 4px 0",
+          "verticalAlign": "middle",
         }
       }
+      viewBox="0 0 24 24"
     >
-      Global settings
-    </h2>
-    <p
-      className="info"
-      style={
-        Object {
-          "marginBottom": "30px",
-        }
-      }
-    >
-      <svg
-        aria-hidden="true"
-        className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-        focusable="false"
-        role="presentation"
-        style={
-          Object {
-            "margin": "0 6px 4px 0",
-            "verticalAlign": "middle",
-          }
-        }
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-        />
-      </svg>
-      These settings apply to all users, so changes made here may affect other users' experience.
-    </p>
-  </div>
+      <path
+        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+      />
+    </svg>
+    These settings apply to all users, so changes made here may affect other users' experience.
+  </p>
   <form
     className=""
   >
@@ -54,8 +52,8 @@ exports[`renders correctly 1`] = `
       className="MuiFormControl-root"
     >
       <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
-        data-shrink={true}
+        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+        data-shrink={false}
         htmlFor="simple-select"
       >
         Device identity attribute
@@ -72,23 +70,29 @@ exports[`renders correctly 1`] = `
         <div
           aria-haspopup="listbox"
           aria-labelledby=" deviceid"
-          className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input MuiInputBase-inputSelect"
+          className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
           id="deviceid"
           onBlur={[Function]}
-          onClick={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
+          onMouseDown={[Function]}
           role="button"
           tabIndex={0}
         >
-          Device ID
+          <span
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "&#8203;",
+              }
+            }
+          />
         </div>
         <input
           id="simple-select"
           name="selector"
           onAnimationStart={[Function]}
           type="hidden"
-          value="Device ID"
+          value=""
         />
         <svg
           aria-hidden="true"
@@ -103,7 +107,7 @@ exports[`renders correctly 1`] = `
         </svg>
       </div>
       <p
-        className="MuiFormHelperText-root info MuiFormHelperText-filled"
+        className="MuiFormHelperText-root info"
         style={
           Object {
             "width": "500px",
@@ -129,65 +133,61 @@ exports[`renders correctly 1`] = `
     </div>
   </form>
   <div
-    className="margin-top-large"
+    className="margin-top-large float-right"
   >
-    <div
-      className="float-right"
-    >
-      <button
-        className="MuiButtonBase-root MuiButton-root MuiButton-text Mui-disabled Mui-disabled"
-        disabled={true}
-        onBlur={[Function]}
-        onClick={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        style={
-          Object {
-            "marginRight": "10px",
-          }
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-text"
+      disabled={false}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      style={
+        Object {
+          "marginRight": "10px",
         }
-        tabIndex={-1}
-        type="button"
+      }
+      tabIndex={0}
+      type="button"
+    >
+      <span
+        className="MuiButton-label"
       >
-        <span
-          className="MuiButton-label"
-        >
-          Cancel
-        </span>
-      </button>
-      <button
-        className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled"
-        disabled={true}
-        onBlur={[Function]}
-        onClick={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        tabIndex={-1}
-        type="button"
+        Cancel
+      </span>
+    </button>
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+      type="button"
+    >
+      <span
+        className="MuiButton-label"
       >
-        <span
-          className="MuiButton-label"
-        >
-          Save
-        </span>
-      </button>
-    </div>
+        Save
+      </span>
+    </button>
   </div>
 </div>
 `;

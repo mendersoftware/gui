@@ -1,6 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { matchPath } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import LeftNav from './left-nav';
 import GettingStarted from './getting-started';
 import ApplicationUpdates from './application-updates';
@@ -17,8 +17,8 @@ import Support from './support';
 import MoreHelp from './more-help-resources';
 import { isEmpty, versionCompare } from '../../helpers';
 
-import AppStore from '../../stores/app-store';
-import AppActions from '../../actions/app-actions';
+import { findLocalIpAddress } from '../../actions/appActions';
+import { getUserOrganization } from '../../actions/userActions';
 
 var components = {
   'getting-started': {
@@ -76,66 +76,11 @@ var components = {
   }
 };
 
-export default class Help extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object
-  };
-
-  constructor(props, context) {
-    super(props, context);
-    this.state = this._getInitialState();
-  }
-  _getInitialState() {
-    return {
-      snackbar: AppStore.getSnackbar(),
-      hasMultitenancy: AppStore.hasMultitenancy(),
-      isHosted: AppStore.getIsHosted()
-    };
-  }
+export class Help extends React.PureComponent {
   componentDidMount() {
-    if (this.state.hasMultitenancy && this.state.isHosted) {
-      this._getUserOrganization();
-      this.setState({ version: '', docsVersion: '' }); // if hosted, use latest docs version
-    } else {
-      this.setState({ docsVersion: this.props.docsVersion ? `${this.props.docsVersion}/` : 'development/' });
+    if (this.props.hasMultitenancy || this.props.isEnterprise || this.props.isHosted) {
+      this.props.getUserOrganization();
     }
-  }
-
-  _getUserOrganization() {
-    var self = this;
-    return AppActions.getUserOrganization()
-      .then(org => {
-        self.setState({ org: org });
-        self.linksTimer = setInterval(() => {
-          self._getLinks(org.id);
-        }, 30000);
-        self._getLinks(org.id);
-      })
-      .catch(err => console.log(`Error: ${err}`));
-  }
-
-  _getLinks(id) {
-    var self = this;
-    AppActions.getHostedLinks(id)
-      .then(response => {
-        self.setState({ links: response });
-        // clear timer when got links successfully
-        clearInterval(self.linksTimer);
-      })
-      .catch(err => console.log(`Error: ${err}`, `Tenant id: ${id}`));
-  }
-
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.linksTimer);
-    AppStore.removeChangeListener(this._onChange.bind(this));
-  }
-
-  _onChange() {
-    this.setState(this._getInitialState());
   }
 
   _getLatest(array) {
@@ -168,20 +113,25 @@ export default class Help extends React.Component {
 
     return (
       <div className="help-container">
-        <LeftNav isHosted={this.state.isHosted} pages={components} />
+        <LeftNav isHosted={this.props.isHosted} pages={components} />
         <div>
           <p style={{ color: 'rgba(0, 0, 0, 0.54)', maxWidth: contentWidth }}>Help {breadcrumbs}</p>
           <div style={{ position: 'relative', top: '12px', maxWidth: contentWidth }} className="help-content">
             <ComponentToShow
-              version={this.props.version}
-              docsVersion={this.state.docsVersion}
+              docsVersion={this.props.docsVersion}
+              findLocalIpAddress={this.props.findLocalIpAddress}
               getLatest={this._getLatest}
-              isHosted={this.state.isHosted}
-              org={this.state.org}
-              links={this.state.links}
-              hasMultitenancy={this.state.hasMultitenancy}
+              hasMultitenancy={this.props.hasMultitenancy}
+              isHosted={this.props.isHosted}
+              isEnterprise={this.props.isEnterprise}
               isEmpty={isEmpty}
+              links={this.props.links}
+              menderDebPackageVersion={this.props.menderDebPackageVersion}
+              menderVersion={this.props.menderVersion}
+              menderArtifactVersion={this.props.menderArtifactVersion}
+              org={this.props.org}
               pages={components}
+              version={this.props.version}
             />
           </div>
         </div>
@@ -189,3 +139,23 @@ export default class Help extends React.Component {
     );
   }
 }
+
+const actionCreators = { getUserOrganization, findLocalIpAddress };
+
+const mapStateToProps = state => {
+  // if hosted, use latest docs version
+  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
+  return {
+    docsVersion: state.app.features.hasMultitenancy && state.app.features.isHosted ? '' : docsVersion,
+    isHosted: state.app.features.isHosted,
+    isEnterprise: state.app.features.isEnterprise,
+    links: state.app.hostedLinks,
+    menderVersion: state.app.versionInformation['Mender-Client'],
+    menderDebPackageVersion: state.app.menderDebPackageVersion,
+    menderArtifactVersion: state.app.versionInformation['Mender-Artifact'],
+    org: state.users.organization,
+    version: state.app.versionInformation.Integration
+  };
+};
+
+export default connect(mapStateToProps, actionCreators)(Help);

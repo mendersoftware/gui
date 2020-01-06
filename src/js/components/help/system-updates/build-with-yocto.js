@@ -24,7 +24,9 @@ export default class BuildYocto extends React.Component {
   }
 
   render() {
-    var token = (this.props.org || {}).tenant_token;
+    const { docsVersion = '', isHosted, org = {} } = this.props;
+
+    var token = org.tenant_token;
     var codeToCopy1 = 'bitbake-layers remove-layer ../meta-mender/meta-mender-demo';
     var codeToCopy2 = `MENDER_SERVER_URL = 'https://hosted.mender.io' \nMENDER_TENANT_TOKEN = '${token}'`;
 
@@ -51,13 +53,13 @@ export default class BuildYocto extends React.Component {
 
         <p>
           Follow the docs at{' '}
-          <a href={`https://docs.mender.io/${this.props.docsVersion}artifacts/yocto-project/building`} target="_blank">
-            {`https://docs.mender.io/${this.props.docsVersion}artifacts/yocto-project/building`}
+          <a href={`https://docs.mender.io/${docsVersion}artifacts/yocto-project/building`} target="_blank">
+            {`https://docs.mender.io/${docsVersion}artifacts/yocto-project/building`}
           </a>{' '}
           to build your .sdimg and .mender files.
         </p>
 
-        {this.props.isHosted ? (
+        {isHosted ? (
           <div>
             <p>Do the following steps to integrate your build with Hosted Mender:</p>
 
@@ -73,7 +75,7 @@ export default class BuildYocto extends React.Component {
             <div className="code">
               <CopyToClipboard text={codeToCopy1} onCopy={() => this._copied('copied1')}>
                 <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-                  <CopyPasteIcon/>
+                  <CopyPasteIcon />
                 </IconButton>
               </CopyToClipboard>
               <span style={{ wordBreak: 'break-word' }}>{codeToCopy1}</span>
@@ -90,7 +92,7 @@ export default class BuildYocto extends React.Component {
             <div className="code">
               <CopyToClipboard text={codeToCopy2} onCopy={() => this._copied('copied2')}>
                 <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-                  <CopyPasteIcon/>
+                  <CopyPasteIcon />
                 </IconButton>
               </CopyToClipboard>
               <span style={{ wordBreak: 'break-word' }}>{codeToCopy2}</span>
@@ -100,7 +102,7 @@ export default class BuildYocto extends React.Component {
 
             <p>
               You can the use the output .sdimg and .mender files to connect to your Mender server and deploy updates, as outlined{' '}
-              <a href={`https://docs.mender.io/${this.props.docsVersion}artifacts/yocto-project/building`} target="_blank">
+              <a href={`https://docs.mender.io/${docsVersion}artifacts/yocto-project/building`} target="_blank">
                 in the tutorial
               </a>
               .

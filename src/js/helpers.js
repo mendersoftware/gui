@@ -2,8 +2,7 @@ import jwtDecode from 'jwt-decode';
 import md5 from 'md5';
 import React from 'react';
 
-import AppActions from './actions/app-actions';
-import AppStore from './stores/app-store';
+import store from './reducers';
 
 export function isEncoded(uri) {
   uri = uri || '';
@@ -19,42 +18,41 @@ export function fullyDecodeURI(uri) {
   return uri;
 }
 
-export const groupDeploymentStats = stats => {
-  const collector = items => items.reduce((accu, property) => accu + Number(stats[property] || 0), 0);
-  return {
-    // don't include 'pending' as inprogress, as all remaining devices will be pending - we don't discriminate based on phase membership
-    inprogress: collector(['downloading', 'installing', 'rebooting']),
-    pending: stats['pending'] || 0,
-    successes: collector(['success', 'already-installed']),
-    failures: collector(['failure', 'aborted', 'noartifact', 'decommissioned'])
-  };
-};
+const statCollector = (items, statistics) => items.reduce((accu, property) => accu + Number(statistics[property] || 0), 0);
+
+export const groupDeploymentStats = stats => ({
+  // don't include 'pending' as inprogress, as all remaining devices will be pending - we don't discriminate based on phase membership
+  inprogress: statCollector(['downloading', 'installing', 'rebooting'], stats),
+  pending: stats['pending'] || 0,
+  successes: statCollector(['success', 'already-installed'], stats),
+  failures: statCollector(['failure', 'aborted', 'noartifact', 'decommissioned'], stats)
+});
 
 export function statusToPercentage(state, intervals) {
   var time;
   var minutes = intervals / 3;
   switch (state) {
-  case 'pending':
-  case 'noartifact':
-    return 0;
+    case 'pending':
+    case 'noartifact':
+      return 0;
 
-  case 'downloading':
-    // increase slightly over time to show progress
-    time = minutes < 15 && intervals < 69 ? 0 + intervals : 69;
-    return time;
+    case 'downloading':
+      // increase slightly over time to show progress
+      time = minutes < 15 && intervals < 69 ? 0 + intervals : 69;
+      return time;
 
-  case 'installing':
-    return 70;
+    case 'installing':
+      return 70;
 
-  case 'rebooting':
-    time = minutes < 18 && 75 + intervals < 99 ? 75 + intervals : 99;
-    return time;
+    case 'rebooting':
+      time = minutes < 18 && 75 + intervals < 99 ? 75 + intervals : 99;
+      return time;
 
-  case 'aborted':
-  case 'already-installed':
-  case 'failure':
-  case 'success':
-    return 100;
+    case 'aborted':
+    case 'already-installed':
+    case 'failure':
+    case 'success':
+      return 100;
   }
 }
 
@@ -217,24 +215,24 @@ export function deepCompare() {
       }
 
       switch (typeof x[p]) {
-      case 'object':
-      case 'function':
-        leftChain.push(x);
-        rightChain.push(y);
+        case 'object':
+        case 'function':
+          leftChain.push(x);
+          rightChain.push(y);
 
-        if (!compare2Objects(x[p], y[p])) {
-          return false;
-        }
+          if (!compare2Objects(x[p], y[p])) {
+            return false;
+          }
 
-        leftChain.pop();
-        rightChain.pop();
-        break;
+          leftChain.pop();
+          rightChain.pop();
+          break;
 
-      default:
-        if (x[p] !== y[p]) {
-          return false;
-        }
-        break;
+        default:
+          if (x[p] !== y[p]) {
+            return false;
+          }
+          break;
       }
     }
 
@@ -264,17 +262,17 @@ export function stringToBoolean(content) {
   }
   const string = content + '';
   switch (string.trim().toLowerCase()) {
-  case 'true':
-  case 'yes':
-  case '1':
-    return true;
-  case 'false':
-  case 'no':
-  case '0':
-  case null:
-    return false;
-  default:
-    return Boolean(string);
+    case 'true':
+    case 'yes':
+    case '1':
+      return true;
+    case 'false':
+    case 'no':
+    case '0':
+    case null:
+      return false;
+    default:
+      return Boolean(string);
   }
 }
 
@@ -316,8 +314,36 @@ export const customSort = (direction, field) => (a, b) => {
   return 0;
 };
 
-export const mapDeviceAttributes = attributes =>
-  attributes.reduce((accu, attribute) => Object.assign(accu, { [attribute.name]: attribute.value }), { device_type: '', artifact_name: '' });
+export const duplicateFilter = (item, index, array) => array.indexOf(item) == index;
+
+export const mapDeviceAttributes = (attributes = []) =>
+  attributes.reduce((accu, attribute) => ({ ...accu, [attribute.name]: attribute.value }), { device_type: '', artifact_name: '' });
+
+const deriveAttributePopularity = (accu, sourceObject = {}) =>
+  Object.keys(sourceObject).reduce((keyAccu, key) => {
+    keyAccu[key] = keyAccu[key] + 1 || 1;
+    return keyAccu;
+  }, accu);
+
+export const deriveAttributesFromDevices = devices => {
+  const availableAttributes = devices.reduce(
+    (accu, item) => {
+      // count popularity of attributes to create attribute sort order
+      accu.identity_data = deriveAttributePopularity(accu.identity_data, item.identity_data);
+      accu.attributes = deriveAttributePopularity(accu.attributes, item.attributes);
+      return accu;
+    },
+    { identity_data: [], attributes: [] }
+  );
+  // sort in reverse order, to have most common attribute at the top of the select
+  const inventoryAttributes = Object.entries(availableAttributes.attributes)
+    .sort((a, b) => b[1] - a[1])
+    .map(a => a[0]);
+  const identityAttributes = Object.entries(availableAttributes.identity_data)
+    .sort((a, b) => b[1] - a[1])
+    .map(a => a[0]);
+  return { identityAttributes, inventoryAttributes };
+};
 
 export const getFormattedSize = bytes => {
   const suffixes = ['Bytes', 'KB', 'MB', 'GB'];
@@ -328,24 +354,17 @@ export const getFormattedSize = bytes => {
   return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${suffixes[i]}`;
 };
 
-export class FileSize extends React.PureComponent {
-  render() {
-    return <div style={this.props.style}>{getFormattedSize(this.props.fileSize)}</div>;
-  }
-}
-
-export const timeoutPromise = (url, options = {}, timeout = 1000) =>
-  Promise.race([fetch(url, options), new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeout))]);
+export const FileSize = ({ style, fileSize }) => <div style={style}>{getFormattedSize(fileSize)}</div>;
 
 export const collectAddressesFrom = devices =>
   devices.reduce((collector, device) => {
-    const ips = device.attributes.reduce((accu, item) => {
-      if (item.name.startsWith('ipv4')) {
-        if (Array.isArray(item.value)) {
-          const texts = item.value.map(text => text.slice(0, text.indexOf('/')));
+    const ips = Object.entries(device.attributes).reduce((accu, [name, value]) => {
+      if (name.startsWith('ipv4')) {
+        if (Array.isArray(value)) {
+          const texts = value.map(text => text.slice(0, text.indexOf('/')));
           accu.push(...texts);
         } else {
-          const text = item.value.slice(0, item.value.indexOf('/'));
+          const text = value.slice(0, value.indexOf('/'));
           accu.push(text);
         }
       }
@@ -358,22 +377,21 @@ export const collectAddressesFrom = devices =>
 export const getDemoDeviceAddress = devices => {
   let targetUrl = '';
   const defaultVitualizedIp = '10.0.2.15';
-  return AppActions.getDevicesWithInventory(devices).then(devices => {
-    const addresses = collectAddressesFrom(devices);
-    const address = addresses.reduce((accu, item) => {
-      if (accu && item === defaultVitualizedIp) {
-        return accu;
-      }
-      return item;
-    }, null);
-    const onboardingApproach = AppStore.getOnboardingApproach();
-    const port = AppStore.getDemoArtifactPort();
-    targetUrl = `http://${address}:${port}`;
-    if (!address || (onboardingApproach === 'virtual' && (navigator.appVersion.indexOf('Win') != -1 || navigator.appVersion.indexOf('Mac') != -1))) {
-      targetUrl = `http://localhost:${port}`;
+  const addresses = collectAddressesFrom(devices);
+  const address = addresses.reduce((accu, item) => {
+    if (accu && item === defaultVitualizedIp) {
+      return accu;
     }
-    return Promise.resolve(targetUrl);
-  });
+    return item;
+  }, null);
+  const onboarding = store.getState().users.onboarding;
+  const onboardingApproach = onboarding.approach;
+  const port = onboarding.demoArtifactPort;
+  targetUrl = `http://${address}:${port}`;
+  if (!address || (onboardingApproach === 'virtual' && (navigator.appVersion.indexOf('Win') != -1 || navigator.appVersion.indexOf('Mac') != -1))) {
+    targetUrl = `http://localhost:${port}`;
+  }
+  return Promise.resolve(targetUrl);
 };
 
 export const detectOsIdentifier = () => {
@@ -423,6 +441,36 @@ export const getRemainderPercent = phases => {
   return remainder;
 };
 
+export const sortDeploymentDevices = devices => {
+  const newList = {
+    aborted: [],
+    decommissioned: [],
+    'already-installed': [],
+    downloading: [],
+    failure: [],
+    installing: [],
+    noartifact: [],
+    pending: [],
+    rebooting: [],
+    success: []
+  };
+  devices.map(device => newList[device.status].push(device));
+  const newCombine = newList.failure.concat(
+    newList.downloading,
+    newList.installing,
+    newList.rebooting,
+    newList.pending,
+    newList.success,
+    newList.aborted,
+    newList.noartifact,
+    newList['already-installed'],
+    newList.decommissioned
+  );
+  return newCombine;
+};
+
+export const startTimeSort = (a, b) => (b.created > a.created) - (b.created < a.created);
+
 export const standardizePhases = phases =>
   phases.map((phase, index) => {
     let standardizedPhase = { batch_size: phase.batch_size, start_ts: index };
@@ -436,6 +484,32 @@ export const standardizePhases = phases =>
     }
     return standardizedPhase;
   });
+
+/*
+ * Match device attributes against filters, return true or false
+ */
+export const matchFilters = (device, filters = store.getState().devices.filteringAttributes) =>
+  filters.reduce((accu, filter) => {
+    if (filter.key && filter.value) {
+      if (device[filter.key] instanceof Array) {
+        // array
+        if (
+          device[filter.key]
+            .join(', ')
+            .toLowerCase()
+            .indexOf(filter.value.toLowerCase()) == -1
+        ) {
+          return false;
+        }
+      } else {
+        // string
+        if (device[filter.key].toLowerCase().indexOf(filter.value.toLowerCase()) == -1) {
+          return false;
+        }
+      }
+    }
+    return accu;
+  }, true);
 
 export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token, packageVersion, deviceType = 'generic-armv6') => {
   let connectionInstructions = `  --quiet --demo ${ipAddress ? `--server-ip ${ipAddress}` : ''}`;
@@ -454,11 +528,11 @@ ${enterpriseSettings}`;
   let codeToCopy = `sudo bash -c 'wget https://d1b0l86ne08fsf.cloudfront.net/${packageVersion}/dist-packages/debian/armhf/mender-client_${packageVersion}-1_armhf.deb && \\
 DEBIAN_FRONTEND=noninteractive dpkg -i mender-client_${packageVersion}-1_armhf.deb && \\
 DEVICE_TYPE="${deviceType}" && \\${
-  token
-    ? `
+    token
+      ? `
 TENANT_TOKEN="${token}" && \\`
-    : ''
-}
+      : ''
+  }
 mender setup \\
   --device-type $DEVICE_TYPE \\
 ${connectionInstructions} && \\

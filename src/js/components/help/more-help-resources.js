@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MoreHelp = ({ docsVersion, isHosted }) => {
+const MoreHelp = ({ docsVersion = '', isHosted }) => {
   var support = isHosted ? 'mailto:support@mender.io' : 'mailto:contact@mender.io';
   const resources = [
     {

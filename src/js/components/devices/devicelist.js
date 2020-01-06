@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 // material ui
 import Checkbox from '@material-ui/core/Checkbox';
@@ -6,14 +7,16 @@ import Checkbox from '@material-ui/core/Checkbox';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SortIcon from '@material-ui/icons/Sort';
 
-import AppActions from '../../actions/app-actions';
+import { setSnackbar } from '../../actions/appActions';
+import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
+
+import { DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import DeviceListItem from './devicelistitem';
-import AppStore from '../../stores/app-store';
 import { advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
-export default class DeviceList extends React.Component {
+export class DeviceList extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -36,12 +39,17 @@ export default class DeviceList extends React.Component {
     if (event.target.closest('input') && event.target.closest('input').hasOwnProperty('checked')) {
       return;
     }
-    AppActions.setSnackbar('');
-    let deviceId = self.props.devices[rowNumber].id;
-    if (self.state.expandedDeviceId === deviceId) {
-      deviceId = null;
+    self.props.setSnackbar('');
+    let device = self.props.devices[rowNumber];
+    if (self.state.expandedDeviceId === device.id) {
+      device = null;
+    } else if (device.status === DEVICE_STATES.accepted) {
+      // Get full device identity details for single selected device
+      Promise.all([self.props.getDeviceAuth(device.id), self.props.getDeviceById(device.id)]).catch(err => console.log(`Error: ${err}`));
+    } else {
+      self.props.getDeviceAuth(device.id);
     }
-    if (!AppStore.getOnboardingComplete()) {
+    if (!self.props.onboardingComplete) {
       if (!getOnboardingStepCompleted('devices-pending-accepting-onboarding')) {
         advanceOnboarding('devices-pending-accepting-onboarding');
       }
@@ -49,7 +57,7 @@ export default class DeviceList extends React.Component {
         advanceOnboarding('devices-accepted-onboarding');
       }
     }
-    self.setState({ expandedDeviceId: deviceId });
+    self.setState({ expandedDeviceId: device ? device.id : null });
   }
 
   _isSelected(index) {
@@ -86,7 +94,20 @@ export default class DeviceList extends React.Component {
 
   render() {
     const self = this;
-    const { className, columnHeaders, devices, pageLength, pageLoading, pageNo, pageTotal, onSelect, onChangeRowsPerPage, selectedRows } = self.props;
+    const {
+      className,
+      columnHeaders,
+      devices,
+      filterable = false,
+      filters,
+      pageLength,
+      pageLoading,
+      pageNo,
+      pageTotal,
+      onSelect,
+      onChangeRowsPerPage,
+      selectedRows
+    } = self.props;
     const { sortCol, sortDown, expandedDeviceId } = self.state;
     const columnWidth = `${(onSelect ? 90 : 100) / columnHeaders.length}%`;
     const numSelected = (selectedRows || []).length;
@@ -116,7 +137,7 @@ export default class DeviceList extends React.Component {
               {...self.props}
               device={device}
               expanded={expandedDeviceId === device.id}
-              key={device.id}
+              key={`device-${device.id}`}
               selectable={!!onSelect}
               selected={self._isSelected(index)}
               onClick={event => self._expandRow(event, index)}
@@ -124,13 +145,15 @@ export default class DeviceList extends React.Component {
             />
           ))}
         </div>
-        <Pagination
-          count={pageTotal}
-          rowsPerPage={pageLength}
-          onChangeRowsPerPage={onChangeRowsPerPage}
-          page={pageNo}
-          onChangePage={page => self.onPageChange(page)}
-        />
+        {(!filterable || filters.length === 0) && (
+          <Pagination
+            count={pageTotal}
+            rowsPerPage={pageLength}
+            onChangeRowsPerPage={onChangeRowsPerPage}
+            page={pageNo}
+            onChangePage={page => self.onPageChange(page)}
+          />
+        )}
         {pageLoading ? (
           <div className="smallLoaderContainer">
             <Loader show={true} />
@@ -140,3 +163,20 @@ export default class DeviceList extends React.Component {
     );
   }
 }
+
+const actionCreators = { getDeviceAuth, getDeviceById, setSnackbar };
+const mapStateToProps = (state, ownProps) => {
+  const devices = ownProps.devices.reduce((accu, deviceId) => {
+    if (deviceId && state.devices.byId[deviceId]) {
+      accu.push({ auth_sets: [], ...state.devices.byId[deviceId] });
+    }
+    return accu;
+  }, []);
+  return {
+    devices,
+    filters: state.devices.filters,
+    onboardingComplete: state.users.onboarding.complete
+  };
+};
+
+export default connect(mapStateToProps, actionCreators)(DeviceList);

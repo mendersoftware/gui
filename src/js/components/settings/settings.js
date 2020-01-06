@@ -1,16 +1,14 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { NavLink, withRouter } from 'react-router-dom';
 import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
 import MyOrganization from './organization';
 import Global from './global';
 import Billing from './billing';
 
-import AppStore from '../../stores/app-store';
-
 // material ui
-import { List, ListItem, ListSubheader, ListItemText } from '@material-ui/core';
+import { List, ListItem, ListItemText, ListSubheader } from '@material-ui/core';
 
 const routes = {
   global: { route: '/settings/global-settings', text: 'Global settings', admin: true, component: <Global /> },
@@ -27,61 +25,36 @@ const sectionMap = {
   'my-organization': 'myOrganization'
 };
 
-export default class Settings extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object
-  };
-
-  constructor(props, context) {
-    super(props, context);
-    this.state = { hasMultitenancy: AppStore.hasMultitenancy() };
-  }
-
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
-  }
-
-  componentWillUnmount() {
-    AppStore.removeChangeListener(this._onChange.bind(this));
-  }
-
+export class Settings extends React.Component {
   componentDidMount() {
-    if (
-      this.context.router.route.location.pathname === '/settings' ||
-      (this.context.router.route.location.pathname === myOrganization.route && !this.state.hasMultitenancy)
-    ) {
+    if (this.props.location.pathname === '/settings' || (this.props.location.pathname === myOrganization.route && !this.props.hasMultitenancy)) {
       // redirect from organization screen if no multitenancy
-      this.context.router.history.replace(routes.myAccount.route);
+      this.props.history.replace(routes.myAccount.route);
     }
   }
 
-  _getCurrentTab(routeDefinitions, tab = this.props.history.location.pathname) {
+  _getCurrentTab(routeDefinitions, tab = this.props.location.pathname) {
     if (routeDefinitions.hasOwnProperty(tab)) {
       return routeDefinitions[tab];
     }
     return routeDefinitions.myAccount;
   }
 
-  _getCurrentSection(sections, section = this.context.router.route.match.params.section) {
+  _getCurrentSection(sections, section = this.props.match.params.section) {
     if (sections.hasOwnProperty(section)) {
       return sections[section];
     }
     return sections['my-account'];
   }
 
-  _onChange() {
-    this.setState({ hasMultitenancy: AppStore.hasMultitenancy() });
-  }
-
   render() {
     var self = this;
-    const isHosted = AppStore.getIsHosted();
     let relevantItems = routes;
 
-    if (self.state.hasMultitenancy) {
+    if (self.props.hasMultitenancy) {
       relevantItems['myOrganization'] = myOrganization;
     }
-    if (isHosted) {
+    if (self.props.isHosted) {
       relevantItems['billing'] = billing;
     }
     var list = Object.entries(relevantItems).reduce((accu, entry) => {
@@ -95,7 +68,7 @@ export default class Settings extends React.Component {
       return accu;
     }, []);
 
-    const section = self._getCurrentSection(sectionMap, self.context.router.route.match.params.section);
+    const section = self._getCurrentSection(sectionMap, self.props.match.params.section);
     return (
       <div className="margin-top">
         <div className="leftFixed">
@@ -109,3 +82,12 @@ export default class Settings extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    isHosted: state.app.features.isHosted,
+    hasMultitenancy: state.app.features.hasMultitenancy
+  };
+};
+
+export default withRouter(connect(mapStateToProps)(Settings));

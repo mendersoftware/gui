@@ -38,10 +38,10 @@ export default class ProgressChart extends React.Component {
     const momentaryTime = moment(time);
     const timeToNext = nextPhaseStart
       ? {
-        days: nextPhaseStart.diff(momentaryTime, 'days'),
-        hours: nextPhaseStart.diff(momentaryTime, 'hours') - nextPhaseStart.diff(momentaryTime, 'days') * 24,
-        minutes: nextPhaseStart.diff(momentaryTime, 'minutes') - nextPhaseStart.diff(momentaryTime, 'hours') * 60
-      }
+          days: nextPhaseStart.diff(momentaryTime, 'days'),
+          hours: nextPhaseStart.diff(momentaryTime, 'hours') - nextPhaseStart.diff(momentaryTime, 'days') * 24,
+          minutes: nextPhaseStart.diff(momentaryTime, 'minutes') - nextPhaseStart.diff(momentaryTime, 'hours') * 60
+        }
       : null;
 
     // to display failures per phase we have to approximate the failure count per phase by keeping track of the failures we display in previous phases and

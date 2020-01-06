@@ -8,8 +8,6 @@ import { CancelOutlined as CancelOutlinedIcon } from '@material-ui/icons';
 import Confirm from './confirm';
 import ProgressChart from './progressChart';
 import { formatTime, groupDeploymentStats } from '../../helpers';
-import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
 
 const deploymentTypeClasses = {
   past: 'past-item',
@@ -35,22 +33,10 @@ export default class DeploymentItem extends React.Component {
     };
   }
 
-  // get statistics for each in progress
-  componentDidMount() {
-    this.timer = setInterval(() => this.refreshDeploymentDevices(), 30000);
-    this.refreshDeploymentDevices();
-  }
-  componentWillUnmount() {
-    clearInterval(this.timer);
-  }
-  refreshDeploymentDevices() {
-    const self = this;
-    return AppActions.getSingleDeploymentStats(self.props.deployment.id).then(stats => self.setState({ stats }));
-  }
-
   handleAbort(id) {
     this.props.abort(id);
   }
+
   toggleConfirm(id) {
     var self = this;
     setTimeout(() => {
@@ -60,9 +46,9 @@ export default class DeploymentItem extends React.Component {
 
   render() {
     const self = this;
-    const { deployment, openReport, index, type, columnHeaders } = self.props;
-    const { abort, stats } = self.state;
-    const { inprogress: current, failures, pending, successes } = groupDeploymentStats(stats);
+    const { columnHeaders, deployment, index, isEnterprise, openReport, type } = self.props;
+    const { abort } = self.state;
+    const { inprogress: current, failures, pending, successes } = groupDeploymentStats(deployment.stats || {});
 
     const { artifact_name, name, created, device_count, id, status, phases } = deployment;
 
@@ -78,7 +64,6 @@ export default class DeploymentItem extends React.Component {
         />
       );
     }
-    const isEnterprise = AppStore.getIsEnterprise() || AppStore.getIsHosted();
     const started = isEnterprise && phases && phases.length >= 1 ? phases[0].start_ts || created : created;
     return (
       <div className={`deployment-item ${deploymentTypeClasses[type]}`}>

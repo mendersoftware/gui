@@ -1,33 +1,51 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 // material ui
-import Button from '@material-ui/core/Button';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import FormControl from '@material-ui/core/FormControl';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import InputLabel from '@material-ui/core/InputLabel';
+import {
+  Button,
+  ExpansionPanel,
+  ExpansionPanelDetails,
+  ExpansionPanelSummary,
+  FormControl,
+  IconButton,
+  Input,
+  InputAdornment,
+  InputLabel
+} from '@material-ui/core';
 
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
-import CancelIcon from '@material-ui/icons/Cancel';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
-import CheckIcon from '@material-ui/icons/Check';
-import EditIcon from '@material-ui/icons/Edit';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import {
+  Add as AddIcon,
+  Remove as RemoveIcon,
+  Cancel as CancelIcon,
+  CheckCircleOutline as CheckCircleOutlineIcon,
+  CancelOutlined as CancelOutlinedIcon,
+  Check as CheckIcon,
+  Edit as EditIcon,
+  ExitToApp as ExitToAppIcon
+} from '@material-ui/icons';
 
-import AppActions from '../../actions/app-actions';
+import { getArtifactUrl, showRemoveArtifactDialog } from '../../actions/releaseActions';
 import ArtifactPayload from './artifactPayload';
 
-export default class SelectedArtifact extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object
-  };
+const styles = {
+  editButton: {
+    color: 'rgba(0, 0, 0, 0.54)',
+    marginBottom: '10px'
+  },
+  listStyle: {
+    fontSize: '12px',
+    paddingBottom: '10px',
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
+  listItemStyle: {
+    color: '#404041',
+    fontSize: '13px'
+  }
+};
+
+export class SelectedArtifact extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -39,14 +57,11 @@ export default class SelectedArtifact extends React.Component {
   componentDidUpdate(prevProps) {
     const self = this;
     if (prevProps.artifact.id !== self.props.artifact.id || (!self.props.artifact.url && !self.state.gettingUrl)) {
-      self.setState({ gettingUrl: true }, () => AppActions.getArtifactUrl(self.props.artifact.id).then(() => self.setState({ gettingUrl: false })));
+      self.setState({ gettingUrl: true }, () => self.props.getArtifactUrl(self.props.artifact.id).then(() => self.setState({ gettingUrl: false })));
     }
     if (!self.state.descEdit && self.props.artifact.description && self.state.description !== self.props.artifact.description) {
       self.setState({ description: self.props.artifact.description || '-' });
     }
-  }
-  _descEdit(description) {
-    this.setState({ description });
   }
   _onToggleEditing(event) {
     event.stopPropagation();
@@ -61,27 +76,11 @@ export default class SelectedArtifact extends React.Component {
   _toggleArtifactContentVisibility() {
     this.setState({ showPayloads: !this.state.showPayloads });
   }
+
   render() {
     const self = this;
 
-    const { artifact, onExpansion, removeArtifact } = self.props;
-
-    const styles = {
-      editButton: {
-        color: 'rgba(0, 0, 0, 0.54)',
-        marginBottom: '10px'
-      },
-      listStyle: {
-        fontSize: '12px',
-        paddingBottom: '10px',
-        display: 'flex',
-        justifyContent: 'space-between'
-      },
-      listItemStyle: {
-        color: '#404041',
-        fontSize: '13px'
-      }
-    };
+    const { artifact, onExpansion } = self.props;
 
     return (
       <div className={artifact.name == null ? 'muted' : null}>
@@ -95,7 +94,7 @@ export default class SelectedArtifact extends React.Component {
               disabled={!self.state.descEdit}
               value={self.state.description}
               onKeyDown={e => this._onToggleEditing(e)}
-              onChange={e => this._descEdit(e.target.value)}
+              onChange={e => self.setState({ description: e.target.value })}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton style={styles.editButton} onClick={e => self._onToggleEditing(e)}>
@@ -146,7 +145,7 @@ export default class SelectedArtifact extends React.Component {
           Download Artifact
         </Button>
         <div className="margin-left inline">
-          <Button onClick={() => removeArtifact(artifact)}>
+          <Button onClick={() => self.props.showRemoveArtifactDialog(true)}>
             <CancelIcon className="red auth buttonLabelIcon" />
             Remove this Artifact?
           </Button>
@@ -155,3 +154,7 @@ export default class SelectedArtifact extends React.Component {
     );
   }
 }
+
+const actionCreators = { getArtifactUrl, showRemoveArtifactDialog };
+
+export default connect(null, actionCreators)(SelectedArtifact);

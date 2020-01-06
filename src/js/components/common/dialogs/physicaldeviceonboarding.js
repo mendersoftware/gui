@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import ReactTooltip from 'react-tooltip';
 
@@ -8,27 +9,26 @@ import CopyPasteIcon from '@material-ui/icons/FileCopy';
 import HelpIcon from '@material-ui/icons/Help';
 
 import AutoSelect from '../forms/autoselect';
-import AppActions from '../../../actions/app-actions';
-import { findLocalIpAddress, getDebConfigurationCode } from '../../../helpers';
+import { setOnboardingApproach, setOnboardingDeviceType } from '../../../actions/userActions';
+import { findLocalIpAddress } from '../../../actions/appActions';
+import { getDebConfigurationCode } from '../../../helpers';
 import { advanceOnboarding } from '../../../utils/onboardingmanager';
-import AppStore from '../../../stores/app-store';
 
-export default class PhysicalDeviceOnboarding extends React.Component {
+export class PhysicalDeviceOnboarding extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       selection: null,
-      ipAddress: AppStore.getHostAddress(),
       copied: false
     };
   }
 
   componentDidMount() {
     const self = this;
-    if (!self.state.ipAddress || self.state.ipAddress === 'X.X.X.X') {
-      findLocalIpAddress().then(ipAddress => self.setState({ ipAddress }));
+    if (!self.props.ipAddress || self.props.ipAddress === 'X.X.X.X') {
+      self.props.findLocalIpAddress();
     }
-    AppActions.setOnboardingApproach('physical');
+    self.props.setOnboardingApproach('physical');
   }
 
   copied() {
@@ -41,17 +41,14 @@ export default class PhysicalDeviceOnboarding extends React.Component {
   }
 
   onSelect(deviceType) {
-    AppActions.setOnboardingDeviceType(deviceType);
+    this.props.setOnboardingDeviceType(deviceType);
     this.setState({ selection: deviceType });
   }
 
   render() {
     const self = this;
-    const { ipAddress, selection } = self.state;
-    const { token } = self.props;
-    const isHosted = AppStore.getIsHosted();
-    const isEnterprise = AppStore.getIsEnterprise();
-    const debPackageVersion = AppStore.getMenderDebPackageVersion();
+    const { selection } = self.state;
+    const { ipAddress, isHosted, isEnterprise, token, debPackageVersion } = self.props;
 
     const codeToCopy = getDebConfigurationCode(ipAddress, isHosted, isEnterprise, token, debPackageVersion, selection);
 
@@ -132,3 +129,17 @@ export default class PhysicalDeviceOnboarding extends React.Component {
     return <div>{steps[self.props.progress]}</div>;
   }
 }
+
+const actionCreators = { findLocalIpAddress, setOnboardingApproach, setOnboardingDeviceType };
+
+const mapStateToProps = state => {
+  return {
+    ipAddress: state.app.hostAddress,
+    isEnterprise: state.app.features.isEnterprise,
+    isHosted: state.app.features.isHosted,
+    debPackageVersion: state.app.menderDebPackageVersion,
+    token: state.users.organization.tenant_token
+  };
+};
+
+export default connect(mapStateToProps, actionCreators)(PhysicalDeviceOnboarding);

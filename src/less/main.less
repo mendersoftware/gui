@@ -1147,14 +1147,17 @@ table thead.clickable tr > th:first-child {
 
 .report-list,
 .list-item {
-  display: inline-block;
-  margin-right: 3%;
-  width: 30%;
   vertical-align: top;
-  -webkit-line-clamp: 3;
-
   &.list-item-large {
     width: 60%;
+  }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    & > div {
+      flex: 0 45%;
+      margin-right: 2 * @defaultGutterWidth;
+    }
   }
 }
 
@@ -2541,7 +2544,7 @@ div.shake-alert {
       height: @defaultGutterWidth;
     }
     &.credit-warning .MuiLinearProgress-bar {
-      background-color: @menderwarning;
+      background-color: @errorStyleColor;
     }
   }
   .billing-item {

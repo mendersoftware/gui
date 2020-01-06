@@ -1,13 +1,17 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 import Button from '@material-ui/core/Button';
 
-import AppActions from '../../actions/app-actions';
+import { getDevicesByStatus } from '../../actions/deviceActions';
+import { setOnboardingComplete, setShowOnboardingHelp, setShowCreateArtifactDialog } from '../../actions/userActions';
+import * as DeviceConstants from '../../constants/deviceConstants';
 import { getDemoDeviceAddress } from '../../helpers';
 import { advanceOnboarding } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
 
-export default class DeploymentCompleteTip extends React.Component {
+export class DeploymentCompleteTip extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -15,26 +19,28 @@ export default class DeploymentCompleteTip extends React.Component {
       targetUrl: ''
     };
   }
+
   componentDidMount() {
     const self = this;
-    AppActions.getDevicesByStatus('accepted')
-      .then(getDemoDeviceAddress)
+    self.props
+      .getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted)
+      .then(() => getDemoDeviceAddress(self.props.acceptedDevices))
       .catch(e => console.log(e))
       .then(targetUrl => self.setState({ targetUrl, loading: false }));
   }
 
   onClose() {
-    AppActions.setShowOnboardingHelp(false);
-    AppActions.setOnboardingComplete(false);
+    this.props.setShowOnboardingHelp(false);
+    this.props.setOnboardingComplete(false);
   }
 
   onClick() {
-    AppActions.setOnboardingComplete(false);
+    this.props.setOnboardingComplete(false);
     const url = this.state.targetUrl ? this.state.targetUrl : this.props.targetUrl;
     const parametrizedAddress = `${url}/index.html?source=${encodeURIComponent(window.location)}`;
     advanceOnboarding('deployments-past-completed');
     window.open(parametrizedAddress, '_blank');
-    AppActions.setShowCreateArtifactDialog(true);
+    this.props.setShowCreateArtifactDialog(true);
     this.onClose();
   }
 
@@ -56,3 +62,15 @@ export default class DeploymentCompleteTip extends React.Component {
     );
   }
 }
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ getDevicesByStatus, setOnboardingComplete, setShowOnboardingHelp, setShowCreateArtifactDialog }, dispatch);
+};
+
+const mapStateToProps = state => {
+  return {
+    acceptedDevices: state.devices.byStatus.accepted.deviceIds.map(id => state.devices.byId[id])
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DeploymentCompleteTip);

@@ -1,16 +1,7 @@
 import React from 'react';
 
 // material ui
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import InputLabel from '@material-ui/core/InputLabel';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
+import { FormControl, FormHelperText, IconButton, Input, InputLabel, ListItem, ListItemText, MenuItem, TextField } from '@material-ui/core';
 
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 
@@ -19,8 +10,7 @@ export default class FilterItem extends React.Component {
     super(props, context);
     this.state = {
       selectedFilterKey: this.props.filter.key || '', // this refers to the selected filter with key as the id
-      selectedValue: this.props.filter.value || '', // while this is the value that is applied with the filter
-      filters: this.props.filters || []
+      selectedValue: this.props.filter.value || '' // while this is the value that is applied with the filter
     };
   }
   _updateFilterValue(selectedValue) {
@@ -31,7 +21,7 @@ export default class FilterItem extends React.Component {
   }
   render() {
     const self = this;
-    const { filters, filterAttributes, index } = self.props;
+    const { filter, filters, filterAttributes, index } = self.props;
 
     let availableFilters = [
       <MenuItem key="filter-placeholder" value="" disabled>
@@ -60,29 +50,26 @@ export default class FilterItem extends React.Component {
     return (
       <ListItem className="filterPair">
         <ListItemText>
-          <TextField
-            select
-            value={self.state.selectedFilterKey}
-            label="Filter by"
-            onChange={event => self.setState({ selectedFilterKey: event.target.value })}
-            InputProps={{
-              endAdornment: self.state.selectedFilterKey ? (
-                <InputAdornment position="end">
-                  <IconButton onClick={() => self._removeFilter()}>
-                    <RemoveCircleIcon />
-                  </IconButton>
-                </InputAdornment>
-              ) : null
-            }}
-          >
-            {availableFilters}
-          </TextField>
-
+          <div className="flexbox space-between" style={{ alignItems: 'flex-end' }}>
+            <TextField
+              select
+              value={filter.key || self.state.selectedFilterKey}
+              label="Filter by"
+              onChange={event => self.setState({ selectedFilterKey: event.target.value })}
+            >
+              {availableFilters}
+            </TextField>
+            {!!self.state.selectedFilterKey && (
+              <IconButton onClick={() => self._removeFilter()} size="small">
+                <RemoveCircleIcon />
+              </IconButton>
+            )}
+          </div>
           <FormControl error={Boolean(self.state.errortext)}>
             <InputLabel htmlFor={`filter-${index}`}>Value</InputLabel>
             <Input
               id={`filter-${index}`}
-              value={self.state.selectedValue}
+              value={filter.value || self.state.selectedValue}
               placeholder="Value"
               fullWidth={true}
               disabled={!self.state.selectedFilterKey}

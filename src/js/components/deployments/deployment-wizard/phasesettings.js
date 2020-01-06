@@ -38,7 +38,7 @@ export default class PhaseSettings extends React.Component {
     // if new remainder will be 0 or negative remove phase leave last phase to get remainder
     if (remainder < 1) {
       newPhases.pop();
-      newPhases[newPhases.length-1].batch_size = null;
+      newPhases[newPhases.length - 1].batch_size = null;
     }
     this.props.deploymentSettings(newPhases, 'phases');
   }
@@ -69,9 +69,9 @@ export default class PhaseSettings extends React.Component {
     phases.splice(index, 1);
 
     // remove batch size from new last phase, use remainder
-    delete phases[phases.length-1].batch_size;
+    delete phases[phases.length - 1].batch_size;
 
-    if (phases.length===1) {
+    if (phases.length === 1) {
       delete phases[0].delay;
       this.props.deploymentSettings(phases, 'phases');
     } else {
@@ -91,79 +91,93 @@ export default class PhaseSettings extends React.Component {
     const remainder = getRemainderPercent(props.phases);
 
     // disable 'add phase' button if last phase/remainder has only 1 device left
-    const disableAdd = ((remainder/100)*props.numberDevices ) <= 1;
-    const phases = props.phases ? props.phases.map((phase, index) => {
-      let max = index > 0 ? 100-(props.phases[index-1].batch_size) : 100;
-      const deviceCount = (index === props.phases.length-1) 
-        ? Math.ceil((props.numberDevices / 100) * (phase.batch_size || remainder))
-        : Math.floor((props.numberDevices / 100) * phase.batch_size);
+    const disableAdd = (remainder / 100) * props.numberDevices <= 1;
+    const phases = props.phases
+      ? props.phases.map((phase, index) => {
+          let max = index > 0 ? 100 - props.phases[index - 1].batch_size : 100;
+          const deviceCount =
+            index === props.phases.length - 1
+              ? Math.ceil((props.numberDevices / 100) * (phase.batch_size || remainder))
+              : Math.floor((props.numberDevices / 100) * phase.batch_size);
 
-      const startTime = !(index || phase.start_ts) ? new Date().toISOString() : phase.start_ts;
-      return (
-        <TableRow key={index}>
-          <TableCell component="th" scope="row">
-            <Chip size="small" label={`Phase ${index+1}`} />
-          </TableCell>
-          <TableCell>{phase.batch_size && (phase.batch_size<100) ? 
-            <Input
-              value={phase.batch_size}
-              margin="dense"
-              onChange={event => self.updateBatchSize(event.target.value, index)}
-              endAdornment={<InputAdornment className={(deviceCount<1) ? 'warning' : ''} position="end">%</InputAdornment>}
-              disabled={(self.props.disabled && deviceCount>=1) ? true : false}
-              inputProps={{
-                step: 1,
-                min: 1,
-                max: max,
-                type: 'number',
-              }}
-            />
-            : phase.batch_size || remainder}
-          <span className={(deviceCount<1) ? 'warning info' : 'info'} style={{marginLeft:'5px'}}>{`(${deviceCount} ${pluralize('device', deviceCount)})`}</span>
-
-          {(deviceCount<1) ? <div className="warning">Phases must have at least 1 device</div> : null }
-          </TableCell>
-          <TableCell><Time value={startTime} format="YYYY-MM-DD HH:mm" /></TableCell>
-          <TableCell>
-            { phase.delay && (index!==props.phases.length-1) ?
-              ( 
-                <div>
+          const startTime = !(index || phase.start_ts) ? new Date().toISOString() : phase.start_ts;
+          return (
+            <TableRow key={index}>
+              <TableCell component="th" scope="row">
+                <Chip size="small" label={`Phase ${index + 1}`} />
+              </TableCell>
+              <TableCell>
+                {phase.batch_size && phase.batch_size < 100 ? (
                   <Input
-                    value={phase.delay}
+                    value={phase.batch_size}
                     margin="dense"
-                    onChange={event => self.updateDelay(event.target.value, index)}
+                    onChange={event => self.updateBatchSize(event.target.value, index)}
+                    endAdornment={
+                      <InputAdornment className={deviceCount < 1 ? 'warning' : ''} position="end">
+                        %
+                      </InputAdornment>
+                    }
+                    disabled={self.props.disabled && deviceCount >= 1 ? true : false}
                     inputProps={{
                       step: 1,
                       min: 1,
-                      max: 720,
-                      type: 'number',
+                      max: max,
+                      type: 'number'
                     }}
                   />
+                ) : (
+                  phase.batch_size || remainder
+                )}
+                <span className={deviceCount < 1 ? 'warning info' : 'info'} style={{ marginLeft: '5px' }}>{`(${deviceCount} ${pluralize(
+                  'device',
+                  deviceCount
+                )})`}</span>
 
-                  <Select
-                    onChange={event => this.handleDelayToggle(event.target.value, index)}
-                    value={phase.delayUnit || 'hours'}
-                    style={{ marginLeft: '5px' }}
-                  >
-                    <MenuItem value={'minutes'}>Minutes</MenuItem>
-                    <MenuItem value={'hours'}>Hours</MenuItem>
-                    <MenuItem value={'days'}>Days</MenuItem>
-                  </Select>
-                </div>
-              ) : (
-                '-'
-              )}
-          </TableCell>
-          <TableCell>
-            {index >= 1 ? (
-              <IconButton onClick={() => self.removePhase(index)}>
-                <CancelIcon />
-              </IconButton>
-            ) : null}
-          </TableCell>
-        </TableRow>
-      );
-    }) : null;
+                {deviceCount < 1 ? <div className="warning">Phases must have at least 1 device</div> : null}
+              </TableCell>
+              <TableCell>
+                <Time value={startTime} format="YYYY-MM-DD HH:mm" />
+              </TableCell>
+              <TableCell>
+                {phase.delay && index !== props.phases.length - 1 ? (
+                  <div>
+                    <Input
+                      value={phase.delay}
+                      margin="dense"
+                      onChange={event => self.updateDelay(event.target.value, index)}
+                      inputProps={{
+                        step: 1,
+                        min: 1,
+                        max: 720,
+                        type: 'number'
+                      }}
+                    />
+
+                    <Select
+                      onChange={event => this.handleDelayToggle(event.target.value, index)}
+                      value={phase.delayUnit || 'hours'}
+                      style={{ marginLeft: '5px' }}
+                    >
+                      <MenuItem value={'minutes'}>Minutes</MenuItem>
+                      <MenuItem value={'hours'}>Hours</MenuItem>
+                      <MenuItem value={'days'}>Days</MenuItem>
+                    </Select>
+                  </div>
+                ) : (
+                  '-'
+                )}
+              </TableCell>
+              <TableCell>
+                {index >= 1 ? (
+                  <IconButton onClick={() => self.removePhase(index)}>
+                    <CancelIcon />
+                  </IconButton>
+                ) : null}
+              </TableCell>
+            </TableRow>
+          );
+        })
+      : null;
 
     return (
       <div>

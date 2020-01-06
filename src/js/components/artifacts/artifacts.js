@@ -1,146 +1,114 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, LinearProgress } from '@material-ui/core';
 
-import AppActions from '../../actions/app-actions';
-import { AppContext } from '../../contexts/app-context';
+import { setSnackbar } from '../../actions/appActions';
+import { selectDevices } from '../../actions/deviceActions';
+import { getReleases, removeArtifact, selectArtifact, selectRelease, showRemoveArtifactDialog } from '../../actions/releaseActions';
 import { preformatWithRequestID } from '../../helpers';
-import AppStore from '../../stores/app-store';
 
 import ReleaseRepository from './releaserepository';
 import ReleasesList from './releaseslist';
 
-export default class Artifacts extends React.Component {
+export class Artifacts extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       refreshArtifactsLength: 30000, //60000,
       doneLoading: false,
-      ...this._getState(),
       remove: false
     };
   }
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
+  componentDidUpdate(prevProps) {
+    if (prevProps.releases.length !== this.props.releases.length && this.props.releases.length) {
+      const selectedRelease = this.props.releases.find(release => prevProps.releases.every(item => item.Name !== release.Name)) || this.props.releases[0];
+      this.props.selectRelease(selectedRelease);
+    }
+    if (this.props.params && this.props.params.artifactVersion && prevProps.params && prevProps.params.artifactVersion !== this.props.params.artifactVersion) {
+      // selected artifacts
+      self.props.selectArtifact(this.props.params.artifactVersion);
+    }
   }
   componentDidMount() {
-    this.artifactTimer = setInterval(() => this._getReleases(), this.state.refreshArtifactsLength);
-    this._getReleases();
+    const self = this;
+    const { artifactVersion } = self.props.match.params;
+    if (!self.props.onboardingComplete) {
+      self.props.selectDevices([]);
+    }
+    if (!self.props.releases.length) {
+      self._getReleases(artifactVersion);
+    } else {
+      self.setState({ doneLoading: true }, () => {
+        if (artifactVersion) {
+          self.props.selectRelease(artifactVersion);
+        } else {
+          self.props.selectRelease(self.props.releases[0]);
+        }
+      });
+    }
+    self.artifactTimer = setInterval(() => self._getReleases(), self.state.refreshArtifactsLength);
   }
   componentWillUnmount() {
     clearInterval(this.artifactTimer);
-    AppStore.removeChangeListener(this._onChange.bind(this));
-  }
-  _getState() {
-    const releases = AppStore.getReleases();
-    let selectedRelease = this.state ? this.state.selectedRelease : null;
-    const staleSelection = selectedRelease && !releases.find(item => item.name === selectedRelease.name);
-    if (staleSelection || (!selectedRelease && releases.length)) {
-      selectedRelease = releases[0];
-    }
-    if (this.state && this.state.releases.length < releases.length) {
-      selectedRelease = releases.find(release => this.state.releases.every(item => item.Name !== release.Name));
-    }
-    return {
-      releases,
-      selectedRelease,
-      showHelptips: AppStore.showHelptips()
-    };
-  }
-  _onChange() {
-    const self = this;
-    let state = self._getState();
-    if (this.props.params) {
-      if (this.props.params.artifactVersion) {
-        // selected artifacts
-        var artifact = AppStore.getSoftwareArtifact('name', this.props.params.artifactVersion);
-        state.selectedRelease = self.state.releases.find(item => item.Artifacts.find(releaseArtifact => releaseArtifact.id === artifact.id));
-        state.selectedArtifact = artifact;
-      }
-    }
-    self.setState(state);
-  }
-
-  onSelectRelease(release) {
-    this.setState({ selectedRelease: release });
   }
 
   onFilterReleases(releases) {
-    let selectedRelease = this.state.selectedRelease;
+    let selectedRelease = this.props.selectedRelease;
     if (releases && !releases.find(item => selectedRelease && selectedRelease.Name === item.Name)) {
       selectedRelease = releases.length ? releases[0] : null;
     }
-    if (this.state.selectedRelease != selectedRelease) {
-      this.setState({ selectedRelease });
+    if (this.props.selectedRelease != selectedRelease) {
+      this.props.selectRelease(selectedRelease);
     }
   }
 
-  _getReleases() {
+  _getReleases(artifactVersion) {
     var self = this;
-    return Promise.all([AppActions.getReleases(), AppActions.getArtifacts()])
+    return self.props
+      .getReleases()
       .catch(err => {
         var errormsg = err.error || 'Please check your connection';
-        AppActions.setSnackbar(errormsg, 5000, '');
+        self.props.setSnackbar(errormsg, 5000, '');
         console.log(errormsg);
       })
       .finally(() => {
+        if (artifactVersion) {
+          self.props.selectRelease(artifactVersion);
+        }
         self.setState({ doneLoading: true });
       });
   }
-  _removeDialog(artifact) {
-    AppActions.setSnackbar('');
-    if (artifact) {
-      this.setState({ remove: true, artifact });
-    } else {
-      this.setState({ remove: false, artifact: null });
-    }
-  }
+
   _removeArtifact(artifact) {
     const self = this;
-    return AppActions.removeArtifact(artifact.id)
+    return self.props
+      .removeArtifact(artifact.id)
       .then(() => {
-        AppActions.setSnackbar('Artifact was removed', 5000, '');
+        self.props.setSnackbar('Artifact was removed', 5000, '');
       })
       .catch(err => {
         var errMsg = err.res.body.error || '';
-        AppActions.setSnackbar(preformatWithRequestID(err.res, `Error removing artifact: ${errMsg}`), null, 'Copy to clipboard');
+        self.props.setSnackbar(preformatWithRequestID(err.res, `Error removing artifact: ${errMsg}`), null, 'Copy to clipboard');
       })
-      .finally(() => self.setState({ remove: false }));
+      .finally(() => self.props.showRemoveArtifactDialog(false));
   }
   render() {
     const self = this;
-    const { artifact, doneLoading, selectedRelease, showHelptips, releases, remove } = self.state;
-    const { artifactProgress } = self.props;
-    const currentSelectedRelease = releases.find(item => selectedRelease && item.Name === selectedRelease.Name);
+    const { artifact, doneLoading } = self.state;
+    const { artifactProgress, releases, showRemoveDialog, selectedArtifact, selectedRelease, showRemoveArtifactDialog } = self.props;
     return (
       <div style={{ height: '100%' }}>
         <div className="repository">
           <ReleasesList
             releases={releases}
-            selectedRelease={currentSelectedRelease}
-            onSelect={release => self.onSelectRelease(release)}
-            onFilter={releases => self.onFilterReleases(releases)}
+            selectedRelease={selectedRelease}
+            onSelect={release => self.props.selectRelease(release)}
+            onFilter={rels => self.onFilterReleases(rels)}
             loading={!doneLoading}
           />
-          <AppContext.Consumer>
-            {({ uploadArtifact }) => (
-              <ReleaseRepository
-                artifacts={currentSelectedRelease ? currentSelectedRelease.Artifacts : []}
-                uploadArtifact={uploadArtifact}
-                showHelptips={showHelptips}
-                removeArtifact={artifact => self._removeDialog(artifact)}
-                refreshArtifacts={() => self._getReleases()}
-                loading={!doneLoading}
-                release={currentSelectedRelease}
-                hasReleases={releases.length}
-              />
-            )}
-          </AppContext.Consumer>
+          <ReleaseRepository refreshArtifacts={() => self._getReleases()} loading={!doneLoading} release={selectedRelease} />
         </div>
         {artifactProgress ? (
           <div id="progressBarContainer">
@@ -149,15 +117,15 @@ export default class Artifacts extends React.Component {
           </div>
         ) : null}
 
-        <Dialog open={remove}>
+        <Dialog open={showRemoveDialog}>
           <DialogTitle>Remove this artifact?</DialogTitle>
           <DialogContent>
             Are you sure you want to remove <i>{(artifact || {}).name}</i>?
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => this._removeDialog(null)}>Cancel</Button>
+            <Button onClick={() => showRemoveArtifactDialog(false)}>Cancel</Button>
             <div style={{ flexGrow: 1 }} />
-            <Button variant="contained" color="secondary" onClick={() => self._removeArtifact(artifact)}>
+            <Button variant="contained" color="secondary" onClick={() => self._removeArtifact(selectedArtifact || artifact || selectedRelease.Artifacts[0])}>
               Remove artifact
             </Button>
           </DialogActions>
@@ -166,3 +134,18 @@ export default class Artifacts extends React.Component {
     );
   }
 }
+
+const actionCreators = { getReleases, removeArtifact, selectArtifact, selectDevices, selectRelease, showRemoveArtifactDialog, setSnackbar };
+
+const mapStateToProps = state => {
+  return {
+    artifactProgress: state.releases.uploadProgress,
+    onboardingComplete: state.users.onboarding.complete,
+    releases: Object.values(state.releases.byId),
+    selectedArtifact: state.releases.selectedArtifact,
+    selectedRelease: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null,
+    showRemoveDialog: state.releases.showRemoveDialog
+  };
+};
+
+export default withRouter(connect(mapStateToProps, actionCreators)(Artifacts));

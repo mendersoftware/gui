@@ -27,8 +27,8 @@ export default class CompletedDeployments extends React.PureComponent {
       ),
       targetLabel: 'View reports'
     };
-    return counter > 0 ? (
-      <BaseWidget {...this.props} isActive={true} main={widgetMain} onClick={() => this.props.onClick({ route: 'deployments/active' })} />
-    ) : null;
+    const cutoffDay = this.props.cutoffDate.toISOString();
+    const route = `deployments/finished?from=${cutoffDay.slice(0, cutoffDay.indexOf('T'))}`;
+    return counter > 0 && <BaseWidget {...this.props} isActive={true} main={widgetMain} onClick={() => this.props.onClick({ route })} />;
   }
 }

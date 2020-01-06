@@ -1,7 +1,8 @@
-import cookie from 'react-cookie';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
 export function isLoggedIn() {
-  return cookie.load('JWT');
+  return cookies.get('JWT');
 }
 
 export function unauthorizedRedirect(req) {
@@ -14,17 +15,17 @@ export function unauthorizedRedirect(req) {
 }
 
 export function logout() {
-  cookie.remove('JWT');
+  cookies.remove('JWT');
   window.location.replace('#/login');
 }
 
 export function updateMaxAge() {
-  var userCookie = cookie.load('JWT');
+  var userCookie = cookies.get('JWT');
   if (userCookie && expirySet()) {
-    cookie.save('JWT', userCookie, { maxAge: 900 });
+    cookies.set('JWT', userCookie, { maxAge: 900 });
   }
 }
 
 export function expirySet() {
-  return cookie.load('noExpiry') !== 'true';
+  return cookies.get('noExpiry') !== 'true';
 }

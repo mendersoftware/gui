@@ -12,24 +12,24 @@ export default class Filters extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      showFilters: false,
-      filters: this.props.filters
+      showFilters: false
     };
   }
   _addFilter() {
-    var filterArray = this.state.filters;
-    filterArray.push({ key: '', value: '' });
-    this.setState({ filters: filterArray });
+    this.props.onFilterChange([...this.props.filters, { key: '', value: '' }]);
   }
   _updateFilters(filter, index) {
-    let filters = this.state.filters;
+    let filters = this.props.filters;
     filters[index] = filter;
-    this.setState({ filters }, this.props.onFilterChange(filters));
+    this.props.onFilterChange(filters);
   }
   _removeFilter(index) {
-    var filterArray = this.state.filters;
-    filterArray.splice(index, 1);
-    this.setState({ filters: filterArray }, this.props.onFilterChange(filterArray));
+    const filter = this.props.filters.splice(index, 1)[0];
+    if (filter.key === 'id') {
+      this.props.resetIdFilter();
+    }
+
+    this.props.onFilterChange(this.props.filters);
   }
   _toggleNav() {
     this.setState({
@@ -37,27 +37,28 @@ export default class Filters extends React.Component {
     });
   }
   _clearFilters() {
-    this.setState({ filters: [] }, this.props.onFilterChange([]));
+    this.props.onFilterChange([]);
   }
   render() {
     const self = this;
-    const filters = self.state.filters.length ? self.state.filters : [{ key: '', value: '' }];
-    var filterCount = 0;
-    const filterAttributes = Object.entries(self.props.attributes).map(item => ({ key: item[0], value: item[1] }));
-
-    const remainingFilters = filterAttributes.reduce((accu, item) => {
-      const isInUse = filters.find(filter => filter.key === item.key);
-      if (isInUse) {
-        filterCount = filterCount + 1;
-      } else {
-        accu.push(item);
-      }
-      return accu;
-    }, []);
-
+    const filters = self.props.filters.length ? self.props.filters : [{ key: '', value: '' }];
+    const { filterAttributes, filterCount, remainingFilters } = [{ key: 'id', value: 'Device ID' }, ...self.props.attributes].reduce(
+      (accu, value) => {
+        const currentFilter = value.key ? value : { value, key: value };
+        accu.filterAttributes.push(currentFilter);
+        const isInUse = filters.find(filter => filter.key === currentFilter.key);
+        if (isInUse) {
+          accu.filterCount += 1;
+        } else {
+          accu.remainingFilters.push(currentFilter);
+        }
+        return accu;
+      },
+      { filterAttributes: [], filterCount: 0, remainingFilters: [] }
+    );
     const filterItems = filters.map((item, index) => (
       <FilterItem
-        key={self.state.filters.length ? index : `refresh-${index}`}
+        key={self.props.filters.length ? item.key : `refresh-${item.key}`}
         index={index}
         filter={item}
         filters={remainingFilters}
@@ -80,14 +81,14 @@ export default class Filters extends React.Component {
           docked="false"
           anchor="right"
           opensecondary="true"
-          PaperProps={{ style: { width: 320, padding: 20, ...drawerStyles } }}
+          PaperProps={{ style: { width: 335, padding: 15, ...drawerStyles } }}
           BackdropProps={{ style: drawerStyles }}
           onClose={() => self.setState({ showFilters: false })}
         >
           <IconButton
             className="closeSlider"
             onClick={() => self.setState({ showFilters: false })}
-            style={{ position: 'absolute', left: '-25px', background: 'white', top: '20px' }}
+            style={{ position: 'absolute', left: '-25px', background: 'white', top: 15 }}
           >
             <CloseIcon />
           </IconButton>

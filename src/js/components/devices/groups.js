@@ -2,26 +2,13 @@ import React from 'react';
 import ReactTooltip from 'react-tooltip';
 import { AddGroup } from '../helptips/helptooltips';
 
-import AppConstants from '../../constants/app-constants';
+import * as DeviceConstants from '../../constants/deviceConstants';
 
 // material ui
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
+import { Divider, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { Add as AddIcon, Help as HelpIcon } from '@material-ui/icons';
 
-import AddIcon from '@material-ui/icons/Add';
-import HelpIcon from '@material-ui/icons/Help';
-import AppStore from '../../stores/app-store';
-
-require('../common/prototype/Array.prototype.equals');
-
-export default class Groups extends React.Component {
-  dialogToggle() {
-    this.props.acceptedCount ? this.props.openGroupDialog() : null;
-  }
-
+export default class Groups extends React.PureComponent {
   render() {
     var allLabel = <span>All devices</span>;
 
@@ -32,9 +19,9 @@ export default class Groups extends React.Component {
           numDevs = this.props.groupDevices[group] || null;
         }
         var boundClick = () => this.props.changeGroup(group, numDevs);
-        const isUngroupedGroup = group === AppConstants.UNGROUPED_GROUP.id || group === AppConstants.UNGROUPED_GROUP.name;
+        const isUngroupedGroup = group === DeviceConstants.UNGROUPED_GROUP.id || group === DeviceConstants.UNGROUPED_GROUP.name;
         if (isUngroupedGroup) {
-          group = AppConstants.UNGROUPED_GROUP.name;
+          group = DeviceConstants.UNGROUPED_GROUP.name;
         }
         var isSelected = group === this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : {};
         var groupLabel = <span>{decodeURIComponent(group)}</span>;
@@ -52,7 +39,6 @@ export default class Groups extends React.Component {
       },
       { groups: [], ungroupedsItem: null }
     );
-    const showHelptips = AppStore.showHelptips();
 
     return (
       <div>
@@ -75,7 +61,7 @@ export default class Groups extends React.Component {
             classes={{ root: 'grouplist' }}
             disabled={!this.props.acceptedCount}
             style={this.props.acceptedCount ? null : { color: '#d4e9e7' }}
-            onClick={this.props.acceptedCount ? () => this.dialogToggle() : null}
+            onClick={this.props.acceptedCount ? () => this.props.openGroupDialog() : null}
           >
             <ListItemIcon>
               <AddIcon />
@@ -84,7 +70,7 @@ export default class Groups extends React.Component {
           </ListItem>
         </List>
 
-        {showHelptips && this.props.acceptedCount && !this.props.groups.length ? (
+        {this.props.showHelptips && this.props.acceptedCount && this.props.groups.length <= 1 ? (
           <div>
             <div id="onboard-5" className="tooltip help" data-tip data-for="groups-tip" data-event="click focus" style={{ bottom: '-10px' }}>
               <HelpIcon />

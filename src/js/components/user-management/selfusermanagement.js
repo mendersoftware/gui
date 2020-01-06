@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { Collapse, Switch, TextField } from '@material-ui/core';
 
@@ -8,54 +9,41 @@ import PasswordInput from '../common/forms/passwordinput';
 import FormButton from '../common/forms/formbutton';
 import EnterpriseNotification from '../common/enterpriseNotification';
 
-import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
+import { setSnackbar } from '../../actions/appActions';
+import { editUser, saveGlobalSettings } from '../../actions/userActions';
 
 import { preformatWithRequestID } from '../../helpers';
 
 import TwoFactorAuthSetup from './twofactorauthsetup';
 
-export default class SelfUserManagement extends React.Component {
+export class SelfUserManagement extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = { qrExpanded: false };
-    AppActions.getGlobalSettings().then(settings => {
-      if ((AppStore.getIsEnterprise() || AppStore.getIsHosted()) && !settings.hasOwnProperty('2fa')) {
-        AppActions.saveGlobalSettings(Object.assign(settings, { '2fa': 'disabled' }));
-      }
-    });
+    this.state = {
+      editEmail: false,
+      editPass: false,
+      emailFormId: new Date(),
+      qrExpanded: false
+    };
   }
 
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
-  }
-
-  _onChange() {
-    this.setState({});
-  }
-
-  componentWillUnmount() {
-    AppStore.removeChangeListener(this._onChange.bind(this));
-  }
-
-  _editSubmit(id, userData) {
+  _editSubmit(userId, userData) {
     var self = this;
-    return AppActions.editUser(id, userData)
+    return self.props
+      .editUser(userId, userData)
       .then(() => {
-        const user = { ...AppStore.getCurrentUser(), ...userData };
-        AppActions.setCurrentUser(user);
-        AppActions.setSnackbar('The user has been updated.');
+        self.props.setSnackbar('The user has been updated.');
         self.setState({ editPass: false, editEmail: false });
       })
       .catch(err => {
         console.log(err);
         var errMsg = err.res.body.error || '';
-        AppActions.setSnackbar(preformatWithRequestID(err.res, `There was an error editing the user. ${errMsg}`));
+        self.props.setSnackbar(preformatWithRequestID(err.res, `There was an error editing the user. ${errMsg}`));
       });
   }
 
   handleEmail() {
-    var uniqueId = this.state.emailFormId;
+    let uniqueId = this.state.emailFormId;
     if (this.state.editEmail) {
       uniqueId = new Date();
       // changing unique id will reset form values
@@ -68,53 +56,51 @@ export default class SelfUserManagement extends React.Component {
   }
 
   handle2FAState(required) {
-    this.setState({ qrExpanded: false });
-    AppActions.saveGlobalSettings(Object.assign(AppStore.getGlobalSettings() || {}, { '2fa': required ? 'enabled' : 'disabled' })).then(() =>
-      required ? AppActions.setSnackbar('Two Factor authentication set up successfully.') : null
-    );
+    const self = this;
+    self.setState({ qrExpanded: false });
+    self.props
+      .saveGlobalSettings({ '2fa': required ? 'enabled' : 'disabled' })
+      .then(() => (required ? self.props.setSnackbar('Two Factor authentication set up successfully.') : null));
   }
 
   render() {
     const self = this;
     const { editEmail, editPass, emailFormId, qrExpanded } = self.state;
-    const has2fa = AppStore.get2FARequired();
-    const currentUser = AppStore.getCurrentUser();
-    const email = (currentUser || { email: '' }).email;
-    const isEnterprise = AppStore.getIsEnterprise() || AppStore.getIsHosted();
+    const { currentUser, has2FA, isEnterprise } = self.props;
+    const email = currentUser.email;
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
         <h2 className="margin-top-small">My account</h2>
-
-        <Form
-          className="flexbox space-between"
-          onSubmit={userdata => self._editSubmit(currentUser.id, userdata)}
-          handleCancel={() => self.handleEmail()}
-          submitLabel="Save"
-          showButtons={editEmail}
-          buttonColor="secondary"
-          submitButtonId="submit_email"
-          uniqueId={emailFormId}
-        >
-          {!editEmail && currentUser.email ? (
-            <>
-              <TextField
-                label="Email"
-                key={email}
-                InputLabelProps={{ shrink: !!email }}
-                disabled
-                defaultValue={email}
-                style={{ width: '400px', maxWidth: '100%' }}
-              />
-              <FormButton
-                className="inline-block"
-                color="primary"
-                id="change_email"
-                label="Change email"
-                style={{ margin: '30px 0 0 15px' }}
-                handleClick={() => self.handleEmail()}
-              />
-            </>
-          ) : (
+        {!editEmail && currentUser.email ? (
+          <div className="flexbox space-between">
+            <TextField
+              label="Email"
+              key={email}
+              InputLabelProps={{ shrink: !!email }}
+              disabled
+              defaultValue={email}
+              style={{ width: '400px', maxWidth: '100%' }}
+            />
+            <FormButton
+              className="inline-block"
+              color="primary"
+              id="change_email"
+              label="Change email"
+              style={{ margin: '30px 0 0 15px' }}
+              handleClick={() => self.handleEmail()}
+            />
+          </div>
+        ) : (
+          <Form
+            className="flexbox space-between"
+            onSubmit={userdata => self._editSubmit(currentUser.id, userdata)}
+            handleCancel={() => self.handleEmail()}
+            submitLabel="Save"
+            showButtons={editEmail}
+            buttonColor="secondary"
+            submitButtonId="submit_email"
+            uniqueId={emailFormId}
+          >
             <TextInput
               hint="Email"
               label="Email"
@@ -125,19 +111,36 @@ export default class SelfUserManagement extends React.Component {
               focus={true}
               InputLabelProps={{ shrink: !!email }}
             />
-          )}
-        </Form>
-
-        <Form
-          onSubmit={userdata => self._editSubmit(userdata)}
-          handleCancel={() => self.handlePass()}
-          submitLabel="Save"
-          submitButtonId="submit_pass"
-          buttonColor="secondary"
-          showButtons={editPass}
-          className="margin-top flexbox space-between"
-        >
-          {editPass ? (
+          </Form>
+        )}
+        {!editPass ? (
+          <form className="flexbox space-between">
+            <TextField
+              label="Password"
+              key="password-placeholder"
+              disabled
+              defaultValue="********"
+              style={{ width: '400px', maxWidth: '100%' }}
+              type="password"
+            />
+            <FormButton
+              color="primary"
+              id="change_password"
+              label="Change password"
+              style={{ margin: '30px 0 0 15px' }}
+              handleClick={() => self.handlePass()}
+            />
+          </form>
+        ) : (
+          <Form
+            onSubmit={userdata => self._editSubmit(currentUser.id, userdata)}
+            handleCancel={() => self.handlePass()}
+            submitLabel="Save"
+            submitButtonId="submit_pass"
+            buttonColor="secondary"
+            showButtons={editPass}
+            className="margin-top flexbox space-between"
+          >
             <PasswordInput
               className="edit-pass"
               id="password"
@@ -148,18 +151,17 @@ export default class SelfUserManagement extends React.Component {
               onClear={() => self.handleButton()}
               edit={false}
             />
-          ) : (
-            <FormButton buttonHolder={true} color="primary" id="change_pass" label="Change password" handleClick={() => self.handlePass()} />
-          )}
-        </Form>
+          </Form>
+        )}
+
         {isEnterprise ? (
           <div className="margin-top">
             <div
               className="clickable flexbox space-between"
-              onClick={() => self.setState({ qrExpanded: has2fa && !qrExpanded ? self.handle2FAState(false) : !qrExpanded })}
+              onClick={() => self.setState({ qrExpanded: has2FA && !qrExpanded ? self.handle2FAState(false) : !qrExpanded })}
             >
               <p className="help-content">Enable Two Factor authentication</p>
-              <Switch checked={has2fa || qrExpanded} />
+              <Switch checked={has2FA || qrExpanded} />
             </div>
             <p className="info" style={{ width: '75%', margin: 0 }}>
               Two Factor Authentication adds a second layer of protection to your account by asking for an additional verification code each time you log in.
@@ -175,3 +177,15 @@ export default class SelfUserManagement extends React.Component {
     );
   }
 }
+
+const actionCreators = { editUser, saveGlobalSettings, setSnackbar };
+
+const mapStateToProps = state => {
+  return {
+    has2FA: state.users.globalSettings.hasOwnProperty('2fa') && state.users.globalSettings['2fa'] === 'enabled',
+    isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,
+    currentUser: state.users.byId[state.users.currentUser] || {}
+  };
+};
+
+export default connect(mapStateToProps, actionCreators)(SelfUserManagement);

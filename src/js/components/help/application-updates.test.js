@@ -3,13 +3,15 @@ import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import ApplicationUpdates from './application-updates';
 
-it('renders correctly', () => {
-  const tree = renderer
-    .create(
-      <MemoryRouter>
-        <ApplicationUpdates />
-      </MemoryRouter>
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
+describe('ApplicationUpdates Component', () => {
+  it('renders correctly', () => {
+    const tree = renderer
+      .create(
+        <MemoryRouter>
+          <ApplicationUpdates />
+        </MemoryRouter>
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

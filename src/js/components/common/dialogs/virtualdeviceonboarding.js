@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
@@ -6,10 +7,9 @@ import Button from '@material-ui/core/Button';
 
 import CopyPasteIcon from '@material-ui/icons/FileCopy';
 
-import AppActions from '../../../actions/app-actions';
-import AppStore from '../../../stores/app-store';
+import { setOnboardingApproach } from '../../../actions/userActions';
 
-export default class VirtualDeviceOnboarding extends React.Component {
+export class VirtualDeviceOnboarding extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -18,7 +18,7 @@ export default class VirtualDeviceOnboarding extends React.Component {
   }
 
   componentDidMount() {
-    AppActions.setOnboardingApproach('virtual');
+    this.props.setOnboardingApproach('virtual');
   }
 
   copied() {
@@ -31,8 +31,7 @@ export default class VirtualDeviceOnboarding extends React.Component {
 
   render() {
     const self = this;
-    const { token } = self.props;
-    const isHosted = AppStore.getIsHosted();
+    const { isHosted, token } = self.props;
 
     let codeToCopy = token
       ? `
@@ -85,3 +84,14 @@ export default class VirtualDeviceOnboarding extends React.Component {
     );
   }
 }
+
+const actionCreators = { setOnboardingApproach };
+
+const mapStateToProps = state => {
+  return {
+    isHosted: state.app.features.isHosted,
+    token: state.users.organization.tenant_token
+  };
+};
+
+export default connect(mapStateToProps, actionCreators)(VirtualDeviceOnboarding);

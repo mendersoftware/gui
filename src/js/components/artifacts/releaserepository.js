@@ -1,20 +1,16 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
 import ReactTooltip from 'react-tooltip';
 
 // material ui
-import Button from '@material-ui/core/Button';
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
+import { Button, Tooltip, Typography } from '@material-ui/core';
 
-import FileIcon from '@material-ui/icons/CloudUpload';
-import HelpIcon from '@material-ui/icons/Help';
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-import SortIcon from '@material-ui/icons/Sort';
+import { CloudUpload as FileIcon, Help as HelpIcon, KeyboardArrowRight as KeyboardArrowRightIcon, Sort as SortIcon } from '@material-ui/icons';
 
-import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
+import { setSnackbar } from '../../actions/appActions';
+import { editArtifact, uploadArtifact, selectArtifact, selectRelease } from '../../actions/releaseActions';
 import { preformatWithRequestID, customSort } from '../../helpers';
 import { ExpandArtifact } from '../helptips/helptooltips';
 import Loader from '../common/loader';
@@ -28,11 +24,10 @@ const columnHeaders = [
   { title: 'Size', name: 'size', sortable: true }
 ];
 
-export default class ReleaseRepository extends React.Component {
+export class ReleaseRepository extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      selectedArtifact: this.props.artifact || { id: null },
       sortCol: 'modified',
       sortDown: true,
       upload: false,
@@ -46,7 +41,7 @@ export default class ReleaseRepository extends React.Component {
       this._onUploadSubmit(acceptedFiles);
     }
     if (rejectedFiles.length) {
-      AppActions.setSnackbar(`File '${rejectedFiles[0].name}' was rejected. File must be of type .mender`, null);
+      this.props.setSnackbar(`File '${rejectedFiles[0].name}' was rejected. File must be of type .mender`, null);
     }
   }
   _onUploadSubmit(files) {
@@ -57,7 +52,7 @@ export default class ReleaseRepository extends React.Component {
     var meta = { description: '' };
     const uploads = files.map(file => self.props.uploadArtifact(meta, file));
     Promise.all(uploads).then(() => {
-      if (!AppStore.getOnboardingComplete() && getOnboardingStepCompleted('artifact-included-deploy-onboarding')) {
+      if (!self.props.onboardingComplete && getOnboardingStepCompleted('artifact-included-deploy-onboarding')) {
         advanceOnboarding('upload-new-artifact-tip');
       }
       self.props.refreshArtifacts();
@@ -65,40 +60,35 @@ export default class ReleaseRepository extends React.Component {
   }
 
   _onRowSelection(artifact) {
-    if (this.state.selectedArtifact === artifact) {
-      this.setState({ selectedArtifact: { id: null } });
+    if (!artifact || !this.props.selectedArtifact || this.props.selectedArtifact.id !== artifact.id) {
+      this.props.selectArtifact(artifact);
     } else {
-      this.setState({ selectedArtifact: artifact });
+      this.props.selectArtifact();
     }
-    if (!AppStore.getOnboardingComplete()) {
+    if (!this.props.onboardingComplete) {
       advanceOnboarding('artifact-included-onboarding');
     }
   }
 
   _editArtifactData(id, description) {
     var self = this;
-    var body = {
-      description: description
-    };
-    return AppActions.editArtifact(id, body)
+    return self.props
+      .editArtifact(id, { description })
       .then(() => {
-        AppActions.setSnackbar('Artifact details were updated successfully.', 5000, '');
-        var updated = self.state.selectedArtifact;
-        updated.description = description;
-        self.setState({ selectedArtifact: updated });
+        self.props.setSnackbar('Artifact details were updated successfully.', 5000, '');
         self.props.refreshArtifacts();
       })
       .catch(err => {
         var errMsg = err.res.body.error || '';
-        AppActions.setSnackbar(preformatWithRequestID(errMsg, `Artifact details couldn't be updated. ${err.error}`), null, 'Copy to clipboard');
+        self.props.setSnackbar(preformatWithRequestID(errMsg, `Artifact details couldn't be updated. ${err.error}`), null, 'Copy to clipboard');
       });
   }
 
   onCreateDeploymentFrom(release) {
-    if (!AppStore.getOnboardingComplete() && getOnboardingStepCompleted('upload-new-artifact-tip')) {
+    if (!this.props.onboardingComplete && getOnboardingStepCompleted('upload-new-artifact-tip')) {
       advanceOnboarding('artifact-modified-onboarding');
     }
-    AppActions.setDeploymentRelease(release);
+    this.props.selectRelease(release);
   }
 
   _sortColumn(col) {
@@ -111,10 +101,11 @@ export default class ReleaseRepository extends React.Component {
 
   render() {
     const self = this;
-    const { artifacts, loading, release, removeArtifact, showHelptips } = self.props;
-    const { selectedArtifact, sortDown, sortCol } = self.state;
+    const { loading, release, selectedArtifact, showHelptips, uploading } = self.props;
+    const { sortDown, sortCol } = self.state;
+    const artifacts = release ? release.Artifacts : [];
     const items = artifacts.sort(customSort(sortDown, sortCol)).map((pkg, index) => {
-      const expanded = selectedArtifact.id === pkg.id;
+      const expanded = selectedArtifact && selectedArtifact.id === pkg.id;
       return (
         <ReleaseRepositoryItem
           key={`repository-item-${index}`}
@@ -126,14 +117,12 @@ export default class ReleaseRepository extends React.Component {
           // this will be run after expansion + collapse and both need some time to fully settle
           // otherwise the measurements are off
           onExpanded={() => setTimeout(() => self.setState({}), 500)}
-          removeArtifact={removeArtifact}
           release={release}
           ref={ref => (this.repoItemAnchor = ref)}
         />
       );
     });
 
-    const uploading = AppStore.getUploadInProgress();
     const dropzoneClass = uploading ? 'dropzone disabled muted' : 'dropzone';
 
     var emptyLink = (
@@ -282,7 +271,7 @@ export default class ReleaseRepository extends React.Component {
 
           {items.length || loading ? null : (
             <div className="dashboard-placeholder fadeIn" style={{ fontSize: '16px', margin: '8vh auto' }}>
-              {this.props.hasReleases ? <p>Select a Release on the left to view its Artifact details</p> : emptyLink}
+              {this.props.releases.length > 0 ? <p>Select a Release on the left to view its Artifact details</p> : emptyLink}
             </div>
           )}
         </div>
@@ -290,3 +279,18 @@ export default class ReleaseRepository extends React.Component {
     );
   }
 }
+
+const actionCreators = { editArtifact, uploadArtifact, selectArtifact, setSnackbar, selectRelease };
+
+const mapStateToProps = state => {
+  return {
+    onboardingComplete: state.users.onboarding.complete,
+    release: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null,
+    releases: Object.values(state.releases.byId),
+    selectedArtifact: state.releases.selectedArtifact,
+    showHelptips: state.users.showHelptips,
+    uploading: state.releases.uploading
+  };
+};
+
+export default connect(mapStateToProps, actionCreators)(ReleaseRepository);

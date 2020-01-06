@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`MyOrganization Component renders correctly 1`] = `
 <div
   className="margin-top-small"
   style={
@@ -117,9 +117,7 @@ exports[`renders correctly 1`] = `
               "wordBreak": "break-all",
             }
           }
-        >
-          
-        </p>
+        />
         <button
           className="MuiButtonBase-root MuiButton-root MuiButton-text"
           disabled={false}

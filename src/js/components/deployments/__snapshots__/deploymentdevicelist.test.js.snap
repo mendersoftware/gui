@@ -1,3 +1,140 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `null`;
+exports[`ProgressDeviceList Component renders correctly 1`] = `
+<div
+  style={
+    Object {
+      "maxHeight": "40vh",
+      "overflowX": "auto",
+    }
+  }
+>
+  <table
+    className="MuiTable-root"
+  >
+    <thead
+      className="MuiTableHead-root"
+    >
+      <tr
+        className="MuiTableRow-root MuiTableRow-head"
+      >
+        <th
+          aria-sort={null}
+          className="MuiTableCell-root MuiTableCell-head"
+          scope="col"
+          style={
+            Object {
+              "background": "white",
+              "position": "sticky",
+              "top": 0,
+              "zIndex": 1,
+            }
+          }
+          tooltip="Device ID"
+        >
+          Device ID
+        </th>
+        <th
+          aria-sort={null}
+          className="MuiTableCell-root MuiTableCell-head"
+          scope="col"
+          style={
+            Object {
+              "background": "white",
+              "position": "sticky",
+              "top": 0,
+              "zIndex": 1,
+            }
+          }
+          tooltip="Device type"
+        >
+          Device type
+        </th>
+        <th
+          aria-sort={null}
+          className="MuiTableCell-root MuiTableCell-head"
+          scope="col"
+          style={
+            Object {
+              "background": "white",
+              "position": "sticky",
+              "top": 0,
+              "zIndex": 1,
+            }
+          }
+          tooltip="Current software"
+        >
+          Current software
+        </th>
+        <th
+          aria-sort={null}
+          className="MuiTableCell-root MuiTableCell-head"
+          scope="col"
+          style={
+            Object {
+              "background": "white",
+              "position": "sticky",
+              "top": 0,
+              "zIndex": 1,
+            }
+          }
+          tooltip="Started"
+        >
+          Started
+        </th>
+        <th
+          aria-sort={null}
+          className="MuiTableCell-root MuiTableCell-head"
+          scope="col"
+          style={
+            Object {
+              "background": "white",
+              "position": "sticky",
+              "top": 0,
+              "zIndex": 1,
+            }
+          }
+          tooltip="Finished"
+        >
+          Finished
+        </th>
+        <th
+          aria-sort={null}
+          className="MuiTableCell-root MuiTableCell-head"
+          scope="col"
+          style={
+            Object {
+              "background": "white",
+              "position": "sticky",
+              "top": 0,
+              "zIndex": 1,
+            }
+          }
+          tooltip="Deployment status"
+        >
+          Deployment status
+        </th>
+        <th
+          aria-sort={null}
+          className="MuiTableCell-root MuiTableCell-head"
+          scope="col"
+          style={
+            Object {
+              "background": "white",
+              "position": "sticky",
+              "top": 0,
+              "zIndex": 1,
+            }
+          }
+          tooltip=""
+        >
+          
+        </th>
+      </tr>
+    </thead>
+    <tbody
+      className="MuiTableBody-root"
+    />
+  </table>
+</div>
+`;

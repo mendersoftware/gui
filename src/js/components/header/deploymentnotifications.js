@@ -1,21 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 // material ui
 import RefreshIcon from '@material-ui/icons/Refresh';
 
-export default class DeploymentNotifications extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object
-  };
+const style = { color: '#c7c7c7', margin: '0 7px 0 10px', top: '5px', fontSize: '20px' };
 
-  render() {
-    return (
-      <Link to="/deployments/" className="header-section">
-        <span>{this.props.inprogress}</span>
-        <RefreshIcon style={{ color: '#c7c7c7', margin: '0 7px 0 10px', top: '5px', fontSize: '20px' }} className="flip-horizontal" />
-      </Link>
-    );
-  }
-}
+const DeploymentNotifications = props => (
+  <Link to="/deployments/" className="header-section">
+    <span>{props.inprogress}</span>
+    <RefreshIcon style={style} className="flip-horizontal" />
+  </Link>
+);
+
+export default DeploymentNotifications;

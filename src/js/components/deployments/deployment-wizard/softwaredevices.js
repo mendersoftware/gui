@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import pluralize from 'pluralize';
@@ -7,9 +8,8 @@ import { TextField, Tooltip } from '@material-ui/core';
 import { ErrorOutline as ErrorOutlineIcon, InfoOutlined as InfoOutlinedIcon } from '@material-ui/icons';
 
 import AutoSelect from '../../common/forms/autoselect';
-import AppActions from '../../../actions/app-actions';
-import AppStore from '../../../stores/app-store';
-import AppConstants from '../../../constants/app-constants';
+import { getAllDevicesByStatus, getAllGroupDevices, selectDevices } from '../../../actions/deviceActions';
+import DeviceConstants from '../../../constants/deviceConstants';
 
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 
@@ -24,14 +24,13 @@ const styles = {
   }
 };
 
-export default class SoftwareDevices extends React.Component {
+export class SoftwareDevices extends React.Component {
   constructor(props, context) {
     super(props, context);
 
+    this.props.getAllDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted);
     this.state = {
-      artifacts: AppStore.getCollatedArtifacts(AppStore.getArtifactsRepo()),
-      groups: AppStore.getGroups().filter(item => item !== AppConstants.UNGROUPED_GROUP.id),
-      release: null
+      deploymentDeviceIds: []
     };
   }
 
@@ -40,44 +39,40 @@ export default class SoftwareDevices extends React.Component {
     let state = { [property]: value };
     self.props.deploymentSettings(value, property);
 
-    if (property === 'group') {
-      if (value) {
-        let promise = value === allDevices ? Promise.resolve(AppStore.getTotalAcceptedDevices()) : AppActions.getNumberOfDevicesInGroup(value);
-        promise.then(devicesLength => self.setState({ devicesLength }));
+    if (property === 'group' && value) {
+      if (value !== allDevices) {
+        self.props.getAllGroupDevices(value);
       } else {
-        state.devicesLength = 0;
+        self.props.selectDevices(self.props.acceptedDevices);
       }
     }
     const currentState = Object.assign({}, self.state, state);
     if (!currentState.release && property !== 'release') {
-      self.props.deploymentSettings(self.props.deploymentRelease, 'release');
-      currentState.release = state.release = self.props.deploymentRelease;
+      self.props.deploymentSettings(self.props.release, 'release');
+      currentState.release = state.release = self.props.release;
     }
-    if (currentState.group && currentState.release) {
-      self.getDeploymentDeviceIds(currentState.group, self.props.device).then(devices => self.props.deploymentSettings(devices, 'deploymentDeviceIds'));
+    if ((self.props.device || currentState.group) && currentState.release) {
+      state.deploymentDeviceIds = self.props.acceptedDevices;
+      if (self.props.groups[currentState.group]) {
+        state.deploymentDeviceIds = self.props.groups[currentState.group].deviceIds;
+      } else if (self.props.device) {
+        state.deploymentDeviceIds = [self.props.device.id];
+      }
+      self.props.deploymentSettings(state.deploymentDeviceIds, 'deploymentDeviceIds');
+    } else {
+      state.deploymentDeviceIds = [];
     }
     self.setState(state);
   }
 
-  getDeploymentDeviceIds(group, device) {
-    // no device type checking to not hinder deployments to large device counts, just id mapping
-    let promisedDevices;
-    if (group === allDevices) {
-      promisedDevices = AppActions.getAllDevicesByStatus('accepted');
-    } else if (device) {
-      promisedDevices = Promise.resolve([device]);
-    } else {
-      promisedDevices = AppActions.getAllDevicesInGroup(group);
-    }
-    return promisedDevices.then(devices => devices.map(item => item.id));
-  }
-
   render() {
     const self = this;
-    const { device, deploymentAnchor, deploymentRelease, hasPending, release, group, hasDevices } = self.props;
-    const { artifacts, devicesLength, groups } = self.state;
+    const { device, deploymentAnchor, deploymentObject, groups, hasDevices, hasPending, release, releases } = self.props;
+    const { deploymentDeviceIds } = self.state;
 
-    const selectedRelease = deploymentRelease ? deploymentRelease : release;
+    const selectedRelease = deploymentObject.release ? deploymentObject.release : release;
+
+    const group = self.props.group;
 
     const releaseDeviceTypes = selectedRelease ? selectedRelease.device_types_compatible : [];
     const devicetypesInfo = (
@@ -88,23 +83,21 @@ export default class SoftwareDevices extends React.Component {
       </Tooltip>
     );
 
-    let artifactItems = artifacts.map(art => ({
-      title: art.name,
-      value: art
+    let releaseItems = releases.map(rel => ({
+      title: rel.Name,
+      value: rel
     }));
 
     let groupItems = [{ title: 'All devices', value: 'All devices' }];
-    if (device) {
+    if (device && device.attributes) {
       // If single device, don't show groups
       groupItems[0] = {
         title: device.id,
         value: device
       };
-      artifactItems = artifactItems.filter(art =>
-        art.value.device_types_compatible.some(type => type === device.attributes.find(attr => attr.name === 'device_type').value)
-      );
+      releaseItems = releaseItems.filter(rel => rel.value.device_types_compatible.some(type => type === device.attributes.device_type));
     } else {
-      groupItems = groups.reduce((accu, group) => {
+      groupItems = Object.keys(groups).reduce((accu, group) => {
         accu.push({
           title: group,
           value: group
@@ -131,7 +124,7 @@ export default class SoftwareDevices extends React.Component {
 
     return (
       <div style={{ overflow: 'visible', minHeight: '300px', marginTop: '15px' }}>
-        {!artifactItems.length ? (
+        {!releaseItems.length ? (
           <p className="info" style={{ marginTop: '0' }}>
             <ErrorOutlineIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }} />
             There are no artifacts available. <Link to="/artifacts">Upload one to the repository</Link> to get started.
@@ -139,16 +132,16 @@ export default class SoftwareDevices extends React.Component {
         ) : (
           <form className="flexbox centered column">
             <div ref={ref => (this.releaseRef = ref)} style={{ minWidth: 'min-content', minHeight: '105px' }}>
-              {deploymentRelease ? (
-                <TextField value={deploymentRelease.name} label="Release" disabled={true} style={styles.infoStyle} />
+              {selectedRelease ? (
+                <TextField value={selectedRelease.Name} label="Release" disabled={true} style={styles.infoStyle} />
               ) : (
                 <AutoSelect
                   label="Select a Release to deploy"
                   errorText="Select a Release to deploy"
-                  items={artifactItems}
+                  items={releaseItems}
                   onChange={item => self.deploymentSettingsUpdate(item, 'release')}
                   style={styles.textField}
-                  value={release ? release.name : null}
+                  value={release ? release.Name : null}
                 />
               )}
               {releaseDeviceTypes.length ? (
@@ -188,13 +181,13 @@ export default class SoftwareDevices extends React.Component {
                   )}
                 </div>
               )}
-              {devicesLength > 0 && (
+              {deploymentDeviceIds.length > 0 && (
                 <p className="info">
-                  {devicesLength} {pluralize('devices', devicesLength)} will be targeted. <Link to={groupLink}>View the devices</Link>
+                  {deploymentDeviceIds.length} {pluralize('devices', deploymentDeviceIds.length)} will be targeted. <Link to={groupLink}>View the devices</Link>
                 </p>
               )}
               {onboardingComponent}
-              {devicesLength > 0 && release && (
+              {deploymentDeviceIds.length > 0 && release && (
                 <p className="info icon">
                   <InfoOutlinedIcon fontSize="small" style={{ verticalAlign: 'middle', margin: '0 6px 4px 0' }} />
                   The deployment will skip any devices in the group that are already on the target Release version, or that have an incompatible device type.
@@ -207,3 +200,20 @@ export default class SoftwareDevices extends React.Component {
     );
   }
 }
+
+const actionCreators = { getAllDevicesByStatus, getAllGroupDevices, selectDevices };
+
+const mapStateToProps = state => {
+  const { [DeviceConstants.UNGROUPED_GROUP.id]: ungroupedGroup, ...groups } = state.devices.groups.byId;
+  return {
+    acceptedDevices: state.devices.byStatus.accepted.deviceIds,
+    device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
+    groups,
+    hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
+    hasPending: state.devices.byStatus.pending.total || state.devices.byStatus.pending.deviceIds.length > 0,
+    releases: Object.values(state.releases.byId),
+    ungroupedGroup
+  };
+};
+
+export default connect(mapStateToProps, actionCreators)(SoftwareDevices);

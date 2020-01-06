@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { Button } from '@material-ui/core';
 import { CheckCircle as CheckCircleIcon } from '@material-ui/icons';
@@ -7,24 +8,22 @@ import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
 
-import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
+import { setSnackbar } from '../../actions/appActions';
+import { loginUser, saveGlobalSettings } from '../../actions/userActions';
 
 import Loader from '../common/loader';
 
-export default class TwoFactorAuthSetup extends React.Component {
+export class TwoFactorAuthSetup extends React.Component {
   constructor(props, context) {
     super(props, context);
     const self = this;
     self.state = { validated2fa: false, validating2fa: false };
-    AppActions.saveGlobalSettings(Object.assign(AppStore.getGlobalSettings() || {}, { '2fa': 'enabled' })).then(() =>
-      AppActions.get2FAQRCode(props.user.email).then(qrImage => self.setState({ qrImage }))
-    );
+    self.props.saveGlobalSettings({ '2fa': 'enabled' });
   }
 
   componentWillUnmount() {
     if (!this.state.validated2fa) {
-      AppActions.saveGlobalSettings(Object.assign(AppStore.getGlobalSettings(), { '2fa': 'disabled' }));
+      this.props.saveGlobalSettings({ '2fa': 'disabled' });
     }
   }
 
@@ -32,18 +31,19 @@ export default class TwoFactorAuthSetup extends React.Component {
     const self = this;
     self.setState({ validating2fa: true });
     formData.email = self.props.user.email;
-    AppActions.loginUser(formData)
+    self.props
+      .loginUser(formData)
       .then(token => self.setState({ validated2fa: !!token, validating2fa: false }))
       .catch(() => {
-        AppActions.setSnackbar('An error occured validating the verification code.');
+        self.props.setSnackbar('An error occured validating the verification code.');
         self.setState({ validating2fa: false });
       });
   }
 
   render() {
     const self = this;
-    const { handle2FAState } = self.props;
-    const { qrImage, validated2fa, validating2fa } = self.state;
+    const { handle2FAState, qrImage } = self.props;
+    const { validated2fa, validating2fa } = self.state;
 
     return (
       <div className="margin-top">
@@ -118,3 +118,14 @@ export default class TwoFactorAuthSetup extends React.Component {
     );
   }
 }
+
+const actionCreators = { loginUser, saveGlobalSettings, setSnackbar };
+
+const mapStateToProps = state => {
+  return {
+    previousPhases: state.users.globalSettings.previousPhases,
+    qrImage: state.users.qrCode
+  };
+};
+
+export default connect(mapStateToProps, actionCreators)(TwoFactorAuthSetup);

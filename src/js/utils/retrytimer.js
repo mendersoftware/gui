@@ -1,31 +1,30 @@
-import AppActions from '../actions/app-actions';
-import AppStore from '../stores/app-store';
+import store from '../reducers';
 import { preformatWithRequestID } from '../helpers';
 
 var timerArr = {};
 
-export function setRetryTimer(err, service, msg, timeLeft) {
+export function setRetryTimer(err, service, msg, timeLeft, setSnackbar) {
   // check if logged in and if service not already retrying
-  if (!timerArr[service] && AppStore.getCurrentUser().hasOwnProperty('email')) {
+  if (!timerArr[service] && (store.getState().users.byId[store.getState().users.currentUser] || {}).hasOwnProperty('email')) {
     var remaining = timeLeft - 1000;
     timerArr[service] = setInterval(() => {
       remaining -= 1000;
-      remaining > 0 ? AppActions.setSnackbar(preformatWithRequestID(err.res, `${msg} Retrying in ${remaining / 1000} seconds`)) : clearRetryTimer(service);
+      remaining > 0 ? setSnackbar(preformatWithRequestID(err.res, `${msg} Retrying in ${remaining / 1000} seconds`)) : clearRetryTimer(service, setSnackbar);
     }, 1000);
   }
 }
 
-export function clearRetryTimer(service) {
+export function clearRetryTimer(service, setSnackbar) {
   if (timerArr[service]) {
     clearInterval(timerArr[service]);
     delete timerArr[service];
-    AppActions.setSnackbar('');
+    setSnackbar('');
   }
 }
 
-export function clearAllRetryTimers() {
+export function clearAllRetryTimers(setSnackbar) {
   for (var service in timerArr) {
-    clearRetryTimer(service);
+    clearRetryTimer(service, setSnackbar);
   }
-  AppActions.setSnackbar('');
+  setSnackbar('');
 }

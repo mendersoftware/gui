@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`ProgressChart Component renders correctly 1`] = `
 <div
   className="flexbox column progress-chart-container "
 >

@@ -1,12 +1,16 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
 
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import {
+  ArrowUpward as ArrowUpwardIcon,
+  ArrowDownward as ArrowDownwardIcon,
+  ArrowForward as ArrowForwardIcon,
+  ArrowBack as ArrowBackIcon
+} from '@material-ui/icons';
 
-import AppActions from '../../actions/app-actions';
+import { setShowDismissOnboardingTipsDialog } from '../../actions/userActions';
 
 const iconWidth = 30;
 
@@ -46,7 +50,7 @@ const orientations = {
   }
 };
 
-export default class BaseOnboardingTip extends React.Component {
+class BaseOnboardingTipComponent extends React.PureComponent {
   componentDidUpdate() {
     ReactTooltip.show(this.tipRef);
   }
@@ -57,7 +61,7 @@ export default class BaseOnboardingTip extends React.Component {
     ReactTooltip.hide(this.tipRef);
   }
   render() {
-    const { anchor, component, place, progress, progressTotal, id, ...others } = this.props;
+    const { anchor, component, place, progress, progressTotal, id, setShowDismissOnboardingTipsDialog, ...others } = this.props;
     const orientation = orientations[place || 'top'];
     const style = orientation.offsetStyle({ left: anchor.left, top: anchor.top });
     const tipId = `onboard-tip-${id ? id : 1}`;
@@ -86,10 +90,17 @@ export default class BaseOnboardingTip extends React.Component {
           <div className="flexbox">
             {progress ? <div>{`Progress: step ${progress} of ${progressTotal || 3}`}</div> : null}
             <div style={{ flexGrow: 1 }} />
-            <a onClick={() => AppActions.setShowDismissOnboardingTipsDialog(true)}>Dismiss</a>
+            <a onClick={() => setShowDismissOnboardingTipsDialog(true)}>Dismiss</a>
           </div>
         </ReactTooltip>
       </div>
     );
   }
 }
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ setShowDismissOnboardingTipsDialog }, dispatch);
+};
+
+export const BaseOnboardingTip = connect(null, mapDispatchToProps)(BaseOnboardingTipComponent);
+export default BaseOnboardingTip;

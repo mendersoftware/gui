@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`SelectedArtifact Component renders correctly 1`] = `
 <div
   className="muted"
 >
@@ -150,7 +150,7 @@ exports[`renders correctly 1`] = `
     </div>
   </div>
   <div
-    className="MuiPaper-root MuiPaper-elevation1 MuiExpansionPanel-root"
+    className="MuiPaper-root MuiExpansionPanel-root MuiPaper-elevation1"
     style={
       Object {
         "background": "#e9e9e9",
