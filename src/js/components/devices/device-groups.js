@@ -433,7 +433,7 @@ export class DeviceGroups extends React.Component {
             groupCount={groupCount}
             loading={this.state.loading}
             onPageChange={e => self._handlePageChange(e)}
-            onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength })}
+            onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}
             openSettingsDialog={this.props.openSettingsDialog}
             pageNo={self.state.pageNo}
             pageLength={self.state.pageLength}

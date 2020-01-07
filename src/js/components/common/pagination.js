@@ -15,14 +15,13 @@ const paginationIndex = 1;
 class TablePaginationActions extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = {
-      pageNo: 1
-    };
+    const pageNo = props.page ? props.page + paginationIndex : 1;
+    this.state = { pageNo };
   }
 
   componentDidUpdate(prevProps) {
     const currentPage = this.props.page + paginationIndex;
-    if (currentPage !== this.state.pageNo && prevProps.rowsPerPage !== this.props.rowsPerPage) {
+    if (currentPage !== this.state.pageNo || prevProps.rowsPerPage !== this.props.rowsPerPage) {
       this.setState({ pageNo: currentPage });
     }
   }
@@ -53,8 +52,7 @@ class TablePaginationActions extends React.Component {
   };
 
   onPaging = newPage => {
-    this.setState({ pageNo: newPage });
-    return this.props.onChangePage(newPage);
+    return this.setState({ pageNo: newPage }, () => this.props.onChangePage(newPage));
   };
 
   render() {
@@ -105,10 +103,7 @@ const Pagination = props => {
       labelDisplayedRows={() => ''}
       labelRowsPerPage="Rows"
       rowsPerPageOptions={defaultRowsPerPageOptions}
-      onChangeRowsPerPage={e => {
-        onChangeRowsPerPage(e.target.value);
-        return onChangePage(1);
-      }}
+      onChangeRowsPerPage={e => onChangeRowsPerPage(e.target.value)}
       page={page - paginationIndex}
       onChangePage={onChangePage}
       ActionsComponent={TablePaginationActions}
