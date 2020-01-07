@@ -15,9 +15,8 @@ const paginationIndex = 1;
 class TablePaginationActions extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = {
-      pageNo: 1
-    };
+    const pageNo = props.page ? props.page + paginationIndex : 1;
+    this.state = { pageNo };
   }
 
   componentDidUpdate(prevProps) {
@@ -53,8 +52,7 @@ class TablePaginationActions extends React.Component {
   };
 
   onPaging = newPage => {
-    this.setState({ pageNo: newPage });
-    return this.props.onChangePage(newPage);
+    return this.setState({ pageNo: newPage }, () => this.props.onChangePage(newPage));
   };
 
   render() {

@@ -304,6 +304,7 @@ export default class Preauthorize extends React.Component {
               columnHeaders={columnHeaders}
               limitMaxed={limitMaxed}
               onPageChange={e => self._handlePageChange(e)}
+              onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength })}
               pageTotal={self.state.count}
               refreshDevices={() => self._getDevices()}
             />
