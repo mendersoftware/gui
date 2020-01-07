@@ -38,22 +38,21 @@ const routes = {
 
 const refreshDeploymentsLength = 30000;
 
+const deploymentStatusMap = {
+  finished: 'past',
+  inprogress: 'prog',
+  pending: 'pend'
+};
+
 export class Deployments extends React.Component {
   constructor(props, context) {
     super(props, context);
-    const today = new Date();
-    today.setHours(0, 0, 0);
-    const tonight = new Date();
-    tonight.setHours(23, 59, 59);
     this.state = {
       deploymentObject: {},
       invalid: true,
-      startDate: today,
-      endDate: tonight,
       per_page: 20,
       progPage: 1,
       pendPage: 1,
-      pastPage: 1,
       reportDialog: false,
       createDialog: false,
       tabIndex: this._updateActive()
@@ -99,6 +98,7 @@ export class Deployments extends React.Component {
         tabIndex: this._updateActive()
       },
       () => {
+        clearInterval(self.timer);
         self.timer = setInterval(() => self._refreshDeployments(), refreshDeploymentsLength);
         self._refreshDeployments();
       }
@@ -110,122 +110,58 @@ export class Deployments extends React.Component {
     clearAllRetryTimers(this.props.setSnackbar);
   }
 
-  _refreshDeployments() {
-    if (this._getCurrentLabel() === routes.finished.title) {
-      this._refreshPast(null, null, null, null, this.state.groupFilter);
-    } else {
-      this._refreshInProgress();
-      this._refreshPending();
-      if (!this.props.onboardingComplete) {
-        this._refreshPast(null, null, null, null, this.state.groupFilter);
-      }
-    }
-  }
-  _refreshInProgress(page, per_page = DEFAULT_PENDING_INPROGRESS_COUNT) {
-    /*
-    / refresh only in progress deployments
-    /
-    */
+  // deploymentStatus = <finished|inprogress|pending>
+  refreshDeployments(page, per_page = this.state.per_page, deploymentStatus, startDate, endDate, group, fullRefresh = true) {
     var self = this;
-    if (page) {
-      self.setState({ progPage: page });
-    } else {
-      page = self.state.progPage;
+    let tasks = [self.props.getDeploymentCount(deploymentStatus, startDate, endDate, group)];
+    if (fullRefresh) {
+      tasks.push(self.props.getDeploymentsByStatus(deploymentStatus, page, per_page, startDate, endDate, group));
     }
 
-    return Promise.all([
-      self.props.getDeploymentsByStatus('inprogress', page, per_page),
-      // Get full count of deployments for pagination
-      self.props.getDeploymentCount('inprogress')
-    ])
-      .then(results => {
-        const deployments = results[0];
-        self.setState({ doneLoading: true });
-        clearRetryTimer('progress', self.props.setSnackbar);
-        if (self.props.progressCount && !deployments.length) {
-          self._refreshInProgress(1);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        var errormsg = err.error || 'Please check your connection';
-        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, self.props.setSnackbar);
-      });
-  }
-  _refreshPending(page, per_page = DEFAULT_PENDING_INPROGRESS_COUNT) {
-    /*
-    / refresh only pending deployments
-    /
-    */
-    var self = this;
-    if (page) {
-      self.setState({ pendPage: page });
-    } else {
-      page = self.state.pendPage;
-    }
-
-    return Promise.all([self.props.getDeploymentsByStatus('pending', page, per_page), self.props.getDeploymentCount('pending')])
-      .then(() => self.props.setSnackbar(''))
-      .catch(err => {
-        console.log(err);
-        var errormsg = err.error || 'Please check your connection';
-        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, self.props.setSnackbar);
-      });
-  }
-
-  _changePastPage(
-    page = this.state.pastPage,
-    startDate = this.state.startDate,
-    endDate = this.state.endDate,
-    per_page = this.state.per_page,
-    group = this.state.group
-  ) {
-    var self = this;
-    self.setState({ doneLoading: false }, () => {
-      clearInterval(self.timer);
-      self._refreshPast(page, startDate, endDate, per_page, group);
-      self.timer = setInterval(() => self._refreshDeployments(), refreshDeploymentsLength);
-    });
-  }
-  _refreshPast(page, startDate, endDate, per_page, group) {
-    /*
-    / refresh only finished deployments
-    /
-    */
-    var self = this;
-
-    var oldPage = self.state.pastPage;
-
-    startDate = startDate || self.state.startDate;
-    endDate = endDate || self.state.endDate;
-    per_page = per_page || self.state.per_page;
-
-    self.setState({ startDate, endDate, groupFilter: group });
-
-    startDate = Math.round(Date.parse(startDate) / 1000);
-    endDate = Math.round(Date.parse(endDate) / 1000);
-
-    // get total count of past deployments first
-    return self.props
-      .getDeploymentCount('finished', startDate, endDate, group)
-      .then(() => {
-        page = page || self.state.pastPage || 1;
-        self.setState({ pastPage: page });
-        // only refresh deployments if page, count or date range has changed
-        if (oldPage !== page || !self.state.doneLoading) {
-          return self.props.getDeploymentsByStatus('finished', page, per_page, startDate, endDate, group);
-        }
-      })
-      .then(() => {
-        self.setState({ doneLoading: true });
+    return Promise.all(tasks)
+      .then(([countAction, deploymentsAction]) => {
         self.props.setSnackbar('');
+        clearRetryTimer(deploymentStatus, self.props.setSnackbar);
+        if (countAction.deploymentIds.length && deploymentsAction && !deploymentsAction[0].deploymentIds.length) {
+          return self.refreshDeployments(...arguments);
+        }
       })
       .catch(err => {
         console.log(err);
-        self.setState({ doneLoading: true });
         var errormsg = err.error || 'Please check your connection';
         setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, self.props.setSnackbar);
+      })
+      .finally(() => {
+        const mappedDeploymentStatus = deploymentStatusMap[deploymentStatus];
+        self.setState({
+          doneLoading: true,
+          [`${mappedDeploymentStatus}Page`]: page
+        });
       });
+  }
+
+  _refreshDeployments() {
+    this._refreshInProgress();
+    this._refreshPending();
+    if (!this.props.onboardingComplete && this._getCurrentLabel() === routes.finished.title) {
+      this.refreshDeployments(1, DEFAULT_PENDING_INPROGRESS_COUNT, 'finished');
+    }
+  }
+
+  /*
+  / refresh only in progress deployments
+  /
+  */
+  _refreshInProgress(page = this.state.progPage, per_page = DEFAULT_PENDING_INPROGRESS_COUNT) {
+    return this.refreshDeployments(page, per_page, 'inprogress');
+  }
+
+  /*
+  / refresh only pending deployments
+  /
+  */
+  _refreshPending(page = this.state.pendPage, per_page = DEFAULT_PENDING_INPROGRESS_COUNT) {
+    return this.refreshDeployments(page, per_page, 'pending');
   }
 
   _retryDeployment(deployment, devices) {
@@ -306,10 +242,6 @@ export class Deployments extends React.Component {
         self.props.setSnackbar(preformatWithRequestID(err.res, `There was wan error while aborting the deployment: ${errMsg}`));
       });
   }
-  updated() {
-    // use to make sure re-renders dialog at correct height when device list built
-    this.setState({ updated: true });
-  }
 
   _updateActive(tab = this.props.match.params.tab) {
     if (routes.hasOwnProperty(tab)) {
@@ -328,8 +260,10 @@ export class Deployments extends React.Component {
   _changeTab(tabIndex) {
     var self = this;
     clearInterval(self.timer);
-    self.timer = setInterval(() => self._refreshDeployments(), refreshDeploymentsLength);
-    self.setState({ tabIndex, pendPage: 1, pastPage: 1, progPage: 1 }, () => self._refreshDeployments());
+    if (this._getCurrentLabel() !== routes.finished.title) {
+      self.timer = setInterval(() => self._refreshDeployments(), refreshDeploymentsLength);
+    }
+    self.setState({ tabIndex, pendPage: 1, progPage: 1 }, () => self._refreshDeployments());
     self.props.setSnackbar('');
   }
 
@@ -351,22 +285,7 @@ export class Deployments extends React.Component {
 
     // tabs
     const { groups, isEnterprise, onboardingComplete, past, pastCount, pending, pendingCount, progress, progressCount } = self.props;
-    const {
-      contentClass,
-      createDialog,
-      deploymentObject,
-      doneLoading,
-      groupFilter,
-      per_page,
-      pastPage,
-      pendPage,
-      progPage,
-      reportDialog,
-      reportType,
-      startDate,
-      endDate,
-      tabIndex
-    } = self.state;
+    const { contentClass, createDialog, deploymentObject, doneLoading, pendPage, progPage, reportDialog, reportType, tabIndex } = self.state;
     let onboardingComponent = null;
     if (past.length || pastCount) {
       onboardingComponent = getOnboardingComponentFor('deployments-past', { anchor: { left: 240, top: 50 } });
@@ -396,6 +315,7 @@ export class Deployments extends React.Component {
                 <DeploymentsList
                   abort={id => this._abortDeployment(id)}
                   count={pendingCount || pending.length}
+                  defaultPageSize={DEFAULT_PENDING_INPROGRESS_COUNT}
                   items={pending}
                   page={pendPage}
                   refreshItems={(...args) => this._refreshPending(...args)}
@@ -407,6 +327,7 @@ export class Deployments extends React.Component {
                 <Progress
                   abort={id => this._abortDeployment(id)}
                   count={progressCount || progress.length}
+                  defaultPageSize={DEFAULT_PENDING_INPROGRESS_COUNT}
                   isActiveTab={self._getCurrentLabel() === routes.active.title}
                   items={progress}
                   onboardingComplete={onboardingComplete}
@@ -436,18 +357,10 @@ export class Deployments extends React.Component {
           <div className="margin-top">
             <Past
               groups={groups}
-              deviceGroup={groupFilter}
               createClick={() => this.setState({ createDialog: true })}
-              pageSize={per_page}
-              onChangeRowsPerPage={perPage => self.setState({ per_page: perPage, pastPage: 1 }, () => self._changePastPage())}
-              startDate={startDate}
-              endDate={endDate}
-              page={pastPage}
               isActiveTab={self._getCurrentLabel() === routes.finished.title}
-              count={pastCount}
               loading={!doneLoading}
-              past={past}
-              refreshPast={(...args) => this._changePastPage(...args)}
+              refreshDeployments={(...args) => self.refreshDeployments(...args)}
               showReport={type => this._showReport(type)}
             />
           </div>
