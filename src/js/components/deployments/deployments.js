@@ -502,9 +502,8 @@ const tryMapDeployments = (accu, id) => {
 };
 
 const mapStateToProps = state => {
-  const progress = state.deployments.byStatus.inprogress.deploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
-  const pending = state.deployments.byStatus.pending.deploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
-  const past = state.deployments.byStatus.finished.deploymentIds.map(id => state.deployments.byId[id]);
+  const progress = state.deployments.byStatus.inprogress.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
+  const pending = state.deployments.byStatus.pending.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   const groups = Object.keys(state.devices.groups.byId).reduce((accu, group) => {
     if (group !== DeviceConstants.UNGROUPED_GROUP.id) {
       accu.push(group);
@@ -517,7 +516,7 @@ const mapStateToProps = state => {
     hasDeployments: Object.keys(state.deployments.byId).length > 0,
     isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,
     onboardingComplete: state.users.onboarding.complete,
-    past,
+    past: state.deployments.byStatus.finished.deploymentIds,
     pastCount: state.deployments.byStatus.finished.total,
     pending,
     pendingCount: state.deployments.byStatus.pending.total,

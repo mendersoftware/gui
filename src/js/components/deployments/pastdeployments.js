@@ -222,36 +222,36 @@ export class Past extends React.Component {
         </Grid>
         <div className="deploy-table-contain">
           <Loader show={this.props.loading} />
-          {pastMap.length ? (
-            <Table style={{ overflow: 'visible' }}>
-              <TableHead>
-                <TableRow style={{ overflow: 'visible' }}>
-                  <TableCell>Updating to</TableCell>
-                  <TableCell>Group</TableCell>
-                  <TableCell>Started</TableCell>
-                  <TableCell>Finished</TableCell>
-                  <TableCell style={{ textAlign: 'right', width: '100px' }}># Devices</TableCell>
-                  <TableCell style={{ minWidth: '400px' }}>Status</TableCell>
-                </TableRow>
-              </TableHead>
-              <RootRef rootRef={ref => (this.deploymentsRef = ref)}>
-                <TableBody style={{ cursor: 'pointer', overflow: 'visible' }}>{pastMap}</TableBody>
-              </RootRef>
-            </Table>
-          ) : null}
 
           {!this.props.loading && this.props.showHelptips && pastMap.length && onboardingComponent
             ? onboardingComponent // TODO: fix status retrieval for past deployments to decide what to show here -
             : null}
 
-          {this.props.past.length ? (
-            <Pagination
-              count={self.props.count}
-              rowsPerPage={self.props.pageSize}
-              onChangeRowsPerPage={self.props.onChangeRowsPerPage}
-              page={self.props.page}
-              onChangePage={page => self._handlePageChange(page)}
-            />
+          {this.props.past.length && !!pastMap.length ? (
+            <>
+              <Table style={{ overflow: 'visible' }}>
+                <TableHead>
+                  <TableRow style={{ overflow: 'visible' }}>
+                    <TableCell>Updating to</TableCell>
+                    <TableCell>Group</TableCell>
+                    <TableCell>Started</TableCell>
+                    <TableCell>Finished</TableCell>
+                    <TableCell style={{ textAlign: 'right', width: '100px' }}># Devices</TableCell>
+                    <TableCell style={{ minWidth: '400px' }}>Status</TableCell>
+                  </TableRow>
+                </TableHead>
+                <RootRef rootRef={ref => (this.deploymentsRef = ref)}>
+                  <TableBody style={{ cursor: 'pointer', overflow: 'visible' }}>{pastMap}</TableBody>
+                </RootRef>
+              </Table>
+              <Pagination
+                count={self.props.count}
+                rowsPerPage={perPage}
+                onChangeRowsPerPage={value => self.setState({ perPage: value }, () => self._refreshPast(1, value))}
+                page={page}
+                onChangePage={pageNo => self._refreshPast(pageNo)}
+              />
+            </>
           ) : (
             <div className={this.props.loading || pastMap.length ? 'hidden' : 'dashboard-placeholder'}>
               <p>No finished deployments were found.</p>
@@ -270,8 +270,11 @@ export class Past extends React.Component {
 const actionCreators = { setSnackbar, selectDeployment, getSingleDeploymentStats };
 
 const mapStateToProps = state => {
+  const past = state.deployments.byStatus.finished.selectedDeploymentIds.map(id => state.deployments.byId[id]);
   return {
     onboardingComplete: state.users.onboarding.complete,
+    past,
+    count: state.deployments.byStatus.finished.total,
     showHelptips: state.users.showHelptips,
     showOnboardingTips: state.users.onboarding.showTips
   };
