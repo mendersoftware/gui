@@ -36,7 +36,8 @@ const routes = {
   }
 };
 
-const refreshDeploymentsLength = 30000;
+const defaultRefreshDeploymentsLength = 30000;
+const minimalRefreshDeploymentsLength = 2000;
 
 const deploymentStatusMap = {
   finished: 'past',
@@ -48,6 +49,7 @@ export class Deployments extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
+      currentRefreshDeploymentLength: defaultRefreshDeploymentsLength,
       deploymentObject: {},
       invalid: true,
       per_page: 20,
@@ -99,15 +101,14 @@ export class Deployments extends React.Component {
         tabIndex: this._updateActive()
       },
       () => {
-        clearInterval(self.timer);
-        self.timer = setInterval(() => self._refreshDeployments(), refreshDeploymentsLength);
-        self._refreshDeployments();
+        clearTimeout(self.dynamicTimer);
+        self._refreshDeployments(minimalRefreshDeploymentsLength);
       }
     );
   }
 
   componentWillUnmount() {
-    clearInterval(this.timer);
+    clearTimeout(this.dynamicTimer);
     clearAllRetryTimers(this.props.setSnackbar);
   }
 
@@ -130,7 +131,7 @@ export class Deployments extends React.Component {
       .catch(err => {
         console.log(err);
         var errormsg = err.error || 'Please check your connection';
-        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, self.props.setSnackbar);
+        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, defaultRefreshDeploymentsLength, self.props.setSnackbar);
       })
       .finally(() => {
         const mappedDeploymentStatus = deploymentStatusMap[deploymentStatus];
@@ -141,12 +142,18 @@ export class Deployments extends React.Component {
       });
   }
 
-  _refreshDeployments() {
-    this._refreshInProgress();
-    this._refreshPending();
-    if (!this.props.onboardingComplete && this._getCurrentLabel() === routes.finished.title) {
-      this.refreshDeployments(1, DEFAULT_PENDING_INPROGRESS_COUNT, 'finished');
+  _refreshDeployments(refreshLength = defaultRefreshDeploymentsLength) {
+    const self = this;
+    let tasks = [self._refreshInProgress(), self._refreshPending()];
+    if (!self.props.onboardingComplete && self._getCurrentLabel() === routes.finished.title) {
+      tasks.push(self.refreshDeployments(1, DEFAULT_PENDING_INPROGRESS_COUNT, 'finished'));
     }
+    return Promise.all(tasks).then(() => {
+      const currentRefreshDeploymentLength = Math.min(refreshLength, self.state.currentRefreshDeploymentLength * 2);
+      self.setState({ currentRefreshDeploymentLength });
+      clearTimeout(self.dynamicTimer);
+      self.dynamicTimer = setTimeout(() => self._refreshDeployments(), currentRefreshDeploymentLength);
+    });
   }
 
   /*
@@ -196,15 +203,6 @@ export class Deployments extends React.Component {
         self.props.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard');
       })
       .then(() => {
-        clearInterval(self.timer);
-        // successfully retrieved new deployment
-        if (self._getCurrentLabel() !== routes.active.title) {
-          self.props.history.push(routes.active.route);
-          self._changeTab(routes.active.route);
-        } else {
-          self.timer = setInterval(() => self._refreshDeployments(), refreshDeploymentsLength);
-          self._refreshDeployments();
-        }
         self.props.setSnackbar('Deployment created successfully', 8000);
         if (phases) {
           const standardPhases = standardizePhases(phases);
@@ -216,23 +214,33 @@ export class Deployments extends React.Component {
           self.props.saveGlobalSettings({ previousPhases: previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT) });
         }
         self.setState({ doneLoading: true, deploymentObject: {} });
+        clearTimeout(self.dynamicTimer);
+        // successfully retrieved new deployment
+        if (self._getCurrentLabel() !== routes.active.title) {
+          self.props.history.push(routes.active.route);
+          self._changeTab(routes.active.route);
+        } else {
+          self._refreshDeployments(minimalRefreshDeploymentsLength);
+        }
       });
   }
+
   _showReport(reportType) {
     this.setState({ createDialog: false, reportType, reportDialog: true });
   }
+
   _showProgress(rowNumber) {
     const self = this;
     const deployment = self.props.progress[rowNumber];
-    this.props.selectDeployment(deployment.id).then(() => self._showReport('active'));
+    self.props.selectDeployment(deployment.id).then(() => self._showReport('active'));
   }
+
   _abortDeployment(id) {
     var self = this;
     return self.props
       .abortDeployment(id)
       .then(() => {
-        clearInterval(self.timer);
-        self.timer = setInterval(() => self._refreshDeployments(), refreshDeploymentsLength);
+        clearTimeout(self.dynamicTimer);
         self._refreshDeployments();
         self.setState({ createDialog: false, doneLoading: false });
         self.props.setSnackbar('The deployment was successfully aborted');
@@ -260,11 +268,14 @@ export class Deployments extends React.Component {
 
   _changeTab(tabIndex) {
     var self = this;
-    clearInterval(self.timer);
-    if (this._getCurrentLabel() !== routes.finished.title) {
-      self.timer = setInterval(() => self._refreshDeployments(), refreshDeploymentsLength);
-    }
-    self.setState({ tabIndex, pendPage: 1, progPage: 1 }, () => self._refreshDeployments());
+    clearTimeout(self.dynamicTimer);
+    self.setState({ tabIndex, pendPage: 1, progPage: 1 }, () => {
+      if (tabIndex === routes.finished.route) {
+        self._refreshDeployments(defaultRefreshDeploymentsLength * 2);
+      } else {
+        self._refreshDeployments(minimalRefreshDeploymentsLength);
+      }
+    });
     self.props.setSnackbar('');
   }
 
