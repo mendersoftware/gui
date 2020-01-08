@@ -79,8 +79,8 @@ export class ReleaseRepository extends React.Component {
         self.props.refreshArtifacts();
       })
       .catch(err => {
-        var errMsg = err.res.body.error || '';
-        self.props.setSnackbar(preformatWithRequestID(errMsg, `Artifact details couldn't be updated. ${err.error}`), null, 'Copy to clipboard');
+        const errMsg = err.res.body.error || '';
+        self.props.setSnackbar(preformatWithRequestID(err.res, `Artifact details couldn't be updated. ${errMsg || err.error}`), null, 'Copy to clipboard');
       });
   }
 
