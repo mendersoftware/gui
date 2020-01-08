@@ -38,7 +38,7 @@ export class Past extends React.Component {
       active: 'today',
       deviceGroup: null,
       endDate: tonight,
-      startDate: today,
+      startDate: props.startDate || today,
       page: 1,
       perPage: 20,
       retry: false,

@@ -361,7 +361,7 @@ const mapStateToProps = (state, ownProps) => {
     allDevices,
     deviceCount: allDevices.length,
     devicesById: state.devices.byId,
-    deployment: state.deployments.byId[ownProps.deployment.id]
+    deployment: state.deployments.byId[state.deployments.selectedDeployment]
   };
 };
 

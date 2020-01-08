@@ -53,8 +53,9 @@ export class Deployments extends React.Component {
       per_page: 20,
       progPage: 1,
       pendPage: 1,
-      reportDialog: false,
       createDialog: false,
+      reportDialog: false,
+      startDate: null,
       tabIndex: this._updateActive()
     };
   }
@@ -269,23 +270,19 @@ export class Deployments extends React.Component {
 
   closeReport() {
     const self = this;
-    self.setState({ reportDialog: false, selectedDeployment: null }, () => self.props.selectDeployment());
+    self.setState({ reportDialog: false }, () => self.props.selectDeployment());
   }
 
   render() {
     const self = this;
-    const dialogProps = {
-      updated: () => this.setState({ updated: true }),
-      deployment: this.props.selectedDeployment
-    };
-    let dialogContent = <Report retry={(deployment, devices) => this._retryDeployment(deployment, devices)} past={true} {...dialogProps} />;
+    let dialogContent = <Report retry={(deployment, devices) => this._retryDeployment(deployment, devices)} past={true} />;
     if (this.state.reportType === 'active') {
-      dialogContent = <Report abort={id => this._abortDeployment(id)} {...dialogProps} />;
+      dialogContent = <Report abort={id => this._abortDeployment(id)} />;
     }
 
     // tabs
     const { groups, isEnterprise, onboardingComplete, past, pastCount, pending, pendingCount, progress, progressCount } = self.props;
-    const { contentClass, createDialog, deploymentObject, doneLoading, pendPage, progPage, reportDialog, reportType, tabIndex } = self.state;
+    const { contentClass, createDialog, deploymentObject, doneLoading, pendPage, progPage, reportDialog, reportType, startDate, tabIndex } = self.state;
     let onboardingComponent = null;
     if (past.length || pastCount) {
       onboardingComponent = getOnboardingComponentFor('deployments-past', { anchor: { left: 240, top: 50 } });
@@ -297,12 +294,12 @@ export class Deployments extends React.Component {
           className="top-right-button"
           color="secondary"
           variant="contained"
-          onClick={() => this.setState({ createDialog: true })}
+          onClick={() => self.setState({ createDialog: true })}
           style={{ position: 'absolute' }}
         >
           Create a deployment
         </Button>
-        <Tabs value={tabIndex} onChange={(e, tabIndex) => this._changeTab(tabIndex)} style={{ display: 'inline-block' }}>
+        <Tabs value={tabIndex} onChange={(e, tabIndex) => self._changeTab(tabIndex)} style={{ display: 'inline-block' }}>
           {Object.values(routes).map(route => (
             <Tab component={Link} key={route.route} label={route.title} to={route.route} value={route.route} />
           ))}
@@ -313,28 +310,28 @@ export class Deployments extends React.Component {
             {doneLoading ? (
               <div className="margin-top">
                 <DeploymentsList
-                  abort={id => this._abortDeployment(id)}
+                  abort={id => self._abortDeployment(id)}
                   count={pendingCount || pending.length}
                   defaultPageSize={DEFAULT_PENDING_INPROGRESS_COUNT}
                   items={pending}
                   page={pendPage}
-                  refreshItems={(...args) => this._refreshPending(...args)}
+                  refreshItems={(...args) => self._refreshPending(...args)}
                   isEnterprise={isEnterprise}
                   isActiveTab={self._getCurrentLabel() === routes.active.title}
                   title="pending"
                   type="pending"
                 />
                 <Progress
-                  abort={id => this._abortDeployment(id)}
+                  abort={id => self._abortDeployment(id)}
                   count={progressCount || progress.length}
                   defaultPageSize={DEFAULT_PENDING_INPROGRESS_COUNT}
                   isActiveTab={self._getCurrentLabel() === routes.active.title}
                   items={progress}
                   onboardingComplete={onboardingComplete}
-                  openReport={rowNum => this._showProgress(rowNum)}
+                  openReport={rowNum => self._showProgress(rowNum)}
                   page={progPage}
                   pastDeploymentsCount={pastCount}
-                  refreshItems={(...args) => this._refreshInProgress(...args)}
+                  refreshItems={(...args) => self._refreshInProgress(...args)}
                   title="In progress"
                   type="progress"
                 />
@@ -342,7 +339,7 @@ export class Deployments extends React.Component {
                   <div className={progress.length || !doneLoading ? 'hidden' : 'dashboard-placeholder'}>
                     <p>Pending and ongoing deployments will appear here. </p>
                     <p>
-                      <a onClick={() => this.setState({ createDialog: true })}>Create a deployment</a> to get started
+                      <a onClick={() => self.setState({ createDialog: true })}>Create a deployment</a> to get started
                     </p>
                     <img src="assets/img/deployments.png" alt="In progress" />
                   </div>
@@ -356,12 +353,13 @@ export class Deployments extends React.Component {
         {tabIndex === routes.finished.route && (
           <div className="margin-top">
             <Past
+              createClick={() => self.setState({ createDialog: true })}
               groups={groups}
-              createClick={() => this.setState({ createDialog: true })}
               isActiveTab={self._getCurrentLabel() === routes.finished.title}
               loading={!doneLoading}
               refreshDeployments={(...args) => self.refreshDeployments(...args)}
-              showReport={type => this._showReport(type)}
+              showReport={type => self._showReport(type)}
+              startDate={startDate}
             />
           </div>
         )}
@@ -435,7 +433,6 @@ const mapStateToProps = state => {
     pendingCount: state.deployments.byStatus.pending.total,
     progress,
     progressCount: state.deployments.byStatus.inprogress.total,
-    selectedDeployment: state.deployments.byId[state.deployments.selectedDeployment],
     settings: state.users.globalSettings,
     showHelptips: state.users.showHelptips,
     user: state.users.byId[state.users.currentUser] || {}
