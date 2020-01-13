@@ -1952,10 +1952,14 @@ span.day {
 }
 
 .report-container {
+  display: grid;
+  grid-template-columns: 2fr 220px 235px 235px 1fr;
+  grid-column-gap: 2 * @defaultGutterWidth;
   .deploymentInfo {
     font-size: 14px;
     white-space: nowrap;
-
+    flex-grow: 1;
+    max-width: 350px;
     > div {
       margin-bottom: 10px;
       overflow: hidden;
@@ -2084,8 +2088,6 @@ span.day {
   position: relative;
   display: inline-block;
   top: -5px;
-  margin-right: @defaultGutterWidth;
-
   > img {
     vertical-align: top;
     display: inline;
@@ -2093,7 +2095,7 @@ span.day {
   .statusWrapper {
     max-width: 160px;
     min-height: 38px;
-    padding: @defaultGutterWidth 20px 25px;
+    padding: @defaultGutterWidth @defaultGutterWidth 25px 20px;
     margin: 0 8px 10px 10px;
     background-color: @lightestgrey;
     position: relative;
@@ -2101,7 +2103,6 @@ span.day {
     font-size: 16px;
     vertical-align: top;
     white-space: normal;
-
     &:after {
       content: '';
       width: 0;
