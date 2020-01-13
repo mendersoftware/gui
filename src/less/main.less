@@ -142,6 +142,10 @@ body {
   font-weight: bold;
 }
 
+.blurred {
+  filter: blur(1px);
+}
+
 a,
 span.link {
   font-weight: bold;
@@ -2008,8 +2012,8 @@ span.day {
 
 .deployment-item {
   display: grid;
-  grid-template-columns: 20% 0.25fr 0.25fr 0.25fr 30% 0.25fr 50px;
-  grid-column-gap: 30px;
+  grid-template-columns: 2fr 1fr 1fr 1fr 3fr 1fr 50px;
+  grid-column-gap: 2 * @defaultGutterWidth;
   border-bottom: 1px solid @bordercolor;
   margin: 0 30px;
   align-items: center;
@@ -2019,6 +2023,10 @@ span.day {
   }
   &.progress-item {
     padding: 10px 0;
+  }
+  > div,
+  time {
+    min-width: 100px;
   }
   .cancelButton:hover {
     color: @red;
