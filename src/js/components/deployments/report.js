@@ -124,7 +124,11 @@ export class DeploymentReport extends React.Component {
     const slice = devices.slice(start, end);
     const self = this;
     const lackingData = this.state.pagedDevices.reduce((accu, device) => {
-      if (!self.props.devicesById[device.id].identity_data || Object.keys(self.props.devicesById[device.id].attributes).length === 0) {
+      if (
+        !self.props.devicesById[device.id] ||
+        !self.props.devicesById[device.id].identity_data ||
+        Object.keys(self.props.devicesById[device.id].attributes).length === 0
+      ) {
         accu.push(device);
       }
       return accu;
@@ -173,21 +177,10 @@ export class DeploymentReport extends React.Component {
       </Button>
     ];
 
-    var abortButton = abort ? (
-      <Confirm cancel={() => self.setState({ abort: false })} action={() => self._abortHandler()} type="abort" />
-    ) : (
-      <Button
-        color="secondary"
-        onClick={() => self.setState({ abort: true })}
-        icon={<BlockIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
-      >
-        Abort deployment
-      </Button>
-    );
     return (
       <div>
-        <div className="report-container">
-          <div className="deploymentInfo">
+        <div className={`report-container${past ? '' : ' report-progressing'}`}>
+          <div className="deploymentInfo" style={{ marginTop: 30 }}>
             <div>
               <div className="progressLabel">Updating to:</div>
               <span>{artifactLink}</span>
@@ -228,7 +221,7 @@ export class DeploymentReport extends React.Component {
                   </div>
                   <div
                     id="reportRetry"
-                    className={`hint--bottom ${retry ? 'hint--always' : ''} hint--large hint--info`}
+                    className={`hint--bottom ${retry ? 'hint--always ' : ''}hint--large hint--info`}
                     data-hint="This will create a new deployment with the same device group and Release.&#10;Devices with this Release already installed will be skipped, all others will be updated."
                     style={{ marginLeft: 30 }}
                   >
@@ -255,10 +248,10 @@ export class DeploymentReport extends React.Component {
               <Checkbox className="hidden" label="Show only failures" onChange={(e, checked) => this._handleCheckbox(checked)} />
             </>
           ) : (
-            <div className="inline">
-              <div className="progressStatus">
+            <>
+              <div className="progressStatus flexbox space-between">
                 <div id="progressStatus">
-                  <h3 style={{ marginTop: '12px' }}>{finished ? 'Finished' : 'In progress'}</h3>
+                  <h3 style={{ marginTop: 12 }}>{finished ? 'Finished' : 'In progress'}</h3>
                   <h2>
                     <TimelapseIcon style={{ margin: '0 10px 0 -10px', color: '#ACD4D0', verticalAlign: 'text-top' }} />
                     {this.state.elapsed}
@@ -291,13 +284,19 @@ export class DeploymentReport extends React.Component {
               {!finished && (
                 <div
                   id="reportAbort"
-                  className={`hint--bottom ${abort ? 'hint--always' : ''} hint--large hint--info`}
+                  className={`hint--bottom ${abort ? 'hint--always' : ''}hint--large hint--info`}
                   data-hint="Devices that have not yet started the deployment will not start the deployment.&#10;Devices that have already completed the deployment are not affected by the abort.&#10;Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback."
                 >
-                  {abortButton}
+                  {abort ? (
+                    <Confirm cancel={() => self.setState({ abort: false })} action={() => self._abortHandler()} type="abort" />
+                  ) : (
+                    <Button color="secondary" onClick={() => self.setState({ abort: true })} startIcon={<BlockIcon fontSize="small" />}>
+                      Abort deployment
+                    </Button>
+                  )}
                 </div>
               )}
-            </div>
+            </>
           )}
         </div>
 

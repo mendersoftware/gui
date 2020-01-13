@@ -1291,9 +1291,8 @@ span.code {
 #reportAbort {
   position: absolute;
   top: 85px;
-  right: 3 * @defaultGutterWidth;
-  width: 280px;
-  background-color: rgba(255, 255, 255, 0.8);
+  right: 2 * @defaultGutterWidth;
+  width: 230px;
 }
 
 /* Forms and inputs*/
@@ -1959,6 +1958,9 @@ span.day {
   display: grid;
   grid-template-columns: 2fr 220px 235px 235px 1fr;
   grid-column-gap: 2 * @defaultGutterWidth;
+  &.report-progressing {
+    grid-template-columns: 1fr 2fr 1fr;
+  }
   .deploymentInfo {
     font-size: 14px;
     white-space: nowrap;
@@ -2132,14 +2134,9 @@ span.day {
   top: -26px;
   height: auto;
   margin: 2 * @defaultGutterWidth 2 * @defaultGutterWidth 0 0;
-  display: inline-block;
-  vertical-align: top;
-
   #progressStatus {
-    display: inline-block;
     text-align: center;
     vertical-align: top;
-    margin-right: 120px;
   }
 }
 

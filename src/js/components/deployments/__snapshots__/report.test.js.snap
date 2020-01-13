@@ -3,17 +3,13 @@
 exports[`DeploymentReport Component renders correctly 1`] = `
 <div>
   <div
-    className="report-container"
+    className="report-container report-progressing"
   >
     <div
       className="deploymentInfo"
       style={
         Object {
-          "display": "inline-block",
-          "height": "auto",
-          "margin": "30px 30px 30px 0",
-          "verticalAlign": "top",
-          "width": "240px",
+          "marginTop": 30,
         }
       }
     >
@@ -57,251 +53,243 @@ exports[`DeploymentReport Component renders correctly 1`] = `
       </div>
     </div>
     <div
-      className="inline"
+      className="progressStatus flexbox space-between"
     >
       <div
-        className="progressStatus"
+        id="progressStatus"
       >
-        <div
-          id="progressStatus"
+        <h3
+          style={
+            Object {
+              "marginTop": 12,
+            }
+          }
         >
-          <h3
+          In progress
+        </h3>
+        <h2>
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIcon-root"
+            focusable="false"
+            role="presentation"
             style={
               Object {
-                "marginTop": "12px",
+                "color": "#ACD4D0",
+                "margin": "0 10px 0 -10px",
+                "verticalAlign": "text-top",
               }
             }
+            viewBox="0 0 24 24"
           >
-            In progress
-          </h3>
-          <h2>
-            <svg
-              aria-hidden="true"
-              className="MuiSvgIcon-root"
-              focusable="false"
-              role="presentation"
-              style={
-                Object {
-                  "color": "#ACD4D0",
-                  "margin": "0 10px 0 -10px",
-                  "verticalAlign": "text-top",
-                }
-              }
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M16.24 7.76C15.07 6.59 13.54 6 12 6v6l-4.24 4.24c2.34 2.34 6.14 2.34 8.49 0 2.34-2.34 2.34-6.14-.01-8.48zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-              />
-            </svg>
-            0
-          </h2>
-          <div>
-            Started:
-            <time
-              dateTime="2019-01-01T00:00:00+00:00"
-              title={null}
-            >
-              2019-01-01 00:00
-            </time>
-          </div>
+            <path
+              d="M16.24 7.76C15.07 6.59 13.54 6 12 6v6l-4.24 4.24c2.34 2.34 6.14 2.34 8.49 0 2.34-2.34 2.34-6.14-.01-8.48zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+            />
+          </svg>
+          0
+        </h2>
+        <div>
+          Started:
+          <time
+            dateTime="2019-01-01T00:00:00+00:00"
+            title={null}
+          >
+            2019-01-01 00:00
+          </time>
         </div>
+      </div>
+      <div>
         <div
-          className="inline-block"
+          className="results-status vertical"
         >
-          <div>
-            <div
-              className="results-status vertical"
+          <div
+            aria-label="Skipped"
+            className="hint--bottom disabled"
+          >
+            <span
+              className="status skipped"
             >
-              <div
-                aria-label="Skipped"
-                className="hint--bottom disabled"
-              >
-                <span
-                  className="status skipped"
-                >
-                  0
-                </span>
-                <span
-                  className="label"
-                >
-                  Skipped
-                </span>
-              </div>
-              <div
-                aria-label="Pending"
-                className="hint--bottom disabled"
-              >
-                <span
-                  className="status pending"
-                >
-                  0
-                </span>
-                <span
-                  className="label"
-                >
-                  Pending
-                </span>
-              </div>
-              <div
-                aria-label="In progress"
-                className="hint--bottom disabled"
-              >
-                <span
-                  className="status inprogress"
-                >
-                  0
-                </span>
-                <span
-                  className="label"
-                >
-                  In progress
-                </span>
-              </div>
-              <div
-                aria-label="Successful"
-                className="hint--bottom disabled"
-              >
-                <span
-                  className="status success"
-                >
-                  0
-                </span>
-                <span
-                  className="label"
-                >
-                  Successful
-                </span>
-              </div>
-              <div
-                aria-label="Failed"
-                className="hint--bottom disabled"
-              >
-                <span
-                  className="status failure"
-                >
-                  0
-                </span>
-                <span
-                  className="label"
-                >
-                  Failed
-                </span>
-              </div>
-            </div>
+              0
+            </span>
+            <span
+              className="label"
+            >
+              Skipped
+            </span>
+          </div>
+          <div
+            aria-label="Pending"
+            className="hint--bottom disabled"
+          >
+            <span
+              className="status pending"
+            >
+              0
+            </span>
+            <span
+              className="label"
+            >
+              Pending
+            </span>
+          </div>
+          <div
+            aria-label="In progress"
+            className="hint--bottom disabled"
+          >
+            <span
+              className="status inprogress"
+            >
+              0
+            </span>
+            <span
+              className="label"
+            >
+              In progress
+            </span>
+          </div>
+          <div
+            aria-label="Successful"
+            className="hint--bottom disabled"
+          >
+            <span
+              className="status success"
+            >
+              0
+            </span>
+            <span
+              className="label"
+            >
+              Successful
+            </span>
+          </div>
+          <div
+            aria-label="Failed"
+            className="hint--bottom disabled"
+          >
+            <span
+              className="status failure"
+            >
+              0
+            </span>
+            <span
+              className="label"
+            >
+              Failed
+            </span>
           </div>
         </div>
       </div>
-      <div
+    </div>
+    <div
+      className="hidden"
+      style={
+        Object {
+          "display": "inline-block",
+          "height": "auto",
+          "margin": "30px 0 30px 30px",
+          "verticalAlign": "top",
+          "width": "240px",
+        }
+      }
+    >
+      <span
+        aria-disabled={false}
+        className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-16 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+        label="Show pending devices"
+        onBlur={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex={null}
+      >
+        <span
+          className="MuiIconButton-label"
+        >
+          <input
+            className="PrivateSwitchBase-input-19"
+            data-indeterminate={false}
+            disabled={false}
+            onChange={[Function]}
+            type="checkbox"
+          />
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIcon-root"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+            />
+          </svg>
+        </span>
+      </span>
+      <p
         className="hidden"
         style={
           Object {
-            "display": "inline-block",
-            "height": "auto",
-            "margin": "30px 0 30px 30px",
-            "verticalAlign": "top",
-            "width": "240px",
+            "marginLeft": "40px",
           }
         }
       >
+        0
+         devices pending
+      </p>
+    </div>
+    <div
+      className="hint--bottom hint--large hint--info"
+      data-hint="Devices that have not yet started the deployment will not start the deployment.
+Devices that have already completed the deployment are not affected by the abort.
+Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback."
+      id="reportAbort"
+    >
+      <button
+        className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
+        disabled={false}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex={0}
+        type="button"
+      >
         <span
-          aria-disabled={false}
-          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-16 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
-          label="Show pending devices"
-          onBlur={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={null}
+          className="MuiButton-label"
         >
           <span
-            className="MuiIconButton-label"
+            className="MuiButton-startIcon MuiButton-iconSizeMedium"
           >
-            <input
-              className="PrivateSwitchBase-input-19"
-              data-indeterminate={false}
-              disabled={false}
-              onChange={[Function]}
-              type="checkbox"
-            />
             <svg
               aria-hidden="true"
-              className="MuiSvgIcon-root"
+              className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
               focusable="false"
               role="presentation"
               viewBox="0 0 24 24"
             >
               <path
-                d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-4.42 3.58-8 8-8 1.85 0 3.55.63 4.9 1.69L5.69 16.9C4.63 15.55 4 13.85 4 12zm8 8c-1.85 0-3.55-.63-4.9-1.69L18.31 7.1C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z"
               />
             </svg>
           </span>
+          Abort deployment
         </span>
-        <p
-          className="hidden"
-          style={
-            Object {
-              "marginLeft": "40px",
-            }
-          }
-        >
-          0
-           devices pending
-        </p>
-      </div>
-      <div
-        className="hint--bottom hint--large hint--info"
-        data-hint="Devices that have not yet started the deployment will not start the deployment.
-Devices that have already completed the deployment are not affected by the abort.
-Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback."
-        id="reportAbort"
-      >
-        <div
-          className="float-right"
-        >
-          <button
-            className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
-            disabled={false}
-            icon={
-              <Memo(BlockIcon)
-                style={
-                  Object {
-                    "height": "18px",
-                    "verticalAlign": "middle",
-                    "width": "18px",
-                  }
-                }
-              />
-            }
-            onBlur={[Function]}
-            onClick={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            tabIndex={0}
-            type="button"
-          >
-            <span
-              className="MuiButton-label"
-            >
-              Abort deployment
-            </span>
-          </button>
-        </div>
-      </div>
+      </button>
     </div>
   </div>
 </div>
