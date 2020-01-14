@@ -196,8 +196,12 @@ export class ReleaseRepository extends React.Component {
     }
 
     const noArtifactsClass = release ? '' : 'muted';
-    return (
-      <div className={`relative release-repo margin-left${wasSelectedRecently ? ' blurred' : ''}`} style={{ width: '100%' }}>
+    return loading || wasSelectedRecently ? (
+      <div className="flexbox centered" style={{ width: '100%', height: '50%' }}>
+        <Loader show={true} />
+      </div>
+    ) : (
+      <div className="relative release-repo margin-left" style={{ width: '100%' }}>
         <div className="flexbox">
           <KeyboardArrowRightIcon className={noArtifactsClass} />
           <div className={noArtifactsClass}>
