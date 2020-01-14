@@ -79,10 +79,14 @@ export const getDeploymentCount = (status, startDate, endDate, group) => (dispat
   });
 };
 
-export const createDeployment = deployment => dispatch =>
-  DeploymentsApi.post(`${deploymentsApiUrl}/deployments`, deployment).then(data => {
+export const createDeployment = newDeployment => dispatch =>
+  DeploymentsApi.post(`${deploymentsApiUrl}/deployments`, newDeployment).then(data => {
     const lastslashindex = data.location.lastIndexOf('/');
     const deploymentId = data.location.substring(lastslashindex + 1);
+    const deployment = {
+      ...newDeployment,
+      devices: newDeployment.devices.map(id => ({ id, status: 'pending' }))
+    };
     return Promise.all([
       dispatch({
         type: DeploymentConstants.CREATE_DEPLOYMENT,
