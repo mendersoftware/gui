@@ -56,17 +56,22 @@ export class CreateDialog extends React.Component {
     }
   }
 
+  cleanUpDeploymentsStatus() {
+    this.props.selectDevice();
+    this.props.selectRelease();
+    const location = window.location.hash.substring(0, window.location.hash.indexOf('?'));
+    window.location.replace(location);
+  }
+
   onScheduleSubmit(settings) {
     this.props.onScheduleSubmit(settings);
     this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: null, disableSchedule: false });
-    this.props.selectDevice();
-    this.props.selectRelease();
+    this.cleanUpDeploymentsStatus();
   }
 
   closeWizard() {
     this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: null, disableSchedule: false });
-    this.props.selectDevice();
-    this.props.selectRelease();
+    this.cleanUpDeploymentsStatus();
     this.props.onDismiss();
   }
 
