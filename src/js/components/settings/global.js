@@ -110,7 +110,7 @@ export class Global extends React.Component {
             onChange={value => this.changeIdAttribute(value)}
             menuItems={id_attributes}
             style={{ width: '400px' }}
-            value={this.state.updatedSettings.id_attribute || ''}
+            value={this.state.updatedSettings.id_attribute || this.props.settings.id_attribute || ''}
             hint={id_hint}
           />
         </Form>
