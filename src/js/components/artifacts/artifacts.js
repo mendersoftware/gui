@@ -12,6 +12,7 @@ import { preformatWithRequestID } from '../../helpers';
 import ReleaseRepository from './releaserepository';
 import ReleasesList from './releaseslist';
 import RemoveArtifactDialog from './dialogs/removeartifact';
+import CreateArtifactDialog from './dialogs/createartifact';
 
 export class Artifacts extends React.Component {
   constructor(props, context) {
@@ -19,7 +20,8 @@ export class Artifacts extends React.Component {
     this.state = {
       refreshArtifactsLength: 30000, //60000,
       doneLoading: false,
-      remove: false
+      remove: false,
+      showCreateArtifactDialog: false
     };
   }
   componentDidUpdate(prevProps) {
@@ -97,7 +99,7 @@ export class Artifacts extends React.Component {
   }
   render() {
     const self = this;
-    const { artifact, doneLoading } = self.state;
+    const { artifact, doneLoading, showCreateArtifactDialog } = self.state;
     const { artifactProgress, releases, showRemoveDialog, selectedArtifact, selectedRelease, showRemoveArtifactDialog } = self.props;
     return (
       <div style={{ height: '100%' }}>
@@ -123,6 +125,7 @@ export class Artifacts extends React.Component {
           onCancel={() => showRemoveArtifactDialog(false)}
           onRemove={() => self._removeArtifact(selectedArtifact || artifact || selectedRelease.Artifacts[0])}
         />
+        <CreateArtifactDialog open={showCreateArtifactDialog} onCancel={() => self.setState({ showCreateArtifactDialog: false })} />
       </div>
     );
   }
