@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, LinearProgress } from '@material-ui/core';
+import { Button, LinearProgress } from '@material-ui/core';
 
 import { setSnackbar } from '../../actions/appActions';
 import { selectDevices } from '../../actions/deviceActions';
@@ -11,6 +11,7 @@ import { preformatWithRequestID } from '../../helpers';
 
 import ReleaseRepository from './releaserepository';
 import ReleasesList from './releaseslist';
+import RemoveArtifactDialog from './dialogs/removeartifact';
 
 export class Artifacts extends React.Component {
   constructor(props, context) {
@@ -116,20 +117,12 @@ export class Artifacts extends React.Component {
             <LinearProgress variant="determinate" style={{ backgroundColor: '#c7c7c7', margin: '15px 0' }} value={artifactProgress} />
           </div>
         ) : null}
-
-        <Dialog open={showRemoveDialog}>
-          <DialogTitle>Remove this artifact?</DialogTitle>
-          <DialogContent>
-            Are you sure you want to remove <i>{(artifact || {}).name}</i>?
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => showRemoveArtifactDialog(false)}>Cancel</Button>
-            <div style={{ flexGrow: 1 }} />
-            <Button variant="contained" color="secondary" onClick={() => self._removeArtifact(selectedArtifact || artifact || selectedRelease.Artifacts[0])}>
-              Remove artifact
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <RemoveArtifactDialog
+          artifact={(artifact || {}).name}
+          open={showRemoveDialog}
+          onCancel={() => showRemoveArtifactDialog(false)}
+          onRemove={() => self._removeArtifact(selectedArtifact || artifact || selectedRelease.Artifacts[0])}
+        />
       </div>
     );
   }
