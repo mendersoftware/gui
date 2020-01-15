@@ -4,6 +4,8 @@ import { withRouter } from 'react-router-dom';
 
 import { Button, LinearProgress } from '@material-ui/core';
 
+import { CloudUpload, InfoOutlined as InfoIcon } from '@material-ui/icons';
+
 import { setSnackbar } from '../../actions/appActions';
 import { selectDevices } from '../../actions/deviceActions';
 import { getReleases, removeArtifact, selectArtifact, selectRelease, showRemoveArtifactDialog } from '../../actions/releaseActions';
@@ -104,13 +106,29 @@ export class Artifacts extends React.Component {
     return (
       <div style={{ height: '100%' }}>
         <div className="repository">
-          <ReleasesList
-            releases={releases}
-            selectedRelease={selectedRelease}
-            onSelect={release => self.props.selectRelease(release)}
-            onFilter={rels => self.onFilterReleases(rels)}
-            loading={!doneLoading}
-          />
+          <div>
+            <ReleasesList
+              releases={releases}
+              selectedRelease={selectedRelease}
+              onSelect={release => self.props.selectRelease(release)}
+              onFilter={rels => self.onFilterReleases(rels)}
+              loading={!doneLoading}
+            />
+            <div>
+              <Button
+                variant="contained"
+                color="secondary"
+                startIcon={<CloudUpload fontSize="small" />}
+                onClick={() => self.setState({ showCreateArtifactDialog: true })}
+              >
+                Upload
+              </Button>
+              <p className="info">
+                <InfoIcon fontSize="small" />
+                Upload an Artifact to an existing or new Release
+              </p>
+            </div>
+          </div>
           <ReleaseRepository refreshArtifacts={() => self._getReleases()} loading={!doneLoading} release={selectedRelease} />
         </div>
         {artifactProgress ? (

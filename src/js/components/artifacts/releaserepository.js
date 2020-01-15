@@ -7,7 +7,7 @@ import ReactTooltip from 'react-tooltip';
 // material ui
 import { Button, Tooltip, Typography } from '@material-ui/core';
 
-import { CloudUpload as FileIcon, Help as HelpIcon, KeyboardArrowRight as KeyboardArrowRightIcon, Sort as SortIcon } from '@material-ui/icons';
+import { Help as HelpIcon, KeyboardArrowRight as KeyboardArrowRightIcon, Sort as SortIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { editArtifact, uploadArtifact, selectArtifact, selectRelease } from '../../actions/releaseActions';
@@ -212,29 +212,6 @@ export class ReleaseRepository extends React.Component {
           </div>
         </div>
 
-        <Dropzone
-          disabled={uploading}
-          activeClassName="active"
-          rejectClassName="active"
-          multiple={false}
-          accept=".mender"
-          onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
-        >
-          {({ getRootProps, getInputProps }) => (
-            <div
-              {...getRootProps({ className: `dashboard-placeholder top-right-button fadeIn onboard ${dropzoneClass}`, style: { top: 0 } })}
-              ref={ref => (this.dropzoneRef = ref)}
-            >
-              <input {...getInputProps()} disabled={uploading} />
-              <span className="icon">
-                <FileIcon style={{ height: '24px', width: '24px', verticalAlign: 'middle', marginTop: '-2px', marginRight: '10px' }} />
-              </span>
-              <span>
-                Drag here or <a>browse</a> to upload an Artifact file
-              </span>
-            </div>
-          )}
-        </Dropzone>
         {uploadArtifactOnboardingComponent ? uploadArtifactOnboardingComponent : null}
         <Loader show={loading} />
 
