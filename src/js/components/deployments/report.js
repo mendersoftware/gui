@@ -354,14 +354,14 @@ export class DeploymentReport extends React.Component {
 
 const actionCreators = { getDeviceAuth, getDeviceById, getDeviceLog, getSingleDeploymentDevices, getSingleDeploymentStats };
 
-const mapStateToProps = (state, ownProps) => {
-  const allDevices = sortDeploymentDevices(Object.values(state.deployments.byId[ownProps.deployment.id].devices || {}));
+const mapStateToProps = state => {
+  const allDevices = sortDeploymentDevices(Object.values(state.deployments.byId[state.deployments.selectedDeployment].devices || {}));
   return {
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
     allDevices,
     deviceCount: allDevices.length,
     devicesById: state.devices.byId,
-    deployment: state.deployments.byId[ownProps.deployment.id]
+    deployment: state.deployments.byId[state.deployments.selectedDeployment]
   };
 };
 

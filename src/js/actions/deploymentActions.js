@@ -47,7 +47,10 @@ export const getDeploymentsByStatus = (status, page = default_page, per_page = d
     `${deploymentsApiUrl}/deployments?status=${status}&per_page=${per_page}&page=${page}${created_after}${created_before}${search}`
   ).then(res => {
     const { deployments, deploymentIds } = transformDeployments(res.body, getState().deployments.byId);
-    let tasks = [dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status })];
+    let tasks = [
+      dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status }),
+      dispatch({ type: DeploymentConstants[`SELECT_${status.toUpperCase()}_DEPLOYMENTS`], deploymentIds, status })
+    ];
     tasks.push(...deploymentIds.map(deploymentId => dispatch(getSingleDeploymentStats(deploymentId))));
     return Promise.all(tasks);
   });
@@ -76,10 +79,14 @@ export const getDeploymentCount = (status, startDate, endDate, group) => (dispat
   });
 };
 
-export const createDeployment = deployment => dispatch =>
-  DeploymentsApi.post(`${deploymentsApiUrl}/deployments`, deployment).then(data => {
+export const createDeployment = newDeployment => dispatch =>
+  DeploymentsApi.post(`${deploymentsApiUrl}/deployments`, newDeployment).then(data => {
     const lastslashindex = data.location.lastIndexOf('/');
     const deploymentId = data.location.substring(lastslashindex + 1);
+    const deployment = {
+      ...newDeployment,
+      devices: newDeployment.devices.map(id => ({ id, status: 'pending' }))
+    };
     return Promise.all([
       dispatch({
         type: DeploymentConstants.CREATE_DEPLOYMENT,

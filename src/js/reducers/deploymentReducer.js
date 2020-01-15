@@ -5,12 +5,11 @@ const initialState = {
     // [id]: { stats, devices: [ { id, log } ] }
   },
   byStatus: {
-    pending: { deploymentIds: [], total: 0 },
-    inprogress: { deploymentIds: [], total: 0 },
-    finished: { deploymentIds: [], total: 0 }
+    pending: { deploymentIds: [], selectedDeploymentIds: [], total: 0 },
+    inprogress: { deploymentIds: [], selectedDeploymentIds: [], total: 0 },
+    finished: { deploymentIds: [], selectedDeploymentIds: [], total: 0 }
   },
   deploymentDeviceLimit: 5000,
-  selectedDeploymentsList: [],
   selectedDeployment: null
 };
 
@@ -74,7 +73,6 @@ const deploymentReducer = (state = initialState, action) => {
           }
         }
       };
-
     case DeploymentConstants.RECEIVE_INPROGRESS_DEPLOYMENTS:
     case DeploymentConstants.RECEIVE_PENDING_DEPLOYMENTS:
     case DeploymentConstants.RECEIVE_FINISHED_DEPLOYMENTS:
@@ -106,6 +104,19 @@ const deploymentReducer = (state = initialState, action) => {
           [action.status]: {
             ...state.byStatus[action.status],
             total: action.deploymentIds.length
+          }
+        }
+      };
+    case DeploymentConstants.SELECT_INPROGRESS_DEPLOYMENTS:
+    case DeploymentConstants.SELECT_PENDING_DEPLOYMENTS:
+    case DeploymentConstants.SELECT_FINISHED_DEPLOYMENTS:
+      return {
+        ...state,
+        byStatus: {
+          ...state.byStatus,
+          [action.status]: {
+            ...state.byStatus[action.status],
+            selectedDeploymentIds: action.deploymentIds
           }
         }
       };

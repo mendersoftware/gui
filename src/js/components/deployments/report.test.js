@@ -20,12 +20,14 @@ describe('DeploymentReport Component', () => {
       deployments: {
         byId: {
           a1: {
-            devices: {},
             artifact_name: 'test',
             created: '2019-01-01',
-            finished: '2019-01-01'
+            devices: {},
+            finished: '2019-01-01',
+            stats: {}
           }
-        }
+        },
+        selectedDeployment: 'a1'
       }
     });
   });

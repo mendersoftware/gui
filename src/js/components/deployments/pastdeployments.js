@@ -16,6 +16,7 @@ import AutoSelect from '../common/forms/autoselect';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import DeploymentStatus from './deploymentstatus';
 import { formatTime } from '../../helpers';
+import { clearAllRetryTimers } from '../../utils/retrytimer';
 import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 const timeranges = {
@@ -25,19 +26,32 @@ const timeranges = {
   month: { start: 29, end: 0, title: 'Last 30 days' }
 };
 
+const today = new Date(new Date().setHours(0, 0, 0));
+const tonight = new Date(new Date().setHours(23, 59, 59));
+
+const refreshDeploymentsLength = 30000;
+
 export class Past extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
+      active: 'today',
+      deviceGroup: null,
+      endDate: tonight,
+      startDate: props.startDate || today,
+      page: 1,
+      perPage: 20,
       retry: false,
-      today: new Date(),
-      active: 'today'
+      today: new Date()
     };
-    this._setDateRange(timeranges['today'].start, timeranges['today'].end);
   }
 
   componentDidMount() {
     const self = this;
+    self._setDateRange(timeranges['today'].start, timeranges['today'].end);
+    clearInterval(self.timer);
+    self.timer = setInterval(() => self._refreshPast(), refreshDeploymentsLength);
+    self._refreshPast();
     if (self.props.showHelptips && self.props.showOnboardingTips && !self.props.onboardingComplete && this.props.past.length) {
       const progress = getOnboardingStepCompleted('artifact-modified-onboarding') && this.props.past.length > 1 ? 4 : 3;
       setTimeout(() => {
@@ -48,13 +62,9 @@ export class Past extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
-    if (
-      (this.props.startDate !== prevProps.startDate && this.state.startDate && this.state.startDate !== this.props.startDate) ||
-      (this.props.endDate !== prevProps.endDate && this.state.endDate && this.state.endDate !== this.props.endDate)
-    ) {
-      this._handleDateChange(1, this.props.startDate, this.props.endDate);
-    }
+  componentWillUnmount() {
+    clearInterval(this.timer);
+    clearAllRetryTimers(this.props.setSnackbar);
   }
 
   onCloseSnackbar = (_, reason) => {
@@ -65,37 +75,47 @@ export class Past extends React.Component {
   };
 
   _setDateRange(after, before) {
-    var self = this;
     var startDate = new Date();
     startDate.setDate(startDate.getDate() - (after || 0));
     startDate.setHours(0, 0, 0, 0);
     var endDate = new Date();
     endDate.setDate(endDate.getDate() - (before || 0));
     endDate.setHours(23, 59, 59, 999);
+    this._refreshPast(1, this.state.perPage, startDate, endDate, this.state.deviceGroup);
+  }
 
-    self._handleDateChange(1, startDate, endDate);
+  /*
+  / refresh only finished deployments
+  /
+  */
+  _refreshPast(
+    page = this.state.page,
+    perPage = this.state.perPage,
+    startDate = this.state.startDate,
+    endDate = this.state.endDate,
+    group = this.state.deviceGroup
+  ) {
+    const self = this;
+    // always get total count of past deployments, only refresh deployments if page, count or date range has changed
+    let fullRefresh = false;
+    if (self.state.page !== page || !self.state.doneLoading) {
+      fullRefresh = true;
+    }
+    const roundedStartDate = Math.round(Date.parse(startDate) / 1000);
+    const roundedEndDate = Math.round(Date.parse(endDate) / 1000);
+    return self.setState({ page, perPage, endDate, startDate, group }, () =>
+      self.props.refreshDeployments(page, perPage, 'finished', roundedStartDate, roundedEndDate, group, fullRefresh)
+    );
   }
-  _pastCellClick(rowNumber) {
+
+  _pastCellClick(deploymentId) {
     // adjust index to allow for client side pagination
-    var deployment = this.props.past[rowNumber];
-    this.props.selectDeployment(deployment.id);
+    this.props.selectDeployment(deploymentId);
     this.props.showReport('past');
-  }
-  _handleDateChange(pageNo, createdAfter, createdBefore) {
-    createdAfter = createdAfter || this.props.startDate;
-    createdBefore = createdBefore || this.props.endDate;
-    this.props.refreshPast(pageNo, createdAfter, createdBefore, this.props.pageSize, this.props.deviceGroup);
-  }
-  _handlePageChange(pageNo) {
-    this.props.refreshPast(pageNo, this.props.startDate, this.props.endDate, this.props.pageSize, this.props.deviceGroup);
-  }
-  _handleChangeStartDate(date) {
-    // refresh deployment list
-    this._handleDateChange(1, date, null);
   }
 
   _handleChangeEndDate(date) {
-    var startDate = this.props.startDate;
+    var startDate = this.state.startDate;
     if (date < startDate) {
       startDate = date;
       startDate._isAMomentObject ? startDate.startOf('day') : startDate.setHours(0, 0, 0, 0);
@@ -106,21 +126,18 @@ export class Past extends React.Component {
     date._isAMomentObject ? date.endOf('day') : date.setHours(23, 59, 59, 999);
 
     // refresh deployment list
-    this._handleDateChange(1, startDate, date);
+    this._refreshPast(1, this.state.perPage, startDate, date, this.state.deviceGroup);
   }
 
   setDefaultRange(after, before, active) {
     this._setDateRange(after, before);
-    this.setState({ active: active });
-  }
-
-  handleUpdateInput(value) {
-    this.props.refreshPast(1, this.props.startDate, this.props.endDate, this.props.pageSize, value);
+    this.setState({ active });
   }
 
   render() {
     const self = this;
-    const pastMap = this.props.past.map((deployment, index) => {
+    const { page, perPage, endDate, startDate } = self.state;
+    const pastMap = self.props.past.map((deployment, index) => {
       let time = '-';
       if (deployment.finished) {
         time = <Time value={formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" />;
@@ -129,7 +146,7 @@ export class Past extends React.Component {
       //  get statistics
       const status = (
         <DeploymentStatus
-          isActiveTab={this.props.isActiveTab}
+          isActiveTab={self.props.isActiveTab}
           id={deployment.id}
           stats={deployment.stats}
           setFinished={() => {}}
@@ -138,7 +155,7 @@ export class Past extends React.Component {
       );
 
       return (
-        <TableRow hover key={index} onClick={() => this._pastCellClick(index)}>
+        <TableRow hover key={index} onClick={() => self._pastCellClick(deployment.id)}>
           <TableCell>{deployment.artifact_name}</TableCell>
           <TableCell>{deployment.name}</TableCell>
           <TableCell>
@@ -188,11 +205,11 @@ export class Past extends React.Component {
               <DatePicker
                 variant="inline"
                 className="margin-right"
-                onChange={date => this._handleChangeStartDate(date)}
+                onChange={date => self._refreshPast(1, perPage, date)}
                 autoOk={true}
                 label="From"
-                value={this.props.startDate}
-                maxDate={this.props.endDate || this.state.today}
+                value={startDate}
+                maxDate={endDate || today}
                 style={{ width: '160px', marginTop: 0 }}
               />
             </Grid>
@@ -200,11 +217,11 @@ export class Past extends React.Component {
               <DatePicker
                 variant="inline"
                 className="margin-right"
-                onChange={date => this._handleChangeEndDate(date)}
+                onChange={date => self._handleChangeEndDate(date)}
                 autoOk={true}
                 label="To"
-                value={this.props.endDate}
-                maxDate={this.state.today}
+                value={endDate}
+                maxDate={today}
                 style={{ width: '160px', marginTop: 0 }}
               />
             </Grid>
@@ -215,43 +232,43 @@ export class Past extends React.Component {
               placeholder="Select a group"
               errorText="Choose a Release to deploy"
               items={menuItems}
-              onChange={value => this.handleUpdateInput(value)}
+              onChange={value => self._refreshPast(1, perPage, startDate, endDate, value)}
               style={{ marginTop: 0 }}
             />
           </Grid>
         </Grid>
         <div className="deploy-table-contain">
           <Loader show={this.props.loading} />
-          {pastMap.length ? (
-            <Table style={{ overflow: 'visible' }}>
-              <TableHead>
-                <TableRow style={{ overflow: 'visible' }}>
-                  <TableCell>Updating to</TableCell>
-                  <TableCell>Group</TableCell>
-                  <TableCell>Started</TableCell>
-                  <TableCell>Finished</TableCell>
-                  <TableCell style={{ textAlign: 'right', width: '100px' }}># Devices</TableCell>
-                  <TableCell style={{ minWidth: '400px' }}>Status</TableCell>
-                </TableRow>
-              </TableHead>
-              <RootRef rootRef={ref => (this.deploymentsRef = ref)}>
-                <TableBody style={{ cursor: 'pointer', overflow: 'visible' }}>{pastMap}</TableBody>
-              </RootRef>
-            </Table>
-          ) : null}
 
           {!this.props.loading && this.props.showHelptips && pastMap.length && onboardingComponent
             ? onboardingComponent // TODO: fix status retrieval for past deployments to decide what to show here -
             : null}
 
-          {this.props.past.length ? (
-            <Pagination
-              count={self.props.count}
-              rowsPerPage={self.props.pageSize}
-              onChangeRowsPerPage={self.props.onChangeRowsPerPage}
-              page={self.props.page}
-              onChangePage={page => self._handlePageChange(page)}
-            />
+          {this.props.past.length && !!pastMap.length ? (
+            <>
+              <Table style={{ overflow: 'visible' }}>
+                <TableHead>
+                  <TableRow style={{ overflow: 'visible' }}>
+                    <TableCell>Updating to</TableCell>
+                    <TableCell>Group</TableCell>
+                    <TableCell>Started</TableCell>
+                    <TableCell>Finished</TableCell>
+                    <TableCell style={{ textAlign: 'right', width: '100px' }}># Devices</TableCell>
+                    <TableCell style={{ minWidth: '400px' }}>Status</TableCell>
+                  </TableRow>
+                </TableHead>
+                <RootRef rootRef={ref => (this.deploymentsRef = ref)}>
+                  <TableBody style={{ cursor: 'pointer', overflow: 'visible' }}>{pastMap}</TableBody>
+                </RootRef>
+              </Table>
+              <Pagination
+                count={self.props.count}
+                rowsPerPage={perPage}
+                onChangeRowsPerPage={value => self.setState({ perPage: value }, () => self._refreshPast(1, value))}
+                page={page}
+                onChangePage={pageNo => self._refreshPast(pageNo)}
+              />
+            </>
           ) : (
             <div className={this.props.loading || pastMap.length ? 'hidden' : 'dashboard-placeholder'}>
               <p>No finished deployments were found.</p>
@@ -270,8 +287,11 @@ export class Past extends React.Component {
 const actionCreators = { setSnackbar, selectDeployment, getSingleDeploymentStats };
 
 const mapStateToProps = state => {
+  const past = state.deployments.byStatus.finished.selectedDeploymentIds.map(id => state.deployments.byId[id]);
   return {
     onboardingComplete: state.users.onboarding.complete,
+    past,
+    count: state.deployments.byStatus.finished.total,
     showHelptips: state.users.showHelptips,
     showOnboardingTips: state.users.onboarding.showTips
   };
