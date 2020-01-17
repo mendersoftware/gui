@@ -7,6 +7,7 @@ import { Button, List, ListItem, ListItemText, Typography } from '@material-ui/c
 import { KeyboardArrowRight as KeyboardArrowRightIcon, Sort as SortIcon } from '@material-ui/icons';
 
 import Loader from '../common/loader';
+import { customSort } from '../../helpers';
 
 export default class ReleasesList extends React.Component {
   constructor(props, context) {
@@ -33,7 +34,7 @@ export default class ReleasesList extends React.Component {
     const { loading, onSelect, releases, selectedRelease } = self.props;
     const { sortDown } = self.state;
 
-    const filteredReleases = self.state.filteredReleases || releases;
+    const filteredReleases = (self.state.filteredReleases || releases).sort(customSort(sortDown, 'Name'));
 
     return (
       <div className="repository-list">
