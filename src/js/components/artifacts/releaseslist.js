@@ -9,6 +9,8 @@ import { KeyboardArrowRight as KeyboardArrowRightIcon, Sort as SortIcon } from '
 import Loader from '../common/loader';
 import { customSort } from '../../helpers';
 
+const filters = ['device_types_compatible', 'descriptions', 'Name'];
+
 export default class ReleasesList extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -21,11 +23,9 @@ export default class ReleasesList extends React.Component {
   searchUpdated(term) {
     const self = this;
     if (self.search) {
-      var filters = ['Name', 'device_types_compatible'];
-      let filteredItems = self.props.releases;
-      filteredItems = self.props.releases.filter(self.search.filter(filters));
-      self.props.onFilter(filteredItems);
-      self.setState({ searchTerm: term, filteredReleases: filteredItems });
+      const filteredReleases = self.props.releases.filter(self.search.filter(filters));
+      self.props.onFilter(filteredReleases);
+      self.setState({ searchTerm: term, filteredReleases });
     }
   }
 

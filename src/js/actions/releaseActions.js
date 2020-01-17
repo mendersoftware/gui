@@ -9,8 +9,17 @@ const apiUrl = '/api/management/v1';
 const deploymentsApiUrl = `${apiUrl}/deployments`;
 
 const flattenRelease = release => {
-  release.device_types_compatible = release.Artifacts.reduce((accu, item) => [...accu, ...item.device_types_compatible], []);
+  const { descriptions, deviceTypes } = release.Artifacts.reduce(
+    (accu, item) => {
+      item.description ? accu.descriptions.push(item.description) : null;
+      accu.deviceTypes.concat(item.device_types_compatible);
+      return accu;
+    },
+    { descriptions: [], deviceTypes: [] }
+  );
   release.Artifacts.sort(customSort(1, 'modified'));
+  release.descriptions = descriptions;
+  release.device_types_compatible = deviceTypes;
   return release;
 };
 

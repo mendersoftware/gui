@@ -29,9 +29,10 @@ const initialState = {
           ],
           url: '' // optional
         }
-      ]
-      Name: '',
-      device_types_compatible
+      ],
+      descriptions,
+      device_types_compatible,
+      Name: ''
     }
     */
   },
