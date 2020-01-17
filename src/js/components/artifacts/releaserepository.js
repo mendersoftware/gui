@@ -6,8 +6,7 @@ import ReactTooltip from 'react-tooltip';
 
 // material ui
 import { Button, Tooltip, Typography } from '@material-ui/core';
-
-import { Help as HelpIcon, KeyboardArrowRight as KeyboardArrowRightIcon, Sort as SortIcon } from '@material-ui/icons';
+import { Help as HelpIcon, Sort as SortIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { editArtifact, uploadArtifact, selectArtifact, selectRelease } from '../../actions/releaseActions';
@@ -202,15 +201,17 @@ export class ReleaseRepository extends React.Component {
       </div>
     ) : (
       <div className="relative release-repo margin-left" style={{ width: '100%' }}>
-        <div className="flexbox">
-          <KeyboardArrowRightIcon className={noArtifactsClass} />
-          <div className={noArtifactsClass}>
-            <Typography variant="body2" style={release ? { fontWeight: 'bold', marginBottom: '30px' } : { marginBottom: '30px' }}>
-              {release ? release.Name : 'No release selected'}
-            </Typography>
-            <Typography variant="body1">Artifacts in this Release:</Typography>
-          </div>
+        <div className="muted margin-bottom">
+          <Typography variant="body1" style={{ marginBottom: 10 }}>
+            Release:
+          </Typography>
+          <Typography variant="body2">{release ? release.Name : 'No release selected'}</Typography>
         </div>
+        {!!release && (
+          <Typography variant="body1" style={{ fontWeight: 'bold' }}>
+            Artifacts in this Release:
+          </Typography>
+        )}
 
         {uploadArtifactOnboardingComponent ? uploadArtifactOnboardingComponent : null}
         <Loader show={loading} />

@@ -142,7 +142,7 @@ EOF
     return (
       <Dialog open={open || false} fullWidth={true} maxWidth={progress > 1 ? 'sm' : 'md'}>
         <DialogTitle>Creating a new Artifact</DialogTitle>
-        <DialogContent className="onboard-dialog">{steps[progress]}</DialogContent>
+        <DialogContent className="onboard-dialog dialog-content">{steps[progress]}</DialogContent>
         <DialogActions>
           <Button onClick={onCancel}>Cancel</Button>
           <div style={{ flexGrow: 1 }} />

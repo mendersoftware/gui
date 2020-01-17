@@ -175,10 +175,6 @@ ul.link-list {
   }
 }
 
-.nowrap {
-  white-space: nowrap;
-}
-
 .capitalized {
   text-transform: capitalize;
 }
@@ -654,8 +650,12 @@ ul.link-list {
   border: white 1px solid;
 }
 
-.onboard-dialog {
+.dialog-content {
+  margin: 30px;
   min-height: 30vh;
+}
+
+.onboard-dialog {
   display: flex;
   > div {
     display: flex;
@@ -1088,9 +1088,10 @@ table thead.clickable tr > th:first-child {
     visibility: visible;
     .transition(all 0.15s ease-in-out) !important;
   }
-  .sortIcon.false {
-    .rotateX(180deg) !important;
-  }
+}
+
+.sortIcon.false {
+  .rotateX(180deg) !important;
 }
 
 .tableSearch {
@@ -1187,10 +1188,13 @@ table thead.clickable tr > th:first-child {
   padding: 0 16px;
 }
 
-.listItem-link {
-  float: right;
-  font-size: 13px;
-  font-weight: 500;
+.file-upload-form {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  grid-template-rows: repeat(3, 70px) 1fr;
+  .info {
+    grid-area: ~'4 / 1 / 5 / 3';
+  }
 }
 
 /*  hint.css tooltips */
@@ -2180,9 +2184,9 @@ span.day {
   display: flex;
   .repository-list {
     border-right: 1px solid @lightergrey;
-    min-width: 210px;
+    min-width: 1.5 * @defaultLeftBarWidth;
     width: 100%;
-    max-width: @defaultLeftBarWidth;
+    max-width: 3 * @defaultLeftBarWidth;
     > div.margin-bottom-small {
       height: 85px;
     }
@@ -2237,6 +2241,11 @@ span.day {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr 48px;
     grid-column-gap: 20px;
+    .text-overflow {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
   }
 }
 

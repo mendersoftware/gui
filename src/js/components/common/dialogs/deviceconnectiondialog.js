@@ -112,7 +112,7 @@ export class DeviceConnectionDialog extends React.Component {
     return (
       <Dialog open={open || false} fullWidth={true} maxWidth="sm">
         <DialogTitle>Connecting a device</DialogTitle>
-        <DialogContent className="onboard-dialog">{content}</DialogContent>
+        <DialogContent className="onboard-dialog dialog-content">{content}</DialogContent>
         <DialogActions>
           <Button onClick={onCancel}>Cancel</Button>
           <div style={{ flexGrow: 1 }} />

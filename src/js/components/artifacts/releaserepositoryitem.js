@@ -36,7 +36,7 @@ export default class ReleaseRepositoryItem extends React.PureComponent {
         >
           <ExpansionPanelSummary style={{ padding: '0 12px' }} classes={{ content: 'repo-item' }}>
             <Tooltip title={compatible} placement="top-start">
-              <div className="nowrap text-overflow">{compatible}</div>
+              <div className="text-overflow">{compatible}</div>
             </Tooltip>
             <Time value={formatTime(artifact.modified)} format="YYYY-MM-DD HH:mm" />
             <div style={{ maxWidth: '100vw' }}>{artifactType}</div>
