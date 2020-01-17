@@ -8,13 +8,13 @@ import { CloudUpload, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { selectDevices } from '../../actions/deviceActions';
-import { getReleases, removeArtifact, selectArtifact, selectRelease, showRemoveArtifactDialog } from '../../actions/releaseActions';
+import { getReleases, removeArtifact, selectArtifact, selectRelease, showRemoveArtifactDialog, uploadArtifact } from '../../actions/releaseActions';
 import { preformatWithRequestID } from '../../helpers';
 
 import ReleaseRepository from './releaserepository';
 import ReleasesList from './releaseslist';
 import RemoveArtifactDialog from './dialogs/removeartifact';
-import CreateArtifactDialog from './dialogs/createartifact';
+import AddArtifactDialog from './dialogs/addartifact';
 
 export class Artifacts extends React.Component {
   constructor(props, context) {
@@ -102,7 +102,7 @@ export class Artifacts extends React.Component {
   render() {
     const self = this;
     const { artifact, doneLoading, showCreateArtifactDialog } = self.state;
-    const { artifactProgress, releases, showRemoveDialog, selectedArtifact, selectedRelease, showRemoveArtifactDialog } = self.props;
+    const { artifactProgress, deviceTypes, releases, showRemoveDialog, selectedArtifact, selectedRelease, showRemoveArtifactDialog } = self.props;
     return (
       <div style={{ height: '100%' }}>
         <div className="repository">
@@ -119,11 +119,12 @@ export class Artifacts extends React.Component {
                 variant="contained"
                 color="secondary"
                 startIcon={<CloudUpload fontSize="small" />}
+                style={{ minWidth: 164 }}
                 onClick={() => self.setState({ showCreateArtifactDialog: true })}
               >
                 Upload
               </Button>
-              <p className="info">
+              <p className="info flexbox" style={{ alignItems: 'center' }}>
                 <InfoIcon fontSize="small" />
                 Upload an Artifact to an existing or new Release
               </p>
@@ -143,17 +144,30 @@ export class Artifacts extends React.Component {
           onCancel={() => showRemoveArtifactDialog(false)}
           onRemove={() => self._removeArtifact(selectedArtifact || artifact || selectedRelease.Artifacts[0])}
         />
-        <CreateArtifactDialog open={showCreateArtifactDialog} onCancel={() => self.setState({ showCreateArtifactDialog: false })} />
+        <AddArtifactDialog
+          deviceTypes={deviceTypes}
+          open={showCreateArtifactDialog}
+          onCancel={() => self.setState({ showCreateArtifactDialog: false })}
+          onUpload={uploadArtifact}
+        />
       </div>
     );
   }
 }
 
-const actionCreators = { getReleases, removeArtifact, selectArtifact, selectDevices, selectRelease, showRemoveArtifactDialog, setSnackbar };
+const actionCreators = { getReleases, removeArtifact, selectArtifact, selectDevices, selectRelease, showRemoveArtifactDialog, setSnackbar, uploadArtifact };
 
 const mapStateToProps = state => {
+  const deviceTypes = state.devices.byStatus.accepted.deviceIds.reduce((accu, item) => {
+    const deviceType = state.devices.byId[item] ? state.devices.byId[item].attributes.device_type : '';
+    if (deviceType.length > 0) {
+      accu[deviceType] = accu[deviceType] ? accu[deviceType] + 1 : 1;
+    }
+    return accu;
+  }, {});
   return {
     artifactProgress: state.releases.uploadProgress,
+    deviceTypes: Object.keys(deviceTypes),
     onboardingComplete: state.users.onboarding.complete,
     releases: Object.values(state.releases.byId),
     selectedArtifact: state.releases.selectedArtifact,
