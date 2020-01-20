@@ -78,7 +78,6 @@ exports[`ReleaseRepository Component renders correctly 1`] = `
         tabIndex={0}
       >
         <input
-          accept=".mender"
           autoComplete="off"
           disabled={false}
           multiple={false}

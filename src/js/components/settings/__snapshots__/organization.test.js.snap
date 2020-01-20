@@ -79,7 +79,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
           </svg>
         </div>
         <div
-          className="__react_component_tooltip place-top type-dark "
+          className="__react_component_tooltip place-top type-dark"
           data-id="tooltip"
           id="token-help"
         >

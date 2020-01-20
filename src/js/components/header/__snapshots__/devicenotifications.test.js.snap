@@ -10,7 +10,7 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
     id="limit"
   >
     <div
-      className="__react_component_tooltip place-bottom type-dark "
+      className="__react_component_tooltip place-bottom type-dark"
       data-id="tooltip"
       id="limit-tip"
     >
