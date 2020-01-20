@@ -28,12 +28,20 @@ export class ReleaseRepository extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
+      popupLabel: 'Upload a new artifact',
       sortCol: 'modified',
       sortDown: true,
+      tmpFile: null,
       upload: false,
-      popupLabel: 'Upload a new artifact',
-      tmpFile: null
+      wasSelectedRecently: false
     };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.release && prevProps.release.Name !== this.props.release.Name) {
+      const self = this;
+      self.setState({ wasSelectedRecently: true }, () => setTimeout(() => self.setState({ wasSelectedRecently: false }), 200));
+    }
   }
 
   onDrop(acceptedFiles, rejectedFiles) {
@@ -102,10 +110,10 @@ export class ReleaseRepository extends React.Component {
   render() {
     const self = this;
     const { loading, release, selectedArtifact, showHelptips, uploading } = self.props;
-    const { sortDown, sortCol } = self.state;
+    const { sortCol, sortDown, wasSelectedRecently } = self.state;
     const artifacts = release ? release.Artifacts : [];
     const items = artifacts.sort(customSort(sortDown, sortCol)).map((pkg, index) => {
-      const expanded = selectedArtifact && selectedArtifact.id === pkg.id;
+      const expanded = !!(selectedArtifact && selectedArtifact.id === pkg.id);
       return (
         <ReleaseRepositoryItem
           key={`repository-item-${index}`}
@@ -144,7 +152,6 @@ export class ReleaseRepository extends React.Component {
         )}
       </Dropzone>
     );
-    const noArtifactsClass = release ? '' : 'muted';
 
     // We need the ref to the <a> element that refers to the deployments tab, in order to align
     // the helptip with the button - unfortunately this is not forwarded through react-router or mui
@@ -188,7 +195,12 @@ export class ReleaseRepository extends React.Component {
       );
     }
 
-    return (
+    const noArtifactsClass = release ? '' : 'muted';
+    return loading || wasSelectedRecently ? (
+      <div className="flexbox centered" style={{ width: '100%', height: '50%' }}>
+        <Loader show={true} />
+      </div>
+    ) : (
       <div className="relative release-repo margin-left" style={{ width: '100%' }}>
         <div className="flexbox">
           <KeyboardArrowRightIcon className={noArtifactsClass} />

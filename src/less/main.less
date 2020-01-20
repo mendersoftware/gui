@@ -1286,10 +1286,9 @@ span.code {
 
 #reportAbort {
   position: absolute;
-  top: 85px;
-  right: 3 * @defaultGutterWidth;
-  width: 280px;
-  background-color: rgba(255, 255, 255, 0.8);
+  top: 100px;
+  right: 2 * @defaultGutterWidth;
+  width: 230px;
 }
 
 /* Forms and inputs*/
@@ -1952,10 +1951,18 @@ span.day {
 }
 
 .report-container {
+  display: grid;
+  grid-template-columns: 2fr 220px 235px 235px 1fr;
+  grid-column-gap: 2 * @defaultGutterWidth;
+  &.report-progressing {
+    grid-template-columns: 1fr 2fr 1fr;
+  }
   .deploymentInfo {
+    margin-top: 30px;
     font-size: 14px;
     white-space: nowrap;
-
+    flex-grow: 1;
+    max-width: 350px;
     > div {
       margin-bottom: 10px;
       overflow: hidden;
@@ -2004,8 +2011,8 @@ span.day {
 
 .deployment-item {
   display: grid;
-  grid-template-columns: 20% 0.25fr 0.25fr 0.25fr 30% 0.25fr 50px;
-  grid-column-gap: 30px;
+  grid-template-columns: 2fr 1fr 1fr 1fr 3fr 1fr 50px;
+  grid-column-gap: 2 * @defaultGutterWidth;
   border-bottom: 1px solid @bordercolor;
   margin: 0 30px;
   align-items: center;
@@ -2015,6 +2022,10 @@ span.day {
   }
   &.progress-item {
     padding: 10px 0;
+  }
+  > div,
+  time {
+    min-width: 100px;
   }
   .cancelButton:hover {
     color: @red;
@@ -2084,8 +2095,6 @@ span.day {
   position: relative;
   display: inline-block;
   top: -5px;
-  margin-right: @defaultGutterWidth;
-
   > img {
     vertical-align: top;
     display: inline;
@@ -2093,7 +2102,7 @@ span.day {
   .statusWrapper {
     max-width: 160px;
     min-height: 38px;
-    padding: @defaultGutterWidth 20px 25px;
+    padding: @defaultGutterWidth @defaultGutterWidth 25px 20px;
     margin: 0 8px 10px 10px;
     background-color: @lightestgrey;
     position: relative;
@@ -2101,7 +2110,6 @@ span.day {
     font-size: 16px;
     vertical-align: top;
     white-space: normal;
-
     &:after {
       content: '';
       width: 0;
@@ -2123,14 +2131,9 @@ span.day {
   top: -26px;
   height: auto;
   margin: 2 * @defaultGutterWidth 2 * @defaultGutterWidth 0 0;
-  display: inline-block;
-  vertical-align: top;
-
   #progressStatus {
-    display: inline-block;
     text-align: center;
     vertical-align: top;
-    margin-right: 120px;
   }
 }
 

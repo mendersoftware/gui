@@ -124,7 +124,11 @@ export class DeploymentReport extends React.Component {
     const slice = devices.slice(start, end);
     const self = this;
     const lackingData = this.state.pagedDevices.reduce((accu, device) => {
-      if (!self.props.devicesById[device.id].identity_data || Object.keys(self.props.devicesById[device.id].attributes).length === 0) {
+      if (
+        !self.props.devicesById[device.id] ||
+        !self.props.devicesById[device.id].identity_data ||
+        Object.keys(self.props.devicesById[device.id].attributes).length === 0
+      ) {
         accu.push(device);
       }
       return accu;
@@ -141,9 +145,9 @@ export class DeploymentReport extends React.Component {
   }
   render() {
     const self = this;
-    const { allDevices, deployment, deviceCount } = self.props;
+    const { allDevices, deployment, deviceCount, past } = self.props;
     const { stats = {}, devices } = deployment;
-    const { deviceId, showDialog } = self.state;
+    const { abort, deviceId, finished, retry, showDialog } = self.state;
     const logData = deviceId ? devices[deviceId].log : null;
     var deviceList = this.state.pagedDevices || [];
 
@@ -173,30 +177,10 @@ export class DeploymentReport extends React.Component {
       </Button>
     ];
 
-    var abort = (
-      <div className="float-right">
-        <Button
-          color="secondary"
-          onClick={() => self.setState({ abort: true })}
-          icon={<BlockIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
-        >
-          Abort deployment
-        </Button>
-      </div>
-    );
-    if (self.state.abort) {
-      abort = <Confirm cancel={() => self.setState({ abort: false })} action={() => self._abortHandler()} type="abort" />;
-    }
-
-    var finished = '-';
-    if (deployment.finished) {
-      finished = <Time value={formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" />;
-    }
-
     return (
       <div>
-        <div className="report-container">
-          <div className="deploymentInfo" style={{ width: '240px', height: 'auto', margin: '30px 30px 30px 0', display: 'inline-block', verticalAlign: 'top' }}>
+        <div className={`report-container${past ? '' : ' report-progressing'}`}>
+          <div className="deploymentInfo" style={{ marginTop: 30 }}>
             <div>
               <div className="progressLabel">Updating to:</div>
               <span>{artifactLink}</span>
@@ -211,78 +195,63 @@ export class DeploymentReport extends React.Component {
             </div>
           </div>
 
-          {this.props.past ? (
-            <div className="inline">
-              <div className="inline">
-                <div
-                  className="deploymentInfo"
-                  style={{ width: '260px', height: 'auto', margin: '30px 30px 30px 0', display: 'inline-block', verticalAlign: 'top' }}
-                >
-                  <div>
-                    <div className="progressLabel">Status:</div>Finished {stats.failure ? <span className="failures">with failures</span> : null}
-                  </div>
-                  <div>
-                    <div className="progressLabel">Started:</div>
-                    <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
-                  </div>
-                  <div>
-                    <div className="progressLabel">Finished:</div>
-                    {finished}
-                  </div>
+          {past ? (
+            <>
+              <div className="deploymentInfo">
+                <div>
+                  <div className="progressLabel">Status:</div>
+                  Finished {!!stats.failure && <span className="failures">with failures</span>}
                 </div>
-                <div className="deploymentInfo" style={{ height: 'auto', margin: '30px 30px 30px 0', display: 'inline-block', verticalAlign: 'top' }}>
-                  {stats.failure || stats.aborted ? (
-                    <div className="statusLarge">
-                      <img src="assets/img/largeFail.png" />
-                      <div className="statusWrapper">
-                        <b className="red">{stats.failure || stats.aborted}</b> {pluralize('devices', stats.failure)} failed to update
-                      </div>
-
-                      <div>
-                        <div
-                          id="reportRetry"
-                          className={
-                            this.state.retry
-                              ? 'float-right hint--bottom hint--always hint--large hint--info'
-                              : 'float-right hint--bottom hint--large hint--info'
-                          }
-                          data-hint="This will create a new deployment with the same device group and Release.&#10;Devices with this Release already installed will be skipped, all others will be updated."
-                        >
-                          <Button
-                            color="secondary"
-                            icon={<RefreshIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
-                            onClick={() => self.props.retry(deployment, allDevices)}
-                          >
-                            Retry deployment?
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ) : null}
-                  {stats.success ? (
-                    <div className="statusLarge">
-                      <img src="assets/img/largeSuccess.png" />
-                      <div className="statusWrapper">
-                        <b className="green">
-                          {stats.success === deviceList.length ? <span>All </span> : null}
-                          {stats.success}
-                        </b>{' '}
-                        {pluralize('devices', stats.success)} updated successfully
-                      </div>
-                    </div>
-                  ) : null}
+                <div>
+                  <div className="progressLabel">Started:</div>
+                  <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
                 </div>
-
-                <div className="hidden" style={{ width: '240px', height: 'auto', margin: '30px 0 30px 30px', display: 'inline-block', verticalAlign: 'top' }}>
-                  <Checkbox label="Show only failures" onChange={(e, checked) => this._handleCheckbox(checked)} />
+                <div>
+                  <div className="progressLabel">Finished:</div>
+                  {deployment.finished ? <Time value={formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" /> : '-'}
                 </div>
               </div>
-            </div>
+              {!!(stats.failure || stats.aborted) && (
+                <div className="deploymentInfo" style={{ display: 'flex', flexDirection: 'column' }}>
+                  <div className="statusLarge">
+                    <img src="assets/img/largeFail.png" />
+                    <div className="statusWrapper">
+                      <b className="red">{stats.failure || stats.aborted}</b> {pluralize('devices', stats.failure)} failed to update
+                    </div>
+                  </div>
+                  <div
+                    id="reportRetry"
+                    className={`hint--bottom ${retry ? 'hint--always ' : ''}hint--large hint--info`}
+                    data-hint="This will create a new deployment with the same device group and Release.&#10;Devices with this Release already installed will be skipped, all others will be updated."
+                    style={{ marginLeft: 30 }}
+                  >
+                    <Button color="secondary" startIcon={<RefreshIcon fontSize="small" />} onClick={() => self.props.retry(deployment, allDevices)}>
+                      Retry deployment?
+                    </Button>
+                  </div>
+                </div>
+              )}
+              {!!stats.success && (
+                <div className="deploymentInfo">
+                  <div className="statusLarge">
+                    <img src="assets/img/largeSuccess.png" />
+                    <div className="statusWrapper">
+                      <b className="green">
+                        {stats.success === deviceList.length ? <span>All </span> : null}
+                        {stats.success}
+                      </b>{' '}
+                      {pluralize('devices', stats.success)} updated successfully
+                    </div>
+                  </div>
+                </div>
+              )}
+              <Checkbox className="hidden" label="Show only failures" onChange={(e, checked) => this._handleCheckbox(checked)} />
+            </>
           ) : (
-            <div className="inline">
-              <div className="progressStatus">
+            <>
+              <div className="progressStatus flexbox space-between">
                 <div id="progressStatus">
-                  <h3 style={{ marginTop: '12px' }}>{this.state.finished ? 'Finished' : 'In progress'}</h3>
+                  <h3 style={{ marginTop: 12 }}>{finished ? 'Finished' : 'In progress'}</h3>
                   <h2>
                     <TimelapseIcon style={{ margin: '0 10px 0 -10px', color: '#ACD4D0', verticalAlign: 'text-top' }} />
                     {this.state.elapsed}
@@ -292,18 +261,17 @@ export class DeploymentReport extends React.Component {
                     <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
                   </div>
                 </div>
-                <div className="inline-block">
-                  <DeploymentStatus
-                    isActiveTab={true}
-                    setFinished={finished => this._setFinished(finished)}
-                    finished={this.state.finished}
-                    refresh={true}
-                    vertical={true}
-                    id={deployment.id}
-                    stats={stats}
-                    refreshStatus={id => self.props.getSingleDeploymentStats(id)}
-                  />
-                </div>
+
+                <DeploymentStatus
+                  isActiveTab={true}
+                  setFinished={finished => this._setFinished(finished)}
+                  finished={finished}
+                  refresh={true}
+                  vertical={true}
+                  id={deployment.id}
+                  stats={stats}
+                  refreshStatus={id => self.props.getSingleDeploymentStats(id)}
+                />
               </div>
 
               <div className="hidden" style={{ width: '240px', height: 'auto', margin: '30px 0 30px 30px', display: 'inline-block', verticalAlign: 'top' }}>
@@ -313,16 +281,22 @@ export class DeploymentReport extends React.Component {
                 </p>
               </div>
 
-              {!this.state.finished ? (
+              {!finished && (
                 <div
                   id="reportAbort"
-                  className={this.state.abort ? 'hint--bottom hint--always hint--large hint--info' : 'hint--bottom hint--large hint--info'}
+                  className={`hint--bottom ${abort ? 'hint--always' : ''}hint--large hint--info`}
                   data-hint="Devices that have not yet started the deployment will not start the deployment.&#10;Devices that have already completed the deployment are not affected by the abort.&#10;Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback."
                 >
-                  {abort}
+                  {abort ? (
+                    <Confirm cancel={() => self.setState({ abort: false })} action={() => self._abortHandler()} type="abort" />
+                  ) : (
+                    <Button color="secondary" onClick={() => self.setState({ abort: true })} startIcon={<BlockIcon fontSize="small" />}>
+                      Abort deployment
+                    </Button>
+                  )}
                 </div>
-              ) : null}
-            </div>
+              )}
+            </>
           )}
         </div>
 

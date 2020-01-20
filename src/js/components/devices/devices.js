@@ -171,6 +171,7 @@ export class Devices extends React.Component {
           <DeviceGroups
             params={this.props.match.params}
             acceptedDevices={this.props.acceptedCount}
+            highlightHelp={!this.props.acceptedCount}
             currentTab={this.state.currentTab}
             openSettingsDialog={() => this._openSettingsDialog()}
             pause={() => this._pauseInterval()}

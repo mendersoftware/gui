@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 import Time from 'react-time';
 
@@ -98,7 +99,7 @@ export class Authorized extends React.Component {
 
   render() {
     const self = this;
-    const { allCount, devices, globalSettings, group, groupCount, loading, showHelptips } = self.props;
+    const { allCount, devices, globalSettings, group, groupCount, highlightHelp, loading, showHelptips } = self.props;
     const { selectedRows } = self.state;
     const columnHeaders = [
       {
@@ -198,6 +199,11 @@ export class Authorized extends React.Component {
           <div className={devices.length || loading ? 'hidden' : 'dashboard-placeholder'}>
             <p>No devices found</p>
             {!allCount ? <p>No devices have been authorized to connect to the Mender server yet.</p> : null}
+            {highlightHelp && (
+              <p>
+                Visit the <Link to="/help/getting-started">Help section</Link> to learn how to connect devices to the Mender server.
+              </p>
+            )}
           </div>
         )}
         {onboardingComponent ? onboardingComponent : null}
