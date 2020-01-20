@@ -144,7 +144,12 @@ export class Artifacts extends React.Component {
               </p>
             </div>
           </div>
-          <ReleaseRepository refreshArtifacts={() => self._getReleases()} loading={!doneLoading} release={selectedRelease} />
+          <ReleaseRepository
+            refreshArtifacts={() => self._getReleases()}
+            loading={!doneLoading}
+            onUpload={selectedFile => self.setState({ selectedFile, showCreateArtifactDialog: true })}
+            release={selectedRelease}
+          />
         </div>
         {artifactProgress ? (
           <div id="progressBarContainer">
