@@ -37,7 +37,7 @@ export class ReleaseRepository extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.release && prevProps.release.Name !== this.props.release.Name) {
+    if (prevProps.release && this.props.release && prevProps.release.Name !== this.props.release.Name) {
       const self = this;
       self.setState({ wasSelectedRecently: true }, () => setTimeout(() => self.setState({ wasSelectedRecently: false }), 200));
     }

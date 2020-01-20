@@ -12,7 +12,7 @@ const flattenRelease = release => {
   const { descriptions, deviceTypes } = release.Artifacts.reduce(
     (accu, item) => {
       item.description ? accu.descriptions.push(item.description) : null;
-      accu.deviceTypes.concat(item.device_types_compatible);
+      accu.deviceTypes.push(...item.device_types_compatible);
       return accu;
     },
     { descriptions: [], deviceTypes: [] }
