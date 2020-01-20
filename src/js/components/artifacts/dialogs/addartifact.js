@@ -15,36 +15,41 @@ export class AddArtifactDialog extends React.Component {
     this.state = {
       activeStep: 0,
       customDeviceTypes: '',
-      destination: null,
+      destination: '',
       file: null,
       selectedDeviceTypes: []
     };
   }
 
-  onUpdate(update) {
-    this.setState(update);
+  componentDidMount() {
+    if (this.props.selectedFile) {
+      this.setState({ file: this.props.selectedFile });
+    }
   }
 
   onUpload({ customDeviceTypes, file, destination, selectedDeviceTypes, name }) {
+    let meta = { description: '' };
+    if (file && file.name.endsWith('.mender')) {
+      return this.props.onUpload(meta, file);
+    }
     const otherDeviceTypes = customDeviceTypes.split(',');
     const deviceTypes = selectedDeviceTypes.concat(otherDeviceTypes);
-
-    const meta = { description: '', deviceTypes, file, destination, name };
-    this.props.onUpload(meta, file);
+    meta = { ...meta, deviceTypes, file, destination, name };
+    this.props.onCreate(meta, file);
   }
 
   render() {
     const self = this;
     const { deviceTypes = [], onCancel, open, setSnackbar } = self.props;
     const { activeStep, destination, file } = self.state;
-    const finalStep = activeStep === steps.length - 1;
     const ComponentToShow = steps[activeStep].component;
-    const fileSelected = file && destination.length > 0;
+    const fileSelected = file && (destination.length > 0 || file.name.endsWith('.mender'));
+    const finalStep = activeStep === steps.length - 1 || (file && file.name.endsWith('.mender'));
     return (
       <Dialog open={open} fullWidth={true} maxWidth="sm">
         <DialogTitle>Upload an Artifact</DialogTitle>
         <DialogContent className="dialog-content margin-top margin-left margin-right margin-bottom">
-          <ComponentToShow setSnackbar={setSnackbar} updateCreation={(...args) => self.onUpdate(...args)} deviceTypes={deviceTypes} {...self.state} />
+          <ComponentToShow deviceTypes={deviceTypes} setSnackbar={setSnackbar} updateCreation={(...args) => self.setState(...args)} {...self.state} />
         </DialogContent>
         <DialogActions>
           <Button onClick={onCancel}>Cancel</Button>

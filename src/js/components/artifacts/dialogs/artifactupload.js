@@ -17,7 +17,8 @@ export default class ArtifactUpload extends React.Component {
 
   onDrop(acceptedFiles) {
     if (acceptedFiles.length === 1) {
-      this.setState({ acceptedFiles });
+      const self = this;
+      self.setState({ acceptedFiles }, () => self.props.updateCreation({ file: acceptedFiles[0] }));
     } else {
       this.setState({ acceptedFiles: [] });
       this.props.setSnackbar('The selected file is not supported.', null);
@@ -34,7 +35,10 @@ export default class ArtifactUpload extends React.Component {
   render() {
     const self = this;
     const { acceptedFiles, destination } = self.state;
-    const { filesize, filename } = acceptedFiles.length ? { filename: acceptedFiles[0].name, filesize: acceptedFiles[0].size } : { filesize: 0, filename: 0 };
+    const { filesize, filename, isMenderArtifact } = acceptedFiles.length
+      ? { filename: acceptedFiles[0].name, filesize: acceptedFiles[0].size, isMenderArtifact: acceptedFiles[0].name.endsWith('.mender') }
+      : { filesize: 0, filename: 0, isMenderArtifact: false };
+
     return !acceptedFiles.length ? (
       <>
         <Dropzone activeClassName="active" rejectClassName="active" multiple={false} onDrop={(...args) => self.onDrop(...args)}>
@@ -52,7 +56,7 @@ export default class ArtifactUpload extends React.Component {
         </Dropzone>
         <p className="info flexbox centered" style={{ marginTop: '10px' }}>
           <InfoIcon fontSize="small" />
-          Upload a pre-built .mender Artifact OR any file to create single-file update Artifact
+          Upload a pre-built .mender Artifact OR any file to create a single-file update Artifact
         </p>
       </>
     ) : (
@@ -71,21 +75,34 @@ export default class ArtifactUpload extends React.Component {
           inputProps={{ fileSize: filesize, style: { padding: '6px 0 7px' } }}
         />
         <div />
-        <TextField
-          placeholder="Example: /opt/installed-by-single-file"
-          label="Destination directory where the file will be installed on your devices"
-          value={destination}
-          autoFocus={true}
-          InputLabelProps={{ shrink: true }}
-          inputProps={{ style: { marginTop: 16 } }}
-          onChange={e => self.onChange(e)}
-        />
+        {isMenderArtifact ? (
+          <div />
+        ) : (
+          <TextField
+            placeholder="Example: /opt/installed-by-single-file"
+            label="Destination directory where the file will be installed on your devices"
+            value={destination}
+            autoFocus={true}
+            InputLabelProps={{ shrink: true }}
+            inputProps={{ style: { marginTop: 16 } }}
+            onChange={e => self.onChange(e)}
+          />
+        )}
         <div />
         <div className="info margin-top-large">
-          <p className="info">
-            This file will be converted to a .mender Artifact file before itis uploaded to the server, which requires some metadata to be entered.
-          </p>
-          <p className="info">Click &apos;Next&apos; to continue</p>
+          {isMenderArtifact ? (
+            <>
+              <p className="info">Artifacts that share the same name but different device type compatibility will be grouped together as a Release.</p>
+              <p className="info">If no Release with the Artifact name exists, a new one will be created.</p>
+            </>
+          ) : (
+            <>
+              <p className="info">
+                This file will be converted to a .mender Artifact file before it is uploaded to the server, which requires some metadata to be entered.
+              </p>
+              <p className="info">Click &apos;Next&apos; to continue</p>
+            </>
+          )}
         </div>
       </div>
     );
