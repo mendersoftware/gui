@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { FormControl, Input, InputLabel, TextField, Tooltip } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { InfoOutlined as InfoIcon } from '@material-ui/icons';
-import { duplicateFilter } from '../../../helpers';
+import { duplicateFilter, unionizeStrings } from '../../../helpers';
 
 const ReleaseTooltip = () => (
   <div style={{ fontSize: 12 }}>
@@ -33,15 +33,8 @@ export class ArtifactInformation extends React.PureComponent {
       .split(',')
       .filter(duplicateFilter);
     const customDeviceTypes = value.substring(lastIndex + 1);
-    const possibleDeviceTypeSelection = possibleCustomDeviceTypes.length
-      ? possibleCustomDeviceTypes.reduce((accu, item) => {
-          if (item.trim().length) {
-            accu.add(item.trim());
-          }
-          return accu;
-        }, new Set(selectedDeviceTypes))
-      : selectedDeviceTypes;
-    updateCreation({ customDeviceTypes, selectedDeviceTypes: [...possibleDeviceTypeSelection] });
+    const possibleDeviceTypeSelection = unionizeStrings(selectedDeviceTypes, possibleCustomDeviceTypes);
+    updateCreation({ customDeviceTypes, selectedDeviceTypes: possibleDeviceTypeSelection });
   }
 
   render() {

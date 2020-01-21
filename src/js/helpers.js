@@ -316,6 +316,19 @@ export const customSort = (direction, field) => (a, b) => {
 
 export const duplicateFilter = (item, index, array) => array.indexOf(item) == index;
 
+export const unionizeStrings = (someStrings, someOtherStrings) => {
+  const startingPoint = new Set(someStrings.filter(item => item.length));
+  const uniqueStrings = someOtherStrings.length
+    ? someOtherStrings.reduce((accu, item) => {
+        if (item.trim().length) {
+          accu.add(item.trim());
+        }
+        return accu;
+      }, startingPoint)
+    : startingPoint;
+  return [...uniqueStrings];
+};
+
 export const mapDeviceAttributes = (attributes = []) =>
   attributes.reduce((accu, attribute) => ({ ...accu, [attribute.name]: attribute.value }), { device_type: '', artifact_name: '' });
 

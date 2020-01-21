@@ -8,7 +8,15 @@ import { CloudUpload, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { selectDevices } from '../../actions/deviceActions';
-import { getReleases, removeArtifact, selectArtifact, selectRelease, showRemoveArtifactDialog, uploadArtifact } from '../../actions/releaseActions';
+import {
+  createArtifact,
+  getReleases,
+  removeArtifact,
+  selectArtifact,
+  selectRelease,
+  showRemoveArtifactDialog,
+  uploadArtifact
+} from '../../actions/releaseActions';
 import { preformatWithRequestID } from '../../helpers';
 import { advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
@@ -89,14 +97,12 @@ export class Artifacts extends React.Component {
 
   addArtifact(meta, file, type = 'upload') {
     const self = this;
-    self.setState({ showCreateArtifactDialog: false });
     const upload = type === 'create' ? this.props.createArtifact(meta, file) : this.props.uploadArtifact(meta, file);
-    upload.then(() => {
-      if (!self.props.onboardingComplete && getOnboardingStepCompleted('artifact-included-deploy-onboarding')) {
-        advanceOnboarding('upload-new-artifact-tip');
-      }
-      return self._getReleases();
-    });
+    return upload
+      .then(() => {
+        return self._getReleases();
+      })
+      .finally(() => self.setState({ showCreateArtifactDialog: false }));
   }
 
   _removeArtifact(artifact) {
@@ -181,6 +187,7 @@ export class Artifacts extends React.Component {
 }
 
 const actionCreators = {
+  createArtifact,
   getReleases,
   removeArtifact,
   selectArtifact,

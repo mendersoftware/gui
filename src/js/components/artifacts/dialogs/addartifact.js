@@ -3,6 +3,7 @@ import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 import ArtifactUpload from './artifactupload';
 import ArtifactInformationForm from './artifactinformationform';
+import { unionizeStrings } from '../../../helpers';
 
 const steps = [
   { title: 'File Upload', component: ArtifactUpload },
@@ -33,8 +34,8 @@ export class AddArtifactDialog extends React.Component {
       return this.props.onUpload(meta, file);
     }
     const otherDeviceTypes = customDeviceTypes.split(',');
-    const deviceTypes = selectedDeviceTypes.concat(otherDeviceTypes);
-    meta = { ...meta, deviceTypes, file, destination, name };
+    const deviceTypes = unionizeStrings(selectedDeviceTypes, otherDeviceTypes);
+    meta = { ...meta, deviceTypes, destination, name };
     this.props.onCreate(meta, file);
   }
 

@@ -66,27 +66,31 @@ export default class ArtifactUpload extends React.Component {
           <DeleteIcon />
         </IconButton>
         <TextField
-          label="Size"
-          key="filesize"
           disabled
           defaultValue={filesize}
           InputLabelProps={{ shrink: true }}
           InputProps={{ inputComponent: FileSize }}
           inputProps={{ fileSize: filesize, style: { padding: '6px 0 7px' } }}
+          key="filesize"
+          label="Size"
         />
         <div />
         {isMenderArtifact ? (
           <div />
         ) : (
-          <TextField
-            placeholder="Example: /opt/installed-by-single-file"
-            label="Destination directory where the file will be installed on your devices"
-            value={destination}
-            autoFocus={true}
-            InputLabelProps={{ shrink: true }}
-            inputProps={{ style: { marginTop: 16 } }}
-            onChange={e => self.onChange(e)}
-          />
+          <div>
+            <TextField
+              autoFocus={true}
+              fullWidth
+              inputProps={{ style: { marginTop: 16 } }}
+              InputLabelProps={{ shrink: true }}
+              label="Destination directory where the file will be installed on your devices"
+              onChange={e => self.onChange(e)}
+              placeholder="Example: /opt/installed-by-single-file"
+              ref={ref => (self.onboardingAnchor = ref)}
+              value={destination}
+            />
+          </div>
         )}
         <div />
         <div className="info margin-top-large">
