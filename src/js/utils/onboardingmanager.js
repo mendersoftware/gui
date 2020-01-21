@@ -176,17 +176,52 @@ export const onboardingSteps = {
     condition: () => onboardingTipSanityCheck('upload-new-artifact-tip') && getOnboardingStepCompleted('deployments-past-completed'),
     component: (
       <div>
-        Now upload your new Artifact here!
+        Click &apos;Upload&apos; to upload the file and create your new Release.
         <p>
-          Or <a onClick={() => store.dispatch(setShowCreateArtifactDialog(true))}>view the instructions again</a> on how to edit the demo webserver application
-          and create your own Artifact
+          You can <a onClick={() => store.dispatch(setShowCreateArtifactDialog(true))}>view the instructions again</a> if you need help creating the{' '}
+          <i>index.html</i> file.
         </p>
       </div>
     ),
     progress: 2
   },
+  'upload-new-artifact-dialog-upload': {
+    condition: () => onboardingTipSanityCheck('upload-new-artifact-dialog-upload'),
+    component: (
+      <div>
+        Drag or select your new <i>index.html</i> file here to upload it.
+      </div>
+    ),
+    progress: 2
+  },
+  'upload-new-artifact-dialog-destination': {
+    condition: () => onboardingTipSanityCheck('upload-new-artifact-dialog-destination') && getOnboardingStepCompleted('upload-new-artifact-dialog-upload'),
+    component: (
+      <div>
+        We have prefilled this for you, for the demo - it is the destination on your device where the new <i>index.html</i> file will be installed.
+        <p>Click &apos;Next&apos; below.</p>
+      </div>
+    ),
+    progress: 2
+  },
+  'upload-new-artifact-dialog-device-type': {
+    condition: () => onboardingTipSanityCheck('upload-new-artifact-dialog-device-type') && getOnboardingStepCompleted('upload-new-artifact-dialog-upload'),
+    component: <div>Enter the device types this will be compatible with. For the demo, you just need to select the device type of your demo device.</div>,
+    progress: 2
+  },
+  'upload-new-artifact-dialog-release-name': {
+    condition: () =>
+      onboardingTipSanityCheck('upload-new-artifact-dialog-release-name') && getOnboardingStepCompleted('upload-new-artifact-dialog-device-type'),
+    component: (
+      <div>
+        Now name your Release: for the demo you could call it something like &quot;hello-world&quot;.
+        <p>Then click &apos;Upload&apos; to finish this step!</p>
+      </div>
+    ),
+    progress: 2
+  },
   'artifact-modified-onboarding': {
-    condition: () => onboardingTipSanityCheck('artifact-modified-onboarding') && getOnboardingStepCompleted('upload-new-artifact-tip'),
+    condition: () => onboardingTipSanityCheck('artifact-modified-onboarding') && getOnboardingStepCompleted('upload-new-artifact-dialog-release-name'),
     component: (
       <div>
         Your uploaded Artifact is now part of a new &apos;Release&apos;.

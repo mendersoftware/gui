@@ -94,7 +94,7 @@ export class ReleaseRepository extends React.Component {
 
   render() {
     const self = this;
-    const { loading, onUpload, release, selectedArtifact, showHelptips, uploading } = self.props;
+    const { loading, onUpload, release, releases, selectedArtifact, showHelptips, uploading } = self.props;
     const { sortCol, sortDown, wasSelectedRecently } = self.state;
     const artifacts = release ? release.Artifacts : [];
     const items = artifacts.sort(customSort(sortDown, sortCol)).map((pkg, index) => {
@@ -150,14 +150,6 @@ export class ReleaseRepository extends React.Component {
     if (this.dropzoneRef) {
       const dropzoneAnchor = { left: this.dropzoneRef.offsetLeft, top: this.dropzoneRef.offsetTop + this.dropzoneRef.offsetHeight };
       uploadArtifactOnboardingComponent = getOnboardingComponentFor('upload-prepared-artifact-tip', { anchor: dropzoneAnchor, place: 'left' });
-      uploadArtifactOnboardingComponent = getOnboardingComponentFor(
-        'upload-new-artifact-tip',
-        {
-          place: 'left',
-          anchor: dropzoneAnchor
-        },
-        uploadArtifactOnboardingComponent
-      );
     }
 
     return loading || wasSelectedRecently ? (
@@ -226,7 +218,7 @@ export class ReleaseRepository extends React.Component {
 
           {items.length || loading ? null : (
             <div className="dashboard-placeholder fadeIn" style={{ fontSize: '16px', margin: '8vh auto' }}>
-              {this.props.releases.length > 0 ? (
+              {releases.length > 0 ? (
                 <p>Select a Release on the left to view its Artifact details</p>
               ) : (
                 <Dropzone
@@ -238,7 +230,7 @@ export class ReleaseRepository extends React.Component {
                   rejectClassName="active"
                 >
                   {({ getRootProps, getInputProps }) => (
-                    <div {...getRootProps({ className: dropzoneClass })} onClick={() => onUpload()}>
+                    <div {...getRootProps({ className: dropzoneClass })} onClick={() => onUpload()} ref={ref => (self.dropzoneRef = ref)}>
                       <input {...getInputProps()} disabled={uploading} />
                       <p>
                         There are no Releases yet. <a>Upload an Artifact</a> to create a new Release

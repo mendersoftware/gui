@@ -18,6 +18,7 @@ import {
   uploadArtifact
 } from '../../actions/releaseActions';
 import { preformatWithRequestID } from '../../helpers';
+import { advanceOnboarding, getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 import ReleaseRepository from './releaserepository';
 import ReleasesList from './releaseslist';
@@ -99,6 +100,9 @@ export class Artifacts extends React.Component {
     const upload = type === 'create' ? this.props.createArtifact(meta, file) : this.props.uploadArtifact(meta, file);
     return upload
       .then(() => {
+        if (!self.props.onboardingComplete && getOnboardingStepCompleted('artifact-included-deploy-onboarding')) {
+          advanceOnboarding('upload-new-artifact-tip');
+        }
         return self._getReleases();
       })
       .finally(() => self.setState({ showCreateArtifactDialog: false }));
@@ -121,7 +125,28 @@ export class Artifacts extends React.Component {
   render() {
     const self = this;
     const { artifact, doneLoading, selectedFile, showCreateArtifactDialog } = self.state;
-    const { artifactProgress, deviceTypes, releases, showRemoveDialog, selectedArtifact, selectedRelease, showRemoveArtifactDialog } = self.props;
+    const {
+      artifactProgress,
+      deviceTypes,
+      onboardingComplete,
+      releases,
+      showRemoveDialog,
+      selectedArtifact,
+      selectedRelease,
+      showRemoveArtifactDialog
+    } = self.props;
+
+    let uploadArtifactOnboardingComponent = null;
+    if (!onboardingComplete && self.uploadButtonRef) {
+      uploadArtifactOnboardingComponent = getOnboardingComponentFor('upload-new-artifact-tip', {
+        place: 'right',
+        anchor: {
+          left: self.uploadButtonRef.offsetLeft + self.uploadButtonRef.offsetWidth,
+          top: self.uploadButtonRef.offsetTop + self.uploadButtonRef.offsetHeight / 2
+        }
+      });
+    }
+
     return (
       <div style={{ height: '100%' }}>
         <div className="repository">
@@ -133,21 +158,21 @@ export class Artifacts extends React.Component {
               onFilter={rels => self.onFilterReleases(rels)}
               loading={!doneLoading}
             />
-            <div>
-              <Button
-                variant="contained"
-                color="secondary"
-                startIcon={<CloudUpload fontSize="small" />}
-                style={{ minWidth: 164 }}
-                onClick={() => self.setState({ showCreateArtifactDialog: true })}
-              >
-                Upload
-              </Button>
-              <p className="info flexbox" style={{ alignItems: 'center' }}>
-                <InfoIcon fontSize="small" />
-                Upload an Artifact to an existing or new Release
-              </p>
-            </div>
+            <Button
+              buttonRef={ref => (this.uploadButtonRef = ref)}
+              color="secondary"
+              onClick={() => self.setState({ showCreateArtifactDialog: true })}
+              startIcon={<CloudUpload fontSize="small" />}
+              style={{ minWidth: 164 }}
+              variant="contained"
+            >
+              Upload
+            </Button>
+            <p className="info flexbox" style={{ alignItems: 'center' }}>
+              <InfoIcon fontSize="small" />
+              Upload an Artifact to an existing or new Release
+            </p>
+            {uploadArtifactOnboardingComponent ? uploadArtifactOnboardingComponent : null}
           </div>
           <ReleaseRepository
             refreshArtifacts={() => self._getReleases()}
@@ -175,6 +200,7 @@ export class Artifacts extends React.Component {
             selectedFile={selectedFile}
             deviceTypes={deviceTypes}
             open={showCreateArtifactDialog}
+            onboardingComplete={onboardingComplete}
             onCancel={() => self.setState({ showCreateArtifactDialog: false })}
             onCreate={(meta, file) => self.addArtifact(meta, file, 'create')}
             onUpload={(meta, file) => self.addArtifact(meta, file, 'upload')}
