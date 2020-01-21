@@ -102,6 +102,11 @@ export const getOnboardingState = () => (dispatch, getState) => {
     .then(state => {
       const progress = Object.keys(onboardingSteps).findIndex(step => step === 'deployments-past-completed');
       state.showArtifactCreation = Math.abs(state.progress - progress) <= 1;
+      if (state.showArtifactCreation) {
+        // although it would be more appropriate to do this in the app component, this happens here because in the app component we would need to track
+        // redirects, if we want to still allow navigation across the UI while the dialog is visible
+        window.location.replace('#/releases');
+      }
       return dispatch(setOnboardingState(state));
     })
     .catch(e => console.log(e));
