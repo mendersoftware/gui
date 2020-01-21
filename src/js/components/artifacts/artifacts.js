@@ -18,7 +18,6 @@ import {
   uploadArtifact
 } from '../../actions/releaseActions';
 import { preformatWithRequestID } from '../../helpers';
-import { advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 import ReleaseRepository from './releaserepository';
 import ReleasesList from './releaseslist';
