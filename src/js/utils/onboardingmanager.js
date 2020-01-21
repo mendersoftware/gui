@@ -231,6 +231,7 @@ export const determineProgress = (acceptedDevices, pendingDevices, releases, pas
   const steps = Object.keys(onboardingSteps);
   let progress = -1;
   progress = pendingDevices.length > 1 ? steps.findIndex(step => step === 'devices-pending-accepting-onboarding') : progress;
+  progress = acceptedDevices.length >= 1 ? steps.findIndex(step => step === 'application-update-reminder-tip') : progress;
   progress = acceptedDevices.length > 1 && releases.length > 1 ? steps.findIndex(step => step === 'application-update-reminder-tip') : progress;
   progress =
     acceptedDevices.length > 1 && releases.length > 1 && pastDeployments.length > 1 ? steps.findIndex(step => step === 'deployments-past-completed') : progress;
