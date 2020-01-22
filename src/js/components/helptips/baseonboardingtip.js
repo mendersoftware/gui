@@ -51,6 +51,9 @@ const orientations = {
 };
 
 class BaseOnboardingTipComponent extends React.PureComponent {
+  componentDidMount() {
+    ReactTooltip.show(this.tipRef);
+  }
   componentDidUpdate() {
     ReactTooltip.show(this.tipRef);
   }

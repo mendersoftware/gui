@@ -34,6 +34,13 @@ export default class ArtifactUpload extends React.Component {
     self.setState({ destination }, () => self.props.updateCreation({ destination, file: acceptedFiles.length ? acceptedFiles[0] : null }));
   }
 
+  onRefSet(refTarget, ref) {
+    if (!this[refTarget] || (this[refTarget] && ref && this[refTarget].className !== ref.className)) {
+      this[refTarget] = ref;
+      this.setState({});
+    }
+  }
+
   render() {
     const self = this;
     const { acceptedFiles, destination } = self.state;
@@ -57,7 +64,7 @@ export default class ArtifactUpload extends React.Component {
           {({ getRootProps, getInputProps }) => (
             <div
               {...getRootProps({ className: 'dashboard-placeholder fadeIn onboard dropzone', style: { top: 0 } })}
-              ref={ref => (self.onboardingAnchor = ref)}
+              ref={ref => self.onRefSet('onboardingAnchor', ref)}
             >
               <input {...getInputProps()} />
               <span className="icon">
@@ -103,7 +110,7 @@ export default class ArtifactUpload extends React.Component {
               label="Destination directory where the file will be installed on your devices"
               onChange={e => self.onChange(e)}
               placeholder="Example: /opt/installed-by-single-file"
-              ref={ref => (self.onboardingAnchor = ref)}
+              ref={ref => self.onRefSet('onboardingAnchor', ref)}
               value={destination}
             />
             {!!onboardingComponent && onboardingComponent}

@@ -19,7 +19,7 @@ const ReleaseTooltip = () => (
   </div>
 );
 
-export class ArtifactInformation extends React.PureComponent {
+export class ArtifactInformation extends React.Component {
   // to allow device types to automatically be selected on entered ',' we have to filter the input and transform any completed device types (followed by a ',')
   // while also checking for duplicates and allowing complete resets of the input
   onTextInputChange(updateCreation, value, selectedDeviceTypes, reason) {
@@ -43,13 +43,20 @@ export class ArtifactInformation extends React.PureComponent {
     updateCreation({ customDeviceTypes: '', selectedDeviceTypes: possibleDeviceTypeSelection });
   }
 
+  onRefSet(refTarget, ref) {
+    if (!this[refTarget] || (this[refTarget] && ref && this[refTarget].className !== ref.className)) {
+      this[refTarget] = ref;
+      this.setState({});
+    }
+  }
+
   render() {
     const self = this;
     const { customDeviceTypes, deviceTypes, name, onboardingComplete, selectedDeviceTypes = [], updateCreation } = self.props;
 
     let onboardingComponent = null;
     if (!onboardingComplete && self.deviceTypeRef && self.releaseNameRef) {
-      if ((selectedDeviceTypes.length || customDeviceTypes.length) && !getOnboardingStepCompleted('upload-new-artifact-dialog-device-type')) {
+      if ((selectedDeviceTypes.length || customDeviceTypes.length > 3) && !getOnboardingStepCompleted('upload-new-artifact-dialog-device-type')) {
         advanceOnboarding('upload-new-artifact-dialog-device-type');
       }
       const deviceTypeAnchor = {
@@ -95,7 +102,7 @@ export class ArtifactInformation extends React.PureComponent {
               onBlur={e => self.onTextInputLeave(updateCreation, e.target.value, selectedDeviceTypes)}
               onChange={e => self.onTextInputChange(updateCreation, e.target.value, selectedDeviceTypes, 'input')}
               placeholder="Enter all device types this software is compatible with"
-              ref={ref => (self.deviceTypeRef = ref)}
+              ref={ref => self.onRefSet('deviceTypeRef', ref)}
             />
           )}
         />
@@ -111,7 +118,7 @@ export class ArtifactInformation extends React.PureComponent {
             id="release-name"
             placeholder="A descriptive name for the software"
             onChange={e => updateCreation({ name: e.target.value })}
-            ref={ref => (self.releaseNameRef = ref)}
+            inputRef={ref => self.onRefSet('releaseNameRef', ref)}
           />
         </FormControl>
         {!!onboardingComponent && onboardingComponent}

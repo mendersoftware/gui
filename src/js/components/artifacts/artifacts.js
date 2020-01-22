@@ -133,6 +133,7 @@ export class Artifacts extends React.Component {
       showRemoveDialog,
       selectedArtifact,
       selectedRelease,
+      showOnboardingDialog,
       showRemoveArtifactDialog
     } = self.props;
 
@@ -172,7 +173,7 @@ export class Artifacts extends React.Component {
               <InfoIcon fontSize="small" />
               Upload an Artifact to an existing or new Release
             </p>
-            {uploadArtifactOnboardingComponent ? uploadArtifactOnboardingComponent : null}
+            {!!uploadArtifactOnboardingComponent && !showOnboardingDialog && !showCreateArtifactDialog && uploadArtifactOnboardingComponent}
           </div>
           <ReleaseRepository
             refreshArtifacts={() => self._getReleases()}
@@ -235,6 +236,7 @@ const mapStateToProps = state => {
     artifactProgress: state.releases.uploadProgress,
     deviceTypes: Object.keys(deviceTypes),
     onboardingComplete: state.users.onboarding.complete,
+    showOnboardingDialog: state.users.onboarding.showCreateArtifactDialog,
     releases: Object.values(state.releases.byId),
     selectedArtifact: state.releases.selectedArtifact,
     selectedRelease: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null,
