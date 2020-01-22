@@ -53,12 +53,12 @@ export class ArtifactInformation extends React.PureComponent {
         advanceOnboarding('upload-new-artifact-dialog-device-type');
       }
       const deviceTypeAnchor = {
-        left: self.deviceTypeRef.offsetLeft + self.deviceTypeRef.offsetWidth / 2,
-        top: self.deviceTypeRef.offsetTop - self.deviceTypeRef.offsetHeight / 2
+        left: self.deviceTypeRef.offsetLeft + self.deviceTypeRef.clientWidth,
+        top: self.deviceTypeRef.offsetTop + self.deviceTypeRef.clientHeight / 2
       };
       const releaseNameAnchor = {
-        left: self.releaseNameRef.offsetLeft + self.releaseNameRef.offsetWidth / 2,
-        top: self.releaseNameRef.offsetTop - self.releaseNameRef.offsetHeight / 2
+        left: self.releaseNameRef.parentElement.parentElement.offsetLeft + self.releaseNameRef.clientWidth,
+        top: self.releaseNameRef.parentElement.parentElement.offsetTop + self.releaseNameRef.clientHeight / 2
       };
       onboardingComponent = getOnboardingComponentFor('upload-new-artifact-dialog-device-type', { anchor: deviceTypeAnchor, place: 'right' });
       onboardingComponent = getOnboardingComponentFor(
@@ -69,7 +69,7 @@ export class ArtifactInformation extends React.PureComponent {
     }
 
     return (
-      <div className="flexbox column">
+      <div className="flexbox column" style={{ maxWidth: 400 }}>
         <h4>Artifact information</h4>
         <Autocomplete
           value={selectedDeviceTypes}

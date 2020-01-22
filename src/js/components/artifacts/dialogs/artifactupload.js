@@ -45,8 +45,8 @@ export default class ArtifactUpload extends React.Component {
     let onboardingComponent = null;
     if (!onboardingComplete && self.onboardingAnchor) {
       const anchor = {
-        left: self.onboardingAnchor.offsetLeft + self.onboardingAnchor.offsetWidth / 2,
-        top: self.onboardingAnchor.offsetTop - self.onboardingAnchor.offsetHeight / 2
+        left: self.onboardingAnchor.offsetLeft + self.onboardingAnchor.clientWidth,
+        top: self.onboardingAnchor.offsetTop + self.onboardingAnchor.clientHeight / 2
       };
       onboardingComponent = getOnboardingComponentFor('upload-new-artifact-dialog-upload', { anchor, place: 'right' });
       onboardingComponent = getOnboardingComponentFor('upload-new-artifact-dialog-destination', { anchor, place: 'right' }, onboardingComponent);
