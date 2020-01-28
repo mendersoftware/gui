@@ -56,11 +56,14 @@ test:acceptance:
   script:
     - docker load -i image.tar
     - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:pr
-    - apk add git bash
-    - git clone https://github.com/mendersoftware/integration.git
-    - cp -r integration/tests/* tests
+    - apk add --no-cache git bash
+    - git clone --single-branch https://github.com/mendersoftware/integration.git
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run
     - docker rmi $DOCKER_REPOSITORY:pr
+  artifacts:
+    expire_in: 2w
+    paths:
+      - tests/e2e_tests/cypress/screenshots
   tags:
     - mender-qa-slave
 
