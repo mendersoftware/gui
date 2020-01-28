@@ -5,7 +5,7 @@ COMPOSE_CMD="docker-compose -p gui-tests \
              -f ${INTEGRATION_PATH}/docker-compose.yml \
              -f ${INTEGRATION_PATH}/docker-compose.client.yml
              -f ${INTEGRATION_PATH}/docker-compose.demo.yml \
-             -f tests/e2e_tests/docker-compose.e2e-tests.yml"
+             -f ${GUI_REPOSITORY}/tests/e2e_tests/docker-compose.e2e-tests.yml"
 
 # by default just add minio, with COMPOSE_CMD_BASE this creates the standard onprem ST setup
 COMPOSE_FILES_DEFAULT=( "${INTEGRATION_PATH}/docker-compose.storage.minio.yml" )
