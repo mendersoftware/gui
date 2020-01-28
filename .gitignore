@@ -1,6 +1,10 @@
 #directories
 dist/
 node_modules/
+videos
+screenshots
+.vscode
 
 #files
 src/main.css
+.DS_Store
