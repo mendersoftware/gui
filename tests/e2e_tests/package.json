@@ -15,7 +15,7 @@
   "scripts": {
     "test": "cypress run --project .",
     "ciTest": "cypress run --project . --config video=false",
-    "watch": "cypress open --port 8888 --project tests/e2e_tests --config pageLoadTimeout=100000,watchForFileChanges=true"
+    "watch": "cypress open --port 8888 --project . --config pageLoadTimeout=100000,watchForFileChanges=true"
   },
   "author": "Michael Clelland",
   "license": "ISC",
