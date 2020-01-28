@@ -30,7 +30,7 @@ exports[`BaseOnboardingTip Component renders correctly 1`] = `
     </svg>
   </a>
   <div
-    className="__react_component_tooltip place-bottom type-dark allow_click "
+    className="__react_component_tooltip place-bottom type-dark allow_click"
     data-id="tooltip"
     id="onboard-tip-1"
   >

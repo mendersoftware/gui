@@ -12,6 +12,14 @@ describe('Artifacts Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
+      devices: {
+        byId: {},
+        byStatus: {
+          accepted: {
+            deviceIds: []
+          }
+        }
+      },
       releases: {
         byId: {},
         selectedArtifact: null,

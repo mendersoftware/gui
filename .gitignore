@@ -2,8 +2,8 @@
 dist/
 node_modules/
 videos
-screenshots
 .vscode
+screenshots/**
 
 #files
 src/main.css

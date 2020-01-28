@@ -9,8 +9,17 @@ const apiUrl = '/api/management/v1';
 const deploymentsApiUrl = `${apiUrl}/deployments`;
 
 const flattenRelease = release => {
-  release.device_types_compatible = release.Artifacts.reduce((accu, item) => [...accu, ...item.device_types_compatible], []);
+  const { descriptions, deviceTypes } = release.Artifacts.reduce(
+    (accu, item) => {
+      item.description ? accu.descriptions.push(item.description) : null;
+      accu.deviceTypes.push(...item.device_types_compatible);
+      return accu;
+    },
+    { descriptions: [], deviceTypes: [] }
+  );
   release.Artifacts.sort(customSort(1, 'modified'));
+  release.descriptions = descriptions;
+  release.device_types_compatible = deviceTypes;
   return release;
 };
 
@@ -37,6 +46,31 @@ export const getArtifactUrl = id => (dispatch, getState) =>
     release.Artifacts[index].url = response.uri;
     return dispatch({ type: ReleaseConstants.ARTIFACTS_SET_ARTIFACT_URL, release });
   });
+
+export const createArtifact = (meta, file) => dispatch => {
+  let formData = Object.entries(meta).reduce((accu, [key, value]) => {
+    accu.append(key, JSON.stringify(value));
+    return accu;
+  }, new FormData());
+  formData.append('type', ReleaseConstants.ARTIFACT_GENERATION_TYPE.SINGLE_FILE);
+  formData.append('file', file);
+  var progress = percent => dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, uploadProgress: percent });
+  return Promise.all([
+    dispatch(setSnackbar('Generating artifact')),
+    dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 }),
+    ArtifactsApi.postFormData(`${deploymentsApiUrl}/artifacts/generate`, formData, e => progress(e.percent))
+  ])
+    .then(() => Promise.all([dispatch(selectArtifact(meta.name)), dispatch(setSnackbar('Upload successful', 5000))]))
+    .catch(err => {
+      try {
+        var errMsg = err.res.body.error || '';
+        dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be generated. ${errMsg}`), null, 'Copy to clipboard'));
+      } catch (e) {
+        console.log(e);
+      }
+    })
+    .finally(() => dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 }));
+};
 
 export const uploadArtifact = (meta, file) => dispatch => {
   var formData = new FormData();

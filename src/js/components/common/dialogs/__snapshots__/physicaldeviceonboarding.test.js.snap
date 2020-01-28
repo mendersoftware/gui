@@ -71,7 +71,7 @@ exports[`PhysicalDeviceOnboarding Component renders correctly 1`] = `
       </svg>
     </div>
     <div
-      className="__react_component_tooltip place-bottom type-dark "
+      className="__react_component_tooltip place-bottom type-dark"
       data-id="tooltip"
       id="physical-device-type-tip"
     >

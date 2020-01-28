@@ -2,15 +2,27 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, LinearProgress } from '@material-ui/core';
+import { Button, LinearProgress } from '@material-ui/core';
+
+import { CloudUpload, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { selectDevices } from '../../actions/deviceActions';
-import { getReleases, removeArtifact, selectArtifact, selectRelease, showRemoveArtifactDialog } from '../../actions/releaseActions';
+import {
+  createArtifact,
+  getReleases,
+  removeArtifact,
+  selectArtifact,
+  selectRelease,
+  showRemoveArtifactDialog,
+  uploadArtifact
+} from '../../actions/releaseActions';
 import { preformatWithRequestID } from '../../helpers';
 
 import ReleaseRepository from './releaserepository';
 import ReleasesList from './releaseslist';
+import RemoveArtifactDialog from './dialogs/removeartifact';
+import AddArtifactDialog from './dialogs/addartifact';
 
 export class Artifacts extends React.Component {
   constructor(props, context) {
@@ -18,7 +30,8 @@ export class Artifacts extends React.Component {
     this.state = {
       refreshArtifactsLength: 30000, //60000,
       doneLoading: false,
-      remove: false
+      remove: false,
+      showCreateArtifactDialog: false
     };
   }
   componentDidUpdate(prevProps) {
@@ -81,6 +94,16 @@ export class Artifacts extends React.Component {
       });
   }
 
+  addArtifact(meta, file, type = 'upload') {
+    const self = this;
+    const upload = type === 'create' ? this.props.createArtifact(meta, file) : this.props.uploadArtifact(meta, file);
+    return upload
+      .then(() => {
+        return self._getReleases();
+      })
+      .finally(() => self.setState({ showCreateArtifactDialog: false }));
+  }
+
   _removeArtifact(artifact) {
     const self = this;
     return self.props
@@ -94,21 +117,44 @@ export class Artifacts extends React.Component {
       })
       .finally(() => self.props.showRemoveArtifactDialog(false));
   }
+
   render() {
     const self = this;
-    const { artifact, doneLoading } = self.state;
-    const { artifactProgress, releases, showRemoveDialog, selectedArtifact, selectedRelease, showRemoveArtifactDialog } = self.props;
+    const { artifact, doneLoading, selectedFile, showCreateArtifactDialog } = self.state;
+    const { artifactProgress, deviceTypes, releases, showRemoveDialog, selectedArtifact, selectedRelease, showRemoveArtifactDialog } = self.props;
     return (
       <div style={{ height: '100%' }}>
         <div className="repository">
-          <ReleasesList
-            releases={releases}
-            selectedRelease={selectedRelease}
-            onSelect={release => self.props.selectRelease(release)}
-            onFilter={rels => self.onFilterReleases(rels)}
+          <div>
+            <ReleasesList
+              releases={releases}
+              selectedRelease={selectedRelease}
+              onSelect={release => self.props.selectRelease(release)}
+              onFilter={rels => self.onFilterReleases(rels)}
+              loading={!doneLoading}
+            />
+            <div>
+              <Button
+                variant="contained"
+                color="secondary"
+                startIcon={<CloudUpload fontSize="small" />}
+                style={{ minWidth: 164 }}
+                onClick={() => self.setState({ showCreateArtifactDialog: true })}
+              >
+                Upload
+              </Button>
+              <p className="info flexbox" style={{ alignItems: 'center' }}>
+                <InfoIcon fontSize="small" />
+                Upload an Artifact to an existing or new Release
+              </p>
+            </div>
+          </div>
+          <ReleaseRepository
+            refreshArtifacts={() => self._getReleases()}
             loading={!doneLoading}
+            onUpload={selectedFile => self.setState({ selectedFile, showCreateArtifactDialog: true })}
+            release={selectedRelease}
           />
-          <ReleaseRepository refreshArtifacts={() => self._getReleases()} loading={!doneLoading} release={selectedRelease} />
         </div>
         {artifactProgress ? (
           <div id="progressBarContainer">
@@ -116,30 +162,52 @@ export class Artifacts extends React.Component {
             <LinearProgress variant="determinate" style={{ backgroundColor: '#c7c7c7', margin: '15px 0' }} value={artifactProgress} />
           </div>
         ) : null}
-
-        <Dialog open={showRemoveDialog}>
-          <DialogTitle>Remove this artifact?</DialogTitle>
-          <DialogContent>
-            Are you sure you want to remove <i>{(artifact || {}).name}</i>?
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => showRemoveArtifactDialog(false)}>Cancel</Button>
-            <div style={{ flexGrow: 1 }} />
-            <Button variant="contained" color="secondary" onClick={() => self._removeArtifact(selectedArtifact || artifact || selectedRelease.Artifacts[0])}>
-              Remove artifact
-            </Button>
-          </DialogActions>
-        </Dialog>
+        {showRemoveDialog && (
+          <RemoveArtifactDialog
+            artifact={(artifact || {}).name}
+            open={showRemoveDialog}
+            onCancel={() => showRemoveArtifactDialog(false)}
+            onRemove={() => self._removeArtifact(selectedArtifact || artifact || selectedRelease.Artifacts[0])}
+          />
+        )}
+        {showCreateArtifactDialog && (
+          <AddArtifactDialog
+            selectedFile={selectedFile}
+            deviceTypes={deviceTypes}
+            open={showCreateArtifactDialog}
+            onCancel={() => self.setState({ showCreateArtifactDialog: false })}
+            onCreate={(meta, file) => self.addArtifact(meta, file, 'create')}
+            onUpload={(meta, file) => self.addArtifact(meta, file, 'upload')}
+          />
+        )}
       </div>
     );
   }
 }
 
-const actionCreators = { getReleases, removeArtifact, selectArtifact, selectDevices, selectRelease, showRemoveArtifactDialog, setSnackbar };
+const actionCreators = {
+  createArtifact,
+  getReleases,
+  removeArtifact,
+  selectArtifact,
+  selectDevices,
+  selectRelease,
+  showRemoveArtifactDialog,
+  setSnackbar,
+  uploadArtifact
+};
 
 const mapStateToProps = state => {
+  const deviceTypes = state.devices.byStatus.accepted.deviceIds.reduce((accu, item) => {
+    const deviceType = state.devices.byId[item] ? state.devices.byId[item].attributes.device_type : '';
+    if (deviceType.length > 0) {
+      accu[deviceType] = accu[deviceType] ? accu[deviceType] + 1 : 1;
+    }
+    return accu;
+  }, {});
   return {
     artifactProgress: state.releases.uploadProgress,
+    deviceTypes: Object.keys(deviceTypes),
     onboardingComplete: state.users.onboarding.complete,
     releases: Object.values(state.releases.byId),
     selectedArtifact: state.releases.selectedArtifact,

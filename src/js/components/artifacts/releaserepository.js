@@ -6,8 +6,7 @@ import ReactTooltip from 'react-tooltip';
 
 // material ui
 import { Button, Tooltip, Typography } from '@material-ui/core';
-
-import { CloudUpload as FileIcon, Help as HelpIcon, KeyboardArrowRight as KeyboardArrowRightIcon, Sort as SortIcon } from '@material-ui/icons';
+import { Help as HelpIcon, Sort as SortIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { editArtifact, uploadArtifact, selectArtifact, selectRelease } from '../../actions/releaseActions';
@@ -38,7 +37,7 @@ export class ReleaseRepository extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.release && prevProps.release.Name !== this.props.release.Name) {
+    if (prevProps.release && this.props.release && prevProps.release.Name !== this.props.release.Name) {
       const self = this;
       self.setState({ wasSelectedRecently: true }, () => setTimeout(() => self.setState({ wasSelectedRecently: false }), 200));
     }
@@ -46,25 +45,11 @@ export class ReleaseRepository extends React.Component {
 
   onDrop(acceptedFiles, rejectedFiles) {
     if (acceptedFiles.length) {
-      this._onUploadSubmit(acceptedFiles);
+      this.props.onUpload(acceptedFiles[0]);
     }
     if (rejectedFiles.length) {
-      this.props.setSnackbar(`File '${rejectedFiles[0].name}' was rejected. File must be of type .mender`, null);
+      this.props.setSnackbar(`File '${rejectedFiles[0].name}' was rejected. File should be of type .mender`, null);
     }
-  }
-  _onUploadSubmit(files) {
-    var self = this;
-    //var tmpFile = meta.artifactFile;
-    //delete meta.artifactFile;
-    //delete meta.verified;
-    var meta = { description: '' };
-    const uploads = files.map(file => self.props.uploadArtifact(meta, file));
-    Promise.all(uploads).then(() => {
-      if (!self.props.onboardingComplete && getOnboardingStepCompleted('artifact-included-deploy-onboarding')) {
-        advanceOnboarding('upload-new-artifact-tip');
-      }
-      self.props.refreshArtifacts();
-    });
   }
 
   _onRowSelection(artifact) {
@@ -109,7 +94,7 @@ export class ReleaseRepository extends React.Component {
 
   render() {
     const self = this;
-    const { loading, release, selectedArtifact, showHelptips, uploading } = self.props;
+    const { loading, onUpload, release, selectedArtifact, showHelptips, uploading } = self.props;
     const { sortCol, sortDown, wasSelectedRecently } = self.state;
     const artifacts = release ? release.Artifacts : [];
     const items = artifacts.sort(customSort(sortDown, sortCol)).map((pkg, index) => {
@@ -132,26 +117,6 @@ export class ReleaseRepository extends React.Component {
     });
 
     const dropzoneClass = uploading ? 'dropzone disabled muted' : 'dropzone';
-
-    var emptyLink = (
-      <Dropzone
-        disabled={uploading}
-        activeClassName="active"
-        rejectClassName="active"
-        multiple={false}
-        accept=".mender"
-        onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
-      >
-        {({ getRootProps, getInputProps }) => (
-          <div {...getRootProps({ className: dropzoneClass })}>
-            <input {...getInputProps()} disabled={uploading} />
-            <p>
-              There are no Releases yet. <a>Upload an Artifact</a> to create a new Release
-            </p>
-          </div>
-        )}
-      </Dropzone>
-    );
 
     // We need the ref to the <a> element that refers to the deployments tab, in order to align
     // the helptip with the button - unfortunately this is not forwarded through react-router or mui
@@ -195,46 +160,24 @@ export class ReleaseRepository extends React.Component {
       );
     }
 
-    const noArtifactsClass = release ? '' : 'muted';
     return loading || wasSelectedRecently ? (
       <div className="flexbox centered" style={{ width: '100%', height: '50%' }}>
         <Loader show={true} />
       </div>
     ) : (
       <div className="relative release-repo margin-left" style={{ width: '100%' }}>
-        <div className="flexbox">
-          <KeyboardArrowRightIcon className={noArtifactsClass} />
-          <div className={noArtifactsClass}>
-            <Typography variant="body2" style={release ? { fontWeight: 'bold', marginBottom: '30px' } : { marginBottom: '30px' }}>
-              {release ? release.Name : 'No release selected'}
-            </Typography>
-            <Typography variant="body1">Artifacts in this Release:</Typography>
-          </div>
+        <div className="muted margin-bottom">
+          <Typography variant="body1" style={{ marginBottom: 10 }}>
+            Release:
+          </Typography>
+          <Typography variant="body2">{release ? release.Name : 'No release selected'}</Typography>
         </div>
+        {!!release && (
+          <Typography variant="body1" style={{ fontWeight: 'bold' }}>
+            Artifacts in this Release:
+          </Typography>
+        )}
 
-        <Dropzone
-          disabled={uploading}
-          activeClassName="active"
-          rejectClassName="active"
-          multiple={false}
-          accept=".mender"
-          onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
-        >
-          {({ getRootProps, getInputProps }) => (
-            <div
-              {...getRootProps({ className: `dashboard-placeholder top-right-button fadeIn onboard ${dropzoneClass}`, style: { top: 0 } })}
-              ref={ref => (this.dropzoneRef = ref)}
-            >
-              <input {...getInputProps()} disabled={uploading} />
-              <span className="icon">
-                <FileIcon style={{ height: '24px', width: '24px', verticalAlign: 'middle', marginTop: '-2px', marginRight: '10px' }} />
-              </span>
-              <span>
-                Drag here or <a>browse</a> to upload an Artifact file
-              </span>
-            </div>
-          )}
-        </Dropzone>
         {uploadArtifactOnboardingComponent ? uploadArtifactOnboardingComponent : null}
         <Loader show={loading} />
 
@@ -283,7 +226,27 @@ export class ReleaseRepository extends React.Component {
 
           {items.length || loading ? null : (
             <div className="dashboard-placeholder fadeIn" style={{ fontSize: '16px', margin: '8vh auto' }}>
-              {this.props.releases.length > 0 ? <p>Select a Release on the left to view its Artifact details</p> : emptyLink}
+              {this.props.releases.length > 0 ? (
+                <p>Select a Release on the left to view its Artifact details</p>
+              ) : (
+                <Dropzone
+                  activeClassName="active"
+                  disabled={uploading}
+                  multiple={false}
+                  noClick={true}
+                  onDrop={(accepted, rejected) => self.onDrop(accepted, rejected)}
+                  rejectClassName="active"
+                >
+                  {({ getRootProps, getInputProps }) => (
+                    <div {...getRootProps({ className: dropzoneClass })} onClick={() => onUpload()}>
+                      <input {...getInputProps()} disabled={uploading} />
+                      <p>
+                        There are no Releases yet. <a>Upload an Artifact</a> to create a new Release
+                      </p>
+                    </div>
+                  )}
+                </Dropzone>
+              )}
             </div>
           )}
         </div>

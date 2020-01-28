@@ -10,102 +10,23 @@ exports[`ReleaseRepository Component renders correctly 1`] = `
   }
 >
   <div
-    className="flexbox"
+    className="muted margin-bottom"
   >
-    <svg
-      aria-hidden="true"
-      className="MuiSvgIcon-root muted"
-      focusable="false"
-      role="presentation"
-      viewBox="0 0 24 24"
-    >
-      <path
-        d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
-      />
-    </svg>
-    <div
-      className="muted"
-    >
-      <p
-        className="MuiTypography-root MuiTypography-body2"
-        style={
-          Object {
-            "marginBottom": "30px",
-          }
-        }
-      >
-        No release selected
-      </p>
-      <p
-        className="MuiTypography-root MuiTypography-body1"
-      >
-        Artifacts in this Release:
-      </p>
-    </div>
-  </div>
-  <div
-    className="dashboard-placeholder top-right-button fadeIn onboard dropzone"
-    onBlur={[Function]}
-    onClick={[Function]}
-    onDragEnter={[Function]}
-    onDragLeave={[Function]}
-    onDragOver={[Function]}
-    onDrop={[Function]}
-    onFocus={[Function]}
-    onKeyDown={[Function]}
-    style={
-      Object {
-        "top": 0,
-      }
-    }
-    tabIndex={0}
-  >
-    <input
-      accept=".mender"
-      autoComplete="off"
-      disabled={false}
-      multiple={false}
-      onChange={[Function]}
-      onClick={[Function]}
+    <p
+      className="MuiTypography-root MuiTypography-body1"
       style={
         Object {
-          "display": "none",
+          "marginBottom": 10,
         }
       }
-      tabIndex={-1}
-      type="file"
-    />
-    <span
-      className="icon"
     >
-      <svg
-        aria-hidden="true"
-        className="MuiSvgIcon-root"
-        focusable="false"
-        role="presentation"
-        style={
-          Object {
-            "height": "24px",
-            "marginRight": "10px",
-            "marginTop": "-2px",
-            "verticalAlign": "middle",
-            "width": "24px",
-          }
-        }
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"
-        />
-      </svg>
-    </span>
-    <span>
-      Drag here or 
-      <a>
-        browse
-      </a>
-       to upload an Artifact file
-    </span>
+      Release:
+    </p>
+    <p
+      className="MuiTypography-root MuiTypography-body2"
+    >
+      No release selected
+    </p>
   </div>
   <div
     className="loaderContainer shrunk"
@@ -157,7 +78,6 @@ exports[`ReleaseRepository Component renders correctly 1`] = `
         tabIndex={0}
       >
         <input
-          accept=".mender"
           autoComplete="off"
           disabled={false}
           multiple={false}
