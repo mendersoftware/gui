@@ -37,6 +37,11 @@ export class ArtifactInformation extends React.PureComponent {
     updateCreation({ customDeviceTypes, selectedDeviceTypes: possibleDeviceTypeSelection });
   }
 
+  onTextInputLeave(updateCreation, value, selectedDeviceTypes) {
+    const possibleDeviceTypeSelection = unionizeStrings(selectedDeviceTypes, [value]);
+    updateCreation({ customDeviceTypes: '', selectedDeviceTypes: possibleDeviceTypeSelection });
+  }
+
   render() {
     const self = this;
     const { customDeviceTypes, deviceTypes, name, selectedDeviceTypes = [], updateCreation } = self.props;
@@ -67,6 +72,7 @@ export class ArtifactInformation extends React.PureComponent {
                 ...params.inputProps,
                 value: customDeviceTypes
               }}
+              onBlur={e => self.onTextInputLeave(updateCreation, e.target.value, selectedDeviceTypes)}
             />
           )}
         />
