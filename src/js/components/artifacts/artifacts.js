@@ -98,14 +98,14 @@ export class Artifacts extends React.Component {
   addArtifact(meta, file, type = 'upload') {
     const self = this;
     const upload = type === 'create' ? this.props.createArtifact(meta, file) : this.props.uploadArtifact(meta, file);
-    return upload
-      .then(() => {
+    return self.setState({ showCreateArtifactDialog: false }, () =>
+      upload.then(() => {
         if (!self.props.onboardingComplete && getOnboardingStepCompleted('artifact-included-deploy-onboarding')) {
           advanceOnboarding('upload-new-artifact-tip');
         }
         return self._getReleases();
       })
-      .finally(() => self.setState({ showCreateArtifactDialog: false }));
+    );
   }
 
   _removeArtifact(artifact) {
