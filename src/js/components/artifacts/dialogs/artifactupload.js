@@ -58,6 +58,7 @@ export default class ArtifactUpload extends React.Component {
       onboardingComponent = getOnboardingComponentFor('upload-new-artifact-dialog-upload', { anchor, place: 'right' });
       onboardingComponent = getOnboardingComponentFor('upload-new-artifact-dialog-destination', { anchor, place: 'right' }, onboardingComponent);
     }
+    const isValidDestination = destination.length ? /^(?:\/|[a-z]+:\/\/)/.test(destination) : true;
     return !acceptedFiles.length ? (
       <>
         <Dropzone activeClassName="active" rejectClassName="active" multiple={false} onDrop={(...args) => self.onDrop(...args)}>
@@ -104,7 +105,9 @@ export default class ArtifactUpload extends React.Component {
           <div>
             <TextField
               autoFocus={true}
+              error={!isValidDestination}
               fullWidth
+              helperText={!isValidDestination && <div className="warning">Destination has to be an absolute path</div>}
               inputProps={{ style: { marginTop: 16 } }}
               InputLabelProps={{ shrink: true }}
               label="Destination directory where the file will be installed on your devices"
