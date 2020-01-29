@@ -63,22 +63,28 @@ export const getOnboardingState = () => (dispatch, getState) => {
       dispatch(getDevicesByStatus(DEVICE_STATES.pending)),
       dispatch(getAllDevices()),
       dispatch(getReleases()),
-      dispatch(getDeploymentsByStatus('finished')),
-      Promise.resolve(userCookie)
+      dispatch(getDeploymentsByStatus('finished'))
     ];
-    promises = Promise.all(requests).then(([acceptedDevices, pendingDevices, devices, releases, pastDeployments, onboardedCookie]) => {
+    promises = Promise.all(requests).then(() => {
       const store = getState();
-      const deviceType = acceptedDevices.length && acceptedDevices[0].hasOwnProperty('attributes') ? acceptedDevices[0].attributes.device_type : null;
+      const acceptedDevices = store.devices.byStatus[DEVICE_STATES.accepted].deviceIds;
+      const pendingDevices = store.devices.byStatus[DEVICE_STATES.pending].deviceIds;
+      const devices = Object.values(store.devices.byId);
+      const releases = Object.values(store.releases.byId);
+      const pastDeployments = store.deployments.byStatus.finished.deploymentIds;
+      const deviceType =
+        acceptedDevices.length && store.devices.byId[acceptedDevices[0]].hasOwnProperty('attributes')
+          ? store.devices.byId[acceptedDevices[0]].attributes.device_type
+          : null;
       const state = {
         complete: !!(
-          Boolean(onboardedCookie) ||
           savedState.complete ||
           (acceptedDevices.length > 1 && pendingDevices.length > 0 && releases.length > 1 && pastDeployments.length > 1) ||
           (acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length > 2) ||
           (acceptedDevices.length >= 1 && pendingDevices.length > 0 && releases.length >= 2 && pastDeployments.length >= 2) ||
           store.users.onboarding.disable
         ),
-        showTips: savedState.showTips != null ? savedState.showTips : onboardedCookie ? !onboardedCookie : true,
+        showTips: savedState.showTips != null ? savedState.showTips : true,
         deviceType: savedState.deviceType || store.users.onboarding.deviceType || deviceType,
         approach: savedState.approach || (deviceType || '').startsWith('qemu') ? 'virtual' : 'physical' || store.users.onboarding.approach,
         artifactIncluded: savedState.artifactIncluded || store.users.onboarding.artifactIncluded,
@@ -96,6 +102,11 @@ export const getOnboardingState = () => (dispatch, getState) => {
     .then(state => {
       const progress = Object.keys(onboardingSteps).findIndex(step => step === 'deployments-past-completed');
       state.showArtifactCreation = Math.abs(state.progress - progress) <= 1;
+      if (state.showArtifactCreation) {
+        // although it would be more appropriate to do this in the app component, this happens here because in the app component we would need to track
+        // redirects, if we want to still allow navigation across the UI while the dialog is visible
+        window.location.replace('#/releases');
+      }
       return dispatch(setOnboardingState(state));
     })
     .catch(e => console.log(e));

@@ -40,12 +40,7 @@ export default class ReleasesList extends React.Component {
       <div className="repository-list">
         <div className="flexbox" style={{ alignItems: 'center' }}>
           <h3>Releases</h3>
-          <SearchInput
-            placeholder="Filter by name"
-            className="search margin-left"
-            ref={search => (self.search = search)}
-            onChange={term => self.searchUpdated(term)}
-          />
+          <SearchInput placeholder="Filter" className="search margin-left" ref={search => (self.search = search)} onChange={term => self.searchUpdated(term)} />
         </div>
         {self.state.searchTerm ? <p className="muted">{`Filtered from ${releases.length} ${pluralize('Release', releases.length)}`}</p> : null}
         <Button

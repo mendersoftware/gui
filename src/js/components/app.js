@@ -66,7 +66,11 @@ class AppRoot extends React.Component {
         <div className="rightFluid container">{this.props.children}</div>
         {onboardingComponent ? onboardingComponent : null}
         <ConfirmDismissHelptips open={showDismissHelptipsDialog} />
-        <CreateArtifactDialog open={showCreateArtifactDialog} onCancel={() => setShowCreateArtifactDialog(false)} />
+        <CreateArtifactDialog
+          open={showCreateArtifactDialog}
+          onCancel={() => setShowCreateArtifactDialog(false)}
+          onClose={() => setShowCreateArtifactDialog(false)}
+        />
         <DeviceConnectionDialog open={showDeviceConnectionDialog} onCancel={() => setShowConnectingDialog(false)} />
         <SharedSnackbar />
       </IdleTimer>

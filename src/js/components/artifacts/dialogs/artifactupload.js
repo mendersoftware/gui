@@ -5,19 +5,21 @@ import { IconButton, TextField } from '@material-ui/core';
 import { CloudUpload, Delete as DeleteIcon, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import { FileSize } from '../../../helpers';
+import { advanceOnboarding, getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 
 export default class ArtifactUpload extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      acceptedFiles: this.props.file ? [this.props.file] : [],
-      destination: this.props.destination || ''
+      acceptedFiles: props.file ? [props.file] : [],
+      destination: props.destination || ''
     };
   }
 
   onDrop(acceptedFiles) {
     if (acceptedFiles.length === 1) {
       const self = this;
+      advanceOnboarding('upload-new-artifact-dialog-upload');
       self.setState({ acceptedFiles }, () => self.props.updateCreation({ file: acceptedFiles[0] }));
     } else {
       this.setState({ acceptedFiles: [] });
@@ -32,18 +34,39 @@ export default class ArtifactUpload extends React.Component {
     self.setState({ destination }, () => self.props.updateCreation({ destination, file: acceptedFiles.length ? acceptedFiles[0] : null }));
   }
 
+  onRefSet(refTarget, ref) {
+    if (!this[refTarget] || (this[refTarget] && ref && this[refTarget].className !== ref.className)) {
+      this[refTarget] = ref;
+      this.setState({});
+    }
+  }
+
   render() {
     const self = this;
     const { acceptedFiles, destination } = self.state;
+    const { onboardingComplete } = self.props;
     const { filesize, filename, isMenderArtifact } = acceptedFiles.length
       ? { filename: acceptedFiles[0].name, filesize: acceptedFiles[0].size, isMenderArtifact: acceptedFiles[0].name.endsWith('.mender') }
       : { filesize: 0, filename: 0, isMenderArtifact: false };
 
+    let onboardingComponent = null;
+    if (!onboardingComplete && self.onboardingAnchor) {
+      const anchor = {
+        left: self.onboardingAnchor.offsetLeft + self.onboardingAnchor.clientWidth,
+        top: self.onboardingAnchor.offsetTop + self.onboardingAnchor.clientHeight / 2
+      };
+      onboardingComponent = getOnboardingComponentFor('upload-new-artifact-dialog-upload', { anchor, place: 'right' });
+      onboardingComponent = getOnboardingComponentFor('upload-new-artifact-dialog-destination', { anchor, place: 'right' }, onboardingComponent);
+    }
+    const isValidDestination = destination.length ? /^(?:\/|[a-z]+:\/\/)/.test(destination) : true;
     return !acceptedFiles.length ? (
       <>
         <Dropzone activeClassName="active" rejectClassName="active" multiple={false} onDrop={(...args) => self.onDrop(...args)}>
           {({ getRootProps, getInputProps }) => (
-            <div {...getRootProps({ className: 'dashboard-placeholder fadeIn onboard dropzone', style: { top: 0 } })} ref={ref => (self.dropzoneRef = ref)}>
+            <div
+              {...getRootProps({ className: 'dashboard-placeholder fadeIn onboard dropzone', style: { top: 0 } })}
+              ref={ref => self.onRefSet('onboardingAnchor', ref)}
+            >
               <input {...getInputProps()} />
               <span className="icon">
                 <CloudUpload fontSize="small" />
@@ -54,6 +77,7 @@ export default class ArtifactUpload extends React.Component {
             </div>
           )}
         </Dropzone>
+        {!!onboardingComponent && onboardingComponent}
         <p className="info flexbox centered" style={{ marginTop: '10px' }}>
           <InfoIcon fontSize="small" />
           Upload a pre-built .mender Artifact OR any file to create a single-file update Artifact
@@ -81,15 +105,18 @@ export default class ArtifactUpload extends React.Component {
           <div>
             <TextField
               autoFocus={true}
+              error={!isValidDestination}
               fullWidth
+              helperText={!isValidDestination && <div className="warning">Destination has to be an absolute path</div>}
               inputProps={{ style: { marginTop: 16 } }}
               InputLabelProps={{ shrink: true }}
               label="Destination directory where the file will be installed on your devices"
               onChange={e => self.onChange(e)}
               placeholder="Example: /opt/installed-by-single-file"
-              ref={ref => (self.onboardingAnchor = ref)}
+              ref={ref => self.onRefSet('onboardingAnchor', ref)}
               value={destination}
             />
+            {!!onboardingComponent && onboardingComponent}
           </div>
         )}
         <div />
