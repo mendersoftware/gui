@@ -31,7 +31,7 @@ exports[`Artifacts Component renders correctly 1`] = `
           >
             <input
               onChange={[Function]}
-              placeholder="Filter by name"
+              placeholder="Filter"
               type="search"
               value=""
             />
