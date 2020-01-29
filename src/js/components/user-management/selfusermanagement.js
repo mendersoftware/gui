@@ -38,11 +38,11 @@ export default class SelfUserManagement extends React.Component {
     AppStore.removeChangeListener(this._onChange.bind(this));
   }
 
-  _editSubmit(id, userData) {
+  _editSubmit(userData) {
     var self = this;
-    return AppActions.editUser(id, userData)
+    const user = { ...AppStore.getCurrentUser(), ...userData };
+    return AppActions.editUser(user.id, userData)
       .then(() => {
-        const user = { ...AppStore.getCurrentUser(), ...userData };
         AppActions.setCurrentUser(user);
         AppActions.setSnackbar('The user has been updated.');
         self.setState({ editPass: false, editEmail: false });
