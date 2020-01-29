@@ -49,7 +49,13 @@ export const getArtifactUrl = id => (dispatch, getState) =>
 
 export const createArtifact = (meta, file) => dispatch => {
   let formData = Object.entries(meta).reduce((accu, [key, value]) => {
-    accu.append(key, JSON.stringify(value));
+    if (Array.isArray(value)) {
+      accu.append(key, value.join(','));
+    } else if (value instanceof Object) {
+      accu.append(key, JSON.stringify(value));
+    } else {
+      accu.append(key, value);
+    }
     return accu;
   }, new FormData());
   formData.append('type', ReleaseConstants.ARTIFACT_GENERATION_TYPE.SINGLE_FILE);

@@ -35,7 +35,7 @@ export class AddArtifactDialog extends React.Component {
     }
     const otherDeviceTypes = customDeviceTypes.split(',');
     const deviceTypes = unionizeStrings(selectedDeviceTypes, otherDeviceTypes);
-    meta = { ...meta, device_types_compatible: deviceTypes, destination, name };
+    meta = { ...meta, device_types_compatible: deviceTypes, args: { dest_dir: destination, filename: file.name }, name };
     this.props.onCreate(meta, file);
   }
 
