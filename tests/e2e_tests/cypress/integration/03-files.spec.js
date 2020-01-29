@@ -17,7 +17,7 @@ context('Files', () => {
     const encoding = 'base64'
     const fileName = 'mender-demo-artifact.mender'
     cy.readFile(fileName, encoding).then(fileContent => {
-      cy.get('.dropzone input')
+      cy.get('.onboard.dropzone input')
         .upload({ fileContent, fileName, encoding, mimeType: 'application/octet-stream' })
         .wait(10000) // give some extra time for the upload
     })
