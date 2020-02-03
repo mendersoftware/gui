@@ -4,9 +4,9 @@ import pluralize from 'pluralize';
 
 import { Chip, List } from '@material-ui/core';
 
-import ExpandableDeviceAttribute from '../../devices/expandable-device-attribute';
-import { getRemainderPercent } from '../../../helpers';
+import ExpandableAttribute from '../../common/expandable-attribute';
 import EnterpriseNotification from '../../common/enterpriseNotification';
+import { getRemainderPercent } from '../../../helpers';
 
 const Review = props => {
   const { deploymentDeviceIds, device, group, isEnterprise, phases, release } = props;
@@ -30,7 +30,7 @@ const Review = props => {
 
         <List className="list-horizontal-flex">
           {deploymentInformation.map(item => (
-            <ExpandableDeviceAttribute
+            <ExpandableAttribute
               key={item.primary}
               primary={item.primary}
               secondary={item.secondary}

@@ -25,9 +25,9 @@ import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { preformatWithRequestID } from '../../helpers';
 import { advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import { AuthButton } from '../helptips/helptooltips';
+import ExpandableAttribute from '../common/expandable-attribute';
 import Loader from '../common/loader';
 import Authsets from './authsets';
-import ExpandableDeviceAttribute from './expandable-device-attribute';
 
 const iconStyle = { margin: 12 };
 
@@ -156,10 +156,10 @@ export class ExpandedDevice extends React.Component {
     const self = this;
     const { attributes, created_ts, identity_data, status } = this.props.device;
 
-    let deviceIdentity = [<ExpandableDeviceAttribute key="id_checksum" primary="Device ID" secondary={this.props.device.id || '-'} />];
+    let deviceIdentity = [<ExpandableAttribute key="id_checksum" primary="Device ID" secondary={this.props.device.id || '-'} />];
     if (identity_data) {
       deviceIdentity = Object.entries(identity_data).reduce((accu, item) => {
-        accu.push(<ExpandableDeviceAttribute key={item[0]} primary={item[0]} secondary={item[1]} />);
+        accu.push(<ExpandableAttribute key={item[0]} primary={item[0]} secondary={item[1]} />);
         return accu;
       }, deviceIdentity);
     }
@@ -167,7 +167,7 @@ export class ExpandedDevice extends React.Component {
     if (created_ts) {
       var createdTime = <Time value={created_ts} format="YYYY-MM-DD HH:mm" />;
       deviceIdentity.push(
-        <ExpandableDeviceAttribute key="connectionTime" primary={status === DEVICE_STATES.preauth ? 'Date added' : 'First request'} secondary={createdTime} />
+        <ExpandableAttribute key="connectionTime" primary={status === DEVICE_STATES.preauth ? 'Date added' : 'First request'} secondary={createdTime} />
       );
     }
 
@@ -178,7 +178,7 @@ export class ExpandedDevice extends React.Component {
       var sortedAttributes = Object.entries(attributes).sort((a, b) => a[0].localeCompare(b[0]));
       deviceInventory = sortedAttributes.reduce((accu, attribute, i) => {
         var secondaryText = Array.isArray(attribute[1]) ? attribute[1].join(',') : attribute[1];
-        accu.push(<ExpandableDeviceAttribute key={i} primary={attribute[0]} secondary={secondaryText} textClasses={{ secondary: 'inventory-text' }} />);
+        accu.push(<ExpandableAttribute key={i} primary={attribute[0]} secondary={secondaryText} textClasses={{ secondary: 'inventory-text' }} />);
         return accu;
       }, deviceInventory);
     } else {
