@@ -16,6 +16,14 @@ const SystemUpdates = ({ docsVersion = '' }) => (
       device needs to have an A/B partition layout with the Mender client installed in its disk image.
     </p>
 
+    <p>
+      We prepared images, fully integrated with Mender for you to start with. You can find them on our{' '}
+      <a href={`https://docs.mender.io/${docsVersion}downloads#disk-images`} target="_blank">
+        downloads page
+      </a>
+      .
+    </p>
+
     <p>Learn how to enable and connect your devices for system updates:</p>
     <ul>
       {updateOptions.map(item => (
