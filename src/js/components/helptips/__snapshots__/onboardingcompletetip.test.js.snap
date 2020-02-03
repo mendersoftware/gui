@@ -73,6 +73,9 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
     <p>
       You've now got a good foundation in how to use Mender. Look for more help hints in the UI as you go along.
     </p>
+    <p>
+      If you used one of our pre-built images you can start using full-image and delta updates right away.
+    </p>
     What next?
     <div>
       <a
