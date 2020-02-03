@@ -109,7 +109,7 @@ export class PhysicalDeviceOnboarding extends React.Component {
                 </a>{' '}
                 and once you&apos;re done flashing you can go ahead and proceed to the next step.
               </p>
-              <p>If you already have an image running, you can proceed but some limitations to the kind of updates you can install apply.</p>
+              <p>If you already have an image running, you can proceed with this tutorial but you will not be able to do full system updates later on.</p>
             </div>
           )}
         </div>
