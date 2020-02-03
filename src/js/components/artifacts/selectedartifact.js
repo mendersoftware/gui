@@ -11,7 +11,8 @@ import {
   IconButton,
   Input,
   InputAdornment,
-  InputLabel
+  InputLabel,
+  List
 } from '@material-ui/core';
 
 import {
@@ -26,6 +27,7 @@ import {
 } from '@material-ui/icons';
 
 import { getArtifactUrl, showRemoveArtifactDialog } from '../../actions/releaseActions';
+import ExpandableAttribute from '../common/expandable-attribute';
 import ArtifactPayload from './artifactPayload';
 
 const styles = {
@@ -81,6 +83,19 @@ export class SelectedArtifact extends React.Component {
     const self = this;
 
     const { artifact, onExpansion } = self.props;
+    const metaData =
+      artifact && artifact.metadata
+        ? Object.entries(artifact.metadata).reduce((accu, [key, value]) => {
+            if (Array.isArray(value)) {
+              accu.push({ title: key, value: value.join(',') });
+            } else if (value instanceof Object) {
+              accu.push({ title: key, value: JSON.stringify(value) });
+            } else {
+              accu.push({ title: key, value });
+            }
+            return accu;
+          }, [])
+        : [];
 
     return (
       <div className={artifact.name == null ? 'muted' : null}>
@@ -119,7 +134,13 @@ export class SelectedArtifact extends React.Component {
             />
           </FormControl>
         </div>
-
+        {!!metaData.length && (
+          <List className="list-horizontal-flex">
+            {metaData.map(metadata => (
+              <ExpandableAttribute key={metadata.title} primary={metadata.title} secondary={metadata.value || '-'} />
+            ))}
+          </List>
+        )}
         <ExpansionPanel
           square
           expanded={self.state.showPayloads}
