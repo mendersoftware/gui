@@ -2,7 +2,7 @@ import React from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import IconButton from '@material-ui/core/IconButton';
 import CopyPasteIcon from '@material-ui/icons/FileCopy';
-import { getDebConfigurationCode } from '../../../helpers';
+import { getDebConfigurationCode, getDebInstallationCode } from '../../../helpers';
 
 export default class DebPackage extends React.Component {
   constructor(props, context) {
@@ -36,8 +36,7 @@ export default class DebPackage extends React.Component {
     const { codeToCopyCopied, dpkgCodeCopied } = self.state;
     const { debPackageVersion, ipAddress, isHosted, isEnterprise, org } = self.props;
     const token = (org || {}).tenant_token;
-    const dpkgCode = `wget https://d1b0l86ne08fsf.cloudfront.net/${debPackageVersion}/dist-packages/debian/armhf/mender-client_${debPackageVersion}-1_armhf.deb &&
-    sudo dpkg -i mender-client_${debPackageVersion}-1_armhf.deb`;
+    const dpkgCode = getDebInstallationCode(debPackageVersion);
     const codeToCopy = getDebConfigurationCode(ipAddress, isHosted, isEnterprise, token, debPackageVersion);
     let title = 'Connecting to a demo server with demo settings';
     if (isEnterprise) {

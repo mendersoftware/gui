@@ -43,8 +43,9 @@ export const loginUser = userData => (dispatch, getState) =>
       }
       let options = {};
       if (userData.hasOwnProperty('noExpiry')) {
-        // set no expiry as cookie to remember checkbox value
-        cookies.set('noExpiry', userData.noExpiry.toString());
+        // set no expiry as cookie to remember checkbox value, even though this is set, maxAge takes precedent if present
+        options = { expires: new Date('2500-12-31') };
+        cookies.set('noExpiry', userData.noExpiry.toString(), options);
       } else {
         options = { maxAge: 900 };
       }

@@ -15,26 +15,15 @@ import { setShowConnectingDialog, setShowCreateArtifactDialog } from '../actions
 import SharedSnackbar from '../components/common/sharedsnackbar';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 
-class AppRoot extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      timeout: 900000 // 15 minutes idle time,
-    };
-  }
+const timeout = 900000; // 15 minutes idle time
 
-  componentDidMount() {
-    window.addEventListener('mousemove', updateMaxAge, false);
-  }
-  componentWillUnmount() {
-    window.addEventListener('mousemove', updateMaxAge, false);
-  }
-  _onIdle() {
+class AppRoot extends React.PureComponent {
+  onIdle() {
     if (expirySet() && this.props.currentUser) {
       // logout user and warn
-      if (!this.props.uploadInProgress) {
-        logout();
+      if (!this.props.artifactProgress) {
         this.props.setSnackbar('Your session has expired. You have been automatically logged out due to inactivity.');
+        logout();
         return;
       }
       updateMaxAge();
@@ -42,14 +31,17 @@ class AppRoot extends React.Component {
   }
 
   render() {
-    const { timeout } = this.state;
+    const self = this;
     const {
+      children,
+      history,
+      isLoggedIn,
       setShowConnectingDialog,
       setShowCreateArtifactDialog,
       showDismissHelptipsDialog,
       showDeviceConnectionDialog,
       showCreateArtifactDialog
-    } = this.props;
+    } = self.props;
 
     const onboardingComponent = getOnboardingComponentFor('application-update-reminder-tip', {
       anchor: {
@@ -60,10 +52,11 @@ class AppRoot extends React.Component {
     });
 
     return (
-      <IdleTimer element={document} idleAction={this._onIdle} timeout={timeout} format="MM-DD-YYYY HH:MM:ss.SSS">
-        <Header history={this.props.history} isLoggedIn={this.props.isLoggedIn} />
+      <>
+        <IdleTimer element={document} onAction={updateMaxAge} onIdle={() => self.onIdle()} timeout={timeout} />
+        <Header history={history} isLoggedIn={isLoggedIn} />
         <LeftNav className="leftFixed leftNav" />
-        <div className="rightFluid container">{this.props.children}</div>
+        <div className="rightFluid container">{children}</div>
         {onboardingComponent ? onboardingComponent : null}
         <ConfirmDismissHelptips open={showDismissHelptipsDialog} />
         <CreateArtifactDialog
@@ -73,7 +66,7 @@ class AppRoot extends React.Component {
         />
         <DeviceConnectionDialog open={showDeviceConnectionDialog} onCancel={() => setShowConnectingDialog(false)} />
         <SharedSnackbar />
-      </IdleTimer>
+      </>
     );
   }
 }
