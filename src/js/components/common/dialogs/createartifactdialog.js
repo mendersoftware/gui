@@ -1,26 +1,12 @@
 import React from 'react';
-import CopyToClipboard from 'react-copy-to-clipboard';
-
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 
-import CopyPasteIcon from '@material-ui/icons/FileCopy';
+import CopyCode from '../copy-code';
 
-export class CreateArtifactDialog extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = { copied: false };
-  }
-
-  copied(copied) {
-    var self = this;
-    self.setState({ copied });
-    setTimeout(() => self.setState({ copied: false }), 5000);
-  }
-
+export class CreateArtifactDialog extends React.PureComponent {
   render() {
     const self = this;
     const { open, onCancel, onClose } = self.props;
-    const { copied } = self.state;
 
     const file_modification = `cat >index.html <<EOF
 Hello World!
@@ -38,16 +24,7 @@ EOF
               update the application, so you&apos;ll be able to easily see when your device has received the update. Copy and run the command to create the
               file:
             </p>
-            <div className="code">
-              <CopyToClipboard text={file_modification} onCopy={() => self.copied(true)}>
-                <Button style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-                  <CopyPasteIcon />
-                  Copy to clipboard
-                </Button>
-              </CopyToClipboard>
-              <span style={{ wordBreak: 'break-word' }}>{file_modification}</span>
-            </div>
-            <p>{copied && <span className="green fadeIn">Copied to clipboard.</span>}</p>
+            <CopyCode code={file_modification} withDescription={true} />
             <p>When you have done that, click &apos;Next&apos;</p>
           </div>
         </DialogContent>

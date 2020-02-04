@@ -1,32 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import CopyToClipboard from 'react-copy-to-clipboard';
-
-import Button from '@material-ui/core/Button';
-
-import CopyPasteIcon from '@material-ui/icons/FileCopy';
 
 import { setOnboardingApproach } from '../../../actions/userActions';
+import CopyCode from '../copy-code';
 
-export class VirtualDeviceOnboarding extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      copied: false
-    };
-  }
-
+export class VirtualDeviceOnboarding extends React.PureComponent {
   componentDidMount() {
     this.props.setOnboardingApproach('virtual');
-  }
-
-  copied() {
-    var self = this;
-    self.setState({ copied: true });
-    setTimeout(() => {
-      self.setState({ copied: false });
-    }, 5000);
   }
 
   render() {
@@ -65,17 +46,7 @@ export class VirtualDeviceOnboarding extends React.Component {
         <p>
           <b>2. Copy & paste and run the following command to start the virtual device:</b>
         </p>
-        <div className="code">
-          <CopyToClipboard text={codeToCopy} onCopy={() => this.copied()}>
-            <Button style={{ float: 'right', margin: '-10px 0 0 10px' }}>
-              <CopyPasteIcon />
-              Copy to clipboard
-            </Button>
-          </CopyToClipboard>
-          <span style={{ wordBreak: 'break-word' }}>{codeToCopy}</span>
-        </div>
-        <p>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
-
+        <CopyCode code={codeToCopy} withDescription={true} />
         <p>The device should appear in the Pending devices view in a couple of minutes.</p>
         <p>
           Visit the <Link to="/help/application-updates/demo-virtual-device">Virtual Devices Help page</Link> for more info on managing the virtual device.

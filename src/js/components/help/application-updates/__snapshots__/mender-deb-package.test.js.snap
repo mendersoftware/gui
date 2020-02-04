@@ -70,6 +70,7 @@ exports[`DebPackage Component renders correctly 1`] = `
     <span
       style={
         Object {
+          "whiteSpace": "pre-wrap",
           "wordBreak": "break-word",
         }
       }
