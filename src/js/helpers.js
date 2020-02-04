@@ -524,6 +524,12 @@ export const matchFilters = (device, filters = store.getState().devices.filterin
     return accu;
   }, true);
 
+export const getDebInstallationCode = (
+  packageVersion,
+  noninteractive = false
+) => `wget https://d1b0l86ne08fsf.cloudfront.net/${packageVersion}/dist-packages/debian/armhf/mender-client_${packageVersion}-1_armhf.deb && \\
+${noninteractive ? 'DEBIAN_FRONTEND=noninteractive' : 'sudo'} dpkg -i --force-confdef --force-confold mender-client_${packageVersion}-1_armhf.deb`;
+
 export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token, packageVersion, deviceType = 'generic-armv6') => {
   let connectionInstructions = `  --quiet --demo ${ipAddress ? `--server-ip ${ipAddress}` : ''}`;
   if (isEnterprise || isHosted) {
@@ -538,8 +544,8 @@ export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token
 ${enterpriseSettings}`;
     }
   }
-  let codeToCopy = `sudo bash -c 'wget https://d1b0l86ne08fsf.cloudfront.net/${packageVersion}/dist-packages/debian/armhf/mender-client_${packageVersion}-1_armhf.deb && \\
-DEBIAN_FRONTEND=noninteractive dpkg -i --force-confdef --force-confold mender-client_${packageVersion}-1_armhf.deb && \\
+  const debInstallationCode = getDebInstallationCode(packageVersion, true);
+  let codeToCopy = `sudo bash -c '${debInstallationCode} && \\
 DEVICE_TYPE="${deviceType}" && \\${
     token
       ? `
