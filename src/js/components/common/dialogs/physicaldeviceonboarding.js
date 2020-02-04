@@ -11,6 +11,25 @@ import { findLocalIpAddress } from '../../../actions/appActions';
 import { getDebConfigurationCode } from '../../../helpers';
 import { advanceOnboarding } from '../../../utils/onboardingmanager';
 
+const types = [
+  {
+    title: 'BeagleBone',
+    value: 'beaglebone'
+  },
+  {
+    title: 'Raspberry Pi 3',
+    value: 'raspberrypi3'
+  },
+  {
+    title: 'Raspberry Pi 4',
+    value: 'raspberrypi4'
+  },
+  {
+    title: 'Generic ARMv6 or newer',
+    value: 'generic-armv6'
+  }
+];
+
 export class PhysicalDeviceOnboarding extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -35,29 +54,10 @@ export class PhysicalDeviceOnboarding extends React.Component {
   render() {
     const self = this;
     const { selection } = self.state;
-    const { ipAddress, isHosted, isEnterprise, token, debPackageVersion } = self.props;
+    const { docsVersion, ipAddress, isHosted, isEnterprise, token, debPackageVersion } = self.props;
 
     const codeToCopy = getDebConfigurationCode(ipAddress, isHosted, isEnterprise, token, debPackageVersion, selection);
-
-    const types = [
-      {
-        title: 'BeagleBone',
-        value: 'beaglebone'
-      },
-      {
-        title: 'Raspberry Pi 3',
-        value: 'raspberrypi3'
-      },
-      {
-        title: 'Raspberry Pi 4',
-        value: 'raspberrypi4'
-      },
-      {
-        title: 'Generic ARMv6 or newer',
-        value: 'generic-armv6'
-      }
-    ];
-
+    const hasConvertedImage = !!selection && selection.length && selection.startsWith('raspberrypi3');
     const steps = {
       1: (
         <div className="flexbox column">
@@ -87,6 +87,18 @@ export class PhysicalDeviceOnboarding extends React.Component {
               </p>
             </div>
           </ReactTooltip>
+          {hasConvertedImage && (
+            <div className="margin-top">
+              <p>
+                We prepared an image, fully integrated with Mender for you to start with. You can find it on our{' '}
+                <a href={`https://docs.mender.io/${docsVersion}downloads#disk-images`} target="_blank">
+                  downloads page
+                </a>{' '}
+                and once you&apos;re done flashing you can go ahead and proceed to the next step.
+              </p>
+              <p>If you already have an image running, you can proceed with this tutorial but you will not be able to do full system updates later on.</p>
+            </div>
+          )}
         </div>
       ),
       2: (
@@ -111,7 +123,9 @@ export class PhysicalDeviceOnboarding extends React.Component {
 const actionCreators = { findLocalIpAddress, setOnboardingApproach, setOnboardingDeviceType };
 
 const mapStateToProps = state => {
+  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
+    docsVersion: state.app.features.hasMultitenancy && state.app.features.isHosted ? '' : docsVersion,
     ipAddress: state.app.hostAddress,
     isEnterprise: state.app.features.isEnterprise,
     isHosted: state.app.features.isHosted,
