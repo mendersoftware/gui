@@ -539,7 +539,7 @@ ${enterpriseSettings}`;
     }
   }
   let codeToCopy = `sudo bash -c 'wget https://d1b0l86ne08fsf.cloudfront.net/${packageVersion}/dist-packages/debian/armhf/mender-client_${packageVersion}-1_armhf.deb && \\
-DEBIAN_FRONTEND=noninteractive dpkg -i mender-client_${packageVersion}-1_armhf.deb && \\
+DEBIAN_FRONTEND=noninteractive dpkg -i --force-confdef --force-confold mender-client_${packageVersion}-1_armhf.deb && \\
 DEVICE_TYPE="${deviceType}" && \\${
     token
       ? `
