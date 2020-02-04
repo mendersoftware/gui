@@ -1,13 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import ReactTooltip from 'react-tooltip';
 
-import Button from '@material-ui/core/Button';
-
-import CopyPasteIcon from '@material-ui/icons/FileCopy';
 import HelpIcon from '@material-ui/icons/Help';
 
+import CopyCode from '../copy-code';
 import AutoSelect from '../forms/autoselect';
 import { setOnboardingApproach, setOnboardingDeviceType } from '../../../actions/userActions';
 import { findLocalIpAddress } from '../../../actions/appActions';
@@ -37,8 +34,7 @@ export class PhysicalDeviceOnboarding extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      selection: null,
-      copied: false
+      selection: null
     };
   }
 
@@ -48,15 +44,6 @@ export class PhysicalDeviceOnboarding extends React.Component {
       self.props.findLocalIpAddress();
     }
     self.props.setOnboardingApproach('physical');
-  }
-
-  copied() {
-    var self = this;
-    self.setState({ copied: true });
-    advanceOnboarding('dashboard-onboarding-start');
-    setTimeout(() => {
-      self.setState({ copied: false });
-    }, 5000);
   }
 
   onSelect(deviceType) {
@@ -120,16 +107,7 @@ export class PhysicalDeviceOnboarding extends React.Component {
           <p>
             Copy & paste and run this command <b>on your device</b>:
           </p>
-          <div className="code">
-            <CopyToClipboard text={codeToCopy} onCopy={() => self.copied(true)}>
-              <Button style={{ float: 'right', margin: '-10px 0 0 10px' }}>
-                <CopyPasteIcon />
-                Copy to clipboard
-              </Button>
-            </CopyToClipboard>
-            <span style={{ wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>{codeToCopy}</span>
-          </div>
-          <p>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
+          <CopyCode code={codeToCopy} onCopy={() => advanceOnboarding('dashboard-onboarding-start')} withDescription={true} />
           <p>This downloads the Mender client on the device, sets the configuration and starts the client.</p>
           <p>
             Once the client has started, your device will attempt to connect to the server. It will then appear in your Pending devices tab and you can

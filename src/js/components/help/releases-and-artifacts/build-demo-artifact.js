@@ -1,9 +1,7 @@
 import React from 'react';
-import CopyToClipboard from 'react-copy-to-clipboard';
-import IconButton from '@material-ui/core/IconButton';
-import CopyPasteIcon from '@material-ui/icons/FileCopy';
 
 import { detectOsIdentifier } from '../../../helpers';
+import CopyCode from '../../common/copy-code';
 
 // we don't support windows yet, so we'll point them to the linux file instead
 const downloadFolder = {
@@ -13,26 +11,7 @@ const downloadFolder = {
   Linux: 'linux'
 };
 
-export default class BuildDemoArtifact extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      executable: false,
-      file_modification: false
-    };
-  }
-
-  _copied(ref) {
-    var self = this;
-    var toSet = {};
-    toSet[ref] = true;
-    self.setState(toSet);
-    setTimeout(() => {
-      toSet[ref] = false;
-      self.setState(toSet);
-    }, 5000);
-  }
-
+export default class BuildDemoArtifact extends React.PureComponent {
   render() {
     const { menderVersion = 'master', menderArtifactVersion = 'master' } = this.props;
     var executable = `
@@ -86,37 +65,11 @@ EOF
           </a>
           , extract it then make it executable by running:
         </p>
-
-        <div>
-          <div className="code">
-            <CopyToClipboard text={executable} onCopy={() => this._copied('executable')}>
-              <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-                <CopyPasteIcon />
-              </IconButton>
-            </CopyToClipboard>
-            <span style={{ wordBreak: 'break-word' }}>{executable}</span>
-          </div>
-
-          <p>{this.state.executable ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
-        </div>
-
+        <CopyCode code={executable} />
         <p>
           2. Copy and paste the following to download <span className="code">single-file-artifact-gen</span> and make it executable:
         </p>
-
-        <div>
-          <div className="code">
-            <CopyToClipboard text={file_install} onCopy={() => this._copied('file_install')}>
-              <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-                <CopyPasteIcon />
-              </IconButton>
-            </CopyToClipboard>
-            <span style={{ wordBreak: 'break-word' }}>{file_install}</span>
-          </div>
-
-          <p>{this.state.file_install ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
-        </div>
-
+        <CopyCode code={file_install} />
         <p>
           3. And <a href="https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender">download the demo application</a>.
         </p>
@@ -130,20 +83,7 @@ EOF
           5. Replace the contents of <i>index.html</i> with a simple string (&quot;Hello world&quot;), so you will be able to easily see the change when the
           webpage content is updated. This can be done by using:
         </p>
-
-        <div>
-          <div className="code">
-            <CopyToClipboard text={file_modification} onCopy={() => this._copied('file_modification')}>
-              <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-                <CopyPasteIcon />
-              </IconButton>
-            </CopyToClipboard>
-            <span style={{ wordBreak: 'break-word' }}>{file_modification}</span>
-          </div>
-
-          <p>{this.state.file_modification ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
-        </div>
-
+        <CopyCode code={file_modification} />
         <p>
           6. Now, you can create a new version of the demo webserver application with this modified <i>index.html</i> file. Generate a new Artifact by copying &
           pasting the following snippet.
@@ -151,19 +91,7 @@ EOF
         <p>
           NOTE: You should replace the <span className="code">generic_x86</span> device type with the type you require.
         </p>
-        <div>
-          <div className="code">
-            <CopyToClipboard text={generate} onCopy={() => this._copied('generate')}>
-              <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-                <CopyPasteIcon />
-              </IconButton>
-            </CopyToClipboard>
-            <span style={{ wordBreak: 'break-word' }}>{generate}</span>
-          </div>
-
-          <p>{this.state.generate ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
-        </div>
-
+        <CopyCode code={generate} />
         <p>
           You should now have a new Artifact file called <span className="code">demo-webserver-updated.mender</span>!
         </p>

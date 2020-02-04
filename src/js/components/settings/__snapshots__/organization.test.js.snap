@@ -121,13 +121,6 @@ exports[`MyOrganization Component renders correctly 1`] = `
         <button
           className="MuiButtonBase-root MuiButton-root MuiButton-text"
           disabled={false}
-          icon={
-            <ForwardRef(WithStyles)
-              className="material-icons"
-            >
-              content_paste
-            </ForwardRef(WithStyles)>
-          }
           onBlur={[Function]}
           onClick={[Function]}
           onDragLeave={[Function]}
@@ -151,6 +144,21 @@ exports[`MyOrganization Component renders correctly 1`] = `
           <span
             className="MuiButton-label"
           >
+            <span
+              className="MuiButton-startIcon MuiButton-iconSizeMedium"
+            >
+              <svg
+                aria-hidden="true"
+                className="MuiSvgIcon-root"
+                focusable="false"
+                role="presentation"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"
+                />
+              </svg>
+            </span>
             Copy to clipboard
           </span>
         </button>
