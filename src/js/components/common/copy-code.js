@@ -41,7 +41,7 @@ export default class CopyCode extends React.Component {
               </IconButton>
             )}
           </CopyToClipboard>
-          <span style={{ wordBreak: 'break-word' }}>{code}</span>
+          <span style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{code}</span>
         </div>
         <p>{copied && <span className="green fadeIn">Copied to clipboard.</span>}</p>
       </>
