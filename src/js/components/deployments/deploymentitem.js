@@ -1,5 +1,4 @@
 import React from 'react';
-import Time from 'react-time';
 
 // material ui
 import { Button, IconButton, Tooltip } from '@material-ui/core';
@@ -7,7 +6,8 @@ import { CancelOutlined as CancelOutlinedIcon } from '@material-ui/icons';
 
 import Confirm from './confirm';
 import ProgressChart from './progressChart';
-import { formatTime, groupDeploymentStats } from '../../helpers';
+import { groupDeploymentStats } from '../../helpers';
+import RelativeTime from '../common/relative-time';
 
 const deploymentTypeClasses = {
   past: 'past-item',
@@ -70,7 +70,7 @@ export default class DeploymentItem extends React.Component {
         {!!confirmation && confirmation}
         <div className={columnHeaders[0].class}>{artifact_name}</div>
         <div className={columnHeaders[1].class}>{name}</div>
-        <Time className={columnHeaders[2].class} value={formatTime(started)} format="YYYY-MM-DD HH:mm" />
+        <RelativeTime className={columnHeaders[2].class} updateTime={started} />
         <div className={columnHeaders[3].class}>{device_count}</div>
         {type === 'progress' ? (
           <>

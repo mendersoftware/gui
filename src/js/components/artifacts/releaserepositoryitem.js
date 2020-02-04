@@ -45,12 +45,7 @@ export default class ReleaseRepositoryItem extends React.PureComponent {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             {expanded ? (
-              <SelectedArtifact
-                artifact={artifact}
-                editArtifact={(id, description) => onEdit(id, description)}
-                formatTime={formatTime}
-                onExpansion={() => onExpanded()}
-              />
+              <SelectedArtifact artifact={artifact} editArtifact={(id, description) => onEdit(id, description)} onExpansion={() => onExpanded()} />
             ) : (
               <div />
             )}
