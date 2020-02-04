@@ -177,7 +177,7 @@ export default class CreateGroup extends React.Component {
     var self = this;
     this.setState({ isChecked: isChecked });
     if (isChecked) {
-      cookie.save(`${self.state.user.id}-groupHelpText`, true);
+      cookie.save(`${self.state.user.id}-groupHelpText`, true, { expires: new Date('2500-12-31') });
     }
   }
 
@@ -254,7 +254,7 @@ export default class CreateGroup extends React.Component {
             <div className="help-message">
               <h2>
                 <ErrorOutlineIcon style={{ marginRight: '4px', verticalAlign: 'sub' }} />
-                {' You\'re creating a new group'}
+                {" You're creating a new group"}
               </h2>
               <p>
                 Just a heads-up: if a device is already in another group, it will be removed from that group and moved to the new one. A device can only belong

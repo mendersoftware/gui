@@ -109,6 +109,7 @@ class AppRoot extends React.Component {
   }
 
   render() {
+    const self = this;
     const { snackbar, timeout, showDismissHelptipsDialog, showDeviceConnectionDialog, showCreateArtifactDialog, ...context } = this.state;
 
     const onboardingComponent = getOnboardingComponentFor('application-update-reminder-tip', {
@@ -120,7 +121,8 @@ class AppRoot extends React.Component {
     });
 
     return (
-      <IdleTimer element={document} idleAction={this._onIdle} timeout={timeout} format="MM-DD-YYYY HH:MM:ss.SSS">
+      <>
+        <IdleTimer element={document} idleAction={() => self._onIdle()} timeout={timeout} />
         <Header
           announcement={_HostedAnnouncement}
           docsVersion={context.docsVersion}
@@ -138,7 +140,7 @@ class AppRoot extends React.Component {
         <CreateArtifactDialog open={showCreateArtifactDialog} onCancel={() => AppActions.setShowCreateArtifactDialog(false)} />
         <DeviceConnectionDialog open={showDeviceConnectionDialog} onCancel={() => AppActions.setShowConnectingDialog(false)} />
         <SharedSnackbar snackbar={snackbar} />
-      </IdleTimer>
+      </>
     );
   }
 }
