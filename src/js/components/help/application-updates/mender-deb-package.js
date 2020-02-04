@@ -1,18 +1,9 @@
 import React from 'react';
-import CopyToClipboard from 'react-copy-to-clipboard';
-import IconButton from '@material-ui/core/IconButton';
-import CopyPasteIcon from '@material-ui/icons/FileCopy';
+
 import { getDebConfigurationCode } from '../../../helpers';
+import CopyCode from '../../common/copy-code';
 
-export default class DebPackage extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      codeToCopy: false,
-      dpkgCodeCopied: false
-    };
-  }
-
+export default class DebPackage extends React.PureComponent {
   componentDidMount() {
     const self = this;
     if (!self.props.ipAddress || self.props.ipAddress === 'X.X.X.X') {
@@ -20,20 +11,8 @@ export default class DebPackage extends React.Component {
     }
   }
 
-  _copied(ref) {
-    var self = this;
-    var toSet = {};
-    toSet[ref] = true;
-    self.setState(toSet);
-    setTimeout(() => {
-      toSet[ref] = false;
-      self.setState(toSet);
-    }, 5000);
-  }
-
   render() {
     const self = this;
-    const { codeToCopyCopied, dpkgCodeCopied } = self.state;
     const { debPackageVersion, ipAddress, isHosted, isEnterprise, org } = self.props;
     const token = (org || {}).tenant_token;
     const dpkgCode = `wget https://d1b0l86ne08fsf.cloudfront.net/${debPackageVersion}/dist-packages/debian/armhf/mender-client_${debPackageVersion}-1_armhf.deb &&
@@ -66,16 +45,7 @@ export default class DebPackage extends React.Component {
           The Mender package comes with a wizard that will let you easily configure and customize your installation. To install and configure Mender run the
           following command:
         </p>
-        <div className="code">
-          <CopyToClipboard text={dpkgCode} onCopy={() => self._copied('dpkgCodeCopied')}>
-            <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-              <CopyPasteIcon />
-            </IconButton>
-          </CopyToClipboard>
-          <span style={{ wordBreak: 'break-word' }}>{dpkgCode}</span>
-        </div>
-        <p>{dpkgCodeCopied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
-
+        <CopyCode code={dpkgCode} />
         <p>
           After the installation wizard is completed, Mender is correctly setup on your device and will automatically start in managed mode. Your device is now
           ready to authenticate with the server and start receiving updates.
@@ -88,15 +58,8 @@ export default class DebPackage extends React.Component {
         </p>
         <p>Use the below script to download and setup the Mender client for your Mender installation.</p>
         <h4>{title}</h4>
-        <div className="code">
-          <CopyToClipboard text={codeToCopy} onCopy={() => self._copied('codeToCopyCopied')}>
-            <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-              <CopyPasteIcon />
-            </IconButton>
-          </CopyToClipboard>
-          <span style={{ wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>{codeToCopy}</span>
-        </div>
-        <p>{codeToCopyCopied && <span className="green fadeIn">Copied to clipboard.</span>}</p>
+
+        <CopyCode code={codeToCopy} />
       </div>
     );
   }

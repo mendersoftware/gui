@@ -1,25 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import CopyToClipboard from 'react-copy-to-clipboard';
-import IconButton from '@material-ui/core/IconButton';
-import CopyPasteIcon from '@material-ui/icons/FileCopy';
 
-export default class VirtualDevice extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      copied: false
-    };
-  }
+import CopyCode from '../../common/copy-code';
 
-  _copied() {
-    var self = this;
-    self.setState({ copied: true });
-    setTimeout(() => {
-      self.setState({ copied: false });
-    }, 5000);
-  }
-
+export default class VirtualDevice extends React.PureComponent {
   render() {
     var token = (this.props.org || {}).tenant_token;
 
@@ -93,18 +77,7 @@ export default class VirtualDevice extends React.Component {
             the following command {this.props.isHosted ? <span>(we have pasted in your specific tenant token)</span> : null}
           </p>
 
-          <div>
-            <div className="code">
-              <CopyToClipboard text={codeToCopy} onCopy={() => this._copied()}>
-                <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-                  <CopyPasteIcon />
-                </IconButton>
-              </CopyToClipboard>
-              <span style={{ wordBreak: 'break-word' }}>{codeToCopy}</span>
-            </div>
-
-            <p>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
-          </div>
+          <CopyCode code={codeToCopy} />
 
           {this.props.isHosted ? (
             <p>This will download and run the image for the virtual device. The image is about 500 MB, so be patient if your Internet connection is slow.</p>

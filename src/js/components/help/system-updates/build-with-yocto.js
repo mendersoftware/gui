@@ -1,28 +1,8 @@
 import React from 'react';
-import CopyToClipboard from 'react-copy-to-clipboard';
-import IconButton from '@material-ui/core/IconButton';
-import CopyPasteIcon from '@material-ui/icons/FileCopy';
 
-export default class BuildYocto extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      copied1: false,
-      copied2: false
-    };
-  }
+import CopyCode from '../../common/copy-code';
 
-  _copied(ref) {
-    var self = this;
-    var toSet = {};
-    toSet[ref] = true;
-    self.setState(toSet);
-    setTimeout(() => {
-      toSet[ref] = false;
-      self.setState(toSet);
-    }, 5000);
-  }
-
+export default class BuildYocto extends React.PureComponent {
   render() {
     const { docsVersion = '', isHosted, org = {} } = this.props;
 
@@ -72,33 +52,14 @@ export default class BuildYocto extends React.Component {
               Go to your <span className="code">build</span> directory and run the following command:
             </p>
 
-            <div className="code">
-              <CopyToClipboard text={codeToCopy1} onCopy={() => this._copied('copied1')}>
-                <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-                  <CopyPasteIcon />
-                </IconButton>
-              </CopyToClipboard>
-              <span style={{ wordBreak: 'break-word' }}>{codeToCopy1}</span>
-            </div>
-
-            <p>{this.state.copied1 ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
-
+            <CopyCode code={codeToCopy1} />
             <h4>Update local.conf for Hosted Mender</h4>
 
             <p>
               Add or replace the following two lines in your <span className="code">local.conf</span>:
             </p>
 
-            <div className="code">
-              <CopyToClipboard text={codeToCopy2} onCopy={() => this._copied('copied2')}>
-                <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-                  <CopyPasteIcon />
-                </IconButton>
-              </CopyToClipboard>
-              <span style={{ wordBreak: 'break-word' }}>{codeToCopy2}</span>
-            </div>
-
-            <p>{this.state.copied2 ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
+            <CopyCode code={codeToCopy2} />
 
             <p>
               You can the use the output .sdimg and .mender files to connect to your Mender server and deploy updates, as outlined{' '}
