@@ -105,11 +105,11 @@ export default class Login extends React.Component {
         }
         var options = {};
         if (!formData.noExpiry) {
-          options = { maxAge: 900 };
+          options = { maxAge: 900, expires: new Date('2500-12-31') };
         }
 
         // set no expiry as cookie to remember checkbox value
-        cookie.save('noExpiry', formData.noExpiry.toString());
+        cookie.save('noExpiry', formData.noExpiry.toString(), { expires: new Date('2500-12-31') });
 
         // save token as cookie
         // set maxAge if noexpiry checkbox not checked

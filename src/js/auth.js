@@ -21,7 +21,7 @@ export function logout() {
 export function updateMaxAge() {
   var userCookie = cookie.load('JWT');
   if (userCookie && expirySet()) {
-    cookie.save('JWT', userCookie, { maxAge: 900 });
+    cookie.save('JWT', userCookie, { maxAge: 900, expires: new Date('2500-12-31') });
   }
 }
 

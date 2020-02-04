@@ -10,7 +10,7 @@ export function toggleHelptips() {
     var updatedValue = !userCookie.help;
     userCookie.help = updatedValue;
     userCookie = JSON.stringify(userCookie);
-    cookie.save(user.id, userCookie);
+    cookie.save(user.id, userCookie, { expires: new Date('2500-12-31') });
     AppActions.setShowHelptips(updatedValue);
   }
 }
@@ -18,6 +18,6 @@ export function toggleHelptips() {
 export function hideAnnouncement(hash) {
   var user = AppStore.getCurrentUser();
   if (user.id) {
-    cookie.save(user.id + hash, true, { maxAge: 604800 });
+    cookie.save(user.id + hash, true, { maxAge: 604800, expires: new Date('2500-12-31') });
   }
 }
