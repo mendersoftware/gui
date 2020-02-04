@@ -94,8 +94,20 @@
     "url": "git+https://github.com/mendersoftware/gui.git"
   },
   "jest": {
+    "coverageThreshold": {
+      "global": {
+        "statements": 32,
+        "branches": 25,
+        "functions": 24,
+        "lines": 33
+      }
+    },
+    "collectCoverage": true,
     "collectCoverageFrom": [
-      "src/**/*.js"
+      "src/**/*.{js,jsx}"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
     ],
     "setupFilesAfterEnv": [
       "./tests/setupTests.js"
