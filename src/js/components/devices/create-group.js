@@ -253,8 +253,7 @@ export default class CreateGroup extends React.Component {
           {self.state.showWarning ? (
             <div className="help-message">
               <h2>
-                <ErrorOutlineIcon style={{ marginRight: '4px', verticalAlign: 'sub' }} />
-                {" You're creating a new group"}
+                <ErrorOutlineIcon style={{ marginRight: '4px', verticalAlign: 'sub' }} /> You&apos;re creating a new group
               </h2>
               <p>
                 Just a heads-up: if a device is already in another group, it will be removed from that group and moved to the new one. A device can only belong
