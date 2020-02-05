@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import ReactTooltip from 'react-tooltip';
 // material ui
-import { Button, Divider, Icon, List, ListItem, ListItemText } from '@material-ui/core';
-import InfoIcon from '@material-ui/icons/Info';
+import { Button, Divider, List, ListItem, ListItemText } from '@material-ui/core';
+import { FileCopy as CopyPasteIcon, Info as InfoIcon } from '@material-ui/icons';
 
 import { getUserOrganization } from '../../actions/userActions';
 import PlanNotification from './plannotification';
@@ -66,7 +66,7 @@ export class MyOrganization extends React.Component {
                 <p style={{ wordBreak: 'break-all' }}>{org.tenant_token}</p>
 
                 <CopyToClipboard text={org.tenant_token} onCopy={() => this._copied()}>
-                  <Button style={{ marginTop: '15px' }} icon={<Icon className="material-icons">content_paste</Icon>}>
+                  <Button style={{ marginTop: '15px' }} startIcon={<CopyPasteIcon />}>
                     Copy to clipboard
                   </Button>
                 </CopyToClipboard>

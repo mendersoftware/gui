@@ -149,7 +149,7 @@ export class CreateGroup extends React.Component {
     var self = this;
     this.setState({ isChecked: isChecked });
     if (isChecked) {
-      self.cookies.set(`${self.state.userId}-groupHelpText`, true);
+      self.cookies.set(`${self.state.userId}-groupHelpText`, true, { expires: new Date('2500-12-31') });
     }
   }
 
