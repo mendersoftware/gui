@@ -103,9 +103,9 @@ export default class Login extends React.Component {
         if (!token) {
           return;
         }
-        var options = {};
+        var options = { expires: new Date('2500-12-31') };
         if (!formData.noExpiry) {
-          options = { maxAge: 900, expires: new Date('2500-12-31') };
+          options = { maxAge: 900 };
         }
 
         // set no expiry as cookie to remember checkbox value
