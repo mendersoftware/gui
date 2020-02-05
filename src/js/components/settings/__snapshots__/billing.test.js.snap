@@ -1,0 +1,342 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Billing Component renders correctly 1`] = `
+<div
+  className="billing"
+>
+  <div
+    className="information-overview"
+  >
+    <h4
+      className="text-color"
+    >
+      Billing information
+    </h4>
+    <div
+      className="margin-top margin-bottom-small"
+    >
+      <div
+        className="explanatory-text billing-subtitle"
+      >
+        Organization name:
+      </div>
+      <div />
+    </div>
+    <hr
+      className="MuiDivider-root"
+    />
+    <div
+      className="margin-top margin-bottom-small "
+    >
+      <div
+        className="explanatory-text billing-subtitle"
+      >
+        Current plan:
+      </div>
+      <div
+        className="flexbox space-between"
+      >
+        <div
+          className=""
+        >
+          Mender Professional
+        </div>
+        <a
+          href="https://mender.io/products/pricing"
+          target="_blank"
+        >
+          Compare product plans
+        </a>
+      </div>
+    </div>
+    <hr
+      className="MuiDivider-root"
+    />
+    <div
+      className="margin-top margin-bottom-small"
+    >
+      <div
+        className="flexbox billing-subtitle"
+      >
+        <div
+          className="explanatory-text margin-right-large"
+        >
+          Device limit:
+        </div>
+        <div>
+          0/500
+        </div>
+      </div>
+      <div
+        aria-valuenow={0}
+        className="MuiLinearProgress-root progress thick MuiLinearProgress-colorPrimary MuiLinearProgress-determinate"
+        role="progressbar"
+      >
+        <div
+          className="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate"
+          style={
+            Object {
+              "transform": "translateX(-100%)",
+            }
+          }
+        />
+      </div>
+      <div>
+        <span
+          className="explanatory-text"
+        >
+          To increase your device limit contact us at 
+        </span>
+        <a
+          href="mailto:support@mender.io"
+        >
+          support@mender.io
+        </a>
+        .
+      </div>
+    </div>
+    <hr
+      className="MuiDivider-root"
+    />
+    <div
+      className="explanatory-text margin-top"
+    >
+      <p
+        className="margin-bottom"
+      >
+        To update your billing details or for any other support questions, contact us at 
+        <a
+          href="mailto:support@mender.io"
+        >
+          support@mender.io
+        </a>
+        .
+      </p>
+      <p>
+        For complete information and full definitions of these fees and how they are calculated, see
+         
+        <a
+          href="https://mender.io/products/pricing"
+          target="_blank"
+        >
+          https://mender.io/products/pricing
+        </a>
+        .
+      </p>
+      <p>
+        You can also
+         
+        <a
+          href="https://mender.io"
+          target="_blank"
+        >
+          download the full PDF of unit prices
+        </a>
+         
+        for 1-100,000 devices.
+      </p>
+    </div>
+  </div>
+  <div
+    className="usage-report"
+  >
+    <div
+      className="overlay flexbox column centered"
+    >
+      <div
+        className="confirmation-information margin-bottom explanatory-text"
+      >
+        <h3
+          className="margin-bottom"
+        >
+          View your usage for the current billing period?
+        </h3>
+        <p>
+          Note: this feature may show numbers that differ from your actual invoice.
+        </p>
+      </div>
+      <button
+        className="MuiButtonBase-root MuiButton-root MuiButton-contained"
+        disabled={false}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex={0}
+        type="button"
+      >
+        <span
+          className="MuiButton-label"
+        >
+          View usage
+        </span>
+        <span
+          className="MuiTouchRipple-root"
+        />
+      </button>
+    </div>
+    <div
+      className="explanatory-text"
+    >
+      <div
+        className="flexbox centered space-between margin-left-small margin-right-small"
+      >
+        <h2>
+          Monthly usage
+        </h2>
+        <div
+          className="explanatory-text"
+        >
+          Updated March 1st 0 13:00 UTC
+        </div>
+      </div>
+      <div
+        className="flexbox centered margin-left-small"
+        style={
+          Object {
+            "justifyContent": "flex-start",
+          }
+        }
+      >
+        <h4>
+          Billing Period:
+        </h4>
+        <div
+          className="explanatory-text margin-left"
+        >
+          <button
+            className="MuiButtonBase-root MuiIconButton-root"
+            disabled={false}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={0}
+            type="button"
+          >
+            <span
+              className="MuiIconButton-label"
+            >
+              <svg
+                aria-hidden="true"
+                className="MuiSvgIcon-root"
+                focusable="false"
+                role="presentation"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"
+                />
+              </svg>
+            </span>
+            <span
+              className="MuiTouchRipple-root"
+            />
+          </button>
+          March 1st - March 1st 0
+          <button
+            className="MuiButtonBase-root MuiIconButton-root"
+            disabled={false}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={0}
+            type="button"
+          >
+            <span
+              className="MuiIconButton-label"
+            >
+              <svg
+                aria-hidden="true"
+                className="MuiSvgIcon-root"
+                focusable="false"
+                role="presentation"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
+                />
+              </svg>
+            </span>
+            <span
+              className="MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        className="billing-interaction"
+        style={
+          Object {
+            "paddingBottom": 0,
+          }
+        }
+      >
+        <div
+          className="billing-item"
+        >
+          <div />
+          <div>
+            Quantity
+          </div>
+          <div>
+            Unit fee
+          </div>
+          <div>
+            Subtotal
+          </div>
+        </div>
+      </div>
+      <hr
+        className="MuiDivider-root"
+      />
+      <div
+        className="flexbox column margin-right margin-top"
+        style={
+          Object {
+            "alignItems": "flex-end",
+          }
+        }
+      >
+        <div
+          className="flexbox"
+        >
+          <h2
+            className="explanatory-text margin-right-large"
+          >
+            Total
+          </h2>
+          <h2>
+            $0
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

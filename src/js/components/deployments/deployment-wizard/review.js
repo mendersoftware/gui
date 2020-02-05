@@ -8,9 +8,7 @@ import ExpandableDeviceAttribute from '../../devices/expandable-device-attribute
 import { getRemainderPercent } from '../../../helpers';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 
-const Review = props => {
-  const { deploymentDeviceIds, device, group, isEnterprise, phases, release } = props;
-
+const Review = ({ deploymentDeviceIds, device, group, isEnterprise, phases, release }) => {
   // Create 'phases' for view only
   var deploymentPhases = phases ? phases : [{ batch_size: 100 }];
   const start_time = deploymentPhases[0].start_ts || new Date().toISOString();

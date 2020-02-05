@@ -1,0 +1,295 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Review deployment Component renders correctly 1`] = `
+<div
+  className="flexbox centered column"
+>
+  <div
+    className="bordered"
+  >
+    <h4
+      className="margin-bottom-none"
+    >
+      Review deployment details
+    </h4>
+    <ul
+      className="MuiList-root list-horizontal-flex MuiList-padding"
+    >
+      <div
+        onClick={[Function]}
+        style={
+          Object {
+            "flexBasis": 240,
+            "margin": "-5px 0",
+          }
+        }
+      >
+        <li
+          className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+          disabled={true}
+        >
+          <div
+            className="MuiListItemText-root MuiListItemText-multiline"
+          >
+            <span
+              className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+            >
+              Release
+            </span>
+            <div
+              className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+              title="test-release"
+            >
+              <div>
+                <span
+                  className=" "
+                  style={Object {}}
+                >
+                  test-release
+                </span>
+                 
+              </div>
+            </div>
+          </div>
+        </li>
+      </div>
+      <div
+        onClick={[Function]}
+        style={
+          Object {
+            "flexBasis": 480,
+            "margin": "-5px 0",
+          }
+        }
+      >
+        <li
+          className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+          disabled={true}
+        >
+          <div
+            className="MuiListItemText-root MuiListItemText-multiline"
+          >
+            <span
+              className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+            >
+              Device types compatible
+            </span>
+            <div
+              className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+              title=""
+            >
+              <div>
+                <span
+                  className=" "
+                  style={Object {}}
+                >
+                  
+                </span>
+                 
+              </div>
+            </div>
+          </div>
+        </li>
+      </div>
+      <div
+        onClick={[Function]}
+        style={
+          Object {
+            "flexBasis": 240,
+            "margin": "-5px 0",
+          }
+        }
+      >
+        <li
+          className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+          disabled={true}
+        >
+          <div
+            className="MuiListItemText-root MuiListItemText-multiline"
+          >
+            <span
+              className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+            >
+              Device group
+            </span>
+            <div
+              className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+              title="test"
+            >
+              <div>
+                <span
+                  className=" "
+                  style={Object {}}
+                >
+                  test
+                </span>
+                 
+              </div>
+            </div>
+          </div>
+        </li>
+      </div>
+      <div
+        onClick={[Function]}
+        style={
+          Object {
+            "flexBasis": 240,
+            "margin": "-5px 0",
+          }
+        }
+      >
+        <li
+          className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+          disabled={true}
+        >
+          <div
+            className="MuiListItemText-root MuiListItemText-multiline"
+          >
+            <span
+              className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+            >
+              # devices
+            </span>
+            <div
+              className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+              title={0}
+            >
+              <div>
+                <span
+                  className=" "
+                  style={Object {}}
+                >
+                  0
+                </span>
+                 
+              </div>
+            </div>
+          </div>
+        </li>
+      </div>
+      <div
+        onClick={[Function]}
+        style={
+          Object {
+            "flexBasis": 240,
+            "margin": "-5px 0",
+          }
+        }
+      >
+        <li
+          className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+          disabled={true}
+        >
+          <div
+            className="MuiListItemText-root MuiListItemText-multiline"
+          >
+            <span
+              className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+            >
+              Start time
+            </span>
+            <div
+              className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+              title={
+                <Time
+                  Component="time"
+                  format="YYYY-MM-DD HH:mm"
+                  titleFormat="YYYY-MM-DD HH:mm"
+                  value="2019-01-01T13:00:00.000Z"
+                />
+              }
+            >
+              <div>
+                <span
+                  className=" "
+                  style={Object {}}
+                >
+                  <time
+                    dateTime="2019-01-01T13:00:00+00:00"
+                    title={null}
+                  >
+                    2019-01-01 13:00
+                  </time>
+                </span>
+                 
+              </div>
+            </div>
+          </div>
+        </li>
+      </div>
+    </ul>
+    <h4
+      className="margin-bottom-none"
+    >
+      Rollout Schedule
+    </h4>
+    <div
+      className="flexbox deployment-phases-list margin-top-small margin-bottom-small"
+    >
+      <div
+        className="flexbox column align-right"
+      >
+        <div>
+          Phase begins
+        </div>
+        <div>
+          Batch size
+        </div>
+      </div>
+      <div
+        className="flexbox column"
+      >
+        <div
+          className="MuiChip-root MuiChip-sizeSmall"
+          onKeyUp={[Function]}
+        >
+          <span
+            className="MuiChip-label MuiChip-labelSmall"
+          >
+            Phase 1
+          </span>
+        </div>
+        <div>
+          <time
+            dateTime="2019-01-01T13:00:00+00:00"
+            title={null}
+          >
+            2019-01-01 13:00
+          </time>
+        </div>
+        <div>
+          100% (0 devices)
+        </div>
+      </div>
+    </div>
+    <p
+      className="info icon"
+    >
+      <svg
+        aria-hidden="true"
+        className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+        focusable="false"
+        role="presentation"
+        style={
+          Object {
+            "margin": "0 6px 4px 0",
+            "verticalAlign": "middle",
+          }
+        }
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+        />
+      </svg>
+      With a commercial Mender plan you can choose to schedule or roll out deployments in multiple phases. 
+      <a
+        href="https://mender.io"
+        target="_blank"
+      >
+        Learn more
+      </a>
+    </p>
+  </div>
+</div>
+`;

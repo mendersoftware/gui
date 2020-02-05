@@ -215,7 +215,6 @@ exports[`DeploymentReport Component renders correctly 1`] = `
           <input
             className="PrivateSwitchBase-input-19"
             data-indeterminate={false}
-            disabled={false}
             onChange={[Function]}
             type="checkbox"
           />
