@@ -27,8 +27,8 @@ exports[`ArtifactInformationForm Component renders correctly 1`] = `
       <label
         className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
         data-shrink={false}
-        htmlFor="mui-autocomplete-81471"
-        id="mui-autocomplete-81471-label"
+        htmlFor="compatible-device-type-selection"
+        id="compatible-device-type-selection-label"
       >
         Device types compatible
       </label>
@@ -46,7 +46,7 @@ exports[`ArtifactInformationForm Component renders correctly 1`] = `
           autoFocus={false}
           className="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
           disabled={false}
-          id="mui-autocomplete-81471"
+          id="compatible-device-type-selection"
           onAnimationStart={[Function]}
           onBlur={[Function]}
           onChange={[Function]}

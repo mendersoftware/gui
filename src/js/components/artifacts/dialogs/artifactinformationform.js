@@ -79,6 +79,7 @@ export class ArtifactInformation extends React.Component {
       <div className="flexbox column" style={{ maxWidth: 400 }}>
         <h4>Artifact information</h4>
         <Autocomplete
+          id="compatible-device-type-selection"
           value={selectedDeviceTypes}
           filterSelectedOptions
           freeSolo={true}
