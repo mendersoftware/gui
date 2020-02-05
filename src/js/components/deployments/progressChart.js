@@ -105,15 +105,11 @@ export default class ProgressChart extends React.Component {
         </div>
         <div className="flexbox space-between muted">
           <div>{`Current phase: ${currentPhaseIndex + 1} of ${phases.length}`}</div>
-          {nextPhaseStart && (
+          {phases.length > currentPhaseIndex + 1 && (
             <div>
               <span>Time until next phase: </span>
               <Tooltip title={<Time value={nextPhaseStart.toDate()} format="YYYY-MM-DD HH:mm" />} placement="top">
-                <span>{`${duration.format('d [days] hh [h] mm [m] ss [s]', {
-                  useSignificantDigits: true,
-                  precision: 3,
-                  trim: 'both'
-                })}`}</span>
+                <span>{`${duration.format('d [days] hh [h] mm [m] ss [s]')}`}</span>
               </Tooltip>
             </div>
           )}
