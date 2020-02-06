@@ -25,11 +25,12 @@ import ReleasesList from './releaseslist';
 import RemoveArtifactDialog from './dialogs/removeartifact';
 import AddArtifactDialog from './dialogs/addartifact';
 
+const refreshArtifactsLength = 30000; //60000
+
 export class Artifacts extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      refreshArtifactsLength: 30000, //60000,
       doneLoading: false,
       remove: false,
       showCreateArtifactDialog: false
@@ -62,7 +63,7 @@ export class Artifacts extends React.Component {
         }
       });
     }
-    self.artifactTimer = setInterval(() => self._getReleases(), self.state.refreshArtifactsLength);
+    self.artifactTimer = setInterval(() => self._getReleases(), refreshArtifactsLength);
   }
   componentWillUnmount() {
     clearInterval(this.artifactTimer);
