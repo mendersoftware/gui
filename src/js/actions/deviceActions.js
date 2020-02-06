@@ -2,7 +2,7 @@ import parse from 'parse-link-header';
 
 import DevicesApi from '../api/devices-api';
 import * as DeviceConstants from '../constants/deviceConstants';
-import { deriveAttributesFromDevices, duplicateFilter, mapDeviceAttributes } from '../helpers';
+import { deriveAttributesFromDevices, duplicateFilter, encodeFilters, mapDeviceAttributes } from '../helpers';
 
 // default per page until pagination and counting integrated
 const defaultPerPage = 20;
@@ -32,7 +32,7 @@ export const getGroups = () => dispatch =>
   );
 
 export const addDeviceToGroup = (group, deviceId) => dispatch =>
-  DevicesApi.put(`${inventoryApiUrl}/devices/${deviceId}/group`, { group }).then(() =>
+  DevicesApi.put(`${inventoryApiUrl}/devices/${deviceId}/group`, { group: encodeURIComponent(group) }).then(() =>
     Promise.all([
       dispatch({
         type: DeviceConstants.ADD_TO_GROUP,
@@ -214,9 +214,9 @@ export const getDevicesWithInventory = devices => dispatch =>
     return Promise.resolve();
   });
 
-export const getDevices = (page = defaultPage, perPage = defaultPerPage, searchTerm, shouldSelectDevices = false) => dispatch => {
+export const getDevices = (page = defaultPage, perPage = defaultPerPage, filters, shouldSelectDevices = false) => (dispatch, getState) => {
   // get devices from inventory
-  var search = searchTerm ? `&${searchTerm}` : '';
+  const search = filters ? `&${encodeFilters(filters)}` : '';
   return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${perPage}&page=${page}${search}`).then(res => {
     const devices = res.body.map(device => ({ ...device, attributes: mapDeviceAttributes(device.attributes) }));
     let tasks = [
@@ -307,8 +307,8 @@ export const getAllDevices = limit => (dispatch, getState) => {
   return getAllDevices();
 };
 
-/* 
-    Device Auth + admission 
+/*
+    Device Auth + admission
   */
 export const getDeviceCount = status => dispatch => {
   return DevicesApi.get(`${deviceAuthV2}/devices/count${status ? `?status=${status}` : ''}`).then(res => {

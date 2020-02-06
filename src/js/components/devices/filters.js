@@ -15,22 +15,21 @@ export default class Filters extends React.Component {
       showFilters: false
     };
   }
-  _addFilter() {
-    this.props.onFilterChange([...this.props.filters, { key: '', value: '' }]);
-  }
+
   _updateFilters(filter, index) {
     let filters = this.props.filters;
     filters[index] = filter;
     this.props.onFilterChange(filters);
   }
+
   _removeFilter(index) {
     const filter = this.props.filters.splice(index, 1)[0];
-    if (filter.key === 'id') {
+    if (filter && filter.key === 'id') {
       this.props.resetIdFilter();
     }
-
     this.props.onFilterChange(this.props.filters);
   }
+
   _toggleNav() {
     this.setState({
       showFilters: !this.state.showFilters
@@ -42,8 +41,8 @@ export default class Filters extends React.Component {
   }
   render() {
     const self = this;
-    const { attributes, canFilterMultiple, isHosted } = self.props;
-    const filters = self.props.filters.length ? self.props.filters : [{ key: '', value: '' }];
+    const { attributes, canFilterMultiple, filters: originalFilters, isHosted, onFilterChange } = self.props;
+    const filters = originalFilters.length ? originalFilters : [{ key: '', value: '' }];
     const { filterAttributes, filterCount, remainingFilters } = [{ key: 'id', value: 'Device ID' }, ...attributes].reduce(
       (accu, value) => {
         const currentFilter = value.key ? value : { value, key: value };
@@ -60,7 +59,7 @@ export default class Filters extends React.Component {
     );
     const filterItems = filters.map((item, index) => (
       <FilterItem
-        key={self.props.filters.length ? item.key : `refresh-${item.key}`}
+        key={originalFilters.length ? item.key : `refresh-${item.key}`}
         index={index}
         filter={item}
         filters={remainingFilters}
@@ -95,11 +94,11 @@ export default class Filters extends React.Component {
             <CloseIcon />
           </IconButton>
           <div className="align-right margin-top-small">
-            <a onClick={() => this._clearFilters()}>Clear all filters</a>
+            <a onClick={() => onFilterChange([])}>Clear all filters</a>
           </div>
           <List>{filterItems}</List>
           {canFilterMultiple ? (
-            <Button variant="text" disabled={!canAddMore} onClick={() => this._addFilter()} color="secondary">
+            <Button variant="text" disabled={!canAddMore} onClick={() => onFilterChange([...originalFilters, { key: '', value: '' }])} color="secondary">
               <AddCircleIcon className="buttonLabelIcon" />
               Add filter
             </Button>
