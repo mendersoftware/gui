@@ -103,7 +103,7 @@ export class PhysicalDeviceOnboarding extends React.Component {
       ),
       2: (
         <div>
-          <b>2. SSH into your device and install the Mender client</b>
+          <b>2. Log into your device and install the Mender client</b>
           <p>
             Copy & paste and run this command <b>on your device</b>:
           </p>
