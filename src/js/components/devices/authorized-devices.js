@@ -41,7 +41,7 @@ export class Authorized extends React.Component {
       prevProps.pageNo !== this.props.pageNo
     ) {
       self.setState({ selectedRows: [], expandRow: null, allRowsSelected: false });
-      if (self.props.showHelptips && self.props.showTips && !self.props.onboardingComplete && this.props.devices.length) {
+      if (self.props.showHelptips && self.props.showTips && !self.props.onboardingComplete && this.props.acceptedCount && this.props.acceptedCount < 2) {
         setTimeout(() => {
           self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, self.onCloseSnackbar);
         }, 400);
@@ -63,17 +63,6 @@ export class Authorized extends React.Component {
     }
     this.props.setSnackbar('');
   };
-
-  _sortColumn() {
-    console.log('sort');
-  }
-
-  _addToGroup() {
-    this.props.addDevicesToGroup(this.state.selectedRows);
-  }
-  _removeFromGroup() {
-    this.props.removeDevicesFromGroup(this.state.selectedRows);
-  }
 
   _nameEdit() {
     if (this.state.nameEdit) {
@@ -99,13 +88,26 @@ export class Authorized extends React.Component {
 
   render() {
     const self = this;
-    const { allCount, devices, globalSettings, group, groupCount, highlightHelp, loading, showHelptips } = self.props;
+    const {
+      addDevicesToGroup,
+      allCount,
+      allowDeviceGroupRemoval,
+      devices,
+      globalSettings,
+      group,
+      groupCount,
+      highlightHelp,
+      loading,
+      openSettingsDialog,
+      removeDevicesFromGroup,
+      showHelptips
+    } = self.props;
     const { selectedRows } = self.state;
     const columnHeaders = [
       {
         title: globalSettings.id_attribute || 'Device ID',
         name: 'device_id',
-        customize: () => self.props.openSettingsDialog(),
+        customize: () => openSettingsDialog(),
         style: { flexGrow: 1 }
       },
       {
@@ -214,12 +216,17 @@ export class Authorized extends React.Component {
                 <span className="margin-right">
                   {selectedRows.length} {pluralize('devices', selectedRows.length)} selected
                 </span>
-                <Button variant="contained" disabled={!selectedRows.length} color="secondary" onClick={() => this._addToGroup()}>
+                <Button variant="contained" disabled={!selectedRows.length} color="secondary" onClick={() => addDevicesToGroup(selectedRows)}>
                   <AddCircleIcon className="buttonLabelIcon" />
                   {addLabel}
                 </Button>
-                {this.props.allowDeviceGroupRemoval && this.props.group ? (
-                  <Button variant="contained" disabled={!selectedRows.length} style={{ marginLeft: '4px' }} onClick={() => this._removeFromGroup()}>
+                {allowDeviceGroupRemoval && group ? (
+                  <Button
+                    variant="contained"
+                    disabled={!selectedRows.length}
+                    style={{ marginLeft: '4px' }}
+                    onClick={() => removeDevicesFromGroup(selectedRows)}
+                  >
                     <RemoveCircleOutlineIcon className="buttonLabelIcon" />
                     {removeLabel}
                   </Button>

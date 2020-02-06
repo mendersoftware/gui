@@ -170,7 +170,7 @@ export class DeviceGroups extends React.Component {
         if (filterId) {
           return selectDevice(filterId.value);
         }
-        request = getDevices(this.state.pageNo, this.state.pageLength, this.encodeFilters(filters), true);
+        request = getDevices(this.state.pageNo, this.state.pageLength, filters, true);
       }
       // if a group or filters, must use inventory API
       return request
@@ -200,16 +200,6 @@ export class DeviceGroups extends React.Component {
           setRetryTimer(err, 'devices', `Devices couldn't be loaded. ${errormsg}`, refreshDeviceLength, self.props.setSnackbar);
         });
     }
-  }
-
-  encodeFilters(filters) {
-    var str = filters.reduce((accu, filter) => {
-      if (filter.key && filter.value) {
-        accu.push(`${encodeURIComponent(filter.key)}=${encodeURIComponent(filter.value)}`);
-      }
-      return accu;
-    }, []);
-    return str.join('&');
   }
 
   _getDeviceById(id) {
@@ -257,15 +247,11 @@ export class DeviceGroups extends React.Component {
 
   _createGroupFromDialog(devices, group) {
     var self = this;
-    group = encodeURIComponent(group);
-    for (var i = 0; i < devices.length; i++) {
-      self._addDeviceToGroup(group, devices[i], i, devices.length);
-    }
+    devices.map((device, i) => self._addDeviceToGroup(group, device, i, devices.length));
   }
 
   _addListOfDevices(rows, group) {
     var self = this;
-    group = encodeURIComponent(group);
     rows.map((row, index) => self._addDeviceToGroup(group, self.props.devices[row], index, rows.length));
   }
 

@@ -18,6 +18,16 @@ export function fullyDecodeURI(uri) {
   return uri;
 }
 
+export const encodeFilters = filters =>
+  filters
+    .reduce((accu, filter) => {
+      if (filter.key && filter.value) {
+        accu.push(`${encodeURIComponent(filter.key)}=${encodeURIComponent(filter.value)}`);
+      }
+      return accu;
+    }, [])
+    .join('&');
+
 const statCollector = (items, statistics) => items.reduce((accu, property) => accu + Number(statistics[property] || 0), 0);
 
 export const groupDeploymentStats = stats => ({

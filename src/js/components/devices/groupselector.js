@@ -24,10 +24,6 @@ export default class GroupSelector extends React.Component {
     };
   }
 
-  componentDidMount() {
-    this.changeTimer;
-  }
-
   _showButton() {
     const self = this;
     self.setState({ showInput: true, customName: '' }, () => self.customGroup.focus());

@@ -15,34 +15,26 @@ export default class Filters extends React.Component {
       showFilters: false
     };
   }
-  _addFilter() {
-    this.props.onFilterChange([...this.props.filters, { key: '', value: '' }]);
-  }
+
   _updateFilters(filter, index) {
     let filters = this.props.filters;
     filters[index] = filter;
     this.props.onFilterChange(filters);
   }
+
   _removeFilter(index) {
     const filter = this.props.filters.splice(index, 1)[0];
-    if (filter.key === 'id') {
+    if (filter && filter.key === 'id') {
       this.props.resetIdFilter();
     }
-
     this.props.onFilterChange(this.props.filters);
   }
-  _toggleNav() {
-    this.setState({
-      showFilters: !this.state.showFilters
-    });
-  }
-  _clearFilters() {
-    this.props.onFilterChange([]);
-  }
+
   render() {
     const self = this;
-    const filters = self.props.filters.length ? self.props.filters : [{ key: '', value: '' }];
-    const { filterAttributes, filterCount, remainingFilters } = [{ key: 'id', value: 'Device ID' }, ...self.props.attributes].reduce(
+    const { attributes, filters: originalFilters, isHosted, onFilterChange } = self.props;
+    const filters = originalFilters.length ? originalFilters : [{ key: '', value: '' }];
+    const { filterAttributes, filterCount, remainingFilters } = [{ key: 'id', value: 'Device ID' }, ...attributes].reduce(
       (accu, value) => {
         const currentFilter = value.key ? value : { value, key: value };
         accu.filterAttributes.push(currentFilter);
@@ -58,7 +50,7 @@ export default class Filters extends React.Component {
     );
     const filterItems = filters.map((item, index) => (
       <FilterItem
-        key={self.props.filters.length ? item.key : `refresh-${item.key}`}
+        key={originalFilters.length ? item.key : `refresh-${item.key}`}
         index={index}
         filter={item}
         filters={remainingFilters}
@@ -93,16 +85,16 @@ export default class Filters extends React.Component {
             <CloseIcon />
           </IconButton>
           <div className="align-right margin-top-small">
-            <a onClick={() => this._clearFilters()}>Clear all filters</a>
+            <a onClick={() => onFilterChange([])}>Clear all filters</a>
           </div>
           <List>{filterItems}</List>
-          {this.props.isHosted ? (
-            <Button variant="text" disabled={!canAddMore} onClick={() => this._addFilter()} color="secondary">
+          {isHosted ? (
+            <Button variant="text" disabled={!canAddMore} onClick={() => onFilterChange([...originalFilters, { key: '', value: '' }])} color="secondary">
               <AddCircleIcon className="buttonLabelIcon" />
               Add filter
             </Button>
           ) : (
-            <EnterpriseNotification isEnterprise={this.props.isHosted} benefit="filter by multiple attributes to improve the device overview" />
+            <EnterpriseNotification isEnterprise={isHosted} benefit="filter by multiple attributes to improve the device overview" />
           )}
         </Drawer>
       </div>
