@@ -103,7 +103,7 @@ export class Artifacts extends React.Component {
         if (!self.props.onboardingComplete && getOnboardingStepCompleted('artifact-included-deploy-onboarding')) {
           advanceOnboarding('upload-new-artifact-tip');
         }
-        return self._getReleases();
+        return setTimeout(() => self._getReleases(), 2000);
       })
     );
   }

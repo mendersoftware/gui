@@ -16,7 +16,7 @@ export class AddArtifactDialog extends React.Component {
     this.state = {
       activeStep: 0,
       customDeviceTypes: '',
-      destination: !props.onboardingComplete ? '/var/www/localhost' : '',
+      destination: !props.onboardingComplete ? '/var/www/localhost/htdocs' : '',
       file: null,
       selectedDeviceTypes: []
     };
