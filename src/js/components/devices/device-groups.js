@@ -21,7 +21,8 @@ import {
   selectGroup,
   selectDevice,
   selectDevices,
-  setDeviceFilters
+  setDeviceFilters,
+  trySelectDevice
 } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 
@@ -158,7 +159,17 @@ export class DeviceGroups extends React.Component {
    */
   _getDevices() {
     var self = this;
-    const { currentTab, filters, getDevices, getDevicesByStatus, getGroupDevices, selectDevice, selectDevices, selectedGroup, ungroupedDevices } = self.props;
+    const {
+      currentTab,
+      filters,
+      getDevices,
+      getDevicesByStatus,
+      getGroupDevices,
+      selectDevices,
+      selectedGroup,
+      trySelectDevice,
+      ungroupedDevices
+    } = self.props;
     var hasFilters = filters.length && filters[0].value;
 
     if (selectedGroup || hasFilters) {
@@ -168,7 +179,7 @@ export class DeviceGroups extends React.Component {
       } else {
         const filterId = filters.find(item => item.key === 'id');
         if (filterId) {
-          return selectDevice(filterId.value);
+          return trySelectDevice(filterId.value);
         }
         request = getDevices(this.state.pageNo, this.state.pageLength, filters, true);
       }
@@ -208,7 +219,7 @@ export class DeviceGroups extends React.Component {
 
     // do this via deviceauth not inventory
     return self.props
-      .selectDevice(id)
+      .trySelectDevice(id)
       .then(() => self.setState({ loading: false, pageLoading: false }))
       .catch(err => {
         var state = { loading: false };
@@ -487,7 +498,8 @@ const actionCreators = {
   selectDevice,
   selectDevices,
   setDeviceFilters,
-  setSnackbar
+  setSnackbar,
+  trySelectDevice
 };
 
 const mapStateToProps = state => {
