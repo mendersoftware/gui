@@ -40,9 +40,9 @@ const initialState = {
     isDemoMode: stringToBoolean(menderEnvironment.isDemoMode)
   },
   hostedAnnouncement: menderEnvironment.hostedAnnouncement,
-  docsVersion: isNaN(menderEnvironment.menderVersion.charAt(0))
+  docsVersion: isNaN(menderEnvironment.integrationVersion.charAt(0))
     ? ''
-    : menderEnvironment.menderVersion
+    : menderEnvironment.integrationVersion
         .split('.')
         .slice(0, 2)
         .join('.'),
