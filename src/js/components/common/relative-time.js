@@ -22,9 +22,14 @@ export default class RelativeTime extends React.Component {
 
   render() {
     const { updateTime } = this.state;
-    const { className } = this.props;
+    const { className, shouldCount = 'both' } = this.props;
     let timeDisplay = updateTime ? <Time className={className} value={updateTime} format="YYYY-MM-DD HH:mm" /> : <div className={className}>-</div>;
-    if (updateTime && updateTime.diff(new Date(), 'seconds') > cutoff) {
+    const diffSeconds = updateTime ? updateTime.diff(moment(), 'seconds') : 0;
+    if (
+      updateTime &&
+      diffSeconds > cutoff &&
+      (shouldCount === 'both' || (shouldCount === 'up' && diffSeconds > 0) || (shouldCount === 'down' && diffSeconds < 0))
+    ) {
       timeDisplay = (
         <time className={className} dateTime={updateTime}>
           {updateTime.fromNow()}
