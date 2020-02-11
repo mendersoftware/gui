@@ -65,14 +65,15 @@ export default class DeploymentItem extends React.Component {
       );
     }
     const started = isEnterprise && phases && phases.length >= 1 ? phases[0].start_ts || created : created;
+    const isInProgress = type === 'progress';
     return (
       <div className={`deployment-item ${deploymentTypeClasses[type]}`}>
         {!!confirmation && confirmation}
         <div className={columnHeaders[0].class}>{artifact_name}</div>
         <div className={columnHeaders[1].class}>{name}</div>
-        <RelativeTime className={columnHeaders[2].class} updateTime={started} />
+        <RelativeTime className={columnHeaders[2].class} updateTime={started} shouldCount={isInProgress ? 'both' : 'up'} />
         <div className={columnHeaders[3].class}>{device_count}</div>
-        {type === 'progress' ? (
+        {isInProgress ? (
           <>
             <ProgressChart
               className={columnHeaders[4].class}

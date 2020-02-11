@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import Time from 'react-time';
 
 // material ui
 import { Grid, RootRef, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
@@ -11,7 +12,6 @@ import { setSnackbar } from '../../actions/appActions';
 import { selectDeployment, getSingleDeploymentStats } from '../../actions/deploymentActions';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
-import RelativeTime from '../common/relative-time';
 import AutoSelect from '../common/forms/autoselect';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import DeploymentStatus from './deploymentstatus';
@@ -137,8 +137,6 @@ export class Past extends React.Component {
     const self = this;
     const { page, perPage, endDate, startDate } = self.state;
     const pastMap = self.props.past.map((deployment, index) => {
-      let time = <RelativeTime updateTime={deployment.finished} />;
-
       //  get statistics
       const status = (
         <DeploymentStatus
@@ -155,9 +153,11 @@ export class Past extends React.Component {
           <TableCell>{deployment.artifact_name}</TableCell>
           <TableCell>{deployment.name}</TableCell>
           <TableCell>
-            <RelativeTime updateTime={deployment.created} />
+            <Time value={deployment.created} format="YYYY-MM-DD HH:mm" />
           </TableCell>
-          <TableCell>{time}</TableCell>
+          <TableCell>
+            <Time value={deployment.finished} format="YYYY-MM-DD HH:mm" />
+          </TableCell>
           <TableCell style={{ textAlign: 'right', width: '100px' }}>{deployment.device_count}</TableCell>
           <TableCell style={{ overflow: 'visible', minWidth: '400px' }}>{status}</TableCell>
         </TableRow>
