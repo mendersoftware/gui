@@ -9,6 +9,17 @@ exports[`SystemUpdates Component renders correctly 1`] = `
     The built-in update mechanism in Mender is dual A/B rootfs updates, meaning the whole system on the device is updated. To enable system updates, the device needs to have an A/B partition layout with the Mender client installed in its disk image.
   </p>
   <p>
+    We prepared images, fully integrated with Mender for you to start with. You can find them on our
+     
+    <a
+      href="https://docs.mender.io/downloads#disk-images"
+      target="_blank"
+    >
+      downloads page
+    </a>
+    .
+  </p>
+  <p>
     Learn how to enable and connect your devices for system updates:
   </p>
   <ul>

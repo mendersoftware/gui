@@ -39,7 +39,7 @@ export class OnboardingCompleteTip extends React.Component {
   }
 
   render() {
-    const { docsVersion, setOnboardingComplete } = this.props;
+    const { docsVersion, isHosted, setOnboardingComplete } = this.props;
     const { loading, targetUrl } = this.state;
     const url = targetUrl ? targetUrl : this.props.targetUrl;
 
@@ -75,6 +75,7 @@ export class OnboardingCompleteTip extends React.Component {
             might have to refresh the page.
           </p>
           <p>You&apos;ve now got a good foundation in how to use Mender. Look for more help hints in the UI as you go along.</p>
+          <p>{`If you used one of our pre-built images you can start using full-image${isHosted ? ` and delta updates` : ''} right away.`}</p>
           What next?
           <div>
             <a href={`https://docs.mender.io/${docsVersion}getting-started/on-premise-installation/deploy-a-system-update-demo`} target="_blank">
@@ -105,6 +106,7 @@ const mapStateToProps = state => {
   const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
     docsVersion: state.app.features.hasMultitenancy && state.app.features.isHosted ? '' : docsVersion,
+    isHosted: state.app.features.isHosted,
     acceptedDevices: state.devices.byStatus.accepted.deviceIds.map(id => state.devices.byId[id])
   };
 };
