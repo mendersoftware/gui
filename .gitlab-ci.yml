@@ -93,11 +93,13 @@ publish:image:
     - docker
 
 publish:disclaimer:
-  image: node:12.14.0-alpine
   stage: publish
+  services:
+    - docker:dind
   script:
-    - npm ci
-    - npm run disclaim
+    - docker build -f Dockerfile.disclaimer -t disclaimer .
+    - docker run --rm --entrypoint "/bin/sh" -v $(pwd):/extract disclaimer -c "cp disclaimer.txt /extract/"
+    - docker image rm disclaimer
   artifacts:
     expire_in: 2w
     paths:
