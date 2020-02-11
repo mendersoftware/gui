@@ -26,7 +26,9 @@ export class UserManagement extends React.Component {
   componentDidUpdate(prevProps) {
     const changed =
       prevProps.currentUser.id !== this.props.currentUser.id ||
-      prevProps.users.some((user, index) => user.id !== this.props.users[index].id || user.email !== this.props.users[index].email);
+      prevProps.users.some(
+        (user, index) => this.props.users[index] && (user.id !== this.props.users[index].id || user.email !== this.props.users[index].email)
+      );
     if (changed) {
       this.props.getUserList();
     }
