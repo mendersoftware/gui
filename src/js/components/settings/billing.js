@@ -221,6 +221,7 @@ class Billing extends React.Component {
             isVisible={showUsage}
             timeframe={timeframe}
           />
+          {showUsage && org && org.discount && <p>Note: These numbers might not include the discounts permitted for your account.</p>}
         </div>
       </div>
     );
