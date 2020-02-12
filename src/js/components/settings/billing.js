@@ -121,7 +121,7 @@ class Billing extends React.Component {
     const { currentUser, deviceCount, deviceLimit, isHosted, org } = self.props;
     const { billingInformation, showUsage, timeframe } = self.state;
     const userCreationDate = new Date(currentUser.created_ts);
-    const currentPlan = isHosted ? 'Mender Professional' : 'Mender Enterprise';
+    const currentPlan = isHosted ? org && org.plan : 'enterprise';
     const expirationDate = moment(userCreationDate).add(1, 'years');
     const freeCreditConsumed = (100 / totalFreeCredit) * (totalFreeCredit + billingInformation.total);
     const freeCreditRunningOut = freeCreditConsumed > 90;

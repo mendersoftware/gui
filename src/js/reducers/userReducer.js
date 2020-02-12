@@ -12,7 +12,7 @@ const initialState = {
   },
   showHelptips: true,
   organization: {
-    // id, name, status, tenant_token
+    // id, name, status, tenant_token, plan
   },
   onboarding: {
     approach: null,
