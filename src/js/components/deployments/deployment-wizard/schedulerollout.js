@@ -91,9 +91,12 @@ export class ScheduleRollout extends React.Component {
 
   render() {
     const self = this;
-    const { deploymentDeviceIds = [], phases = [], previousPhases = [] } = self.props;
+    const { deploymentDeviceIds = [], isEnterprise, phases = [], previousPhases = [] } = self.props;
     const numberDevices = deploymentDeviceIds ? deploymentDeviceIds.length : 0;
-    const start_time = phases && phases.length ? phases[0].start_ts : null;
+    let start_time = phases && phases.length ? phases[0].start_ts : null;
+    if (!isEnterprise) {
+      start_time = new Date();
+    }
     const customPattern = phases && phases.length > 1 ? 1 : 0;
 
     const styles = {
@@ -137,10 +140,11 @@ export class ScheduleRollout extends React.Component {
                           open={self.state.isPickerOpen}
                           onOpen={() => self.setPickerOpen(true)}
                           onClose={() => self.setPickerOpen(false)}
-                          label="Set the start time"
+                          label={isEnterprise ? 'Set the start time' : 'Starting at'}
                           value={start_time}
                           style={styles.textField}
                           minDate={new Date()}
+                          disabled={!isEnterprise}
                           onChange={date => self.handleStartTimeChange(date.toISOString())}
                         />
                       </MuiPickersUtilsProvider>

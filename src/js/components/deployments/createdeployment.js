@@ -9,7 +9,7 @@ import Review from './deployment-wizard/review';
 
 import { selectDevice } from '../../actions/deviceActions';
 import { selectRelease } from '../../actions/releaseActions';
-
+import { PLANS as plans } from '../../constants/appConstants';
 import { getRemainderPercent } from '../../helpers';
 
 const deploymentSteps = [
@@ -146,11 +146,13 @@ export class CreateDialog extends React.Component {
 const actionCreators = { selectDevice, selectRelease };
 
 const mapStateToProps = state => {
+  const plan = state.users.organization ? state.users.organization.plan : plans.os;
   return {
-    isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,
+    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === plans.enterprise),
     device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
     groups: Object.keys(state.devices.groups.byId),
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
+    plan,
     release: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null
   };
 };
