@@ -21,25 +21,26 @@ const deploymentSteps = [
 export class CreateDialog extends React.Component {
   constructor(props, context) {
     super(props, context);
+    this.state = {
+      activeStep: 0,
+      deploymentDeviceIds: [],
+      steps: deploymentSteps
+    };
+  }
+
+  componentDidMount() {
     const self = this;
+    if (Object.keys(self.props.deploymentObject).length) {
+      self.setState({ ...self.props.deploymentObject });
+    }
     const steps = deploymentSteps.reduce((accu, step) => {
-      if (step.closed && !self.props.isEnterprise) {
+      if (step.closed && (!self.props.isEnterprise || self.props.plan !== 'enterprise')) {
         return accu;
       }
       accu.push(step);
       return accu;
     }, []);
-    this.state = {
-      activeStep: 0,
-      deploymentDeviceIds: [],
-      steps
-    };
-  }
-
-  componentDidMount() {
-    if (Object.keys(this.props.deploymentObject).length) {
-      this.setState({ ...this.props.deploymentObject });
-    }
+    self.setState({ steps });
   }
 
   componentDidUpdate(prevProps) {
