@@ -20,24 +20,23 @@ const NumberIcon = props => (
   </Box>
 );
 
-export default class DeviceStatus extends React.PureComponent {
-  render() {
-    const { device } = this.props;
-    let status = statusTypes.default;
-    let label = status.label;
-    let icon = <ErrorIcon />;
+const DeviceStatus = ({ device }) => {
+  let status = statusTypes.default;
+  let label = status.label;
+  let icon = <ErrorIcon />;
 
-    const pendingAuthSetsCount = device.auth_sets.filter(item => item.status === 'pending').length;
-    if (pendingAuthSetsCount) {
-      icon = <NumberIcon value={pendingAuthSetsCount} />;
-      status = statusTypes.authRequests;
-      label = <div className="uppercased">new {pluralize('request', pendingAuthSetsCount)}</div>;
-    }
-
-    return label && device ? (
-      <Tooltip title={status.notification} placement="bottom">
-        <Chip variant="outlined" size="small" icon={icon} label={label} className="deviceStatus" />
-      </Tooltip>
-    ) : null;
+  const pendingAuthSetsCount = device.auth_sets.filter(item => item.status === 'pending').length;
+  if (pendingAuthSetsCount) {
+    icon = <NumberIcon value={pendingAuthSetsCount} />;
+    status = statusTypes.authRequests;
+    label = <div className="uppercased">new {pluralize('request', pendingAuthSetsCount)}</div>;
   }
-}
+
+  return label && device ? (
+    <Tooltip title={status.notification} placement="bottom">
+      <Chip variant="outlined" size="small" icon={icon} label={label} className="deviceStatus" />
+    </Tooltip>
+  ) : null;
+};
+
+export default DeviceStatus;
