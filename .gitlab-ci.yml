@@ -17,7 +17,7 @@ before_script:
 build:
   stage: build
   services:
-    - docker:dind
+    - docker:19.03.5-dind
   script:
     - echo "building gui for ${SERVICE_IMAGE}"
     - docker build
@@ -91,7 +91,7 @@ publish:tests:
 publish:image:
   stage: publish
   services:
-    - docker:dind
+    - docker:19.03.5-dind
   dependencies:
     - build
   script:
@@ -109,7 +109,7 @@ publish:image:
 publish:disclaimer:
   stage: publish
   services:
-    - docker:dind
+    - docker:19.03.5-dind
   script:
     - docker build -f Dockerfile.disclaimer -t disclaimer .
     - docker run --rm --entrypoint "/bin/sh" -v $(pwd):/extract disclaimer -c "cp disclaimer.txt /extract/"
