@@ -7,6 +7,7 @@ import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
 import PhaseSettings from './phasesettings';
+import EnterpriseNotification from '../../common/enterpriseNotification';
 
 export class ScheduleRollout extends React.Component {
   constructor(props, context) {
@@ -91,12 +92,9 @@ export class ScheduleRollout extends React.Component {
 
   render() {
     const self = this;
-    const { deploymentDeviceIds = [], isEnterprise, phases = [], previousPhases = [] } = self.props;
+    const { deploymentDeviceIds = [], isEnterprise, isHosted, phases = [], plan, previousPhases = [] } = self.props;
     const numberDevices = deploymentDeviceIds ? deploymentDeviceIds.length : 0;
     let start_time = phases && phases.length ? phases[0].start_ts : null;
-    if (!isEnterprise) {
-      start_time = new Date();
-    }
     const customPattern = phases && phases.length > 1 ? 1 : 0;
 
     const styles = {
@@ -169,7 +167,12 @@ export class ScheduleRollout extends React.Component {
                 <div style={{ width: 'min-content' }}>
                   <FormControl style={{ maxWidth: 515 }}>
                     <InputLabel>Select a rollout pattern</InputLabel>
-                    <Select onChange={event => self.handlePatternChange(event.target.value)} value={customPattern} style={styles.textField}>
+                    <Select
+                      onChange={event => self.handlePatternChange(event.target.value)}
+                      value={customPattern}
+                      style={styles.textField}
+                      disabled={!isEnterprise || plan !== 'enterprise'}
+                    >
                       <MenuItem value={0}>Single phase: 100%</MenuItem>
                       {numberDevices > 1 && [
                         <MenuItem key="customPhaseSetting" divider={true} value={1}>
@@ -180,6 +183,13 @@ export class ScheduleRollout extends React.Component {
                       ]}
                     </Select>
                   </FormControl>
+                  {((isHosted && plan !== 'enterprise') || !isEnterprise) && (
+                    <EnterpriseNotification
+                      isEnterprise={isEnterprise}
+                      benefit={`choose to roll out deployments in multiple phases`}
+                      recommendedPlan={'enterprise'}
+                    />
+                  )}
                 </div>
               </Grid>
             </Grid>

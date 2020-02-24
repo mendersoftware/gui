@@ -34,7 +34,7 @@ export class CreateDialog extends React.Component {
       self.setState({ ...self.props.deploymentObject });
     }
     const steps = deploymentSteps.reduce((accu, step) => {
-      if (step.closed && (!self.props.isEnterprise || self.props.plan !== 'enterprise')) {
+      if (step.closed && (self.props.plan === 'os' || !(self.props.isHosted || self.props.isEnterprise))) {
         return accu;
       }
       accu.push(step);
@@ -150,6 +150,7 @@ const mapStateToProps = state => {
   const plan = state.users.organization ? state.users.organization.plan : plans.os;
   return {
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === plans.enterprise),
+    isHosted: state.app.features.isHosted,
     device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
     groups: Object.keys(state.devices.groups.byId),
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,

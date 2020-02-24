@@ -9,7 +9,7 @@ import { PLANS as plans } from '../../../constants/appConstants';
 import { getRemainderPercent } from '../../../helpers';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 
-const Review = ({ deploymentDeviceIds, device, group, isEnterprise, phases, release }) => {
+const Review = ({ deploymentDeviceIds, device, group, isEnterprise, isHosted, phases, plan, release }) => {
   // Create 'phases' for view only
   var deploymentPhases = phases ? phases : [{ batch_size: 100 }];
   const start_time = deploymentPhases[0].start_ts || new Date().toISOString();
@@ -21,6 +21,10 @@ const Review = ({ deploymentDeviceIds, device, group, isEnterprise, phases, rele
     { primary: '# devices', secondary: deploymentDeviceIds.length },
     { primary: 'Start time', secondary: <Time value={start_time} format="YYYY-MM-DD HH:mm" /> }
   ];
+
+  const planKeys = Object.keys(plans);
+  const planIndex = !isEnterprise || !plan === 'enterprise' ? planKeys.indexOf(plan) : planKeys.length - 1;
+  const recommendedPlan = planKeys[planIndex + 1];
 
   return (
     <div className="flexbox centered column">
@@ -63,11 +67,11 @@ const Review = ({ deploymentDeviceIds, device, group, isEnterprise, phases, rele
             );
           })}
         </div>
-        {!isEnterprise && (
+        {isHosted && plan !== 'enterprise' && (
           <EnterpriseNotification
             isEnterprise={isEnterprise}
-            benefit="choose to schedule or roll out deployments in multiple phases"
-            recommendedPlan={plans.enterprise}
+            benefit={`choose to ${plan === 'os' ? 'schedule or ' : ''}roll out deployments in multiple phases`}
+            recommendedPlan={recommendedPlan}
           />
         )}
       </div>
