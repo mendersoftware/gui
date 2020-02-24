@@ -106,7 +106,7 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
                 Select a rollout pattern
               </label>
               <div
-                className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+                className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl"
                 onClick={[Function]}
                 style={
                   Object {
@@ -117,13 +117,13 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
                 <div
                   aria-haspopup="listbox"
                   aria-labelledby=" "
-                  className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
+                  className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled Mui-disabled"
                   onBlur={[Function]}
                   onFocus={[Function]}
                   onKeyDown={[Function]}
-                  onMouseDown={[Function]}
+                  onMouseDown={null}
                   role="button"
-                  tabIndex={0}
+                  tabIndex={null}
                 >
                   Single phase: 100%
                 </div>
@@ -145,6 +145,34 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
                 </svg>
               </div>
             </div>
+            <p
+              className="info icon"
+            >
+              <svg
+                aria-hidden="true"
+                className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                focusable="false"
+                role="presentation"
+                style={
+                  Object {
+                    "margin": "0 6px 4px 0",
+                    "verticalAlign": "middle",
+                  }
+                }
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                />
+              </svg>
+              With a Mender Enterprise plan you can choose to roll out deployments in multiple phases. 
+              <a
+                href="https://mender.io"
+                target="_blank"
+              >
+                Learn more
+              </a>
+            </p>
           </div>
         </div>
       </div>

@@ -67,11 +67,11 @@ const Review = ({ deploymentDeviceIds, device, group, isEnterprise, isHosted, ph
             );
           })}
         </div>
-        {isHosted && plan !== 'enterprise' && (
+        {!isEnterprise && (!isHosted || (isHosted && plan !== 'enterprise')) && (
           <EnterpriseNotification
             isEnterprise={isEnterprise}
             benefit={`choose to ${plan === 'os' ? 'schedule or ' : ''}roll out deployments in multiple phases`}
-            recommendedPlan={recommendedPlan}
+            recommendedPlan={isHosted ? recommendedPlan : null}
           />
         )}
       </div>

@@ -2,10 +2,9 @@ import React from 'react';
 
 import Divider from '@material-ui/core/Divider';
 
-import { PLANS as plans } from '../../constants/appConstants';
 import { Plan } from '../../helpers';
 
-const PlanNotification = ({ className = '', currentPlan = plans.os, planClass = '' }) => (
+const PlanNotification = ({ className = '', currentPlan = 'os', planClass = '' }) => (
   <>
     <div className={`margin-top margin-bottom-small ${className}`}>
       <div className="explanatory-text billing-subtitle">Current plan:</div>
