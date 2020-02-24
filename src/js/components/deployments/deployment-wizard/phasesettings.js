@@ -10,10 +10,6 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import { getRemainderPercent } from '../../../helpers';
 
 export default class PhaseSettings extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-  }
-
   updateDelay(value, index) {
     let newPhases = this.props.phases;
     // value must be at least 1
@@ -87,18 +83,18 @@ export default class PhaseSettings extends React.Component {
 
   render() {
     const self = this;
-    const props = self.props;
-    const remainder = getRemainderPercent(props.phases);
+    const { disabled, numberDevices, phases = [] } = self.props;
+    const remainder = getRemainderPercent(phases);
 
     // disable 'add phase' button if last phase/remainder has only 1 device left
-    const disableAdd = (remainder / 100) * props.numberDevices <= 1;
-    const phases = props.phases
-      ? props.phases.map((phase, index) => {
-          let max = index > 0 ? 100 - props.phases[index - 1].batch_size : 100;
+    const disableAdd = (remainder / 100) * numberDevices <= 1;
+    const mappedPhases = phases.length
+      ? phases.map((phase, index) => {
+          let max = index > 0 ? 100 - phases[index - 1].batch_size : 100;
           const deviceCount =
-            index === props.phases.length - 1
-              ? Math.ceil((props.numberDevices / 100) * (phase.batch_size || remainder))
-              : Math.floor((props.numberDevices / 100) * phase.batch_size);
+            index === phases.length - 1
+              ? Math.ceil((numberDevices / 100) * (phase.batch_size || remainder))
+              : Math.floor((numberDevices / 100) * phase.batch_size);
 
           const startTime = !(index || phase.start_ts) ? new Date().toISOString() : phase.start_ts;
           return (
@@ -117,7 +113,7 @@ export default class PhaseSettings extends React.Component {
                         %
                       </InputAdornment>
                     }
-                    disabled={self.props.disabled && deviceCount >= 1 ? true : false}
+                    disabled={disabled && deviceCount >= 1 ? true : false}
                     inputProps={{
                       step: 1,
                       min: 1,
@@ -139,7 +135,7 @@ export default class PhaseSettings extends React.Component {
                 <Time value={startTime} format="YYYY-MM-DD HH:mm" />
               </TableCell>
               <TableCell>
-                {phase.delay && index !== props.phases.length - 1 ? (
+                {phase.delay && index !== phases.length - 1 ? (
                   <div>
                     <Input
                       value={phase.delay}
@@ -191,7 +187,7 @@ export default class PhaseSettings extends React.Component {
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>{phases}</TableBody>
+          <TableBody>{mappedPhases}</TableBody>
         </Table>
 
         {!disableAdd ? (

@@ -77,7 +77,7 @@ run_tests() {
         return 1
     fi
 
-    docker exec $useradmid /usr/bin/useradm create-user --username mender-demo@example.com --password mysecretpassword
+    docker exec $useradmid /usr/bin/useradm create-user --username mender-demo@example.com --password mysecretpassword!123
 
     declare retries=5
     while [[ $retries -gt 0 && -z $runnerid ]]; do
