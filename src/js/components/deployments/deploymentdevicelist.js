@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Time from 'react-time';
 
 // material ui
 import { Button, LinearProgress, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 
-import RelativeTime from '../common/relative-time';
-import { statusToPercentage } from '../../helpers';
+import { formatTime, statusToPercentage } from '../../helpers';
 
 const stateTitleMap = {
   noartifact: 'No artifact',
@@ -49,11 +49,9 @@ const ProgressDeviceList = ({ created, devices, globalSettings, viewLog }) => {
         <TableCell>{device.attributes.device_type || '-'}</TableCell>
         <TableCell>{currentArtifactLink}</TableCell>
         <TableCell>
-          <RelativeTime updateTime={device.created} />
+          <Time value={formatTime(device.created)} format="YYYY-MM-DD HH:mm" />
         </TableCell>
-        <TableCell>
-          <RelativeTime updateTime={device.finished} />
-        </TableCell>
+        <TableCell>{device.finished ? <Time value={formatTime(device.finished)} format="YYYY-MM-DD HH:mm" /> : '-'}</TableCell>
         <TableCell style={{ paddingRight: '0px', position: 'relative', minWidth: 200 }}>
           {device.substate ? (
             <div className="flexbox">
