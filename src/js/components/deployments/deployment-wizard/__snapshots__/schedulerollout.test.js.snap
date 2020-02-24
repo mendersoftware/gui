@@ -1,0 +1,154 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ScheduleRollout Component renders correctly 1`] = `
+<div
+  style={
+    Object {
+      "marginTop": "15px",
+      "minHeight": "300px",
+      "overflow": "visible",
+    }
+  }
+>
+  <form>
+    <div
+      className="MuiGrid-root MuiGrid-container MuiGrid-align-items-xs-center MuiGrid-justify-xs-center"
+    >
+      <div
+        className="MuiGrid-root MuiGrid-item"
+      >
+        <div
+          style={
+            Object {
+              "minHeight": "105px",
+              "width": "min-content",
+            }
+          }
+        >
+          <div
+            className="MuiFormControl-root"
+          >
+            <label
+              className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+              data-shrink={true}
+            >
+              Set a start time
+            </label>
+            <div
+              className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+              onClick={[Function]}
+              style={
+                Object {
+                  "minWidth": "400px",
+                }
+              }
+            >
+              <div
+                aria-haspopup="listbox"
+                aria-labelledby=" "
+                className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                role="button"
+                tabIndex={0}
+              >
+                Start immediately
+              </div>
+              <input
+                onAnimationStart={[Function]}
+                type="hidden"
+                value={0}
+              />
+              <svg
+                aria-hidden="true"
+                className="MuiSvgIcon-root MuiSelect-icon"
+                focusable="false"
+                role="presentation"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M7 10l5 5 5-5z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div
+        className="MuiGrid-root MuiGrid-container MuiGrid-align-items-xs-center MuiGrid-justify-xs-center"
+      >
+        <div
+          className="MuiGrid-root MuiGrid-item"
+        >
+          <div
+            style={
+              Object {
+                "width": "min-content",
+              }
+            }
+          >
+            <div
+              className="MuiFormControl-root"
+              style={
+                Object {
+                  "maxWidth": 515,
+                }
+              }
+            >
+              <label
+                className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+                data-shrink={true}
+              >
+                Select a rollout pattern
+              </label>
+              <div
+                className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+                onClick={[Function]}
+                style={
+                  Object {
+                    "minWidth": "400px",
+                  }
+                }
+              >
+                <div
+                  aria-haspopup="listbox"
+                  aria-labelledby=" "
+                  className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
+                  onBlur={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  role="button"
+                  tabIndex={0}
+                >
+                  Single phase: 100%
+                </div>
+                <input
+                  onAnimationStart={[Function]}
+                  type="hidden"
+                  value={0}
+                />
+                <svg
+                  aria-hidden="true"
+                  className="MuiSvgIcon-root MuiSelect-icon"
+                  focusable="false"
+                  role="presentation"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M7 10l5 5 5-5z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+`;

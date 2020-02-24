@@ -35,7 +35,7 @@ export default class ArtifactUpload extends React.Component {
   }
 
   onRefSet(refTarget, ref) {
-    if (!this[refTarget] || (this[refTarget] && ref && this[refTarget].className !== ref.className)) {
+    if ((!this[refTarget] && ref) || (this[refTarget] && ref && this[refTarget].className !== ref.className)) {
       this[refTarget] = ref;
       this.setState({});
     }

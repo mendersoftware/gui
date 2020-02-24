@@ -44,7 +44,7 @@ export class ArtifactInformation extends React.Component {
   }
 
   onRefSet(refTarget, ref) {
-    if (!this[refTarget] || (this[refTarget] && ref && this[refTarget].className !== ref.className)) {
+    if ((!this[refTarget] && ref) || (this[refTarget] && ref && this[refTarget].className !== ref.className)) {
       this[refTarget] = ref;
       this.setState({});
     }
@@ -79,6 +79,7 @@ export class ArtifactInformation extends React.Component {
       <div className="flexbox column" style={{ maxWidth: 400 }}>
         <h4>Artifact information</h4>
         <Autocomplete
+          id="compatible-device-type-selection"
           value={selectedDeviceTypes}
           filterSelectedOptions
           freeSolo={true}

@@ -5,11 +5,11 @@
   "main": "gulpfile.js",
   "dependencies": {
     "@date-io/moment": "^1.3.13",
-    "@material-ui/core": "^4.8.3",
-    "@material-ui/lab": "^4.0.0-alpha.39",
-    "@material-ui/icons": "^4.5.1",
-    "@material-ui/pickers": "^3.2.9",
-    "copy-to-clipboard": "^3.2.0",
+    "@material-ui/core": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.41",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/pickers": "^3.2.10",
+    "copy-to-clipboard": "^3.2.1",
     "generate-password": "^1.5.0",
     "jwt-decode": "^2.2.0",
     "lodash.differencewith": "^4.5.0",
@@ -32,25 +32,25 @@
     "react-router-dom": "^5.1.2",
     "react-search-input": "^0.11.3",
     "react-time": "^4.3.0",
-    "react-tooltip": "^3.11.2",
+    "react-tooltip": "^3.11.5",
     "recompose": "^0.30.0",
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
     "superagent": "^5.2.1",
     "universal-cookie": "^4.0.3",
-    "validator": "^12.1.0",
+    "validator": "^12.2.0",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.3",
+    "@babel/core": "^7.8.4",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
     "@babel/preset-react": "^7.8.3",
     "autoprefixer": "^9.7.4",
     "babel-eslint": "^10.0.3",
-    "babel-jest": "~24.9.0",
+    "babel-jest": "~25.1.0",
     "babel-loader": "^8.0.6",
     "child_process": "^1.0.2",
     "clean-webpack-plugin": "^3.0.0",
@@ -61,16 +61,16 @@
     "enzyme-adapter-react-16": "^1.15.2",
     "eslint": "^6.8.0",
     "eslint-loader": "^3.0.3",
-    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-prettier": "^3.1.2",
-    "eslint-plugin-react": "^7.18.0",
+    "eslint-plugin-react": "^7.18.3",
     "file-loader": "^5.0.2",
     "gulp": "^4.0.2",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
-    "jest": "~24.9.0",
+    "jest": "~25.1.0",
     "jest-environment-jsdom-fifteen": "1.0.2",
-    "jest-resolve": "~24.9.0",
+    "jest-resolve": "~25.1.0",
     "jest-watch-typeahead": "0.4.2",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
@@ -95,8 +95,21 @@
     "url": "git+https://github.com/mendersoftware/gui.git"
   },
   "jest": {
+    "coverageThreshold": {
+      "global": {
+        "statements": 36,
+        "branches": 31,
+        "functions": 28,
+        "lines": 38
+      }
+    },
+    "collectCoverage": true,
     "collectCoverageFrom": [
-      "src/**/*.js"
+      "src/**/*.{js,jsx}"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/themes/"
     ],
     "setupFilesAfterEnv": [
       "./tests/setupTests.js"
