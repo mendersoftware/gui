@@ -4,6 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import Linkify from 'react-linkify';
 import ReactTooltip from 'react-tooltip';
+import EnterpriseLogo from '../../../assets/img/headerlogo_enterprise.png';
 
 import { Button, IconButton, ListItemText, ListItemSecondaryAction, Menu, MenuItem, Toolbar } from '@material-ui/core';
 
@@ -148,6 +149,7 @@ export class Header extends React.Component {
       deviceLimit,
       docsVersion,
       inProgress,
+      isEnterprise,
       location,
       multitenancy,
       pendingDevices,
@@ -215,7 +217,7 @@ export class Header extends React.Component {
       <div id="fixedHeader" className={`header ${location.pathname === '/login' ? 'hidden' : ''}`}>
         <Toolbar style={Object.assign({ backgroundColor: '#fff' }, toolbarStyle)}>
           <Toolbar key={0} style={toolbarStyle}>
-            <Link to="/" id="logo" />
+            <Link to="/" id="logo" style={isEnterprise ? { backgroundImage: `url(${EnterpriseLogo})` } : {}} />
 
             {this.props.demo ? (
               <div id="demoBox">
@@ -281,6 +283,7 @@ const mapStateToProps = state => {
     demo: state.app.features.isDemoMode,
     docsVersion: state.app.docsVersion,
     inProgress: state.deployments.byStatus.inprogress.total,
+    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && state.users.organization.plan === 'enterprise'),
     multitenancy: state.app.features.hasMultitenancy,
     showHelptips: state.users.showHelptips,
     pendingDevices: state.devices.byStatus.pending.total,
