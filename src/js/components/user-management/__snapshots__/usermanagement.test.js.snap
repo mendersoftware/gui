@@ -41,11 +41,7 @@ exports[`UserManagement Component renders correctly 1`] = `
       }
     >
       <h2
-        style={
-          Object {
-            "marginTop": "15px",
-          }
-        }
+        className="margin-top-small"
       >
         Users
       </h2>

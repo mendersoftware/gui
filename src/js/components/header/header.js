@@ -25,7 +25,7 @@ import DeploymentNotifications from './deploymentnotifications';
 
 import { getDeviceLimit } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
-import { getUser, getGlobalSettings, setShowHelptips, toggleHelptips } from '../../actions/userActions';
+import { getUser, getGlobalSettings, getUserOrganization, setShowHelptips, toggleHelptips } from '../../actions/userActions';
 import { getOnboardingState, setSnackbar } from '../../actions/appActions';
 import { getDeploymentCount } from '../../actions/deploymentActions';
 
@@ -62,6 +62,9 @@ export class Header extends React.Component {
       this.props.getDeviceLimit();
       this._checkShowHelp();
       this.props.getGlobalSettings();
+      if (this.props.multitenancy) {
+        this.props.getUserOrganization();
+      }
     }
   }
 
@@ -270,6 +273,7 @@ const actionCreators = {
   getOnboardingState,
   getReleases,
   getUser,
+  getUserOrganization,
   setShowHelptips,
   setSnackbar,
   toggleHelptips

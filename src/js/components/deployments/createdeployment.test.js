@@ -33,7 +33,8 @@ describe('CreateDeployment Component', () => {
       releases: {
         byId: {},
         selectedRelease: null
-      }
+      },
+      users: {}
     });
   });
 

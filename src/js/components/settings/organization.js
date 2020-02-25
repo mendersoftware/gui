@@ -29,7 +29,7 @@ export class MyOrganization extends React.Component {
   }
   render() {
     const { org, isHosted } = this.props;
-    const currentPlan = isHosted ? 'Mender Professional' : 'Mender Enterprise';
+    const currentPlan = isHosted ? org && org.plan : 'enterprise';
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
         <h2 style={{ marginTop: '15px' }}>My organization</h2>
@@ -78,7 +78,6 @@ export class MyOrganization extends React.Component {
             <PlanNotification
               className="margin-left-small margin-right-small"
               currentPlan={currentPlan}
-              defaultPlan="Mender Enterprise"
               planClass="MuiTypography-body2 MuiTypography-colorTextSecondary"
             />
             <p className="margin-left-small margin-right-small">
