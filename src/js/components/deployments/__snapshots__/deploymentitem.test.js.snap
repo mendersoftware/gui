@@ -104,9 +104,19 @@ exports[`DeploymentItem Component renders correctly 1`] = `
   <div
     className=""
   />
-  <span>
-    Invalid date
-  </span>
+  <div
+    aria-describedby={null}
+    className=""
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onMouseLeave={[Function]}
+    onMouseOver={[Function]}
+    onTouchEnd={[Function]}
+    onTouchStart={[Function]}
+    title=""
+  >
+    -
+  </div>
   <div
     className="align-right"
   />
