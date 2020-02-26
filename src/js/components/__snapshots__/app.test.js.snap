@@ -33,6 +33,7 @@ Array [
           href="/"
           id="logo"
           onClick={[Function]}
+          style={Object {}}
         />
       </div>
       <div

@@ -4,7 +4,6 @@ import { Link, withRouter } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import Linkify from 'react-linkify';
 import ReactTooltip from 'react-tooltip';
-import EnterpriseLogo from '../../../assets/img/headerlogo_enterprise.png';
 
 import { Button, IconButton, ListItemText, ListItemSecondaryAction, Menu, MenuItem, Toolbar } from '@material-ui/core';
 
@@ -18,16 +17,16 @@ import {
   InfoOutlined as InfoIcon
 } from '@material-ui/icons';
 
-import { isEmpty, decodeSessionToken, hashString } from '../../helpers';
-import { clearAllRetryTimers } from '../../utils/retrytimer';
 import DeviceNotifications from './devicenotifications';
 import DeploymentNotifications from './deploymentnotifications';
-
 import { getDeviceLimit } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
 import { getUser, getGlobalSettings, getUserOrganization, setShowHelptips, toggleHelptips } from '../../actions/userActions';
 import { getOnboardingState, setSnackbar } from '../../actions/appActions';
 import { getDeploymentCount } from '../../actions/deploymentActions';
+import { isEmpty, decodeSessionToken, hashString } from '../../helpers';
+import { clearAllRetryTimers } from '../../utils/retrytimer';
+import EnterpriseLogo from '../../../assets/img/headerlogo_enterprise.png';
 
 export class Header extends React.Component {
   constructor(props, context) {
