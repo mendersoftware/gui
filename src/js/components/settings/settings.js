@@ -1,13 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
+
+// material ui
+import { List, ListItem, ListItemText, ListSubheader } from '@material-ui/core';
+
 import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
 import MyOrganization from './organization';
 import Global from './global';
-
-// material ui
-import { List, ListItem, ListItemText, ListSubheader } from '@material-ui/core';
 
 const routes = {
   global: { route: '/settings/global-settings', text: 'Global settings', admin: true, component: <Global /> },
@@ -46,9 +47,11 @@ export class Settings extends React.Component {
 
   render() {
     var self = this;
+    const { hasMultitenancy, match } = self.props;
+
     let relevantItems = routes;
 
-    if (self.props.hasMultitenancy) {
+    if (hasMultitenancy) {
       relevantItems['myOrganization'] = myOrganization;
     }
     var list = Object.entries(relevantItems).reduce((accu, entry) => {
@@ -62,7 +65,7 @@ export class Settings extends React.Component {
       return accu;
     }, []);
 
-    const section = self._getCurrentSection(sectionMap, self.props.match.params.section);
+    const section = self._getCurrentSection(sectionMap, match.params.section);
     return (
       <div className="margin-top">
         <div className="leftFixed">
@@ -79,7 +82,6 @@ export class Settings extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    isHosted: state.app.features.isHosted,
     hasMultitenancy: state.app.features.hasMultitenancy
   };
 };
