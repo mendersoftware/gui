@@ -86,15 +86,19 @@ exports[`DeploymentReport Component renders correctly 1`] = `
               d="M16.24 7.76C15.07 6.59 13.54 6 12 6v6l-4.24 4.24c2.34 2.34 6.14 2.34 8.49 0 2.34-2.34 2.34-6.14-.01-8.48zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
             />
           </svg>
-          0
+          <span>
+            0 h 00 m 00 s
+          </span>
         </h2>
         <div>
-          Started:
+          <div>
+            Started: 
+          </div>
           <time
-            dateTime="2019-01-01T00:00:00+00:00"
+            dateTime="2019-01-01T13:00:00+00:00"
             title={null}
           >
-            2019-01-01 00:00
+            2019-01-01 13:00
           </time>
         </div>
       </div>
@@ -215,7 +219,6 @@ exports[`DeploymentReport Component renders correctly 1`] = `
           <input
             className="PrivateSwitchBase-input-19"
             data-indeterminate={false}
-            disabled={false}
             onChange={[Function]}
             type="checkbox"
           />

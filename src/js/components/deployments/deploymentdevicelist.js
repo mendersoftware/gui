@@ -6,7 +6,7 @@ import Time from 'react-time';
 // material ui
 import { Button, LinearProgress, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 
-import { statusToPercentage, formatTime } from '../../helpers';
+import { formatTime, statusToPercentage } from '../../helpers';
 
 const stateTitleMap = {
   noartifact: 'No artifact',

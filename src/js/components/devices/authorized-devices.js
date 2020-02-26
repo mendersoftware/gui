@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
-import Time from 'react-time';
 
 import pluralize from 'pluralize';
 
@@ -15,6 +14,7 @@ import { ExpandDevice } from '../helptips/helptooltips';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 
 import Loader from '../common/loader';
+import RelativeTime from '../common/relative-time';
 import { setSnackbar } from '../../actions/appActions';
 
 import DeviceList from './devicelist';
@@ -124,7 +124,7 @@ export class Authorized extends React.Component {
         title: 'Last check-in',
         name: 'last_checkin',
         property: 'updated_ts',
-        render: device => (device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-')
+        render: device => <RelativeTime updateTime={device.updated_ts} />
       },
       {
         title: '',

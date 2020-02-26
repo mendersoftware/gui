@@ -15,7 +15,6 @@ import Pagination from '../common/pagination';
 import AutoSelect from '../common/forms/autoselect';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import DeploymentStatus from './deploymentstatus';
-import { formatTime } from '../../helpers';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
@@ -138,11 +137,6 @@ export class Past extends React.Component {
     const self = this;
     const { page, perPage, endDate, startDate } = self.state;
     const pastMap = self.props.past.map((deployment, index) => {
-      let time = '-';
-      if (deployment.finished) {
-        time = <Time value={formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" />;
-      }
-
       //  get statistics
       const status = (
         <DeploymentStatus
@@ -159,9 +153,11 @@ export class Past extends React.Component {
           <TableCell>{deployment.artifact_name}</TableCell>
           <TableCell>{deployment.name}</TableCell>
           <TableCell>
-            <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
+            <Time value={deployment.created} format="YYYY-MM-DD HH:mm" />
           </TableCell>
-          <TableCell>{time}</TableCell>
+          <TableCell>
+            <Time value={deployment.finished} format="YYYY-MM-DD HH:mm" />
+          </TableCell>
           <TableCell style={{ textAlign: 'right', width: '100px' }}>{deployment.device_count}</TableCell>
           <TableCell style={{ overflow: 'visible', minWidth: '400px' }}>{status}</TableCell>
         </TableRow>

@@ -26,7 +26,6 @@ exports[`FormCheckbox Component renders correctly 1`] = `
       <input
         className="PrivateSwitchBase-input-16"
         data-indeterminate={false}
-        disabled={false}
         onChange={[Function]}
         type="checkbox"
       />

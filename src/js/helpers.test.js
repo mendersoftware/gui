@@ -26,7 +26,7 @@ import renderer from 'react-test-renderer';
 // ];
 import { FileSize } from './helpers';
 
-describe('ExpandArtifact', () => {
+describe('FileSize Component', () => {
   it('renders correctly', () => {
     const tree = renderer.create(<FileSize fileSize={1000} />).toJSON();
     expect(tree).toMatchSnapshot();

@@ -3,6 +3,7 @@ import md5 from 'md5';
 import React from 'react';
 
 import store from './reducers';
+import appConstants from './constants/appConstants';
 
 export function isEncoded(uri) {
   uri = uri || '';
@@ -378,6 +379,8 @@ export const getFormattedSize = bytes => {
 };
 
 export const FileSize = ({ style, fileSize }) => <div style={style}>{getFormattedSize(fileSize)}</div>;
+
+export const Plan = ({ className, plan }) => <div className={className}>{appConstants.PLANS[plan]}</div>;
 
 export const collectAddressesFrom = devices =>
   devices.reduce((collector, device) => {

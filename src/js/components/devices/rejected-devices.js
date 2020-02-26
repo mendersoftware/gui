@@ -6,6 +6,7 @@ import { getDevicesByStatus } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
+import RelativeTime from '../common/relative-time';
 import DeviceList from './devicelist';
 
 export class Rejected extends React.Component {
@@ -87,7 +88,7 @@ export class Rejected extends React.Component {
       {
         title: 'Last check-in',
         name: 'last_checkin',
-        render: device => (device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-')
+        render: device => <RelativeTime updateTime={device.updated_ts} />
       },
       {
         title: 'Status',
