@@ -24,9 +24,7 @@ export default class DeploymentStatus extends React.PureComponent {
     }
     // isActive has changed
     if (!prevProps.isActiveTab && self.props.isActiveTab && self.props.refresh) {
-      self.timer = setInterval(() => {
-        self.props.refreshStatus(self.props.id);
-      }, 10000);
+      self.timer = setInterval(() => self.props.refreshStatus(self.props.id), 10000);
     }
     if (
       prevProps.stats !== self.props.stats &&
@@ -41,9 +39,7 @@ export default class DeploymentStatus extends React.PureComponent {
   componentDidMount() {
     var self = this;
     if (self.props.refresh) {
-      self.timer = setInterval(() => {
-        self.props.refreshStatus(self.props.id);
-      }, 10000);
+      self.timer = setInterval(() => self.props.refreshStatus(self.props.id), 10000);
     }
     self.props.refreshStatus(self.props.id);
   }

@@ -68,7 +68,9 @@ export class DeploymentReport extends React.Component {
 
   refreshDeploymentDevices() {
     var self = this;
-
+    if (!self.props.deployment.id) {
+      return;
+    }
     return self.props.getSingleDeploymentDevices(self.props.deployment.id).then(() => self._handlePageChange(self.state.currentPage));
   }
   _getDeviceAttribute(device, attributeName) {
@@ -137,7 +139,7 @@ export class DeploymentReport extends React.Component {
   render() {
     const self = this;
     const { allDevices, deployment, deviceCount, past } = self.props;
-    const { created, stats = {}, devices } = deployment;
+    const { created = new Date().toISOString(), stats = {}, devices } = deployment;
     const { abort, deviceId, elapsed, finished, retry, showDialog } = self.state;
     const logData = deviceId ? devices[deviceId].log : null;
     var deviceList = this.state.pagedDevices || [];
@@ -262,7 +264,7 @@ export class DeploymentReport extends React.Component {
                   vertical={true}
                   id={deployment.id}
                   stats={stats}
-                  refreshStatus={id => self.props.getSingleDeploymentStats(id)}
+                  refreshStatus={id => (id ? self.props.getSingleDeploymentStats(id) : null)}
                 />
               </div>
 
@@ -321,13 +323,14 @@ export class DeploymentReport extends React.Component {
 const actionCreators = { getDeviceAuth, getDeviceById, getDeviceLog, getSingleDeploymentDevices, getSingleDeploymentStats };
 
 const mapStateToProps = state => {
-  const allDevices = sortDeploymentDevices(Object.values(state.deployments.byId[state.deployments.selectedDeployment].devices || {}));
+  const devices = state.deployments.byId[state.deployments.selectedDeployment]?.devices || {};
+  const allDevices = sortDeploymentDevices(Object.values(devices));
   return {
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
     allDevices,
     deviceCount: allDevices.length,
     devicesById: state.devices.byId,
-    deployment: state.deployments.byId[state.deployments.selectedDeployment]
+    deployment: state.deployments.byId[state.deployments.selectedDeployment] || {}
   };
 };
 
