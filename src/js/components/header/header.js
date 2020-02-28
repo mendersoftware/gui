@@ -151,9 +151,11 @@ export class Header extends React.Component {
       deviceLimit,
       docsVersion,
       inProgress,
+      isEnterprise,
       location,
       multitenancy,
       pendingDevices,
+      plan,
       showHelptips,
       toggleHelptips,
       user
@@ -218,7 +220,7 @@ export class Header extends React.Component {
       <div id="fixedHeader" className={`header ${location.pathname === '/login' ? 'hidden' : ''}`}>
         <Toolbar style={Object.assign({ backgroundColor: '#fff' }, toolbarStyle)}>
           <Toolbar key={0} style={toolbarStyle}>
-            <Link to="/" id="logo" />
+            <Link to="/" id="logo" className={plan === 'enterprise' || isEnterprise ? 'enterprise' : ''} />
 
             {this.props.demo ? (
               <div id="demoBox">
@@ -285,6 +287,7 @@ const mapStateToProps = state => {
     demo: state.app.features.isDemoMode,
     docsVersion: state.app.docsVersion,
     inProgress: state.deployments.byStatus.inprogress.total,
+    isEnterprise: state.app.features.hasMultitenancy || state.app.features.isEnterprise || state.app.features.isHosted,
     multitenancy: state.app.features.hasMultitenancy,
     showHelptips: state.users.showHelptips,
     pendingDevices: state.devices.byStatus.pending.total,
