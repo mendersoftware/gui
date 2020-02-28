@@ -241,9 +241,9 @@ export class Deployments extends React.Component {
       .abortDeployment(id)
       .then(() => {
         clearTimeout(self.dynamicTimer);
-        self._refreshDeployments();
-        self.setState({ createDialog: false, doneLoading: false });
+        self.setState({ createDialog: false, reportDialog: false, doneLoading: false });
         self.props.setSnackbar('The deployment was successfully aborted');
+        self._refreshDeployments();
       })
       .catch(err => {
         console.log(err);

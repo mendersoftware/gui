@@ -272,7 +272,7 @@ const deriveInactiveDevices = (acceptedDeviceIds, deviceInventoryIds) => (dispat
   });
 };
 
-export const getAllDevices = () => (dispatch, getState) => {
+export const getAllDevices = limit => (dispatch, getState) => {
   const getAllDevices = (perPage = 500, page = 1, devices = []) =>
     DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${perPage}&page=${page}`).then(res => {
       const links = parse(res.headers['link']);
@@ -281,7 +281,7 @@ export const getAllDevices = () => (dispatch, getState) => {
         type: DeviceConstants.RECEIVE_DEVICES,
         devicesById: deviceAccu.devicesById
       });
-      if (links.next) {
+      if (links.next && !(limit && perPage * page >= limit)) {
         return getAllDevices(perPage, page + 1, deviceAccu.ids);
       }
       let tasks = [
