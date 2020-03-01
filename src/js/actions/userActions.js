@@ -62,6 +62,18 @@ export const loginUser = userData => (dispatch, getState) =>
       return Promise.all([Promise.reject(err), dispatch(handleLoginError(err, has2FA))]);
     });
 
+export const verify2FA = tfaData => dispatch =>
+  UsersApi.putVerifyTFA(`${useradmApiUrl}/2faverify`, tfaData)
+    .then(() => {
+      return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: cookies.get('JWT') })]);
+    })
+    .catch(err => {
+      return Promise.all([
+        Promise.reject(err),
+        dispatch(setSnackbar(preformatWithRequestID(err.res, 'failed to verify token, please try again.'), null, 'Copy to clipboard'))
+      ]);
+    });
+
 export const getUserList = () => dispatch =>
   UsersApi.get(`${useradmApiUrl}/users`)
     .then(res => {
