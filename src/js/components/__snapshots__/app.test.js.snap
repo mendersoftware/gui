@@ -30,6 +30,7 @@ Array [
         }
       >
         <a
+          className=""
           href="/"
           id="logo"
           onClick={[Function]}
