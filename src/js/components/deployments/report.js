@@ -83,7 +83,9 @@ export class DeploymentReport extends React.Component {
   }
   refreshDeploymentDevices() {
     var self = this;
-
+    if (!self.props.deployment.id) {
+      return;
+    }
     return self.props.getSingleDeploymentDevices(self.props.deployment.id).then(() => self._handlePageChange(self.state.currentPage));
   }
   _getDeviceAttribute(device, attributeName) {
@@ -270,7 +272,7 @@ export class DeploymentReport extends React.Component {
                   vertical={true}
                   id={deployment.id}
                   stats={stats}
-                  refreshStatus={id => self.props.getSingleDeploymentStats(id)}
+                  refreshStatus={id => (id ? self.props.getSingleDeploymentStats(id) : null)}
                 />
               </div>
 
@@ -329,13 +331,14 @@ export class DeploymentReport extends React.Component {
 const actionCreators = { getDeviceAuth, getDeviceById, getDeviceLog, getSingleDeploymentDevices, getSingleDeploymentStats };
 
 const mapStateToProps = state => {
-  const allDevices = sortDeploymentDevices(Object.values(state.deployments.byId[state.deployments.selectedDeployment].devices || {}));
+  const devices = state.deployments.byId[state.deployments.selectedDeployment]?.devices || {};
+  const allDevices = sortDeploymentDevices(Object.values(devices));
   return {
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
     allDevices,
     deviceCount: allDevices.length,
     devicesById: state.devices.byId,
-    deployment: state.deployments.byId[state.deployments.selectedDeployment]
+    deployment: state.deployments.byId[state.deployments.selectedDeployment] || {}
   };
 };
 
