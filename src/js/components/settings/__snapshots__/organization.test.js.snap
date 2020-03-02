@@ -178,7 +178,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
       className="margin-top margin-bottom-small margin-left-small margin-right-small"
     >
       <div
-        className="explanatory-text billing-subtitle"
+        className="explanatory-text"
       >
         Current plan:
       </div>
