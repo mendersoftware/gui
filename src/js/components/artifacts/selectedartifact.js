@@ -87,16 +87,35 @@ export class SelectedArtifact extends React.Component {
       artifact && artifact.metadata
         ? Object.entries(artifact.metadata).reduce((accu, [key, value]) => {
             if (Array.isArray(value)) {
-              accu.push({ title: key, value: value.join(',') });
+              accu.push(<ExpandableAttribute key={key} primary={key} secondary={value.length ? value.join(',') : '-'} />);
             } else if (value instanceof Object) {
-              accu.push({ title: key, value: JSON.stringify(value) });
+              accu.push(<ExpandableAttribute key={key} primary={key} secondary={JSON.stringify(value) || '-'} />);
             } else {
-              accu.push({ title: key, value });
+              accu.push(<ExpandableAttribute key={key} primary={key} secondary={value || '-'} />);
             }
             return accu;
           }, [])
         : [];
-
+    const depends = artifact.artifact_depends
+      ? Object.entries(artifact.artifact_depends).reduce((accu, [key, value]) => {
+          if (!Array.isArray(value)) {
+            accu.push(<ExpandableAttribute key={key} primary={key} secondary={value} />);
+          } else if (!key.startsWith('device_type')) {
+            // we can expect this to be an array of artifacts or artifact groups this artifact depends on
+            const dependencies = value.reduce((dependencies, dependency, index) => {
+              const dependencyKey = value.length > 1 ? `${key}-${index + 1}` : key;
+              dependencies.push(<ExpandableAttribute key={dependencyKey} primary={dependencyKey} secondary={dependency} />);
+              return dependencies;
+            }, []);
+            accu = [...accu, ...dependencies];
+          }
+          return accu;
+        }, [])
+      : [];
+    const artifactMetaInfo = [
+      { title: 'Artifact dependencies', content: depends },
+      { title: 'Artifact metadata', content: metaData }
+    ];
     return (
       <div className={artifact.name == null ? 'muted' : null}>
         <div style={styles.listStyle}>
@@ -134,12 +153,16 @@ export class SelectedArtifact extends React.Component {
             />
           </FormControl>
         </div>
-        {!!metaData.length && (
-          <List className="list-horizontal-flex">
-            {metaData.map(metadata => (
-              <ExpandableAttribute key={metadata.title} primary={metadata.title} secondary={metadata.value || '-'} />
-            ))}
-          </List>
+        {artifactMetaInfo.map(
+          info =>
+            !!info.content.length && (
+              <>
+                <p className="margin-bottom-none">{info.title}</p>
+                <List className="list-horizontal-flex" style={{ paddingTop: 0 }}>
+                  {info.content}
+                </List>
+              </>
+            )
         )}
         <ExpansionPanel
           square
