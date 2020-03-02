@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PlanNotification Component renders correctly 1`] = `
+Array [
+  <div
+    className="margin-top margin-bottom-small "
+  >
+    <div
+      className="explanatory-text billing-subtitle"
+    >
+      Current plan:
+    </div>
+    <div
+      className="flexbox space-between"
+    >
+      <div
+        className=""
+      >
+        Mender Open Source
+      </div>
+      <a
+        href="https://mender.io/products/pricing"
+        target="_blank"
+      >
+        Compare product plans
+      </a>
+    </div>
+  </div>,
+  <hr
+    className="MuiDivider-root"
+  />,
+]
+`;

@@ -9,7 +9,7 @@ import Review from './deployment-wizard/review';
 
 import { selectDevice } from '../../actions/deviceActions';
 import { selectRelease } from '../../actions/releaseActions';
-
+import { PLANS as plans } from '../../constants/appConstants';
 import { getRemainderPercent } from '../../helpers';
 
 const deploymentSteps = [
@@ -21,25 +21,26 @@ const deploymentSteps = [
 export class CreateDialog extends React.Component {
   constructor(props, context) {
     super(props, context);
+    this.state = {
+      activeStep: 0,
+      deploymentDeviceIds: [],
+      steps: deploymentSteps
+    };
+  }
+
+  componentDidMount() {
     const self = this;
+    if (Object.keys(self.props.deploymentObject).length) {
+      self.setState({ ...self.props.deploymentObject });
+    }
     const steps = deploymentSteps.reduce((accu, step) => {
-      if (step.closed && !self.props.isEnterprise) {
+      if (step.closed && (self.props.plan === 'os' || !(self.props.isHosted || self.props.isEnterprise))) {
         return accu;
       }
       accu.push(step);
       return accu;
     }, []);
-    this.state = {
-      activeStep: 0,
-      deploymentDeviceIds: [],
-      steps
-    };
-  }
-
-  componentDidMount() {
-    if (Object.keys(this.props.deploymentObject).length) {
-      this.setState({ ...this.props.deploymentObject });
-    }
+    self.setState({ steps });
   }
 
   componentDidUpdate(prevProps) {
@@ -146,11 +147,14 @@ export class CreateDialog extends React.Component {
 const actionCreators = { selectDevice, selectRelease };
 
 const mapStateToProps = state => {
+  const plan = state.users.organization ? state.users.organization.plan : plans.os;
   return {
-    isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,
+    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === plans.enterprise),
+    isHosted: state.app.features.isHosted,
     device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
     groups: Object.keys(state.devices.groups.byId),
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
+    plan,
     release: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null
   };
 };

@@ -4,6 +4,7 @@ node_modules/
 videos
 .vscode
 screenshots/**
+coverage
 
 #files
 src/main.css

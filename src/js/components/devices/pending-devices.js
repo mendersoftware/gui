@@ -16,6 +16,7 @@ import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { preformatWithRequestID } from '../../helpers';
 import { getOnboardingComponentFor, advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
+import RelativeTime from '../common/relative-time';
 import { DevicePendingTip } from '../helptips/onboardingtips';
 import DeviceList from './devicelist';
 
@@ -178,7 +179,7 @@ export class Pending extends React.Component {
       {
         title: 'Last check-in',
         name: 'last_checkin',
-        render: device => (device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-')
+        render: device => <RelativeTime updateTime={device.updated_ts} />
       },
       {
         title: 'Status',

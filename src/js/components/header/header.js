@@ -22,11 +22,13 @@ import { clearAllRetryTimers } from '../../utils/retrytimer';
 import DeviceNotifications from './devicenotifications';
 import DeploymentNotifications from './deploymentnotifications';
 
-import { getDeviceLimit } from '../../actions/deviceActions';
+import { getAllDevices, getDeviceCount, getDeviceLimit } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
-import { getUser, getGlobalSettings, setShowHelptips, toggleHelptips } from '../../actions/userActions';
+import { getUser, getGlobalSettings, getUserOrganization, setShowHelptips, toggleHelptips } from '../../actions/userActions';
 import { getOnboardingState, setSnackbar } from '../../actions/appActions';
 import { getDeploymentCount } from '../../actions/deploymentActions';
+
+import { DEVICE_STATES } from '../../constants/deviceConstants';
 
 export class Header extends React.Component {
   constructor(props, context) {
@@ -59,8 +61,14 @@ export class Header extends React.Component {
       this._checkHeaderInfo();
       this.props.getReleases();
       this.props.getDeviceLimit();
+      this.props.getDeviceCount(DEVICE_STATES.accepted);
+      this.props.getDeviceCount(DEVICE_STATES.pending);
+      this.props.getAllDevices(100);
       this._checkShowHelp();
       this.props.getGlobalSettings();
+      if (this.props.multitenancy) {
+        this.props.getUserOrganization();
+      }
     }
   }
 
@@ -148,9 +156,11 @@ export class Header extends React.Component {
       deviceLimit,
       docsVersion,
       inProgress,
+      isEnterprise,
       location,
       multitenancy,
       pendingDevices,
+      plan,
       showHelptips,
       toggleHelptips,
       user
@@ -215,7 +225,7 @@ export class Header extends React.Component {
       <div id="fixedHeader" className={`header ${location.pathname === '/login' ? 'hidden' : ''}`}>
         <Toolbar style={Object.assign({ backgroundColor: '#fff' }, toolbarStyle)}>
           <Toolbar key={0} style={toolbarStyle}>
-            <Link to="/" id="logo" />
+            <Link to="/" id="logo" className={plan === 'enterprise' || isEnterprise ? 'enterprise' : ''} />
 
             {this.props.demo ? (
               <div id="demoBox">
@@ -262,12 +272,15 @@ export class Header extends React.Component {
 }
 
 const actionCreators = {
+  getAllDevices,
+  getDeviceCount,
   getDeviceLimit,
   getDeploymentCount,
   getGlobalSettings,
   getOnboardingState,
   getReleases,
   getUser,
+  getUserOrganization,
   setShowHelptips,
   setSnackbar,
   toggleHelptips
@@ -281,6 +294,7 @@ const mapStateToProps = state => {
     demo: state.app.features.isDemoMode,
     docsVersion: state.app.docsVersion,
     inProgress: state.deployments.byStatus.inprogress.total,
+    isEnterprise: state.app.features.hasMultitenancy || state.app.features.isEnterprise || state.app.features.isHosted,
     multitenancy: state.app.features.hasMultitenancy,
     showHelptips: state.users.showHelptips,
     pendingDevices: state.devices.byStatus.pending.total,

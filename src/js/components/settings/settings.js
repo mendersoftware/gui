@@ -1,14 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
+
+// material ui
+import { List, ListItem, ListItemText, ListSubheader } from '@material-ui/core';
+
 import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
 import MyOrganization from './organization';
 import Global from './global';
 import Billing from './billing';
-
-// material ui
-import { List, ListItem, ListItemText, ListSubheader } from '@material-ui/core';
+import { PLANS as plans } from '../../constants/appConstants';
 
 const routes = {
   global: { route: '/settings/global-settings', text: 'Global settings', admin: true, component: <Global /> },
@@ -49,12 +51,14 @@ export class Settings extends React.Component {
 
   render() {
     var self = this;
+    const { hasMultitenancy, isEnterprise, isHosted, match } = self.props;
+
     let relevantItems = routes;
 
-    if (self.props.hasMultitenancy) {
+    if (hasMultitenancy) {
       relevantItems['myOrganization'] = myOrganization;
     }
-    if (self.props.isHosted) {
+    if (isHosted && !isEnterprise) {
       relevantItems['billing'] = billing;
     }
     var list = Object.entries(relevantItems).reduce((accu, entry) => {
@@ -68,7 +72,7 @@ export class Settings extends React.Component {
       return accu;
     }, []);
 
-    const section = self._getCurrentSection(sectionMap, self.props.match.params.section);
+    const section = self._getCurrentSection(sectionMap, match.params.section);
     return (
       <div className="margin-top">
         <div className="leftFixed">
@@ -84,7 +88,9 @@ export class Settings extends React.Component {
 }
 
 const mapStateToProps = state => {
+  const plan = state.users.organization ? state.users.organization.plan : plans.os;
   return {
+    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === plans.enterprise),
     isHosted: state.app.features.isHosted,
     hasMultitenancy: state.app.features.hasMultitenancy
   };

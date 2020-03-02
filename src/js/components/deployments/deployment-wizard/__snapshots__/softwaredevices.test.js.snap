@@ -1,0 +1,151 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SoftwareDevices Component renders correctly 1`] = `
+<div
+  style={
+    Object {
+      "marginTop": "15px",
+      "minHeight": "300px",
+      "overflow": "visible",
+    }
+  }
+>
+  <form
+    className="flexbox centered column"
+  >
+    <div
+      style={
+        Object {
+          "minHeight": "105px",
+          "minWidth": "min-content",
+        }
+      }
+    >
+      <div
+        className="MuiFormControl-root MuiTextField-root"
+        style={
+          Object {
+            "borderBottom": "none",
+            "minWidth": "400px",
+          }
+        }
+      >
+        <label
+          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated Mui-disabled Mui-disabled"
+          data-shrink={false}
+        >
+          Release
+        </label>
+        <div
+          className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl"
+          onClick={[Function]}
+        >
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled"
+            disabled={true}
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="text"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      style={
+        Object {
+          "width": "min-content",
+        }
+      }
+    >
+      <div>
+        <div
+          className="MuiFormControl-root"
+          style={
+            Object {
+              "minWidth": "400px",
+            }
+          }
+        >
+          <label
+            className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+            data-shrink={false}
+            htmlFor="adornment-target-select"
+          >
+            Select a device group to deploy to
+          </label>
+          <div
+            className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl"
+            onClick={[Function]}
+            style={
+              Object {
+                "minWidth": "250px",
+              }
+            }
+          >
+            <input
+              aria-invalid={false}
+              autoComplete="off"
+              className="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled"
+              disabled={true}
+              id="adornment-target-select"
+              onAnimationStart={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder="Select a device group to deploy to"
+              required={false}
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <p
+          className="info"
+          style={
+            Object {
+              "marginTop": "10px",
+            }
+          }
+        >
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIcon-root"
+            focusable="false"
+            role="presentation"
+            style={
+              Object {
+                "color": "rgb(171, 16, 0)",
+                "fontSize": "18px",
+                "marginRight": "4px",
+                "position": "relative",
+                "top": "4px",
+              }
+            }
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+            />
+          </svg>
+          There are no connected devices.
+           
+          <span>
+            <a
+              href="/help/getting-started"
+              onClick={[Function]}
+            >
+              Read the help pages
+            </a>
+             for help with connecting devices.
+          </span>
+        </p>
+      </div>
+    </div>
+  </form>
+</div>
+`;

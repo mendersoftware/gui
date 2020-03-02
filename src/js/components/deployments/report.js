@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import Time from 'react-time';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
+import moment from 'moment';
+import momentDurationFormatSetup from 'moment-duration-format';
 import pluralize from 'pluralize';
 import isEqual from 'lodash.isequal';
 import differenceWith from 'lodash.differencewith';
@@ -21,6 +23,8 @@ import DeploymentStatus from './deploymentstatus';
 import DeviceList from './deploymentdevicelist';
 import Confirm from './confirm';
 
+momentDurationFormatSetup(moment);
+
 export class DeploymentReport extends React.Component {
   constructor(props, state) {
     super(props, state);
@@ -28,7 +32,7 @@ export class DeploymentReport extends React.Component {
       abort: false,
       deviceId: null,
       currentPage: 1,
-      elapsed: 0,
+      elapsed: moment(),
       finished: false,
       perPage: 20,
       showDialog: false,
@@ -37,53 +41,36 @@ export class DeploymentReport extends React.Component {
       pagedDevices: []
     };
   }
+
   componentDidMount() {
     var self = this;
     self.timer;
     if (self.props.past) {
       self.setState({ finished: true });
     } else {
-      self.timer = setInterval(() => this.tick(), 50);
+      self.timer = setInterval(() => self.setState({ elapsed: moment() }), 300);
     }
     this.timer2 = this.props.past ? null : setInterval(() => self.refreshDeploymentDevices(), 5000);
     this.refreshDeploymentDevices();
   }
+
   componentWillUnmount() {
     clearInterval(this.timer);
     clearInterval(this.timer2);
   }
+
   shouldComponentUpdate(nextProps, nextState) {
     const mapToRelevance = ({ deployment, globalSettings, past }) => ({ deployment, globalSettings, past });
     const nextRelevant = mapToRelevance(nextProps);
     const thisRelevant = mapToRelevance(this.props);
     return !isEqual(thisRelevant, nextRelevant) || !isEqual(this.state, nextState);
   }
-  tick() {
-    var now = new Date();
-    var then = new Date(this.props.deployment.created);
 
-    // TODO refactor using momentjs:
-    // get difference in seconds
-    var difference = (now.getTime() - then.getTime()) / 1000;
-
-    // Calculate the number of days left
-    var days = Math.floor(difference / 86400);
-    // After deducting the days calculate the number of hours left
-    var hours = Math.floor((difference - days * 86400) / 3600);
-    // After days and hours , how many minutes are left
-    var minutes = Math.floor((difference - days * 86400 - hours * 3600) / 60);
-    // Finally how many seconds left after removing days, hours and minutes.
-    var secs = Math.floor(difference - days * 86400 - hours * 3600 - minutes * 60);
-    secs = `0${secs}`.slice(-2);
-    // Only show days if exists
-    days = days ? `${days}d ` : '';
-
-    var x = `${days + hours}h ${minutes}m ${secs}s`;
-    this.setState({ elapsed: x });
-  }
   refreshDeploymentDevices() {
     var self = this;
-
+    if (!self.props.deployment.id) {
+      return;
+    }
     return self.props.getSingleDeploymentDevices(self.props.deployment.id).then(() => self._handlePageChange(self.state.currentPage));
   }
   _getDeviceAttribute(device, attributeName) {
@@ -97,14 +84,17 @@ export class DeploymentReport extends React.Component {
   _filterPending(device) {
     return device.status !== DEVICE_STATES.pending;
   }
+
   _handleCheckbox(checked) {
     this.setState({ showPending: checked, currentPage: 1 });
     this.refreshDeploymentDevices();
   }
+
   viewLog(id) {
     const self = this;
     return self.props.getDeviceLog(this.props.deployment.id, id).then(() => self.setState({ showDialog: true, copied: false, deviceId: id }));
   }
+
   exportLog(content) {
     const uriContent = `data:application/octet-stream,${encodeURIComponent(content)}`;
     window.open(uriContent, 'deviceLog');
@@ -116,6 +106,7 @@ export class DeploymentReport extends React.Component {
     clearInterval(this.timer2);
     this.setState({ finished: bool });
   }
+
   _handlePageChange(pageNo) {
     var start = pageNo * this.state.perPage - this.state.perPage;
     var end = Math.min(this.props.deviceCount, pageNo * this.state.perPage);
@@ -140,14 +131,16 @@ export class DeploymentReport extends React.Component {
     }
     this.setState({ currentPage: pageNo, start: start, end: end, pagedDevices: slice });
   }
+
   _abortHandler() {
     this.props.abort(this.props.deployment.id);
   }
+
   render() {
     const self = this;
     const { allDevices, deployment, deviceCount, past } = self.props;
-    const { stats = {}, devices } = deployment;
-    const { abort, deviceId, finished, retry, showDialog } = self.state;
+    const { created = new Date().toISOString(), stats = {}, devices } = deployment;
+    const { abort, deviceId, elapsed, finished, retry, showDialog } = self.state;
     const logData = deviceId ? devices[deviceId].log : null;
     var deviceList = this.state.pagedDevices || [];
 
@@ -177,6 +170,7 @@ export class DeploymentReport extends React.Component {
       </Button>
     ];
 
+    const duration = moment.duration(elapsed.diff(moment(created)));
     return (
       <div>
         <div className={`report-container${past ? '' : ' report-progressing'}`}>
@@ -203,8 +197,8 @@ export class DeploymentReport extends React.Component {
                   Finished {!!stats.failure && <span className="failures">with failures</span>}
                 </div>
                 <div>
-                  <div className="progressLabel">Started:</div>
-                  <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
+                  <div className="progressLabel">Started: </div>
+                  <Time value={formatTime(created)} format="YYYY-MM-DD HH:mm" />
                 </div>
                 <div>
                   <div className="progressLabel">Finished:</div>
@@ -254,11 +248,11 @@ export class DeploymentReport extends React.Component {
                   <h3 style={{ marginTop: 12 }}>{finished ? 'Finished' : 'In progress'}</h3>
                   <h2>
                     <TimelapseIcon style={{ margin: '0 10px 0 -10px', color: '#ACD4D0', verticalAlign: 'text-top' }} />
-                    {this.state.elapsed}
+                    <span>{`${duration.format('d [d] *hh [h] mm [m] ss [s]')}`}</span>
                   </h2>
                   <div>
-                    Started:
-                    <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
+                    <div>Started: </div>
+                    <Time value={formatTime(created)} format="YYYY-MM-DD HH:mm" />
                   </div>
                 </div>
 
@@ -270,7 +264,7 @@ export class DeploymentReport extends React.Component {
                   vertical={true}
                   id={deployment.id}
                   stats={stats}
-                  refreshStatus={id => self.props.getSingleDeploymentStats(id)}
+                  refreshStatus={id => (id ? self.props.getSingleDeploymentStats(id) : null)}
                 />
               </div>
 
@@ -302,7 +296,7 @@ export class DeploymentReport extends React.Component {
 
         {(deviceCount || deployment.deviceCount || !!deviceList.length) && (
           <div style={{ minHeight: '20vh' }}>
-            <DeviceList created={deployment.created} status={deployment.status} devices={deviceList} viewLog={id => this.viewLog(id)} past={this.props.past} />
+            <DeviceList created={created} status={deployment.status} devices={deviceList} viewLog={id => this.viewLog(id)} past={this.props.past} />
             <Pagination
               count={deviceCount || deployment.device_count}
               rowsPerPage={self.state.perPage}
@@ -329,13 +323,14 @@ export class DeploymentReport extends React.Component {
 const actionCreators = { getDeviceAuth, getDeviceById, getDeviceLog, getSingleDeploymentDevices, getSingleDeploymentStats };
 
 const mapStateToProps = state => {
-  const allDevices = sortDeploymentDevices(Object.values(state.deployments.byId[state.deployments.selectedDeployment].devices || {}));
+  const devices = state.deployments.byId[state.deployments.selectedDeployment]?.devices || {};
+  const allDevices = sortDeploymentDevices(Object.values(devices));
   return {
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
     allDevices,
     deviceCount: allDevices.length,
     devicesById: state.devices.byId,
-    deployment: state.deployments.byId[state.deployments.selectedDeployment]
+    deployment: state.deployments.byId[state.deployments.selectedDeployment] || {}
   };
 };
 

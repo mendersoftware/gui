@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeviceStatus Component renders correctly 1`] = `
+<div
+  aria-describedby={null}
+  className="MuiChip-root deviceStatus MuiChip-outlined MuiChip-sizeSmall"
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onKeyUp={[Function]}
+  onMouseLeave={[Function]}
+  onMouseOver={[Function]}
+  onTouchEnd={[Function]}
+  onTouchStart={[Function]}
+  title="This device has a new auth request. This can happen if the device's public key changes. Expand the row to see more details"
+>
+  <div
+    className="MuiBox-root MuiBox-root-43 flexbox centered notificationCounter"
+  >
+    <div>
+      1
+    </div>
+  </div>
+  <span
+    className="MuiChip-label MuiChip-labelSmall"
+  >
+    <div
+      className="uppercased"
+    >
+      new 
+      request
+    </div>
+  </span>
+</div>
+`;
