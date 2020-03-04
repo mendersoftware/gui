@@ -10,7 +10,8 @@ const listItems = [
   { route: '/', text: 'Dashboard' },
   { route: '/devices', text: 'Devices' },
   { route: '/releases', text: 'Releases' },
-  { route: '/deployments', text: 'Deployments' }
+  { route: '/deployments', text: 'Deployments' },
+  { route: '/reports', text: 'Reports' }
 ];
 
 const listItemStyle = {
