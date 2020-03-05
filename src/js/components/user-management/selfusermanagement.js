@@ -167,7 +167,7 @@ export class SelfUserManagement extends React.Component {
               Two Factor Authentication adds a second layer of protection to your account by asking for an additional verification code each time you log in.
             </p>
             <Collapse in={qrExpanded} timeout="auto" unmountOnExit>
-              <TwoFactorAuthSetup handle2FAState={isEnabled => self.handle2FAState(isEnabled)} show={qrExpanded} user={currentUser} />
+              <TwoFactorAuthSetup handle2FAState={isEnabled => self.handle2FAState(isEnabled)} has2FA={has2FA} show={qrExpanded} user={currentUser} />
             </Collapse>
           </div>
         ) : (
