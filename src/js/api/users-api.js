@@ -48,6 +48,35 @@ const Api = {
         })
     );
   },
+  putVerifyTFA: (url, userData) => {
+    var token = cookies.get('JWT');
+    let body = {};
+    if (userData.hasOwnProperty('token2fa')) {
+      body = { token2fa: userData.token2fa };
+    }
+    return new Promise((resolve, reject) =>
+      request
+        .put(url)
+        .auth(token, { type: 'bearer' })
+        .set('Content-Type', 'application/json')
+        .send(body)
+        .end((err, res) => {
+          if (err || !res.ok) {
+            var errorResponse = {
+              text: err.response ? JSON.parse(err.response.text) : err,
+              code: err.status
+            };
+            reject({ error: errorResponse, res: res });
+          } else {
+            var response = {
+              text: res.text,
+              code: res.status
+            };
+            resolve(response);
+          }
+        })
+    );
+  },
   post: (url, userData) => {
     var token = cookies.get('JWT');
     return new Promise((resolve, reject) =>

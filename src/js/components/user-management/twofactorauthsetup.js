@@ -6,10 +6,9 @@ import { CheckCircle as CheckCircleIcon } from '@material-ui/icons';
 
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
-import PasswordInput from '../common/forms/passwordinput';
 
 import { setSnackbar } from '../../actions/appActions';
-import { loginUser, saveGlobalSettings } from '../../actions/userActions';
+import { loginUser, verify2FA, saveGlobalSettings } from '../../actions/userActions';
 
 import Loader from '../common/loader';
 
@@ -32,11 +31,13 @@ export class TwoFactorAuthSetup extends React.Component {
     self.setState({ validating2fa: true });
     formData.email = self.props.user.email;
     self.props
-      .loginUser(formData)
-      .then(token => self.setState({ validated2fa: !!token, validating2fa: false }))
+      .verify2FA(formData)
+      .then(() => {
+        self.setState({ validated2fa: true, validating2fa: false });
+      })
       .catch(() => {
         self.props.setSnackbar('An error occured validating the verification code.');
-        self.setState({ validating2fa: false });
+        self.setState({ validated2fa: false, validating2fa: false });
       });
   }
 
@@ -64,7 +65,7 @@ export class TwoFactorAuthSetup extends React.Component {
             <li>Scan the QR code on the right with the authenticator app you just downloaded on your device.</li>
             <li>
               <div>
-                Type in your password and the generated code in the input field below and click Verify.
+                Type in the generated code in the input field below and click Verify.
                 {validated2fa ? (
                   <div className="flexbox space-between centered margin-top margin-right margin-bottom" style={{ justifyContent: 'flex-end' }}>
                     <CheckCircleIcon className="green" />
@@ -81,7 +82,6 @@ export class TwoFactorAuthSetup extends React.Component {
                       submitLabel="Verify"
                       submitButtonId="confirm-button"
                     >
-                      <PasswordInput id="password" label="Password" required={true} />
                       <TextInput hint="Verification code" label="Verification code" id="token2fa" validations="isLength:6,isNumeric" required={true} />
                     </Form>
                     {validating2fa && (
@@ -119,7 +119,7 @@ export class TwoFactorAuthSetup extends React.Component {
   }
 }
 
-const actionCreators = { loginUser, saveGlobalSettings, setSnackbar };
+const actionCreators = { loginUser, verify2FA, saveGlobalSettings, setSnackbar };
 
 const mapStateToProps = state => {
   return {
