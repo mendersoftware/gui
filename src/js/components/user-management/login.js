@@ -50,6 +50,9 @@ export class Login extends React.Component {
       }, 1000);
       self.props.setSnackbar('');
     }
+    if (prevProps.has2FA !== self.props.has2FA && self.props.has2FA) {
+      self.setState({});
+    }
   }
 
   componentWillUnmount() {
