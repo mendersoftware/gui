@@ -9,8 +9,6 @@ import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
 import MyOrganization from './organization';
 import Global from './global';
-import Billing from './billing';
-import { PLANS as plans } from '../../constants/appConstants';
 
 const routes = {
   global: { route: '/settings/global-settings', text: 'Global settings', admin: true, component: <Global /> },
@@ -18,11 +16,9 @@ const routes = {
   userManagement: { route: '/settings/user-management', text: 'User management', admin: true, component: <UserManagement /> }
 };
 const myOrganization = { route: '/settings/my-organization', text: 'My organization', admin: true, component: <MyOrganization /> };
-const billing = { route: '/settings/billing', text: 'Usage and billing', admin: true, component: <Billing /> };
 const sectionMap = {
   'global-settings': 'global',
   'my-account': 'myAccount',
-  billing: 'billing',
   'user-management': 'userManagement',
   'my-organization': 'myOrganization'
 };
@@ -51,15 +47,12 @@ export class Settings extends React.Component {
 
   render() {
     var self = this;
-    const { hasMultitenancy, isEnterprise, isHosted, match } = self.props;
+    const { hasMultitenancy, match } = self.props;
 
     let relevantItems = routes;
 
     if (hasMultitenancy) {
       relevantItems['myOrganization'] = myOrganization;
-    }
-    if (isHosted && !isEnterprise) {
-      relevantItems['billing'] = billing;
     }
     var list = Object.entries(relevantItems).reduce((accu, entry) => {
       const key = entry[0];
@@ -88,10 +81,7 @@ export class Settings extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const plan = state.users.organization ? state.users.organization.plan : plans.os;
   return {
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === plans.enterprise),
-    isHosted: state.app.features.isHosted,
     hasMultitenancy: state.app.features.hasMultitenancy
   };
 };

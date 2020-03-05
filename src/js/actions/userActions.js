@@ -120,11 +120,6 @@ export const getUserOrganization = () => dispatch =>
     Promise.all([dispatch({ type: UserConstants.SET_ORGANIZATION, organization: res.body }), dispatch(getHostedLinks(res.body.id))])
   );
 
-export const getBillingStatement = timeframe => dispatch =>
-  GeneralApi.get(`${apiUrl}/billing?year=${timeframe.year}&month=${timeframe.month}`)
-    .then(billingInformation => dispatch({ type: UserConstants.SET_BILLING_INFORMATION, billingInformation }))
-    .catch(e => console.log(e));
-
 /* 
   Global settings 
 */

@@ -110,11 +110,6 @@ const userReducer = (state = initialState, action) => {
           ...action.organization
         }
       };
-    case UserConstants.SET_BILLING_INFORMATION:
-      return {
-        ...state,
-        billingStatement: action.billingInformation
-      };
     case UserConstants.SET_SHOW_HELP:
       return {
         ...state,

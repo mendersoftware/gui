@@ -6,7 +6,7 @@ Array [
     className="margin-top margin-bottom-small "
   >
     <div
-      className="explanatory-text billing-subtitle"
+      className="explanatory-text"
     >
       Current plan:
     </div>
