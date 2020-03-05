@@ -62,6 +62,8 @@ export const loginUser = userData => (dispatch, getState) =>
       return Promise.all([Promise.reject(err), dispatch(handleLoginError(err, has2FA))]);
     });
 
+export const logoutUser = () => dispatch => Promise.resolve(dispatch({ type: UserConstants.USER_LOGOUT }));
+
 export const verify2FA = tfaData => dispatch =>
   UsersApi.putVerifyTFA(`${useradmApiUrl}/2faverify`, tfaData)
     .then(() => {
