@@ -171,7 +171,11 @@ export class SelfUserManagement extends React.Component {
             </Collapse>
           </div>
         ) : (
-          <EnterpriseNotification isEnterprise={isEnterprise} benefit="set up Two Factor Authentication to add an additional layer of security to accounts" />
+          <EnterpriseNotification
+            isEnterprise={isEnterprise}
+            recommendedPlan={'professional'}
+            benefit="set up Two Factor Authentication to add an additional layer of security to accounts"
+          />
         )}
       </div>
     );
@@ -181,9 +185,10 @@ export class SelfUserManagement extends React.Component {
 const actionCreators = { editUser, saveGlobalSettings, setSnackbar };
 
 const mapStateToProps = state => {
+  const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
     has2FA: state.users.globalSettings.hasOwnProperty('2fa') && state.users.globalSettings['2fa'] === 'enabled',
-    isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,
+    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
     currentUser: state.users.byId[state.users.currentUser] || {}
   };
 };
