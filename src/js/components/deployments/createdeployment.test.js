@@ -34,7 +34,11 @@ describe('CreateDeployment Component', () => {
         byId: {},
         selectedRelease: null
       },
-      users: {}
+      users: {
+        organization: {
+          plan: 'professional'
+        }
+      }
     });
   });
 

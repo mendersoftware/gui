@@ -66,7 +66,7 @@ export class SelfUserManagement extends React.Component {
   render() {
     const self = this;
     const { editEmail, editPass, emailFormId, qrExpanded } = self.state;
-    const { currentUser, has2FA, isEnterprise } = self.props;
+    const { currentUser, has2FA, isEnterprise, isHosted } = self.props;
     const email = currentUser.email;
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
@@ -173,7 +173,7 @@ export class SelfUserManagement extends React.Component {
         ) : (
           <EnterpriseNotification
             isEnterprise={isEnterprise}
-            recommendedPlan={'professional'}
+            recommendedPlan={isHosted ? 'professional' : null}
             benefit="set up Two Factor Authentication to add an additional layer of security to accounts"
           />
         )}
@@ -189,6 +189,7 @@ const mapStateToProps = state => {
   return {
     has2FA: state.users.globalSettings.hasOwnProperty('2fa') && state.users.globalSettings['2fa'] === 'enabled',
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
+    isHosted: state.app.features.isEnterprise || state.app.features.isHosted,
     currentUser: state.users.byId[state.users.currentUser] || {}
   };
 };
