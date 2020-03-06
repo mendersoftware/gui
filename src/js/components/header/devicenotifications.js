@@ -31,15 +31,13 @@ const DeviceNotifications = ({ total, limit, pending }) => {
             </p>
           )}
           <p>
-            Contact us by email at <a href="mailto:support@mender.io">support@mender.io</a> to request a higher limit.
+            If you need a higher device limit, you can contact us by email at <a href="mailto:support@mender.io">support@mender.io</a> to change your plan.
           </p>
-          <p>There is no fee for a higher limit; the purpose of the limit is to allow us to plan capacity for scaling Hosted Mender.</p>
           <p>
-            Billing is based on your usage only. See{' '}
+            Learn about the different plans available by visiting{' '}
             <a href="https://mender.io/pricing" target="_blank">
-              pricing
-            </a>{' '}
-            for an overview.
+              mender.io/pricing
+            </a>
           </p>
         </ReactTooltip>
 
