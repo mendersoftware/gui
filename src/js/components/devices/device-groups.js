@@ -365,6 +365,24 @@ export class DeviceGroups extends React.Component {
 
   render() {
     const self = this;
+    const {
+      acceptedDevices,
+      allCount,
+      attributes,
+      canFilterMultiple,
+      currentTab,
+      devices,
+      filters,
+      groupCount,
+      groups,
+      isHosted,
+      openSettingsDialog,
+      paused,
+      selectDevice,
+      selectedGroup,
+      showHelptips
+    } = self.props;
+
     // Add to group dialog
     var addActions = [
       <Button key="add-action-button-1" style={{ marginRight: '10px' }} onClick={() => self.setState({ addGroup: !self.state.addGroup })}>
@@ -384,36 +402,34 @@ export class DeviceGroups extends React.Component {
       </Button>
     ];
 
-    var groupCount = this.props.groupCount || this.props.acceptedDevices || 0;
-
-    var groupName = this._isUngroupedGroup(this.props.selectedGroup) ? DeviceConstants.UNGROUPED_GROUP.name : this.props.selectedGroup;
-    var allowDeviceGroupRemoval = !this._isUngroupedGroup(this.props.selectedGroup);
+    const groupName = this._isUngroupedGroup(selectedGroup) ? DeviceConstants.UNGROUPED_GROUP.name : selectedGroup;
+    const allowDeviceGroupRemoval = !this._isUngroupedGroup(selectedGroup);
 
     return (
       <div className="tab-container">
         <div className="leftFixed">
           <Groups
-            acceptedCount={this.props.acceptedDevices}
-            allCount={this.props.allCount}
+            acceptedCount={acceptedDevices}
+            allCount={allCount}
             changeGroup={group => this._handleGroupChange(group)}
-            groups={this.props.groups}
+            groups={groups}
             openGroupDialog={() => self.setState({ createGroupDialog: !self.state.createGroupDialog })}
-            selectedGroup={this.props.selectedGroup}
-            showHelptips={this.props.showHelptips}
+            selectedGroup={selectedGroup}
+            showHelptips={showHelptips}
           />
         </div>
         <div className="rightFluid" style={{ paddingTop: '0' }}>
-          {!this.props.selectedGroup ? (
+          {!selectedGroup && (
             <Filters
-              attributes={this.props.attributes}
-              filters={this.props.filters}
-              onFilterChange={filters => this._onFilterChange(filters)}
-              resetIdFilter={() => this.props.selectDevice()}
-              isHosted={this.props.isEnterprise}
+              attributes={attributes}
+              canFilterMultiple={canFilterMultiple}
+              filters={filters}
+              isHosted={isHosted}
+              onFilterChange={changedFilters => self._onFilterChange(changedFilters)}
+              resetIdFilter={selectDevice}
             />
-          ) : null}
-
-          {self.props.selectedGroup && allowDeviceGroupRemoval ? (
+          )}
+          {selectedGroup && allowDeviceGroupRemoval ? (
             <Button
               style={{ position: 'absolute', top: 0, right: '30px', zIndex: 100 }}
               onClick={() => self.setState({ removeGroup: !self.state.removeGroup })}
@@ -423,23 +439,23 @@ export class DeviceGroups extends React.Component {
             </Button>
           ) : null}
           <AuthorizedDevices
-            acceptedCount={this.props.acceptedDevices}
+            acceptedCount={acceptedDevices}
             addDevicesToGroup={devices => this._addDevicesToGroup(devices)}
-            allCount={this.props.allCount}
+            allCount={allCount}
             allowDeviceGroupRemoval={allowDeviceGroupRemoval}
-            currentTab={this.props.currentTab}
-            devices={this.props.devices}
+            currentTab={currentTab}
+            devices={devices}
             group={groupName}
             groupCount={groupCount}
             loading={this.state.loading}
             onPageChange={e => self._handlePageChange(e)}
             onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}
-            openSettingsDialog={this.props.openSettingsDialog}
+            openSettingsDialog={openSettingsDialog}
             pageNo={self.state.pageNo}
             pageLength={self.state.pageLength}
             pause={() => this._pauseInterval()}
             refreshDevices={() => self._getDevices()}
-            paused={this.props.paused}
+            paused={paused}
             removeDevicesFromGroup={rows => this._removeDevicesFromGroup(rows)}
           />
         </div>
@@ -452,11 +468,11 @@ export class DeviceGroups extends React.Component {
                 devices={this.state.tmpDevices.length}
                 willBeEmpty={this.state.willBeEmpty}
                 tmpGroup={this.state.tmpGroup}
-                selectedGroup={this.props.selectedGroup}
+                selectedGroup={selectedGroup}
                 selectedGroupName={groupName}
                 changeSelect={group => this._changeTmpGroup(group)}
                 validateName={(invalid, group) => this._validate(invalid, group)}
-                groups={this.props.groups.filter(group => !this._isUngroupedGroup(group))}
+                groups={groups.filter(group => !this._isUngroupedGroup(group))}
                 selectedField={this.state.selectedField}
               />
             </DialogContent>
@@ -478,10 +494,10 @@ export class DeviceGroups extends React.Component {
           <CreateGroup
             toggleDialog={() => self.setState({ createGroupDialog: !self.state.createGroupDialog })}
             open={this.state.createGroupDialog}
-            groups={this.props.groups}
+            groups={groups}
             changeGroup={() => this._handleGroupChange()}
             addListOfDevices={(devices, group) => this._createGroupFromDialog(devices, group)}
-            acceptedCount={this.props.acceptedDevices}
+            acceptedCount={acceptedDevices}
           />
         )}
       </div>
@@ -529,18 +545,20 @@ const mapStateToProps = state => {
       return accu;
     }, [])
     .sort();
+  const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
     acceptedDevices: state.devices.byStatus.accepted.total || 0,
     acceptedDevicesList: state.devices.byStatus.accepted.deviceIds.slice(0, 20),
     allCount: state.devices.byStatus.accepted.total + state.devices.byStatus.rejected.total || 0,
     attributes: state.devices.filteringAttributes.inventoryAttributes.slice(0, state.devices.filteringAttributesLimit) || [],
+    canFilterMultiple: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
     devices,
     deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
     filters: state.devices.filters || [],
     groups,
     groupDevices,
     groupCount,
-    isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,
+    isHosted: state.app.features.isEnterprise || state.app.features.isHosted,
     selectedGroup,
     showHelptips: state.users.showHelptips,
     ungroupedDevices

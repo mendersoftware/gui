@@ -38,11 +38,13 @@ export default class Filters extends React.Component {
   }
   _clearFilters() {
     this.props.onFilterChange([]);
+    this.props.resetIdFilter();
   }
   render() {
     const self = this;
+    const { attributes, canFilterMultiple, isHosted } = self.props;
     const filters = self.props.filters.length ? self.props.filters : [{ key: '', value: '' }];
-    const { filterAttributes, filterCount, remainingFilters } = [{ key: 'id', value: 'Device ID' }, ...self.props.attributes].reduce(
+    const { filterAttributes, filterCount, remainingFilters } = [{ key: 'id', value: 'Device ID' }, ...attributes].reduce(
       (accu, value) => {
         const currentFilter = value.key ? value : { value, key: value };
         accu.filterAttributes.push(currentFilter);
@@ -96,13 +98,17 @@ export default class Filters extends React.Component {
             <a onClick={() => this._clearFilters()}>Clear all filters</a>
           </div>
           <List>{filterItems}</List>
-          {this.props.isHosted ? (
+          {canFilterMultiple ? (
             <Button variant="text" disabled={!canAddMore} onClick={() => this._addFilter()} color="secondary">
               <AddCircleIcon className="buttonLabelIcon" />
               Add filter
             </Button>
           ) : (
-            <EnterpriseNotification isEnterprise={this.props.isHosted} benefit="filter by multiple attributes to improve the device overview" />
+            <EnterpriseNotification
+              isEnterprise={canFilterMultiple}
+              recommendedPlan={isHosted ? 'professional' : null}
+              benefit="filter by multiple attributes to improve the device overview"
+            />
           )}
         </Drawer>
       </div>
