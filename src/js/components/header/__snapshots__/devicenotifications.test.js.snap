@@ -19,7 +19,7 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
       </h3>
       <p>
         You can still connect another 
-        400
+        900
          
         devices
         .
@@ -57,7 +57,7 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
         </span>
         <span>
           /
-          500
+          1,000
         </span>
         <svg
           aria-hidden="true"

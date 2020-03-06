@@ -7,7 +7,6 @@ import pluralize from 'pluralize';
 import DeveloperBoardIcon from '@material-ui/icons/DeveloperBoard';
 
 const DeviceNotifications = ({ total, limit, pending }) => {
-  limit = 500;
   const approaching = limit && total / limit > 0.8;
   const warning = limit && limit <= total;
   return (
