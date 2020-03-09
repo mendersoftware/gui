@@ -91,13 +91,7 @@ export const getUserList = () => dispatch =>
     });
 
 export const getUser = id => dispatch =>
-  UsersApi.get(`${useradmApiUrl}/users/${id}`).then(user => {
-    let tasks = [dispatch({ type: UserConstants.RECEIVED_USER, user })];
-    if (user.hasOwnProperty('tfasecret')) {
-      tasks.push(dispatch(saveGlobalSettings({ '2fa': user.tfasecret.length ? 'enabled' : 'disabled' })));
-    }
-    return Promise.all(tasks);
-  });
+  UsersApi.get(`${useradmApiUrl}/users/${id}`).then(user => Promise.resolve(dispatch({ type: UserConstants.RECEIVED_USER, user })));
 
 export const createUser = userData => dispatch =>
   UsersApi.post(`${useradmApiUrl}/users`, userData).then(() =>
