@@ -287,6 +287,7 @@ const actionCreators = {
 };
 
 const mapStateToProps = state => {
+  const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
     acceptedDevices: state.devices.byStatus.accepted.total,
     announcement: state.app.hostedAnnouncement,
@@ -294,8 +295,8 @@ const mapStateToProps = state => {
     demo: state.app.features.isDemoMode,
     docsVersion: state.app.docsVersion,
     inProgress: state.deployments.byStatus.inprogress.total,
-    isEnterprise: state.app.features.hasMultitenancy || state.app.features.isEnterprise || state.app.features.isHosted,
-    multitenancy: state.app.features.hasMultitenancy,
+    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
+    multitenancy: state.app.features.hasMultitenancy || state.app.features.isEnterprise || state.app.features.isHosted,
     showHelptips: state.users.showHelptips,
     pendingDevices: state.devices.byStatus.pending.total,
     user: state.users.byId[state.users.currentUser] || { email: '', id: null }
