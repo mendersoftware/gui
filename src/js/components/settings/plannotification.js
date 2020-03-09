@@ -7,7 +7,7 @@ import { Plan } from '../../helpers';
 const PlanNotification = ({ className = '', currentPlan = 'os', planClass = '' }) => (
   <>
     <div className={`margin-top margin-bottom-small ${className}`}>
-      <div className="explanatory-text">Current plan:</div>
+      <div className="explanatory-text">Current plan</div>
       <div className="flexbox space-between">
         <Plan className={planClass} plan={currentPlan} />
         <a href="https://mender.io/products/pricing" target="_blank">
