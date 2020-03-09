@@ -35,6 +35,7 @@ describe('getFormattedSize function', () => {
     expect(getFormattedSize()).toEqual('0 Bytes');
     expect(getFormattedSize(null)).toEqual('0 Bytes');
     expect(getFormattedSize(0)).toEqual('0 Bytes');
+    expect(getFormattedSize(31)).toEqual('31.00 Bytes');
     expect(getFormattedSize(1024)).toEqual('1.00 KB');
     expect(getFormattedSize(1024 * 1024)).toEqual('1.00 MB');
     expect(getFormattedSize(1024 * 1024 * 2.5)).toEqual('2.50 MB');
