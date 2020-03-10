@@ -28,8 +28,15 @@ export default class DistributionReport extends React.Component {
     this.setState({ distribution });
   }
 
+  onSliceClick(thing) {
+    const { attribute, group, selectGroup } = this.props;
+    selectGroup(group);
+    window.location.replace(`#/devices/${group ? `group=${group}&` : ''}${attribute}=${thing}`);
+  }
+
   render() {
-    const { attribute, group, onClick } = this.props;
+    const self = this;
+    const { attribute, group, onClick } = self.props;
     const data = Object.entries(this.state.distribution).reduce((accu, [key, value]) => [...accu, { x: key, y: value }], []);
     return (
       <Paper className="flexbox column centered space-between margin-right margin-bottom" elevation={2} style={{ minWidth: 380, width: 380 }}>
@@ -54,9 +61,7 @@ export default class DistributionReport extends React.Component {
                 {
                   target: 'data',
                   eventHandlers: {
-                    onClick: (evt, clickedProps) => {
-                      console.log(clickedProps);
-                    }
+                    onClick: (evt, clickedProps) => self.onSliceClick(clickedProps.datum.x)
                   }
                 }
               ]}
