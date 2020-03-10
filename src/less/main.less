@@ -197,6 +197,11 @@ ul.link-list {
   word-wrap: break-word;
 }
 
+.break-all {
+  white-space: normal;
+  word-wrap: break-all;
+}
+
 .clear {
   clear: both;
 }
@@ -1624,6 +1629,9 @@ tr.expand {
     display: inline;
     overflow: initial;
     max-height: initial;
+  }
+  &.break-all {
+    word-break: break-all;
   }
 }
 

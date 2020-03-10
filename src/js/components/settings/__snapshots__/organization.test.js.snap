@@ -3,11 +3,6 @@
 exports[`MyOrganization Component renders correctly 1`] = `
 <div
   className="margin-top-small"
-  style={
-    Object {
-      "maxWidth": "750px",
-    }
-  }
 >
   <h2
     style={
@@ -23,8 +18,13 @@ exports[`MyOrganization Component renders correctly 1`] = `
       className="MuiList-root MuiList-padding"
     >
       <li
-        className="MuiListItem-root MuiListItem-gutters Mui-disabled"
+        className="MuiListItem-root MuiListItem-gutters MuiListItem-divider Mui-disabled"
         disabled={true}
+        style={
+          Object {
+            "maxWidth": "500px",
+          }
+        }
       >
         <div
           className="MuiListItemText-root"
@@ -36,88 +36,122 @@ exports[`MyOrganization Component renders correctly 1`] = `
           </span>
         </div>
       </li>
-      <hr
-        className="MuiDivider-root"
-      />
       <div
-        className="material-list-item"
+        className="flexbox"
+        style={
+          Object {
+            "alignItems": "flex-end",
+          }
+        }
       >
-        <h4
-          style={
-            Object {
-              "display": "inline",
-              "paddingRight": "10px",
-            }
-          }
-        >
-          Token
-        </h4>
         <div
-          className="tooltip info"
-          data-event="click focus"
-          data-for="token-help"
-          data-tip={true}
-          id="token-info"
+          onClick={[Function]}
           style={
             Object {
-              "display": "inline",
-              "position": "relative",
-              "top": "6px",
+              "display": "inline-block",
+              "width": "500px",
             }
           }
         >
-          <svg
-            aria-hidden="true"
-            className="MuiSvgIcon-root"
-            focusable="false"
-            role="presentation"
-            viewBox="0 0 24 24"
+          <li
+            className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+            disabled={true}
           >
-            <path
-              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-            />
-          </svg>
+            <div
+              className="MuiListItemText-root MuiListItemText-multiline"
+            >
+              <span
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+              >
+                <div>
+                  <h4
+                    style={
+                      Object {
+                        "display": "inline",
+                        "paddingRight": "10px",
+                      }
+                    }
+                  >
+                    Token
+                  </h4>
+                  <div
+                    className="tooltip info"
+                    data-event="click focus"
+                    data-for="token-help"
+                    data-tip={true}
+                    id="token-info"
+                    style={
+                      Object {
+                        "display": "inline",
+                        "position": "relative",
+                        "top": "6px",
+                      }
+                    }
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="MuiSvgIcon-root"
+                      focusable="false"
+                      role="presentation"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                      />
+                    </svg>
+                  </div>
+                  <div
+                    className="__react_component_tooltip place-top type-dark"
+                    data-id="tooltip"
+                    id="token-help"
+                  >
+                    <h3>
+                      Tenant token
+                    </h3>
+                    <p
+                      style={
+                        Object {
+                          "color": "#DECFD9",
+                          "margin": "1em 0",
+                        }
+                      }
+                    >
+                      This token is unique for your organization and ensures that only devices that you own are able to connect to your account.
+                    </p>
+                    <p
+                      style={
+                        Object {
+                          "color": "#DECFD9",
+                          "margin": "1em 0",
+                        }
+                      }
+                    >
+                      Set this variable in 
+                      <i>
+                        local.conf
+                      </i>
+                       in order to make the device recognize the organization to which it belongs.
+                    </p>
+                  </div>
+                </div>
+              </span>
+              <div
+                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+              >
+                <div>
+                  <span
+                    className="break-all inventory-text "
+                    style={Object {}}
+                  />
+                   
+                </div>
+              </div>
+            </div>
+          </li>
+          <hr
+            className="MuiDivider-root"
+          />
         </div>
-        <div
-          className="__react_component_tooltip place-top type-dark"
-          data-id="tooltip"
-          id="token-help"
-        >
-          <h3>
-            Tenant token
-          </h3>
-          <p
-            style={
-              Object {
-                "color": "#DECFD9",
-                "margin": "1em 0",
-              }
-            }
-          >
-            This token is unique for your organization and ensures that only devices that you own are able to connect to your account.
-          </p>
-          <p
-            style={
-              Object {
-                "color": "#DECFD9",
-                "margin": "1em 0",
-              }
-            }
-          >
-            Set this variable in 
-            <i>
-              local.conf
-            </i>
-             in order to make the device recognize the organization to which it belongs.
-          </p>
-        </div>
-        <p
-          style={
-            Object {
-              "wordBreak": "break-all",
-            }
-          }
-        />
         <button
           className="MuiButtonBase-root MuiButton-root MuiButton-text"
           disabled={false}
@@ -135,7 +169,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
           onTouchStart={[Function]}
           style={
             Object {
-              "marginTop": "15px",
+              "margin": "0 15px 15px",
             }
           }
           tabIndex={0}
@@ -161,56 +195,84 @@ exports[`MyOrganization Component renders correctly 1`] = `
             </span>
             Copy to clipboard
           </span>
+          <span
+            className="MuiTouchRipple-root"
+          />
         </button>
-        <p
-          style={
-            Object {
-              "marginLeft": "14px",
+        <div>
+          <p
+            style={
+              Object {
+                "marginBottom": "30px",
+              }
             }
+          />
+        </div>
+      </div>
+      <li
+        className="MuiListItem-root MuiListItem-gutters MuiListItem-divider Mui-disabled"
+        disabled={true}
+        style={
+          Object {
+            "maxWidth": "500px",
           }
-        />
-      </div>
-      <hr
-        className="MuiDivider-root"
-      />
-    </ul>
-    <div
-      className="margin-top margin-bottom-small margin-left-small margin-right-small"
-    >
-      <div
-        className="explanatory-text"
-      >
-        Current plan:
-      </div>
-      <div
-        className="flexbox space-between"
+        }
       >
         <div
-          className="MuiTypography-body2 MuiTypography-colorTextSecondary"
+          className="MuiListItemText-root MuiListItemText-multiline"
         >
-          Mender Enterprise
+          <span
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          >
+            Current plan
+          </span>
+          <p
+            className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+          >
+            Mender Enterprise
+          </p>
         </div>
-        <a
-          href="https://mender.io/products/pricing"
-          target="_blank"
-        >
-          Compare product plans
-        </a>
-      </div>
-    </div>
-    <hr
-      className="MuiDivider-root"
-    />
+      </li>
+    </ul>
+    <p
+      className="margin-top margin-left-small margin-right-small"
+    >
+      <a
+        href="mailto:support@mender.io?subject=undefined: Change plan&body=Organization%20ID%3A%20undefined%0AOrganization%20name%3A%20undefined%0APlan%20name%3A%20Mender Enterprise%0A%0AI%20would%20like%20to%20make%20a%20change%20to%20my%20Mender%20plan."
+        target="_blank"
+      >
+        Upgrade your plan
+      </a>
+       
+      or compare product plans at
+       
+      <a
+        href="https://mender.io/pricing"
+        target="_blank"
+      >
+        mender.io/pricing
+      </a>
+      .
+    </p>
     <p
       className="margin-left-small margin-right-small"
     >
-      To update your billing details or for any other support questions, contact us at 
       <a
-        href="mailto:support@mender.io"
+        href="mailto:support@mender.io?subject=undefined: Update billing&body=Organization%20ID%3A%20undefined%0AOrganization%20name%3A%20undefined%0APlan%20name%3A%20Mender Enterprise%0A%0AI%20would%20like%20to%20make%20a%20change%20to%20my%20billing%20details."
+        target="_blank"
       >
-        support@mender.io
+        Request to update your billing details
       </a>
-      .
+    </p>
+    <p
+      className="margin-left-small margin-right-small"
+    >
+      <a
+        href="mailto:support@mender.io?subject=undefined: Cancel subscription&body=Organization%20ID%3A%20undefined%0AOrganization%20name%3A%20undefined%0APlan%20name%3A%20Mender Enterprise%0A%0APlease%20cancel%20my%20subscription.%0AReason%20%5Boptional%5D%3A"
+        target="_blank"
+      >
+        Cancel subscription
+      </a>
     </p>
   </div>
 </div>
