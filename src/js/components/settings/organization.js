@@ -20,6 +20,7 @@ export class MyOrganization extends React.Component {
   }
   componentDidMount() {
     this.props.getUserOrganization();
+    this.setState({});
   }
 
   _copied() {
@@ -92,19 +93,23 @@ export class MyOrganization extends React.Component {
               <ListItem style={{ maxWidth: '500px' }} divider={true} key="name" disabled={true}>
                 <ListItemText primary="Organization name" secondary={org.name} />
               </ListItem>
-              <ExpandableDeviceAttribute
-                style={{ width: '500px', display: 'inline-block' }}
-                key="org_token"
-                primary={orgHeader}
-                secondary={org.tenant_token}
-                textClasses={{ secondary: 'break-all inventory-text' }}
-              />
-              <CopyToClipboard text={org.tenant_token} onCopy={() => this._copied()}>
-                <Button style={{ margin: '-30px 15px 15px' }} startIcon={<CopyPasteIcon />}>
-                  Copy to clipboard
-                </Button>
-              </CopyToClipboard>
-              <p style={{ margin: '0 0 14px 14px' }}>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
+              <div className="flexbox" style={{ alignItems: 'flex-end' }}>
+                <ExpandableDeviceAttribute
+                  style={{ width: '500px', display: 'inline-block' }}
+                  key="org_token"
+                  primary={orgHeader}
+                  secondary={org.tenant_token}
+                  textClasses={{ secondary: 'break-all inventory-text' }}
+                />
+                <CopyToClipboard text={org.tenant_token} onCopy={() => this._copied()}>
+                  <Button style={{ margin: '0 15px 15px' }} startIcon={<CopyPasteIcon />}>
+                    Copy to clipboard
+                  </Button>
+                </CopyToClipboard>
+                <div>
+                  <p style={{ marginBottom: '30px' }}>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
+                </div>
+              </div>
               <ListItem style={{ maxWidth: '500px' }} divider={true} key="plan" disabled={true}>
                 <ListItemText primary="Current plan" secondary={plans[currentPlan]} />
               </ListItem>
