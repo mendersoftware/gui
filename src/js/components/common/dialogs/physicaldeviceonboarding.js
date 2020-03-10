@@ -57,7 +57,7 @@ export class PhysicalDeviceOnboarding extends React.Component {
     const { docsVersion, ipAddress, isHosted, isEnterprise, token, debPackageVersion } = self.props;
 
     const codeToCopy = getDebConfigurationCode(ipAddress, isHosted, isEnterprise, token, debPackageVersion, selection);
-    const hasConvertedImage = !!selection && selection.length && selection.startsWith('raspberrypi3');
+    const hasConvertedImage = !!selection && selection.length && selection.startsWith('raspberrypi');
     const steps = {
       1: (
         <div className="flexbox column">
