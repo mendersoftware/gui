@@ -8,7 +8,7 @@ import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 
 import { setSnackbar } from '../../actions/appActions';
-import { loginUser, verify2FA, saveGlobalSettings } from '../../actions/userActions';
+import { loginUser, saveGlobalSettings, verify2FA } from '../../actions/userActions';
 
 import Loader from '../common/loader';
 
@@ -18,12 +18,26 @@ export class TwoFactorAuthSetup extends React.Component {
     const self = this;
     self.state = { validated2fa: false, validating2fa: false };
     self.props.saveGlobalSettings({ '2fa': 'enabled' });
+    self.onUnload = self.onUnload.bind(self);
+  }
+
+  componentDidMount() {
+    window.addEventListener('beforeunload', this.onUnload);
   }
 
   componentWillUnmount() {
-    if (!this.state.validated2fa) {
+    if (!this.state.validated2fa && this.props.qrImage) {
       this.props.saveGlobalSettings({ '2fa': 'disabled' });
     }
+    window.removeEventListener('beforeunload', this.onUnload);
+  }
+
+  onUnload(e) {
+    if (!e || (this.state.validated2fa && this.props.has2FA) || !this.props.qrImage) {
+      return;
+    }
+    e.returnValue = '2fa setup incomplete';
+    return e.returnValue;
   }
 
   validate2faSetup(formData) {
@@ -119,7 +133,7 @@ export class TwoFactorAuthSetup extends React.Component {
   }
 }
 
-const actionCreators = { loginUser, verify2FA, saveGlobalSettings, setSnackbar };
+const actionCreators = { loginUser, saveGlobalSettings, setSnackbar, verify2FA };
 
 const mapStateToProps = state => {
   return {

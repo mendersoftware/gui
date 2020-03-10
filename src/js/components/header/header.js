@@ -17,6 +17,7 @@ import {
   InfoOutlined as InfoIcon
 } from '@material-ui/icons';
 
+import { logout } from '../../auth';
 import { isEmpty, decodeSessionToken, hashString } from '../../helpers';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import DeviceNotifications from './devicenotifications';
@@ -24,7 +25,7 @@ import DeploymentNotifications from './deploymentnotifications';
 
 import { getAllDevices, getDeviceCount, getDeviceLimit } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
-import { getUser, getGlobalSettings, getUserOrganization, setShowHelptips, toggleHelptips } from '../../actions/userActions';
+import { getUser, getGlobalSettings, getUserOrganization, logoutUser, setShowHelptips, toggleHelptips } from '../../actions/userActions';
 import { getOnboardingState, setSnackbar } from '../../actions/appActions';
 import { getDeploymentCount } from '../../actions/deploymentActions';
 
@@ -143,8 +144,7 @@ export class Header extends React.Component {
   onLogoutClick() {
     this.setState({ gettingUser: false, anchorEl: null });
     clearAllRetryTimers(this.props.setSnackbar);
-    this.cookies.remove('JWT');
-    this.props.history.push('/login');
+    this.props.logoutUser().then(() => logout());
   }
   render() {
     const self = this;
@@ -281,6 +281,7 @@ const actionCreators = {
   getReleases,
   getUser,
   getUserOrganization,
+  logoutUser,
   setShowHelptips,
   setSnackbar,
   toggleHelptips

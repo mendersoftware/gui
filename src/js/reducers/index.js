@@ -6,6 +6,7 @@ import deploymentReducer from './deploymentReducer';
 import deviceReducer from './deviceReducer';
 import releaseReducer from './releaseReducer';
 import userReducer from './userReducer';
+import { USER_LOGOUT } from '../constants/userConstants';
 
 const rootReducer = combineReducers({
   app: appReducer,
@@ -15,6 +16,13 @@ const rootReducer = combineReducers({
   users: userReducer
 });
 
-const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunkMiddleware)));
+const sessionReducer = (state, action) => {
+  if (action.type === USER_LOGOUT) {
+    state = undefined;
+  }
+  return rootReducer(state, action);
+};
+
+const store = createStore(sessionReducer, composeWithDevTools(applyMiddleware(thunkMiddleware)));
 
 export default store;
