@@ -183,11 +183,11 @@ export class ScheduleRollout extends React.Component {
                       ]}
                     </Select>
                   </FormControl>
-                  {((isHosted && plan !== 'enterprise') || !isEnterprise) && (
+                  {(!isHosted || (isHosted && plan !== 'enterprise') || !isEnterprise) && (
                     <EnterpriseNotification
                       isEnterprise={isEnterprise}
                       benefit={`choose to roll out deployments in multiple phases`}
-                      recommendedPlan={'enterprise'}
+                      recommendedPlan={isHosted ? 'enterprise' : null}
                     />
                   )}
                 </div>

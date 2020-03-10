@@ -15,7 +15,8 @@ describe('OnboardingCompleteTip Component', () => {
       devices: {
         byId: {},
         byStatus: { accepted: { deviceIds: [] } }
-      }
+      },
+      users: {}
     });
   });
 

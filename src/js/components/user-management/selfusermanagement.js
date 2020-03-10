@@ -66,7 +66,7 @@ export class SelfUserManagement extends React.Component {
   render() {
     const self = this;
     const { editEmail, editPass, emailFormId, qrExpanded } = self.state;
-    const { currentUser, has2FA, isEnterprise } = self.props;
+    const { canHave2FA, currentUser, has2FA, isEnterprise } = self.props;
     const email = currentUser.email;
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
@@ -154,7 +154,7 @@ export class SelfUserManagement extends React.Component {
           </Form>
         )}
 
-        {isEnterprise ? (
+        {canHave2FA ? (
           <div className="margin-top">
             <div
               className="clickable flexbox space-between"
@@ -171,7 +171,11 @@ export class SelfUserManagement extends React.Component {
             </Collapse>
           </div>
         ) : (
-          <EnterpriseNotification isEnterprise={isEnterprise} benefit="set up Two Factor Authentication to add an additional layer of security to accounts" />
+          <EnterpriseNotification
+            isEnterprise={isEnterprise}
+            recommendedPlan={canHave2FA ? 'professional' : null}
+            benefit="set up Two Factor Authentication to add an additional layer of security to accounts"
+          />
         )}
       </div>
     );
@@ -181,10 +185,12 @@ export class SelfUserManagement extends React.Component {
 const actionCreators = { editUser, saveGlobalSettings, setSnackbar };
 
 const mapStateToProps = state => {
+  const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
+    canHave2FA: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
+    currentUser: state.users.byId[state.users.currentUser] || {},
     has2FA: state.users.globalSettings.hasOwnProperty('2fa') && state.users.globalSettings['2fa'] === 'enabled',
-    isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,
-    currentUser: state.users.byId[state.users.currentUser] || {}
+    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise')
   };
 };
 
