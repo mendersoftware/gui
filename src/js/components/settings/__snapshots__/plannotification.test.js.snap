@@ -8,7 +8,7 @@ Array [
     <div
       className="explanatory-text"
     >
-      Current plan:
+      Current plan
     </div>
     <div
       className="flexbox space-between"
