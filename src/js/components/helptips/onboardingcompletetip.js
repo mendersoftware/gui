@@ -78,7 +78,7 @@ export class OnboardingCompleteTip extends React.Component {
           <p>{`If you used one of our pre-built images you can start using full-image${isHosted ? ` and delta updates` : ''} right away.`}</p>
           What next?
           <div>
-            <a href={`https://docs.mender.io/${docsVersion}getting-started/on-premise-installation/deploy-a-system-update-demo`} target="_blank">
+            <a href={`https://docs.mender.io/${docsVersion}artifacts/snapshots`} target="_blank">
               Learn about full-image updates
             </a>{' '}
             or{' '}
