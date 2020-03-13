@@ -99,7 +99,7 @@ export class MyOrganization extends React.Component {
                   key="org_token"
                   primary={orgHeader}
                   secondary={org.tenant_token}
-                  textClasses={{ secondary: 'break-all inventory-text' }}
+                  textClasses={{ secondary: 'break-all inventory-text tenant-token-text' }}
                 />
                 <CopyToClipboard text={org.tenant_token} onCopy={() => this._copied()}>
                   <Button style={{ margin: '0 15px 15px' }} startIcon={<CopyPasteIcon />}>
