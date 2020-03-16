@@ -18,7 +18,7 @@ import {
 } from '@material-ui/icons';
 
 import { logout } from '../../auth';
-import { isEmpty, decodeSessionToken, hashString } from '../../helpers';
+import { decodeSessionToken, hashString } from '../../helpers';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import DeviceNotifications from './devicenotifications';
 import DeploymentNotifications from './deploymentnotifications';
@@ -35,41 +35,48 @@ export class Header extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      anchorEl: null
+      anchorEl: null,
+      gettingUser: false
     };
     this.cookies = new Cookies();
   }
 
   componentDidUpdate(prevProps, prevState) {
     const sessionId = this.cookies.get('JWT');
-    if (!sessionId || isEmpty(this.props.user) || this.props.user === null) {
+    if (!sessionId || !this.props.user || !this.props.user.id || !this.props.user.email.length) {
       this._updateUsername()
-        .then(() => this.props.getOnboardingState())
+        .then(() => {
+          this.props.getOnboardingState();
+          this.initializeHeaderData();
+        })
         // this is allowed to fail if no user information are available
         .catch(e => console.log(e));
     } else if (prevState.sessionId !== this.state.sessionId) {
-      this._hasDeployments();
+      this.initializeHeaderData();
       this.props.getReleases();
-      this._checkShowHelp();
-      this._checkHeaderInfo();
-      this.props.getGlobalSettings();
+      this.props.getAllDevices(100);
     }
   }
+
   componentDidMount() {
     // check logged in user
     if (this.props.isLoggedIn) {
-      this._updateUsername().then(() => this.props.getOnboardingState());
-      this._checkHeaderInfo();
-      this.props.getReleases();
-      this.props.getDeviceLimit();
-      this.props.getDeviceCount(DEVICE_STATES.accepted);
-      this.props.getDeviceCount(DEVICE_STATES.pending);
-      this.props.getAllDevices(100);
-      this._checkShowHelp();
-      this.props.getGlobalSettings();
-      if (this.props.multitenancy) {
-        this.props.getUserOrganization();
-      }
+      this._updateUsername().then(() => {
+        this.props.getOnboardingState();
+        this.initializeHeaderData();
+      });
+    }
+  }
+
+  initializeHeaderData() {
+    this._checkHeaderInfo();
+    this._checkShowHelp();
+    this.props.getDeviceCount(DEVICE_STATES.accepted);
+    this.props.getDeviceCount(DEVICE_STATES.pending);
+    this.props.getDeviceLimit();
+    this.props.getGlobalSettings();
+    if (this.props.multitenancy) {
+      this.props.getUserOrganization();
     }
   }
 
@@ -78,6 +85,7 @@ export class Header extends React.Component {
     this.props.getDeploymentCount('inprogress');
     this._checkAnnouncement();
   }
+
   _checkShowHelp() {
     //checks if user id is set and if cookie for helptips exists for that user
     var userCookie = this.cookies.get(this.props.user.id);
@@ -89,6 +97,7 @@ export class Header extends React.Component {
       this.props.setShowHelptips(userCookie.help);
     }
   }
+
   _checkAnnouncement() {
     var hash = this.props.announcement ? hashString(this.props.announcement) : null;
     var announceCookie = this.cookies.get(this.props.user.id + hash);
@@ -98,6 +107,7 @@ export class Header extends React.Component {
       this.setState({ showAnnouncement: false });
     }
   }
+
   _hideAnnouncement() {
     if (this.props.user.id) {
       this.cookies.set(this.props.user.id + this.state.hash, true, { maxAge: 604800 });
@@ -116,18 +126,10 @@ export class Header extends React.Component {
       self.setState({ gettingUser: true });
       return self.props
         .getUser(userId)
-        .then(() => {
-          self.setState({ gettingUser: false });
-          self._checkShowHelp();
-          self.props.getGlobalSettings();
-          self._checkHeaderInfo();
-        })
-        .catch(err => {
-          self.setState({ gettingUser: false });
-          var errMsg = err.res.error;
-          console.log(errMsg);
-        });
+        .catch(err => console.log(err.res.error))
+        .finally(() => self.setState({ gettingUser: false }));
     }
+    return Promise.reject();
   }
 
   changeTab() {
