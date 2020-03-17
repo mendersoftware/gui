@@ -1,5 +1,6 @@
 FROM cypress/included:3.8.3
 WORKDIR /e2e
+ENV CI=1
 RUN mkdir -p downloaded-tools && \
   curl -SL --fail "https://mender.s3-accelerate.amazonaws.com/temp_master/core-image-full-cmdline-qemux86-64.ext4" \
   -o core-image-full-cmdline-qemux86-64.ext4 && \
@@ -8,9 +9,8 @@ RUN mkdir -p downloaded-tools && \
   curl -SL --fail "https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/master/mender-artifact" \
   -o /usr/bin/mender-artifact && \
   chmod +x /usr/bin/mender-artifact
-COPY package-lock.json package.json cypress.json ./
-ENV CI=1
-RUN npm ci
+RUN npm install cypress-file-upload@^3.5.3 jwt-decode@^2.2.0
+COPY package.json package-lock.json cypress.json ./
 COPY cypress ./cypress
 RUN npx cypress verify
 CMD npm run ciTest
