@@ -550,7 +550,7 @@ const mapStateToProps = state => {
     acceptedDevices: state.devices.byStatus.accepted.total || 0,
     acceptedDevicesList: state.devices.byStatus.accepted.deviceIds.slice(0, 20),
     allCount: state.devices.byStatus.accepted.total + state.devices.byStatus.rejected.total || 0,
-    attributes: state.devices.filteringAttributes.inventoryAttributes.slice(0, state.devices.filteringAttributesLimit) || [],
+    attributes: state.devices.filteringAttributes.inventoryAttributes || [],
     canFilterMultiple: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
     devices,
     deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
