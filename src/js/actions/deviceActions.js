@@ -379,7 +379,7 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
   const getAllDevices = (perPage = 500, page = 1, devices = []) =>
     DevicesApi.get(`${deviceAuthV2}/devices?status=${status}&per_page=${perPage}&page=${page}`).then(res => {
       var links = parse(res.headers['link']);
-      const deviceAccu = reduceReceivedDevices(res.body, devices, getState());
+      const deviceAccu = reduceReceivedDevices(res.body, devices, getState(), status);
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICES,
         devicesById: deviceAccu.devicesById
