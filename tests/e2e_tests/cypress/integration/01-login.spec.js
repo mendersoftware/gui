@@ -4,16 +4,19 @@ context('Login', () => {
   describe('works as expected', () => {
     beforeEach(() => {
       cy.clearCookies();
-      cy.visit(`${Cypress.config().baseUrl}ui/`);
+      cy.visit(Cypress.config().baseUrl);
     });
 
     it('Logs in using UI', () => {
-      cy.location('hash').should('equal', '#/login');
-
+      cy.visit(`${Cypress.config().baseUrl}ui`);
       // enter valid username and password
       cy.get('[id=email]').type(Cypress.env('username'));
-      cy.get('[name=password]').type(Cypress.env('password'));
-      cy.contains('button', 'Log in').click();
+      cy.get('[name=password]')
+        .clear()
+        .type(Cypress.env('password'));
+      cy.contains('button', 'Log in')
+        .click()
+        .wait(300);
 
       // confirm we have logged in successfully
       cy.location('hash')
@@ -23,7 +26,7 @@ context('Login', () => {
       // now we can log out
       cy.contains('.header-dropdown', Cypress.env('username')).click({ force: true });
       cy.contains('span', 'Log out').click({ force: true });
-      cy.location('hash').should('equal', '#/login');
+      cy.contains('Log in').should('be.visible');
     });
 
     it('does not stay logged in across sessions, after browser restart', () => {
