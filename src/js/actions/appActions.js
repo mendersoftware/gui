@@ -61,7 +61,7 @@ export const getOnboardingState = () => (dispatch, getState) => {
     const requests = [
       dispatch(getDevicesByStatus(DEVICE_STATES.accepted)),
       dispatch(getDevicesByStatus(DEVICE_STATES.pending)),
-      dispatch(getAllDevices()),
+      dispatch(getAllDevices(100)),
       dispatch(getReleases()),
       dispatch(getDeploymentsByStatus('finished'))
     ];

@@ -1,6 +1,6 @@
 /// <reference types="Cypress" />
 
-var jwtDecode = require('jwt-decode');
+import jwtDecode from 'jwt-decode';
 
 context('Settings', () => {
   before(() => {
@@ -46,15 +46,24 @@ context('Settings', () => {
         .click();
       cy.contains('.header-dropdown', Cypress.env('username')).click({ force: true });
       cy.contains('span', 'Log out').click({ force: true });
-      cy.location('hash').should('equal', '#/login');
-      cy.get('[id=email]').type(Cypress.env('username'));
-      cy.get('[name=password]').type('mysecretpassword!456');
-      cy.contains('button', 'Log in')
-        .click()
-        .wait(2000);
+    });
+
+    it('allows password changes', () => {
+      cy.visit(`${Cypress.config().baseUrl}`).wait(300);
+      if (cy.location('hash').then(hash => hash === '#/login')) {
+        cy.get('[id=email]').type(Cypress.env('username'));
+        cy.get('[name=password]').type('mysecretpassword!456');
+        cy.contains('button', 'Log in')
+          .click()
+          .wait(2000);
+      }
       cy.visit(`${Cypress.config().baseUrl}ui/#/settings/my-account`);
       cy.get('#change_password').click();
       cy.get('[name=password]').type(Cypress.env('password'));
+      cy.get('[name=password]')
+        .clear()
+        .type(Cypress.env('password'))
+        .wait(300);
       cy.get('.rightFluid')
         .last()
         .contains('button', 'Save')

@@ -16,7 +16,7 @@ export function unauthorizedRedirect(req) {
 
 export function logout() {
   cookies.remove('JWT');
-  window.location.replace('#/login');
+  window.location.hash = '#/login';
 }
 
 export function updateMaxAge() {
