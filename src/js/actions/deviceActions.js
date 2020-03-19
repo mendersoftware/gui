@@ -190,12 +190,14 @@ export const setDeviceFilters = filters => dispatch =>
 
 export const getDeviceById = id => dispatch =>
   DevicesApi.get(`${inventoryApiUrl}/devices/${id}`)
-    .then(res =>
+    .then(res => {
+      const device = { ...res.body, attributes: mapDeviceAttributes(res.body.attributes) };
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICE,
-        device: { ...res.body, attributes: mapDeviceAttributes(res.body.attributes) }
-      })
-    )
+        device
+      });
+      return Promise.resolve(device);
+    })
     .catch(err => {
       if (err.res && err.res.body && err.res.body.error.startsWith('Device not found')) {
         console.log(`${id} does not have any inventory information`);
@@ -204,7 +206,13 @@ export const getDeviceById = id => dispatch =>
       return err;
     });
 
-export const getDevicesWithInventory = devices => dispatch => Promise.all(devices.map(device => dispatch(getDeviceById(device.id))));
+export const getDevicesWithInventory = devices => dispatch =>
+  Promise.all(devices.map(device => dispatch(getDeviceById(device.id)))).then(deviceList => {
+    if (deviceList.length && deviceList.length < 200) {
+      return Promise.resolve(dispatch(setFilterAttributes(deriveAttributesFromDevices(deviceList))));
+    }
+    return Promise.resolve();
+  });
 
 export const getDevices = (page = defaultPage, perPage = defaultPerPage, searchTerm, shouldSelectDevices = false) => dispatch => {
   // get devices from inventory
@@ -359,13 +367,7 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
           devicesById: deviceAccu.devicesById
         })
       ];
-      if (status === DeviceConstants.DEVICE_STATES.accepted) {
-        tasks.push(dispatch(getDevicesWithInventory(response.body)));
-        if (response.body.length < 200) {
-          tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(response.body))));
-        }
-      }
-      if (status === DeviceConstants.DEVICE_STATES.rejected) {
+      if (status === DeviceConstants.DEVICE_STATES.accepted || status === DeviceConstants.DEVICE_STATES.rejected) {
         tasks.push(dispatch(getDevicesWithInventory(response.body)));
       }
       if (shouldSelectDevices) {

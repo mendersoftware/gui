@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { duplicateFilter, getFormattedSize, hashString, isEmpty, mapDeviceAttributes, stringToBoolean, unionizeStrings } from './helpers';
+import { duplicateFilter, FileSize, getFormattedSize, hashString, isEmpty, mapDeviceAttributes, stringToBoolean, unionizeStrings } from './helpers';
 
 // TODO: test ALL of the following!
 // [
@@ -21,7 +21,6 @@ import { duplicateFilter, getFormattedSize, hashString, isEmpty, mapDeviceAttrib
 //   detectOsIdentifier,
 //   findLocalIpAddress
 // ];
-import { FileSize } from './helpers';
 
 describe('FileSize Component', () => {
   it('renders correctly', () => {

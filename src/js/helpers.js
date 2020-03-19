@@ -342,6 +342,9 @@ const deriveAttributePopularity = (accu, sourceObject = {}) =>
 export const deriveAttributesFromDevices = devices => {
   const availableAttributes = devices.reduce(
     (accu, item) => {
+      if (!item) {
+        return accu;
+      }
       // count popularity of attributes to create attribute sort order
       accu.identity_data = deriveAttributePopularity(accu.identity_data, item.identity_data);
       accu.attributes = deriveAttributePopularity(accu.attributes, item.attributes);
