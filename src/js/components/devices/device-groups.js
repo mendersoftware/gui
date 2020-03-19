@@ -9,7 +9,6 @@ import CreateGroup from './create-group';
 import AuthorizedDevices from './authorized-devices';
 import Filters from './filters';
 import Groups from './groups';
-import GroupSelector from './groupselector';
 import {
   addDeviceToGroup,
   getAllDevicesByStatus,
@@ -35,7 +34,6 @@ export class DeviceGroups extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      addGroup: false,
       removeGroup: false,
       groupInvalid: true,
       createGroupDialog: false,
@@ -238,51 +236,22 @@ export class DeviceGroups extends React.Component {
   }
 
   // Edit groups from device selection
-  _addDevicesToGroup(devices) {
-    var self = this;
+  _addDevicesToGroup(rows) {
     // (save selected devices in state, open dialog)
-    self.setState({ tmpDevices: devices, addGroup: !self.state.addGroup });
-  }
-
-  _validate(invalid, group) {
-    var name = invalid ? '' : group;
-    this.setState({ groupInvalid: invalid, tmpGroup: name });
-  }
-  _changeTmpGroup(group) {
-    this.setState({ selectedField: group, tmpGroup: group });
-  }
-  _addToGroup() {
-    this._addListOfDevices(this.state.tmpDevices, this.state.selectedField || this.state.tmpGroup);
+    const devices = rows.map(row => this.props.devices[row]);
+    this.setState({ tmpDevices: devices, createGroupDialog: !this.state.createGroupDialog });
   }
 
   _createGroupFromDialog(devices, group) {
     var self = this;
     group = encodeURIComponent(group);
-    for (var i = 0; i < devices.length; i++) {
-      self._addDeviceToGroup(group, devices[i], i, devices.length);
-    }
-  }
-
-  _addListOfDevices(rows, group) {
-    var self = this;
-    group = encodeURIComponent(group);
-    rows.map((row, index) => self._addDeviceToGroup(group, self.props.devices[row], index, rows.length));
-  }
-
-  _addDeviceToGroup(group, deviceId, idx, length) {
-    var self = this;
-    self.props
-      .addDeviceToGroup(group, deviceId)
+    return Promise.all(devices.map(deviceId => self.props.addDeviceToGroup(group, deviceId)))
       .then(() => {
-        if (idx === length - 1) {
-          // reached end of list
-          self.setState({ createGroupDialog: false, addGroup: false, tmpGroup: '', selectedField: '' }, () => {
-            self.props.setSnackbar('The group was updated successfully', 5000);
-            self._refreshGroups(() => {
-              self._handleGroupChange(group);
-            });
-          });
-        }
+        // reached end of list
+        self.setState({ createGroupDialog: false, tmpGroup: '', selectedField: '' }, () => {
+          self.props.setSnackbar('The group was updated successfully', 5000);
+          self._refreshGroups(() => self._handleGroupChange(group));
+        });
       })
       .catch(err => {
         console.log(err);
@@ -383,15 +352,7 @@ export class DeviceGroups extends React.Component {
       showHelptips
     } = self.props;
 
-    // Add to group dialog
-    var addActions = [
-      <Button key="add-action-button-1" style={{ marginRight: '10px' }} onClick={() => self.setState({ addGroup: !self.state.addGroup })}>
-        Cancel
-      </Button>,
-      <Button variant="contained" key="add-action-button-2" color="primary" onClick={() => this._addToGroup()} disabled={this.state.groupInvalid}>
-        Add to group
-      </Button>
-    ];
+    const { tmpDevices } = self.state;
 
     var removeActions = [
       <Button key="remove-action-button-1" onClick={() => self.setState({ removeGroup: !self.state.removeGroup })} style={{ marginRight: '10px' }}>
@@ -460,26 +421,6 @@ export class DeviceGroups extends React.Component {
           />
         </div>
 
-        {this.state.addGroup && (
-          <Dialog open={this.state.addGroup} fullWidth={true} maxWidth="sm">
-            <DialogTitle>Add selected devices to group</DialogTitle>
-            <DialogContent>
-              <GroupSelector
-                devices={this.state.tmpDevices.length}
-                willBeEmpty={this.state.willBeEmpty}
-                tmpGroup={this.state.tmpGroup}
-                selectedGroup={selectedGroup}
-                selectedGroupName={groupName}
-                changeSelect={group => this._changeTmpGroup(group)}
-                validateName={(invalid, group) => this._validate(invalid, group)}
-                groups={groups.filter(group => !this._isUngroupedGroup(group))}
-                selectedField={this.state.selectedField}
-              />
-            </DialogContent>
-            <DialogActions>{addActions}</DialogActions>
-          </Dialog>
-        )}
-
         {this.state.removeGroup && (
           <Dialog open={this.state.removeGroup}>
             <DialogTitle>Remove this group?</DialogTitle>
@@ -492,12 +433,11 @@ export class DeviceGroups extends React.Component {
 
         {this.state.createGroupDialog && (
           <CreateGroup
-            toggleDialog={() => self.setState({ createGroupDialog: !self.state.createGroupDialog })}
-            open={this.state.createGroupDialog}
-            groups={groups}
-            changeGroup={() => this._handleGroupChange()}
             addListOfDevices={(devices, group) => this._createGroupFromDialog(devices, group)}
-            acceptedCount={acceptedDevices}
+            groups={groups}
+            isCreation={this.state.createGroupDialog}
+            selectedDevices={tmpDevices}
+            onClose={() => self.setState({ createGroupDialog: false })}
           />
         )}
       </div>
