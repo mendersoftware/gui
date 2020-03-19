@@ -13,6 +13,13 @@ describe('CreateGroup Component', () => {
     store = mockStore({
       devices: {
         byId: {},
+        byStatus: {
+          accepted: { deviceIds: [], total: 0 }
+        },
+        groups: {
+          byId: {},
+          selectedGroup: null
+        },
         selectedDeviceList: [],
         limit: 500
       },
@@ -26,7 +33,7 @@ describe('CreateGroup Component', () => {
   it('renders correctly', () => {
     const tree = createMount()(
       <Provider store={store}>
-        <CreateGroup open={true} />
+        <CreateGroup selectedDevices={[]} />
       </Provider>
     );
     expect(tree.html()).toMatchSnapshot();
