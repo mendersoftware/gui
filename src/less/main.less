@@ -1633,6 +1633,15 @@ tr.expand {
   &.break-all {
     word-break: break-all;
   }
+  &.tenant-token-text {
+    display: block;
+    max-height: initial;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    &.expanded-attribute {
+      white-space: initial;
+    }
+  }
 }
 
 .grouplist div span {
