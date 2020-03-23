@@ -223,8 +223,7 @@ export const getDevicesWithInventory = devices => dispatch =>
     return Promise.resolve();
   });
 
-export const getDevices = (page = defaultPage, perPage = defaultPerPage, filters, shouldSelectDevices = false) => (dispatch, getState) => {
-  let possibleDevices = [];
+export const getDevices = (page = defaultPage, perPage = defaultPerPage, filters, shouldSelectDevices = false, status) => (dispatch, getState) => {
   let tasks = [];
   // get devices from inventory
   const search = filters ? `&${encodeFilters(filters)}` : '';
@@ -235,16 +234,18 @@ export const getDevices = (page = defaultPage, perPage = defaultPerPage, filters
   }
   return query.then(res => {
     const devices = res.body.map(device => ({ ...device, attributes: mapDeviceAttributes(device.attributes) }));
-    tasks.push(
-      dispatch({
-        type: DeviceConstants.RECEIVE_DEVICES_LIST,
-        devices
-      }),
+    if (!!devices.length || (!devices.length && !possibleDeviceIds.length)) {
+      tasks.push(
+        dispatch({
+          type: DeviceConstants.RECEIVE_DEVICES_LIST,
+          devices
+        })
+      );
       // for each device, get device identity info
-      dispatch(getDevicesWithAuth(devices))
-    );
-    if (devices.length && devices.length < 200) {
-      tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(devices))));
+      tasks.push(dispatch(getDevicesWithAuth(devices)));
+      if (devices.length < 200) {
+        tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(devices))));
+      }
     }
     if (shouldSelectDevices) {
       if (possibleDeviceIds.length) {
