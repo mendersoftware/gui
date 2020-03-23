@@ -515,30 +515,22 @@ export const standardizePhases = phases =>
   });
 
 /*
- * Match device attributes against filters, return true or false
+ * Match device attributes against filters, return filtered device list
  */
-export const matchFilters = (device, filters = store.getState().devices.filteringAttributes) =>
-  filters.reduce((accu, filter) => {
-    if (filter.key && filter.value) {
-      if (device[filter.key] instanceof Array) {
-        // array
-        if (
-          device[filter.key]
-            .join(', ')
-            .toLowerCase()
-            .indexOf(filter.value.toLowerCase()) == -1
-        ) {
-          return false;
-        }
-      } else {
-        // string
-        if (device[filter.key].toLowerCase().indexOf(filter.value.toLowerCase()) == -1) {
-          return false;
-        }
-      }
-    }
-    return accu;
-  }, true);
+export const filterDevices = (deviceState, filters, status) => {
+  const deviceIds = status ? deviceState.byStatus[status].deviceIds : Object.keys(deviceState.byId);
+  return deviceIds.filter(deviceId => {
+    const device = deviceState.byId[deviceId];
+    return filters.reduce(
+      (accu, filter) =>
+        accu &&
+        ((device.attributes && device.attributes[filter.key] && device.attributes[filter.key].toString().startsWith(filter.value)) ||
+          (device.identity_data && device.identity_data[filter.key] && device.identity_data[filter.key].toString().startsWith(filter.value)) ||
+          (device[filter.key] && device[filter.key].toString().startsWith(filter.value))),
+      true
+    );
+  });
+};
 
 export const getDebInstallationCode = (
   packageVersion,

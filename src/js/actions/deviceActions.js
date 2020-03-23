@@ -2,7 +2,7 @@ import parse from 'parse-link-header';
 
 import DevicesApi from '../api/devices-api';
 import * as DeviceConstants from '../constants/deviceConstants';
-import { deriveAttributesFromDevices, duplicateFilter, encodeFilters, mapDeviceAttributes } from '../helpers';
+import { deriveAttributesFromDevices, duplicateFilter, encodeFilters, filterDevices, mapDeviceAttributes } from '../helpers';
 
 // default per page until pagination and counting integrated
 const defaultPerPage = 20;
@@ -226,22 +226,14 @@ export const getDevicesWithInventory = devices => dispatch =>
 export const getDevices = (page = defaultPage, perPage = defaultPerPage, filters, shouldSelectDevices = false) => (dispatch, getState) => {
   let possibleDevices = [];
   let tasks = [];
-  if (filters) {
-    const devices = Object.values(getState().devices.byId);
-    possibleDevices = devices.filter(device =>
-      filters.reduce(
-        (accu, filter) =>
-          accu &&
-          ((device.attributes && device.attributes[filter.key] && device.attributes[filter.key].toString().startsWith(filter.value)) ||
-            (device.identity_data && device.identity_data[filter.key] && device.identity_data[filter.key].toString().startsWith(filter.value)) ||
-            (device[filter.key] && device[filter.key].toString().startsWith(filter.value))),
-        true
-      )
-    );
-  }
   // get devices from inventory
   const search = filters ? `&${encodeFilters(filters)}` : '';
-  return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${perPage}&page=${page}${search}`).then(res => {
+  const query = DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${perPage}&page=${page}${search}`);
+  let possibleDeviceIds = [];
+  if (filters) {
+    possibleDeviceIds = filterDevices(getState().devices, filters, status);
+  }
+  return query.then(res => {
     const devices = res.body.map(device => ({ ...device, attributes: mapDeviceAttributes(device.attributes) }));
     tasks.push(
       dispatch({
@@ -255,8 +247,8 @@ export const getDevices = (page = defaultPage, perPage = defaultPerPage, filters
       tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(devices))));
     }
     if (shouldSelectDevices) {
-      if (possibleDevices.length) {
-        tasks.push(dispatch(selectDevices(possibleDevices.map(device => device.id))));
+      if (possibleDeviceIds.length) {
+        tasks.push(dispatch(selectDevices(possibleDeviceIds)));
       } else {
         tasks.push(dispatch(selectDevices(devices.map(device => device.id))));
       }
