@@ -13,7 +13,8 @@ describe('DeploymentCompleteTip Component', () => {
     store = mockStore({
       devices: {
         byId: {},
-        byStatus: { accepted: { deviceIds: [] } }
+        byStatus: { accepted: { deviceIds: [] } },
+        filters: []
       }
     });
   });

@@ -45,7 +45,8 @@ exports[`Devices Component renders correctly 1`] = `
             Device groups
           </span>
           <span
-            className="MuiTouchRipple-root"
+            className="PrivateTabIndicator-root-25 PrivateTabIndicator-colorSecondary-27 MuiTabs-indicator"
+            style={Object {}}
           />
         </a>
         <a
@@ -73,9 +74,6 @@ exports[`Devices Component renders correctly 1`] = `
           >
             Pending
           </span>
-          <span
-            className="MuiTouchRipple-root"
-          />
         </a>
         <a
           aria-disabled={false}
@@ -102,9 +100,6 @@ exports[`Devices Component renders correctly 1`] = `
           >
             Preauthorized
           </span>
-          <span
-            className="MuiTouchRipple-root"
-          />
         </a>
         <a
           aria-disabled={false}
@@ -131,20 +126,8 @@ exports[`Devices Component renders correctly 1`] = `
           >
             Rejected
           </span>
-          <span
-            className="MuiTouchRipple-root"
-          />
         </a>
       </div>
-      <span
-        className="PrivateTabIndicator-root-25 PrivateTabIndicator-colorSecondary-27 MuiTabs-indicator"
-        style={
-          Object {
-            "left": 0,
-            "width": 0,
-          }
-        }
-      />
     </div>
   </div>
   <div
@@ -196,9 +179,6 @@ exports[`Devices Component renders correctly 1`] = `
                 </span>
               </span>
             </div>
-            <span
-              className="MuiTouchRipple-root"
-            />
           </div>
           <hr
             className="MuiDivider-root"
@@ -263,62 +243,21 @@ exports[`Devices Component renders correctly 1`] = `
       }
     >
       <div
-        style={
-          Object {
-            "position": "relative",
-          }
-        }
-      >
-        <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
-          disabled={false}
-          onBlur={[Function]}
-          onClick={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          style={
-            Object {
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-              "zIndex": 100,
-            }
-          }
-          tabIndex={0}
-          type="button"
-        >
-          <span
-            className="MuiButton-label"
-          >
-            <svg
-              aria-hidden="true"
-              className="MuiSvgIcon-root buttonLabelIcon"
-              focusable="false"
-              role="presentation"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
-              />
-            </svg>
-            Filters
-          </span>
-          <span
-            className="MuiTouchRipple-root"
-          />
-        </button>
-      </div>
-      <div
         className="relative"
       >
+        <div
+          style={
+            Object {
+              "marginLeft": "20px",
+            }
+          }
+        >
+          <h2
+            className="inline-block margin-right"
+          >
+            All devices
+          </h2>
+        </div>
         <div
           className="loaderContainer"
         >

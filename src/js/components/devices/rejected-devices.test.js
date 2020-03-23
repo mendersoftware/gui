@@ -15,6 +15,7 @@ describe('RejectedDevices Component', () => {
         byStatus: {
           rejected: { total: 0 }
         },
+        filters: [],
         selectedDeviceList: [],
         limit: 500
       },

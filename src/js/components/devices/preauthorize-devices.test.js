@@ -16,6 +16,7 @@ describe('PreauthorizeDevices Component', () => {
           accepted: { total: 0 },
           preauthorized: { total: 0 }
         },
+        filters: [],
         selectedDeviceList: [],
         limit: 500
       },

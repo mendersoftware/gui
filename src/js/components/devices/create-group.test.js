@@ -21,6 +21,7 @@ describe('CreateGroup Component', () => {
           selectedGroup: null
         },
         selectedDeviceList: [],
+        filters: [],
         limit: 500
       },
       users: {

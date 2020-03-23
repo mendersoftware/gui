@@ -14,7 +14,8 @@ describe('OnboardingCompleteTip Component', () => {
       app: { docsVersion: null, features: { hasMultitenancy: true, isHosted: true } },
       devices: {
         byId: {},
-        byStatus: { accepted: { deviceIds: [] } }
+        byStatus: { accepted: { deviceIds: [] } },
+        filters: []
       },
       users: {}
     });
