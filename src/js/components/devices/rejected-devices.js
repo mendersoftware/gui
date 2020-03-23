@@ -8,6 +8,7 @@ import { DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
 import RelativeTime from '../common/relative-time';
 import DeviceList from './devicelist';
+import Filters from './filters';
 
 export class Rejected extends React.Component {
   constructor(props, context) {
@@ -72,12 +73,13 @@ export class Rejected extends React.Component {
 
   render() {
     var self = this;
-    var limitMaxed = this.props.deviceLimit ? this.props.deviceLimit <= this.props.acceptedDevices : false;
+    const { acceptedDevices, count, deviceLimit, devices, globalSettings, openSettingsDialog } = self.props;
+    var limitMaxed = deviceLimit ? deviceLimit <= acceptedDevices : false;
     const columnHeaders = [
       {
-        title: self.props.globalSettings.id_attribute || 'Device ID',
+        title: globalSettings.id_attribute || 'Device ID',
         name: 'device_id',
-        customize: () => self.props.openSettingsDialog(),
+        customize: openSettingsDialog,
         style: { flexGrow: 1 }
       },
       {
@@ -98,11 +100,17 @@ export class Rejected extends React.Component {
     ];
     return (
       <div className="tab-container">
+        {!!count && (
+          <div className="align-center">
+            <h3 className="inline-block margin-right">Rejected devices</h3>
+            {!this.state.pageLoading && (
+              <Filters identityOnly={true} onFilterChange={() => self._getDevices(true)} refreshDevices={() => self._getDevices(true)} />
+            )}
+          </div>
+        )}
         <Loader show={this.state.pageLoading} />
-
-        {this.props.devices.length && !this.state.pageLoading ? (
+        {devices.length && !this.state.pageLoading ? (
           <div className="padding-bottom">
-            <h3 className="align-center">Rejected devices</h3>
             <DeviceList
               {...self.props}
               {...self.state}
@@ -110,7 +118,7 @@ export class Rejected extends React.Component {
               limitMaxed={limitMaxed}
               onPageChange={e => self._handlePageChange(e)}
               onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}
-              pageTotal={self.props.count}
+              pageTotal={count}
               refreshDevices={() => self._getDevices()}
             />
           </div>
