@@ -382,11 +382,16 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
       }
     } else {
       const deviceAccu = reduceReceivedDevices(response.body, [], getState(), status);
+      let total;
+      if (getState().devices.byStatus[status].total === deviceAccu.ids.length) {
+        total = deviceAccu.ids.length;
+      }
       tasks = [
         dispatch({
           type: DeviceConstants[`SET_${status.toUpperCase()}_DEVICES`],
           deviceIds: deviceAccu.ids,
-          status
+          status,
+          total
         }),
         dispatch({
           type: DeviceConstants.RECEIVE_DEVICES,
