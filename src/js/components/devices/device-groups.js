@@ -174,7 +174,7 @@ export class DeviceGroups extends React.Component {
         if (filterId) {
           return trySelectDevice(filterId.value);
         }
-        request = getDevices(this.state.pageNo, this.state.pageLength, filters, true);
+        request = getDevices(this.state.pageNo, this.state.pageLength, filters, true, DeviceConstants.DEVICE_STATES.accepted);
       }
       // if a group or filters, must use inventory API
       return request

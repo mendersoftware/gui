@@ -361,8 +361,14 @@ export const getDeviceLimit = () => dispatch =>
     })
   );
 
-export const getDevicesByStatus = (status, page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false) => (dispatch, getState) =>
-  DevicesApi.get(`${deviceAuthV2}/devices?${status ? `status=${status}` : ''}&per_page=${perPage}&page=${page}`).then(response => {
+export const getDevicesByStatus = (status, page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false) => (dispatch, getState) => {
+  const query = DevicesApi.get(`${deviceAuthV2}/devices?${status ? `status=${status}` : ''}&per_page=${perPage}&page=${page}`);
+  const filters = getState().devices.filters;
+  let possibleDeviceIds = [];
+  if (filters.length && shouldSelectDevices) {
+    possibleDeviceIds = filterDevices(getState().devices, filters, status);
+  }
+  return query.then(response => {
     let tasks = [];
     if (!status) {
       tasks.push(
@@ -391,21 +397,22 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
         tasks.push(dispatch(getDevicesWithInventory(response.body)));
       }
       if (shouldSelectDevices) {
-        tasks.push(dispatch(selectDevices(deviceAccu.ids)));
+        tasks.push(dispatch(selectDevices(filters.length && possibleDeviceIds.length ? possibleDeviceIds : deviceAccu.ids)));
       }
     }
     return Promise.all(tasks);
   });
+};
 
 export const getAllDevicesByStatus = status => (dispatch, getState) => {
   const getAllDevices = (perPage = 500, page = 1, devices = []) =>
     DevicesApi.get(`${deviceAuthV2}/devices?status=${status}&per_page=${perPage}&page=${page}`).then(res => {
-      var links = parse(res.headers['link']);
       const deviceAccu = reduceReceivedDevices(res.body, devices, getState(), status);
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICES,
         devicesById: deviceAccu.devicesById
       });
+      const links = parse(res.headers['link']);
       if (links.next) {
         return getAllDevices(perPage, page + 1, deviceAccu.ids);
       }
