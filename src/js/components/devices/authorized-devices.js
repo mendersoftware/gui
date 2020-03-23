@@ -6,7 +6,7 @@ import ReactTooltip from 'react-tooltip';
 import pluralize from 'pluralize';
 
 // material ui
-import { Button, FormControl, FormHelperText, Input } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 
 import { AddCircle as AddCircleIcon, Help as HelpIcon, RemoveCircleOutline as RemoveCircleOutlineIcon } from '@material-ui/icons';
 
@@ -17,6 +17,7 @@ import Loader from '../common/loader';
 import RelativeTime from '../common/relative-time';
 import { setSnackbar } from '../../actions/appActions';
 
+import Filters from './filters';
 import DeviceList from './devicelist';
 import DeviceStatus from './device-status';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
@@ -64,20 +65,6 @@ export class Authorized extends React.Component {
     this.props.setSnackbar('');
   };
 
-  _nameEdit() {
-    if (this.state.nameEdit) {
-      this._handleGroupNameSave();
-    }
-    this.setState({
-      nameEdit: !this.state.nameEdit,
-      errortext: null
-    });
-  }
-
-  _handleGroupNameSave() {
-    // to props - function to get all devices from group, update group one by one
-  }
-
   _handleGroupNameChange(event) {
     this.setState({ textfield: event.target.value });
   }
@@ -98,8 +85,12 @@ export class Authorized extends React.Component {
       groupCount,
       highlightHelp,
       loading,
+      onFilterChange,
       openSettingsDialog,
+      refreshDevices,
       removeDevicesFromGroup,
+      selectDeviceById,
+      selectedGroup,
       showHelptips
     } = self.props;
     const { selectedRows } = self.state;
@@ -107,7 +98,7 @@ export class Authorized extends React.Component {
       {
         title: globalSettings.id_attribute || 'Device ID',
         name: 'device_id',
-        customize: () => openSettingsDialog(),
+        customize: openSettingsDialog,
         style: { flexGrow: 1 }
       },
       {
@@ -139,63 +130,44 @@ export class Authorized extends React.Component {
     var removeLabel = `Remove selected ${pluralized} from this group`;
     var groupLabel = group ? decodeURIComponent(group) : 'All devices';
 
-    var groupNameInputs = this.state.nameEdit ? (
-      <FormControl error={Boolean(self.state.errortext)} style={{ marginTop: 0 }}>
-        <Input
-          id="groupNameInput"
-          className="hoverText"
-          value={self.state.textfield}
-          style={{ marginTop: '5px' }}
-          underlinefocusstyle={{ borderColor: '#e0e0e0' }}
-          onChange={e => this._handleGroupNameChange(e)}
-          onKeyDown={() => this._handleGroupNameSave()}
-          type="text"
-        />
-        <FormHelperText>{self.state.errortext}</FormHelperText>
-      </FormControl>
-    ) : null;
-
     const anchor = { left: 200, top: 146 };
     let onboardingComponent = getOnboardingComponentFor('devices-accepted-onboarding', { anchor });
     onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor }, onboardingComponent);
     return (
       <div className="relative">
+        <div style={{ marginLeft: '20px' }}>
+          <h2 className="inline-block margin-right">{groupLabel}</h2>
+          {!selectedGroup && <Filters onFilterChange={onFilterChange} refreshDevices={refreshDevices} selectDeviceById={selectDeviceById} />}
+        </div>
         <Loader show={loading} />
-
         {devices.length > 0 && !loading ? (
-          <div>
-            <div style={{ marginLeft: '20px' }}>
-              <h2>{this.state.nameEdit ? groupNameInputs : <span>{groupLabel}</span>}</h2>
-            </div>
+          <div className="padding-bottom">
+            <DeviceList
+              {...self.props}
+              columnHeaders={columnHeaders}
+              filterable={true}
+              selectedRows={selectedRows}
+              onSelect={selection => self.onRowSelection(selection)}
+              pageTotal={groupCount}
+            />
 
-            <div className="padding-bottom">
-              <DeviceList
-                {...self.props}
-                columnHeaders={columnHeaders}
-                filterable={true}
-                selectedRows={selectedRows}
-                onSelect={selection => self.onRowSelection(selection)}
-                pageTotal={groupCount}
-              />
-
-              {showHelptips && devices.length ? (
-                <div>
-                  <div
-                    id="onboard-6"
-                    className="tooltip help"
-                    data-tip
-                    data-for="expand-device-tip"
-                    data-event="click focus"
-                    style={{ left: 'inherit', right: '45px' }}
-                  >
-                    <HelpIcon />
-                  </div>
-                  <ReactTooltip id="expand-device-tip" globalEventOff="click" place="left" type="light" effect="solid" className="react-tooltip">
-                    <ExpandDevice />
-                  </ReactTooltip>
+            {showHelptips && devices.length ? (
+              <div>
+                <div
+                  id="onboard-6"
+                  className="tooltip help"
+                  data-tip
+                  data-for="expand-device-tip"
+                  data-event="click focus"
+                  style={{ left: 'inherit', right: '45px' }}
+                >
+                  <HelpIcon />
                 </div>
-              ) : null}
-            </div>
+                <ReactTooltip id="expand-device-tip" globalEventOff="click" place="left" type="light" effect="solid" className="react-tooltip">
+                  <ExpandDevice />
+                </ReactTooltip>
+              </div>
+            ) : null}
           </div>
         ) : (
           <div className={devices.length || loading ? 'hidden' : 'dashboard-placeholder'}>
@@ -216,8 +188,13 @@ export class Authorized extends React.Component {
                 <span className="margin-right">
                   {selectedRows.length} {pluralize('devices', selectedRows.length)} selected
                 </span>
-                <Button variant="contained" disabled={!selectedRows.length} color="secondary" onClick={() => addDevicesToGroup(selectedRows)}>
-                  <AddCircleIcon className="buttonLabelIcon" />
+                <Button
+                  variant="contained"
+                  disabled={!selectedRows.length}
+                  color="secondary"
+                  onClick={() => addDevicesToGroup(selectedRows)}
+                  startIcon={<AddCircleIcon />}
+                >
                   {addLabel}
                 </Button>
                 {allowDeviceGroupRemoval && group ? (
@@ -226,8 +203,8 @@ export class Authorized extends React.Component {
                     disabled={!selectedRows.length}
                     style={{ marginLeft: '4px' }}
                     onClick={() => removeDevicesFromGroup(selectedRows)}
+                    startIcon={<RemoveCircleOutlineIcon />}
                   >
-                    <RemoveCircleOutlineIcon className="buttonLabelIcon" />
                     {removeLabel}
                   </Button>
                 ) : null}
@@ -244,9 +221,10 @@ const actionCreators = { setSnackbar };
 
 const mapStateToProps = state => {
   return {
-    onboardingComplete: state.users.onboarding.complete,
-    showTips: state.users.onboarding.showTips,
     globalSettings: state.users.globalSettings,
+    onboardingComplete: state.users.onboarding.complete,
+    selectedGroup: state.devices.groups.selectedGroup,
+    showTips: state.users.onboarding.showTips,
     showHelptips: state.users.showHelptips
   };
 };
