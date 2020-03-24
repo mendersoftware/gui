@@ -2,12 +2,22 @@ import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
-import { FormControl, Grid, InputLabel, ListSubheader, MenuItem, RootRef, Select } from '@material-ui/core';
+import { Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, Grid, InputLabel, ListSubheader, MenuItem, Select } from '@material-ui/core';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
 import PhaseSettings from './phasesettings';
 import EnterpriseNotification from '../../common/enterpriseNotification';
+
+const styles = {
+  textField: {
+    minWidth: 400
+  },
+  infoStyle: {
+    minWidth: 400,
+    borderBottom: 'none'
+  }
+};
 
 export class ScheduleRollout extends React.Component {
   constructor(props, context) {
@@ -26,11 +36,6 @@ export class ScheduleRollout extends React.Component {
     }
   }
 
-  deploymentSettingsUpdate(value, property) {
-    this.setState({ [property]: value });
-    this.props.deploymentSettings(value, property);
-  }
-
   handleStartTimeChange(value) {
     const self = this;
     // if there is no existing phase, set phase and start time
@@ -42,6 +47,10 @@ export class ScheduleRollout extends React.Component {
       newPhases[0].start_ts = value;
       self.updatePhaseStarts(newPhases);
     }
+  }
+
+  handleRetriesChange(value) {
+    this.props.deploymentSettings(value, 'retries');
   }
 
   updatePhaseStarts(phases) {
@@ -92,20 +101,21 @@ export class ScheduleRollout extends React.Component {
 
   render() {
     const self = this;
-    const { deploymentDeviceIds = [], isEnterprise, isHosted, phases = [], plan, previousPhases = [] } = self.props;
+    const {
+      deploymentDeviceIds = [],
+      hasNewRetryDefault,
+      isEnterprise,
+      isHosted,
+      onSaveRetriesSetting,
+      phases = [],
+      plan,
+      previousPhases = [],
+      previousRetries
+    } = self.props;
+    const retries = self.props.retries ? self.props.retries : previousRetries;
     const numberDevices = deploymentDeviceIds ? deploymentDeviceIds.length : 0;
     let start_time = phases && phases.length ? phases[0].start_ts : null;
     const customPattern = phases && phases.length > 1 ? 1 : 0;
-
-    const styles = {
-      textField: {
-        minWidth: '400px'
-      },
-      infoStyle: {
-        minWidth: '400px',
-        borderBottom: 'none'
-      }
-    };
 
     const previousPhaseOptions =
       previousPhases.length > 0
@@ -124,98 +134,104 @@ export class ScheduleRollout extends React.Component {
           ];
 
     return (
-      <div style={{ overflow: 'visible', minHeight: '300px', marginTop: '15px' }}>
-        <form>
-          <RootRef rootRef={ref => (this.scheduleRef = ref)}>
-            <Grid container justify="center" alignItems="center">
-              <Grid item>
-                <div style={{ width: 'min-content', minHeight: '105px' }}>
-                  {self.state.isPickerOpen || start_time ? (
-                    <FormControl>
-                      <MuiPickersUtilsProvider utils={MomentUtils}>
-                        <DateTimePicker
-                          ampm={false}
-                          open={self.state.isPickerOpen}
-                          onOpen={() => self.setPickerOpen(true)}
-                          onClose={() => self.setPickerOpen(false)}
-                          label={isEnterprise ? 'Set the start time' : 'Starting at'}
-                          value={start_time}
-                          style={styles.textField}
-                          minDate={new Date()}
-                          disabled={!isEnterprise}
-                          onChange={date => self.handleStartTimeChange(date.toISOString())}
-                        />
-                      </MuiPickersUtilsProvider>
-                    </FormControl>
-                  ) : (
-                    <FormControl>
-                      <InputLabel>Set a start time</InputLabel>
-                      <Select onChange={event => this.handleStartChange(event.target.value)} value={0} style={styles.textField}>
-                        <MenuItem value={0}>Start immediately</MenuItem>
-                        <MenuItem value="custom">Schedule a start date & time</MenuItem>
-                      </Select>
-                    </FormControl>
-                  )}
-                </div>
-              </Grid>
-            </Grid>
-          </RootRef>
-
-          <div>
-            <Grid container justify="center" alignItems="center">
-              <Grid item>
-                <div style={{ width: 'min-content' }}>
-                  <FormControl style={{ maxWidth: 515 }}>
-                    <InputLabel>Select a rollout pattern</InputLabel>
-                    <Select
-                      onChange={event => self.handlePatternChange(event.target.value)}
-                      value={customPattern}
-                      style={styles.textField}
-                      disabled={!isEnterprise || plan !== 'enterprise'}
-                    >
-                      <MenuItem value={0}>Single phase: 100%</MenuItem>
-                      {numberDevices > 1 && [
-                        <MenuItem key="customPhaseSetting" divider={true} value={1}>
-                          Custom
-                        </MenuItem>,
-                        <ListSubheader key="phaseSettingsSubheader">Recent patterns</ListSubheader>,
-                        ...previousPhaseOptions
-                      ]}
-                    </Select>
-                  </FormControl>
-                  {(!isHosted || (isHosted && plan !== 'enterprise') || !isEnterprise) && (
-                    <EnterpriseNotification
-                      isEnterprise={isEnterprise}
-                      benefit={`choose to roll out deployments in multiple phases`}
-                      recommendedPlan={isHosted ? 'enterprise' : null}
-                    />
-                  )}
-                </div>
-              </Grid>
-            </Grid>
-
-            {customPattern ? (
-              <Grid style={{ marginBottom: '15px' }} container justify="center" alignItems="center">
-                <Grid item>
-                  <PhaseSettings
-                    disabled={self.props.disableSchedule}
-                    numberDevices={numberDevices}
-                    {...self.props}
-                    updatePhaseStarts={(...args) => self.updatePhaseStarts(...args)}
+      <form style={{ overflow: 'visible', minHeight: '300px', marginTop: '15px' }}>
+        <Grid container alignItems="center" direction="column">
+          <Grid item style={{ width: 'min-content', marginBottom: 30 }}>
+            {self.state.isPickerOpen || start_time ? (
+              <FormControl>
+                <MuiPickersUtilsProvider utils={MomentUtils}>
+                  <DateTimePicker
+                    ampm={false}
+                    open={self.state.isPickerOpen}
+                    onOpen={() => self.setPickerOpen(true)}
+                    onClose={() => self.setPickerOpen(false)}
+                    label={isEnterprise ? 'Set the start time' : 'Starting at'}
+                    value={start_time}
+                    style={styles.textField}
+                    minDate={new Date()}
+                    disabled={!isEnterprise}
+                    onChange={date => self.handleStartTimeChange(date.toISOString())}
                   />
-                </Grid>
-              </Grid>
-            ) : null}
-          </div>
-        </form>
-      </div>
+                </MuiPickersUtilsProvider>
+              </FormControl>
+            ) : (
+              <FormControl>
+                <InputLabel>Set a start time</InputLabel>
+                <Select onChange={event => this.handleStartChange(event.target.value)} value={0} style={styles.textField}>
+                  <MenuItem value={0}>Start immediately</MenuItem>
+                  <MenuItem value="custom">Schedule a start date & time</MenuItem>
+                </Select>
+              </FormControl>
+            )}
+          </Grid>
+          <Grid item>
+            <FormControl style={{ width: 400, marginBottom: 30 }}>
+              <FormGroup row>
+                <InputLabel>Retries</InputLabel>
+                <Select onChange={event => self.handleRetriesChange(event.target.value)} value={retries} style={{ width: 150, marginRight: 30 }}>
+                  <MenuItem value={0}>Don&apos;t retry</MenuItem>
+                  {[1, 2, 3].map(value => (
+                    <MenuItem key={`retries-option-${value}`} value={value}>
+                      {value}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormControlLabel
+                  control={<Checkbox checked={hasNewRetryDefault} onChange={(e, checked) => onSaveRetriesSetting(checked)} />}
+                  label="Save as default"
+                  style={{ marginTop: 0, marginBottom: -15 }}
+                />
+              </FormGroup>
+              <FormHelperText>Number of times a device will retry the update if it fails</FormHelperText>
+            </FormControl>
+          </Grid>
+          <Grid item style={{ width: 'min-content' }}>
+            <FormControl style={{ maxWidth: 515 }}>
+              <InputLabel>Select a rollout pattern</InputLabel>
+              <Select
+                onChange={event => self.handlePatternChange(event.target.value)}
+                value={customPattern}
+                style={styles.textField}
+                disabled={!isEnterprise || plan !== 'enterprise'}
+              >
+                <MenuItem value={0}>Single phase: 100%</MenuItem>
+                {numberDevices > 1 && [
+                  <MenuItem key="customPhaseSetting" divider={true} value={1}>
+                    Custom
+                  </MenuItem>,
+                  <ListSubheader key="phaseSettingsSubheader">Recent patterns</ListSubheader>,
+                  ...previousPhaseOptions
+                ]}
+              </Select>
+            </FormControl>
+            {(!isHosted || (isHosted && plan !== 'enterprise') || !isEnterprise) && (
+              <EnterpriseNotification
+                isEnterprise={isEnterprise}
+                benefit={`choose to roll out deployments in multiple phases`}
+                recommendedPlan={isHosted ? 'enterprise' : null}
+              />
+            )}
+          </Grid>
+          {customPattern ? (
+            <Grid item style={{ marginBottom: '15px' }}>
+              <PhaseSettings
+                disabled={self.props.disableSchedule}
+                numberDevices={numberDevices}
+                {...self.props}
+                updatePhaseStarts={(...args) => self.updatePhaseStarts(...args)}
+              />
+            </Grid>
+          ) : null}
+        </Grid>
+      </form>
     );
   }
 }
 
 const mapStateToProps = state => {
   return {
-    previousPhases: state.users.globalSettings.previousPhases
+    previousPhases: state.users.globalSettings.previousPhases,
+    previousRetries: state.users.globalSettings.previousRetries || 0
   };
 };
 

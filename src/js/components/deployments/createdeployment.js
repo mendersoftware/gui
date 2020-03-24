@@ -9,6 +9,7 @@ import Review from './deployment-wizard/review';
 
 import { selectDevice } from '../../actions/deviceActions';
 import { selectRelease } from '../../actions/releaseActions';
+import { saveGlobalSettings } from '../../actions/userActions';
 import { getRemainderPercent } from '../../helpers';
 
 const deploymentSteps = [
@@ -23,7 +24,8 @@ export class CreateDialog extends React.Component {
     this.state = {
       activeStep: 0,
       deploymentDeviceIds: [],
-      steps: deploymentSteps
+      steps: deploymentSteps,
+      retries: props.retries
     };
   }
 
@@ -33,7 +35,7 @@ export class CreateDialog extends React.Component {
       self.setState({ ...self.props.deploymentObject });
     }
     const steps = deploymentSteps.reduce((accu, step) => {
-      if (step.closed && (self.props.plan === 'os' || !(self.props.isHosted || self.props.isEnterprise))) {
+      if (step.closed && ((!self.props.isEnterprise && self.props.plan === 'os') || !(self.props.isHosted || self.props.isEnterprise))) {
         return accu;
       }
       accu.push(step);
@@ -63,8 +65,15 @@ export class CreateDialog extends React.Component {
     return location.length ? window.location.replace(location) : null;
   }
 
+  onSaveRetriesSetting(hasNewRetryDefault) {
+    this.setState({ hasNewRetryDefault });
+  }
+
   onScheduleSubmit(settings) {
     this.props.onScheduleSubmit(settings);
+    if (this.state.hasNewRetryDefault) {
+      this.props.saveGlobalSettings({ retries: settings.retries });
+    }
     this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: null, disableSchedule: false });
     this.cleanUpDeploymentsStatus();
   }
@@ -90,12 +99,13 @@ export class CreateDialog extends React.Component {
   render() {
     const self = this;
     const { device, deploymentObject, open, release } = self.props;
-    const { activeStep, deploymentDeviceIds, group, phases, steps } = self.state;
+    const { activeStep, deploymentDeviceIds, group, phases, retries, steps } = self.state;
     const ComponentToShow = steps[activeStep].component;
     const deploymentSettings = {
       group: device ? device.id : deploymentObject.group || group,
       deploymentDeviceIds: deploymentObject.deploymentDeviceIds || deploymentDeviceIds,
       release: deploymentObject.release || release || self.state.release,
+      retries: deploymentObject.retries || retries,
       phases
     };
     const disabled = activeStep === 0 ? !(deploymentSettings.release && deploymentSettings.deploymentDeviceIds.length) : self.state.disableSchedule;
@@ -118,6 +128,7 @@ export class CreateDialog extends React.Component {
             {...self.state}
             {...deploymentSettings}
             deploymentSettings={(...args) => self.deploymentSettings(...args)}
+            onSaveRetriesSetting={shouldSave => self.onSaveRetriesSetting(shouldSave)}
           />
         </DialogContent>
         <DialogActions className="margin-left margin-right">
@@ -143,7 +154,7 @@ export class CreateDialog extends React.Component {
   }
 }
 
-const actionCreators = { selectDevice, selectRelease };
+const actionCreators = { saveGlobalSettings, selectDevice, selectRelease };
 
 const mapStateToProps = state => {
   const plan = state.users.organization ? state.users.organization.plan : 'os';
@@ -154,7 +165,8 @@ const mapStateToProps = state => {
     groups: Object.keys(state.devices.groups.byId),
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
     plan,
-    release: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null
+    release: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null,
+    retries: state.users.globalSettings.retries
   };
 };
 
