@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { deleteAuthset, updateDeviceAuth } from '../../actions/deviceActions';
+import { deleteAuthset, getDeviceAuth, updateDeviceAuth } from '../../actions/deviceActions';
 
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
@@ -40,9 +40,11 @@ export class Authsets extends React.Component {
           self.props.dialogToggle('authsets');
         } else {
           // refresh authset list
-          self._refreshAuth(device_id);
-          // on finish, change "loading" back to null
-          self.setState({ loading: null });
+          self.props
+            .getDeviceAuth(device_id)
+            .catch(err => console.log(`Error: ${err}`))
+            // on finish, change "loading" back to null
+            .finally(() => self.setState({ loading: null }));
         }
         self.props.setSnackbar('Device authorization status was updated successfully');
       })
@@ -65,11 +67,6 @@ export class Authsets extends React.Component {
   _decommissionHandler() {
     //handle decommission, close dialog when done
     this.props.decommission(this.props.device.id);
-  }
-
-  _refreshAuth(device_id) {
-    var self = this;
-    return self.props.getDeviceAuth(device_id).catch(err => console.log(`Error: ${err}`));
   }
 
   render() {
@@ -147,7 +144,7 @@ export class Authsets extends React.Component {
   }
 }
 
-const actionCreators = { deleteAuthset, updateDeviceAuth, setSnackbar };
+const actionCreators = { deleteAuthset, getDeviceAuth, setSnackbar, updateDeviceAuth };
 
 const mapStateToProps = (state, ownProps) => {
   const device = state.devices.byId[ownProps.device.id];
