@@ -35,6 +35,9 @@ describe('CreateDeployment Component', () => {
         selectedRelease: null
       },
       users: {
+        globalSettings: {
+          retries: 0
+        },
         organization: {
           plan: 'professional'
         }
