@@ -27,6 +27,9 @@ export default class GroupDefinition extends React.Component {
     } else if (validator.contains(name.toLowerCase(), DeviceConstants.UNGROUPED_GROUP.name.toLowerCase())) {
       invalid = true;
       errortext = `${name} is a reserved group name`;
+    } else if (this.props.selectedGroup && name === this.props.selectedGroup) {
+      invalid = true;
+      errortext = `${name} is the same group the selected devices are already in`;
     }
     this.setState({ errortext });
     this.props.onInputChange(invalid, name, isModification);
@@ -34,7 +37,8 @@ export default class GroupDefinition extends React.Component {
 
   render() {
     const self = this;
-    const { isModification, groups, newGroup } = self.props;
+    const { isModification, groups, newGroup, selectedGroup } = self.props;
+    const filteredGroups = groups.filter(group => group !== selectedGroup);
     const { errortext } = self.state;
     return (
       <>
@@ -43,7 +47,7 @@ export default class GroupDefinition extends React.Component {
           disableClearable
           freeSolo
           value={newGroup}
-          options={groups}
+          options={filteredGroups}
           onInputChange={(e, newValue) => self.validateName(newValue)}
           renderInput={params => (
             <TextField {...params} label={!isModification ? 'Name your group' : 'Select a group'} InputProps={{ ...params.InputProps, type: 'search' }} />
