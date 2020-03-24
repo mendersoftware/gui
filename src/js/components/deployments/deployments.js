@@ -426,12 +426,7 @@ const tryMapDeployments = (accu, id) => {
 const mapStateToProps = state => {
   const progress = state.deployments.byStatus.inprogress.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   const pending = state.deployments.byStatus.pending.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
-  const groups = Object.keys(state.devices.groups.byId).reduce((accu, group) => {
-    if (group !== DeviceConstants.UNGROUPED_GROUP.id) {
-      accu.push(group);
-    }
-    return accu;
-  }, []);
+  const groups = Object.keys(state.devices.groups.byId).filter(group => group !== DeviceConstants.UNGROUPED_GROUP.id);
   return {
     finishedCount: state.deployments.byStatus.finished.total,
     groups,
