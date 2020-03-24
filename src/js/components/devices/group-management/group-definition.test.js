@@ -4,7 +4,7 @@ import GroupDefinition from './group-definition';
 
 describe('GroupDefinition Component', () => {
   it('renders correctly', () => {
-    const tree = renderer.create(<GroupDefinition />).toJSON();
+    const tree = renderer.create(<GroupDefinition groups={[]} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });
