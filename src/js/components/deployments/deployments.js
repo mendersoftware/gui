@@ -186,12 +186,13 @@ export class Deployments extends React.Component {
 
   _onScheduleSubmit(deploymentObject) {
     const self = this;
-    const { group, deploymentDeviceIds, release, phases } = deploymentObject;
+    const { group, deploymentDeviceIds, phases, release, retries } = deploymentObject;
     const newDeployment = {
       name: decodeURIComponent(group) || 'All devices',
       artifact_name: release.Name,
       devices: deploymentDeviceIds,
-      phases
+      phases,
+      retries
     };
     self.setState({ doneLoading: false, createDialog: false, reportDialog: false });
 

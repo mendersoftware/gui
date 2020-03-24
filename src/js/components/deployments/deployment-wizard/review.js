@@ -9,7 +9,7 @@ import { PLANS as plans } from '../../../constants/appConstants';
 import { getRemainderPercent } from '../../../helpers';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 
-const Review = ({ deploymentDeviceIds, device, group, isEnterprise, isHosted, phases, plan, release }) => {
+const Review = ({ deploymentDeviceIds, device, group, isEnterprise, isHosted, phases, plan, release, retries }) => {
   // Create 'phases' for view only
   var deploymentPhases = phases ? phases : [{ batch_size: 100 }];
   const start_time = deploymentPhases[0].start_ts || new Date().toISOString();
@@ -18,8 +18,9 @@ const Review = ({ deploymentDeviceIds, device, group, isEnterprise, isHosted, ph
     { primary: 'Release', secondary: release.Name },
     { primary: 'Device types compatible', secondary: release.device_types_compatible.join(', '), wide: true },
     { primary: `Device${device ? '' : ' group'}`, secondary: device ? device.id : group },
-    { primary: '# devices', secondary: deploymentDeviceIds.length },
-    { primary: 'Start time', secondary: <Time value={start_time} format="YYYY-MM-DD HH:mm" /> }
+    { primary: '# devices', secondary: deploymentDeviceIds.length, wide: true },
+    { primary: 'Start time', secondary: <Time value={start_time} format="YYYY-MM-DD HH:mm" /> },
+    { primary: 'Number of retries', secondary: retries }
   ];
 
   const planKeys = Object.keys(plans);
@@ -70,7 +71,7 @@ const Review = ({ deploymentDeviceIds, device, group, isEnterprise, isHosted, ph
         {!isEnterprise && (!isHosted || (isHosted && plan !== 'enterprise')) && (
           <EnterpriseNotification
             isEnterprise={isEnterprise}
-            benefit={`choose to ${plan === 'os' ? 'schedule or ' : ''}roll out deployments in multiple phases`}
+            benefit={`choose to ${plan === 'os' ? 'retry, schedule or ' : ''}roll out deployments in multiple phases`}
             recommendedPlan={isHosted ? recommendedPlan : null}
           />
         )}
