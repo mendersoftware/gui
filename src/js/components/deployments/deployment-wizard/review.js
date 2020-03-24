@@ -71,7 +71,7 @@ const Review = ({ deploymentDeviceIds, device, group, isEnterprise, isHosted, ph
         {!isEnterprise && (!isHosted || (isHosted && plan !== 'enterprise')) && (
           <EnterpriseNotification
             isEnterprise={isEnterprise}
-            benefit={`choose to ${plan === 'os' ? 'schedule or ' : ''}roll out deployments in multiple phases`}
+            benefit={`choose to ${plan === 'os' ? 'retry, schedule or ' : ''}roll out deployments in multiple phases`}
             recommendedPlan={isHosted ? recommendedPlan : null}
           />
         )}
