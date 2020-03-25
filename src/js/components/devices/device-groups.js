@@ -50,13 +50,16 @@ export class DeviceGroups extends React.Component {
   componentDidMount() {
     var self = this;
     if (self.props.acceptedDevicesList.length < 20) {
-      self._getDevices();
+      self._getDevices(true);
     } else {
       self.props.selectDevices(self.props.acceptedDevicesList);
     }
     clearAllRetryTimers(self.props.setSnackbar);
     if (self.props.filters) {
       self._refreshGroups();
+      if (self.props.groupDevices.length) {
+        self.setState({ loading: false }, () => self.props.selectDevices(self.props.groupDevices.slice(0, self.state.pageLength)));
+      }
     } else {
       clearInterval(self.deviceTimer);
       // no group, no filters, all devices
@@ -81,14 +84,14 @@ export class DeviceGroups extends React.Component {
       clearInterval(this.deviceTimer);
       if (this.props.currentTab === 'Device groups') {
         this.deviceTimer = setInterval(() => this._getDevices(), refreshDeviceLength);
-        this._refreshAll();
+        this._refreshAll(true);
       }
     }
   }
 
-  _refreshAll() {
+  _refreshAll(shouldUpdate = false) {
     this._refreshGroups();
-    this._getDevices();
+    this._getDevices(shouldUpdate);
   }
 
   /*
@@ -150,19 +153,9 @@ export class DeviceGroups extends React.Component {
   /*
    * Devices
    */
-  _getDevices() {
+  _getDevices(shouldUpdate = false) {
     var self = this;
-    const {
-      currentTab,
-      filters,
-      getDevices,
-      getDevicesByStatus,
-      getGroupDevices,
-      selectDevices,
-      selectedGroup,
-      trySelectDevice,
-      ungroupedDevices
-    } = self.props;
+    const { filters, getDevices, getDevicesByStatus, getGroupDevices, selectDevices, selectedGroup, trySelectDevice, ungroupedDevices } = self.props;
     var hasFilters = filters.length && filters[0].value;
 
     if (selectedGroup || hasFilters) {
@@ -195,7 +188,7 @@ export class DeviceGroups extends React.Component {
         });
     } else {
       // otherwise, show accepted from device adm
-      return getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength, currentTab === 'Device groups')
+      return getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength, shouldUpdate)
         .then(() => self.setState({ loading: false, pageLoading: false }))
         .catch(err => {
           console.log(err);
@@ -226,9 +219,7 @@ export class DeviceGroups extends React.Component {
   }
   _handlePageChange(pageNo) {
     var self = this;
-    self.setState({ pageLoading: true, pageNo: pageNo }, () => {
-      self._getDevices();
-    });
+    self.setState({ pageLoading: true, pageNo: pageNo }, () => self._getDevices(true));
   }
 
   // Edit groups from device selection
