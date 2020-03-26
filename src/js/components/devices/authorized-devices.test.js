@@ -11,6 +11,18 @@ describe('AuthorizedDevices Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
+      app: {
+        features: { hasMultitenancy: false, isEnterprise: false, isHosted: false }
+      },
+      devices: {
+        filteringAttributes: {
+          identityAttributes: [],
+          inventoryAttributes: []
+        },
+        groups: {
+          selectedGroup: null
+        }
+      },
       users: {
         globalSettings: {},
         onboarding: {
@@ -26,7 +38,7 @@ describe('AuthorizedDevices Component', () => {
     const tree = renderer
       .create(
         <Provider store={store}>
-          <Authorized devices={[]} />
+          <Authorized devices={[]} onFilterChange={jest.fn} />
         </Provider>
       )
       .toJSON();

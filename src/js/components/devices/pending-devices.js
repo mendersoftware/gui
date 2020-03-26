@@ -35,7 +35,7 @@ export class Pending extends React.Component {
 
   componentDidMount() {
     this.timer = setInterval(() => this._getDevices(), this.state.refreshDeviceLength);
-    this._getDevices();
+    this._getDevices(true);
   }
   componentWillUnmount() {
     clearInterval(this.timer);
@@ -63,10 +63,10 @@ export class Pending extends React.Component {
   /*
    * Devices to show
    */
-  _getDevices() {
+  _getDevices(shouldUpdate = false) {
     var self = this;
     self.props
-      .getDevicesByStatus(DEVICE_STATES.pending, this.state.pageNo, this.state.pageLength)
+      .getDevicesByStatus(DEVICE_STATES.pending, this.state.pageNo, this.state.pageLength, shouldUpdate)
       .catch(error => {
         console.log(error);
         var errormsg = error.error || 'Please check your connection.';

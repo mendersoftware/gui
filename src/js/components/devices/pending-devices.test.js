@@ -18,6 +18,7 @@ describe('PendingDevices Component', () => {
           accepted: { total: 0 },
           pending: { total: 0 }
         },
+        filters: [],
         selectedDeviceList: [],
         limit: 500
       },
