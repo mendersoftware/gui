@@ -256,7 +256,9 @@ export class Header extends React.Component {
             {announcement ? (
               <div id="announcement" className={this.state.showAnnouncement ? 'fadeInSlow' : 'fadeOutSlow'} style={{ display: 'flex', alignItems: 'center' }}>
                 <AnnounceIcon className="red" style={{ marginRight: '4px', height: '18px', minWidth: '24px' }} />
-                <Linkify properties={{ target: '_blank' }}>{announcement}</Linkify>
+                <p>
+                  <Linkify properties={{ target: '_blank' }}>{announcement}</Linkify>
+                </p>
                 <CloseIcon style={{ marginLeft: '4px', height: '16px', verticalAlign: 'bottom' }} onClick={() => this._hideAnnouncement()} />
               </div>
             ) : null}
