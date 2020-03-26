@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Time from 'react-time';
+import pluralize from 'pluralize';
 
 import { getDevicesByStatus } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
@@ -73,7 +74,7 @@ export class Rejected extends React.Component {
 
   render() {
     var self = this;
-    const { acceptedDevices, count, deviceLimit, devices, globalSettings, openSettingsDialog } = self.props;
+    const { acceptedDevices, count, deviceLimit, devices, filters, globalSettings, openSettingsDialog } = self.props;
     var limitMaxed = deviceLimit ? deviceLimit <= acceptedDevices : false;
     const columnHeaders = [
       {
@@ -124,7 +125,9 @@ export class Rejected extends React.Component {
           </div>
         ) : (
           <div className={this.state.pageLoading ? 'hidden' : 'dashboard-placeholder'}>
-            <p>There are no rejected devices</p>
+            <p>
+              {filters.length ? `There are no rejected devices matching the selected ${pluralize('filters', filters.length)}` : 'There are no rejected devices'}
+            </p>
           </div>
         )}
       </div>
@@ -140,6 +143,7 @@ const mapStateToProps = state => {
     count: state.devices.byStatus.rejected.total,
     devices: state.devices.selectedDeviceList,
     deviceLimit: state.devices.limit,
+    filters: state.devices.filters || [],
     globalSettings: state.users.globalSettings
   };
 };

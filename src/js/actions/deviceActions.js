@@ -417,7 +417,8 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
         tasks.push(dispatch(getDevicesWithInventory(response.body)));
       }
       if (shouldSelectDevices) {
-        tasks.push(dispatch(selectDevices(filters.length && possibleDeviceIds.length ? possibleDeviceIds : deviceAccu.ids)));
+        // since deviceauth doesn't have any filtering we have to rely on the local filtering capabilities if filters are selected
+        tasks.push(dispatch(selectDevices(filters.length ? possibleDeviceIds : deviceAccu.ids)));
       }
     }
     return Promise.all(tasks);

@@ -167,6 +167,7 @@ export class Pending extends React.Component {
       devices,
       deviceLimit,
       disabled,
+      filters,
       globalSettings,
       highlightHelp,
       onboardingComplete,
@@ -268,7 +269,11 @@ export class Pending extends React.Component {
               <DevicePendingTip />
             ) : (
               <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>
-                <p>There are no devices pending authorization</p>
+                <p>
+                  {filters.length
+                    ? `There are no pending devices matching the selected ${pluralize('filters', filters.length)}`
+                    : 'There are no devices pending authorization'}
+                </p>
                 {highlightHelp ? (
                   <p>
                     Visit the <Link to="/help/getting-started">Help section</Link> to learn how to connect devices to the Mender server.
@@ -312,9 +317,10 @@ const mapStateToProps = state => {
   return {
     acceptedDevices: state.devices.byStatus.accepted.total || 0,
     count: state.devices.byStatus.pending.total,
-    fullDevices: state.devices.selectedDeviceList.map(id => state.devices.byId[id]),
     devices: state.devices.selectedDeviceList,
     deviceLimit: state.devices.limit,
+    filters: state.devices.filters || [],
+    fullDevices: state.devices.selectedDeviceList.map(id => state.devices.byId[id]),
     globalSettings: state.users.globalSettings,
     onboardingComplete: state.users.onboarding.complete,
     showHelptips: state.users.showHelptips,
