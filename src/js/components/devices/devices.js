@@ -174,7 +174,6 @@ export class Devices extends React.Component {
             highlightHelp={!this.props.acceptedCount}
             currentTab={this.state.currentTab}
             openSettingsDialog={() => this._openSettingsDialog()}
-            pause={() => this._pauseInterval()}
           />
         )}
 

@@ -80,27 +80,41 @@ export const selectGroup = group => (dispatch, getState) => {
   ]);
 };
 
-export const trySelectDevice = deviceId => (dispatch, getState) => {
-  const deviceIds = Object.keys(getState().devices.byId);
+export const trySelectDevice = (deviceId, status) => (dispatch, getState) => {
+  const deviceIds = status ? getState().devices.byStatus[status].deviceIds : Object.keys(getState().devices.byId);
   if (deviceIds[0] && deviceId.length === deviceIds[0].length) {
     return Promise.resolve(dispatch(selectDevice(deviceId)));
   }
   const possibleDevices = deviceIds.filter(id => id.startsWith(deviceId));
-  return Promise.resolve(dispatch(selectDevices(possibleDevices)));
+  return Promise.resolve(possibleDevices.length ? dispatch(selectDevices(possibleDevices)) : dispatch(selectDevice(deviceId)));
 };
 
 export const selectDevice = deviceId => dispatch => {
-  let tasks = [
+  if (deviceId) {
+    const tasks = [dispatch(getDeviceById(deviceId)), dispatch(getDeviceAuth(deviceId))];
+    return Promise.all(tasks)
+      .then(() =>
+        dispatch({
+          type: DeviceConstants.SELECT_DEVICE,
+          deviceId
+        })
+      )
+      .catch(() =>
+        Promise.all([
+          dispatch(selectDevices([])),
+          dispatch({
+            type: DeviceConstants.SELECT_DEVICE,
+            deviceId: null
+          })
+        ])
+      );
+  }
+  return Promise.resolve(
     dispatch({
       type: DeviceConstants.SELECT_DEVICE,
       deviceId
     })
-  ];
-  if (deviceId) {
-    tasks.push(dispatch(getDeviceById(deviceId)));
-    tasks.push(dispatch(getDeviceAuth(deviceId)));
-  }
-  return Promise.all(tasks);
+  );
 };
 
 export const selectDevices = deviceIds => dispatch => dispatch({ type: DeviceConstants.SELECT_DEVICES, deviceIds });
@@ -444,12 +458,13 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
 };
 
 export const getDeviceAuth = id => dispatch =>
-  DevicesApi.get(`${deviceAuthV2}/devices/${id}`).then(res =>
+  DevicesApi.get(`${deviceAuthV2}/devices/${id}`).then(res => {
     dispatch({
       type: DeviceConstants.RECEIVE_DEVICE_AUTH,
       device: res.body
-    })
-  );
+    });
+    return Promise.resolve(res.body);
+  });
 
 export const getDevicesWithAuth = devices => dispatch => devices.map(device => dispatch(getDeviceAuth(device.id)));
 

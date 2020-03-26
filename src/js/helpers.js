@@ -524,9 +524,11 @@ export const filterDevices = (deviceState, filters, status) => {
     return filters.reduce(
       (accu, filter) =>
         accu &&
-        ((device.attributes && device.attributes[filter.key] && device.attributes[filter.key].toString().startsWith(filter.value)) ||
+        !!(
+          (device.attributes && device.attributes[filter.key] && device.attributes[filter.key].toString().startsWith(filter.value)) ||
           (device.identity_data && device.identity_data[filter.key] && device.identity_data[filter.key].toString().startsWith(filter.value)) ||
-          (device[filter.key] && device[filter.key].toString().startsWith(filter.value))),
+          (device[filter.key] && device[filter.key].toString().startsWith(filter.value))
+        ),
       true
     );
   });

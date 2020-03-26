@@ -50,13 +50,7 @@ export class Filters extends React.Component {
   onFilterChange(filters) {
     var self = this;
     self.props.setDeviceFilters(filters);
-    const id = filters.find(filter => filter.key === 'id')?.value;
-    // check filters for ID or group, this is temporary until full filtering functionality
-    if (id) {
-      // get single device by id
-      return self.props.selectDeviceById(id);
-    }
-    self.props.onFilterChange();
+    self.props.onFilterChange(filters);
   }
 
   render() {

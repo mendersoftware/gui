@@ -89,7 +89,6 @@ export class Authorized extends React.Component {
       openSettingsDialog,
       refreshDevices,
       removeDevicesFromGroup,
-      selectDeviceById,
       selectedGroup,
       showHelptips
     } = self.props;
@@ -137,7 +136,7 @@ export class Authorized extends React.Component {
       <div className="relative">
         <div style={{ marginLeft: '20px' }}>
           <h2 className="inline-block margin-right">{groupLabel}</h2>
-          {!selectedGroup && <Filters onFilterChange={onFilterChange} refreshDevices={refreshDevices} selectDeviceById={selectDeviceById} />}
+          {!selectedGroup && <Filters onFilterChange={onFilterChange} refreshDevices={refreshDevices} />}
         </div>
         <Loader show={loading} />
         {devices.length > 0 && !loading ? (
