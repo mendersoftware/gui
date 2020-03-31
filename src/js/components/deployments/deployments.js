@@ -198,11 +198,6 @@ export class Deployments extends React.Component {
 
     return self.props
       .createDeployment(newDeployment)
-      .catch(err => {
-        self.props.setSnackbar('Error while creating deployment');
-        var errMsg = err.res.body.error || '';
-        self.props.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard');
-      })
       .then(() => {
         self.props.setSnackbar('Deployment created successfully', 8000);
         if (phases) {
@@ -223,6 +218,11 @@ export class Deployments extends React.Component {
         } else {
           self._refreshDeployments(minimalRefreshDeploymentsLength);
         }
+      })
+      .catch(err => {
+        self.props.setSnackbar('Error while creating deployment');
+        var errMsg = err.res.body.error || '';
+        self.props.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard');
       });
   }
 
