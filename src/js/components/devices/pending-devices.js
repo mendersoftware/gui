@@ -85,9 +85,7 @@ export class Pending extends React.Component {
 
   _handlePageChange(pageNo) {
     var self = this;
-    self.setState({ selectedRows: [], currentPage: pageNo, pageLoading: true, expandRow: null, pageNo: pageNo }, () => {
-      self._getDevices();
-    });
+    self.setState({ selectedRows: [], currentPage: pageNo, pageLoading: true, expandRow: null, pageNo: pageNo }, () => self._getDevices(true));
   }
 
   _getDevicesFromSelectedRows() {
