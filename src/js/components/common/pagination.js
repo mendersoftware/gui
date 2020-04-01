@@ -19,9 +19,9 @@ class TablePaginationActions extends React.Component {
     this.state = { pageNo };
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     const currentPage = this.props.page + paginationIndex;
-    if (currentPage !== this.state.pageNo || prevProps.rowsPerPage !== this.props.rowsPerPage) {
+    if ((currentPage !== this.state.pageNo && !(prevState.pageNo !== this.state.pageNo)) || prevProps.rowsPerPage !== this.props.rowsPerPage) {
       this.setState({ pageNo: currentPage });
     }
   }
@@ -84,7 +84,7 @@ class TablePaginationActions extends React.Component {
         </IconButton>
         <IconButton
           onClick={() => self.onPaging(Math.max(paginationIndex, Math.ceil(count / rowsPerPage)))}
-          disabled={currentPage >= Math.ceil(count / rowsPerPage) - paginationIndex}
+          disabled={currentPage >= Math.ceil(count / rowsPerPage)}
         >
           <LastPageIcon />
         </IconButton>
