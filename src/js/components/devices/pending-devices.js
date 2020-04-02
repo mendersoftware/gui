@@ -9,7 +9,7 @@ import { Button } from '@material-ui/core';
 
 import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 
-import { getDevicesByStatus, updateDeviceAuth } from '../../actions/deviceActions';
+import { getAllDevicesByStatus, getDevicesByStatus, setDeviceFilters, updateDeviceAuth } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
@@ -32,6 +32,9 @@ export class Pending extends React.Component {
       authLoading: 'all',
       pageLoading: true
     };
+    if (!props.pendingDeviceIds.length) {
+      props.getAllDevicesByStatus(DEVICE_STATES.pending);
+    }
   }
 
   componentDidMount() {
@@ -311,7 +314,7 @@ export class Pending extends React.Component {
   }
 }
 
-const actionCreators = { getDevicesByStatus, updateDeviceAuth, setSnackbar };
+const actionCreators = { getAllDevicesByStatus, getDevicesByStatus, setDeviceFilters, setSnackbar, updateDeviceAuth };
 
 const mapStateToProps = state => {
   return {
@@ -323,6 +326,7 @@ const mapStateToProps = state => {
     fullDevices: state.devices.selectedDeviceList.map(id => state.devices.byId[id]),
     globalSettings: state.users.globalSettings,
     onboardingComplete: state.users.onboarding.complete,
+    pendingDeviceIds: state.devices.byStatus.pending.deviceIds,
     showHelptips: state.users.showHelptips,
     showOnboardingTips: state.users.onboarding.showTips
   };

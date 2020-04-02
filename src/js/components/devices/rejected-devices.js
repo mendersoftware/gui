@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Time from 'react-time';
 import pluralize from 'pluralize';
 
-import { getDevicesByStatus } from '../../actions/deviceActions';
+import { getAllDevicesByStatus, getDevicesByStatus, setDeviceFilters } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
@@ -20,6 +20,9 @@ export class Rejected extends React.Component {
       refreshDeviceLength: 10000,
       pageLoading: true
     };
+    if (!props.rejectedDeviceIds.length) {
+      props.getAllDevicesByStatus(DEVICE_STATES.rejected);
+    }
   }
 
   componentDidMount() {
@@ -135,16 +138,17 @@ export class Rejected extends React.Component {
   }
 }
 
-const actionCreators = { getDevicesByStatus, setSnackbar };
+const actionCreators = { getAllDevicesByStatus, getDevicesByStatus, setDeviceFilters, setSnackbar };
 
 const mapStateToProps = state => {
   return {
-    acceptedDevices: state.devices.byStatus.rejected.total || 0,
+    acceptedDevices: state.devices.byStatus.accepted.total || 0,
     count: state.devices.byStatus.rejected.total,
     devices: state.devices.selectedDeviceList.slice(0, DEVICE_LIST_MAXIMUM_LENGTH),
     deviceLimit: state.devices.limit,
     filters: state.devices.filters || [],
-    globalSettings: state.users.globalSettings
+    globalSettings: state.users.globalSettings,
+    rejectedDeviceIds: state.devices.byStatus.rejected.deviceIds
   };
 };
 
