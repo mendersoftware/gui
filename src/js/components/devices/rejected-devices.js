@@ -115,6 +115,7 @@ export class Rejected extends React.Component {
               {...self.props}
               {...self.state}
               columnHeaders={columnHeaders}
+              filterable={true}
               limitMaxed={limitMaxed}
               onPageChange={e => self._handlePageChange(e)}
               onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}

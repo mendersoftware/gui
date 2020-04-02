@@ -254,6 +254,7 @@ export class Pending extends React.Component {
               {...self.state}
               className="pending"
               columnHeaders={columnHeaders}
+              filterable={true}
               limitMaxed={limitMaxed}
               onSelect={selection => self.onRowSelection(selection)}
               onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}
