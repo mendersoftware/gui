@@ -386,7 +386,7 @@ const actionCreators = {
 };
 
 const mapStateToProps = state => {
-  let devices = state.devices.selectedDeviceList;
+  let devices = state.devices.selectedDeviceList.slice(0, DeviceConstants.DEVICE_LIST_MAXIMUM_LENGTH);
   let groupCount = state.devices.byStatus.accepted.total;
   let selectedGroup;
   let groupDevices = [];

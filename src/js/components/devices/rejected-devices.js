@@ -5,7 +5,7 @@ import pluralize from 'pluralize';
 
 import { getDevicesByStatus } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
-import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
 import RelativeTime from '../common/relative-time';
 import DeviceList from './devicelist';
@@ -140,7 +140,7 @@ const mapStateToProps = state => {
   return {
     acceptedDevices: state.devices.byStatus.rejected.total || 0,
     count: state.devices.byStatus.rejected.total,
-    devices: state.devices.selectedDeviceList,
+    devices: state.devices.selectedDeviceList.slice(0, DEVICE_LIST_MAXIMUM_LENGTH),
     deviceLimit: state.devices.limit,
     filters: state.devices.filters || [],
     globalSettings: state.users.globalSettings

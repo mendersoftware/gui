@@ -1,15 +1,11 @@
 import React from 'react';
 
-import TablePagination from '@material-ui/core/TablePagination';
-import IconButton from '@material-ui/core/IconButton';
+import { FirstPage as FirstPageIcon, LastPage as LastPageIcon, KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons';
+import { IconButton, TablePagination, TextField } from '@material-ui/core';
 
-import FirstPageIcon from '@material-ui/icons/FirstPage';
-import LastPageIcon from '@material-ui/icons/LastPage';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import { TextField } from '@material-ui/core';
+import { DEVICE_LIST_MAXIMUM_LENGTH } from '../../constants/deviceConstants';
 
-const defaultRowsPerPageOptions = [10, 20, 50];
+const defaultRowsPerPageOptions = [10, 20, DEVICE_LIST_MAXIMUM_LENGTH];
 const paginationIndex = 1;
 
 class TablePaginationActions extends React.Component {

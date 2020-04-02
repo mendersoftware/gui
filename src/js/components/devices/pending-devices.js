@@ -12,7 +12,7 @@ import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 import { getDevicesByStatus, updateDeviceAuth } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 
-import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
 import { preformatWithRequestID } from '../../helpers';
 import { getOnboardingComponentFor, advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
@@ -316,7 +316,7 @@ const mapStateToProps = state => {
   return {
     acceptedDevices: state.devices.byStatus.accepted.total || 0,
     count: state.devices.byStatus.pending.total,
-    devices: state.devices.selectedDeviceList,
+    devices: state.devices.selectedDeviceList.slice(0, DEVICE_LIST_MAXIMUM_LENGTH),
     deviceLimit: state.devices.limit,
     filters: state.devices.filters || [],
     fullDevices: state.devices.selectedDeviceList.map(id => state.devices.byId[id]),
