@@ -44,6 +44,7 @@ export class Pending extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.count !== this.props.count || (prevProps.currentTab !== this.props.currentTab && this.props.currentTab.indexOf('Pending') !== -1)) {
+      this.props.setDeviceFilters([]);
       this._getDevices();
     }
     const self = this;

@@ -32,6 +32,7 @@ export class Rejected extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.count !== this.props.count || (prevProps.currentTab !== this.props.currentTab && this.props.currentTab.indexOf('Rejected'))) {
+      this.props.setDeviceFilters([]);
       this._getDevices();
       if (!this.props.devices.length && this.props.count) {
         //if devices empty but count not, put back to first page

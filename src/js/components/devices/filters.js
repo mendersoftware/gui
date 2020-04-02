@@ -25,7 +25,7 @@ export class Filters extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.setDeviceFilters([]);
+    this.clearFilters();
   }
 
   _updateFilters(filter, index) {

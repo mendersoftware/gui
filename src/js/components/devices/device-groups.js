@@ -80,6 +80,9 @@ export class DeviceGroups extends React.Component {
     if (this.props.currentTab !== 'Device groups') {
       clearInterval(this.deviceTimer);
     }
+    if (prevProps.currentTab !== this.props.currentTab) {
+      this.props.setDeviceFilters([]);
+    }
     if (prevProps.filters !== this.props.filters || prevProps.groupCount !== this.props.groupCount || prevProps.selectedGroup !== this.props.selectedGroup) {
       clearInterval(this.deviceTimer);
       if (this.props.currentTab === 'Device groups') {

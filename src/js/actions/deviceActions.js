@@ -83,22 +83,25 @@ export const selectGroup = group => (dispatch, getState) => {
 export const trySelectDevice = (deviceId, status) => (dispatch, getState) => {
   const deviceIds = status ? getState().devices.byStatus[status].deviceIds : Object.keys(getState().devices.byId);
   if (deviceIds[0] && deviceId.length === deviceIds[0].length) {
-    return Promise.resolve(dispatch(selectDevice(deviceId)));
+    return Promise.resolve(dispatch(selectDevice(deviceId, status)));
   }
   const possibleDevices = deviceIds.filter(id => id.startsWith(deviceId));
   return Promise.resolve(possibleDevices.length ? dispatch(selectDevices(possibleDevices)) : dispatch(selectDevice(deviceId)));
 };
 
-export const selectDevice = deviceId => dispatch => {
+export const selectDevice = (deviceId, status) => dispatch => {
   if (deviceId) {
     const tasks = [dispatch(getDeviceById(deviceId)), dispatch(getDeviceAuth(deviceId))];
     return Promise.all(tasks)
-      .then(() =>
+      .then(results => {
+        if (status && status !== results[1].status) {
+          return Promise.reject();
+        }
         dispatch({
           type: DeviceConstants.SELECT_DEVICE,
           deviceId
-        })
-      )
+        });
+      })
       .catch(() =>
         Promise.all([
           dispatch(selectDevices([])),
