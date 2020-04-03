@@ -134,7 +134,7 @@ const actionCreators = {
 
 const mapStateToProps = (state, ownProps) => {
   const plan = state.users.organization ? state.users.organization.plan : 'os';
-  let attributes = state.devices.filteringAttributes.identityAttributes.map(item => ({ key: item, value: item, scope: 'identity' }));
+  let attributes = []; // state.devices.filteringAttributes.identityAttributes.map(item => ({ key: item, value: item, scope: 'identity' }));
   if (!ownProps.identityOnly) {
     attributes = [...attributes, ...state.devices.filteringAttributes.inventoryAttributes.map(item => ({ key: item, value: item, scope: 'inventory' }))];
   }
