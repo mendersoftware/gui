@@ -9,3 +9,5 @@ coverage
 #files
 src/main.css
 .DS_Store
+
+*.swp
