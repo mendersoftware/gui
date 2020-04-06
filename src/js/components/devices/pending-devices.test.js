@@ -16,7 +16,7 @@ describe('PendingDevices Component', () => {
         byId: {},
         byStatus: {
           accepted: { total: 0 },
-          pending: { total: 0 }
+          pending: { total: 0, deviceIds: [] }
         },
         filters: [],
         selectedDeviceList: [],

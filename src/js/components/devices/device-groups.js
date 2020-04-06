@@ -80,6 +80,9 @@ export class DeviceGroups extends React.Component {
     if (this.props.currentTab !== 'Device groups') {
       clearInterval(this.deviceTimer);
     }
+    if (prevProps.currentTab !== this.props.currentTab) {
+      this.props.setDeviceFilters([]);
+    }
     if (prevProps.filters !== this.props.filters || prevProps.groupCount !== this.props.groupCount || prevProps.selectedGroup !== this.props.selectedGroup) {
       clearInterval(this.deviceTimer);
       if (this.props.currentTab === 'Device groups') {
@@ -273,7 +276,7 @@ export class DeviceGroups extends React.Component {
   onFilterChange(filters) {
     var self = this;
     clearInterval(self.deviceTimer);
-    self.setState({ pageNo: 1 }, () => {
+    self.setState({ pageNo: 1, pageLength: filters.length ? DeviceConstants.DEVICE_LIST_MAXIMUM_LENGTH : self.state.pageLength }, () => {
       clearInterval(self.deviceTimer);
       self.deviceTimer = setInterval(() => self._getDevices(), refreshDeviceLength);
       self._getDevices(!filters.length);
@@ -383,7 +386,7 @@ const actionCreators = {
 };
 
 const mapStateToProps = state => {
-  let devices = state.devices.selectedDeviceList;
+  let devices = state.devices.selectedDeviceList.slice(0, DeviceConstants.DEVICE_LIST_MAXIMUM_LENGTH);
   let groupCount = state.devices.byStatus.accepted.total;
   let selectedGroup;
   let groupDevices = [];

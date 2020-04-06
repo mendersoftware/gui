@@ -81,9 +81,7 @@ export class Preauthorize extends React.Component {
 
   _handlePageChange(pageNo) {
     var self = this;
-    self.setState({ pageLoading: true, expandRow: null, pageNo: pageNo }, () => {
-      self._getDevices();
-    });
+    self.setState({ pageLoading: true, expandRow: null, pageNo: pageNo }, () => self._getDevices(true));
   }
 
   _togglePreauth(openPreauth = !this.state.openPreauth) {

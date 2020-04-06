@@ -75,7 +75,6 @@ export class ExpandedDevice extends React.Component {
 
   toggleAuthsets(authsets = !this.state.authsets) {
     this.setState({ authsets });
-    this.props.pause();
     this.props.refreshDevices();
   }
 

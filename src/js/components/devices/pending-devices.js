@@ -9,10 +9,10 @@ import { Button } from '@material-ui/core';
 
 import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 
-import { getDevicesByStatus, updateDeviceAuth } from '../../actions/deviceActions';
+import { getAllDevicesByStatus, getDevicesByStatus, setDeviceFilters, updateDeviceAuth } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 
-import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
 import { preformatWithRequestID } from '../../helpers';
 import { getOnboardingComponentFor, advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
@@ -32,6 +32,9 @@ export class Pending extends React.Component {
       authLoading: 'all',
       pageLoading: true
     };
+    if (!props.pendingDeviceIds.length) {
+      props.getAllDevicesByStatus(DEVICE_STATES.pending);
+    }
   }
 
   componentDidMount() {
@@ -44,6 +47,7 @@ export class Pending extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.count !== this.props.count || (prevProps.currentTab !== this.props.currentTab && this.props.currentTab.indexOf('Pending') !== -1)) {
+      this.props.setDeviceFilters([]);
       this._getDevices();
     }
     const self = this;
@@ -64,19 +68,21 @@ export class Pending extends React.Component {
   /*
    * Devices to show
    */
-  _getDevices(shouldUpdate = false) {
+  _getDevices(shouldUpdate = false, filters = []) {
     var self = this;
-    self.props
-      .getDevicesByStatus(DEVICE_STATES.pending, this.state.pageNo, this.state.pageLength, shouldUpdate)
-      .catch(error => {
-        console.log(error);
-        var errormsg = error.error || 'Please check your connection.';
-        self.props.setSnackbar(errormsg, 5000, '');
-        console.log(errormsg);
-      })
-      .finally(() => {
-        self.setState({ pageLoading: false, authLoading: null });
-      });
+    self.setState({ pageNo: filters.length ? 1 : self.state.pageNo, pageLength: filters.length ? DEVICE_LIST_MAXIMUM_LENGTH : self.state.pageLength }, () =>
+      self.props
+        .getDevicesByStatus(DEVICE_STATES.pending, this.state.pageNo, this.state.pageLength, shouldUpdate)
+        .catch(error => {
+          console.log(error);
+          var errormsg = error.error || 'Please check your connection.';
+          self.props.setSnackbar(errormsg, 5000, '');
+          console.log(errormsg);
+        })
+        .finally(() => {
+          self.setState({ pageLoading: false, authLoading: null });
+        })
+    );
   }
 
   _sortColumn() {
@@ -85,9 +91,7 @@ export class Pending extends React.Component {
 
   _handlePageChange(pageNo) {
     var self = this;
-    self.setState({ selectedRows: [], currentPage: pageNo, pageLoading: true, expandRow: null, pageNo: pageNo }, () => {
-      self._getDevices();
-    });
+    self.setState({ selectedRows: [], currentPage: pageNo, pageLoading: true, expandRow: null, pageNo: pageNo }, () => self._getDevices(true));
   }
 
   _getDevicesFromSelectedRows() {
@@ -242,7 +246,7 @@ export class Pending extends React.Component {
               {count} {pluralize('devices', count)} pending authorization
             </h3>
             {!this.state.authLoading && (
-              <Filters identityOnly={true} onFilterChange={() => self._getDevices(true)} refreshDevices={() => self._getDevices(true)} />
+              <Filters identityOnly={true} onFilterChange={filters => self._getDevices(true, filters)} refreshDevices={() => self._getDevices(true)} />
             )}
           </div>
         )}
@@ -255,6 +259,7 @@ export class Pending extends React.Component {
               {...self.state}
               className="pending"
               columnHeaders={columnHeaders}
+              filterable={true}
               limitMaxed={limitMaxed}
               onSelect={selection => self.onRowSelection(selection)}
               onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}
@@ -311,18 +316,19 @@ export class Pending extends React.Component {
   }
 }
 
-const actionCreators = { getDevicesByStatus, updateDeviceAuth, setSnackbar };
+const actionCreators = { getAllDevicesByStatus, getDevicesByStatus, setDeviceFilters, setSnackbar, updateDeviceAuth };
 
 const mapStateToProps = state => {
   return {
     acceptedDevices: state.devices.byStatus.accepted.total || 0,
     count: state.devices.byStatus.pending.total,
-    devices: state.devices.selectedDeviceList,
+    devices: state.devices.selectedDeviceList.slice(0, DEVICE_LIST_MAXIMUM_LENGTH),
     deviceLimit: state.devices.limit,
     filters: state.devices.filters || [],
     fullDevices: state.devices.selectedDeviceList.map(id => state.devices.byId[id]),
     globalSettings: state.users.globalSettings,
     onboardingComplete: state.users.onboarding.complete,
+    pendingDeviceIds: state.devices.byStatus.pending.deviceIds,
     showHelptips: state.users.showHelptips,
     showOnboardingTips: state.users.onboarding.showTips
   };

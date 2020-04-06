@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import Time from 'react-time';
 import pluralize from 'pluralize';
 
-import { getDevicesByStatus } from '../../actions/deviceActions';
+import { getAllDevicesByStatus, getDevicesByStatus, setDeviceFilters } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
-import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
 import RelativeTime from '../common/relative-time';
 import DeviceList from './devicelist';
@@ -20,6 +20,9 @@ export class Rejected extends React.Component {
       refreshDeviceLength: 10000,
       pageLoading: true
     };
+    if (!props.rejectedDeviceIds.length) {
+      props.getAllDevicesByStatus(DEVICE_STATES.rejected);
+    }
   }
 
   componentDidMount() {
@@ -32,6 +35,7 @@ export class Rejected extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.count !== this.props.count || (prevProps.currentTab !== this.props.currentTab && this.props.currentTab.indexOf('Rejected'))) {
+      this.props.setDeviceFilters([]);
       this._getDevices();
       if (!this.props.devices.length && this.props.count) {
         //if devices empty but count not, put back to first page
@@ -47,19 +51,21 @@ export class Rejected extends React.Component {
   /*
    * Devices to show
    */
-  _getDevices(shouldUpdate = false) {
+  _getDevices(shouldUpdate = false, filters = []) {
     var self = this;
-    self.props
-      .getDevicesByStatus(DEVICE_STATES.rejected, this.state.pageNo, this.state.pageLength, shouldUpdate)
-      .catch(error => {
-        console.log(error);
-        var errormsg = error.error || 'Please check your connection.';
-        self.props.setSnackbar(errormsg, 5000, '');
-        console.log(errormsg);
-      })
-      .finally(() => {
-        self.setState({ pageLoading: false });
-      });
+    self.setState({ pageNo: filters.length ? 1 : self.state.pageNo, pageLength: filters.length ? DEVICE_LIST_MAXIMUM_LENGTH : self.state.pageLength }, () =>
+      self.props
+        .getDevicesByStatus(DEVICE_STATES.rejected, this.state.pageNo, this.state.pageLength, shouldUpdate)
+        .catch(error => {
+          console.log(error);
+          var errormsg = error.error || 'Please check your connection.';
+          self.props.setSnackbar(errormsg, 5000, '');
+          console.log(errormsg);
+        })
+        .finally(() => {
+          self.setState({ pageLoading: false });
+        })
+    );
   }
   _sortColumn(col) {
     console.log(`sort: ${col}`);
@@ -67,9 +73,7 @@ export class Rejected extends React.Component {
 
   _handlePageChange(pageNo) {
     var self = this;
-    self.setState({ pageLoading: true, expandRow: null, pageNo: pageNo }, () => {
-      self._getDevices();
-    });
+    self.setState({ pageLoading: true, expandRow: null, pageNo: pageNo }, () => self._getDevices(true));
   }
 
   render() {
@@ -105,7 +109,7 @@ export class Rejected extends React.Component {
           <div className="align-center">
             <h3 className="inline-block margin-right">Rejected devices</h3>
             {!this.state.pageLoading && (
-              <Filters identityOnly={true} onFilterChange={() => self._getDevices(true)} refreshDevices={() => self._getDevices(true)} />
+              <Filters identityOnly={true} onFilterChange={filters => self._getDevices(true, filters)} refreshDevices={() => self._getDevices(true)} />
             )}
           </div>
         )}
@@ -116,6 +120,7 @@ export class Rejected extends React.Component {
               {...self.props}
               {...self.state}
               columnHeaders={columnHeaders}
+              filterable={true}
               limitMaxed={limitMaxed}
               onPageChange={e => self._handlePageChange(e)}
               onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}
@@ -135,16 +140,17 @@ export class Rejected extends React.Component {
   }
 }
 
-const actionCreators = { getDevicesByStatus, setSnackbar };
+const actionCreators = { getAllDevicesByStatus, getDevicesByStatus, setDeviceFilters, setSnackbar };
 
 const mapStateToProps = state => {
   return {
-    acceptedDevices: state.devices.byStatus.rejected.total || 0,
+    acceptedDevices: state.devices.byStatus.accepted.total || 0,
     count: state.devices.byStatus.rejected.total,
-    devices: state.devices.selectedDeviceList,
+    devices: state.devices.selectedDeviceList.slice(0, DEVICE_LIST_MAXIMUM_LENGTH),
     deviceLimit: state.devices.limit,
     filters: state.devices.filters || [],
-    globalSettings: state.users.globalSettings
+    globalSettings: state.users.globalSettings,
+    rejectedDeviceIds: state.devices.byStatus.rejected.deviceIds
   };
 };
 
