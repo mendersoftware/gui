@@ -13,7 +13,8 @@ describe('RejectedDevices Component', () => {
     store = mockStore({
       devices: {
         byStatus: {
-          rejected: { total: 0 }
+          accepted: { total: 0 },
+          rejected: { total: 0, deviceIds: [] }
         },
         filters: [],
         selectedDeviceList: [],
