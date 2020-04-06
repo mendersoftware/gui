@@ -140,13 +140,11 @@ export class SelectedArtifact extends React.Component {
           </ExpansionPanelDetails>
         </ExpansionPanel>
 
-        <Button href={artifact.url} target="_blank" disabled={!artifact.url}>
-          <ExitToAppIcon style={{ transform: 'rotateZ(90deg)' }} className="buttonLabelIcon" />
+        <Button href={artifact.url} target="_blank" disabled={!artifact.url} startIcon={<ExitToAppIcon style={{ transform: 'rotateZ(90deg)' }} />}>
           Download Artifact
         </Button>
         <div className="margin-left inline">
-          <Button onClick={() => self.props.showRemoveArtifactDialog(true)}>
-            <CancelIcon className="red auth buttonLabelIcon" />
+          <Button onClick={() => self.props.showRemoveArtifactDialog(true)} startIcon={<CancelIcon className="red auth" />}>
             Remove this Artifact?
           </Button>
         </div>

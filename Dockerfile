@@ -17,4 +17,6 @@ COPY httpd.conf /etc/nginx/nginx.conf
 COPY --from=build /usr/src/app/dist .
 
 ENTRYPOINT ["/entrypoint.sh"]
+HEALTHCHECK --interval=8s --timeout=15s --start-period=120s --retries=128 CMD wget --quiet --tries=1 --spider --output-document=/dev/null 127.0.0.1
 CMD ["nginx"]
+

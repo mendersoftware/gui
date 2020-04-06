@@ -125,25 +125,20 @@ export class Devices extends React.Component {
     self.setState({ openIdDialog: !self.state.openIdDialog });
   }
 
-  _pauseInterval() {
-    var self = this;
-    this.setState({ pause: !self.state.pause }, () => {
-      // pause refresh interval when authset dialog is open
-      self.state.pause ? clearInterval(self.interval) : self._restartInterval();
-    });
-  }
-
   render() {
+    const { acceptedCount, match, pendingCount } = this.props;
+    const { currentTab, duplicates, openDeviceExists, openIdDialog } = this.state;
+
     // nested tabs
-    var duplicateActions = [
+    const duplicateActions = [
       <div key="duplicate-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
         <Button onClick={() => this.dialogToggle('openDeviceExists')}>Cancel</Button>
       </div>
     ];
 
-    var pendingLabel = this.props.pendingCount ? `Pending (${this.props.pendingCount})` : 'Pending';
+    var pendingLabel = pendingCount ? `Pending (${pendingCount})` : 'Pending';
 
-    const tabIndex = this.props.match.params.status || 'devices';
+    const tabIndex = match.params.status || 'devices';
     return (
       <div>
         <Tabs value={tabIndex} onChange={() => this._changeTab()}>
@@ -154,38 +149,32 @@ export class Devices extends React.Component {
         </Tabs>
         {tabIndex === routes.pending.status && (
           <PendingDevices
-            currentTab={this.state.currentTab}
-            highlightHelp={!this.props.acceptedCount}
+            currentTab={currentTab}
+            highlightHelp={!acceptedCount}
             openSettingsDialog={() => this._openSettingsDialog()}
             restart={() => this._restartInterval()}
-            pause={() => this._pauseInterval()}
           />
         )}
-        {tabIndex === routes.preauthorized.status && (
-          <PreauthDevices currentTab={this.state.currentTab} openSettingsDialog={() => this._openSettingsDialog()} pause={() => this._pauseInterval()} />
-        )}
-        {tabIndex === routes.rejected.status && (
-          <RejectedDevices currentTab={this.state.currentTab} openSettingsDialog={() => this._openSettingsDialog()} pause={() => this._pauseInterval()} />
-        )}
+        {tabIndex === routes.preauthorized.status && <PreauthDevices currentTab={currentTab} openSettingsDialog={() => this._openSettingsDialog()} />}
+        {tabIndex === routes.rejected.status && <RejectedDevices currentTab={currentTab} openSettingsDialog={() => this._openSettingsDialog()} />}
         {tabIndex === routes.devices.status && (
           <DeviceGroups
-            params={this.props.match.params}
-            acceptedDevices={this.props.acceptedCount}
-            highlightHelp={!this.props.acceptedCount}
-            currentTab={this.state.currentTab}
+            params={match.params}
+            acceptedDevices={acceptedCount}
+            highlightHelp={!acceptedCount}
+            currentTab={currentTab}
             openSettingsDialog={() => this._openSettingsDialog()}
-            pause={() => this._pauseInterval()}
           />
         )}
 
-        {this.state.openDeviceExists && (
-          <Dialog open={this.state.openDeviceExists || false}>
+        {openDeviceExists && (
+          <Dialog open={openDeviceExists || false}>
             <DialogTitle>Device with this identity data already exists</DialogTitle>
             <DialogContent style={{ overflow: 'hidden' }}>
               <p>This will remove the group from the list. Are you sure you want to continue?</p>
               <p>
-                A device with matching identity data already exists. If you still want to accept {pluralize('this', this.state.duplicates)} pending{' '}
-                {pluralize('device', this.state.duplicates)}, you should first remove the following {pluralize('device', this.state.duplicates)}:
+                A device with matching identity data already exists. If you still want to accept {pluralize('this', duplicates)} pending{' '}
+                {pluralize('device', duplicates)}, you should first remove the following {pluralize('device', duplicates)}:
               </p>
               <Table>
                 <TableHead>
@@ -199,8 +188,8 @@ export class Devices extends React.Component {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {(this.state.duplicates || []).map(function(device) {
-                    var status = device.status === DEVICE_STATES.accepted ? '' : `/${device.status}`;
+                  {(duplicates || []).map(device => {
+                    const status = device.status === DEVICE_STATES.accepted ? '' : `/${device.status}`;
                     return (
                       <TableRow hover key={device.device_id}>
                         <TableCell>
@@ -217,8 +206,8 @@ export class Devices extends React.Component {
           </Dialog>
         )}
 
-        {this.state.openIdDialog && (
-          <Dialog open={this.state.openIdDialog || false}>
+        {openIdDialog && (
+          <Dialog open={openIdDialog || false}>
             <DialogTitle>Default device identity attribute</DialogTitle>
             <DialogContent style={{ overflow: 'hidden' }}>
               <Global dialog={true} closeDialog={() => this._openSettingsDialog()} />

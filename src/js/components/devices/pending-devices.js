@@ -9,16 +9,17 @@ import { Button } from '@material-ui/core';
 
 import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 
-import { getDevicesByStatus, updateDeviceAuth } from '../../actions/deviceActions';
+import { getAllDevicesByStatus, getDevicesByStatus, setDeviceFilters, updateDeviceAuth } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 
-import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
 import { preformatWithRequestID } from '../../helpers';
 import { getOnboardingComponentFor, advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
 import RelativeTime from '../common/relative-time';
 import { DevicePendingTip } from '../helptips/onboardingtips';
 import DeviceList from './devicelist';
+import Filters from './filters';
 
 export class Pending extends React.Component {
   constructor(props, context) {
@@ -31,11 +32,14 @@ export class Pending extends React.Component {
       authLoading: 'all',
       pageLoading: true
     };
+    if (!props.pendingDeviceIds.length) {
+      props.getAllDevicesByStatus(DEVICE_STATES.pending);
+    }
   }
 
   componentDidMount() {
     this.timer = setInterval(() => this._getDevices(), this.state.refreshDeviceLength);
-    this._getDevices();
+    this._getDevices(true);
   }
   componentWillUnmount() {
     clearInterval(this.timer);
@@ -43,6 +47,7 @@ export class Pending extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.count !== this.props.count || (prevProps.currentTab !== this.props.currentTab && this.props.currentTab.indexOf('Pending') !== -1)) {
+      this.props.setDeviceFilters([]);
       this._getDevices();
     }
     const self = this;
@@ -63,19 +68,21 @@ export class Pending extends React.Component {
   /*
    * Devices to show
    */
-  _getDevices() {
+  _getDevices(shouldUpdate = false, filters = []) {
     var self = this;
-    self.props
-      .getDevicesByStatus(DEVICE_STATES.pending, this.state.pageNo, this.state.pageLength)
-      .catch(error => {
-        console.log(error);
-        var errormsg = error.error || 'Please check your connection.';
-        self.props.setSnackbar(errormsg, 5000, '');
-        console.log(errormsg);
-      })
-      .finally(() => {
-        self.setState({ pageLoading: false, authLoading: null });
-      });
+    self.setState({ pageNo: filters.length ? 1 : self.state.pageNo, pageLength: filters.length ? DEVICE_LIST_MAXIMUM_LENGTH : self.state.pageLength }, () =>
+      self.props
+        .getDevicesByStatus(DEVICE_STATES.pending, this.state.pageNo, this.state.pageLength, shouldUpdate)
+        .catch(error => {
+          console.log(error);
+          var errormsg = error.error || 'Please check your connection.';
+          self.props.setSnackbar(errormsg, 5000, '');
+          console.log(errormsg);
+        })
+        .finally(() => {
+          self.setState({ pageLoading: false, authLoading: null });
+        })
+    );
   }
 
   _sortColumn() {
@@ -84,9 +91,7 @@ export class Pending extends React.Component {
 
   _handlePageChange(pageNo) {
     var self = this;
-    self.setState({ selectedRows: [], currentPage: pageNo, pageLoading: true, expandRow: null, pageNo: pageNo }, () => {
-      self._getDevices();
-    });
+    self.setState({ selectedRows: [], currentPage: pageNo, pageLoading: true, expandRow: null, pageNo: pageNo }, () => self._getDevices(true));
   }
 
   _getDevicesFromSelectedRows() {
@@ -160,15 +165,29 @@ export class Pending extends React.Component {
 
   render() {
     const self = this;
-    var limitMaxed = this.props.deviceLimit ? this.props.deviceLimit <= this.props.acceptedDevices : false;
-    var limitNear = this.props.deviceLimit ? this.props.deviceLimit < this.props.acceptedDevices + this.props.devices.length : false;
-    var selectedOverLimit = this.props.deviceLimit ? this.props.deviceLimit < this.props.acceptedDevices + this.state.selectedRows.length : false;
+    const {
+      acceptedDevices,
+      count,
+      devices,
+      deviceLimit,
+      disabled,
+      filters,
+      globalSettings,
+      highlightHelp,
+      onboardingComplete,
+      openSettingsDialog,
+      showHelptips,
+      showOnboardingTips
+    } = self.props;
+    var limitMaxed = deviceLimit ? deviceLimit <= acceptedDevices : false;
+    var limitNear = deviceLimit ? deviceLimit < acceptedDevices + devices.length : false;
+    var selectedOverLimit = deviceLimit ? deviceLimit < acceptedDevices + this.state.selectedRows.length : false;
 
     const columnHeaders = [
       {
-        title: self.props.globalSettings.id_attribute || 'Device ID',
+        title: globalSettings.id_attribute || 'Device ID',
         name: 'device_id',
-        customize: () => self.props.openSettingsDialog(),
+        customize: openSettingsDialog,
         style: { flexGrow: 1 }
       },
       {
@@ -193,14 +212,13 @@ export class Pending extends React.Component {
         <p className="warning">
           <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
           {limitMaxed ? <span>You have reached</span> : null}
-          {limitNear && !limitMaxed ? <span>You are nearing</span> : null} your limit of authorized devices: {this.props.acceptedDevices} of{' '}
-          {this.props.deviceLimit}
+          {limitNear && !limitMaxed ? <span>You are nearing</span> : null} your limit of authorized devices: {acceptedDevices} of {deviceLimit}
         </p>
       ) : null;
 
     const deviceConnectingProgressed = getOnboardingStepCompleted('devices-pending-onboarding');
     let onboardingComponent = null;
-    if (self.props.showHelptips && !self.props.onboardingComplete) {
+    if (showHelptips && !onboardingComplete) {
       if (this.deviceListRef) {
         const element = this.deviceListRef ? this.deviceListRef.getElementsByClassName('body')[0] : null;
         onboardingComponent = getOnboardingComponentFor('devices-pending-onboarding', {
@@ -214,7 +232,7 @@ export class Pending extends React.Component {
         };
         onboardingComponent = getOnboardingComponentFor('devices-pending-accepting-onboarding', { place: 'left', anchor });
       }
-      if (self.props.acceptedDevices && !window.sessionStorage.getItem('pendings-redirect')) {
+      if (acceptedDevices && !window.sessionStorage.getItem('pendings-redirect')) {
         window.sessionStorage.setItem('pendings-redirect', true);
         return <Redirect to="/devices" />;
       }
@@ -222,37 +240,46 @@ export class Pending extends React.Component {
 
     return (
       <div className="tab-container">
-        <Loader show={this.state.authLoading} />
-
-        {this.props.devices.length && (!this.state.pageLoading || this.state.authLoading !== 'all') ? (
-          <div className="padding-bottom" ref={ref => (this.deviceListRef = ref)}>
-            <h3 className="align-center">
-              {this.props.count} {pluralize('devices', this.props.count)} pending authorization
+        {!!count && (
+          <div className="align-center">
+            <h3 className="inline-block margin-right">
+              {count} {pluralize('devices', count)} pending authorization
             </h3>
-
+            {!this.state.authLoading && (
+              <Filters identityOnly={true} onFilterChange={filters => self._getDevices(true, filters)} refreshDevices={() => self._getDevices(true)} />
+            )}
+          </div>
+        )}
+        <Loader show={this.state.authLoading} />
+        {devices.length && (!this.state.pageLoading || this.state.authLoading !== 'all') ? (
+          <div className="padding-bottom" ref={ref => (this.deviceListRef = ref)}>
             {deviceLimitWarning}
-
             <DeviceList
               {...self.props}
               {...self.state}
               className="pending"
               columnHeaders={columnHeaders}
+              filterable={true}
               limitMaxed={limitMaxed}
               onSelect={selection => self.onRowSelection(selection)}
               onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}
               onPageChange={e => self._handlePageChange(e)}
-              pageTotal={self.props.count}
+              pageTotal={count}
               refreshDevices={() => self._getDevices()}
             />
           </div>
         ) : (
           <div>
-            {self.props.showHelptips && self.props.showOnboardingTips && !self.props.onboardingComplete && !deviceConnectingProgressed ? (
+            {showHelptips && showOnboardingTips && !onboardingComplete && !deviceConnectingProgressed ? (
               <DevicePendingTip />
             ) : (
               <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>
-                <p>There are no devices pending authorization</p>
-                {this.props.highlightHelp ? (
+                <p>
+                  {filters.length
+                    ? `There are no pending devices matching the selected ${pluralize('filters', filters.length)}`
+                    : 'There are no devices pending authorization'}
+                </p>
+                {highlightHelp ? (
                   <p>
                     Visit the <Link to="/help/getting-started">Help section</Link> to learn how to connect devices to the Mender server.
                   </p>
@@ -272,7 +299,7 @@ export class Pending extends React.Component {
               </span>
               <Button
                 variant="contained"
-                disabled={this.props.disabled || limitMaxed || selectedOverLimit}
+                disabled={disabled || limitMaxed || selectedOverLimit}
                 onClick={() => this._authorizeDevices()}
                 buttonRef={ref => (this.authorizeRef = ref)}
                 color="primary"
@@ -289,17 +316,19 @@ export class Pending extends React.Component {
   }
 }
 
-const actionCreators = { getDevicesByStatus, updateDeviceAuth, setSnackbar };
+const actionCreators = { getAllDevicesByStatus, getDevicesByStatus, setDeviceFilters, setSnackbar, updateDeviceAuth };
 
 const mapStateToProps = state => {
   return {
     acceptedDevices: state.devices.byStatus.accepted.total || 0,
     count: state.devices.byStatus.pending.total,
-    fullDevices: state.devices.selectedDeviceList.map(id => state.devices.byId[id]),
-    devices: state.devices.selectedDeviceList,
+    devices: state.devices.selectedDeviceList.slice(0, DEVICE_LIST_MAXIMUM_LENGTH),
     deviceLimit: state.devices.limit,
+    filters: state.devices.filters || [],
+    fullDevices: state.devices.selectedDeviceList.map(id => state.devices.byId[id]),
     globalSettings: state.users.globalSettings,
     onboardingComplete: state.users.onboarding.complete,
+    pendingDeviceIds: state.devices.byStatus.pending.deviceIds,
     showHelptips: state.users.showHelptips,
     showOnboardingTips: state.users.onboarding.showTips
   };

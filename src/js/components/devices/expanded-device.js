@@ -75,7 +75,6 @@ export class ExpandedDevice extends React.Component {
 
   toggleAuthsets(authsets = !this.state.authsets) {
     this.setState({ authsets });
-    this.props.pause();
     this.props.refreshDevices();
   }
 
@@ -279,14 +278,12 @@ export class ExpandedDevice extends React.Component {
 
         {status === DEVICE_STATES.accepted && !waiting ? (
           <div className="device-actions" style={{ marginTop: '24px' }}>
-            <Button onClick={() => this._copyLinkToClipboard()}>
-              <LinkIcon className="rotated buttonLabelIcon" />
+            <Button onClick={() => this._copyLinkToClipboard()} startIcon={<LinkIcon />}>
               Copy link to this device
             </Button>
             {status === DEVICE_STATES.accepted ? (
               <span className="margin-left">
-                <Button to={`/deployments?open=true&deviceId=${this.props.device.id}`} component={ForwardingLink}>
-                  <ReplayIcon className="rotated buttonLabelIcon" />
+                <Button to={`/deployments?open=true&deviceId=${this.props.device.id}`} component={ForwardingLink} startIcon={<ReplayIcon />}>
                   Create a deployment for this device
                 </Button>
               </span>

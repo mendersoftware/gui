@@ -133,7 +133,7 @@ exports[`Review deployment Component renders correctly 1`] = `
         onClick={[Function]}
         style={
           Object {
-            "flexBasis": 240,
+            "flexBasis": 480,
             "margin": "-5px 0",
           }
         }
@@ -211,6 +211,41 @@ exports[`Review deployment Component renders correctly 1`] = `
                     2019-01-01 13:00
                   </time>
                 </span>
+                 
+              </div>
+            </div>
+          </div>
+        </li>
+      </div>
+      <div
+        onClick={[Function]}
+        style={
+          Object {
+            "flexBasis": 240,
+            "margin": "-5px 0",
+          }
+        }
+      >
+        <li
+          className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+          disabled={true}
+        >
+          <div
+            className="MuiListItemText-root MuiListItemText-multiline"
+          >
+            <span
+              className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+            >
+              Number of retries
+            </span>
+            <div
+              className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+            >
+              <div>
+                <span
+                  className=" "
+                  style={Object {}}
+                />
                  
               </div>
             </div>

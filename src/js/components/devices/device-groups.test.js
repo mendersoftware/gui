@@ -12,10 +12,6 @@ describe('DeviceGroups Component', () => {
   beforeEach(() => {
     store = mockStore({
       devices: {
-        groups: {
-          byId: {},
-          selectedGroup: null
-        },
         byStatus: {
           accepted: {
             total: 0,
@@ -25,8 +21,15 @@ describe('DeviceGroups Component', () => {
             total: 0
           }
         },
+        groups: {
+          byId: {},
+          selectedGroup: null
+        },
         filters: [],
-        filteringAttributes: { inventoryAttributes: [] },
+        filteringAttributes: {
+          identityAttributes: [],
+          inventoryAttributes: []
+        },
         selectedDevice: null,
         selectedDeviceList: []
       },

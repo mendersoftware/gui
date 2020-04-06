@@ -2,7 +2,7 @@ import parse from 'parse-link-header';
 
 import DevicesApi from '../api/devices-api';
 import * as DeviceConstants from '../constants/deviceConstants';
-import { deriveAttributesFromDevices, duplicateFilter, mapDeviceAttributes } from '../helpers';
+import { deriveAttributesFromDevices, duplicateFilter, encodeFilters, filterDevices, mapDeviceAttributes } from '../helpers';
 
 // default per page until pagination and counting integrated
 const defaultPerPage = 20;
@@ -32,7 +32,7 @@ export const getGroups = () => dispatch =>
   );
 
 export const addDeviceToGroup = (group, deviceId) => dispatch =>
-  DevicesApi.put(`${inventoryApiUrl}/devices/${deviceId}/group`, { group }).then(() =>
+  DevicesApi.put(`${inventoryApiUrl}/devices/${deviceId}/group`, { group: encodeURIComponent(group) }).then(() =>
     Promise.all([
       dispatch({
         type: DeviceConstants.ADD_TO_GROUP,
@@ -80,18 +80,44 @@ export const selectGroup = group => (dispatch, getState) => {
   ]);
 };
 
-export const selectDevice = deviceId => dispatch => {
-  let tasks = [
+export const trySelectDevice = (deviceId, status) => (dispatch, getState) => {
+  const deviceIds = status ? getState().devices.byStatus[status].deviceIds : Object.keys(getState().devices.byId);
+  if (status === DeviceConstants.DEVICE_STATES.accepted || (deviceIds[0] && deviceId.length === deviceIds[0].length)) {
+    return Promise.resolve(dispatch(selectDevice(deviceId, status)));
+  }
+  const possibleDevices = deviceIds.filter(id => id.startsWith(deviceId));
+  return Promise.resolve(possibleDevices.length ? dispatch(selectDevices(possibleDevices)) : dispatch(selectDevice(deviceId)));
+};
+
+export const selectDevice = (deviceId, status) => dispatch => {
+  if (deviceId) {
+    const tasks = [dispatch(getDeviceById(deviceId)), dispatch(getDeviceAuth(deviceId))];
+    return Promise.all(tasks)
+      .then(results => {
+        if (status && status !== results[1].status) {
+          return Promise.reject();
+        }
+        dispatch({
+          type: DeviceConstants.SELECT_DEVICE,
+          deviceId
+        });
+      })
+      .catch(() =>
+        Promise.all([
+          dispatch(selectDevices([])),
+          dispatch({
+            type: DeviceConstants.SELECT_DEVICE,
+            deviceId: null
+          })
+        ])
+      );
+  }
+  return Promise.resolve(
     dispatch({
       type: DeviceConstants.SELECT_DEVICE,
       deviceId
     })
-  ];
-  if (deviceId) {
-    tasks.push(dispatch(getDeviceById(deviceId)));
-    tasks.push(dispatch(getDeviceAuth(deviceId)));
-  }
-  return Promise.all(tasks);
+  );
 };
 
 export const selectDevices = deviceIds => dispatch => dispatch({ type: DeviceConstants.SELECT_DEVICES, deviceIds });
@@ -214,26 +240,28 @@ export const getDevicesWithInventory = devices => dispatch =>
     return Promise.resolve();
   });
 
-export const getDevices = (page = defaultPage, perPage = defaultPerPage, searchTerm, shouldSelectDevices = false) => dispatch => {
+export const getDevices = (page = defaultPage, perPage = defaultPerPage, filters, shouldSelectDevices = false) => dispatch => {
   // get devices from inventory
-  var search = searchTerm ? `&${searchTerm}` : '';
-  return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${perPage}&page=${page}${search}`).then(res => {
+  const search = filters ? `&${encodeFilters(filters)}` : '';
+  const query = DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${perPage}&page=${page}${search}`);
+  return query.then(res => {
     const devices = res.body.map(device => ({ ...device, attributes: mapDeviceAttributes(device.attributes) }));
-    let tasks = [
+    let tasks = [];
+    tasks.push(
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICES_LIST,
         devices
-      }),
-      // for each device, get device identity info
-      dispatch(getDevicesWithAuth(devices))
-    ];
-    if (devices.length && devices.length < 200) {
+      })
+    );
+    // for each device, get device identity info
+    tasks.push(dispatch(getDevicesWithAuth(devices)));
+    if (devices.length < 200) {
       tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(devices))));
     }
     if (shouldSelectDevices) {
       tasks.push(dispatch(selectDevices(devices.map(device => device.id))));
     }
-    Promise.all(tasks);
+    return Promise.all(tasks);
   });
 };
 
@@ -307,8 +335,8 @@ export const getAllDevices = limit => (dispatch, getState) => {
   return getAllDevices();
 };
 
-/* 
-    Device Auth + admission 
+/*
+    Device Auth + admission
   */
 export const getDeviceCount = status => dispatch => {
   return DevicesApi.get(`${deviceAuthV2}/devices/count${status ? `?status=${status}` : ''}`).then(res => {
@@ -341,8 +369,14 @@ export const getDeviceLimit = () => dispatch =>
     })
   );
 
-export const getDevicesByStatus = (status, page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false) => (dispatch, getState) =>
-  DevicesApi.get(`${deviceAuthV2}/devices?${status ? `status=${status}` : ''}&per_page=${perPage}&page=${page}`).then(response => {
+export const getDevicesByStatus = (status, page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false) => (dispatch, getState) => {
+  const query = DevicesApi.get(`${deviceAuthV2}/devices?${status ? `status=${status}` : ''}&per_page=${perPage}&page=${page}`);
+  const filters = getState().devices.filters;
+  let possibleDeviceIds = [];
+  if (filters.length && shouldSelectDevices && status !== DeviceConstants.DEVICE_STATES.accepted) {
+    possibleDeviceIds = filterDevices(getState().devices, filters, status);
+  }
+  return query.then(response => {
     let tasks = [];
     if (!status) {
       tasks.push(
@@ -356,11 +390,16 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
       }
     } else {
       const deviceAccu = reduceReceivedDevices(response.body, [], getState(), status);
+      let total;
+      if (getState().devices.byStatus[status].total === deviceAccu.ids.length) {
+        total = deviceAccu.ids.length;
+      }
       tasks = [
         dispatch({
           type: DeviceConstants[`SET_${status.toUpperCase()}_DEVICES`],
           deviceIds: deviceAccu.ids,
-          status
+          status,
+          total
         }),
         dispatch({
           type: DeviceConstants.RECEIVE_DEVICES,
@@ -371,21 +410,23 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
         tasks.push(dispatch(getDevicesWithInventory(response.body)));
       }
       if (shouldSelectDevices) {
-        tasks.push(dispatch(selectDevices(deviceAccu.ids)));
+        // since deviceauth doesn't have any filtering we have to rely on the local filtering capabilities if filters are selected
+        tasks.push(dispatch(selectDevices(filters.length ? possibleDeviceIds : deviceAccu.ids)));
       }
     }
     return Promise.all(tasks);
   });
+};
 
 export const getAllDevicesByStatus = status => (dispatch, getState) => {
   const getAllDevices = (perPage = 500, page = 1, devices = []) =>
     DevicesApi.get(`${deviceAuthV2}/devices?status=${status}&per_page=${perPage}&page=${page}`).then(res => {
-      var links = parse(res.headers['link']);
       const deviceAccu = reduceReceivedDevices(res.body, devices, getState(), status);
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICES,
         devicesById: deviceAccu.devicesById
       });
+      const links = parse(res.headers['link']);
       if (links.next) {
         return getAllDevices(perPage, page + 1, deviceAccu.ids);
       }
@@ -411,12 +452,13 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
 };
 
 export const getDeviceAuth = id => dispatch =>
-  DevicesApi.get(`${deviceAuthV2}/devices/${id}`).then(res =>
+  DevicesApi.get(`${deviceAuthV2}/devices/${id}`).then(res => {
     dispatch({
       type: DeviceConstants.RECEIVE_DEVICE_AUTH,
       device: res.body
-    })
-  );
+    });
+    return Promise.resolve(res.body);
+  });
 
 export const getDevicesWithAuth = devices => dispatch => devices.map(device => dispatch(getDeviceAuth(device.id)));
 

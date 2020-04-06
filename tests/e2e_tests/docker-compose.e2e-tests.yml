@@ -16,6 +16,9 @@ services:
       - mender-inventory
       - mender-useradm
       - mender-mongo
+      - mender-workflows-server
+      - mender-workflows-worker
+      - mender-create-artifact-worker
       - minio
     volumes:
       - ${GUI_REPOSITORY}/tests/e2e_tests/cypress/screenshots:/e2e/cypress/screenshots

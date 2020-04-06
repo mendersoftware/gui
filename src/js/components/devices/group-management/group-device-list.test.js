@@ -3,21 +3,22 @@ import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import OnboardingCompleteTip from './onboardingcompletetip';
+import GroupDeviceList from './group-device-list';
 
 const mockStore = configureStore([thunk]);
 
-describe('OnboardingCompleteTip Component', () => {
+describe('GroupDeviceList Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
-      app: { docsVersion: null, features: { hasMultitenancy: true, isHosted: true } },
       devices: {
-        byId: {},
-        byStatus: { accepted: { deviceIds: [] } },
-        filters: []
+        byStatus: {
+          accepted: { deviceIds: [], total: 0 }
+        }
       },
-      users: {}
+      users: {
+        globalSettings: {}
+      }
     });
   });
 
@@ -25,7 +26,7 @@ describe('OnboardingCompleteTip Component', () => {
     const tree = renderer
       .create(
         <Provider store={store}>
-          <OnboardingCompleteTip />
+          <GroupDeviceList selectedDevices={[]} />
         </Provider>
       )
       .toJSON();

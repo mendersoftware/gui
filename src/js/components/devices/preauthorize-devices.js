@@ -22,7 +22,6 @@ export class Preauthorize extends React.Component {
       pageLength: 20,
       pageLoading: true,
       openPreauth: false,
-      openRemove: false,
       inputs: [{ key: '', value: '' }],
       public: '',
       refreshDeviceLength: 10000,
@@ -32,7 +31,7 @@ export class Preauthorize extends React.Component {
 
   componentDidMount() {
     this.timer = setInterval(() => this._getDevices(), this.state.refreshDeviceLength);
-    this._getDevices();
+    this._getDevices(true);
   }
 
   componentWillUnmount() {
@@ -61,10 +60,10 @@ export class Preauthorize extends React.Component {
   /*
    * Devices to show
    */
-  _getDevices() {
+  _getDevices(shouldUpdate = false) {
     var self = this;
     Promise.all([
-      self.props.getDevicesByStatus(DEVICE_STATES.preauth, this.state.pageNo, this.state.pageLength),
+      self.props.getDevicesByStatus(DEVICE_STATES.preauth, this.state.pageNo, this.state.pageLength, shouldUpdate),
       self.props.getDeviceCount(DEVICE_STATES.preauth)
     ])
       .catch(error => {
@@ -82,9 +81,7 @@ export class Preauthorize extends React.Component {
 
   _handlePageChange(pageNo) {
     var self = this;
-    self.setState({ pageLoading: true, expandRow: null, pageNo: pageNo }, () => {
-      self._getDevices();
-    });
+    self.setState({ pageLoading: true, expandRow: null, pageNo: pageNo }, () => self._getDevices(true));
   }
 
   _togglePreauth(openPreauth = !this.state.openPreauth) {

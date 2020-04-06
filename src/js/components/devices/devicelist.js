@@ -98,6 +98,7 @@ export class DeviceList extends React.Component {
       className,
       columnHeaders,
       devices,
+      expandable = true,
       filterable = false,
       filters,
       pageLength,
@@ -106,7 +107,8 @@ export class DeviceList extends React.Component {
       pageTotal,
       onSelect,
       onChangeRowsPerPage,
-      selectedRows
+      selectedRows,
+      showPagination = true
     } = self.props;
     const { sortCol, sortDown, expandedDeviceId } = self.state;
     const columnWidth = `${(onSelect ? 90 : 100) / columnHeaders.length}%`;
@@ -121,7 +123,6 @@ export class DeviceList extends React.Component {
               onChange={() => self.onSelectAllClick()}
             />
           ) : null}
-
           {columnHeaders.map(item => (
             <div className="columnHeader" key={item.name} style={Object.assign({ width: item.width || columnWidth }, item.style)}>
               {item.title}
@@ -129,7 +130,7 @@ export class DeviceList extends React.Component {
               {item.customize ? <SettingsIcon onClick={item.customize} style={{ fontSize: 16, marginLeft: 'auto' }} /> : null}
             </div>
           ))}
-          <div style={{ width: 48 }} />
+          {expandable && <div style={{ width: 48 }} />}
         </div>
         <div className="body">
           {devices.map((device, index) => (
@@ -140,12 +141,12 @@ export class DeviceList extends React.Component {
               key={`device-${device.id}`}
               selectable={!!onSelect}
               selected={self._isSelected(index)}
-              onClick={event => self._expandRow(event, index)}
+              onClick={event => (expandable ? self._expandRow(event, index) : self._onRowSelection(index))}
               onRowSelect={() => self._onRowSelection(index)}
             />
           ))}
         </div>
-        {(!filterable || filters.length === 0) && (
+        {showPagination && (!filterable || filters.length === 0) && (
           <Pagination
             count={pageTotal}
             rowsPerPage={pageLength}
@@ -175,6 +176,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     devices,
     filters: state.devices.filters,
+    globalSettings: state.users.globalSettings,
     onboardingComplete: state.users.onboarding.complete
   };
 };

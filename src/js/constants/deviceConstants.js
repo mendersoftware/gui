@@ -35,6 +35,7 @@ module.exports = {
 
   SET_DEVICE_LIMIT: 'SET_DEVICE_LIMIT',
 
+  DEVICE_LIST_MAXIMUM_LENGTH: 50,
   DEVICE_STATES: {
     accepted: 'accepted',
     pending: 'pending',

@@ -378,7 +378,7 @@ ul.link-list {
   background-size: contain;
 
   &.enterprise {
-      background-image: url('../assets/img/headerlogo-enterprise.png');
+    background-image: url('../assets/img/headerlogo-enterprise.png');
   }
 }
 
@@ -558,6 +558,10 @@ ul.link-list {
 }
 
 .dialogTableContainer {
+  .deviceList {
+    min-width: initial;
+  }
+
   .transition(opacity 0.4s ease-in) !important;
   overflow: hidden;
   position: relative;
@@ -998,10 +1002,6 @@ ul.link-list {
   .rotate(-45deg);
 }
 
-.buttonLabelIcon {
-  margin-right: 8px;
-}
-
 .absoluteTextfieldButton {
   position: absolute;
   top: 70px;
@@ -1042,25 +1042,10 @@ ul.link-list {
   }
 }
 
-.filterWrapper {
-  padding: 10px 20px;
-  overflow-y: auto;
-}
-
-.filterPair {
-  margin-bottom: 14px;
-  padding: 4px 10% 4px 11px;
-  position: relative;
+.filter-wrapper {
   background-color: #fafbfc;
-
-  &:first-child {
-    margin-top: 14px;
-  }
-}
-
-span.length {
-  font-size: 13px;
-  color: #8c8c8d;
+  overflow-y: auto;
+  padding: 10px 20px;
 }
 
 .maxTable {
@@ -1632,6 +1617,15 @@ tr.expand {
   }
   &.break-all {
     word-break: break-all;
+  }
+  &.tenant-token-text {
+    display: block;
+    max-height: initial;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    &.expanded-attribute {
+      white-space: initial;
+    }
   }
 }
 
