@@ -276,7 +276,7 @@ export class DeviceGroups extends React.Component {
   onFilterChange(filters) {
     var self = this;
     clearInterval(self.deviceTimer);
-    self.setState({ pageNo: 1 }, () => {
+    self.setState({ pageNo: 1, pageLength: filters.length ? DeviceConstants.DEVICE_LIST_MAXIMUM_LENGTH : self.state.pageLength }, () => {
       clearInterval(self.deviceTimer);
       self.deviceTimer = setInterval(() => self._getDevices(), refreshDeviceLength);
       self._getDevices(!filters.length);

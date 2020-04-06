@@ -51,19 +51,21 @@ export class Rejected extends React.Component {
   /*
    * Devices to show
    */
-  _getDevices(shouldUpdate = false) {
+  _getDevices(shouldUpdate = false, filters = []) {
     var self = this;
-    self.props
-      .getDevicesByStatus(DEVICE_STATES.rejected, this.state.pageNo, this.state.pageLength, shouldUpdate)
-      .catch(error => {
-        console.log(error);
-        var errormsg = error.error || 'Please check your connection.';
-        self.props.setSnackbar(errormsg, 5000, '');
-        console.log(errormsg);
-      })
-      .finally(() => {
-        self.setState({ pageLoading: false });
-      });
+    self.setState({ pageNo: filters.length ? 1 : self.state.pageNo, pageLength: filters.length ? DEVICE_LIST_MAXIMUM_LENGTH : self.state.pageLength }, () =>
+      self.props
+        .getDevicesByStatus(DEVICE_STATES.rejected, this.state.pageNo, this.state.pageLength, shouldUpdate)
+        .catch(error => {
+          console.log(error);
+          var errormsg = error.error || 'Please check your connection.';
+          self.props.setSnackbar(errormsg, 5000, '');
+          console.log(errormsg);
+        })
+        .finally(() => {
+          self.setState({ pageLoading: false });
+        })
+    );
   }
   _sortColumn(col) {
     console.log(`sort: ${col}`);
@@ -107,7 +109,7 @@ export class Rejected extends React.Component {
           <div className="align-center">
             <h3 className="inline-block margin-right">Rejected devices</h3>
             {!this.state.pageLoading && (
-              <Filters identityOnly={true} onFilterChange={() => self._getDevices(true)} refreshDevices={() => self._getDevices(true)} />
+              <Filters identityOnly={true} onFilterChange={filters => self._getDevices(true, filters)} refreshDevices={() => self._getDevices(true)} />
             )}
           </div>
         )}
