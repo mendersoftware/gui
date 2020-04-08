@@ -82,9 +82,6 @@ export class DeviceGroups extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.selectedGroup !== this.props.selectedGroup) {
-      this._refreshGroups();
-    }
     if (this.props.currentTab !== 'Device groups') {
       clearInterval(this.deviceTimer);
     }
@@ -235,7 +232,7 @@ export class DeviceGroups extends React.Component {
         // reached end of list
         self.setState({ createGroupDialog: false, modifyGroupDialog: false, fromFilters: false, tmpGroup: '', selectedField: '' }, () => {
           self.props.setSnackbar('The group was updated successfully', 5000);
-          self._refreshGroups(() => self._handleGroupChange(group));
+          self._refreshGroups();
         });
       })
       .catch(err => {
@@ -274,16 +271,6 @@ export class DeviceGroups extends React.Component {
         }
       })
       .catch(err => console.log(err));
-  }
-
-  onFilterChange(filters) {
-    var self = this;
-    clearInterval(self.deviceTimer);
-    self.setState({ pageNo: 1, pageLength: filters.length ? DeviceConstants.DEVICE_LIST_MAXIMUM_LENGTH : self.state.pageLength }, () => {
-      clearInterval(self.deviceTimer);
-      self.deviceTimer = setInterval(() => self._getDevices(), refreshDeviceLength);
-      self._getDevices(!filters.length);
-    });
   }
 
   render() {
@@ -329,16 +316,14 @@ export class DeviceGroups extends React.Component {
           ) : null}
           <AuthorizedDevices
             acceptedCount={acceptedDevices}
-            addDevicesToGroup={devices => this._addDevicesToGroup(devices)}
+            addDevicesToGroup={devices => self._addDevicesToGroup(devices)}
             allCount={allCount}
-            allowDeviceGroupRemoval={allowDeviceGroupRemoval}
             currentTab={currentTab}
             devices={devices}
-            group={groupName}
             groupCount={groupCount}
             loading={loading}
             onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}
-            onFilterChange={filters => self.onFilterChange(filters)}
+            onFilterChange={() => self.setState({ pageNo: 1 })}
             onPageChange={e => self._handlePageChange(e)}
             onGroupClick={() => self.onGroupClick()}
             onGroupRemoval={() => self.setState({ removeGroup: !removeGroup })}
