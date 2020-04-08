@@ -109,9 +109,7 @@ export class Rejected extends React.Component {
         {!!count && (
           <div className="align-center">
             <h3 className="inline-block margin-right">Rejected devices</h3>
-            {!this.state.pageLoading && (
-              <Filters identityOnly={true} onFilterChange={filters => self._getDevices(true, filters)} refreshDevices={() => self._getDevices(true)} />
-            )}
+            {!this.state.pageLoading && <Filters identityOnly={true} onFilterChange={filters => self._getDevices(true, filters)} />}
           </div>
         )}
         <Loader show={this.state.pageLoading} />

@@ -246,9 +246,7 @@ export class Pending extends React.Component {
             <h3 className="inline-block margin-right">
               {count} {pluralize('devices', count)} pending authorization
             </h3>
-            {!this.state.authLoading && (
-              <Filters identityOnly={true} onFilterChange={filters => self._getDevices(true, filters)} refreshDevices={() => self._getDevices(true)} />
-            )}
+            {!this.state.authLoading && <Filters identityOnly={true} onFilterChange={filters => self._getDevices(true, filters)} />}
           </div>
         )}
         <Loader show={this.state.authLoading} />

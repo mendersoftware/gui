@@ -91,7 +91,11 @@ export class DeviceGroups extends React.Component {
     if (prevProps.currentTab !== this.props.currentTab) {
       this.props.setDeviceFilters([]);
     }
-    if (prevProps.filters !== this.props.filters || prevProps.groupCount !== this.props.groupCount || prevProps.selectedGroup !== this.props.selectedGroup) {
+    if (
+      prevProps.groupCount !== this.props.groupCount ||
+      prevProps.selectedGroup !== this.props.selectedGroup ||
+      filtersCompare(prevProps.filters, this.props.filters)
+    ) {
       clearInterval(this.deviceTimer);
       if (this.props.currentTab === 'Device groups') {
         this.deviceTimer = setInterval(() => this._getDevices(), refreshDeviceLength);
