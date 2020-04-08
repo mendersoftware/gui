@@ -2,7 +2,7 @@ import parse from 'parse-link-header';
 
 import DevicesApi from '../api/devices-api';
 import * as DeviceConstants from '../constants/deviceConstants';
-import { deriveAttributesFromDevices, duplicateFilter, encodeFilters, filterDevices, mapDeviceAttributes } from '../helpers';
+import { deriveAttributesFromDevices, duplicateFilter, filterDevices, isUngroupedGroup, mapDeviceAttributes } from '../helpers';
 
 // default per page until pagination and counting integrated
 const defaultPerPage = 20;
@@ -14,22 +14,30 @@ const deviceAuthV2 = `${apiUrlV2}/devauth`;
 const inventoryApiUrl = `${apiUrl}/inventory`;
 const inventoryApiUrlV2 = `${apiUrlV2}/inventory`;
 
-export const getGroups = () => dispatch =>
-  DevicesApi.get(`${inventoryApiUrl}/groups`).then(res =>
-    Promise.all(
-      res.body.reduce(
-        (accu, group) => {
-          accu.push(dispatch(getGroupDevices(group)));
-          return accu;
-        },
-        [
-          dispatch({
-            type: DeviceConstants.RECEIVE_GROUPS,
-            groups: res.body
-          })
-        ]
-      )
-    )
+export const getGroups = () => (dispatch, getState) =>
+  DevicesApi.get(`${inventoryApiUrl}/groups`).then(res => {
+    const state = getState().devices.groups.byId;
+    const groups = res.body.reduce((accu, group) => {
+      accu[group] = { deviceIds: [], filters: [], total: 0, ...state[group] };
+      return accu;
+    }, {});
+    return Promise.resolve(
+      dispatch({
+        type: DeviceConstants.RECEIVE_GROUPS,
+        groups
+      })
+    );
+  });
+
+export const initializeGroupsDevices = () => (dispatch, getState) =>
+  Promise.all(
+    Object.keys(getState().devices.groups.byId).reduce((accu, group) => {
+      if (isUngroupedGroup(group)) {
+        return accu;
+      }
+      accu.push(dispatch(getGroupDevices(group, 1, 1)));
+      return accu;
+    }, [])
   );
 
 export const addDeviceToGroup = (group, deviceId) => dispatch =>
@@ -63,6 +71,22 @@ export const removeDeviceFromGroup = (deviceId, group) => dispatch =>
       })
     ])
   );
+
+export const addStaticGroup = (group, deviceIds) => (dispatch, getState) =>
+  Promise.all(deviceIds.map(id => dispatch(addDeviceToGroup(group, id)))).then(() =>
+    Promise.resolve(
+      dispatch({
+        type: DeviceConstants.ADD_STATIC_GROUP,
+        group: { deviceIds: [], total: 0, filters: [], ...getState().devices.groups.byId[group] },
+        selectedGroup: group
+      })
+    )
+  );
+
+export const removeStaticGroup = groupName => (dispatch, getState) => {
+  const { deviceIds } = getState().devices.groups.byId[groupName];
+  return Promise.all(deviceIds.map(id => dispatch(removeDeviceFromGroup(id, groupName))));
+};
 
 // for some reason these functions can not be stored in the deviceConstants...
 const filterProcessors = {
@@ -156,11 +180,16 @@ export const removeDynamicGroup = groupName => (dispatch, getState) => {
  * Device inventory functions
  */
 export const selectGroup = group => (dispatch, getState) => {
-  const selectedGroup = getState().devices.groups.byId[group] ? group : null;
-  return Promise.all([
-    dispatch({ type: DeviceConstants.SELECT_GROUP, group: selectedGroup }),
-    dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: [] })
-  ]);
+  let selectedGroup = getState().devices.groups.byId[group];
+  let tasks = [];
+  if (selectedGroup && selectedGroup.filters && selectedGroup.filters.length) {
+    tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: selectedGroup.filters }));
+  } else {
+    tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: [] }));
+  }
+  selectedGroup = getState().devices.groups.byId[group] ? group : null;
+  tasks.push(dispatch({ type: DeviceConstants.SELECT_GROUP, group: selectedGroup }));
+  return Promise.all(tasks);
 };
 
 export const trySelectDevice = (deviceId, status) => (dispatch, getState) => {
