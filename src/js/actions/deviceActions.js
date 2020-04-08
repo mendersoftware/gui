@@ -12,6 +12,7 @@ const apiUrl = '/api/management/v1';
 const apiUrlV2 = '/api/management/v2';
 const deviceAuthV2 = `${apiUrlV2}/devauth`;
 const inventoryApiUrl = `${apiUrl}/inventory`;
+const inventoryApiUrlV2 = `${apiUrlV2}/inventory`;
 
 export const getGroups = () => dispatch =>
   DevicesApi.get(`${inventoryApiUrl}/groups`).then(res =>
@@ -63,11 +64,93 @@ export const removeDeviceFromGroup = (deviceId, group) => dispatch =>
     ])
   );
 
-export const addGroup = group => dispatch =>
-  dispatch({
-    type: DeviceConstants.ADD_GROUP,
-    group
+// for some reason these functions can not be stored in the deviceConstants...
+const filterProcessors = {
+  $eq: val => val,
+  $ne: val => val,
+  $gt: val => Number(val),
+  $gte: val => Number(val),
+  $lt: val => Number(val),
+  $lte: val => Number(val),
+  $in: val => ('' + val).split(','),
+  $nin: val => ('' + val).split(',')
+};
+const mapFiltersToTerms = filters =>
+  filters.map(filter => ({
+    scope: filter.scope,
+    attribute: filter.key,
+    type: filter.operator,
+    value: filterProcessors[filter.operator](filter.value)
+  }));
+const mapTermsToFilters = terms => terms.map(term => ({ scope: term.scope, key: term.attribute, operator: term.type, value: term.value }));
+
+export const getDynamicGroups = () => (dispatch, getState) =>
+  DevicesApi.get(`${inventoryApiUrlV2}/filters`).then(({ body: filters }) => {
+    const state = getState().devices.groups.byId;
+    const groups = (filters || []).reduce((accu, filter) => {
+      accu[filter.name] = {
+        deviceIds: [],
+        total: 0,
+        ...state[filter.name],
+        id: filter.id,
+        filters: mapTermsToFilters(filter.terms)
+      };
+      return accu;
+    }, {});
+    return Promise.resolve(
+      dispatch({
+        type: DeviceConstants.RECEIVE_DYNAMIC_GROUPS,
+        groups
+      })
+    );
   });
+
+export const getDynamicGroup = groupName => (dispatch, getState) => {
+  const filterId = getState().devices.groups.byId[groupName].id;
+  return DevicesApi.get(`${inventoryApiUrlV2}/filters/${filterId}`).then(filter =>
+    Promise.resolve(
+      dispatch({
+        type: DeviceConstants.ADD_DYNAMIC_GROUP,
+        id: filterId,
+        group: groupName,
+        filters: mapTermsToFilters(filter.terms)
+      })
+    )
+  );
+};
+
+export const addDynamicGroup = (groupName, filterPredicates) => dispatch =>
+  DevicesApi.post(`${inventoryApiUrlV2}/filters`, { name: groupName, terms: mapFiltersToTerms(filterPredicates) }).then(res =>
+    Promise.resolve(
+      dispatch({
+        type: DeviceConstants.ADD_DYNAMIC_GROUP,
+        id: res.headers['location'].substring(res.headers['location'].lastIndexOf('/') + 1),
+        group: groupName,
+        filters: filterPredicates
+      })
+    ).then(() => Promise.resolve(dispatch(selectGroup(groupName))))
+  );
+
+export const updateDynamicGroup = (groupName, filterPredicates) => (dispatch, getState) => {
+  const filterId = getState().devices.groups.byId[groupName].id;
+  return DevicesApi.delete(`${inventoryApiUrlV2}/filters/${filterId}`).then(() => Promise.resolve(dispatch(addDynamicGroup(groupName, filterPredicates))));
+};
+
+export const removeDynamicGroup = groupName => (dispatch, getState) => {
+  const filterId = getState().devices.groups.byId[groupName].id;
+  const selectedGroup = getState().devices.groups.selectedGroup === groupName ? undefined : getState().devices.groups.selectedGroup;
+  let groups = getState().devices.groups.byId;
+  delete groups[groupName];
+  return DevicesApi.delete(`${inventoryApiUrlV2}/filters/${filterId}`).then(() =>
+    Promise.resolve(
+      dispatch({
+        type: DeviceConstants.REMOVE_DYNAMIC_GROUP,
+        groups,
+        selectedGroup
+      })
+    )
+  );
+};
 
 /*
  * Device inventory functions

@@ -110,6 +110,43 @@ const deviceReducer = (state = initialState, action) => {
         }
       };
     }
+    case DeviceConstants.ADD_DYNAMIC_GROUP:
+      return {
+        ...state,
+        groups: {
+          ...state.groups,
+          byId: {
+            ...state.groups.byId,
+            [action.group]: {
+              deviceIds: [],
+              total: 0,
+              ...state.groups.byId[action.group],
+              filters: action.filters,
+              id: action.id
+            }
+          }
+        }
+      };
+    case DeviceConstants.RECEIVE_DYNAMIC_GROUPS:
+      return {
+        ...state,
+        groups: {
+          ...state.groups,
+          byId: {
+            ...state.groups.byId,
+            ...action.groups
+          }
+        }
+      };
+    case DeviceConstants.REMOVE_DYNAMIC_GROUP:
+      return {
+        ...state,
+        groups: {
+          ...state.groups,
+          selectedGroup: action.selectedGroup,
+          byId: action.groups
+        }
+      };
     case DeviceConstants.SELECT_GROUP:
       return {
         ...state,
