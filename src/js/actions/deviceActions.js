@@ -273,11 +273,14 @@ export const getGroupDevices = (group, page = defaultPage, perPage = defaultPerP
   });
 
 export const getAllGroupDevices = group => (dispatch, getState) => {
-  const forGroup = group ? `&group=${group}` : '&has_group=false';
+  const state = getState();
+  if (!group || state.devices.groups[group].filters.length) {
+    return Promise.resolve();
+  }
   const getAllDevices = (perPage = 500, page = defaultPage, devices = []) =>
-    DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${perPage}&page=${page}${forGroup}`).then(res => {
+    DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${perPage}&page=${page}&group=${group}`).then(res => {
       const links = parse(res.headers['link']);
-      const deviceAccu = reduceReceivedDevices(res.body, devices, getState());
+      const deviceAccu = reduceReceivedDevices(res.body, devices, state);
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICES,
         devicesById: deviceAccu.devicesById
