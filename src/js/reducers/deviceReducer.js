@@ -164,12 +164,12 @@ const deviceReducer = (state = initialState, action) => {
     case DeviceConstants.RECEIVE_GROUP_DEVICES:
       return {
         ...state,
-        selectedDeviceList: action.selectDevices ? action.deviceIds : state.selectedDeviceList,
         groups: {
           ...state.groups,
           byId: {
             ...state.groups.byId,
             [action.group]: {
+              ...state.groups.byId[action.group],
               deviceIds:
                 action.deviceIds.length === action.total || action.deviceIds.length > state.groups.byId[action.group].deviceIds
                   ? action.deviceIds
@@ -192,21 +192,6 @@ const deviceReducer = (state = initialState, action) => {
           }
         }
       };
-    case DeviceConstants.RECEIVE_DEVICES_LIST: {
-      const devicesById = action.devices.reduce((accu, device) => {
-        delete device.updated_ts;
-        accu[device.id] = { ...state.byId[device.id], ...device };
-        return accu;
-      }, {});
-      return {
-        ...state,
-        selectedDeviceList: Object.keys(devicesById),
-        byId: {
-          ...state.byId,
-          ...devicesById
-        }
-      };
-    }
     case DeviceConstants.RECEIVE_DEVICES:
       return {
         ...state,
