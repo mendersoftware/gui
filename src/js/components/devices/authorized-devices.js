@@ -178,7 +178,6 @@ export class Authorized extends React.Component {
             <DeviceList
               {...self.props}
               columnHeaders={columnHeaders}
-              filterable={true}
               selectedRows={selectedRows}
               onSelect={selection => self.onRowSelection(selection)}
               pageTotal={groupCount}
