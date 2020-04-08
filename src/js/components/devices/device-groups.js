@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import pluralize from 'pluralize';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
-import { Delete as DeleteIcon } from '@material-ui/icons';
 
 import CreateGroup from './create-group';
 import AuthorizedDevices from './authorized-devices';
@@ -305,15 +304,7 @@ export class DeviceGroups extends React.Component {
           />
         </div>
         <div className="rightFluid" style={{ paddingTop: '0' }}>
-          {selectedGroup && allowDeviceGroupRemoval ? (
-            <Button
-              style={{ position: 'absolute', top: 0, right: '30px', zIndex: 100 }}
-              onClick={() => self.setState({ removeGroup: !removeGroup })}
-              startIcon={<DeleteIcon />}
-            >
-              Remove group
-            </Button>
-          ) : null}
+          {/* TODO: this component and authorized devices should get decoupled somehow... */}
           <AuthorizedDevices
             acceptedCount={acceptedDevices}
             addDevicesToGroup={devices => self._addDevicesToGroup(devices)}
