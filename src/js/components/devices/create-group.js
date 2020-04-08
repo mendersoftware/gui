@@ -53,20 +53,22 @@ export class CreateGroup extends React.Component {
     this.setState({ selectedDevices, invalid: !selectedDevices.length, willBeEmpty });
   }
 
-  onNameChange(invalid, newGroup, isModification) {
+  onNameChange(isNotValid, newGroup, isModification) {
     let steps = this.state.steps;
-    if (this.state.isModification !== isModification && isModification) {
+    if (this.state.isModification !== isModification && isModification && !this.state.isCreationDynamic) {
       steps = this.state.selectedDevices.length ? [defaultSteps[0], defaultSteps[2]] : defaultSteps;
       steps = !this.state.showWarning ? steps.slice(0, steps.length - 1) : steps;
     }
-    const title = isModification ? `Add ${this.props.selectedDevices.length ? 'selected ' : ''}devices to group` : 'Create a new group';
+    const title =
+      isModification && !this.state.isCreationDynamic ? `Add ${this.props.selectedDevices.length ? 'selected ' : ''}devices to group` : 'Create a new group';
+    const invalid = isModification && this.state.isCreationDynamic ? true : isNotValid;
     this.setState({ invalid, isModification, newGroup, steps, title });
   }
 
   render() {
     const self = this;
     const { addListOfDevices, onClose } = self.props;
-    const { activeStep, invalid, isModification, newGroup, selectedDevices, showWarning, steps, title } = self.state;
+    const { activeStep, invalid, isCreationDynamic, isModification, newGroup, selectedDevices, showWarning, steps, title } = self.state;
     const ComponentToShow = steps[activeStep];
     return (
       <Dialog disableBackdropClick disableEscapeKeyDown open={true} scroll={'paper'} fullWidth={true} maxWidth="sm">
