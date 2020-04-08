@@ -21,6 +21,7 @@ export class CreateGroup extends React.Component {
       activeStep: 0,
       invalid: showWarning,
       isModification: !props.isCreation,
+      isCreationDynamic: props.isCreation && props.fromFilters,
       newGroup: '',
       selectedDevices: props.selectedDevices,
       showWarning,
@@ -35,6 +36,9 @@ export class CreateGroup extends React.Component {
     if (this.props.selectedDevices.length && !this.state.showWarning) {
       // cookie exists || if no other groups exist, continue to create group
       steps = steps.slice(0, steps.length - 1);
+    }
+    if (this.state.isCreationDynamic) {
+      steps = [steps[0]];
     }
     this.setState({ steps });
   }
@@ -86,7 +90,7 @@ export class CreateGroup extends React.Component {
             </Button>
           ) : (
             <Button variant="contained" color="primary" onClick={() => addListOfDevices(selectedDevices, newGroup)} disabled={!newGroup.length || invalid}>
-              {!isModification ? (showWarning ? 'Confirm' : 'Create group') : 'Add to group'}
+              {!isModification || isCreationDynamic ? (showWarning ? 'Confirm' : 'Create group') : 'Add to group'}
             </Button>
           )}
         </DialogActions>

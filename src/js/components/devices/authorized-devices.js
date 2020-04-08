@@ -6,20 +6,28 @@ import ReactTooltip from 'react-tooltip';
 import pluralize from 'pluralize';
 
 // material ui
-import { Button } from '@material-ui/core';
+import { Button, Tooltip } from '@material-ui/core';
 
-import { AddCircle as AddCircleIcon, Help as HelpIcon, RemoveCircleOutline as RemoveCircleOutlineIcon } from '@material-ui/icons';
+import {
+  AddCircle as AddCircleIcon,
+  Delete as DeleteIcon,
+  Help as HelpIcon,
+  InfoOutlined as InfoIcon,
+  LockOutlined,
+  RemoveCircleOutline as RemoveCircleOutlineIcon
+} from '@material-ui/icons';
 
 import { ExpandDevice } from '../helptips/helptooltips';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 
 import Loader from '../common/loader';
 import RelativeTime from '../common/relative-time';
-import { setSnackbar } from '../../actions/appActions';
 
-import Filters from './filters';
 import DeviceList from './devicelist';
 import DeviceStatus from './device-status';
+import Filters from './filters';
+import { isUngroupedGroup } from '../../helpers';
+import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
 export class Authorized extends React.Component {
@@ -78,16 +86,17 @@ export class Authorized extends React.Component {
     const {
       addDevicesToGroup,
       allCount,
-      allowDeviceGroupRemoval,
       devices,
       globalSettings,
-      group,
       groupCount,
+      groupFilters,
       highlightHelp,
+      isEnterprise,
       loading,
       onFilterChange,
+      onGroupClick,
+      onGroupRemoval,
       openSettingsDialog,
-      refreshDevices,
       removeDevicesFromGroup,
       selectedGroup,
       showHelptips
@@ -123,20 +132,57 @@ export class Authorized extends React.Component {
       }
     ];
 
-    var pluralized = pluralize('devices', selectedRows.length);
-
-    var addLabel = group ? `Move selected ${pluralized} to another group` : `Add selected ${pluralized} to a group`;
-    var removeLabel = `Remove selected ${pluralized} from this group`;
-    var groupLabel = group ? decodeURIComponent(group) : 'All devices';
+    const allowDeviceGroupRemoval = !isUngroupedGroup(selectedGroup);
+    const group = isUngroupedGroup(selectedGroup) ? UNGROUPED_GROUP.name : selectedGroup;
+    const groupLabel = group ? decodeURIComponent(group) : 'All devices';
+    const pluralized = pluralize('devices', selectedRows.length);
+    const addLabel = group ? `Move selected ${pluralized} to another group` : `Add selected ${pluralized} to a group`;
+    const removeLabel = `Remove selected ${pluralized} from this group`;
 
     const anchor = { left: 200, top: 146 };
     let onboardingComponent = getOnboardingComponentFor('devices-accepted-onboarding', { anchor });
     onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor }, onboardingComponent);
     return (
       <div className="relative">
-        <div style={{ marginLeft: '20px' }}>
-          <h2 className="inline-block margin-right">{groupLabel}</h2>
-          {!selectedGroup && <Filters onFilterChange={onFilterChange} refreshDevices={refreshDevices} />}
+        <div className="flexbox space-between" style={{ marginLeft: '20px' }}>
+          <div style={{ width: '100%' }}>
+            <h2 className="inline-block margin-right">
+              {
+                <>
+                  {groupLabel}
+                  {isUngroupedGroup(group) && (
+                    <Tooltip
+                      title="Ungrouped devices are not currently members of a static group, but may still be part of a dynamic group"
+                      arrow={true}
+                      placement="top"
+                      enterDelay={300}
+                    >
+                      <InfoIcon className="margin-left-small" fontSize="small" style={{ marginBottom: -3 }} />
+                    </Tooltip>
+                  )}
+                </>
+              }
+            </h2>
+
+            {(!selectedGroup || !!groupFilters.length) && (
+              <Filters onFilterChange={onFilterChange} onGroupClick={onGroupClick} isModification={!!groupFilters.length} />
+            )}
+          </div>
+          {selectedGroup && allowDeviceGroupRemoval && (
+            <div className="flexbox centered" style={{ marginTop: 5, minWidth: 240, alignSelf: 'flex-start' }}>
+              {isEnterprise && !groupFilters.length && (
+                <>
+                  <p className="info flexbox centered" style={{ marginRight: 15 }}>
+                    <LockOutlined fontSize="small" />
+                    <span>Static</span>
+                  </p>
+                </>
+              )}
+              <Button onClick={onGroupRemoval} startIcon={<DeleteIcon />}>
+                Remove group
+              </Button>
+            </div>
+          )}
         </div>
         <Loader show={loading} />
         {devices.length > 0 && !loading ? (
@@ -216,16 +262,14 @@ export class Authorized extends React.Component {
   }
 }
 
-const actionCreators = { setSnackbar };
-
 const mapStateToProps = state => {
+  const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
     globalSettings: state.users.globalSettings,
+    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
     onboardingComplete: state.users.onboarding.complete,
-    selectedGroup: state.devices.groups.selectedGroup,
-    showTips: state.users.onboarding.showTips,
-    showHelptips: state.users.showHelptips
+    showTips: state.users.onboarding.showTips
   };
 };
 
-export default connect(mapStateToProps, actionCreators)(Authorized);
+export default connect(mapStateToProps)(Authorized);
