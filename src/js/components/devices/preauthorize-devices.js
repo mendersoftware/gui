@@ -14,6 +14,8 @@ import { isEmpty, preformatWithRequestID } from '../../helpers';
 import Loader from '../common/loader';
 import DeviceList from './devicelist';
 
+const refreshDeviceLength = 10000;
+
 export class Preauthorize extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -24,13 +26,12 @@ export class Preauthorize extends React.Component {
       openPreauth: false,
       inputs: [{ key: '', value: '' }],
       public: '',
-      refreshDeviceLength: 10000,
       devicesToRemove: []
     };
   }
 
   componentDidMount() {
-    this.timer = setInterval(() => this._getDevices(), this.state.refreshDeviceLength);
+    this.timer = setInterval(() => this._getDevices(), refreshDeviceLength);
     this._getDevices(true);
   }
 

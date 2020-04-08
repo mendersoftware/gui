@@ -21,6 +21,8 @@ import { DevicePendingTip } from '../helptips/onboardingtips';
 import DeviceList from './devicelist';
 import Filters from './filters';
 
+const refreshDeviceLength = 10000;
+
 export class Pending extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -28,7 +30,6 @@ export class Pending extends React.Component {
       pageNo: 1,
       pageLength: 20,
       selectedRows: [],
-      refreshDeviceLength: 10000,
       authLoading: 'all',
       pageLoading: true
     };
@@ -38,7 +39,7 @@ export class Pending extends React.Component {
   }
 
   componentDidMount() {
-    this.timer = setInterval(() => this._getDevices(), this.state.refreshDeviceLength);
+    this.timer = setInterval(() => this._getDevices(), refreshDeviceLength);
     this._getDevices(true);
   }
   componentWillUnmount() {
@@ -327,6 +328,7 @@ const mapStateToProps = state => {
     filters: state.devices.filters || [],
     fullDevices: state.devices.selectedDeviceList.map(id => state.devices.byId[id]),
     globalSettings: state.users.globalSettings,
+    highlightHelp: !state.devices.byStatus.accepted.total,
     onboardingComplete: state.users.onboarding.complete,
     pendingDeviceIds: state.devices.byStatus.pending.deviceIds,
     showHelptips: state.users.showHelptips,

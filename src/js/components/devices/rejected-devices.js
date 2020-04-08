@@ -11,13 +11,14 @@ import RelativeTime from '../common/relative-time';
 import DeviceList from './devicelist';
 import Filters from './filters';
 
+const refreshDeviceLength = 10000;
+
 export class Rejected extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       pageNo: 1,
       pageLength: 20,
-      refreshDeviceLength: 10000,
       pageLoading: true
     };
     if (!props.rejectedDeviceIds.length) {
@@ -26,7 +27,7 @@ export class Rejected extends React.Component {
   }
 
   componentDidMount() {
-    this.timer = setInterval(() => this._getDevices(), this.state.refreshDeviceLength);
+    this.timer = setInterval(() => this._getDevices(), refreshDeviceLength);
     this._getDevices(true);
   }
   componentWillUnmount() {

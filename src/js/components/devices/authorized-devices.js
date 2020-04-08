@@ -34,9 +34,7 @@ export class Authorized extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      divHeight: 208,
-      selectedRows: [],
-      textfield: this.props.group ? decodeURIComponent(this.props.group) : 'All devices'
+      selectedRows: []
     };
   }
 
@@ -51,18 +49,12 @@ export class Authorized extends React.Component {
     ) {
       self.setState({ selectedRows: [], expandRow: null, allRowsSelected: false });
       if (self.props.showHelptips && self.props.showTips && !self.props.onboardingComplete && this.props.acceptedCount && this.props.acceptedCount < 2) {
-        setTimeout(() => {
-          self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, self.onCloseSnackbar);
-        }, 400);
+        setTimeout(() => self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, self.onCloseSnackbar), 400);
       }
     }
 
     if (prevProps.currentTab !== this.props.currentTab && this.props.currentTab === 'Device groups') {
       this.setState({ selectedRows: [], expandRow: null });
-    }
-
-    if (prevProps.group !== this.props.group) {
-      this.setState({ textfield: this.props.group ? decodeURIComponent(this.props.group) : 'All devices' });
     }
   }
 
@@ -72,10 +64,6 @@ export class Authorized extends React.Component {
     }
     this.props.setSnackbar('');
   };
-
-  _handleGroupNameChange(event) {
-    this.setState({ textfield: event.target.value });
-  }
 
   onRowSelection(selection) {
     this.setState({ selectedRows: selection });
@@ -226,37 +214,35 @@ export class Authorized extends React.Component {
           </div>
         )}
         {onboardingComponent ? onboardingComponent : null}
-        <div>
-          {selectedRows.length ? (
-            <div className="fixedButtons">
-              <div className="float-right">
-                <span className="margin-right">
-                  {selectedRows.length} {pluralize('devices', selectedRows.length)} selected
-                </span>
+        {!!selectedRows.length && (
+          <div className="fixedButtons">
+            <div className="float-right">
+              <span className="margin-right">
+                {selectedRows.length} {pluralize('devices', selectedRows.length)} selected
+              </span>
+              <Button
+                variant="contained"
+                disabled={!selectedRows.length}
+                color="secondary"
+                onClick={() => addDevicesToGroup(selectedRows)}
+                startIcon={<AddCircleIcon />}
+              >
+                {addLabel}
+              </Button>
+              {allowDeviceGroupRemoval && group ? (
                 <Button
                   variant="contained"
                   disabled={!selectedRows.length}
-                  color="secondary"
-                  onClick={() => addDevicesToGroup(selectedRows)}
-                  startIcon={<AddCircleIcon />}
+                  style={{ marginLeft: '4px' }}
+                  onClick={() => removeDevicesFromGroup(selectedRows)}
+                  startIcon={<RemoveCircleOutlineIcon />}
                 >
-                  {addLabel}
+                  {removeLabel}
                 </Button>
-                {allowDeviceGroupRemoval && group ? (
-                  <Button
-                    variant="contained"
-                    disabled={!selectedRows.length}
-                    style={{ marginLeft: '4px' }}
-                    onClick={() => removeDevicesFromGroup(selectedRows)}
-                    startIcon={<RemoveCircleOutlineIcon />}
-                  >
-                    {removeLabel}
-                  </Button>
-                ) : null}
-              </div>
+              ) : null}
             </div>
-          ) : null}
-        </div>
+          </div>
+        )}
       </div>
     );
   }

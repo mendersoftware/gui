@@ -253,14 +253,13 @@ export class DeviceGroups extends React.Component {
     clearInterval(self.deviceTimer);
     const isGroupRemoval = rows.length >= self.props.groupCount;
     const isPageRemoval = self.props.devices.length === rows.length;
-    const refresh = () => self._refreshAll();
     const deviceRemovals = rows.map((row, i) => self._removeSingleDevice(i, rows.length, self.props.devices[row], isGroupRemoval));
     return Promise.all(deviceRemovals)
       .then(() => {
         // if rows.length = number on page but < groupCount
         // move page back to pageNO 1
         if (isPageRemoval) {
-          self.setState({ pageNo: 1, pageLoading: true }, refresh);
+          self.setState({ pageNo: 1, pageLoading: true }, () => self._refreshAll());
         }
         // if rows.length === groupCount
         // group now empty, go to all devices
@@ -307,7 +306,7 @@ export class DeviceGroups extends React.Component {
           <Groups
             acceptedCount={acceptedDevices}
             allCount={allCount}
-            changeGroup={group => this._handleGroupChange(group)}
+            changeGroup={group => self._handleGroupChange(group)}
             groups={groups}
             openGroupDialog={() => self.setState({ createGroupDialog: !createGroupDialog })}
             selectedGroup={selectedGroup}
