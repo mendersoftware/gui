@@ -477,14 +477,13 @@ export const updateDeviceAuth = (deviceId, authId, status) => dispatch =>
 
 export const deleteAuthset = (deviceId, authId) => dispatch =>
   DevicesApi.delete(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}`).then(() =>
-    Promise.all([
+    Promise.resolve(
       dispatch({
         type: DeviceConstants.REMOVE_DEVICE_AUTHSET,
         authId,
         deviceId
-      }),
-      dispatch(getDeviceAuth(deviceId))
-    ])
+      })
+    )
   );
 
 export const preauthDevice = authset => dispatch =>

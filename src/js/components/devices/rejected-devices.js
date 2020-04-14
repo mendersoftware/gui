@@ -125,7 +125,7 @@ export class Rejected extends React.Component {
               onPageChange={e => self._handlePageChange(e)}
               onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}
               pageTotal={count}
-              refreshDevices={() => self._getDevices()}
+              refreshDevices={shouldUpdate => self._getDevices(shouldUpdate)}
             />
           </div>
         ) : (
