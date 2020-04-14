@@ -210,10 +210,10 @@ export class Authorized extends React.Component {
     const {
       allCount,
       devices,
-      globalSettings,
       groupCount,
       groupFilters,
       highlightHelp,
+      idAttribute,
       isEnterprise,
       loading,
       onGroupClick,
@@ -225,7 +225,7 @@ export class Authorized extends React.Component {
     const { selectedRows } = self.state;
     const columnHeaders = [
       {
-        title: globalSettings.id_attribute || 'Device ID',
+        title: idAttribute || 'Device ID',
         name: 'device_id',
         customize: openSettingsDialog,
         style: { flexGrow: 1 }
@@ -427,10 +427,10 @@ const mapStateToProps = state => {
     deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
     devices,
     filters: state.devices.filters || [],
-    globalSettings: state.users.globalSettings,
     groupCount,
     groupDevices,
     groupFilters,
+    idAttribute: state.users.globalSettings.id_attribute,
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
     onboardingComplete: state.users.onboarding.complete,
     selectedGroup,

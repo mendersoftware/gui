@@ -6,12 +6,15 @@ import { Button, Chip, Collapse } from '@material-ui/core';
 import { Add as AddIcon, FilterList as FilterListIcon } from '@material-ui/icons';
 
 import { selectDevice as resetIdFilter, setDeviceFilters } from '../../actions/deviceActions';
+import { saveGlobalSettings } from '../../actions/userActions';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import FilterItem from './filteritem';
 
 import { DEVICE_FILTERING_OPTIONS } from '../../constants/deviceConstants';
 
 export const emptyFilter = { key: undefined, value: undefined, operator: '$eq', scope: 'inventory' };
+
+const MAX_PREVIOUS_FILTERS_COUNT = 3;
 
 export class Filters extends React.Component {
   constructor(props, context) {
@@ -40,11 +43,20 @@ export class Filters extends React.Component {
   updateFilter(newFilter) {
     this.setState({ newFilter });
     let filterIndex = this.props.filters.findIndex(filter => filter.key === newFilter.key);
+    this.saveUpdatedFilter(newFilter);
     if (filterIndex === -1) {
       return this.onFilterChange([...this.props.filters, newFilter]);
     }
     this.props.filters[filterIndex] = newFilter;
     this.onFilterChange(this.props.filters);
+  }
+
+  saveUpdatedFilter(newFilter) {
+    let previousFilters = this.props.previousFilters;
+    if (!previousFilters.find(filter => newFilter.key === filter.key)) {
+      previousFilters.push(newFilter);
+      this.props.saveGlobalSettings({ previousFilters: previousFilters.slice(-1 * MAX_PREVIOUS_FILTERS_COUNT) });
+    }
   }
 
   removeFilter(removedFilter) {
@@ -178,6 +190,7 @@ export class Filters extends React.Component {
 
 const actionCreators = {
   resetIdFilter,
+  saveGlobalSettings,
   setDeviceFilters
 };
 
@@ -190,9 +203,8 @@ const mapStateToProps = (state, ownProps) => {
   if (!ownProps.identityOnly) {
     attributes = [
       ...state.users.globalSettings.previousFilters.map(item => ({
-        key: item.value,
-        value: item.value,
-        scope: item.scope,
+        ...item,
+        value: item.key,
         category: 'recently used',
         priority: 0
       })),
@@ -206,6 +218,7 @@ const mapStateToProps = (state, ownProps) => {
     filters: ownProps.filters || state.devices.filters || [],
     isHosted: state.app.features.isEnterprise || state.app.features.isHosted,
     plan,
+    previousFilters: state.users.globalSettings.previousFilters || [],
     selectedGroup: state.devices.groups.selectedGroup
   };
 };
