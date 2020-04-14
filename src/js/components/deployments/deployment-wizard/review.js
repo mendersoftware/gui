@@ -4,10 +4,10 @@ import pluralize from 'pluralize';
 
 import { Chip, List } from '@material-ui/core';
 
-import ExpandableDeviceAttribute from '../../devices/expandable-device-attribute';
+import EnterpriseNotification from '../../common/enterpriseNotification';
+import ExpandableAttribute from '../../common/expandable-attribute';
 import { PLANS as plans } from '../../../constants/appConstants';
 import { getRemainderPercent } from '../../../helpers';
-import EnterpriseNotification from '../../common/enterpriseNotification';
 
 const Review = ({ deploymentDeviceIds, device, group, isEnterprise, isHosted, phases, plan, release, retries }) => {
   // Create 'phases' for view only
@@ -34,7 +34,7 @@ const Review = ({ deploymentDeviceIds, device, group, isEnterprise, isHosted, ph
 
         <List className="list-horizontal-flex">
           {deploymentInformation.map(item => (
-            <ExpandableDeviceAttribute
+            <ExpandableAttribute
               key={item.primary}
               primary={item.primary}
               secondary={item.secondary}

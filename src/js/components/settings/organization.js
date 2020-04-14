@@ -9,7 +9,7 @@ import { FileCopy as CopyPasteIcon, Info as InfoIcon } from '@material-ui/icons'
 import { getUserOrganization } from '../../actions/userActions';
 import { PLANS as plans } from '../../constants/appConstants';
 
-import ExpandableDeviceAttribute from '../devices/expandable-device-attribute';
+import ExpandableAttribute from '../common/expandable-attribute';
 
 export class MyOrganization extends React.Component {
   constructor(props, context) {
@@ -94,7 +94,7 @@ export class MyOrganization extends React.Component {
                 <ListItemText primary="Organization name" secondary={org.name} />
               </ListItem>
               <div className="flexbox" style={{ alignItems: 'flex-end' }}>
-                <ExpandableDeviceAttribute
+                <ExpandableAttribute
                   style={{ width: '500px', display: 'inline-block' }}
                   key="org_token"
                   primary={orgHeader}
