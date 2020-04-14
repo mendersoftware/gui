@@ -274,11 +274,12 @@ export const getGroupDevices = (group, page = defaultPage, perPage = defaultPerP
 
 export const getAllGroupDevices = group => (dispatch, getState) => {
   const state = getState();
-  if (!group || state.devices.groups[group].filters.length) {
+  if (group && (!state.devices.groups[group] || state.devices.groups[group].filters.length)) {
     return Promise.resolve();
   }
+  const forGroup = group ? `&group=${group}` : '&has_group=false';
   const getAllDevices = (perPage = 500, page = defaultPage, devices = []) =>
-    DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${perPage}&page=${page}&group=${group}`).then(res => {
+    DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${perPage}&page=${page}${forGroup}`).then(res => {
       const links = parse(res.headers['link']);
       const deviceAccu = reduceReceivedDevices(res.body, devices, state);
       dispatch({
@@ -289,14 +290,7 @@ export const getAllGroupDevices = group => (dispatch, getState) => {
         return getAllDevices(perPage, page + 1, deviceAccu.ids);
       }
       let tasks = [];
-
       if (!group) {
-        tasks.push(
-          dispatch({
-            type: DeviceConstants.RECEIVE_ALL_DEVICE_IDS,
-            deviceIds: deviceAccu.ids
-          })
-        );
         group = DeviceConstants.UNGROUPED_GROUP.id;
       }
       tasks.push(
@@ -307,7 +301,8 @@ export const getAllGroupDevices = group => (dispatch, getState) => {
           total: deviceAccu.ids.length
         })
       );
-      return Promise.all([tasks]);
+      tasks.push(Promise.resolve({ deviceAccu, total: deviceAccu.ids.length }));
+      return Promise.all(tasks);
     });
   return getAllDevices();
 };
@@ -398,9 +393,10 @@ export const getDevices = (page = defaultPage, perPage = defaultPerPage, filters
     return Promise.all(tasks);
   });
 
-const deriveUngroupedDevices = acceptedDeviceIds => (dispatch, getState) => {
-  return Promise.all([dispatch(getAllGroupDevices())]).then(() => {
-    const deviceIds = getState().devices.groups.byId[DeviceConstants.UNGROUPED_GROUP.id].deviceIds.reduce((accu, deviceId) => {
+const deriveUngroupedDevices = acceptedDeviceIds => dispatch => {
+  return Promise.resolve(dispatch(getAllGroupDevices())).then(results => {
+    const { deviceAccu } = results[results.length - 1];
+    const deviceIds = deviceAccu.ids.reduce((accu, deviceId) => {
       const isContained = acceptedDeviceIds.find(item => item === deviceId);
       if (isContained) {
         accu.push(deviceId);
