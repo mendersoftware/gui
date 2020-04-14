@@ -378,6 +378,9 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
   }
   return query.then(response => {
     let tasks = [];
+    if (response.body.length < 200) {
+      tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(response.body))));
+    }
     if (!status) {
       tasks.push(
         dispatch({
@@ -385,9 +388,6 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
           devices: response.body
         })
       );
-      if (response.body.length < 200) {
-        tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(response.body))));
-      }
     } else {
       const deviceAccu = reduceReceivedDevices(response.body, [], getState(), status);
       let total;
