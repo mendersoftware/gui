@@ -1,10 +1,17 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import GroupDefinition from './group-definition';
 
 describe('GroupDefinition Component', () => {
   it('renders correctly', () => {
-    const tree = renderer.create(<GroupDefinition groups={[]} />).toJSON();
+    const tree = renderer
+      .create(
+        <MemoryRouter>
+          <GroupDefinition groups={[]} />
+        </MemoryRouter>
+      )
+      .toJSON();
     expect(tree).toMatchSnapshot();
   });
 });

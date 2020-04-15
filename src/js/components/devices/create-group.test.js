@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { createMount } from '@material-ui/core/test-utils';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
@@ -33,9 +34,11 @@ describe('CreateGroup Component', () => {
 
   it('renders correctly', () => {
     const tree = createMount()(
-      <Provider store={store}>
-        <CreateGroup selectedDevices={[]} />
-      </Provider>
+      <MemoryRouter>
+        <Provider store={store}>
+          <CreateGroup selectedDevices={[]} />
+        </Provider>
+      </MemoryRouter>
     );
     expect(tree.html()).toMatchSnapshot();
   });
