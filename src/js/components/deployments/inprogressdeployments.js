@@ -3,17 +3,7 @@ import { Redirect } from 'react-router-dom';
 
 import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
-import DeploymentsList from './deploymentslist';
-
-const columnHeaders = [
-  { title: 'Release', class: '' },
-  { title: 'Device group', class: '' },
-  { title: 'Start time', class: '' },
-  { title: 'Total # devices', class: 'align-right' },
-  { title: 'Overall progress', class: '' },
-  { title: '', class: '' },
-  { title: '', class: '' }
-];
+import DeploymentsList, { defaultHeaders } from './deploymentslist';
 
 export class Progress extends React.PureComponent {
   render() {
@@ -34,9 +24,12 @@ export class Progress extends React.PureComponent {
 
     return (
       <div>
+        <h4 className="dashboard-header margin-top-large">
+          <span>In progress now</span>
+        </h4>
         {!!self.props.items.length && (
           <div ref={ref => (this.inprogressRef = ref)}>
-            <DeploymentsList headers={columnHeaders} {...self.props} />
+            <DeploymentsList headers={defaultHeaders} {...self.props} />
           </div>
         )}
         {!!onboardingComponent && onboardingComponent}
