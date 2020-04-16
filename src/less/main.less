@@ -220,6 +220,15 @@ ul.link-list {
   position: absolute !important;
 }
 
+.margin {
+  margin: 2 * @defaultGutterWidth;
+}
+.margin-small {
+  margin: @defaultGutterWidth;
+}
+.margin-large {
+  margin: 3 * @defaultGutterWidth;
+}
 .margin-top {
   margin-top: 2 * @defaultGutterWidth;
 }
@@ -479,8 +488,6 @@ ul.link-list {
 }
 
 .flexbox {
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   overflow: hidden;
   &.centered {
@@ -496,6 +503,12 @@ ul.link-list {
   &.no-basis {
     flex-basis: 0;
   }
+}
+
+.two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 2 * @defaultGutterWidth;
 }
 
 .overflow-hidden {
@@ -1212,17 +1225,10 @@ table thead.clickable tr > th:first-child {
 
 .results-status {
   padding-top: 4px;
+  margin-bottom: 5px;
 
   .disabled {
     .opacity(0.1);
-  }
-
-  &.vertical > div {
-    display: block;
-    margin-bottom: 5px;
-    &.disabled {
-      .opacity(1);
-    }
   }
 
   span.status {
@@ -1280,12 +1286,6 @@ table thead.clickable tr > th:first-child {
 
 span.code {
   padding: 2px;
-}
-
-#reportAbort {
-  position: absolute;
-  top: 100px;
-  right: 2 * @defaultGutterWidth;
 }
 
 /* Forms and inputs*/
@@ -1961,11 +1961,8 @@ span.day {
 
 .report-container {
   display: grid;
-  grid-template-columns: 2fr 220px 235px 235px 1fr;
+  grid-template-columns: 1fr 2fr 1fr;
   grid-column-gap: 2 * @defaultGutterWidth;
-  &.report-progressing {
-    grid-template-columns: 1fr 2fr 1fr;
-  }
   .deploymentInfo {
     margin-top: 30px;
     font-size: 14px;

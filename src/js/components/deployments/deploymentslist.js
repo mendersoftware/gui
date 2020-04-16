@@ -38,14 +38,12 @@ export default class DeploymentsList extends React.Component {
               </div>
             ))}
           </div>
-          {items.map((deployment, index) => (
+          {items.map(deployment => (
             <DeploymentItem
               abort={abort}
               columnHeaders={columnHeaders}
               deployment={deployment}
               key={`${type}-deployment-${deployment.created}`}
-              index={index}
-              isActiveTab={isActiveTab}
               isEnterprise={isEnterprise}
               openReport={openReport}
               type={type}

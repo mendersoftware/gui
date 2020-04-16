@@ -109,8 +109,7 @@ export class Past extends React.Component {
 
   _pastCellClick(deploymentId) {
     // adjust index to allow for client side pagination
-    this.props.selectDeployment(deploymentId);
-    this.props.showReport('past');
+    this.props.showReport('past', deploymentId);
   }
 
   _handleChangeEndDate(date) {
@@ -135,8 +134,9 @@ export class Past extends React.Component {
 
   render() {
     const self = this;
+    const { count, createClick, groups, loading, past, showHelptips, showReport } = self.props;
     const { page, perPage, endDate, startDate } = self.state;
-    const pastMap = self.props.past.map((deployment, index) => {
+    const pastMap = past.map((deployment, index) => {
       //  get statistics
       const status = (
         <DeploymentStatus
@@ -149,7 +149,7 @@ export class Past extends React.Component {
       );
 
       return (
-        <TableRow hover key={index} onClick={() => self._pastCellClick(deployment.id)}>
+        <TableRow hover key={index} onClick={() => showReport('past', deployment.id)}>
           <TableCell>{deployment.artifact_name}</TableCell>
           <TableCell>{deployment.name}</TableCell>
           <TableCell>
@@ -164,7 +164,7 @@ export class Past extends React.Component {
       );
     });
 
-    const menuItems = this.props.groups.reduce(
+    const menuItems = groups.reduce(
       (accu, item) => {
         accu.push({ title: item, value: item });
         return accu;
@@ -234,13 +234,13 @@ export class Past extends React.Component {
           </Grid>
         </Grid>
         <div className="deploy-table-contain">
-          <Loader show={this.props.loading} />
+          <Loader show={loading} />
 
-          {!this.props.loading && this.props.showHelptips && pastMap.length && onboardingComponent
+          {!loading && showHelptips && pastMap.length && onboardingComponent
             ? onboardingComponent // TODO: fix status retrieval for past deployments to decide what to show here -
             : null}
 
-          {this.props.past.length && !!pastMap.length ? (
+          {past.length && !!pastMap.length ? (
             <>
               <Table style={{ overflow: 'visible' }}>
                 <TableHead>
@@ -258,7 +258,7 @@ export class Past extends React.Component {
                 </RootRef>
               </Table>
               <Pagination
-                count={self.props.count}
+                count={count}
                 rowsPerPage={perPage}
                 onChangeRowsPerPage={value => self.setState({ perPage: value }, () => self._refreshPast(1, value))}
                 page={page}
@@ -266,10 +266,10 @@ export class Past extends React.Component {
               />
             </>
           ) : (
-            <div className={this.props.loading || pastMap.length ? 'hidden' : 'dashboard-placeholder'}>
+            <div className={loading || pastMap.length ? 'hidden' : 'dashboard-placeholder'}>
               <p>No finished deployments were found.</p>
               <p>
-                Try a different date range, or <a onClick={this.props.createClick}>Create a new deployment</a> to get started
+                Try a different date range, or <a onClick={createClick}>Create a new deployment</a> to get started
               </p>
               <img src="assets/img/history.png" alt="Past" />
             </div>

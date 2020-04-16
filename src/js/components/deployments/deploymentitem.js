@@ -46,7 +46,7 @@ export default class DeploymentItem extends React.Component {
 
   render() {
     const self = this;
-    const { columnHeaders, deployment, index, isEnterprise, openReport, type } = self.props;
+    const { columnHeaders, deployment, isEnterprise, openReport, type } = self.props;
     const { abort } = self.state;
     const { inprogress: current, failures, pending, successes } = groupDeploymentStats(deployment.stats || {});
 
@@ -86,7 +86,7 @@ export default class DeploymentItem extends React.Component {
               created={created}
               id={id}
             />
-            <Button className={columnHeaders[5].class} variant="contained" onClick={() => openReport(index, type)} style={{ justifySelf: 'center' }}>
+            <Button className={columnHeaders[5].class} variant="contained" onClick={() => openReport(type, deployment.id)} style={{ justifySelf: 'center' }}>
               View details
             </Button>
           </>

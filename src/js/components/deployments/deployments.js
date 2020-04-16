@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@material-ui/core';
+import { Button, Tab, Tabs } from '@material-ui/core';
 
 import { getAllGroupDevices, selectDevice } from '../../actions/deviceActions';
 import { selectRelease } from '../../actions/releaseActions';
@@ -74,7 +74,7 @@ export class Deployments extends React.Component {
       if (params) {
         if (params.get('open')) {
           if (params.get('id')) {
-            self.props.selectDeployment(params.get('id')).then(() => self._showReport(self.state.reportType));
+            self.showReport(self.state.reportType, params.get('id'));
           } else if (params.get('release')) {
             self.props.selectRelease(params.get('release'));
           } else if (params.get('deviceId')) {
@@ -226,14 +226,9 @@ export class Deployments extends React.Component {
       });
   }
 
-  _showReport(reportType) {
-    this.setState({ createDialog: false, reportType, reportDialog: true });
-  }
-
-  _showProgress(rowNumber) {
+  showReport(reportType, deploymentId) {
     const self = this;
-    const deployment = self.props.progress[rowNumber];
-    self.props.selectDeployment(deployment.id).then(() => self._showReport('active'));
+    self.props.selectDeployment(deploymentId).then(() => self.setState({ createDialog: false, reportType, reportDialog: true }));
   }
 
   _abortDeployment(id) {
@@ -287,11 +282,6 @@ export class Deployments extends React.Component {
 
   render() {
     const self = this;
-    let dialogContent = <Report retry={(deployment, devices) => this._retryDeployment(deployment, devices)} past={true} />;
-    if (this.state.reportType === 'active') {
-      dialogContent = <Report abort={id => this._abortDeployment(id)} />;
-    }
-
     // tabs
     const { groups, isEnterprise, onboardingComplete, past, pastCount, pending, pendingCount, progress, progressCount } = self.props;
     const { contentClass, createDialog, deploymentObject, doneLoading, pendPage, progPage, reportDialog, reportType, startDate, tabIndex } = self.state;
@@ -338,12 +328,9 @@ export class Deployments extends React.Component {
                   count={progressCount || progress.length}
                   defaultPageSize={DEFAULT_PENDING_INPROGRESS_COUNT}
                   isActiveTab={self._getCurrentLabel() === routes.active.title}
-                  items={progress}
-                  onboardingComplete={onboardingComplete}
-                  openReport={rowNum => self._showProgress(rowNum)}
-                  page={progPage}
-                  pastDeploymentsCount={pastCount}
-                  refreshItems={(...args) => self._refreshInProgress(...args)}
+                    onboardingComplete={onboardingComplete}
+                    openReport={(type, id) => self.showReport(type, id)}
+                    page={progPage}
                   title="In progress"
                   type="progress"
                 />
@@ -370,24 +357,18 @@ export class Deployments extends React.Component {
               isActiveTab={self._getCurrentLabel() === routes.finished.title}
               loading={!doneLoading}
               refreshDeployments={(...args) => self.refreshDeployments(...args)}
-              showReport={type => self._showReport(type)}
+              showReport={(type, id) => self.showReport(type, id)}
               startDate={startDate}
             />
           </div>
-        )}
-
         {reportDialog && (
-          <Dialog open={reportDialog} fullWidth={true} maxWidth="lg">
-            <DialogTitle>{reportType === 'active' ? 'Deployment progress' : 'Results of deployment'}</DialogTitle>
-            <DialogContent className={contentClass} style={{ overflow: 'hidden' }}>
-              {dialogContent}
-            </DialogContent>
-            <DialogActions>
-              <Button key="report-action-button-1" onClick={() => self.closeReport()}>
-                Close
-              </Button>
-            </DialogActions>
-          </Dialog>
+          <Report
+            abort={id => self._abortDeployment(id)}
+            contentClass={contentClass}
+            onClose={() => self.closeReport()}
+            retry={(deployment, devices) => self._retryDeployment(deployment, devices)}
+            type={reportType}
+          />
         )}
 
         {createDialog && (
