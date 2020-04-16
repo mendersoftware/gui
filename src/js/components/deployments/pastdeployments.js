@@ -138,15 +138,7 @@ export class Past extends React.Component {
     const { page, perPage, endDate, startDate } = self.state;
     const pastMap = past.map((deployment, index) => {
       //  get statistics
-      const status = (
-        <DeploymentStatus
-          isActiveTab={self.props.isActiveTab}
-          id={deployment.id}
-          stats={deployment.stats}
-          setFinished={() => {}}
-          refreshStatus={id => self.props.getSingleDeploymentStats(id)}
-        />
-      );
+      const status = <DeploymentStatus vertical={false} stats={deployment.stats} />;
 
       return (
         <TableRow hover key={index} onClick={() => showReport('past', deployment.id)}>
