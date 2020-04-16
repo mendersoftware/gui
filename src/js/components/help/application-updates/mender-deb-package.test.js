@@ -4,7 +4,7 @@ import DebPackage from './mender-deb-package';
 
 describe('DebPackage Component', () => {
   it('renders correctly', () => {
-    const tree = renderer.create(<DebPackage findLocalIpAddress={jest.fn()} debPackageVersion="master" />).toJSON();
+    const tree = renderer.create(<DebPackage findLocalIpAddress={jest.fn()} menderDebPackageVersion="master" />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });
