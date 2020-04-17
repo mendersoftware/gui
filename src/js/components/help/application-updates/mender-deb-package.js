@@ -13,10 +13,10 @@ export default class DebPackage extends React.PureComponent {
 
   render() {
     const self = this;
-    const { debPackageVersion, ipAddress, isHosted, isEnterprise, org } = self.props;
+    const { menderDebPackageVersion, ipAddress, isHosted, isEnterprise, org } = self.props;
     const token = (org || {}).tenant_token;
-    const dpkgCode = getDebInstallationCode(debPackageVersion);
-    const codeToCopy = getDebConfigurationCode(ipAddress, isHosted, isEnterprise, token, debPackageVersion);
+    const dpkgCode = getDebInstallationCode(menderDebPackageVersion);
+    const codeToCopy = getDebConfigurationCode(ipAddress, isHosted, isEnterprise, token, menderDebPackageVersion);
     let title = 'Connecting to a demo server with demo settings';
     if (isEnterprise) {
       title = 'Connecting to an Enterprise server';
