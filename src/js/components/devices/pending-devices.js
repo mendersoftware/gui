@@ -265,7 +265,7 @@ export class Pending extends React.Component {
               onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}
               onPageChange={e => self._handlePageChange(e)}
               pageTotal={count}
-              refreshDevices={() => self._getDevices()}
+              refreshDevices={shouldUpdate => self._getDevices(shouldUpdate)}
             />
           </div>
         ) : (
