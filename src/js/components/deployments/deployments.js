@@ -12,9 +12,7 @@ import * as DeviceConstants from '../../constants/deviceConstants';
 
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 
-import Loader from '../common/loader';
 import CreateDialog from './createdeployment';
-import DeploymentsList from './deploymentslist';
 import Progress from './inprogressdeployments';
 import Past from './pastdeployments';
 import Report from './report';
@@ -24,7 +22,7 @@ import { deepCompare, preformatWithRequestID, standardizePhases } from '../../he
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
 const MAX_PREVIOUS_PHASES_COUNT = 5;
-const DEFAULT_PENDING_INPROGRESS_COUNT = 10;
+export const DEFAULT_PENDING_INPROGRESS_COUNT = 10;
 
 const routes = {
   active: {
@@ -177,7 +175,7 @@ export class Deployments extends React.Component {
     return this.refreshDeployments(page, per_page, 'pending');
   }
 
-  _retryDeployment(deployment, devices) {
+  retryDeployment(deployment, devices) {
     const self = this;
     const release = { Name: deployment.artifact_name, device_types_compatible: deployment.device_types_compatible || [] };
     const deploymentObject = {
@@ -189,7 +187,7 @@ export class Deployments extends React.Component {
     self.setState({ deploymentObject, createDialog: true, reportDialog: false });
   }
 
-  _onScheduleSubmit(deploymentObject) {
+  onScheduleSubmit(deploymentObject) {
     const self = this;
     const { group, deploymentDeviceIds, phases, release, retries } = deploymentObject;
     const newDeployment = {
@@ -288,7 +286,7 @@ export class Deployments extends React.Component {
   render() {
     const self = this;
     // tabs
-    const { groups, isEnterprise, onboardingComplete, past, pastCount, pending, pendingCount, progress, progressCount } = self.props;
+    const { isEnterprise, onboardingComplete, past, pastCount, pending, pendingCount, progress, progressCount } = self.props;
     const { contentClass, createDialog, deploymentObject, doneLoading, pendPage, progPage, reportDialog, reportType, startDate, tabIndex } = self.state;
     let onboardingComponent = null;
     if (past.length || pastCount) {
@@ -309,66 +307,41 @@ export class Deployments extends React.Component {
             </Button>
           </div>
           {tabIndex === routes.active.route && (
-            <>
-              {doneLoading ? (
-                <>
-                  <Progress
-                    abort={id => self._abortDeployment(id)}
-                    count={progressCount || progress.length}
-                    defaultPageSize={DEFAULT_PENDING_INPROGRESS_COUNT}
-                    items={progress}
-                    onboardingComplete={onboardingComplete}
-                    openReport={(type, id) => self.showReport(type, id)}
-                    page={progPage}
-                    pastDeploymentsCount={pastCount}
-                    refreshItems={(...args) => self._refreshInProgress(...args)}
-                    type="progress"
-                  />
-                  {!!(pendingCount && pending.length) && (
-                    <>
-                      <h4 className="dashboard-header margin-top-large">
-                        <span>Pending</span>
-                      </h4>
-                      <DeploymentsList
-                        abort={id => self._abortDeployment(id)}
-                        count={pendingCount || pending.length}
-                        defaultPageSize={DEFAULT_PENDING_INPROGRESS_COUNT}
-                        items={pending}
-                        page={pendPage}
-                        refreshItems={(...args) => self._refreshPending(...args)}
-                        isEnterprise={isEnterprise}
-                        type="pending"
-                      />
-                    </>
-                  )}
-                  {!(progressCount || progress.length || pendingCount || pending.length) && (
-                    <div className={progress.length || !doneLoading ? 'hidden' : 'dashboard-placeholder'}>
-                      <p>Pending and ongoing deployments will appear here. </p>
-                      <p>
-                        <a onClick={() => self.setState({ createDialog: true })}>Create a deployment</a> to get started
-                      </p>
-                      <img src="assets/img/deployments.png" alt="In progress" />
-                    </div>
-                  )}
-                </>
-              ) : (
-                <Loader show={doneLoading} />
-              )}
-            </>
+            <Progress
+              abort={id => self._abortDeployment(id)}
+              count={progressCount || progress.length}
+              defaultPageSize={DEFAULT_PENDING_INPROGRESS_COUNT}
+              doneLoading={doneLoading}
+              isEnterprise={isEnterprise}
+              onboardingComplete={onboardingComplete}
+              openReport={(type, id) => self.showReport(type, id)}
+              pastDeploymentsCount={pastCount}
+              pending={pending}
+              pendingCount={pendingCount}
+              pendPage={pendPage}
+              progress={progress}
+              progPage={progPage}
+              page={progPage}
+              refreshItems={(...args) => self._refreshInProgress(...args)}
+            />
           )}
           {tabIndex === routes.scheduled.route && (
             <Scheduled
               loading={!doneLoading}
+              abort={id => self._abortDeployment(id)}
+              count={pendingCount || pending.length}
+              defaultPageSize={DEFAULT_PENDING_INPROGRESS_COUNT}
+              items={pending}
+              page={pendPage}
+              refreshItems={(...args) => self._refreshPending(...args)}
+              isEnterprise={isEnterprise}
               refreshDeployments={(...args) => self.refreshDeployments(...args)}
               showReport={(type, id) => self.showReport(type, id)}
-              startDate={startDate}
             />
           )}
           {tabIndex === routes.finished.route && (
             <Past
               createClick={() => self.setState({ createDialog: true })}
-              groups={groups}
-              isActiveTab={self._getCurrentLabel() === routes.finished.title}
               loading={!doneLoading}
               refreshDeployments={(...args) => self.refreshDeployments(...args)}
               showReport={(type, id) => self.showReport(type, id)}
@@ -381,7 +354,7 @@ export class Deployments extends React.Component {
             abort={id => self._abortDeployment(id)}
             contentClass={contentClass}
             onClose={() => self.closeReport()}
-            retry={(deployment, devices) => self._retryDeployment(deployment, devices)}
+            retry={(deployment, devices) => self.retryDeployment(deployment, devices)}
             type={reportType}
           />
         )}
@@ -390,7 +363,7 @@ export class Deployments extends React.Component {
           <CreateDialog
             open={createDialog}
             onDismiss={() => self.setState({ createDialog: false, deploymentObject: {} })}
-            onScheduleSubmit={(...args) => self._onScheduleSubmit(...args)}
+            onScheduleSubmit={deploymentObj => self.onScheduleSubmit(deploymentObj)}
             deploymentObject={deploymentObject}
           />
         )}

@@ -3,11 +3,14 @@ import { Redirect } from 'react-router-dom';
 
 import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
+import Loader from '../common/loader';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
 
 export class Progress extends React.PureComponent {
   render() {
     const self = this;
+
+    const { doneLoading, pending, pendingCount, pendPage, progress, progressCount, progPage } = self.props;
 
     let onboardingComponent = null;
     if (!self.props.onboardingComplete && this.inprogressRef) {
@@ -22,18 +25,54 @@ export class Progress extends React.PureComponent {
       }
     }
 
-    return (
-      <div>
-        <h4 className="dashboard-header margin-top-large">
-          <span>In progress now</span>
-        </h4>
-        {!!self.props.items.length && (
-          <div ref={ref => (this.inprogressRef = ref)}>
-            <DeploymentsList headers={defaultHeaders} {...self.props} />
-          </div>
+    return doneLoading ? (
+      <div className="fadeIn">
+        {!!progress.length && (
+          <>
+            <h4 className="dashboard-header margin-top-large">
+              <span>In progress now</span>
+            </h4>
+            <div ref={ref => (this.inprogressRef = ref)}>
+              <DeploymentsList
+                headers={defaultHeaders}
+                type="progress"
+                count={progressCount || progress.length}
+                items={progress}
+                page={progPage}
+                {...self.props}
+              />
+            </div>
+          </>
         )}
         {!!onboardingComponent && onboardingComponent}
+        {!!(pendingCount && pending.length) && (
+          <>
+            <h4 className="dashboard-header margin-top-large">
+              <span>Pending</span>
+            </h4>
+            <DeploymentsList
+              abort={id => self._abortDeployment(id)}
+              count={pendingCount || pending.length}
+              items={pending}
+              page={pendPage}
+              refreshItems={(...args) => self._refreshPending(...args)}
+              {...self.props}
+              type="pending"
+            />
+          </>
+        )}
+        {!(progressCount || progress.length || pendingCount || pending.length) && (
+          <div className={progress.length || !doneLoading ? 'hidden' : 'dashboard-placeholder'}>
+            <p>Pending and ongoing deployments will appear here. </p>
+            <p>
+              <a onClick={() => self.setState({ createDialog: true })}>Create a deployment</a> to get started
+            </p>
+            <img src="assets/img/deployments.png" alt="In progress" />
+          </div>
+        )}
       </div>
+    ) : (
+      <Loader show={doneLoading} />
     );
   }
 }
