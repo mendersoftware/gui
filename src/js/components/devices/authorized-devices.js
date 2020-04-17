@@ -148,6 +148,8 @@ export class Authorized extends React.Component {
               selectedRows={selectedRows}
               onSelect={selection => self.onRowSelection(selection)}
               pageTotal={groupCount}
+              refreshDevices={shouldUpdate => refreshDevices(shouldUpdate)}
+              selectDeviceById={id => self.getDeviceById(id)}
             />
 
             {showHelptips && devices.length ? (
