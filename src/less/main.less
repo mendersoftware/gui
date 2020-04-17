@@ -66,6 +66,9 @@ body {
 .text-color {
   color: @text!important;
 }
+.text-muted {
+  color: @textmuted;
+}
 
 .warning {
   color: @errorStyleColor !important;
@@ -1998,18 +2001,22 @@ span.day {
 
 .deployment-item {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 3fr 1fr 50px;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 3fr 1.2fr 50px;
   grid-column-gap: 2 * @defaultGutterWidth;
   border-bottom: 1px solid @bordercolor;
   margin: 0 1.5vw;
+  padding: 10px 0;
   align-items: center;
   position: relative;
   min-width: 1300px;
   &.deployment-header-item {
     border-bottom: transparent;
   }
-  &.progress-item {
-    padding: 10px 0;
+  &.scheduled-item {
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1.2fr 50px;
+  }
+  &:last-of-type {
+    border-bottom: transparent;
   }
   > div,
   time {
@@ -2020,13 +2027,15 @@ span.day {
   }
   .progress-chart-container {
     background: @lightestgrey;
-    padding: 15px 20px;
+    padding: 10px 20px;
     height: 70px;
     border-radius: @dotSize * 0.5;
-    .progress-chart {
+    .progress-chart,
+    .progress-step-total {
       display: flex;
       width: 100%;
-      height: 30px;
+      min-height: 20px;
+      height: 100%;
       position: relative;
     }
     .progress-step {
@@ -2041,8 +2050,6 @@ span.day {
     }
     .progress-step-total {
       position: absolute;
-      width: 100%;
-      height: 2 * @defaultGutterWidth;
       z-index: 0;
       border: none;
       .progress-bar {

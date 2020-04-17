@@ -1,19 +1,58 @@
 import React from 'react';
+import { compose, setDisplayName } from 'recompose';
 
 // material ui
 import { Button, IconButton, Tooltip } from '@material-ui/core';
 import { CancelOutlined as CancelOutlinedIcon } from '@material-ui/icons';
 
-import Confirm from './confirm';
-import ProgressChart from './progressChart';
 import { groupDeploymentStats } from '../../helpers';
 import RelativeTime from '../common/relative-time';
+import Confirm from './confirm';
+import ProgressChart from './progressChart';
 
-const deploymentTypeClasses = {
+export const deploymentTypeClasses = {
   past: 'past-item',
   pending: 'pending-item',
-  progress: 'progress-item'
+  progress: 'progress-item',
+  scheduled: 'scheduled-item'
 };
+
+export const DeploymentDeviceCount = compose(setDisplayName('DeploymentDeviceCount'))(({ deployment }) => (
+  <div className="align-right" key="DeploymentDeviceCount">
+    {deployment.device_count}
+  </div>
+));
+export const DeploymentDeviceGroup = compose(setDisplayName('DeploymentDeviceGroup'))(({ deployment }) => (
+  <div key="DeploymentDeviceGroup">{deployment.name}</div>
+));
+export const DeploymentEndTime = compose(setDisplayName('DeploymentEndTime'))(() => <div key="DeploymentEndTime">-</div>);
+export const DeploymentPhases = compose(setDisplayName('DeploymentPhases'))(({ deployment }) => (
+  <div key="DeploymentPhases">{deployment.phases ? deployment.phases.length : '-'}</div>
+));
+export const DeploymentProgress = compose(setDisplayName('DeploymentProgress'))(({ deployment, groupedStats }) => (
+  <ProgressChart
+    key="DeploymentProgress"
+    created={deployment.created}
+    currentPendingCount={groupedStats.pending}
+    currentProgressCount={groupedStats.current}
+    id={deployment.id}
+    phases={deployment.phases}
+    status={deployment.status}
+    totalSuccessCount={groupedStats.successes}
+    totalDeviceCount={deployment.device_count}
+    totalFailureCount={groupedStats.failures}
+  />
+));
+export const DeploymentRelease = compose(setDisplayName('DeploymentRelease'))(({ deployment }) => (
+  <div key="DeploymentRelease">{deployment.artifact_name}</div>
+));
+export const DeploymentStartTime = compose(setDisplayName('DeploymentStartTime'))(({ started, direction = 'both' }) => (
+  <RelativeTime key="DeploymentStartTime" updateTime={started} shouldCount={direction} />
+));
+
+export const DeploymentWindows = compose(setDisplayName('DeploymentWindows'))(({ deployment }) => (
+  <div key="DeploymentWindows">{deployment.windows ? deployment.windows.map(window => window.start_ts).join(',') : '-'}</div>
+));
 
 export default class DeploymentItem extends React.Component {
   constructor(props, context) {
@@ -48,9 +87,8 @@ export default class DeploymentItem extends React.Component {
     const self = this;
     const { columnHeaders, deployment, isEnterprise, openReport, type } = self.props;
     const { abort } = self.state;
-    const { inprogress: current, failures, pending, successes } = groupDeploymentStats(deployment.stats || {});
-
-    const { artifact_name, name, created, device_count, id, status, phases } = deployment;
+    const groupedStats = groupDeploymentStats(deployment.stats || {});
+    const { created, id, phases } = deployment;
 
     let confirmation;
     if (abort === id) {
@@ -65,38 +103,16 @@ export default class DeploymentItem extends React.Component {
       );
     }
     const started = isEnterprise && phases && phases.length >= 1 ? phases[0].start_ts || created : created;
-    const isInProgress = type === 'progress';
     return (
       <div className={`deployment-item ${deploymentTypeClasses[type]}`}>
         {!!confirmation && confirmation}
-        <div className={columnHeaders[0].class}>{artifact_name}</div>
-        <div className={columnHeaders[1].class}>{name}</div>
-        <RelativeTime className={columnHeaders[2].class} updateTime={started} shouldCount={isInProgress ? 'both' : 'up'} />
-        <div className={columnHeaders[3].class}>{device_count}</div>
-        {isInProgress ? (
-          <>
-            <ProgressChart
-              className={columnHeaders[4].class}
-              currentPendingCount={pending}
-              currentProgressCount={current}
-              totalSuccessCount={successes}
-              totalDeviceCount={device_count}
-              totalFailureCount={failures}
-              phases={phases}
-              created={created}
-              id={id}
-            />
-            <Button className={columnHeaders[5].class} variant="contained" onClick={() => openReport(type, deployment.id)} style={{ justifySelf: 'center' }}>
-              View details
-            </Button>
-          </>
-        ) : (
-          <>
-            <div className={`flexbox space-between centered ${columnHeaders[4].class}`}>{status}</div>
-            <div className={columnHeaders[5].class} />
-          </>
+        {columnHeaders.map(column =>
+          column.renderer({ ...self.props, deployment, started, groupedStats: { ...groupedStats, current: groupedStats.inprogress }, ...column.props })
         )}
-        <Tooltip className={`columnHeader ${columnHeaders[6].class}`} title="Abort" placement="top-start">
+        <Button variant="contained" onClick={() => openReport(type, deployment.id)} style={{ justifySelf: 'center' }}>
+          View details
+        </Button>
+        <Tooltip className="columnHeader" title="Abort" placement="top-start">
           <IconButton onClick={() => self.toggleConfirm(id)}>
             <CancelOutlinedIcon className="cancelButton muted" />
           </IconButton>

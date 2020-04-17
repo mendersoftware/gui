@@ -1,17 +1,23 @@
 import React from 'react';
 
 import Pagination from '../common/pagination';
-import DeploymentItem from './deploymentitem';
+import DeploymentItem, {
+  deploymentTypeClasses,
+  DeploymentDeviceCount,
+  DeploymentDeviceGroup,
+  DeploymentEndTime,
+  DeploymentStartTime,
+  DeploymentProgress,
+  DeploymentRelease
+} from './deploymentitem';
 
 export const defaultHeaders = [
-  { title: 'Release', class: '' },
-  { title: 'Device group', class: '' },
-  { title: 'Start time', class: '' },
-  { title: `End time`, class: '' },
-  { title: '# devices', class: 'align-right' },
-  { title: 'Status', class: '' },
-  { title: '', class: '' },
-  { title: '', class: '' }
+  { title: 'Release', renderer: DeploymentRelease },
+  { title: 'Device group', renderer: DeploymentDeviceGroup },
+  { title: 'Start time', renderer: DeploymentStartTime },
+  { title: `End time`, renderer: DeploymentEndTime },
+  { title: '# devices', class: 'align-right', renderer: DeploymentDeviceCount },
+  { title: 'Status', renderer: DeploymentProgress }
 ];
 
 export default class DeploymentsList extends React.Component {
@@ -33,9 +39,9 @@ export default class DeploymentsList extends React.Component {
       !!items.length && (
         <div className="fadeIn deploy-table-contain">
           <h3 className="capitalized-start">{title}</h3>
-          <div className="deployment-item deployment-header-item muted">
+          <div className={`deployment-item deployment-header-item muted ${deploymentTypeClasses[type] || ''}`}>
             {columnHeaders.map((item, index) => (
-              <div key={`${item.title}-${index}`} className={item.class}>
+              <div key={`${item.title}-${index}`} className={item.class || ''}>
                 {item.title}
               </div>
             ))}
