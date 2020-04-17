@@ -9,7 +9,6 @@ import { duplicateFilter, FileSize, getFormattedSize, hashString, isEmpty, mapDe
 //   statusToPercentage,
 //   decodeSessionToken,
 //   preformatWithRequestID,
-//   versionCompare,
 //   deepCompare,
 //   formatTime,
 //   formatPublicKey,

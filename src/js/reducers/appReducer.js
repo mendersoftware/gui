@@ -11,7 +11,6 @@ const menderEnvironment = {
   },
   docsVersion: '',
   hostedAnnouncement: '',
-  hostedLinks: {},
   menderDebPackageVersion: '',
   integrationVersion: '',
   menderVersion: '',
@@ -65,11 +64,6 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         snackbar: action.snackbar
-      };
-    case AppConstants.RECEIVED_HOSTED_LINKS:
-      return {
-        ...state,
-        hostedLinks: action.links
       };
     case AppConstants.SET_LOCAL_IPADDRESS:
       return {

@@ -14,7 +14,6 @@ describe('Help Component', () => {
     store = mockStore({
       app: {
         features: { isHosted: false, isEnterprise: false },
-        hostedLinks: {},
         versionInformation: {},
         menderDebPackageVersion: null
       },

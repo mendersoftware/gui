@@ -1,6 +1,6 @@
 import Cookies from 'universal-cookie';
 
-import { getHostedLinks, setSnackbar } from '../actions/appActions';
+import { setSnackbar } from '../actions/appActions';
 import GeneralApi from '../api/general-api';
 import UsersApi from '../api/users-api';
 import * as UserConstants from '../constants/userConstants';
@@ -112,9 +112,7 @@ export const setCurrentUser = user => dispatch => dispatch({ type: UserConstants
   Tenant management + Hosted Mender
 */
 export const getUserOrganization = () => dispatch =>
-  GeneralApi.get(`${tenantadmUrl}/user/tenant`).then(res =>
-    Promise.all([dispatch({ type: UserConstants.SET_ORGANIZATION, organization: res.body }), dispatch(getHostedLinks(res.body.id))])
-  );
+  GeneralApi.get(`${tenantadmUrl}/user/tenant`).then(res => Promise.resolve(dispatch({ type: UserConstants.SET_ORGANIZATION, organization: res.body })));
 
 /* 
   Global settings 
