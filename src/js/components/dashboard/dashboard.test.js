@@ -7,6 +7,7 @@ import configureStore from 'redux-mock-store';
 
 import { mount } from 'enzyme';
 import Dashboard from './dashboard';
+import { undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -61,5 +62,6 @@ describe('Dashboard Component', () => {
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
+    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });
 });

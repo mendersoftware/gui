@@ -6,6 +6,7 @@ import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import * as DeviceConstants from '../../../constants/deviceConstants';
 import SoftwareDevices from './softwaredevices';
+import { undefineds } from '../../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -48,5 +49,6 @@ describe('SoftwareDevices Component', () => {
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
+    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });
 });

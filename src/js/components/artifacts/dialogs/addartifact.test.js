@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import AddArtifact from './addartifact';
+import { undefineds } from '../../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -32,5 +33,6 @@ describe('AddArtifact Component', () => {
       </Provider>
     ).html();
     expect(tree).toMatchSnapshot();
+    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });
 });

@@ -48,7 +48,8 @@ export default class TextInput extends React.Component {
     this.props.validate(this, event.currentTarget.value);
   }
   render() {
-    var className = this.props.required ? `${this.props.className} required` : this.props.className;
+    let { className = '' } = this.props;
+    className = this.props.required ? `${className} required` : className;
     return (
       <FormControl className={className} error={Boolean(this.state.errortext)}>
         <InputLabel htmlFor={this.props.id} {...this.props.InputLabelProps}>

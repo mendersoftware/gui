@@ -1,6 +1,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { duplicateFilter, FileSize, getFormattedSize, hashString, isEmpty, mapDeviceAttributes, stringToBoolean, unionizeStrings } from './helpers';
+import { undefineds } from '../../tests/mockData';
 
 // TODO: test ALL of the following!
 // [
@@ -25,6 +26,7 @@ describe('FileSize Component', () => {
   it('renders correctly', () => {
     const tree = renderer.create(<FileSize fileSize={1000} />).toJSON();
     expect(tree).toMatchSnapshot();
+    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });
 });
 
