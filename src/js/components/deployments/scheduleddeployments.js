@@ -20,29 +20,81 @@ const headers = [
   { title: 'Phases', renderer: DeploymentPhases }
 ];
 
+const tabs = {
+  list: {
+    icon: <ListIcon />,
+    index: 'list',
+    title: 'List view'
+  },
+  calendar: {
+    icon: <CalendarTodayIcon />,
+    index: 'calendar',
+    title: 'Calendar'
+  }
+};
+
 export class Scheduled extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      tabIndex: 'list'
+      tabIndex: tabs.list.index,
+      calendarEvents: []
     };
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.tabIndex !== this.state.tabIndex && this.state.tabIndex === tabs.calendar.index) {
+      const calendarEvents = this.props.items.map(deployment => {
+        const start = new Date(deployment.start_ts || deployment.phases ? deployment.phases[0].start_ts : deployment.created);
+        let endDate = start;
+        if (deployment.phases && deployment.phases.length && deployment.phases[deployment.phases.length - 1].end_ts) {
+          endDate = new Date(deployment.phases[deployment.phases.length - 1].end_ts);
+        } else if (deployment.filter_id) {
+          endDate = new Date(8640000000000000); // set to the upper limit of js supported dates, which should be the next best thing to infinity
+        }
+        return {
+          allDay: !deployment.filter_id,
+          id: deployment.id,
+          title: `${deployment.name} ${deployment.artifact_name}`,
+          start,
+          end: endDate
+        };
+      });
+      this.setState({ calendarEvents });
+    }
   }
 
   render() {
     const self = this;
-    const { tabIndex } = self.state;
+    const { calendarEvents, tabIndex } = self.state;
+    const { showReport } = self.props;
     return (
       <div className="fadeIn margin-left">
         <div className="margin-large margin-left-small">
-          <Button color="secondary" startIcon={<ListIcon />} style={{ textTransform: 'none' }} onClick={() => self.setState({ tabIndex: 'list' })}>
-            List view
-          </Button>
-          <Button color="primary" startIcon={<CalendarTodayIcon />} style={{ textTransform: 'none' }} onClick={() => self.setState({ tabIndex: 'calendar' })}>
-            Calendar
-          </Button>
+          {Object.entries(tabs).map(([currentIndex, tab]) => (
+            <Button
+              color="primary"
+              key={currentIndex}
+              startIcon={tab.icon}
+              style={Object.assign({ textTransform: 'none' }, currentIndex !== tabIndex ? { color: '#c7c7c7' } : {})}
+              onClick={() => self.setState({ tabIndex: currentIndex })}
+            >
+              {tab.title}
+            </Button>
+          ))}
         </div>
-        {tabIndex === 'list' && <DeploymentsList headers={headers} {...self.props} type="scheduled" />}
-        {tabIndex === 'calendar' && <Calendar localizer={localizer} events={[]} startAccessor="start" endAccessor="end" style={{ height: 500 }} />}
+        {tabIndex === tabs.list.index && <DeploymentsList headers={headers} {...self.props} type="scheduled" />}
+        {tabIndex === tabs.calendar.index && (
+          <Calendar
+            localizer={localizer}
+            className="margin-left"
+            events={calendarEvents}
+            startAccessor="start"
+            endAccessor="end"
+            style={{ height: 700 }}
+            onSelectEvent={calendarEvent => showReport('scheduled', calendarEvent.id)}
+          />
+        )}
       </div>
     );
   }
