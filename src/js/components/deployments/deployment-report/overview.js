@@ -139,18 +139,17 @@ export default class DeploymentOverview extends React.Component {
           {!finished ? (
             <>
               {aborting ? (
-                <Confirm cancel={() => self.setState({ aborting: !aborting })} action={onAbortClick} type="abort" />
+                <Confirm cancel={() => self.setState({ aborting: !aborting })} action={onAbortClick} type="abort" classes="margin-top" />
               ) : (
                 <Tooltip
                   title="Devices that have not yet started the deployment will not start the deployment.&#10;Devices that have already completed the deployment are not affected by the abort.&#10;Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback."
                   placement="bottom"
                 >
                   <Button
-                    className="flexbox margin-top-large"
                     color="secondary"
                     onClick={() => self.setState({ aborting: !aborting })}
                     startIcon={<BlockIcon fontSize="small" />}
-                    style={{ alignSelf: 'baseline' }}
+                    style={{ alignSelf: 'baseline', marginTop: 45 }}
                   >
                     {deployment.filters?.length ? 'Stop' : 'Abort'} deployment
                   </Button>
@@ -163,13 +162,7 @@ export default class DeploymentOverview extends React.Component {
                 title="This will create a new deployment with the same device group and Release.&#10;Devices with this Release already installed will be skipped, all others will be updated."
                 placement="bottom"
               >
-                <Button
-                  className="flexbox margin-top-large"
-                  color="secondary"
-                  startIcon={<RefreshIcon fontSize="small" />}
-                  onClick={onRetryClick}
-                  style={{ alignSelf: 'baseline' }}
-                >
+                <Button color="secondary" startIcon={<RefreshIcon fontSize="small" />} onClick={onRetryClick} style={{ alignSelf: 'baseline', marginTop: 45 }}>
                   Retry deployment?
                 </Button>
               </Tooltip>

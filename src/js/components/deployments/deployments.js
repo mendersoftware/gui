@@ -336,7 +336,7 @@ export class Deployments extends React.Component {
               refreshItems={(...args) => self._refreshPending(...args)}
               isEnterprise={isEnterprise}
               refreshDeployments={(...args) => self.refreshDeployments(...args)}
-              showReport={(type, id) => self.showReport(type, id)}
+              openReport={(type, id) => self.showReport(type, id)}
             />
           )}
           {tabIndex === routes.finished.route && (

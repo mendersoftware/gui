@@ -67,7 +67,7 @@ export class Scheduled extends React.Component {
   render() {
     const self = this;
     const { calendarEvents, tabIndex } = self.state;
-    const { showReport } = self.props;
+    const { openReport } = self.props;
     return (
       <div className="fadeIn margin-left">
         <div className="margin-large margin-left-small">
@@ -92,7 +92,7 @@ export class Scheduled extends React.Component {
             startAccessor="start"
             endAccessor="end"
             style={{ height: 700 }}
-            onSelectEvent={calendarEvent => showReport('scheduled', calendarEvent.id)}
+            onSelectEvent={calendarEvent => openReport('scheduled', calendarEvent.id)}
           />
         )}
       </div>
