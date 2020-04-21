@@ -129,6 +129,7 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
       if (status) {
         delete device.updated_ts;
         device.status = status;
+        device.attributes = stateDevice ? { ...stateDevice.attributes } : { device_type: '', artifact_name: '' };
       } else {
         const attributes = mapDeviceAttributes(device.attributes);
         device.attributes = stateDevice ? { ...stateDevice.attributes, ...attributes } : attributes;

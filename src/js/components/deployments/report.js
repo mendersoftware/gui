@@ -11,6 +11,7 @@ import { Block as BlockIcon } from '@material-ui/icons';
 
 import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
 import { getDeviceLog, getSingleDeploymentDevices, getSingleDeploymentStats } from '../../actions/deploymentActions';
+import { getRelease } from '../../actions/releaseActions';
 import { sortDeploymentDevices } from '../../helpers';
 import DeploymentLog from './deployment-report/deploymentlog';
 import DeploymentOverview from './deployment-report/overview';
@@ -39,6 +40,9 @@ export class DeploymentReport extends React.Component {
     if (!(self.props.deployment.finished || self.props.deployment.status === 'finished')) {
       self.timer = setInterval(() => self.setState({ elapsed: moment() }), 300);
       self.timer2 = this.props.past ? null : setInterval(() => self.refreshDeploymentDevices(), 5000);
+    }
+    if (self.props.type === 'scheduled') {
+      self.setState({ tabIndex: 'details' });
     }
     self.refreshDeploymentDevices();
   }
@@ -69,6 +73,9 @@ export class DeploymentReport extends React.Component {
       // if no more devices in "progress" statuses, deployment has finished, stop counter
       clearInterval(self.timer);
       clearInterval(self.timer2);
+    }
+    if (prevProps.deployment.id !== self.props.deployment.id || !self.props.release.device_types_compatible.length) {
+      self.props.getRelease(self.props.deployment.artifact_name);
     }
   }
 
@@ -139,7 +146,7 @@ export class DeploymentReport extends React.Component {
   }
 }
 
-const actionCreators = { getDeviceAuth, getDeviceById, getDeviceLog, getSingleDeploymentDevices, getSingleDeploymentStats };
+const actionCreators = { getDeviceAuth, getDeviceById, getDeviceLog, getRelease, getSingleDeploymentDevices, getSingleDeploymentStats };
 
 const mapStateToProps = state => {
   const devices = state.deployments.byId[state.deployments.selectedDeployment]?.devices || {};
@@ -154,7 +161,10 @@ const mapStateToProps = state => {
     deployment,
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
     isHosted: state.app.features.isHosted,
-    release: deployment.artifact_name ? state.releases.byId[deployment.artifact_name] : {}
+    release:
+      deployment.artifact_name && state.releases.byId[deployment.artifact_name]
+        ? state.releases.byId[deployment.artifact_name]
+        : { device_types_compatible: [] }
   };
 };
 

@@ -19,11 +19,13 @@ import Confirm from './../confirm';
 export default class DeploymentOverview extends React.Component {
   constructor(props, state) {
     super(props, state);
+    const perPage = 20;
+    const end = Math.min(props.deviceCount, perPage);
     this.state = {
       aborting: false,
       currentPage: 1,
-      pagedDevices: [],
-      perPage: 20
+      pagedDevices: props.allDevices.slice(0, end),
+      perPage
     };
   }
 
