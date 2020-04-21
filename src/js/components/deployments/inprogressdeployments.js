@@ -28,26 +28,27 @@ export class Progress extends React.PureComponent {
     return doneLoading ? (
       <div className="fadeIn">
         {!!progress.length && (
-          <>
-            <h4 className="dashboard-header margin-top-large">
+          <div className="margin-left">
+            <h4 className="dashboard-header margin-top-large margin-right">
               <span>In progress now</span>
             </h4>
             <div ref={ref => (this.inprogressRef = ref)}>
               <DeploymentsList
-                headers={defaultHeaders}
-                type="progress"
                 count={progressCount || progress.length}
+                headers={defaultHeaders}
                 items={progress}
+                listClass="margin-right-small"
                 page={progPage}
+                type="progress"
                 {...self.props}
               />
             </div>
-          </>
+          </div>
         )}
         {!!onboardingComponent && onboardingComponent}
         {!!(pendingCount && pending.length) && (
-          <>
-            <h4 className="dashboard-header margin-top-large">
+          <div className="deployments-pending">
+            <h4 className="dashboard-header margin-small margin-top">
               <span>Pending</span>
             </h4>
             <DeploymentsList
@@ -59,7 +60,7 @@ export class Progress extends React.PureComponent {
               {...self.props}
               type="pending"
             />
-          </>
+          </div>
         )}
         {!(progressCount || progress.length || pendingCount || pending.length) && (
           <div className={progress.length || !doneLoading ? 'hidden' : 'dashboard-placeholder'}>

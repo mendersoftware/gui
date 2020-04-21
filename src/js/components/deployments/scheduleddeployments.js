@@ -15,7 +15,7 @@ const headers = [
   ...defaultHeaders.slice(0, 2),
   { title: 'Start time', renderer: DeploymentStartTime, props: { direction: 'up' } },
   { title: `End time`, renderer: DeploymentEndTime },
-  { title: '# devices', class: 'align-right', renderer: DeploymentDeviceCount },
+  { title: '# devices', class: 'align-right column-defined', renderer: DeploymentDeviceCount },
   { title: 'Scheduled windows', renderer: DeploymentWindows },
   { title: 'Phases', renderer: DeploymentPhases }
 ];

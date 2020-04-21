@@ -174,7 +174,7 @@ export class Past extends React.Component {
     }
 
     return (
-      <div className="fadeIn margin-top-large">
+      <div className="fadeIn margin-left margin-top-large">
         <Grid container spacing={2} className="datepicker-container" style={{ paddingTop: '4px' }}>
           <Grid item>
             <span>Filter by date</span>

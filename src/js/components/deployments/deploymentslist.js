@@ -16,7 +16,7 @@ export const defaultHeaders = [
   { title: 'Device group', renderer: DeploymentDeviceGroup },
   { title: 'Start time', renderer: DeploymentStartTime },
   { title: `End time`, renderer: DeploymentEndTime },
-  { title: '# devices', class: 'align-right', renderer: DeploymentDeviceCount },
+  { title: '# devices', class: 'align-right column-defined', renderer: DeploymentDeviceCount },
   { title: 'Status', renderer: DeploymentProgress }
 ];
 
@@ -30,33 +30,31 @@ export default class DeploymentsList extends React.Component {
 
   render() {
     const self = this;
-
-    const { abort, count, headers, openReport, page, items, isEnterprise, refreshItems, title, type } = self.props;
-
+    const { abort, count, headers, isEnterprise, items, listClass = '', openReport, page, refreshItems, type } = self.props;
     const columnHeaders = headers ? headers : defaultHeaders;
-
     return (
       !!items.length && (
         <div className="fadeIn deploy-table-contain">
-          <h3 className="capitalized-start">{title}</h3>
-          <div className={`deployment-item deployment-header-item muted ${deploymentTypeClasses[type] || ''}`}>
+          <div className={`deployment-item deployment-header-item muted ${deploymentTypeClasses[type] || ''}`} style={{ paddingRight: 15 }}>
             {columnHeaders.map((item, index) => (
               <div key={`${item.title}-${index}`} className={item.class || ''}>
                 {item.title}
               </div>
             ))}
           </div>
-          {items.map(deployment => (
-            <DeploymentItem
-              abort={abort}
-              columnHeaders={columnHeaders}
-              deployment={deployment}
-              key={`${type}-deployment-${deployment.created}`}
-              isEnterprise={isEnterprise}
-              openReport={openReport}
-              type={type}
-            />
-          ))}
+          <div className={listClass}>
+            {items.map(deployment => (
+              <DeploymentItem
+                abort={abort}
+                columnHeaders={columnHeaders}
+                deployment={deployment}
+                key={`${type}-deployment-${deployment.created}`}
+                isEnterprise={isEnterprise}
+                openReport={openReport}
+                type={type}
+              />
+            ))}
+          </div>
           {count > items.length && (
             <Pagination
               count={count}

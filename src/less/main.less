@@ -250,6 +250,9 @@ ul.link-list {
 .margin-left-small {
   margin-left: @defaultGutterWidth;
 }
+.margin-left-large {
+  margin-left: 3 * @defaultGutterWidth;
+}
 .margin-right {
   margin-right: 2 * @defaultGutterWidth;
 }
@@ -862,22 +865,6 @@ ul.link-list {
   }
   .link {
     font-size: small;
-  }
-}
-
-.development {
-  background-color: @alertgreen;
-  padding: 7px 11px;
-  color: @lightestgrey;
-  border-radius: 20px;
-  margin: -10px 0 10px;
-  display: table;
-
-  .material-icons {
-    margin-right: 7px;
-    color: @lightestgrey;
-    vertical-align: text-bottom;
-    font-size: 18px;
   }
 }
 
@@ -1945,14 +1932,12 @@ span.day {
 
 .report-container {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: 2fr 2fr 1fr;
   grid-column-gap: 2 * @defaultGutterWidth;
   .deploymentInfo {
     margin-top: 30px;
     font-size: 14px;
-    white-space: nowrap;
     flex-grow: 1;
-    max-width: 350px;
     > div {
       margin-bottom: 10px;
       overflow: hidden;
@@ -1998,10 +1983,25 @@ span.day {
 }
 
 /* Deployments */
+.deployments-pending {
+  padding: 10px @defaultGutterWidth 2 * @defaultGutterWidth;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background-color: #fdfdfd;
+  .dashboard-header {
+    margin-bottom: 2 * @defaultGutterWidth;
+    span {
+      background: #fdfdfd;
+    }
+  }
+  .deploy-table-contain {
+    margin-bottom: initial;
+  }
+}
 
 .deployment-item {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 3fr 1.2fr 50px;
+  grid-template-columns: 2fr 1fr 1fr 1fr 0.75fr 4fr 1.2fr 50px;
   grid-column-gap: 2 * @defaultGutterWidth;
   border-bottom: 1px solid @bordercolor;
   margin: 0 1.5vw;
@@ -2022,6 +2022,9 @@ span.day {
   time {
     min-width: 100px;
   }
+  > .column-defined {
+    min-width: initial;
+  }
   .cancelButton:hover {
     color: @red;
   }
@@ -2030,6 +2033,7 @@ span.day {
     padding: 10px 20px;
     height: 70px;
     border-radius: @dotSize * 0.5;
+    justify-content: center;
     .progress-chart,
     .progress-step-total {
       display: flex;
@@ -2116,7 +2120,7 @@ span.day {
 
 .progressStatus {
   background-color: @lightestgrey;
-  padding: @defaultGutterWidth 90px @defaultGutterWidth;
+  padding: @defaultGutterWidth 4 * @defaultGutterWidth @defaultGutterWidth;
   #progressStatus {
     text-align: center;
     vertical-align: top;

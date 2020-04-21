@@ -295,7 +295,7 @@ export class Deployments extends React.Component {
 
     return (
       <>
-        <div className="margin-left margin-top" style={{ maxWidth: '80vw' }}>
+        <div className="margin-left-small margin-top" style={{ maxWidth: '80vw' }}>
           <div className="flexbox space-between">
             <Tabs value={tabIndex} onChange={(e, tabIndex) => self._changeTab(tabIndex)}>
               {Object.values(routes).map(route => (

@@ -39,13 +39,13 @@ export default class DeploymentOverview extends React.Component {
   }
 
   handlePageChange(pageNo) {
-    const start = pageNo * this.state.perPage - this.state.perPage;
-    const end = Math.min(this.props.deviceCount, pageNo * this.state.perPage);
-    // cut slice from full list of devices
-    const devices = this.props.allDevices;
-    const slice = devices.slice(start, end);
     const self = this;
-    const lackingData = this.state.pagedDevices.reduce((accu, device) => {
+    const start = pageNo * self.state.perPage - self.state.perPage;
+    const end = Math.min(self.props.deviceCount, pageNo * self.state.perPage);
+    // cut slice from full list of devices
+    const devices = self.props.allDevices;
+    const slice = devices.slice(start, end);
+    const lackingData = self.state.pagedDevices.reduce((accu, device) => {
       if (
         !self.props.devicesById[device.id] ||
         !self.props.devicesById[device.id].identity_data ||
@@ -55,47 +55,47 @@ export default class DeploymentOverview extends React.Component {
       }
       return accu;
     }, []);
-    if (!isEqual(slice, this.state.pagedDevices) || lackingData.length) {
-      var diff = differenceWith(slice, this.state.pagedDevices, isEqual);
+    if (!isEqual(slice, self.state.pagedDevices) || lackingData.length) {
+      var diff = differenceWith(slice, self.state.pagedDevices, isEqual);
       // only update those that have changed
-      this.getDeviceDetails(diff.concat(lackingData));
+      self.getDeviceDetails(diff.concat(lackingData));
     }
-    this.setState({ currentPage: pageNo, end: end, pagedDevices: slice });
+    self.setState({ currentPage: pageNo, end: end, pagedDevices: slice });
   }
 
   render() {
     const self = this;
-    const { deployment, deviceCount, duration, onAbortClick, onRetryClick, viewLog } = this.props;
+    const { deployment, deviceCount, duration, onAbortClick, onRetryClick, viewLog } = self.props;
     const { aborting, currentPage, pagedDevices, perPage } = self.state;
     const finished = deployment.finished || deployment.status === 'finished';
     const created = deployment.created || new Date();
+
+    const statusDescription = finished ? (
+      <div>Finished {!!deployment.stats.failure && <span className="failures">with failures</span>}</div>
+    ) : (
+      <div className="capitalized-start">
+        {deployment.status}
+        {deployment.status === 'pending' ? (deployment.windows ? ' (awaiting devices)' : ' (waiting for next window)') : ''}
+      </div>
+    );
     return (
       <div>
         <div className="report-container">
-          <div className="deploymentInfo" style={{ marginTop: 30, maxWidth: 'initial' }}>
-            <div className="two-columns">
-              <div>
-                <ExpandableAttribute
-                  primary="Release:"
-                  secondary={
-                    <Link style={{ fontWeight: '500' }} to={`/releases/${encodeURIComponent(deployment.artifact_name)}`}>
-                      {deployment.artifact_name}
-                    </Link>
-                  }
-                  dividerDisabled={true}
-                  style={{ marginBottom: -15 }}
-                />
-                <ExpandableAttribute primary="Device group:" secondary={deployment.name} dividerDisabled={true} style={{ marginBottom: -15 }} />
-              </div>
-              {finished && (
-                <ExpandableAttribute
-                  primary="Status:"
-                  secondary={<div>Finished {!!deployment.stats.failure && <span className="failures">with failures</span>}</div>}
-                  dividerDisabled={true}
-                  style={{ marginBottom: -15 }}
-                />
-              )}
+          <div className="deploymentInfo two-columns">
+            <div>
+              <ExpandableAttribute
+                primary="Release:"
+                secondary={
+                  <Link style={{ fontWeight: '500' }} to={`/releases/${encodeURIComponent(deployment.artifact_name)}`}>
+                    {deployment.artifact_name}
+                  </Link>
+                }
+                dividerDisabled={true}
+                style={{ marginBottom: -15 }}
+              />
+              <ExpandableAttribute primary="Device group:" secondary={deployment.name} dividerDisabled={true} style={{ marginBottom: -15 }} />
             </div>
+            <ExpandableAttribute primary="Status:" secondary={statusDescription} dividerDisabled={true} style={{ marginBottom: -15 }} />
           </div>
           {finished ? (
             <div className="statusLarge margin-top-large flexbox centered" style={{ alignItems: 'flex-start' }}>
@@ -143,8 +143,14 @@ export default class DeploymentOverview extends React.Component {
                   title="Devices that have not yet started the deployment will not start the deployment.&#10;Devices that have already completed the deployment are not affected by the abort.&#10;Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback."
                   placement="bottom"
                 >
-                  <Button color="secondary" onClick={() => self.setState({ aborting: !aborting })} startIcon={<BlockIcon fontSize="small" />}>
-                    Abort deployment
+                  <Button
+                    className="flexbox margin-top-large"
+                    color="secondary"
+                    onClick={() => self.setState({ aborting: !aborting })}
+                    startIcon={<BlockIcon fontSize="small" />}
+                    style={{ alignSelf: 'baseline' }}
+                  >
+                    {deployment.filters?.length ? 'Stop' : 'Abort'} deployment
                   </Button>
                 </Tooltip>
               )}
@@ -155,7 +161,13 @@ export default class DeploymentOverview extends React.Component {
                 title="This will create a new deployment with the same device group and Release.&#10;Devices with this Release already installed will be skipped, all others will be updated."
                 placement="bottom"
               >
-                <Button color="secondary" startIcon={<RefreshIcon fontSize="small" />} onClick={onRetryClick}>
+                <Button
+                  className="flexbox margin-top-large"
+                  color="secondary"
+                  startIcon={<RefreshIcon fontSize="small" />}
+                  onClick={onRetryClick}
+                  style={{ alignSelf: 'baseline' }}
+                >
                   Retry deployment?
                 </Button>
               </Tooltip>

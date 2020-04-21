@@ -18,7 +18,7 @@ export const deploymentTypeClasses = {
 };
 
 export const DeploymentDeviceCount = compose(setDisplayName('DeploymentDeviceCount'))(({ deployment }) => (
-  <div className="align-right" key="DeploymentDeviceCount">
+  <div className="align-right column-defined" key="DeploymentDeviceCount">
     {deployment.device_count}
   </div>
 ));
@@ -109,7 +109,11 @@ export default class DeploymentItem extends React.Component {
         {columnHeaders.map(column =>
           column.renderer({ ...self.props, deployment, started, groupedStats: { ...groupedStats, current: groupedStats.inprogress }, ...column.props })
         )}
-        <Button variant="contained" onClick={() => openReport(type, deployment.id)} style={{ justifySelf: 'center' }}>
+        <Button
+          variant="contained"
+          onClick={() => openReport(type, deployment.id)}
+          style={{ justifySelf: 'center', backgroundColor: 'transparent', textTransform: 'none' }}
+        >
           View details
         </Button>
         <Tooltip className="columnHeader" title="Abort" placement="top-start">

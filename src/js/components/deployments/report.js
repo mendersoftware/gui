@@ -117,15 +117,15 @@ export class DeploymentReport extends React.Component {
             </div>
           )}
           {type === 'scheduled' && (
-            <>
+            <div className="margin-left-large margin-top">
               {aborting ? (
                 <Confirm cancel={() => self.setState({ aborting: !aborting })} action={() => abort(deployment.id)} type="abort" />
               ) : (
-                <Button color="secondary" onClick={() => self.setState({ aborting: !aborting })} startIcon={<BlockIcon fontSize="small" />}>
+                <Button color="secondary" variant="contained" onClick={() => self.setState({ aborting: !aborting })} startIcon={<BlockIcon fontSize="small" />}>
                   Abort deployment
                 </Button>
               )}
-            </>
+            </div>
           )}
           {showDialog && <DeploymentLog logData={logData} onClose={() => self.setState({ showDialog: false })} />}
         </DialogContent>
