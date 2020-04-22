@@ -78,14 +78,32 @@ export const addStaticGroup = (group, deviceIds) => (dispatch, getState) =>
       dispatch({
         type: DeviceConstants.ADD_STATIC_GROUP,
         group: { deviceIds: [], total: 0, filters: [], ...getState().devices.groups.byId[group] },
-        selectedGroup: group
+        groupName: group
       })
-    )
+    ).then(() => Promise.resolve(dispatch(selectGroup(group))))
   );
 
 export const removeStaticGroup = groupName => (dispatch, getState) => {
   const { deviceIds } = getState().devices.groups.byId[groupName];
-  return Promise.all(deviceIds.map(id => dispatch(removeDeviceFromGroup(id, groupName))));
+  const selectedGroup = getState().devices.groups.selectedGroup === groupName ? undefined : getState().devices.groups.selectedGroup;
+  return Promise.all(
+    deviceIds.reduce(
+      (accu, id) => {
+        accu.push(dispatch(removeDeviceFromGroup(id, groupName)));
+        return accu;
+      },
+      [dispatch(selectGroup(selectedGroup))]
+    )
+  ).then(() => {
+    let groups = getState().devices.groups.byId;
+    delete groups[groupName];
+    return Promise.resolve(
+      dispatch({
+        type: DeviceConstants.REMOVE_STATIC_GROUP,
+        groups
+      })
+    );
+  });
 };
 
 // for some reason these functions can not be stored in the deviceConstants...
@@ -135,22 +153,32 @@ export const getDynamicGroup = groupName => (dispatch, getState) => {
     Promise.resolve(
       dispatch({
         type: DeviceConstants.ADD_DYNAMIC_GROUP,
-        id: filterId,
-        group: groupName,
-        filters: mapTermsToFilters(filter.terms)
+        groupName,
+        group: {
+          deviceIds: [],
+          total: 0,
+          ...getState().devices.groups.byId[groupName],
+          id: filterId,
+          filters: mapTermsToFilters(filter.terms)
+        }
       })
     )
   );
 };
 
-export const addDynamicGroup = (groupName, filterPredicates) => dispatch =>
+export const addDynamicGroup = (groupName, filterPredicates) => (dispatch, getState) =>
   DevicesApi.post(`${inventoryApiUrlV2}/filters`, { name: groupName, terms: mapFiltersToTerms(filterPredicates) }).then(res =>
     Promise.resolve(
       dispatch({
         type: DeviceConstants.ADD_DYNAMIC_GROUP,
-        id: res.headers['location'].substring(res.headers['location'].lastIndexOf('/') + 1),
-        group: groupName,
-        filters: filterPredicates
+        groupName,
+        group: {
+          deviceIds: [],
+          total: 0,
+          ...getState().devices.groups.byId[groupName],
+          id: res.headers['location'].substring(res.headers['location'].lastIndexOf('/') + 1),
+          filters: filterPredicates
+        }
       })
     ).then(() => Promise.resolve(dispatch(selectGroup(groupName))))
   );
@@ -165,12 +193,11 @@ export const removeDynamicGroup = groupName => (dispatch, getState) => {
   const selectedGroup = getState().devices.groups.selectedGroup === groupName ? undefined : getState().devices.groups.selectedGroup;
   let groups = getState().devices.groups.byId;
   delete groups[groupName];
-  return DevicesApi.delete(`${inventoryApiUrlV2}/filters/${filterId}`).then(() =>
+  return Promise.all([DevicesApi.delete(`${inventoryApiUrlV2}/filters/${filterId}`), dispatch(selectGroup(selectedGroup))]).then(() =>
     Promise.resolve(
       dispatch({
         type: DeviceConstants.REMOVE_DYNAMIC_GROUP,
-        groups,
-        selectedGroup
+        groups
       })
     )
   );
@@ -252,17 +279,22 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
     { ids, devicesById: {} }
   );
 
-export const getGroupDevices = (group, page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false) => dispatch =>
+export const getGroupDevices = (group, page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false) => (dispatch, getState) =>
   Promise.resolve(dispatch(getInventoryDevices(page, perPage, [], group))).then(results => {
     const { deviceAccu, total } = results[results.length - 1];
     let tasks = [];
     if (group.length) {
+      const stateGroup = getState().devices.groups.byId[group];
       tasks.push(
         dispatch({
           type: DeviceConstants.RECEIVE_GROUP_DEVICES,
-          group,
-          deviceIds: deviceAccu.ids,
-          total
+          group: {
+            filters: [],
+            ...stateGroup,
+            deviceIds: deviceAccu.ids.length === total || deviceAccu.ids.length > stateGroup.deviceIds ? deviceAccu.ids : stateGroup.deviceIds,
+            total
+          },
+          groupName: group
         })
       );
     }
@@ -296,9 +328,13 @@ export const getAllGroupDevices = group => (dispatch, getState) => {
       tasks.push(
         dispatch({
           type: DeviceConstants.RECEIVE_GROUP_DEVICES,
-          group,
-          deviceIds: deviceAccu.ids,
-          total: deviceAccu.ids.length
+          group: {
+            filters: [],
+            ...state.devices.groups[group],
+            deviceIds: deviceAccu.ids,
+            total: deviceAccu.ids.length
+          },
+          groupName: group
         })
       );
       tasks.push(Promise.resolve({ deviceAccu, total: deviceAccu.ids.length }));

@@ -38,22 +38,15 @@ const deviceReducer = (state = initialState, action) => {
           byId: { ...state.groups.byId, ...action.groups }
         }
       };
-    case DeviceConstants.ADD_STATIC_GROUP:
-      return {
-        ...state,
-        groups: {
-          ...state.groups,
-          selectedGroup: action.selectedGroup,
-          byId: { ...state.groups.byId, [action.selectedGroup]: action.group }
-        }
-      };
     case DeviceConstants.ADD_TO_GROUP: {
       let group = {
         deviceIds: [action.deviceId],
+        filters: [],
         total: 1
       };
       if (state.groups.byId[action.group]) {
         group = {
+          filters: [],
           ...state.groups.byId[action.group],
           deviceIds: [...state.groups.byId[action.group].deviceIds, action.deviceId],
           total: state.groups.byId[action.group].total + 1
@@ -65,9 +58,7 @@ const deviceReducer = (state = initialState, action) => {
           ...state.groups,
           byId: {
             ...state.groups.byId,
-            [action.group]: {
-              ...group
-            }
+            [action.group]: group
           }
         }
       };
@@ -88,6 +79,7 @@ const deviceReducer = (state = initialState, action) => {
         byId[action.group] = group;
       } else if (state.groups.selectedGroup === action.group) {
         selectedGroup = null;
+        delete byId[action.group];
       }
       return {
         ...state,
@@ -99,20 +91,12 @@ const deviceReducer = (state = initialState, action) => {
       };
     }
     case DeviceConstants.ADD_DYNAMIC_GROUP:
+    case DeviceConstants.ADD_STATIC_GROUP:
       return {
         ...state,
         groups: {
           ...state.groups,
-          byId: {
-            ...state.groups.byId,
-            [action.group]: {
-              deviceIds: [],
-              total: 0,
-              ...state.groups.byId[action.group],
-              filters: action.filters,
-              id: action.id
-            }
-          }
+          byId: { ...state.groups.byId, [action.groupName]: action.group }
         }
       };
     case DeviceConstants.RECEIVE_DYNAMIC_GROUPS:
@@ -127,11 +111,11 @@ const deviceReducer = (state = initialState, action) => {
         }
       };
     case DeviceConstants.REMOVE_DYNAMIC_GROUP:
+    case DeviceConstants.REMOVE_STATIC_GROUP:
       return {
         ...state,
         groups: {
           ...state.groups,
-          selectedGroup: action.selectedGroup,
           byId: action.groups
         }
       };
@@ -156,14 +140,7 @@ const deviceReducer = (state = initialState, action) => {
           ...state.groups,
           byId: {
             ...state.groups.byId,
-            [action.group]: {
-              ...state.groups.byId[action.group],
-              deviceIds:
-                action.deviceIds.length === action.total || action.deviceIds.length > state.groups.byId[action.group].deviceIds
-                  ? action.deviceIds
-                  : state.groups.byId[action.group].deviceIds,
-              total: action.total
-            }
+            [action.groupName]: action.group
           }
         }
       };
