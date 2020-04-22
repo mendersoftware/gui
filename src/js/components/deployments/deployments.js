@@ -182,7 +182,7 @@ export class Deployments extends React.Component {
       group: deployment.name,
       deploymentDeviceIds: devices.map(item => item.id),
       release,
-      phases: null
+      phases: [{ batch_size: 100, start_ts: new Date().toISOString(), delay: 0 }]
     };
     self.setState({ deploymentObject, createDialog: true, reportDialog: false });
   }
