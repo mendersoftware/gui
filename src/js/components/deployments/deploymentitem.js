@@ -9,6 +9,7 @@ import { groupDeploymentStats } from '../../helpers';
 import RelativeTime from '../common/relative-time';
 import Confirm from './confirm';
 import ProgressChart from './progressChart';
+import DeploymentStats from './deploymentstatus';
 
 export const deploymentTypeClasses = {
   past: 'past-item',
@@ -25,7 +26,9 @@ export const DeploymentDeviceCount = compose(setDisplayName('DeploymentDeviceCou
 export const DeploymentDeviceGroup = compose(setDisplayName('DeploymentDeviceGroup'))(({ deployment }) => (
   <div key="DeploymentDeviceGroup">{deployment.name}</div>
 ));
-export const DeploymentEndTime = compose(setDisplayName('DeploymentEndTime'))(() => <div key="DeploymentEndTime">-</div>);
+export const DeploymentEndTime = compose(setDisplayName('DeploymentEndTime'))(({ deployment }) => (
+  <RelativeTime key="DeploymentEndTime" updateTime={deployment.finished} shouldCount="none" />
+));
 export const DeploymentPhases = compose(setDisplayName('DeploymentPhases'))(({ deployment }) => (
   <div key="DeploymentPhases">{deployment.phases ? deployment.phases.length : '-'}</div>
 ));
@@ -48,6 +51,10 @@ export const DeploymentRelease = compose(setDisplayName('DeploymentRelease'))(({
 ));
 export const DeploymentStartTime = compose(setDisplayName('DeploymentStartTime'))(({ started, direction = 'both' }) => (
   <RelativeTime key="DeploymentStartTime" updateTime={started} shouldCount={direction} />
+));
+
+export const DeploymentStatus = compose(setDisplayName('DeploymentStatus'))(({ deployment }) => (
+  <DeploymentStats key="DeploymentStatus" vertical={false} stats={deployment.stats} />
 ));
 
 export const DeploymentWindows = compose(setDisplayName('DeploymentWindows'))(({ deployment }) => (
@@ -77,10 +84,8 @@ export default class DeploymentItem extends React.Component {
   }
 
   toggleConfirm(id) {
-    var self = this;
-    setTimeout(() => {
-      self.setState({ abort: self.state.abort ? null : id });
-    }, 150);
+    const self = this;
+    setTimeout(() => self.setState({ abort: self.state.abort ? null : id }), 150);
   }
 
   render() {
@@ -116,11 +121,13 @@ export default class DeploymentItem extends React.Component {
         >
           View details
         </Button>
-        <Tooltip className="columnHeader" title="Abort" placement="top-start">
-          <IconButton onClick={() => self.toggleConfirm(id)}>
-            <CancelOutlinedIcon className="cancelButton muted" />
-          </IconButton>
-        </Tooltip>
+        {type !== 'past' && (
+          <Tooltip className="columnHeader" title="Abort" placement="top-start">
+            <IconButton onClick={e => self.toggleConfirm(e, id)}>
+              <CancelOutlinedIcon className="cancelButton muted" />
+            </IconButton>
+          </Tooltip>
+        )}
       </div>
     );
   }

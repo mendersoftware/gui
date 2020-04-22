@@ -1,23 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Time from 'react-time';
 
 // material ui
-import { Grid, RootRef, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
-
+import { Grid, RootRef } from '@material-ui/core';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
 import { setSnackbar } from '../../actions/appActions';
 import { selectDeployment, getSingleDeploymentStats } from '../../actions/deploymentActions';
 import Loader from '../common/loader';
-import Pagination from '../common/pagination';
 import AutoSelect from '../common/forms/autoselect';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
-import DeploymentStatus from './deploymentstatus';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
+import DeploymentsList, { defaultHeaders } from './deploymentslist';
+import { DeploymentStatus } from './deploymentitem';
 
 const timeranges = {
   today: { start: 0, end: 0, title: 'Today' },
@@ -30,6 +28,8 @@ const today = new Date(new Date().setHours(0, 0, 0));
 const tonight = new Date(new Date().setHours(23, 59, 59));
 
 const refreshDeploymentsLength = 30000;
+
+const headers = [...defaultHeaders.slice(0, defaultHeaders.length - 1), { title: 'Status', renderer: DeploymentStatus }];
 
 export class Past extends React.Component {
   constructor(props, context) {
@@ -135,27 +135,8 @@ export class Past extends React.Component {
 
   render() {
     const self = this;
-    const { count, createClick, groups, loading, past, showHelptips, showReport } = self.props;
+    const { count, createClick, groups, loading, past, showHelptips } = self.props;
     const { page, perPage, endDate, startDate } = self.state;
-    const pastMap = past.map((deployment, index) => {
-      //  get statistics
-      const status = <DeploymentStatus vertical={false} stats={deployment.stats} />;
-
-      return (
-        <TableRow hover key={index} onClick={() => showReport('past', deployment.id)}>
-          <TableCell>{deployment.artifact_name}</TableCell>
-          <TableCell>{deployment.name}</TableCell>
-          <TableCell>
-            <Time value={deployment.created} format="YYYY-MM-DD HH:mm" />
-          </TableCell>
-          <TableCell>
-            <Time value={deployment.finished} format="YYYY-MM-DD HH:mm" />
-          </TableCell>
-          <TableCell style={{ textAlign: 'right', width: '100px' }}>{deployment.device_count}</TableCell>
-          <TableCell style={{ overflow: 'visible', minWidth: '400px' }}>{status}</TableCell>
-        </TableRow>
-      );
-    });
 
     const menuItems = groups.reduce(
       (accu, item) => {
@@ -226,40 +207,27 @@ export class Past extends React.Component {
             />
           </Grid>
         </Grid>
+
         <div className="deploy-table-contain">
           <Loader show={loading} />
-
-          {!loading && showHelptips && pastMap.length && onboardingComponent
-            ? onboardingComponent // TODO: fix status retrieval for past deployments to decide what to show here -
-            : null}
-
-          {past.length && !!pastMap.length ? (
-            <>
-              <Table style={{ overflow: 'visible' }}>
-                <TableHead>
-                  <TableRow style={{ overflow: 'visible' }}>
-                    <TableCell>Updating to</TableCell>
-                    <TableCell>Group</TableCell>
-                    <TableCell>Started</TableCell>
-                    <TableCell>Finished</TableCell>
-                    <TableCell style={{ textAlign: 'right', width: '100px' }}># Devices</TableCell>
-                    <TableCell style={{ minWidth: '400px' }}>Status</TableCell>
-                  </TableRow>
-                </TableHead>
-                <RootRef rootRef={ref => (this.deploymentsRef = ref)}>
-                  <TableBody style={{ cursor: 'pointer', overflow: 'visible' }}>{pastMap}</TableBody>
-                </RootRef>
-              </Table>
-              <Pagination
-                count={count}
-                rowsPerPage={perPage}
-                onChangeRowsPerPage={value => self.setState({ perPage: value }, () => self._refreshPast(1, value))}
+          {/* TODO: fix status retrieval for past deployments to decide what to show here - */}
+          {!loading && showHelptips && !!past.length && onboardingComponent && onboardingComponent}
+          {!!past.length && (
+            <RootRef rootRef={ref => (this.deploymentsRef = ref)}>
+              <DeploymentsList
+                componentClass="margin-left-small"
+                count={count || past.length}
+                headers={headers}
+                items={past}
                 page={page}
-                onChangePage={pageNo => self._refreshPast(pageNo)}
+                refreshItems={(...args) => self.refreshPast(...args)}
+                {...self.props}
+                type="past"
               />
-            </>
-          ) : (
-            <div className={loading || pastMap.length ? 'hidden' : 'dashboard-placeholder'}>
+            </RootRef>
+          )}
+          {!(loading || past.length) && (
+            <div className="dashboard-placeholder">
               <p>No finished deployments were found.</p>
               <p>
                 Try a different date range, or <a onClick={createClick}>Create a new deployment</a> to get started
