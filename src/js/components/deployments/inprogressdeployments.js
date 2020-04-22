@@ -53,6 +53,7 @@ export class Progress extends React.PureComponent {
             </h4>
             <DeploymentsList
               abort={id => self._abortDeployment(id)}
+              componentClass="margin-left-small"
               count={pendingCount || pending.length}
               items={pending}
               page={pendPage}

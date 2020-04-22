@@ -30,12 +30,12 @@ export default class DeploymentsList extends React.Component {
 
   render() {
     const self = this;
-    const { abort, count, headers, isEnterprise, items, listClass = '', openReport, page, refreshItems, type } = self.props;
+    const { abort, componentClass = '', count, headers, isEnterprise, items, listClass = '', openReport, page, refreshItems, type } = self.props;
     const columnHeaders = headers ? headers : defaultHeaders;
     return (
       !!items.length && (
-        <div className="fadeIn deploy-table-contain">
-          <div className={`deployment-item deployment-header-item muted ${deploymentTypeClasses[type] || ''}`} style={{ paddingRight: 15 }}>
+        <div className={`fadeIn deploy-table-contain ${componentClass}`}>
+          <div className={`deployment-item deployment-header-item muted ${deploymentTypeClasses[type] || ''}`}>
             {columnHeaders.map((item, index) => (
               <div key={`${item.title}-${index}`} className={item.class || ''}>
                 {item.title}

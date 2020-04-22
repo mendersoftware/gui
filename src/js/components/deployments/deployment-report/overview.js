@@ -121,9 +121,9 @@ export default class DeploymentOverview extends React.Component {
               </div>
             </div>
           ) : (
-            <div className="progressStatus flexbox space-between">
+            <div className="progressStatus flexbox centered space-between">
               <div id="progressStatus">
-                <h3 style={{ marginTop: 12 }}>{finished ? 'Finished' : 'In progress'}</h3>
+                <h3 style={{ marginTop: 0 }}>In progress</h3>
                 <h2>
                   <TimelapseIcon style={{ margin: '0 10px 0 -10px', color: '#ACD4D0', verticalAlign: 'text-top' }} />
                   <span>{`${duration.format('d [d] *hh [h] mm [m] ss [s]')}`}</span>

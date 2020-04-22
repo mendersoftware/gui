@@ -2004,13 +2004,16 @@ span.day {
   grid-template-columns: 2fr 1fr 1fr 1fr 0.75fr 4fr 1.2fr 50px;
   grid-column-gap: 2 * @defaultGutterWidth;
   border-bottom: 1px solid @bordercolor;
-  margin: 0 1.5vw;
+  margin: 0 @defaultGutterWidth;
   padding: 10px 0;
   align-items: center;
   position: relative;
   min-width: 1300px;
   &.deployment-header-item {
     border-bottom: transparent;
+    &.progress-item {
+      padding-right: @defaultGutterWidth;
+    }
   }
   &.scheduled-item {
     grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1.2fr 50px;
