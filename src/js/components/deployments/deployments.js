@@ -286,7 +286,7 @@ export class Deployments extends React.Component {
   render() {
     const self = this;
     // tabs
-    const { isEnterprise, onboardingComplete, past, pastCount, pending, pendingCount, progress, progressCount } = self.props;
+    const { isEnterprise, onboardingComplete, past, pastCount, pending, pendingCount, progress, progressCount, scheduled } = self.props;
     const { contentClass, createDialog, deploymentObject, doneLoading, pendPage, progPage, reportDialog, reportType, startDate, tabIndex } = self.state;
     let onboardingComponent = null;
     if (past.length || pastCount) {
@@ -329,10 +329,8 @@ export class Deployments extends React.Component {
             <Scheduled
               loading={!doneLoading}
               abort={id => self._abortDeployment(id)}
-              count={pendingCount || pending.length}
-              defaultPageSize={DEFAULT_PENDING_INPROGRESS_COUNT}
-              items={pending}
-              page={pendPage}
+              count={scheduled.length}
+              items={scheduled}
               refreshItems={(...args) => self._refreshPending(...args)}
               isEnterprise={isEnterprise}
               refreshDeployments={(...args) => self.refreshDeployments(...args)}
@@ -395,7 +393,26 @@ const tryMapDeployments = (accu, id) => {
 
 const mapStateToProps = state => {
   const progress = state.deployments.byStatus.inprogress.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
-  const pending = state.deployments.byStatus.pending.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
+  const now = new Date();
+  const { pending, scheduled } = state.deployments.byStatus.pending.deploymentIds.reduce(
+    (accu, id) => {
+      const deployment = accu.state.deployments.byId[id];
+      if (deployment) {
+        if (
+          (deployment.phases && deployment.phases.length && new Date(deployment.phases[0].start_ts) < now) ||
+          (!deployment.phases && new Date(deployment.created) < now)
+        ) {
+          if (state.deployments.byStatus.pending.selectedDeploymentIds.includes(deployment.id)) {
+            accu.pending.push(deployment);
+          }
+        } else {
+          accu.scheduled.push(deployment);
+        }
+      }
+      return accu;
+    },
+    { state, pending: [], scheduled: [] }
+  );
   const groups = Object.keys(state.devices.groups.byId).filter(group => group !== DeviceConstants.UNGROUPED_GROUP.id);
   return {
     finishedCount: state.deployments.byStatus.finished.total,
@@ -406,9 +423,10 @@ const mapStateToProps = state => {
     past: state.deployments.byStatus.finished.deploymentIds,
     pastCount: state.deployments.byStatus.finished.total,
     pending,
-    pendingCount: state.deployments.byStatus.pending.total,
+    pendingCount: state.deployments.byStatus.pending.total - scheduled.length,
     progress,
     progressCount: state.deployments.byStatus.inprogress.total,
+    scheduled,
     settings: state.users.globalSettings,
     showHelptips: state.users.showHelptips,
     user: state.users.byId[state.users.currentUser] || {}

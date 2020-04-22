@@ -83,7 +83,7 @@ export class Scheduled extends React.Component {
             </Button>
           ))}
         </div>
-        {tabIndex === tabs.list.index && <DeploymentsList headers={headers} {...self.props} type="scheduled" />}
+        {tabIndex === tabs.list.index && <DeploymentsList headers={headers} {...self.props} type="scheduled" count={0} />}
         {tabIndex === tabs.calendar.index && (
           <Calendar
             localizer={localizer}
