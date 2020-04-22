@@ -72,8 +72,8 @@ export class Deployments extends React.Component {
     self.props.selectDevice();
     self.props.groups.map(group => self.props.getAllGroupDevices(group));
     let startDate = self.state.startDate;
+    const params = new URLSearchParams(this.props.location.search);
     if (this.props.match) {
-      const params = new URLSearchParams(this.props.location.search);
       if (params) {
         if (params.get('open')) {
           if (params.get('id')) {
@@ -95,10 +95,9 @@ export class Deployments extends React.Component {
         }
       }
     }
-    const query = new URLSearchParams(this.props.location.search);
     self.setState(
       {
-        createDialog: Boolean(query.get('open')),
+        createDialog: Boolean(params.get('open')),
         reportType: this.props.match ? this.props.match.params.tab : 'active',
         startDate,
         tabIndex: this._updateActive()
