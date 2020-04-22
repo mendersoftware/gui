@@ -51,6 +51,7 @@ export default class DeploymentOverview extends React.Component {
       if (
         !self.props.devicesById[device.id] ||
         !self.props.devicesById[device.id].identity_data ||
+        !self.props.devicesById[device.id].attributes ||
         Object.keys(self.props.devicesById[device.id].attributes).length === 0
       ) {
         accu.push(device);
