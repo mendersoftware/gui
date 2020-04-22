@@ -507,6 +507,9 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
   }
   return query.then(response => {
     let tasks = [];
+    if (response.body.length < 200) {
+      tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(response.body))));
+    }
     if (!status) {
       tasks.push(
         dispatch({
@@ -514,9 +517,6 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
           devices: response.body
         })
       );
-      if (response.body.length < 200) {
-        tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(response.body))));
-      }
     } else {
       const deviceAccu = reduceReceivedDevices(response.body, [], getState(), status);
       let total;
@@ -606,14 +606,13 @@ export const updateDeviceAuth = (deviceId, authId, status) => dispatch =>
 
 export const deleteAuthset = (deviceId, authId) => dispatch =>
   DevicesApi.delete(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}`).then(() =>
-    Promise.all([
+    Promise.resolve(
       dispatch({
         type: DeviceConstants.REMOVE_DEVICE_AUTHSET,
         authId,
         deviceId
-      }),
-      dispatch(getDeviceAuth(deviceId))
-    ])
+      })
+    )
   );
 
 export const preauthDevice = authset => dispatch =>

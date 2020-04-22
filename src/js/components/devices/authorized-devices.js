@@ -320,7 +320,7 @@ export class Authorized extends React.Component {
               onPageChange={e => self._handlePageChange(e)}
               onSelect={selection => self.onRowSelection(selection)}
               pageTotal={groupCount}
-              refreshDevices={() => self._getDevices()}
+              refreshDevices={shouldUpdate => self._getDevices(shouldUpdate)}
               selectDeviceById={id => self.getDeviceById(id)}
             />
 

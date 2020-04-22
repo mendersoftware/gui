@@ -73,9 +73,9 @@ export class ExpandedDevice extends React.Component {
     this.setState({ filterByArtifact: null });
   }
 
-  toggleAuthsets(authsets = !this.state.authsets) {
+  toggleAuthsets(authsets = !this.state.authsets, shouldUpdate = false) {
     this.setState({ authsets });
-    this.props.refreshDevices();
+    this.props.refreshDevices(shouldUpdate);
   }
 
   _updateParams(val, attr) {
@@ -148,7 +148,7 @@ export class ExpandedDevice extends React.Component {
         console.log(errMsg);
         self.props.setSnackbar(preformatWithRequestID(err.res, `There was a problem decommissioning the device: ${errMsg}`), null, 'Copy to clipboard');
       })
-      .finally(() => self.props.refreshDevices());
+      .finally(() => self.props.refreshDevices(true));
   }
 
   render() {
@@ -366,7 +366,7 @@ export class ExpandedDevice extends React.Component {
           <DialogTitle>{authsetTitle}</DialogTitle>
           <DialogContent>
             <Authsets
-              dialogToggle={() => this.toggleAuthsets(false)}
+              dialogToggle={shouldUpdate => this.toggleAuthsets(false, shouldUpdate)}
               decommission={id => this._decommissionDevice(id)}
               device={device}
               id_attribute={id_attribute}
