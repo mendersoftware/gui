@@ -24,7 +24,7 @@ const Review = ({ deployment = {}, deploymentDeviceIds, device, group, isEnterpr
       { primary: 'Number of retries', secondary: retries }
     ],
     Schedule: [
-      { primary: 'Created at', secondary: <Time value={deployment.created} format="YYYY-MM-DD HH:mm" /> },
+      { primary: 'Created at', secondary: <Time value={deployment.created || new Date().toISOString()} format="YYYY-MM-DD HH:mm" /> },
       { primary: 'Start time', secondary: <Time value={start_time} format="YYYY-MM-DD HH:mm" /> },
       { primary: 'End time', secondary: end_time ? <Time value={end_time} format="YYYY-MM-DD HH:mm" /> : '-' },
       { primary: 'Scheduled windows', secondary: schedule ? schedule : '-' }
