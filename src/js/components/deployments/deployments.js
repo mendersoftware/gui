@@ -114,7 +114,7 @@ export class Deployments extends React.Component {
     clearAllRetryTimers(this.props.setSnackbar);
   }
 
-  // deploymentStatus = <finished|inprogress|pending>
+  // deploymentStatus = <inprogress|pending>
   refreshDeployments(page, per_page = this.state.per_page, deploymentStatus, startDate, endDate, group, fullRefresh = true) {
     var self = this;
     let tasks = [self.props.getDeploymentCount(deploymentStatus, startDate, endDate, group)];
@@ -285,13 +285,12 @@ export class Deployments extends React.Component {
   render() {
     const self = this;
     // tabs
-    const { isEnterprise, onboardingComplete, past, pastCount, pending, pendingCount, progress, progressCount, scheduled } = self.props;
+    const { isEnterprise, onboardingComplete, pastCount, pending, pendingCount, progress, progressCount, scheduled } = self.props;
     const { contentClass, createDialog, deploymentObject, doneLoading, pendPage, progPage, reportDialog, reportType, startDate, tabIndex } = self.state;
     let onboardingComponent = null;
-    if (past.length || pastCount) {
+    if (pastCount) {
       onboardingComponent = getOnboardingComponentFor('deployments-past', { anchor: { left: 240, top: 50 } });
     }
-
     return (
       <>
         <div className="margin-left-small margin-top" style={{ maxWidth: '80vw' }}>
@@ -340,8 +339,7 @@ export class Deployments extends React.Component {
             <Past
               createClick={() => self.setState({ createDialog: true })}
               loading={!doneLoading}
-              refreshDeployments={(...args) => self.refreshDeployments(...args)}
-              showReport={(type, id) => self.showReport(type, id)}
+              openReport={(type, id) => self.showReport(type, id)}
               startDate={startDate}
             />
           )}
@@ -414,13 +412,11 @@ const mapStateToProps = state => {
   );
   const groups = Object.keys(state.devices.groups.byId).filter(group => group !== DeviceConstants.UNGROUPED_GROUP.id);
   return {
-    finishedCount: state.deployments.byStatus.finished.total,
     groups,
     hasDeployments: Object.keys(state.deployments.byId).length > 0,
     isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,
     onboardingComplete: state.users.onboarding.complete,
-    past: state.deployments.byStatus.finished.deploymentIds,
-    pastCount: state.deployments.byStatus.finished.total,
+    pastCount: state.deployments.byStatus.finished.total || state.deployments.byStatus.finished.deploymentIds.length,
     pending,
     pendingCount: state.deployments.byStatus.pending.total - scheduled.length,
     progress,

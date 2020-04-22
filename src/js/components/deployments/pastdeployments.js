@@ -7,12 +7,13 @@ import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
 import { setSnackbar } from '../../actions/appActions';
-import { selectDeployment, getSingleDeploymentStats } from '../../actions/deploymentActions';
+import { getDeploymentCount, getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
+
 import Loader from '../common/loader';
 import AutoSelect from '../common/forms/autoselect';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
-import { clearAllRetryTimers } from '../../utils/retrytimer';
+import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
 import { DeploymentStatus } from './deploymentitem';
@@ -37,11 +38,11 @@ export class Past extends React.Component {
     this.state = {
       active: 'today',
       deviceGroup: null,
+      doneLoading: false,
       endDate: tonight,
       startDate: props.startDate || today,
       page: 1,
       perPage: 20,
-      retry: false,
       today: new Date()
     };
   }
@@ -50,8 +51,8 @@ export class Past extends React.Component {
     const self = this;
     self._setDateRange(timeranges['today'].start, timeranges['today'].end);
     clearInterval(self.timer);
-    self.timer = setInterval(() => self._refreshPast(), refreshDeploymentsLength);
-    self._refreshPast();
+    self.timer = setInterval(() => self.refreshPast(), refreshDeploymentsLength);
+    self.refreshPast();
     if (self.props.showHelptips && self.props.showOnboardingTips && !self.props.onboardingComplete && this.props.past.length) {
       const progress = getOnboardingStepCompleted('artifact-modified-onboarding') && this.props.past.length > 1 ? 4 : 3;
       setTimeout(() => {
@@ -65,6 +66,7 @@ export class Past extends React.Component {
   componentWillUnmount() {
     clearInterval(this.timer);
     clearAllRetryTimers(this.props.setSnackbar);
+    clearAllRetryTimers('finished');
   }
 
   onCloseSnackbar = (_, reason) => {
@@ -75,20 +77,20 @@ export class Past extends React.Component {
   };
 
   _setDateRange(after, before) {
-    var startDate = new Date();
+    let startDate = new Date();
     startDate.setDate(startDate.getDate() - (after || 0));
     startDate.setHours(0, 0, 0, 0);
-    var endDate = new Date();
+    let endDate = new Date();
     endDate.setDate(endDate.getDate() - (before || 0));
     endDate.setHours(23, 59, 59, 999);
-    this._refreshPast(1, this.state.perPage, startDate, endDate, this.state.deviceGroup);
+    this.refreshPast(1, this.state.perPage, startDate, endDate, this.state.deviceGroup);
   }
 
   /*
   / refresh only finished deployments
   /
   */
-  _refreshPast(
+  refreshPast(
     page = this.state.page,
     perPage = this.state.perPage,
     startDate = this.state.startDate,
@@ -96,25 +98,35 @@ export class Past extends React.Component {
     group = this.state.deviceGroup
   ) {
     const self = this;
-    // always get total count of past deployments, only refresh deployments if page, count or date range has changed
     let fullRefresh = false;
+    // always get total count of past deployments, only refresh deployments if page, count or date range has changed
     if (self.state.page !== page || !self.state.doneLoading) {
       fullRefresh = true;
     }
     const roundedStartDate = Math.round(Date.parse(startDate) / 1000);
     const roundedEndDate = Math.round(Date.parse(endDate) / 1000);
-    return self.setState({ page, perPage, endDate, startDate, group }, () =>
-      self.props.refreshDeployments(page, perPage, 'finished', roundedStartDate, roundedEndDate, group, fullRefresh)
-    );
-  }
-
-  _pastCellClick(deploymentId) {
-    // adjust index to allow for client side pagination
-    this.props.showReport('past', deploymentId);
+    let tasks = [self.props.getDeploymentCount('finished', roundedStartDate, roundedEndDate, group)];
+    if (fullRefresh) {
+      tasks.push(self.props.getDeploymentsByStatus('finished', page, perPage, roundedStartDate, roundedEndDate, group));
+    }
+    return Promise.all(tasks)
+      .then(([countAction, deploymentsAction]) => {
+        self.props.setSnackbar('');
+        clearRetryTimer('finished', self.props.setSnackbar);
+        if (countAction.deploymentIds.length && deploymentsAction && !deploymentsAction[0].deploymentIds.length) {
+          return self.refreshDeployments(...arguments);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        let errormsg = err.error || 'Please check your connection';
+        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, self.props.setSnackbar);
+      })
+      .finally(() => self.setState({ doneLoading: true, page, perPage, endDate, startDate, group }));
   }
 
   _handleChangeEndDate(date) {
-    var startDate = this.state.startDate;
+    let startDate = this.state.startDate;
     if (date < startDate) {
       startDate = date;
       startDate._isAMomentObject ? startDate.startOf('day') : startDate.setHours(0, 0, 0, 0);
@@ -125,12 +137,12 @@ export class Past extends React.Component {
     date._isAMomentObject ? date.endOf('day') : date.setHours(23, 59, 59, 999);
 
     // refresh deployment list
-    this._refreshPast(1, this.state.perPage, startDate, date, this.state.deviceGroup);
+    this.refreshPast(1, this.state.perPage, startDate, date, this.state.deviceGroup);
   }
 
   setDefaultRange(after, before, active) {
-    this._setDateRange(after, before);
-    this.setState({ active });
+    const self = this;
+    self.setState({ active, doneLoading: false }, () => self._setDateRange(after, before));
   }
 
   render() {
@@ -175,7 +187,7 @@ export class Past extends React.Component {
               <DatePicker
                 variant="inline"
                 className="margin-right"
-                onChange={date => self._refreshPast(1, perPage, date)}
+                onChange={date => self.refreshPast(1, perPage, date)}
                 autoOk={true}
                 label="From"
                 value={startDate}
@@ -200,9 +212,8 @@ export class Past extends React.Component {
             <AutoSelect
               label="Filter by device group"
               placeholder="Select a group"
-              errorText="Choose a Release to deploy"
               items={menuItems}
-              onChange={value => self._refreshPast(1, perPage, startDate, endDate, value)}
+              onChange={value => self.refreshPast(1, perPage, startDate, endDate, value)}
               style={{ marginTop: 0 }}
             />
           </Grid>
@@ -241,7 +252,7 @@ export class Past extends React.Component {
   }
 }
 
-const actionCreators = { setSnackbar, selectDeployment, getSingleDeploymentStats };
+const actionCreators = { getDeploymentCount, getDeploymentsByStatus, getSingleDeploymentStats, setSnackbar, selectDeployment };
 
 const mapStateToProps = state => {
   const past = state.deployments.byStatus.finished.selectedDeploymentIds.map(id => state.deployments.byId[id]);
