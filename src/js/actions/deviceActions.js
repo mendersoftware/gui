@@ -80,7 +80,7 @@ export const addStaticGroup = (group, deviceIds) => (dispatch, getState) =>
         group: { deviceIds: [], total: 0, filters: [], ...getState().devices.groups.byId[group] },
         groupName: group
       })
-    ).then(() => Promise.resolve(dispatch(selectGroup(group))))
+    ).then(() => Promise.all([dispatch(selectDevice()), dispatch(selectGroup(group))]))
   );
 
 export const removeStaticGroup = groupName => (dispatch, getState) => {
