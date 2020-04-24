@@ -71,30 +71,26 @@ export class Progress extends React.Component {
   // // deploymentStatus = <inprogress|pending>
   refreshDeployments(page, perPage, deploymentStatus, fullRefresh = true) {
     const self = this;
-    let tasks = [self.props.getDeploymentCount(deploymentStatus)];
-    if (fullRefresh) {
-      tasks.push(self.props.getDeploymentsByStatus(deploymentStatus, page, perPage));
-    }
-    return Promise.all(tasks)
-      .then(([countAction, deploymentsAction]) => {
-        clearRetryTimer(deploymentStatus, self.props.setSnackbar);
-        if (countAction.deploymentIds.length && deploymentsAction && !deploymentsAction[0].deploymentIds.length) {
-          return self.refreshDeployments(...arguments);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        var errormsg = err.error || 'Please check your connection';
-        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, self.props.setSnackbar);
-      })
-      .finally(() => {
-        const mappedDeploymentStatus = deploymentStatusMap[deploymentStatus];
-        self.setState({
-          doneLoading: true,
-          [`${mappedDeploymentStatus}Page`]: page,
-          [`${mappedDeploymentStatus}PerPage`]: perPage
-        });
-      });
+    const mappedDeploymentStatus = deploymentStatusMap[deploymentStatus];
+    return self.setState({ [`${mappedDeploymentStatus}Page`]: page, [`${mappedDeploymentStatus}PerPage`]: perPage }, () => {
+      let tasks = [self.props.getDeploymentCount(deploymentStatus)];
+      if (fullRefresh) {
+        tasks.push(self.props.getDeploymentsByStatus(deploymentStatus, page, perPage));
+      }
+      return Promise.all(tasks)
+        .then(([countAction, deploymentsAction]) => {
+          clearRetryTimer(deploymentStatus, self.props.setSnackbar);
+          if (countAction.deploymentIds.length && deploymentsAction && !deploymentsAction[0].deploymentIds.length) {
+            return self.refreshDeployments(...arguments);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          var errormsg = err.error || 'Please check your connection';
+          setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, self.props.setSnackbar);
+        })
+        .finally(() => self.setState({ doneLoading: true }));
+    });
   }
 
   abortDeployment(id) {
