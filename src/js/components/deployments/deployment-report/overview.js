@@ -78,7 +78,7 @@ export default class DeploymentOverview extends React.Component {
     ) : (
       <div className="capitalized-start">
         {deployment.status}
-        {deployment.status === 'pending' ? (deployment.windows ? ' (awaiting devices)' : ' (waiting for next window)') : ''}
+        {deployment.status === 'pending' ? ' (awaiting devices)' : ''}
       </div>
     );
     return (

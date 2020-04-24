@@ -7,7 +7,7 @@ import { Button } from '@material-ui/core';
 import { CalendarToday as CalendarTodayIcon, List as ListIcon } from '@material-ui/icons';
 
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
-import { DeploymentDeviceCount, DeploymentEndTime, DeploymentPhases, DeploymentStartTime, DeploymentWindows } from './deploymentitem';
+import { DeploymentDeviceCount, DeploymentEndTime, DeploymentPhases, DeploymentStartTime } from './deploymentitem';
 
 const localizer = momentLocalizer(moment);
 
@@ -16,7 +16,6 @@ const headers = [
   { title: 'Start time', renderer: DeploymentStartTime, props: { direction: 'up' } },
   { title: `End time`, renderer: DeploymentEndTime },
   { title: '# devices', class: 'align-right column-defined', renderer: DeploymentDeviceCount },
-  { title: 'Scheduled windows', renderer: DeploymentWindows },
   { title: 'Phases', renderer: DeploymentPhases }
 ];
 

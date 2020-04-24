@@ -14,7 +14,6 @@ const Review = ({ deployment = {}, deploymentDeviceIds, device, group, isEnterpr
   const deploymentPhases = phases || [{ batch_size: 100 }];
   const start_time = deploymentPhases[0].start_ts || deployment.created || new Date().toISOString();
   const end_time = null || formatTime(deployment.finished);
-  const schedule = null;
 
   const deploymentInformation = {
     General: [
@@ -26,8 +25,7 @@ const Review = ({ deployment = {}, deploymentDeviceIds, device, group, isEnterpr
     Schedule: [
       { primary: 'Created at', secondary: <Time value={deployment.created || new Date().toISOString()} format="YYYY-MM-DD HH:mm" /> },
       { primary: 'Start time', secondary: <Time value={start_time} format="YYYY-MM-DD HH:mm" /> },
-      { primary: 'End time', secondary: end_time ? <Time value={end_time} format="YYYY-MM-DD HH:mm" /> : '-' },
-      { primary: 'Scheduled windows', secondary: schedule ? schedule : '-' }
+      { primary: 'End time', secondary: end_time ? <Time value={end_time} format="YYYY-MM-DD HH:mm" /> : '-' }
     ]
   };
 

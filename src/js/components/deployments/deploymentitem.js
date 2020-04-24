@@ -57,10 +57,6 @@ export const DeploymentStatus = compose(setDisplayName('DeploymentStatus'))(({ d
   <DeploymentStats key="DeploymentStatus" vertical={false} stats={deployment.stats} />
 ));
 
-export const DeploymentWindows = compose(setDisplayName('DeploymentWindows'))(({ deployment }) => (
-  <div key="DeploymentWindows">{deployment.windows ? deployment.windows.map(window => window.start_ts).join(',') : '-'}</div>
-));
-
 export default class DeploymentItem extends React.Component {
   constructor(props, context) {
     super(props, context);
