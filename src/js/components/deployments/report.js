@@ -111,16 +111,16 @@ export class DeploymentReport extends React.Component {
           )}
           {tabIndex === 'devices' && (
             <DeploymentOverview
+              {...self.props}
               duration={duration}
               onAbortClick={() => abort(deployment.id)}
               onRetryClick={() => retry(deployment, Object.values(allDevices))}
               viewLog={id => self.viewLog(id)}
-              {...self.props}
             />
           )}
           {tabIndex === 'details' && (
             <div className="margin-left margin-right">
-              <Review deploymentDeviceIds={Object.keys(allDevices)} group={deployment.name} {...self.props} />
+              <Review {...self.props} deploymentDeviceIds={Object.keys(allDevices)} group={deployment.name} />
             </div>
           )}
           {type === 'scheduled' && (
