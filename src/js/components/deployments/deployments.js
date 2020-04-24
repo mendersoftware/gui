@@ -188,9 +188,14 @@ export class Deployments extends React.Component {
 
   render() {
     const self = this;
+    const { pastCount } = self.props;
     // tabs
     const { createDialog, deploymentObject, reportDialog, reportType, startDate, tabIndex } = self.state;
-    const onboardingComponent = getOnboardingComponentFor('deployments-past', { anchor: { left: 240, top: 50 } });
+    let onboardingComponent = null;
+    // the pastCount prop is needed to trigger the rerender as the change in past deployments would otherwise not be noticed on this view
+    if (pastCount) {
+      onboardingComponent = getOnboardingComponentFor('deployments-past', { anchor: { left: 240, top: 50 } });
+    }
     const ComponentToShow = self._getCurrentRoute().component;
     return (
       <>
@@ -246,6 +251,7 @@ const actionCreators = {
 
 const mapStateToProps = state => {
   return {
+    pastCount: state.deployments.byStatus.finished.total,
     settings: state.users.globalSettings
   };
 };

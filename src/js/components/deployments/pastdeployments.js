@@ -226,7 +226,7 @@ export class Past extends React.Component {
         <div className="deploy-table-contain">
           <Loader show={loading} />
           {/* TODO: fix status retrieval for past deployments to decide what to show here - */}
-          {!loading && showHelptips && !!past.length && onboardingComponent && onboardingComponent}
+          {!loading && showHelptips && !!past.length && !!onboardingComponent && onboardingComponent}
           {!!past.length && (
             <RootRef rootRef={ref => (this.deploymentsRef = ref)}>
               <DeploymentsList

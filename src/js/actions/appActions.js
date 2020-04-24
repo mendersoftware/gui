@@ -63,7 +63,7 @@ export const getOnboardingState = () => (dispatch, getState) => {
       dispatch(getDevicesByStatus(DEVICE_STATES.pending)),
       dispatch(getAllDevices(100)),
       dispatch(getReleases()),
-      dispatch(getDeploymentsByStatus('finished', null, null, null, null, null, false))
+      dispatch(getDeploymentsByStatus('finished', undefined, undefined, undefined, undefined, undefined, false))
     ];
     promises = Promise.all(requests).then(() => {
       const store = getState();
