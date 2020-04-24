@@ -47,11 +47,19 @@ export const getDeploymentsByStatus = (status, page = default_page, per_page = d
     `${deploymentsApiUrl}/deployments?status=${status}&per_page=${per_page}&page=${page}${created_after}${created_before}${search}`
   ).then(res => {
     const { deployments, deploymentIds } = transformDeployments(res.body, getState().deployments.byId);
-    let tasks = [
-      dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status }),
-      dispatch({ type: DeploymentConstants[`SELECT_${status.toUpperCase()}_DEPLOYMENTS`], deploymentIds, status })
-    ];
-    tasks.push(...deploymentIds.map(deploymentId => dispatch(getSingleDeploymentStats(deploymentId))));
+    const deploymentsState = getState().deployments.byId;
+    let tasks = deploymentIds.reduce(
+      (accu, deploymentId) => {
+        if (status !== 'finished' || !deploymentsState[deploymentId] || !deploymentsState[deploymentId].stats) {
+          accu.push(dispatch(getSingleDeploymentStats(deploymentId)));
+        }
+        return accu;
+      },
+      [
+        dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status }),
+        dispatch({ type: DeploymentConstants[`SELECT_${status.toUpperCase()}_DEPLOYMENTS`], deploymentIds, status })
+      ]
+    );
     return Promise.all(tasks);
   });
 };
