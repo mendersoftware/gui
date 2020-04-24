@@ -20,52 +20,49 @@ export const defaultHeaders = [
   { title: 'Status', renderer: DeploymentProgress }
 ];
 
-export default class DeploymentsList extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      pageSize: 10
-    };
-  }
+const defaultRowsPerPage = 20;
 
-  render() {
-    const self = this;
-    const { abort, componentClass = '', count, headers, isEnterprise, items, listClass = '', openReport, page, refreshItems, type } = self.props;
-    const columnHeaders = headers ? headers : defaultHeaders;
-    return (
-      !!items.length && (
-        <div className={`fadeIn deploy-table-contain ${componentClass}`}>
-          <div className={`deployment-item deployment-header-item muted ${deploymentTypeClasses[type] || ''}`}>
-            {columnHeaders.map((item, index) => (
-              <div key={`${item.title}-${index}`} className={item.class || ''}>
-                {item.title}
-              </div>
-            ))}
+export const DeploymentsList = ({
+  abort,
+  componentClass = '',
+  count,
+  headers = defaultHeaders,
+  isEnterprise,
+  items,
+  listClass = '',
+  openReport,
+  onChangePage,
+  onChangeRowsPerPage,
+  page,
+  pageSize,
+  type
+}) =>
+  !!items.length && (
+    <div className={`fadeIn deploy-table-contain ${componentClass}`}>
+      <div className={`deployment-item deployment-header-item muted ${deploymentTypeClasses[type] || ''}`}>
+        {headers.map((item, index) => (
+          <div key={`${item.title}-${index}`} className={item.class || ''}>
+            {item.title}
           </div>
-          <div className={listClass}>
-            {items.map(deployment => (
-              <DeploymentItem
-                abort={abort}
-                columnHeaders={columnHeaders}
-                deployment={deployment}
-                key={`${type}-deployment-${deployment.created}`}
-                isEnterprise={isEnterprise}
-                openReport={openReport}
-                type={type}
-              />
-            ))}
-          </div>
-          {count > items.length && (
-            <Pagination
-              count={count}
-              rowsPerPage={self.state.pageSize}
-              onChangeRowsPerPage={pageSize => self.setState({ pageSize }, () => refreshItems(1, pageSize))}
-              page={page}
-              onChangePage={page => refreshItems(page, self.state.pageSize)}
-            />
-          )}
-        </div>
-      )
-    );
-  }
-}
+        ))}
+      </div>
+      <div className={listClass}>
+        {items.map(deployment => (
+          <DeploymentItem
+            abort={abort}
+            columnHeaders={headers}
+            deployment={deployment}
+            key={`${type}-deployment-${deployment.created}`}
+            isEnterprise={isEnterprise}
+            openReport={openReport}
+            type={type}
+          />
+        ))}
+      </div>
+      {(count > items.length || items.length > defaultRowsPerPage) && (
+        <Pagination count={count} rowsPerPage={pageSize} onChangeRowsPerPage={onChangeRowsPerPage} page={page} onChangePage={onChangePage} />
+      )}
+    </div>
+  );
+
+export default DeploymentsList;

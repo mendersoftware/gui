@@ -17,6 +17,7 @@ import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils
 import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
 import { DeploymentStatus } from './deploymentitem';
+import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
 
 const timeranges = {
   today: { start: 0, end: 0, title: 'Today' },
@@ -28,9 +29,9 @@ const timeranges = {
 const today = new Date(new Date().setHours(0, 0, 0));
 const tonight = new Date(new Date().setHours(23, 59, 59));
 
-const refreshDeploymentsLength = 30000;
-
 const headers = [...defaultHeaders.slice(0, defaultHeaders.length - 1), { title: 'Status', renderer: DeploymentStatus }];
+
+const type = 'finished';
 
 export class Past extends React.Component {
   constructor(props, context) {
@@ -66,7 +67,6 @@ export class Past extends React.Component {
   componentWillUnmount() {
     clearInterval(this.timer);
     clearAllRetryTimers(this.props.setSnackbar);
-    clearAllRetryTimers('finished');
   }
 
   onCloseSnackbar = (_, reason) => {
@@ -98,31 +98,35 @@ export class Past extends React.Component {
     group = this.state.deviceGroup
   ) {
     const self = this;
-    let fullRefresh = false;
     // always get total count of past deployments, only refresh deployments if page, count or date range has changed
-    if (self.state.page !== page || !self.state.doneLoading) {
-      fullRefresh = true;
-    }
-    const roundedStartDate = Math.round(Date.parse(startDate) / 1000);
-    const roundedEndDate = Math.round(Date.parse(endDate) / 1000);
-    let tasks = [self.props.getDeploymentCount('finished', roundedStartDate, roundedEndDate, group)];
-    if (fullRefresh) {
-      tasks.push(self.props.getDeploymentsByStatus('finished', page, perPage, roundedStartDate, roundedEndDate, group));
-    }
-    return Promise.all(tasks)
-      .then(([countAction, deploymentsAction]) => {
-        self.props.setSnackbar('');
-        clearRetryTimer('finished', self.props.setSnackbar);
-        if (countAction.deploymentIds.length && deploymentsAction && !deploymentsAction[0].deploymentIds.length) {
-          return self.refreshDeployments(...arguments);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        let errormsg = err.error || 'Please check your connection';
-        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, self.props.setSnackbar);
-      })
-      .finally(() => self.setState({ doneLoading: true, page, perPage, endDate, startDate, group }));
+    const fullRefresh =
+      self.state.page !== page ||
+      self.state.perPage !== perPage ||
+      self.state.startDate !== startDate ||
+      self.state.endDate !== endDate ||
+      self.state.group !== group ||
+      !self.state.doneLoading;
+    self.setState({ page, perPage, endDate, startDate, group }, () => {
+      const roundedStartDate = Math.round(Date.parse(startDate) / 1000);
+      const roundedEndDate = Math.round(Date.parse(endDate) / 1000);
+      let tasks = [self.props.getDeploymentCount(type, roundedStartDate, roundedEndDate, group)];
+      if (fullRefresh) {
+        tasks.push(self.props.getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, group));
+      }
+      return Promise.all(tasks)
+        .then(([countAction, deploymentsAction]) => {
+          clearRetryTimer(type, self.props.setSnackbar);
+          if (countAction.deploymentIds.length && deploymentsAction && !deploymentsAction[0].deploymentIds.length) {
+            return self.refreshDeployments(...arguments);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          let errormsg = err.error || 'Please check your connection';
+          setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, self.props.setSnackbar);
+        })
+        .finally(() => self.setState({ doneLoading: true }));
+    });
   }
 
   _handleChangeEndDate(date) {
@@ -226,14 +230,16 @@ export class Past extends React.Component {
           {!!past.length && (
             <RootRef rootRef={ref => (this.deploymentsRef = ref)}>
               <DeploymentsList
+                {...self.props}
                 componentClass="margin-left-small"
                 count={count || past.length}
                 headers={headers}
                 items={past}
                 page={page}
-                refreshItems={(...args) => self.refreshPast(...args)}
-                {...self.props}
-                type="past"
+                onChangeRowsPerPage={newPerPage => self.refreshPast(1, newPerPage)}
+                onChangePage={(...args) => self.refreshPast(...args)}
+                pageSize={perPage}
+                type={type}
               />
             </RootRef>
           )}

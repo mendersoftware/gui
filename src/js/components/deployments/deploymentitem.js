@@ -12,7 +12,7 @@ import ProgressChart from './progressChart';
 import DeploymentStats from './deploymentstatus';
 
 export const deploymentTypeClasses = {
-  past: 'past-item',
+  finished: 'past-item',
   pending: 'pending-item',
   progress: 'progress-item',
   scheduled: 'scheduled-item'
@@ -117,9 +117,9 @@ export default class DeploymentItem extends React.Component {
         >
           View details
         </Button>
-        {type !== 'past' && (
+        {type !== 'finished' && (
           <Tooltip className="columnHeader" title="Abort" placement="top-start">
-            <IconButton onClick={e => self.toggleConfirm(e, id)}>
+            <IconButton onClick={() => self.toggleConfirm(id)}>
               <CancelOutlinedIcon className="cancelButton muted" />
             </IconButton>
           </Tooltip>

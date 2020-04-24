@@ -1,13 +1,18 @@
 import React from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
+import { connect } from 'react-redux';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import { Button } from '@material-ui/core';
 import { CalendarToday as CalendarTodayIcon, List as ListIcon } from '@material-ui/icons';
 
+import { setSnackbar } from '../../actions/appActions';
+import { getDeploymentCount, getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
+import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
 import { DeploymentDeviceCount, DeploymentEndTime, DeploymentPhases, DeploymentStartTime } from './deploymentitem';
+import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
 
 const localizer = momentLocalizer(moment);
 
@@ -32,13 +37,24 @@ const tabs = {
   }
 };
 
+const type = 'scheduled';
+
 export class Scheduled extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      tabIndex: tabs.list.index,
-      calendarEvents: []
+      calendarEvents: [],
+      page: 1,
+      perPage: 20,
+      tabIndex: tabs.list.index
     };
+  }
+
+  componentDidMount() {
+    const self = this;
+    clearInterval(self.timer);
+    self.timer = setInterval(() => self.refreshDeployments(), refreshDeploymentsLength);
+    self.refreshDeployments();
   }
 
   componentDidUpdate(_, prevState) {
@@ -49,7 +65,9 @@ export class Scheduled extends React.Component {
         if (deployment.phases && deployment.phases.length && deployment.phases[deployment.phases.length - 1].end_ts) {
           endDate = new Date(deployment.phases[deployment.phases.length - 1].end_ts);
         } else if (deployment.filter_id) {
-          endDate = new Date(8640000000000000); // set to the upper limit of js supported dates, which should be the next best thing to infinity
+          // calendar doesn't support never ending events so we set to the upper limit of js supported dates,
+          // - this should be the next best thing to infinity
+          endDate = new Date(8640000000000000);
         }
         return {
           allDay: !deployment.filter_id,
@@ -63,40 +81,113 @@ export class Scheduled extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    clearInterval(this.timer);
+    clearAllRetryTimers(this.props.setSnackbar);
+  }
+
+  refreshDeployments(page = this.state.page, perPage = this.state.perPage, fullRefresh = true) {
+    const self = this;
+    return self.setState({ page, perPage }, () => {
+      let tasks = [self.props.getDeploymentCount('pending')];
+      if (fullRefresh) {
+        tasks.push(self.props.getDeploymentsByStatus('pending', page, perPage));
+      }
+      return Promise.all(tasks)
+        .then(([countAction, deploymentsAction]) => {
+          clearRetryTimer(type, self.props.setSnackbar);
+          if (countAction.deploymentIds.length && deploymentsAction && !deploymentsAction[0].deploymentIds.length) {
+            return self.refreshDeployments(...arguments);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          var errormsg = err.error || 'Please check your connection';
+          setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, self.props.setSnackbar);
+        })
+        .finally(() => self.setState({ doneLoading: true }));
+    });
+  }
+
+  abortDeployment(id) {
+    const self = this;
+    self.props.abort(id).then(() => self.refreshDeployments());
+  }
+
   render() {
     const self = this;
     const { calendarEvents, tabIndex } = self.state;
-    const { openReport } = self.props;
+    const { createClick, items, openReport } = self.props;
     return (
       <div className="fadeIn margin-left">
-        <div className="margin-large margin-left-small">
-          {Object.entries(tabs).map(([currentIndex, tab]) => (
-            <Button
-              color="primary"
-              key={currentIndex}
-              startIcon={tab.icon}
-              style={Object.assign({ textTransform: 'none' }, currentIndex !== tabIndex ? { color: '#c7c7c7' } : {})}
-              onClick={() => self.setState({ tabIndex: currentIndex })}
-            >
-              {tab.title}
-            </Button>
-          ))}
-        </div>
-        {tabIndex === tabs.list.index && <DeploymentsList headers={headers} {...self.props} type="scheduled" count={0} />}
-        {tabIndex === tabs.calendar.index && (
-          <Calendar
-            localizer={localizer}
-            className="margin-left"
-            events={calendarEvents}
-            startAccessor="start"
-            endAccessor="end"
-            style={{ height: 700 }}
-            onSelectEvent={calendarEvent => openReport('scheduled', calendarEvent.id)}
-          />
+        {items.length ? (
+          <>
+            <div className="margin-large margin-left-small">
+              {Object.entries(tabs).map(([currentIndex, tab]) => (
+                <Button
+                  color="primary"
+                  key={currentIndex}
+                  startIcon={tab.icon}
+                  style={Object.assign({ textTransform: 'none' }, currentIndex !== tabIndex ? { color: '#c7c7c7' } : {})}
+                  onClick={() => self.setState({ tabIndex: currentIndex })}
+                >
+                  {tab.title}
+                </Button>
+              ))}
+            </div>
+            {tabIndex === tabs.list.index && <DeploymentsList {...self.props} abort={id => self.abortDeployment(id)} count={0} headers={headers} type={type} />}
+            {tabIndex === tabs.calendar.index && (
+              <Calendar
+                localizer={localizer}
+                className="margin-left"
+                events={calendarEvents}
+                startAccessor="start"
+                endAccessor="end"
+                style={{ height: 700 }}
+                onSelectEvent={calendarEvent => openReport(type, calendarEvent.id)}
+              />
+            )}
+          </>
+        ) : (
+          <div className="dashboard-placeholder">
+            <p>Scheduled deployments will appear here. </p>
+            <p>
+              <a onClick={createClick}>Create a deployment</a> to get started
+            </p>
+            <img src="assets/img/deployments.png" alt="In progress" />
+          </div>
         )}
       </div>
     );
   }
 }
 
-export default Scheduled;
+const actionCreators = { getDeploymentCount, getDeploymentsByStatus, getSingleDeploymentStats, setSnackbar, selectDeployment };
+
+const mapStateToProps = state => {
+  const now = new Date();
+  const { scheduled } = state.deployments.byStatus.pending.deploymentIds.reduce(
+    (accu, id) => {
+      const deployment = accu.state.deployments.byId[id];
+      if (deployment) {
+        if (
+          (deployment.phases && deployment.phases.length && new Date(deployment.phases[0].start_ts) < now) ||
+          (!deployment.phases && new Date(deployment.created) < now)
+        ) {
+          if (state.deployments.byStatus.pending.selectedDeploymentIds.includes(deployment.id)) {
+            accu.pending.push(deployment);
+          }
+        } else {
+          accu.scheduled.push(deployment);
+        }
+      }
+      return accu;
+    },
+    { state, pending: [], scheduled: [] }
+  );
+  return {
+    items: scheduled
+  };
+};
+
+export default connect(mapStateToProps, actionCreators)(Scheduled);
