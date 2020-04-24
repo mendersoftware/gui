@@ -10,6 +10,7 @@ import { CalendarToday as CalendarTodayIcon, List as ListIcon } from '@material-
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentCount, getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
+import EnterpriseNotification from '../common/enterpriseNotification';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
 import { DeploymentDeviceCount, DeploymentEndTime, DeploymentPhases, DeploymentStartTime } from './deploymentitem';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
@@ -117,7 +118,7 @@ export class Scheduled extends React.Component {
   render() {
     const self = this;
     const { calendarEvents, tabIndex } = self.state;
-    const { createClick, items, openReport } = self.props;
+    const { createClick, isEnterprise, items, openReport } = self.props;
     return (
       <div className="fadeIn margin-left">
         {items.length ? (
@@ -149,11 +150,19 @@ export class Scheduled extends React.Component {
             )}
           </>
         ) : (
-          <div className="dashboard-placeholder">
-            <p>Scheduled deployments will appear here. </p>
-            <p>
-              <a onClick={createClick}>Create a deployment</a> to get started
-            </p>
+          <div className="dashboard-placeholder margin-top">
+            {isEnterprise ? (
+              <>
+                <p>Scheduled deployments will appear here. </p>
+                <p>
+                  <a onClick={createClick}>Create a deployment</a> to get started
+                </p>
+              </>
+            ) : (
+              <div className="flexbox centered">
+                <EnterpriseNotification isEnterprise={isEnterprise} benefit="schedule deployments to steer the distribution of your updates." />
+              </div>
+            )}
             <img src="assets/img/deployments.png" alt="In progress" />
           </div>
         )}
@@ -185,7 +194,9 @@ const mapStateToProps = state => {
     },
     { state, pending: [], scheduled: [] }
   );
+  const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
+    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
     items: scheduled
   };
 };

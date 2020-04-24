@@ -12,7 +12,7 @@ import { formatTime } from '../../../helpers';
 import ExpandableAttribute from '../../common/expandable-attribute';
 import Pagination from '../../common/pagination';
 
-import DeviceList from './deploymentdevicelist';
+import DeviceList from './devicelist';
 import DeploymentStatus from './../deploymentstatus';
 import Confirm from './../confirm';
 

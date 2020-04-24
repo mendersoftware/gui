@@ -13,7 +13,7 @@ import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
 import { getDeviceLog, getSingleDeploymentDevices, getSingleDeploymentStats } from '../../actions/deploymentActions';
 import { getRelease } from '../../actions/releaseActions';
 import { sortDeploymentDevices } from '../../helpers';
-import DeploymentLog from './deployment-report/deploymentlog';
+import DeploymentLog from './deployment-report/log';
 import DeploymentOverview from './deployment-report/overview';
 import Review from './deployment-wizard/review';
 import Confirm from './confirm';
