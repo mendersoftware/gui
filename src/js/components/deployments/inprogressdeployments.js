@@ -25,7 +25,7 @@ export class Progress extends React.Component {
     super(props, context);
     this.state = {
       currentRefreshDeploymentLength: refreshDeploymentsLength,
-      doneLoading: false,
+      doneLoading: !!props.progress.length || !!props.pending.length,
       progressPage: 1,
       progressPerPage: DEFAULT_PENDING_INPROGRESS_COUNT,
       pendingPage: 1,

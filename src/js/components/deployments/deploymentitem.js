@@ -61,22 +61,8 @@ export default class DeploymentItem extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      stats: {
-        downloading: 0,
-        decommissioned: 0,
-        failure: 0,
-        installing: 0,
-        noartifact: 0,
-        pending: 0,
-        rebooting: 0,
-        success: 0,
-        'already-installed': 0
-      }
+      abort: null
     };
-  }
-
-  handleAbort(id) {
-    this.props.abort(id);
   }
 
   toggleConfirm(id) {
@@ -86,7 +72,7 @@ export default class DeploymentItem extends React.Component {
 
   render() {
     const self = this;
-    const { columnHeaders, deployment, isEnterprise, openReport, type } = self.props;
+    const { abort: abortDeployment, columnHeaders, deployment, isEnterprise, openReport, type } = self.props;
     const { abort } = self.state;
     const groupedStats = groupDeploymentStats(deployment.stats || {});
     const { created, id, phases } = deployment;
@@ -97,7 +83,7 @@ export default class DeploymentItem extends React.Component {
         <Confirm
           classes="flexbox centered confirmation-overlay"
           cancel={() => self.toggleConfirm(id)}
-          action={() => self.handleAbort(id)}
+          action={() => abortDeployment(id)}
           table={true}
           type="abort"
         />
