@@ -20,6 +20,11 @@ import Confirm from './confirm';
 
 momentDurationFormatSetup(moment);
 
+const tabs = [
+  { title: 'Devices overview', value: 'devices' },
+  { title: 'Deployment details', value: 'details' }
+];
+
 export class DeploymentReport extends React.Component {
   constructor(props, state) {
     super(props, state);
@@ -94,7 +99,7 @@ export class DeploymentReport extends React.Component {
 
   render() {
     const self = this;
-    const { abort, allDevices, contentClass, deployment, onClose, retry, type } = self.props;
+    const { abort, allDevices, deployment, onClose, retry, type } = self.props;
     const { created = new Date().toISOString(), devices } = deployment;
     const { aborting, deviceId, elapsed, showDialog, tabIndex } = self.state;
     const logData = deviceId ? devices[deviceId].log : null;
@@ -102,11 +107,12 @@ export class DeploymentReport extends React.Component {
     return (
       <Dialog open={true} fullWidth={true} maxWidth="lg">
         <DialogTitle>{`Deployment ${type !== 'scheduled' ? 'details' : 'report'}`}</DialogTitle>
-        <DialogContent className={contentClass} style={{ overflow: 'hidden' }}>
+        <DialogContent className="deployment-report" style={{ overflow: 'hidden' }}>
           {type !== 'scheduled' && (
-            <Tabs value={tabIndex} onChange={(e, tabIndex) => self.setState({ tabIndex })}>
-              <Tab label="Devices overview" value="devices" />
-              <Tab label="Deployment details" value="details" />
+            <Tabs value={tabIndex} onChange={(e, tabIndex) => self.setState({ tabIndex })} textColor="primary" TabIndicatorProps={{ className: 'hidden' }}>
+              {tabs.map(tab => (
+                <Tab key={tab.value} label={tab.title} value={tab.value} />
+              ))}
             </Tabs>
           )}
           {tabIndex === 'devices' && (

@@ -189,7 +189,7 @@ export class Deployments extends React.Component {
   render() {
     const self = this;
     // tabs
-    const { contentClass, createDialog, deploymentObject, reportDialog, reportType, startDate, tabIndex } = self.state;
+    const { createDialog, deploymentObject, reportDialog, reportType, startDate, tabIndex } = self.state;
     const onboardingComponent = getOnboardingComponentFor('deployments-past', { anchor: { left: 240, top: 50 } });
     const ComponentToShow = self._getCurrentRoute().component;
     return (
@@ -215,7 +215,6 @@ export class Deployments extends React.Component {
         {reportDialog && (
           <Report
             abort={id => self._abortDeployment(id)}
-            contentClass={contentClass}
             onClose={() => self.closeReport()}
             retry={(deployment, devices) => self.retryDeployment(deployment, devices)}
             type={reportType}

@@ -101,26 +101,28 @@ export default class DeploymentOverview extends React.Component {
             <ExpandableAttribute primary="Status:" secondary={statusDescription} dividerDisabled={true} style={{ marginBottom: -15 }} />
           </div>
           {finished ? (
-            <div className="statusLarge margin-top-large flexbox centered" style={{ alignItems: 'flex-start' }}>
-              <img src={deployment.stats.success ? 'assets/img/largeSuccess.png' : 'assets/img/largeFail.png'} />
-              <div className="statusWrapper">
-                {!!deployment.stats.success && (
-                  <>
-                    <b className="green">
-                      {deployment.stats.success === pagedDevices.length && <span>All </span>}
-                      {deployment.stats.success}
-                    </b>{' '}
-                    {pluralize('devices', deployment.stats.success)} updated successfully
-                  </>
-                )}
-                {!!(deployment.stats.failure || deployment.stats.aborted) && (
-                  <>
-                    <b className="red">{deployment.stats.failure || deployment.stats.aborted}</b> {pluralize('devices', deployment.stats.failure)} failed to
-                    update
-                  </>
-                )}
+            !!(deployment.stats.failure || deployment.stats.aborted || deployment.stats.success) && (
+              <div className="statusLarge margin-top-large flexbox centered" style={{ alignItems: 'flex-start' }}>
+                <img src={deployment.stats.success ? 'assets/img/largeSuccess.png' : 'assets/img/largeFail.png'} />
+                <div className="statusWrapper">
+                  {!!deployment.stats.success && (
+                    <>
+                      <b className="green">
+                        {deployment.stats.success === pagedDevices.length && <span>All </span>}
+                        {deployment.stats.success}
+                      </b>{' '}
+                      {pluralize('devices', deployment.stats.success)} updated successfully
+                    </>
+                  )}
+                  {!!(deployment.stats.failure || deployment.stats.aborted) && (
+                    <>
+                      <b className="red">{deployment.stats.failure || deployment.stats.aborted}</b> {pluralize('devices', deployment.stats.failure)} failed to
+                      update
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
+            )
           ) : (
             <div className="progressStatus flexbox centered space-between">
               <div id="progressStatus">
