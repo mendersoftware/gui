@@ -20,6 +20,11 @@ describe('PastDeployments Component', () => {
           }
         }
       },
+      devices: {
+        groups: {
+          byId: {}
+        }
+      },
       users: { onboarding: { complete: false, showTips: true }, showHelptips: true }
     });
     const mockDate = new Date('2019-01-01T13:00:00.000Z');
