@@ -39,7 +39,10 @@ export const getDeployments = (page = default_page, per_page = default_per_page)
     );
   });
 
-export const getDeploymentsByStatus = (status, page = default_page, per_page = default_per_page, startDate, endDate, group) => (dispatch, getState) => {
+export const getDeploymentsByStatus = (status, page = default_page, per_page = default_per_page, startDate, endDate, group, shouldSelect = true) => (
+  dispatch,
+  getState
+) => {
   var created_after = startDate ? `&created_after=${startDate}` : '';
   var created_before = endDate ? `&created_before=${endDate}` : '';
   var search = group ? `&search=${group}` : '';
@@ -55,11 +58,11 @@ export const getDeploymentsByStatus = (status, page = default_page, per_page = d
         }
         return accu;
       },
-      [
-        dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status }),
-        dispatch({ type: DeploymentConstants[`SELECT_${status.toUpperCase()}_DEPLOYMENTS`], deploymentIds, status })
-      ]
+      [dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status })]
     );
+    if (shouldSelect) {
+      tasks.push(dispatch({ type: DeploymentConstants[`SELECT_${status.toUpperCase()}_DEPLOYMENTS`], deploymentIds, status }));
+    }
     return Promise.all(tasks);
   });
 };
