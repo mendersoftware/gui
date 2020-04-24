@@ -156,7 +156,7 @@ const actionCreators = { getDeviceAuth, getDeviceById, getDeviceLog, getRelease,
 
 const mapStateToProps = state => {
   const devices = state.deployments.byId[state.deployments.selectedDeployment]?.devices || {};
-  const allDevices = sortDeploymentDevices(Object.values(devices));
+  const allDevices = sortDeploymentDevices(Object.values(devices)).map(device => ({ ...state.devices.byId[device.id], ...device }));
   const deployment = state.deployments.byId[state.deployments.selectedDeployment] || {};
   const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
