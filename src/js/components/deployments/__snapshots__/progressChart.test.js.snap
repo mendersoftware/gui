@@ -5,7 +5,13 @@ exports[`ProgressChart Component renders correctly 1`] = `
   className="flexbox column progress-chart-container "
 >
   <div
-    className="flexbox space-between centered"
+    style={
+      Object {
+        "display": "grid",
+        "gridColumnGap": 15,
+        "gridTemplateColumns": "2fr 1fr",
+      }
+    }
   >
     <div
       className="progress-chart"
@@ -54,8 +60,6 @@ exports[`ProgressChart Component renders correctly 1`] = `
       style={
         Object {
           "justifyContent": "flex-end",
-          "marginLeft": 15,
-          "width": "60%",
         }
       }
     >

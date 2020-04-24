@@ -12,7 +12,7 @@ describe('ExpandedDevice Component', () => {
   beforeEach(() => {
     store = mockStore({
       app: { docsVersion: null },
-      releases: { artifactsRepo: {} },
+      releases: {},
       users: {
         onboarding: { complete: false },
         showHelptips: true

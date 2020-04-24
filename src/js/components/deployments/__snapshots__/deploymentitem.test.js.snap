@@ -13,17 +13,14 @@ exports[`DeploymentItem Component renders correctly 1`] = `
     }
   >
     <div
-      className="float-right"
+      className="bold"
     >
-      <span
-        className="bold"
-      >
-        Confirm abort deployment?
-      </span>
+      Confirm abort deployment?
+    </div>
+    <div>
       <button
         className="MuiButtonBase-root MuiIconButton-root"
         disabled={false}
-        id="confirmAbort"
         onBlur={[Function]}
         onClick={[Function]}
         onDragLeave={[Function]}
@@ -61,7 +58,6 @@ exports[`DeploymentItem Component renders correctly 1`] = `
       <button
         className="MuiButtonBase-root MuiIconButton-root"
         disabled={false}
-        id="cancelAbort"
         onBlur={[Function]}
         onClick={[Function]}
         onDragLeave={[Function]}
@@ -98,12 +94,8 @@ exports[`DeploymentItem Component renders correctly 1`] = `
       </button>
     </div>
   </div>
-  <div
-    className=""
-  />
-  <div
-    className=""
-  />
+  <div />
+  <div />
   <div
     aria-describedby={null}
     className=""
@@ -118,17 +110,131 @@ exports[`DeploymentItem Component renders correctly 1`] = `
     -
   </div>
   <div
-    className="align-right"
-  />
-  <div
-    className="flexbox space-between centered "
-  />
-  <div
+    aria-describedby={null}
     className=""
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onMouseLeave={[Function]}
+    onMouseOver={[Function]}
+    onTouchEnd={[Function]}
+    onTouchStart={[Function]}
+    title=""
+  >
+    -
+  </div>
+  <div
+    className="align-right column-defined"
   />
+  <div
+    className="flexbox column progress-chart-container "
+  >
+    <div
+      style={
+        Object {
+          "display": "grid",
+          "gridColumnGap": 15,
+          "gridTemplateColumns": "2fr 1fr",
+        }
+      }
+    >
+      <div
+        className="progress-chart"
+      >
+        <div
+          className="progress-step"
+          style={
+            Object {
+              "borderRight": "none",
+              "flexGrow": 1,
+            }
+          }
+        >
+          <div
+            className="progress-bar green"
+            style={
+              Object {
+                "width": "0%",
+              }
+            }
+          />
+          <div
+            className="progress-bar warning"
+            style={
+              Object {
+                "width": "0%",
+              }
+            }
+          />
+        </div>
+        <div
+          className="progress-step progress-step-total"
+        >
+          <div
+            className="progress-bar"
+            style={
+              Object {
+                "width": "100%",
+              }
+            }
+          />
+        </div>
+      </div>
+      <div
+        className="flexbox space-between centered muted"
+        style={
+          Object {
+            "justifyContent": "flex-end",
+          }
+        }
+      >
+        0 failures
+      </div>
+    </div>
+    <div
+      className="flexbox space-between muted"
+    >
+      <div>
+        Current phase: 1 of 1
+      </div>
+    </div>
+  </div>
+  <button
+    className="MuiButtonBase-root MuiButton-root MuiButton-contained"
+    disabled={false}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onDragLeave={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    style={
+      Object {
+        "backgroundColor": "transparent",
+        "justifySelf": "center",
+        "textTransform": "none",
+      }
+    }
+    tabIndex={0}
+    type="button"
+  >
+    <span
+      className="MuiButton-label"
+    >
+      View details
+    </span>
+    <span
+      className="MuiTouchRipple-root"
+    />
+  </button>
   <button
     aria-describedby={null}
-    className="MuiButtonBase-root MuiIconButton-root columnHeader "
+    className="MuiButtonBase-root MuiIconButton-root columnHeader"
     disabled={false}
     onBlur={[Function]}
     onClick={[Function]}
