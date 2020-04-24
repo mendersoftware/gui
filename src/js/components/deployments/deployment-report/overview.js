@@ -81,6 +81,10 @@ export default class DeploymentOverview extends React.Component {
         {deployment.status === 'pending' ? ' (awaiting devices)' : ''}
       </div>
     );
+
+    const deviceGroupDetails = deployment.filter
+      ? deployment.filter.map(filter => `${filter.key} ${filter.operator} ${filter.value}`).join(', ')
+      : deployment.name;
     return (
       <div>
         <div className="report-container">
@@ -96,7 +100,7 @@ export default class DeploymentOverview extends React.Component {
                 dividerDisabled={true}
                 style={{ marginBottom: -15 }}
               />
-              <ExpandableAttribute primary="Device group:" secondary={deployment.name} dividerDisabled={true} style={{ marginBottom: -15 }} />
+              <ExpandableAttribute primary="Device group:" secondary={deviceGroupDetails} dividerDisabled={true} style={{ marginBottom: -15 }} />
             </div>
             <ExpandableAttribute primary="Status:" secondary={statusDescription} dividerDisabled={true} style={{ marginBottom: -15 }} />
           </div>
