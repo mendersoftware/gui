@@ -2,113 +2,28 @@
 
 exports[`DeploymentItem Component renders correctly 1`] = `
 <div
-  className="deployment-item undefined"
+  className="deployment-item progress-item"
 >
-  <div
-    className="fadeIn flexbox centered confirmation-overlay"
-    style={
-      Object {
-        "marginRight": "12px",
-      }
-    }
-  >
-    <div
-      className="bold"
-    >
-      Confirm abort deployment?
-    </div>
-    <div>
-      <button
-        className="MuiButtonBase-root MuiIconButton-root"
-        disabled={false}
-        onBlur={[Function]}
-        onClick={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        tabIndex={0}
-        type="button"
-      >
-        <span
-          className="MuiIconButton-label"
-        >
-          <svg
-            aria-hidden="true"
-            className="MuiSvgIcon-root green"
-            focusable="false"
-            role="presentation"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-            />
-          </svg>
-        </span>
-        <span
-          className="MuiTouchRipple-root"
-        />
-      </button>
-      <button
-        className="MuiButtonBase-root MuiIconButton-root"
-        disabled={false}
-        onBlur={[Function]}
-        onClick={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        tabIndex={0}
-        type="button"
-      >
-        <span
-          className="MuiIconButton-label"
-        >
-          <svg
-            aria-hidden="true"
-            className="MuiSvgIcon-root red"
-            focusable="false"
-            role="presentation"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"
-            />
-          </svg>
-        </span>
-        <span
-          className="MuiTouchRipple-root"
-        />
-      </button>
-    </div>
+  <div>
+    test
   </div>
-  <div />
-  <div />
-  <div
+  <div>
+    test deployment
+  </div>
+  <time
     aria-describedby={null}
     className=""
+    dateTime={"2019-01-01T13:00:00.000Z"}
     onBlur={[Function]}
     onFocus={[Function]}
     onMouseLeave={[Function]}
     onMouseOver={[Function]}
     onTouchEnd={[Function]}
     onTouchStart={[Function]}
-    title=""
+    title="Tue Jan 01 2019 13:00:00 GMT+0000"
   >
-    -
-  </div>
+    a few seconds ago
+  </time>
   <div
     aria-describedby={null}
     className=""
@@ -124,7 +39,9 @@ exports[`DeploymentItem Component renders correctly 1`] = `
   </div>
   <div
     className="align-right column-defined"
-  />
+  >
+    1
+  </div>
   <div
     className="flexbox column progress-chart-container "
   >
@@ -162,6 +79,15 @@ exports[`DeploymentItem Component renders correctly 1`] = `
             style={
               Object {
                 "width": "0%",
+              }
+            }
+          />
+          <div
+            className="progress-bar"
+            style={
+              Object {
+                "backgroundColor": "#aaa",
+                "width": "100%",
               }
             }
           />
