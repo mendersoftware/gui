@@ -132,9 +132,11 @@ export const onboardingSteps = {
   'scheduling-release-to-devices': {
     condition: () =>
       onboardingTipSanityCheck('scheduling-release-to-devices') &&
-      store.getState().devices.byStatus.accepted.total &&
-      (store.getState().devices.groups.selectedGroup || store.getState().devices.selectedDeviceList.length || store.getState().devices.selectedDevice) &&
-      store.getState().releases.selectedRelease,
+      ((store.getState().devices.byStatus.accepted.total &&
+        (store.getState().devices.groups.selectedGroup || store.getState().devices.selectedDeviceList.length || store.getState().devices.selectedDevice) &&
+        store.getState().releases.selectedRelease) ||
+        store.getState().deployments.byStatus.finished.total ||
+        store.getState().deployments.byStatus.finished.deploymentIds.length),
     component: compose(setDisplayName('OnboardingTip'))(() => (
       <div>{`Create the deployment! This will deploy the ${store.getState().releases.selectedRelease} Artifact to ${
         store.getState().devices.selectedDevice ? store.getState().devices.selectedDevice : store.getState().devices.groups.selectedGroup || 'All devices'

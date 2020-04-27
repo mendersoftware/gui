@@ -76,19 +76,21 @@ export const getOnboardingState = () => (dispatch, getState) => {
         acceptedDevices.length && store.devices.byId[acceptedDevices[0]].hasOwnProperty('attributes')
           ? store.devices.byId[acceptedDevices[0]].attributes.device_type
           : null;
+      const progress = savedState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments);
       const state = {
         complete: !!(
           savedState.complete ||
           (acceptedDevices.length > 1 && pendingDevices.length > 0 && releases.length > 1 && pastDeployments.length > 1) ||
           (acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length > 2) ||
           (acceptedDevices.length >= 1 && pendingDevices.length > 0 && releases.length >= 2 && pastDeployments.length >= 2) ||
+          progress >= Object.keys(onboardingSteps).length - 1 ||
           store.users.onboarding.disable
         ),
         showTips: savedState.showTips != null ? savedState.showTips : true,
         deviceType: savedState.deviceType || store.users.onboarding.deviceType || deviceType,
         approach: savedState.approach || (deviceType || '').startsWith('qemu') ? 'virtual' : 'physical' || store.users.onboarding.approach,
         artifactIncluded: savedState.artifactIncluded || store.users.onboarding.artifactIncluded,
-        progress: savedState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments)
+        progress
       };
       persistOnboardingState(state);
       state.devices = devices;

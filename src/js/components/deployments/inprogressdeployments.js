@@ -108,18 +108,16 @@ export class Progress extends React.Component {
   render() {
     const self = this;
 
-    const { createClick, pending, pendingCount, progress, progressCount } = self.props;
+    const { createClick, pastDeploymentsCount, pending, pendingCount, progress, progressCount } = self.props;
     const { doneLoading, pendingPage, pendingPerPage, progressPage, progressPerPage } = self.state;
 
     let onboardingComponent = null;
-    if (!self.props.onboardingComplete && this.inprogressRef) {
-      const anchor = { left: 200, top: this.inprogressRef.offsetTop + this.inprogressRef.offsetHeight };
-      onboardingComponent = getOnboardingComponentFor('deployments-inprogress', { anchor });
-      if (
-        self.props.pastDeploymentsCount &&
-        getOnboardingStepCompleted('scheduling-release-to-devices') &&
-        !getOnboardingStepCompleted('upload-new-artifact-tip')
-      ) {
+    if (!self.props.onboardingComplete) {
+      if (this.inprogressRef) {
+        const anchor = { left: this.inprogressRef.offsetWidth, top: this.inprogressRef.offsetTop + this.inprogressRef.offsetHeight };
+        onboardingComponent = getOnboardingComponentFor('deployments-inprogress', { anchor });
+      }
+      if (pastDeploymentsCount && getOnboardingStepCompleted('scheduling-release-to-devices') && !getOnboardingStepCompleted('upload-new-artifact-tip')) {
         return <Redirect to="/deployments/finished" />;
       }
     }
@@ -217,6 +215,7 @@ const mapStateToProps = state => {
   );
   return {
     onboardingComplete: state.users.onboarding.complete,
+    pastDeploymentsCount: state.deployments.byStatus.finished.deploymentIds.length || state.deployments.byStatus.finished.total,
     pending,
     pendingCount: state.deployments.byStatus.pending.total - scheduled.length,
     progress,

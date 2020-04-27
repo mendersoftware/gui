@@ -164,7 +164,7 @@ export class Past extends React.Component {
 
     let onboardingComponent = null;
     if (this.deploymentsRef) {
-      let anchor = { left: 250, top: this.deploymentsRef.offsetParent.offsetTop + this.deploymentsRef.offsetTop + this.deploymentsRef.offsetHeight };
+      let anchor = { left: this.deploymentsRef.offsetWidth / 2, top: this.deploymentsRef.offsetTop + this.deploymentsRef.offsetHeight };
       onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor });
       onboardingComponent = getOnboardingComponentFor('deployments-past-completed-failure', { anchor }, onboardingComponent);
       onboardingComponent = getOnboardingComponentFor('onboarding-finished', { anchor }, onboardingComponent);
