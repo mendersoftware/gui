@@ -101,11 +101,10 @@ const mapStateToProps = state => {
   const deviceList = state.devices.selectedDeviceList.length > 0 ? state.devices.selectedDeviceList : state.devices.byStatus.accepted.deviceIds;
   const devices = deviceList.map(id => state.devices.byId[id]);
   const selectedGroupDevices = state.devices.groups.selectedGroup ? state.devices.groups.byId[state.devices.groups.selectedGroup].deviceIds : [];
-  const groups = Object.keys(state.devices.groups.byId).filter(group => group !== DeviceConstants.UNGROUPED_GROUP.id);
   return {
     devices,
     globalSettings: state.users.globalSettings,
-    groups,
+    groups: Object.keys(state.devices.groups.byId),
     selectedGroup: state.devices.groups.selectedGroup,
     selectedGroupDevices,
     userId: state.users.currentUser

@@ -22,7 +22,7 @@ describe('SoftwareDevices Component', () => {
         },
         groups: {
           byId: {
-            [DeviceConstants.UNGROUPED_GROUP.id]: { deviceIds: [] }
+            // groupName: { deviceIds: [] }
           }
         }
       },

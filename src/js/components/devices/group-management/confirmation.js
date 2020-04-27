@@ -3,7 +3,6 @@ import pluralize from 'pluralize';
 import { Checkbox, FormControlLabel } from '@material-ui/core';
 import { ErrorOutline as ErrorOutlineIcon } from '@material-ui/icons';
 import { fullyDecodeURI } from '../../../helpers';
-import * as DeviceConstants from '../../../constants/deviceConstants';
 
 const errorIconStyle = { marginRight: 4, fontSize: 18, top: 4, verticalAlign: 'sub' };
 
@@ -14,8 +13,7 @@ const Confirmation = ({ className, isModification, newGroup, onConfirm, selected
         {selectedGroup ? (
           <>
             <ErrorOutlineIcon style={errorIconStyle} />
-            {selectedDevices.length} {pluralize('devices', selectedDevices.length)} will be{' '}
-            {DeviceConstants.UNGROUPED_GROUP.id !== selectedGroup ? `removed from ${(<i>{fullyDecodeURI(selectedGroup)}</i>)} and ` : ''}added to{' '}
+            {selectedDevices.length} {pluralize('devices', selectedDevices.length)} will be removed from <i>{fullyDecodeURI(selectedGroup)}</i> and added to{' '}
             <i>{newGroup}</i>.
           </>
         ) : (
