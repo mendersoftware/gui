@@ -8,7 +8,6 @@ import Deployments from '../components/deployments/deployments';
 import Devices from '../components/devices/devices';
 import Help from '../components/help/help';
 import Login from '../components/user-management/login';
-import Reports from '../components/reports';
 import Settings from '../components/settings/settings';
 
 import { isLoggedIn } from '../auth';
@@ -42,7 +41,6 @@ export default (
       <PrivateRoute path="/releases/:artifactVersion?" component={Artifacts} />
       <PrivateRoute path="/deployments/:tab?" component={Deployments} />
       <PrivateRoute path="/settings/:section?" component={Settings} />
-      <PrivateRoute path="/reports" component={Reports} />
       <PrivateRoute path="/help" component={Help} />
       <Route path="/login" render={() => <Login />} />
       <PrivateRoute component={Dashboard} />

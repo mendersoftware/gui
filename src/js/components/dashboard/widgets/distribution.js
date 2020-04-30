@@ -4,7 +4,7 @@ import { IconButton, Paper } from '@material-ui/core';
 import { Clear as ClearIcon } from '@material-ui/icons';
 import { VictoryPie, VictoryTooltip } from 'victory';
 
-import Loader from '../common/loader';
+import Loader from '../../common/loader';
 
 export default class DistributionReport extends React.Component {
   constructor(props, state) {
@@ -36,38 +36,38 @@ export default class DistributionReport extends React.Component {
 
   render() {
     const self = this;
-    const { attribute, group, onClick } = self.props;
+    const { group, onClick, style } = self.props;
     const data = Object.entries(this.state.distribution).reduce((accu, [key, value]) => [...accu, { x: key, y: value }], []);
     return (
-      <Paper className="flexbox column centered space-between margin-right margin-bottom" elevation={2} style={{ minWidth: 380, width: 380 }}>
+      <Paper className="flexbox column margin-right margin-bottom" elevation={1} style={style}>
+        <div className="flexbox space-between">
+          <h4>{group || 'All devices'}</h4>
+          <IconButton onClick={onClick} style={{ alignSelf: 'flex-end' }}>
+            <ClearIcon fontSize="small" />
+          </IconButton>
+        </div>
         {data.length ? (
-          <>
-            <IconButton onClick={onClick} style={{ alignSelf: 'flex-end' }}>
-              <ClearIcon fontSize="small" />
-            </IconButton>
-            <VictoryPie
-              colorScale="qualitative"
-              data={data}
-              height={220}
-              innerRadius={30}
-              labelComponent={<VictoryTooltip flyoutWidth={150} constrainToVisibleArea />}
-              padding={0}
-              // radius={20}
-              style={{
-                parent: { width: 220, height: 220, display: 'flex', alignSelf: 'center' }
-              }}
-              width={220}
-              events={[
-                {
-                  target: 'data',
-                  eventHandlers: {
-                    onClick: (evt, clickedProps) => self.onSliceClick(clickedProps.datum.x)
-                  }
+          <VictoryPie
+            colorScale="qualitative"
+            data={data}
+            height={220}
+            innerRadius={30}
+            labelComponent={<VictoryTooltip flyoutWidth={150} constrainToVisibleArea />}
+            padding={0}
+            // radius={20}
+            style={{
+              parent: { width: 220, height: 220, display: 'flex', alignSelf: 'center' }
+            }}
+            width={220}
+            events={[
+              {
+                target: 'data',
+                eventHandlers: {
+                  onClick: (evt, clickedProps) => self.onSliceClick(clickedProps.datum.x)
                 }
-              ]}
-            />
-            <h4 className="flexbox centered">{`${attribute} in ${group || 'All devices'}`}</h4>
-          </>
+              }
+            ]}
+          />
         ) : (
           <Loader show={true} />
         )}

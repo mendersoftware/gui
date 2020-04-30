@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import Deployments from './deployments';
 import Devices from './devices';
+import SoftwareDistribution from './software-distribution';
 
 import { styles } from './widgets/baseWidget';
 import { setSnackbar } from '../../actions/appActions';
@@ -75,7 +76,10 @@ export class Dashboard extends React.Component {
     return (
       <div className="dashboard">
         <Devices styles={rowStyles} clickHandle={this._handleClick.bind(this)} />
-        <Deployments styles={rowStyles} clickHandle={this._handleClick.bind(this)} />
+        <div className="two-column" style={{ gridTemplateColumns: '4fr 5fr' }}>
+          <Deployments styles={rowStyles} clickHandle={this._handleClick.bind(this)} />
+          <SoftwareDistribution />
+        </div>
       </div>
     );
   }
