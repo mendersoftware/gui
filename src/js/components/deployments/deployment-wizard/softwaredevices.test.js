@@ -4,7 +4,6 @@ import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import * as DeviceConstants from '../../../constants/deviceConstants';
 import SoftwareDevices from './softwaredevices';
 
 const mockStore = configureStore([thunk]);
