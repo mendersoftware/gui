@@ -46,7 +46,9 @@ const UserList = ({ currentUser, editUser, isEnterprise, removeUser, roles, user
               <TableCell>
                 <RelativeTime updateTime={user.updated_ts} />
               </TableCell>
-              {isEnterprise && <TableCell>{(user.roles || []).map(role => roles.find(currentRole => currentRole.id === role).title).join(', ')}</TableCell>}
+              {isEnterprise && (
+                <TableCell>{(user.roles || []).map(role => (roles.find(currentRole => currentRole.id === role) || {}).title).join(', ')}</TableCell>
+              )}
               <TableCell>
                 <Button onClick={() => editUser(user)} style={{ marginLeft: -10 }}>
                   Edit
