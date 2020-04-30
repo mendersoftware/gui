@@ -7,13 +7,14 @@ import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '@mater
 import RelativeTime from '../common/relative-time';
 
 const columnData = [
-  { id: 'email', disablePadding: false, label: 'Email' },
-  { id: 'created_ts', disablePadding: false, label: 'Date created' },
-  { id: 'updated_ts', disablePadding: false, label: 'Last updated' },
-  { id: 'actions', disablePadding: false, label: 'Manage' }
+  { id: 'email', disablePadding: false, label: 'Email', enterpriseOnly: false },
+  { id: 'created_ts', disablePadding: false, label: 'Date created', enterpriseOnly: false },
+  { id: 'updated_ts', disablePadding: false, label: 'Last updated', enterpriseOnly: false },
+  { id: 'roles', disablePadding: false, label: 'Role', enterpriseOnly: true },
+  { id: 'actions', disablePadding: false, label: 'Manage', enterpriseOnly: false }
 ];
 
-const UserList = ({ users, currentUser, editUser, removeUser }) => (
+const UserList = ({ currentUser, editUser, isEnterprise, removeUser, roles, users }) => (
   <div className="margin-top-small">
     <div style={{ marginLeft: '20px' }}>
       <h2 className="margin-top-small">Users</h2>
@@ -22,25 +23,34 @@ const UserList = ({ users, currentUser, editUser, removeUser }) => (
       <Table>
         <TableHead>
           <TableRow>
-            {columnData.map(column => (
-              <TableCell key={column.id} padding={column.disablePadding ? 'none' : 'default'}>
-                {column.label}
-              </TableCell>
-            ))}
+            {columnData.reduce((accu, column) => {
+              if (column.enterpriseOnly && !isEnterprise) {
+                return accu;
+              }
+              accu.push(
+                <TableCell key={column.id} padding={column.disablePadding ? 'none' : 'default'}>
+                  {column.label}
+                </TableCell>
+              );
+              return accu;
+            }, [])}
           </TableRow>
         </TableHead>
         <TableBody>
           {users.map((user, index) => (
             <TableRow key={user.id || index} hover>
               <TableCell>{user.email}</TableCell>
-              <TableCell align="left">
+              <TableCell>
                 <Time value={user.created_ts} format="YYYY-MM-DD HH:mm" />
               </TableCell>
-              <TableCell align="left">
+              <TableCell>
                 <RelativeTime updateTime={user.updated_ts} />
               </TableCell>
-              <TableCell padding="none">
-                <Button onClick={() => editUser(user)}>Edit</Button>
+              {isEnterprise && <TableCell>{(user.roles || []).map(role => roles.find(currentRole => currentRole.id === role).title).join(', ')}</TableCell>}
+              <TableCell>
+                <Button onClick={() => editUser(user)} style={{ marginLeft: -10 }}>
+                  Edit
+                </Button>
                 {currentUser.id !== user.id ? <Button onClick={() => removeUser(user)}>Remove</Button> : null}
               </TableCell>
             </TableRow>
