@@ -102,7 +102,7 @@ export class Devices extends React.Component {
         <h4 className="dashboard-header">
           <span>Devices</span>
         </h4>
-        <div style={Object.assign({ marginBottom: '30px', marginTop: '50px' }, this.props.styles)} ref={element => (this.anchor = element)}>
+        <div style={Object.assign({ marginBottom: 30 }, this.props.styles)} ref={element => (this.anchor = element)}>
           {!!pendingDevicesCount && (
             <PendingDevices
               pendingDevicesCount={pendingDevicesCount}
