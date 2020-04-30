@@ -12,7 +12,11 @@ describe('UserManagement Component', () => {
   beforeEach(() => {
     store = mockStore({
       app: {
-        snackbar: {}
+        snackbar: {},
+        features: {
+          isEnterprise: false,
+          isHosted: false
+        }
       },
       users: {
         currentUser: null,
