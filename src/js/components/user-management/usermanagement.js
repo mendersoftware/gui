@@ -8,7 +8,6 @@ import UserForm from './userform';
 import { setSnackbar } from '../../actions/appActions';
 import { createUser, editUser, getUserList, removeUser } from '../../actions/userActions';
 import { preformatWithRequestID } from '../../helpers';
-import { USER_ROLES as roles } from '../../constants/userConstants';
 
 const actions = {
   create: {
@@ -98,13 +97,12 @@ export class UserManagement extends React.Component {
           </Button>
         </div>
 
-        <UserList {...self.props} editUser={user => self._openEdit(user)} removeUser={user => self._openRemove(user)} roles={roles} />
+        <UserList {...self.props} editUser={user => self._openEdit(user)} removeUser={user => self._openRemove(user)} />
         {editDialog && (
           <UserForm
             {...self.props}
             closeDialog={() => self.dialogDismiss()}
             handleRolesChange={event => self.handleRolesChange(event.target.value)}
-            roles={roles}
             submit={(...args) => self.submit(...args)}
             user={user}
           />
@@ -142,6 +140,7 @@ const mapStateToProps = state => {
   return {
     currentUser: state.users.byId[state.users.currentUser] || {},
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
+    roles: state.users.roles,
     snackbar: state.app.snackbar,
     users: Object.values(state.users.byId)
   };
