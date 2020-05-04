@@ -1,20 +1,33 @@
 import React from 'react';
 
 // material ui
-import { IconButton, TextField } from '@material-ui/core';
+import { IconButton, MenuItem, Select, TextField } from '@material-ui/core';
 import { HighlightOff as HighlightOffIcon } from '@material-ui/icons';
 import { Autocomplete } from '@material-ui/lab';
 
+import { DEVICE_FILTERING_OPTIONS } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
 
+import { emptyFilter } from './filters';
+import { filtersCompare } from '../../helpers';
+
 const textFieldStyle = { marginTop: 0, marginBottom: 15 };
+
+const filterOptionsByPlan = {
+  os: { $eq: { title: 'equals' } },
+  professional: DEVICE_FILTERING_OPTIONS,
+  enterprise: DEVICE_FILTERING_OPTIONS
+};
 
 export default class FilterItem extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       key: props.filter.key, // this refers to the selected filter with key as the id
-      value: props.filter.value // while this is the value that is applied with the filter
+      value: props.filter.value, // while this is the value that is applied with the filter
+      operator: props.filter.operator || '$eq',
+      scope: props.filter.scope || 'inventory',
+      reset: true
     };
   }
 
@@ -24,18 +37,16 @@ export default class FilterItem extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (Math.abs(prevProps.filters.length - this.props.filters.length) > 1) {
-      this.setState({ key: undefined, value: undefined });
+      this.setState(emptyFilter);
     }
     if (this.props.filter.key && this.props.filter.key !== this.state.key) {
-      this.setState({ key: this.props.filter.key, value: this.props.filter.value });
+      this.setState(this.props.filter);
     }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.filter.key && nextProps.filter.key !== this.state.key) {
-      return true;
-    }
-    if (nextProps.filter.value && nextProps.filter.value !== this.state.value) {
+    const shouldUpdate = filtersCompare([this.state], [nextState]);
+    if (shouldUpdate) {
       return true;
     }
     if (nextProps.filters.length !== this.props.filters.length) {
@@ -44,7 +55,7 @@ export default class FilterItem extends React.Component {
     if (nextProps.loading !== this.props.loading) {
       return true;
     }
-    return !(nextState.key === this.state.key && nextState.value === this.state.value);
+    return !(nextState.key === this.state.key && nextState.value === this.state.value && nextState.operator === this.state.operator);
   }
 
   updateFilterKey(value) {
@@ -52,7 +63,13 @@ export default class FilterItem extends React.Component {
     if (!value) {
       return self._removeFilter();
     }
-    self.setState({ key: value }, () => (self.state.value ? self.props.onSelect(self.state) : null));
+    const { key, scope } = self.props.filters.find(filter => filter.key === value);
+    self.setState({ key, scope }, () => self.notifyFilterUpdate());
+  }
+
+  updateFilterOperator(value) {
+    const self = this;
+    self.setState({ operator: value }, () => self.notifyFilterUpdate());
   }
 
   updateFilterValue(value) {
@@ -63,35 +80,52 @@ export default class FilterItem extends React.Component {
   notifyFilterUpdate() {
     const self = this;
     clearTimeout(self.timer);
-    self.timer = setTimeout(() => (self.state.key && self.state.value ? self.props.onSelect(self.state) : null), 300);
+    self.timer = setTimeout(
+      () =>
+        self.state.key && self.state.value
+          ? self.props.onSelect({
+              key: self.state.key,
+              operator: self.state.operator,
+              scope: self.state.scope,
+              value: self.state.value
+            })
+          : null,
+      300
+    );
   }
 
   _removeFilter() {
-    this.setState({ key: undefined, value: undefined }, this.props.onRemove());
+    this.props.onRemove(this.state);
+    this.setState({ ...emptyFilter, reset: !this.state.reset });
   }
 
   render() {
     const self = this;
-    const { filterAttributes, filters, index, itemKey, loading } = self.props;
-    const { key, value } = self.state;
-    const selectedFilter = filterAttributes.find(filter => filter.key === key) || { key, value: key };
+    const { filters, loading, plan } = self.props;
+    const { key, operator, reset, value } = self.state;
+    const filterOptions = plan ? filterOptionsByPlan[plan] : DEVICE_FILTERING_OPTIONS;
     return (
-      <div className="flexbox" key={itemKey} style={{ alignItems: 'center' }}>
-        <div className="margin-right">Device matching:</div>
+      <div className="flexbox" style={{ alignItems: 'center' }}>
         <Autocomplete
           autoComplete
-          id={`filter-selection-${index}`}
           freeSolo
           filterSelectedOptions
-          groupBy={option => option.scope}
+          groupBy={option => option.category}
           getOptionLabel={option => option.value || ''}
           includeInputInList={true}
           onChange={(e, changedValue) => self.updateFilterKey(changedValue ? changedValue.key : changedValue)}
-          options={filters.sort((a, b) => -b.scope.localeCompare(a.scope))}
+          options={filters.sort((a, b) => a.priority - b.priority)}
           renderInput={params => <TextField {...params} label="Attribute" style={textFieldStyle} />}
-          value={selectedFilter}
+          key={reset}
+          value={key}
         />
-        <div className="margin-left-small margin-right">Equals</div>
+        <Select className="margin-left-small margin-right-small" onChange={event => self.updateFilterOperator(event.target.value)} value={operator}>
+          {Object.entries(filterOptions).map(([optionKey, option]) => (
+            <MenuItem key={optionKey} value={optionKey}>
+              {option.title}
+            </MenuItem>
+          ))}
+        </Select>
         <TextField
           label="Value"
           value={value || ''}
@@ -99,7 +133,7 @@ export default class FilterItem extends React.Component {
           InputLabelProps={{ shrink: !!value }}
           style={textFieldStyle}
         />
-        {!!self.state.key && (
+        {!!key && (
           <IconButton className="margin-left" onClick={() => self._removeFilter()} size="small">
             <HighlightOffIcon />
           </IconButton>

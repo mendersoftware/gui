@@ -37,7 +37,7 @@ const Api = {
           if (err || !res.ok) {
             reject({ error: err, res: res });
           } else {
-            resolve(res.header);
+            resolve(res);
           }
         });
     });

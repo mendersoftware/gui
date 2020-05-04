@@ -21,6 +21,7 @@ export class CreateGroup extends React.Component {
       activeStep: 0,
       invalid: showWarning,
       isModification: !props.isCreation,
+      isCreationDynamic: props.isCreation && props.fromFilters,
       newGroup: '',
       selectedDevices: props.selectedDevices,
       showWarning,
@@ -36,6 +37,9 @@ export class CreateGroup extends React.Component {
       // cookie exists || if no other groups exist, continue to create group
       steps = steps.slice(0, steps.length - 1);
     }
+    if (this.state.isCreationDynamic) {
+      steps = [steps[0]];
+    }
     this.setState({ steps });
   }
 
@@ -49,20 +53,22 @@ export class CreateGroup extends React.Component {
     this.setState({ selectedDevices, invalid: !selectedDevices.length, willBeEmpty });
   }
 
-  onNameChange(invalid, newGroup, isModification) {
+  onNameChange(isNotValid, newGroup, isModification) {
     let steps = this.state.steps;
-    if (this.state.isModification !== isModification && isModification) {
+    if (this.state.isModification !== isModification && isModification && !this.state.isCreationDynamic) {
       steps = this.state.selectedDevices.length ? [defaultSteps[0], defaultSteps[2]] : defaultSteps;
       steps = !this.state.showWarning ? steps.slice(0, steps.length - 1) : steps;
     }
-    const title = isModification ? `Add ${this.props.selectedDevices.length ? 'selected ' : ''}devices to group` : 'Create a new group';
+    const title =
+      isModification && !this.state.isCreationDynamic ? `Add ${this.props.selectedDevices.length ? 'selected ' : ''}devices to group` : 'Create a new group';
+    const invalid = isModification && this.state.isCreationDynamic ? true : isNotValid;
     this.setState({ invalid, isModification, newGroup, steps, title });
   }
 
   render() {
     const self = this;
     const { addListOfDevices, onClose } = self.props;
-    const { activeStep, invalid, isModification, newGroup, selectedDevices, showWarning, steps, title } = self.state;
+    const { activeStep, invalid, isCreationDynamic, isModification, newGroup, selectedDevices, showWarning, steps, title } = self.state;
     const ComponentToShow = steps[activeStep];
     return (
       <Dialog disableBackdropClick disableEscapeKeyDown open={true} scroll={'paper'} fullWidth={true} maxWidth="sm">
@@ -86,7 +92,7 @@ export class CreateGroup extends React.Component {
             </Button>
           ) : (
             <Button variant="contained" color="primary" onClick={() => addListOfDevices(selectedDevices, newGroup)} disabled={!newGroup.length || invalid}>
-              {!isModification ? (showWarning ? 'Confirm' : 'Create group') : 'Add to group'}
+              {!isModification || isCreationDynamic ? (showWarning ? 'Confirm' : 'Create group') : 'Add to group'}
             </Button>
           )}
         </DialogActions>
@@ -97,14 +103,16 @@ export class CreateGroup extends React.Component {
 
 const actionCreators = { getDevicesByStatus };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   const deviceList = state.devices.selectedDeviceList.length > 0 ? state.devices.selectedDeviceList : state.devices.byStatus.accepted.deviceIds;
   const devices = deviceList.map(id => state.devices.byId[id]);
   const selectedGroupDevices = state.devices.groups.selectedGroup ? state.devices.groups.byId[state.devices.groups.selectedGroup].deviceIds : [];
+  // ensure that existing dynamic groups are only listed if a dynamic group should be created
+  const groups = Object.keys(state.devices.groups.byId).filter(group => (ownProps.fromFilters ? true : !state.devices.groups.byId[group].filters.length));
   return {
     devices,
     globalSettings: state.users.globalSettings,
-    groups: Object.keys(state.devices.groups.byId),
+    groups,
     selectedGroup: state.devices.groups.selectedGroup,
     selectedGroupDevices,
     userId: state.users.currentUser

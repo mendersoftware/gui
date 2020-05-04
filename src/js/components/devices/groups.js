@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactTooltip from 'react-tooltip';
-import { AddGroup } from '../helptips/helptooltips';
 
 // material ui
 import { Divider, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { Add as AddIcon, Help as HelpIcon } from '@material-ui/icons';
+
+import { AddGroup } from '../helptips/helptooltips';
 
 export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, selectedGroup, showHelptips }) => {
   const groupItems = groups.map((group, index) => {
@@ -20,7 +21,7 @@ export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, se
     <div>
       <div className="muted margin-bottom-small">Groups</div>
       <List>
-        <ListItem classes={{ root: 'grouplist' }} button key="All" style={!selectedGroup ? { backgroundColor: '#e7e7e7' } : {}} onClick={() => changeGroup('')}>
+        <ListItem classes={{ root: 'grouplist' }} button key="All" style={!selectedGroup ? { backgroundColor: '#e7e7e7' } : {}} onClick={() => changeGroup()}>
           <ListItemText primary="All devices" />
         </ListItem>
         <Divider />
@@ -29,8 +30,8 @@ export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, se
           button
           classes={{ root: 'grouplist' }}
           disabled={!acceptedCount}
-          style={acceptedCount ? null : { color: '#d4e9e7' }}
-          onClick={openGroupDialog}
+          style={acceptedCount ? {} : { color: '#d4e9e7' }}
+          onClick={acceptedCount ? () => openGroupDialog() : x => x}
         >
           <ListItemIcon>
             <AddIcon />
@@ -38,6 +39,7 @@ export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, se
           <ListItemText primary="Create a group" />
         </ListItem>
       </List>
+
       {showHelptips && acceptedCount && groups.length <= 1 ? (
         <div>
           <div id="onboard-5" className="tooltip help" data-tip data-for="groups-tip" data-event="click focus" style={{ bottom: '-10px' }}>

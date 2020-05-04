@@ -16,9 +16,17 @@ describe('Filters Component', () => {
       },
       devices: {
         filters: [],
-        filteringAttributes: { identityAttributes: [], inventoryAttributes: [] }
+        filteringAttributes: { identityAttributes: [], inventoryAttributes: [] },
+        groups: {
+          selectedGroup: null
+        }
       },
-      users: { organization: {} }
+      users: {
+        globalSettings: {
+          previousFilters: []
+        },
+        organization: {}
+      }
     });
   });
   it('renders correctly', () => {

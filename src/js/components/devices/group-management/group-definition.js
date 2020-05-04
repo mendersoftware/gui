@@ -1,5 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import validator from 'validator';
+
 import { FormHelperText, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 
@@ -49,6 +51,9 @@ export default class GroupDefinition extends React.Component {
           )}
         />
         <FormHelperText>{errortext}</FormHelperText>
+        <p className="info">
+          Note: specific devices can&apos;t be added to dynamic groups. <Link to="/help">Learn more about static vs. dynamic groups</Link>
+        </p>
       </>
     );
   }

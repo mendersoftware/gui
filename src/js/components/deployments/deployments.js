@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@material-ui/core';
 
-import { getAllGroupDevices, selectDevice } from '../../actions/deviceActions';
+import { selectDevice } from '../../actions/deviceActions';
 import { selectRelease } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { setSnackbar } from '../../actions/appActions';
@@ -66,7 +66,6 @@ export class Deployments extends React.Component {
     clearAllRetryTimers(self.props.setSnackbar);
     self.props.selectRelease();
     self.props.selectDevice();
-    self.props.groups.map(group => self.props.getAllGroupDevices(group));
     let startDate = self.state.startDate;
     if (this.props.match) {
       const params = new URLSearchParams(this.props.location.search);
@@ -292,7 +291,7 @@ export class Deployments extends React.Component {
     }
 
     // tabs
-    const { groups, isEnterprise, onboardingComplete, past, pastCount, pending, pendingCount, progress, progressCount } = self.props;
+    const { isEnterprise, onboardingComplete, past, pastCount, pending, pendingCount, progress, progressCount } = self.props;
     const { contentClass, createDialog, deploymentObject, doneLoading, pendPage, progPage, reportDialog, reportType, startDate, tabIndex } = self.state;
     let onboardingComponent = null;
     if (past.length || pastCount) {
@@ -365,7 +364,6 @@ export class Deployments extends React.Component {
           <div className="margin-top">
             <Past
               createClick={() => self.setState({ createDialog: true })}
-              groups={groups}
               isActiveTab={self._getCurrentLabel() === routes.finished.title}
               loading={!doneLoading}
               refreshDeployments={(...args) => self.refreshDeployments(...args)}
@@ -406,7 +404,6 @@ export class Deployments extends React.Component {
 const actionCreators = {
   abortDeployment,
   createDeployment,
-  getAllGroupDevices,
   getDeploymentCount,
   getDeploymentsByStatus,
   saveGlobalSettings,

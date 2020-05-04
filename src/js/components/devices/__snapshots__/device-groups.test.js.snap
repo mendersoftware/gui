@@ -118,62 +118,76 @@ exports[`DeviceGroups Component renders correctly 1`] = `
       className="relative"
     >
       <div
+        className="flexbox space-between"
         style={
           Object {
             "marginLeft": "20px",
           }
         }
       >
-        <h2
-          className="inline-block margin-right"
+        <div
+          style={
+            Object {
+              "width": "100%",
+            }
+          }
         >
-          All devices
-        </h2>
-        <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
-          disabled={false}
-          onBlur={[Function]}
-          onClick={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={0}
-          type="button"
-        >
-          <span
-            className="MuiButton-label"
+          <h2
+            className="inline-block margin-right"
+          >
+            All devices
+          </h2>
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
+            disabled={false}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            style={
+              Object {
+                "marginTop": -8,
+              }
+            }
+            tabIndex={0}
+            type="button"
           >
             <span
-              className="MuiButton-startIcon MuiButton-iconSizeMedium"
+              className="MuiButton-label"
             >
-              <svg
-                aria-hidden="true"
-                className="MuiSvgIcon-root"
-                focusable="false"
-                role="presentation"
-                viewBox="0 0 24 24"
+              <span
+                className="MuiButton-startIcon MuiButton-iconSizeMedium"
               >
-                <path
-                  d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
-                />
-              </svg>
+                <svg
+                  aria-hidden="true"
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  role="presentation"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
+                  />
+                </svg>
+              </span>
+              Filters
             </span>
-            Filters
-          </span>
-          <span
-            className="MuiTouchRipple-root"
-          />
-        </button>
+            <span
+              className="MuiTouchRipple-root"
+            />
+          </button>
+        </div>
       </div>
       <div
-        className="loaderContainer"
+        className="loaderContainer shrunk"
       >
         <div
           className="loader"
@@ -193,7 +207,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        className="hidden"
+        className="dashboard-placeholder"
       >
         <p>
           No devices found
@@ -202,7 +216,6 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           No devices have been authorized to connect to the Mender server yet.
         </p>
       </div>
-      <div />
     </div>
   </div>
 </div>
