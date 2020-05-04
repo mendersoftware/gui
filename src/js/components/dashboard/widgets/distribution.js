@@ -26,7 +26,7 @@ export default class DistributionReport extends React.Component {
       accu[item.attributes[attribute]] = accu[item.attributes[attribute]] + 1;
       return accu;
     }, {});
-    const colors = chartColorPalette.slice(0, Object.keys(distributionByAttribute).length);
+    const colors = chartColorPalette.slice(0, Object.keys(distributionByAttribute).length).reverse();
     const distribution = Object.entries(distributionByAttribute)
       .sort((pairA, pairB) => pairB[1] - pairA[1])
       .slice(0, colors.length)
@@ -45,10 +45,10 @@ export default class DistributionReport extends React.Component {
     const { group, onClick, style } = self.props;
     const { distribution: data } = self.state;
     return (
-      <Paper className="flexbox column margin-right margin-bottom" elevation={1} style={style}>
-        <div className="flexbox space-between">
+      <Paper className="margin-right margin-bottom widget" elevation={1} style={style}>
+        <div className="flexbox space-between margin-left-small">
           <h4>{group || 'All devices'}</h4>
-          <IconButton onClick={onClick} style={{ alignSelf: 'flex-end' }}>
+          <IconButton className="widgetRemover" onClick={onClick} style={{ alignSelf: 'flex-end' }}>
             <ClearIcon fontSize="small" />
           </IconButton>
         </div>

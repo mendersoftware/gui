@@ -819,6 +819,9 @@ ul.link-list {
     &.onboard:hover {
       border-color: darken(@placeholder, 10%);
     }
+    &:hover .widgetRemover {
+      opacity: 1;
+    }
   }
   .widgetHeader,
   .widgetMainContent,
@@ -849,6 +852,9 @@ ul.link-list {
     .counter {
       font-size: xx-large;
     }
+  }
+  .widgetRemover {
+    opacity: 0;
   }
   .link {
     font-size: small;

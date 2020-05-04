@@ -17,8 +17,11 @@ const reportTypes = {
 };
 
 const defaultChartStyle = {
-  width: 380,
-  height: 280
+  cursor: 'initial',
+  height: 280,
+  justifyContent: 'initial',
+  padding: 0,
+  width: 380
 };
 
 export class SoftwareDistribution extends React.Component {
