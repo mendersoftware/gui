@@ -57,9 +57,9 @@ export class Progress extends React.Component {
       self.refreshDeployments(self.state.progressPage, self.state.progressPerPage, 'inprogress'),
       self.refreshDeployments(self.state.pendingPage, self.state.pendingPerPage, 'pending')
     ];
-    // if (!self.props.onboardingComplete && self._getCurrentLabel() === routes.finished.title) {
-    //   tasks.push(self.refreshDeployments(1, DEFAULT_PENDING_INPROGRESS_COUNT, 'finished'));
-    // }
+    if (!self.props.onboardingComplete && !self.props.pastDeploymentsCount) {
+      tasks.push(self.refreshDeployments(1, 1, 'finished'));
+    }
     return Promise.all(tasks).then(() => {
       const currentRefreshDeploymentLength = Math.min(refreshLength, self.state.currentRefreshDeploymentLength * 2);
       self.setState({ currentRefreshDeploymentLength });
