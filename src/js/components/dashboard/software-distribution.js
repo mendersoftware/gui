@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 
 import { BarChart as BarChartIcon } from '@material-ui/icons';
 
+import ChartAdditionWidget from './widgets/chart-addition';
 import DistributionReport from './widgets/distribution';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import { selectGroup } from '../../actions/deviceActions';
+import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
-import ChartAdditionWidget from './widgets/chart-addition';
 
 export const defaultReports = [{ group: null, attribute: 'artifact_name', type: 'distribution' }];
 
@@ -24,13 +25,15 @@ export class SoftwareDistribution extends React.Component {
   constructor(props, state) {
     super(props, state);
     this.state = {
-      reports: defaultReports,
+      reports: props.reports.length ? props.reports : defaultReports,
       selection: ''
     };
   }
 
   addCurrentSelection(selection) {
-    this.setState({ reports: [...this.state.reports, selection] });
+    const reports = [...this.state.reports, selection];
+    this.setState({ reports });
+    this.props.saveGlobalSettings({ [`${this.props.userId}-reports`]: reports });
   }
 
   removeReport(index) {
@@ -82,16 +85,19 @@ export class SoftwareDistribution extends React.Component {
   }
 }
 
-const actionCreators = { selectGroup };
+const actionCreators = { saveGlobalSettings, selectGroup };
 
 const mapStateToProps = state => {
   const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const userId = (state.users.byId[state.users.currentUser] || {}).id;
   return {
     attributes: state.devices.filteringAttributes.inventoryAttributes.concat(state.devices.filteringAttributes.identityAttributes) || [],
     devices: state.devices.byId,
     hasDevices: state.devices.byStatus[DEVICE_STATES.accepted].total,
     groups: state.devices.groups.byId,
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os')
+    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
+    reports: state.users.globalSettings[`${userId}-reports`] || [],
+    userId
   };
 };
 
