@@ -88,26 +88,8 @@ const deploymentReducer = (state = initialState, action) => {
           ...state.byStatus,
           [action.status]: {
             ...state.byStatus[action.status],
-            deploymentIds: action.deploymentIds
-          }
-        }
-      };
-    case DeploymentConstants.RECEIVE_PENDING_DEPLOYMENTS_COUNT:
-    case DeploymentConstants.RECEIVE_INPROGRESS_DEPLOYMENTS_COUNT:
-    case DeploymentConstants.RECEIVE_SCHEDULED_DEPLOYMENTS_COUNT:
-    case DeploymentConstants.RECEIVE_FINISHED_DEPLOYMENTS_COUNT:
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          ...action.deployments
-        },
-        byStatus: {
-          ...state.byStatus,
-          [action.status]: {
-            ...state.byStatus[action.status],
             deploymentIds: action.deploymentIds,
-            total: action.deploymentIds.length
+            total: action.total
           }
         }
       };

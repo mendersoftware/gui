@@ -8,7 +8,7 @@ import { Button } from '@material-ui/core';
 import { CalendarToday as CalendarTodayIcon, List as ListIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getDeploymentCount, getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
+import { getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
 import { tryMapDeployments } from '../../helpers';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import EnterpriseNotification from '../common/enterpriseNotification';
@@ -88,17 +88,13 @@ export class Scheduled extends React.Component {
     clearAllRetryTimers(this.props.setSnackbar);
   }
 
-  refreshDeployments(page = this.state.page, perPage = this.state.perPage, fullRefresh = true) {
+  refreshDeployments(page = this.state.page, perPage = this.state.perPage) {
     const self = this;
-    return self.setState({ page, perPage }, () => {
-      let tasks = [self.props.getDeploymentCount('scheduled')];
-      if (fullRefresh) {
-        tasks.push(self.props.getDeploymentsByStatus('scheduled', page, perPage));
-      }
-      return Promise.all(tasks)
-        .then(([countAction, deploymentsAction]) => {
+    return self.setState({ page, perPage }, () =>
+      Promise.resolve(self.props.getDeploymentsByStatus('scheduled', page, perPage))
+        .then(deploymentsAction => {
           clearRetryTimer(type, self.props.setSnackbar);
-          if (countAction.deploymentIds.length && deploymentsAction && !deploymentsAction[0].deploymentIds.length) {
+          if (deploymentsAction && deploymentsAction[0].total && !deploymentsAction[0].deploymentIds.length) {
             return self.refreshDeployments(...arguments);
           }
         })
@@ -107,8 +103,8 @@ export class Scheduled extends React.Component {
           var errormsg = err.error || 'Please check your connection';
           setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, self.props.setSnackbar);
         })
-        .finally(() => self.setState({ doneLoading: true }));
-    });
+        .finally(() => self.setState({ doneLoading: true }))
+    );
   }
 
   abortDeployment(id) {
@@ -172,7 +168,7 @@ export class Scheduled extends React.Component {
   }
 }
 
-const actionCreators = { getDeploymentCount, getDeploymentsByStatus, getSingleDeploymentStats, setSnackbar, selectDeployment };
+const actionCreators = { getDeploymentsByStatus, getSingleDeploymentStats, setSnackbar, selectDeployment };
 
 const mapStateToProps = state => {
   const scheduled = state.deployments.byStatus.scheduled.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
