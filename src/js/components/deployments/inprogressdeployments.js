@@ -61,7 +61,7 @@ export class Progress extends React.Component {
       tasks.push(self.refreshDeployments(1, 1, 'finished'));
     }
     return Promise.all(tasks).then(() => {
-      const currentRefreshDeploymentLength = Math.min(refreshLength, self.state.currentRefreshDeploymentLength * 2);
+      const currentRefreshDeploymentLength = Math.min(refreshDeploymentsLength, refreshLength * 2);
       self.setState({ currentRefreshDeploymentLength });
       clearTimeout(self.dynamicTimer);
       self.dynamicTimer = setTimeout(() => self.setupDeploymentsRefresh(), currentRefreshDeploymentLength);
