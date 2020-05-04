@@ -92,7 +92,11 @@ export function preformatWithRequestID(res, failMsg) {
 
 export const filtersCompare = (filters, otherFilters) =>
   filters.length !== otherFilters.length ||
-  filters.some(filter => otherFilters.find(otherFilter => Object.entries(filter).reduce((accu, [key, value]) => accu || otherFilter[key] !== value, false)));
+  filters.some(filter =>
+    otherFilters.find(
+      otherFilter => otherFilter.key === filter.key && Object.entries(filter).reduce((accu, [key, value]) => accu || otherFilter[key] !== value, false)
+    )
+  );
 
 /*
  * compare version strings like 1.2.1, 1.2.0 etc
