@@ -2,7 +2,7 @@ import React from 'react';
 
 import { IconButton, Paper } from '@material-ui/core';
 import { Clear as ClearIcon } from '@material-ui/icons';
-import { VictoryPie, VictoryTooltip } from 'victory';
+import { VictoryGroup, VictoryLabel, VictoryLegend, VictoryPie } from 'victory';
 
 import Loader from '../../common/loader';
 import { chartColorPalette } from '../../../themes/mender-theme';
@@ -53,27 +53,31 @@ export default class DistributionReport extends React.Component {
           </IconButton>
         </div>
         {data.length ? (
-          <VictoryPie
-            colorScale="qualitative"
-            data={data}
-            height={220}
-            innerRadius={30}
-            labelComponent={<VictoryTooltip flyoutWidth={150} constrainToVisibleArea />}
-            padding={0}
-            // radius={20}
+          <VictoryGroup
             style={{
-              parent: { width: 220, height: 220, display: 'flex', alignSelf: 'center' }
+              data: { fill: ({ datum }) => datum.fill },
+              parent: { display: 'flex', alignSelf: 'center', height: 'initial', width: 'initial' }
             }}
-            width={220}
-            events={[
-              {
-                target: 'data',
-                eventHandlers: {
-                  onClick: (evt, clickedProps) => self.onSliceClick(clickedProps.datum.x)
+            data={data}
+            width={380}
+            height={230}
+          >
+            <VictoryLegend x={30} y={150} width={270} height={65} orientation="horizontal" itemsPerRow={3} gutter={20} />
+            <VictoryPie
+              endAngle={-90}
+              events={[
+                {
+                  target: 'data',
+                  eventHandlers: {
+                    onClick: (e, clickedProps) => self.onSliceClick(clickedProps.datum.x)
+                  }
                 }
-              }
-            ]}
-          />
+              ]}
+              labelComponent={<VictoryLabel />}
+              radius={85}
+              startAngle={90}
+            />
+          </VictoryGroup>
         ) : (
           <Loader show={true} />
         )}
