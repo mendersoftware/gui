@@ -73,8 +73,8 @@ export class SoftwareDistribution extends React.Component {
           </div>
         ) : (
           <div className="dashboard-placeholder">
-            <p>Software distribution charts will appear here once you connected a device. </p>
-            <BarChartIcon fontSize="large" />
+            <BarChartIcon style={{ transform: 'scale(5)' }} />
+            <p className="margin-top-large">Software distribution charts will appear here once you connected a device. </p>
           </div>
         )}
       </div>
