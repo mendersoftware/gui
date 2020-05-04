@@ -7,7 +7,7 @@ import { Add as AddIcon, Help as HelpIcon } from '@material-ui/icons';
 
 import { AddGroup } from '../helptips/helptooltips';
 
-export const Groups = ({ acceptedCount, allCount, changeGroup, groups, openGroupDialog, selectedGroup, showHelptips }) => {
+export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, selectedGroup, showHelptips }) => {
   const groupItems = groups.map((group, index) => {
     const isSelected = group === selectedGroup ? { backgroundColor: '#e7e7e7' } : {};
     return (
@@ -21,14 +21,8 @@ export const Groups = ({ acceptedCount, allCount, changeGroup, groups, openGroup
     <div>
       <div className="muted margin-bottom-small">Groups</div>
       <List>
-        <ListItem
-          classes={{ root: 'grouplist' }}
-          button
-          key="All"
-          style={!selectedGroup ? { backgroundColor: '#e7e7e7' } : {}}
-          onClick={() => changeGroup('', allCount)}
-        >
-          <ListItemText primary={<span>All devices</span>} />
+        <ListItem classes={{ root: 'grouplist' }} button key="All" style={!selectedGroup ? { backgroundColor: '#e7e7e7' } : {}} onClick={() => changeGroup()}>
+          <ListItemText primary="All devices" />
         </ListItem>
         <Divider />
         {groupItems}
@@ -36,8 +30,8 @@ export const Groups = ({ acceptedCount, allCount, changeGroup, groups, openGroup
           button
           classes={{ root: 'grouplist' }}
           disabled={!acceptedCount}
-          style={acceptedCount ? null : { color: '#d4e9e7' }}
-          onClick={acceptedCount ? () => openGroupDialog() : null}
+          style={acceptedCount ? {} : { color: '#d4e9e7' }}
+          onClick={acceptedCount ? () => openGroupDialog() : x => x}
         >
           <ListItemIcon>
             <AddIcon />

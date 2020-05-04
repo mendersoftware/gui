@@ -132,7 +132,7 @@ export class DeviceGroups extends React.Component {
 
   render() {
     const self = this;
-    const { acceptedCount, allCount, currentTab, groups, openSettingsDialog, selectedGroup, showHelptips } = self.props;
+    const { acceptedCount, currentTab, groups, openSettingsDialog, selectedGroup, showHelptips } = self.props;
     const { createGroupDialog, fromFilters, modifyGroupDialog, removeGroup, tmpDevices } = self.state;
 
     return (
@@ -140,7 +140,6 @@ export class DeviceGroups extends React.Component {
         <div className="leftFixed">
           <Groups
             acceptedCount={acceptedCount}
-            allCount={allCount}
             changeGroup={group => self._handleGroupChange(group)}
             groups={groups}
             openGroupDialog={() => self.setState({ createGroupDialog: !createGroupDialog })}
@@ -226,7 +225,6 @@ const mapStateToProps = state => {
     .sort();
   return {
     acceptedCount: state.devices.byStatus.accepted.total || 0,
-    allCount: state.devices.byStatus.accepted.total + state.devices.byStatus.rejected.total || 0,
     filters: state.devices.filters || [],
     groups,
     groupCount,
