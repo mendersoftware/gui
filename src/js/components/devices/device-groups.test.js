@@ -45,7 +45,8 @@ describe('DeviceGroups Component', () => {
       },
       users: {
         globalSettings: {
-          id_attribute: null
+          id_attribute: null,
+          previousFilters: []
         },
         onboarding: {
           complete: false

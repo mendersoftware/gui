@@ -10,11 +10,6 @@ exports[`FilterItem Component renders correctly 1`] = `
   }
 >
   <div
-    className="margin-right"
-  >
-    Device matching:
-  </div>
-  <div
     aria-expanded={false}
     aria-owns={null}
     className="MuiAutocomplete-root MuiAutocomplete-hasClearIcon"
@@ -109,9 +104,38 @@ exports[`FilterItem Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    className="margin-left-small margin-right"
+    className="MuiInputBase-root MuiInput-root MuiInput-underline margin-left-small margin-right-small"
+    onClick={[Function]}
   >
-    Equals
+    <div
+      aria-haspopup="listbox"
+      aria-labelledby=" "
+      className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
+      onBlur={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onMouseDown={[Function]}
+      role="button"
+      tabIndex={0}
+    >
+      equals
+    </div>
+    <input
+      onAnimationStart={[Function]}
+      type="hidden"
+      value="$eq"
+    />
+    <svg
+      aria-hidden="true"
+      className="MuiSvgIcon-root MuiSelect-icon"
+      focusable="false"
+      role="presentation"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M7 10l5 5 5-5z"
+      />
+    </svg>
   </div>
   <div
     className="MuiFormControl-root MuiTextField-root"

@@ -24,7 +24,7 @@ describe('Devices Component', () => {
           rejected: { total: 0 }
         },
         filters: [],
-        filteringAttributes: { inventoryAttributes: [] },
+        filteringAttributes: { identityAttributes: [], inventoryAttributes: [] },
         groups: {
           byId: {},
           selectedGroup: {}
@@ -32,7 +32,7 @@ describe('Devices Component', () => {
         selectedDeviceList: []
       },
       users: {
-        globalSettings: {},
+        globalSettings: { previousFilters: [] },
         onboarding: {
           complete: false
         },

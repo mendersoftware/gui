@@ -3,12 +3,11 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@material-ui/core';
 
-import { getAllGroupDevices, selectDevice } from '../../actions/deviceActions';
+import { selectDevice } from '../../actions/deviceActions';
 import { selectRelease } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, createDeployment, getDeploymentCount, getDeploymentsByStatus, selectDeployment } from '../../actions/deploymentActions';
-import * as DeviceConstants from '../../constants/deviceConstants';
 
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 
@@ -67,7 +66,6 @@ export class Deployments extends React.Component {
     clearAllRetryTimers(self.props.setSnackbar);
     self.props.selectRelease();
     self.props.selectDevice();
-    self.props.groups.map(group => self.props.getAllGroupDevices(group));
     let startDate = self.state.startDate;
     if (this.props.match) {
       const params = new URLSearchParams(this.props.location.search);
@@ -293,7 +291,7 @@ export class Deployments extends React.Component {
     }
 
     // tabs
-    const { groups, isEnterprise, onboardingComplete, past, pastCount, pending, pendingCount, progress, progressCount } = self.props;
+    const { isEnterprise, onboardingComplete, past, pastCount, pending, pendingCount, progress, progressCount } = self.props;
     const { contentClass, createDialog, deploymentObject, doneLoading, pendPage, progPage, reportDialog, reportType, startDate, tabIndex } = self.state;
     let onboardingComponent = null;
     if (past.length || pastCount) {
@@ -366,7 +364,6 @@ export class Deployments extends React.Component {
           <div className="margin-top">
             <Past
               createClick={() => self.setState({ createDialog: true })}
-              groups={groups}
               isActiveTab={self._getCurrentLabel() === routes.finished.title}
               loading={!doneLoading}
               refreshDeployments={(...args) => self.refreshDeployments(...args)}
@@ -407,7 +404,6 @@ export class Deployments extends React.Component {
 const actionCreators = {
   abortDeployment,
   createDeployment,
-  getAllGroupDevices,
   getDeploymentCount,
   getDeploymentsByStatus,
   saveGlobalSettings,
@@ -427,10 +423,9 @@ const tryMapDeployments = (accu, id) => {
 const mapStateToProps = state => {
   const progress = state.deployments.byStatus.inprogress.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   const pending = state.deployments.byStatus.pending.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
-  const groups = Object.keys(state.devices.groups.byId).filter(group => group !== DeviceConstants.UNGROUPED_GROUP.id);
   return {
     finishedCount: state.deployments.byStatus.finished.total,
-    groups,
+    groups: Object.keys(state.devices.groups.byId),
     hasDeployments: Object.keys(state.deployments.byId).length > 0,
     isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,
     onboardingComplete: state.users.onboarding.complete,

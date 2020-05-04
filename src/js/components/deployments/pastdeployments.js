@@ -285,9 +285,10 @@ const actionCreators = { setSnackbar, selectDeployment, getSingleDeploymentStats
 const mapStateToProps = state => {
   const past = state.deployments.byStatus.finished.selectedDeploymentIds.map(id => state.deployments.byId[id]);
   return {
+    count: state.deployments.byStatus.finished.total,
+    groups: Object.keys(state.devices.groups.byId),
     onboardingComplete: state.users.onboarding.complete,
     past,
-    count: state.deployments.byStatus.finished.total,
     showHelptips: state.users.showHelptips,
     showOnboardingTips: state.users.onboarding.showTips
   };

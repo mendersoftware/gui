@@ -204,15 +204,13 @@ export class SoftwareDevices extends React.Component {
 const actionCreators = { getAllDevicesByStatus, getAllGroupDevices, selectDevices };
 
 const mapStateToProps = state => {
-  const { [DeviceConstants.UNGROUPED_GROUP.id]: ungroupedGroup, ...groups } = state.devices.groups.byId;
   return {
     acceptedDevices: state.devices.byStatus.accepted.deviceIds,
     device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
-    groups,
+    groups: state.devices.groups.byId,
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
     hasPending: state.devices.byStatus.pending.total || state.devices.byStatus.pending.deviceIds.length > 0,
-    releases: Object.values(state.releases.byId),
-    ungroupedGroup
+    releases: Object.values(state.releases.byId)
   };
 };
 

@@ -13,6 +13,9 @@ describe('PastDeployments Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
+      devices: {
+        groups: { byId: {} }
+      },
       deployments: {
         byId: {},
         byStatus: {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import Deployments from './deployments';
 import Devices from './devices';
 
@@ -15,8 +16,16 @@ const rowBaseStyles = {
     maxWidth: '85vw'
   }
 };
+const rowStyles = { ...rowBaseStyles.container, ...styles.rowStyle };
 
-export class Dashboard extends React.PureComponent {
+export class Dashboard extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      redirect: null
+    };
+  }
+
   componentDidMount() {
     const self = this;
     setTimeout(() => {
@@ -39,28 +48,30 @@ export class Dashboard extends React.PureComponent {
   };
 
   _handleClick(params) {
+    let redirect;
     switch (params.route) {
-      case 'deployments':
-        var tab = (params.tab || 'progress') + '/';
-        var URIParams = 'open=' + params.open;
-        URIParams = params.id ? URIParams + '&id=' + params.id : URIParams;
-        URIParams = encodeURIComponent(URIParams);
-        this.props.history.push('/deployments/' + tab + URIParams);
+      case 'deployments': {
+        let URIParams = params.open;
+        URIParams = params.id ? `${URIParams}&id=${params.id}` : URIParams;
+        redirect = `/deployments/${params.tab || 'progress'}/open=${encodeURIComponent(URIParams)}`;
         break;
+      }
       case 'devices':
-        var filters = params.status ? encodeURIComponent('status=' + params.status) : '';
-        this.props.history.push('/devices/groups/' + filters);
+        redirect = `/devices/${params.status ? encodeURIComponent('status=' + params.status) : ''}`;
         break;
       case 'devices/pending':
-        this.props.history.push('/devices/pending');
+        redirect = '/devices/pending';
         break;
       default:
-        this.props.history.push(params.route);
+        redirect = params.route;
     }
+    this.setState({ redirect });
   }
 
   render() {
-    const rowStyles = Object.assign({}, rowBaseStyles.container, styles.rowStyle);
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
+    }
     return (
       <div className="dashboard">
         <Devices styles={rowStyles} clickHandle={this._handleClick.bind(this)} />

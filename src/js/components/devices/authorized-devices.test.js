@@ -15,17 +15,27 @@ describe('AuthorizedDevices Component', () => {
       app: {
         features: { hasMultitenancy: false, isEnterprise: false, isHosted: false }
       },
+      deployments: { deploymentDeviceLimit: 5000 },
       devices: {
+        byStatus: {
+          accepted: { deviceIds: [], total: 0 },
+          rejected: { deviceIds: [], total: 0 }
+        },
+        filters: [],
         filteringAttributes: {
           identityAttributes: [],
           inventoryAttributes: []
         },
         groups: {
-          selectedGroup: null
-        }
+          selectedGroup: null,
+          byId: {}
+        },
+        selectedDeviceList: []
       },
       users: {
-        globalSettings: {},
+        globalSettings: {
+          previousFilters: []
+        },
         onboarding: {
           complete: false,
           showTips: true
