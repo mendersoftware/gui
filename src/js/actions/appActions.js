@@ -1,7 +1,6 @@
 import Cookies from 'universal-cookie';
 import AppConstants from '../constants/appConstants';
 import * as Helpers from '../helpers';
-import GeneralApi from '../api/general-api';
 import { DEVICE_STATES } from '../constants/deviceConstants';
 import { getDevicesByStatus, getAllDevices } from './deviceActions';
 import { getReleases } from './releaseActions';
@@ -10,7 +9,6 @@ import { setOnboardingComplete, setOnboardingState } from './userActions';
 import { getCurrentOnboardingState, determineProgress, persistOnboardingState, onboardingSteps } from '../utils/onboardingmanager';
 
 const cookies = new Cookies();
-const hostedLinks = 'https://s3.amazonaws.com/hosted-mender-artifacts-onboarding/';
 
 export const sortTable = (table, column, direction) => dispatch =>
   dispatch({
@@ -37,12 +35,6 @@ export const setSnackbar = (message, duration, action, component, onClick, onClo
       onClose: onClose
     }
   });
-
-export const getHostedLinks = id => dispatch =>
-  GeneralApi.getNoauth(`${hostedLinks}${id}/links.json`)
-    .then(res => dispatch({ type: AppConstants.RECEIVED_HOSTED_LINKS, links: JSON.parse(res.text) }))
-    // to be expected outside of HM, so logging it should be enough
-    .catch(err => console.log(err.error));
 
 export const findLocalIpAddress = () => dispatch =>
   Helpers.findLocalIpAddress().then(ipAddress => dispatch({ type: AppConstants.SET_LOCAL_IPADDRESS, ipAddress }));
