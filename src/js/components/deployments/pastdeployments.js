@@ -12,7 +12,6 @@ import { getDeploymentCount, getDeploymentsByStatus, getSingleDeploymentStats, s
 import Loader from '../common/loader';
 import AutoSelect from '../common/forms/autoselect';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
-import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
@@ -264,7 +263,7 @@ const mapStateToProps = state => {
   const past = state.deployments.byStatus.finished.selectedDeploymentIds.map(id => state.deployments.byId[id]);
   return {
     count: state.deployments.byStatus.finished.total,
-    groups: Object.keys(state.devices.groups.byId).filter(group => group !== UNGROUPED_GROUP.id),
+    groups: Object.keys(state.devices.groups.byId),
     onboardingComplete: state.users.onboarding.complete,
     past,
     showHelptips: state.users.showHelptips,

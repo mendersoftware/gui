@@ -123,7 +123,7 @@ export const onboardingSteps = {
       onboardingTipSanityCheck('scheduling-group-selection') &&
       store.getState().devices.byStatus.accepted.total &&
       (store.getState().devices.selectedDeviceList.length || store.getState().devices.selectedDevice) &&
-      Object.values(store.getState().devices.groups.byId).length > 1, // group 0 will be the ungrouped group and always present
+      Object.values(store.getState().devices.groups.byId).length > 0,
     component: compose(setDisplayName('OnboardingTip'))(() => (
       <div>{`Select the ${Object.values(store.getState().devices.groups.byId)[1]} device group you just made.`}</div>
     )),

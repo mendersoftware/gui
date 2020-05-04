@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import MyOrganization from './organization';
+import { undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -17,7 +18,11 @@ describe('MyOrganization Component', () => {
         }
       },
       users: {
-        organization: {}
+        organization: {
+          id: 1,
+          name: 'test',
+          tenant_token: 'test'
+        }
       }
     });
   });
@@ -31,5 +36,6 @@ describe('MyOrganization Component', () => {
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
+    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });
 });

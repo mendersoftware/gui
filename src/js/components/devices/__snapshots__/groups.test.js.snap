@@ -39,9 +39,7 @@ exports[`Groups Component renders correctly 1`] = `
         <span
           className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
         >
-          <span>
-            All devices
-          </span>
+          All devices
         </span>
       </div>
     </div>
@@ -52,7 +50,7 @@ exports[`Groups Component renders correctly 1`] = `
       aria-disabled={true}
       className="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters Mui-disabled MuiListItem-button Mui-disabled"
       onBlur={[Function]}
-      onClick={null}
+      onClick={[Function]}
       onDragLeave={[Function]}
       onFocus={[Function]}
       onKeyDown={[Function]}

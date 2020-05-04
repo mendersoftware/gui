@@ -16,6 +16,11 @@ exports[`Filters Component renders correctly 1`] = `
   onTouchEnd={[Function]}
   onTouchMove={[Function]}
   onTouchStart={[Function]}
+  style={
+    Object {
+      "marginTop": -8,
+    }
+  }
   tabIndex={0}
   type="button"
 >

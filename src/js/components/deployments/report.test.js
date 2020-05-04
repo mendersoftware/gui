@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import DeploymentReport from './report';
+import { undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 let dateMock;
@@ -65,10 +66,11 @@ describe('DeploymentReport Component', () => {
     const tree = createMount()(
       <MemoryRouter>
         <Provider store={store}>
-          <DeploymentReport deployment={{ id: 'a1' }} />
+          <DeploymentReport deployment={{ id: 'a1' }} type="finished" />
         </Provider>
       </MemoryRouter>
     ).html();
     expect(tree).toMatchSnapshot();
+    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });
 });

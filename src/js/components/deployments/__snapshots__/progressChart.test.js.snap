@@ -63,7 +63,7 @@ exports[`ProgressChart Component renders correctly 1`] = `
         }
       }
     >
-      undefined failures
+      0 failures
     </div>
   </div>
   <div
