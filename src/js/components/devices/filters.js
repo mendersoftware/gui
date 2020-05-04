@@ -85,7 +85,7 @@ export class Filters extends React.Component {
 
   render() {
     const self = this;
-    const { attributes, canFilterMultiple, filters, isHosted, onGroupClick, plan, selectedGroup } = self.props;
+    const { attributes, canFilterMultiple, filters, isEnterprise, isHosted, onGroupClick, plan, selectedGroup } = self.props;
     const { adding, newFilter, showFilters } = self.state;
     const addedFilters = filters.filter(filter => filter.key !== newFilter.key);
     const { currentFilters, remainingFilters } = attributes.reduce(
@@ -168,14 +168,14 @@ export class Filters extends React.Component {
                   benefit="filter by multiple attributes to improve the device overview"
                 />
               )}
-              {plan !== 'enterprise' && (
+              {!isEnterprise && plan !== 'enterprise' && (
                 <EnterpriseNotification
                   isEnterprise={false}
                   recommendedPlan="enterprise"
                   benefit="filter by multiple attributes to improve the device overview"
                 />
               )}
-              {canFilterMultiple && plan === 'enterprise' && currentFilters.length >= 1 && canSaveFilter && (
+              {canFilterMultiple && (plan === 'enterprise' || isEnterprise) && currentFilters.length >= 1 && canSaveFilter && (
                 <Button variant="contained" color="secondary" onClick={onGroupClick}>
                   {selectedGroup ? 'Save group' : 'Create group with this filter'}
                 </Button>
@@ -216,7 +216,8 @@ const mapStateToProps = (state, ownProps) => {
     attributes: attributes.filter((item, index, array) => array.findIndex(filter => filter.key === item.key) == index),
     canFilterMultiple: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
     filters: ownProps.filters || state.devices.filters || [],
-    isHosted: state.app.features.isEnterprise || state.app.features.isHosted,
+    isHosted: state.app.features.isHosted,
+    isEnterprise: state.app.features.isEnterprise,
     plan,
     previousFilters: state.users.globalSettings.previousFilters || [],
     selectedGroup: state.devices.groups.selectedGroup
