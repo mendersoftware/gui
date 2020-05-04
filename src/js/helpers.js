@@ -4,7 +4,6 @@ import React from 'react';
 
 import store from './reducers';
 import appConstants from './constants/appConstants';
-import { UNGROUPED_GROUP } from './constants/deviceConstants';
 
 export function isEncoded(uri) {
   uri = uri || '';
@@ -21,8 +20,6 @@ export function fullyDecodeURI(uri) {
 }
 
 const statCollector = (items, statistics) => items.reduce((accu, property) => accu + Number(statistics[property] || 0), 0);
-
-export const isUngroupedGroup = group => group && (group === UNGROUPED_GROUP.id || group === UNGROUPED_GROUP.name);
 
 export const groupDeploymentStats = stats => ({
   // don't include 'pending' as inprogress, as all remaining devices will be pending - we don't discriminate based on phase membership

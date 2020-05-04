@@ -6,36 +6,14 @@ stages:
   - e2e-test
   - publish
 
-before_script:
-  - export DOCKER_REPOSITORY="mendersoftware/gui"
-  - export DOCKER_TAG=${CI_COMMIT_REF_SLUG:-master}
-  - export SERVICE_IMAGE=$DOCKER_REPOSITORY:$DOCKER_TAG
-  - export COMMIT_TAG="$CI_COMMIT_REF_SLUG"_"$CI_COMMIT_SHA";
-  - export GIT_REF=${CI_COMMIT_REF_NAME}
-  - export GIT_COMMIT=${CI_COMMIT_SHORT_SHA}
-
-build:
-  stage: build
-  services:
-    - docker:19.03.5-dind
-  script:
-    - echo "building gui for ${SERVICE_IMAGE}"
-    - docker build
-      --build-arg GIT_REF=${GIT_REF}
-      --build-arg GIT_COMMIT=${GIT_COMMIT}
-      -t $SERVICE_IMAGE
-      .
-    - docker save $SERVICE_IMAGE > image.tar
-  artifacts:
-    expire_in: 2w
-    paths:
-      - image.tar
-  tags:
-    - docker
+variables:
+  DOCKER_REPOSITORY: mendersoftware/gui
 
 include:
   - project: 'Northern.tech/Mender/mendertesting'
     file: '.gitlab-ci-check-commits.yml'
+  - project: 'Northern.tech/Mender/mendertesting'
+    file: '.gitlab-ci-check-docker-build.yml'
   - project: 'Northern.tech/Mender/mendertesting'
     file: '.gitlab-ci-github-status-updates.yml'
 
@@ -51,10 +29,13 @@ test:lint:
 test:acceptance:
   image: tiangolo/docker-with-compose
   dependencies:
-    - build
+    - build:docker
   services:
     - docker:18-dind
   stage: e2e-test
+  before_script:
+    - export DOCKER_TAG=${CI_COMMIT_REF_SLUG:-master}
+    - export SERVICE_IMAGE=${DOCKER_REPOSITORY}:${DOCKER_TAG}
   script:
     - docker load -i image.tar
     - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:pr
@@ -89,24 +70,6 @@ publish:tests:
     - npm install -g codecov
   script:
     - codecov
-
-publish:image:
-  stage: publish
-  services:
-    - docker:19.03.5-dind
-  dependencies:
-    - build
-  script:
-    - docker load -i image.tar
-    - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:$COMMIT_TAG
-    - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:$CI_COMMIT_REF_SLUG
-    - echo -n $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
-    - docker push $DOCKER_REPOSITORY:$COMMIT_TAG
-    - docker push $SERVICE_IMAGE
-  only:
-    - /^(master|staging|[0-9]+\.[0-9]+\.x)$/
-  tags:
-    - docker
 
 publish:disclaimer:
   stage: publish

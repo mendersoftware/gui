@@ -21,7 +21,7 @@ const initialState = {
   limit: 500,
   groups: {
     byId: {
-      [DeviceConstants.UNGROUPED_GROUP.id]: { deviceIds: [], total: 0, filters: [] }
+      // groupName: { deviceIds: [], total: 0, filters: [] },
       // dynamo: { deviceIds: [], total: 3, filters: [{ a: 1 }] }
     },
     selectedGroup: null
@@ -212,28 +212,6 @@ const deviceReducer = (state = initialState, action) => {
           ...state.byStatus,
           [action.status]: {
             ...statusDeviceInfo
-          }
-        }
-      };
-    }
-
-    case DeviceConstants.SET_UNGROUPED_DEVICES: {
-      const ungroupedGroup = action.deviceIds
-        ? {
-            [DeviceConstants.UNGROUPED_GROUP.id]: {
-              ...state.groups.byId[DeviceConstants.UNGROUPED_GROUP.id],
-              deviceIds: action.deviceIds,
-              total: action.deviceIds.length
-            }
-          }
-        : {};
-      return {
-        ...state,
-        groups: {
-          ...state.groups,
-          byId: {
-            ...state.groups.byId,
-            ...ungroupedGroup
           }
         }
       };

@@ -6,31 +6,16 @@ import { Divider, List, ListItem, ListItemIcon, ListItemText } from '@material-u
 import { Add as AddIcon, Help as HelpIcon } from '@material-ui/icons';
 
 import { AddGroup } from '../helptips/helptooltips';
-import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
-import { isUngroupedGroup as ungroupedGroupCheck } from '../../helpers';
 
 export const Groups = ({ acceptedCount, allCount, changeGroup, groups, openGroupDialog, selectedGroup, showHelptips }) => {
-  const groupItems = groups.reduce(
-    (accu, group, index) => {
-      const isUngroupedGroup = ungroupedGroupCheck(group);
-      if (isUngroupedGroup) {
-        group = UNGROUPED_GROUP.name;
-      }
-      const isSelected = group === selectedGroup ? { backgroundColor: '#e7e7e7' } : {};
-      const item = (
-        <ListItem classes={{ root: 'grouplist' }} button key={group + index} style={isSelected} onClick={() => changeGroup(group)}>
-          <ListItemText primary={<span>{decodeURIComponent(group)}</span>} />
-        </ListItem>
-      );
-      if (isUngroupedGroup) {
-        accu.ungroupedsItem = item;
-      } else {
-        accu.groups.push(item);
-      }
-      return accu;
-    },
-    { groups: [], ungroupedsItem: null }
-  );
+  const groupItems = groups.map((group, index) => {
+    const isSelected = group === selectedGroup ? { backgroundColor: '#e7e7e7' } : {};
+    return (
+      <ListItem classes={{ root: 'grouplist' }} button key={group + index} style={isSelected} onClick={() => changeGroup(group)}>
+        <ListItemText primary={decodeURIComponent(group)} />
+      </ListItem>
+    );
+  });
 
   return (
     <div>
@@ -45,9 +30,8 @@ export const Groups = ({ acceptedCount, allCount, changeGroup, groups, openGroup
         >
           <ListItemText primary={<span>All devices</span>} />
         </ListItem>
-        {groupItems.ungroupedsItem ? groupItems.ungroupedsItem : null}
         <Divider />
-        {groupItems.groups}
+        {groupItems}
         <ListItem
           button
           classes={{ root: 'grouplist' }}
@@ -75,4 +59,5 @@ export const Groups = ({ acceptedCount, allCount, changeGroup, groups, openGroup
     </div>
   );
 };
+
 export default Groups;

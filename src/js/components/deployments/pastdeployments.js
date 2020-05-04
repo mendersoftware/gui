@@ -15,7 +15,6 @@ import Pagination from '../common/pagination';
 import AutoSelect from '../common/forms/autoselect';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import DeploymentStatus from './deploymentstatus';
-import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
@@ -285,10 +284,9 @@ const actionCreators = { setSnackbar, selectDeployment, getSingleDeploymentStats
 
 const mapStateToProps = state => {
   const past = state.deployments.byStatus.finished.selectedDeploymentIds.map(id => state.deployments.byId[id]);
-  const groups = Object.keys(state.devices.groups.byId).filter(group => group !== UNGROUPED_GROUP.id);
   return {
     count: state.deployments.byStatus.finished.total,
-    groups,
+    groups: Object.keys(state.devices.groups.byId),
     onboardingComplete: state.users.onboarding.complete,
     past,
     showHelptips: state.users.showHelptips,

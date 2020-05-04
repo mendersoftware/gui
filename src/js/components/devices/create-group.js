@@ -107,10 +107,8 @@ const mapStateToProps = (state, ownProps) => {
   const deviceList = state.devices.selectedDeviceList.length > 0 ? state.devices.selectedDeviceList : state.devices.byStatus.accepted.deviceIds;
   const devices = deviceList.map(id => state.devices.byId[id]);
   const selectedGroupDevices = state.devices.groups.selectedGroup ? state.devices.groups.byId[state.devices.groups.selectedGroup].deviceIds : [];
-  // ensure that ungrouped group is not shown and existing dynamic groups are only listed if a dynamic group should be created
-  const groups = Object.keys(state.devices.groups.byId).filter(
-    group => group !== DeviceConstants.UNGROUPED_GROUP.id && (ownProps.fromFilters ? true : !state.devices.groups.byId[group].filters.length)
-  );
+  // ensure that existing dynamic groups are only listed if a dynamic group should be created
+  const groups = Object.keys(state.devices.groups.byId).filter(group => (ownProps.fromFilters ? true : !state.devices.groups.byId[group].filters.length));
   return {
     devices,
     globalSettings: state.users.globalSettings,

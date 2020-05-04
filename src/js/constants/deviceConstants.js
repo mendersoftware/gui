@@ -33,7 +33,6 @@ module.exports = {
   SET_REJECTED_DEVICES: 'SET_REJECTED_DEVICES',
   SET_PREAUTHORIZED_DEVICES: 'SET_PREAUTHORIZED_DEVICES',
 
-  SET_UNGROUPED_DEVICES: 'SET_UNGROUPED_DEVICES',
   SET_INACTIVE_DEVICES: 'SET_INACTIVE_DEVICES',
 
   SET_DEVICE_LIMIT: 'SET_DEVICE_LIMIT',
@@ -55,8 +54,5 @@ module.exports = {
     pending: 'pending',
     preauth: 'preauthorized',
     rejected: 'rejected'
-  },
-  // workaround to support showing ungrouped devices, relying on the fact that
-  // '*', '|', '=' should not be whitelisted characters in a group name
-  UNGROUPED_GROUP: { id: '*|=ungrouped=|*', name: 'Ungrouped' }
+  }
 };

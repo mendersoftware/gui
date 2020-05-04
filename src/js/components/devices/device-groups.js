@@ -22,8 +22,7 @@ import {
 } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 
-import * as DeviceConstants from '../../constants/deviceConstants';
-import { isEmpty, isUngroupedGroup, preformatWithRequestID } from '../../helpers';
+import { isEmpty, preformatWithRequestID } from '../../helpers';
 
 export class DeviceGroups extends React.Component {
   constructor(props, context) {
@@ -52,9 +51,6 @@ export class DeviceGroups extends React.Component {
   }
 
   _handleGroupChange(group) {
-    if (isUngroupedGroup(group)) {
-      group = DeviceConstants.UNGROUPED_GROUP.id;
-    }
     this.props.selectGroup(group);
     this.setState({ loading: true, pageNo: 1 });
   }
@@ -186,7 +182,7 @@ export class DeviceGroups extends React.Component {
             addListOfDevices={(devices, group) => self._createGroupFromDialog(devices, group)}
             fromFilters={fromFilters}
             groups={groups}
-            isCreation={createGroupDialog}
+            isCreation={createGroupDialog || !groups.length}
             selectedDevices={tmpDevices}
             onClose={() => self.setState({ createGroupDialog: false, modifyGroupDialog: false, fromFilters: false, tmpDevices: [] })}
           />

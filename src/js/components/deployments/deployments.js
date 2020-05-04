@@ -425,6 +425,7 @@ const mapStateToProps = state => {
   const pending = state.deployments.byStatus.pending.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   return {
     finishedCount: state.deployments.byStatus.finished.total,
+    groups: Object.keys(state.devices.groups.byId),
     hasDeployments: Object.keys(state.deployments.byId).length > 0,
     isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,
     onboardingComplete: state.users.onboarding.complete,

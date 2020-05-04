@@ -6,13 +6,12 @@ import ReactTooltip from 'react-tooltip';
 import pluralize from 'pluralize';
 
 // material ui
-import { Button, Tooltip } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 
 import {
   AddCircle as AddCircleIcon,
   Delete as DeleteIcon,
   Help as HelpIcon,
-  InfoOutlined as InfoIcon,
   LockOutlined,
   RemoveCircleOutline as RemoveCircleOutlineIcon
 } from '@material-ui/icons';
@@ -38,7 +37,7 @@ import {
 } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 
-import { filtersCompare, isEmpty, isUngroupedGroup } from '../../helpers';
+import { filtersCompare, isEmpty } from '../../helpers';
 import DeviceConstants from '../../constants/deviceConstants';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
@@ -114,14 +113,14 @@ export class Authorized extends React.Component {
    */
   _getDevices(shouldUpdate = false) {
     const self = this;
-    const { filters, getDevices, getDevicesByStatus, getGroupDevices, selectDevices, selectedGroup, setSnackbar, ungroupedDevices } = self.props;
+    const { filters, getDevices, getDevicesByStatus, getGroupDevices, selectedGroup, setSnackbar } = self.props;
     const { pageLength, pageNo } = self.state;
     const hasFilters = filters.length && filters[0].value;
 
     if (selectedGroup || hasFilters) {
       let request;
       if (selectedGroup) {
-        request = isUngroupedGroup(selectedGroup) ? Promise.resolve() : getGroupDevices(selectedGroup, pageNo, pageLength, true);
+        request = getGroupDevices(selectedGroup, pageNo, pageLength, true);
       } else {
         const filterId = filters.find(item => item.key === 'id');
         if (filterId && filters.length === 1) {
@@ -132,13 +131,6 @@ export class Authorized extends React.Component {
       // if a group or filters, must use inventory API
       return (
         request
-          .then(() => {
-            if (isUngroupedGroup(selectedGroup)) {
-              const offset = (pageNo - 1) * pageLength;
-              const devices = ungroupedDevices.slice(offset, offset + pageLength);
-              return selectDevices(devices);
-            }
-          })
           .catch(err => {
             console.log(err);
             var errormsg = err.error || 'Please check your connection.';
@@ -253,11 +245,9 @@ export class Authorized extends React.Component {
       }
     ];
 
-    const allowDeviceGroupRemoval = !isUngroupedGroup(selectedGroup);
-    const group = isUngroupedGroup(selectedGroup) ? DeviceConstants.UNGROUPED_GROUP.name : selectedGroup;
-    const groupLabel = group ? decodeURIComponent(group) : 'All devices';
+    const groupLabel = selectedGroup ? decodeURIComponent(selectedGroup) : 'All devices';
     const pluralized = pluralize('devices', selectedRows.length);
-    const addLabel = group ? `Move selected ${pluralized} to another group` : `Add selected ${pluralized} to a group`;
+    const addLabel = selectedGroup ? `Move selected ${pluralized} to another group` : `Add selected ${pluralized} to a group`;
     const removeLabel = `Remove selected ${pluralized} from this group`;
 
     const anchor = { left: 200, top: 146 };
@@ -267,23 +257,7 @@ export class Authorized extends React.Component {
       <div className="relative">
         <div className="flexbox space-between" style={{ marginLeft: '20px' }}>
           <div style={{ width: '100%' }}>
-            <h2 className="inline-block margin-right">
-              {
-                <>
-                  {groupLabel}
-                  {isUngroupedGroup(group) && (
-                    <Tooltip
-                      title="Ungrouped devices are not currently members of a static group, but may still be part of a dynamic group"
-                      arrow={true}
-                      placement="top"
-                      enterDelay={300}
-                    >
-                      <InfoIcon className="margin-left-small" fontSize="small" style={{ marginBottom: -3 }} />
-                    </Tooltip>
-                  )}
-                </>
-              }
-            </h2>
+            <h2 className="inline-block margin-right">{groupLabel}</h2>
 
             {(!selectedGroup || !!groupFilters.length) && (
               <Filters
@@ -293,7 +267,7 @@ export class Authorized extends React.Component {
               />
             )}
           </div>
-          {selectedGroup && allowDeviceGroupRemoval && (
+          {selectedGroup && (
             <div className="flexbox centered" style={{ marginTop: 5, minWidth: 240, alignSelf: 'flex-start' }}>
               {isEnterprise && !groupFilters.length && (
                 <>
@@ -369,7 +343,7 @@ export class Authorized extends React.Component {
               >
                 {addLabel}
               </Button>
-              {allowDeviceGroupRemoval && group ? (
+              {selectedGroup ? (
                 <Button
                   variant="contained"
                   disabled={!selectedRows.length}
@@ -415,10 +389,6 @@ const mapStateToProps = state => {
   } else if (!devices.length && !state.devices.filters.length && state.devices.byStatus.accepted.total) {
     devices = state.devices.byStatus.accepted.deviceIds.slice(0, 20);
   }
-  const ungroupedDevices = state.devices.groups.byId[DeviceConstants.UNGROUPED_GROUP.id]
-    ? state.devices.groups.byId[DeviceConstants.UNGROUPED_GROUP.id].deviceIds
-    : [];
-
   const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
     acceptedCount: state.devices.byStatus.accepted.total || 0,
@@ -435,8 +405,7 @@ const mapStateToProps = state => {
     onboardingComplete: state.users.onboarding.complete,
     selectedGroup,
     showHelptips: state.users.showHelptips,
-    showTips: state.users.onboarding.showTips,
-    ungroupedDevices
+    showTips: state.users.onboarding.showTips
   };
 };
 

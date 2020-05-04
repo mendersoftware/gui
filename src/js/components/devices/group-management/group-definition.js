@@ -5,8 +5,6 @@ import validator from 'validator';
 import { FormHelperText, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 
-import * as DeviceConstants from '../../../constants/deviceConstants';
-
 import { fullyDecodeURI } from '../../../helpers';
 
 export default class GroupDefinition extends React.Component {
@@ -26,9 +24,6 @@ export default class GroupDefinition extends React.Component {
     } else if (!validator.isWhitelisted(name, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-')) {
       invalid = true;
       errortext = 'Valid characters are a-z, A-Z, 0-9, _ and -';
-    } else if (validator.contains(name.toLowerCase(), DeviceConstants.UNGROUPED_GROUP.name.toLowerCase())) {
-      invalid = true;
-      errortext = `${name} is a reserved group name`;
     } else if (this.props.selectedGroup && name === this.props.selectedGroup) {
       invalid = true;
       errortext = `${name} is the same group the selected devices are already in`;
