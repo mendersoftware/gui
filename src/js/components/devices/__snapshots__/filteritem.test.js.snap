@@ -30,7 +30,8 @@ exports[`FilterItem Component renders correctly 1`] = `
       <label
         className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
         data-shrink={false}
-        id="undefined-label"
+        htmlFor="filter-selection-0"
+        id="filter-selection-0-label"
       >
         Attribute
       </label>
@@ -48,6 +49,7 @@ exports[`FilterItem Component renders correctly 1`] = `
           autoFocus={false}
           className="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
           disabled={false}
+          id="filter-selection-0"
           onAnimationStart={[Function]}
           onBlur={[Function]}
           onChange={[Function]}

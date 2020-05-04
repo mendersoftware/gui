@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Rejected from './rejected-devices';
+import { undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -35,5 +36,6 @@ describe('RejectedDevices Component', () => {
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
+    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });
 });

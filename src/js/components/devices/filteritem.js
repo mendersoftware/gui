@@ -101,7 +101,7 @@ export default class FilterItem extends React.Component {
 
   render() {
     const self = this;
-    const { filters, loading, plan } = self.props;
+    const { filters, index, loading, plan } = self.props;
     const { key, operator, reset, value } = self.state;
     const filterOptions = plan ? filterOptionsByPlan[plan] : DEVICE_FILTERING_OPTIONS;
     return (
@@ -112,6 +112,7 @@ export default class FilterItem extends React.Component {
           filterSelectedOptions
           groupBy={option => option.category}
           getOptionLabel={option => option.value || ''}
+          id={`filter-selection-${index}`}
           includeInputInList={true}
           onChange={(e, changedValue) => self.updateFilterKey(changedValue ? changedValue.key : changedValue)}
           options={filters.sort((a, b) => a.priority - b.priority)}
