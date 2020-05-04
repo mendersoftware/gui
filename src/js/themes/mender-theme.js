@@ -17,6 +17,8 @@ export const colors = {
   errorStyleColor: '#ab1000'
 };
 
+export const chartColorPalette = [colors.mendermaroon, '#a31773', '#00859e', '#14cfda', '#9bfff0'];
+
 export default createMuiTheme({
   palette: {
     primary: {

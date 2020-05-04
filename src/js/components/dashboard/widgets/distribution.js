@@ -5,19 +5,20 @@ import { Clear as ClearIcon } from '@material-ui/icons';
 import { VictoryPie, VictoryTooltip } from 'victory';
 
 import Loader from '../../common/loader';
+import { chartColorPalette } from '../../../themes/mender-theme';
 
 export default class DistributionReport extends React.Component {
   constructor(props, state) {
     super(props, state);
     this.state = {
-      distribution: {}
+      distribution: []
     };
   }
 
   componentDidMount() {
     const { attribute, devices, group, groups } = this.props;
     const relevantDevices = group && groups[group] ? groups[group].deviceIds.map(id => devices[id]) : Object.values(devices);
-    const distribution = relevantDevices.reduce((accu, item) => {
+    const distributionByAttribute = relevantDevices.reduce((accu, item) => {
       if (!item.attributes) return accu;
       if (!accu[item.attributes[attribute]]) {
         accu[item.attributes[attribute]] = 0;
@@ -25,6 +26,11 @@ export default class DistributionReport extends React.Component {
       accu[item.attributes[attribute]] = accu[item.attributes[attribute]] + 1;
       return accu;
     }, {});
+    const colors = chartColorPalette.slice(0, Object.keys(distributionByAttribute).length);
+    const distribution = Object.entries(distributionByAttribute)
+      .sort((pairA, pairB) => pairB[1] - pairA[1])
+      .slice(0, colors.length)
+      .reduce((accu, [key, value], index) => [{ x: key, y: value, name: key, fill: colors[index] }, ...accu], []);
     this.setState({ distribution });
   }
 
@@ -37,7 +43,7 @@ export default class DistributionReport extends React.Component {
   render() {
     const self = this;
     const { group, onClick, style } = self.props;
-    const data = Object.entries(this.state.distribution).reduce((accu, [key, value]) => [...accu, { x: key, y: value }], []);
+    const { distribution: data } = self.state;
     return (
       <Paper className="flexbox column margin-right margin-bottom" elevation={1} style={style}>
         <div className="flexbox space-between">
