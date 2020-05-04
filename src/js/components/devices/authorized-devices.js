@@ -78,7 +78,6 @@ export class Authorized extends React.Component {
     const {
       addDevicesToGroup,
       allCount,
-      allowDeviceGroupRemoval,
       devices,
       globalSettings,
       group,
@@ -198,7 +197,7 @@ export class Authorized extends React.Component {
                 >
                   {addLabel}
                 </Button>
-                {allowDeviceGroupRemoval && group ? (
+                {group ? (
                   <Button
                     variant="contained"
                     disabled={!selectedRows.length}
