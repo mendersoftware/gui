@@ -50,16 +50,15 @@ export class Deployments extends React.Component {
     self.getDeployments();
   }
 
-  handleDeploymentError(err) {
-    var errormsg = err.error || 'Please check your connection';
-    setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, this.props.setSnackbar);
-  }
   getDeployments() {
     const self = this;
     return self.props
       .getDeployments(1, 20)
       .then(() => self.setState({ loading: false }))
-      .catch(self.handleDeploymentError);
+      .catch(err => {
+        var errormsg = err.error || 'Please check your connection';
+        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, self.props.setSnackbar);
+      });
   }
   updateDeploymentCutoff(today) {
     const jsonContent = window.localStorage.getItem('deploymentChecker');
