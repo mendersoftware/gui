@@ -5,8 +5,18 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 const confirmationType = {
-  retry: 'Creating new deployment...',
-  abort: 'Aborting...'
+  retry: {
+    loading: 'Creating new deployment...',
+    message: 'Confirm retry deployment?'
+  },
+  abort: {
+    loading: 'Aborting...',
+    message: 'Confirm abort deployment?'
+  },
+  chartRemoval: {
+    loading: 'Removing...',
+    message: 'Remove this chart?'
+  }
 };
 
 export default class Confirm extends React.Component {
@@ -26,9 +36,9 @@ export default class Confirm extends React.Component {
   }
   render() {
     return (
-      <div className={`${this.state.class} ${this.props.classes || ''}`} style={{ marginRight: '12px' }}>
+      <div className={`${this.state.class} ${this.props.classes || ''}`} style={{ marginRight: '12px', ...this.props.style }}>
         <div className="float-right">
-          <span className="bold">{this.state.loading ? confirmationType[this.props.type] : `Confirm ${this.props.type} deployment?`}</span>
+          <span className="bold">{this.state.loading ? confirmationType[this.props.type].loading : confirmationType[this.props.type].message}</span>
           <IconButton id="confirmAbort" onClick={() => this._handleConfirm()}>
             <CheckCircleIcon className="green" />
           </IconButton>

@@ -4,9 +4,9 @@ import React from 'react';
 import { Button, IconButton, Tooltip } from '@material-ui/core';
 import { CancelOutlined as CancelOutlinedIcon } from '@material-ui/icons';
 
-import Confirm from './confirm';
 import ProgressChart from './progressChart';
 import { groupDeploymentStats } from '../../helpers';
+import Confirm from '../common/confirm';
 import RelativeTime from '../common/relative-time';
 
 const deploymentTypeClasses = {

@@ -18,10 +18,10 @@ import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
 import { getDeviceLog, getSingleDeploymentDevices, getSingleDeploymentStats } from '../../actions/deploymentActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { formatTime, sortDeploymentDevices } from '../../helpers';
+import Confirm from '../common/confirm';
 import Pagination from '../common/pagination';
 import DeploymentStatus from './deploymentstatus';
 import DeviceList from './deploymentdevicelist';
-import Confirm from './confirm';
 
 momentDurationFormatSetup(moment);
 
