@@ -257,5 +257,247 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
       </div>
     </div>
   </div>
+  <div
+    className="deployments-pending margin-top"
+  >
+    <h4
+      className="dashboard-header margin-small margin-top"
+    >
+      <span>
+        Pending
+      </span>
+    </h4>
+    <div
+      className="fadeIn deploy-table-contain margin-left-small"
+    >
+      <div
+        className="deployment-item deployment-header-item muted pending-item"
+      >
+        <div
+          className=""
+        >
+          Release
+        </div>
+        <div
+          className=""
+        >
+          Device group
+        </div>
+        <div
+          className=""
+        >
+          Start time
+        </div>
+        <div
+          className=""
+        >
+          End time
+        </div>
+        <div
+          className="align-right column-defined"
+        >
+          # devices
+        </div>
+        <div
+          className=""
+        >
+          Status
+        </div>
+      </div>
+      <div
+        className=""
+      >
+        <div
+          className="deployment-item pending-item"
+        >
+          <div>
+            test
+          </div>
+          <div>
+            test deployment 2
+          </div>
+          <time
+            aria-describedby={null}
+            className=""
+            dateTime={"2019-01-01T13:00:00.000Z"}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onMouseLeave={[Function]}
+            onMouseOver={[Function]}
+            onTouchEnd={[Function]}
+            onTouchStart={[Function]}
+            title="Tue Jan 01 2019 13:00:00 GMT+0000"
+          >
+            a few seconds ago
+          </time>
+          <div
+            aria-describedby={null}
+            className=""
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onMouseLeave={[Function]}
+            onMouseOver={[Function]}
+            onTouchEnd={[Function]}
+            onTouchStart={[Function]}
+            title=""
+          >
+            -
+          </div>
+          <div
+            className="align-right column-defined"
+          >
+            1
+          </div>
+          <div
+            className="flexbox column progress-chart-container "
+          >
+            <div
+              style={
+                Object {
+                  "display": "grid",
+                  "gridColumnGap": 15,
+                  "gridTemplateColumns": "2fr 1fr",
+                }
+              }
+            >
+              <div
+                className="progress-chart"
+              >
+                <div
+                  className="progress-step"
+                  style={
+                    Object {
+                      "borderRight": "none",
+                      "flexGrow": 1,
+                    }
+                  }
+                >
+                  <div
+                    className="progress-bar green"
+                    style={
+                      Object {
+                        "width": "0%",
+                      }
+                    }
+                  />
+                  <div
+                    className="progress-bar warning"
+                    style={
+                      Object {
+                        "width": "0%",
+                      }
+                    }
+                  />
+                </div>
+                <div
+                  className="progress-step progress-step-total"
+                >
+                  <div
+                    className="progress-bar"
+                    style={
+                      Object {
+                        "width": "100%",
+                      }
+                    }
+                  />
+                </div>
+              </div>
+              <div
+                className="flexbox space-between centered muted"
+                style={
+                  Object {
+                    "justifyContent": "flex-end",
+                  }
+                }
+              >
+                0 failures
+              </div>
+            </div>
+            <div
+              className="flexbox space-between muted"
+            >
+              <div>
+                Current phase: 1 of 1
+              </div>
+            </div>
+          </div>
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained"
+            disabled={false}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            style={
+              Object {
+                "backgroundColor": "transparent",
+                "justifySelf": "center",
+                "textTransform": "none",
+              }
+            }
+            tabIndex={0}
+            type="button"
+          >
+            <span
+              className="MuiButton-label"
+            >
+              View details
+            </span>
+            <span
+              className="MuiTouchRipple-root"
+            />
+          </button>
+          <button
+            aria-describedby={null}
+            className="MuiButtonBase-root MuiIconButton-root columnHeader"
+            disabled={false}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseOver={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={0}
+            title="Abort"
+            type="button"
+          >
+            <span
+              className="MuiIconButton-label"
+            >
+              <svg
+                aria-hidden="true"
+                className="MuiSvgIcon-root cancelButton muted"
+                focusable="false"
+                role="presentation"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.59-13L12 10.59 8.41 7 7 8.41 10.59 12 7 15.59 8.41 17 12 13.41 15.59 17 17 15.59 13.41 12 17 8.41z"
+                />
+              </svg>
+            </span>
+            <span
+              className="MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;
