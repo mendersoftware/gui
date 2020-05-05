@@ -30,7 +30,10 @@ export const getDeployments = (page = default_page, per_page = default_per_page)
         accu[item.status].push(item);
         return accu;
       },
-      { finished: [], inprogress: [], pending: [] }
+      Object.keys(getState().deployments.byStatus).reduce((accu, item) => {
+        accu[item] = [];
+        return accu;
+      }, {})
     );
     return Promise.all(
       Object.entries(deploymentsByStatus).map(([status, value]) => {

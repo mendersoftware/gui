@@ -159,7 +159,10 @@ const mapStateToProps = state => {
       accu[item.status].push(item);
       return accu;
     },
-    { inprogress: [], pending: [], finished: [] }
+    Object.keys(state.deployments.byStatus).reduce((accu, item) => {
+      accu[item] = [];
+      return accu;
+    }, {})
   );
   return {
     finished: state.deployments.byStatus.finished.total
