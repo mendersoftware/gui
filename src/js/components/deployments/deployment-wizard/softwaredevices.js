@@ -107,6 +107,7 @@ export class SoftwareDevices extends React.Component {
     }
 
     const groupLink = group ? `/devices/group=${group}` : '/devices/';
+    const isDynamicGroup = groups[group] && groups[group].filters ? !!groups[group].filters.length : false;
 
     let onboardingComponent = null;
     if (this.releaseRef && this.groupRef && deploymentAnchor) {
@@ -181,9 +182,16 @@ export class SoftwareDevices extends React.Component {
                   )}
                 </div>
               )}
-              {deploymentDeviceIds.length > 0 && (
+              {(deploymentDeviceIds.length > 0 || isDynamicGroup) && (
                 <p className="info">
-                  {deploymentDeviceIds.length} {pluralize('devices', deploymentDeviceIds.length)} will be targeted. <Link to={groupLink}>View the devices</Link>
+                  {isDynamicGroup ? (
+                    <>All devices in this group</>
+                  ) : (
+                    <>
+                      {deploymentDeviceIds.length} {pluralize('devices', deploymentDeviceIds.length)}
+                    </>
+                  )}{' '}
+                  will be targeted. <Link to={groupLink}>View the devices</Link>
                 </p>
               )}
               {onboardingComponent}

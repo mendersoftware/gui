@@ -4,7 +4,9 @@ import DeploymentsApi from '../api/deployments-api';
 import { startTimeSort } from '../helpers';
 
 const apiUrl = '/api/management/v1';
+const apiUrlV2 = '/api/management/v2';
 const deploymentsApiUrl = `${apiUrl}/deployments`;
+const deploymentsApiUrlV2 = `${apiUrlV2}/deployments`;
 
 // default per page until pagination and counting integrated
 const default_per_page = 20;
@@ -90,13 +92,19 @@ export const getDeploymentCount = (status, startDate, endDate, group) => (dispat
   });
 };
 
-export const createDeployment = newDeployment => dispatch =>
-  DeploymentsApi.post(`${deploymentsApiUrl}/deployments`, newDeployment).then(data => {
+export const createDeployment = newDeployment => dispatch => {
+  let request;
+  if (newDeployment.filter_id) {
+    request = DeploymentsApi.post(`${deploymentsApiUrlV2}/deployments`, newDeployment);
+  } else {
+    request = DeploymentsApi.post(`${deploymentsApiUrl}/deployments`, newDeployment);
+  }
+  return request.then(data => {
     const lastslashindex = data.location.lastIndexOf('/');
     const deploymentId = data.location.substring(lastslashindex + 1);
     const deployment = {
       ...newDeployment,
-      devices: newDeployment.devices.map(id => ({ id, status: 'pending' }))
+      devices: newDeployment.devices ? newDeployment.devices.map(id => ({ id, status: 'pending' })) : []
     };
     return Promise.all([
       dispatch({
@@ -107,6 +115,7 @@ export const createDeployment = newDeployment => dispatch =>
       dispatch(getSingleDeployment(deploymentId))
     ]);
   });
+};
 
 export const getSingleDeployment = id => dispatch =>
   DeploymentsApi.get(`${deploymentsApiUrl}/deployments/${id}`).then(res =>

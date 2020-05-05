@@ -103,11 +103,12 @@ export class Deployments extends React.Component {
 
   onScheduleSubmit(deploymentObject) {
     const self = this;
-    const { group, deploymentDeviceIds, phases, release, retries } = deploymentObject;
+    const { deploymentDeviceIds, filterId, group, phases, release, retries } = deploymentObject;
     const newDeployment = {
-      name: decodeURIComponent(group) || 'All devices',
       artifact_name: release.Name,
-      devices: deploymentDeviceIds,
+      devices: filterId ? undefined : deploymentDeviceIds,
+      filter_id: filterId,
+      name: decodeURIComponent(group) || 'All devices',
       phases,
       retries
     };
