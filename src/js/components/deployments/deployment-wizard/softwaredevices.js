@@ -67,13 +67,10 @@ export class SoftwareDevices extends React.Component {
 
   render() {
     const self = this;
-    const { device, deploymentAnchor, deploymentObject, groups, hasDevices, hasPending, release, releases } = self.props;
+    const { device, deploymentAnchor, deploymentObject, group, groups, hasDevices, hasPending, release, releases } = self.props;
     const { deploymentDeviceIds } = self.state;
 
     const selectedRelease = deploymentObject.release ? deploymentObject.release : release;
-
-    const group = self.props.group;
-
     const releaseDeviceTypes = selectedRelease ? selectedRelease.device_types_compatible : [];
     const devicetypesInfo = (
       <Tooltip title={<p>{releaseDeviceTypes.join(', ')}</p>} placement="bottom">
@@ -97,10 +94,10 @@ export class SoftwareDevices extends React.Component {
       };
       releaseItems = releaseItems.filter(rel => rel.value.device_types_compatible.some(type => type === device.attributes.device_type));
     } else {
-      groupItems = Object.keys(groups).reduce((accu, group) => {
+      groupItems = Object.keys(groups).reduce((accu, currentGroup) => {
         accu.push({
-          title: group,
-          value: group
+          title: currentGroup,
+          value: currentGroup
         });
         return accu;
       }, groupItems);
