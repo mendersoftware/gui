@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { IconButton, Paper } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 import { Clear as ClearIcon } from '@material-ui/icons';
 import { VictoryGroup, VictoryLabel, VictoryLegend, VictoryPie } from 'victory';
 
@@ -62,7 +62,7 @@ export default class DistributionReport extends React.Component {
     const { group, onClick, style } = self.props;
     const { distribution: data, removing } = self.state;
     return (
-      <Paper className="margin-right margin-bottom widget" elevation={1} style={style}>
+      <div className="margin-right margin-bottom widget chart-widget" style={style}>
         {removing ? (
           <Confirm
             classes="flexbox centered confirmation-overlay"
@@ -110,7 +110,7 @@ export default class DistributionReport extends React.Component {
             )}
           </>
         )}
-      </Paper>
+      </div>
     );
   }
 }

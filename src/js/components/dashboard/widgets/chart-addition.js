@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Button, FormControl, InputLabel, MenuItem, Paper, Select } from '@material-ui/core';
+import { Button, FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { Add as AddIcon } from '@material-ui/icons';
 
 import { defaultReports } from '../software-distribution';
@@ -24,7 +24,7 @@ export default class ChartAdditionWidget extends React.Component {
     const { groups, style } = self.props;
     const { adding, selection } = self.state;
     return (
-      <Paper className="flexbox column margin-right margin-bottom" elevation={1} style={style}>
+      <div className="margin-right margin-bottom widget chart-widget" style={style}>
         {adding ? (
           <>
             <div className="flexbox centered" style={{ flexGrow: 1 }}>
@@ -52,13 +52,14 @@ export default class ChartAdditionWidget extends React.Component {
             </div>
           </>
         ) : (
-          <div className="flexbox centered" style={{ height: '100%' }}>
-            <Button onClick={() => self.setState({ adding: true })} startIcon={<AddIcon />}>
-              Add a chart
-            </Button>
+          <div className="flexbox centered" style={{ cursor: 'pointer', height: '100%' }} onClick={() => self.setState({ adding: true })}>
+            <div className="flexbox centered muted">
+              <AddIcon />
+              <span style={{ fontSize: '1rem', cursor: 'pointer' }}>Add a chart</span>
+            </div>
           </div>
         )}
-      </Paper>
+      </div>
     );
   }
 }
