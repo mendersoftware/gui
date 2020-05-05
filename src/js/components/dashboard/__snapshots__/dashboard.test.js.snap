@@ -18,8 +18,7 @@ exports[`Dashboard Component renders correctly 1`] = `
           "display": "flex",
           "flexDirection": "row",
           "flexWrap": "wrap",
-          "marginBottom": "30px",
-          "marginTop": "50px",
+          "marginBottom": 30,
           "maxWidth": "85vw",
         }
       }
@@ -106,43 +105,83 @@ exports[`Dashboard Component renders correctly 1`] = `
       </div>
     </div>
   </div>
-  <div>
-    <h4
-      className="dashboard-header"
-    >
-      <span>
-        Deployments
-      </span>
-    </h4>
-    <div
-      className="deployments"
-      style={
-        Object {
-          "marginBottom": "50px",
-          "marginTop": "50px",
-        }
+  <div
+    className="two-column"
+    style={
+      Object {
+        "gridTemplateColumns": "4fr 5fr",
       }
-    >
+    }
+  >
+    <div>
+      <h4
+        className="dashboard-header"
+      >
+        <span>
+          Deployments
+        </span>
+      </h4>
       <div
-        className="loaderContainer"
+        className="deployments"
+        style={
+          Object {
+            "marginBottom": 50,
+          }
+        }
       >
         <div
-          className="loader"
+          className="loaderContainer"
         >
-          <span
-            className="dot dot_1"
-          />
-          <span
-            className="dot dot_2"
-          />
-          <span
-            className="dot dot_3"
-          />
-          <span
-            className="dot dot_4"
-          />
+          <div
+            className="loader"
+          >
+            <span
+              className="dot dot_1"
+            />
+            <span
+              className="dot dot_2"
+            />
+            <span
+              className="dot dot_3"
+            />
+            <span
+              className="dot dot_4"
+            />
+          </div>
         </div>
       </div>
+    </div>
+    <div
+      className="flexbox centered"
+    >
+      <p
+        className="info icon"
+      >
+        <svg
+          aria-hidden="true"
+          className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+          focusable="false"
+          role="presentation"
+          style={
+            Object {
+              "margin": "0 6px 4px 0",
+              "verticalAlign": "middle",
+            }
+          }
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+          />
+        </svg>
+        With a commercial Mender plan you can gain actionable insights into the devices you are updating with Mender. 
+        <a
+          href="https://mender.io"
+          target="_blank"
+        >
+          Learn more
+        </a>
+      </p>
     </div>
   </div>
 </div>

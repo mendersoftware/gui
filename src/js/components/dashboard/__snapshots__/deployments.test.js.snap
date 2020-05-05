@@ -13,8 +13,7 @@ exports[`Deployments Component renders correctly 1`] = `
     className="deployments"
     style={
       Object {
-        "marginBottom": "50px",
-        "marginTop": "50px",
+        "marginBottom": 50,
       }
     }
   >

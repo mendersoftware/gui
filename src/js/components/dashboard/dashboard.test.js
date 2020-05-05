@@ -15,12 +15,24 @@ describe('Dashboard Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
+      app: {
+        features: {
+          isEnterprise: false
+        }
+      },
       devices: {
+        byId: {},
         byStatus: {
           accepted: { deviceIds: [], total: 0 },
           active: { total: 0 },
           inactive: { total: 0 },
           pending: { deviceIds: [], total: 0 }
+        },
+        filteringAttributes: {
+          inventoryAttributes: []
+        },
+        groups: {
+          byId: {}
         }
       },
       deployments: {
@@ -35,6 +47,7 @@ describe('Dashboard Component', () => {
       users: {
         byId: {},
         currentUser: null,
+        globalSettings: {},
         showHelptips: true,
         onboarding: { complete: false, showTips: true }
       }
