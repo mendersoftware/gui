@@ -310,7 +310,7 @@ export const getAllGroupDevices = group => (dispatch, getState) => {
           type: DeviceConstants.RECEIVE_GROUP_DEVICES,
           group: {
             filters: [],
-            ...state.devices.groups[group],
+            ...state.devices.groups.byId[group],
             deviceIds: deviceAccu.ids,
             total: deviceAccu.ids.length
           },
