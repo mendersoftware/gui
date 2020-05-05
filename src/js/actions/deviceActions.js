@@ -319,6 +319,38 @@ export const getAllGroupDevices = group => (dispatch, getState) => {
   return getAllDevices();
 };
 
+export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
+  const state = getState();
+  if (!!group && (!state.devices.groups.byId[group] || !state.devices.groups.byId[group].filters.length)) {
+    return Promise.resolve();
+  }
+  const filters = mapFiltersToTerms(state.devices.groups.byId[group].filters);
+  const getAllDevices = (perPage = 500, page = defaultPage, devices = []) =>
+    DevicesApi.post(`${inventoryApiUrlV2}/filters/search`, { page, per_page: perPage, filters }).then(res => {
+      const deviceAccu = reduceReceivedDevices(res.body, devices, state);
+      dispatch({
+        type: DeviceConstants.RECEIVE_DEVICES,
+        devicesById: deviceAccu.devicesById
+      });
+      const total = Number(res.headers['x-total-count']);
+      if (total > deviceAccu.ids.length) {
+        return getAllDevices(perPage, page + 1, deviceAccu.ids);
+      }
+      return Promise.resolve(
+        dispatch({
+          type: DeviceConstants.RECEIVE_GROUP_DEVICES,
+          group: {
+            ...state.devices.groups.byId[group],
+            deviceIds: deviceAccu.ids,
+            total
+          },
+          groupName: group
+        })
+      );
+    });
+  return getAllDevices();
+};
+
 export const setFilterAttributes = attrs => (dispatch, getState) => {
   const storedFilteringAttributes = getState().devices.filteringAttributes;
   const identityAttributes = [...storedFilteringAttributes.identityAttributes, ...attrs.identityAttributes].filter(duplicateFilter);

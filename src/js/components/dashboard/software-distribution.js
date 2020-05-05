@@ -6,7 +6,7 @@ import { BarChart as BarChartIcon } from '@material-ui/icons';
 import ChartAdditionWidget from './widgets/chart-addition';
 import DistributionReport from './widgets/distribution';
 import EnterpriseNotification from '../common/enterpriseNotification';
-import { getAllGroupDevices, selectGroup } from '../../actions/deviceActions';
+import { getAllDynamicGroupDevices, getAllGroupDevices, selectGroup } from '../../actions/deviceActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 
@@ -44,7 +44,14 @@ export class SoftwareDistribution extends React.Component {
   }
 
   initializeReport(group) {
-    this.props.getAllGroupDevices(group);
+    if (!group) {
+      return Promise.resolve();
+    }
+    const storedGroup = this.props.groups[group];
+    if (storedGroup && storedGroup.filters.length) {
+      return this.props.getAllDynamicGroupDevices(group);
+    }
+    return this.props.getAllGroupDevices(group);
   }
 
   addCurrentSelection(selection) {
@@ -84,7 +91,7 @@ export class SoftwareDistribution extends React.Component {
                   devices={devices}
                   groups={groups}
                   group={report.group}
-                  key={`report-${index}`}
+                  key={`report-${report.group}`}
                   onClick={() => self.removeReport(index)}
                   selectGroup={selectGroup}
                   style={defaultChartStyle}
@@ -104,7 +111,7 @@ export class SoftwareDistribution extends React.Component {
   }
 }
 
-const actionCreators = { getAllGroupDevices, saveGlobalSettings, selectGroup };
+const actionCreators = { getAllDynamicGroupDevices, getAllGroupDevices, saveGlobalSettings, selectGroup };
 
 const mapStateToProps = state => {
   const plan = state.users.organization ? state.users.organization.plan : 'os';
