@@ -1,6 +1,6 @@
 import React from 'react';
 import { createMount } from '@material-ui/core/test-utils';
-import Distribution from './Distribution';
+import Distribution from './distribution';
 
 describe('PendingDevices Component', () => {
   it('renders correctly', () => {
