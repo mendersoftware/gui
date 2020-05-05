@@ -288,7 +288,7 @@ export const getGroupDevices = (group, page = defaultPage, perPage = defaultPerP
 
 export const getAllGroupDevices = group => (dispatch, getState) => {
   const state = getState();
-  if (group && (!state.devices.groups[group] || state.devices.groups[group].filters.length)) {
+  if (!!group && (!state.devices.groups.byId[group] || state.devices.groups.byId[group].filters.length)) {
     return Promise.resolve();
   }
   const forGroup = group ? `&group=${group}` : '&has_group=false';
@@ -308,7 +308,7 @@ export const getAllGroupDevices = group => (dispatch, getState) => {
           type: DeviceConstants.RECEIVE_GROUP_DEVICES,
           group: {
             filters: [],
-            ...state.devices.groups[group],
+            ...state.devices.groups.byId[group],
             deviceIds: deviceAccu.ids,
             total: deviceAccu.ids.length
           },

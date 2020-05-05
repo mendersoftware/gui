@@ -23,7 +23,7 @@ import { clearAllRetryTimers } from '../../utils/retrytimer';
 import DeviceNotifications from './devicenotifications';
 import DeploymentNotifications from './deploymentnotifications';
 
-import { getAllDevices, getDeviceCount, getDeviceLimit } from '../../actions/deviceActions';
+import { getAllDevices, getDeviceCount, getDeviceLimit, getDynamicGroups, getGroups } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
 import { getUser, getGlobalSettings, getUserOrganization, logoutUser, setShowHelptips, toggleHelptips } from '../../actions/userActions';
 import { getOnboardingState, setSnackbar } from '../../actions/appActions';
@@ -73,6 +73,8 @@ export class Header extends React.Component {
     this._checkShowHelp();
     this.props.getDeviceCount(DEVICE_STATES.accepted);
     this.props.getDeviceCount(DEVICE_STATES.pending);
+    this.props.getDynamicGroups();
+    this.props.getGroups();
     this.props.getDeviceLimit();
     this.props.getGlobalSettings();
     if (this.props.multitenancy) {
@@ -280,7 +282,9 @@ const actionCreators = {
   getDeviceCount,
   getDeviceLimit,
   getDeploymentCount,
+  getDynamicGroups,
   getGlobalSettings,
+  getGroups,
   getOnboardingState,
   getReleases,
   getUser,

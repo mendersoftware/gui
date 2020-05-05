@@ -6,7 +6,7 @@ import { BarChart as BarChartIcon } from '@material-ui/icons';
 import ChartAdditionWidget from './widgets/chart-addition';
 import DistributionReport from './widgets/distribution';
 import EnterpriseNotification from '../common/enterpriseNotification';
-import { selectGroup } from '../../actions/deviceActions';
+import { getAllGroupDevices, selectGroup } from '../../actions/deviceActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 
@@ -27,15 +27,30 @@ const defaultChartStyle = {
 export class SoftwareDistribution extends React.Component {
   constructor(props, state) {
     super(props, state);
-    this.state = {
-      reports: props.reports.length ? props.reports : defaultReports,
+    const self = this;
+    self.state = {
+      reports: props.reports.length ? props.reports : Object.keys(props.devices).length ? defaultReports : [],
       selection: ''
     };
+    self.state.reports.map(report => self.initializeReport(report.group));
+  }
+
+  componentDidUpdate(prevProps) {
+    const self = this;
+    if (prevProps.reports.length !== self.props.reports.length) {
+      self.props.reports.map(report => self.initializeReport(report.group));
+      self.setState({ reports: self.props.reports });
+    }
+  }
+
+  initializeReport(group) {
+    this.props.getAllGroupDevices(group);
   }
 
   addCurrentSelection(selection) {
     const reports = [...this.state.reports, selection];
     this.setState({ reports });
+    this.initializeReport(selection.group);
     this.props.saveGlobalSettings({ [`${this.props.userId}-reports`]: reports });
   }
 
@@ -43,6 +58,7 @@ export class SoftwareDistribution extends React.Component {
     const reports = this.state.reports;
     reports.splice(index, 1);
     this.setState({ reports });
+    this.props.saveGlobalSettings({ [`${this.props.userId}-reports`]: reports });
   }
 
   render() {
@@ -88,7 +104,7 @@ export class SoftwareDistribution extends React.Component {
   }
 }
 
-const actionCreators = { saveGlobalSettings, selectGroup };
+const actionCreators = { getAllGroupDevices, saveGlobalSettings, selectGroup };
 
 const mapStateToProps = state => {
   const plan = state.users.organization ? state.users.organization.plan : 'os';

@@ -16,6 +16,21 @@ export default class DistributionReport extends React.Component {
   }
 
   componentDidMount() {
+    this.initializeDistributionData();
+  }
+
+  componentDidUpdate(prevProps) {
+    const { group, groups } = this.props;
+    if (
+      group &&
+      groups &&
+      (prevProps.groups !== groups || (prevProps.groups[group] && prevProps.groups[group].deviceIds.length !== groups[group].deviceIds.length))
+    ) {
+      this.initializeDistributionData();
+    }
+  }
+
+  initializeDistributionData() {
     const { attribute, devices, group, groups } = this.props;
     const relevantDevices = group && groups[group] ? groups[group].deviceIds.map(id => devices[id]) : Object.values(devices);
     const distributionByAttribute = relevantDevices.reduce((accu, item) => {
