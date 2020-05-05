@@ -385,7 +385,6 @@ const actionCreators = { decommissionDevice, getReleases, selectDevice, setSnack
 
 const mapStateToProps = state => {
   return {
-    artifacts: state.releases.artifactsRepo,
     docsVersion: state.app.docsVersion,
     onboardingComplete: state.users.onboarding.complete,
     showHelptips: state.users.showHelptips

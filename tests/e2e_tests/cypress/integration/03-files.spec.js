@@ -100,7 +100,7 @@ context('Deployments', () => {
       .contains('Finished')
       .click()
       .end();
-    cy.get('tr')
+    cy.get('.deployment-item:not(.deployment-header-item)')
       .get('time')
       .should($elems => {
         const time = Cypress.moment($elems[0].getAttribute('datetime'));

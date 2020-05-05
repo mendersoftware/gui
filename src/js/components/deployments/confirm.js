@@ -27,12 +27,12 @@ export default class Confirm extends React.Component {
   render() {
     return (
       <div className={`${this.state.class} ${this.props.classes || ''}`} style={{ marginRight: '12px' }}>
-        <div className="float-right">
-          <span className="bold">{this.state.loading ? confirmationType[this.props.type] : `Confirm ${this.props.type} deployment?`}</span>
-          <IconButton id="confirmAbort" onClick={() => this._handleConfirm()}>
+        <div className="bold">{this.state.loading ? confirmationType[this.props.type] : `Confirm ${this.props.type} deployment?`}</div>
+        <div>
+          <IconButton onClick={() => this._handleConfirm()}>
             <CheckCircleIcon className="green" />
           </IconButton>
-          <IconButton id="cancelAbort" onClick={() => this._handleCancel()}>
+          <IconButton onClick={() => this._handleCancel()}>
             <CancelIcon className="red" />
           </IconButton>
         </div>
