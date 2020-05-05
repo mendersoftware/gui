@@ -187,31 +187,12 @@ const actionCreators = { getDeploymentCount, getDeploymentsByStatus, getSingleDe
 
 const mapStateToProps = state => {
   const progress = state.deployments.byStatus.inprogress.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
-  const now = new Date();
-  const { pending, scheduled } = state.deployments.byStatus.pending.deploymentIds.reduce(
-    (accu, id) => {
-      const deployment = accu.state.deployments.byId[id];
-      if (deployment) {
-        if (
-          (deployment.phases && deployment.phases.length && new Date(deployment.phases[0].start_ts) < now) ||
-          (!deployment.phases && new Date(deployment.created) < now)
-        ) {
-          if (state.deployments.byStatus.pending.selectedDeploymentIds.includes(deployment.id)) {
-            accu.pending.push(deployment);
-          }
-        } else {
-          accu.scheduled.push(deployment);
-        }
-      }
-      return accu;
-    },
-    { state, pending: [], scheduled: [] }
-  );
+  const pending = state.deployments.byStatus.pending.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   return {
     onboardingComplete: state.users.onboarding.complete,
     pastDeploymentsCount: state.deployments.byStatus.finished.deploymentIds.length || state.deployments.byStatus.finished.total,
     pending,
-    pendingCount: state.deployments.byStatus.pending.total - scheduled.length,
+    pendingCount: state.deployments.byStatus.pending.total,
     progress,
     progressCount: state.deployments.byStatus.inprogress.total
   };

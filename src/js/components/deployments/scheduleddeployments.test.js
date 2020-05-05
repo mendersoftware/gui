@@ -22,7 +22,8 @@ describe('ScheduledDeployments Component', () => {
         byStatus: {
           finished: { deploymentIds: [], selectedDeploymentIds: [], total: 0 },
           inprogress: { deploymentIds: [], selectedDeploymentIds: [], total: 0 },
-          pending: { deploymentIds: [], selectedDeploymentIds: [], total: 0 }
+          pending: { deploymentIds: [], selectedDeploymentIds: [], total: 0 },
+          scheduled: { deploymentIds: [], selectedDeploymentIds: [], total: 0 }
         },
         selectedDeployment: null
       },

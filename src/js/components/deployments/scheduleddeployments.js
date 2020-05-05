@@ -9,6 +9,7 @@ import { CalendarToday as CalendarTodayIcon, List as ListIcon } from '@material-
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentCount, getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
+import { tryMapDeployments } from '../../helpers';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
@@ -90,9 +91,9 @@ export class Scheduled extends React.Component {
   refreshDeployments(page = this.state.page, perPage = this.state.perPage, fullRefresh = true) {
     const self = this;
     return self.setState({ page, perPage }, () => {
-      let tasks = [self.props.getDeploymentCount('pending')];
+      let tasks = [self.props.getDeploymentCount('scheduled')];
       if (fullRefresh) {
-        tasks.push(self.props.getDeploymentsByStatus('pending', page, perPage));
+        tasks.push(self.props.getDeploymentsByStatus('scheduled', page, perPage));
       }
       return Promise.all(tasks)
         .then(([countAction, deploymentsAction]) => {
@@ -174,26 +175,7 @@ export class Scheduled extends React.Component {
 const actionCreators = { getDeploymentCount, getDeploymentsByStatus, getSingleDeploymentStats, setSnackbar, selectDeployment };
 
 const mapStateToProps = state => {
-  const now = new Date();
-  const { scheduled } = state.deployments.byStatus.pending.deploymentIds.reduce(
-    (accu, id) => {
-      const deployment = accu.state.deployments.byId[id];
-      if (deployment) {
-        if (
-          (deployment.phases && deployment.phases.length && new Date(deployment.phases[0].start_ts) < now) ||
-          (!deployment.phases && new Date(deployment.created) < now)
-        ) {
-          if (state.deployments.byStatus.pending.selectedDeploymentIds.includes(deployment.id)) {
-            accu.pending.push(deployment);
-          }
-        } else {
-          accu.scheduled.push(deployment);
-        }
-      }
-      return accu;
-    },
-    { state, pending: [], scheduled: [] }
-  );
+  const scheduled = state.deployments.byStatus.scheduled.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
