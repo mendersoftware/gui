@@ -6,6 +6,7 @@ import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../uti
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentCount, getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
+import { tryMapDeployments } from '../../helpers';
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
@@ -183,13 +184,6 @@ export class Progress extends React.Component {
 }
 
 const actionCreators = { getDeploymentCount, getDeploymentsByStatus, getSingleDeploymentStats, setSnackbar, selectDeployment };
-
-const tryMapDeployments = (accu, id) => {
-  if (accu.state.deployments.byId[id]) {
-    accu.deployments.push(accu.state.deployments.byId[id]);
-  }
-  return accu;
-};
 
 const mapStateToProps = state => {
   const progress = state.deployments.byStatus.inprogress.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
