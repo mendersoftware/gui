@@ -13,15 +13,17 @@ describe('PastDeployments Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
-      devices: {
-        groups: { byId: {} }
-      },
       deployments: {
         byId: {},
         byStatus: {
           finished: {
             selectedDeploymentIds: []
           }
+        }
+      },
+      devices: {
+        groups: {
+          byId: {}
         }
       },
       users: { onboarding: { complete: false, showTips: true }, showHelptips: true }

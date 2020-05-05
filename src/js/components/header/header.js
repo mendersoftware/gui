@@ -53,7 +53,6 @@ export class Header extends React.Component {
         .catch(e => console.log(e));
     } else if (prevState.sessionId !== this.state.sessionId) {
       this.initializeHeaderData();
-      this.props.getReleases();
       this.props.getAllDevices(100);
     }
   }
@@ -76,6 +75,7 @@ export class Header extends React.Component {
     this.props.getDynamicGroups();
     this.props.getGroups();
     this.props.getDeviceLimit();
+    this.props.getReleases();
     this.props.getGlobalSettings();
     if (this.props.multitenancy) {
       this.props.getUserOrganization();

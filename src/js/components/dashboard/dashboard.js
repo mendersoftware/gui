@@ -76,7 +76,7 @@ export class Dashboard extends React.Component {
     return (
       <div className="dashboard">
         <Devices styles={rowStyles} clickHandle={this._handleClick.bind(this)} />
-        <div className="two-column" style={{ gridTemplateColumns: '4fr 5fr' }}>
+        <div className="two-columns" style={{ gridTemplateColumns: '4fr 5fr' }}>
           <Deployments styles={rowStyles} clickHandle={this._handleClick.bind(this)} />
           <SoftwareDistribution />
         </div>

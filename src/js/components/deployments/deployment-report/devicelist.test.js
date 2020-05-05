@@ -3,8 +3,8 @@ import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import ProgressDeviceList from './deploymentdevicelist';
-import { undefineds } from '../../../../tests/mockData';
+import ProgressDeviceList from './devicelist';
+import { undefineds } from '../../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 

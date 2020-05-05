@@ -42,7 +42,7 @@ export default class Confirm extends React.Component {
           <IconButton id="confirmAbort" onClick={() => this._handleConfirm()}>
             <CheckCircleIcon className="green" />
           </IconButton>
-          <IconButton id="cancelAbort" onClick={() => this._handleCancel()}>
+          <IconButton onClick={() => this._handleCancel()}>
             <CancelIcon className="red" />
           </IconButton>
         </div>

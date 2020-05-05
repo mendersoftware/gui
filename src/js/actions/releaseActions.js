@@ -159,3 +159,8 @@ export const getReleases = () => dispatch =>
       dispatch({ type: UserConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: !!releases.length })
     ]);
   });
+
+export const getRelease = name => dispatch =>
+  ArtifactsApi.get(`${deploymentsApiUrl}/deployments/releases?name=${name}`).then(([release]) =>
+    Promise.resolve(dispatch({ type: ReleaseConstants.RECEIVE_RELEASE, release: flattenRelease(release) }))
+  );
