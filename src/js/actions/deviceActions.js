@@ -262,12 +262,12 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
     { ids, devicesById: {} }
   );
 
-export const getGroupDevices = (group, page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false) => (dispatch, getState) =>
-  Promise.resolve(dispatch(getInventoryDevices(page, perPage, [], group))).then(results => {
+export const getGroupDevices = (group, page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false) => (dispatch, getState) => {
+  const stateGroup = getState().devices.groups.byId[group];
+  return Promise.resolve(dispatch(getInventoryDevices(page, perPage, stateGroup.filters || [], group))).then(results => {
     const { deviceAccu, total } = results[results.length - 1];
     let tasks = [];
     if (group.length) {
-      const stateGroup = getState().devices.groups.byId[group];
       tasks.push(
         dispatch({
           type: DeviceConstants.RECEIVE_GROUP_DEVICES,
@@ -286,10 +286,11 @@ export const getGroupDevices = (group, page = defaultPage, perPage = defaultPerP
     }
     return Promise.all(tasks);
   });
+};
 
 export const getAllGroupDevices = group => (dispatch, getState) => {
   const state = getState();
-  if (group && (!state.devices.groups[group] || state.devices.groups[group].filters.length)) {
+  if (group && (!state.devices.groups.byId[group] || state.devices.groups.byId[group].filters.length)) {
     return Promise.resolve();
   }
   const forGroup = group ? `&group=${group}` : '&has_group=false';

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Tab, Tabs } from '@material-ui/core';
 
-import { selectDevice } from '../../actions/deviceActions';
+import { getGroups, getDynamicGroups, initializeGroupsDevices, selectDevice } from '../../actions/deviceActions';
 import { selectRelease } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { setSnackbar } from '../../actions/appActions';
@@ -57,6 +57,9 @@ export class Deployments extends React.Component {
     var self = this;
     self.props.selectRelease();
     self.props.selectDevice();
+    Promise.all([self.props.getGroups(), self.props.getDynamicGroups()])
+      .then(() => self.props.initializeGroupsDevices())
+      .catch(err => console.log(err));
     let startDate = self.state.startDate;
     const params = new URLSearchParams(this.props.location.search);
     if (this.props.match) {
@@ -116,11 +119,6 @@ export class Deployments extends React.Component {
 
     return self.props
       .createDeployment(newDeployment)
-      .catch(err => {
-        self.props.setSnackbar('Error while creating deployment');
-        var errMsg = err.res.body.error || '';
-        self.props.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard');
-      })
       .then(() => {
         self.props.setSnackbar('Deployment created successfully', 8000);
         if (phases) {
@@ -138,6 +136,11 @@ export class Deployments extends React.Component {
           self.props.history.push(routes.active.route);
           self._changeTab(routes.active.route);
         }
+      })
+      .catch(err => {
+        self.props.setSnackbar('Error while creating deployment');
+        var errMsg = err.res.body.error || '';
+        self.props.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard');
       });
   }
 
@@ -243,6 +246,9 @@ export class Deployments extends React.Component {
 const actionCreators = {
   abortDeployment,
   createDeployment,
+  getGroups,
+  getDynamicGroups,
+  initializeGroupsDevices,
   saveGlobalSettings,
   selectDevice,
   selectDeployment,
