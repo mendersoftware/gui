@@ -5,13 +5,15 @@ import { Clear as ClearIcon } from '@material-ui/icons';
 import { VictoryGroup, VictoryLabel, VictoryLegend, VictoryPie } from 'victory';
 
 import Loader from '../../common/loader';
+import Confirm from '../../common/confirm';
 import { chartColorPalette } from '../../../themes/mender-theme';
 
 export default class DistributionReport extends React.Component {
   constructor(props, state) {
     super(props, state);
     this.state = {
-      distribution: []
+      distribution: [],
+      removing: false
     };
   }
 
@@ -58,43 +60,55 @@ export default class DistributionReport extends React.Component {
   render() {
     const self = this;
     const { group, onClick, style } = self.props;
-    const { distribution: data } = self.state;
+    const { distribution: data, removing } = self.state;
     return (
       <Paper className="margin-right margin-bottom widget" elevation={1} style={style}>
-        <div className="flexbox space-between margin-left-small">
-          <h4>{group || 'All devices'}</h4>
-          <IconButton className="widgetRemover" onClick={onClick} style={{ alignSelf: 'flex-end' }}>
-            <ClearIcon fontSize="small" />
-          </IconButton>
-        </div>
-        {data.length ? (
-          <VictoryGroup
-            style={{
-              data: { fill: ({ datum }) => datum.fill },
-              parent: { display: 'flex', alignSelf: 'center', height: 'initial', width: 'initial' }
-            }}
-            data={data}
-            width={380}
-            height={230}
-          >
-            <VictoryLegend x={30} y={150} width={270} height={65} orientation="horizontal" itemsPerRow={3} gutter={20} />
-            <VictoryPie
-              endAngle={-90}
-              events={[
-                {
-                  target: 'data',
-                  eventHandlers: {
-                    onClick: (e, clickedProps) => self.onSliceClick(clickedProps.datum.x)
-                  }
-                }
-              ]}
-              labelComponent={<VictoryLabel />}
-              radius={85}
-              startAngle={90}
-            />
-          </VictoryGroup>
+        {removing ? (
+          <Confirm
+            classes="flexbox centered confirmation-overlay"
+            cancel={() => self.setState({ removing: !removing })}
+            action={onClick}
+            style={{ height: '100%' }}
+            type="chartRemoval"
+          />
         ) : (
-          <Loader show={true} />
+          <>
+            <div className="flexbox space-between margin-left-small">
+              <h4>{group || 'All devices'}</h4>
+              <IconButton className="widgetRemover" onClick={() => self.setState({ removing: !removing })} style={{ alignSelf: 'flex-end' }}>
+                <ClearIcon fontSize="small" />
+              </IconButton>
+            </div>
+            {data.length ? (
+              <VictoryGroup
+                style={{
+                  data: { fill: ({ datum }) => datum.fill },
+                  parent: { display: 'flex', alignSelf: 'center', height: 'initial', width: 'initial' }
+                }}
+                data={data}
+                width={380}
+                height={230}
+              >
+                <VictoryLegend x={30} y={150} width={270} height={65} orientation="horizontal" itemsPerRow={3} gutter={20} />
+                <VictoryPie
+                  endAngle={-90}
+                  events={[
+                    {
+                      target: 'data',
+                      eventHandlers: {
+                        onClick: (e, clickedProps) => self.onSliceClick(clickedProps.datum.x)
+                      }
+                    }
+                  ]}
+                  labelComponent={<VictoryLabel />}
+                  radius={85}
+                  startAngle={90}
+                />
+              </VictoryGroup>
+            ) : (
+              <Loader show={true} />
+            )}
+          </>
         )}
       </Paper>
     );
