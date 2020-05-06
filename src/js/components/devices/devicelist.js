@@ -99,8 +99,6 @@ export class DeviceList extends React.Component {
       columnHeaders,
       devices,
       expandable = true,
-      filterable = false,
-      filters,
       pageLength,
       pageLoading,
       pageNo,
@@ -146,7 +144,7 @@ export class DeviceList extends React.Component {
             />
           ))}
         </div>
-        {showPagination && (!filterable || filters.length === 0) && (
+        {showPagination && (
           <Pagination
             count={pageTotal}
             rowsPerPage={pageLength}

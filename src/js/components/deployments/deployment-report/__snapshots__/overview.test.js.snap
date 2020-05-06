@@ -1,0 +1,154 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeploymentOverview Component renders correctly 1`] = `
+<div>
+  <div
+    className="report-container"
+  >
+    <div
+      className="deploymentInfo two-columns"
+    >
+      <div>
+        <div
+          onClick={[Function]}
+          style={
+            Object {
+              "marginBottom": -15,
+            }
+          }
+        >
+          <li
+            className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+            disabled={true}
+          >
+            <div
+              className="MuiListItemText-root MuiListItemText-multiline"
+            >
+              <span
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+              >
+                Release:
+              </span>
+              <div
+                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+                title={
+                  <Link
+                    style={
+                      Object {
+                        "fontWeight": "500",
+                      }
+                    }
+                    to="/releases/test"
+                  >
+                    test
+                  </Link>
+                }
+              >
+                <div>
+                  <span
+                    className=" "
+                    style={Object {}}
+                  >
+                    <a
+                      href="/releases/test"
+                      onClick={[Function]}
+                      style={
+                        Object {
+                          "fontWeight": "500",
+                        }
+                      }
+                    >
+                      test
+                    </a>
+                  </span>
+                   
+                </div>
+              </div>
+            </div>
+          </li>
+        </div>
+        <div
+          onClick={[Function]}
+          style={
+            Object {
+              "marginBottom": -15,
+            }
+          }
+        >
+          <li
+            className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+            disabled={true}
+          >
+            <div
+              className="MuiListItemText-root MuiListItemText-multiline"
+            >
+              <span
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+              >
+                Device group:
+              </span>
+              <div
+                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+                title="test deployment"
+              >
+                <div>
+                  <span
+                    className=" "
+                    style={Object {}}
+                  >
+                    test deployment
+                  </span>
+                   
+                </div>
+              </div>
+            </div>
+          </li>
+        </div>
+      </div>
+      <div
+        onClick={[Function]}
+        style={
+          Object {
+            "marginBottom": -15,
+          }
+        }
+      >
+        <li
+          className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+          disabled={true}
+        >
+          <div
+            className="MuiListItemText-root MuiListItemText-multiline"
+          >
+            <span
+              className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+            >
+              Status:
+            </span>
+            <div
+              className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+              title={
+                <div>
+                  Finished 
+                </div>
+              }
+            >
+              <div>
+                <span
+                  className=" "
+                  style={Object {}}
+                >
+                  <div>
+                    Finished 
+                  </div>
+                </span>
+                 
+              </div>
+            </div>
+          </div>
+        </li>
+      </div>
+    </div>
+  </div>
+</div>
+`;

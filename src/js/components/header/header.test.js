@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Header from './header';
+import { undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -51,5 +52,6 @@ describe('Header Component', () => {
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
+    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });
 });

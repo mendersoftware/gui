@@ -2,7 +2,7 @@
 
 exports[`PastDeployments Component renders correctly 1`] = `
 <div
-  className="fadeIn margin-top-large"
+  className="fadeIn margin-left margin-top-large"
 >
   <div
     className="MuiGrid-root datepicker-container MuiGrid-container MuiGrid-spacing-xs-2"

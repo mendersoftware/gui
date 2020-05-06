@@ -8,6 +8,7 @@ const initialState = {
   qrCode: null,
   globalSettings: {
     id_attribute: 'Device ID',
+    previousFilters: [],
     previousPhases: [],
     retries: 0
   },

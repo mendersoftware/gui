@@ -5,9 +5,10 @@ const initialState = {
     // [id]: { stats, devices: [ { id, log } ] }
   },
   byStatus: {
-    pending: { deploymentIds: [], selectedDeploymentIds: [], total: 0 },
+    finished: { deploymentIds: [], selectedDeploymentIds: [], total: 0 },
     inprogress: { deploymentIds: [], selectedDeploymentIds: [], total: 0 },
-    finished: { deploymentIds: [], selectedDeploymentIds: [], total: 0 }
+    pending: { deploymentIds: [], selectedDeploymentIds: [], total: 0 },
+    scheduled: { deploymentIds: [], selectedDeploymentIds: [], total: 0 }
   },
   deploymentDeviceLimit: 5000,
   selectedDeployment: null
@@ -75,6 +76,7 @@ const deploymentReducer = (state = initialState, action) => {
       };
     case DeploymentConstants.RECEIVE_INPROGRESS_DEPLOYMENTS:
     case DeploymentConstants.RECEIVE_PENDING_DEPLOYMENTS:
+    case DeploymentConstants.RECEIVE_SCHEDULED_DEPLOYMENTS:
     case DeploymentConstants.RECEIVE_FINISHED_DEPLOYMENTS:
       return {
         ...state,
@@ -86,29 +88,14 @@ const deploymentReducer = (state = initialState, action) => {
           ...state.byStatus,
           [action.status]: {
             ...state.byStatus[action.status],
-            deploymentIds: action.deploymentIds
-          }
-        }
-      };
-    case DeploymentConstants.RECEIVE_PENDING_DEPLOYMENTS_COUNT:
-    case DeploymentConstants.RECEIVE_INPROGRESS_DEPLOYMENTS_COUNT:
-    case DeploymentConstants.RECEIVE_FINISHED_DEPLOYMENTS_COUNT:
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          ...action.deployments
-        },
-        byStatus: {
-          ...state.byStatus,
-          [action.status]: {
-            ...state.byStatus[action.status],
-            total: action.deploymentIds.length
+            deploymentIds: action.deploymentIds,
+            total: action.total ? action.total : state.byStatus[action.status].total
           }
         }
       };
     case DeploymentConstants.SELECT_INPROGRESS_DEPLOYMENTS:
     case DeploymentConstants.SELECT_PENDING_DEPLOYMENTS:
+    case DeploymentConstants.SELECT_SCHEDULED_DEPLOYMENTS:
     case DeploymentConstants.SELECT_FINISHED_DEPLOYMENTS:
       return {
         ...state,

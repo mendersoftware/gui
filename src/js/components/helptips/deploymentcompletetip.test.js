@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import DeploymentCompleteTip from './deploymentcompletetip';
+import { undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -28,5 +29,6 @@ describe('DeploymentCompleteTip Component', () => {
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
+    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });
 });

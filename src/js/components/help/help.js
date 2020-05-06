@@ -15,7 +15,6 @@ import ReleasesArtifacts from './releases-and-artifacts';
 import BuildDemoArtifact from './releases-and-artifacts/build-demo-artifact';
 import Support from './support';
 import MoreHelp from './more-help-resources';
-import { isEmpty, versionCompare } from '../../helpers';
 
 import { findLocalIpAddress } from '../../actions/appActions';
 import { getUserOrganization } from '../../actions/userActions';
@@ -83,12 +82,6 @@ export class Help extends React.PureComponent {
     }
   }
 
-  _getLatest(array) {
-    // returns latest version of format x.x.x
-    array.sort(versionCompare);
-    return array[array.length - 1];
-  }
-
   render() {
     var ComponentToShow = GettingStarted;
     var breadcrumbs = '';
@@ -120,18 +113,12 @@ export class Help extends React.PureComponent {
             <ComponentToShow
               docsVersion={this.props.docsVersion}
               findLocalIpAddress={this.props.findLocalIpAddress}
-              getLatest={this._getLatest}
-              hasMultitenancy={this.props.hasMultitenancy}
               isHosted={this.props.isHosted}
               isEnterprise={this.props.isEnterprise}
-              isEmpty={isEmpty}
-              links={this.props.links}
               menderDebPackageVersion={this.props.menderDebPackageVersion}
               menderVersion={this.props.menderVersion}
               menderArtifactVersion={this.props.menderArtifactVersion}
               org={this.props.org}
-              pages={components}
-              version={this.props.version}
             />
           </div>
         </div>
@@ -149,7 +136,6 @@ const mapStateToProps = state => {
     docsVersion: state.app.features.hasMultitenancy && state.app.features.isHosted ? '' : docsVersion,
     isHosted: state.app.features.isHosted,
     isEnterprise: state.app.features.isEnterprise,
-    links: state.app.hostedLinks,
     menderVersion: state.app.versionInformation['Mender-Client'],
     menderDebPackageVersion: state.app.menderDebPackageVersion,
     menderArtifactVersion: state.app.versionInformation['Mender-Artifact'],
