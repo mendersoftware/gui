@@ -1,67 +1,68 @@
 import React from 'react';
 
 import Pagination from '../common/pagination';
-import DeploymentItem from './deploymentitem';
+import DeploymentItem, {
+  deploymentTypeClasses,
+  DeploymentDeviceCount,
+  DeploymentDeviceGroup,
+  DeploymentEndTime,
+  DeploymentStartTime,
+  DeploymentProgress,
+  DeploymentRelease
+} from './deploymentitem';
 
-export default class DeploymentsList extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      pageSize: 10,
-      defaultHeaders: [
-        { title: 'Release', class: '' },
-        { title: 'Device group', class: '' },
-        { title: `Start time`, class: '' },
-        { title: 'Total # devices', class: 'align-right' },
-        { title: 'Status', class: '' },
-        { title: '', class: '' },
-        { title: '', class: '' }
-      ]
-    };
-  }
+export const defaultHeaders = [
+  { title: 'Release', renderer: DeploymentRelease },
+  { title: 'Device group', renderer: DeploymentDeviceGroup },
+  { title: 'Start time', renderer: DeploymentStartTime },
+  { title: `End time`, renderer: DeploymentEndTime },
+  { title: '# devices', class: 'align-right column-defined', renderer: DeploymentDeviceCount },
+  { title: 'Status', renderer: DeploymentProgress }
+];
 
-  render() {
-    const self = this;
+const defaultRowsPerPage = 20;
 
-    const { abort, count, headers, isActiveTab, openReport, page, items, isEnterprise, refreshItems, title, type } = self.props;
-
-    const columnHeaders = headers ? headers : self.state.defaultHeaders;
-
-    return (
-      !!items.length && (
-        <div className="fadeIn deploy-table-contain">
-          <h3 className="capitalized-start">{title}</h3>
-          <div className="deployment-item deployment-header-item muted">
-            {columnHeaders.map((item, index) => (
-              <div key={`${item.title}-${index}`} className={item.class}>
-                {item.title}
-              </div>
-            ))}
+export const DeploymentsList = ({
+  abort,
+  componentClass = '',
+  count,
+  headers = defaultHeaders,
+  isEnterprise,
+  items,
+  listClass = '',
+  openReport,
+  onChangePage,
+  onChangeRowsPerPage,
+  page,
+  pageSize,
+  type
+}) =>
+  !!items.length && (
+    <div className={`fadeIn deploy-table-contain ${componentClass}`}>
+      <div className={`deployment-item deployment-header-item muted ${deploymentTypeClasses[type] || ''}`}>
+        {headers.map((item, index) => (
+          <div key={`${item.title}-${index}`} className={item.class || ''}>
+            {item.title}
           </div>
-          {items.map((deployment, index) => (
-            <DeploymentItem
-              abort={abort}
-              columnHeaders={columnHeaders}
-              deployment={deployment}
-              key={`${type}-deployment-${deployment.created}`}
-              index={index}
-              isActiveTab={isActiveTab}
-              isEnterprise={isEnterprise}
-              openReport={openReport}
-              type={type}
-            />
-          ))}
-          {count > items.length && (
-            <Pagination
-              count={count}
-              rowsPerPage={self.state.pageSize}
-              onChangeRowsPerPage={pageSize => self.setState({ pageSize }, () => refreshItems(1, pageSize))}
-              page={page}
-              onChangePage={page => refreshItems(page, self.state.pageSize)}
-            />
-          )}
-        </div>
-      )
-    );
-  }
-}
+        ))}
+      </div>
+      <div className={listClass}>
+        {items.map(deployment => (
+          <DeploymentItem
+            abort={abort}
+            columnHeaders={headers}
+            deployment={deployment}
+            key={`${type}-deployment-${deployment.created}`}
+            isEnterprise={isEnterprise}
+            openReport={openReport}
+            type={type}
+          />
+        ))}
+      </div>
+      {(count > items.length || items.length > defaultRowsPerPage) && (
+        <Pagination count={count} rowsPerPage={pageSize} onChangeRowsPerPage={onChangeRowsPerPage} page={page} onChangePage={onChangePage} />
+      )}
+    </div>
+  );
+
+export default DeploymentsList;

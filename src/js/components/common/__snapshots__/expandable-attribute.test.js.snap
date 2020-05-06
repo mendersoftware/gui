@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ExpandableDeviceAttribute Component renders correctly 1`] = `
+exports[`ExpandableAttribute Component renders correctly 1`] = `
 <div
   onClick={[Function]}
 >

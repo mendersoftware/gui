@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Past from './pastdeployments';
+import { undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 let dateMock;
@@ -18,6 +19,11 @@ describe('PastDeployments Component', () => {
           finished: {
             selectedDeploymentIds: []
           }
+        }
+      },
+      devices: {
+        groups: {
+          byId: {}
         }
       },
       users: { onboarding: { complete: false, showTips: true }, showHelptips: true }
@@ -43,5 +49,6 @@ describe('PastDeployments Component', () => {
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
+    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });
 });

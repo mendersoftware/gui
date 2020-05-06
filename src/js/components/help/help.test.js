@@ -5,6 +5,7 @@ import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import renderer from 'react-test-renderer';
 import Help from './help';
+import { undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -14,7 +15,6 @@ describe('Help Component', () => {
     store = mockStore({
       app: {
         features: { isHosted: false, isEnterprise: false },
-        hostedLinks: {},
         versionInformation: {},
         menderDebPackageVersion: null
       },
@@ -33,5 +33,6 @@ describe('Help Component', () => {
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
+    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });
 });

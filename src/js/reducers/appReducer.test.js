@@ -55,22 +55,6 @@ describe('app reducer', () => {
     });
   });
 
-  it('should handle RECEIVED_HOSTED_LINKS', () => {
-    expect(
-      reducer(undefined, {
-        type: AppConstants.RECEIVED_HOSTED_LINKS,
-        links: { a: 1 }
-      }).hostedLinks
-    ).toEqual({ a: 1 });
-
-    expect(
-      reducer(initialState, {
-        type: AppConstants.RECEIVED_HOSTED_LINKS,
-        links: { a: 1 }
-      }).hostedLinks
-    ).toEqual({ a: 1 });
-  });
-
   it('should handle SET_LOCAL_IPADDRESS', () => {
     expect(
       reducer(undefined, {

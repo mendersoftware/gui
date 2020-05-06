@@ -98,15 +98,16 @@ export class CreateDialog extends React.Component {
 
   render() {
     const self = this;
-    const { device, deploymentObject, open, release } = self.props;
+    const { device, deploymentObject, groups, open, release } = self.props;
     const { activeStep, deploymentDeviceIds, group, phases, retries, steps } = self.state;
     const ComponentToShow = steps[activeStep].component;
     const deploymentSettings = {
-      group: device ? device.id : deploymentObject.group || group,
       deploymentDeviceIds: deploymentObject.deploymentDeviceIds || deploymentDeviceIds,
+      filterId: groups[deploymentObject.group || group] ? groups[deploymentObject.group || group].id : undefined,
+      group: device ? device.id : deploymentObject.group || group,
+      phases,
       release: deploymentObject.release || release || self.state.release,
-      retries: deploymentObject.retries || retries,
-      phases
+      retries: deploymentObject.retries || retries
     };
     const disabled = activeStep === 0 ? !(deploymentSettings.release && deploymentSettings.deploymentDeviceIds.length) : self.state.disableSchedule;
     const finalStep = activeStep === steps.length - 1;
@@ -162,7 +163,7 @@ const mapStateToProps = state => {
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
     isHosted: state.app.features.isHosted,
     device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
-    groups: Object.keys(state.devices.groups.byId),
+    groups: state.devices.groups.byId,
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
     plan,
     release: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null,

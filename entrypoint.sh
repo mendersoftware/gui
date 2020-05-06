@@ -37,7 +37,7 @@ cat >/var/www/mender-gui/dist/env.js <<EOF
     services: {
       deploymentsVersion: "$MENDER_DEPLOYMENTS_VERSION",
       deviceauthVersion: "$MENDER_DEVICEAUTH_VERSION",
-      guiVersion: "${GIT_REF}_${GIT_COMMIT}",
+      guiVersion: "$GIT_COMMIT_TAG",
       inventoryVersion: "$MENDER_INVENTORY_VERSION"
     },
     demoArtifactPort: "$DEMO_ARTIFACT_PORT",

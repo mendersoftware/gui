@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Authorized from './authorized-devices';
+import { undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -14,17 +15,27 @@ describe('AuthorizedDevices Component', () => {
       app: {
         features: { hasMultitenancy: false, isEnterprise: false, isHosted: false }
       },
+      deployments: { deploymentDeviceLimit: 5000 },
       devices: {
+        byStatus: {
+          accepted: { deviceIds: [], total: 0 },
+          rejected: { deviceIds: [], total: 0 }
+        },
+        filters: [],
         filteringAttributes: {
           identityAttributes: [],
           inventoryAttributes: []
         },
         groups: {
-          selectedGroup: null
-        }
+          selectedGroup: null,
+          byId: {}
+        },
+        selectedDeviceList: []
       },
       users: {
-        globalSettings: {},
+        globalSettings: {
+          previousFilters: []
+        },
         onboarding: {
           complete: false,
           showTips: true
@@ -43,5 +54,6 @@ describe('AuthorizedDevices Component', () => {
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
+    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });
 });

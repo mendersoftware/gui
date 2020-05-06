@@ -11,32 +11,32 @@ import TableRow from '@material-ui/core/TableRow';
 import { FileSize, getFormattedSize } from './../../helpers';
 
 const METADATA_SPACING = 2;
+const style = {
+  metadataList: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  table: {
+    background: 'transparent'
+  },
+  metadataListItem: {
+    paddingBottom: '11px',
+    borderBottom: '1px solid #e0e0e0',
+    marginRight: '2vw'
+  },
+  payloadHeader: {
+    position: 'absolute',
+    background: 'rgb(233, 233, 233)',
+    top: '-35px',
+    padding: '10px'
+  }
+};
+const attributes = ['Name', 'Checksum', 'Build date', 'Size (uncompressed)'];
 
 export default class ArtifactPayload extends React.PureComponent {
   render() {
-    const style = {
-      metadataList: {
-        display: 'flex',
-        flexDirection: 'row'
-      },
-      table: {
-        background: 'transparent'
-      },
-      metadataListItem: {
-        paddingBottom: '11px',
-        borderBottom: '1px solid #e0e0e0',
-        marginRight: '2vw'
-      },
-      payloadHeader: {
-        position: 'absolute',
-        background: 'rgb(233, 233, 233)',
-        top: '-35px',
-        padding: '10px'
-      }
-    };
     const files = this.props.payload.files || [];
     const summedSize = files.reduce((accu, item) => accu + item.size, 0);
-    const attributes = ['Name', 'Checksum', 'Build date', 'Size (uncompressed)'];
     const metaDataObject = this.props.payload.meta_data || {};
     const metaData = [
       { title: 'Type', value: this.props.payload.type_info.type },

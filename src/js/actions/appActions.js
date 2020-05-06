@@ -1,7 +1,6 @@
 import Cookies from 'universal-cookie';
 import AppConstants from '../constants/appConstants';
 import * as Helpers from '../helpers';
-import GeneralApi from '../api/general-api';
 import { DEVICE_STATES } from '../constants/deviceConstants';
 import { getDevicesByStatus, getAllDevices } from './deviceActions';
 import { getReleases } from './releaseActions';
@@ -10,7 +9,6 @@ import { setOnboardingComplete, setOnboardingState } from './userActions';
 import { getCurrentOnboardingState, determineProgress, persistOnboardingState, onboardingSteps } from '../utils/onboardingmanager';
 
 const cookies = new Cookies();
-const hostedLinks = 'https://s3.amazonaws.com/hosted-mender-artifacts-onboarding/';
 
 export const sortTable = (table, column, direction) => dispatch =>
   dispatch({
@@ -38,12 +36,6 @@ export const setSnackbar = (message, duration, action, component, onClick, onClo
     }
   });
 
-export const getHostedLinks = id => dispatch =>
-  GeneralApi.getNoauth(`${hostedLinks}${id}/links.json`)
-    .then(res => dispatch({ type: AppConstants.RECEIVED_HOSTED_LINKS, links: JSON.parse(res.text) }))
-    // to be expected outside of HM, so logging it should be enough
-    .catch(err => console.log(err.error));
-
 export const findLocalIpAddress = () => dispatch =>
   Helpers.findLocalIpAddress().then(ipAddress => dispatch({ type: AppConstants.SET_LOCAL_IPADDRESS, ipAddress }));
 
@@ -63,7 +55,7 @@ export const getOnboardingState = () => (dispatch, getState) => {
       dispatch(getDevicesByStatus(DEVICE_STATES.pending)),
       dispatch(getAllDevices(100)),
       dispatch(getReleases()),
-      dispatch(getDeploymentsByStatus('finished'))
+      dispatch(getDeploymentsByStatus('finished', undefined, undefined, undefined, undefined, undefined, false))
     ];
     promises = Promise.all(requests).then(() => {
       const store = getState();
@@ -76,19 +68,21 @@ export const getOnboardingState = () => (dispatch, getState) => {
         acceptedDevices.length && store.devices.byId[acceptedDevices[0]].hasOwnProperty('attributes')
           ? store.devices.byId[acceptedDevices[0]].attributes.device_type
           : null;
+      const progress = savedState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments);
       const state = {
         complete: !!(
           savedState.complete ||
           (acceptedDevices.length > 1 && pendingDevices.length > 0 && releases.length > 1 && pastDeployments.length > 1) ||
           (acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length > 2) ||
           (acceptedDevices.length >= 1 && pendingDevices.length > 0 && releases.length >= 2 && pastDeployments.length >= 2) ||
+          progress >= Object.keys(onboardingSteps).length - 1 ||
           store.users.onboarding.disable
         ),
         showTips: savedState.showTips != null ? savedState.showTips : true,
         deviceType: savedState.deviceType || store.users.onboarding.deviceType || deviceType,
         approach: savedState.approach || (deviceType || '').startsWith('qemu') ? 'virtual' : 'physical' || store.users.onboarding.approach,
         artifactIncluded: savedState.artifactIncluded || store.users.onboarding.artifactIncluded,
-        progress: savedState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments)
+        progress
       };
       persistOnboardingState(state);
       state.devices = devices;

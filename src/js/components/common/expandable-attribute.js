@@ -1,11 +1,9 @@
 import React from 'react';
 
 // material ui
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import { Divider, ListItem, ListItemText } from '@material-ui/core';
 
-export default class ExpandableDeviceAttribute extends React.Component {
+export default class ExpandableAttribute extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -29,7 +27,7 @@ export default class ExpandableDeviceAttribute extends React.Component {
     const { primary, secondary, classes, textClasses, dividerDisabled, style } = self.props;
     const defaultClasses = { root: 'attributes' };
     const currentTextClasses = `${textClasses ? textClasses.secondary : ''} ${self.state.expanded && self.state.overflowActive ? 'expanded-attribute' : ''}`;
-    let secondaryText = (
+    const secondaryText = (
       <div>
         <span className={currentTextClasses} ref={r => (self.textContent = r)} style={self.state.overflowActive ? { marginBottom: '-0.5em' } : {}}>
           {secondary}
