@@ -15,52 +15,43 @@ const columnData = [
 ];
 
 const UserList = ({ currentUser, editUser, isEnterprise, removeUser, roles, users }) => (
-  <div className="margin-top-small">
-    <div style={{ marginLeft: '20px' }}>
-      <h2 className="margin-top-small">Users</h2>
-    </div>
-    <div className="margin-bottom">
-      <Table>
-        <TableHead>
-          <TableRow>
-            {columnData.reduce((accu, column) => {
-              if (column.enterpriseOnly && !isEnterprise) {
-                return accu;
-              }
-              accu.push(
-                <TableCell key={column.id} padding={column.disablePadding ? 'none' : 'default'}>
-                  {column.label}
-                </TableCell>
-              );
-              return accu;
-            }, [])}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {users.map((user, index) => (
-            <TableRow key={user.id || index} hover>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>
-                <Time value={user.created_ts} format="YYYY-MM-DD HH:mm" />
-              </TableCell>
-              <TableCell>
-                <RelativeTime updateTime={user.updated_ts} />
-              </TableCell>
-              {isEnterprise && (
-                <TableCell>{(user.roles || []).map(role => (roles.find(currentRole => currentRole.id === role) || {}).title).join(', ')}</TableCell>
-              )}
-              <TableCell>
-                <Button onClick={() => editUser(user)} style={{ marginLeft: -10 }}>
-                  Edit
-                </Button>
-                {currentUser.id !== user.id ? <Button onClick={() => removeUser(user)}>Remove</Button> : null}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
-  </div>
+  <Table>
+    <TableHead>
+      <TableRow>
+        {columnData.reduce((accu, column) => {
+          if (column.enterpriseOnly && !isEnterprise) {
+            return accu;
+          }
+          accu.push(
+            <TableCell key={column.id} padding={column.disablePadding ? 'none' : 'default'}>
+              {column.label}
+            </TableCell>
+          );
+          return accu;
+        }, [])}
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      {users.map((user, index) => (
+        <TableRow key={user.id || index} hover>
+          <TableCell>{user.email}</TableCell>
+          <TableCell>
+            <Time value={user.created_ts} format="YYYY-MM-DD HH:mm" />
+          </TableCell>
+          <TableCell>
+            <RelativeTime updateTime={user.updated_ts} />
+          </TableCell>
+          {isEnterprise && <TableCell>{(user.roles || []).map(role => (roles.find(currentRole => currentRole.id === role) || {}).title).join(', ')}</TableCell>}
+          <TableCell>
+            <Button onClick={() => editUser(user)} style={{ marginLeft: -10 }}>
+              Edit
+            </Button>
+            {currentUser.id !== user.id ? <Button onClick={() => removeUser(user)}>Remove</Button> : null}
+          </TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
 );
 
 export default UserList;

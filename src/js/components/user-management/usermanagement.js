@@ -91,7 +91,8 @@ export class UserManagement extends React.Component {
     const { editDialog, removeDialog, user } = self.state;
     return (
       <div>
-        <div className="float-right">
+        <div className="flexbox centered space-between" style={{ marginLeft: '20px' }}>
+          <h2>Users</h2>
           <Button variant="contained" color="primary" onClick={() => self._openEdit({})}>
             Create new user
           </Button>
