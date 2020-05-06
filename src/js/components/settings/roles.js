@@ -5,6 +5,7 @@ import { Button, Checkbox, Chip, Collapse, FormControlLabel, Table, TableBody, T
 import { Add as AddIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
+import { PLANS as plans } from '../../constants/appConstants';
 
 export class RoleManagement extends React.Component {
   constructor(props, context) {
@@ -42,10 +43,37 @@ export class RoleManagement extends React.Component {
     this.setState({ groups });
   }
 
+  generateRequest() {
+    const { isHosted, org } = this.props;
+    const { allowUserManagement, description, groups, name } = this.state;
+    const groupsList = groups
+      .reduce((accu, group) => {
+        if (group.selected) {
+          accu.push(group.name);
+        }
+        return accu;
+      }, [])
+      .join(', ');
+    const currentPlan = isHosted ? org && org.plan : 'enterprise';
+    return encodeURIComponent(`
+    Organization ID
+    ${org.id}
+    Organization name
+    ${org.name}
+    Plan name
+    ${plans[currentPlan]}
+    I would like to create a group with the following settings:
+      name: ${name},
+      description: ${description},
+      allow managing other users: ${allowUserManagement ? 'Yes' : 'No'},
+      groups: ${groupsList}`);
+  }
+
   render() {
     const self = this;
     const { adding, description, groups, name } = self.state;
-    const { roles } = self.props;
+    const { org, roles } = self.props;
+    const mailTrigger = `mailto:support@mender.io?subject=${org.name}: Create group&body=${self.generateRequest()}`;
     return (
       <div>
         <h2 style={{ marginLeft: 20 }}>Roles</h2>
@@ -126,6 +154,8 @@ const actionCreators = { setSnackbar };
 const mapStateToProps = state => {
   return {
     groups: Object.keys(state.devices.groups.byId),
+    isHosted: state.app.features.isHosted,
+    org: state.users.organization,
     roles: state.users.roles
   };
 };
