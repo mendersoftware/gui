@@ -296,6 +296,12 @@ export const tryMapDeployments = (accu, id) => {
   return accu;
 };
 
+export const mapAttributesToAggregator = item =>
+  Object.keys(item).reduce((accu, item) => {
+    accu[item] = [];
+    return accu;
+  }, {});
+
 export const mapDeviceAttributes = (attributes = []) =>
   attributes.reduce((accu, attribute) => ({ ...accu, [attribute.name]: attribute.value }), { device_type: '', artifact_name: '' });
 
