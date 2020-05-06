@@ -54,6 +54,9 @@ export class Scheduled extends React.Component {
 
   componentDidMount() {
     const self = this;
+    if (!self.props.isEnterprise) {
+      return;
+    }
     clearInterval(self.timer);
     self.timer = setInterval(() => self.refreshDeployments(), refreshDeploymentsLength);
     self.refreshDeployments();
@@ -115,7 +118,7 @@ export class Scheduled extends React.Component {
   render() {
     const self = this;
     const { calendarEvents, tabIndex } = self.state;
-    const { createClick, isEnterprise, items, openReport } = self.props;
+    const { createClick, isEnterprise, isHosted, items, openReport } = self.props;
     return (
       <div className="fadeIn margin-left">
         {items.length ? (
@@ -157,7 +160,11 @@ export class Scheduled extends React.Component {
               </>
             ) : (
               <div className="flexbox centered">
-                <EnterpriseNotification isEnterprise={isEnterprise} benefit="schedule deployments to steer the distribution of your updates." />
+                <EnterpriseNotification
+                  isEnterprise={isEnterprise}
+                  recommendedPlan={isHosted ? 'professional' : null}
+                  benefit="schedule deployments to steer the distribution of your updates."
+                />
               </div>
             )}
             <img src="assets/img/deployments.png" alt="In progress" />
@@ -174,7 +181,9 @@ const mapStateToProps = state => {
   const scheduled = state.deployments.byStatus.scheduled.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
+    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
+    isHosted: state.app.features.isHosted,
+    plan,
     items: scheduled
   };
 };

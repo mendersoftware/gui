@@ -54,10 +54,12 @@ export class Deployments extends React.Component {
   }
 
   componentDidMount() {
-    var self = this;
-    self.props.selectRelease();
-    self.props.selectDevice();
-    Promise.all([self.props.getGroups(), self.props.getDynamicGroups()])
+    const self = this;
+    let tasks = [self.props.getGroups(), self.props.selectRelease(), self.props.selectDevice()];
+    if (self.props.isEnterprise) {
+      tasks.push(self.props.getDynamicGroups());
+    }
+    Promise.all(tasks)
       .then(() => self.props.initializeGroupsDevices())
       .catch(err => console.log(err));
     let startDate = self.state.startDate;
@@ -255,7 +257,9 @@ const actionCreators = {
 };
 
 const mapStateToProps = state => {
+  const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
+    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
     pastCount: state.deployments.byStatus.finished.total,
     settings: state.users.globalSettings
   };
