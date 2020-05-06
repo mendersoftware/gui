@@ -66,6 +66,9 @@ body {
 .text-color {
   color: @text!important;
 }
+.text-muted {
+  color: @textmuted;
+}
 
 .warning {
   color: @errorStyleColor !important;
@@ -220,6 +223,15 @@ ul.link-list {
   position: absolute !important;
 }
 
+.margin {
+  margin: 2 * @defaultGutterWidth;
+}
+.margin-small {
+  margin: @defaultGutterWidth;
+}
+.margin-large {
+  margin: 3 * @defaultGutterWidth;
+}
 .margin-top {
   margin-top: 2 * @defaultGutterWidth;
 }
@@ -237,6 +249,9 @@ ul.link-list {
 }
 .margin-left-small {
   margin-left: @defaultGutterWidth;
+}
+.margin-left-large {
+  margin-left: 3 * @defaultGutterWidth;
 }
 .margin-right {
   margin-right: 2 * @defaultGutterWidth;
@@ -479,8 +494,6 @@ ul.link-list {
 }
 
 .flexbox {
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   overflow: hidden;
   &.centered {
@@ -496,6 +509,12 @@ ul.link-list {
   &.no-basis {
     flex-basis: 0;
   }
+}
+
+.two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 2 * @defaultGutterWidth;
 }
 
 .overflow-hidden {
@@ -849,22 +868,6 @@ ul.link-list {
   }
 }
 
-.development {
-  background-color: @alertgreen;
-  padding: 7px 11px;
-  color: @lightestgrey;
-  border-radius: 20px;
-  margin: -10px 0 10px;
-  display: table;
-
-  .material-icons {
-    margin-right: 7px;
-    color: @lightestgrey;
-    vertical-align: text-bottom;
-    font-size: 18px;
-  }
-}
-
 .react-tooltip {
   background-color: @mendermaroon !important;
   pointer-events: auto !important;
@@ -1191,38 +1194,12 @@ table thead.clickable tr > th:first-child {
   }
 }
 
-/*  hint.css tooltips */
-[class*='hint--'] {
-  min-width: 65px !important;
-}
-
-#reportAbort&[class*='hint--']:after {
-  white-space: pre-wrap !important;
-}
-
-.hint--info.hint--bottom-left:before,
-.hint--info.hint--bottom-right:before,
-.hint--info.hint--bottom:before {
-  border-bottom-color: @mendermaroon;
-}
-
-.hint--info:after {
-  background-color: @mendermaroon;
-}
-
 .results-status {
   padding-top: 4px;
+  margin-bottom: 5px;
 
   .disabled {
     .opacity(0.1);
-  }
-
-  &.vertical > div {
-    display: block;
-    margin-bottom: 5px;
-    &.disabled {
-      .opacity(1);
-    }
   }
 
   span.status {
@@ -1280,12 +1257,6 @@ table thead.clickable tr > th:first-child {
 
 span.code {
   padding: 2px;
-}
-
-#reportAbort {
-  position: absolute;
-  top: 100px;
-  right: 2 * @defaultGutterWidth;
 }
 
 /* Forms and inputs*/
@@ -1961,17 +1932,12 @@ span.day {
 
 .report-container {
   display: grid;
-  grid-template-columns: 2fr 220px 235px 235px 1fr;
+  grid-template-columns: 2fr 2fr 1fr;
   grid-column-gap: 2 * @defaultGutterWidth;
-  &.report-progressing {
-    grid-template-columns: 1fr 2fr 1fr;
-  }
   .deploymentInfo {
     margin-top: 30px;
     font-size: 14px;
-    white-space: nowrap;
     flex-grow: 1;
-    max-width: 350px;
     > div {
       margin-bottom: 10px;
       overflow: hidden;
@@ -2017,38 +1983,69 @@ span.day {
 }
 
 /* Deployments */
+.deployments-pending {
+  padding: 10px @defaultGutterWidth 2 * @defaultGutterWidth;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background-color: #fdfdfd;
+  .dashboard-header {
+    margin-bottom: 2 * @defaultGutterWidth;
+    span {
+      background: #fdfdfd;
+    }
+  }
+  .deploy-table-contain {
+    margin-bottom: initial;
+  }
+}
 
 .deployment-item {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 3fr 1fr 50px;
+  grid-template-columns: 2fr 1fr 1fr 1fr 0.75fr 4fr 1.2fr 50px;
   grid-column-gap: 2 * @defaultGutterWidth;
   border-bottom: 1px solid @bordercolor;
-  margin: 0 1.5vw;
+  margin: 0 @defaultGutterWidth;
+  padding: 10px 0;
   align-items: center;
   position: relative;
   min-width: 1300px;
   &.deployment-header-item {
     border-bottom: transparent;
+    &.progress-item {
+      padding-right: @defaultGutterWidth;
+    }
   }
-  &.progress-item {
-    padding: 10px 0;
+  &.scheduled-item {
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1.2fr 50px;
+  }
+  &.past-item {
+    grid-template-columns: 2fr 1fr 1fr 1fr 0.75fr 4fr 1fr;
+  }
+  &:last-of-type {
+    border-bottom: transparent;
   }
   > div,
   time {
     min-width: 100px;
+  }
+  > .column-defined {
+    min-width: initial;
   }
   .cancelButton:hover {
     color: @red;
   }
   .progress-chart-container {
     background: @lightestgrey;
-    padding: 15px 20px;
+    padding: 10px 20px;
     height: 70px;
     border-radius: @dotSize * 0.5;
-    .progress-chart {
+    justify-content: center;
+    .progress-chart,
+    .progress-step-total {
       display: flex;
       width: 100%;
-      height: 30px;
+      min-height: 20px;
+      height: 100%;
       position: relative;
     }
     .progress-step {
@@ -2063,8 +2060,6 @@ span.day {
     }
     .progress-step-total {
       position: absolute;
-      width: 100%;
-      height: 2 * @defaultGutterWidth;
       z-index: 0;
       border: none;
       .progress-bar {
@@ -2099,12 +2094,18 @@ span.day {
 }
 
 // deployment progress report
+.deployment-report {
+  .MuiTab-textColorInherit {
+    color: @verylightgrey;
+  }
+  .MuiTab-root {
+    height: 100%;
+    min-height: 0px;
+    min-width: fit-content;
+  }
+}
+
 .statusLarge {
-  vertical-align: top;
-  overflow: visible !important;
-  position: relative;
-  display: inline-block;
-  top: -5px;
   > img {
     vertical-align: top;
     display: inline;
@@ -2136,11 +2137,7 @@ span.day {
 
 .progressStatus {
   background-color: @lightestgrey;
-  padding: @defaultGutterWidth 90px @defaultGutterWidth;
-  position: relative;
-  top: -26px;
-  height: auto;
-  margin: 2 * @defaultGutterWidth 2 * @defaultGutterWidth 0 0;
+  padding: @defaultGutterWidth 4 * @defaultGutterWidth @defaultGutterWidth;
   #progressStatus {
     text-align: center;
     vertical-align: top;

@@ -67,6 +67,16 @@ const releaseReducer = (state = initialState, action) => {
         byId: action.releases
       };
     }
+    case ReleaseConstants.RECEIVE_RELEASE:
+      return {
+        ...state,
+        byId: {
+          [action.release.Name]: {
+            ...state.byId[action.release.Name],
+            ...action.release
+          }
+        }
+      };
     case ReleaseConstants.RELEASE_REMOVED: {
       let byId = state.byId;
       delete byId[action.release];

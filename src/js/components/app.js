@@ -62,7 +62,10 @@ class AppRoot extends React.PureComponent {
         <CreateArtifactDialog
           open={showCreateArtifactDialog}
           onCancel={() => setShowCreateArtifactDialog(false)}
-          onClose={() => setShowCreateArtifactDialog(false)}
+          onClose={() => {
+            history.push('/releases');
+            setShowCreateArtifactDialog(false);
+          }}
         />
         <DeviceConnectionDialog open={showDeviceConnectionDialog} onCancel={() => setShowConnectingDialog(false)} />
         <SharedSnackbar />
@@ -75,9 +78,8 @@ const actionCreators = { setShowConnectingDialog, setShowCreateArtifactDialog, s
 
 const mapStateToProps = state => {
   return {
-    artifactProgress: state.releases.artifactProgress,
+    artifactProgress: state.releases.uploadProgress,
     currentUser: state.users.currentUser,
-    uploadInProgress: state.releases.uploadInProgress,
     showDismissHelptipsDialog: !state.users.onboarding.complete && state.users.onboarding.showTipsDialog,
     showCreateArtifactDialog: state.users.onboarding.showCreateArtifactDialog,
     showDeviceConnectionDialog: state.users.onboarding.showConnectDeviceDialog

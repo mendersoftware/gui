@@ -3,11 +3,18 @@
 exports[`DeploymentStatus Component renders correctly 1`] = `
 <div>
   <div
-    className="results-status"
+    className="flexbox results-status"
   >
     <div
-      aria-label="Skipped"
-      className="hint--bottom disabled"
+      aria-describedby={null}
+      className="disabled"
+      onBlur={[Function]}
+      onFocus={[Function]}
+      onMouseLeave={[Function]}
+      onMouseOver={[Function]}
+      onTouchEnd={[Function]}
+      onTouchStart={[Function]}
+      title="Skipped"
     >
       <span
         className="status skipped"
@@ -16,8 +23,15 @@ exports[`DeploymentStatus Component renders correctly 1`] = `
       </span>
     </div>
     <div
-      aria-label="Pending"
-      className="hint--bottom disabled"
+      aria-describedby={null}
+      className="disabled"
+      onBlur={[Function]}
+      onFocus={[Function]}
+      onMouseLeave={[Function]}
+      onMouseOver={[Function]}
+      onTouchEnd={[Function]}
+      onTouchStart={[Function]}
+      title="Pending"
     >
       <span
         className="status pending"
@@ -26,8 +40,15 @@ exports[`DeploymentStatus Component renders correctly 1`] = `
       </span>
     </div>
     <div
-      aria-label="In progress"
-      className="hint--bottom disabled"
+      aria-describedby={null}
+      className="disabled"
+      onBlur={[Function]}
+      onFocus={[Function]}
+      onMouseLeave={[Function]}
+      onMouseOver={[Function]}
+      onTouchEnd={[Function]}
+      onTouchStart={[Function]}
+      title="In progress"
     >
       <span
         className="status inprogress"
@@ -36,8 +57,15 @@ exports[`DeploymentStatus Component renders correctly 1`] = `
       </span>
     </div>
     <div
-      aria-label="Successful"
-      className="hint--bottom disabled"
+      aria-describedby={null}
+      className="disabled"
+      onBlur={[Function]}
+      onFocus={[Function]}
+      onMouseLeave={[Function]}
+      onMouseOver={[Function]}
+      onTouchEnd={[Function]}
+      onTouchStart={[Function]}
+      title="Successful"
     >
       <span
         className="status success"
@@ -46,8 +74,15 @@ exports[`DeploymentStatus Component renders correctly 1`] = `
       </span>
     </div>
     <div
-      aria-label="Failed"
-      className="hint--bottom disabled"
+      aria-describedby={null}
+      className="disabled"
+      onBlur={[Function]}
+      onFocus={[Function]}
+      onMouseLeave={[Function]}
+      onMouseOver={[Function]}
+      onTouchEnd={[Function]}
+      onTouchStart={[Function]}
+      title="Failed"
     >
       <span
         className="status failure"

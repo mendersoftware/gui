@@ -31,6 +31,16 @@ exports[`PendingDevices Component renders correctly 1`] = `
       <p>
         There are no devices pending authorization
       </p>
+      <p>
+        Visit the 
+        <a
+          href="/help/getting-started"
+          onClick={[Function]}
+        >
+          Help section
+        </a>
+         to learn how to connect devices to the Mender server.
+      </p>
     </div>
   </div>
 </div>

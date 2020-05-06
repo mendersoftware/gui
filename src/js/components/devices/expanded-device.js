@@ -25,9 +25,9 @@ import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { preformatWithRequestID } from '../../helpers';
 import { advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import { AuthButton } from '../helptips/helptooltips';
+import ExpandableAttribute from '../common/expandable-attribute';
 import Loader from '../common/loader';
 import Authsets from './authsets';
-import ExpandableDeviceAttribute from './expandable-device-attribute';
 
 const iconStyle = { margin: 12 };
 
@@ -153,12 +153,13 @@ export class ExpandedDevice extends React.Component {
 
   render() {
     const self = this;
-    const { attributes, created_ts, identity_data, status } = this.props.device;
+    const { className, device, highlightHelp, id_attribute, id_value, limitMaxed, setSnackbar, showHelptips, unauthorized } = self.props;
+    const { auth_sets, attributes, created_ts, id, identity_data, status = DEVICE_STATES.accepted } = device;
 
-    let deviceIdentity = [<ExpandableDeviceAttribute key="id_checksum" primary="Device ID" secondary={this.props.device.id || '-'} />];
+    let deviceIdentity = [<ExpandableAttribute key="id_checksum" primary="Device ID" secondary={id || '-'} />];
     if (identity_data) {
       deviceIdentity = Object.entries(identity_data).reduce((accu, item) => {
-        accu.push(<ExpandableDeviceAttribute key={item[0]} primary={item[0]} secondary={item[1]} />);
+        accu.push(<ExpandableAttribute key={item[0]} primary={item[0]} secondary={item[1]} />);
         return accu;
       }, deviceIdentity);
     }
@@ -166,7 +167,7 @@ export class ExpandedDevice extends React.Component {
     if (created_ts) {
       var createdTime = <Time value={created_ts} format="YYYY-MM-DD HH:mm" />;
       deviceIdentity.push(
-        <ExpandableDeviceAttribute key="connectionTime" primary={status === DEVICE_STATES.preauth ? 'Date added' : 'First request'} secondary={createdTime} />
+        <ExpandableAttribute key="connectionTime" primary={status === DEVICE_STATES.preauth ? 'Date added' : 'First request'} secondary={createdTime} />
       );
     }
 
@@ -177,7 +178,7 @@ export class ExpandedDevice extends React.Component {
       var sortedAttributes = Object.entries(attributes).sort((a, b) => a[0].localeCompare(b[0]));
       deviceInventory = sortedAttributes.reduce((accu, attribute, i) => {
         var secondaryText = Array.isArray(attribute[1]) ? attribute[1].join(',') : attribute[1];
-        accu.push(<ExpandableDeviceAttribute key={i} primary={attribute[0]} secondary={secondaryText} textClasses={{ secondary: 'inventory-text' }} />);
+        accu.push(<ExpandableAttribute key={i} primary={attribute[0]} secondary={secondaryText} textClasses={{ secondary: 'inventory-text' }} />);
         return accu;
       }, deviceInventory);
     } else {
@@ -216,8 +217,8 @@ export class ExpandedDevice extends React.Component {
     const statusIcon = states[status].statusIcon;
 
     var hasPending = '';
-    if (status === DEVICE_STATES.accepted && this.props.device.auth_sets.length > 1) {
-      hasPending = this.props.device.auth_sets.reduce((accu, set) => {
+    if (status === DEVICE_STATES.accepted && auth_sets.length > 1) {
+      hasPending = auth_sets.reduce((accu, set) => {
         return set.status === DEVICE_STATES.pending ? 'This device has a pending authentication set' : accu;
       }, '');
     }
@@ -252,8 +253,8 @@ export class ExpandedDevice extends React.Component {
 
             <Button
               onClick={() => {
-                this.toggleAuthsets(true);
-                self.props.setSnackbar('');
+                self.toggleAuthsets(true);
+                setSnackbar('');
               }}
             >
               {hasPending ? <WarningIcon className="auth" style={iconStyle} /> : null}
@@ -270,7 +271,7 @@ export class ExpandedDevice extends React.Component {
         </div>
 
         {(attributes || status === DEVICE_STATES.accepted) && (
-          <div className={`device-inventory bordered ${this.props.unauthorized ? 'hidden' : 'report-list'}`}>
+          <div className={`device-inventory bordered ${unauthorized ? 'hidden' : 'report-list'}`}>
             <h4 className="margin-bottom-none">Device inventory</h4>
             <List>{deviceInventory}</List>
           </div>
@@ -283,7 +284,7 @@ export class ExpandedDevice extends React.Component {
             </Button>
             {status === DEVICE_STATES.accepted ? (
               <span className="margin-left">
-                <Button to={`/deployments?open=true&deviceId=${this.props.device.id}`} component={ForwardingLink} startIcon={<ReplayIcon />}>
+                <Button to={`/deployments?open=true&deviceId=${id}`} component={ForwardingLink} startIcon={<ReplayIcon />}>
                   Create a deployment for this device
                 </Button>
               </span>
@@ -301,9 +302,7 @@ export class ExpandedDevice extends React.Component {
 
     var authsetTitle = (
       <div style={{ width: 'fit-content', position: 'relative' }}>
-        {this.props.device.status === DEVICE_STATES.pending
-          ? `Authorization ${pluralize('request', this.props.device.auth_sets.length)} for this device`
-          : 'Authorization status for this device'}
+        {status === DEVICE_STATES.pending ? `Authorization ${pluralize('request', auth_sets.length)} for this device` : 'Authorization status for this device'}
         <div
           onClick={e => this._handleStopProp(e)}
           id="inventory-info"
@@ -333,14 +332,14 @@ export class ExpandedDevice extends React.Component {
     );
 
     return (
-      <div className={this.props.className}>
+      <div className={className}>
         {deviceInfo}
 
-        {this.props.showHelptips && status === DEVICE_STATES.pending ? (
+        {showHelptips && status === DEVICE_STATES.pending ? (
           <div>
             <div
               id="onboard-4"
-              className={this.props.highlightHelp ? 'tooltip help highlight' : 'tooltip help'}
+              className={highlightHelp ? 'tooltip help highlight' : 'tooltip help'}
               data-tip
               data-for="auth-button-tip"
               data-event="click focus"
@@ -349,7 +348,7 @@ export class ExpandedDevice extends React.Component {
               <HelpIcon />
             </div>
             <ReactTooltip id="auth-button-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-              <AuthButton devices={[this.props.device]} />
+              <AuthButton devices={[device]} />
             </ReactTooltip>
           </div>
         ) : null}
@@ -369,10 +368,10 @@ export class ExpandedDevice extends React.Component {
             <Authsets
               dialogToggle={shouldUpdate => this.toggleAuthsets(false, shouldUpdate)}
               decommission={id => this._decommissionDevice(id)}
-              device={this.props.device}
-              id_attribute={this.props.id_attribute}
-              id_value={this.props.id_value}
-              limitMaxed={this.props.limitMaxed}
+              device={device}
+              id_attribute={id_attribute}
+              id_value={id_value}
+              limitMaxed={limitMaxed}
             />
           </DialogContent>
           <DialogActions>{authsetActions}</DialogActions>
@@ -386,7 +385,6 @@ const actionCreators = { decommissionDevice, getReleases, selectDevice, setSnack
 
 const mapStateToProps = state => {
   return {
-    artifacts: state.releases.artifactsRepo,
     docsVersion: state.app.docsVersion,
     onboardingComplete: state.users.onboarding.complete,
     showHelptips: state.users.showHelptips

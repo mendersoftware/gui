@@ -5,7 +5,7 @@ exports[`UserForm Component renders correctly 1`] = `
   className=""
 >
   <div
-    className="MuiFormControl-root undefined required"
+    className="MuiFormControl-root  required"
   >
     <label
       className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"

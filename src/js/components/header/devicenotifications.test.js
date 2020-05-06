@@ -2,6 +2,7 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import DeviceNotifications from './devicenotifications';
+import { undefineds } from '../../../../tests/mockData';
 
 describe('DeviceNotifications Component', () => {
   it('renders correctly', () => {
@@ -13,5 +14,6 @@ describe('DeviceNotifications Component', () => {
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
+    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });
 });

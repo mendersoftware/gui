@@ -39,12 +39,12 @@ export class OnboardingCompleteTip extends React.Component {
   }
 
   render() {
-    const { docsVersion, hasDeltaAccess, setOnboardingComplete } = this.props;
+    const { anchor, docsVersion, hasDeltaAccess, setOnboardingComplete } = this.props;
     const { loading, targetUrl } = this.state;
     const url = targetUrl ? targetUrl : this.props.targetUrl;
 
     return (
-      <div className="onboard-tip" style={{ left: '50%', top: '50%' }}>
+      <div className="onboard-tip" style={anchor}>
         <a
           className="tooltip onboard-icon"
           data-tip
