@@ -137,11 +137,9 @@ export class Deployments extends React.Component {
           self._changeTab(routes.active.route);
         }
       })
-      .catch(err => {
-        self.props.setSnackbar('Error while creating deployment');
-        var errMsg = err.res.body.error || '';
-        self.props.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard');
-      });
+      .catch(err =>
+        self.props.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${err.res.body.error || ''}`), null, 'Copy to clipboard')
+      );
   }
 
   _abortDeployment(id) {
