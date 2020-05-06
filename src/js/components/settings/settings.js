@@ -8,12 +8,14 @@ import { List, ListItem, ListItemText, ListSubheader } from '@material-ui/core';
 import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
 import MyOrganization from './organization';
+import Roles from './roles';
 import Global from './global';
 
 const sectionMap = {
   'global-settings': { admin: false, enterprise: false, multitenancy: false, component: <Global />, text: 'Global settings' },
   'my-account': { admin: false, enterprise: false, multitenancy: false, component: <SelfUserManagement />, text: 'My account' },
   'user-management': { admin: true, enterprise: false, multitenancy: false, component: <UserManagement />, text: 'User management' },
+  'role-management': { admin: true, enterprise: true, multitenancy: false, component: <Roles />, text: 'Roles' },
   'my-organization': { admin: false, enterprise: false, multitenancy: true, component: <MyOrganization />, text: 'My organization' }
 };
 
