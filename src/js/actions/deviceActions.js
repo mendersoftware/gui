@@ -1,6 +1,6 @@
 import parse from 'parse-link-header';
 
-import DevicesApi from '../api/devices-api';
+import DevicesApi, { headerNames } from '../api/devices-api';
 import * as DeviceConstants from '../constants/deviceConstants';
 import { deriveAttributesFromDevices, duplicateFilter, filterDevices, mapDeviceAttributes } from '../helpers';
 
@@ -158,7 +158,7 @@ export const addDynamicGroup = (groupName, filterPredicates) => (dispatch, getSt
           deviceIds: [],
           total: 0,
           ...getState().devices.groups.byId[groupName],
-          id: res.headers['location'].substring(res.headers['location'].lastIndexOf('/') + 1),
+          id: res.headers[headerNames.location].substring(res.headers[headerNames.location].lastIndexOf('/') + 1),
           filters: filterPredicates
         }
       })
@@ -296,7 +296,7 @@ export const getAllGroupDevices = group => (dispatch, getState) => {
   const forGroup = group ? `&group=${group}` : '&has_group=false';
   const getAllDevices = (perPage = 500, page = defaultPage, devices = []) =>
     DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${perPage}&page=${page}${forGroup}`).then(res => {
-      const links = parse(res.headers['link']);
+      const links = parse(res.headers[headerNames.link]);
       const deviceAccu = reduceReceivedDevices(res.body, devices, state);
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICES,
@@ -388,7 +388,7 @@ export const getInventoryDevices = (page = defaultPage, perPage = defaultPerPage
       // for each device, get device identity info
       tasks.push(dispatch(getDevicesWithAuth(Object.values(deviceAccu.devicesById))));
     }
-    tasks.push(Promise.resolve({ deviceAccu, total: Number(res.headers['x-total-count']) }));
+    tasks.push(Promise.resolve({ deviceAccu, total: Number(res.headers[headerNames.total]) }));
     return Promise.all(tasks);
   });
 };
@@ -437,7 +437,7 @@ const deriveInactiveDevices = (acceptedDeviceIds, deviceInventoryIds) => (dispat
 export const getAllDevices = limit => (dispatch, getState) => {
   const getAllDevices = (perPage = 500, page = 1, devices = []) =>
     DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${perPage}&page=${page}`).then(res => {
-      const links = parse(res.headers['link']);
+      const links = parse(res.headers[headerNames.link]);
       const deviceAccu = reduceReceivedDevices(res.body, devices, getState());
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICES,
@@ -552,7 +552,7 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
         type: DeviceConstants.RECEIVE_DEVICES,
         devicesById: deviceAccu.devicesById
       });
-      const links = parse(res.headers['link']);
+      const links = parse(res.headers[headerNames.link]);
       if (links.next) {
         return getAllDevices(perPage, page + 1, deviceAccu.ids);
       }
