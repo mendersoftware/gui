@@ -1,5 +1,5 @@
 import * as DeploymentConstants from '../constants/deploymentConstants';
-import DeploymentsApi from '../api/deployments-api';
+import DeploymentsApi, { headerNames } from '../api/deployments-api';
 import { mapAttributesToAggregator, startTimeSort } from '../helpers';
 
 const apiUrl = '/api/management/v1';
@@ -62,7 +62,7 @@ export const getDeploymentsByStatus = (status, page = default_page, per_page = d
           deployments,
           deploymentIds,
           status,
-          total: Number(res.headers['x-total-count'])
+          total: Number(res.headers[headerNames.total])
         })
       ]
     );
