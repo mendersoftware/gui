@@ -74,8 +74,8 @@ export class RoleManagement extends React.Component {
     Plan name
     ${plans[currentPlan]}
     I would like to create a group with the following settings:
-      name: ${name},
-      description: ${description},
+      name: ${name || ''},
+      description: ${description || ''},
       allow managing other users: ${allowUserManagement ? 'Yes' : 'No'},
       groups: ${groupsList}`);
   }
