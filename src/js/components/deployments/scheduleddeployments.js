@@ -5,7 +5,7 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import { Button } from '@material-ui/core';
-import { CalendarToday as CalendarTodayIcon, List as ListIcon } from '@material-ui/icons';
+import { CalendarToday as CalendarTodayIcon, List as ListIcon, Refresh as RefreshIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
@@ -164,7 +164,7 @@ export class Scheduled extends React.Component {
                 <EnterpriseNotification isEnterprise={isEnterprise} benefit="scheduled deployments to steer the distribution of your updates." />
               </div>
             )}
-            <img src="assets/img/deployments.png" alt="In progress" />
+            <RefreshIcon style={{ transform: 'rotateY(-180deg)', fill: '#e3e3e3', width: 111, height: 111 }} />
           </div>
         )}
       </div>

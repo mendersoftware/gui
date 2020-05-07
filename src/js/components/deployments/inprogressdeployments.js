@@ -2,11 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
+import { Refresh as RefreshIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
 import { tryMapDeployments } from '../../helpers';
+import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
@@ -169,7 +170,7 @@ export class Progress extends React.Component {
             <p>
               <a onClick={createClick}>Create a deployment</a> to get started
             </p>
-            <img src="assets/img/deployments.png" alt="In progress" />
+            <RefreshIcon style={{ transform: 'rotateY(-180deg)', fill: '#e3e3e3', width: 111, height: 111 }} />
           </div>
         )}
       </div>
