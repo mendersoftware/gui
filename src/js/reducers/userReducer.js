@@ -32,7 +32,7 @@ const initialState = {
     showCreateArtifactDialog: false
   },
   roles: [
-    { id: 'RBAC_ROLE_PERMIT_ALL', title: 'All Allowed', allowUserManagement: true, groups: [], description: 'Full access', editable: false },
+    { id: 'RBAC_ROLE_PERMIT_ALL', title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false },
     { id: 'RBAC_ROLE_OBSERVER', title: 'Read only', allowUserManagement: false, groups: [], description: '', editable: false },
     { id: 'RBAC_ROLE_CI', title: 'CI', allowUserManagement: false, groups: [], description: '', editable: false }
   ]
