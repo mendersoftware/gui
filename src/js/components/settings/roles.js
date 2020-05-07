@@ -5,6 +5,7 @@ import { Button, Checkbox, Chip, Collapse, FormControlLabel, Table, TableBody, T
 import { Add as AddIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
+import { getGroups, getDynamicGroups } from '../../actions/deviceActions';
 import { PLANS as plans } from '../../constants/appConstants';
 
 export class RoleManagement extends React.Component {
@@ -16,6 +17,16 @@ export class RoleManagement extends React.Component {
       description: undefined,
       name: undefined
     };
+    if (!props.groups.length) {
+      props.getDynamicGroups();
+      props.getGroups();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.groups.length !== this.props.groups.length) {
+      this.setState({ groups: this.props.groups.map(group => ({ name: group, selected: false })) });
+    }
   }
 
   onSubmit() {
@@ -124,17 +135,19 @@ export class RoleManagement extends React.Component {
               label="Allow to manage other users"
             />
           </div>
-          <div className="flexbox column margin-top-small">
-            <div>Device group permission</div>
-            {groups.map(group => (
-              <FormControlLabel
-                style={{ marginTop: 0, marginLeft: 0 }}
-                key={group.name}
-                control={<Checkbox color="primary" checked={group.selected} onChange={(e, checked) => self.handleGroupSelection(checked, group)} />}
-                label={group.name}
-              />
-            ))}
-          </div>
+          {groups.length && (
+            <div className="flexbox column margin-top-small">
+              <div>Device group permission</div>
+              {groups.map(group => (
+                <FormControlLabel
+                  style={{ marginTop: 0, marginLeft: 0 }}
+                  key={group.name}
+                  control={<Checkbox color="primary" checked={group.selected} onChange={(e, checked) => self.handleGroupSelection(checked, group)} />}
+                  label={group.name}
+                />
+              ))}
+            </div>
+          )}
           <div className="flexbox centered" style={{ justifyContent: 'flex-end' }}>
             <Button onClick={() => self.onCancel()} style={{ marginRight: 15 }}>
               Cancel
@@ -149,7 +162,7 @@ export class RoleManagement extends React.Component {
   }
 }
 
-const actionCreators = { setSnackbar };
+const actionCreators = { getDynamicGroups, getGroups, setSnackbar };
 
 const mapStateToProps = state => {
   return {
