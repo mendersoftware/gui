@@ -1,6 +1,6 @@
 import * as DeploymentConstants from '../constants/deploymentConstants';
 import DeploymentsApi, { headerNames } from '../api/deployments-api';
-import { startTimeSort } from '../helpers';
+import { mapAttributesToAggregator, startTimeSort } from '../helpers';
 
 const apiUrl = '/api/management/v1';
 const apiUrlV2 = '/api/management/v2';
@@ -25,16 +25,10 @@ const transformDeployments = (deployments, deploymentsById) =>
 // all deployments
 export const getDeployments = (page = default_page, per_page = default_per_page) => (dispatch, getState) =>
   DeploymentsApi.get(`${deploymentsApiUrl}/deployments?page=${page}&per_page=${per_page}`).then(res => {
-    const deploymentsByStatus = res.body.reduce(
-      (accu, item) => {
-        accu[item.status].push(item);
-        return accu;
-      },
-      Object.keys(getState().deployments.byStatus).reduce((accu, item) => {
-        accu[item] = [];
-        return accu;
-      }, {})
-    );
+    const deploymentsByStatus = res.body.reduce((accu, item) => {
+      accu[item.status].push(item);
+      return accu;
+    }, mapAttributesToAggregator(getState().deployments.byStatus));
     return Promise.all(
       Object.entries(deploymentsByStatus).map(([status, value]) => {
         const { deployments, deploymentIds } = transformDeployments(value, getState().deployments.byId);

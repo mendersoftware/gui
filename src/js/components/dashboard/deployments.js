@@ -7,6 +7,7 @@ import UpdateIcon from '@material-ui/icons/Update';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeployments } from '../../actions/deploymentActions';
+import { mapAttributesToAggregator } from '../../helpers';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
@@ -153,16 +154,10 @@ export class Deployments extends React.Component {
 const actionCreators = { getDeployments, setSnackbar };
 
 const mapStateToProps = state => {
-  const deploymentsByState = Object.values(state.deployments.byId).reduce(
-    (accu, item) => {
-      accu[item.status].push(item);
-      return accu;
-    },
-    Object.keys(state.deployments.byStatus).reduce((accu, item) => {
-      accu[item] = [];
-      return accu;
-    }, {})
-  );
+  const deploymentsByState = Object.values(state.deployments.byId).reduce((accu, item) => {
+    accu[item.status].push(item);
+    return accu;
+  }, mapAttributesToAggregator(state.deployments.byStatus));
   return {
     finished: state.deployments.byStatus.finished.total
       ? state.deployments.byStatus.finished.deploymentIds.map(id => state.deployments.byId[id])
