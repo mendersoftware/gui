@@ -7,9 +7,9 @@ import { Chip, List } from '@material-ui/core';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import ExpandableAttribute from '../../common/expandable-attribute';
 import { PLANS as plans } from '../../../constants/appConstants';
-import { formatTime, getRemainderPercent } from '../../../helpers';
+import { formatTime, generateDeploymentGroupDetails, getRemainderPercent } from '../../../helpers';
 
-const Review = ({ deployment = {}, deploymentDeviceIds, device, group, isEnterprise, isHosted, phases, plan, release, retries = 0 }) => {
+const Review = ({ deployment = {}, deploymentDeviceIds, device, filters, group, isEnterprise, isHosted, phases, plan, release, retries = 0 }) => {
   // Create 'phases' for view only
   const deploymentPhases = phases || [{ batch_size: 100 }];
   const start_time = deploymentPhases[0].start_ts || deployment.created || new Date().toISOString();
@@ -19,7 +19,10 @@ const Review = ({ deployment = {}, deploymentDeviceIds, device, group, isEnterpr
     General: [
       { primary: 'Release', secondary: release.Name },
       { primary: 'Device types compatible', secondary: release.device_types_compatible.join(', ') },
-      { primary: `Device${device ? '' : ' group'}`, secondary: device ? device.id : group },
+      {
+        primary: `Device${device ? '' : ' group'}`,
+        secondary: device ? device.id : generateDeploymentGroupDetails(deployment.filter || { terms: filters }, group)
+      },
       { primary: 'Number of retries', secondary: retries }
     ],
     Schedule: [

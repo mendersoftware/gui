@@ -125,6 +125,7 @@ export class CreateDialog extends React.Component {
           </Stepper>
           <ComponentToShow
             deploymentAnchor={this.deploymentRef}
+            filters={deploymentSettings.filterId ? groups[deploymentObject.group || group].filters : undefined}
             {...self.props}
             {...self.state}
             {...deploymentSettings}
