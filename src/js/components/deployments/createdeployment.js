@@ -124,7 +124,6 @@ export class CreateDialog extends React.Component {
             ))}
           </Stepper>
           <ComponentToShow
-            disableSchedule={self.state.disableSchedule}
             deploymentAnchor={this.deploymentRef}
             {...self.props}
             {...self.state}
