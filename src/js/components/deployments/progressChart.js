@@ -48,8 +48,9 @@ export default class ProgressChart extends React.Component {
   }
 
   render() {
-    const { created, currentProgressCount, id, totalDeviceCount, totalFailureCount, totalSuccessCount, status } = this.props;
+    const { className = '', created, currentProgressCount, id, totalDeviceCount, totalFailureCount, totalSuccessCount } = this.props;
     const { time } = this.state;
+    const status = this.props.status === 'pending' && this.props.currentProgressCount === 0 ? 'queued' : this.props.status;
     let phases = this.props.phases;
     phases = phases && phases.length ? phases : [{ id, device_count: totalSuccessCount, batch_size: totalDeviceCount, start_ts: created }];
 
@@ -101,7 +102,7 @@ export default class ProgressChart extends React.Component {
         <span className="margin-left-small">{statusMap[status].description()}</span>
       </div>
     ) : (
-      <div className={`flexbox column progress-chart-container ${this.props.className || ''}`}>
+      <div className={`flexbox column progress-chart-container ${className}`}>
         {statusMap[status] && (
           <span className="flexbox small text-muted" style={{ alignItems: 'center' }}>
             {statusMap[status].icon}
