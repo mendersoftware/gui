@@ -129,7 +129,7 @@ export default class FilterItem extends React.Component {
         </Select>
         <TextField
           label="Value"
-          value={value || ''}
+          value={value}
           onChange={e => self.updateFilterValue(e.target.value)}
           InputLabelProps={{ shrink: !!value }}
           style={textFieldStyle}
