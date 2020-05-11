@@ -12,4 +12,5 @@ COPY package.json package-lock.json cypress.json ./
 RUN npm ci
 COPY cypress ./cypress
 RUN npx cypress verify
-CMD npm run ciTest
+ENTRYPOINT []
+CMD tail -f /dev/null
