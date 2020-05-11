@@ -55,7 +55,7 @@ const mapStateToProps = state => {
   const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
     currentUser,
-    isAdmin: currentUser ? currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL') : false,
+    isAdmin: currentUser && currentUser.roles ? currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL') : false,
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
     hasMultitenancy: state.app.features.hasMultitenancy
   };
