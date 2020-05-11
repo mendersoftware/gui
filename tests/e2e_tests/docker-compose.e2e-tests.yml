@@ -21,7 +21,10 @@ services:
       - mender-create-artifact-worker
       - minio
     volumes:
-      - ${GUI_REPOSITORY}/tests/e2e_tests/cypress/screenshots:/e2e/cypress/screenshots
+      - ${GUI_REPOSITORY}/screenshots:/e2e/cypress/screenshots
+      - ${GUI_REPOSITORY}/videos:/e2e/cypress/videos
+      - ${GUI_REPOSITORY}/logs:/root/.npm/_logs
+
 
     ##
     ## to execute or edit the tests locally:

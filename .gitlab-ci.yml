@@ -35,7 +35,7 @@ test:acceptance:
   dependencies:
     - build:docker
   services:
-    - docker:18-dind
+    - docker:19.03.5-dind
   before_script:
     - export DOCKER_TAG=${CI_COMMIT_REF_SLUG:-master}
     - export SERVICE_IMAGE=${DOCKER_REPOSITORY}:${DOCKER_TAG}
@@ -49,7 +49,9 @@ test:acceptance:
   artifacts:
     expire_in: 2w
     paths:
-      - tests/e2e_tests/cypress/screenshots
+      - screenshots
+      - logs
+    when: on_failure
   tags:
     - mender-qa-slave
 
