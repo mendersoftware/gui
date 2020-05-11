@@ -42,7 +42,7 @@ export default class UserForm extends React.Component {
     if (isSelected) {
       newlySelectedRoles.push(role);
     } else if (foundIndex > -1) {
-      newlySelectedRoles.splice(foundIndex);
+      newlySelectedRoles.splice(foundIndex, 1);
     }
     this.setState({ selectedRoles: newlySelectedRoles });
   }
