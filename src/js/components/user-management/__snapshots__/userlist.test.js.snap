@@ -1,68 +1,47 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`UserList Component renders correctly 1`] = `
-<div
-  className="margin-top-small"
+<table
+  className="MuiTable-root"
 >
-  <div
-    style={
-      Object {
-        "marginLeft": "20px",
-      }
-    }
+  <thead
+    className="MuiTableHead-root"
   >
-    <h2
-      className="margin-top-small"
+    <tr
+      className="MuiTableRow-root MuiTableRow-head"
     >
-      Users
-    </h2>
-  </div>
-  <div
-    className="margin-bottom"
-  >
-    <table
-      className="MuiTable-root"
-    >
-      <thead
-        className="MuiTableHead-root"
+      <th
+        aria-sort={null}
+        className="MuiTableCell-root MuiTableCell-head"
+        scope="col"
       >
-        <tr
-          className="MuiTableRow-root MuiTableRow-head"
-        >
-          <th
-            aria-sort={null}
-            className="MuiTableCell-root MuiTableCell-head"
-            scope="col"
-          >
-            Email
-          </th>
-          <th
-            aria-sort={null}
-            className="MuiTableCell-root MuiTableCell-head"
-            scope="col"
-          >
-            Date created
-          </th>
-          <th
-            aria-sort={null}
-            className="MuiTableCell-root MuiTableCell-head"
-            scope="col"
-          >
-            Last updated
-          </th>
-          <th
-            aria-sort={null}
-            className="MuiTableCell-root MuiTableCell-head"
-            scope="col"
-          >
-            Manage
-          </th>
-        </tr>
-      </thead>
-      <tbody
-        className="MuiTableBody-root"
-      />
-    </table>
-  </div>
-</div>
+        Email
+      </th>
+      <th
+        aria-sort={null}
+        className="MuiTableCell-root MuiTableCell-head"
+        scope="col"
+      >
+        Date created
+      </th>
+      <th
+        aria-sort={null}
+        className="MuiTableCell-root MuiTableCell-head"
+        scope="col"
+      >
+        Last updated
+      </th>
+      <th
+        aria-sort={null}
+        className="MuiTableCell-root MuiTableCell-head"
+        scope="col"
+      >
+        Manage
+      </th>
+    </tr>
+  </thead>
+  <tbody
+    className="MuiTableBody-root"
+  />
+</table>
 `;
