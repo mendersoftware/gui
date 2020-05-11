@@ -8,7 +8,7 @@ import isEqual from 'lodash.isequal';
 import { Button, Tooltip } from '@material-ui/core';
 import { Block as BlockIcon, Timelapse as TimelapseIcon, Refresh as RefreshIcon } from '@material-ui/icons';
 
-import { formatTime, generateDeploymentGroupDetails } from '../../../helpers';
+import { formatTime } from '../../../helpers';
 import ExpandableAttribute from '../../common/expandable-attribute';
 import Pagination from '../../common/pagination';
 
@@ -97,12 +97,7 @@ export default class DeploymentOverview extends React.Component {
                 dividerDisabled={true}
                 style={{ marginBottom: -15 }}
               />
-              <ExpandableAttribute
-                primary="Device group:"
-                secondary={generateDeploymentGroupDetails(deployment.filter, deployment.name)}
-                dividerDisabled={true}
-                style={{ marginBottom: -15 }}
-              />
+              <ExpandableAttribute primary="Device group:" secondary={deployment.name} dividerDisabled={true} style={{ marginBottom: -15 }} />
             </div>
             <ExpandableAttribute primary="Status:" secondary={statusDescription} dividerDisabled={true} style={{ marginBottom: -15 }} />
           </div>
