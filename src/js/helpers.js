@@ -4,6 +4,7 @@ import React from 'react';
 
 import store from './reducers';
 import appConstants from './constants/appConstants';
+import { DEVICE_FILTERING_OPTIONS } from './constants/deviceConstants';
 
 export function isEncoded(uri) {
   uri = uri || '';
@@ -288,6 +289,13 @@ export const unionizeStrings = (someStrings, someOtherStrings) => {
     : startingPoint;
   return [...uniqueStrings];
 };
+
+export const generateDeploymentGroupDetails = (filter, groupName) =>
+  filter && filter.terms
+    ? `${groupName} (${filter.terms
+        .map(filter => `${filter.attribute || filter.key} ${DEVICE_FILTERING_OPTIONS[filter.type || filter.operator].shortform} ${filter.value}`)
+        .join(', ')})`
+    : groupName;
 
 export const tryMapDeployments = (accu, id) => {
   if (accu.state.deployments.byId[id]) {
