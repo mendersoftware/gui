@@ -139,6 +139,7 @@ exports[`Settings Component renders correctly 1`] = `
               placeholder="Email"
               required={false}
               type="text"
+              value=""
             />
           </div>
           <p

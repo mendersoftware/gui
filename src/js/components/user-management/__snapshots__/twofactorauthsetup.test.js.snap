@@ -82,6 +82,7 @@ exports[`TwoFactorAuthSetup Component renders correctly 1`] = `
                   placeholder="Verification code"
                   required={true}
                   type="text"
+                  value=""
                 />
               </div>
               <p
