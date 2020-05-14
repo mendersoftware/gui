@@ -499,7 +499,7 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
   const query = DevicesApi.get(`${deviceAuthV2}/devices?${status ? `status=${status}` : ''}&per_page=${perPage}&page=${page}`);
   const filters = getState().devices.filters;
   let possibleDeviceIds = [];
-  if (filters.length && shouldSelectDevices && status !== DeviceConstants.DEVICE_STATES.accepted) {
+  if (filters.length && shouldSelectDevices) {
     possibleDeviceIds = filterDevices(getState().devices, filters, status);
   }
   return query.then(response => {
