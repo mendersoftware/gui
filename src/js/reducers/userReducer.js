@@ -31,11 +31,11 @@ const initialState = {
     showConnectDeviceDialog: false,
     showCreateArtifactDialog: false
   },
-  roles: [
-    { id: 'RBAC_ROLE_PERMIT_ALL', title: 'All Allowed' },
-    { id: 'RBAC_ROLE_OBSERVER', title: 'Read only' },
-    { id: 'RBAC_ROLE_CI', title: 'CI' }
-  ]
+  rolesById: {
+    RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false, permissions: [] },
+    RBAC_ROLE_OBSERVER: { title: 'Read only', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
+    RBAC_ROLE_CI: { title: 'CI', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] }
+  }
 };
 
 const userReducer = (state = initialState, action) => {
