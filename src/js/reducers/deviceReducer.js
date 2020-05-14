@@ -18,7 +18,7 @@ const initialState = {
   filteringAttributes: { identityAttributes: [], inventoryAttributes: [] },
   filteringAttributesLimit: 10,
   total: 0,
-  limit: 500,
+  limit: 0,
   groups: {
     byId: {
       // groupName: { deviceIds: [], total: 0, filters: [] },

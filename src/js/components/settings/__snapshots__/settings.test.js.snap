@@ -33,11 +33,12 @@ exports[`Settings Component renders correctly 1`] = `
         </div>
       </a>
       <a
-        aria-current={null}
-        className="MuiListItem-root navLink settingsNav MuiListItem-gutters"
+        aria-current="page"
+        className="MuiListItem-root navLink settingsNav MuiListItem-gutters active"
         disabled={false}
         href="/settings/my-account"
         onClick={[Function]}
+        style={Object {}}
       >
         <div
           className="MuiListItemText-root"
@@ -159,8 +160,8 @@ exports[`Settings Component renders correctly 1`] = `
           }
         >
           <label
-            className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink Mui-disabled Mui-disabled MuiFormLabel-filled"
-            data-shrink={true}
+            className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated Mui-disabled Mui-disabled"
+            data-shrink={false}
           >
             Password
           </label>
@@ -212,6 +213,9 @@ exports[`Settings Component renders correctly 1`] = `
           >
             Change password
           </span>
+          <span
+            className="MuiTouchRipple-root"
+          />
         </button>
       </form>
       <p
