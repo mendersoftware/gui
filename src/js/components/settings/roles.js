@@ -6,7 +6,7 @@ import { Add as AddIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getGroups, getDynamicGroups } from '../../actions/deviceActions';
-import { PLANS as plans } from '../../constants/appConstants';
+import { createRole, getRoles, removeRole } from '../../actions/userActions';
 
 export class RoleManagement extends React.Component {
   constructor(props, context) {
@@ -20,6 +20,7 @@ export class RoleManagement extends React.Component {
     if (!props.groups.length) {
       props.getDynamicGroups();
       props.getGroups();
+      props.getRoles();
     }
   }
 
@@ -27,10 +28,6 @@ export class RoleManagement extends React.Component {
     if (prevProps.groups.length !== this.props.groups.length) {
       this.setState({ groups: this.props.groups.map(group => ({ name: group, selected: false })) });
     }
-  }
-
-  onSubmit() {
-    this.onCancel();
   }
 
   onCancel() {
@@ -41,6 +38,22 @@ export class RoleManagement extends React.Component {
       groups: this.props.groups.map(group => ({ name: group, selected: false })),
       name: undefined
     });
+  }
+
+  onSubmit() {
+    const role = {
+      allowUserManagement: this.state.allowUserManagement,
+      name: this.state.name,
+      description: this.state.description,
+      groups: this.state.groups.reduce((accu, group) => {
+        if (group.selected) {
+          accu.push(group.name);
+        }
+        return accu;
+      }, [])
+    };
+    this.props.createRole(role);
+    this.onCancel();
   }
 
   handleGroupSelection(selected, group) {
@@ -54,37 +67,10 @@ export class RoleManagement extends React.Component {
     this.setState({ groups });
   }
 
-  generateRequest() {
-    const { isHosted, org } = this.props;
-    const { allowUserManagement, description, groups, name } = this.state;
-    const groupsList = groups
-      .reduce((accu, group) => {
-        if (group.selected) {
-          accu.push(group.name);
-        }
-        return accu;
-      }, [])
-      .join(', ');
-    const currentPlan = isHosted ? org && org.plan : 'enterprise';
-    return encodeURIComponent(`
-    Organization ID
-    ${org.id}
-    Organization name
-    ${org.name}
-    Plan name
-    ${plans[currentPlan]}
-    I would like to create a group with the following settings:
-      name: ${name || ''},
-      description: ${description || ''},
-      allow managing other users: ${allowUserManagement ? 'Yes' : 'No'},
-      groups: ${groupsList}`);
-  }
-
   render() {
     const self = this;
     const { adding, description, groups, name } = self.state;
-    const { org, roles } = self.props;
-    const mailTrigger = `mailto:support@mender.io?subject=${org.name}: Create group&body=${self.generateRequest()}`;
+    const { roles, removeRole } = self.props;
     return (
       <div>
         <h2 style={{ marginLeft: 20 }}>Roles</h2>
@@ -105,7 +91,7 @@ export class RoleManagement extends React.Component {
                 <TableCell>{role.allowUserManagement ? 'Yes' : 'No'}</TableCell>
                 <TableCell>{role.groups.length ? role.groups.join(', ') : 'All devices'}</TableCell>
                 <TableCell>{role.description || '-'}</TableCell>
-                <TableCell>{role.editable && <Button onClick={role => self.onRemove(role)}>Remove</Button>}</TableCell>
+                <TableCell>{role.editable && <Button onClick={() => removeRole(role.id)}>Remove</Button>}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -152,7 +138,7 @@ export class RoleManagement extends React.Component {
             <Button onClick={() => self.onCancel()} style={{ marginRight: 15 }}>
               Cancel
             </Button>
-            <Button color="secondary" variant="contained" href={mailTrigger} target="_blank" onClick={() => self.onCancel()}>
+            <Button color="secondary" variant="contained" target="_blank" onClick={() => self.onSubmit()}>
               Submit
             </Button>
           </div>
@@ -162,7 +148,7 @@ export class RoleManagement extends React.Component {
   }
 }
 
-const actionCreators = { getDynamicGroups, getGroups, setSnackbar };
+const actionCreators = { createRole, getDynamicGroups, getGroups, getRoles, removeRole, setSnackbar };
 
 const mapStateToProps = state => {
   return {
