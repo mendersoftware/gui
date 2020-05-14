@@ -108,6 +108,54 @@ export const editUser = (userId, userData) => dispatch =>
 
 export const setCurrentUser = user => dispatch => dispatch({ type: UserConstants.SET_CURRENT_USER, user });
 
+export const getRoles = () => (dispatch, getState) =>
+  UsersApi.get(`${useradmApiUrl}/roles`).then(res => {
+    const rolesState = getState().users.rolesById;
+    const rolesById = res.reduce((accu, role) => {
+      const groups = role.permissions.reduce((accu, permission) => {
+        if (permission.action === 'any' && permission.object.type === 'DEVICE_GROUP') {
+          accu.push(permission.object.value);
+        }
+        return accu;
+      }, []);
+      accu[role.name] = {
+        ...UserConstants.emptyRole,
+        ...rolesState[role.name],
+        groups,
+        description: rolesState[role.name] && rolesState[role.name].description ? rolesState[role.name].description : role.description,
+        editable: rolesState[role.name] && typeof rolesState[role.name].editable !== 'undefined' ? rolesState[role.name].editable : true,
+        title: rolesState[role.name] && rolesState[role.name].title ? rolesState[role.name].title : role.name,
+        permissions: role.permissions
+      };
+      return accu;
+    }, {});
+    return dispatch({ type: UserConstants.RECEIVED_ROLES, rolesById });
+  });
+
+export const createRole = roleData => dispatch => {
+  let permissions = roleData.groups.map(group => ({ action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: group } }));
+  if (roleData.allowUserManagement) {
+    permissions.push({
+      action: 'http',
+      object: {
+        type: 'any',
+        value: `${useradmApiUrl}/.*`
+      }
+    });
+  }
+  const role = {
+    name: roleData.name,
+    description: roleData.description,
+    permissions
+  };
+  return UsersApi.post(`${useradmApiUrl}/roles`, role).then(() =>
+    Promise.all([dispatch({ type: UserConstants.CREATED_ROLE, role: { ...UserConstants.emptyRole, ...role }, roleId: role.name }), dispatch(getRoles())])
+  );
+};
+
+export const removeRole = roleId => dispatch =>
+  UsersApi.delete(`${useradmApiUrl}/roles/${roleId}`).then(() => Promise.all([dispatch({ type: UserConstants.REMOVED_ROLE, roleId }), dispatch(getRoles())]));
+
 /* 
   Tenant management + Hosted Mender
 */

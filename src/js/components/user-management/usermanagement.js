@@ -141,7 +141,7 @@ const mapStateToProps = state => {
   return {
     currentUser: state.users.byId[state.users.currentUser] || {},
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
-    roles: state.users.roles,
+    roles: Object.entries(state.users.rolesById).map(([id, role]) => ({ id, ...role })),
     snackbar: state.app.snackbar,
     users: Object.values(state.users.byId)
   };
