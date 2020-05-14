@@ -33,7 +33,7 @@ describe('Roles Component', () => {
           id: 1,
           name: 'test'
         },
-        roles: [{ id: 'RBAC_ROLE_PERMIT_ALL', title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false }]
+        rolesById: { RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false } }
       }
     });
   });

@@ -371,10 +371,9 @@ exports[`Roles Component renders correctly 1`] = `
               Cancel
             </span>
           </button>
-          <a
-            aria-disabled={false}
+          <button
             className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
-            href="mailto:support@mender.io?subject=test: Create group&body=%0A%20%20%20%20Organization%20ID%0A%20%20%20%201%0A%20%20%20%20Organization%20name%0A%20%20%20%20test%0A%20%20%20%20Plan%20name%0A%20%20%20%20Mender%20Enterprise%0A%20%20%20%20I%20would%20like%20to%20create%20a%20group%20with%20the%20following%20settings%3A%0A%20%20%20%20%20%20name%3A%20%2C%0A%20%20%20%20%20%20description%3A%20%2C%0A%20%20%20%20%20%20allow%20managing%20other%20users%3A%20No%2C%0A%20%20%20%20%20%20groups%3A%20"
+            disabled={false}
             onBlur={[Function]}
             onClick={[Function]}
             onDragLeave={[Function]}
@@ -389,13 +388,14 @@ exports[`Roles Component renders correctly 1`] = `
             onTouchStart={[Function]}
             tabIndex={0}
             target="_blank"
+            type="button"
           >
             <span
               className="MuiButton-label"
             >
               Submit
             </span>
-          </a>
+          </button>
         </div>
       </div>
     </div>
