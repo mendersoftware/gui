@@ -7,6 +7,7 @@ import ApplicationUpdates from './application-updates';
 import DebPackage from './application-updates/mender-deb-package';
 import VirtualDevice from './application-updates/demo-virtual-device';
 import UpdateModules from './application-updates/update-modules';
+import Devices from './devices';
 import SystemUpdates from './system-updates';
 import BoardIntegrations from './system-updates/board-integrations';
 import BuildYocto from './system-updates/build-with-yocto';
@@ -55,6 +56,10 @@ var components = {
       title: 'Devices running Debian family',
       component: IntegrateDebian
     }
+  },
+  devices: {
+    title: 'Devices and device groups',
+    component: Devices
   },
   'releases-artifacts': {
     title: 'Releases and artifacts',
