@@ -12,15 +12,19 @@ import Roles from './roles';
 import Global from './global';
 
 const sectionMap = {
-  'global-settings': { admin: false, enterprise: false, multitenancy: false, component: <Global />, text: 'Global settings' },
-  'my-account': { admin: false, enterprise: false, multitenancy: false, component: <SelfUserManagement />, text: 'My account' },
-  'user-management': { admin: true, enterprise: false, multitenancy: false, component: <UserManagement />, text: 'User management' },
-  'role-management': { admin: true, enterprise: true, multitenancy: false, component: <Roles />, text: 'Roles' },
-  'my-organization': { admin: false, enterprise: false, multitenancy: true, component: <MyOrganization />, text: 'My organization' }
+  'global-settings': { admin: false, enterprise: false, multitenancy: false, userManagement: false, component: <Global />, text: 'Global settings' },
+  'my-account': { admin: false, enterprise: false, multitenancy: false, userManagement: false, component: <SelfUserManagement />, text: 'My account' },
+  'user-management': { admin: false, enterprise: false, multitenancy: false, userManagement: true, component: <UserManagement />, text: 'User management' },
+  'role-management': { admin: true, enterprise: true, multitenancy: false, userManagement: false, component: <Roles />, text: 'Roles' },
+  'my-organization': { admin: false, enterprise: false, multitenancy: true, userManagement: false, component: <MyOrganization />, text: 'My organization' }
 };
 
-export const Settings = ({ currentUser, hasMultitenancy, history, isAdmin, isEnterprise, match }) => {
-  const checkDenyAccess = item => (currentUser && item.admin && !isAdmin) || (item.multitenancy && !hasMultitenancy) || (item.enterprise && !isEnterprise);
+export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, history, isAdmin, isEnterprise, match }) => {
+  const checkDenyAccess = item =>
+    (currentUser && item.admin && !isAdmin) ||
+    (item.multitenancy && !hasMultitenancy) ||
+    (item.enterprise && !isEnterprise) ||
+    (item.userManagement && !allowUserManagement);
 
   const getCurrentSection = (sections, section = match.params.section) => {
     if (!sections.hasOwnProperty(section) || checkDenyAccess(sections[section])) {
@@ -55,9 +59,23 @@ export const Settings = ({ currentUser, hasMultitenancy, history, isAdmin, isEnt
 const mapStateToProps = state => {
   const currentUser = state.users.byId[state.users.currentUser];
   const plan = state.users.organization ? state.users.organization.plan : 'os';
+  let isAdmin = false;
+  let allowUserManagement = false;
+  if (currentUser?.roles) {
+    // TODO: move these + additional role checks into selectors
+    isAdmin = currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL');
+    allowUserManagement =
+      isAdmin ||
+      currentUser.roles.some(role =>
+        state.users.rolesById[role]?.permissions.some(
+          permission => permission.action === 'http' && permission.object.value === '/api/management/v1/useradm/.*' && ['any'].includes(permission.object.type)
+        )
+      );
+  }
   return {
+    allowUserManagement,
     currentUser,
-    isAdmin: currentUser && currentUser.roles ? currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL') : false,
+    isAdmin,
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
     hasMultitenancy: state.app.features.hasMultitenancy
   };
