@@ -25,11 +25,17 @@ export default class UserForm extends React.Component {
     this.state = {
       editPass: isCreation,
       isCreation,
-      selectedRoles: props.user.roles ? props.user.roles.map(role => props.roles.find(currentRole => currentRole.id === role)) : []
+      selectedRoles: (props.user.roles || []).reduce((accu, role) => {
+        const foundRole = props.roles.find(currentRole => currentRole.id === role);
+        if (foundRole) {
+          accu.push(foundRole);
+        }
+        return accu;
+      }, [])
     };
   }
 
-  componentDidUpdate(_, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     // TODO: this is needed due to the re-registering of inputs in the form component and should be fixed at some point
     if (prevState.editPass !== this.state.editPass || prevState.selectedRoles !== this.state.selectedRoles) {
       this.forceUpdate();

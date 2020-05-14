@@ -23,11 +23,11 @@ import { clearAllRetryTimers } from '../../utils/retrytimer';
 import DeviceNotifications from './devicenotifications';
 import DeploymentNotifications from './deploymentnotifications';
 
-import { getAllDevices, getDeviceCount, getDeviceLimit } from '../../actions/deviceActions';
-import { getReleases } from '../../actions/releaseActions';
-import { getUser, getGlobalSettings, getUserOrganization, logoutUser, setShowHelptips, toggleHelptips } from '../../actions/userActions';
 import { getOnboardingState, setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus } from '../../actions/deploymentActions';
+import { getAllDevices, getDeviceCount, getDeviceLimit } from '../../actions/deviceActions';
+import { getReleases } from '../../actions/releaseActions';
+import { getUser, getGlobalSettings, getRoles, getUserOrganization, logoutUser, setShowHelptips, toggleHelptips } from '../../actions/userActions';
 
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 
@@ -75,6 +75,7 @@ export class Header extends React.Component {
     this.props.getDeviceLimit();
     this.props.getReleases();
     this.props.getGlobalSettings();
+    this.props.getRoles();
     if (this.props.multitenancy) {
       this.props.getUserOrganization();
     }
@@ -283,6 +284,7 @@ const actionCreators = {
   getGlobalSettings,
   getOnboardingState,
   getReleases,
+  getRoles,
   getUser,
   getUserOrganization,
   logoutUser,
