@@ -13,7 +13,8 @@ const tenantadmUrl = `${apiUrl}/tenantadm`;
 const useradmApiUrl = `${apiUrl}/useradm`;
 
 const handleLoginError = (err, has2FA) => dispatch => {
-  const is2FABackend = err.error.text.error && err.error.text.error.includes('2fa');
+  const errorText = err.error.text ? err.error.text.error : err.error.message;
+  const is2FABackend = errorText.includes('2fa');
   if (is2FABackend && !has2FA) {
     return dispatch(saveGlobalSettings({ '2fa': 'enabled' }, true));
   }
@@ -58,6 +59,7 @@ export const loginUser = userData => (dispatch, getState) =>
       return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), dispatch(getUser(userId))]);
     })
     .catch(err => {
+      cookies.remove('JWT');
       const has2FA = getState().users.globalSettings.hasOwnProperty('2fa') && getState().users.globalSettings['2fa'] === 'enabled';
       return Promise.all([Promise.reject(err), dispatch(handleLoginError(err, has2FA))]);
     });
