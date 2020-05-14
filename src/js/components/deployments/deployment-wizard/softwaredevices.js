@@ -67,7 +67,7 @@ export class SoftwareDevices extends React.Component {
 
   render() {
     const self = this;
-    const { device, deploymentAnchor, deploymentObject, group, groups, hasDevices, hasPending, release, releases } = self.props;
+    const { device, deploymentAnchor, deploymentObject, group, groups, hasDevices, hasDynamicGroups, hasPending, release, releases } = self.props;
     const { deploymentDeviceIds } = self.state;
 
     const selectedRelease = deploymentObject.release ? deploymentObject.release : release;
@@ -158,11 +158,11 @@ export class SoftwareDevices extends React.Component {
                     errorText="Please select a group from the list"
                     value={group}
                     items={groupItems}
-                    disabled={!hasDevices}
+                    disabled={!(hasDevices || hasDynamicGroups)}
                     onChange={item => self.deploymentSettingsUpdate(item, 'group')}
                     style={styles.textField}
                   />
-                  {hasDevices ? null : (
+                  {!(hasDevices || hasDynamicGroups) && (
                     <p className="info" style={{ marginTop: '10px' }}>
                       <ErrorOutlineIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)', position: 'relative' }} />
                       There are no connected devices.{' '}
@@ -214,6 +214,7 @@ const mapStateToProps = state => {
     device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
     groups: state.devices.groups.byId,
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
+    hasDynamicGroups: Object.values(state.devices.groups.byId).some(group => !!group.id),
     hasPending: state.devices.byStatus.pending.total || state.devices.byStatus.pending.deviceIds.length > 0,
     releases: Object.values(state.releases.byId)
   };

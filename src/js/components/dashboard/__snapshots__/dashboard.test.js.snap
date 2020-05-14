@@ -106,7 +106,7 @@ exports[`Dashboard Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    className="two-column"
+    className="two-columns"
     style={
       Object {
         "gridTemplateColumns": "4fr 5fr",

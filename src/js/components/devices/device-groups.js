@@ -47,7 +47,11 @@ export class DeviceGroups extends React.Component {
    * Groups
    */
   _refreshGroups() {
-    return Promise.all([this.props.getGroups(), this.props.getDynamicGroups()]).catch(err => console.log(err));
+    let tasks = [this.props.getGroups()];
+    if (this.props.isEnterprise) {
+      tasks.push(this.props.getDynamicGroups());
+    }
+    return Promise.all(tasks).catch(err => console.log(err));
   }
 
   _handleGroupChange(group) {
@@ -223,12 +227,14 @@ const mapStateToProps = state => {
       return accu;
     }, [])
     .sort();
+  const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
     acceptedCount: state.devices.byStatus.accepted.total || 0,
     filters: state.devices.filters || [],
     groups,
     groupCount,
     groupFilters,
+    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
     selectedGroup,
     showHelptips: state.users.showHelptips
   };

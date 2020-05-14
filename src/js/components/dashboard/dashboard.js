@@ -73,12 +73,13 @@ export class Dashboard extends React.Component {
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />;
     }
+    const { acceptedDevicesCount, deploymentDeviceLimit } = this.props;
     return (
       <div className="dashboard">
         <Devices styles={rowStyles} clickHandle={this._handleClick.bind(this)} />
         <div className="two-columns" style={{ gridTemplateColumns: '4fr 5fr' }}>
           <Deployments styles={rowStyles} clickHandle={this._handleClick.bind(this)} />
-          <SoftwareDistribution />
+          {acceptedDevicesCount < deploymentDeviceLimit ? <SoftwareDistribution /> : <div />}
         </div>
       </div>
     );
@@ -89,7 +90,9 @@ const actionCreators = { setSnackbar };
 
 const mapStateToProps = state => {
   return {
+    acceptedDevicesCount: state.devices.byStatus.accepted.total,
     currentUser: state.users.byId[state.users.currentUser] || {},
+    deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
     onboardingComplete: state.users.onboarding.complete,
     showHelptips: state.users.showHelptips,
     showOnboardingTips: state.users.onboarding.showTips

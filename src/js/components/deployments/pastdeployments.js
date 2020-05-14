@@ -7,7 +7,7 @@ import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getDeploymentCount, getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
+import { getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
 
 import Loader from '../common/loader';
 import AutoSelect from '../common/forms/autoselect';
@@ -97,25 +97,13 @@ export class Past extends React.Component {
     group = this.state.deviceGroup
   ) {
     const self = this;
-    // always get total count of past deployments, only refresh deployments if page, count or date range has changed
-    const fullRefresh =
-      self.state.page !== page ||
-      self.state.perPage !== perPage ||
-      self.state.startDate !== startDate ||
-      self.state.endDate !== endDate ||
-      self.state.group !== group ||
-      !self.state.doneLoading;
     self.setState({ page, perPage, endDate, startDate, group }, () => {
       const roundedStartDate = Math.round(Date.parse(startDate) / 1000);
       const roundedEndDate = Math.round(Date.parse(endDate) / 1000);
-      let tasks = [self.props.getDeploymentCount(type, roundedStartDate, roundedEndDate, group)];
-      if (fullRefresh) {
-        tasks.push(self.props.getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, group));
-      }
-      return Promise.all(tasks)
-        .then(([countAction, deploymentsAction]) => {
+      return Promise.resolve(self.props.getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, group))
+        .then(deploymentsAction => {
           clearRetryTimer(type, self.props.setSnackbar);
-          if (countAction.deploymentIds.length && deploymentsAction && !deploymentsAction[0].deploymentIds.length) {
+          if (deploymentsAction && deploymentsAction[0].total && !deploymentsAction[0].deploymentIds.length) {
             return self.refreshDeployments(...arguments);
           }
         })
@@ -257,7 +245,7 @@ export class Past extends React.Component {
   }
 }
 
-const actionCreators = { getDeploymentCount, getDeploymentsByStatus, getSingleDeploymentStats, setSnackbar, selectDeployment };
+const actionCreators = { getDeploymentsByStatus, getSingleDeploymentStats, setSnackbar, selectDeployment };
 
 const mapStateToProps = state => {
   const past = state.deployments.byStatus.finished.selectedDeploymentIds.map(id => state.deployments.byId[id]);

@@ -12,7 +12,7 @@ import FilterItem from './filteritem';
 
 import { DEVICE_FILTERING_OPTIONS } from '../../constants/deviceConstants';
 
-export const emptyFilter = { key: undefined, value: undefined, operator: '$eq', scope: 'inventory' };
+export const emptyFilter = { key: null, value: '', operator: '$eq', scope: 'inventory' };
 
 const MAX_PREVIOUS_FILTERS_COUNT = 3;
 

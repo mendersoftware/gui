@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Collapse, Switch, TextField } from '@material-ui/core';
+import { Button, Collapse, Switch, TextField } from '@material-ui/core';
 
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
-import FormButton from '../common/forms/formbutton';
 import EnterpriseNotification from '../common/enterpriseNotification';
 
 import { setSnackbar } from '../../actions/appActions';
@@ -81,14 +80,9 @@ export class SelfUserManagement extends React.Component {
               defaultValue={email}
               style={{ width: '400px', maxWidth: '100%' }}
             />
-            <FormButton
-              className="inline-block"
-              color="primary"
-              id="change_email"
-              label="Change email"
-              style={{ margin: '30px 0 0 15px' }}
-              handleClick={() => self.handleEmail()}
-            />
+            <Button className="inline-block" color="primary" id="change_email" style={{ margin: '30px 0 0 15px' }} onClick={() => self.handleEmail()}>
+              Change email
+            </Button>
           </div>
         ) : (
           <Form
@@ -123,13 +117,9 @@ export class SelfUserManagement extends React.Component {
               style={{ width: '400px', maxWidth: '100%' }}
               type="password"
             />
-            <FormButton
-              color="primary"
-              id="change_password"
-              label="Change password"
-              style={{ margin: '30px 0 0 15px' }}
-              handleClick={() => self.handlePass()}
-            />
+            <Button color="primary" id="change_password" style={{ margin: '30px 0 0 15px' }} onClick={() => self.handlePass()}>
+              Change password
+            </Button>
           </form>
         ) : (
           <Form

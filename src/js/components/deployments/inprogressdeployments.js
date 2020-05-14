@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom';
 import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getDeploymentCount, getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
+import { getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
 import { tryMapDeployments } from '../../helpers';
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
@@ -70,18 +70,14 @@ export class Progress extends React.Component {
   }
 
   // // deploymentStatus = <inprogress|pending>
-  refreshDeployments(page, perPage, deploymentStatus, fullRefresh = true) {
+  refreshDeployments(page, perPage, deploymentStatus) {
     const self = this;
     const mappedDeploymentStatus = deploymentStatusMap[deploymentStatus];
-    return self.setState({ [`${mappedDeploymentStatus}Page`]: page, [`${mappedDeploymentStatus}PerPage`]: perPage }, () => {
-      let tasks = [self.props.getDeploymentCount(deploymentStatus)];
-      if (fullRefresh) {
-        tasks.push(self.props.getDeploymentsByStatus(deploymentStatus, page, perPage));
-      }
-      return Promise.all(tasks)
-        .then(([countAction, deploymentsAction]) => {
+    return self.setState({ [`${mappedDeploymentStatus}Page`]: page, [`${mappedDeploymentStatus}PerPage`]: perPage }, () =>
+      Promise.resolve(self.props.getDeploymentsByStatus(deploymentStatus, page, perPage))
+        .then(deploymentsAction => {
           clearRetryTimer(deploymentStatus, self.props.setSnackbar);
-          if (countAction.deploymentIds.length && deploymentsAction && !deploymentsAction[0].deploymentIds.length) {
+          if (deploymentsAction && deploymentsAction[0].total && !deploymentsAction[0].deploymentIds.length) {
             return self.refreshDeployments(...arguments);
           }
         })
@@ -90,8 +86,8 @@ export class Progress extends React.Component {
           var errormsg = err.error || 'Please check your connection';
           setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, self.props.setSnackbar);
         })
-        .finally(() => self.setState({ doneLoading: true }));
-    });
+        .finally(() => self.setState({ doneLoading: true }))
+    );
   }
 
   abortDeployment(id) {
@@ -183,7 +179,7 @@ export class Progress extends React.Component {
   }
 }
 
-const actionCreators = { getDeploymentCount, getDeploymentsByStatus, getSingleDeploymentStats, setSnackbar, selectDeployment };
+const actionCreators = { getDeploymentsByStatus, getSingleDeploymentStats, setSnackbar, selectDeployment };
 
 const mapStateToProps = state => {
   const progress = state.deployments.byStatus.inprogress.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;

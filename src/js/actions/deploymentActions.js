@@ -1,7 +1,6 @@
-import parse from 'parse-link-header';
 import * as DeploymentConstants from '../constants/deploymentConstants';
-import DeploymentsApi from '../api/deployments-api';
-import { startTimeSort } from '../helpers';
+import DeploymentsApi, { headerNames } from '../api/deployments-api';
+import { mapAttributesToAggregator, startTimeSort } from '../helpers';
 
 const apiUrl = '/api/management/v1';
 const apiUrlV2 = '/api/management/v2';
@@ -26,17 +25,14 @@ const transformDeployments = (deployments, deploymentsById) =>
 // all deployments
 export const getDeployments = (page = default_page, per_page = default_per_page) => (dispatch, getState) =>
   DeploymentsApi.get(`${deploymentsApiUrl}/deployments?page=${page}&per_page=${per_page}`).then(res => {
-    const deploymentsByStatus = res.body.reduce(
-      (accu, item) => {
-        accu[item.status].push(item);
-        return accu;
-      },
-      { finished: [], inprogress: [], pending: [] }
-    );
+    const deploymentsByStatus = res.body.reduce((accu, item) => {
+      accu[item.status].push(item);
+      return accu;
+    }, mapAttributesToAggregator(getState().deployments.byStatus));
     return Promise.all(
       Object.entries(deploymentsByStatus).map(([status, value]) => {
         const { deployments, deploymentIds } = transformDeployments(value, getState().deployments.byId);
-        return dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds });
+        return dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status });
       })
     );
   });
@@ -60,35 +56,20 @@ export const getDeploymentsByStatus = (status, page = default_page, per_page = d
         }
         return accu;
       },
-      [dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status })]
+      [
+        dispatch({
+          type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`],
+          deployments,
+          deploymentIds,
+          status,
+          total: Number(res.headers[headerNames.total])
+        })
+      ]
     );
     if (shouldSelect) {
       tasks.push(dispatch({ type: DeploymentConstants[`SELECT_${status.toUpperCase()}_DEPLOYMENTS`], deploymentIds, status }));
     }
     return Promise.all(tasks);
-  });
-};
-
-export const getDeploymentCount = (status, startDate, endDate, group) => (dispatch, getState) => {
-  var created_after = startDate ? `&created_after=${startDate}` : '';
-  var created_before = endDate ? `&created_before=${endDate}` : '';
-  var search = group ? `&search=${group}` : '';
-  const DeploymentCount = (page = 1, per_page = 500, deployments = []) =>
-    DeploymentsApi.get(`${deploymentsApiUrl}/deployments?status=${status}&per_page=${per_page}&page=${page}${created_after}${created_before}${search}`).then(
-      res => {
-        var links = parse(res.headers['link']);
-        deployments.push(...res.body);
-        if (links.next) {
-          page++;
-          return DeploymentCount(page, per_page, deployments);
-        }
-        return Promise.resolve(deployments);
-      }
-    );
-
-  return DeploymentCount().then(deploymentList => {
-    const { deployments, deploymentIds } = transformDeployments(deploymentList, getState().deployments.byId);
-    return dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS_COUNT`], deployments, deploymentIds, status });
   });
 };
 
@@ -171,8 +152,9 @@ export const abortDeployment = deploymentId => (dispatch, getState) =>
       accu[id] = state.deployments.byId[id];
       return accu;
     }, {});
+    const total = state.deployments.byStatus[status].total - 1;
     return Promise.all([
-      dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status }),
+      dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status, total }),
       dispatch({
         type: DeploymentConstants.REMOVE_DEPLOYMENT,
         deploymentId

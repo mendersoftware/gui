@@ -9,7 +9,6 @@ import { Button, Tooltip } from '@material-ui/core';
 import { Block as BlockIcon, Timelapse as TimelapseIcon, Refresh as RefreshIcon } from '@material-ui/icons';
 
 import { formatTime } from '../../../helpers';
-import { DEVICE_FILTERING_OPTIONS } from '../../../constants/deviceConstants';
 import Confirm from '../../common/confirm';
 import ExpandableAttribute from '../../common/expandable-attribute';
 import Pagination from '../../common/pagination';
@@ -83,9 +82,6 @@ export default class DeploymentOverview extends React.Component {
       </div>
     );
 
-    const deviceGroupDetails = deployment.filter
-      ? deployment.filter.terms.map(filter => `${filter.attribute} ${DEVICE_FILTERING_OPTIONS[filter.type].shortform} ${filter.value}`).join(', ')
-      : deployment.name;
     return (
       <div>
         <div className="report-container">
@@ -101,7 +97,7 @@ export default class DeploymentOverview extends React.Component {
                 dividerDisabled={true}
                 style={{ marginBottom: -15 }}
               />
-              <ExpandableAttribute primary="Device group:" secondary={deviceGroupDetails} dividerDisabled={true} style={{ marginBottom: -15 }} />
+              <ExpandableAttribute primary="Device group:" secondary={deployment.name} dividerDisabled={true} style={{ marginBottom: -15 }} />
             </div>
             <ExpandableAttribute primary="Status:" secondary={statusDescription} dividerDisabled={true} style={{ marginBottom: -15 }} />
           </div>

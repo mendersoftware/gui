@@ -27,7 +27,7 @@ import { getAllDevices, getDeviceCount, getDeviceLimit, getDynamicGroups, getGro
 import { getReleases } from '../../actions/releaseActions';
 import { getUser, getGlobalSettings, getUserOrganization, logoutUser, setShowHelptips, toggleHelptips } from '../../actions/userActions';
 import { getOnboardingState, setSnackbar } from '../../actions/appActions';
-import { getDeploymentCount } from '../../actions/deploymentActions';
+import { getDeploymentsByStatus } from '../../actions/deploymentActions';
 
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 
@@ -84,7 +84,7 @@ export class Header extends React.Component {
 
   _checkHeaderInfo() {
     // check if deployments in progress
-    this.props.getDeploymentCount('inprogress');
+    this.props.getDeploymentsByStatus('inprogress');
     this._checkAnnouncement();
   }
 
@@ -281,8 +281,8 @@ const actionCreators = {
   getAllDevices,
   getDeviceCount,
   getDeviceLimit,
-  getDeploymentCount,
   getDynamicGroups,
+  getDeploymentsByStatus,
   getGlobalSettings,
   getGroups,
   getOnboardingState,

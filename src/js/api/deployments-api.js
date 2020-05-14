@@ -5,6 +5,10 @@ var request = require('superagent')
   .agent()
   .use(unauthorizedRedirect);
 
+export const headerNames = {
+  total: 'x-total-count'
+};
+
 const Api = {
   get: url => {
     var token = cookies.get('JWT');
