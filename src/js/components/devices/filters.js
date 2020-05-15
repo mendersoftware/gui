@@ -169,11 +169,7 @@ export class Filters extends React.Component {
                 />
               )}
               {!isEnterprise && plan !== 'enterprise' && (
-                <EnterpriseNotification
-                  isEnterprise={false}
-                  recommendedPlan="enterprise"
-                  benefit="filter by multiple attributes to improve the device overview"
-                />
+                <EnterpriseNotification isEnterprise={false} recommendedPlan="enterprise" benefit="save dynamic groups and ease device management" />
               )}
               {canFilterMultiple && (plan === 'enterprise' || isEnterprise) && currentFilters.length >= 1 && canSaveFilter && (
                 <Button variant="contained" color="secondary" onClick={onGroupClick}>
