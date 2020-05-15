@@ -139,7 +139,7 @@ export class Past extends React.Component {
   render() {
     const self = this;
     const { count, createClick, groups, loading, past, showHelptips } = self.props;
-    const { page, perPage, endDate, startDate } = self.state;
+    const { active, page, perPage, endDate, startDate } = self.state;
 
     const menuItems = groups.reduce(
       (accu, item) => {
@@ -151,10 +151,23 @@ export class Past extends React.Component {
 
     let onboardingComponent = null;
     if (this.deploymentsRef) {
-      let anchor = { left: this.deploymentsRef.offsetWidth / 2, top: this.deploymentsRef.offsetTop + this.deploymentsRef.offsetHeight };
+      const detailsButtons = self.deploymentsRef.getElementsByClassName('MuiButton-contained');
+      const left = detailsButtons.length
+        ? self.deploymentsRef.offsetLeft + detailsButtons[0].offsetLeft + detailsButtons[0].offsetWidth / 2 + 15
+        : self.deploymentsRef.offsetWidth;
+      let anchor = { left, top: self.deploymentsRef.offsetTop + self.deploymentsRef.offsetHeight };
       onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor });
       onboardingComponent = getOnboardingComponentFor('deployments-past-completed-failure', { anchor }, onboardingComponent);
-      onboardingComponent = getOnboardingComponentFor('onboarding-finished', { anchor }, onboardingComponent);
+      onboardingComponent = getOnboardingComponentFor(
+        'onboarding-finished',
+        {
+          anchor: {
+            left: self.deploymentsRef.offsetWidth / 2,
+            top: anchor.top
+          }
+        },
+        onboardingComponent
+      );
     }
 
     return (
@@ -165,7 +178,7 @@ export class Past extends React.Component {
             <ul className="unstyled link-list horizontal">
               {Object.entries(timeranges).map(([key, range]) => (
                 <li key={`filter-by-${key}`}>
-                  <a className={this.state.active === key ? 'active' : ''} onClick={() => this.setDefaultRange(range.start, range.end, key)}>
+                  <a className={active === key ? 'active' : ''} onClick={() => self.setDefaultRange(range.start, range.end, key)}>
                     {range.title}
                   </a>
                 </li>
