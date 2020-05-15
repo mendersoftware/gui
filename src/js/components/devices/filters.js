@@ -196,15 +196,16 @@ const actionCreators = {
 
 const mapStateToProps = (state, ownProps) => {
   const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const deviceIdAttribute = { key: 'id', value: 'Device ID', scope: 'identity', category: 'identity', priority: 1 };
   let attributes = [
-    { key: 'id', value: 'Device ID', scope: 'identity', category: 'identity', priority: 1 },
+    deviceIdAttribute,
     ...state.devices.filteringAttributes.identityAttributes.map(item => ({ key: item, value: item, scope: 'identity', category: 'identity', priority: 1 }))
   ];
   if (!ownProps.identityOnly) {
     attributes = [
       ...state.users.globalSettings.previousFilters.map(item => ({
         ...item,
-        value: item.key,
+        value: deviceIdAttribute.key === item.key ? deviceIdAttribute.value : item.key,
         category: 'recently used',
         priority: 0
       })),
