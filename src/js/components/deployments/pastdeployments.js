@@ -155,19 +155,10 @@ export class Past extends React.Component {
       const left = detailsButtons.length
         ? self.deploymentsRef.offsetLeft + detailsButtons[0].offsetLeft + detailsButtons[0].offsetWidth / 2 + 15
         : self.deploymentsRef.offsetWidth;
-      let anchor = { left, top: self.deploymentsRef.offsetTop + self.deploymentsRef.offsetHeight };
+      let anchor = { left: self.deploymentsRef.offsetWidth / 2, top: self.deploymentsRef.offsetTop + self.deploymentsRef.offsetHeight };
       onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor });
-      onboardingComponent = getOnboardingComponentFor('deployments-past-completed-failure', { anchor }, onboardingComponent);
-      onboardingComponent = getOnboardingComponentFor(
-        'onboarding-finished',
-        {
-          anchor: {
-            left: self.deploymentsRef.offsetWidth / 2,
-            top: anchor.top
-          }
-        },
-        onboardingComponent
-      );
+      onboardingComponent = getOnboardingComponentFor('deployments-past-completed-failure', { anchor: { left, top: anchor.top } }, onboardingComponent);
+      onboardingComponent = getOnboardingComponentFor('onboarding-finished', { anchor }, onboardingComponent);
     }
 
     return (
