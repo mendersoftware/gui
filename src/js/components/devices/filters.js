@@ -117,7 +117,7 @@ export class Filters extends React.Component {
       />
     );
 
-    const canSaveFilter = newFilter.scope === 'inventory' || (addedFilters.length && addedFilters[0].scope === 'inventory');
+    const canSaveFilter = newFilter.scope === 'inventory' || (!!addedFilters.length && addedFilters[0].scope === 'inventory');
     const filter = filters.find(item => item.key === newFilter.key) || newFilter;
     const addedFilterDefined = filter && Object.values(filter).every(thing => !!thing);
     return (
