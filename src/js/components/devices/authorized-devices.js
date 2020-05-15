@@ -300,7 +300,7 @@ export class Authorized extends React.Component {
               selectDeviceById={id => self.getDeviceById(id)}
             />
 
-            {showHelptips && devices.length ? (
+            {showHelptips && devices.length && (
               <div>
                 <div
                   id="onboard-6"
@@ -316,7 +316,7 @@ export class Authorized extends React.Component {
                   <ExpandDevice />
                 </ReactTooltip>
               </div>
-            ) : null}
+            )}
           </div>
         ) : (
           <div className={devices.length || loading ? 'hidden' : 'dashboard-placeholder'}>
