@@ -103,6 +103,9 @@ export class Artifacts extends React.Component {
       upload.then(() => {
         if (!self.props.onboardingComplete && getOnboardingStepCompleted('artifact-included-deploy-onboarding')) {
           advanceOnboarding('upload-new-artifact-tip');
+          if (type === 'create' && getOnboardingStepCompleted('upload-new-artifact-dialog-device-type')) {
+            advanceOnboarding('upload-new-artifact-dialog-release-name');
+          }
         }
         return setTimeout(() => self._getReleases(), 2000);
       })
