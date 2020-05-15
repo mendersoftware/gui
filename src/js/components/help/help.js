@@ -137,10 +137,11 @@ const actionCreators = { getUserOrganization, findLocalIpAddress };
 const mapStateToProps = state => {
   // if hosted, use latest docs version
   const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
+  const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
     docsVersion: state.app.features.hasMultitenancy && state.app.features.isHosted ? '' : docsVersion,
     isHosted: state.app.features.isHosted,
-    isEnterprise: state.app.features.isEnterprise,
+    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
     menderVersion: state.app.versionInformation['Mender-Client'],
     menderDebPackageVersion: state.app.menderDebPackageVersion,
     menderArtifactVersion: state.app.versionInformation['Mender-Artifact'],
