@@ -197,15 +197,22 @@ export class Deployments extends React.Component {
     const { createDialog, deploymentObject, reportDialog, reportType, startDate, tabIndex } = self.state;
     let onboardingComponent = null;
     // the pastCount prop is needed to trigger the rerender as the change in past deployments would otherwise not be noticed on this view
-    if (pastCount) {
-      onboardingComponent = getOnboardingComponentFor('deployments-past', { anchor: { left: 240, top: 50 } });
+    if (pastCount && self.tabsRef) {
+      const tabs = self.tabsRef.getElementsByClassName('MuiTab-root');
+      const finishedTab = tabs[tabs.length - 1];
+      onboardingComponent = getOnboardingComponentFor('deployments-past', {
+        anchor: {
+          left: self.tabsRef.offsetLeft + self.tabsRef.offsetWidth - finishedTab.offsetWidth / 2,
+          top: self.tabsRef.offsetHeight + finishedTab.offsetHeight
+        }
+      });
     }
     const ComponentToShow = self._getCurrentRoute().component;
     return (
       <>
         <div className="margin-left-small margin-top" style={{ maxWidth: '80vw' }}>
           <div className="flexbox space-between">
-            <Tabs value={tabIndex} onChange={(e, newTabIndex) => self._changeTab(newTabIndex)}>
+            <Tabs value={tabIndex} onChange={(e, newTabIndex) => self._changeTab(newTabIndex)} ref={ref => (self.tabsRef = ref)}>
               {Object.values(routes).map(route => (
                 <Tab component={Link} key={route.route} label={route.title} to={route.route} value={route.route} />
               ))}
