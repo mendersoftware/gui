@@ -156,7 +156,9 @@ export const createRole = roleData => dispatch => {
 };
 
 export const removeRole = roleId => dispatch =>
-  UsersApi.delete(`${useradmApiUrl}/roles/${roleId}`).then(() => Promise.all([dispatch({ type: UserConstants.REMOVED_ROLE, roleId }), dispatch(getRoles())]));
+  UsersApi.delete(`${useradmApiUrl}/roles/${roleId}`)
+    .then(() => Promise.all([dispatch({ type: UserConstants.REMOVED_ROLE, roleId }), dispatch(getRoles())]))
+    .catch(err => Promise.all([Promise.reject(err), dispatch(setSnackbar(preformatWithRequestID(err.res, err.res.body.error), null, 'Copy to clipboard'))]));
 
 /* 
   Tenant management + Hosted Mender
