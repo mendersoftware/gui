@@ -122,11 +122,13 @@ export class Authorized extends React.Component {
       if (selectedGroup) {
         request = getGroupDevices(selectedGroup, pageNo, pageLength, true);
       } else {
-        const filterId = filters.find(item => item.key === 'id');
-        if (filterId && filters.length === 1) {
-          return self.getDeviceById(filterId.value);
+        const identityFiltered = filters.filter(item => item.scope === 'identity');
+        if (identityFiltered.length === 1 && identityFiltered[0].key === 'id') {
+          return self.getDeviceById(identityFiltered[0].value);
         }
-        request = getDevices(pageNo, pageLength, filters, true);
+        request = identityFiltered.length
+          ? getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, pageNo, pageLength, true)
+          : getDevices(pageNo, pageLength, filters, true);
       }
       // if a group or filters, must use inventory API
       return (
@@ -298,7 +300,7 @@ export class Authorized extends React.Component {
               selectDeviceById={id => self.getDeviceById(id)}
             />
 
-            {showHelptips && devices.length ? (
+            {showHelptips && devices.length && (
               <div>
                 <div
                   id="onboard-6"
@@ -314,7 +316,7 @@ export class Authorized extends React.Component {
                   <ExpandDevice />
                 </ReactTooltip>
               </div>
-            ) : null}
+            )}
           </div>
         ) : (
           <div className={devices.length || loading ? 'hidden' : 'dashboard-placeholder'}>

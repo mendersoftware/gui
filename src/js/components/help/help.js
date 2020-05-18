@@ -7,6 +7,7 @@ import ApplicationUpdates from './application-updates';
 import DebPackage from './application-updates/mender-deb-package';
 import VirtualDevice from './application-updates/demo-virtual-device';
 import UpdateModules from './application-updates/update-modules';
+import Devices from './devices';
 import SystemUpdates from './system-updates';
 import BoardIntegrations from './system-updates/board-integrations';
 import BuildYocto from './system-updates/build-with-yocto';
@@ -55,6 +56,10 @@ var components = {
       title: 'Devices running Debian family',
       component: IntegrateDebian
     }
+  },
+  devices: {
+    title: 'Devices and device groups',
+    component: Devices
   },
   'releases-artifacts': {
     title: 'Releases and artifacts',
@@ -132,10 +137,11 @@ const actionCreators = { getUserOrganization, findLocalIpAddress };
 const mapStateToProps = state => {
   // if hosted, use latest docs version
   const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
+  const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
     docsVersion: state.app.features.hasMultitenancy && state.app.features.isHosted ? '' : docsVersion,
     isHosted: state.app.features.isHosted,
-    isEnterprise: state.app.features.isEnterprise,
+    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
     menderVersion: state.app.versionInformation['Mender-Client'],
     menderDebPackageVersion: state.app.menderDebPackageVersion,
     menderArtifactVersion: state.app.versionInformation['Mender-Artifact'],
