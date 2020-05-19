@@ -14,6 +14,12 @@ const columnData = [
   { id: 'actions', disablePadding: false, label: 'Manage', enterpriseOnly: false }
 ];
 
+const canRemoveAdmin = (currentUser, user) => {
+  const currentIsAdmin = currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL');
+  const userIsAdmin = user.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL');
+  return currentIsAdmin === userIsAdmin;
+};
+
 const UserList = ({ currentUser, editUser, isEnterprise, removeUser, roles, users }) => (
   <Table>
     <TableHead>
@@ -46,7 +52,7 @@ const UserList = ({ currentUser, editUser, isEnterprise, removeUser, roles, user
             <Button onClick={() => editUser(user)} style={{ marginLeft: -10 }}>
               Edit
             </Button>
-            {currentUser.id !== user.id ? <Button onClick={() => removeUser(user)}>Remove</Button> : null}
+            {currentUser.id !== user.id && canRemoveAdmin(currentUser, user) ? <Button onClick={() => removeUser(user)}>Remove</Button> : null}
           </TableCell>
         </TableRow>
       ))}

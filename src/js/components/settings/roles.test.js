@@ -3,26 +3,37 @@ import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import UserManagement from './usermanagement';
+import Roles from './roles';
 import { undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
-describe('UserManagement Component', () => {
+describe('Roles Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
       app: {
-        snackbar: {},
         features: {
-          isEnterprise: false,
           isHosted: false
         }
       },
-      users: {
-        currentUser: null,
+      devices: {
         byId: {},
-        rolesById: {}
+        filteringAttributes: { identityAttributes: ['id_attribute'] },
+        filteringAttributesLimit: 10,
+        groups: {
+          byId: {
+            testGroup: {}
+          }
+        }
+      },
+      users: {
+        globalSettings: {},
+        organization: {
+          id: 1,
+          name: 'test'
+        },
+        rolesById: { RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false } }
       }
     });
   });
@@ -31,7 +42,7 @@ describe('UserManagement Component', () => {
     const tree = renderer
       .create(
         <Provider store={store}>
-          <UserManagement />
+          <Roles />
         </Provider>
       )
       .toJSON();

@@ -23,11 +23,11 @@ import { clearAllRetryTimers } from '../../utils/retrytimer';
 import DeviceNotifications from './devicenotifications';
 import DeploymentNotifications from './deploymentnotifications';
 
-import { getAllDevices, getDeviceCount, getDeviceLimit, getDynamicGroups, getGroups } from '../../actions/deviceActions';
-import { getReleases } from '../../actions/releaseActions';
-import { getUser, getGlobalSettings, getUserOrganization, logoutUser, setShowHelptips, toggleHelptips } from '../../actions/userActions';
 import { getOnboardingState, setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus } from '../../actions/deploymentActions';
+import { getAllDevices, getDeviceCount, getDeviceLimit, getDynamicGroups, getGroups } from '../../actions/deviceActions';
+import { getReleases } from '../../actions/releaseActions';
+import { getUser, getGlobalSettings, getRoles, getUserOrganization, logoutUser, setShowHelptips, toggleHelptips } from '../../actions/userActions';
 
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 
@@ -36,34 +36,23 @@ export class Header extends React.Component {
     super(props, context);
     this.state = {
       anchorEl: null,
-      gettingUser: false
+      gettingUser: false,
+      loggingOut: false
     };
     this.cookies = new Cookies();
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate() {
     const sessionId = this.cookies.get('JWT');
-    if (!sessionId || !this.props.user || !this.props.user.id || !this.props.user.email.length) {
-      this._updateUsername()
-        .then(() => {
-          this.props.getOnboardingState();
-          this.initializeHeaderData();
-        })
-        // this is allowed to fail if no user information are available
-        .catch(e => console.log(e));
-    } else if (prevState.sessionId !== this.state.sessionId) {
-      this.initializeHeaderData();
-      this.props.getAllDevices(100);
+    if ((!sessionId || !this.props.user || !this.props.user.id || !this.props.user.email.length) && !this.state.gettingUser && !this.state.loggingOut) {
+      this._updateUsername();
     }
   }
 
   componentDidMount() {
     // check logged in user
     if (this.props.isLoggedIn) {
-      this._updateUsername().then(() => {
-        this.props.getOnboardingState();
-        this.initializeHeaderData();
-      });
+      this._updateUsername();
     }
   }
 
@@ -77,6 +66,7 @@ export class Header extends React.Component {
     this.props.getDeviceLimit();
     this.props.getReleases();
     this.props.getGlobalSettings();
+    this.props.getRoles();
     if (this.props.multitenancy) {
       this.props.getUserOrganization();
     }
@@ -121,17 +111,24 @@ export class Header extends React.Component {
     var self = this;
     // get current user
     if (!self.state.gettingUser) {
-      var userId = self.state.sessionId ? decodeSessionToken(self.state.sessionId) : decodeSessionToken(self.cookies.get('JWT'));
+      const userId = decodeSessionToken(self.cookies.get('JWT'));
       if (!userId) {
-        return Promise.reject();
+        return;
       }
       self.setState({ gettingUser: true });
-      return self.props
-        .getUser(userId)
-        .catch(err => console.log(err.res.error))
-        .finally(() => self.setState({ gettingUser: false }));
+      return (
+        self.props
+          .getUser(userId)
+          .then(() => {
+            self.props.getOnboardingState();
+            self.initializeHeaderData();
+            self.props.getAllDevices(100);
+          })
+          // this is allowed to fail if no user information are available
+          .catch(err => console.log(err.res.error))
+          .finally(() => self.setState({ gettingUser: false }))
+      );
     }
-    return Promise.reject();
   }
 
   changeTab() {
@@ -146,9 +143,13 @@ export class Header extends React.Component {
     this.setState({ anchorEl: null });
   };
   onLogoutClick() {
-    this.setState({ gettingUser: false, anchorEl: null });
+    const self = this;
+    self.setState({ gettingUser: false, loggingOut: true, anchorEl: null });
     clearAllRetryTimers(this.props.setSnackbar);
-    this.props.logoutUser().then(() => logout());
+    self.props
+      .logoutUser()
+      .then(() => logout())
+      .finally(() => self.setState({ loggingOut: false }));
   }
   render() {
     const self = this;
@@ -287,6 +288,7 @@ const actionCreators = {
   getGroups,
   getOnboardingState,
   getReleases,
+  getRoles,
   getUser,
   getUserOrganization,
   logoutUser,

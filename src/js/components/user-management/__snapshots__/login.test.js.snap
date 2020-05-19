@@ -53,6 +53,7 @@ exports[`Login Component renders correctly 1`] = `
             placeholder="Your email"
             required={true}
             type="text"
+            value=""
           />
         </div>
         <p

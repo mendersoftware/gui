@@ -31,11 +31,11 @@ const initialState = {
     showConnectDeviceDialog: false,
     showCreateArtifactDialog: false
   },
-  roles: [
-    { id: 'RBAC_ROLE_PERMIT_ALL', title: 'All Allowed' },
-    { id: 'RBAC_ROLE_OBSERVER', title: 'Read only' },
-    { id: 'RBAC_ROLE_CI', title: 'CI' }
-  ]
+  rolesById: {
+    RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false, permissions: [] },
+    RBAC_ROLE_OBSERVER: { title: 'Read only', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
+    RBAC_ROLE_CI: { title: 'CI', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] }
+  }
 };
 
 const userReducer = (state = initialState, action) => {
@@ -101,6 +101,33 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         currentUser: action.user
+      };
+    case UserConstants.RECEIVED_ROLES:
+      return {
+        ...state,
+        rolesById: {
+          ...state.rolesById,
+          ...action.rolesById
+        }
+      };
+    case UserConstants.REMOVED_ROLE: {
+      let rolesById = state.rolesById;
+      delete rolesById[action.roleId];
+      return {
+        ...state,
+        rolesById
+      };
+    }
+    case UserConstants.CREATED_ROLE:
+      return {
+        ...state,
+        rolesById: {
+          ...state.rolesById,
+          [action.roleId]: {
+            ...state.rolesById[action.roleId],
+            ...action.role
+          }
+        }
       };
     case UserConstants.SET_GLOBAL_SETTINGS:
       return {
