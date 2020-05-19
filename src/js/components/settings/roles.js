@@ -69,7 +69,7 @@ export class RoleManagement extends React.Component {
 
   render() {
     const self = this;
-    const { adding, description, groups, name } = self.state;
+    const { adding, allowUserManagement, description, groups, name } = self.state;
     const { roles, removeRole } = self.props;
     return (
       <div>
@@ -121,7 +121,7 @@ export class RoleManagement extends React.Component {
               label="Allow to manage other users"
             />
           </div>
-          {groups.length && (
+          {!!groups.length && (
             <div className="flexbox column margin-top-small">
               <div>Device group permission</div>
               {groups.map(group => (
@@ -138,7 +138,13 @@ export class RoleManagement extends React.Component {
             <Button onClick={() => self.onCancel()} style={{ marginRight: 15 }}>
               Cancel
             </Button>
-            <Button color="secondary" variant="contained" target="_blank" onClick={() => self.onSubmit()}>
+            <Button
+              color="secondary"
+              variant="contained"
+              target="_blank"
+              disabled={!(name && (allowUserManagement || groups.some(group => group.selected)))}
+              onClick={() => self.onSubmit()}
+            >
               Submit
             </Button>
           </div>
