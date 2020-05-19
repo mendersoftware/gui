@@ -372,8 +372,8 @@ exports[`Roles Component renders correctly 1`] = `
             </span>
           </button>
           <button
-            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
-            disabled={false}
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary Mui-disabled Mui-disabled"
+            disabled={true}
             onBlur={[Function]}
             onClick={[Function]}
             onDragLeave={[Function]}
@@ -386,7 +386,7 @@ exports[`Roles Component renders correctly 1`] = `
             onTouchEnd={[Function]}
             onTouchMove={[Function]}
             onTouchStart={[Function]}
-            tabIndex={0}
+            tabIndex={-1}
             target="_blank"
             type="button"
           >
