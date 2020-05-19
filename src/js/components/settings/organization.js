@@ -77,9 +77,6 @@ export class MyOrganization extends React.Component {
           <p style={{ color: '#DECFD9', margin: '1em 0' }}>
             This token is unique for your organization and ensures that only devices that you own are able to connect to your account.
           </p>
-          <p style={{ color: '#DECFD9', margin: '1em 0' }}>
-            Set this variable in <i>local.conf</i> in order to make the device recognize the organization to which it belongs.
-          </p>
         </ReactTooltip>
       </div>
     );
