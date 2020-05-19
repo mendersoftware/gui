@@ -254,6 +254,9 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
       } else {
         const attributes = mapDeviceAttributes(device.attributes);
         device.attributes = stateDevice ? { ...stateDevice.attributes, ...attributes } : attributes;
+        device.status = status ? status : device.status || device.attributes.status;
+        device.created_ts = device.attributes.created_ts ? device.attributes.created_ts : device.created_ts;
+        device.updated_ts = device.attributes.updated_ts ? device.attributes.updated_ts : device.updated_ts;
       }
       accu.devicesById[device.id] = { ...stateDevice, ...device };
       accu.ids.push(device.id);
@@ -341,6 +344,7 @@ export const getDeviceById = id => dispatch =>
   DevicesApi.get(`${inventoryApiUrl}/devices/${id}`)
     .then(res => {
       const device = { ...res.body, attributes: mapDeviceAttributes(res.body.attributes) };
+      delete device.updated_ts;
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICE,
         device
