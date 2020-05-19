@@ -12,8 +12,7 @@ exports[`Devices Component renders correctly 1`] = `
   <div
     style={
       Object {
-        "marginBottom": "30px",
-        "marginTop": "50px",
+        "marginBottom": 30,
       }
     }
   >

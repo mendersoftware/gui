@@ -514,7 +514,7 @@ ul.link-list {
 .two-columns {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-column-gap: 2 * @defaultGutterWidth;
+  column-gap: 2 * @defaultGutterWidth;
 }
 
 .overflow-hidden {
@@ -832,6 +832,13 @@ ul.link-list {
     &.onboard:hover {
       border-color: darken(@placeholder, 10%);
     }
+    &:hover .widgetRemover {
+      opacity: 1;
+    }
+    &.chart-widget {
+      border-radius: @dotSize * 0.5;
+      border: 1px solid @placeholder;
+    }
   }
   .widgetHeader,
   .widgetMainContent,
@@ -862,6 +869,9 @@ ul.link-list {
     .counter {
       font-size: xx-large;
     }
+  }
+  .widgetRemover {
+    opacity: 0;
   }
   .link {
     font-size: small;
@@ -1753,7 +1763,7 @@ span.day {
 
 .dashboard-header {
   border-bottom: 1px solid @lightgrey;
-  margin-bottom: @defaultGutterWidth;
+  margin-bottom: 3 * @defaultGutterWidth;
   position: relative;
 
   span {

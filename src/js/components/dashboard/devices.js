@@ -5,8 +5,8 @@ import { getAllDevices, getAllDevicesByStatus, getDeviceCount } from '../../acti
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import AcceptedDevices from './widgets/accepteddevices';
-import RedirectionWidget from './widgets/redirectionwidget';
 import PendingDevices from './widgets/pendingdevices';
+import RedirectionWidget from './widgets/redirectionwidget';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
 const refreshDevicesLength = 30000;
@@ -34,7 +34,7 @@ export class Devices extends React.Component {
   }
 
   _refreshDevices() {
-    if (this.state.loading || this.props.devices.length > this.props.deploymentDeviceLimit) {
+    if (this.state.loading || this.props.acceptedDevicesCount > this.props.deploymentDeviceLimit) {
       return;
     }
     this.props.getAllDevicesByStatus(DEVICE_STATES.accepted);
@@ -80,8 +80,8 @@ export class Devices extends React.Component {
 
   render() {
     const { deltaActivity } = this.state;
-    const { devices, inactiveDevicesCount, onboardingComplete, pendingDevicesCount, setShowConnectingDialog, showHelptips } = this.props;
-    const noDevicesAvailable = !(devices.length + pendingDevicesCount > 0);
+    const { acceptedDevicesCount, inactiveDevicesCount, onboardingComplete, pendingDevicesCount, setShowConnectingDialog, showHelptips } = this.props;
+    const noDevicesAvailable = !(acceptedDevicesCount + pendingDevicesCount > 0);
     let onboardingComponent = null;
     if (this.anchor) {
       const element = this.anchor.children[this.anchor.children.length - 1];
@@ -102,7 +102,7 @@ export class Devices extends React.Component {
         <h4 className="dashboard-header">
           <span>Devices</span>
         </h4>
-        <div style={Object.assign({ marginBottom: '30px', marginTop: '50px' }, this.props.styles)} ref={element => (this.anchor = element)}>
+        <div style={Object.assign({ marginBottom: 30 }, this.props.styles)} ref={element => (this.anchor = element)}>
           {!!pendingDevicesCount && (
             <PendingDevices
               pendingDevicesCount={pendingDevicesCount}
@@ -112,7 +112,7 @@ export class Devices extends React.Component {
               ref={ref => (this.pendingsRef = ref)}
             />
           )}
-          <AcceptedDevices devicesCount={devices.length} inactiveCount={inactiveDevicesCount} delta={deltaActivity} onClick={this.props.clickHandle} />
+          <AcceptedDevices devicesCount={acceptedDevicesCount} inactiveCount={inactiveDevicesCount} delta={deltaActivity} onClick={this.props.clickHandle} />
           <RedirectionWidget
             target={redirectionRoute}
             content={`Learn how to connect ${onboardingComplete ? 'more devices' : 'a device'}`}
@@ -138,7 +138,7 @@ const mapStateToProps = state => {
   return {
     activeDevicesCount: state.devices.byStatus.active.total,
     deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
-    devices: state.devices.byStatus.accepted.deviceIds,
+    acceptedDevicesCount: state.devices.byStatus.accepted.total,
     inactiveDevicesCount: state.devices.byStatus.inactive.total,
     onboardingComplete: state.users.onboarding.complete,
     pendingDevicesCount: state.devices.byStatus.pending.total,

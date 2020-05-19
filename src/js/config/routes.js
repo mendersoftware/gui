@@ -2,13 +2,13 @@ import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
 import App from '../components/app';
+import Artifacts from '../components/artifacts/artifacts';
 import Dashboard from '../components/dashboard/dashboard';
 import Deployments from '../components/deployments/deployments';
 import Devices from '../components/devices/devices';
-import Artifacts from '../components/artifacts/artifacts';
+import Help from '../components/help/help';
 import Login from '../components/user-management/login';
 import Settings from '../components/settings/settings';
-import Help from '../components/help/help';
 
 import { isLoggedIn } from '../auth';
 

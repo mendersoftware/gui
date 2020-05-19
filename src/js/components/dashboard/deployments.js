@@ -114,7 +114,7 @@ export class Deployments extends React.Component {
         <h4 className="dashboard-header">
           <span>Deployments</span>
         </h4>
-        <div className="deployments" style={Object.assign({ marginBottom: '50px', marginTop: '50px' })}>
+        <div className="deployments" style={Object.assign({ marginBottom: 50 })}>
           {loading ? (
             <Loader show={loading} fade={true} />
           ) : (

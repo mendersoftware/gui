@@ -4,14 +4,12 @@ import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-
-import { mount } from 'enzyme';
-import Dashboard from './dashboard';
+import SoftwareDistribution from './software-distribution';
 import { undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
-describe('Dashboard Component', () => {
+describe('Devices Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
@@ -20,13 +18,25 @@ describe('Dashboard Component', () => {
           isEnterprise: false
         }
       },
+      deployments: {
+        deploymentDeviceLimit: 5000
+      },
       devices: {
         byId: {},
         byStatus: {
-          accepted: { deviceIds: [], total: 0 },
-          active: { total: 0 },
-          inactive: { total: 0 },
-          pending: { deviceIds: [], total: 0 }
+          accepted: {
+            total: 0,
+            deviceIds: []
+          },
+          active: {
+            total: 0
+          },
+          inactive: {
+            total: 0
+          },
+          pending: {
+            total: 0
+          }
         },
         filteringAttributes: {
           inventoryAttributes: []
@@ -35,33 +45,14 @@ describe('Dashboard Component', () => {
           byId: {}
         }
       },
-      deployments: {
-        byId: {},
-        byStatus: {
-          finished: { total: 0 },
-          inprogress: { total: 0 },
-          pending: { total: 0 }
-        },
-        deploymentDeviceLimit: 500
-      },
       users: {
         byId: {},
         currentUser: null,
         globalSettings: {},
-        showHelptips: true,
-        onboarding: { complete: false, showTips: true }
+        onboarding: { complete: false },
+        showHelptips: true
       }
     });
-  });
-
-  it('renders without crashing', () => {
-    mount(
-      <MemoryRouter>
-        <Provider store={store}>
-          <Dashboard />
-        </Provider>
-      </MemoryRouter>
-    );
   });
 
   it('renders correctly', () => {
@@ -69,7 +60,7 @@ describe('Dashboard Component', () => {
       .create(
         <MemoryRouter>
           <Provider store={store}>
-            <Dashboard />
+            <SoftwareDistribution getAllDevicesByStatus={jest.fn()} />
           </Provider>
         </MemoryRouter>
       )

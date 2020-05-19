@@ -42,6 +42,7 @@
     "superagent": "^5.2.1",
     "universal-cookie": "^4.0.3",
     "validator": "^12.2.0",
+    "victory": "^34.1.1",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {

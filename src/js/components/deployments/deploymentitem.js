@@ -6,8 +6,8 @@ import { Button, IconButton, Tooltip } from '@material-ui/core';
 import { CancelOutlined as CancelOutlinedIcon } from '@material-ui/icons';
 
 import { groupDeploymentStats } from '../../helpers';
+import Confirm from '../common/confirm';
 import RelativeTime from '../common/relative-time';
-import Confirm from './confirm';
 import ProgressChart from './progressChart';
 import DeploymentStats from './deploymentstatus';
 
