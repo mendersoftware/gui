@@ -4,6 +4,7 @@ import React from 'react';
 
 import store from './reducers';
 import appConstants from './constants/appConstants';
+import { DEVICE_FILTERING_OPTIONS } from './constants/deviceConstants';
 
 export function isEncoded(uri) {
   uri = uri || '';
@@ -18,16 +19,6 @@ export function fullyDecodeURI(uri) {
 
   return uri;
 }
-
-export const encodeFilters = filters =>
-  filters
-    .reduce((accu, filter) => {
-      if (filter.key && filter.value) {
-        accu.push(`${encodeURIComponent(filter.key)}=${encodeURIComponent(filter.value)}`);
-      }
-      return accu;
-    }, [])
-    .join('&');
 
 const statCollector = (items, statistics) => items.reduce((accu, property) => accu + Number(statistics[property] || 0), 0);
 
@@ -100,54 +91,13 @@ export function preformatWithRequestID(res, failMsg) {
   return failMsg;
 }
 
-/*
- * compare version strings like 1.2.1, 1.2.0 etc
- * from https://gist.github.com/TheDistantSea/8021359
- */
-export function versionCompare(v1, v2, options) {
-  var lexicographical = options && options.lexicographical,
-    zeroExtend = options && options.zeroExtend,
-    v1parts = v1.split('.'),
-    v2parts = v2.split('.');
-
-  function isValidPart(x) {
-    return (lexicographical ? /^\d+[A-Za-z]*$/ : /^\d+$/).test(x);
-  }
-
-  if (!v1parts.every(isValidPart) || !v2parts.every(isValidPart)) {
-    return NaN;
-  }
-
-  if (zeroExtend) {
-    while (v1parts.length < v2parts.length) v1parts.push('0');
-    while (v2parts.length < v1parts.length) v2parts.push('0');
-  }
-
-  if (!lexicographical) {
-    v1parts = v1parts.map(Number);
-    v2parts = v2parts.map(Number);
-  }
-
-  for (var i = 0; i < v1parts.length; ++i) {
-    if (v2parts.length == i) {
-      return 1;
-    }
-
-    if (v1parts[i] == v2parts[i]) {
-      continue;
-    } else if (v1parts[i] > v2parts[i]) {
-      return 1;
-    } else {
-      return -1;
-    }
-  }
-
-  if (v1parts.length != v2parts.length) {
-    return -1;
-  }
-
-  return 0;
-}
+export const filtersCompare = (filters, otherFilters) =>
+  filters.length !== otherFilters.length ||
+  filters.some(filter =>
+    otherFilters.find(
+      otherFilter => otherFilter.key === filter.key && Object.entries(filter).reduce((accu, [key, value]) => accu || otherFilter[key] !== value, false)
+    )
+  );
 
 /*
  *
@@ -339,6 +289,26 @@ export const unionizeStrings = (someStrings, someOtherStrings) => {
     : startingPoint;
   return [...uniqueStrings];
 };
+
+export const generateDeploymentGroupDetails = (filter, groupName) =>
+  filter && filter.terms
+    ? `${groupName} (${filter.terms
+        .map(filter => `${filter.attribute || filter.key} ${DEVICE_FILTERING_OPTIONS[filter.type || filter.operator].shortform} ${filter.value}`)
+        .join(', ')})`
+    : groupName;
+
+export const tryMapDeployments = (accu, id) => {
+  if (accu.state.deployments.byId[id]) {
+    accu.deployments.push(accu.state.deployments.byId[id]);
+  }
+  return accu;
+};
+
+export const mapAttributesToAggregator = item =>
+  Object.keys(item).reduce((accu, item) => {
+    accu[item] = [];
+    return accu;
+  }, {});
 
 export const mapDeviceAttributes = (attributes = []) =>
   attributes.reduce((accu, attribute) => ({ ...accu, [attribute.name]: attribute.value }), { device_type: '', artifact_name: '' });

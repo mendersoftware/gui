@@ -67,13 +67,10 @@ export class SoftwareDevices extends React.Component {
 
   render() {
     const self = this;
-    const { device, deploymentAnchor, deploymentObject, groups, hasDevices, hasPending, release, releases } = self.props;
+    const { device, deploymentAnchor, deploymentObject, group, groups, hasDevices, hasDynamicGroups, hasPending, release, releases } = self.props;
     const { deploymentDeviceIds } = self.state;
 
     const selectedRelease = deploymentObject.release ? deploymentObject.release : release;
-
-    const group = self.props.group;
-
     const releaseDeviceTypes = selectedRelease ? selectedRelease.device_types_compatible : [];
     const devicetypesInfo = (
       <Tooltip title={<p>{releaseDeviceTypes.join(', ')}</p>} placement="bottom">
@@ -97,16 +94,17 @@ export class SoftwareDevices extends React.Component {
       };
       releaseItems = releaseItems.filter(rel => rel.value.device_types_compatible.some(type => type === device.attributes.device_type));
     } else {
-      groupItems = Object.keys(groups).reduce((accu, group) => {
+      groupItems = Object.keys(groups).reduce((accu, currentGroup) => {
         accu.push({
-          title: group,
-          value: group
+          title: currentGroup,
+          value: currentGroup
         });
         return accu;
       }, groupItems);
     }
 
     const groupLink = group ? `/devices/group=${group}` : '/devices/';
+    const isDynamicGroup = groups[group] && groups[group].filters ? !!groups[group].filters.length : false;
 
     let onboardingComponent = null;
     if (this.releaseRef && this.groupRef && deploymentAnchor) {
@@ -160,11 +158,11 @@ export class SoftwareDevices extends React.Component {
                     errorText="Please select a group from the list"
                     value={group}
                     items={groupItems}
-                    disabled={!hasDevices}
+                    disabled={!(hasDevices || hasDynamicGroups)}
                     onChange={item => self.deploymentSettingsUpdate(item, 'group')}
                     style={styles.textField}
                   />
-                  {hasDevices ? null : (
+                  {!(hasDevices || hasDynamicGroups) && (
                     <p className="info" style={{ marginTop: '10px' }}>
                       <ErrorOutlineIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)', position: 'relative' }} />
                       There are no connected devices.{' '}
@@ -181,9 +179,16 @@ export class SoftwareDevices extends React.Component {
                   )}
                 </div>
               )}
-              {deploymentDeviceIds.length > 0 && (
+              {(deploymentDeviceIds.length > 0 || isDynamicGroup) && (
                 <p className="info">
-                  {deploymentDeviceIds.length} {pluralize('devices', deploymentDeviceIds.length)} will be targeted. <Link to={groupLink}>View the devices</Link>
+                  {isDynamicGroup ? (
+                    <>All devices in this group</>
+                  ) : (
+                    <>
+                      {deploymentDeviceIds.length} {pluralize('devices', deploymentDeviceIds.length)}
+                    </>
+                  )}{' '}
+                  will be targeted. <Link to={groupLink}>View the devices</Link>
                 </p>
               )}
               {onboardingComponent}
@@ -204,15 +209,14 @@ export class SoftwareDevices extends React.Component {
 const actionCreators = { getAllDevicesByStatus, getAllGroupDevices, selectDevices };
 
 const mapStateToProps = state => {
-  const { [DeviceConstants.UNGROUPED_GROUP.id]: ungroupedGroup, ...groups } = state.devices.groups.byId;
   return {
     acceptedDevices: state.devices.byStatus.accepted.deviceIds,
     device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
-    groups,
+    groups: state.devices.groups.byId,
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
+    hasDynamicGroups: Object.values(state.devices.groups.byId).some(group => !!group.id),
     hasPending: state.devices.byStatus.pending.total || state.devices.byStatus.pending.deviceIds.length > 0,
-    releases: Object.values(state.releases.byId),
-    ungroupedGroup
+    releases: Object.values(state.releases.byId)
   };
 };
 

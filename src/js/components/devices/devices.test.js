@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Devices from './devices';
+import { undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -23,7 +24,7 @@ describe('Devices Component', () => {
           rejected: { total: 0 }
         },
         filters: [],
-        filteringAttributes: { inventoryAttributes: [] },
+        filteringAttributes: { identityAttributes: [], inventoryAttributes: [] },
         groups: {
           byId: {},
           selectedGroup: {}
@@ -31,7 +32,7 @@ describe('Devices Component', () => {
         selectedDeviceList: []
       },
       users: {
-        globalSettings: {},
+        globalSettings: { previousFilters: [] },
         onboarding: {
           complete: false
         },
@@ -51,5 +52,6 @@ describe('Devices Component', () => {
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
+    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });
 });

@@ -8,54 +8,169 @@ import pluralize from 'pluralize';
 // material ui
 import { Button } from '@material-ui/core';
 
-import { AddCircle as AddCircleIcon, Help as HelpIcon, RemoveCircleOutline as RemoveCircleOutlineIcon } from '@material-ui/icons';
+import {
+  AddCircle as AddCircleIcon,
+  Delete as DeleteIcon,
+  Help as HelpIcon,
+  LockOutlined,
+  RemoveCircleOutline as RemoveCircleOutlineIcon
+} from '@material-ui/icons';
 
 import { ExpandDevice } from '../helptips/helptooltips';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 
 import Loader from '../common/loader';
 import RelativeTime from '../common/relative-time';
-import { setSnackbar } from '../../actions/appActions';
 
-import Filters from './filters';
 import DeviceList from './devicelist';
 import DeviceStatus from './device-status';
+import Filters from './filters';
+
+import {
+  getAllDevicesByStatus,
+  getDevices,
+  getDevicesByStatus,
+  getGroupDevices,
+  selectDevices,
+  setDeviceFilters,
+  trySelectDevice
+} from '../../actions/deviceActions';
+import { setSnackbar } from '../../actions/appActions';
+
+import { filtersCompare, isEmpty } from '../../helpers';
+import DeviceConstants from '../../constants/deviceConstants';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
+
+const refreshDeviceLength = 10000;
 
 export class Authorized extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      divHeight: 208,
+      loading: true,
+      pageNo: 1,
+      pageLength: 20,
       selectedRows: [],
-      textfield: this.props.group ? decodeURIComponent(this.props.group) : 'All devices'
+      tmpDevices: []
     };
   }
 
+  componentDidMount() {
+    const self = this;
+    if (!this.props.acceptedDevicesList.length && this.props.acceptedCount < this.props.deploymentDeviceLimit) {
+      this.props.getAllDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted);
+    }
+    if (self.props.acceptedDevicesList.length < 20) {
+      self._getDevices(true);
+    } else {
+      self.props.selectDevices(self.props.acceptedDevicesList);
+    }
+    clearAllRetryTimers(self.props.setSnackbar);
+    if (self.props.filters && self.props.groupDevices.length) {
+      self.setState({ loading: false }, () => self.props.selectDevices(self.props.groupDevices.slice(0, self.state.pageLength)));
+    } else {
+      clearInterval(self.deviceTimer);
+      // no group, no filters, all devices
+      self.deviceTimer = setInterval(() => self._getDevices(), refreshDeviceLength);
+      self._getDevices();
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.deviceTimer);
+    clearAllRetryTimers(this.props.setSnackbar);
+  }
+
   componentDidUpdate(prevProps) {
-    var self = this;
+    if (this.props.currentTab !== 'Device groups') {
+      return clearInterval(this.deviceTimer);
+    }
+    const self = this;
+    if (prevProps.currentTab !== self.props.currentTab) {
+      self.props.setDeviceFilters([]);
+      self.setState({ selectedRows: [], expandRow: null });
+    }
     if (
-      prevProps.allCount !== this.props.allCount ||
-      prevProps.group !== this.props.group ||
-      prevProps.devices.length !== this.props.devices.length ||
-      prevProps.groupCount !== this.props.groupCount ||
-      prevProps.pageNo !== this.props.pageNo
+      prevProps.allCount !== self.props.allCount ||
+      prevProps.group !== self.props.group ||
+      prevProps.devices.length !== self.props.devices.length ||
+      prevProps.groupCount !== self.props.groupCount ||
+      filtersCompare(prevProps.filters, self.props.filters)
     ) {
       self.setState({ selectedRows: [], expandRow: null, allRowsSelected: false });
-      if (self.props.showHelptips && self.props.showTips && !self.props.onboardingComplete && this.props.acceptedCount && this.props.acceptedCount < 2) {
-        setTimeout(() => {
-          self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, self.onCloseSnackbar);
-        }, 400);
+      if (self.props.showHelptips && self.props.showTips && !self.props.onboardingComplete && self.props.acceptedCount && self.props.acceptedCount < 2) {
+        setTimeout(() => self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, self.onCloseSnackbar), 400);
       }
+      clearInterval(self.deviceTimer);
+      self.deviceTimer = setInterval(() => self._getDevices(), refreshDeviceLength);
+      self._getDevices(true);
     }
+  }
 
-    if (prevProps.currentTab !== this.props.currentTab && this.props.currentTab === 'Device groups') {
-      this.setState({ selectedRows: [], expandRow: null });
-    }
+  /*
+   * Devices
+   */
+  _getDevices(shouldUpdate = false) {
+    const self = this;
+    const { filters, getDevices, getDevicesByStatus, getGroupDevices, selectedGroup, setSnackbar } = self.props;
+    const { pageLength, pageNo } = self.state;
+    const hasFilters = filters.length && filters[0].value;
 
-    if (prevProps.group !== this.props.group) {
-      this.setState({ textfield: this.props.group ? decodeURIComponent(this.props.group) : 'All devices' });
+    if (selectedGroup || hasFilters) {
+      let request;
+      if (selectedGroup) {
+        request = getGroupDevices(selectedGroup, pageNo, pageLength, true);
+      } else {
+        const identityFiltered = filters.filter(item => item.scope === 'identity');
+        if (identityFiltered.length === 1 && identityFiltered[0].key === 'id') {
+          return self.getDeviceById(identityFiltered[0].value);
+        }
+        request = identityFiltered.length
+          ? getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, pageNo, pageLength, true)
+          : getDevices(pageNo, pageLength, filters, true);
+      }
+      // if a group or filters, must use inventory API
+      return (
+        request
+          .catch(err => {
+            console.log(err);
+            var errormsg = err.error || 'Please check your connection.';
+            setRetryTimer(err, 'devices', `Devices couldn't be loaded. ${errormsg}`, refreshDeviceLength, setSnackbar);
+          })
+          // only set state after all devices id data retrieved
+          .finally(() => self.setState({ loading: false, pageLoading: false }))
+      );
+    } else {
+      // otherwise, show accepted from device adm
+      return getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, pageNo, pageLength, shouldUpdate)
+        .catch(err => {
+          console.log(err);
+          var errormsg = err.error || 'Please check your connection.';
+          setRetryTimer(err, 'devices', `Devices couldn't be loaded. ${errormsg}`, refreshDeviceLength, setSnackbar);
+        })
+        .finally(() => self.setState({ loading: false, pageLoading: false }));
     }
+  }
+
+  getDeviceById(id) {
+    // filter the list to show a single device only
+    var self = this;
+    // do this via deviceauth not inventory
+    return self.props
+      .trySelectDevice(id, DeviceConstants.DEVICE_STATES.accepted)
+      .catch(err => {
+        if (err.res.statusCode === 404) {
+          var errormsg = err.error || 'Please check your connection.';
+          setRetryTimer(err, 'devices', `Device couldn't be loaded. ${errormsg}`, refreshDeviceLength, self.props.setSnackbar);
+        }
+      })
+      .finally(() => self.setState({ loading: false, pageLoading: false }));
+  }
+
+  _handlePageChange(pageNo) {
+    var self = this;
+    self.setState({ pageLoading: true, pageNo: pageNo }, () => self._getDevices(true));
   }
 
   onCloseSnackbar = (_, reason) => {
@@ -65,37 +180,46 @@ export class Authorized extends React.Component {
     this.props.setSnackbar('');
   };
 
-  _handleGroupNameChange(event) {
-    this.setState({ textfield: event.target.value });
-  }
-
   onRowSelection(selection) {
     this.setState({ selectedRows: selection });
+  }
+
+  onAddDevicesToGroup(rows) {
+    const devices = rows.map(row => this.props.devices[row]);
+    this.props.addDevicesToGroup(devices);
+  }
+
+  onRemoveDevicesFromGroup(rows) {
+    const devices = rows.map(row => this.props.devices[row]);
+    this.props.removeDevicesFromGroup(devices);
+    // if devices.length = number on page but < groupCount
+    // move page back to pageNO 1
+    if (this.props.devices.length === devices.length) {
+      this.setState({ pageNo: 1, pageLoading: true }, () => this._getDevices());
+    }
   }
 
   render() {
     const self = this;
     const {
-      addDevicesToGroup,
       allCount,
-      allowDeviceGroupRemoval,
       devices,
-      globalSettings,
-      group,
       groupCount,
+      groupFilters,
       highlightHelp,
+      idAttribute,
+      isEnterprise,
       loading,
-      onFilterChange,
+      onGroupClick,
+      onGroupRemoval,
       openSettingsDialog,
-      refreshDevices,
-      removeDevicesFromGroup,
       selectedGroup,
       showHelptips
     } = self.props;
     const { selectedRows } = self.state;
     const columnHeaders = [
       {
-        title: globalSettings.id_attribute || 'Device ID',
+        title: idAttribute || 'Device ID',
         name: 'device_id',
         customize: openSettingsDialog,
         style: { flexGrow: 1 }
@@ -123,34 +247,60 @@ export class Authorized extends React.Component {
       }
     ];
 
-    var pluralized = pluralize('devices', selectedRows.length);
-
-    var addLabel = group ? `Move selected ${pluralized} to another group` : `Add selected ${pluralized} to a group`;
-    var removeLabel = `Remove selected ${pluralized} from this group`;
-    var groupLabel = group ? decodeURIComponent(group) : 'All devices';
+    const groupLabel = selectedGroup ? decodeURIComponent(selectedGroup) : 'All devices';
+    const pluralized = pluralize('devices', selectedRows.length);
+    const addLabel = selectedGroup ? `Move selected ${pluralized} to another group` : `Add selected ${pluralized} to a group`;
+    const removeLabel = `Remove selected ${pluralized} from this group`;
 
     const anchor = { left: 200, top: 146 };
     let onboardingComponent = getOnboardingComponentFor('devices-accepted-onboarding', { anchor });
     onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor }, onboardingComponent);
     return (
       <div className="relative">
-        <div style={{ marginLeft: '20px' }}>
-          <h2 className="inline-block margin-right">{groupLabel}</h2>
-          {!selectedGroup && <Filters onFilterChange={onFilterChange} refreshDevices={refreshDevices} />}
+        <div className="flexbox space-between" style={{ marginLeft: '20px' }}>
+          <div style={{ width: '100%' }}>
+            <h2 className="inline-block margin-right">{groupLabel}</h2>
+
+            {(!selectedGroup || !!groupFilters.length) && (
+              <Filters
+                onFilterChange={() => self.setState({ pageNo: 1 }, () => self._getDevices(true))}
+                onGroupClick={onGroupClick}
+                isModification={!!groupFilters.length}
+              />
+            )}
+          </div>
+          {selectedGroup && (
+            <div className="flexbox centered" style={{ marginTop: 5, minWidth: 240, alignSelf: 'flex-start' }}>
+              {isEnterprise && !groupFilters.length && (
+                <>
+                  <p className="info flexbox centered" style={{ marginRight: 15 }}>
+                    <LockOutlined fontSize="small" />
+                    <span>Static</span>
+                  </p>
+                </>
+              )}
+              <Button onClick={onGroupRemoval} startIcon={<DeleteIcon />}>
+                Remove group
+              </Button>
+            </div>
+          )}
         </div>
         <Loader show={loading} />
         {devices.length > 0 && !loading ? (
           <div className="padding-bottom">
             <DeviceList
               {...self.props}
+              {...self.state}
               columnHeaders={columnHeaders}
-              filterable={true}
-              selectedRows={selectedRows}
+              onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}
+              onPageChange={e => self._handlePageChange(e)}
               onSelect={selection => self.onRowSelection(selection)}
               pageTotal={groupCount}
+              refreshDevices={shouldUpdate => self._getDevices(shouldUpdate)}
+              selectDeviceById={id => self.getDeviceById(id)}
             />
 
-            {showHelptips && devices.length ? (
+            {showHelptips && devices.length && (
               <div>
                 <div
                   id="onboard-6"
@@ -166,7 +316,7 @@ export class Authorized extends React.Component {
                   <ExpandDevice />
                 </ReactTooltip>
               </div>
-            ) : null}
+            )}
           </div>
         ) : (
           <div className={devices.length || loading ? 'hidden' : 'dashboard-placeholder'}>
@@ -180,51 +330,84 @@ export class Authorized extends React.Component {
           </div>
         )}
         {onboardingComponent ? onboardingComponent : null}
-        <div>
-          {selectedRows.length ? (
-            <div className="fixedButtons">
-              <div className="float-right">
-                <span className="margin-right">
-                  {selectedRows.length} {pluralize('devices', selectedRows.length)} selected
-                </span>
+        {!!selectedRows.length && (
+          <div className="fixedButtons">
+            <div className="float-right">
+              <span className="margin-right">
+                {selectedRows.length} {pluralize('devices', selectedRows.length)} selected
+              </span>
+              <Button
+                variant="contained"
+                disabled={!selectedRows.length}
+                color="secondary"
+                onClick={() => self.onAddDevicesToGroup(selectedRows)}
+                startIcon={<AddCircleIcon />}
+              >
+                {addLabel}
+              </Button>
+              {selectedGroup ? (
                 <Button
                   variant="contained"
                   disabled={!selectedRows.length}
-                  color="secondary"
-                  onClick={() => addDevicesToGroup(selectedRows)}
-                  startIcon={<AddCircleIcon />}
+                  style={{ marginLeft: '4px' }}
+                  onClick={() => self.onRemoveDevicesFromGroup(selectedRows)}
+                  startIcon={<RemoveCircleOutlineIcon />}
                 >
-                  {addLabel}
+                  {removeLabel}
                 </Button>
-                {allowDeviceGroupRemoval && group ? (
-                  <Button
-                    variant="contained"
-                    disabled={!selectedRows.length}
-                    style={{ marginLeft: '4px' }}
-                    onClick={() => removeDevicesFromGroup(selectedRows)}
-                    startIcon={<RemoveCircleOutlineIcon />}
-                  >
-                    {removeLabel}
-                  </Button>
-                ) : null}
-              </div>
+              ) : null}
             </div>
-          ) : null}
-        </div>
+          </div>
+        )}
       </div>
     );
   }
 }
 
-const actionCreators = { setSnackbar };
+const actionCreators = {
+  getAllDevicesByStatus,
+  getDevices,
+  getDevicesByStatus,
+  getGroupDevices,
+  selectDevices,
+  setDeviceFilters,
+  setSnackbar,
+  trySelectDevice
+};
 
 const mapStateToProps = state => {
+  let devices = state.devices.selectedDeviceList.slice(0, DeviceConstants.DEVICE_LIST_MAXIMUM_LENGTH);
+  let groupCount = state.devices.byStatus.accepted.total;
+  let selectedGroup;
+  let groupFilters = [];
+  let groupDevices = [];
+  if (!isEmpty(state.devices.groups.selectedGroup)) {
+    selectedGroup = state.devices.groups.selectedGroup;
+    groupCount = state.devices.groups.byId[selectedGroup].total;
+    groupFilters = state.devices.groups.byId[selectedGroup].filters || [];
+    groupDevices = state.devices.groups.byId[selectedGroup].deviceIds;
+  } else if (!isEmpty(state.devices.selectedDevice)) {
+    devices = [state.devices.selectedDevice];
+  } else if (!devices.length && !state.devices.filters.length && state.devices.byStatus.accepted.total) {
+    devices = state.devices.byStatus.accepted.deviceIds.slice(0, 20);
+  }
+  const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
-    globalSettings: state.users.globalSettings,
+    acceptedCount: state.devices.byStatus.accepted.total || 0,
+    acceptedDevicesList: state.devices.byStatus.accepted.deviceIds.slice(0, 20),
+    allCount: state.devices.byStatus.accepted.total + state.devices.byStatus.rejected.total || 0,
+    deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
+    devices,
+    filters: state.devices.filters || [],
+    groupCount,
+    groupDevices,
+    groupFilters,
+    idAttribute: state.users.globalSettings.id_attribute,
+    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
     onboardingComplete: state.users.onboarding.complete,
-    selectedGroup: state.devices.groups.selectedGroup,
-    showTips: state.users.onboarding.showTips,
-    showHelptips: state.users.showHelptips
+    selectedGroup,
+    showHelptips: state.users.showHelptips,
+    showTips: state.users.onboarding.showTips
   };
 };
 

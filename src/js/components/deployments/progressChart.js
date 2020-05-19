@@ -4,10 +4,31 @@ import momentDurationFormatSetup from 'moment-duration-format';
 import Time from 'react-time';
 import pluralize from 'pluralize';
 
-import { Tooltip } from '@material-ui/core';
-import WarningIcon from '@material-ui/icons/Warning';
+import { SvgIcon, Tooltip } from '@material-ui/core';
+import { RotateLeftOutlined, Warning as WarningIcon } from '@material-ui/icons';
+import { mdiDotsHorizontalCircleOutline as QueuedIcon, mdiSleep as SleepIcon } from '@mdi/js';
 
 momentDurationFormatSetup(moment);
+
+const statusMap = {
+  complete: {
+    icon: (
+      <SvgIcon fontSize="inherit">
+        <path d={SleepIcon} />
+      </SvgIcon>
+    ),
+    description: () => 'Complete, awaiting new devices'
+  },
+  queued: {
+    icon: (
+      <SvgIcon fontSize="inherit">
+        <path d={QueuedIcon} />
+      </SvgIcon>
+    ),
+    description: () => 'Queued to start'
+  },
+  paused: { icon: <RotateLeftOutlined fontSize="inherit" />, description: window => `Paused until next window ${window}` }
+};
 
 export default class ProgressChart extends React.Component {
   constructor(props) {
@@ -27,9 +48,10 @@ export default class ProgressChart extends React.Component {
   }
 
   render() {
-    let { created, currentProgressCount, id, totalDeviceCount, totalFailureCount, totalSuccessCount, phases } = this.props;
+    const { className = '', created, currentProgressCount, id, totalDeviceCount, totalFailureCount, totalSuccessCount } = this.props;
     const { time } = this.state;
-
+    const status = this.props.status === 'pending' && this.props.currentProgressCount === 0 ? 'queued' : this.props.status;
+    let phases = this.props.phases;
     phases = phases && phases.length ? phases : [{ id, device_count: totalSuccessCount, batch_size: totalDeviceCount, start_ts: created }];
 
     const currentPhase =
@@ -74,9 +96,20 @@ export default class ProgressChart extends React.Component {
     ).displayablePhases;
 
     const duration = moment.duration(nextPhaseStart.diff(momentaryTime));
-    return (
-      <div className={`flexbox column progress-chart-container ${this.props.className || ''}`}>
-        <div className="flexbox space-between centered">
+    return status === 'queued' ? (
+      <div className="flexbox" style={{ alignItems: 'center' }}>
+        {statusMap[status].icon}
+        <span className="margin-left-small">{statusMap[status].description()}</span>
+      </div>
+    ) : (
+      <div className={`flexbox column progress-chart-container ${className}`}>
+        {statusMap[status] && (
+          <span className="flexbox small text-muted" style={{ alignItems: 'center' }}>
+            {statusMap[status].icon}
+            <span className="margin-left-small">{statusMap[status].description()}</span>
+          </span>
+        )}
+        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gridColumnGap: 15 }}>
           <div className="progress-chart">
             {displayablePhases.map((phase, index) => {
               let style = { width: `${phase.batch_size}%` };
@@ -95,10 +128,7 @@ export default class ProgressChart extends React.Component {
               <div className="progress-bar" style={{ width: '100%' }}></div>
             </div>
           </div>
-          <div
-            className={`flexbox space-between centered ${totalFailureCount ? 'warning' : 'muted'}`}
-            style={{ width: '60%', marginLeft: 15, justifyContent: 'flex-end' }}
-          >
+          <div className={`flexbox space-between centered ${totalFailureCount ? 'warning' : 'muted'}`} style={{ justifyContent: 'flex-end' }}>
             {!!totalFailureCount && <WarningIcon style={{ fontSize: 16, marginRight: 10 }} />}
             {`${totalFailureCount} ${pluralize('failure', totalFailureCount)}`}
           </div>

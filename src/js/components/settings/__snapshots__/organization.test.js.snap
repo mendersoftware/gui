@@ -27,13 +27,18 @@ exports[`MyOrganization Component renders correctly 1`] = `
         }
       >
         <div
-          className="MuiListItemText-root"
+          className="MuiListItemText-root MuiListItemText-multiline"
         >
           <span
             className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
           >
             Organization name
           </span>
+          <p
+            className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+          >
+            test
+          </p>
         </div>
       </li>
       <div
@@ -123,12 +128,15 @@ exports[`MyOrganization Component renders correctly 1`] = `
               </span>
               <div
                 className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+                title="test"
               >
                 <div>
                   <span
                     className="break-all inventory-text tenant-token-text "
                     style={Object {}}
-                  />
+                  >
+                    test
+                  </span>
                    
                 </div>
               </div>
@@ -224,7 +232,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
       className="margin-top margin-left-small margin-right-small"
     >
       <a
-        href="mailto:support@mender.io?subject=undefined: Change plan&body=Organization%20ID%3A%20undefined%0AOrganization%20name%3A%20undefined%0APlan%20name%3A%20Mender Enterprise%0A%0AI%20would%20like%20to%20make%20a%20change%20to%20my%20Mender%20plan."
+        href="mailto:support@mender.io?subject=test: Change plan&body=Organization%20ID%3A%201%0AOrganization%20name%3A%20test%0APlan%20name%3A%20Mender Enterprise%0A%0AI%20would%20like%20to%20make%20a%20change%20to%20my%20Mender%20plan."
         target="_blank"
       >
         Upgrade your plan
@@ -244,7 +252,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
       className="margin-left-small margin-right-small"
     >
       <a
-        href="mailto:support@mender.io?subject=undefined: Update billing&body=Organization%20ID%3A%20undefined%0AOrganization%20name%3A%20undefined%0APlan%20name%3A%20Mender Enterprise%0A%0AI%20would%20like%20to%20make%20a%20change%20to%20my%20billing%20details."
+        href="mailto:support@mender.io?subject=test: Update billing&body=Organization%20ID%3A%201%0AOrganization%20name%3A%20test%0APlan%20name%3A%20Mender Enterprise%0A%0AI%20would%20like%20to%20make%20a%20change%20to%20my%20billing%20details."
         target="_blank"
       >
         Request to update your billing details
@@ -254,7 +262,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
       className="margin-left-small margin-right-small"
     >
       <a
-        href="mailto:support@mender.io?subject=undefined: Cancel subscription&body=Organization%20ID%3A%20undefined%0AOrganization%20name%3A%20undefined%0APlan%20name%3A%20Mender Enterprise%0A%0APlease%20cancel%20my%20subscription.%0AReason%20%5Boptional%5D%3A"
+        href="mailto:support@mender.io?subject=test: Cancel subscription&body=Organization%20ID%3A%201%0AOrganization%20name%3A%20test%0APlan%20name%3A%20Mender Enterprise%0A%0APlease%20cancel%20my%20subscription.%0AReason%20%5Boptional%5D%3A"
         target="_blank"
       >
         Cancel subscription

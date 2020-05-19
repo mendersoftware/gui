@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ScheduledDeployments Component renders correctly 1`] = `
+<div
+  className="fadeIn margin-left"
+>
+  <div
+    className="dashboard-placeholder margin-top"
+  >
+    <p>
+      Scheduled deployments will appear here. 
+    </p>
+    <p>
+      <a>
+        Create a deployment
+      </a>
+       to get started
+    </p>
+    <img
+      alt="In progress"
+      src="assets/img/deployments.png"
+    />
+  </div>
+</div>
+`;

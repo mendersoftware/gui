@@ -27,7 +27,7 @@ import { getAllDevices, getDeviceCount, getDeviceLimit } from '../../actions/dev
 import { getReleases } from '../../actions/releaseActions';
 import { getUser, getGlobalSettings, getUserOrganization, logoutUser, setShowHelptips, toggleHelptips } from '../../actions/userActions';
 import { getOnboardingState, setSnackbar } from '../../actions/appActions';
-import { getDeploymentCount } from '../../actions/deploymentActions';
+import { getDeploymentsByStatus } from '../../actions/deploymentActions';
 
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 
@@ -53,7 +53,6 @@ export class Header extends React.Component {
         .catch(e => console.log(e));
     } else if (prevState.sessionId !== this.state.sessionId) {
       this.initializeHeaderData();
-      this.props.getReleases();
       this.props.getAllDevices(100);
     }
   }
@@ -74,6 +73,7 @@ export class Header extends React.Component {
     this.props.getDeviceCount(DEVICE_STATES.accepted);
     this.props.getDeviceCount(DEVICE_STATES.pending);
     this.props.getDeviceLimit();
+    this.props.getReleases();
     this.props.getGlobalSettings();
     if (this.props.multitenancy) {
       this.props.getUserOrganization();
@@ -82,7 +82,7 @@ export class Header extends React.Component {
 
   _checkHeaderInfo() {
     // check if deployments in progress
-    this.props.getDeploymentCount('inprogress');
+    this.props.getDeploymentsByStatus('inprogress');
     this._checkAnnouncement();
   }
 
@@ -279,7 +279,7 @@ const actionCreators = {
   getAllDevices,
   getDeviceCount,
   getDeviceLimit,
-  getDeploymentCount,
+  getDeploymentsByStatus,
   getGlobalSettings,
   getOnboardingState,
   getReleases,

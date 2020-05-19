@@ -8,6 +8,7 @@ const initialState = {
   qrCode: null,
   globalSettings: {
     id_attribute: 'Device ID',
+    previousFilters: [],
     previousPhases: [],
     retries: 0
   },
@@ -29,7 +30,12 @@ const initialState = {
     showTipsDialog: false,
     showConnectDeviceDialog: false,
     showCreateArtifactDialog: false
-  }
+  },
+  roles: [
+    { id: 'RBAC_ROLE_PERMIT_ALL', title: 'All Allowed' },
+    { id: 'RBAC_ROLE_OBSERVER', title: 'Read only' },
+    { id: 'RBAC_ROLE_CI', title: 'CI' }
+  ]
 };
 
 const userReducer = (state = initialState, action) => {

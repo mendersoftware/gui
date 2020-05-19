@@ -1,10 +1,11 @@
-import parse from 'parse-link-header';
 import * as DeploymentConstants from '../constants/deploymentConstants';
-import DeploymentsApi from '../api/deployments-api';
-import { startTimeSort } from '../helpers';
+import DeploymentsApi, { headerNames } from '../api/deployments-api';
+import { mapAttributesToAggregator, startTimeSort } from '../helpers';
 
 const apiUrl = '/api/management/v1';
+const apiUrlV2 = '/api/management/v2';
 const deploymentsApiUrl = `${apiUrl}/deployments`;
+const deploymentsApiUrlV2 = `${apiUrlV2}/deployments`;
 
 // default per page until pagination and counting integrated
 const default_per_page = 20;
@@ -24,22 +25,22 @@ const transformDeployments = (deployments, deploymentsById) =>
 // all deployments
 export const getDeployments = (page = default_page, per_page = default_per_page) => (dispatch, getState) =>
   DeploymentsApi.get(`${deploymentsApiUrl}/deployments?page=${page}&per_page=${per_page}`).then(res => {
-    const deploymentsByStatus = res.body.reduce(
-      (accu, item) => {
-        accu[item.status].push(item);
-        return accu;
-      },
-      { finished: [], inprogress: [], pending: [] }
-    );
+    const deploymentsByStatus = res.body.reduce((accu, item) => {
+      accu[item.status].push(item);
+      return accu;
+    }, mapAttributesToAggregator(getState().deployments.byStatus));
     return Promise.all(
       Object.entries(deploymentsByStatus).map(([status, value]) => {
         const { deployments, deploymentIds } = transformDeployments(value, getState().deployments.byId);
-        return dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds });
+        return dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status });
       })
     );
   });
 
-export const getDeploymentsByStatus = (status, page = default_page, per_page = default_per_page, startDate, endDate, group) => (dispatch, getState) => {
+export const getDeploymentsByStatus = (status, page = default_page, per_page = default_per_page, startDate, endDate, group, shouldSelect = true) => (
+  dispatch,
+  getState
+) => {
   var created_after = startDate ? `&created_after=${startDate}` : '';
   var created_before = endDate ? `&created_before=${endDate}` : '';
   var search = group ? `&search=${group}` : '';
@@ -47,45 +48,44 @@ export const getDeploymentsByStatus = (status, page = default_page, per_page = d
     `${deploymentsApiUrl}/deployments?status=${status}&per_page=${per_page}&page=${page}${created_after}${created_before}${search}`
   ).then(res => {
     const { deployments, deploymentIds } = transformDeployments(res.body, getState().deployments.byId);
-    let tasks = [
-      dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status }),
-      dispatch({ type: DeploymentConstants[`SELECT_${status.toUpperCase()}_DEPLOYMENTS`], deploymentIds, status })
-    ];
-    tasks.push(...deploymentIds.map(deploymentId => dispatch(getSingleDeploymentStats(deploymentId))));
+    const deploymentsState = getState().deployments.byId;
+    let tasks = deploymentIds.reduce(
+      (accu, deploymentId) => {
+        if (status !== 'finished' || !deploymentsState[deploymentId] || !deploymentsState[deploymentId].stats) {
+          accu.push(dispatch(getSingleDeploymentStats(deploymentId)));
+        }
+        return accu;
+      },
+      [
+        dispatch({
+          type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`],
+          deployments,
+          deploymentIds,
+          status,
+          total: Number(res.headers[headerNames.total])
+        })
+      ]
+    );
+    if (shouldSelect) {
+      tasks.push(dispatch({ type: DeploymentConstants[`SELECT_${status.toUpperCase()}_DEPLOYMENTS`], deploymentIds, status }));
+    }
     return Promise.all(tasks);
   });
 };
 
-export const getDeploymentCount = (status, startDate, endDate, group) => (dispatch, getState) => {
-  var created_after = startDate ? `&created_after=${startDate}` : '';
-  var created_before = endDate ? `&created_before=${endDate}` : '';
-  var search = group ? `&search=${group}` : '';
-  const DeploymentCount = (page = 1, per_page = 500, deployments = []) =>
-    DeploymentsApi.get(`${deploymentsApiUrl}/deployments?status=${status}&per_page=${per_page}&page=${page}${created_after}${created_before}${search}`).then(
-      res => {
-        var links = parse(res.headers['link']);
-        deployments.push(...res.body);
-        if (links.next) {
-          page++;
-          return DeploymentCount(page, per_page, deployments);
-        }
-        return Promise.resolve(deployments);
-      }
-    );
-
-  return DeploymentCount().then(deploymentList => {
-    const { deployments, deploymentIds } = transformDeployments(deploymentList, getState().deployments.byId);
-    return dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS_COUNT`], deployments, deploymentIds, status });
-  });
-};
-
-export const createDeployment = newDeployment => dispatch =>
-  DeploymentsApi.post(`${deploymentsApiUrl}/deployments`, newDeployment).then(data => {
+export const createDeployment = newDeployment => dispatch => {
+  let request;
+  if (newDeployment.filter_id) {
+    request = DeploymentsApi.post(`${deploymentsApiUrlV2}/deployments`, newDeployment);
+  } else {
+    request = DeploymentsApi.post(`${deploymentsApiUrl}/deployments`, newDeployment);
+  }
+  return request.then(data => {
     const lastslashindex = data.location.lastIndexOf('/');
     const deploymentId = data.location.substring(lastslashindex + 1);
     const deployment = {
       ...newDeployment,
-      devices: newDeployment.devices.map(id => ({ id, status: 'pending' }))
+      devices: newDeployment.devices ? newDeployment.devices.map(id => ({ id, status: 'pending' })) : []
     };
     return Promise.all([
       dispatch({
@@ -96,6 +96,7 @@ export const createDeployment = newDeployment => dispatch =>
       dispatch(getSingleDeployment(deploymentId))
     ]);
   });
+};
 
 export const getSingleDeployment = id => dispatch =>
   DeploymentsApi.get(`${deploymentsApiUrl}/deployments/${id}`).then(res =>
@@ -151,8 +152,9 @@ export const abortDeployment = deploymentId => (dispatch, getState) =>
       accu[id] = state.deployments.byId[id];
       return accu;
     }, {});
+    const total = state.deployments.byStatus[status].total - 1;
     return Promise.all([
-      dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status }),
+      dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status, total }),
       dispatch({
         type: DeploymentConstants.REMOVE_DEPLOYMENT,
         deploymentId

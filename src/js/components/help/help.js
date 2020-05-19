@@ -7,6 +7,7 @@ import ApplicationUpdates from './application-updates';
 import DebPackage from './application-updates/mender-deb-package';
 import VirtualDevice from './application-updates/demo-virtual-device';
 import UpdateModules from './application-updates/update-modules';
+import Devices from './devices';
 import SystemUpdates from './system-updates';
 import BoardIntegrations from './system-updates/board-integrations';
 import BuildYocto from './system-updates/build-with-yocto';
@@ -15,7 +16,6 @@ import ReleasesArtifacts from './releases-and-artifacts';
 import BuildDemoArtifact from './releases-and-artifacts/build-demo-artifact';
 import Support from './support';
 import MoreHelp from './more-help-resources';
-import { isEmpty, versionCompare } from '../../helpers';
 
 import { findLocalIpAddress } from '../../actions/appActions';
 import { getUserOrganization } from '../../actions/userActions';
@@ -57,6 +57,10 @@ var components = {
       component: IntegrateDebian
     }
   },
+  devices: {
+    title: 'Devices and device groups',
+    component: Devices
+  },
   'releases-artifacts': {
     title: 'Releases and artifacts',
     component: ReleasesArtifacts,
@@ -81,12 +85,6 @@ export class Help extends React.PureComponent {
     if (this.props.hasMultitenancy || this.props.isEnterprise || this.props.isHosted) {
       this.props.getUserOrganization();
     }
-  }
-
-  _getLatest(array) {
-    // returns latest version of format x.x.x
-    array.sort(versionCompare);
-    return array[array.length - 1];
   }
 
   render() {
@@ -120,18 +118,12 @@ export class Help extends React.PureComponent {
             <ComponentToShow
               docsVersion={this.props.docsVersion}
               findLocalIpAddress={this.props.findLocalIpAddress}
-              getLatest={this._getLatest}
-              hasMultitenancy={this.props.hasMultitenancy}
               isHosted={this.props.isHosted}
               isEnterprise={this.props.isEnterprise}
-              isEmpty={isEmpty}
-              links={this.props.links}
               menderDebPackageVersion={this.props.menderDebPackageVersion}
               menderVersion={this.props.menderVersion}
               menderArtifactVersion={this.props.menderArtifactVersion}
               org={this.props.org}
-              pages={components}
-              version={this.props.version}
             />
           </div>
         </div>
@@ -145,11 +137,11 @@ const actionCreators = { getUserOrganization, findLocalIpAddress };
 const mapStateToProps = state => {
   // if hosted, use latest docs version
   const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
+  const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
     docsVersion: state.app.features.hasMultitenancy && state.app.features.isHosted ? '' : docsVersion,
     isHosted: state.app.features.isHosted,
-    isEnterprise: state.app.features.isEnterprise,
-    links: state.app.hostedLinks,
+    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
     menderVersion: state.app.versionInformation['Mender-Client'],
     menderDebPackageVersion: state.app.menderDebPackageVersion,
     menderArtifactVersion: state.app.versionInformation['Mender-Artifact'],

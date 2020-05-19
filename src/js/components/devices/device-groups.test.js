@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import DeviceGroups from './device-groups';
+import { undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -44,7 +45,8 @@ describe('DeviceGroups Component', () => {
       },
       users: {
         globalSettings: {
-          id_attribute: null
+          id_attribute: null,
+          previousFilters: []
         },
         onboarding: {
           complete: false
@@ -63,5 +65,6 @@ describe('DeviceGroups Component', () => {
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
+    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });
 });

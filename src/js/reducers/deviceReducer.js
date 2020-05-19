@@ -12,14 +12,17 @@ const initialState = {
   },
   selectedDevice: null,
   selectedDeviceList: [],
-  filters: [],
+  filters: [
+    // { key: 'device_type', value: 'raspberry', operator: '$eq', scope: 'inventory' }
+  ],
   filteringAttributes: { identityAttributes: [], inventoryAttributes: [] },
   filteringAttributesLimit: 10,
   total: 0,
-  limit: 500,
+  limit: 0,
   groups: {
     byId: {
-      // [DeviceConstants.UNGROUPED_GROUP.id]: { deviceIds: [], total: 0 }
+      // groupName: { deviceIds: [], total: 0, filters: [] },
+      // dynamo: { deviceIds: [], total: 3, filters: [{ a: 1 }] }
     },
     selectedGroup: null
   }
@@ -27,31 +30,23 @@ const initialState = {
 
 const deviceReducer = (state = initialState, action) => {
   switch (action.type) {
-    case DeviceConstants.RECEIVE_GROUPS: {
-      const byId = action.groups.reduce(
-        (accu, group) => {
-          if (!accu[group]) {
-            accu[group] = { deviceIds: [], total: 0 };
-          }
-          return accu;
-        },
-        { ...state.groups.byId }
-      );
+    case DeviceConstants.RECEIVE_GROUPS:
       return {
         ...state,
         groups: {
           ...state.groups,
-          byId: { ...byId }
+          byId: { ...state.groups.byId, ...action.groups }
         }
       };
-    }
     case DeviceConstants.ADD_TO_GROUP: {
       let group = {
         deviceIds: [action.deviceId],
+        filters: [],
         total: 1
       };
       if (state.groups.byId[action.group]) {
         group = {
+          filters: [],
           ...state.groups.byId[action.group],
           deviceIds: [...state.groups.byId[action.group].deviceIds, action.deviceId],
           total: state.groups.byId[action.group].total + 1
@@ -63,27 +58,11 @@ const deviceReducer = (state = initialState, action) => {
           ...state.groups,
           byId: {
             ...state.groups.byId,
-            [action.group]: {
-              ...group
-            }
+            [action.group]: group
           }
         }
       };
     }
-    case DeviceConstants.ADD_GROUP:
-      return {
-        ...state,
-        groups: {
-          ...state.groups,
-          byId: {
-            ...state.groups.byId,
-            [action.group]: {
-              deviceIds: [],
-              total: 0
-            }
-          }
-        }
-      };
     case DeviceConstants.REMOVE_FROM_GROUP: {
       const deviceIdsIndex = state.groups.byId[action.group].deviceIds.findIndex(item => item === action.deviceId);
       const group = {
@@ -100,6 +79,7 @@ const deviceReducer = (state = initialState, action) => {
         byId[action.group] = group;
       } else if (state.groups.selectedGroup === action.group) {
         selectedGroup = null;
+        delete byId[action.group];
       }
       return {
         ...state,
@@ -110,6 +90,35 @@ const deviceReducer = (state = initialState, action) => {
         }
       };
     }
+    case DeviceConstants.ADD_DYNAMIC_GROUP:
+    case DeviceConstants.ADD_STATIC_GROUP:
+      return {
+        ...state,
+        groups: {
+          ...state.groups,
+          byId: { ...state.groups.byId, [action.groupName]: action.group }
+        }
+      };
+    case DeviceConstants.RECEIVE_DYNAMIC_GROUPS:
+      return {
+        ...state,
+        groups: {
+          ...state.groups,
+          byId: {
+            ...state.groups.byId,
+            ...action.groups
+          }
+        }
+      };
+    case DeviceConstants.REMOVE_DYNAMIC_GROUP:
+    case DeviceConstants.REMOVE_STATIC_GROUP:
+      return {
+        ...state,
+        groups: {
+          ...state.groups,
+          byId: action.groups
+        }
+      };
     case DeviceConstants.SELECT_GROUP:
       return {
         ...state,
@@ -127,18 +136,11 @@ const deviceReducer = (state = initialState, action) => {
     case DeviceConstants.RECEIVE_GROUP_DEVICES:
       return {
         ...state,
-        selectedDeviceList: action.selectDevices ? action.deviceIds : state.selectedDeviceList,
         groups: {
           ...state.groups,
           byId: {
             ...state.groups.byId,
-            [action.group]: {
-              deviceIds:
-                action.deviceIds.length === action.total || action.deviceIds.length > state.groups.byId[action.group].deviceIds
-                  ? action.deviceIds
-                  : state.groups.byId[action.group].deviceIds,
-              total: action.total
-            }
+            [action.groupName]: action.group
           }
         }
       };
@@ -155,21 +157,6 @@ const deviceReducer = (state = initialState, action) => {
           }
         }
       };
-    case DeviceConstants.RECEIVE_DEVICES_LIST: {
-      const devicesById = action.devices.reduce((accu, device) => {
-        delete device.updated_ts;
-        accu[device.id] = { ...state.byId[device.id], ...device };
-        return accu;
-      }, {});
-      return {
-        ...state,
-        selectedDeviceList: Object.keys(devicesById),
-        byId: {
-          ...state.byId,
-          ...devicesById
-        }
-      };
-    }
     case DeviceConstants.RECEIVE_DEVICES:
       return {
         ...state,
@@ -225,27 +212,6 @@ const deviceReducer = (state = initialState, action) => {
           ...state.byStatus,
           [action.status]: {
             ...statusDeviceInfo
-          }
-        }
-      };
-    }
-
-    case DeviceConstants.SET_UNGROUPED_DEVICES: {
-      const ungroupedGroup = action.deviceIds
-        ? {
-            [DeviceConstants.UNGROUPED_GROUP.id]: {
-              deviceIds: action.deviceIds,
-              total: action.deviceIds.length
-            }
-          }
-        : {};
-      return {
-        ...state,
-        groups: {
-          ...state.groups,
-          byId: {
-            ...state.groups.byId,
-            ...ungroupedGroup
           }
         }
       };

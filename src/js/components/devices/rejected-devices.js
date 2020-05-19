@@ -11,13 +11,14 @@ import RelativeTime from '../common/relative-time';
 import DeviceList from './devicelist';
 import Filters from './filters';
 
+const refreshDeviceLength = 10000;
+
 export class Rejected extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       pageNo: 1,
       pageLength: 20,
-      refreshDeviceLength: 10000,
       pageLoading: true
     };
     if (!props.rejectedDeviceIds.length) {
@@ -26,7 +27,7 @@ export class Rejected extends React.Component {
   }
 
   componentDidMount() {
-    this.timer = setInterval(() => this._getDevices(), this.state.refreshDeviceLength);
+    this.timer = setInterval(() => this._getDevices(), refreshDeviceLength);
     this._getDevices(true);
   }
   componentWillUnmount() {
@@ -108,9 +109,7 @@ export class Rejected extends React.Component {
         {!!count && (
           <div className="align-center">
             <h3 className="inline-block margin-right">Rejected devices</h3>
-            {!this.state.pageLoading && (
-              <Filters identityOnly={true} onFilterChange={filters => self._getDevices(true, filters)} refreshDevices={() => self._getDevices(true)} />
-            )}
+            {!this.state.pageLoading && <Filters identityOnly={true} onFilterChange={filters => self._getDevices(true, filters)} />}
           </div>
         )}
         <Loader show={this.state.pageLoading} />
@@ -120,12 +119,11 @@ export class Rejected extends React.Component {
               {...self.props}
               {...self.state}
               columnHeaders={columnHeaders}
-              filterable={true}
               limitMaxed={limitMaxed}
               onPageChange={e => self._handlePageChange(e)}
               onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}
               pageTotal={count}
-              refreshDevices={() => self._getDevices()}
+              refreshDevices={shouldUpdate => self._getDevices(shouldUpdate)}
             />
           </div>
         ) : (

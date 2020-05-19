@@ -10,17 +10,14 @@ exports[`Confirm Component renders correctly 1`] = `
   }
 >
   <div
-    className="float-right"
+    className="bold"
   >
-    <span
-      className="bold"
-    >
-      Confirm abort deployment?
-    </span>
+    Confirm abort deployment?
+  </div>
+  <div>
     <button
       className="MuiButtonBase-root MuiIconButton-root"
       disabled={false}
-      id="confirmAbort"
       onBlur={[Function]}
       onClick={[Function]}
       onDragLeave={[Function]}
@@ -55,7 +52,6 @@ exports[`Confirm Component renders correctly 1`] = `
     <button
       className="MuiButtonBase-root MuiIconButton-root"
       disabled={false}
-      id="cancelAbort"
       onBlur={[Function]}
       onClick={[Function]}
       onDragLeave={[Function]}

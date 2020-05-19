@@ -3,12 +3,6 @@
 exports[`OnboardingCompleteTip Component renders correctly 1`] = `
 <div
   className="onboard-tip"
-  style={
-    Object {
-      "left": "50%",
-      "top": "50%",
-    }
-  }
 >
   <a
     className="tooltip onboard-icon"
