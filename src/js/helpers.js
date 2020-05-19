@@ -311,7 +311,15 @@ export const mapAttributesToAggregator = item =>
   }, {});
 
 export const mapDeviceAttributes = (attributes = []) =>
-  attributes.reduce((accu, attribute) => ({ ...accu, [attribute.name]: attribute.value }), { device_type: '', artifact_name: '' });
+  attributes.reduce(
+    (accu, attribute) => {
+      if (!(attribute.value && attribute.name)) {
+        return accu;
+      }
+      return { ...accu, [attribute.name]: attribute.value };
+    },
+    { device_type: '', artifact_name: '' }
+  );
 
 const deriveAttributePopularity = (accu, sourceObject = {}) =>
   Object.keys(sourceObject).reduce((keyAccu, key) => {
