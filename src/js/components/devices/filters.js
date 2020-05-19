@@ -12,7 +12,7 @@ import FilterItem from './filteritem';
 
 import { DEVICE_FILTERING_OPTIONS } from '../../constants/deviceConstants';
 
-export const emptyFilter = { key: undefined, value: undefined, operator: '$eq', scope: 'inventory' };
+export const emptyFilter = { key: null, value: '', operator: '$eq', scope: 'inventory' };
 
 const MAX_PREVIOUS_FILTERS_COUNT = 3;
 
@@ -117,7 +117,7 @@ export class Filters extends React.Component {
       />
     );
 
-    const canSaveFilter = newFilter.scope === 'inventory' || (addedFilters.length && addedFilters[0].scope === 'inventory');
+    const canSaveFilter = newFilter.scope === 'inventory' || (!!addedFilters.length && addedFilters[0].scope === 'inventory');
     const filter = filters.find(item => item.key === newFilter.key) || newFilter;
     const addedFilterDefined = filter && Object.values(filter).every(thing => !!thing);
     return (
@@ -169,11 +169,7 @@ export class Filters extends React.Component {
                 />
               )}
               {!isEnterprise && plan !== 'enterprise' && (
-                <EnterpriseNotification
-                  isEnterprise={false}
-                  recommendedPlan="enterprise"
-                  benefit="filter by multiple attributes to improve the device overview"
-                />
+                <EnterpriseNotification isEnterprise={false} recommendedPlan="enterprise" benefit="save dynamic groups and ease device management" />
               )}
               {canFilterMultiple && (plan === 'enterprise' || isEnterprise) && currentFilters.length >= 1 && canSaveFilter && (
                 <Button variant="contained" color="secondary" onClick={onGroupClick}>
@@ -196,15 +192,16 @@ const actionCreators = {
 
 const mapStateToProps = (state, ownProps) => {
   const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const deviceIdAttribute = { key: 'id', value: 'Device ID', scope: 'identity', category: 'identity', priority: 1 };
   let attributes = [
-    { key: 'id', value: 'Device ID', scope: 'identity', category: 'identity', priority: 1 },
+    deviceIdAttribute,
     ...state.devices.filteringAttributes.identityAttributes.map(item => ({ key: item, value: item, scope: 'identity', category: 'identity', priority: 1 }))
   ];
   if (!ownProps.identityOnly) {
     attributes = [
       ...state.users.globalSettings.previousFilters.map(item => ({
         ...item,
-        value: item.key,
+        value: deviceIdAttribute.key === item.key ? deviceIdAttribute.value : item.key,
         category: 'recently used',
         priority: 0
       })),

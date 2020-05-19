@@ -13,6 +13,7 @@ import DeviceGroups from './device-groups';
 import PendingDevices from './pending-devices';
 import RejectedDevices from './rejected-devices';
 import PreauthDevices from './preauthorize-devices';
+import { emptyFilter } from './filters';
 
 const routes = {
   pending: {
@@ -53,10 +54,10 @@ export class Devices extends React.Component {
     this._restartInterval();
     this.props.getAllDeviceCounts();
     if (this.props.match.params.filters) {
-      var str = decodeURIComponent(this.props.match.params.filters);
+      const str = decodeURIComponent(this.props.match.params.filters);
       const filters = str.split('&').map(filter => {
         const filterPair = filter.split('=');
-        return { key: filterPair[0], value: filterPair[1] };
+        return { ...emptyFilter, key: filterPair[0], value: filterPair[1] };
       });
       this.props.setDeviceFilters(filters);
     }

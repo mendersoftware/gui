@@ -4,6 +4,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mate
 import ArtifactUpload from './artifactupload';
 import ArtifactInformationForm from './artifactinformationform';
 import { unionizeStrings } from '../../../helpers';
+import { advanceOnboarding } from '../../../utils/onboardingmanager';
 
 const steps = [
   { title: 'File Upload', component: ArtifactUpload },
@@ -32,6 +33,9 @@ export class AddArtifactDialog extends React.Component {
     let meta = { description: '' };
     if (file && file.name.endsWith('.mender')) {
       return this.props.onUpload(meta, file);
+    }
+    if (!this.props.onboardingComplete) {
+      advanceOnboarding('upload-new-artifact-dialog-device-type');
     }
     const otherDeviceTypes = customDeviceTypes.split(',');
     const deviceTypes = unionizeStrings(selectedDeviceTypes, otherDeviceTypes);

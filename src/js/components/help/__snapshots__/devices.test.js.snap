@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GettingStarted Component renders correctly 1`] = `
+<div>
+  <h2>
+    Devices
+  </h2>
+  <p>
+    A device represents, intuitively, a particular piece of hardware. It is uniquely identified by a set of identity attributes (MAC addresses, user-defined UIDs, etc.); think of it as an extension of a unique identifier into a multi-attribute structure.
+  </p>
+  <h2>
+    Device groups
+  </h2>
+  A device group represents a set of devices sharing the same set of attributes. Device groups can either be static or dynamic, where static and dynamic refer to the device membership status.
+  <h3>
+    Static groups
+  </h3>
+  Static device groups consist of devices with the same group attribute and can only be extended by explicit assignment of the group to the device through the API.
+  <a
+    href="https://docs.mender.io/apis/open-source/management-apis/device-inventory"
+    target="_blank"
+  >
+    Read the API documentation for more on static groups and their creation
+  </a>
+  .
+  <br />
+  <h3>
+    Dynamic groups
+  </h3>
+  Unlike static groups, dynamic group membership is defined by matching a set of filters on the device inventory attributes. Since these attribute values might change over time, a device might match different groups because of changing attribute values, thus leading to the group changing dynamically.
+  <a
+    href="https://docs.mender.io/apis/enterprise/management-apis/device-inventory-v2#filters-post"
+    target="_blank"
+  >
+    Read the API documentation for more information on the creation of dynamic groups
+  </a>
+  .
+  <p
+    className="info icon"
+  >
+    <svg
+      aria-hidden="true"
+      className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+      focusable="false"
+      role="presentation"
+      style={
+        Object {
+          "margin": "0 6px 4px 0",
+          "verticalAlign": "middle",
+        }
+      }
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+      />
+    </svg>
+    With a Mender Enterprise plan you can save dynamic groups and ease device management. 
+    <a
+      href="https://mender.io"
+      target="_blank"
+    >
+      Learn more
+    </a>
+  </p>
+</div>
+`;

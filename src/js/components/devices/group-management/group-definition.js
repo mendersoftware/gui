@@ -52,7 +52,7 @@ export default class GroupDefinition extends React.Component {
         />
         <FormHelperText>{errortext}</FormHelperText>
         <p className="info">
-          Note: specific devices can&apos;t be added to dynamic groups. <Link to="/help">Learn more about static vs. dynamic groups</Link>
+          Note: specific devices can&apos;t be added to dynamic groups. <Link to="/help/devices">Learn more about static vs. dynamic groups</Link>
         </p>
       </>
     );

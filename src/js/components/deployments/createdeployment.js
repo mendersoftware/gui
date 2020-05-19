@@ -99,7 +99,7 @@ export class CreateDialog extends React.Component {
   render() {
     const self = this;
     const { device, deploymentObject, groups, open, release } = self.props;
-    const { activeStep, deploymentDeviceIds, group, phases, retries, steps } = self.state;
+    const { activeStep, deploymentDeviceIds, disableSchedule, group, phases, retries, steps } = self.state;
     const ComponentToShow = steps[activeStep].component;
     const deploymentSettings = {
       deploymentDeviceIds: deploymentObject.deploymentDeviceIds || deploymentDeviceIds,
@@ -109,7 +109,8 @@ export class CreateDialog extends React.Component {
       release: deploymentObject.release || release || self.state.release,
       retries: deploymentObject.retries || retries
     };
-    const disabled = activeStep === 0 ? !(deploymentSettings.release && deploymentSettings.deploymentDeviceIds.length) : self.state.disableSchedule;
+    const disabled =
+      activeStep === 0 ? !(deploymentSettings.release && (deploymentSettings.deploymentDeviceIds.length || deploymentSettings.filterId)) : disableSchedule;
     const finalStep = activeStep === steps.length - 1;
     return (
       <Dialog open={open || false} fullWidth={false} maxWidth="md">
@@ -123,8 +124,8 @@ export class CreateDialog extends React.Component {
             ))}
           </Stepper>
           <ComponentToShow
-            disableSchedule={self.state.disableSchedule}
             deploymentAnchor={this.deploymentRef}
+            filters={deploymentSettings.filterId ? groups[deploymentObject.group || group].filters : undefined}
             {...self.props}
             {...self.state}
             {...deploymentSettings}

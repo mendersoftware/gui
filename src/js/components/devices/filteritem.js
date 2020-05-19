@@ -3,13 +3,15 @@ import React from 'react';
 // material ui
 import { IconButton, MenuItem, Select, TextField } from '@material-ui/core';
 import { HighlightOff as HighlightOffIcon } from '@material-ui/icons';
-import { Autocomplete } from '@material-ui/lab';
+import { Autocomplete, createFilterOptions } from '@material-ui/lab';
 
 import { DEVICE_FILTERING_OPTIONS } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
 
 import { emptyFilter } from './filters';
 import { filtersCompare } from '../../helpers';
+
+const filter = createFilterOptions();
 
 const textFieldStyle = { marginTop: 0, marginBottom: 15 };
 
@@ -19,6 +21,8 @@ const filterOptionsByPlan = {
   enterprise: DEVICE_FILTERING_OPTIONS
 };
 
+const defaultScope = 'inventory';
+
 export default class FilterItem extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -26,7 +30,7 @@ export default class FilterItem extends React.Component {
       key: props.filter.key, // this refers to the selected filter with key as the id
       value: props.filter.value, // while this is the value that is applied with the filter
       operator: props.filter.operator || '$eq',
-      scope: props.filter.scope || 'inventory',
+      scope: props.filter.scope || defaultScope,
       reset: true
     };
   }
@@ -108,13 +112,34 @@ export default class FilterItem extends React.Component {
       <div className="flexbox" style={{ alignItems: 'center' }}>
         <Autocomplete
           autoComplete
+          autoHighlight
+          autoSelect
           freeSolo
           filterSelectedOptions
+          filterOptions={(options, params) => {
+            const filtered = filter(options, params);
+            if (filtered.length !== 1 && params.inputValue !== '') {
+              filtered.push({
+                inputValue: params.inputValue,
+                key: 'custom',
+                value: `Use "${params.inputValue}"`,
+                category: 'custom',
+                priority: 99
+              });
+            }
+            return filtered;
+          }}
           groupBy={option => option.category}
-          getOptionLabel={option => option.value || ''}
+          getOptionLabel={option => option.value || option.key || option}
           id={`filter-selection-${index}`}
           includeInputInList={true}
-          onChange={(e, changedValue) => self.updateFilterKey(changedValue ? changedValue.key : changedValue)}
+          onChange={(e, changedValue) => {
+            if (changedValue && changedValue.inputValue) {
+              // only circumvent updateFilterKey if we deal with a custom attribute - those will be treated as inventory attributes
+              return self.setState({ key: changedValue.inputValue, scope: defaultScope }, () => self.notifyFilterUpdate());
+            }
+            self.updateFilterKey(changedValue && changedValue.key ? changedValue.key : changedValue);
+          }}
           options={filters.sort((a, b) => a.priority - b.priority)}
           renderInput={params => <TextField {...params} label="Attribute" style={textFieldStyle} />}
           key={reset}
@@ -129,7 +154,7 @@ export default class FilterItem extends React.Component {
         </Select>
         <TextField
           label="Value"
-          value={value || ''}
+          value={value}
           onChange={e => self.updateFilterValue(e.target.value)}
           InputLabelProps={{ shrink: !!value }}
           style={textFieldStyle}

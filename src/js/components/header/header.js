@@ -25,7 +25,7 @@ import DeploymentNotifications from './deploymentnotifications';
 
 import { getOnboardingState, setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus } from '../../actions/deploymentActions';
-import { getAllDevices, getDeviceCount, getDeviceLimit } from '../../actions/deviceActions';
+import { getAllDevices, getDeviceCount, getDeviceLimit, getDynamicGroups, getGroups } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
 import { getUser, getGlobalSettings, getRoles, getUserOrganization, logoutUser, setShowHelptips, toggleHelptips } from '../../actions/userActions';
 
@@ -61,6 +61,8 @@ export class Header extends React.Component {
     this._checkShowHelp();
     this.props.getDeviceCount(DEVICE_STATES.accepted);
     this.props.getDeviceCount(DEVICE_STATES.pending);
+    this.props.getDynamicGroups();
+    this.props.getGroups();
     this.props.getDeviceLimit();
     this.props.getReleases();
     this.props.getGlobalSettings();
@@ -280,8 +282,10 @@ const actionCreators = {
   getAllDevices,
   getDeviceCount,
   getDeviceLimit,
+  getDynamicGroups,
   getDeploymentsByStatus,
   getGlobalSettings,
+  getGroups,
   getOnboardingState,
   getReleases,
   getRoles,
