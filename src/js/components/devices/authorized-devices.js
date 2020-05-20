@@ -24,6 +24,7 @@ import RelativeTime from '../common/relative-time';
 
 import DeviceList from './devicelist';
 import DeviceStatus from './device-status';
+import { refreshLength as refreshDeviceLength } from './devices';
 import Filters from './filters';
 
 import {
@@ -42,8 +43,6 @@ import DeviceConstants from '../../constants/deviceConstants';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 
-const refreshDeviceLength = 10000;
-
 export class Authorized extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -58,6 +57,8 @@ export class Authorized extends React.Component {
 
   componentDidMount() {
     const self = this;
+    self.props.setDeviceFilters([]);
+    self.setState({ selectedRows: [], expandRow: null });
     if (!this.props.acceptedDevicesList.length && this.props.acceptedCount < this.props.deploymentDeviceLimit) {
       this.props.getAllDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted);
     }
@@ -83,14 +84,7 @@ export class Authorized extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.currentTab !== 'Device groups') {
-      return clearInterval(this.deviceTimer);
-    }
     const self = this;
-    if (prevProps.currentTab !== self.props.currentTab) {
-      self.props.setDeviceFilters([]);
-      self.setState({ selectedRows: [], expandRow: null });
-    }
     if (
       prevProps.allCount !== self.props.allCount ||
       prevProps.group !== self.props.group ||

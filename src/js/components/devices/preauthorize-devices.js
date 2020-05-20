@@ -13,8 +13,7 @@ import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { isEmpty, preformatWithRequestID } from '../../helpers';
 import Loader from '../common/loader';
 import DeviceList from './devicelist';
-
-const refreshDeviceLength = 10000;
+import { refreshLength as refreshDeviceLength } from './devices';
 
 export class Preauthorize extends React.Component {
   constructor(props, context) {
@@ -40,7 +39,7 @@ export class Preauthorize extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.count !== this.props.count || (prevProps.currentTab !== this.props.currentTab && this.props.currentTab.indexOf('Preauthorized') !== -1)) {
+    if (prevProps.count !== this.props.count) {
       this._getDevices();
     }
     const self = this;
