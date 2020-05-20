@@ -5,7 +5,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Dialog, DialogContent, DialogTitle, Tab, Tabs } from '@material-ui/core';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getAllDeviceCounts, selectDevice, setDeviceFilters } from '../../actions/deviceActions';
+import { getAllDeviceCounts, selectDevice, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Global from '../settings/global';
@@ -60,8 +60,13 @@ export class Devices extends React.Component {
       const str = decodeURIComponent(this.props.match.params.filters);
       const filters = str.split('&').map(filter => {
         const filterPair = filter.split('=');
-        return { ...emptyFilter, key: filterPair[0], value: filterPair[1] };
+        const scope = filterPair[0] === 'group' ? { scope: 'system' } : {};
+        return { ...emptyFilter, ...scope, key: filterPair[0], value: filterPair[1] };
       });
+      const groupFilter = filters.find(filter => filter.key === 'group');
+      if (groupFilter) {
+        this.props.selectGroup(groupFilter.value);
+      }
       this.props.setDeviceFilters(filters);
     }
   }
@@ -120,7 +125,7 @@ export class Devices extends React.Component {
   }
 }
 
-const actionCreators = { getAllDeviceCounts, selectDevice, setDeviceFilters, setSnackbar };
+const actionCreators = { getAllDeviceCounts, selectDevice, selectGroup, setDeviceFilters, setSnackbar };
 
 const mapStateToProps = state => {
   const currentUser = state.users.byId[state.users.currentUser];
