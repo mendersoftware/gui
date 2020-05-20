@@ -265,47 +265,45 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
     { ids, devicesById: {} }
   );
 
-export const getGroupDevices = (group, page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false) => (dispatch, getState) => {
-  const stateGroup = getState().devices.groups.byId[group];
-  return Promise.resolve(dispatch(getInventoryDevices(page, perPage, stateGroup.filters || [], group))).then(results => {
+export const getGroupDevices = (group, page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false) => (dispatch, getState) =>
+  Promise.resolve(dispatch(getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, page, perPage, shouldSelectDevices, group))).then(results => {
+    if (!group) {
+      Promise.resolve();
+    }
     const { deviceAccu, total } = results[results.length - 1];
-    let tasks = [];
-    if (group.length) {
-      tasks.push(
-        dispatch({
-          type: DeviceConstants.RECEIVE_GROUP_DEVICES,
-          group: {
-            filters: [],
-            ...stateGroup,
-            deviceIds: deviceAccu.ids.length === total || deviceAccu.ids.length > stateGroup.deviceIds ? deviceAccu.ids : stateGroup.deviceIds,
-            total
-          },
-          groupName: group
-        })
-      );
-    }
-    if (shouldSelectDevices) {
-      tasks.push(dispatch(selectDevices(deviceAccu.ids)));
-    }
-    return Promise.all(tasks);
+    const stateGroup = getState().devices.groups.byId[group];
+    return Promise.resolve(
+      dispatch({
+        type: DeviceConstants.RECEIVE_GROUP_DEVICES,
+        group: {
+          filters: [],
+          ...stateGroup,
+          deviceIds: deviceAccu.ids.length === total || deviceAccu.ids.length > stateGroup.deviceIds ? deviceAccu.ids : stateGroup.deviceIds,
+          total
+        },
+        groupName: group
+      })
+    );
   });
-};
 
 export const getAllGroupDevices = group => (dispatch, getState) => {
   const state = getState();
   if (!!group && (!state.devices.groups.byId[group] || state.devices.groups.byId[group].filters.length)) {
     return Promise.resolve();
   }
-  const forGroup = group ? `&group=${group}` : '&has_group=false';
   const getAllDevices = (perPage = 500, page = defaultPage, devices = []) =>
-    DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${perPage}&page=${page}${forGroup}`).then(res => {
-      const links = parse(res.headers[headerNames.link]);
+    DevicesApi.post(`${inventoryApiUrlV2}/filters/search`, {
+      page,
+      per_page: perPage,
+      filters: mapFiltersToTerms([{ key: 'group', value: group, operator: '$eq', scope: 'system' }])
+    }).then(res => {
       const deviceAccu = reduceReceivedDevices(res.body, devices, state);
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICES,
         devicesById: deviceAccu.devicesById
       });
-      if (links.next) {
+      const total = Number(res.headers[headerNames.total]);
+      if (total > perPage * page) {
         return getAllDevices(perPage, page + 1, deviceAccu.ids);
       }
       return Promise.resolve(
