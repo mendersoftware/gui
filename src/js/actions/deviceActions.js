@@ -616,16 +616,30 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
   return getAllDevices();
 };
 
-export const getDeviceAuth = id => dispatch =>
+export const getDeviceAuth = (id, isBulkRetrieval = false) => dispatch =>
   DevicesApi.get(`${deviceAuthV2}/devices/${id}`).then(res => {
-    dispatch({
-      type: DeviceConstants.RECEIVE_DEVICE_AUTH,
-      device: res.body
-    });
-    return Promise.resolve(res.body);
+    let tasks = [];
+    if (!isBulkRetrieval) {
+      tasks.push(
+        dispatch({
+          type: DeviceConstants.RECEIVE_DEVICE_AUTH,
+          device: res.body
+        })
+      );
+    }
+    tasks.push(Promise.resolve(res.body));
+    return Promise.all(tasks);
   });
 
-export const getDevicesWithAuth = devices => dispatch => devices.map(device => dispatch(getDeviceAuth(device.id)));
+export const getDevicesWithAuth = devices => (dispatch, getState) =>
+  Promise.all(devices.map(device => dispatch(getDeviceAuth(device.id, true)))).then(tasks => {
+    const devices = tasks.map(task => task[task.length - 1]);
+    const deviceAccu = reduceReceivedDevices(devices, [], getState());
+    dispatch({
+      type: DeviceConstants.RECEIVE_DEVICES,
+      devicesById: deviceAccu.devicesById
+    });
+  });
 
 export const updateDeviceAuth = (deviceId, authId, status) => dispatch =>
   DevicesApi.put(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}/status`, { status }).then(() =>
