@@ -245,17 +245,11 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
   devices.reduce(
     (accu, device) => {
       const stateDevice = state.devices.byId[device.id];
-      if (status) {
-        delete device.updated_ts;
-        device.status = status;
-        device.attributes = stateDevice ? { ...stateDevice.attributes } : { device_type: '', artifact_name: '' };
-      } else {
-        const attributes = mapDeviceAttributes(device.attributes);
-        device.attributes = stateDevice ? { ...stateDevice.attributes, ...attributes } : attributes;
-        device.status = status ? status : device.status || device.attributes.status;
-        device.created_ts = device.attributes.created_ts ? device.attributes.created_ts : device.created_ts;
-        device.updated_ts = device.attributes.updated_ts ? device.attributes.updated_ts : device.updated_ts;
-      }
+      const attributes = mapDeviceAttributes(device.attributes);
+      device.attributes = stateDevice ? { ...stateDevice.attributes, ...attributes } : attributes;
+      device.status = status ? status : device.status || device.attributes.status;
+      device.created_ts = device.attributes.created_ts ? device.attributes.created_ts : device.created_ts;
+      device.updated_ts = device.attributes.updated_ts ? device.attributes.updated_ts : device.updated_ts;
       accu.devicesById[device.id] = { ...stateDevice, ...device };
       accu.ids.push(device.id);
       return accu;
