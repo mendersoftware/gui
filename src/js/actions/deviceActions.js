@@ -443,21 +443,19 @@ export const getDevices = (page = defaultPage, perPage = defaultPerPage, filters
     return Promise.all(tasks);
   });
 
-const deriveInactiveDevices = (acceptedDeviceIds, deviceInventoryIds) => (dispatch, getState) => {
+const deriveInactiveDevices = deviceIds => (dispatch, getState) => {
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
   const yesterdaysIsoString = yesterday.toISOString();
   const state = getState().devices;
-  const deviceInventory = deviceInventoryIds.map(id => state.byId[id]);
   // now boil the list down to the ones that were not updated since yesterday
-  const devices = acceptedDeviceIds.reduce(
+  const devices = deviceIds.reduce(
     (accu, id) => {
-      const item = state.byId[id];
-      const device = deviceInventory[id];
-      if ((device && device.updated_ts > yesterdaysIsoString) || item.updated_ts > yesterdaysIsoString) {
-        accu.active.push(item);
+      const device = state.byId[id];
+      if (device && device.updated_ts > yesterdaysIsoString) {
+        accu.active.push(id);
       } else {
-        accu.inactive.push(item);
+        accu.inactive.push(id);
       }
       return accu;
     },
