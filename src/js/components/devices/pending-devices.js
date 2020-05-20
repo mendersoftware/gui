@@ -9,7 +9,7 @@ import { Button } from '@material-ui/core';
 
 import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 
-import { getAllDevicesByStatus, getDevicesByStatus, setDeviceFilters, updateDeviceAuth } from '../../actions/deviceActions';
+import { getDevicesByStatus, setDeviceFilters, updateDeviceAuth } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
 import { preformatWithRequestID } from '../../helpers';
@@ -32,7 +32,7 @@ export class Pending extends React.Component {
       pageLoading: true
     };
     if (!props.pendingDeviceIds.length) {
-      props.getAllDevicesByStatus(DEVICE_STATES.pending);
+      props.getDevicesByStatus(DEVICE_STATES.pending);
     }
   }
 
@@ -314,7 +314,7 @@ export class Pending extends React.Component {
   }
 }
 
-const actionCreators = { getAllDevicesByStatus, getDevicesByStatus, setDeviceFilters, setSnackbar, updateDeviceAuth };
+const actionCreators = { getDevicesByStatus, setDeviceFilters, setSnackbar, updateDeviceAuth };
 
 const mapStateToProps = state => {
   return {

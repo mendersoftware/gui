@@ -16,32 +16,20 @@ import {
   RemoveCircleOutline as RemoveCircleOutlineIcon
 } from '@material-ui/icons';
 
-import { ExpandDevice } from '../helptips/helptooltips';
-import { WelcomeSnackTip } from '../helptips/onboardingtips';
-
+import { getDevicesByStatus, getGroupDevices, selectDevices, setDeviceFilters, trySelectDevice } from '../../actions/deviceActions';
+import { setSnackbar } from '../../actions/appActions';
+import DeviceConstants from '../../constants/deviceConstants';
+import { filtersCompare, isEmpty } from '../../helpers';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
 import RelativeTime from '../common/relative-time';
-
+import { ExpandDevice } from '../helptips/helptooltips';
+import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import DeviceList from './devicelist';
 import DeviceStatus from './device-status';
 import { refreshLength as refreshDeviceLength } from './devices';
 import Filters from './filters';
-
-import {
-  getAllDevicesByStatus,
-  getDevices,
-  getDevicesByStatus,
-  getGroupDevices,
-  selectDevices,
-  setDeviceFilters,
-  trySelectDevice
-} from '../../actions/deviceActions';
-import { setSnackbar } from '../../actions/appActions';
-
-import { filtersCompare, isEmpty } from '../../helpers';
-import DeviceConstants from '../../constants/deviceConstants';
-import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
-import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 
 export class Authorized extends React.Component {
   constructor(props, context) {
@@ -60,7 +48,7 @@ export class Authorized extends React.Component {
     self.props.setDeviceFilters([]);
     self.setState({ selectedRows: [], expandRow: null });
     if (!this.props.acceptedDevicesList.length && this.props.acceptedCount < this.props.deploymentDeviceLimit) {
-      this.props.getAllDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted);
+      this.props.getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted);
     }
     if (self.props.acceptedDevicesList.length < 20) {
       self._getDevices(true);
@@ -107,44 +95,26 @@ export class Authorized extends React.Component {
    */
   _getDevices(shouldUpdate = false) {
     const self = this;
-    const { filters, getDevices, getDevicesByStatus, getGroupDevices, selectedGroup, setSnackbar } = self.props;
+    const { filters, getDevicesByStatus, getGroupDevices, selectedGroup, setSnackbar } = self.props;
     const { pageLength, pageNo } = self.state;
-    const hasFilters = filters.length && filters[0].value;
-
-    if (selectedGroup || hasFilters) {
-      let request;
-      if (selectedGroup) {
-        request = getGroupDevices(selectedGroup, pageNo, pageLength, true);
-      } else {
-        const identityFiltered = filters.filter(item => item.scope === 'identity');
-        if (identityFiltered.length === 1 && identityFiltered[0].key === 'id') {
-          return self.getDeviceById(identityFiltered[0].value);
-        }
-        request = identityFiltered.length
-          ? getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, pageNo, pageLength, true)
-          : getDevices(pageNo, pageLength, filters, true);
-      }
-      // if a group or filters, must use inventory API
-      return (
-        request
-          .catch(err => {
-            console.log(err);
-            var errormsg = err.error || 'Please check your connection.';
-            setRetryTimer(err, 'devices', `Devices couldn't be loaded. ${errormsg}`, refreshDeviceLength, setSnackbar);
-          })
-          // only set state after all devices id data retrieved
-          .finally(() => self.setState({ loading: false, pageLoading: false }))
-      );
+    let request;
+    // if a group or filters, must use inventory API
+    const identityFiltered = filters.filter(item => item.scope === 'identity');
+    if (selectedGroup || (identityFiltered.length === 1 && identityFiltered[0].key === 'id')) {
+      request = selectedGroup ? getGroupDevices(selectedGroup, pageNo, pageLength, true) : self.getDeviceById(identityFiltered[0].value);
     } else {
       // otherwise, show accepted from device adm
-      return getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, pageNo, pageLength, shouldUpdate)
-        .catch(err => {
-          console.log(err);
-          var errormsg = err.error || 'Please check your connection.';
-          setRetryTimer(err, 'devices', `Devices couldn't be loaded. ${errormsg}`, refreshDeviceLength, setSnackbar);
-        })
-        .finally(() => self.setState({ loading: false, pageLoading: false }));
+      const hasFilters = filters.length && filters[0].value;
+      request = getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, pageNo, pageLength, shouldUpdate || hasFilters);
     }
+    request
+      .catch(err => {
+        console.log(err);
+        const errormsg = err.error || 'Please check your connection.';
+        setRetryTimer(err, 'devices', `Devices couldn't be loaded. ${errormsg}`, refreshDeviceLength, setSnackbar);
+      })
+      // only set state after all devices id data retrieved
+      .finally(() => self.setState({ loading: false, pageLoading: false }));
   }
 
   getDeviceById(id) {
@@ -359,8 +329,6 @@ export class Authorized extends React.Component {
 }
 
 const actionCreators = {
-  getAllDevicesByStatus,
-  getDevices,
   getDevicesByStatus,
   getGroupDevices,
   selectDevices,

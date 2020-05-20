@@ -2,7 +2,7 @@ import Cookies from 'universal-cookie';
 import AppConstants from '../constants/appConstants';
 import * as Helpers from '../helpers';
 import { DEVICE_STATES } from '../constants/deviceConstants';
-import { getDevicesByStatus, getAllDevices } from './deviceActions';
+import { getDevicesByStatus } from './deviceActions';
 import { getReleases } from './releaseActions';
 import { getDeploymentsByStatus } from './deploymentActions';
 import { setOnboardingComplete, setOnboardingState } from './userActions';
@@ -53,7 +53,8 @@ export const getOnboardingState = () => (dispatch, getState) => {
     const requests = [
       dispatch(getDevicesByStatus(DEVICE_STATES.accepted)),
       dispatch(getDevicesByStatus(DEVICE_STATES.pending)),
-      dispatch(getAllDevices(100)),
+      dispatch(getDevicesByStatus(DEVICE_STATES.preauth)),
+      dispatch(getDevicesByStatus(DEVICE_STATES.rejected)),
       dispatch(getReleases()),
       dispatch(getDeploymentsByStatus('finished', undefined, undefined, undefined, undefined, undefined, false))
     ];

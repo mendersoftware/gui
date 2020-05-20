@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Time from 'react-time';
 import pluralize from 'pluralize';
 
-import { getAllDevicesByStatus, getDevicesByStatus, setDeviceFilters } from '../../actions/deviceActions';
+import { getDevicesByStatus, setDeviceFilters } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
@@ -21,7 +21,7 @@ export class Rejected extends React.Component {
       pageLoading: true
     };
     if (!props.rejectedDeviceIds.length) {
-      props.getAllDevicesByStatus(DEVICE_STATES.rejected);
+      props.getDevicesByStatus(DEVICE_STATES.rejected);
     }
   }
 
@@ -139,7 +139,7 @@ export class Rejected extends React.Component {
   }
 }
 
-const actionCreators = { getAllDevicesByStatus, getDevicesByStatus, setDeviceFilters, setSnackbar };
+const actionCreators = { getDevicesByStatus, setDeviceFilters, setSnackbar };
 
 const mapStateToProps = state => {
   return {

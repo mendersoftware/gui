@@ -25,7 +25,7 @@ import DeploymentNotifications from './deploymentnotifications';
 
 import { getOnboardingState, setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus } from '../../actions/deploymentActions';
-import { getAllDevices, getDeviceCount, getDeviceLimit, getDynamicGroups, getGroups } from '../../actions/deviceActions';
+import { getDeviceCount, getDeviceLimit, getDevicesByStatus, getDynamicGroups, getGroups } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
 import { getUser, getGlobalSettings, getRoles, getUserOrganization, logoutUser, setShowHelptips, toggleHelptips } from '../../actions/userActions';
 
@@ -59,13 +59,13 @@ export class Header extends React.Component {
   initializeHeaderData() {
     this._checkHeaderInfo();
     this._checkShowHelp();
-    this.props.getDeviceCount(DEVICE_STATES.accepted);
-    this.props.getDeviceCount(DEVICE_STATES.pending);
+    this.props.getDevicesByStatus(DEVICE_STATES.accepted);
+    this.props.getDevicesByStatus(DEVICE_STATES.pending);
+    this.props.getDeviceLimit();
+    this.props.getGlobalSettings();
     this.props.getDynamicGroups();
     this.props.getGroups();
-    this.props.getDeviceLimit();
     this.props.getReleases();
-    this.props.getGlobalSettings();
     this.props.getRoles();
     if (this.props.multitenancy) {
       this.props.getUserOrganization();
@@ -282,11 +282,11 @@ export class Header extends React.Component {
 }
 
 const actionCreators = {
-  getAllDevices,
+  getDeploymentsByStatus,
   getDeviceCount,
   getDeviceLimit,
   getDynamicGroups,
-  getDeploymentsByStatus,
+  getDevicesByStatus,
   getGlobalSettings,
   getGroups,
   getOnboardingState,
