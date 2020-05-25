@@ -42,6 +42,24 @@ const Api = {
           }
         });
     });
+  },
+
+  post: (url, data) => {
+    var token = cookies.get('JWT');
+    return new Promise((resolve, reject) =>
+      request
+        .post(url)
+        .auth(token, { type: 'bearer' })
+        .set('Content-Type', 'application/json')
+        .send(data)
+        .end((err, res) => {
+          if (err || !res.ok) {
+            reject({ error: err, res });
+          } else {
+            resolve(res);
+          }
+        })
+    );
   }
 };
 
