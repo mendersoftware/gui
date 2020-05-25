@@ -70,12 +70,14 @@
     "gulp": "^4.0.2",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
+    "husky": "^4.2.5",
     "jest": "~25.1.0",
     "jest-environment-jsdom-fifteen": "1.0.2",
     "jest-resolve": "~25.1.0",
     "jest-watch-typeahead": "0.4.2",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
+    "lint-staged": "^10.2.6",
     "mini-css-extract-plugin": "^0.9.0",
     "postcss-loader": "^3.0.0",
     "prettier": "^2.0.5",
@@ -96,6 +98,13 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mendersoftware/gui.git"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "post-commit": "sh ${MENDER_TESTING}/check_commits.sh",
+      "pre-push": "npm run test -- --changedSince master"
+    }
   },
   "jest": {
     "coverageThreshold": {
@@ -155,5 +164,8 @@
   "bugs": {
     "url": "https://github.com/mendersoftware/gui/issues"
   },
-  "homepage": "https://github.com/mendersoftware/gui#readme"
+  "homepage": "https://github.com/mendersoftware/gui#readme",
+  "lint-staged": {
+    "*.js": "eslint --cache --fix"
+  }
 }
