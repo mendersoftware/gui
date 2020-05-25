@@ -254,6 +254,9 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
       } else {
         const attributes = mapDeviceAttributes(device.attributes);
         device.attributes = stateDevice ? { ...stateDevice.attributes, ...attributes } : attributes;
+        device.status = status ? status : device.status || device.attributes.status;
+        device.created_ts = device.attributes.created_ts ? device.attributes.created_ts : device.created_ts;
+        device.updated_ts = device.attributes.updated_ts ? device.attributes.updated_ts : device.updated_ts;
       }
       accu.devicesById[device.id] = { ...stateDevice, ...device };
       accu.ids.push(device.id);
@@ -341,6 +344,7 @@ export const getDeviceById = id => dispatch =>
   DevicesApi.get(`${inventoryApiUrl}/devices/${id}`)
     .then(res => {
       const device = { ...res.body, attributes: mapDeviceAttributes(res.body.attributes) };
+      delete device.updated_ts;
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICE,
         device
@@ -499,13 +503,14 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
   const query = DevicesApi.get(`${deviceAuthV2}/devices?${status ? `status=${status}` : ''}&per_page=${perPage}&page=${page}`);
   const filters = getState().devices.filters;
   let possibleDeviceIds = [];
-  if (filters.length && shouldSelectDevices && status !== DeviceConstants.DEVICE_STATES.accepted) {
+  if (filters.length && shouldSelectDevices) {
     possibleDeviceIds = filterDevices(getState().devices, filters, status);
   }
   return query.then(response => {
     let tasks = [];
+    const deviceAccu = reduceReceivedDevices(response.body, [], getState(), status);
     if (response.body.length < 200) {
-      tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(response.body))));
+      tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(Object.values(deviceAccu.devicesById)))));
     }
     if (!status) {
       tasks.push(
@@ -515,7 +520,6 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
         })
       );
     } else {
-      const deviceAccu = reduceReceivedDevices(response.body, [], getState(), status);
       let total;
       if (getState().devices.byStatus[status].total === deviceAccu.ids.length) {
         total = deviceAccu.ids.length;

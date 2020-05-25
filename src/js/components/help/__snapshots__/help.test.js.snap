@@ -214,6 +214,28 @@ exports[`Help Component renders correctly 1`] = `
       aria-current={null}
       className="MuiListItem-root navLink helpNav MuiListItem-gutters"
       disabled={false}
+      href="/help/devices"
+      onClick={[Function]}
+      style={
+        Object {
+          "paddingLeft": 16,
+        }
+      }
+    >
+      <div
+        className="MuiListItemText-root"
+      >
+        <span
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+        >
+          Devices and device groups
+        </span>
+      </div>
+    </a>
+    <a
+      aria-current={null}
+      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
+      disabled={false}
       href="/help/releases-artifacts"
       onClick={[Function]}
       style={

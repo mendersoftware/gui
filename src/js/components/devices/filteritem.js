@@ -112,6 +112,8 @@ export default class FilterItem extends React.Component {
       <div className="flexbox" style={{ alignItems: 'center' }}>
         <Autocomplete
           autoComplete
+          autoHighlight
+          autoSelect
           freeSolo
           filterSelectedOptions
           filterOptions={(options, params) => {
