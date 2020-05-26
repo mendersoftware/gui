@@ -136,7 +136,6 @@ export const getRoles = () => (dispatch, getState) =>
 
 export const createRole = roleData => dispatch => {
   let permissions = roleData.groups.map(group => ({ action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: group } }));
-  permissions.push({ action: 'http', object: { type: 'any', value: `any` } });
   if (roleData.allowUserManagement) {
     permissions.push({
       action: 'http',
