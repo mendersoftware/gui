@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getAllDevices, getAllDevicesByStatus, getDeviceCount } from '../../actions/deviceActions';
+import { getAllDevicesByStatus, getDeviceCount } from '../../actions/deviceActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import AcceptedDevices from './widgets/accepteddevices';
@@ -39,7 +39,6 @@ export class Devices extends React.Component {
     }
     this.props.getAllDevicesByStatus(DEVICE_STATES.accepted);
     this.props.getDeviceCount(DEVICE_STATES.pending);
-    this.props.getAllDevices();
     const deltaActivity = this._updateDeviceActivityHistory(this.props.activeDevicesCount);
     this.setState({ deltaActivity });
   }
@@ -132,7 +131,7 @@ export class Devices extends React.Component {
   }
 }
 
-const actionCreators = { getAllDevices, getAllDevicesByStatus, getDeviceCount, setShowConnectingDialog };
+const actionCreators = { getAllDevicesByStatus, getDeviceCount, setShowConnectingDialog };
 
 const mapStateToProps = state => {
   return {

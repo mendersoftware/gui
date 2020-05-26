@@ -32,6 +32,8 @@ describe('Devices Component', () => {
         selectedDeviceList: []
       },
       users: {
+        byId: {},
+        currentUser: {},
         globalSettings: { previousFilters: [] },
         onboarding: {
           complete: false

@@ -25,7 +25,7 @@ import DeploymentNotifications from './deploymentnotifications';
 
 import { getOnboardingState, setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus } from '../../actions/deploymentActions';
-import { getAllDevices, getDeviceCount, getDeviceLimit, getDynamicGroups, getGroups } from '../../actions/deviceActions';
+import { getDeviceCount, getDeviceLimit, getDevicesByStatus, getDynamicGroups, getGroups } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
 import { getUser, getGlobalSettings, getRoles, getUserOrganization, logoutUser, setShowHelptips, toggleHelptips } from '../../actions/userActions';
 
@@ -59,13 +59,13 @@ export class Header extends React.Component {
   initializeHeaderData() {
     this._checkHeaderInfo();
     this._checkShowHelp();
-    this.props.getDeviceCount(DEVICE_STATES.accepted);
-    this.props.getDeviceCount(DEVICE_STATES.pending);
+    this.props.getDevicesByStatus(DEVICE_STATES.accepted);
+    this.props.getDevicesByStatus(DEVICE_STATES.pending);
+    this.props.getDeviceLimit();
+    this.props.getGlobalSettings();
     this.props.getDynamicGroups();
     this.props.getGroups();
-    this.props.getDeviceLimit();
     this.props.getReleases();
-    this.props.getGlobalSettings();
     this.props.getRoles();
     if (this.props.multitenancy) {
       this.props.getUserOrganization();
@@ -157,6 +157,7 @@ export class Header extends React.Component {
 
     const {
       acceptedDevices,
+      allowUserManagement,
       announcement,
       deviceLimit,
       docsVersion,
@@ -205,9 +206,11 @@ export class Header extends React.Component {
               My organization
             </MenuItem>
           )}
-          <MenuItem component={Link} to="/settings/user-management">
-            User management
-          </MenuItem>
+          {allowUserManagement && (
+            <MenuItem component={Link} to="/settings/user-management">
+              User management
+            </MenuItem>
+          )}
           <MenuItem onClick={() => toggleHelptips()}>{showHelptips ? 'Hide help tooltips' : 'Show help tooltips'}</MenuItem>
           <MenuItem component={Link} to="/help/getting-started">
             Help
@@ -279,11 +282,11 @@ export class Header extends React.Component {
 }
 
 const actionCreators = {
-  getAllDevices,
+  getDeploymentsByStatus,
   getDeviceCount,
   getDeviceLimit,
   getDynamicGroups,
-  getDeploymentsByStatus,
+  getDevicesByStatus,
   getGlobalSettings,
   getGroups,
   getOnboardingState,
@@ -299,8 +302,22 @@ const actionCreators = {
 
 const mapStateToProps = state => {
   const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const currentUser = state.users.byId[state.users.currentUser];
+  let allowUserManagement = false;
+  if (currentUser?.roles) {
+    // TODO: move these + additional role checks into selectors
+    const isAdmin = currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL');
+    allowUserManagement =
+      isAdmin ||
+      currentUser.roles.some(role =>
+        state.users.rolesById[role]?.permissions.some(
+          permission => permission.action === 'http' && permission.object.value === '/api/management/v1/useradm/.*' && ['any'].includes(permission.object.type)
+        )
+      );
+  }
   return {
     acceptedDevices: state.devices.byStatus.accepted.total,
+    allowUserManagement,
     announcement: state.app.hostedAnnouncement,
     deviceLimit: state.devices.limit,
     demo: state.app.features.isDemoMode,

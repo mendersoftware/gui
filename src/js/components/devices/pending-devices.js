@@ -9,9 +9,8 @@ import { Button } from '@material-ui/core';
 
 import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 
-import { getAllDevicesByStatus, getDevicesByStatus, setDeviceFilters, updateDeviceAuth } from '../../actions/deviceActions';
+import { getDevicesByStatus, setDeviceFilters, updateDeviceAuth } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
-
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
 import { preformatWithRequestID } from '../../helpers';
 import { getOnboardingComponentFor, advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
@@ -19,9 +18,8 @@ import Loader from '../common/loader';
 import RelativeTime from '../common/relative-time';
 import { DevicePendingTip } from '../helptips/onboardingtips';
 import DeviceList from './devicelist';
+import { refreshLength as refreshDeviceLength } from './devices';
 import Filters from './filters';
-
-const refreshDeviceLength = 10000;
 
 export class Pending extends React.Component {
   constructor(props, context) {
@@ -34,20 +32,22 @@ export class Pending extends React.Component {
       pageLoading: true
     };
     if (!props.pendingDeviceIds.length) {
-      props.getAllDevicesByStatus(DEVICE_STATES.pending);
+      props.getDevicesByStatus(DEVICE_STATES.pending);
     }
   }
 
   componentDidMount() {
+    this.props.setDeviceFilters([]);
     this.timer = setInterval(() => this._getDevices(), refreshDeviceLength);
     this._getDevices(true);
   }
+
   componentWillUnmount() {
     clearInterval(this.timer);
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.count !== this.props.count || (prevProps.currentTab !== this.props.currentTab && this.props.currentTab.indexOf('Pending') !== -1)) {
+    if (prevProps.count !== this.props.count) {
       this.props.setDeviceFilters([]);
       this._getDevices();
     }
@@ -314,7 +314,7 @@ export class Pending extends React.Component {
   }
 }
 
-const actionCreators = { getAllDevicesByStatus, getDevicesByStatus, setDeviceFilters, setSnackbar, updateDeviceAuth };
+const actionCreators = { getDevicesByStatus, setDeviceFilters, setSnackbar, updateDeviceAuth };
 
 const mapStateToProps = state => {
   return {
