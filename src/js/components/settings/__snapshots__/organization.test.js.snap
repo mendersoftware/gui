@@ -265,7 +265,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
         href=""
         onClick={[Function]}
       >
-        Cancel subscription
+        Cancel subscription and deactivate account
       </a>
     </p>
   </div>

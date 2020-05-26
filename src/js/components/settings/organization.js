@@ -3,29 +3,17 @@ import { connect } from 'react-redux';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import ReactTooltip from 'react-tooltip';
 // material ui
-import { Button, List, ListItem, ListItemText, FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { Button, List, ListItem, ListItemText } from '@material-ui/core';
 import { FileCopy as CopyPasteIcon, Info as InfoIcon } from '@material-ui/icons';
 
 import { getUserOrganization } from '../../actions/userActions';
 import { cancelRequest } from '../../actions/organizationActions';
 import { setSnackbar } from '../../actions/appActions';
 import { PLANS as plans } from '../../constants/appConstants';
-import CancelRequestConfirmationDialog from './dialogs/cancelrequestconfirmation';
+import CancelRequestDialog from './dialogs/cancelrequest';
 
+import Alert from '../common/alert';
 import ExpandableAttribute from '../common/expandable-attribute';
-
-const cancelSubscriptionReasons = [
-  'Just learning about Mender',
-  'Decided to use Mender on-premise',
-  'Decided to use a different OTA update manager',
-  'Too expensive',
-  'Lack of features',
-  'Was not able to get my device working properly with Mender',
-  'Security concerns',
-  'I am using a different hosted Mender account',
-  'My project is delayed or cancelled',
-  'Other'
-];
 
 export class MyOrganization extends React.Component {
   constructor(props, context) {
@@ -33,11 +21,8 @@ export class MyOrganization extends React.Component {
     this.state = {
       copied: false,
       cancelSubscription: false,
-      cancelSubscriptionFormId: new Date(),
-      cancelSubscriptionReason: '',
-      showCancelRequestConfirmationDialog: false
+      cancelSubscriptionConfirmation: false
     };
-    this.cancelSubscriptionReasons = cancelSubscriptionReasons.map(v => ({ label: v, value: v }));
   }
 
   componentDidMount() {
@@ -53,15 +38,10 @@ export class MyOrganization extends React.Component {
     }, 5000);
   }
 
-  _setCancelSubscriptionReason(evt) {
-    this.setState({ cancelSubscriptionReason: evt.target.value });
-  }
-
-  _cancelSubscriptionSubmit() {
-    this.props.cancelRequest(this.props.org.id, this.state.cancelSubscriptionReason).then(() => {
-      this.setState({ showCancelRequestConfirmationDialog: false });
-      this.handleCancelSubscription();
-      this.props.setSnackbar('The cancellation request has been sent correctly!', 5000, '');
+  _cancelSubscriptionSubmit(reason) {
+    this.props.cancelRequest(this.props.org.id, reason).then(() => {
+      this.setState({ cancelSubscription: false, cancelSubscriptionConfirmation: true });
+      this.props.setSnackbar('Deactivation request was sent successfully', 5000, '');
     });
   }
 
@@ -69,11 +49,7 @@ export class MyOrganization extends React.Component {
     if (e !== undefined) {
       e.preventDefault();
     }
-    let uniqueId = this.state.emailFormId;
-    if (this.state.editEmail) {
-      uniqueId = new Date();
-    }
-    this.setState({ cancelSubscription: !this.state.cancelSubscription, cancelSubscriptionFormId: uniqueId });
+    this.setState({ cancelSubscription: !this.state.cancelSubscription });
   }
 
   render() {
@@ -165,54 +141,28 @@ export class MyOrganization extends React.Component {
                 Request to update your billing details
               </a>
             </p>
-            <p className="margin-left-small margin-right-small">
-              <a href="" onClick={e => self.handleCancelSubscription(e)}>
-                Cancel subscription
-              </a>
-            </p>
-            {this.state.showCancelRequestConfirmationDialog && (
-              <CancelRequestConfirmationDialog
-                open={this.state.showCancelRequestConfirmationDialog}
-                onCancel={() => self.setState({ showCancelRequestConfirmationDialog: false })}
-                onSubmit={() => this._cancelSubscriptionSubmit()}
-              />
+            {this.state.cancelSubscriptionConfirmation ? (
+              <Alert className="margin-top-large" severity="error" style={{ maxWidth: '500px' }}>
+                <p>We&#39;ve started the process to cancel your plan and deactivate your account.</p>
+                <p>
+                  We&#39;ll send you an email confirming your deactivation. If you have any question at all, contact us at{' '}
+                  <strong>
+                    <a href="mailto:support@mender.io">support@mender.io</a>
+                  </strong>
+                </p>
+              </Alert>
+            ) : (
+              <p className="margin-left-small margin-right-small">
+                <a href="" onClick={e => self.handleCancelSubscription(e)}>
+                  Cancel subscription and deactivate account
+                </a>
+              </p>
             )}
             {this.state.cancelSubscription && (
-              <div className="margin-left-small margin-right-small">
-                <p className="margin-top-large">
-                  The request won&#39;t be fulfilled immediately.
-                  <br />
-                  Our Support Team will act upon it and be back to you soon.
-                </p>
-                <p>Please select the reason for your cancellation to help us improve our service:</p>
-                <div className="flexbox space-between">
-                  <FormControl id="reason-form">
-                    <InputLabel id="reason-selection-label">Reason</InputLabel>
-                    <Select
-                      labelId="reason-selection-label"
-                      id={`reason-selector-${this.cancelSubscriptionReasons}.length}`}
-                      value={this.state.cancelSubscriptionReason}
-                      validations="isLength:1"
-                      onChange={evt => this._setCancelSubscriptionReason(evt)}
-                      required={true}
-                    >
-                      {this.cancelSubscriptionReasons.map(item => (
-                        <MenuItem key={item.value} value={item.value}>
-                          {item.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => self.setState({ showCancelRequestConfirmationDialog: true })}
-                    disabled={this.state.cancelSubscriptionReason == ''}
-                  >
-                    Submit the request
-                  </Button>
-                </div>
-              </div>
+              <CancelRequestDialog
+                onCancel={() => self.setState({ cancelSubscription: false })}
+                onSubmit={value => this._cancelSubscriptionSubmit(value)}
+              />
             )}
           </div>
         ) : null}
