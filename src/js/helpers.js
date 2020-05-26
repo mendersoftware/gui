@@ -526,7 +526,7 @@ export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token
   --update-poll 5 \\
   --inventory-poll 5`;
     connectionInstructions = `--quiet ${ipAddress ? `  --server-url ${ipAddress}` : ' '} \\
-    --server-cert="" {enterpriseSettings}`;
+    --server-cert="" ${enterpriseSettings}`;
     if (isHosted) {
       connectionInstructions = `  --quiet --hosted-mender \\
 ${enterpriseSettings}`;
