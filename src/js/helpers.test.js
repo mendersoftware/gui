@@ -37,7 +37,7 @@ describe('FileSize Component', () => {
   it('renders correctly', () => {
     const tree = renderer.create(<FileSize fileSize={1000} />).toJSON();
     expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    expect(JSON.stringify(tree)).not.toMatch(undefineds);
   });
 });
 
