@@ -1,4 +1,5 @@
 import React from 'react';
+import pluralize from 'pluralize';
 import {
   Button,
   Checkbox,
@@ -7,6 +8,7 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  FormHelperText,
   ListItemText,
   InputLabel,
   MenuItem,
@@ -65,6 +67,15 @@ export default class UserForm extends React.Component {
     const { editPass, isCreation, selectedRoles } = self.state;
     const { closeDialog, currentUser, isEnterprise, roles, user } = self.props;
     const isAdmin = currentUser.roles && currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL');
+    const showRoleUsageNotification = selectedRoles.reduce((accu, item) => {
+      const hasUiApiAccess = ['RBAC_ROLE_CI'].includes(item.id)
+        ? false
+        : item.id === 'RBAC_ROLE_PERMIT_ALL' || item.permissions.some(permission => !['CREATE_DEPLOYMENT'].includes(permission.action));
+      if (hasUiApiAccess) {
+        return false;
+      }
+      return typeof accu !== 'undefined' ? accu : true;
+    }, undefined);
     return (
       <Dialog open={true} fullWidth={true} maxWidth="sm">
         <DialogTitle>{isCreation ? 'Create new user' : 'Edit user'}</DialogTitle>
@@ -125,6 +136,14 @@ export default class UserForm extends React.Component {
                       </MenuItem>
                     ))}
                   </Select>
+                  {showRoleUsageNotification && (
+                    <FormHelperText className="info">
+                      The selected {pluralize('role', selectedRoles.length)} may prevent {currentUser.email === user.email ? 'you' : <i>{user.email}</i>} from
+                      using the Mender UI.
+                      <br />
+                      Consider adding the <i>Read only</i> role as well.
+                    </FormHelperText>
+                  )}
                 </FormControl>
               </div>
             ) : (
