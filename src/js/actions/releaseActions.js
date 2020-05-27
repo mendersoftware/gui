@@ -1,4 +1,3 @@
-import ArtifactsApi from '../api/artifacts-api';
 import GeneralApi from '../api/general-api';
 import { setSnackbar } from '../actions/appActions';
 import * as ReleaseConstants from '../constants/releaseConstants';
@@ -65,13 +64,13 @@ export const createArtifact = (meta, file) => dispatch => {
   return Promise.all([
     dispatch(setSnackbar('Generating artifact')),
     dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 }),
-    ArtifactsApi.postFormData(`${deploymentsApiUrl}/artifacts/generate`, formData, e => progress(e.percent))
+    GeneralApi.upload(`${deploymentsApiUrl}/artifacts/generate`, formData, e => progress(e.percent))
   ])
     .then(() => Promise.all([dispatch(selectArtifact(meta.name)), dispatch(setSnackbar('Upload successful', 5000))]))
     .catch(err => {
       try {
-        var errMsg = err.res.body.error || '';
-        dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be generated. ${errMsg}`), null, 'Copy to clipboard'));
+        var errorResponse = err.res ? JSON.parse(err.res.text) : { error: 'There was an error generating the artifact' };
+        dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be generated. ${errorResponse.error}`), null, 'Copy to clipboard'));
       } catch (e) {
         console.log(e);
       }
@@ -88,13 +87,13 @@ export const uploadArtifact = (meta, file) => dispatch => {
   return Promise.all([
     dispatch(setSnackbar('Uploading artifact')),
     dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 }),
-    ArtifactsApi.postFormData(`${deploymentsApiUrl}/artifacts`, formData, e => progress(e.percent))
+    GeneralApi.upload(`${deploymentsApiUrl}/artifacts`, formData, e => progress(e.percent))
   ])
     .then(() => Promise.all([dispatch(selectArtifact(file)), dispatch(setSnackbar('Upload successful', 5000))]))
     .catch(err => {
       try {
-        var errMsg = err.res.body.error || '';
-        dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be uploaded. ${errMsg}`), null, 'Copy to clipboard'));
+        const errorResponse = err.res ? JSON.parse(err.res.text) : { error: 'There was an error uploading the artifact' };
+        dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be uploaded. ${errorResponse.error}`), null, 'Copy to clipboard'));
       } catch (e) {
         console.log(e);
       }

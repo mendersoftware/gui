@@ -57,6 +57,17 @@ const Api = {
         .send(data)
         .end((error, res) => endHandler(error, res, reject, resolve))
     );
+  },
+  upload: (url, formData, progress) => {
+    const token = cookies.get('JWT');
+    return new Promise((resolve, reject) =>
+      request
+        .post(url)
+        .auth(token, { type: 'bearer' })
+        .send(formData)
+        .on('progress', progress)
+        .end((error, res) => endHandler(error, res, reject, resolve))
+    );
   }
 };
 
