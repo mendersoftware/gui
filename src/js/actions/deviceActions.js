@@ -444,7 +444,7 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
     filters: mapFiltersToTerms([...applicableFilters, { key: 'status', value: status, operator: '$eq', scope: 'identity' }])
   }).then(response => {
     const deviceAccu = reduceReceivedDevices(response.body, [], state, status);
-    let total;
+    let total = !applicableFilters.length ? Number(response.headers[headerNames.total]) : null;
     if (state.devices.byStatus[status].total === deviceAccu.ids.length) {
       total = deviceAccu.ids.length;
     }
