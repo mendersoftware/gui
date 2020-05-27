@@ -1,4 +1,5 @@
 import ArtifactsApi from '../api/artifacts-api';
+import GeneralApi from '../api/general-api';
 import { setSnackbar } from '../actions/appActions';
 import * as ReleaseConstants from '../constants/releaseConstants';
 import * as UserConstants from '../constants/userConstants';
@@ -37,13 +38,13 @@ const findArtifactIndexInRelease = (releases, id) =>
 
 /* Artifacts */
 export const getArtifactUrl = id => (dispatch, getState) =>
-  ArtifactsApi.get(`${deploymentsApiUrl}/artifacts/${id}/download`).then(response => {
+  GeneralApi.get(`${deploymentsApiUrl}/artifacts/${id}/download`).then(response => {
     const state = getState();
     let { release, index } = findArtifactIndexInRelease(state.releases.byId, id);
     if (!release || index === -1) {
       return dispatch(getReleases());
     }
-    release.Artifacts[index].url = response.uri;
+    release.Artifacts[index].url = response.body.uri;
     return dispatch({ type: ReleaseConstants.ARTIFACTS_SET_ARTIFACT_URL, release });
   });
 
@@ -102,26 +103,36 @@ export const uploadArtifact = (meta, file) => dispatch => {
 };
 
 export const editArtifact = (id, body) => (dispatch, getState) =>
-  ArtifactsApi.putJSON(`${deploymentsApiUrl}/artifacts/${id}`, body).then(() => {
-    const state = getState();
-    let { release, index } = findArtifactIndexInRelease(state.releases.byId, id);
-    if (!release || index === -1) {
-      return dispatch(getReleases());
-    }
-    release.Artifacts[index].description = body.description;
-    return dispatch({ type: ReleaseConstants.UPDATED_ARTIFACT, release });
-  });
+  GeneralApi.put(`${deploymentsApiUrl}/artifacts/${id}`, body)
+    .catch(err => {
+      const errMsg = err.res.body.error || '';
+      dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact details couldn't be updated. ${errMsg || err.error}`), null, 'Copy to clipboard'));
+    })
+    .then(() => {
+      const state = getState();
+      let { release, index } = findArtifactIndexInRelease(state.releases.byId, id);
+      if (!release || index === -1) {
+        return dispatch(getReleases());
+      }
+      release.Artifacts[index].description = body.description;
+      return dispatch({ type: ReleaseConstants.UPDATED_ARTIFACT, release });
+    });
 
 export const removeArtifact = id => (dispatch, getState) =>
-  ArtifactsApi.delete(`${deploymentsApiUrl}/artifacts/${id}`).then(() => {
-    const state = getState();
-    let { release, index } = findArtifactIndexInRelease(state.releases.byId, id);
-    release.Artifacts.splice(index, 1);
-    if (!release.Artifacts.length) {
-      return dispatch({ type: ReleaseConstants.RELEASE_REMOVED, release: release.Name });
-    }
-    return dispatch({ type: ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT, release });
-  });
+  GeneralApi.delete(`${deploymentsApiUrl}/artifacts/${id}`)
+    .then(() => {
+      const state = getState();
+      let { release, index } = findArtifactIndexInRelease(state.releases.byId, id);
+      release.Artifacts.splice(index, 1);
+      if (!release.Artifacts.length) {
+        return dispatch({ type: ReleaseConstants.RELEASE_REMOVED, release: release.Name });
+      }
+      return Promise.all([dispatch(setSnackbar('Artifact was removed', 5000, '')), dispatch({ type: ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT, release })]);
+    })
+    .catch(err => {
+      const errorResponse = err.res ? JSON.parse(err.res.text) : { error: 'There was an error removing the artifact' };
+      dispatch(setSnackbar(preformatWithRequestID(err.res, `Error removing artifact: ${errorResponse.error}`), null, 'Copy to clipboard'));
+    });
 
 export const selectArtifact = artifact => (dispatch, getState) => {
   if (!artifact) {
@@ -149,18 +160,24 @@ export const showRemoveArtifactDialog = showRemoveDialog => dispatch => dispatch
 
 /* Releases */
 export const getReleases = () => dispatch =>
-  ArtifactsApi.get(`${deploymentsApiUrl}/deployments/releases`).then(releases => {
-    const flatReleases = releases.sort(customSort(1, 'Name')).reduce((accu, release) => {
-      accu[release.Name] = flattenRelease(release);
-      return accu;
-    }, {});
-    return Promise.all([
-      dispatch({ type: ReleaseConstants.RECEIVE_RELEASES, releases: flatReleases }),
-      dispatch({ type: UserConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: !!releases.length })
-    ]);
-  });
+  GeneralApi.get(`${deploymentsApiUrl}/deployments/releases`)
+    .then(({ body: releases }) => {
+      const flatReleases = releases.sort(customSort(1, 'Name')).reduce((accu, release) => {
+        accu[release.Name] = flattenRelease(release);
+        return accu;
+      }, {});
+      return Promise.all([
+        dispatch({ type: ReleaseConstants.RECEIVE_RELEASES, releases: flatReleases }),
+        dispatch({ type: UserConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: !!releases.length })
+      ]);
+    })
+    .catch(err => {
+      var errormsg = err.error || 'Please check your connection';
+      console.log(errormsg);
+      dispatch(setSnackbar(errormsg, 5000, ''));
+    });
 
 export const getRelease = name => dispatch =>
-  ArtifactsApi.get(`${deploymentsApiUrl}/deployments/releases?name=${name}`).then(([release]) =>
-    Promise.resolve(dispatch({ type: ReleaseConstants.RECEIVE_RELEASE, release: flattenRelease(release) }))
+  GeneralApi.get(`${deploymentsApiUrl}/deployments/releases?name=${name}`).then(({ body: releases }) =>
+    Promise.resolve(dispatch({ type: ReleaseConstants.RECEIVE_RELEASE, release: flattenRelease(releases[0]) }))
   );

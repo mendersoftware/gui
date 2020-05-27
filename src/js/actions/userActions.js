@@ -79,9 +79,9 @@ export const verify2FA = tfaData => dispatch =>
     });
 
 export const getUserList = () => dispatch =>
-  UsersApi.get(`${useradmApiUrl}/users`)
+  GeneralApi.get(`${useradmApiUrl}/users`)
     .then(res => {
-      const users = res.reduce((accu, item) => {
+      const users = res.body.reduce((accu, item) => {
         accu[item.id] = item;
         return accu;
       }, {});
@@ -93,27 +93,27 @@ export const getUserList = () => dispatch =>
     });
 
 export const getUser = id => dispatch =>
-  UsersApi.get(`${useradmApiUrl}/users/${id}`).then(user => Promise.resolve(dispatch({ type: UserConstants.RECEIVED_USER, user })));
+  GeneralApi.get(`${useradmApiUrl}/users/${id}`).then(({ body: user }) => Promise.resolve(dispatch({ type: UserConstants.RECEIVED_USER, user })));
 
 export const createUser = userData => dispatch =>
-  UsersApi.post(`${useradmApiUrl}/users`, userData).then(() =>
+  GeneralApi.post(`${useradmApiUrl}/users`, userData).then(() =>
     Promise.all([dispatch({ type: UserConstants.CREATED_USER, user: userData }), dispatch(getUserList())])
   );
 
 export const removeUser = userId => dispatch =>
-  UsersApi.delete(`${useradmApiUrl}/users/${userId}`).then(() =>
+  GeneralApi.delete(`${useradmApiUrl}/users/${userId}`).then(() =>
     Promise.all([dispatch({ type: UserConstants.REMOVED_USER, userId }), dispatch(getUserList())])
   );
 
 export const editUser = (userId, userData) => dispatch =>
-  UsersApi.put(`${useradmApiUrl}/users/${userId}`, userData).then(() => dispatch({ type: UserConstants.UPDATED_USER, userId, user: userData }));
+  GeneralApi.put(`${useradmApiUrl}/users/${userId}`, userData).then(() => dispatch({ type: UserConstants.UPDATED_USER, userId, user: userData }));
 
 export const setCurrentUser = user => dispatch => dispatch({ type: UserConstants.SET_CURRENT_USER, user });
 
 export const getRoles = () => (dispatch, getState) =>
-  UsersApi.get(`${useradmApiUrl}/roles`).then(res => {
+  GeneralApi.get(`${useradmApiUrl}/roles`).then(({ body: roles }) => {
     const rolesState = getState().users.rolesById;
-    const rolesById = res.reduce((accu, role) => {
+    const rolesById = roles.reduce((accu, role) => {
       const groups = role.permissions.reduce((accu, permission) => {
         if (permission.action === 'any' && permission.object.type === 'DEVICE_GROUP') {
           accu.push(permission.object.value);
@@ -150,13 +150,13 @@ export const createRole = roleData => dispatch => {
     description: roleData.description,
     permissions
   };
-  return UsersApi.post(`${useradmApiUrl}/roles`, role).then(() =>
+  return GeneralApi.post(`${useradmApiUrl}/roles`, role).then(() =>
     Promise.all([dispatch({ type: UserConstants.CREATED_ROLE, role: { ...UserConstants.emptyRole, ...role }, roleId: role.name }), dispatch(getRoles())])
   );
 };
 
 export const removeRole = roleId => dispatch =>
-  UsersApi.delete(`${useradmApiUrl}/roles/${roleId}`)
+  GeneralApi.delete(`${useradmApiUrl}/roles/${roleId}`)
     .then(() => Promise.all([dispatch({ type: UserConstants.REMOVED_ROLE, roleId }), dispatch(getRoles())]))
     .catch(err => Promise.all([Promise.reject(err), dispatch(setSnackbar(preformatWithRequestID(err.res, err.res.body.error), null, 'Copy to clipboard'))]));
 
@@ -170,12 +170,12 @@ export const getUserOrganization = () => dispatch =>
   Global settings 
 */
 export const getGlobalSettings = () => dispatch =>
-  UsersApi.get(`${useradmApiUrl}/settings`).then(res => dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: res }));
+  GeneralApi.get(`${useradmApiUrl}/settings`).then(res => dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: res }));
 
 export const saveGlobalSettings = (settings, beOptimistic = false) => (dispatch, getState) => {
   const updatedSettings = { ...getState().users.globalSettings, ...settings };
   let tasks = [dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: updatedSettings })];
-  return UsersApi.post(`${useradmApiUrl}/settings`, updatedSettings)
+  return GeneralApi.post(`${useradmApiUrl}/settings`, updatedSettings)
     .then(() => {
       if (updatedSettings.hasOwnProperty('2fa') && updatedSettings['2fa'] === 'enabled') {
         const state = getState();
@@ -192,7 +192,7 @@ export const saveGlobalSettings = (settings, beOptimistic = false) => (dispatch,
 };
 
 export const get2FAQRCode = () => dispatch =>
-  UsersApi.get(`${useradmApiUrl}/2faqr`).then(res => dispatch({ type: UserConstants.RECEIVED_QR_CODE, value: res.qr }));
+  GeneralApi.get(`${useradmApiUrl}/2faqr`).then(res => dispatch({ type: UserConstants.RECEIVED_QR_CODE, value: res.body.qr }));
 
 /*
   Onboarding
