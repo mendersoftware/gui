@@ -127,25 +127,6 @@ export const getDynamicGroups = () => (dispatch, getState) =>
     );
   });
 
-export const getDynamicGroup = groupName => (dispatch, getState) => {
-  const filterId = getState().devices.groups.byId[groupName].id;
-  return GeneralApi.get(`${inventoryApiUrlV2}/filters/${filterId}`).then(filter =>
-    Promise.resolve(
-      dispatch({
-        type: DeviceConstants.ADD_DYNAMIC_GROUP,
-        groupName,
-        group: {
-          deviceIds: [],
-          total: 0,
-          ...getState().devices.groups.byId[groupName],
-          id: filterId,
-          filters: mapTermsToFilters(filter.terms)
-        }
-      })
-    )
-  );
-};
-
 export const addDynamicGroup = (groupName, filterPredicates) => (dispatch, getState) =>
   GeneralApi.post(`${inventoryApiUrlV2}/filters`, { name: groupName, terms: mapFiltersToTerms(filterPredicates) }).then(res =>
     Promise.resolve(
