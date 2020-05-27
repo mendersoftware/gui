@@ -1,4 +1,3 @@
-import React from 'react';
 import Api from './general-api';
 let request = require('superagent');
 const superagentMock = require('superagent-mock');
