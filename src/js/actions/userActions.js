@@ -74,7 +74,13 @@ export const verify2FA = tfaData => dispatch =>
     .catch(err => {
       return Promise.all([
         Promise.reject(err),
-        dispatch(setSnackbar(preformatWithRequestID(err.res, 'failed to verify token, please try again.'), null, 'Copy to clipboard'))
+        dispatch(
+          setSnackbar(
+            preformatWithRequestID(err.res, 'An error occured validating the verification code: failed to verify token, please try again.'),
+            null,
+            'Copy to clipboard'
+          )
+        )
       ]);
     });
 
