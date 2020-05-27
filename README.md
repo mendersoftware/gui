@@ -1,5 +1,6 @@
 [![Build Status](https://gitlab.com/Northern.tech/Mender/gui/badges/master/pipeline.svg)](https://gitlab.com/Northern.tech/Mender/gui/pipelines)
 [![Docker pulls](https://img.shields.io/docker/pulls/mendersoftware/gui.svg?maxAge=3600)](https://hub.docker.com/r/mendersoftware/gui/)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
 # Mender: GUI
 
@@ -28,11 +29,24 @@ documentation](https://github.com/mendersoftware/mender/blob/master/CONTRIBUTING
 
 ## Development
 
-In order to develop the GUI code to contribute, it is required to
-install [gulp](https://github.com/gulpjs/gulp) and all the dependencies in
-package.json. Work on the files in 'src'. Running 'gulp' will watch for your
-changes as you develop and build as you go. Always run 'gulp build' to build
-the production code in 'dist' before you commit.
+In order to develop the GUI code to contribute, it is required to [nodejs](https://nodejs.org) and [npm](https://github.com/gulpjs/gulp) installed, followed
+by an execution of `npm install` to install all the dependencies in package.json. Work on the files in 'src'. Running `npm run watch` will watch for your
+changes as you develop and build as you go.
+The `watch` command is intended to build however the content should be served from within the regular container running in your local mender setup.
+To connect the two a typical approach is to create a `docker-compose.override.yml` in the folder you have cloned the integration repo into (to isolate the changes made to the running environment in a single file) with the following content:
+
+```
+version: '2.1'
+services:
+    mender-gui:
+        volumes:
+            - ../<path-to-clone-of-the-gui-repo>/dist:/var/www/mender-gui/dist
+```
+
+and then start the demo environment with this file like this: `./demo -f docker-compose.override.yml up` from the integration clone folder. The content should be accessible under https://localhost/ just as without any modifications. While running `npm run watch` the results of each incremental build should show up on page refresh.
+To ensure committed changes pass the CI pipeline it is good to run `npm run lint` and `npm run test` before you submit your changes for review.
+
+The project is equipped with commit checks powered by [husky](https://github.com/typicode/husky) that check for linter problems and run tests on the changed files. To also check your commit messages and fix potential problems with them, make sure to set `MENDER_TESTING` in your `ENV` to a local clone of the [mendertesting](https://github.com/mendersoftware/mendertesting) repository.
 
 ## License
 

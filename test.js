@@ -16,7 +16,7 @@ process.on('unhandledRejection', err => {
 let argv = process.argv.slice(2);
 
 // Watch unless on CI or explicitly running all tests
-if (!process.env.CI && argv.indexOf('--watchAll') === -1) {
+if (!process.env.CI && !argv.length) {
   argv.push('--watch');
 }
 

@@ -21,7 +21,6 @@
   },
   "plugins": ["react", "prettier"],
   "rules": {
-    "prettier/prettier": ["error", { "singleQuote": true, "printWidth": 160 }],
     "consistent-this": ["error", "self"],
     "import/no-named-as-default": 0,
     "no-console": 0,
