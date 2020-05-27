@@ -122,7 +122,6 @@ export class Header extends React.Component {
           .then(() => {
             self.props.getOnboardingState();
             self.initializeHeaderData();
-            self.props.getAllDevices(100);
           })
           // this is allowed to fail if no user information are available
           .catch(err => console.log(err.res.error))
