@@ -519,18 +519,22 @@ export const getDebInstallationCode = (
 ${noninteractive ? 'DEBIAN_FRONTEND=noninteractive' : 'sudo'} dpkg -i --force-confdef --force-confold mender-client_${packageVersion}-1_armhf.deb`;
 
 export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token, packageVersion, deviceType = 'generic-armv6') => {
-  let connectionInstructions = `  --quiet --demo ${ipAddress ? `--server-ip ${ipAddress}` : ''}`;
+  let connectionInstructions = ``;
+  let demoSettings = `  --quiet --demo ${ipAddress ? `--server-ip ${ipAddress}` : ''}`;
   if (isEnterprise || isHosted) {
-    const enterpriseSettings = `  --tenant-token $TENANT_TOKEN \\
+    const enterpriseSettings = `  --tenant-token $TENANT_TOKEN`;
+    if (isHosted) {
+      connectionInstructions = `  --quiet --hosted-mender \\
+${enterpriseSettings} \\
   --retry-poll 30 \\
   --update-poll 5 \\
   --inventory-poll 5`;
-    connectionInstructions = `--quiet ${ipAddress ? `  --server-url ${ipAddress}` : ' '} \\
-    --server-cert="" ${enterpriseSettings}`;
-    if (isHosted) {
-      connectionInstructions = `  --quiet --hosted-mender \\
+    } else {
+      connectionInstructions = `${demoSettings} \\
 ${enterpriseSettings}`;
     }
+  } else {
+      connectionInstructions = `${demoSettings}`;
   }
   const debInstallationCode = getDebInstallationCode(packageVersion, true);
   let codeToCopy = `sudo bash -c '${debInstallationCode} && \\
