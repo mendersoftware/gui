@@ -1,9 +1,7 @@
 import Cookies from 'universal-cookie';
 import { unauthorizedRedirect } from '../auth';
 const cookies = new Cookies();
-var request = require('superagent')
-  .agent()
-  .use(unauthorizedRedirect);
+var request = require('superagent').agent().use(unauthorizedRedirect);
 
 export const headerNames = {
   link: 'link',

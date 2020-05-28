@@ -161,11 +161,11 @@ export class Preauthorize extends React.Component {
       var reader = new FileReader();
       reader.readAsBinaryString(acceptedFiles[0]);
       reader.fileName = acceptedFiles[0].name;
-      reader.onload = function() {
+      reader.onload = function () {
         var str = reader.result.replace(/\n|\r/g, '\n');
         self.setState({ public: str, filename: reader.fileName });
       };
-      reader.onerror = function(error) {
+      reader.onerror = function (error) {
         console.log('Error: ', error);
       };
     }

@@ -243,10 +243,7 @@ export function hashString(str) {
 
 export const formatTime = date => {
   if (date) {
-    return date
-      .replace(' ', 'T')
-      .replace(/ /g, '')
-      .replace('UTC', '');
+    return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
   }
   return;
 };
