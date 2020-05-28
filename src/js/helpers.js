@@ -534,7 +534,7 @@ ${enterpriseSettings} \\
 ${enterpriseSettings}`;
     }
   } else {
-      connectionInstructions = `${demoSettings}`;
+    connectionInstructions = `${demoSettings}`;
   }
   const debInstallationCode = getDebInstallationCode(packageVersion, true);
   let codeToCopy = `sudo bash -c '${debInstallationCode} && \\
