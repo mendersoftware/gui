@@ -5,9 +5,17 @@ var request = require('superagent')
   .agent()
   .use(unauthorizedRedirect);
 
+export const headerNames = {
+  link: 'link',
+  location: 'location',
+  total: 'x-total-count'
+};
+
+const endHandler = (error, res, reject, resolve) => (error || !res.ok ? reject({ error, res }) : resolve(res));
+
 const Api = {
   get: url => {
-    var token = cookies.get('JWT');
+    const token = cookies.get('JWT');
     return new Promise((resolve, reject) => {
       request
         .get(url)
@@ -16,49 +24,49 @@ const Api = {
           response: 10000, // wait 10 seconds for server to start sending
           deadline: 60000 // allow one minute to finish loading
         })
-        .end((err, res) => {
-          if (err || !res.ok) {
-            reject({ error: err, res: res });
-          } else {
-            resolve(res);
-          }
-        });
+        .end((error, res) => endHandler(error, res, reject, resolve));
     });
   },
-
-  getNoauth: url => {
-    return new Promise((resolve, reject) => {
+  delete: url => {
+    const token = cookies.get('JWT');
+    return new Promise((resolve, reject) =>
       request
-        .get(url)
-        .timeout({
-          response: 10000, // wait 10 seconds for server to start sending
-          deadline: 60000 // allow one minute to finish loading
-        })
-        .end((err, res) => {
-          if (err || !res.ok) {
-            reject({ error: err, res: res });
-          } else {
-            resolve(res);
-          }
-        });
-    });
+        .del(url)
+        .auth(token, { type: 'bearer' })
+        .end((error, res) => endHandler(error, res, reject, resolve))
+    );
   },
-
   post: (url, data) => {
-    var token = cookies.get('JWT');
+    const token = cookies.get('JWT');
     return new Promise((resolve, reject) =>
       request
         .post(url)
         .auth(token, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .send(data)
-        .end((err, res) => {
-          if (err || !res.ok) {
-            reject({ error: err, res });
-          } else {
-            resolve(res);
-          }
-        })
+        .end((error, res) => endHandler(error, res, reject, resolve))
+    );
+  },
+  put: (url, data) => {
+    const token = cookies.get('JWT');
+    return new Promise((resolve, reject) =>
+      request
+        .put(url)
+        .auth(token, { type: 'bearer' })
+        .set('Content-Type', 'application/json')
+        .send(data)
+        .end((error, res) => endHandler(error, res, reject, resolve))
+    );
+  },
+  upload: (url, formData, progress) => {
+    const token = cookies.get('JWT');
+    return new Promise((resolve, reject) =>
+      request
+        .post(url)
+        .auth(token, { type: 'bearer' })
+        .send(formData)
+        .on('progress', progress)
+        .end((error, res) => endHandler(error, res, reject, resolve))
     );
   }
 };

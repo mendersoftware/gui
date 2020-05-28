@@ -6,7 +6,6 @@ import { Button, LinearProgress } from '@material-ui/core';
 
 import { CloudUpload, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
-import { setSnackbar } from '../../actions/appActions';
 import { selectDevices } from '../../actions/deviceActions';
 import {
   createArtifact,
@@ -17,7 +16,6 @@ import {
   showRemoveArtifactDialog,
   uploadArtifact
 } from '../../actions/releaseActions';
-import { preformatWithRequestID } from '../../helpers';
 import { advanceOnboarding, getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 import ReleaseRepository from './releaserepository';
@@ -81,19 +79,12 @@ export class Artifacts extends React.Component {
 
   _getReleases(artifactVersion) {
     var self = this;
-    return self.props
-      .getReleases()
-      .catch(err => {
-        var errormsg = err.error || 'Please check your connection';
-        self.props.setSnackbar(errormsg, 5000, '');
-        console.log(errormsg);
-      })
-      .finally(() => {
-        if (artifactVersion) {
-          self.props.selectRelease(artifactVersion);
-        }
-        self.setState({ doneLoading: true });
-      });
+    return self.props.getReleases().finally(() => {
+      if (artifactVersion) {
+        self.props.selectRelease(artifactVersion);
+      }
+      self.setState({ doneLoading: true });
+    });
   }
 
   addArtifact(meta, file, type = 'upload') {
@@ -114,16 +105,7 @@ export class Artifacts extends React.Component {
 
   _removeArtifact(artifact) {
     const self = this;
-    return self.props
-      .removeArtifact(artifact.id)
-      .then(() => {
-        self.props.setSnackbar('Artifact was removed', 5000, '');
-      })
-      .catch(err => {
-        var errMsg = err.res.body.error || '';
-        self.props.setSnackbar(preformatWithRequestID(err.res, `Error removing artifact: ${errMsg}`), null, 'Copy to clipboard');
-      })
-      .finally(() => self.props.showRemoveArtifactDialog(false));
+    return self.props.removeArtifact(artifact.id).finally(() => self.props.showRemoveArtifactDialog(false));
   }
 
   render() {
@@ -224,7 +206,6 @@ const actionCreators = {
   selectDevices,
   selectRelease,
   showRemoveArtifactDialog,
-  setSnackbar,
   uploadArtifact
 };
 

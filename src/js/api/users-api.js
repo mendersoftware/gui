@@ -1,25 +1,8 @@
 import Cookies from 'universal-cookie';
-import { unauthorizedRedirect } from '../auth';
 const cookies = new Cookies();
-var request = require('superagent');
+const request = require('superagent');
 
 const Api = {
-  get: url => {
-    var token = cookies.get('JWT');
-    return new Promise((resolve, reject) =>
-      request
-        .get(url)
-        .use(unauthorizedRedirect)
-        .auth(token, { type: 'bearer' })
-        .end((err, res) => {
-          if (err || !res.ok) {
-            reject({ error: err, res: res });
-          } else {
-            resolve(res.body);
-          }
-        })
-    );
-  },
   postLogin: (url, userData) => {
     let body = {};
     if (userData.hasOwnProperty('token2fa')) {
@@ -73,58 +56,6 @@ const Api = {
               code: res.status
             };
             resolve(response);
-          }
-        })
-    );
-  },
-  post: (url, userData) => {
-    var token = cookies.get('JWT');
-    return new Promise((resolve, reject) =>
-      request
-        .post(url)
-        .use(unauthorizedRedirect)
-        .auth(token, { type: 'bearer' })
-        .set('Content-Type', 'application/json')
-        .send(userData)
-        .end((err, res) => {
-          if (err || !res.ok) {
-            reject({ error: err, res });
-          } else {
-            resolve(res);
-          }
-        })
-    );
-  },
-  put: (url, userData) => {
-    var token = cookies.get('JWT');
-    return new Promise((resolve, reject) =>
-      request
-        .put(url)
-        .use(unauthorizedRedirect)
-        .auth(token, { type: 'bearer' })
-        .set('Content-Type', 'application/json')
-        .send(userData)
-        .end((err, res) => {
-          if (err || !res.ok) {
-            reject({ error: err, res: res });
-          } else {
-            resolve(res.header);
-          }
-        })
-    );
-  },
-  delete: url => {
-    var token = cookies.get('JWT');
-    return new Promise((resolve, reject) =>
-      request
-        .del(url)
-        .use(unauthorizedRedirect)
-        .auth(token, { type: 'bearer' })
-        .end((err, res) => {
-          if (err || !res.ok) {
-            reject({ error: err, res: res });
-          } else {
-            resolve(res.header);
           }
         })
     );

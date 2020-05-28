@@ -7,7 +7,6 @@ import { CheckCircle as CheckCircleIcon } from '@material-ui/icons';
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 
-import { setSnackbar } from '../../actions/appActions';
 import { loginUser, saveGlobalSettings, verify2FA } from '../../actions/userActions';
 
 import Loader from '../common/loader';
@@ -46,13 +45,8 @@ export class TwoFactorAuthSetup extends React.Component {
     formData.email = self.props.user.email;
     self.props
       .verify2FA(formData)
-      .then(() => {
-        self.setState({ validated2fa: true, validating2fa: false });
-      })
-      .catch(() => {
-        self.props.setSnackbar('An error occured validating the verification code.');
-        self.setState({ validated2fa: false, validating2fa: false });
-      });
+      .then(() => self.setState({ validated2fa: true, validating2fa: false }))
+      .catch(() => self.setState({ validated2fa: false, validating2fa: false }));
   }
 
   render() {
@@ -133,7 +127,7 @@ export class TwoFactorAuthSetup extends React.Component {
   }
 }
 
-const actionCreators = { loginUser, saveGlobalSettings, setSnackbar, verify2FA };
+const actionCreators = { loginUser, saveGlobalSettings, verify2FA };
 
 const mapStateToProps = state => {
   return {
