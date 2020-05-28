@@ -111,11 +111,8 @@ DEVICE_TYPE="raspberrypi3" && \\
 TENANT_TOKEN="token" && \\
 mender setup \\
   --device-type $DEVICE_TYPE \\
---quiet   --server-url 192.168.7.41 \\
-    --server-cert=""   --tenant-token $TENANT_TOKEN \\
-  --retry-poll 30 \\
-  --update-poll 5 \\
-  --inventory-poll 5 && \\
+  --quiet --demo --server-ip 192.168.7.41 \\
+  --tenant-token $TENANT_TOKEN && \\
 systemctl restart mender-client'`
     );
   });
