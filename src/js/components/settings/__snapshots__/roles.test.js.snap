@@ -149,7 +149,8 @@ exports[`Roles Component renders correctly 1`] = `
             }
           }
         >
-          Add a role
+          Edit the
+           role
         </h4>
         <div
           className="MuiFormControl-root MuiTextField-root"
@@ -184,6 +185,7 @@ exports[`Roles Component renders correctly 1`] = `
               onFocus={[Function]}
               required={false}
               type="text"
+              value=""
             />
           </div>
         </div>
@@ -221,6 +223,7 @@ exports[`Roles Component renders correctly 1`] = `
               placeholder="-"
               required={false}
               type="text"
+              value=""
             />
           </div>
         </div>
@@ -248,6 +251,7 @@ exports[`Roles Component renders correctly 1`] = `
                 className="MuiIconButton-label"
               >
                 <input
+                  checked={false}
                   className="PrivateSwitchBase-input-141"
                   data-indeterminate={false}
                   onChange={[Function]}

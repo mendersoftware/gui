@@ -6,16 +6,18 @@ import { Add as AddIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getGroups, getDynamicGroups } from '../../actions/deviceActions';
-import { createRole, getRoles, removeRole } from '../../actions/userActions';
+import { createRole, editRole, getRoles, removeRole } from '../../actions/userActions';
 
 export class RoleManagement extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       adding: false,
+      editing: false,
+      allowUserManagement: false,
       groups: props.groups.map(group => ({ name: group, selected: false })),
-      description: undefined,
-      name: undefined
+      description: '',
+      name: ''
     };
     if (!props.groups.length) {
       props.getDynamicGroups();
@@ -30,14 +32,38 @@ export class RoleManagement extends React.Component {
     }
   }
 
+  addRole() {
+    this.setState({
+      adding: true,
+      editing: false,
+      name: '',
+      description: '',
+      allowUserManagement: false,
+      groups: this.props.groups.map(group => ({ name: group, selected: false })),
+    });
+  }
+
+  editRole(role) {
+    this.setState({
+      adding: false,
+      editing: true,
+      name: role.id,
+      description: role.description,
+      allowUserManagement: role.allowUserManagement,
+      groups: this.props.groups.map(group => ({ name: group, selected: role.groups.indexOf(group) !== -1 })),
+    });
+  }
+
+  removeRole(roleId) {
+    this.props.removeRole(roleId);
+    this.onCancel();
+  }
+
   onCancel() {
     this.setState({
       adding: false,
-      allowUserManagement: false,
-      description: undefined,
-      groups: this.props.groups.map(group => ({ name: group, selected: false })),
-      name: undefined
-    });
+      editing: false,
+    })
   }
 
   onSubmit() {
@@ -52,7 +78,11 @@ export class RoleManagement extends React.Component {
         return accu;
       }, [])
     };
-    this.props.createRole(role);
+    if (this.state.adding) {
+      this.props.createRole(role);
+    } else {
+      this.props.editRole(role);
+    }
     this.onCancel();
   }
 
@@ -69,8 +99,8 @@ export class RoleManagement extends React.Component {
 
   render() {
     const self = this;
-    const { adding, allowUserManagement, description, groups, name } = self.state;
-    const { roles, removeRole } = self.props;
+    const { adding, editing, allowUserManagement, description, groups, name } = self.state;
+    const { roles } = self.props;
     return (
       <div>
         <h2 style={{ marginLeft: 20 }}>Roles</h2>
@@ -91,19 +121,23 @@ export class RoleManagement extends React.Component {
                 <TableCell>{role.allowUserManagement ? 'Yes' : 'No'}</TableCell>
                 <TableCell>{role.groups.length ? role.groups.join(', ') : 'All devices'}</TableCell>
                 <TableCell>{role.description || '-'}</TableCell>
-                <TableCell>{role.editable && <Button onClick={() => removeRole(role.id)}>Remove</Button>}</TableCell>
+                <TableCell>
+                  {role.editable && <Button onClick={() => self.editRole(role)}>Edit</Button>}
+                  {role.editable && <Button onClick={() => self.removeRole(role.id)}>Remove</Button>}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
 
-        {!adding && <Chip className="margin-top-small" color="primary" icon={<AddIcon />} label="Add a role" onClick={() => self.setState({ adding: true })} />}
-        <Collapse in={adding} className="margin-right-small filter-wrapper" classes={{ wrapperInner: 'margin-bottom-small margin-right' }}>
-          <h4 style={{ marginTop: 5 }}>Add a role</h4>
+        {!adding && <Chip className="margin-top-small" color="primary" icon={<AddIcon />} label="Add a role" onClick={() => self.addRole()} />}
+        <Collapse in={adding || editing} className="margin-right-small filter-wrapper" classes={{ wrapperInner: 'margin-bottom-small margin-right' }}>
+          <h4 style={{ marginTop: 5 }}>{adding ? 'Add a' : 'Edit the'} role</h4>
           <TextField
             label="Role name"
             id="role-name"
             value={name}
+            disabled={editing}
             onChange={e => self.setState({ name: e.target.value })}
             style={{ marginTop: 0, marginRight: 30 }}
           />
@@ -118,6 +152,7 @@ export class RoleManagement extends React.Component {
           <div>
             <FormControlLabel
               control={<Checkbox color="primary" onChange={(e, checked) => self.setState({ allowUserManagement: checked })} />}
+              checked={allowUserManagement}
               label="Allow to manage other users"
             />
           </div>
@@ -154,7 +189,7 @@ export class RoleManagement extends React.Component {
   }
 }
 
-const actionCreators = { createRole, getDynamicGroups, getGroups, getRoles, removeRole, setSnackbar };
+const actionCreators = { createRole, editRole, getDynamicGroups, getGroups, getRoles, removeRole, setSnackbar };
 
 const mapStateToProps = state => {
   return {
