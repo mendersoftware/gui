@@ -16,7 +16,7 @@
     "lodash.differencewith": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "md5": "^2.2.1",
-    "moment": "^2.24.0",
+    "moment": "^2.26.0",
     "moment-duration-format": "^2.3.2",
     "pluralize": "^8.0.0",
     "react": "~16.12.0",
