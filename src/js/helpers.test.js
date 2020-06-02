@@ -1,6 +1,17 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { duplicateFilter, FileSize, getFormattedSize, hashString, isEmpty, mapDeviceAttributes, stringToBoolean, unionizeStrings } from './helpers';
+import {
+  duplicateFilter,
+  FileSize,
+  getDebConfigurationCode,
+  getDebInstallationCode,
+  getFormattedSize,
+  hashString,
+  isEmpty,
+  mapDeviceAttributes,
+  stringToBoolean,
+  unionizeStrings
+} from './helpers';
 import { undefineds } from '../../tests/mockData';
 
 // TODO: test ALL of the following!
@@ -26,7 +37,7 @@ describe('FileSize Component', () => {
   it('renders correctly', () => {
     const tree = renderer.create(<FileSize fileSize={1000} />).toJSON();
     expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    expect(JSON.stringify(tree)).not.toMatch(undefineds);
   });
 });
 
@@ -69,6 +80,46 @@ describe('stringToBoolean function', () => {
     expect(stringToBoolean(false)).toEqual(false);
     expect(stringToBoolean('no')).toEqual(false);
     expect(stringToBoolean('FALSE')).toEqual(false);
+  });
+});
+
+describe('getDebInstallationCode function', () => {
+  it('should not contain any template string leftovers', () => {
+    expect(getDebInstallationCode('master')).not.toMatch(/\{([^}]+)\}/);
+  });
+  it('should return a sane result', () => {
+    expect(getDebInstallationCode('master')).toMatch(
+      `wget https://d1b0l86ne08fsf.cloudfront.net/master/dist-packages/debian/armhf/mender-client_master-1_armhf.deb && \\
+sudo dpkg -i --force-confdef --force-confold mender-client_master-1_armhf.deb`
+    );
+  });
+});
+
+describe('getDebConfigurationCode function', () => {
+  let code;
+  beforeEach(() => {
+    code = getDebConfigurationCode('192.168.7.41', false, true, 'token', 'master', 'raspberrypi3');
+  });
+  it('should not contain any template string leftovers', () => {
+    expect(code).not.toMatch(/\{([^}]+)\}/);
+  });
+  it('should return a sane result', () => {
+    expect(code).toMatch(
+      `sudo bash -c 'wget https://d1b0l86ne08fsf.cloudfront.net/master/dist-packages/debian/armhf/mender-client_master-1_armhf.deb && \\
+DEBIAN_FRONTEND=noninteractive dpkg -i --force-confdef --force-confold mender-client_master-1_armhf.deb && \\
+DEVICE_TYPE="raspberrypi3" && \\
+TENANT_TOKEN="token" && \\
+mender setup \\
+  --device-type $DEVICE_TYPE \\
+  --quiet --demo --server-ip 192.168.7.41 \\
+  --tenant-token $TENANT_TOKEN && \\
+systemctl restart mender-client'`
+    );
+  });
+  it('should not contain tenant information for OS calls', () => {
+    code = getDebConfigurationCode('192.168.7.41', false, false, null, 'master', 'raspberrypi3');
+    expect(code).not.toMatch(/tenant/);
+    expect(code).not.toMatch(/token/);
   });
 });
 

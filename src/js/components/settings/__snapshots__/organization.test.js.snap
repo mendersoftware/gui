@@ -262,10 +262,10 @@ exports[`MyOrganization Component renders correctly 1`] = `
       className="margin-left-small margin-right-small"
     >
       <a
-        href="mailto:support@mender.io?subject=test: Cancel subscription&body=Organization%20ID%3A%201%0AOrganization%20name%3A%20test%0APlan%20name%3A%20Mender Enterprise%0A%0APlease%20cancel%20my%20subscription.%0AReason%20%5Boptional%5D%3A"
-        target="_blank"
+        href=""
+        onClick={[Function]}
       >
-        Cancel subscription
+        Cancel subscription and deactivate account
       </a>
     </p>
   </div>

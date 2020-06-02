@@ -1,5 +1,5 @@
 import * as DeploymentConstants from '../constants/deploymentConstants';
-import DeploymentsApi, { headerNames } from '../api/deployments-api';
+import GeneralApi, { headerNames } from '../api/general-api';
 import { mapAttributesToAggregator, startTimeSort } from '../helpers';
 
 const apiUrl = '/api/management/v1';
@@ -24,7 +24,7 @@ const transformDeployments = (deployments, deploymentsById) =>
 /*Deployments */
 // all deployments
 export const getDeployments = (page = default_page, per_page = default_per_page) => (dispatch, getState) =>
-  DeploymentsApi.get(`${deploymentsApiUrl}/deployments?page=${page}&per_page=${per_page}`).then(res => {
+  GeneralApi.get(`${deploymentsApiUrl}/deployments?page=${page}&per_page=${per_page}`).then(res => {
     const deploymentsByStatus = res.body.reduce((accu, item) => {
       accu[item.status].push(item);
       return accu;
@@ -44,45 +44,45 @@ export const getDeploymentsByStatus = (status, page = default_page, per_page = d
   var created_after = startDate ? `&created_after=${startDate}` : '';
   var created_before = endDate ? `&created_before=${endDate}` : '';
   var search = group ? `&search=${group}` : '';
-  return DeploymentsApi.get(
-    `${deploymentsApiUrl}/deployments?status=${status}&per_page=${per_page}&page=${page}${created_after}${created_before}${search}`
-  ).then(res => {
-    const { deployments, deploymentIds } = transformDeployments(res.body, getState().deployments.byId);
-    const deploymentsState = getState().deployments.byId;
-    let tasks = deploymentIds.reduce(
-      (accu, deploymentId) => {
-        if (status !== 'finished' || !deploymentsState[deploymentId] || !deploymentsState[deploymentId].stats) {
-          accu.push(dispatch(getSingleDeploymentStats(deploymentId)));
-        }
-        return accu;
-      },
-      [
-        dispatch({
-          type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`],
-          deployments,
-          deploymentIds,
-          status,
-          total: Number(res.headers[headerNames.total])
-        })
-      ]
-    );
-    if (shouldSelect) {
-      tasks.push(dispatch({ type: DeploymentConstants[`SELECT_${status.toUpperCase()}_DEPLOYMENTS`], deploymentIds, status }));
+  return GeneralApi.get(`${deploymentsApiUrl}/deployments?status=${status}&per_page=${per_page}&page=${page}${created_after}${created_before}${search}`).then(
+    res => {
+      const { deployments, deploymentIds } = transformDeployments(res.body, getState().deployments.byId);
+      const deploymentsState = getState().deployments.byId;
+      let tasks = deploymentIds.reduce(
+        (accu, deploymentId) => {
+          if (status !== 'finished' || !deploymentsState[deploymentId] || !deploymentsState[deploymentId].stats) {
+            accu.push(dispatch(getSingleDeploymentStats(deploymentId)));
+          }
+          return accu;
+        },
+        [
+          dispatch({
+            type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`],
+            deployments,
+            deploymentIds,
+            status,
+            total: Number(res.headers[headerNames.total])
+          })
+        ]
+      );
+      if (shouldSelect) {
+        tasks.push(dispatch({ type: DeploymentConstants[`SELECT_${status.toUpperCase()}_DEPLOYMENTS`], deploymentIds, status }));
+      }
+      return Promise.all(tasks);
     }
-    return Promise.all(tasks);
-  });
+  );
 };
 
 export const createDeployment = newDeployment => dispatch => {
   let request;
   if (newDeployment.filter_id) {
-    request = DeploymentsApi.post(`${deploymentsApiUrlV2}/deployments`, newDeployment);
+    request = GeneralApi.post(`${deploymentsApiUrlV2}/deployments`, newDeployment);
   } else {
-    request = DeploymentsApi.post(`${deploymentsApiUrl}/deployments`, newDeployment);
+    request = GeneralApi.post(`${deploymentsApiUrl}/deployments`, newDeployment);
   }
   return request.then(data => {
-    const lastslashindex = data.location.lastIndexOf('/');
-    const deploymentId = data.location.substring(lastslashindex + 1);
+    const lastslashindex = data.header.location.lastIndexOf('/');
+    const deploymentId = data.header.location.substring(lastslashindex + 1);
     const deployment = {
       ...newDeployment,
       devices: newDeployment.devices ? newDeployment.devices.map(id => ({ id, status: 'pending' })) : []
@@ -99,7 +99,7 @@ export const createDeployment = newDeployment => dispatch => {
 };
 
 export const getSingleDeployment = id => dispatch =>
-  DeploymentsApi.get(`${deploymentsApiUrl}/deployments/${id}`).then(res =>
+  GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}`).then(res =>
     dispatch({
       type: DeploymentConstants.RECEIVE_DEPLOYMENT,
       deployment: res.body
@@ -107,12 +107,12 @@ export const getSingleDeployment = id => dispatch =>
   );
 
 export const getSingleDeploymentStats = id => dispatch =>
-  DeploymentsApi.get(`${deploymentsApiUrl}/deployments/${id}/statistics`).then(res =>
+  GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}/statistics`).then(res =>
     dispatch({ type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS, stats: res.body, deploymentId: id })
   );
 
 export const getSingleDeploymentDevices = id => dispatch =>
-  DeploymentsApi.get(`${deploymentsApiUrl}/deployments/${id}/devices`).then(res => {
+  GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}/devices`).then(res => {
     const devices = res.body.reduce((accu, item) => {
       accu[item.id] = item;
       return accu;
@@ -125,7 +125,7 @@ export const getSingleDeploymentDevices = id => dispatch =>
   });
 
 export const getDeviceLog = (deploymentId, deviceId) => (dispatch, getState) =>
-  DeploymentsApi.getText(`${deploymentsApiUrl}/deployments/${deploymentId}/devices/${deviceId}/log`).then(log => {
+  GeneralApi.get(`${deploymentsApiUrl}/deployments/${deploymentId}/devices/${deviceId}/log`).then(({ text: log }) => {
     const devices = getState().deployments.byId[deploymentId].devices;
     devices[deviceId].log = log;
     return dispatch({
@@ -136,7 +136,7 @@ export const getDeviceLog = (deploymentId, deviceId) => (dispatch, getState) =>
   });
 
 export const abortDeployment = deploymentId => (dispatch, getState) =>
-  DeploymentsApi.put(`${deploymentsApiUrl}/deployments/${deploymentId}/status`, { status: 'aborted' }).then(() => {
+  GeneralApi.put(`${deploymentsApiUrl}/deployments/${deploymentId}/status`, { status: 'aborted' }).then(() => {
     const state = getState();
     let status = 'pending';
     let index = state.deployments.byStatus.pending.deploymentIds.findIndex(id => id === deploymentId);

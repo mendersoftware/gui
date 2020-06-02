@@ -1,4 +1,5 @@
 import React from 'react';
+import pluralize from 'pluralize';
 import {
   Button,
   Checkbox,
@@ -7,6 +8,7 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  FormHelperText,
   ListItemText,
   InputLabel,
   MenuItem,
@@ -25,11 +27,17 @@ export default class UserForm extends React.Component {
     this.state = {
       editPass: isCreation,
       isCreation,
-      selectedRoles: props.user.roles ? props.user.roles.map(role => props.roles.find(currentRole => currentRole.id === role)) : []
+      selectedRoles: (props.user.roles || []).reduce((accu, role) => {
+        const foundRole = props.roles.find(currentRole => currentRole.id === role);
+        if (foundRole) {
+          accu.push(foundRole);
+        }
+        return accu;
+      }, [])
     };
   }
 
-  componentDidUpdate(_, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     // TODO: this is needed due to the re-registering of inputs in the form component and should be fixed at some point
     if (prevState.editPass !== this.state.editPass || prevState.selectedRoles !== this.state.selectedRoles) {
       this.forceUpdate();
@@ -42,7 +50,7 @@ export default class UserForm extends React.Component {
     if (isSelected) {
       newlySelectedRoles.push(role);
     } else if (foundIndex > -1) {
-      newlySelectedRoles.splice(foundIndex);
+      newlySelectedRoles.splice(foundIndex, 1);
     }
     this.setState({ selectedRoles: newlySelectedRoles });
   }
@@ -59,6 +67,15 @@ export default class UserForm extends React.Component {
     const { editPass, isCreation, selectedRoles } = self.state;
     const { closeDialog, currentUser, isEnterprise, roles, user } = self.props;
     const isAdmin = currentUser.roles && currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL');
+    const showRoleUsageNotification = selectedRoles.reduce((accu, item) => {
+      const hasUiApiAccess = ['RBAC_ROLE_CI'].includes(item.id)
+        ? false
+        : item.id === 'RBAC_ROLE_PERMIT_ALL' || item.permissions.some(permission => !['CREATE_DEPLOYMENT'].includes(permission.action));
+      if (hasUiApiAccess) {
+        return false;
+      }
+      return typeof accu !== 'undefined' ? accu : true;
+    }, undefined);
     return (
       <Dialog open={true} fullWidth={true} maxWidth="sm">
         <DialogTitle>{isCreation ? 'Create new user' : 'Edit user'}</DialogTitle>
@@ -119,6 +136,14 @@ export default class UserForm extends React.Component {
                       </MenuItem>
                     ))}
                   </Select>
+                  {showRoleUsageNotification && (
+                    <FormHelperText className="info">
+                      The selected {pluralize('role', selectedRoles.length)} may prevent {currentUser.email === user.email ? 'you' : <i>{user.email}</i>} from
+                      using the Mender UI.
+                      <br />
+                      Consider adding the <i>Read only</i> role as well.
+                    </FormHelperText>
+                  )}
                 </FormControl>
               </div>
             ) : (

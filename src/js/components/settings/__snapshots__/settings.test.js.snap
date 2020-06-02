@@ -54,23 +54,6 @@ exports[`Settings Component renders correctly 1`] = `
         aria-current={null}
         className="MuiListItem-root navLink settingsNav MuiListItem-gutters"
         disabled={false}
-        href="/settings/user-management"
-        onClick={[Function]}
-      >
-        <div
-          className="MuiListItemText-root"
-        >
-          <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
-          >
-            User management
-          </span>
-        </div>
-      </a>
-      <a
-        aria-current={null}
-        className="MuiListItem-root navLink settingsNav MuiListItem-gutters"
-        disabled={false}
         href="/settings/my-organization"
         onClick={[Function]}
       >
@@ -139,6 +122,7 @@ exports[`Settings Component renders correctly 1`] = `
               placeholder="Email"
               required={false}
               type="text"
+              value=""
             />
           </div>
           <p

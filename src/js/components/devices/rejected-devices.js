@@ -3,15 +3,14 @@ import { connect } from 'react-redux';
 import Time from 'react-time';
 import pluralize from 'pluralize';
 
-import { getAllDevicesByStatus, getDevicesByStatus, setDeviceFilters } from '../../actions/deviceActions';
+import { getDevicesByStatus, setDeviceFilters } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
 import RelativeTime from '../common/relative-time';
 import DeviceList from './devicelist';
+import { refreshLength as refreshDeviceLength } from './devices';
 import Filters from './filters';
-
-const refreshDeviceLength = 10000;
 
 export class Rejected extends React.Component {
   constructor(props, context) {
@@ -22,20 +21,22 @@ export class Rejected extends React.Component {
       pageLoading: true
     };
     if (!props.rejectedDeviceIds.length) {
-      props.getAllDevicesByStatus(DEVICE_STATES.rejected);
+      props.getDevicesByStatus(DEVICE_STATES.rejected);
     }
   }
 
   componentDidMount() {
+    this.props.setDeviceFilters([]);
     this.timer = setInterval(() => this._getDevices(), refreshDeviceLength);
     this._getDevices(true);
   }
+
   componentWillUnmount() {
     clearInterval(this.timer);
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.count !== this.props.count || (prevProps.currentTab !== this.props.currentTab && this.props.currentTab.indexOf('Rejected'))) {
+    if (prevProps.count !== this.props.count) {
       this.props.setDeviceFilters([]);
       this._getDevices();
       if (!this.props.devices.length && this.props.count) {
@@ -138,7 +139,7 @@ export class Rejected extends React.Component {
   }
 }
 
-const actionCreators = { getAllDevicesByStatus, getDevicesByStatus, setDeviceFilters, setSnackbar };
+const actionCreators = { getDevicesByStatus, setDeviceFilters, setSnackbar };
 
 const mapStateToProps = state => {
   return {

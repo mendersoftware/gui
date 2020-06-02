@@ -5,7 +5,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Dialog, DialogContent, DialogTitle, Tab, Tabs } from '@material-ui/core';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getAllDeviceCounts, selectDevice, setDeviceFilters } from '../../actions/deviceActions';
+import { getAllDeviceCounts, selectDevice, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Global from '../settings/global';
@@ -13,38 +13,42 @@ import DeviceGroups from './device-groups';
 import PendingDevices from './pending-devices';
 import RejectedDevices from './rejected-devices';
 import PreauthDevices from './preauthorize-devices';
+import { emptyFilter } from './filters';
 
 const routes = {
-  pending: {
-    route: '/devices/pending',
-    status: DEVICE_STATES.pending,
-    title: 'Pending'
-  },
-  preauthorized: {
-    route: '/devices/preauthorized',
-    status: DEVICE_STATES.preauth,
-    title: 'Preauthorized'
-  },
-  rejected: {
-    route: '/devices/rejected',
-    status: DEVICE_STATES.rejected,
-    title: 'Rejected'
-  },
   devices: {
+    component: DeviceGroups,
+    groupRestricted: false,
     route: '/devices',
-    status: 'devices',
-    title: 'Device groups'
+    title: () => 'Device groups'
+  },
+  [DEVICE_STATES.pending]: {
+    component: PendingDevices,
+    groupRestricted: true,
+    route: '/devices/pending',
+    title: count => `Pending${count ? ` (${count})` : ''}`
+  },
+  [DEVICE_STATES.preauth]: {
+    component: PreauthDevices,
+    groupRestricted: true,
+    route: '/devices/preauthorized',
+    title: () => 'Preauthorized'
+  },
+  [DEVICE_STATES.rejected]: {
+    component: RejectedDevices,
+    groupRestricted: true,
+    route: '/devices/rejected',
+    title: () => 'Rejected'
   }
 };
 
-const refreshLength = 10000;
+export const refreshLength = 10000;
 
 export class Devices extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      currentTab: this._getCurrentLabel(),
-      tabIndex: this._updateActive()
+      openIdDialog: false
     };
   }
 
@@ -53,21 +57,17 @@ export class Devices extends React.Component {
     this._restartInterval();
     this.props.getAllDeviceCounts();
     if (this.props.match.params.filters) {
-      var str = decodeURIComponent(this.props.match.params.filters);
+      const str = decodeURIComponent(this.props.match.params.filters);
       const filters = str.split('&').map(filter => {
         const filterPair = filter.split('=');
-        return { key: filterPair[0], value: filterPair[1] };
+        const scope = filterPair[0] === 'group' ? { scope: 'system' } : {};
+        return { ...emptyFilter, ...scope, key: filterPair[0], value: filterPair[1] };
       });
+      const groupFilter = filters.find(filter => filter.key === 'group');
+      if (groupFilter) {
+        this.props.selectGroup(groupFilter.value);
+      }
       this.props.setDeviceFilters(filters);
-    }
-  }
-
-  // nested tabs
-  componentDidUpdate() {
-    const tabIndex = this._updateActive();
-    const currentTab = this._getCurrentLabel();
-    if (this.state.tabIndex !== tabIndex || this.state.currentTab !== currentTab) {
-      this.setState({ tabIndex, currentTab });
     }
   }
 
@@ -83,48 +83,35 @@ export class Devices extends React.Component {
     self.props.getAllDeviceCounts();
   }
 
-  _updateActive(tab = this.props.match.params.status) {
-    if (routes.hasOwnProperty(tab)) {
-      return routes[tab].route;
-    }
-    return routes.devices.route;
-  }
-
-  _getCurrentLabel(tab = this.props.match.params.status) {
-    if (routes.hasOwnProperty(tab)) {
-      return routes[tab].title;
-    }
-    return routes.devices.title;
-  }
-
   _openSettingsDialog() {
-    var self = this;
-    self.setState({ openIdDialog: !self.state.openIdDialog });
+    this.setState({ openIdDialog: !this.state.openIdDialog });
   }
 
   render() {
-    const { match, pendingCount, setSnackbar } = this.props;
-    const { currentTab, openIdDialog } = this.state;
+    const { history, isGroupRestricted, match, pendingCount, setSnackbar } = this.props;
+    const { openIdDialog } = this.state;
 
-    const pendingLabel = pendingCount ? `Pending (${pendingCount})` : 'Pending';
-    const tabIndex = match.params.status || 'devices';
+    let tabIndex = match.params.status || 'devices';
+    if (isGroupRestricted) {
+      tabIndex = routes[tabIndex].groupRestricted ? 'devices' : tabIndex;
+    }
+    const ComponentToShow = routes[tabIndex].component;
     return (
       <div>
         <Tabs value={tabIndex} onChange={() => setSnackbar('')}>
-          <Tab component={Link} label={routes.devices.title} value={routes.devices.status} to={routes.devices.route} />
-          <Tab component={Link} label={pendingLabel} value={routes.pending.status} to={routes.pending.route} />
-          <Tab component={Link} label={routes.preauthorized.title} value={routes.preauthorized.status} to={routes.preauthorized.route} />
-          <Tab component={Link} label={routes.rejected.title} value={routes.rejected.status} to={routes.rejected.route} />
+          {Object.entries(routes).reduce((accu, [key, route]) => {
+            if (!isGroupRestricted || !route.groupRestricted) {
+              accu.push(<Tab component={Link} key={key} label={route.title(pendingCount)} value={key} to={route.route} />);
+            }
+            return accu;
+          }, [])}
         </Tabs>
-        {tabIndex === routes.pending.status && (
-          <PendingDevices currentTab={currentTab} openSettingsDialog={() => this._openSettingsDialog()} restart={() => this._restartInterval()} />
-        )}
-        {tabIndex === routes.preauthorized.status && <PreauthDevices currentTab={currentTab} openSettingsDialog={() => this._openSettingsDialog()} />}
-        {tabIndex === routes.rejected.status && <RejectedDevices currentTab={currentTab} openSettingsDialog={() => this._openSettingsDialog()} />}
-        {tabIndex === routes.devices.status && (
-          <DeviceGroups params={match.params} currentTab={currentTab} openSettingsDialog={() => this._openSettingsDialog()} />
-        )}
-
+        <ComponentToShow
+          history={history}
+          openSettingsDialog={() => this._openSettingsDialog()}
+          params={match.params}
+          restart={() => this._restartInterval()}
+        />
         {openIdDialog && (
           <Dialog open={openIdDialog || false}>
             <DialogTitle>Default device identity attribute</DialogTitle>
@@ -138,10 +125,19 @@ export class Devices extends React.Component {
   }
 }
 
-const actionCreators = { getAllDeviceCounts, selectDevice, setDeviceFilters, setSnackbar };
+const actionCreators = { getAllDeviceCounts, selectDevice, selectGroup, setDeviceFilters, setSnackbar };
 
 const mapStateToProps = state => {
+  const currentUser = state.users.byId[state.users.currentUser];
+  let isGroupRestricted = false;
+  if (currentUser?.roles) {
+    // TODO: move these + additional role checks into selectors
+    const isAdmin = currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL');
+    isGroupRestricted =
+      !isAdmin && currentUser.roles.some(role => state.users.rolesById[role]?.permissions.some(permission => permission.object.type === 'DEVICE_GROUP'));
+  }
   return {
+    isGroupRestricted,
     pendingCount: state.devices.byStatus.pending.total
   };
 };

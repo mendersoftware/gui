@@ -9,7 +9,7 @@ export default class TextInput extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      value: this.props.value,
+      value: this.props.value || '',
       errortext: null,
       isValid: true
     };

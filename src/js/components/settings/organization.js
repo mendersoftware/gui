@@ -7,17 +7,24 @@ import { Button, List, ListItem, ListItemText } from '@material-ui/core';
 import { FileCopy as CopyPasteIcon, Info as InfoIcon } from '@material-ui/icons';
 
 import { getUserOrganization } from '../../actions/userActions';
+import { cancelRequest } from '../../actions/organizationActions';
+import { setSnackbar } from '../../actions/appActions';
 import { PLANS as plans } from '../../constants/appConstants';
+import CancelRequestDialog from './dialogs/cancelrequest';
 
+import Alert from '../common/alert';
 import ExpandableAttribute from '../common/expandable-attribute';
 
 export class MyOrganization extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      copied: false
+      copied: false,
+      cancelSubscription: false,
+      cancelSubscriptionConfirmation: false
     };
   }
+
   componentDidMount() {
     this.props.getUserOrganization();
     this.setState({});
@@ -30,7 +37,23 @@ export class MyOrganization extends React.Component {
       self.setState({ copied: false });
     }, 5000);
   }
+
+  _cancelSubscriptionSubmit(reason) {
+    this.props.cancelRequest(this.props.org.id, reason).then(() => {
+      this.setState({ cancelSubscription: false, cancelSubscriptionConfirmation: true });
+      this.props.setSnackbar('Deactivation request was sent successfully', 5000, '');
+    });
+  }
+
+  handleCancelSubscription(e) {
+    if (e !== undefined) {
+      e.preventDefault();
+    }
+    this.setState({ cancelSubscription: !this.state.cancelSubscription });
+  }
+
   render() {
+    var self = this;
     const { org, isHosted } = this.props;
     const currentPlan = isHosted ? org && org.plan : 'enterprise';
     const mailBodyTexts = {
@@ -49,15 +72,7 @@ export class MyOrganization extends React.Component {
         org.name +
         '%0APlan%20name%3A%20' +
         plans[currentPlan] +
-        '%0A%0AI%20would%20like%20to%20make%20a%20change%20to%20my%20billing%20details.',
-      cancel:
-        'Organization%20ID%3A%20' +
-        org.id +
-        '%0AOrganization%20name%3A%20' +
-        org.name +
-        '%0APlan%20name%3A%20' +
-        plans[currentPlan] +
-        '%0A%0APlease%20cancel%20my%20subscription.%0AReason%20%5Boptional%5D%3A'
+        '%0A%0AI%20would%20like%20to%20make%20a%20change%20to%20my%20billing%20details.'
     };
     const orgHeader = (
       <div>
@@ -126,11 +141,29 @@ export class MyOrganization extends React.Component {
                 Request to update your billing details
               </a>
             </p>
-            <p className="margin-left-small margin-right-small">
-              <a href={`mailto:support@mender.io?subject=` + org.name + `: Cancel subscription&body=` + mailBodyTexts.cancel.toString()} target="_blank">
-                Cancel subscription
-              </a>
-            </p>
+            {this.state.cancelSubscriptionConfirmation ? (
+              <Alert className="margin-top-large" severity="error" style={{ maxWidth: '500px' }}>
+                <p>We&#39;ve started the process to cancel your plan and deactivate your account.</p>
+                <p>
+                  We&#39;ll send you an email confirming your deactivation. If you have any question at all, contact us at{' '}
+                  <strong>
+                    <a href="mailto:support@mender.io">support@mender.io</a>
+                  </strong>
+                </p>
+              </Alert>
+            ) : (
+              <p className="margin-left-small margin-right-small">
+                <a href="" onClick={e => self.handleCancelSubscription(e)}>
+                  Cancel subscription and deactivate account
+                </a>
+              </p>
+            )}
+            {this.state.cancelSubscription && (
+              <CancelRequestDialog
+                onCancel={() => self.setState({ cancelSubscription: false })}
+                onSubmit={value => this._cancelSubscriptionSubmit(value)}
+              />
+            )}
           </div>
         ) : null}
       </div>
@@ -138,7 +171,7 @@ export class MyOrganization extends React.Component {
   }
 }
 
-const actionCreators = { getUserOrganization };
+const actionCreators = { getUserOrganization, setSnackbar, cancelRequest };
 
 const mapStateToProps = state => {
   return {
