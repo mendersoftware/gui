@@ -418,6 +418,23 @@ ul.link-list {
   padding: 0 @defaultGutterWidth;
 }
 
+.alert {
+  padding: 20px;
+  background-color: #eeeeee;
+  border-left: 8px solid #666666;
+  border-radius: 0 10px 10px 0;
+
+  &.alert-error {
+    background-color: #fbeeee;
+    border-color: #d9524f;
+    color: #d95552;
+  }
+
+  a, a:hover, a:focus, a:visited, a:link {
+    color: #d95552;
+  }
+}
+
 .header .header-section {
   height: 24px;
   font-size: 14px;
