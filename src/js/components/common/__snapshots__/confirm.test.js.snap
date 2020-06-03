@@ -40,10 +40,9 @@ exports[`Confirm Component renders correctly 1`] = `
         className="MuiIconButton-label"
       >
         <svg
-          aria-hidden="true"
+          aria-hidden={true}
           className="MuiSvgIcon-root green"
           focusable="false"
-          role="presentation"
           viewBox="0 0 24 24"
         >
           <path
@@ -74,10 +73,9 @@ exports[`Confirm Component renders correctly 1`] = `
         className="MuiIconButton-label"
       >
         <svg
-          aria-hidden="true"
+          aria-hidden={true}
           className="MuiSvgIcon-root red"
           focusable="false"
-          role="presentation"
           viewBox="0 0 24 24"
         >
           <path

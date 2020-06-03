@@ -19,7 +19,7 @@ exports[`FilterItem Component renders correctly 1`] = `
     role="combobox"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root"
+      className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
       style={
         Object {
           "marginBottom": 15,
@@ -36,7 +36,7 @@ exports[`FilterItem Component renders correctly 1`] = `
         Attribute
       </label>
       <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
         onClick={[Function]}
       >
         <input
@@ -87,10 +87,9 @@ exports[`FilterItem Component renders correctly 1`] = `
               className="MuiIconButton-label"
             >
               <svg
-                aria-hidden="true"
+                aria-hidden={true}
                 className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
                 focusable="false"
-                role="presentation"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -109,7 +108,6 @@ exports[`FilterItem Component renders correctly 1`] = `
   >
     <div
       aria-haspopup="listbox"
-      aria-labelledby=" "
       className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
       onBlur={[Function]}
       onFocus={[Function]}
@@ -126,10 +124,9 @@ exports[`FilterItem Component renders correctly 1`] = `
       value="$eq"
     />
     <svg
-      aria-hidden="true"
+      aria-hidden={true}
       className="MuiSvgIcon-root MuiSelect-icon"
       focusable="false"
-      role="presentation"
       viewBox="0 0 24 24"
     >
       <path
@@ -193,10 +190,9 @@ exports[`FilterItem Component renders correctly 1`] = `
       className="MuiIconButton-label"
     >
       <svg
-        aria-hidden="true"
+        aria-hidden={true}
         className="MuiSvgIcon-root"
         focusable="false"
-        role="presentation"
         viewBox="0 0 24 24"
       >
         <path

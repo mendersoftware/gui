@@ -17,6 +17,7 @@ exports[`Devices Component renders correctly 1`] = `
     >
       <div
         className="MuiTabs-flexContainer"
+        onKeyDown={[Function]}
         role="tablist"
       >
         <a
@@ -66,7 +67,7 @@ exports[`Devices Component renders correctly 1`] = `
           onTouchMove={[Function]}
           onTouchStart={[Function]}
           role="tab"
-          tabIndex={0}
+          tabIndex={-1}
         >
           <span
             className="MuiTab-wrapper"
@@ -95,7 +96,7 @@ exports[`Devices Component renders correctly 1`] = `
           onTouchMove={[Function]}
           onTouchStart={[Function]}
           role="tab"
-          tabIndex={0}
+          tabIndex={-1}
         >
           <span
             className="MuiTab-wrapper"
@@ -124,7 +125,7 @@ exports[`Devices Component renders correctly 1`] = `
           onTouchMove={[Function]}
           onTouchStart={[Function]}
           role="tab"
-          tabIndex={0}
+          tabIndex={-1}
         >
           <span
             className="MuiTab-wrapper"
@@ -137,7 +138,7 @@ exports[`Devices Component renders correctly 1`] = `
         </a>
       </div>
       <span
-        className="PrivateTabIndicator-root-25 PrivateTabIndicator-colorSecondary-27 MuiTabs-indicator"
+        className="PrivateTabIndicator-root-1 PrivateTabIndicator-colorSecondary-3 MuiTabs-indicator"
         style={
           Object {
             "left": 0,
@@ -189,7 +190,7 @@ exports[`Devices Component renders correctly 1`] = `
               className="MuiListItemText-root"
             >
               <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
                 All devices
               </span>
@@ -228,10 +229,9 @@ exports[`Devices Component renders correctly 1`] = `
               className="MuiListItemIcon-root"
             >
               <svg
-                aria-hidden="true"
+                aria-hidden={true}
                 className="MuiSvgIcon-root"
                 focusable="false"
-                role="presentation"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -243,7 +243,7 @@ exports[`Devices Component renders correctly 1`] = `
               className="MuiListItemText-root"
             >
               <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
                 Create a group
               </span>
@@ -313,10 +313,9 @@ exports[`Devices Component renders correctly 1`] = `
                   className="MuiButton-startIcon MuiButton-iconSizeMedium"
                 >
                   <svg
-                    aria-hidden="true"
+                    aria-hidden={true}
                     className="MuiSvgIcon-root"
                     focusable="false"
-                    role="presentation"
                     viewBox="0 0 24 24"
                   >
                     <path

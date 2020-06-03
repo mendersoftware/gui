@@ -4,12 +4,15 @@ exports[`PhaseSettings Component renders correctly 1`] = `
 <div>
   <table
     className="MuiTable-root"
+    role={null}
   >
     <thead
       className="MuiTableHead-root"
+      role={null}
     >
       <tr
         className="MuiTableRow-root MuiTableRow-head"
+        role={null}
       >
         <th
           aria-sort={null}
@@ -46,17 +49,21 @@ exports[`PhaseSettings Component renders correctly 1`] = `
     </thead>
     <tbody
       className="MuiTableBody-root"
+      role={null}
     >
       <tr
         className="MuiTableRow-root"
+        role={null}
       >
         <th
           aria-sort={null}
           className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall"
+          role="cell"
           scope="row"
         >
           <div
             className="MuiChip-root MuiChip-sizeSmall"
+            onKeyDown={[Function]}
             onKeyUp={[Function]}
           >
             <span
@@ -124,10 +131,9 @@ exports[`PhaseSettings Component renders correctly 1`] = `
     tabIndex={0}
   >
     <svg
-      aria-hidden="true"
+      aria-hidden={true}
       className="MuiSvgIcon-root MuiChip-icon MuiChip-iconColorPrimary"
       focusable="false"
-      role="presentation"
       viewBox="0 0 24 24"
     >
       <path

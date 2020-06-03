@@ -15,7 +15,7 @@ exports[`SelectInput Component renders correctly 1`] = `
   >
     <div
       aria-haspopup="listbox"
-      aria-labelledby=" mui-component-select-selector"
+      aria-labelledby="mui-component-select-selector"
       className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
       id="mui-component-select-selector"
       onBlur={[Function]}
@@ -41,10 +41,9 @@ exports[`SelectInput Component renders correctly 1`] = `
       value=""
     />
     <svg
-      aria-hidden="true"
+      aria-hidden={true}
       className="MuiSvgIcon-root MuiSelect-icon"
       focusable="false"
-      role="presentation"
       viewBox="0 0 24 24"
     >
       <path

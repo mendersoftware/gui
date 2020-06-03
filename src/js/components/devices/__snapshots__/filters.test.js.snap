@@ -31,10 +31,9 @@ exports[`Filters Component renders correctly 1`] = `
       className="MuiButton-startIcon MuiButton-iconSizeMedium"
     >
       <svg
-        aria-hidden="true"
+        aria-hidden={true}
         className="MuiSvgIcon-root"
         focusable="false"
-        role="presentation"
         viewBox="0 0 24 24"
       >
         <path
