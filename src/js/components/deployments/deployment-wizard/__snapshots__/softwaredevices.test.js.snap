@@ -113,10 +113,9 @@ exports[`SoftwareDevices Component renders correctly 1`] = `
           }
         >
           <svg
-            aria-hidden="true"
+            aria-hidden={true}
             className="MuiSvgIcon-root"
             focusable="false"
-            role="presentation"
             style={
               Object {
                 "color": "rgb(171, 16, 0)",

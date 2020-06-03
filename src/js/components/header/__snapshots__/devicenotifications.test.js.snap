@@ -60,10 +60,9 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
           1,000
         </span>
         <svg
-          aria-hidden="true"
+          aria-hidden={true}
           className="MuiSvgIcon-root"
           focusable="false"
-          role="presentation"
           style={
             Object {
               "fontSize": "20px",

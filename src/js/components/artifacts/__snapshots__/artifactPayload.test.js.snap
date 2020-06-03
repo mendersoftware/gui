@@ -40,12 +40,12 @@ exports[`ArtifactPayload Component renders correctly 1`] = `
         className="MuiListItemText-root MuiListItemText-multiline"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Type
         </span>
         <p
-          className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+          className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
         >
           test
         </p>
@@ -66,12 +66,12 @@ exports[`ArtifactPayload Component renders correctly 1`] = `
         className="MuiListItemText-root MuiListItemText-multiline"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Total Size (uncompressed)
         </span>
         <p
-          className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+          className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
         >
           0 Bytes
         </p>

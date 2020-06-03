@@ -237,10 +237,9 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
                 className="MuiIconButton-label"
               >
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root cancelButton muted"
                   focusable="false"
-                  role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -480,10 +479,9 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
               className="MuiIconButton-label"
             >
               <svg
-                aria-hidden="true"
+                aria-hidden={true}
                 className="MuiSvgIcon-root cancelButton muted"
                 focusable="false"
-                role="presentation"
                 viewBox="0 0 24 24"
               >
                 <path

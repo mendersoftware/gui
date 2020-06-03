@@ -42,7 +42,6 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
         >
           <div
             aria-haspopup="listbox"
-            aria-labelledby=" "
             className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
             onBlur={[Function]}
             onFocus={[Function]}
@@ -59,10 +58,9 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
             value={0}
           />
           <svg
-            aria-hidden="true"
+            aria-hidden={true}
             className="MuiSvgIcon-root MuiSelect-icon"
             focusable="false"
-            role="presentation"
             viewBox="0 0 24 24"
           >
             <path
@@ -105,7 +103,6 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
           >
             <div
               aria-haspopup="listbox"
-              aria-labelledby=" "
               className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
               onBlur={[Function]}
               onFocus={[Function]}
@@ -122,10 +119,9 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
               value={0}
             />
             <svg
-              aria-hidden="true"
+              aria-hidden={true}
               className="MuiSvgIcon-root MuiSelect-icon"
               focusable="false"
-              role="presentation"
               viewBox="0 0 24 24"
             >
               <path
@@ -144,7 +140,7 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
           >
             <span
               aria-disabled={false}
-              className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-197 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+              className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
               onBlur={[Function]}
               onDragLeave={[Function]}
               onFocus={[Function]}
@@ -162,17 +158,16 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
                 className="MuiIconButton-label"
               >
                 <input
-                  className="PrivateSwitchBase-input-200"
+                  className="PrivateSwitchBase-input-4"
                   data-indeterminate={false}
                   disabled={false}
                   onChange={[Function]}
                   type="checkbox"
                 />
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -230,8 +225,8 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
           }
         >
           <div
+            aria-disabled="true"
             aria-haspopup="listbox"
-            aria-labelledby=" "
             className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled Mui-disabled"
             onBlur={[Function]}
             onFocus={[Function]}
@@ -248,10 +243,9 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
             value={0}
           />
           <svg
-            aria-hidden="true"
-            className="MuiSvgIcon-root MuiSelect-icon"
+            aria-hidden={true}
+            className="MuiSvgIcon-root MuiSelect-icon Mui-disabled"
             focusable="false"
-            role="presentation"
             viewBox="0 0 24 24"
           >
             <path
@@ -264,10 +258,9 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
         className="info icon"
       >
         <svg
-          aria-hidden="true"
+          aria-hidden={true}
           className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
           focusable="false"
-          role="presentation"
           style={
             Object {
               "margin": "0 6px 4px 0",

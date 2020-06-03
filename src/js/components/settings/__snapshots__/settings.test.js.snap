@@ -26,7 +26,7 @@ exports[`Settings Component renders correctly 1`] = `
           className="MuiListItemText-root"
         >
           <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
             Global settings
           </span>
@@ -44,7 +44,7 @@ exports[`Settings Component renders correctly 1`] = `
           className="MuiListItemText-root"
         >
           <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
             My account
           </span>
@@ -61,7 +61,7 @@ exports[`Settings Component renders correctly 1`] = `
           className="MuiListItemText-root"
         >
           <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
             My organization
           </span>
@@ -206,10 +206,9 @@ exports[`Settings Component renders correctly 1`] = `
         className="info icon"
       >
         <svg
-          aria-hidden="true"
+          aria-hidden={true}
           className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
           focusable="false"
-          role="presentation"
           style={
             Object {
               "margin": "0 6px 4px 0",

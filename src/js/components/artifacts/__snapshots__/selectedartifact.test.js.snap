@@ -79,10 +79,9 @@ exports[`SelectedArtifact Component renders correctly 1`] = `
               className="MuiIconButton-label"
             >
               <svg
-                aria-hidden="true"
+                aria-hidden={true}
                 className="MuiSvgIcon-root"
                 focusable="false"
-                role="presentation"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -118,10 +117,9 @@ exports[`SelectedArtifact Component renders correctly 1`] = `
           className="MuiInputAdornment-root MuiInputAdornment-positionStart"
         >
           <svg
-            aria-hidden="true"
+            aria-hidden={true}
             className="MuiSvgIcon-root red"
             focusable="false"
-            role="presentation"
             viewBox="0 0 24 24"
           >
             <path
@@ -193,10 +191,9 @@ exports[`SelectedArtifact Component renders correctly 1`] = `
           }
         >
           <svg
-            aria-hidden="true"
+            aria-hidden={true}
             className="MuiSvgIcon-root"
             focusable="false"
-            role="presentation"
             viewBox="0 0 24 24"
           >
             <path
@@ -263,10 +260,9 @@ exports[`SelectedArtifact Component renders correctly 1`] = `
         className="MuiButton-startIcon MuiButton-iconSizeMedium"
       >
         <svg
-          aria-hidden="true"
+          aria-hidden={true}
           className="MuiSvgIcon-root"
           focusable="false"
-          role="presentation"
           style={
             Object {
               "transform": "rotateZ(90deg)",
@@ -310,10 +306,9 @@ exports[`SelectedArtifact Component renders correctly 1`] = `
           className="MuiButton-startIcon MuiButton-iconSizeMedium"
         >
           <svg
-            aria-hidden="true"
+            aria-hidden={true}
             className="MuiSvgIcon-root red auth"
             focusable="false"
-            role="presentation"
             viewBox="0 0 24 24"
           >
             <path

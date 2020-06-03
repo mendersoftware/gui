@@ -68,10 +68,9 @@ exports[`Artifacts Component renders correctly 1`] = `
               className="MuiButton-endIcon MuiButton-iconSizeMedium"
             >
               <svg
-                aria-hidden="true"
+                aria-hidden={true}
                 className="MuiSvgIcon-root sortIcon true"
                 focusable="false"
-                role="presentation"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -137,10 +136,9 @@ exports[`Artifacts Component renders correctly 1`] = `
             className="MuiButton-startIcon MuiButton-iconSizeMedium"
           >
             <svg
-              aria-hidden="true"
+              aria-hidden={true}
               className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
               focusable="false"
-              role="presentation"
               viewBox="0 0 24 24"
             >
               <path
@@ -160,10 +158,9 @@ exports[`Artifacts Component renders correctly 1`] = `
         }
       >
         <svg
-          aria-hidden="true"
+          aria-hidden={true}
           className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
           focusable="false"
-          role="presentation"
           viewBox="0 0 24 24"
         >
           <path

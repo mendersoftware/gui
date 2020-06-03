@@ -6,7 +6,7 @@ exports[`FormCheckbox Component renders correctly 1`] = `
 >
   <span
     aria-disabled={false}
-    className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-13 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
+    className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
     onBlur={[Function]}
     onDragLeave={[Function]}
     onFocus={[Function]}
@@ -24,16 +24,15 @@ exports[`FormCheckbox Component renders correctly 1`] = `
       className="MuiIconButton-label"
     >
       <input
-        className="PrivateSwitchBase-input-16"
+        className="PrivateSwitchBase-input-4"
         data-indeterminate={false}
         onChange={[Function]}
         type="checkbox"
       />
       <svg
-        aria-hidden="true"
+        aria-hidden={true}
         className="MuiSvgIcon-root"
         focusable="false"
-        role="presentation"
         viewBox="0 0 24 24"
       >
         <path

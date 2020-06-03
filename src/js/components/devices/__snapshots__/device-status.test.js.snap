@@ -6,6 +6,7 @@ exports[`DeviceStatus Component renders correctly 1`] = `
   className="MuiChip-root deviceStatus MuiChip-outlined MuiChip-sizeSmall"
   onBlur={[Function]}
   onFocus={[Function]}
+  onKeyDown={[Function]}
   onKeyUp={[Function]}
   onMouseLeave={[Function]}
   onMouseOver={[Function]}
@@ -14,7 +15,7 @@ exports[`DeviceStatus Component renders correctly 1`] = `
   title="This device has a new auth request. This can happen if the device's public key changes. Expand the row to see more details"
 >
   <div
-    className="MuiBox-root MuiBox-root-43 flexbox centered notificationCounter"
+    className="MuiBox-root MuiBox-root-1 flexbox centered notificationCounter"
   >
     <div>
       1
