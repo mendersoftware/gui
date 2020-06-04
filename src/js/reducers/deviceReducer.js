@@ -243,7 +243,10 @@ const deviceReducer = (state = initialState, action) => {
           ...state.byId,
           [action.device.id]: {
             ...state.byId[action.device.id],
-            identity_data,
+            identity_data: {
+              ...state.byId[action.device.id].identity_data,
+              ...identity_data
+            },
             auth_sets,
             status
           }
