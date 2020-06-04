@@ -30,12 +30,12 @@ exports[`MyOrganization Component renders correctly 1`] = `
           className="MuiListItemText-root MuiListItemText-multiline"
         >
           <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
             Organization name
           </span>
           <p
-            className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+            className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
           >
             test
           </p>
@@ -66,7 +66,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
               className="MuiListItemText-root MuiListItemText-multiline"
             >
               <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
                 <div>
                   <h4
@@ -94,10 +94,9 @@ exports[`MyOrganization Component renders correctly 1`] = `
                     }
                   >
                     <svg
-                      aria-hidden="true"
+                      aria-hidden={true}
                       className="MuiSvgIcon-root"
                       focusable="false"
-                      role="presentation"
                       viewBox="0 0 24 24"
                     >
                       <path
@@ -127,7 +126,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
                 </div>
               </span>
               <div
-                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
                 title="test"
               >
                 <div>
@@ -176,10 +175,9 @@ exports[`MyOrganization Component renders correctly 1`] = `
               className="MuiButton-startIcon MuiButton-iconSizeMedium"
             >
               <svg
-                aria-hidden="true"
+                aria-hidden={true}
                 className="MuiSvgIcon-root"
                 focusable="false"
-                role="presentation"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -216,12 +214,12 @@ exports[`MyOrganization Component renders correctly 1`] = `
           className="MuiListItemText-root MuiListItemText-multiline"
         >
           <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
             Current plan
           </span>
           <p
-            className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+            className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
           >
             Mender Enterprise
           </p>

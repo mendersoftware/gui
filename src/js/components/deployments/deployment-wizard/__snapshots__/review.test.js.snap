@@ -34,12 +34,12 @@ exports[`Review deployment Component renders correctly 1`] = `
               className="MuiListItemText-root MuiListItemText-multiline"
             >
               <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
                 Release
               </span>
               <div
-                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
                 title="test-release"
               >
                 <div>
@@ -71,12 +71,12 @@ exports[`Review deployment Component renders correctly 1`] = `
               className="MuiListItemText-root MuiListItemText-multiline"
             >
               <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
                 Device types compatible
               </span>
               <div
-                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
                 title=""
               >
                 <div>
@@ -108,12 +108,12 @@ exports[`Review deployment Component renders correctly 1`] = `
               className="MuiListItemText-root MuiListItemText-multiline"
             >
               <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
                 Device group
               </span>
               <div
-                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
                 title="test"
               >
                 <div>
@@ -145,12 +145,12 @@ exports[`Review deployment Component renders correctly 1`] = `
               className="MuiListItemText-root MuiListItemText-multiline"
             >
               <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
                 Number of retries
               </span>
               <div
-                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
                 title={0}
               >
                 <div>
@@ -195,12 +195,12 @@ exports[`Review deployment Component renders correctly 1`] = `
               className="MuiListItemText-root MuiListItemText-multiline"
             >
               <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
                 Created at
               </span>
               <div
-                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
                 title={
                   <Time
                     Component="time"
@@ -244,12 +244,12 @@ exports[`Review deployment Component renders correctly 1`] = `
               className="MuiListItemText-root MuiListItemText-multiline"
             >
               <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
                 Start time
               </span>
               <div
-                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
                 title={
                   <Time
                     Component="time"
@@ -293,12 +293,12 @@ exports[`Review deployment Component renders correctly 1`] = `
               className="MuiListItemText-root MuiListItemText-multiline"
             >
               <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
                 End time
               </span>
               <div
-                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
                 title="-"
               >
                 <div>
@@ -343,6 +343,7 @@ exports[`Review deployment Component renders correctly 1`] = `
       >
         <div
           className="MuiChip-root MuiChip-sizeSmall"
+          onKeyDown={[Function]}
           onKeyUp={[Function]}
         >
           <span
@@ -369,10 +370,9 @@ exports[`Review deployment Component renders correctly 1`] = `
     className="info icon"
   >
     <svg
-      aria-hidden="true"
+      aria-hidden={true}
       className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
       focusable="false"
-      role="presentation"
       style={
         Object {
           "margin": "0 6px 4px 0",

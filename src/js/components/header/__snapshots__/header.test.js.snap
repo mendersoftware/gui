@@ -110,10 +110,9 @@ exports[`Header Component renders correctly 1`] = `
                 500
               </span>
               <svg
-                aria-hidden="true"
+                aria-hidden={true}
                 className="MuiSvgIcon-root"
                 focusable="false"
-                role="presentation"
                 style={
                   Object {
                     "fontSize": "20px",
@@ -139,10 +138,9 @@ exports[`Header Component renders correctly 1`] = `
           0
         </span>
         <svg
-          aria-hidden="true"
+          aria-hidden={true}
           className="MuiSvgIcon-root flip-horizontal"
           focusable="false"
-          role="presentation"
           style={
             Object {
               "color": "#c7c7c7",
@@ -195,10 +193,9 @@ exports[`Header Component renders correctly 1`] = `
             className="MuiButton-label"
           >
             <svg
-              aria-hidden="true"
+              aria-hidden={true}
               className="MuiSvgIcon-root"
               focusable="false"
-              role="presentation"
               style={
                 Object {
                   "color": "#c7c7c7",
@@ -215,10 +212,9 @@ exports[`Header Component renders correctly 1`] = `
             </svg>
             a@b.com
             <svg
-              aria-hidden="true"
+              aria-hidden={true}
               className="MuiSvgIcon-root"
               focusable="false"
-              role="presentation"
               viewBox="0 0 24 24"
             >
               <path

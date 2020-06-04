@@ -56,10 +56,9 @@ exports[`BuildDemoArtifact Component renders correctly 1`] = `
         className="MuiIconButton-label"
       >
         <svg
-          aria-hidden="true"
+          aria-hidden={true}
           className="MuiSvgIcon-root"
           focusable="false"
-          role="presentation"
           viewBox="0 0 24 24"
         >
           <path
@@ -122,10 +121,9 @@ sudo mv mender-artifact /usr/local/bin
         className="MuiIconButton-label"
       >
         <svg
-          aria-hidden="true"
+          aria-hidden={true}
           className="MuiSvgIcon-root"
           focusable="false"
-          role="presentation"
           viewBox="0 0 24 24"
         >
           <path
@@ -218,10 +216,9 @@ sudo chmod +x single-file-artifact-gen
         className="MuiIconButton-label"
       >
         <svg
-          aria-hidden="true"
+          aria-hidden={true}
           className="MuiSvgIcon-root"
           focusable="false"
-          role="presentation"
           viewBox="0 0 24 24"
         >
           <path
@@ -292,10 +289,9 @@ EOF
         className="MuiIconButton-label"
       >
         <svg
-          aria-hidden="true"
+          aria-hidden={true}
           className="MuiSvgIcon-root"
           focusable="false"
-          role="presentation"
           viewBox="0 0 24 24"
         >
           <path

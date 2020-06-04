@@ -12,7 +12,7 @@ exports[`ExpandableAttribute Component renders correctly 1`] = `
       className="MuiListItemText-root"
     >
       <div
-        className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+        className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
       >
         <div>
           <span

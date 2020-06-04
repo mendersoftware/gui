@@ -84,10 +84,9 @@ exports[`ArtifactInformationForm Component renders correctly 1`] = `
               className="MuiIconButton-label"
             >
               <svg
-                aria-hidden="true"
+                aria-hidden={true}
                 className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
                 focusable="false"
-                role="presentation"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -120,7 +119,7 @@ exports[`ArtifactInformationForm Component renders correctly 1`] = `
       Release name
       <svg
         aria-describedby={null}
-        aria-hidden="true"
+        aria-hidden={true}
         className="MuiSvgIcon-root margin-left-small MuiSvgIcon-fontSizeSmall"
         focusable="false"
         onBlur={[Function]}
@@ -129,7 +128,6 @@ exports[`ArtifactInformationForm Component renders correctly 1`] = `
         onMouseOver={[Function]}
         onTouchEnd={[Function]}
         onTouchStart={[Function]}
-        role="presentation"
         title={null}
         viewBox="0 0 24 24"
       >

@@ -8,10 +8,9 @@ exports[`DeploymentNotifications Component renders correctly 1`] = `
 >
   <span />
   <svg
-    aria-hidden="true"
+    aria-hidden={true}
     className="MuiSvgIcon-root flip-horizontal"
     focusable="false"
-    role="presentation"
     style={
       Object {
         "color": "#c7c7c7",

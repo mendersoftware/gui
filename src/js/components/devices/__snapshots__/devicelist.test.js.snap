@@ -75,7 +75,6 @@ exports[`DeviceList Component renders correctly 1`] = `
       >
         <div
           aria-haspopup="listbox"
-          aria-labelledby=" "
           className="MuiSelect-root MuiSelect-select MuiTablePagination-select MuiSelect-selectMenu MuiInputBase-input"
           onBlur={[Function]}
           onFocus={[Function]}
@@ -92,10 +91,9 @@ exports[`DeviceList Component renders correctly 1`] = `
           value={10}
         />
         <svg
-          aria-hidden="true"
+          aria-hidden={true}
           className="MuiSvgIcon-root MuiSelect-icon MuiTablePagination-selectIcon"
           focusable="false"
-          role="presentation"
           viewBox="0 0 24 24"
         >
           <path
@@ -133,10 +131,9 @@ exports[`DeviceList Component renders correctly 1`] = `
             className="MuiIconButton-label"
           >
             <svg
-              aria-hidden="true"
+              aria-hidden={true}
               className="MuiSvgIcon-root"
               focusable="false"
-              role="presentation"
               viewBox="0 0 24 24"
             >
               <path
@@ -167,10 +164,9 @@ exports[`DeviceList Component renders correctly 1`] = `
             className="MuiIconButton-label"
           >
             <svg
-              aria-hidden="true"
+              aria-hidden={true}
               className="MuiSvgIcon-root"
               focusable="false"
-              role="presentation"
               viewBox="0 0 24 24"
             >
               <path
@@ -241,10 +237,9 @@ exports[`DeviceList Component renders correctly 1`] = `
             className="MuiIconButton-label"
           >
             <svg
-              aria-hidden="true"
+              aria-hidden={true}
               className="MuiSvgIcon-root"
               focusable="false"
-              role="presentation"
               viewBox="0 0 24 24"
             >
               <path
@@ -275,10 +270,9 @@ exports[`DeviceList Component renders correctly 1`] = `
             className="MuiIconButton-label"
           >
             <svg
-              aria-hidden="true"
+              aria-hidden={true}
               className="MuiSvgIcon-root"
               focusable="false"
-              role="presentation"
               viewBox="0 0 24 24"
             >
               <path

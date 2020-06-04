@@ -111,10 +111,9 @@ Array [
                   500
                 </span>
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   style={
                     Object {
                       "fontSize": "20px",
@@ -140,10 +139,9 @@ Array [
             0
           </span>
           <svg
-            aria-hidden="true"
+            aria-hidden={true}
             className="MuiSvgIcon-root flip-horizontal"
             focusable="false"
-            role="presentation"
             style={
               Object {
                 "color": "#c7c7c7",
@@ -196,10 +194,9 @@ Array [
               className="MuiButton-label"
             >
               <svg
-                aria-hidden="true"
+                aria-hidden={true}
                 className="MuiSvgIcon-root"
                 focusable="false"
-                role="presentation"
                 style={
                   Object {
                     "color": "#c7c7c7",
@@ -216,10 +213,9 @@ Array [
               </svg>
               
               <svg
-                aria-hidden="true"
+                aria-hidden={true}
                 className="MuiSvgIcon-root"
                 focusable="false"
-                role="presentation"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -267,7 +263,7 @@ Array [
           }
         >
           <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
             Dashboard
           </span>
@@ -294,7 +290,7 @@ Array [
           }
         >
           <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
             Devices
           </span>
@@ -321,7 +317,7 @@ Array [
           }
         >
           <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
             Releases
           </span>
@@ -348,7 +344,7 @@ Array [
           }
         >
           <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
             Deployments
           </span>
@@ -382,7 +378,7 @@ Array [
           className="MuiListItemText-root"
         >
           <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
             Help
           </span>
@@ -402,7 +398,7 @@ Array [
           className="MuiListItemText-root MuiListItemText-multiline"
         >
           <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
             <div
               aria-describedby={null}
@@ -420,7 +416,7 @@ Array [
             </div>
           </span>
           <p
-            className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+            className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
           >
             <a
               href="https://docs.mender.io/development/release-information/open-source-licenses"

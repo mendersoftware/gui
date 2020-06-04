@@ -132,10 +132,9 @@ exports[`SelfUserManagement Component renders correctly 1`] = `
     className="info icon"
   >
     <svg
-      aria-hidden="true"
+      aria-hidden={true}
       className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
       focusable="false"
-      role="presentation"
       style={
         Object {
           "margin": "0 6px 4px 0",

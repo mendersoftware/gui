@@ -12,7 +12,7 @@ Array [
     role="combobox"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root"
+      className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
     >
       <label
         className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
@@ -23,7 +23,7 @@ Array [
         Name your group
       </label>
       <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
         onClick={[Function]}
       >
         <input

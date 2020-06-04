@@ -58,7 +58,7 @@ export class CancelRequestDialog extends React.Component {
             </p>
             <p>Please select the reason for your cancellation to help us improve our service:</p>
             <FormControl component="fieldset">
-              <RadioGroup onChange={e => this._setCancelSubscriptionReason(e)}>
+              <RadioGroup name="cancellation-selection" onChange={e => this._setCancelSubscriptionReason(e)}>
                 {cancelSubscriptionReasons.map((item, index) => (
                   <FormControlLabel value={item} control={<Radio />} label={item} key={index} style={{ marginTop: '0px' }} />
                 ))}
