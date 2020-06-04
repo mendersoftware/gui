@@ -98,7 +98,11 @@ export class Authorized extends React.Component {
       prevProps.groupCount !== self.props.groupCount ||
       filtersCompare(prevProps.filters, self.props.filters)
     ) {
-      self.setState({ pageNo: 1, selectedRows: [], expandRow: null, allRowsSelected: false });
+      var newState = { selectedRows: [], expandRow: null, allRowsSelected: false };
+      if (prevProps.selectedGroup != self.props.selectedGroup) {
+        newState = { pageNo: 1, ...newState };
+      }
+      self.setState(newState);
       if (self.props.showHelptips && self.props.showTips && !self.props.onboardingComplete && self.props.acceptedCount && self.props.acceptedCount < 2) {
         setTimeout(() => self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, self.onCloseSnackbar), 400);
       }
