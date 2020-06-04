@@ -428,15 +428,10 @@ export const getDeviceLimit = () => dispatch =>
 // get devices from inventory
 export const getDevicesByStatus = (status, page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false, group) => (dispatch, getState) => {
   const state = getState();
-  const filters = state.devices.filters;
-  let applicableFilters = [];
-  if (group && state.devices.groups.byId[group].filters.length) {
-    // use non-grouped filters here, since the group filters are reflected in these + possible modifications
-    applicableFilters = state.devices.filters;
-  } else if (typeof group === 'string') {
+  const filters = state.devices.filters || [];
+  let applicableFilters = filters;
+  if (typeof group === 'string' && !filters.length) {
     applicableFilters = [{ key: 'group', value: group, operator: '$eq', scope: 'system' }];
-  } else {
-    applicableFilters = filters;
   }
   let possibleDeviceIds = [];
   if (filters.length && shouldSelectDevices) {
