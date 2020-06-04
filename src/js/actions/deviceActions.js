@@ -168,6 +168,9 @@ export const removeDynamicGroup = groupName => (dispatch, getState) => {
  * Device inventory functions
  */
 export const selectGroup = group => (dispatch, getState) => {
+  if (getState().devices.groups.selectedGroup === group) {
+    return;
+  }
   let selectedGroup = getState().devices.groups.byId[group];
   let tasks = [];
   if (selectedGroup && selectedGroup.filters && selectedGroup.filters.length) {
