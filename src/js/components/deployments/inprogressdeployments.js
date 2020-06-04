@@ -137,7 +137,7 @@ export class Progress extends React.Component {
                 page={progressPage}
                 pageSize={progressPerPage}
                 onChangeRowsPerPage={perPage => self.refreshDeployments(1, perPage, 'inprogress')}
-                onChangePage={(...args) => self.refreshDeployments(...args, 'inprogress')}
+                onChangePage={page => self.refreshDeployments(page, progressPerPage, 'inprogress')}
                 type="progress"
               />
             </div>
@@ -158,7 +158,7 @@ export class Progress extends React.Component {
               page={pendingPage}
               pageSize={pendingPerPage}
               onChangeRowsPerPage={perPage => self.refreshDeployments(1, perPage, 'pending')}
-              onChangePage={(...args) => self.refreshDeployments(...args, 'pending')}
+              onChangePage={page => self.refreshDeployments(page, pendingPerPage, 'pending')}
               type="pending"
             />
           </div>

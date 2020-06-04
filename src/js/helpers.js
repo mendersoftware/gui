@@ -461,7 +461,7 @@ export const sortDeploymentDevices = devices => {
     rebooting: [],
     success: []
   };
-  devices.map(device => newList[device.status].push(device));
+  devices.map(device => (newList.hasOwnProperty(device.status) ? newList[device.status].push(device) : newList.decommissioned.push(device)));
   const newCombine = newList.failure.concat(
     newList.downloading,
     newList.installing,
