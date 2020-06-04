@@ -316,9 +316,13 @@ export const mapDeviceAttributes = (attributes = []) =>
       if (!(attribute.value && attribute.name)) {
         return accu;
       }
-      return { ...accu, [attribute.name]: attribute.value };
+      accu[attribute.scope || 'inventory'] = {
+        ...accu[attribute.scope || 'inventory'],
+        [attribute.name]: attribute.value
+      };
+      return accu;
     },
-    { device_type: '', artifact_name: '' }
+    { inventory: { device_type: '', artifact_name: '' }, identity: {}, system: {} }
   );
 
 const deriveAttributePopularity = (accu, sourceObject = {}) =>
