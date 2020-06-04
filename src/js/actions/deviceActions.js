@@ -1,6 +1,6 @@
 import GeneralApi, { headerNames } from '../api/general-api';
 import * as DeviceConstants from '../constants/deviceConstants';
-import { deriveAttributesFromDevices, duplicateFilter, filterDevices, mapDeviceAttributes } from '../helpers';
+import { deriveAttributesFromDevices, duplicateFilter, mapDeviceAttributes } from '../helpers';
 
 // default per page until pagination and counting integrated
 const defaultPerPage = 20;
@@ -428,14 +428,9 @@ export const getDeviceLimit = () => dispatch =>
 // get devices from inventory
 export const getDevicesByStatus = (status, page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false, group) => (dispatch, getState) => {
   const state = getState();
-  const filters = state.devices.filters || [];
-  let applicableFilters = filters;
-  if (typeof group === 'string' && !filters.length) {
+  let applicableFilters = state.devices.filters || [];
+  if (typeof group === 'string' && !applicableFilters.length) {
     applicableFilters = [{ key: 'group', value: group, operator: '$eq', scope: 'system' }];
-  }
-  let possibleDeviceIds = [];
-  if (filters.length && shouldSelectDevices) {
-    possibleDeviceIds = filterDevices(getState().devices, filters, status);
   }
   return GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
     page,
@@ -467,8 +462,7 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
       tasks.push(dispatch(getDevicesWithAuth(Object.values(deviceAccu.devicesById))));
     }
     if (shouldSelectDevices) {
-      // since deviceauth doesn't have any filtering we have to rely on the local filtering capabilities if filters are selected
-      tasks.push(dispatch(selectDevices(filters.length && possibleDeviceIds.length > deviceAccu.ids.length ? possibleDeviceIds : deviceAccu.ids)));
+      tasks.push(dispatch(selectDevices(deviceAccu.ids)));
     }
     tasks.push(Promise.resolve({ deviceAccu, total: Number(response.headers[headerNames.total]) }));
     return Promise.all(tasks);
