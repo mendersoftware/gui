@@ -93,12 +93,12 @@ export class Authorized extends React.Component {
     }
     if (
       prevProps.allCount !== self.props.allCount ||
-      prevProps.group !== self.props.group ||
+      prevProps.selectedGroup !== self.props.selectedGroup ||
       prevProps.devices.length !== self.props.devices.length ||
       prevProps.groupCount !== self.props.groupCount ||
       filtersCompare(prevProps.filters, self.props.filters)
     ) {
-      self.setState({ selectedRows: [], expandRow: null, allRowsSelected: false });
+      self.setState({ pageNo: 1, selectedRows: [], expandRow: null, allRowsSelected: false });
       if (self.props.showHelptips && self.props.showTips && !self.props.onboardingComplete && self.props.acceptedCount && self.props.acceptedCount < 2) {
         setTimeout(() => self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, self.onCloseSnackbar), 400);
       }
