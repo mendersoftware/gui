@@ -203,7 +203,7 @@ export const getUserOrganization = () => dispatch =>
   Global settings
 */
 export const getGlobalSettings = () => dispatch =>
-  GeneralApi.get(`${useradmApiUrl}/settings`).then(res => dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: res }));
+  GeneralApi.get(`${useradmApiUrl}/settings`).then(({ body: settings }) => dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings }));
 
 export const saveGlobalSettings = (settings, beOptimistic = false) => (dispatch, getState) => {
   const updatedSettings = { ...getState().users.globalSettings, ...settings };

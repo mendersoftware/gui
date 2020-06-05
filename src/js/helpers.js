@@ -243,10 +243,7 @@ export function hashString(str) {
 
 export const formatTime = date => {
   if (date) {
-    return date
-      .replace(' ', 'T')
-      .replace(/ /g, '')
-      .replace('UTC', '');
+    return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
   }
   return;
 };
@@ -495,26 +492,6 @@ export const standardizePhases = phases =>
     }
     return standardizedPhase;
   });
-
-/*
- * Match device attributes against filters, return filtered device list
- */
-export const filterDevices = (deviceState, filters, status) => {
-  const deviceIds = status ? deviceState.byStatus[status].deviceIds : Object.keys(deviceState.byId);
-  return deviceIds.filter(deviceId => {
-    const device = deviceState.byId[deviceId];
-    return filters.reduce(
-      (accu, filter) =>
-        accu &&
-        !!(
-          (device.attributes && device.attributes[filter.key] && device.attributes[filter.key].toString().startsWith(filter.value)) ||
-          (device.identity_data && device.identity_data[filter.key] && device.identity_data[filter.key].toString().startsWith(filter.value)) ||
-          (device[filter.key] && device[filter.key].toString().startsWith(filter.value))
-        ),
-      true
-    );
-  });
-};
 
 export const getDebInstallationCode = (
   packageVersion,
