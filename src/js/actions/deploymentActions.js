@@ -51,9 +51,7 @@ export const getDeploymentsByStatus = (status, page = default_page, per_page = d
     const deploymentsState = getState().deployments.byId;
     let tasks = deploymentIds.reduce(
       (accu, deploymentId) => {
-        if (status !== 'finished' || !deploymentsState[deploymentId] || !deploymentsState[deploymentId].stats) {
-          accu.push(dispatch(getSingleDeploymentStats(deploymentId)));
-        }
+        accu.push(dispatch(getSingleDeploymentStats(deploymentId)));
         return accu;
       },
       [
