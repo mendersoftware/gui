@@ -88,12 +88,10 @@ export const removeStaticGroup = groupName => (dispatch, getState) => {
 
 // for some reason these functions can not be stored in the deviceConstants...
 const filterProcessors = {
-  $eq: val => val,
-  $ne: val => val,
-  $gt: val => Number(val),
-  $gte: val => Number(val),
-  $lt: val => Number(val),
-  $lte: val => Number(val),
+  $gt: val => Number(val) || val,
+  $gte: val => Number(val) || val,
+  $lt: val => Number(val) || val,
+  $lte: val => Number(val) || val,
   $in: val => ('' + val).split(','),
   $nin: val => ('' + val).split(',')
 };
@@ -102,7 +100,7 @@ const mapFiltersToTerms = filters =>
     scope: filter.scope,
     attribute: filter.key,
     type: filter.operator,
-    value: filterProcessors[filter.operator](filter.value)
+    value: filterProcessors.hasOwnProperty(filter.operator) ? filterProcessors[filter.operator](filter.value) : filter.value
   }));
 const mapTermsToFilters = terms => terms.map(term => ({ scope: term.scope, key: term.attribute, operator: term.type, value: term.value }));
 
