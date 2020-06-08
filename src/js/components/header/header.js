@@ -28,7 +28,16 @@ import { getOnboardingState, setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus } from '../../actions/deploymentActions';
 import { getDeviceCount, getDeviceLimit, getDevicesByStatus, getDynamicGroups, getGroups } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
-import { getUser, getGlobalSettings, getRoles, getUserOrganization, logoutUser, setShowHelptips, toggleHelptips } from '../../actions/userActions';
+import {
+  getUser,
+  getGlobalSettings,
+  getRoles,
+  getUserOrganization,
+  logoutUser,
+  saveUserSettings,
+  setShowHelptips,
+  toggleHelptips
+} from '../../actions/userActions';
 
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 
@@ -67,7 +76,11 @@ export class Header extends React.Component {
     this.props.getDevicesByStatus(DEVICE_STATES.accepted);
     this.props.getDevicesByStatus(DEVICE_STATES.pending);
     this.props.getDeviceLimit();
-    this.props.getGlobalSettings();
+    this.props.getGlobalSettings().then(() => {
+      if (this.cookies.get('_ga') && typeof this.props.hasTrackingEnabled === 'undefined') {
+        this.props.saveUserSettings({ trackingConsentGiven: true });
+      }
+    });
     this.props.getDynamicGroups();
     this.props.getGroups();
     this.props.getReleases();
@@ -299,6 +312,7 @@ const actionCreators = {
   getUser,
   getUserOrganization,
   logoutUser,
+  saveUserSettings,
   setShowHelptips,
   setSnackbar,
   toggleHelptips
