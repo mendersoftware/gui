@@ -36,6 +36,11 @@ describe('Header Component', () => {
       users: {
         byId: { a1: { email: 'a@b.com', id: 'a1' } },
         currentUser: 'a1',
+        globalSettings: {
+          a1: {
+            trackingConsentGiven: false
+          }
+        },
         showHelptips: true
       }
     });

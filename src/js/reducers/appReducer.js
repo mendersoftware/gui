@@ -26,7 +26,7 @@ const menderEnvironment = {
   ...mender_environment
 };
 
-const initialState = {
+export const initialState = {
   hostAddress: menderEnvironment.hostAddress,
   snackbar: {
     open: false,
