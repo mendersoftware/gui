@@ -22,6 +22,7 @@ const menderEnvironment = {
     inventoryVersion: '',
     guiVersion: ''
   },
+  trackerCode: '',
   ...mender_environment
 };
 
@@ -39,13 +40,9 @@ const initialState = {
     isDemoMode: stringToBoolean(menderEnvironment.isDemoMode)
   },
   hostedAnnouncement: menderEnvironment.hostedAnnouncement,
-  docsVersion: isNaN(menderEnvironment.integrationVersion.charAt(0))
-    ? ''
-    : menderEnvironment.integrationVersion
-        .split('.')
-        .slice(0, 2)
-        .join('.'),
+  docsVersion: isNaN(menderEnvironment.integrationVersion.charAt(0)) ? '' : menderEnvironment.integrationVersion.split('.').slice(0, 2).join('.'),
   menderDebPackageVersion: menderEnvironment.menderDebPackageVersion || 'master',
+  trackerCode: menderEnvironment.trackerCode,
   versionInformation: {
     Integration: isNaN(menderEnvironment.integrationVersion.charAt(0)) ? 'master' : menderEnvironment.integrationVersion,
     'Mender-Client': isNaN(menderEnvironment.menderVersion.charAt(0)) ? 'master' : menderEnvironment.menderVersion,

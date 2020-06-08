@@ -13,7 +13,7 @@ HOSTNAME=""
 
 if [ -n "$GATEWAY_IP" ]; then
     HOSTNAME=$GATEWAY_IP
-fi 
+fi
 
 if [ -n "$GATEWAY_PORT" ]; then
     HOSTNAME=$HOSTNAME':'$GATEWAY_PORT
@@ -29,6 +29,7 @@ cat >/var/www/mender-gui/dist/env.js <<EOF
       isEnterprise: "$HAVE_ENTERPRISE",
       isHosted: "$MENDER_HOSTED"
     },
+    trackerCode: "$TRACKER_CODE",
     integrationVersion: "$INTEGRATION_VERSION",
     menderVersion: "$MENDER_VERSION",
     menderArtifactVersion: "$MENDER_ARTIFACT_VERSION",
