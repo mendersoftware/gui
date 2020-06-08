@@ -4,6 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import Linkify from 'react-linkify';
 import ReactTooltip from 'react-tooltip';
+import ReactGA from 'react-ga';
 
 import { Button, IconButton, ListItemText, ListItemSecondaryAction, Menu, MenuItem, Toolbar } from '@material-ui/core';
 
@@ -42,10 +43,14 @@ export class Header extends React.Component {
     this.cookies = new Cookies();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     const sessionId = this.cookies.get('JWT');
-    if ((!sessionId || !this.props.user || !this.props.user.id || !this.props.user.email.length) && !this.state.gettingUser && !this.state.loggingOut) {
+    const { hasTrackingEnabled, isEnterprise, trackingCode, user } = this.props;
+    if ((!sessionId || !user || !user.id || !user.email.length) && !this.state.gettingUser && !this.state.loggingOut) {
       this._updateUsername();
+    }
+    if (prevProps.hasTrackingEnabled !== hasTrackingEnabled && trackingCode && !isEnterprise && hasTrackingEnabled) {
+      ReactGA.initialize(trackingCode);
     }
   }
 
@@ -321,11 +326,13 @@ const mapStateToProps = state => {
     deviceLimit: state.devices.limit,
     demo: state.app.features.isDemoMode,
     docsVersion: state.app.docsVersion,
+    hasTrackingEnabled: state.users.globalSettings[state.users.currentUser]?.trackingConsentGiven,
     inProgress: state.deployments.byStatus.inprogress.total,
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
     multitenancy: state.app.features.hasMultitenancy || state.app.features.isEnterprise || state.app.features.isHosted,
     showHelptips: state.users.showHelptips,
     pendingDevices: state.devices.byStatus.pending.total,
+    trackingCode: state.app.trackerCode,
     user: state.users.byId[state.users.currentUser] || { email: '', id: null }
   };
 };
