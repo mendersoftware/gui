@@ -224,6 +224,17 @@ export const saveGlobalSettings = (settings, beOptimistic = false) => (dispatch,
     });
 };
 
+export const saveUserSettings = settings => (dispatch, getState) => {
+  const currentUserId = (getState().users.byId[getState().users.currentUser] || {}).id;
+  const updatedSettings = {
+    [currentUserId]: {
+      ...getState().users.globalSettings[currentUserId],
+      ...settings
+    }
+  };
+  return dispatch(saveGlobalSettings(updatedSettings));
+};
+
 export const get2FAQRCode = () => dispatch =>
   GeneralApi.get(`${useradmApiUrl}/2faqr`).then(res => dispatch({ type: UserConstants.RECEIVED_QR_CODE, value: res.body.qr }));
 
