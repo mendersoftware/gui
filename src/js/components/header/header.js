@@ -42,6 +42,7 @@ import {
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 
 import Tracking from '../../tracking';
+const menuButtonColor = '#c7c7c7';
 
 export class Header extends React.Component {
   constructor(props, context) {
@@ -168,12 +169,13 @@ export class Header extends React.Component {
   }
   render() {
     const self = this;
-    const { anchorEl } = self.state;
+    const { anchorEl, showAnnouncement } = self.state;
 
     const {
       acceptedDevices,
       allowUserManagement,
       announcement,
+      demo,
       deviceLimit,
       docsVersion,
       inProgress,
@@ -187,141 +189,122 @@ export class Header extends React.Component {
       user
     } = self.props;
 
-    const menuButtonColor = '#c7c7c7';
-
-    var dropDownElement = (
-      <div style={{ marginRight: '0', paddingLeft: '30px' }}>
-        <Button className="header-dropdown" style={{ fontSize: '14px', fill: 'rgb(0, 0, 0)', textTransform: 'none' }} onClick={self.handleClick}>
-          <AccountCircleIcon style={{ marginRight: '8px', top: '5px', fontSize: '20px', color: menuButtonColor }} />
-          {user.email}
-          {anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-        </Button>
-        <Menu
-          anchorEl={anchorEl}
-          getContentAnchorEl={null}
-          onClose={self.handleClose}
-          open={Boolean(anchorEl)}
-          anchorOrigin={{
-            vertical: 'center',
-            horizontal: 'center'
-          }}
-          transformOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center'
-          }}
-        >
-          <MenuItem component={Link} to="/settings">
-            Settings
-          </MenuItem>
-          <MenuItem component={Link} to="/settings/my-profile">
-            My profile
-          </MenuItem>
-          {multitenancy && (
-            <MenuItem component={Link} to="/settings/my-organization">
-              My organization
-            </MenuItem>
-          )}
-          {allowUserManagement && (
-            <MenuItem component={Link} to="/settings/user-management">
-              User management
-            </MenuItem>
-          )}
-          <MenuItem onClick={() => toggleHelptips()}>{showHelptips ? 'Hide help tooltips' : 'Show help tooltips'}</MenuItem>
-          <MenuItem component={Link} to="/help/getting-started">
-            Help
-          </MenuItem>
-          <MenuItem onClick={() => self.onLogoutClick()}>
-            <ListItemText primary="Log out" />
-            <ListItemSecondaryAction>
-              <IconButton>
-                <ExitIcon style={{ color: menuButtonColor, fill: menuButtonColor }} />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </MenuItem>
-        </Menu>
-      </div>
-    );
-
-    const toolbarStyle = { height: '56px', minHeight: 'unset', paddingLeft: '16px', paddingRight: '16px' };
-
     return (
       <div id="fixedHeader" className="header">
-        <Toolbar style={Object.assign({ backgroundColor: '#fff' }, toolbarStyle)}>
-          <Toolbar key={0} style={toolbarStyle}>
-            <Link to="/" id="logo" className={plan === 'enterprise' || isEnterprise ? 'enterprise' : ''} />
+        <Toolbar style={{ backgroundColor: '#fff', height: 56, minHeight: 'unset', paddingLeft: 32, paddingRight: 40 }}>
+          <Link to="/" id="logo" className={plan === 'enterprise' || isEnterprise ? 'enterprise' : ''} />
+          {demo && (
+            <div id="demoBox" className="flexbox centered">
+              <a id="demo-info" data-tip data-for="demo-mode" data-event="click focus" data-offset="{'bottom': 15}">
+                <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
+                Demo mode
+              </a>
 
-            {this.props.demo ? (
-              <div id="demoBox">
-                <a id="demo-info" data-tip data-for="demo-mode" data-event="click focus" data-offset="{'bottom': 15, 'right': 60}">
+              <ReactTooltip id="demo-mode" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+                <h3>Demo mode</h3>
+                <p>
+                  Mender is currently running in <b>demo mode</b>.
+                </p>
+                <p>
+                  <a href={`https://docs.mender.io/${docsVersion}administration/production-installation`} target="_blank">
+                    See the documentation for help switching to production mode
+                  </a>
+                  .
+                </p>
+              </ReactTooltip>
+            </div>
+          )}
+          {organization && organization.trial ? (
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+              <div id="trialVersion">
+                <a id="trial-info" data-tip data-for="trial-version" data-event="click focus" data-offset="{'bottom': 15, 'right': 60}">
                   <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
-                  Demo mode
+                  Trial version
                 </a>
 
-                <ReactTooltip id="demo-mode" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-                  <h3>Demo mode</h3>
+                <ReactTooltip id="trial-version" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+                  <h3>Trial version</h3>
+                  <p>You&apos;re using the trial version of Mender – it&apos;s free for up to 10 devices for 12 months.</p>
                   <p>
-                    Mender is currently running in <b>demo mode</b>.
+                    <Link to="/settings/upgrade">Upgrade to a plan</Link> to add more devices and continue using Mender after the trial expires.
                   </p>
                   <p>
-                    <a href={`https://docs.mender.io/${docsVersion}administration/production-installation`} target="_blank">
-                      See the documentation for help switching to production mode
+                    Or compare the plans at{' '}
+                    <a href={`https://mender.io/plans/pricing`} target="_blank">
+                      mender.io/plans/pricing
                     </a>
                     .
                   </p>
                 </ReactTooltip>
               </div>
-            ) : null}
 
-            {organization && organization.trial ? (
-              <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <div id="trialVersion">
-                  <a id="trial-info" data-tip data-for="trial-version" data-event="click focus" data-offset="{'bottom': 15, 'right': 60}">
-                    <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
-                    Trial version
-                  </a>
-
-                  <ReactTooltip id="trial-version" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-                    <h3>Trial version</h3>
-                    <p>You&apos;re using the trial version of Mender – it&apos;s free for up to 10 devices for 12 months.</p>
-                    <p>
-                      <Link to="/settings/upgrade">Upgrade to a plan</Link> to add more devices and continue using Mender after the trial expires.
-                    </p>
-                    <p>
-                      Or compare the plans at{' '}
-                      <a href={`https://mender.io/plans/pricing`} target="_blank">
-                        mender.io/plans/pricing
-                      </a>
-                      .
-                    </p>
-                  </ReactTooltip>
-                </div>
-
-                <Link id="trial-upgrade-now" to="/settings/upgrade">
-                  <Button style={{ top: '5px' }} color="primary" startIcon={<Payment />}>
-                    Upgrade now
-                  </Button>
-                </Link>
-              </div>
-            ) : null}
-          </Toolbar>
-
-          <Toolbar key={1} style={{ flexGrow: '2' }}>
-            {announcement ? (
-              <div id="announcement" className={this.state.showAnnouncement ? 'fadeInSlow' : 'fadeOutSlow'} style={{ display: 'flex', alignItems: 'center' }}>
-                <AnnounceIcon className="red" style={{ marginRight: '4px', height: '18px', minWidth: '24px' }} />
-                <p>
-                  <Linkify properties={{ target: '_blank' }}>{announcement}</Linkify>
-                </p>
-                <CloseIcon style={{ marginLeft: '4px', height: '16px', verticalAlign: 'bottom' }} onClick={() => this._hideAnnouncement()} />
-              </div>
-            ) : null}
-          </Toolbar>
-
-          <Toolbar key={2} style={{ flexShrink: '0' }}>
-            <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
-            <DeploymentNotifications inprogress={inProgress} />
-            {dropDownElement}
-          </Toolbar>
+              <Link id="trial-upgrade-now" to="/settings/upgrade">
+                <Button style={{ top: '5px' }} color="primary" startIcon={<Payment />}>
+                  Upgrade now
+                </Button>
+              </Link>
+            </div>
+          ) : null}
+          {!!announcement && (
+            <div id="announcement" className={`flexbox centered ${showAnnouncement ? 'fadeInSlow' : 'fadeOutSlow'}`}>
+              <AnnounceIcon className="red" style={{ marginRight: '4px', height: '18px', minWidth: '24px' }} />
+              <p>
+                <Linkify properties={{ target: '_blank' }}>{announcement}</Linkify>
+              </p>
+              <CloseIcon style={{ marginLeft: '4px', height: '16px', cursor: 'pointer' }} onClick={() => self._hideAnnouncement()} />
+            </div>
+          )}
+          <div style={{ flexGrow: '1' }}></div>
+          <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
+          <DeploymentNotifications inprogress={inProgress} />
+          <Button className="header-dropdown" style={{ fontSize: '14px', fill: 'rgb(0, 0, 0)', textTransform: 'none' }} onClick={self.handleClick}>
+            <AccountCircleIcon style={{ marginRight: '8px', top: '5px', fontSize: '20px', color: menuButtonColor }} />
+            {user.email}
+            {anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+          </Button>
+          <Menu
+            anchorEl={anchorEl}
+            getContentAnchorEl={null}
+            onClose={self.handleClose}
+            open={Boolean(anchorEl)}
+            anchorOrigin={{
+              vertical: 'center',
+              horizontal: 'center'
+            }}
+            transformOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center'
+            }}
+          >
+            <MenuItem component={Link} to="/settings">
+              Settings
+            </MenuItem>
+            <MenuItem component={Link} to="/settings/my-profile">
+              My profile
+            </MenuItem>
+            {multitenancy && (
+              <MenuItem component={Link} to="/settings/my-organization">
+                My organization
+              </MenuItem>
+            )}
+            {allowUserManagement && (
+              <MenuItem component={Link} to="/settings/user-management">
+                User management
+              </MenuItem>
+            )}
+            <MenuItem onClick={() => toggleHelptips()}>{showHelptips ? 'Hide help tooltips' : 'Show help tooltips'}</MenuItem>
+            <MenuItem component={Link} to="/help/getting-started">
+              Help
+            </MenuItem>
+            <MenuItem onClick={() => self.onLogoutClick()}>
+              <ListItemText primary="Log out" />
+              <ListItemSecondaryAction>
+                <IconButton>
+                  <ExitIcon style={{ color: menuButtonColor, fill: menuButtonColor }} />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </MenuItem>
+          </Menu>
         </Toolbar>
       </div>
     );
