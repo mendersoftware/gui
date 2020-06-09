@@ -40,7 +40,7 @@
     "superagent": "^5.2.2",
     "universal-cookie": "^4.0.3",
     "validator": "^13.0.0",
-    "victory": "^34.3.9",
+    "victory": "^34.3.10",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
