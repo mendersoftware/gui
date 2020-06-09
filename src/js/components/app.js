@@ -3,6 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import IdleTimer from 'react-idle-timer';
+import ReactGA from 'react-ga';
 
 import Header from './header/header';
 import LeftNav from './leftnav';
@@ -18,6 +19,19 @@ import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 const timeout = 900000; // 15 minutes idle time
 
 class AppRoot extends React.PureComponent {
+  componentDidMount() {
+    this.props.history.listen(location => {
+      let page = location.pathname || '';
+      ReactGA.set({ page });
+      // unless we're on a help page the path will get cut off to the rough region, to ensure we're not sending any sensitive device/ group/ deployment names etc.
+      if (!location.pathname.startsWith('/help')) {
+        const path = location.pathname.split('/');
+        page = path.length > 1 ? path[1] : path[0];
+      }
+      ReactGA.pageview(page);
+    });
+  }
+
   onIdle() {
     if (expirySet() && this.props.currentUser) {
       // logout user and warn
