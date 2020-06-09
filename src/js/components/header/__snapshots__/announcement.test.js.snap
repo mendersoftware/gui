@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Announcement Component renders correctly 1`] = `
+<div
+  className="flexbox centered fadeOutSlow"
+  id="announcement"
+>
+  <svg
+    aria-hidden={true}
+    className="MuiSvgIcon-root red"
+    focusable="false"
+    style={
+      Object {
+        "height": "18px",
+        "marginRight": "4px",
+        "minWidth": "24px",
+      }
+    }
+    viewBox="0 0 24 24"
+  >
+    <path
+      d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 9h-2V5h2v6zm0 4h-2v-2h2v2z"
+    />
+  </svg>
+  <p />
+  <svg
+    aria-hidden={true}
+    className="MuiSvgIcon-root"
+    focusable="false"
+    style={
+      Object {
+        "cursor": "pointer",
+        "height": "16px",
+        "marginLeft": "4px",
+      }
+    }
+    viewBox="0 0 24 24"
+  >
+    <path
+      d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+    />
+  </svg>
+</div>
+`;

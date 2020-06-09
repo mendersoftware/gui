@@ -9,7 +9,6 @@ import { Button, IconButton, ListItemText, ListItemSecondaryAction, Menu, MenuIt
 
 import {
   AccountCircle as AccountCircleIcon,
-  Announcement as AnnounceIcon,
   ArrowDropDown as ArrowDropDownIcon,
   ArrowDropUp as ArrowDropUpIcon,
   Close as CloseIcon,
@@ -21,6 +20,8 @@ import {
 import { logout } from '../../auth';
 import { decodeSessionToken, hashString } from '../../helpers';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
+import Announcement from './announcement';
+import DemoNotification from './demonotification';
 import DeviceNotifications from './devicenotifications';
 import DeploymentNotifications from './deploymentnotifications';
 
@@ -193,27 +194,7 @@ export class Header extends React.Component {
       <div id="fixedHeader" className="header">
         <Toolbar style={{ backgroundColor: '#fff', height: 56, minHeight: 'unset', paddingLeft: 32, paddingRight: 40 }}>
           <Link to="/" id="logo" className={plan === 'enterprise' || isEnterprise ? 'enterprise' : ''} />
-          {demo && (
-            <div id="demoBox" className="flexbox centered">
-              <a id="demo-info" data-tip data-for="demo-mode" data-event="click focus" data-offset="{'bottom': 15}">
-                <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
-                Demo mode
-              </a>
-
-              <ReactTooltip id="demo-mode" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-                <h3>Demo mode</h3>
-                <p>
-                  Mender is currently running in <b>demo mode</b>.
-                </p>
-                <p>
-                  <a href={`https://docs.mender.io/${docsVersion}administration/production-installation`} target="_blank">
-                    See the documentation for help switching to production mode
-                  </a>
-                  .
-                </p>
-              </ReactTooltip>
-            </div>
-          )}
+          {demo && <DemoNotification docsVersion={docsVersion} />}
           {organization && organization.trial ? (
             <div style={{ display: 'flex', flexDirection: 'row' }}>
               <div id="trialVersion">
@@ -245,15 +226,7 @@ export class Header extends React.Component {
               </Link>
             </div>
           ) : null}
-          {!!announcement && (
-            <div id="announcement" className={`flexbox centered ${showAnnouncement ? 'fadeInSlow' : 'fadeOutSlow'}`}>
-              <AnnounceIcon className="red" style={{ marginRight: '4px', height: '18px', minWidth: '24px' }} />
-              <p>
-                <Linkify properties={{ target: '_blank' }}>{announcement}</Linkify>
-              </p>
-              <CloseIcon style={{ marginLeft: '4px', height: '16px', cursor: 'pointer' }} onClick={() => self._hideAnnouncement()} />
-            </div>
-          )}
+          {!!announcement && <Announcement announcement={announcement} showAnnouncement={showAnnouncement} onHide={() => self._hideAnnouncement()} />}
           <div style={{ flexGrow: '1' }}></div>
           <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
           <DeploymentNotifications inprogress={inProgress} />
