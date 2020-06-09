@@ -9,7 +9,7 @@ import HelpIcon from '@material-ui/icons/Help';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getUser, loginUser, saveGlobalSettings, setCurrentUser } from '../../actions/userActions';
+import { getUser, loginUser, setCurrentUser } from '../../actions/userActions';
 
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
@@ -148,7 +148,7 @@ export class Login extends React.Component {
   }
 }
 
-const actionCreators = { getUser, loginUser, saveGlobalSettings, setCurrentUser, setSnackbar };
+const actionCreators = { getUser, loginUser, setCurrentUser, setSnackbar };
 
 const mapStateToProps = state => {
   return {

@@ -126,26 +126,24 @@ export class Header extends React.Component {
   }
 
   _updateUsername() {
-    var self = this;
-    // get current user
-    if (!self.state.gettingUser) {
-      const userId = decodeSessionToken(self.cookies.get('JWT'));
-      if (!userId) {
-        return;
-      }
-      self.setState({ gettingUser: true });
-      return (
-        self.props
-          .getUser(userId)
-          .then(() => {
-            self.props.getOnboardingState();
-            self.initializeHeaderData();
-          })
-          // this is allowed to fail if no user information are available
-          .catch(err => console.log(err.res ? err.res.error : err))
-          .finally(() => self.setState({ gettingUser: false }))
-      );
+    const userId = decodeSessionToken(this.cookies.get('JWT'));
+    if (this.state.gettingUser || !userId) {
+      return;
     }
+    const self = this;
+    self.setState({ gettingUser: true });
+    // get current user
+    return (
+      self.props
+        .getUser(userId)
+        .then(() => {
+          self.props.getOnboardingState();
+          self.initializeHeaderData();
+        })
+        // this is allowed to fail if no user information are available
+        .catch(err => console.log(err.res ? err.res.error : err))
+        .finally(() => self.setState({ gettingUser: false }))
+    );
   }
 
   changeTab() {
