@@ -14,6 +14,10 @@ const columnData = [
   { id: 'actions', disablePadding: false, label: 'Manage', enterpriseOnly: false }
 ];
 
+const isAdmin = (currentUser) => {
+  return currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL');
+};
+
 const UserList = ({ currentUser, editUser, isEnterprise, removeUser, roles, users }) => (
   <Table>
     <TableHead>
@@ -46,7 +50,7 @@ const UserList = ({ currentUser, editUser, isEnterprise, removeUser, roles, user
             <Button onClick={() => editUser(user)} style={{ marginLeft: -10 }}>
               Edit
             </Button>
-            {currentUser.id !== user.id ? <Button onClick={() => removeUser(user)}>Remove</Button> : null}
+            {currentUser.id !== user.id && isAdmin(currentUser) ? <Button onClick={() => removeUser(user)}>Remove</Button> : null}
           </TableCell>
         </TableRow>
       ))}
