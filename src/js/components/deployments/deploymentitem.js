@@ -20,7 +20,7 @@ export const deploymentTypeClasses = {
 
 export const DeploymentDeviceCount = compose(setDisplayName('DeploymentDeviceCount'))(({ deployment }) => (
   <div className="align-right column-defined" key="DeploymentDeviceCount">
-    {deployment.device_count}
+    {Math.max(deployment.device_count, deployment.max_devices || 0)}
   </div>
 ));
 export const DeploymentDeviceGroup = compose(setDisplayName('DeploymentDeviceGroup'))(({ deployment }) => (
@@ -42,7 +42,7 @@ export const DeploymentProgress = compose(setDisplayName('DeploymentProgress'))(
     phases={deployment.phases}
     status={deployment.status}
     totalSuccessCount={groupedStats.successes}
-    totalDeviceCount={deployment.device_count}
+    totalDeviceCount={Math.max(deployment.device_count, deployment.max_devices || 0)}
     totalFailureCount={groupedStats.failures}
   />
 ));
@@ -54,7 +54,7 @@ export const DeploymentStartTime = compose(setDisplayName('DeploymentStartTime')
 ));
 
 export const DeploymentStatus = compose(setDisplayName('DeploymentStatus'))(({ deployment }) => (
-  <DeploymentStats key="DeploymentStatus" vertical={false} stats={deployment.stats} />
+  <DeploymentStats key="DeploymentStatus" vertical={false} deployment={deployment} />
 ));
 
 export default class DeploymentItem extends React.Component {
@@ -74,7 +74,7 @@ export default class DeploymentItem extends React.Component {
     const self = this;
     const { abort: abortDeployment, columnHeaders, deployment, isEnterprise, openReport, type } = self.props;
     const { abort } = self.state;
-    const groupedStats = groupDeploymentStats(deployment.stats || {});
+    const groupedStats = groupDeploymentStats(deployment);
     const { created, id, phases } = deployment;
 
     let confirmation;
