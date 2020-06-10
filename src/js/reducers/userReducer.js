@@ -1,7 +1,7 @@
 import * as UserConstants from '../constants/userConstants';
 import { stringToBoolean } from '../helpers';
 
-const initialState = {
+export const initialState = {
   byId: {},
   currentUser: null,
   jwtToken: null,
@@ -129,17 +129,17 @@ const userReducer = (state = initialState, action) => {
           }
         }
       };
-      case UserConstants.UPDATED_ROLE:
-        return {
-          ...state,
-          rolesById: {
-            ...state.rolesById,
-            [action.roleId]: {
-              ...state.rolesById[action.roleId],
-              ...action.role
-            }
+    case UserConstants.UPDATED_ROLE:
+      return {
+        ...state,
+        rolesById: {
+          ...state.rolesById,
+          [action.roleId]: {
+            ...state.rolesById[action.roleId],
+            ...action.role
           }
-        };
+        }
+      };
     case UserConstants.SET_GLOBAL_SETTINGS:
       return {
         ...state,
