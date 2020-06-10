@@ -71,8 +71,8 @@ const Review = ({ deployment = {}, deploymentDeviceIds, device, filters, group, 
             row.batch_size = row.batch_size || getRemainderPercent(deploymentPhases);
             const deviceCount =
               index === deploymentPhases.length - 1
-                ? Math.ceil((deploymentDeviceIds.length / 100) * row.batch_size)
-                : Math.floor((deploymentDeviceIds.length / 100) * row.batch_size);
+                ? Math.ceil(((deployment.max_devices || deploymentDeviceIds.length) / 100) * row.batch_size)
+                : Math.floor(((deployment.max_devices || deploymentDeviceIds.length) / 100) * row.batch_size);
             return (
               <div className="flexbox column" key={row.start_ts || start_time}>
                 <Chip size="small" label={`Phase ${index + 1}`} />

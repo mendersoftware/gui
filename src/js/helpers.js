@@ -22,13 +22,20 @@ export function fullyDecodeURI(uri) {
 
 const statCollector = (items, statistics) => items.reduce((accu, property) => accu + Number(statistics[property] || 0), 0);
 
-export const groupDeploymentStats = stats => ({
+export const groupDeploymentStats = deployment => {
+  const stats = deployment.stats || {}
   // don't include 'pending' as inprogress, as all remaining devices will be pending - we don't discriminate based on phase membership
-  inprogress: statCollector(['downloading', 'installing', 'rebooting'], stats),
-  pending: stats['pending'] || 0,
-  successes: statCollector(['success', 'already-installed'], stats),
-  failures: statCollector(['failure', 'aborted', 'noartifact', 'decommissioned'], stats)
-});
+  const inprogress = statCollector(['downloading', 'installing', 'rebooting'], stats);
+  const pending  = (deployment.max_devices ? deployment.max_devices - deployment.device_count : 0) + (stats['pending'] || 0);
+  const successes = statCollector(['success', 'already-installed'], stats);
+  const failures = statCollector(['failure', 'aborted', 'noartifact', 'decommissioned'], stats);
+  return {
+    inprogress: inprogress,
+    pending: pending,
+    successes: successes,
+    failures: failures,
+  };
+};
 
 export function statusToPercentage(state, intervals) {
   var time;
