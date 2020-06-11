@@ -159,10 +159,7 @@ export class MyOrganization extends React.Component {
               </p>
             )}
             {this.state.cancelSubscription && (
-              <CancelRequestDialog
-                onCancel={() => self.setState({ cancelSubscription: false })}
-                onSubmit={value => this._cancelSubscriptionSubmit(value)}
-              />
+              <CancelRequestDialog onCancel={() => self.setState({ cancelSubscription: false })} onSubmit={value => this._cancelSubscriptionSubmit(value)} />
             )}
           </div>
         ) : null}

@@ -95,9 +95,7 @@ export default class DeploymentItem extends React.Component {
         {!!confirmation && confirmation}
         {columnHeaders.map((column, i) => (
           <div className={column.class} key={'deploy-item-' + i}>
-            {column.title && (
-              <span className="deployment-item-title text-muted">{ column.title }</span>
-            )}
+            {column.title && <span className="deployment-item-title text-muted">{column.title}</span>}
             {column.renderer({ ...self.props, deployment, started, groupedStats: { ...groupedStats, current: groupedStats.inprogress }, ...column.props })}
           </div>
         ))}

@@ -39,7 +39,7 @@ export class RoleManagement extends React.Component {
       name: '',
       description: '',
       allowUserManagement: false,
-      groups: this.props.groups.map(group => ({ name: group, selected: false })),
+      groups: this.props.groups.map(group => ({ name: group, selected: false }))
     });
   }
 
@@ -50,7 +50,7 @@ export class RoleManagement extends React.Component {
       name: role.id,
       description: role.description,
       allowUserManagement: role.allowUserManagement,
-      groups: this.props.groups.map(group => ({ name: group, selected: role.groups.indexOf(group) !== -1 })),
+      groups: this.props.groups.map(group => ({ name: group, selected: role.groups.indexOf(group) !== -1 }))
     });
   }
 
@@ -62,8 +62,8 @@ export class RoleManagement extends React.Component {
   onCancel() {
     this.setState({
       adding: false,
-      editing: false,
-    })
+      editing: false
+    });
   }
 
   onSubmit() {
