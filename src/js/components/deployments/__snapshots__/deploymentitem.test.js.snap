@@ -5,122 +5,166 @@ exports[`DeploymentItem Component renders correctly 1`] = `
   className="deployment-item progress-item"
 >
   <div>
-    test
+    <span
+      className="deployment-item-title text-muted"
+    >
+      Release
+    </span>
+    <div>
+      test
+    </div>
   </div>
   <div>
-    test deployment
+    <span
+      className="deployment-item-title text-muted"
+    >
+      Device group
+    </span>
+    <div>
+      test deployment
+    </div>
   </div>
-  <time
-    aria-describedby={null}
-    className=""
-    dateTime={"2019-01-01T13:00:00.000Z"}
-    onBlur={[Function]}
-    onFocus={[Function]}
-    onMouseLeave={[Function]}
-    onMouseOver={[Function]}
-    onTouchEnd={[Function]}
-    onTouchStart={[Function]}
-    title="Tue Jan 01 2019 13:00:00 GMT+0000"
-  >
-    a few seconds ago
-  </time>
-  <div
-    aria-describedby={null}
-    className=""
-    onBlur={[Function]}
-    onFocus={[Function]}
-    onMouseLeave={[Function]}
-    onMouseOver={[Function]}
-    onTouchEnd={[Function]}
-    onTouchStart={[Function]}
-    title=""
-  >
-    -
+  <div>
+    <span
+      className="deployment-item-title text-muted"
+    >
+      Start time
+    </span>
+    <time
+      aria-describedby={null}
+      className=""
+      dateTime={"2019-01-01T13:00:00.000Z"}
+      onBlur={[Function]}
+      onFocus={[Function]}
+      onMouseLeave={[Function]}
+      onMouseOver={[Function]}
+      onTouchEnd={[Function]}
+      onTouchStart={[Function]}
+      title="Tue Jan 01 2019 13:00:00 GMT+0000"
+    >
+      a few seconds ago
+    </time>
+  </div>
+  <div>
+    <span
+      className="deployment-item-title text-muted"
+    >
+      End time
+    </span>
+    <div
+      aria-describedby={null}
+      className=""
+      onBlur={[Function]}
+      onFocus={[Function]}
+      onMouseLeave={[Function]}
+      onMouseOver={[Function]}
+      onTouchEnd={[Function]}
+      onTouchStart={[Function]}
+      title=""
+    >
+      -
+    </div>
   </div>
   <div
     className="align-right column-defined"
   >
-    1
-  </div>
-  <div
-    className="flexbox column progress-chart-container "
-  >
+    <span
+      className="deployment-item-title text-muted"
+    >
+      # devices
+    </span>
     <div
-      style={
-        Object {
-          "display": "grid",
-          "gridColumnGap": 15,
-          "gridTemplateColumns": "2fr 1fr",
-        }
-      }
+      className="align-right column-defined"
+    >
+      1
+    </div>
+  </div>
+  <div>
+    <span
+      className="deployment-item-title text-muted"
+    >
+      Status
+    </span>
+    <div
+      className="flexbox column progress-chart-container "
     >
       <div
-        className="progress-chart"
-      >
-        <div
-          className="progress-step"
-          style={
-            Object {
-              "borderRight": "none",
-              "flexGrow": 1,
-            }
-          }
-        >
-          <div
-            className="progress-bar green"
-            style={
-              Object {
-                "width": "0%",
-              }
-            }
-          />
-          <div
-            className="progress-bar warning"
-            style={
-              Object {
-                "width": "0%",
-              }
-            }
-          />
-          <div
-            className="progress-bar"
-            style={
-              Object {
-                "backgroundColor": "#aaa",
-                "width": "100%",
-              }
-            }
-          />
-        </div>
-        <div
-          className="progress-step progress-step-total"
-        >
-          <div
-            className="progress-bar"
-            style={
-              Object {
-                "width": "100%",
-              }
-            }
-          />
-        </div>
-      </div>
-      <div
-        className="flexbox space-between centered muted"
         style={
           Object {
-            "justifyContent": "flex-end",
+            "display": "grid",
+            "gridColumnGap": 15,
+            "gridTemplateColumns": "2fr 1fr",
           }
         }
       >
-        0 failures
+        <div
+          className="progress-chart"
+        >
+          <div
+            className="progress-step"
+            style={
+              Object {
+                "borderRight": "none",
+                "flexGrow": 1,
+              }
+            }
+          >
+            <div
+              className="progress-bar green"
+              style={
+                Object {
+                  "width": "0%",
+                }
+              }
+            />
+            <div
+              className="progress-bar warning"
+              style={
+                Object {
+                  "width": "0%",
+                }
+              }
+            />
+            <div
+              className="progress-bar"
+              style={
+                Object {
+                  "backgroundColor": "#aaa",
+                  "width": "100%",
+                }
+              }
+            />
+          </div>
+          <div
+            className="progress-step progress-step-total"
+          >
+            <div
+              className="progress-bar"
+              style={
+                Object {
+                  "width": "100%",
+                }
+              }
+            />
+          </div>
+        </div>
+        <div
+          className="flexbox space-between centered muted"
+          style={
+            Object {
+              "justifyContent": "flex-end",
+            }
+          }
+        >
+          0 failures
+        </div>
       </div>
-    </div>
-    <div
-      className="flexbox space-between muted"
-    >
-      <div>
-        Current phase: 1 of 1
+      <div
+        className="flexbox space-between muted"
+      >
+        <div>
+          Current phase: 1 of 1
+        </div>
       </div>
     </div>
   </div>
@@ -183,10 +227,9 @@ exports[`DeploymentItem Component renders correctly 1`] = `
       className="MuiIconButton-label"
     >
       <svg
-        aria-hidden="true"
+        aria-hidden={true}
         className="MuiSvgIcon-root cancelButton muted"
         focusable="false"
-        role="presentation"
         viewBox="0 0 24 24"
       >
         <path

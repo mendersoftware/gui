@@ -27,6 +27,7 @@ exports[`Deployments Component renders correctly 1`] = `
       >
         <div
           className="MuiTabs-flexContainer"
+          onKeyDown={[Function]}
           role="tablist"
         >
           <a
@@ -76,7 +77,7 @@ exports[`Deployments Component renders correctly 1`] = `
             onTouchMove={[Function]}
             onTouchStart={[Function]}
             role="tab"
-            tabIndex={0}
+            tabIndex={-1}
           >
             <span
               className="MuiTab-wrapper"
@@ -105,7 +106,7 @@ exports[`Deployments Component renders correctly 1`] = `
             onTouchMove={[Function]}
             onTouchStart={[Function]}
             role="tab"
-            tabIndex={0}
+            tabIndex={-1}
           >
             <span
               className="MuiTab-wrapper"
@@ -118,7 +119,7 @@ exports[`Deployments Component renders correctly 1`] = `
           </a>
         </div>
         <span
-          className="PrivateTabIndicator-root-25 PrivateTabIndicator-colorSecondary-27 MuiTabs-indicator"
+          className="PrivateTabIndicator-root-1 PrivateTabIndicator-colorSecondary-3 MuiTabs-indicator"
           style={
             Object {
               "left": 0,

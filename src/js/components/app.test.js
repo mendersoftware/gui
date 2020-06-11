@@ -46,6 +46,7 @@ describe('App Component', () => {
       users: {
         byId: {},
         currentUser: null,
+        globalSettings: {},
         onboarding: {
           complete: false,
           showCreateArtifactDialog: false,

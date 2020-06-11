@@ -31,7 +31,7 @@ exports[`LeftNav Component renders correctly 1`] = `
         }
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Dashboard
         </span>
@@ -58,7 +58,7 @@ exports[`LeftNav Component renders correctly 1`] = `
         }
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Devices
         </span>
@@ -85,7 +85,7 @@ exports[`LeftNav Component renders correctly 1`] = `
         }
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Releases
         </span>
@@ -112,7 +112,7 @@ exports[`LeftNav Component renders correctly 1`] = `
         }
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Deployments
         </span>
@@ -146,7 +146,7 @@ exports[`LeftNav Component renders correctly 1`] = `
         className="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Help
         </span>
@@ -166,7 +166,7 @@ exports[`LeftNav Component renders correctly 1`] = `
         className="MuiListItemText-root MuiListItemText-multiline"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           <div
             aria-describedby={null}
@@ -184,7 +184,7 @@ exports[`LeftNav Component renders correctly 1`] = `
           </div>
         </span>
         <p
-          className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+          className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
         >
           <a
             href="https://docs.mender.io/development/release-information/open-source-licenses"

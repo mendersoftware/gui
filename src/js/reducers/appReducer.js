@@ -22,10 +22,11 @@ const menderEnvironment = {
     inventoryVersion: '',
     guiVersion: ''
   },
+  trackerCode: '',
   ...mender_environment
 };
 
-const initialState = {
+export const initialState = {
   hostAddress: menderEnvironment.hostAddress,
   snackbar: {
     open: false,
@@ -41,6 +42,7 @@ const initialState = {
   hostedAnnouncement: menderEnvironment.hostedAnnouncement,
   docsVersion: isNaN(menderEnvironment.integrationVersion.charAt(0)) ? '' : menderEnvironment.integrationVersion.split('.').slice(0, 2).join('.'),
   menderDebPackageVersion: menderEnvironment.menderDebPackageVersion || 'master',
+  trackerCode: menderEnvironment.trackerCode,
   versionInformation: {
     Integration: isNaN(menderEnvironment.integrationVersion.charAt(0)) ? 'master' : menderEnvironment.integrationVersion,
     'Mender-Client': isNaN(menderEnvironment.menderVersion.charAt(0)) ? 'master' : menderEnvironment.menderVersion,

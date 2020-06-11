@@ -18,10 +18,9 @@ exports[`OnboardingTips Components DevicePendingTip renders correctly 1`] = `
     data-tip={true}
   >
     <svg
-      aria-hidden="true"
+      aria-hidden={true}
       className="MuiSvgIcon-root"
       focusable="false"
-      role="presentation"
       viewBox="0 0 24 24"
     >
       <path
@@ -100,10 +99,9 @@ exports[`OnboardingTips Components WelcomeSnackTip renders correctly 1`] = `
       className="MuiIconButton-label"
     >
       <svg
-        aria-hidden="true"
+        aria-hidden={true}
         className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
         focusable="false"
-        role="presentation"
         viewBox="0 0 24 24"
       >
         <path

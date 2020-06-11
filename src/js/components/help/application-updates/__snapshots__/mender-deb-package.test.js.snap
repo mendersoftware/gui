@@ -55,10 +55,9 @@ exports[`DebPackage Component renders correctly 1`] = `
         className="MuiIconButton-label"
       >
         <svg
-          aria-hidden="true"
+          aria-hidden={true}
           className="MuiSvgIcon-root"
           focusable="false"
-          role="presentation"
           viewBox="0 0 24 24"
         >
           <path
@@ -126,10 +125,9 @@ sudo dpkg -i --force-confdef --force-confold mender-client_master-1_armhf.deb
         className="MuiIconButton-label"
       >
         <svg
-          aria-hidden="true"
+          aria-hidden={true}
           className="MuiSvgIcon-root"
           focusable="false"
-          role="presentation"
           viewBox="0 0 24 24"
         >
           <path

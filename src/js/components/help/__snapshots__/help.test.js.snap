@@ -28,7 +28,7 @@ exports[`Help Component renders correctly 1`] = `
         className="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Getting started
         </span>
@@ -50,7 +50,7 @@ exports[`Help Component renders correctly 1`] = `
         className="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Application updates
         </span>
@@ -72,7 +72,7 @@ exports[`Help Component renders correctly 1`] = `
         className="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Connecting your device using Mender .deb package
         </span>
@@ -94,7 +94,7 @@ exports[`Help Component renders correctly 1`] = `
         className="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Connecting a demo virtual device
         </span>
@@ -116,7 +116,7 @@ exports[`Help Component renders correctly 1`] = `
         className="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Enabling different kinds of updates with Update Modules
         </span>
@@ -138,7 +138,7 @@ exports[`Help Component renders correctly 1`] = `
         className="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           System updates
         </span>
@@ -160,7 +160,7 @@ exports[`Help Component renders correctly 1`] = `
         className="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Supported board integrations on Mender Hub
         </span>
@@ -182,7 +182,7 @@ exports[`Help Component renders correctly 1`] = `
         className="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Building a Mender-enabled Yocto image
         </span>
@@ -204,7 +204,7 @@ exports[`Help Component renders correctly 1`] = `
         className="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Devices running Debian family
         </span>
@@ -226,7 +226,7 @@ exports[`Help Component renders correctly 1`] = `
         className="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Devices and device groups
         </span>
@@ -248,7 +248,7 @@ exports[`Help Component renders correctly 1`] = `
         className="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Releases and artifacts
         </span>
@@ -270,7 +270,7 @@ exports[`Help Component renders correctly 1`] = `
         className="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Building a demo application update Artifact
         </span>
@@ -292,7 +292,7 @@ exports[`Help Component renders correctly 1`] = `
         className="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           More resources
         </span>

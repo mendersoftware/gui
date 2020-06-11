@@ -6,10 +6,9 @@ exports[`Group-creation-confirmation Component renders correctly 1`] = `
 >
   <h2>
     <svg
-      aria-hidden="true"
+      aria-hidden={true}
       className="MuiSvgIcon-root"
       focusable="false"
-      role="presentation"
       style={
         Object {
           "marginRight": 4,
@@ -42,7 +41,7 @@ exports[`Group-creation-confirmation Component renders correctly 1`] = `
   >
     <span
       aria-disabled={false}
-      className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-22 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+      className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
       onBlur={[Function]}
       onDragLeave={[Function]}
       onFocus={[Function]}
@@ -60,16 +59,15 @@ exports[`Group-creation-confirmation Component renders correctly 1`] = `
         className="MuiIconButton-label"
       >
         <input
-          className="PrivateSwitchBase-input-25"
+          className="PrivateSwitchBase-input-4"
           data-indeterminate={false}
           onChange={[Function]}
           type="checkbox"
         />
         <svg
-          aria-hidden="true"
+          aria-hidden={true}
           className="MuiSvgIcon-root"
           focusable="false"
-          role="presentation"
           viewBox="0 0 24 24"
         >
           <path

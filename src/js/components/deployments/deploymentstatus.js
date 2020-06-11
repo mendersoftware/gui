@@ -14,17 +14,19 @@ const defaultStats = {
   'already-installed': 0
 };
 
-export const DeploymentStatus = ({ stats = defaultStats, vertical }) => {
+export const DeploymentStatus = ({ deployment = {}, vertical }) => {
+  const stats = deployment.stats || defaultStats;
   const inprogress = stats.downloading + stats.installing + stats.rebooting;
-  const failed = stats.failure;
+  const failures = stats.failure;
   const skipped = stats.aborted + stats.noartifact + stats['already-installed'] + stats.decommissioned;
-
+  const successes = stats.success;
+  const pending = (deployment.max_devices ? deployment.max_devices - deployment.device_count : 0) + stats.pending;
   const phases = [
     { title: 'Skipped', value: skipped, className: 'skipped' },
-    { title: 'Pending', value: stats.pending, className: 'pending' },
+    { title: 'Pending', value: pending, className: 'pending' },
     { title: 'In progress', value: inprogress, className: 'inprogress' },
-    { title: 'Successful', value: stats.success, className: 'success' },
-    { title: 'Failed', value: failed, className: 'failure' }
+    { title: 'Successful', value: successes, className: 'success' },
+    { title: 'Failed', value: failures, className: 'failure' }
   ];
   return (
     <div>

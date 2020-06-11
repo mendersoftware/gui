@@ -27,10 +27,9 @@ exports[`GlobalSettings Component renders correctly 1`] = `
     }
   >
     <svg
-      aria-hidden="true"
+      aria-hidden={true}
       className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
       focusable="false"
-      role="presentation"
       style={
         Object {
           "margin": "0 6px 4px 0",
@@ -69,7 +68,7 @@ exports[`GlobalSettings Component renders correctly 1`] = `
       >
         <div
           aria-haspopup="listbox"
-          aria-labelledby=" deviceid"
+          aria-labelledby="deviceid"
           className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
           id="deviceid"
           onBlur={[Function]}
@@ -95,10 +94,9 @@ exports[`GlobalSettings Component renders correctly 1`] = `
           value=""
         />
         <svg
-          aria-hidden="true"
+          aria-hidden={true}
           className="MuiSvgIcon-root MuiSelect-icon"
           focusable="false"
-          role="presentation"
           viewBox="0 0 24 24"
         >
           <path
@@ -163,6 +161,9 @@ exports[`GlobalSettings Component renders correctly 1`] = `
       >
         Cancel
       </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </button>
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -187,6 +188,9 @@ exports[`GlobalSettings Component renders correctly 1`] = `
       >
         Save
       </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </button>
   </div>
 </div>

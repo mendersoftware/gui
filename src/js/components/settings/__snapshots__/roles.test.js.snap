@@ -13,12 +13,15 @@ exports[`Roles Component renders correctly 1`] = `
   </h2>
   <table
     className="MuiTable-root margin-bottom"
+    role={null}
   >
     <thead
       className="MuiTableHead-root"
+      role={null}
     >
       <tr
         className="MuiTableRow-root MuiTableRow-head"
+        role={null}
       >
         <th
           aria-sort={null}
@@ -59,9 +62,11 @@ exports[`Roles Component renders correctly 1`] = `
     </thead>
     <tbody
       className="MuiTableBody-root"
+      role={null}
     >
       <tr
         className="MuiTableRow-root MuiTableRow-hover"
+        role={null}
       >
         <td
           aria-sort={null}
@@ -112,10 +117,9 @@ exports[`Roles Component renders correctly 1`] = `
     tabIndex={0}
   >
     <svg
-      aria-hidden="true"
+      aria-hidden={true}
       className="MuiSvgIcon-root MuiChip-icon MuiChip-iconColorPrimary"
       focusable="false"
-      role="presentation"
       viewBox="0 0 24 24"
     >
       <path
@@ -149,7 +153,8 @@ exports[`Roles Component renders correctly 1`] = `
             }
           }
         >
-          Add a role
+          Edit the
+           role
         </h4>
         <div
           className="MuiFormControl-root MuiTextField-root"
@@ -184,6 +189,7 @@ exports[`Roles Component renders correctly 1`] = `
               onFocus={[Function]}
               required={false}
               type="text"
+              value=""
             />
           </div>
         </div>
@@ -221,6 +227,7 @@ exports[`Roles Component renders correctly 1`] = `
               placeholder="-"
               required={false}
               type="text"
+              value=""
             />
           </div>
         </div>
@@ -230,7 +237,7 @@ exports[`Roles Component renders correctly 1`] = `
           >
             <span
               aria-disabled={false}
-              className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-138 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
+              className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
               onBlur={[Function]}
               onDragLeave={[Function]}
               onFocus={[Function]}
@@ -248,16 +255,16 @@ exports[`Roles Component renders correctly 1`] = `
                 className="MuiIconButton-label"
               >
                 <input
-                  className="PrivateSwitchBase-input-141"
+                  checked={false}
+                  className="PrivateSwitchBase-input-4"
                   data-indeterminate={false}
                   onChange={[Function]}
                   type="checkbox"
                 />
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -290,7 +297,7 @@ exports[`Roles Component renders correctly 1`] = `
           >
             <span
               aria-disabled={false}
-              className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-138 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
+              className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
               onBlur={[Function]}
               onDragLeave={[Function]}
               onFocus={[Function]}
@@ -309,16 +316,15 @@ exports[`Roles Component renders correctly 1`] = `
               >
                 <input
                   checked={false}
-                  className="PrivateSwitchBase-input-141"
+                  className="PrivateSwitchBase-input-4"
                   data-indeterminate={false}
                   onChange={[Function]}
                   type="checkbox"
                 />
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path

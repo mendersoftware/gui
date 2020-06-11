@@ -28,17 +28,17 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
                 className="MuiListItemText-root MuiListItemText-multiline"
               >
                 <span
-                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
                 >
                   Device ID
                 </span>
                 <div
-                  className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+                  className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
                   title="-"
                 >
                   <div>
                     <span
-                      className=" "
+                      className="inventory-text"
                       style={Object {}}
                     >
                       -
@@ -74,10 +74,9 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
           }
         >
           <svg
-            aria-hidden="true"
+            aria-hidden={true}
             className="MuiSvgIcon-root green"
             focusable="false"
-            role="presentation"
             style={
               Object {
                 "margin": 12,
@@ -196,10 +195,9 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
             }
           >
             <svg
-              aria-hidden="true"
+              aria-hidden={true}
               className="MuiSvgIcon-root"
               focusable="false"
-              role="presentation"
               viewBox="0 0 24 24"
             >
               <path

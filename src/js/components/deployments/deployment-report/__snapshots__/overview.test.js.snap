@@ -25,12 +25,12 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
               className="MuiListItemText-root MuiListItemText-multiline"
             >
               <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
                 Release:
               </span>
               <div
-                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
                 title={
                   <Link
                     style={
@@ -46,7 +46,7 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
               >
                 <div>
                   <span
-                    className=" "
+                    className="inventory-text"
                     style={Object {}}
                   >
                     <a
@@ -83,17 +83,17 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
               className="MuiListItemText-root MuiListItemText-multiline"
             >
               <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
                 Device group:
               </span>
               <div
-                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
                 title="test deployment"
               >
                 <div>
                   <span
-                    className=" "
+                    className="inventory-text"
                     style={Object {}}
                   >
                     test deployment
@@ -121,12 +121,12 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
             className="MuiListItemText-root MuiListItemText-multiline"
           >
             <span
-              className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+              className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
             >
               Status:
             </span>
             <div
-              className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
+              className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
               title={
                 <div>
                   Finished 
@@ -135,7 +135,7 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
             >
               <div>
                 <span
-                  className=" "
+                  className="inventory-text"
                   style={Object {}}
                 >
                   <div>

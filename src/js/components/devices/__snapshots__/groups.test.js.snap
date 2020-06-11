@@ -37,7 +37,7 @@ exports[`Groups Component renders correctly 1`] = `
         className="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           All devices
         </span>
@@ -73,10 +73,9 @@ exports[`Groups Component renders correctly 1`] = `
         className="MuiListItemIcon-root"
       >
         <svg
-          aria-hidden="true"
+          aria-hidden={true}
           className="MuiSvgIcon-root"
           focusable="false"
-          role="presentation"
           viewBox="0 0 24 24"
         >
           <path
@@ -88,7 +87,7 @@ exports[`Groups Component renders correctly 1`] = `
         className="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Create a group
         </span>

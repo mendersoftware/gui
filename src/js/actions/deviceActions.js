@@ -1,6 +1,6 @@
 import GeneralApi, { headerNames } from '../api/general-api';
 import * as DeviceConstants from '../constants/deviceConstants';
-import { deriveAttributesFromDevices, duplicateFilter, filterDevices, mapDeviceAttributes } from '../helpers';
+import { deriveAttributesFromDevices, duplicateFilter, mapDeviceAttributes } from '../helpers';
 
 // default per page until pagination and counting integrated
 const defaultPerPage = 20;
@@ -88,12 +88,10 @@ export const removeStaticGroup = groupName => (dispatch, getState) => {
 
 // for some reason these functions can not be stored in the deviceConstants...
 const filterProcessors = {
-  $eq: val => val,
-  $ne: val => val,
-  $gt: val => Number(val),
-  $gte: val => Number(val),
-  $lt: val => Number(val),
-  $lte: val => Number(val),
+  $gt: val => Number(val) || val,
+  $gte: val => Number(val) || val,
+  $lt: val => Number(val) || val,
+  $lte: val => Number(val) || val,
   $in: val => ('' + val).split(','),
   $nin: val => ('' + val).split(',')
 };
@@ -102,7 +100,7 @@ const mapFiltersToTerms = filters =>
     scope: filter.scope,
     attribute: filter.key,
     type: filter.operator,
-    value: filterProcessors[filter.operator](filter.value)
+    value: filterProcessors.hasOwnProperty(filter.operator) ? filterProcessors[filter.operator](filter.value) : filter.value
   }));
 const mapTermsToFilters = terms => terms.map(term => ({ scope: term.scope, key: term.attribute, operator: term.type, value: term.value }));
 
@@ -168,6 +166,9 @@ export const removeDynamicGroup = groupName => (dispatch, getState) => {
  * Device inventory functions
  */
 export const selectGroup = group => (dispatch, getState) => {
+  if (getState().devices.groups.selectedGroup === group) {
+    return;
+  }
   let selectedGroup = getState().devices.groups.byId[group];
   let tasks = [];
   if (selectedGroup && selectedGroup.filters && selectedGroup.filters.length) {
@@ -226,11 +227,12 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
   devices.reduce(
     (accu, device) => {
       const stateDevice = state.devices.byId[device.id];
-      const attributes = mapDeviceAttributes(device.attributes);
-      device.attributes = stateDevice ? { ...stateDevice.attributes, ...attributes } : attributes;
-      device.status = status ? status : device.status || device.attributes.status;
-      device.created_ts = device.attributes.created_ts ? device.attributes.created_ts : device.created_ts;
-      device.updated_ts = device.attributes.updated_ts ? device.attributes.updated_ts : device.updated_ts;
+      const { identity, inventory, system } = mapDeviceAttributes(device.attributes);
+      device.attributes = stateDevice ? { ...stateDevice.attributes, ...inventory } : inventory;
+      device.identity_data = stateDevice ? { ...stateDevice.identity_data, ...identity } : identity;
+      device.status = status ? status : device.status || identity.status;
+      device.created_ts = system.created_ts ? system.created_ts : device.created_ts || stateDevice.created_ts;
+      device.updated_ts = system.updated_ts ? system.updated_ts : device.updated_ts || stateDevice.updated_ts;
       accu.devicesById[device.id] = { ...stateDevice, ...device };
       accu.ids.push(device.id);
       return accu;
@@ -346,7 +348,7 @@ export const setDeviceFilters = filters => dispatch =>
 export const getDeviceById = id => dispatch =>
   GeneralApi.get(`${inventoryApiUrl}/devices/${id}`)
     .then(res => {
-      const device = { ...res.body, attributes: mapDeviceAttributes(res.body.attributes) };
+      const device = { ...res.body, attributes: mapDeviceAttributes(res.body.attributes).inventory };
       delete device.updated_ts;
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICE,
@@ -424,19 +426,9 @@ export const getDeviceLimit = () => dispatch =>
 // get devices from inventory
 export const getDevicesByStatus = (status, page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false, group) => (dispatch, getState) => {
   const state = getState();
-  const filters = state.devices.filters;
-  let applicableFilters = [];
-  if (group && state.devices.groups.byId[group].filters.length) {
-    // use non-grouped filters here, since the group filters are reflected in these + possible modifications
-    applicableFilters = state.devices.filters;
-  } else if (typeof group === 'string') {
+  let applicableFilters = state.devices.filters || [];
+  if (typeof group === 'string' && !applicableFilters.length) {
     applicableFilters = [{ key: 'group', value: group, operator: '$eq', scope: 'system' }];
-  } else {
-    applicableFilters = filters;
-  }
-  let possibleDeviceIds = [];
-  if (filters.length && shouldSelectDevices) {
-    possibleDeviceIds = filterDevices(getState().devices, filters, status);
   }
   return GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
     page,
@@ -468,8 +460,7 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
       tasks.push(dispatch(getDevicesWithAuth(Object.values(deviceAccu.devicesById))));
     }
     if (shouldSelectDevices) {
-      // since deviceauth doesn't have any filtering we have to rely on the local filtering capabilities if filters are selected
-      tasks.push(dispatch(selectDevices(filters.length ? possibleDeviceIds : deviceAccu.ids)));
+      tasks.push(dispatch(selectDevices(deviceAccu.ids)));
     }
     tasks.push(Promise.resolve({ deviceAccu, total: Number(response.headers[headerNames.total]) }));
     return Promise.all(tasks);

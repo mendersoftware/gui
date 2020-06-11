@@ -47,12 +47,9 @@ export const getDeploymentsByStatus = (status, page = default_page, per_page = d
   return GeneralApi.get(`${deploymentsApiUrl}/deployments?status=${status}&per_page=${per_page}&page=${page}${created_after}${created_before}${search}`).then(
     res => {
       const { deployments, deploymentIds } = transformDeployments(res.body, getState().deployments.byId);
-      const deploymentsState = getState().deployments.byId;
       let tasks = deploymentIds.reduce(
         (accu, deploymentId) => {
-          if (status !== 'finished' || !deploymentsState[deploymentId] || !deploymentsState[deploymentId].stats) {
-            accu.push(dispatch(getSingleDeploymentStats(deploymentId)));
-          }
+          accu.push(dispatch(getSingleDeploymentStats(deploymentId)));
           return accu;
         },
         [

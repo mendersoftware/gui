@@ -9,7 +9,7 @@ import PasswordInput from '../common/forms/passwordinput';
 import EnterpriseNotification from '../common/enterpriseNotification';
 
 import { setSnackbar } from '../../actions/appActions';
-import { editUser, saveGlobalSettings } from '../../actions/userActions';
+import { editUser, saveGlobalSettings, saveUserSettings } from '../../actions/userActions';
 
 import { preformatWithRequestID } from '../../helpers';
 
@@ -65,7 +65,7 @@ export class SelfUserManagement extends React.Component {
   render() {
     const self = this;
     const { editEmail, editPass, emailFormId, qrExpanded } = self.state;
-    const { canHave2FA, currentUser, has2FA, isEnterprise } = self.props;
+    const { canHave2FA, currentUser, has2FA, hasTracking, hasTrackingConsent, isEnterprise, saveUserSettings } = self.props;
     const email = currentUser.email;
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
@@ -167,12 +167,23 @@ export class SelfUserManagement extends React.Component {
             benefit="set up Two Factor Authentication to add an additional layer of security to accounts"
           />
         )}
+        {isEnterprise && hasTracking && (
+          <div className="margin-top">
+            <div className="clickable flexbox space-between" onClick={() => saveUserSettings({ trackingConsentGiven: !hasTrackingConsent })}>
+              <p className="help-content">Help us improve Mender</p>
+              <Switch checked={!!(hasTracking && hasTrackingConsent)} />
+            </div>
+            <p className="info" style={{ width: '75%', margin: 0 }}>
+              Enable usage data and errors to be sent to help us improve our service.
+            </p>
+          </div>
+        )}
       </div>
     );
   }
 }
 
-const actionCreators = { editUser, saveGlobalSettings, setSnackbar };
+const actionCreators = { editUser, saveGlobalSettings, saveUserSettings, setSnackbar };
 
 const mapStateToProps = state => {
   const plan = state.users.organization ? state.users.organization.plan : 'os';
@@ -180,6 +191,8 @@ const mapStateToProps = state => {
     canHave2FA: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
     currentUser: state.users.byId[state.users.currentUser] || {},
     has2FA: state.users.globalSettings.hasOwnProperty('2fa') && state.users.globalSettings['2fa'] === 'enabled',
+    hasTracking: !!state.app.trackerCode,
+    hasTrackingConsent: state.users.globalSettings[state.users.currentUser]?.trackingConsentGiven,
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise')
   };
 };

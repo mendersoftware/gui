@@ -22,13 +22,20 @@ export function fullyDecodeURI(uri) {
 
 const statCollector = (items, statistics) => items.reduce((accu, property) => accu + Number(statistics[property] || 0), 0);
 
-export const groupDeploymentStats = stats => ({
+export const groupDeploymentStats = deployment => {
+  const stats = deployment.stats || {}
   // don't include 'pending' as inprogress, as all remaining devices will be pending - we don't discriminate based on phase membership
-  inprogress: statCollector(['downloading', 'installing', 'rebooting'], stats),
-  pending: stats['pending'] || 0,
-  successes: statCollector(['success', 'already-installed'], stats),
-  failures: statCollector(['failure', 'aborted', 'noartifact', 'decommissioned'], stats)
-});
+  const inprogress = statCollector(['downloading', 'installing', 'rebooting'], stats);
+  const pending  = (deployment.max_devices ? deployment.max_devices - deployment.device_count : 0) + (stats['pending'] || 0);
+  const successes = statCollector(['success', 'already-installed'], stats);
+  const failures = statCollector(['failure', 'aborted', 'noartifact', 'decommissioned'], stats);
+  return {
+    inprogress: inprogress,
+    pending: pending,
+    successes: successes,
+    failures: failures,
+  };
+};
 
 export function statusToPercentage(state, intervals) {
   var time;
@@ -313,9 +320,13 @@ export const mapDeviceAttributes = (attributes = []) =>
       if (!(attribute.value && attribute.name)) {
         return accu;
       }
-      return { ...accu, [attribute.name]: attribute.value };
+      accu[attribute.scope || 'inventory'] = {
+        ...accu[attribute.scope || 'inventory'],
+        [attribute.name]: attribute.value
+      };
+      return accu;
     },
-    { device_type: '', artifact_name: '' }
+    { inventory: { device_type: '', artifact_name: '' }, identity: {}, system: {} }
   );
 
 const deriveAttributePopularity = (accu, sourceObject = {}) =>
@@ -458,7 +469,7 @@ export const sortDeploymentDevices = devices => {
     rebooting: [],
     success: []
   };
-  devices.map(device => newList[device.status].push(device));
+  devices.map(device => (newList.hasOwnProperty(device.status) ? newList[device.status].push(device) : newList.decommissioned.push(device)));
   const newCombine = newList.failure.concat(
     newList.downloading,
     newList.installing,
@@ -488,26 +499,6 @@ export const standardizePhases = phases =>
     }
     return standardizedPhase;
   });
-
-/*
- * Match device attributes against filters, return filtered device list
- */
-export const filterDevices = (deviceState, filters, status) => {
-  const deviceIds = status ? deviceState.byStatus[status].deviceIds : Object.keys(deviceState.byId);
-  return deviceIds.filter(deviceId => {
-    const device = deviceState.byId[deviceId];
-    return filters.reduce(
-      (accu, filter) =>
-        accu &&
-        !!(
-          (device.attributes && device.attributes[filter.key] && device.attributes[filter.key].toString().startsWith(filter.value)) ||
-          (device.identity_data && device.identity_data[filter.key] && device.identity_data[filter.key].toString().startsWith(filter.value)) ||
-          (device[filter.key] && device[filter.key].toString().startsWith(filter.value))
-        ),
-      true
-    );
-  });
-};
 
 export const getDebInstallationCode = (
   packageVersion,

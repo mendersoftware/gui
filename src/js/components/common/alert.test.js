@@ -1,13 +1,15 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import FilterItem from './filteritem';
+import Alert from './alert';
 import { undefineds } from '../../../../tests/mockData';
 
-describe('FilterItem Component', () => {
+describe('Alert Component', () => {
   it('renders correctly', () => {
     const tree = renderer
       .create(
-        <FilterItem filterAttributes={['test']} filter={{ key: 'testkey', value: 'testvalue' }} filters={[{ key: 'testkey', value: 'testvalue' }]} attributes={[{ key: 'testkey', value: 'testvalue' }]} index={0} />
+        <Alert className="margin-top-small" severity="error">
+          Content
+        </Alert>
       )
       .toJSON();
     expect(tree).toMatchSnapshot();

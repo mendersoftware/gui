@@ -32,8 +32,8 @@ const handleLoginError = (err, has2FA) => dispatch => {
   return dispatch(setSnackbar(preformatWithRequestID(err.res, errMsg), null, 'Copy to clipboard'));
 };
 
-/* 
-  User management 
+/*
+  User management
 */
 export const loginUser = userData => (dispatch, getState) =>
   UsersApi.postLogin(`${useradmApiUrl}/auth/login`, userData)
@@ -120,9 +120,13 @@ export const getRoles = () => (dispatch, getState) =>
   GeneralApi.get(`${useradmApiUrl}/roles`).then(({ body: roles }) => {
     const rolesState = getState().users.rolesById;
     const rolesById = roles.reduce((accu, role) => {
+      var allowUserManagement = false;
       const groups = role.permissions.reduce((accu, permission) => {
-        if (permission.action === 'any' && permission.object.type === 'DEVICE_GROUP') {
+        if (permission.action === 'CREATE_DEPLOYMENT' && permission.object.type === 'DEVICE_GROUP') {
           accu.push(permission.object.value);
+        }
+        if (permission.action == 'http' && permission.object.type == 'any' && permission.object.value == `${useradmApiUrl}/.*`) {
+          allowUserManagement = true;
         }
         return accu;
       }, []);
@@ -133,7 +137,8 @@ export const getRoles = () => (dispatch, getState) =>
         description: rolesState[role.name] && rolesState[role.name].description ? rolesState[role.name].description : role.description,
         editable: rolesState[role.name] && typeof rolesState[role.name].editable !== 'undefined' ? rolesState[role.name].editable : true,
         title: rolesState[role.name] && rolesState[role.name].title ? rolesState[role.name].title : role.name,
-        permissions: role.permissions
+        permissions: role.permissions,
+        allowUserManagement: allowUserManagement
       };
       return accu;
     }, {});
@@ -161,22 +166,44 @@ export const createRole = roleData => dispatch => {
   );
 };
 
+export const editRole = roleData => dispatch => {
+  let permissions = roleData.groups.map(group => ({ action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: group } }));
+  if (roleData.allowUserManagement) {
+    permissions.push({
+      action: 'http',
+      object: {
+        type: 'any',
+        value: `${useradmApiUrl}/.*`
+      }
+    });
+  }
+  const role = {
+    name: roleData.name,
+    description: roleData.description,
+    permissions
+  };
+  const roleId = role.name;
+  return GeneralApi.put(`${useradmApiUrl}/roles/${roleId}`, role).then(() =>
+    Promise.all([dispatch({ type: UserConstants.UPDATED_ROLE, role: { ...UserConstants.emptyRole, ...role }, roleId: roleId }), dispatch(getRoles())])
+  );
+};
+
 export const removeRole = roleId => dispatch =>
   GeneralApi.delete(`${useradmApiUrl}/roles/${roleId}`)
     .then(() => Promise.all([dispatch({ type: UserConstants.REMOVED_ROLE, roleId }), dispatch(getRoles())]))
     .catch(err => Promise.all([Promise.reject(err), dispatch(setSnackbar(preformatWithRequestID(err.res, err.res.body.error), null, 'Copy to clipboard'))]));
 
-/* 
+/*
   Tenant management + Hosted Mender
 */
 export const getUserOrganization = () => dispatch =>
   GeneralApi.get(`${tenantadmUrl}/user/tenant`).then(res => Promise.resolve(dispatch({ type: UserConstants.SET_ORGANIZATION, organization: res.body })));
 
-/* 
-  Global settings 
+/*
+  Global settings
 */
 export const getGlobalSettings = () => dispatch =>
-  GeneralApi.get(`${useradmApiUrl}/settings`).then(res => dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: res }));
+  GeneralApi.get(`${useradmApiUrl}/settings`).then(({ body: settings }) => dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings }));
 
 export const saveGlobalSettings = (settings, beOptimistic = false) => (dispatch, getState) => {
   const updatedSettings = { ...getState().users.globalSettings, ...settings };
@@ -195,6 +222,17 @@ export const saveGlobalSettings = (settings, beOptimistic = false) => (dispatch,
       }
       return Promise.reject();
     });
+};
+
+export const saveUserSettings = settings => (dispatch, getState) => {
+  const currentUserId = (getState().users.byId[getState().users.currentUser] || {}).id;
+  const updatedSettings = {
+    [currentUserId]: {
+      ...getState().users.globalSettings[currentUserId],
+      ...settings
+    }
+  };
+  return dispatch(saveGlobalSettings(updatedSettings));
 };
 
 export const get2FAQRCode = () => dispatch =>

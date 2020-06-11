@@ -75,12 +75,16 @@ export class Authorized extends React.Component {
     const self = this;
     if (
       prevProps.allCount !== self.props.allCount ||
-      prevProps.group !== self.props.group ||
+      prevProps.selectedGroup !== self.props.selectedGroup ||
       prevProps.devices.length !== self.props.devices.length ||
       prevProps.groupCount !== self.props.groupCount ||
       filtersCompare(prevProps.filters, self.props.filters)
     ) {
-      self.setState({ selectedRows: [], expandRow: null, allRowsSelected: false });
+      var newState = { selectedRows: [], expandRow: null, allRowsSelected: false };
+      if (prevProps.selectedGroup != self.props.selectedGroup) {
+        newState = { pageNo: 1, ...newState };
+      }
+      self.setState(newState);
       if (self.props.showHelptips && self.props.showTips && !self.props.onboardingComplete && self.props.acceptedCount && self.props.acceptedCount < 2) {
         setTimeout(() => self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, self.onCloseSnackbar), 400);
       }
@@ -98,12 +102,11 @@ export class Authorized extends React.Component {
     const { filters, getDevicesByStatus, getGroupDevices, selectedGroup, setSnackbar } = self.props;
     const { pageLength, pageNo } = self.state;
     let request;
-    // if a group or filters, must use inventory API
-    const identityFiltered = filters.filter(item => item.scope === 'identity');
-    if (selectedGroup || (identityFiltered.length === 1 && identityFiltered[0].key === 'id')) {
-      request = selectedGroup ? getGroupDevices(selectedGroup, pageNo, pageLength, true) : self.getDeviceById(identityFiltered[0].value);
+    // if a group is selected, use getGroupDevices
+    if (selectedGroup) {
+      request = getGroupDevices(selectedGroup, pageNo, pageLength, true);
     } else {
-      // otherwise, show accepted from device adm
+      // otherwise, get accepted devices from the inventory, eventually applying filters
       const hasFilters = filters.length && filters[0].value;
       request = getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, pageNo, pageLength, shouldUpdate || hasFilters);
     }

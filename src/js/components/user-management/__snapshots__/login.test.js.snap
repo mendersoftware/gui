@@ -125,10 +125,9 @@ exports[`Login Component renders correctly 1`] = `
                   className="MuiIconButton-label"
                 >
                   <svg
-                    aria-hidden="true"
+                    aria-hidden={true}
                     className="MuiSvgIcon-root"
                     focusable="false"
-                    role="presentation"
                     viewBox="0 0 24 24"
                   >
                     <path
@@ -158,7 +157,7 @@ exports[`Login Component renders correctly 1`] = `
       >
         <span
           aria-disabled={false}
-          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-105 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
           onBlur={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
@@ -177,7 +176,7 @@ exports[`Login Component renders correctly 1`] = `
           >
             <input
               checked={false}
-              className="PrivateSwitchBase-input-108"
+              className="PrivateSwitchBase-input-4"
               data-indeterminate={false}
               id="noExpiry"
               name="noExpiry"
@@ -185,10 +184,9 @@ exports[`Login Component renders correctly 1`] = `
               type="checkbox"
             />
             <svg
-              aria-hidden="true"
+              aria-hidden={true}
               className="MuiSvgIcon-root"
               focusable="false"
-              role="presentation"
               viewBox="0 0 24 24"
             >
               <path

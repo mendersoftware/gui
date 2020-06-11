@@ -11,12 +11,15 @@ exports[`ProgressDeviceList Component renders correctly 1`] = `
 >
   <table
     className="MuiTable-root"
+    role={null}
   >
     <thead
       className="MuiTableHead-root"
+      role={null}
     >
       <tr
         className="MuiTableRow-root MuiTableRow-head"
+        role={null}
       >
         <th
           aria-sort={null}
@@ -134,6 +137,7 @@ exports[`ProgressDeviceList Component renders correctly 1`] = `
     </thead>
     <tbody
       className="MuiTableBody-root"
+      role={null}
     />
   </table>
 </div>

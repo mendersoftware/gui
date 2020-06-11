@@ -148,18 +148,73 @@ describe('unionizeStrings function', () => {
 });
 
 describe('mapDeviceAttributes function', () => {
-  it('removes duplicastes from an array', () => {
-    const defaultAttributes = { device_type: '', artifact_name: '' };
+  const defaultAttributes = {
+    inventory: { device_type: '', artifact_name: '' },
+    identity: {},
+    system: {}
+  };
+  it('works with empty attributes', () => {
     expect(mapDeviceAttributes()).toEqual(defaultAttributes);
     expect(mapDeviceAttributes([])).toEqual(defaultAttributes);
+  });
+  it('handles unscoped attributes', () => {
     const testAttributesObject1 = { name: 'this1', value: 'that1' };
-    expect(mapDeviceAttributes([testAttributesObject1])).toEqual({ this1: 'that1', ...defaultAttributes });
+    expect(mapDeviceAttributes([testAttributesObject1])).toEqual({
+      ...defaultAttributes,
+      inventory: {
+        ...defaultAttributes.inventory,
+        this1: 'that1'
+      }
+    });
     const testAttributesObject2 = { name: 'this2', value: 'that2' };
-    expect(mapDeviceAttributes([testAttributesObject1, testAttributesObject2])).toEqual({ this1: 'that1', this2: 'that2', ...defaultAttributes });
+    expect(mapDeviceAttributes([testAttributesObject1, testAttributesObject2])).toEqual({
+      ...defaultAttributes,
+      inventory: {
+        ...defaultAttributes.inventory,
+        this1: 'that1',
+        this2: 'that2'
+      }
+    });
     expect(mapDeviceAttributes([testAttributesObject1, testAttributesObject2, testAttributesObject2])).toEqual({
-      this1: 'that1',
-      this2: 'that2',
-      ...defaultAttributes
+      ...defaultAttributes,
+      inventory: {
+        ...defaultAttributes.inventory,
+        this1: 'that1',
+        this2: 'that2'
+      }
+    });
+  });
+  it('handles scoped attributes', () => {
+    const testAttributesObject1 = { name: 'this1', value: 'that1', scope: 'inventory' };
+    expect(mapDeviceAttributes([testAttributesObject1])).toEqual({
+      ...defaultAttributes,
+      inventory: {
+        ...defaultAttributes.inventory,
+        this1: 'that1'
+      }
+    });
+    const testAttributesObject2 = { name: 'this2', value: 'that2', scope: 'identity' };
+    expect(mapDeviceAttributes([testAttributesObject1, testAttributesObject2])).toEqual({
+      ...defaultAttributes,
+      identity: {
+        ...defaultAttributes.identity,
+        this2: 'that2'
+      },
+      inventory: {
+        ...defaultAttributes.inventory,
+        this1: 'that1'
+      }
+    });
+    expect(mapDeviceAttributes([testAttributesObject1, testAttributesObject2, testAttributesObject2])).toEqual({
+      ...defaultAttributes,
+      identity: {
+        ...defaultAttributes.identity,
+        this2: 'that2'
+      },
+      inventory: {
+        ...defaultAttributes.inventory,
+        this1: 'that1'
+      }
     });
   });
 });
