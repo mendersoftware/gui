@@ -216,8 +216,8 @@ export class Header extends React.Component {
           <MenuItem component={Link} to="/settings">
             Settings
           </MenuItem>
-          <MenuItem component={Link} to="/settings/my-account">
-            My account
+          <MenuItem component={Link} to="/settings/my-profile">
+            My profile
           </MenuItem>
           {multitenancy && (
             <MenuItem component={Link} to="/settings/my-organization">
