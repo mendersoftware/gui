@@ -132,7 +132,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
               >
                 <div>
                   <span
-                    className="break-all inventory-text tenant-token-text "
+                    className="break-all inventory-text tenant-token-text"
                     style={Object {}}
                   >
                     test
