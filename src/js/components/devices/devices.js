@@ -60,7 +60,7 @@ export class Devices extends React.Component {
       const str = decodeURIComponent(this.props.match.params.filters);
       const filters = str.split('&').map(filter => {
         const filterPair = filter.split('=');
-        const scope = filterPair[0] === 'group' ? { scope: 'system' } : {};
+        const scope = filterPair[0] === 'group' ? { scope: 'system' } : (filterPair[0] === 'id' ? { scope: 'identity' } : {});
         return { ...emptyFilter, ...scope, key: filterPair[0], value: filterPair[1] };
       });
       const groupFilter = filters.find(filter => filter.key === 'group');
