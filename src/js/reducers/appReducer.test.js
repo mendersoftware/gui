@@ -1,32 +1,5 @@
-import reducer from './appReducer';
+import reducer, { initialState } from './appReducer';
 import * as AppConstants from '../constants/appConstants';
-
-const initialState = {
-  hostAddress: null,
-  snackbar: {
-    open: false,
-    message: ''
-  },
-  features: {
-    hasMultitenancy: true,
-    isHosted: false,
-    isEnterprise: false,
-    isDemoMode: false
-  },
-  hostedAnnouncement: '',
-  docsVersion: '',
-  menderDebPackageVersion: 'master',
-  versionInformation: {
-    Integration: '',
-    'Mender-Client': '',
-    'Mender-Artifact': '',
-    'Meta-Mender': '',
-    Deployments: null,
-    Deviceauth: null,
-    Inventory: null,
-    GUI: 'latest'
-  }
-};
 
 describe('app reducer', () => {
   it('should return the initial state', () => {
