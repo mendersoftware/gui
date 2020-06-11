@@ -13,7 +13,7 @@ import Global from './global';
 
 const sectionMap = {
   'global-settings': { admin: false, enterprise: false, multitenancy: false, userManagement: false, component: <Global />, text: 'Global settings' },
-  'my-account': { admin: false, enterprise: false, multitenancy: false, userManagement: false, component: <SelfUserManagement />, text: 'My account' },
+  'my-profile': { admin: false, enterprise: false, multitenancy: false, userManagement: false, component: <SelfUserManagement />, text: 'My profile' },
   'user-management': { admin: false, enterprise: false, multitenancy: false, userManagement: true, component: <UserManagement />, text: 'User management' },
   'role-management': { admin: true, enterprise: true, multitenancy: false, userManagement: false, component: <Roles />, text: 'Roles' },
   'my-organization': { admin: false, enterprise: false, multitenancy: true, userManagement: false, component: <MyOrganization />, text: 'My organization' }
@@ -28,8 +28,8 @@ export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, hi
 
   const getCurrentSection = (sections, section = match.params.section) => {
     if (!sections.hasOwnProperty(section) || checkDenyAccess(sections[section])) {
-      history.replace('/settings/my-account');
-      return sections['my-account'];
+      history.replace('/settings/my-profile');
+      return sections['my-profile'];
     }
     return sections[section];
   };
