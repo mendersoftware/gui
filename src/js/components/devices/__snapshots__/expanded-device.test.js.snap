@@ -38,7 +38,7 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
                 >
                   <div>
                     <span
-                      className=" "
+                      className="inventory-text"
                       style={Object {}}
                     >
                       -

@@ -102,12 +102,11 @@ export class Authorized extends React.Component {
     const { filters, getDevicesByStatus, getGroupDevices, selectedGroup, setSnackbar } = self.props;
     const { pageLength, pageNo } = self.state;
     let request;
-    // if a group or filters, must use inventory API
-    const identityFiltered = filters.filter(item => item.scope === 'identity');
-    if (selectedGroup || (identityFiltered.length === 1 && identityFiltered[0].key === 'id')) {
-      request = selectedGroup ? getGroupDevices(selectedGroup, pageNo, pageLength, true) : self.getDeviceById(identityFiltered[0].value);
+    // if a group is selected, use getGroupDevices
+    if (selectedGroup) {
+      request = getGroupDevices(selectedGroup, pageNo, pageLength, true);
     } else {
-      // otherwise, show accepted from device adm
+      // otherwise, get accepted devices from the inventory, eventually applying filters
       const hasFilters = filters.length && filters[0].value;
       request = getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, pageNo, pageLength, shouldUpdate || hasFilters);
     }

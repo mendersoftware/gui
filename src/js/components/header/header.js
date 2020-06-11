@@ -54,11 +54,11 @@ export class Header extends React.Component {
 
   componentDidUpdate(prevProps) {
     const sessionId = this.cookies.get('JWT');
-    const { hasTrackingEnabled, isEnterprise, trackingCode, user } = this.props;
+    const { hasTrackingEnabled, trackingCode, user } = this.props;
     if ((!sessionId || !user || !user.id || !user.email.length) && !this.state.gettingUser && !this.state.loggingOut) {
       this._updateUsername();
     }
-    if (prevProps.hasTrackingEnabled !== hasTrackingEnabled && trackingCode && !isEnterprise && hasTrackingEnabled) {
+    if (prevProps.hasTrackingEnabled !== hasTrackingEnabled && trackingCode && hasTrackingEnabled) {
       ReactGA.initialize(trackingCode);
     }
   }
