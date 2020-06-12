@@ -26,7 +26,7 @@ const initialState = {
     deviceType: null,
     demoArtifactPort: mender_environment && mender_environment.demoArtifactPort ? mender_environment.demoArtifactPort : 85,
     progress: 0,
-    showTips: true,
+    showTips: false,
     showTipsDialog: false,
     showConnectDeviceDialog: false,
     showCreateArtifactDialog: false
@@ -129,17 +129,17 @@ const userReducer = (state = initialState, action) => {
           }
         }
       };
-      case UserConstants.UPDATED_ROLE:
-        return {
-          ...state,
-          rolesById: {
-            ...state.rolesById,
-            [action.roleId]: {
-              ...state.rolesById[action.roleId],
-              ...action.role
-            }
+    case UserConstants.UPDATED_ROLE:
+      return {
+        ...state,
+        rolesById: {
+          ...state.rolesById,
+          [action.roleId]: {
+            ...state.rolesById[action.roleId],
+            ...action.role
           }
-        };
+        }
+      };
     case UserConstants.SET_GLOBAL_SETTINGS:
       return {
         ...state,
