@@ -86,7 +86,7 @@ export default class FilterItem extends React.Component {
     clearTimeout(self.timer);
     self.timer = setTimeout(
       () =>
-        self.state.key && self.state.value
+        self.state.key
           ? self.props.onSelect({
               key: self.state.key,
               operator: self.state.operator,

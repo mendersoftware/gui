@@ -84,8 +84,9 @@ export class Filters extends React.Component {
   }
 
   onFilterChange(filters) {
-    this.props.setDeviceFilters(filters);
-    this.props.onFilterChange(filters);
+    const activeFilters = filters.filter(item => item.value !== '');
+    this.props.setDeviceFilters(activeFilters);
+    this.props.onFilterChange(activeFilters);
   }
 
   render() {
