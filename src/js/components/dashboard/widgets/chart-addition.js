@@ -14,8 +14,8 @@ export default class ChartAdditionWidget extends React.Component {
     };
   }
 
-  addCurrentSelection() {
-    this.props.onAdditionClick({ ...defaultReports[0], group: this.state.selection });
+  addCurrentSelection(selection) {
+    this.props.onAdditionClick({ ...defaultReports[0], group: typeof selection === 'string' ? selection : null });
     this.setState({ adding: false, selection: '' });
   }
 
@@ -31,7 +31,7 @@ export default class ChartAdditionWidget extends React.Component {
               <FormControl>
                 <InputLabel id="group-select-label">Device group</InputLabel>
                 <Select labelId="group-select-label" value={selection} onChange={e => self.setState({ selection: e.target.value })}>
-                  <MenuItem value="">
+                  <MenuItem value={true}>
                     <em>All Devices</em>
                   </MenuItem>
                   {Object.keys(groups).map(group => (
@@ -46,7 +46,12 @@ export default class ChartAdditionWidget extends React.Component {
               <Button onClick={() => self.setState({ adding: false })} style={{ marginRight: 15, marginBottom: 15 }}>
                 Cancel
               </Button>
-              <Button variant="contained" disabled={!selection} onClick={() => self.addCurrentSelection()} style={{ marginRight: 15, marginBottom: 15 }}>
+              <Button
+                variant="contained"
+                disabled={!selection}
+                onClick={() => self.addCurrentSelection(selection)}
+                style={{ marginRight: 15, marginBottom: 15 }}
+              >
                 Save
               </Button>
             </div>
