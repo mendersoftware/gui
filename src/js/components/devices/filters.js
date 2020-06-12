@@ -134,7 +134,7 @@ export class Filters extends React.Component {
         <Collapse in={showFilters} timeout="auto" unmountOnExit>
           <>
             <div className="flexbox">
-              <div className="margin-right" style={{ marginTop: currentFilters.length ? 8 : 25 }}>
+              <div className="margin-right" style={{ marginTop: addedFilters.length ? 8 : 25 }}>
                 Devices matching:
               </div>
               <div>
