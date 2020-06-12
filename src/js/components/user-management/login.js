@@ -4,9 +4,9 @@ import { Redirect } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import ReactTooltip from 'react-tooltip';
 
-import HelpIcon from '@material-ui/icons/Help';
-
-import { clearAllRetryTimers } from '../../utils/retrytimer';
+import { Button, SvgIcon } from '@material-ui/core';
+import { Help as HelpIcon } from '@material-ui/icons';
+import { mdiGithub, mdiGoogle } from '@mdi/js';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getUser, loginUser, setCurrentUser } from '../../actions/userActions';
@@ -17,6 +17,26 @@ import PasswordInput from '../common/forms/passwordinput';
 import FormCheckbox from '../common/forms/formcheckbox';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import { getOnboardingStepCompleted } from '../../utils/onboardingmanager';
+import { clearAllRetryTimers } from '../../utils/retrytimer';
+
+const providers = [
+  {
+    id: 'Github',
+    icon: (
+      <SvgIcon fontSize="inherit">
+        <path d={mdiGithub} />
+      </SvgIcon>
+    )
+  },
+  {
+    id: 'Google',
+    icon: (
+      <SvgIcon fontSize="inherit">
+        <path d={mdiGoogle} />
+      </SvgIcon>
+    )
+  }
+];
 
 export class Login extends React.Component {
   constructor(props, context) {
@@ -120,15 +140,30 @@ export class Login extends React.Component {
             <FormCheckbox id="noExpiry" label="Stay logged in" checked={noExpiry === 'true'} />
           </Form>
 
-          <div className="clear" />
           {isHosted ? (
-            <div className="flexbox margin-top" style={{ color: 'rgba(0, 0, 0, 0.3)', justifyContent: 'center' }}>
-              <span>
+            <div className="margin-top text-muted">
+              <div className="flexbox centered">
                 Don&#39;t have an account?{' '}
                 <a style={{ marginLeft: '4px' }} href="https://mender.io/signup" target="_blank">
                   Sign up here
                 </a>
-              </span>
+              </div>
+              <h4 className="dashboard-header margin-top-large" style={{ display: 'flex', justifyContent: 'center' }}>
+                <span style={{ padding: 15, top: -24 }}>or</span>
+              </h4>
+              <div className="flexbox centered margin-bottom">Log in using:</div>
+              <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                {providers.map(provider => (
+                  <Button
+                    variant="contained"
+                    key={provider.id}
+                    href={`/api/management/v1/useradm/oauth2/${provider.id.toLowerCase()}`}
+                    startIcon={provider.icon}
+                  >
+                    {provider.id}
+                  </Button>
+                ))}
+              </div>
               {this.twoFARef && (
                 <div>
                   <div id="onboard-6" className="tooltip info" data-tip data-for="2fa-tip" data-event="click focus" style={twoFAAnchor}>
