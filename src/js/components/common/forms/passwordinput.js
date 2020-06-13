@@ -34,7 +34,7 @@ export default class PasswordInput extends React.Component {
   }
   _getState() {
     return {
-      value: '',
+      value: this.props.value || '',
       errortext: null,
       isValid: true,
       score: '',
