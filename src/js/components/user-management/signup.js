@@ -4,6 +4,8 @@ import { Link, Redirect } from 'react-router-dom';
 
 import { Button } from '@material-ui/core';
 
+import ReCAPTCHA from 'react-google-recaptcha';
+
 import { setSnackbar } from '../../actions/appActions';
 import { createOrganizationTrial } from '../../actions/organizationActions';
 import { loginUser } from '../../actions/userActions';
@@ -26,6 +28,7 @@ export class Signup extends React.Component {
       name: '',
       tos: '',
       marketing: '',
+      recaptcha: '',
     };
   }
 
@@ -43,6 +46,10 @@ export class Signup extends React.Component {
   }
 
   _handleSignup(formData) {
+    if (this.props.recaptchaSiteKey !== '' && this.state.recaptcha === '') {
+      this.props.setSnackbar('Please complete the reCAPTCHA test before proceeding!', 5000, '');
+      return;
+    }
     this.setState({
       name: formData.name,
       tos: formData.tos,
@@ -55,11 +62,11 @@ export class Signup extends React.Component {
       plan: 'enterprise',
       tos: formData.tos,
       marketing: formData.marketing,
-      'g-recaptcha-response': 'recaptcha',
+      'g-recaptcha-response': this.state.recaptcha || 'empty',
     };
     return this.props.createOrganizationTrial(signup).catch(err => {
       if (err.error.status >= 400 && err.error.status < 500) {
-        this.setState({step: 1})
+        this.setState({step: 1, recaptcha: ''})
         this.props.setSnackbar(err.error.response.body.error, 5000, '');
       }
     }).then((res) => {
@@ -75,6 +82,10 @@ export class Signup extends React.Component {
       password: this.state.password,
     };
     return this.props.loginUser(formData).catch(err => console.log(err));
+  }
+
+  _recaptchaOnChange(value) {
+    this.setState({recaptcha: value});
   }
 
   componentDidUpdate() {
@@ -134,6 +145,14 @@ export class Signup extends React.Component {
                 <TextInput hint="Company or organization name *" label="Company or organization name *" id="name" required={true} value={name} validations="isLength:1" />
                 <FormCheckbox id="tos" label="By checking this you agree to our Terms of service and Privacy Policy *" required={true} value={'true'} checked={tos === 'true'} />
                 <FormCheckbox id="marketing" label="If you would like to receive occasional email updates about Mender and upcoming features, please consent to us storing your email address only for this purpose. By checking this box, you agree that we may contact you by email from time tom time. You can unsubscribe by emailing contact@mender.io" value={'true'} checked={marketing === 'true'} />
+                {self.props.recaptchaSiteKey ? (
+                  <div className="margin-top">
+                    <ReCAPTCHA
+                      sitekey={self.props.recaptchaSiteKey}
+                      onChange={value => self._recaptchaOnChange(value)}
+                    />
+                  </div>
+                ) : <></> }
               </Form>
             </>
           )}
@@ -176,6 +195,7 @@ const mapStateToProps = state => {
   return {
     currentUser: state.users.byId[state.users.currentUser] || {},
     isHosted: state.app.features.isHosted,
+    recaptchaSiteKey: state.app.recaptchaSiteKey,
   };
 };
 
