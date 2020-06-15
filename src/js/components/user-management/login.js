@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import ReactTooltip from 'react-tooltip';
 
@@ -125,9 +125,9 @@ export class Login extends React.Component {
             <div className="flexbox margin-top" style={{ color: 'rgba(0, 0, 0, 0.3)', justifyContent: 'center' }}>
               <span>
                 Don&#39;t have an account?{' '}
-                <a style={{ marginLeft: '4px' }} href="https://mender.io/signup" target="_blank">
+                <Link style={{ marginLeft: '4px' }} to="/signup">
                   Sign up here
-                </a>
+                </Link>
               </span>
               {this.twoFARef && (
                 <div>

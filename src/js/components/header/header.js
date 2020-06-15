@@ -245,7 +245,7 @@ export class Header extends React.Component {
     const toolbarStyle = { height: '56px', minHeight: 'unset', paddingLeft: '16px', paddingRight: '16px' };
 
     return (
-      <div id="fixedHeader" className={`header ${location.pathname === '/login' ? 'hidden' : ''}`}>
+      <div id="fixedHeader" className={`header ${location.pathname === '/login' || location.pathname == '/signup' ? 'hidden' : ''}`}>
         <Toolbar style={Object.assign({ backgroundColor: '#fff' }, toolbarStyle)}>
           <Toolbar key={0} style={toolbarStyle}>
             <Link to="/" id="logo" className={plan === 'enterprise' || isEnterprise ? 'enterprise' : ''} />
