@@ -1,7 +1,7 @@
 import * as UserConstants from '../constants/userConstants';
 import { stringToBoolean } from '../helpers';
 
-const initialState = {
+export const initialState = {
   byId: {},
   currentUser: null,
   jwtToken: null,
