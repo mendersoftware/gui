@@ -122,6 +122,28 @@ export class Login extends React.Component {
           <h3>Log in</h3>
           <img src="assets/img/loginlogo.png" alt="mender-logo" className="margin-bottom-small" />
 
+          {isHosted && (
+            <>
+              <div className="flexbox centered margin-bottom">Log in with:</div>
+              <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                {providers.map(provider => (
+                  <Button
+                    className="oauth-provider"
+                    variant="contained"
+                    key={provider.id}
+                    href={`/api/management/v1/useradm/oauth2/${provider.id.toLowerCase()}`}
+                    startIcon={provider.icon}
+                  >
+                    {provider.id}
+                  </Button>
+                ))}
+              </div>
+              <h4 className="dashboard-header margin-top-large" style={{ display: 'flex', justifyContent: 'center' }}>
+                <span style={{ padding: 15, top: -24 }}>or your email address</span>
+              </h4>
+            </>
+          )}
+
           <Form showButtons={true} buttonColor="primary" onSubmit={formdata => this._handleLogin(formdata)} submitLabel="Log in" submitButtonId="login_button">
             <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
             <PasswordInput className="margin-bottom-small" id="password" label="Password" required={true} />
@@ -148,22 +170,7 @@ export class Login extends React.Component {
                   Sign up here
                 </a>
               </div>
-              <h4 className="dashboard-header margin-top-large" style={{ display: 'flex', justifyContent: 'center' }}>
-                <span style={{ padding: 15, top: -24 }}>or</span>
-              </h4>
-              <div className="flexbox centered margin-bottom">Log in using:</div>
-              <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                {providers.map(provider => (
-                  <Button
-                    variant="contained"
-                    key={provider.id}
-                    href={`/api/management/v1/useradm/oauth2/${provider.id.toLowerCase()}`}
-                    startIcon={provider.icon}
-                  >
-                    {provider.id}
-                  </Button>
-                ))}
-              </div>
+
               {this.twoFARef && (
                 <div>
                   <div id="onboard-6" className="tooltip info" data-tip data-for="2fa-tip" data-event="click focus" style={twoFAAnchor}>
