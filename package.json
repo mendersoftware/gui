@@ -10,6 +10,8 @@
     "@material-ui/lab": "4.0.0-alpha.55",
     "@material-ui/pickers": "^3.2.10",
     "@mdi/js": "^5.3.45",
+    "@stripe/react-stripe-js": "^1.1.2",
+    "@stripe/stripe-js": "^1.7.0",
     "copy-to-clipboard": "^3.3.1",
     "generate-password": "^1.5.1",
     "jwt-decode": "^2.2.0",
