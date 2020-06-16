@@ -21,12 +21,15 @@ const timeout = 900000; // 15 minutes idle time
 class AppRoot extends React.PureComponent {
   componentDidMount() {
     this.props.history.listen(location => {
+      const path = location.pathname.split('/');
+      ReactGA.set({ page: path.length > 1 ? path[1] : path[0] });
+      // if we're on page whose path might contain sensitive device/ group/ deployment names etc. we sanitize the sent information before submission
       let page = location.pathname || '';
-      ReactGA.set({ page });
-      // unless we're on a help page the path will get cut off to the rough region, to ensure we're not sending any sensitive device/ group/ deployment names etc.
-      if (!location.pathname.startsWith('/help')) {
-        const path = location.pathname.split('/');
-        page = path.length > 1 ? path[1] : path[0];
+      if (location.pathname.includes('=') && (location.pathname.startsWith('/devices') || location.pathname.startsWith('/deployments'))) {
+        const splitter = location.pathname.lastIndexOf('/');
+        const filters = location.pathname.slice(splitter + 1);
+        const keyOnlyFilters = filters.split('&').reduce((accu, item) => `${accu}:${item.split('=')[0]}&`, ''); // assume the keys to filter by are not as revealing as the values things are filtered by
+        page = `${location.pathname.substring(0, splitter)}?${keyOnlyFilters.substring(0, keyOnlyFilters.length - 1)}`; // cut off the last & of the reduced filters string
       }
       ReactGA.pageview(page);
     });
