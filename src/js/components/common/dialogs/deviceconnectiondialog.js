@@ -45,7 +45,7 @@ export class DeviceConnectionDialog extends React.Component {
 
   render() {
     const self = this;
-    const { onboardingDeviceType, open, onCancel, pendingCount } = self.props;
+    const { onboardingDeviceType, open, onboardingComplete, onCancel, pendingCount } = self.props;
     const { progress, onDevice, virtualDevice } = self.state;
 
     let content = (
@@ -116,7 +116,7 @@ export class DeviceConnectionDialog extends React.Component {
         <DialogActions>
           <Button onClick={onCancel}>Cancel</Button>
           <div style={{ flexGrow: 1 }} />
-          {onDevice || virtualDevice ? (
+          {(onDevice || virtualDevice) && (
             <div>
               <Button onClick={() => self.onBackClick()}>Back</Button>
               {progress < 2 ? (
@@ -128,12 +128,12 @@ export class DeviceConnectionDialog extends React.Component {
                   Next
                 </Button>
               ) : (
-                <Button variant="contained" disabled={true}>
-                  Waiting for device
+                <Button variant="contained" disabled={!onboardingComplete} onClick={onCancel}>
+                  {onboardingComplete ? 'Close' : 'Waiting for device'}
                 </Button>
               )}
             </div>
-          ) : null}
+          )}
         </DialogActions>
       </Dialog>
     );
@@ -146,6 +146,7 @@ const mapStateToProps = state => {
   return {
     isEnterprise: state.app.features.hasMultitenancy || state.app.features.isEnterprise || state.app.features.isHosted,
     pendingCount: state.devices.byStatus.pending.total,
+    onboardingComplete: state.users.onboarding.complete,
     onboardingDeviceType: state.users.onboarding.deviceType,
     token: state.users.organization.tenant_token
   };
