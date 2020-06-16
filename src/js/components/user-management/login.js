@@ -4,9 +4,9 @@ import { Link, Redirect } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import ReactTooltip from 'react-tooltip';
 
-import HelpIcon from '@material-ui/icons/Help';
-
-import { clearAllRetryTimers } from '../../utils/retrytimer';
+import { Button, SvgIcon } from '@material-ui/core';
+import { Help as HelpIcon } from '@material-ui/icons';
+import { mdiGithub, mdiGoogle } from '@mdi/js';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getUser, loginUser, setCurrentUser } from '../../actions/userActions';
@@ -17,6 +17,26 @@ import PasswordInput from '../common/forms/passwordinput';
 import FormCheckbox from '../common/forms/formcheckbox';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import { getOnboardingStepCompleted } from '../../utils/onboardingmanager';
+import { clearAllRetryTimers } from '../../utils/retrytimer';
+
+const providers = [
+  {
+    id: 'Github',
+    icon: (
+      <SvgIcon fontSize="inherit">
+        <path d={mdiGithub} />
+      </SvgIcon>
+    )
+  },
+  {
+    id: 'Google',
+    icon: (
+      <SvgIcon fontSize="inherit">
+        <path d={mdiGoogle} />
+      </SvgIcon>
+    )
+  }
+];
 
 export class Login extends React.Component {
   constructor(props, context) {
@@ -102,6 +122,28 @@ export class Login extends React.Component {
           <h3>Log in</h3>
           <img src="assets/img/loginlogo.png" alt="mender-logo" className="margin-bottom-small" />
 
+          {isHosted && (
+            <>
+              <div className="flexbox centered margin-bottom">Log in with:</div>
+              <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                {providers.map(provider => (
+                  <Button
+                    className="oauth-provider"
+                    variant="contained"
+                    key={provider.id}
+                    href={`/api/management/v1/useradm/oauth2/${provider.id.toLowerCase()}`}
+                    startIcon={provider.icon}
+                  >
+                    {provider.id}
+                  </Button>
+                ))}
+              </div>
+              <h4 className="dashboard-header margin-top-large" style={{ display: 'flex', justifyContent: 'center' }}>
+                <span style={{ padding: 15, top: -24 }}>or your email address</span>
+              </h4>
+            </>
+          )}
+
           <Form showButtons={true} buttonColor="primary" onSubmit={formdata => this._handleLogin(formdata)} submitLabel="Log in" submitButtonId="login_button">
             <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
             <PasswordInput className="margin-bottom-small" id="password" label="Password" required={true} />
@@ -120,15 +162,14 @@ export class Login extends React.Component {
             <FormCheckbox id="noExpiry" label="Stay logged in" checked={noExpiry === 'true'} />
           </Form>
 
-          <div className="clear" />
           {isHosted ? (
-            <div className="flexbox margin-top" style={{ color: 'rgba(0, 0, 0, 0.3)', justifyContent: 'center' }}>
-              <span>
+            <div className="margin-top text-muted">
+              <div className="flexbox centered">
                 Don&#39;t have an account?{' '}
                 <Link style={{ marginLeft: '4px' }} to="/signup">
                   Sign up here
                 </Link>
-              </span>
+              </div>
               {this.twoFARef && (
                 <div>
                   <div id="onboard-6" className="tooltip info" data-tip data-for="2fa-tip" data-event="click focus" style={twoFAAnchor}>
