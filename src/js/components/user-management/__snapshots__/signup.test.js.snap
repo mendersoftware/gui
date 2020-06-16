@@ -264,9 +264,6 @@ exports[`Signup Component renders correctly 1`] = `
         </button>
       </div>
     </form>
-    <div
-      className="clear"
-    />
   </div>
 </div>
 `;
