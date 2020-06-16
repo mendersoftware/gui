@@ -2,8 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 
-import { Button } from '@material-ui/core';
-
 import ReCAPTCHA from 'react-google-recaptcha';
 
 import { setSnackbar } from '../../actions/appActions';
@@ -11,6 +9,7 @@ import { createOrganizationTrial } from '../../actions/organizationActions';
 import { loginUser } from '../../actions/userActions';
 
 import Form from '../common/forms/form';
+import Loader from '../common/loader';
 import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
 import FormCheckbox from '../common/forms/formcheckbox';
@@ -23,6 +22,7 @@ export class Signup extends React.Component {
     this.state = {
       step: props.step || 1,
       email: '',
+      loading: false,
       password: '',
       password_confirmation: '',
       name: '',
@@ -54,6 +54,7 @@ export class Signup extends React.Component {
       name: formData.name,
       tos: formData.tos,
       marketing: formData.marketing,
+      loading: true
     });
     const signup = {
       email: this.state.email,
@@ -62,26 +63,28 @@ export class Signup extends React.Component {
       plan: 'enterprise',
       tos: formData.tos,
       marketing: formData.marketing,
-      'g-recaptcha-response': this.state.recaptcha || 'empty',
+      'g-recaptcha-response': this.state.recaptcha || 'empty'
     };
-    return this.props.createOrganizationTrial(signup).catch(err => {
-      if (err.error.status >= 400 && err.error.status < 500) {
-        this.setState({step: 1, recaptcha: ''})
-        this.props.setSnackbar(err.error.response.body.error, 5000, '');
-      }
-    }).then((res) => {
-      if (typeof res !== 'undefined') {
-        this.setState({step: 3})
-      }
-    });
-  }
-
-  _handleLogin() {
-    const formData = {
-      email: this.state.email,
-      password: this.state.password,
-    };
-    return this.props.loginUser(formData).catch(err => console.log(err));
+    return this.props
+      .createOrganizationTrial(signup)
+      .catch(err => {
+        if (err.error.status >= 400 && err.error.status < 500) {
+          this.setState({ step: 1, recaptcha: '' });
+          this.props.setSnackbar(err.error.response.body.error, 5000, '');
+        }
+      })
+      .then(res => {
+        if (typeof res !== 'undefined') {
+          setTimeout(() => {
+            this.props.loginUser({
+              email: this.state.email,
+              password: this.state.password
+            });
+            this.setState({ loading: false });
+          }, 3000);
+        }
+      })
+      .finally(() => setTimeout(() => this.setState({ loading: false }), 3200));
   }
 
   _recaptchaOnChange(value) {
@@ -108,7 +111,7 @@ export class Signup extends React.Component {
 
   render() {
     const self = this;
-    const { step, email, password, password_confirmation, name, tos, marketing, redirectToReferrer } = this.state;
+    const { step, email, loading, password, password_confirmation, name, tos, marketing, redirectToReferrer } = this.state;
     const { isHosted } = this.props;
     let { from } = { from: { pathname: '/' } };
     if (location && location.state && location.state.from.pathname !== '/ui/') {
@@ -120,6 +123,10 @@ export class Signup extends React.Component {
     return (
       <div className="full-screen">
         <div id="signup-box">
+          {loading ? (
+            <Loader show={true} style={{ display: 'flex' }} />
+          ) : (
+            <>
           {step == 1 && (
             <>
               <h1>Try Mender for Free</h1>
@@ -156,33 +163,16 @@ export class Signup extends React.Component {
               </Form>
             </>
           )}
-
-          {step == 3 && (
-            <>
-              <h1>Sign up completed</h1>
-              <h2 className="margin-bottom-large">
-                Your account has been created,<br/>
-                you can now log in.
-              </h2>
-              <div className="align-center">
-                <Button variant="contained" color="secondary" onClick={() => self._handleLogin()}>
-                  Log in
-                </Button>
-              </div>
+              {isHosted && (
+                <div className="flexbox margin-top" style={{ color: 'rgba(0, 0, 0, 0.3)', justifyContent: 'center' }}>
+                  Already have an account?{' '}
+                  <Link style={{ marginLeft: '4px' }} to="/login">
+                    Log in
+                  </Link>
+                </div>
+              )}
             </>
           )}
-
-          <div className="clear" />
-          {isHosted && step != 3 ? (
-            <div className="flexbox margin-top" style={{ color: 'rgba(0, 0, 0, 0.3)', justifyContent: 'center' }}>
-              <span>
-                Already have an account? {' '}
-                <Link style={{ marginLeft: '4px' }} to="/login">
-                  Log in
-                </Link>
-              </span>
-            </div>
-          ) : null}
         </div>
       </div>
     );
