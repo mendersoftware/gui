@@ -21,8 +21,6 @@ const timeout = 900000; // 15 minutes idle time
 class AppRoot extends React.PureComponent {
   componentDidMount() {
     this.props.history.listen(location => {
-      const path = location.pathname.split('/');
-      ReactGA.set({ page: path.length > 1 ? path[1] : path[0] });
       // if we're on page whose path might contain sensitive device/ group/ deployment names etc. we sanitize the sent information before submission
       let page = location.pathname || '';
       if (location.pathname.includes('=') && (location.pathname.startsWith('/devices') || location.pathname.startsWith('/deployments'))) {
