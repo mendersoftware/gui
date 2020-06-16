@@ -28,7 +28,7 @@ export class Signup extends React.Component {
       name: '',
       tos: '',
       marketing: '',
-      recaptcha: '',
+      recaptcha: ''
     };
   }
 
@@ -41,7 +41,7 @@ export class Signup extends React.Component {
       email: formData.email,
       password: formData.password_new,
       password_confirmation: formData.password_confirmation,
-      step: 2,
+      step: 2
     });
   }
 
@@ -88,7 +88,7 @@ export class Signup extends React.Component {
   }
 
   _recaptchaOnChange(value) {
-    this.setState({recaptcha: value});
+    this.setState({ recaptcha: value });
   }
 
   componentDidUpdate() {
@@ -127,42 +127,79 @@ export class Signup extends React.Component {
             <Loader show={true} style={{ display: 'flex' }} />
           ) : (
             <>
-          {step == 1 && (
-            <>
-              <h1>Try Mender for Free</h1>
-              <h2 className="margin-bottom-large">
-                Sign up and connect up to 10 devices<br />
-                free for 12 months
-              </h2>
-              <Form showButtons={true} buttonColor="primary" onSubmit={formdata => self._handleStep1(formdata)} submitLabel="Sign up" submitButtonId="login_button">
-                <TextInput hint="Email *" label="Email *" id="email" required={true} validations="isLength:1,isEmail" value={email} />
-                <PasswordInput id="password_new" label="Password *" validations="isLength:8" required={true} value={password} />
-                <PasswordInput id="password_confirmation" label="Confirm password *" validations="isLength:8" required={true} value={password_confirmation} />
-              </Form>
-            </>
-          )}
-          {step == 2 && (
-            <>
-              <h1>Setting up your Account</h1>
-              <h2 className="margin-bottom-large">
-                To finish creating your account,<br />
-                please fill in a few details
-              </h2>
-              <Form showButtons={true} buttonColor="primary" onSubmit={formdata => self._handleSignup(formdata)} submitLabel="Complete signup" submitButtonId="login_button">
-                <TextInput hint="Company or organization name *" label="Company or organization name *" id="name" required={true} value={name} validations="isLength:1" />
-                <FormCheckbox id="tos" label="By checking this you agree to our Terms of service and Privacy Policy *" required={true} value={'true'} checked={tos === 'true'} />
-                <FormCheckbox id="marketing" label="If you would like to receive occasional email updates about Mender and upcoming features, please consent to us storing your email address only for this purpose. By checking this box, you agree that we may contact you by email from time tom time. You can unsubscribe by emailing contact@mender.io" value={'true'} checked={marketing === 'true'} />
-                {self.props.recaptchaSiteKey ? (
-                  <div className="margin-top">
-                    <ReCAPTCHA
-                      sitekey={self.props.recaptchaSiteKey}
-                      onChange={value => self._recaptchaOnChange(value)}
+              {step == 1 && (
+                <>
+                  <h1>Try Mender for Free</h1>
+                  <h2 className="margin-bottom-large">
+                    Sign up and connect up to 10 devices
+                    <br />
+                    free for 12 months
+                  </h2>
+                  <Form
+                    showButtons={true}
+                    buttonColor="primary"
+                    onSubmit={formdata => self._handleStep1(formdata)}
+                    submitLabel="Sign up"
+                    submitButtonId="login_button"
+                  >
+                    <TextInput hint="Email *" label="Email *" id="email" required={true} validations="isLength:1,isEmail" value={email} />
+                    <PasswordInput id="password_new" label="Password *" validations="isLength:8" required={true} value={password} />
+                    <PasswordInput
+                      id="password_confirmation"
+                      label="Confirm password *"
+                      validations="isLength:8"
+                      required={true}
+                      value={password_confirmation}
                     />
-                  </div>
-                ) : <></> }
-              </Form>
-            </>
-          )}
+                  </Form>
+                </>
+              )}
+              {step == 2 && (
+                <>
+                  <h1>Setting up your Account</h1>
+                  <h2 className="margin-bottom-large">
+                    To finish creating your account,
+                    <br />
+                    please fill in a few details
+                  </h2>
+                  <Form
+                    showButtons={true}
+                    buttonColor="primary"
+                    onSubmit={formdata => self._handleSignup(formdata)}
+                    submitLabel="Complete signup"
+                    submitButtonId="login_button"
+                  >
+                    <TextInput
+                      hint="Company or organization name *"
+                      label="Company or organization name *"
+                      id="name"
+                      required={true}
+                      value={name}
+                      validations="isLength:1"
+                    />
+                    <FormCheckbox
+                      id="tos"
+                      label="By checking this you agree to our Terms of service and Privacy Policy *"
+                      required={true}
+                      value={'true'}
+                      checked={tos === 'true'}
+                    />
+                    <FormCheckbox
+                      id="marketing"
+                      label="If you would like to receive occasional email updates about Mender and upcoming features, please consent to us storing your email
+address only for this purpose. By checking this box, you agree that we may contact you by email from time tom time.
+You can unsubscribe by emailing contact@mender.io"
+                      value={'true'}
+                      checked={marketing === 'true'}
+                    />
+                    {self.props.recaptchaSiteKey && (
+                      <div className="margin-top">
+                        <ReCAPTCHA sitekey={self.props.recaptchaSiteKey} onChange={value => self._recaptchaOnChange(value)} />
+                      </div>
+                    )}
+                  </Form>
+                </>
+              )}
               {isHosted && (
                 <div className="flexbox margin-top" style={{ color: 'rgba(0, 0, 0, 0.3)', justifyContent: 'center' }}>
                   Already have an account?{' '}
@@ -185,7 +222,7 @@ const mapStateToProps = state => {
   return {
     currentUser: state.users.byId[state.users.currentUser] || {},
     isHosted: state.app.features.isHosted,
-    recaptchaSiteKey: state.app.recaptchaSiteKey,
+    recaptchaSiteKey: state.app.recaptchaSiteKey
   };
 };
 
