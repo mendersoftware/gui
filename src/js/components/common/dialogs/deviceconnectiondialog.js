@@ -101,7 +101,7 @@ export class DeviceConnectionDialog extends React.Component {
       content = <VirtualDeviceOnboarding />;
     }
 
-    if (pendingCount) {
+    if (pendingCount && !onboardingComplete) {
       setTimeout(() => onCancel(), 2000);
     }
     if (open && progress >= 2 && pendingCount && !window.location.hash.includes('pending')) {
