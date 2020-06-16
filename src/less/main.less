@@ -397,9 +397,9 @@ ul.link-list {
   }
 }
 
-#demoBox,
+#demoBox, 
+#trialVersion,
 #announcement {
-  border-left: 1px solid @lightergrey;
   padding: 4px 2 * @defaultGutterWidth;
   margin: 14px 0;
   font-size: 14px;
@@ -1501,6 +1501,53 @@ div:focus {
     margin-bottom: 15px;
   }
 }
+
+
+/* Upgrade */
+
+.planPanel {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: 1px solid @lightergrey;
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 2%;
+  margin-bottom: 10px;
+  width: 30%;
+  height: 150px;
+  .transition(all 0.2s ease);
+  cursor: pointer;
+
+  &.active,
+  &:hover {
+    border-color: @lightgrey;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
+  }
+
+  &.active {
+    background-color: @lightestgrey;
+  }
+}
+
+/* stripe elements */
+
+#poweredByStripe {
+  display: block;
+  background-image: url(../assets/img/powered_by_stripe.png);
+  height: 30px;
+  width: 100%;
+  background-position-x: right;
+  background-repeat: no-repeat;
+  float: right;
+  margin-top: 10px;
+}
+
+.StripeElement {
+  border-bottom: 1px solid rgba(0,0,0,.26);
+  padding-bottom: 10px;
+}
+
+
 
 /* icons */
 

@@ -35,6 +35,9 @@ export const initialState = {
     RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false, permissions: [] },
     RBAC_ROLE_OBSERVER: { title: 'Read only', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
     RBAC_ROLE_CI: { title: 'CI', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] }
+  },
+  stripe: {
+    // stripe secret
   }
 };
 
@@ -231,6 +234,12 @@ const userReducer = (state = initialState, action) => {
           ...state.onboarding,
           artifactIncluded: action.value
         }
+      };
+
+    case UserConstants.STRIPE_SECRET:
+      return {
+        ...state,
+        secret: action.value
       };
     default:
       return state;
