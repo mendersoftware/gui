@@ -59,7 +59,7 @@ export default class DistributionReport extends React.Component {
 
   render() {
     const self = this;
-    const { group, onClick, style } = self.props;
+    const { group, groups, onClick, style } = self.props;
     const { distribution: data, removing } = self.state;
     return (
       <div className="margin-right margin-bottom widget chart-widget" style={style}>
@@ -105,6 +105,10 @@ export default class DistributionReport extends React.Component {
                   startAngle={90}
                 />
               </VictoryGroup>
+            ) : groups[group]?.filters.length && !groups[group]?.deviceIds.length ? (
+              <p className="muted flexbox centered" style={{ height: '100%' }}>
+                No devices are part of this group.
+              </p>
             ) : (
               <Loader show={true} />
             )}

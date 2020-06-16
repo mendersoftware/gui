@@ -1412,7 +1412,8 @@ div:focus {
 }
 
 /* Log in */
-#login-box {
+#login-box,
+#signup-box  {
   .animation(fadein 1s 1);
   width: 25%;
   max-width: 400px;
@@ -1479,6 +1480,21 @@ div:focus {
   }
   svg {
     vertical-align: middle;
+  }
+}
+
+/* sign up */
+#signup-box {
+  h1, h2, h3 {
+    text-transform: none;
+    color: black;
+    font-weight: normal;
+    text-align: center;
+  }
+
+  .MuiFormControl-root {
+    margin-top: 0;
+    margin-bottom: 15px;
   }
 }
 

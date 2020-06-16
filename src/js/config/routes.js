@@ -8,6 +8,7 @@ import Deployments from '../components/deployments/deployments';
 import Devices from '../components/devices/devices';
 import Help from '../components/help/help';
 import Login from '../components/user-management/login';
+import Signup from '../components/user-management/signup';
 import Settings from '../components/settings/settings';
 
 import { isLoggedIn } from '../auth';
@@ -43,6 +44,7 @@ export default (
       <PrivateRoute path="/settings/:section?" component={Settings} />
       <PrivateRoute path="/help" component={Help} />
       <Route path="/login" render={() => <Login />} />
+      <Route path="/signup" render={() => <Signup />} />
       <PrivateRoute component={Dashboard} />
     </Switch>
   </App>

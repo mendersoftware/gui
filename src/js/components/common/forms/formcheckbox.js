@@ -7,6 +7,7 @@ export default class FormCheckbox extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
+      value: this.props.checked ? this.props.value : '',
       checked: this.props.checked,
       isValid: true
     };
@@ -14,15 +15,24 @@ export default class FormCheckbox extends React.Component {
 
   componentDidMount() {
     this.props.attachToForm(this); // Attaching the component to the form
+    if (this.props.value) {
+      this.props.validate(this, this.props.value);
+    }
+    if (this.props.setControlRef) {
+      this.props.setControlRef(this.input);
+    }
   }
+
   componentWillUnmount() {
     this.props.detachFromForm(this); // Detaching if unmounting
   }
 
   updateCheck(checked) {
-    this.setState({ checked });
-    this.props.validate(this, !this.state.checked);
+    const value = checked ? this.props.value : '';
+    this.setState({ checked, value: value });
+    this.props.validate(this, value);
   }
+
   render() {
     return (
       <FormControlLabel

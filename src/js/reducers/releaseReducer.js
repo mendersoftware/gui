@@ -1,6 +1,6 @@
 import * as ReleaseConstants from '../constants/releaseConstants';
 
-const initialState = {
+export const initialState = {
   /*
    * Return list of saved artifacts objects
    */
@@ -13,7 +13,7 @@ const initialState = {
    * Return list of saved release objects
    */
   byId: {
-    /* 
+    /*
     [releaseName]: {
       Artifacts: [
         {
@@ -22,11 +22,12 @@ const initialState = {
           description: '',
           device_types_compatible: [],
           ...
-          updates: [
+          updates: [{
             files: [
               { size: 123, name: '' }
-            ]
-          ],
+            ],
+            type_info: { type: '' }
+          }],
           url: '' // optional
         }
       ],
@@ -102,8 +103,6 @@ const releaseReducer = (state = initialState, action) => {
         ...state,
         selectedRelease: action.release
       };
-    case ReleaseConstants.UPLOAD_ARTIFACT:
-      return state;
     case ReleaseConstants.UPLOAD_PROGRESS:
       return {
         ...state,
