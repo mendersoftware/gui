@@ -96,7 +96,7 @@ export class Signup extends React.Component {
   render() {
     const self = this;
     const { step, loading, redirectToReferrer } = this.state;
-    const { isHosted, recaptchaSiteKey } = this.props;
+    const { recaptchaSiteKey } = this.props;
     let from = { pathname: '/' };
     if (location && location.state && location.state.from.pathname !== '/ui/') {
       from = location.state.from;
@@ -113,14 +113,12 @@ export class Signup extends React.Component {
             <>
               {step == 1 && <UserDataEntry setSnackbar={setSnackbar} onSubmit={self._handleStep1} />}
               {step == 2 && <OrgDataEntry setSnackbar={setSnackbar} onSubmit={self._handleSignup} recaptchaSiteKey={recaptchaSiteKey} />}
-              {isHosted && (
-                <div className="flexbox margin-top" style={{ color: 'rgba(0, 0, 0, 0.3)', justifyContent: 'center' }}>
-                  Already have an account?{' '}
-                  <Link style={{ marginLeft: '4px' }} to="/login">
-                    Log in
-                  </Link>
-                </div>
-              )}
+              <div className="flexbox margin-top" style={{ color: 'rgba(0, 0, 0, 0.3)', justifyContent: 'center' }}>
+                Already have an account?{' '}
+                <Link style={{ marginLeft: '4px' }} to="/login">
+                  Log in
+                </Link>
+              </div>
             </>
           )}
         </div>
@@ -134,7 +132,6 @@ const actionCreators = { createOrganizationTrial, loginUser, setSnackbar };
 const mapStateToProps = state => {
   return {
     currentUserId: state.users.currentUserId,
-    isHosted: state.app.features.isHosted,
     recaptchaSiteKey: state.app.recaptchaSiteKey
   };
 };
