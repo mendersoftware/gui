@@ -19,7 +19,7 @@ import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import { getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 
-const providers = [
+export const providers = [
   {
     id: 'Github',
     icon: (
