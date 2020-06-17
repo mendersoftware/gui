@@ -69,8 +69,8 @@ export const createArtifact = (meta, file) => dispatch => {
     .then(() => Promise.all([dispatch(selectArtifact(meta.name)), dispatch(setSnackbar('Upload successful', 5000))]))
     .catch(err => {
       try {
-        var errMsg = err.res.body.error || '';
-        dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be generated. ${errMsg}`), null, 'Copy to clipboard'));
+        const errMsg = err.res.body.error || '';
+        dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be generated. ${errMsg || err.error}`), null, 'Copy to clipboard'));
       } catch (e) {
         console.log(e);
       }
@@ -92,8 +92,8 @@ export const uploadArtifact = (meta, file) => dispatch => {
     .then(() => Promise.all([dispatch(selectArtifact(file)), dispatch(setSnackbar('Upload successful', 5000))]))
     .catch(err => {
       try {
-        var errMsg = err.res.body.error || '';
-        dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be uploaded. ${errMsg}`), null, 'Copy to clipboard'));
+        const errMsg = err.res.body.error || '';
+        dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be uploaded. ${errMsg || err.error}`), null, 'Copy to clipboard'));
       } catch (e) {
         console.log(e);
       }
@@ -110,6 +110,11 @@ export const editArtifact = (id, body) => (dispatch, getState) =>
     }
     release.Artifacts[index].description = body.description;
     return dispatch({ type: ReleaseConstants.UPDATED_ARTIFACT, release });
+  })
+  .catch(err => {
+    const errMsg = err.res.body.error || '';
+    dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact details couldn't be updated. ${errMsg || err.error}`), null, 'Copy to clipboard'));
+    return Promise.reject();
   });
 
 export const removeArtifact = id => (dispatch, getState) =>
@@ -121,6 +126,10 @@ export const removeArtifact = id => (dispatch, getState) =>
       return dispatch({ type: ReleaseConstants.RELEASE_REMOVED, release: release.Name });
     }
     return dispatch({ type: ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT, release });
+  })
+  .catch(err => {
+    const errMsg = err.res.body.error || '';
+    dispatch(setSnackbar(preformatWithRequestID(err.res, `Error removing artifact: ${errMsg || err.error}`), null, 'Copy to clipboard'));
   });
 
 export const selectArtifact = artifact => (dispatch, getState) => {

@@ -5,6 +5,22 @@ var request = require('superagent')
   .agent()
   .use(unauthorizedRedirect);
 
+export const headerNames = {
+  link: 'link',
+  location: 'location',
+  total: 'x-total-count'
+};
+
+const endHandler = (error, res, reject, resolve) => {
+  if (error || !res.ok) {
+    if (res && res.statusCode == 403) {
+      res.body.error = res.body.error.message;
+    }
+    return reject({ error, res });
+  }
+  return resolve(res);
+}
+
 const Api = {
   get: url => {
     var token = cookies.get('JWT');
