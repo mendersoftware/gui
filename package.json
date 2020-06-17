@@ -34,7 +34,7 @@
     "react-router-dom": "^5.2.0",
     "react-search-input": "^0.11.3",
     "react-time": "^4.3.0",
-    "react-tooltip": "^3.11.6",
+    "react-tooltip": "^4.2.7",
     "recompose": "^0.30.0",
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
