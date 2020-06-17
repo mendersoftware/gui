@@ -61,6 +61,7 @@ export default class DistributionReport extends React.Component {
     const self = this;
     const { group, groups, onClick, style } = self.props;
     const { distribution: data, removing } = self.state;
+    const total = data.reduce((prev, item) => prev + item.y, 0);
     return (
       <div className="margin-right margin-bottom widget chart-widget" style={style}>
         {removing ? (
@@ -100,7 +101,7 @@ export default class DistributionReport extends React.Component {
                       }
                     }
                   ]}
-                  labelComponent={<VictoryLabel />}
+                  labelComponent={<VictoryLabel text={({ datum }) => datum.y.toString() + ' (' + (Math.round(datum.y * 1000 / (total || 1))/10.0).toString() + '%)'} dy={8} />}
                   radius={85}
                   startAngle={90}
                 />
