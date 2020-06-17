@@ -87,10 +87,10 @@ export default class DistributionReport extends React.Component {
                   parent: { display: 'flex', alignSelf: 'center', height: 'initial', width: 'initial' }
                 }}
                 data={data}
-                width={380}
-                height={230}
+                width={315}
+                height={240}
               >
-                <VictoryLegend x={30} y={150} width={270} height={65} orientation="horizontal" itemsPerRow={3} gutter={20} />
+                <VictoryLegend x={30} y={150} width={320} height={65} orientation="horizontal" itemsPerRow={3} gutter={20} />
                 <VictoryPie
                   endAngle={-90}
                   events={[
