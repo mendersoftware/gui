@@ -5,9 +5,9 @@ import Time from 'react-time';
 import pluralize from 'pluralize';
 
 // material ui
-import { Button } from '@material-ui/core';
+import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
+import { CheckCircle as CheckCircleIcon, InfoOutlined as InfoIcon, HighlightOffOutlined as HighlightOffOutlinedIcon } from '@material-ui/icons';
 
-import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 import { getDevicesByStatus, setDeviceFilters, updateDevicesAuth } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
@@ -23,11 +23,12 @@ export class Pending extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      pageNo: 1,
-      pageLength: 20,
-      selectedRows: [],
       authLoading: 'all',
-      pageLoading: true
+      pageLength: 20,
+      pageLoading: true,
+      pageNo: 1,
+      selectedRows: [],
+      showActions: false
     };
     if (!props.pendingDeviceIds.length) {
       props.getDevicesByStatus(DEVICE_STATES.pending);
@@ -129,9 +130,10 @@ export class Pending extends React.Component {
       showHelptips,
       showOnboardingTips
     } = self.props;
-    var limitMaxed = deviceLimit ? deviceLimit <= acceptedDevices : false;
-    var limitNear = deviceLimit ? deviceLimit < acceptedDevices + devices.length : false;
-    var selectedOverLimit = deviceLimit ? deviceLimit < acceptedDevices + this.state.selectedRows.length : false;
+    const { authLoading, pageLoading, selectedRows, showActions } = self.state;
+    const limitMaxed = deviceLimit ? deviceLimit <= acceptedDevices : false;
+    const limitNear = deviceLimit ? deviceLimit < acceptedDevices + devices.length : false;
+    const selectedOverLimit = deviceLimit ? deviceLimit < acceptedDevices + selectedRows.length : false;
 
     const columnHeaders = [
       {
@@ -175,7 +177,7 @@ export class Pending extends React.Component {
           anchor: { left: 200, top: element ? element.offsetTop + element.offsetHeight : 170 }
         });
       }
-      if (this.state.selectedRows && this.authorizeRef) {
+      if (selectedRows && this.authorizeRef) {
         const anchor = {
           left: this.authorizeRef.offsetLeft - this.authorizeRef.offsetWidth / 2,
           top: this.authorizeRef.offsetParent.offsetTop - this.authorizeRef.offsetParent.offsetHeight - this.authorizeRef.offsetHeight / 2
@@ -188,6 +190,12 @@ export class Pending extends React.Component {
       }
     }
 
+    const pluralized = pluralize('devices', selectedRows.length);
+    const actions = [
+      { icon: <HighlightOffOutlinedIcon />, title: `Reject ${pluralized}`, action: () => self.onAuthorizationChange(selectedRows, DEVICE_STATES.rejected) },
+      { icon: <CheckCircleIcon />, title: `Accept ${pluralized}`, action: () => self.onAuthorizationChange(selectedRows, DEVICE_STATES.accepted) }
+    ];
+
     return (
       <div className="tab-container">
         {!!count && (
@@ -195,11 +203,11 @@ export class Pending extends React.Component {
             <h3 className="inline-block margin-right">
               {count} {pluralize('devices', count)} pending authorization
             </h3>
-            {!this.state.authLoading && <Filters identityOnly={true} onFilterChange={filters => self._getDevices(true, filters)} />}
+            {!authLoading && <Filters identityOnly={true} onFilterChange={filters => self._getDevices(true, filters)} />}
           </div>
         )}
-        <Loader show={this.state.authLoading} />
-        {devices.length && (!this.state.pageLoading || this.state.authLoading !== 'all') ? (
+        <Loader show={authLoading} />
+        {devices.length && (!pageLoading || authLoading !== 'all') ? (
           <div className="padding-bottom" ref={ref => (this.deviceListRef = ref)}>
             {deviceLimitWarning}
             <DeviceList
@@ -220,7 +228,7 @@ export class Pending extends React.Component {
             {showHelptips && showOnboardingTips && !onboardingComplete && !deviceConnectingProgressed ? (
               <DevicePendingTip />
             ) : (
-              <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>
+              <div className={authLoading ? 'hidden' : 'dashboard-placeholder'}>
                 <p>
                   {filters.length
                     ? `There are no pending devices matching the selected ${pluralize('filters', filters.length)}`
@@ -236,27 +244,29 @@ export class Pending extends React.Component {
           </div>
         )}
 
-        {this.state.selectedRows.length ? (
-          <div className="fixedButtons">
-            <div className="float-right">
-              {this.state.authLoading ? <Loader style={{ width: '100px', top: '7px', position: 'relative' }} table={true} waiting={true} show={true} /> : null}
-
-              <span className="margin-right">
-                {this.state.selectedRows.length} {pluralize('devices', this.state.selectedRows.length)} selected
-              </span>
-              <Button
-                variant="contained"
-                disabled={disabled || limitMaxed || selectedOverLimit}
-                onClick={() => this._authorizeDevices()}
-                buttonRef={ref => (this.authorizeRef = ref)}
-                color="primary"
-              >
-                {`Authorize ${this.state.selectedRows.length} ${pluralize('devices', this.state.selectedRows.length)}`}
-              </Button>
-              {deviceLimitWarning}
+        {!!selectedRows.length && (
+          <div className="flexbox fixedButtons">
+            <div className="margin-right">
+              {authLoading && <Loader style={{ width: '100px', top: '7px', position: 'relative' }} table={true} waiting={true} show={true} />}
+              {selectedRows.length} {pluralize('devices', selectedRows.length)} selected
             </div>
+            <SpeedDial
+              ariaLabel="device-actions"
+              className="margin-small"
+              icon={<SpeedDialIcon />}
+              disabled={disabled || limitMaxed || selectedOverLimit}
+              onClose={() => self.setState({ showActions: false })}
+              onOpen={() => self.setState({ showActions: true })}
+              buttonRef={ref => (this.authorizeRef = ref)}
+              open={showActions}
+            >
+              {actions.map(action => (
+                <SpeedDialAction key={action.title} icon={action.icon} tooltipTitle={action.title} tooltipOpen onClick={action.action} />
+              ))}
+            </SpeedDial>
+            {deviceLimitWarning}
           </div>
-        ) : null}
+        )}
         {onboardingComponent ? onboardingComponent : null}
       </div>
     );
