@@ -2,11 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import pluralize from 'pluralize';
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
-
-import CreateGroup from './create-group';
 import AuthorizedDevices from './authorized-devices';
+import CreateGroup from './create-group';
 import Groups from './groups';
+import RemoveGroup from './remove-group';
 import {
   addDeviceToGroup,
   addDynamicGroup,
@@ -163,24 +162,7 @@ export class DeviceGroups extends React.Component {
             removeDevicesFromGroup={devices => self._removeDevicesFromGroup(devices)}
           />
         </div>
-
-        {removeGroup && (
-          <Dialog open={removeGroup}>
-            <DialogTitle>Remove this group?</DialogTitle>
-            <DialogContent>
-              <p>This will remove the group from the list. Are you sure you want to continue?</p>
-            </DialogContent>
-            <DialogActions>
-              <Button key="remove-action-button-1" onClick={() => self.setState({ removeGroup: !removeGroup })} style={{ marginRight: '10px' }}>
-                Cancel
-              </Button>
-              <Button variant="contained" key="remove-action-button-2" color="primary" onClick={() => self._removeCurrentGroup()}>
-                Remove group
-              </Button>
-            </DialogActions>
-          </Dialog>
-        )}
-
+        {removeGroup && <RemoveGroup onClose={() => self.setState({ removeGroup: !removeGroup })} onRemove={() => self._removeCurrentGroup()} />}
         {(createGroupDialog || modifyGroupDialog) && (
           <CreateGroup
             addListOfDevices={(devices, group) => self._createGroupFromDialog(devices, group)}
