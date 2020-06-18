@@ -21,7 +21,6 @@ const defaultChartStyle = {
   height: 280,
   justifyContent: 'initial',
   padding: 0,
-  width: 380
 };
 
 export class SoftwareDistribution extends React.Component {
@@ -91,7 +90,7 @@ export class SoftwareDistribution extends React.Component {
                   devices={devices}
                   groups={groups}
                   group={report.group}
-                  key={`report-${report.group}`}
+                  key={`report-${report.group}-${index}`}
                   onClick={() => self.removeReport(index)}
                   selectGroup={selectGroup}
                   style={defaultChartStyle}
