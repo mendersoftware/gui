@@ -7,7 +7,7 @@ import Time from 'react-time';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Fab, FormControl, FormHelperText, IconButton, Input, TextField } from '@material-ui/core';
 import { Add as ContentAddIcon, Clear as ClearIcon, CloudUpload as FileIcon, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
-import { getDeviceCount, getDevicesByStatus, preauthDevice } from '../../actions/deviceActions';
+import { getDeviceCount, getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { isEmpty, preformatWithRequestID } from '../../helpers';
@@ -30,6 +30,8 @@ export class Preauthorize extends React.Component {
   }
 
   componentDidMount() {
+    this.props.selectGroup();
+    this.props.setDeviceFilters([]);
     this.timer = setInterval(() => this._getDevices(), refreshDeviceLength);
     this._getDevices(true);
   }
@@ -355,7 +357,7 @@ export class Preauthorize extends React.Component {
   }
 }
 
-const actionCreators = { getDeviceCount, getDevicesByStatus, preauthDevice, setSnackbar };
+const actionCreators = { getDeviceCount, getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters, setSnackbar };
 
 const mapStateToProps = state => {
   return {

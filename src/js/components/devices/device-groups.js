@@ -139,7 +139,6 @@ export class DeviceGroups extends React.Component {
     const self = this;
     const { acceptedCount, currentTab, groups, openSettingsDialog, selectedGroup, showHelptips } = self.props;
     const { createGroupDialog, fromFilters, modifyGroupDialog, removeGroup, tmpDevices } = self.state;
-
     return (
       <div className="tab-container">
         <div className="leftFixed">
