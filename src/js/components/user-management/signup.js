@@ -29,7 +29,7 @@ export class Signup extends React.Component {
     if (oauthProvider) {
       state.oauthProvider = oauthProvider;
       state.oauthId = cookies.get('externalID');
-      state.email = cookies.get('email') || 'meh@moooh.com';
+      state.email = cookies.get('email');
       state.step = 2;
     }
     this.state = state;
@@ -47,7 +47,7 @@ export class Signup extends React.Component {
     this.setState({
       loading: true
     });
-    let signup = {
+    const signup = {
       email: this.state.email,
       password: this.state.password,
       organization: formData.name,
@@ -111,8 +111,8 @@ export class Signup extends React.Component {
             <Loader show={true} style={{ display: 'flex' }} />
           ) : (
             <>
-              {step == 1 && <UserDataEntry setSnackbar={setSnackbar} onSubmit={self._handleStep1} />}
-              {step == 2 && <OrgDataEntry setSnackbar={setSnackbar} onSubmit={self._handleSignup} recaptchaSiteKey={recaptchaSiteKey} />}
+              {step == 1 && <UserDataEntry setSnackbar={setSnackbar} onSubmit={formdata => self._handleStep1(formdata)} />}
+              {step == 2 && <OrgDataEntry setSnackbar={setSnackbar} onSubmit={formdata => self._handleSignup(formdata)} recaptchaSiteKey={recaptchaSiteKey} />}
               <div className="flexbox margin-top" style={{ color: 'rgba(0, 0, 0, 0.3)', justifyContent: 'center' }}>
                 Already have an account?{' '}
                 <Link style={{ marginLeft: '4px' }} to="/login">
