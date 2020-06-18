@@ -179,5 +179,5 @@ export const getReleases = () => dispatch =>
 
 export const getRelease = name => dispatch =>
   GeneralApi.get(`${deploymentsApiUrl}/deployments/releases?name=${name}`).then(({ body: releases }) =>
-    Promise.resolve(dispatch({ type: ReleaseConstants.RECEIVE_RELEASE, release: flattenRelease(releases[0]) }))
+    releases.length ? Promise.resolve(dispatch({ type: ReleaseConstants.RECEIVE_RELEASE, release: flattenRelease(releases[0]) })) : Promise.resolve(null)
   );
