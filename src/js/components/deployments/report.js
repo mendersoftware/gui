@@ -126,7 +126,7 @@ export class DeploymentReport extends React.Component {
           )}
           {tabIndex === 'details' && (
             <div className="margin-left margin-right">
-              <Review {...self.props} deploymentDeviceIds={Object.keys(allDevices)} group={deployment.name} />
+              <Review {...self.props} deploymentDeviceIds={Object.keys(allDevices)} group={deployment.name} phases={deployment.phases} />
             </div>
           )}
           {type === 'scheduled' && (
