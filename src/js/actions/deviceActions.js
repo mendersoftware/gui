@@ -1,6 +1,7 @@
+import { setSnackbar } from '../actions/appActions';
 import GeneralApi, { headerNames } from '../api/general-api';
 import * as DeviceConstants from '../constants/deviceConstants';
-import { deriveAttributesFromDevices, duplicateFilter, mapDeviceAttributes } from '../helpers';
+import { deriveAttributesFromDevices, duplicateFilter, getSnackbarMessage, mapDeviceAttributes, preformatWithRequestID } from '../helpers';
 
 // default per page until pagination and counting integrated
 const defaultPerPage = 20;
@@ -518,7 +519,7 @@ export const getDevicesWithAuth = devices => (dispatch, getState) =>
   Promise.all(devices.map(device => dispatch(getDeviceAuth(device.id, true)))).then(tasks => {
     const devices = tasks.map(task => task[task.length - 1]);
     const deviceAccu = reduceReceivedDevices(devices, [], getState());
-    dispatch({
+    return dispatch({
       type: DeviceConstants.RECEIVE_DEVICES,
       devicesById: deviceAccu.devicesById
     });
@@ -536,6 +537,51 @@ export const updateDeviceAuth = (deviceId, authId, status) => dispatch =>
       dispatch(getDeviceAuth(deviceId))
     ])
   );
+
+export const updateDevicesAuth = (deviceIds, status) => (dispatch, getState) => {
+  let devices = getState().devices.byId;
+  const deviceIdsWithoutAuth = deviceIds.reduce((accu, id) => (devices[id].auth_sets ? accu : [...accu, { id }]), []);
+  return dispatch(getDevicesWithAuth(deviceIdsWithoutAuth)).then(() => {
+    devices = getState().devices.byId;
+    // for each device, get id and id of authset & make api call to accept
+    // if >1 authset, skip instead
+    const deviceAuthUpdates = deviceIds.map(id => {
+      const device = devices[id];
+      if (device.auth_sets.length !== 1) {
+        return Promise.reject();
+      }
+      // api call device.id and device.authsets[0].id
+      return dispatch(updateDeviceAuth(device.id, device.auth_sets[0].id, status)).catch(err => {
+        var errMsg = err.res.error.message || '';
+        // notify if an error occurs
+        dispatch(
+          setSnackbar(
+            preformatWithRequestID(err.res, `The action was stopped as there was a problem updating a device authorization status: ${errMsg}`),
+            null,
+            'Copy to clipboard'
+          )
+        );
+        return Promise.reject();
+      });
+    });
+    return Promise.allSettled(deviceAuthUpdates).then(results => {
+      const { skipped, count } = results.reduce(
+        (accu, item) => {
+          if (item.status === 'rejected') {
+            accu.skipped = accu.skipped + 1;
+          } else {
+            accu.count = accu.count + 1;
+          }
+          return accu;
+        },
+        { skipped: 0, count: 0 }
+      );
+      const message = getSnackbarMessage(skipped, count);
+      // break if an error occurs, display status up til this point before error message
+      return dispatch(setSnackbar(message));
+    });
+  });
+};
 
 export const deleteAuthset = (deviceId, authId) => dispatch =>
   GeneralApi.delete(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}`).then(() =>

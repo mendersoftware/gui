@@ -8,11 +8,9 @@ import pluralize from 'pluralize';
 import { Button } from '@material-ui/core';
 
 import { InfoOutlined as InfoIcon } from '@material-ui/icons';
-
-import { getDevicesByStatus, setDeviceFilters, updateDeviceAuth } from '../../actions/deviceActions';
+import { getDevicesByStatus, setDeviceFilters, updateDevicesAuth } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
-import { preformatWithRequestID } from '../../helpers';
 import { getOnboardingComponentFor, advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
 import RelativeTime from '../common/relative-time';
@@ -95,65 +93,16 @@ export class Pending extends React.Component {
     self.setState({ selectedRows: [], currentPage: pageNo, pageLoading: true, expandRow: null, pageNo: pageNo }, () => self._getDevices(true));
   }
 
-  _getDevicesFromSelectedRows() {
-    // use selected rows to get device from corresponding position in devices array
-    const self = this;
-    const devices = self.state.selectedRows.map(row => self.props.fullDevices[row]);
-    return devices;
-  }
-
-  _getSnackbarMessage(skipped, done) {
-    pluralize.addIrregularRule('its', 'their');
-    var skipText = skipped
-      ? `${skipped} ${pluralize('devices', skipped)} ${pluralize('have', skipped)} more than one pending authset. Expand ${pluralize(
-          'this',
-          skipped
-        )} ${pluralize('device', skipped)} to individually adjust ${pluralize('their', skipped)} authorization status. `
-      : '';
-    var doneText = done ? `${done} ${pluralize('device', done)} ${pluralize('was', done)} updated successfully. ` : '';
-    this.props.setSnackbar(doneText + skipText);
-  }
-
-  _authorizeDevices() {
+  onAuthorizationChange(rows, status) {
     var self = this;
-    var devices = this._getDevicesFromSelectedRows();
     self.setState({ authLoading: true });
-    var skipped = 0;
-    var count = 0;
-
     // for each device, get id and id of authset & make api call to accept
     // if >1 authset, skip instead
-    const deviceAuthUpdates = devices.map(device => {
-      if (device.auth_sets.length !== 1) {
-        skipped++;
-        return Promise.resolve();
-      }
-      // api call device.id and device.authsets[0].id
-      return self.props
-        .updateDeviceAuth(device.id, device.auth_sets[0].id, DEVICE_STATES.accepted)
-        .then(() => count++)
-        .catch(err => {
-          var errMsg = err.res.error.message || '';
-          console.log(errMsg);
-          // break if an error occurs, display status up til this point before error message
-          self._getSnackbarMessage(skipped, count);
-          setTimeout(() => {
-            self.props.setSnackbar(
-              preformatWithRequestID(err.res, `The action was stopped as there was a problem updating a device authorization status: ${errMsg}`),
-              null,
-              'Copy to clipboard'
-            );
-            self.setState({ selectedRows: [] });
-            self.props.restart();
-          }, 4000);
-          self.break;
-        });
-    });
-    return Promise.all(deviceAuthUpdates).then(() => {
-      self._getSnackbarMessage(skipped, count);
+    const deviceIds = rows.map(row => self.props.devices[row]);
+    return self.props.updateDevicesAuth(deviceIds, status).then(() => {
       // refresh devices by calling function in parent
       self.props.restart();
-      self.setState({ selectedRows: [] });
+      self.setState({ selectedRows: [], authLoading: false });
     });
   }
 
@@ -314,7 +263,7 @@ export class Pending extends React.Component {
   }
 }
 
-const actionCreators = { getDevicesByStatus, setDeviceFilters, setSnackbar, updateDeviceAuth };
+const actionCreators = { getDevicesByStatus, setDeviceFilters, setSnackbar, updateDevicesAuth };
 
 const mapStateToProps = state => {
   return {
@@ -323,7 +272,6 @@ const mapStateToProps = state => {
     devices: state.devices.selectedDeviceList.slice(0, DEVICE_LIST_MAXIMUM_LENGTH),
     deviceLimit: state.devices.limit,
     filters: state.devices.filters || [],
-    fullDevices: state.devices.selectedDeviceList.map(id => state.devices.byId[id]),
     globalSettings: state.users.globalSettings,
     highlightHelp: !state.devices.byStatus.accepted.total,
     onboardingComplete: state.users.onboarding.complete,
