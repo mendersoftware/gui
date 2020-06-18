@@ -170,6 +170,6 @@ export const getReleases = () => dispatch =>
   });
 
 export const getRelease = name => dispatch =>
-  ArtifactsApi.get(`${deploymentsApiUrl}/deployments/releases?name=${name}`).then(([release]) =>
-    Promise.resolve(dispatch({ type: ReleaseConstants.RECEIVE_RELEASE, release: flattenRelease(release) }))
+  ArtifactsApi.get(`${deploymentsApiUrl}/deployments/releases?name=${name}`).then(({ body: releases }) =>
+    releases.length ? Promise.resolve(dispatch({ type: ReleaseConstants.RECEIVE_RELEASE, release: flattenRelease(releases[0]) })) : Promise.resolve(null)
   );

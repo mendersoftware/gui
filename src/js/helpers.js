@@ -249,11 +249,10 @@ export function hashString(str) {
 }
 
 export const formatTime = date => {
-  if (date) {
-    return date
-      .replace(' ', 'T')
-      .replace(/ /g, '')
-      .replace('UTC', '');
+  if (date && Object.prototype.toString.call(date) === '[object Date]' && !isNaN(date)) {
+    return date.toISOString().slice(0, -1);
+  } else if (date) {
+    return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
   }
   return;
 };
