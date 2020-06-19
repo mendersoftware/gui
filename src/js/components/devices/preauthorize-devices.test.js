@@ -19,7 +19,11 @@ describe('PreauthorizeDevices Component', () => {
         },
         filters: [],
         selectedDeviceList: [],
-        limit: 500
+        limit: 500,
+        groups: {
+          byId: {},
+          selectedGroup: ''
+        },
       },
       users: {
         globalSettings: { id_attribute: null }

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Time from 'react-time';
 import pluralize from 'pluralize';
 
-import { getDevicesByStatus, setDeviceFilters } from '../../actions/deviceActions';
+import { getDevicesByStatus, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
@@ -26,6 +26,7 @@ export class Rejected extends React.Component {
   }
 
   componentDidMount() {
+    this.props.selectGroup();
     this.props.setDeviceFilters([]);
     this.timer = setInterval(() => this._getDevices(), refreshDeviceLength);
     this._getDevices(true);
@@ -139,7 +140,7 @@ export class Rejected extends React.Component {
   }
 }
 
-const actionCreators = { getDevicesByStatus, setDeviceFilters, setSnackbar };
+const actionCreators = { getDevicesByStatus, selectGroup, setDeviceFilters, setSnackbar };
 
 const mapStateToProps = state => {
   return {

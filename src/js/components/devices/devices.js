@@ -57,17 +57,23 @@ export class Devices extends React.Component {
     this._restartInterval();
     this.props.getAllDeviceCounts();
     if (this.props.match.params.filters) {
+      let groupName = '';
       const str = decodeURIComponent(this.props.match.params.filters);
-      const filters = str.split('&').map(filter => {
+      const filters = str.split('&').reduce((filters, filter) => {
         const filterPair = filter.split('=');
-        const scope = filterPair[0] === 'group' ? { scope: 'system' } : (filterPair[0] === 'id' ? { scope: 'identity' } : {});
-        return { ...emptyFilter, ...scope, key: filterPair[0], value: filterPair[1] };
-      });
-      const groupFilter = filters.find(filter => filter.key === 'group');
-      if (groupFilter) {
-        this.props.selectGroup(groupFilter.value);
+        if (filterPair[0] === 'group') {
+          groupName = filterPair[1];
+        } else {
+          const scope = filterPair[0] === 'group' ? { scope: 'system' } : (filterPair[0] === 'id' ? { scope: 'identity' } : {});
+          filters.push({ ...emptyFilter, ...scope, key: filterPair[0], value: filterPair[1] });
+        }
+        return filters;
+      }, []);
+      if (groupName) {
+        this.props.selectGroup(groupName, filters);
+      } else {
+        this.props.setDeviceFilters(filters)
       }
-      this.props.setDeviceFilters(filters);
     }
   }
 

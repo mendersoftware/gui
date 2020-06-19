@@ -15,7 +15,7 @@ exports[`Confirm Component renders correctly 1`] = `
     <span
       className="bold"
     >
-      Confirm abort deployment?
+      Confirm abort?
     </span>
     <button
       className="MuiButtonBase-root MuiIconButton-root"
