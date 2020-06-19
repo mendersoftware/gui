@@ -46,16 +46,17 @@ export class Login extends React.Component {
       noExpiry: cookies.get('noExpiry'),
       redirectToReferrer: false
     };
-
-    const loginError = cookies.get('error');
-    if (loginError) {
-      this.props.setSnackbar(loginError, 10000);
-    }
   }
 
   componentDidMount() {
     clearAllRetryTimers(this.props.setSnackbar);
     this.props.setCurrentUser(null);
+    const cookies = new Cookies();
+    const loginError = cookies.get('error');
+    if (loginError) {
+      this.props.setSnackbar(loginError, 10000);
+      cookies.remove('error');
+    }
   }
 
   componentDidUpdate(prevProps) {
