@@ -595,15 +595,26 @@ export const deleteAuthset = (deviceId, authId) => dispatch =>
   );
 
 export const preauthDevice = authset => dispatch =>
-  GeneralApi.post(`${deviceAuthV2}/devices`, authset).then(() =>
-    Promise.all([
-      dispatch({
-        type: DeviceConstants.ADD_DEVICE_AUTHSET,
-        authset
-      }),
-      dispatch(getDeviceCount(DeviceConstants.DEVICE_STATES.preauth))
-    ])
-  );
+  GeneralApi.post(`${deviceAuthV2}/devices`, authset)
+    .then(() =>
+      Promise.all([
+        dispatch({
+          type: DeviceConstants.ADD_DEVICE_AUTHSET,
+          authset
+        }),
+        dispatch(getDeviceCount(DeviceConstants.DEVICE_STATES.preauth))
+      ])
+    )
+    .catch(err => {
+      console.log(err);
+      var errMsg = (err.res.body || {}).error || '';
+      if (err.res.status === 409) {
+        return Promise.reject('A device with a matching identity data set already exists');
+      } else {
+        dispatch(setSnackbar(preformatWithRequestID(err.res, `The device could not be added: ${errMsg}`), null, 'Copy to clipboard'));
+      }
+      return Promise.reject();
+    });
 
 export const decommissionDevice = deviceId => dispatch =>
   GeneralApi.delete(`${deviceAuthV2}/devices/${deviceId}`).then(() =>
