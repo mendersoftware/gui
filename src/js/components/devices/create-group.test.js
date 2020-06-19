@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import CreateGroup from './create-group';
+import { undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -41,5 +42,6 @@ describe('CreateGroup Component', () => {
       </MemoryRouter>
     );
     expect(tree.html()).toMatchSnapshot();
+    expect(JSON.stringify(tree.html())).toEqual(expect.not.stringMatching(undefineds));
   });
 });

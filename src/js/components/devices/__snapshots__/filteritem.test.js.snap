@@ -119,11 +119,8 @@ exports[`FilterItem Component renders correctly 1`] = `
       equals
     </div>
     <input
-      aria-hidden={true}
-      className="MuiSelect-nativeInput"
       onAnimationStart={[Function]}
-      onChange={[Function]}
-      tabIndex={-1}
+      type="hidden"
       value="$eq"
     />
     <svg
