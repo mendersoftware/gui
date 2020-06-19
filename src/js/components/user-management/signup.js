@@ -44,12 +44,18 @@ export class Signup extends React.Component {
   }
 
   _handleSignup(formData, recaptcha) {
-    this.setState({
-      loading: true
-    });
+    this.setState({ loading: true });
+    const credentials = this.state.oauthProvider
+      ? {
+          email: this.state.email,
+          login: { [this.state.oauthProvider]: this.state.oauthId }
+        }
+      : {
+          email: this.state.email,
+          password: this.state.password
+        };
     const signup = {
-      email: this.state.email,
-      password: this.state.password,
+      ...credentials,
       organization: formData.name,
       plan: 'enterprise',
       tos: formData.tos,
@@ -67,17 +73,6 @@ export class Signup extends React.Component {
       .then(res => {
         if (typeof res !== 'undefined') {
           setTimeout(() => {
-            let credentials = this.state.oauthProvider
-              ? {
-                  email: this.state.email,
-                  login: {
-                    [this.state.oauthProvider]: this.state.oauthId
-                  }
-                }
-              : {
-                  email: this.state.email,
-                  password: this.state.password
-                };
             this.props.loginUser(credentials);
             this.setState({ loading: false });
           }, 3000);
