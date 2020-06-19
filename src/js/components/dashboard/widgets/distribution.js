@@ -63,7 +63,8 @@ export default class DistributionReport extends React.Component {
 
   onSliceClick(thing) {
     const { attribute, group, selectGroup } = this.props;
-    selectGroup(group);
+    const filters = [{key: attribute, value: thing, operator: '$eq', scope: 'inventory'}];
+    selectGroup(group, filters);
     window.location.replace(`#/devices/${group ? `group=${group}&` : ''}${attribute}=${thing}`);
   }
 

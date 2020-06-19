@@ -182,6 +182,7 @@ export class Authorized extends React.Component {
     const {
       allCount,
       devices,
+      filters,
       groupCount,
       groupFilters,
       highlightHelp,
@@ -257,7 +258,7 @@ export class Authorized extends React.Component {
           <div style={{ width: '100%' }}>
             <h2 className="inline-block margin-right">{groupLabel}</h2>
 
-            {(!selectedGroup || !!groupFilters.length) && (
+            {(!selectedGroup || !!groupFilters.length || filters.length !== 0) && (
               <Filters
                 onFilterChange={() => self.setState({ pageNo: 1 }, () => self._getDevices(true))}
                 onGroupClick={onGroupClick}

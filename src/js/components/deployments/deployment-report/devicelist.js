@@ -48,9 +48,7 @@ const ProgressDeviceList = ({ created, devices, globalSettings, viewLog }) => {
         </TableCell>
         <TableCell>{device.attributes.device_type || '-'}</TableCell>
         <TableCell>{currentArtifactLink}</TableCell>
-        <TableCell>
-          <Time value={formatTime(device.created)} format="YYYY-MM-DD HH:mm" />
-        </TableCell>
+        <TableCell>{device.created ? <Time value={formatTime(device.created)} format="YYYY-MM-DD HH:mm" /> : '-'}</TableCell>
         <TableCell>{device.finished ? <Time value={formatTime(device.finished)} format="YYYY-MM-DD HH:mm" /> : '-'}</TableCell>
         <TableCell style={{ paddingRight: '0px', position: 'relative', minWidth: 200 }}>
           {device.substate ? (

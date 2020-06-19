@@ -8,7 +8,7 @@ import pluralize from 'pluralize';
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
 import { CheckCircle as CheckCircleIcon, InfoOutlined as InfoIcon, HighlightOffOutlined as HighlightOffOutlinedIcon } from '@material-ui/icons';
 
-import { getDevicesByStatus, setDeviceFilters, updateDevicesAuth } from '../../actions/deviceActions';
+import { getDevicesByStatus, selectGroup, setDeviceFilters, updateDevicesAuth } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
 import { getOnboardingComponentFor, advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
@@ -36,6 +36,7 @@ export class Pending extends React.Component {
   }
 
   componentDidMount() {
+    this.props.selectGroup();
     this.props.setDeviceFilters([]);
     this.timer = setInterval(() => this._getDevices(), refreshDeviceLength);
     this._getDevices(true);
@@ -273,7 +274,7 @@ export class Pending extends React.Component {
   }
 }
 
-const actionCreators = { getDevicesByStatus, setDeviceFilters, setSnackbar, updateDevicesAuth };
+const actionCreators = { getDevicesByStatus, selectGroup, setDeviceFilters, setSnackbar, updateDevicesAuth };
 
 const mapStateToProps = state => {
   return {

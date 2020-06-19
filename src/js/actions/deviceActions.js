@@ -166,19 +166,19 @@ export const removeDynamicGroup = groupName => (dispatch, getState) => {
 /*
  * Device inventory functions
  */
-export const selectGroup = group => (dispatch, getState) => {
-  if (getState().devices.groups.selectedGroup === group) {
+export const selectGroup = (group, filters = []) => (dispatch, getState) => {
+  if (getState().devices.groups.selectedGroup === group && filters.length === 0) {
     return;
   }
-  let selectedGroup = getState().devices.groups.byId[group];
   let tasks = [];
+  const selectedGroup = getState().devices.groups.byId[group];
   if (selectedGroup && selectedGroup.filters && selectedGroup.filters.length) {
-    tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: selectedGroup.filters }));
+    tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: selectedGroup.filters.concat(filters) }));
   } else {
-    tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: [] }));
+    tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: filters }));
   }
-  selectedGroup = getState().devices.groups.byId[group] ? group : null;
-  tasks.push(dispatch({ type: DeviceConstants.SELECT_GROUP, group: selectedGroup }));
+  const selectedGroupName = selectedGroup ? group : null;
+  tasks.push(dispatch({ type: DeviceConstants.SELECT_GROUP, group: selectedGroupName }));
   return Promise.all(tasks);
 };
 

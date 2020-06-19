@@ -217,7 +217,7 @@ export default class Form extends React.Component {
     );
 
     return (
-      <form key={this.props.uniqueId} className={this.props.className || ''}>
+      <form key={this.props.uniqueId} className={this.props.className || ''} autoComplete={this.props.autocomplete || undefined}>
         {this.newChildren}
         {uploadActions}
       </form>

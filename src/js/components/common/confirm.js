@@ -7,11 +7,11 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 const confirmationType = {
   retry: {
     loading: 'Creating new deployment...',
-    message: 'Confirm retry deployment?'
+    message: 'Confirm retry?'
   },
   abort: {
     loading: 'Aborting...',
-    message: 'Confirm abort deployment?'
+    message: 'Confirm abort?'
   },
   chartRemoval: {
     loading: 'Removing...',
