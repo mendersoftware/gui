@@ -1,47 +1,292 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Filters Component renders correctly 1`] = `
-<button
-  className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
-  disabled={false}
-  onBlur={[Function]}
-  onClick={[Function]}
-  onDragLeave={[Function]}
-  onFocus={[Function]}
-  onKeyDown={[Function]}
-  onKeyUp={[Function]}
-  onMouseDown={[Function]}
-  onMouseLeave={[Function]}
-  onMouseUp={[Function]}
-  onTouchEnd={[Function]}
-  onTouchMove={[Function]}
-  onTouchStart={[Function]}
+<div
+  className="MuiCollapse-container filter-wrapper MuiCollapse-entered"
   style={
     Object {
-      "marginTop": -8,
+      "minHeight": "0px",
     }
   }
-  tabIndex={0}
-  type="button"
 >
-  <span
-    className="MuiButton-label"
+  <div
+    className="MuiCollapse-wrapper"
   >
-    <span
-      className="MuiButton-startIcon MuiButton-iconSizeMedium"
+    <div
+      className="MuiCollapse-wrapperInner"
     >
-      <svg
-        aria-hidden={true}
-        className="MuiSvgIcon-root"
-        focusable="false"
-        viewBox="0 0 24 24"
+      <div
+        className="flexbox"
       >
-        <path
-          d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
-        />
-      </svg>
-    </span>
-    Filters
-  </span>
-</button>
+        <div
+          className="margin-right"
+          style={
+            Object {
+              "marginTop": 25,
+            }
+          }
+        >
+          Devices matching:
+        </div>
+        <div>
+          <div />
+          <div
+            className="flexbox"
+            style={
+              Object {
+                "alignItems": "center",
+              }
+            }
+          >
+            <div
+              aria-expanded={false}
+              aria-owns={null}
+              className="MuiAutocomplete-root MuiAutocomplete-hasClearIcon"
+              onClick={[Function]}
+              onKeyDown={[Function]}
+              onMouseDown={[Function]}
+              role="combobox"
+            >
+              <div
+                className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+                style={
+                  Object {
+                    "marginBottom": 15,
+                    "marginTop": 0,
+                  }
+                }
+              >
+                <label
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+                  data-shrink={false}
+                  htmlFor="filter-selection"
+                  id="filter-selection-label"
+                >
+                  Attribute
+                </label>
+                <div
+                  className="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+                  onClick={[Function]}
+                >
+                  <input
+                    aria-activedescendant={null}
+                    aria-autocomplete="both"
+                    aria-controls={null}
+                    aria-invalid={false}
+                    autoCapitalize="none"
+                    autoComplete="off"
+                    autoFocus={false}
+                    className="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
+                    disabled={false}
+                    id="filter-selection"
+                    onAnimationStart={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onMouseDown={[Function]}
+                    required={false}
+                    spellCheck="false"
+                    type="text"
+                    value=""
+                  />
+                  <div
+                    className="MuiAutocomplete-endAdornment"
+                  >
+                    <button
+                      aria-label="Clear"
+                      className="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator"
+                      disabled={false}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onDragLeave={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyUp={[Function]}
+                      onMouseDown={[Function]}
+                      onMouseLeave={[Function]}
+                      onMouseUp={[Function]}
+                      onTouchEnd={[Function]}
+                      onTouchMove={[Function]}
+                      onTouchStart={[Function]}
+                      tabIndex={-1}
+                      title="Clear"
+                      type="button"
+                    >
+                      <span
+                        className="MuiIconButton-label"
+                      >
+                        <svg
+                          aria-hidden={true}
+                          className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="MuiInputBase-root MuiInput-root MuiInput-underline margin-left-small margin-right-small"
+              onClick={[Function]}
+            >
+              <div
+                aria-haspopup="listbox"
+                className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                role="button"
+                tabIndex={0}
+              >
+                equals
+              </div>
+              <input
+                aria-hidden={true}
+                className="MuiSelect-nativeInput"
+                onAnimationStart={[Function]}
+                onChange={[Function]}
+                tabIndex={-1}
+                value="$eq"
+              />
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root MuiSelect-icon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M7 10l5 5 5-5z"
+                />
+              </svg>
+            </div>
+            <div
+              className="MuiFormControl-root MuiTextField-root"
+              style={
+                Object {
+                  "marginBottom": 15,
+                  "marginTop": 0,
+                }
+              }
+            >
+              <label
+                className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+                data-shrink={false}
+              >
+                Value
+              </label>
+              <div
+                className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+                onClick={[Function]}
+              >
+                <input
+                  aria-invalid={false}
+                  autoFocus={false}
+                  className="MuiInputBase-input MuiInput-input"
+                  disabled={false}
+                  onAnimationStart={[Function]}
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+            <div
+              className="loaderContainer shrunk"
+            >
+              <div
+                className="loader"
+              >
+                <span
+                  className="dot dot_1"
+                />
+                <span
+                  className="dot dot_2"
+                />
+                <span
+                  className="dot dot_3"
+                />
+                <span
+                  className="dot dot_4"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="flexbox margin-top-small margin-bottom-small"
+        style={
+          Object {
+            "justifyContent": "flex-end",
+          }
+        }
+      >
+        <p
+          className="info icon"
+        >
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+            focusable="false"
+            style={
+              Object {
+                "margin": "0 6px 4px 0",
+                "verticalAlign": "middle",
+              }
+            }
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+            />
+          </svg>
+          With a commercial Mender plan you can filter by multiple attributes to improve the device overview. 
+          <a
+            href="https://mender.io"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </p>
+        <p
+          className="info icon"
+        >
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+            focusable="false"
+            style={
+              Object {
+                "margin": "0 6px 4px 0",
+                "verticalAlign": "middle",
+              }
+            }
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+            />
+          </svg>
+          With a Mender Enterprise plan you can save dynamic groups and ease device management. 
+          <a
+            href="https://mender.io"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 `;

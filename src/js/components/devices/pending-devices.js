@@ -5,8 +5,14 @@ import Time from 'react-time';
 import pluralize from 'pluralize';
 
 // material ui
+import { Button } from '@material-ui/core';
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
-import { CheckCircle as CheckCircleIcon, InfoOutlined as InfoIcon, HighlightOffOutlined as HighlightOffOutlinedIcon } from '@material-ui/icons';
+import {
+  CheckCircle as CheckCircleIcon,
+  FilterList as FilterListIcon,
+  InfoOutlined as InfoIcon,
+  HighlightOffOutlined as HighlightOffOutlinedIcon
+} from '@material-ui/icons';
 
 import { getDevicesByStatus, selectGroup, setDeviceFilters, updateDevicesAuth } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
@@ -131,7 +137,7 @@ export class Pending extends React.Component {
       showHelptips,
       showOnboardingTips
     } = self.props;
-    const { authLoading, pageLoading, selectedRows, showActions } = self.state;
+    const { authLoading, pageLoading, selectedRows, showActions, showFilters } = self.state;
     const limitMaxed = deviceLimit ? deviceLimit <= acceptedDevices : false;
     const limitNear = deviceLimit ? deviceLimit < acceptedDevices + devices.length : false;
     const selectedOverLimit = deviceLimit ? deviceLimit < acceptedDevices + selectedRows.length : false;
@@ -200,12 +206,28 @@ export class Pending extends React.Component {
     return (
       <div className="tab-container">
         {!!count && (
-          <div className="align-center">
-            <h3 className="inline-block margin-right">
-              {count} {pluralize('devices', count)} pending authorization
-            </h3>
-            {!authLoading && <Filters identityOnly={true} onFilterChange={filters => self._getDevices(true, filters)} />}
-          </div>
+          <>
+            <div className="flexbox" style={{ zIndex: 2, marginBottom: -1 }}>
+              <h2 className="margin-right">Pending devices</h2>
+              <div className={`flexbox centered ${showFilters ? 'filter-toggle' : ''}`}>
+                <Button
+                  color="secondary"
+                  disableRipple
+                  onClick={() => self.setState({ showFilters: !showFilters })}
+                  startIcon={<FilterListIcon />}
+                  style={{ backgroundColor: 'transparent' }}
+                >
+                  {filters.length > 0 ? `Filters (${filters.length})` : 'Filters'}
+                </Button>
+              </div>
+            </div>
+            <Filters identityOnly={true} onFilterChange={filters => self._getDevices(true, filters)} open={showFilters} />
+            {authLoading !== 'all' && (
+              <p className="info">
+                Showing {devices.length} of {count} {pluralize('devices', count)} pending authorization
+              </p>
+            )}
+          </>
         )}
         <Loader show={authLoading} />
         {devices.length && (!pageLoading || authLoading !== 'all') ? (

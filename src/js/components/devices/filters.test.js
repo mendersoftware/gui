@@ -34,7 +34,7 @@ describe('Filters Component', () => {
     const tree = renderer
       .create(
         <Provider store={store}>
-          <Filters attributes={[{ key: 'testkey', value: 'testvalue' }]} filters={[]} onFilterChange={() => {}} />
+          <Filters attributes={[{ key: 'testkey', value: 'testvalue' }]} filters={[]} onFilterChange={() => {}} open={true} />
         </Provider>
       )
       .toJSON();

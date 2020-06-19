@@ -11,7 +11,9 @@ import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
 
 import {
   AddCircle as AddCircleIcon,
+  Autorenew as AutorenewIcon,
   Delete as DeleteIcon,
+  FilterList as FilterListIcon,
   Help as HelpIcon,
   HeightOutlined as HeightOutlinedIcon,
   HighlightOffOutlined as HighlightOffOutlinedIcon,
@@ -43,6 +45,7 @@ export class Authorized extends React.Component {
       pageLength: 20,
       selectedRows: [],
       showActions: false,
+      showFilters: false,
       tmpDevices: []
     };
   }
@@ -86,7 +89,7 @@ export class Authorized extends React.Component {
     ) {
       var newState = { selectedRows: [], expandRow: null, allRowsSelected: false };
       if (prevProps.selectedGroup != self.props.selectedGroup) {
-        newState = { pageNo: 1, ...newState };
+        newState = { pageNo: 1, showFilters: false, ...newState };
       }
       self.setState(newState);
       if (self.props.showHelptips && self.props.showTips && !self.props.onboardingComplete && self.props.acceptedCount && self.props.acceptedCount < 2) {
@@ -187,14 +190,13 @@ export class Authorized extends React.Component {
       groupFilters,
       highlightHelp,
       idAttribute,
-      isEnterprise,
       onGroupClick,
       onGroupRemoval,
       openSettingsDialog,
       selectedGroup,
       showHelptips
     } = self.props;
-    const { loading, selectedRows, showActions } = self.state;
+    const { loading, selectedRows, showActions, showFilters } = self.state;
     const columnHeaders = [
       {
         title: idAttribute || 'Device ID',
@@ -254,33 +256,44 @@ export class Authorized extends React.Component {
     onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor }, onboardingComponent);
     return (
       <div className="relative">
-        <div className="flexbox space-between" style={{ marginLeft: '20px' }}>
-          <div style={{ width: '100%' }}>
-            <h2 className="inline-block margin-right">{groupLabel}</h2>
-
-            {(!selectedGroup || !!groupFilters.length || filters.length !== 0) && (
-              <Filters
-                onFilterChange={() => self.setState({ pageNo: 1 }, () => self._getDevices(true))}
-                onGroupClick={onGroupClick}
-                isModification={!!groupFilters.length}
-              />
+        <div style={{ marginLeft: '20px' }}>
+          <div className="flexbox space-between" style={{ zIndex: 2, marginBottom: -1 }}>
+            <div className="flexbox">
+              <h2 className="margin-right">{groupLabel}</h2>
+              {(!selectedGroup || !!groupFilters.length) && (
+                <div className={`flexbox centered ${showFilters ? 'filter-toggle' : ''}`}>
+                  <Button
+                    color="secondary"
+                    disableRipple
+                    onClick={() => self.setState({ showFilters: !showFilters })}
+                    startIcon={<FilterListIcon />}
+                    style={{ backgroundColor: 'transparent' }}
+                  >
+                    {filters.length > 0 ? `Filters (${filters.length})` : 'Filters'}
+                  </Button>
+                </div>
+              )}
+              {selectedGroup && (
+                <p className="info flexbox centered">
+                  {!groupFilters.length ? <LockOutlined fontSize="small" /> : <AutorenewIcon fontSize="small" />}
+                  <span>{!groupFilters.length ? 'Static' : 'Dynamic'}</span>
+                </p>
+              )}
+            </div>
+            {selectedGroup && (
+              <div className="flexbox centered">
+                <Button onClick={onGroupRemoval} startIcon={<DeleteIcon />}>
+                  Remove group
+                </Button>
+              </div>
             )}
           </div>
-          {selectedGroup && (
-            <div className="flexbox centered" style={{ marginTop: 5, minWidth: 240, alignSelf: 'flex-start' }}>
-              {isEnterprise && !groupFilters.length && (
-                <>
-                  <p className="info flexbox centered" style={{ marginRight: 15 }}>
-                    <LockOutlined fontSize="small" />
-                    <span>Static</span>
-                  </p>
-                </>
-              )}
-              <Button onClick={onGroupRemoval} startIcon={<DeleteIcon />}>
-                Remove group
-              </Button>
-            </div>
-          )}
+          <Filters
+            onFilterChange={() => self.setState({ pageNo: 1 }, () => self._getDevices(true))}
+            onGroupClick={onGroupClick}
+            isModification={!!groupFilters.length}
+            open={showFilters}
+          />
         </div>
         <Loader show={loading} />
         {devices.length > 0 && !loading ? (
@@ -378,7 +391,6 @@ const mapStateToProps = state => {
   } else if (!devices.length && !state.devices.filters.length && state.devices.byStatus.accepted.total) {
     devices = state.devices.byStatus.accepted.deviceIds.slice(0, 20);
   }
-  const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
     acceptedCount: state.devices.byStatus.accepted.total || 0,
     acceptedDevicesList: state.devices.byStatus.accepted.deviceIds.slice(0, 20),
@@ -390,7 +402,6 @@ const mapStateToProps = state => {
     groupDevices,
     groupFilters,
     idAttribute: state.users.globalSettings.id_attribute,
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
     onboardingComplete: state.users.onboarding.complete,
     selectedGroup,
     showHelptips: state.users.showHelptips,

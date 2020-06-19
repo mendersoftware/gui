@@ -30,8 +30,8 @@ exports[`FilterItem Component renders correctly 1`] = `
       <label
         className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
         data-shrink={false}
-        htmlFor="filter-selection-0"
-        id="filter-selection-0-label"
+        htmlFor="filter-selection"
+        id="filter-selection-label"
       >
         Attribute
       </label>
@@ -49,7 +49,7 @@ exports[`FilterItem Component renders correctly 1`] = `
           autoFocus={false}
           className="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
           disabled={false}
-          id="filter-selection-0"
+          id="filter-selection"
           onAnimationStart={[Function]}
           onBlur={[Function]}
           onChange={[Function]}
@@ -119,8 +119,11 @@ exports[`FilterItem Component renders correctly 1`] = `
       equals
     </div>
     <input
+      aria-hidden={true}
+      className="MuiSelect-nativeInput"
       onAnimationStart={[Function]}
-      type="hidden"
+      onChange={[Function]}
+      tabIndex={-1}
       value="$eq"
     />
     <svg
