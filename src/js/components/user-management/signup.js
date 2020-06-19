@@ -71,7 +71,7 @@ export class Signup extends React.Component {
               ? {
                   email: this.state.email,
                   login: {
-                    [`oauth2-${this.state.oauthProvider}`]: this.state.oauthId
+                    [this.state.oauthProvider]: this.state.oauthId
                   }
                 }
               : {
