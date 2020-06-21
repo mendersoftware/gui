@@ -38,15 +38,14 @@ context('Layout assertions', () => {
     })
 
     it('can authorize a device', () => {
-      cy.get('a').contains('Devices').click().end()
-      cy.get('a').contains('Pending').click().end()
-      cy.get('.deviceListItem input').click().end()
-      cy.get('button').contains('Authorize').click().end()
-      cy.get('a').contains('Device groups').click().wait(30000).end()
-      
-      cy.get('.deviceListItem')
-        .should('contain', "qemux86-64")
-    })
+      cy.get('a').contains('Devices').click().end();
+      cy.get('a').contains('Pending').click().end();
+      cy.get('.deviceListItem input').click().end();
+      cy.get('.MuiSpeedDial-fab').click();
+      cy.get('#device-actions-actions').get('.MuiSpeedDialAction-staticTooltipLabel').contains('Accept').parent().find('button').click().end();
+      cy.get('a').contains('Device groups').click().wait(30000).end();
+      cy.get('.deviceListItem').should('contain', 'qemux86-64');
+    });
 
     it('has basic inventory', () => {
       cy.get('a').contains('Devices').click().wait(3000).end()
