@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import ReactGA from 'react-ga';
 import { compose, setDisplayName } from 'recompose';
 
 import BaseOnboardingTip from '../components/helptips/baseonboardingtip';
@@ -289,6 +290,7 @@ export function advanceOnboarding(stepId) {
   const state = Object.assign(getCurrentOnboardingState(), { progress: madeProgress });
   state.complete = state.progress >= Object.keys(onboardingSteps).length ? true : state.complete;
   persistOnboardingState(state);
+  ReactGA.event({ category: 'onboarding', action: stepId });
 }
 
 export function persistOnboardingState(state = getCurrentOnboardingState()) {
