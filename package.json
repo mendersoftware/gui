@@ -41,7 +41,7 @@
     "redux-thunk": "^2.3.0",
     "superagent": "^5.2.2",
     "universal-cookie": "^4.0.3",
-    "validator": "^13.0.0",
+    "validator": "^13.1.1",
     "victory": "^34.3.11",
     "zxcvbn": "^4.4.2"
   },
