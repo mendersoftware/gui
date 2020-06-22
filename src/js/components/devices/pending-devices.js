@@ -186,8 +186,9 @@ export class Pending extends React.Component {
       }
       if (selectedRows && this.authorizeRef) {
         const anchor = {
-          left: this.authorizeRef.offsetLeft - this.authorizeRef.offsetWidth / 2,
-          top: this.authorizeRef.offsetParent.offsetTop - this.authorizeRef.offsetParent.offsetHeight - this.authorizeRef.offsetHeight / 2
+          left: this.authorizeRef.offsetParent.offsetLeft + this.authorizeRef.offsetLeft,
+          top:
+            this.authorizeRef.offsetParent.offsetTop + this.authorizeRef.offsetParent.offsetHeight - this.authorizeRef.firstElementChild.offsetHeight / 2 - 15
         };
         onboardingComponent = getOnboardingComponentFor('devices-pending-accepting-onboarding', { place: 'left', anchor });
       }
@@ -280,7 +281,7 @@ export class Pending extends React.Component {
               disabled={disabled || limitMaxed || selectedOverLimit}
               onClose={() => self.setState({ showActions: false })}
               onOpen={() => self.setState({ showActions: true })}
-              buttonRef={ref => (this.authorizeRef = ref)}
+              ref={ref => (this.authorizeRef = ref)}
               open={showActions}
             >
               {actions.map(action => (
