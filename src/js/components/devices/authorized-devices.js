@@ -229,7 +229,7 @@ export class Authorized extends React.Component {
 
     const groupLabel = selectedGroup ? decodeURIComponent(selectedGroup) : 'All devices';
     const pluralized = pluralize('devices', selectedRows.length);
-    let actions = [{ icon: <HighlightOffOutlinedIcon />, title: `Reject ${pluralized}`, action: () => self.onRejectDevices(selectedRows) }];
+    let actions = [{ icon: <HighlightOffOutlinedIcon className="red" />, title: `Reject ${pluralized}`, action: () => self.onRejectDevices(selectedRows) }];
     if (selectedGroup) {
       actions.push(
         {
@@ -248,7 +248,11 @@ export class Authorized extends React.Component {
         }
       );
     } else {
-      actions.push({ icon: <AddCircleIcon />, title: `Add selected ${pluralized} to a group`, action: () => self.onAddDevicesToGroup(selectedRows) });
+      actions.push({
+        icon: <AddCircleIcon className="green" />,
+        title: `Add selected ${pluralized} to a group`,
+        action: () => self.onAddDevicesToGroup(selectedRows)
+      });
     }
 
     const anchor = { left: 200, top: 146 };

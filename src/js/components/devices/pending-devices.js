@@ -200,8 +200,16 @@ export class Pending extends React.Component {
 
     const pluralized = pluralize('devices', selectedRows.length);
     const actions = [
-      { icon: <HighlightOffOutlinedIcon />, title: `Reject ${pluralized}`, action: () => self.onAuthorizationChange(selectedRows, DEVICE_STATES.rejected) },
-      { icon: <CheckCircleIcon />, title: `Accept ${pluralized}`, action: () => self.onAuthorizationChange(selectedRows, DEVICE_STATES.accepted) }
+      {
+        icon: <HighlightOffOutlinedIcon className="red" />,
+        title: `Reject ${pluralized}`,
+        action: () => self.onAuthorizationChange(selectedRows, DEVICE_STATES.rejected)
+      },
+      {
+        icon: <CheckCircleIcon className="green" />,
+        title: `Accept ${pluralized}`,
+        action: () => self.onAuthorizationChange(selectedRows, DEVICE_STATES.accepted)
+      }
     ];
 
     return (
