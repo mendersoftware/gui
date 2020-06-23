@@ -71,7 +71,7 @@ export const addStaticGroup = (group, deviceIds) => (dispatch, getState) =>
         group: { deviceIds: [], total: 0, filters: [], ...getState().devices.groups.byId[group] },
         groupName: group
       })
-    ).then(() => Promise.all([dispatch(selectDevice()), dispatch(selectGroup(group))]))
+    ).then(() => Promise.all([dispatch(selectDevice()), dispatch(selectGroup(group)), dispatch(getGroups())]))
   );
 
 export const removeStaticGroup = groupName => (dispatch, getState) => {
@@ -88,12 +88,13 @@ export const removeStaticGroup = groupName => (dispatch, getState) => {
   ).then(() => {
     let groups = getState().devices.groups.byId;
     delete groups[groupName];
-    return Promise.resolve(
+    return Promise.all([
       dispatch({
         type: DeviceConstants.REMOVE_STATIC_GROUP,
         groups
-      })
-    );
+      }),
+      dispatch(getGroups())
+    ]);
   });
 };
 
@@ -177,17 +178,18 @@ export const removeDynamicGroup = groupName => (dispatch, getState) => {
  * Device inventory functions
  */
 export const selectGroup = (group, filters = []) => (dispatch, getState) => {
-  if (getState().devices.groups.selectedGroup === group && filters.length === 0) {
+  const groupName = group === DeviceConstants.UNGROUPED_GROUP.id || group === DeviceConstants.UNGROUPED_GROUP.name ? DeviceConstants.UNGROUPED_GROUP.id : group;
+  if (getState().devices.groups.selectedGroup === groupName && filters.length === 0) {
     return;
   }
   let tasks = [];
-  const selectedGroup = getState().devices.groups.byId[group];
+  const selectedGroup = getState().devices.groups.byId[groupName];
   if (selectedGroup && selectedGroup.filters && selectedGroup.filters.length) {
     tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: selectedGroup.filters.concat(filters) }));
   } else {
     tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: filters }));
   }
-  const selectedGroupName = selectedGroup ? group : null;
+  const selectedGroupName = selectedGroup ? groupName : null;
   tasks.push(dispatch({ type: DeviceConstants.SELECT_GROUP, group: selectedGroupName }));
   return Promise.all(tasks);
 };
@@ -254,10 +256,13 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
 export const getGroupDevices = (group, page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false) => (dispatch, getState) =>
   Promise.resolve(dispatch(getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, page, perPage, shouldSelectDevices, group))).then(results => {
     if (!group) {
-      Promise.resolve();
+      return Promise.resolve();
     }
     const { deviceAccu, total } = results[results.length - 1];
     const stateGroup = getState().devices.groups.byId[group];
+    if (!stateGroup && !total && !deviceAccu.ids.length) {
+      return Promise.resolve();
+    }
     return Promise.resolve(
       dispatch({
         type: DeviceConstants.RECEIVE_GROUP_DEVICES,
