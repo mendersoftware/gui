@@ -20,12 +20,22 @@ export const getGroups = () => (dispatch, getState) =>
       accu[group] = { deviceIds: [], filters: [], total: 0, ...state[group] };
       return accu;
     }, {});
-    return Promise.resolve(
+    return Promise.all([
       dispatch({
         type: DeviceConstants.RECEIVE_GROUPS,
         groups
+      }),
+      dispatch({
+        type: DeviceConstants.ADD_DYNAMIC_GROUP,
+        groupName: DeviceConstants.UNGROUPED_GROUP.id,
+        group: {
+          deviceIds: [],
+          total: 0,
+          ...getState().devices.groups.byId[DeviceConstants.UNGROUPED_GROUP.id],
+          filters: [{ key: 'group', value: res.body, operator: '$nin', scope: 'system' }]
+        }
       })
-    );
+    ]);
   });
 
 export const initializeGroupsDevices = () => (dispatch, getState) =>
