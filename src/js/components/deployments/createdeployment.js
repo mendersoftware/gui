@@ -10,6 +10,7 @@ import Review from './deployment-wizard/review';
 import { selectDevice } from '../../actions/deviceActions';
 import { selectRelease } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
+import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { getRemainderPercent } from '../../helpers';
 
 const deploymentSteps = [
@@ -160,11 +161,13 @@ const actionCreators = { saveGlobalSettings, selectDevice, selectRelease };
 
 const mapStateToProps = state => {
   const plan = state.users.organization ? state.users.organization.plan : 'os';
+  // eslint-disable-next-line no-unused-vars
+  const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
     isHosted: state.app.features.isHosted,
     device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
-    groups: state.devices.groups.byId,
+    groups,
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
     plan,
     release: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null,
