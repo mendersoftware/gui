@@ -44,16 +44,10 @@ export class Signup extends React.Component {
   }
 
   _handleSignup(formData, recaptcha) {
-    this.setState({ loading: true });
-    const credentials = this.state.oauthProvider
-      ? {
-          email: this.state.email,
-          login: { [this.state.oauthProvider]: this.state.oauthId }
-        }
-      : {
-          email: this.state.email,
-          password: this.state.password
-        };
+    const self = this;
+    self.setState({ loading: true });
+    const { email, password, oauthProvider, oauthId } = self.state;
+    const credentials = oauthProvider ? { email, login: { [oauthProvider]: oauthId } } : { email, password };
     const signup = {
       ...credentials,
       organization: formData.name,
@@ -62,23 +56,10 @@ export class Signup extends React.Component {
       marketing: formData.marketing,
       'g-recaptcha-response': recaptcha || 'empty'
     };
-    return this.props
+    return self.props
       .createOrganizationTrial(signup)
-      .catch(err => {
-        if (err.error.status >= 400 && err.error.status < 500) {
-          this.setState({ step: 1 });
-          this.props.setSnackbar(err.error.response.body.error, 5000, '');
-        }
-      })
-      .then(res => {
-        if (typeof res !== 'undefined') {
-          setTimeout(() => {
-            this.props.loginUser(credentials);
-            this.setState({ loading: false });
-          }, 3000);
-        }
-      })
-      .finally(() => setTimeout(() => this.setState({ loading: false }), 3200));
+      .then(() => self.setState({ loading: false, redirectToReferrer: true }))
+      .finally(() => setTimeout(() => self.setState({ loading: false, step: 1 }), 3000));
   }
 
   componentDidUpdate() {
