@@ -36,9 +36,17 @@ export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, se
           <ListItemText primary="All devices" />
         </ListItem>
         <Divider />
-        {!!dynamicGroups.length && <ListSubheader key="dynamic-groups-sub">Dynamic</ListSubheader>}
+        {!!dynamicGroups.length && (
+          <ListSubheader disableSticky key="dynamic-groups-sub">
+            Dynamic
+          </ListSubheader>
+        )}
         {dynamicGroups}
-        {!!staticGroups.length && <ListSubheader key="static-groups-sub">Static</ListSubheader>}
+        {!!staticGroups.length && (
+          <ListSubheader disableSticky key="static-groups-sub">
+            Static
+          </ListSubheader>
+        )}
         {staticGroups}
         <ListItem
           button
