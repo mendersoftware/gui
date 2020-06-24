@@ -113,7 +113,7 @@ export class DeviceGroups extends React.Component {
     if (this.props.selectedGroup) {
       return this.props.updateDynamicGroup(this.props.selectedGroup, this.props.filters);
     }
-    this.setState({ createGroupDialog: true, fromFilters: true });
+    this.setState({ modifyGroupDialog: true, fromFilters: true });
   }
 
   _removeDevicesFromGroup(devices) {
@@ -160,12 +160,12 @@ export class DeviceGroups extends React.Component {
           />
         </div>
         {removeGroup && <RemoveGroup onClose={() => self.setState({ removeGroup: !removeGroup })} onRemove={() => self._removeCurrentGroup()} />}
-        {(createGroupDialog || modifyGroupDialog) && (
+        {modifyGroupDialog && (
           <CreateGroup
             addListOfDevices={(devices, group) => self._createGroupFromDialog(devices, group)}
             fromFilters={fromFilters}
             groups={groups}
-            isCreation={createGroupDialog || !groups.length}
+            isCreation={fromFilters || !groups.length}
             selectedDevices={tmpDevices}
             onClose={() => self.setState({ createGroupDialog: false, modifyGroupDialog: false, fromFilters: false, tmpDevices: [] })}
           />
