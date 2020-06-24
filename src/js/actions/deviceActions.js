@@ -41,30 +41,30 @@ export const getGroups = () => (dispatch, getState) =>
 export const initializeGroupsDevices = () => (dispatch, getState) =>
   Promise.all(Object.keys(getState().devices.groups.byId).map(group => dispatch(getGroupDevices(group, 1, 1))));
 
-export const addDeviceToGroup = (group, deviceId) => dispatch =>
-  GeneralApi.put(`${inventoryApiUrl}/devices/${deviceId}/group`, { group: encodeURIComponent(group) }).then(() =>
+export const addDevicesToGroup = (group, deviceIds) => dispatch =>
+  GeneralApi.patch(`${inventoryApiUrl}/groups/${group}/devices`, deviceIds).then(() =>
     Promise.resolve(
       dispatch({
         type: DeviceConstants.ADD_TO_GROUP,
         group,
-        deviceId
+        deviceIds
       })
     )
   );
 
-export const removeDeviceFromGroup = (deviceId, group) => dispatch =>
-  GeneralApi.delete(`${inventoryApiUrl}/devices/${deviceId}/group/${group}`).then(() =>
+export const removeDevicesFromGroup = (group, deviceIds) => dispatch =>
+  GeneralApi.delete(`${inventoryApiUrl}/groups/${group}/devices`, deviceIds).then(() =>
     Promise.resolve(
       dispatch({
         type: DeviceConstants.REMOVE_FROM_GROUP,
         group,
-        deviceId
+        deviceIds
       })
     )
   );
 
 export const addStaticGroup = (group, deviceIds) => (dispatch, getState) =>
-  Promise.all(deviceIds.map(id => dispatch(addDeviceToGroup(group, id)))).then(() =>
+  Promise.resolve(dispatch(addDevicesToGroup(group, deviceIds))).then(() =>
     Promise.resolve(
       dispatch({
         type: DeviceConstants.ADD_STATIC_GROUP,
@@ -76,16 +76,8 @@ export const addStaticGroup = (group, deviceIds) => (dispatch, getState) =>
 
 export const removeStaticGroup = groupName => (dispatch, getState) => {
   const { deviceIds } = getState().devices.groups.byId[groupName];
-  const selectedGroup = getState().devices.groups.selectedGroup === groupName ? undefined : getState().devices.groups.selectedGroup;
-  return Promise.all(
-    deviceIds.reduce(
-      (accu, id) => {
-        accu.push(dispatch(removeDeviceFromGroup(id, groupName)));
-        return accu;
-      },
-      [dispatch(selectGroup(selectedGroup))]
-    )
-  ).then(() => {
+  return Promise.resolve(dispatch(removeDevicesFromGroup(groupName, deviceIds))).then(() => {
+    const selectedGroup = getState().devices.groups.selectedGroup === groupName ? undefined : getState().devices.groups.selectedGroup;
     let groups = getState().devices.groups.byId;
     delete groups[groupName];
     return Promise.all([
@@ -93,7 +85,8 @@ export const removeStaticGroup = groupName => (dispatch, getState) => {
         type: DeviceConstants.REMOVE_STATIC_GROUP,
         groups
       }),
-      dispatch(getGroups())
+      dispatch(getGroups()),
+      dispatch(selectGroup(selectedGroup))
     ]);
   });
 };
