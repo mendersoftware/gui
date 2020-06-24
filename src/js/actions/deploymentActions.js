@@ -74,6 +74,8 @@ export const createDeployment = newDeployment => dispatch => {
   let request;
   if (newDeployment.filter_id) {
     request = GeneralApi.post(`${deploymentsApiUrlV2}/deployments`, newDeployment);
+  } else if (newDeployment.group) {
+    request = GeneralApi.post(`${deploymentsApiUrl}/deployments/group/${newDeployment.group}`, newDeployment);
   } else {
     request = GeneralApi.post(`${deploymentsApiUrl}/deployments`, newDeployment);
   }
