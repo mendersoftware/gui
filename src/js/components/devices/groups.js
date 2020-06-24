@@ -53,13 +53,7 @@ export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, se
           </ListSubheader>
         )}
         {staticGroups}
-        <ListItem
-          button
-          classes={{ root: 'grouplist' }}
-          disabled={!acceptedCount}
-          style={acceptedCount ? {} : { color: '#d4e9e7' }}
-          onClick={acceptedCount ? () => openGroupDialog() : x => x}
-        >
+        <ListItem button classes={{ root: 'grouplist' }} disabled={!acceptedCount} style={acceptedCount ? {} : { color: '#d4e9e7' }} onClick={openGroupDialog}>
           <ListItemIcon>
             <AddIcon />
           </ListItemIcon>
