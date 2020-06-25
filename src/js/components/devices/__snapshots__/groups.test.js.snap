@@ -44,8 +44,8 @@ exports[`Groups Component renders correctly 1`] = `
       </div>
     </div>
     <div
-      aria-disabled={true}
-      className="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters Mui-disabled MuiListItem-button Mui-disabled"
+      aria-disabled={false}
+      className="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-button"
       onBlur={[Function]}
       onClick={[Function]}
       onDragLeave={[Function]}
@@ -61,10 +61,10 @@ exports[`Groups Component renders correctly 1`] = `
       role="button"
       style={
         Object {
-          "color": "#d4e9e7",
+          "marginTop": 30,
         }
       }
-      tabIndex={-1}
+      tabIndex={0}
     >
       <div
         className="MuiListItemIcon-root"
