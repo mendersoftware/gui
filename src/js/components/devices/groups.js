@@ -3,7 +3,7 @@ import ReactTooltip from 'react-tooltip';
 
 // material ui
 import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@material-ui/core';
-import { Add as AddIcon, Help as HelpIcon } from '@material-ui/icons';
+import { Help as HelpIcon, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import { AddGroup } from '../helptips/helptooltips';
 
@@ -55,7 +55,7 @@ export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, se
         {staticGroups}
         <ListItem button classes={{ root: 'grouplist' }} disabled={!acceptedCount} style={acceptedCount ? {} : { color: '#d4e9e7' }} onClick={openGroupDialog}>
           <ListItemIcon>
-            <AddIcon />
+            <InfoIcon />
           </ListItemIcon>
           <ListItemText primary="Create a group" />
         </ListItem>
