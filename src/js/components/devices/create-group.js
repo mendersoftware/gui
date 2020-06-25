@@ -1,89 +1,55 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Cookies from 'universal-cookie';
 import { Button, Dialog, DialogActions, DialogTitle, DialogContent } from '@material-ui/core';
 
 import { getDevicesByStatus } from '../../actions/deviceActions';
 import * as DeviceConstants from '../../constants/deviceConstants';
 import GroupDefinition from './group-management/group-definition';
-import Confirmation from './group-management/confirmation';
-
-const defaultSteps = [GroupDefinition, Confirmation];
 
 export class CreateGroup extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.cookies = new Cookies();
-    const showWarning = !this.cookies.get(`${this.props.userId}-groupHelpText`);
     this.state = {
       activeStep: 0,
-      invalid: showWarning,
+      invalid: true,
       isModification: !props.isCreation,
-      isCreationDynamic: props.isCreation && props.fromFilters,
       newGroup: '',
-      selectedDevices: props.selectedDevices,
-      showWarning,
-      steps: defaultSteps,
       title: props.isCreation ? 'Create a new group' : `Add ${props.selectedDevices.length ? 'selected ' : ''}devices to group`
     };
     this.props.getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength);
   }
 
-  componentDidMount() {
-    let steps = defaultSteps;
-    // cookie exists || if no other groups exist, continue to create group
-    if ((this.props.selectedDevices.length && !this.state.showWarning) || this.state.isCreationDynamic) {
-      steps = [steps[0]];
-    }
-    this.setState({ steps });
-  }
-
-  onConfirm(checked) {
-    this.cookies.set(`${this.props.userId}-groupHelpText`, checked, { expires: new Date('2500-12-31') });
-    this.setState({ invalid: !checked });
-  }
-
   onNameChange(isNotValid, newGroup, isModification) {
-    let steps = this.state.steps;
-    if (this.state.isModification !== isModification && isModification && !this.state.isCreationDynamic) {
-      steps = this.state.selectedDevices.length ? defaultSteps : steps;
-      steps = !this.state.showWarning ? [steps[0]] : steps;
-    }
     const title =
-      isModification && !this.state.isCreationDynamic ? `Add ${this.props.selectedDevices.length ? 'selected ' : ''}devices to group` : 'Create a new group';
-    const invalid = isModification && this.state.isCreationDynamic ? true : isNotValid;
-    this.setState({ invalid, isModification, newGroup, steps, title });
+      isModification && !this.props.isCreationDynamic ? `Add ${this.props.selectedDevices.length ? 'selected ' : ''}devices to group` : 'Create a new group';
+    const invalid = isModification && this.props.isCreationDynamic ? true : isNotValid;
+    this.setState({ invalid, isModification, newGroup, title });
   }
 
   render() {
     const self = this;
-    const { addListOfDevices, onClose } = self.props;
-    const { activeStep, invalid, isCreationDynamic, isModification, newGroup, selectedDevices, showWarning, steps, title } = self.state;
-    const ComponentToShow = steps[activeStep];
+    const { addListOfDevices, groups, isCreationDynamic, onClose, selectedDevices, selectedGroup } = self.props;
+    const { invalid, isModification, newGroup, title } = self.state;
     return (
       <Dialog disableBackdropClick disableEscapeKeyDown open={true} scroll={'paper'} fullWidth={true} maxWidth="sm">
         <DialogTitle style={{ paddingBottom: '15px', marginBottom: 0 }}>{title}</DialogTitle>
         <DialogContent className="dialog">
-          <ComponentToShow
-            onConfirm={checked => self.onConfirm(checked)}
+          <GroupDefinition
+            groups={groups}
+            isCreationDynamic={isCreationDynamic}
+            isModification={isModification}
+            newGroup={newGroup}
             onInputChange={(invalidName, name, isModification) => self.onNameChange(invalidName, name, isModification)}
-            {...self.props}
-            {...self.state}
+            selectedGroup={selectedGroup}
           />
         </DialogContent>
         <DialogActions style={{ marginTop: 0 }}>
           <Button style={{ marginRight: 10 }} onClick={onClose}>
             Cancel
           </Button>
-          {activeStep < steps.length - 1 ? (
-            <Button variant="contained" color="primary" onClick={() => self.setState({ activeStep: activeStep + 1 })} disabled={invalid}>
-              Next
-            </Button>
-          ) : (
-            <Button variant="contained" color="primary" onClick={() => addListOfDevices(selectedDevices, newGroup)} disabled={!newGroup.length || invalid}>
-              {!isModification || isCreationDynamic ? (showWarning ? 'Confirm' : 'Create group') : 'Add to group'}
-            </Button>
-          )}
+          <Button variant="contained" color="primary" onClick={() => addListOfDevices(selectedDevices, newGroup)} disabled={!newGroup.length || invalid}>
+            {!isModification || isCreationDynamic ? 'Create group' : 'Add to group'}
+          </Button>
         </DialogActions>
       </Dialog>
     );
@@ -102,10 +68,10 @@ const mapStateToProps = (state, ownProps) => {
     devices,
     globalSettings: state.users.globalSettings,
     groups,
+    isCreationDynamic: ownProps.isCreation && ownProps.fromFilters,
     selectedGroup: state.devices.groups.selectedGroup,
     selectedGroupDevices,
-    userId: state.users.currentUser,
-    willBeEmpty: state.devices.groups.selectedGroup && selectedGroupDevices.length === ownProps.selectedDevices.length
+    userId: state.users.currentUser
   };
 };
 
