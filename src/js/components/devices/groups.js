@@ -8,6 +8,7 @@ import { Help as HelpIcon, InfoOutlined as InfoIcon } from '@material-ui/icons';
 import { AddGroup } from '../helptips/helptooltips';
 
 const styles = {
+  selectedGroup: { backgroundColor: '#e7e7e7' },
   subheader: { color: '#aaaaaa', height: 48 }
 };
 
@@ -16,9 +17,14 @@ export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, se
     .sort((a, b) => a[0].localeCompare(b[0]))
     .reduce(
       (accu, [groupname, group], index) => {
-        const isSelected = groupname === selectedGroup ? { backgroundColor: '#e7e7e7' } : {};
         const groupItem = (
-          <ListItem classes={{ root: 'grouplist' }} button key={groupname + index} style={isSelected} onClick={() => changeGroup(groupname)}>
+          <ListItem
+            classes={{ root: 'grouplist' }}
+            button
+            key={groupname + index}
+            style={groupname === selectedGroup ? styles.selectedGroup : {}}
+            onClick={() => changeGroup(groupname)}
+          >
             <ListItemText primary={decodeURIComponent(groupname)} />
           </ListItem>
         );
@@ -36,7 +42,7 @@ export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, se
     <div>
       <div className="muted margin-bottom-small">Groups</div>
       <List>
-        <ListItem classes={{ root: 'grouplist' }} button key="All" style={!selectedGroup ? { backgroundColor: '#e7e7e7' } : {}} onClick={() => changeGroup()}>
+        <ListItem classes={{ root: 'grouplist' }} button key="All" style={!selectedGroup ? styles.selectedGroup : {}} onClick={() => changeGroup()}>
           <ListItemText primary="All devices" />
         </ListItem>
         {!!dynamicGroups.length && (
