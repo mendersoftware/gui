@@ -58,16 +58,5 @@ Array [
   >
     
   </p>,
-  <p
-    className="info"
-  >
-    Note: specific devices can't be added to dynamic groups. 
-    <a
-      href="/help/devices"
-      onClick={[Function]}
-    >
-      Learn more about static vs. dynamic groups
-    </a>
-  </p>,
 ]
 `;
