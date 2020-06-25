@@ -20,7 +20,7 @@ import {
 } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 
-import { isEmpty, preformatWithRequestID } from '../../helpers';
+import { preformatWithRequestID } from '../../helpers';
 import CreateGroupExplainer from './create-group-explainer';
 
 export class DeviceGroups extends React.Component {
@@ -186,7 +186,7 @@ const mapStateToProps = state => {
   let groupCount = state.devices.byStatus.accepted.total;
   let selectedGroup;
   let groupFilters = [];
-  if (!isEmpty(state.devices.groups.selectedGroup)) {
+  if (state.devices.groups.selectedGroup && state.devices.groups.byId[state.devices.groups.selectedGroup]) {
     selectedGroup = state.devices.groups.selectedGroup;
     groupCount = state.devices.groups.byId[selectedGroup].total;
     groupFilters = state.devices.groups.byId[selectedGroup].filters || [];
