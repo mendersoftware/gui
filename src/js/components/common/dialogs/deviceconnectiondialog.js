@@ -73,7 +73,7 @@ export class DeviceConnectionDialog extends React.Component {
               </p>
             </ReactTooltip>
           </div>
-          <p>The steps are optimized for Linux workstations and devices running an OS in the Debian family such as Raspbian, Ubuntu and Debian.</p>
+          <p>The steps are optimized for Linux workstations and Raspberry Pi devices, but can be used on any ARM device running a Debian family OS.</p>
           <div className="flexbox centered column os-list">
             <div>
               {['assets/img/debian.png', 'assets/img/ubuntu.png', 'assets/img/raspbian.webp'].map((tile, index) => (

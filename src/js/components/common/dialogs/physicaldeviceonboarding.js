@@ -86,13 +86,13 @@ export class PhysicalDeviceOnboarding extends React.Component {
           {hasConvertedImage && (
             <div className="margin-top">
               <p>
-                We prepared an image, fully integrated with Mender for you to start with. You can find it on our{' '}
-                <a href={`https://docs.mender.io/${docsVersion}downloads#disk-images`} target="_blank">
-                  downloads page
+                We prepared an image, fully integrated with Mender for you to start with. You can find it in the{' '}
+                <a href={`https://docs.mender.io/${docsVersion}get-started/preparation/prepare-a-raspberry-pi-device`} target="_blank">
+                  Prepare a Raspberry Pi device
                 </a>{' '}
-                and once you&apos;re done flashing you can go ahead and proceed to the next step.
+                documentation, which also contains instructions for initial device setup. Once you&apos;re done flashing you can go ahead and proceed to the
+                next step.
               </p>
-              <p>If you already have an image running, you can proceed with this tutorial but you will not be able to do full system updates later on.</p>
             </div>
           )}
         </div>
@@ -121,7 +121,7 @@ const actionCreators = { findLocalIpAddress, setOnboardingApproach, setOnboardin
 const mapStateToProps = state => {
   const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
-    docsVersion: state.app.features.hasMultitenancy && state.app.features.isHosted ? '' : docsVersion,
+    docsVersion: state.app.features.isHosted ? '' : docsVersion,
     ipAddress: state.app.hostAddress,
     isEnterprise: state.app.features.isEnterprise,
     isHosted: state.app.features.isHosted,
