@@ -13,10 +13,6 @@ import { advanceOnboarding } from '../../../utils/onboardingmanager';
 
 const types = [
   {
-    title: 'BeagleBone',
-    value: 'beaglebone'
-  },
-  {
     title: 'Raspberry Pi 3',
     value: 'raspberrypi3'
   },
