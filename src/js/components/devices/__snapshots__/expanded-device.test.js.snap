@@ -223,7 +223,7 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
                
               <a
                 href="https://docs.mender.io/client-configuration/configuration-file/polling-intervals"
-                onClick={[Function]}
+                target="_blank"
               >
                 Polling intervals
               </a>

@@ -125,7 +125,7 @@ const actionCreators = { findLocalIpAddress, setOnboardingApproach, setOnboardin
 const mapStateToProps = state => {
   const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
-    docsVersion: state.app.features.hasMultitenancy && state.app.features.isHosted ? '' : docsVersion,
+    docsVersion: state.app.features.isHosted ? '' : docsVersion,
     ipAddress: state.app.hostAddress,
     isEnterprise: state.app.features.isEnterprise,
     isHosted: state.app.features.isHosted,
