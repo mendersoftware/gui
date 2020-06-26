@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { InfoOutlined as InfoOutlinedIcon, Mail as MailIcon } from '@material-ui/icons';
+import { getDeviceLimit } from '../../actions/deviceActions';
 import { getUserOrganization } from '../../actions/userActions';
 
 import CardSection from './cardsection';
@@ -27,6 +28,7 @@ export class Upgrade extends React.Component {
       updatedFormdata: {plan: 'os', name: 'Starter'},
     };
   }
+
   componentDidMount() {
     this.props.getUserOrganization();
   }
@@ -39,6 +41,7 @@ export class Upgrade extends React.Component {
   handleUpgrade() {
     this.setState({ upgraded: true });
     setTimeout(() => {
+      this.props.getDeviceLimit();
       this.props.history.push('/settings/my-organization');
     }, 3000);
   }
@@ -109,7 +112,7 @@ export class Upgrade extends React.Component {
   }
 }
 
-const actionCreators = { getUserOrganization };
+const actionCreators = { getDeviceLimit, getUserOrganization };
 
 const mapStateToProps = state => {
   return {
