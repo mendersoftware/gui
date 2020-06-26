@@ -59,8 +59,8 @@ export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, hi
 const mapStateToProps = state => {
   const currentUser = state.users.byId[state.users.currentUser];
   const plan = state.users.organization ? state.users.organization.plan : 'os';
-  let isAdmin = false;
-  let allowUserManagement = false;
+  let isAdmin = false || !(state.app.features.hasMultitenancy || state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'));
+  let allowUserManagement = false || isAdmin;
   if (currentUser?.roles) {
     // TODO: move these + additional role checks into selectors
     isAdmin = currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL');

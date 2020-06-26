@@ -113,6 +113,7 @@ export class Deployments extends React.Component {
       artifact_name: release.Name,
       devices: filterId ? undefined : deploymentDeviceIds,
       filter_id: filterId,
+      group,
       name: decodeURIComponent(group) || 'All devices',
       phases,
       retries

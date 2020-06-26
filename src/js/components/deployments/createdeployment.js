@@ -13,6 +13,8 @@ import { saveGlobalSettings } from '../../actions/userActions';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { getRemainderPercent } from '../../helpers';
 
+export const allDevices = 'All devices';
+
 const deploymentSteps = [
   { title: 'Select target software and devices', closed: false, component: SoftwareDevices },
   { title: 'Set a rollout schedule', closed: true, component: ScheduleRollout },
@@ -111,7 +113,12 @@ export class CreateDialog extends React.Component {
       retries: deploymentObject.retries || retries
     };
     const disabled =
-      activeStep === 0 ? !(deploymentSettings.release && (deploymentSettings.deploymentDeviceIds.length || deploymentSettings.filterId)) : disableSchedule;
+      activeStep === 0
+        ? !(
+            deploymentSettings.release &&
+            (deploymentSettings.deploymentDeviceIds.length || deploymentSettings.filterId || deploymentSettings.group !== allDevices)
+          )
+        : disableSchedule;
     const finalStep = activeStep === steps.length - 1;
     return (
       <Dialog open={open || false} fullWidth={false} maxWidth="md">

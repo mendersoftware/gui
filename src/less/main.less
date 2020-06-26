@@ -430,7 +430,11 @@ ul.link-list {
     color: #d95552;
   }
 
-  a, a:hover, a:focus, a:visited, a:link {
+  a,
+  a:hover,
+  a:focus,
+  a:visited,
+  a:link {
     color: #d95552;
   }
 }
@@ -1430,7 +1434,7 @@ div:focus {
 
 /* Log in */
 #login-box,
-#signup-box  {
+#signup-box {
   .animation(fadein 1s 1);
   width: 25%;
   max-width: 400px;
@@ -1502,7 +1506,9 @@ div:focus {
 
 /* sign up */
 #signup-box {
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     text-transform: none;
     color: black;
     font-weight: normal;
@@ -1540,12 +1546,6 @@ button.remove-icon .material-icons {
 }
 
 /* tables */
-
-hr.table-divider {
-  border: 0;
-  height: 6px;
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0));
-}
 
 // table expanding
 tr.expand {
@@ -1700,9 +1700,10 @@ div.waiting-inventory {
 /* Buttons */
 
 .fixedButtons {
-  position: absolute;
-  bottom: 2 * @defaultGutterWidth;
-  right: 2 * @defaultGutterWidth;
+  position: fixed;
+  bottom: 3.5 * @defaultGutterWidth;
+  right: 3.5 * @defaultGutterWidth;
+  z-index: 10;
   min-width: 400px;
   align-items: baseline;
   justify-content: flex-end;
@@ -1817,6 +1818,24 @@ span.month,
 span.day {
   display: block;
   text-align: center;
+}
+
+.heading-lined {
+  position: relative;
+  // height: 48px;
+  display: flex;
+  align-items: center;
+  span {
+    position: absolute;
+    background: white;
+    padding: 0 @defaultGutterWidth;
+    min-width: 6 * @defaultGutterWidth;
+  }
+  > div {
+    width: 100%;
+    height: 1px;
+    background: @bordercolor;
+  }
 }
 
 .dashboard-header {

@@ -2,13 +2,17 @@ import React from 'react';
 import ReactTooltip from 'react-tooltip';
 
 // material ui
-import { Divider, List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@material-ui/core';
+import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@material-ui/core';
 import { Add as AddIcon, Help as HelpIcon } from '@material-ui/icons';
 
 import { AddGroup } from '../helptips/helptooltips';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 
 const selectionStyle = { backgroundColor: '#e7e7e7' };
+
+const styles = {
+  subheader: { color: '#aaaaaa', height: 48 }
+};
 
 export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, selectedGroup, showHelptips }) => {
   const { dynamic: dynamicGroups, static: staticGroups, ungrouped } = Object.entries(groups)
@@ -43,10 +47,19 @@ export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, se
         <ListItem classes={{ root: 'grouplist' }} button key="All" style={!selectedGroup ? selectionStyle : {}} onClick={() => changeGroup()}>
           <ListItemText primary="All devices" />
         </ListItem>
-        <Divider />
-        {!!dynamicGroups.length && <ListSubheader key="dynamic-groups-sub">Dynamic</ListSubheader>}
+        {!!dynamicGroups.length && (
+          <ListSubheader classes={{ root: 'heading-lined' }} disableGutters disableSticky key="dynamic-groups-sub" style={styles.subheader}>
+            <span>Dynamic</span>
+            <div></div>
+          </ListSubheader>
+        )}
         {dynamicGroups}
-        {!!staticGroups.length && <ListSubheader key="static-groups-sub">Static</ListSubheader>}
+        {!!staticGroups.length && (
+          <ListSubheader classes={{ root: 'heading-lined' }} disableGutters disableSticky key="static-groups-sub" style={styles.subheader}>
+            <span>Static</span>
+            <div></div>
+          </ListSubheader>
+        )}
         {staticGroups}
         {!!staticGroups.length && ungrouped}
         <ListItem
