@@ -4,35 +4,45 @@ exports[`PreauthorizeDevices Component renders correctly 1`] = `
 <div
   className="tab-container"
 >
-  <button
-    className="MuiButtonBase-root MuiButton-root MuiButton-contained top-right-button MuiButton-containedSecondary"
-    disabled={false}
-    onBlur={[Function]}
-    onClick={[Function]}
-    onDragLeave={[Function]}
-    onFocus={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseDown={[Function]}
-    onMouseLeave={[Function]}
-    onMouseUp={[Function]}
-    onTouchEnd={[Function]}
-    onTouchMove={[Function]}
-    onTouchStart={[Function]}
+  <div
+    className="flexbox space-between"
     style={
       Object {
-        "position": "absolute",
+        "marginBottom": -1,
+        "zIndex": 2,
       }
     }
-    tabIndex={0}
-    type="button"
   >
-    <span
-      className="MuiButton-label"
+    <div />
+    <div
+      className="flexbox centered"
     >
-      Preauthorize devices
-    </span>
-  </button>
+      <button
+        className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
+        disabled={false}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex={0}
+        type="button"
+      >
+        <span
+          className="MuiButton-label"
+        >
+          Preauthorize devices
+        </span>
+      </button>
+    </div>
+  </div>
   <div
     className="loaderContainer"
   >

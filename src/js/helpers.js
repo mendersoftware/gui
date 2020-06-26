@@ -1,6 +1,7 @@
+import React from 'react';
 import jwtDecode from 'jwt-decode';
 import md5 from 'md5';
-import React from 'react';
+import pluralize from 'pluralize';
 
 import store from './reducers';
 import appConstants from './constants/appConstants';
@@ -528,4 +529,16 @@ ${connectionInstructions} && \\
 systemctl restart mender-client'
 `;
   return codeToCopy;
+};
+
+export const getSnackbarMessage = (skipped, done) => {
+  pluralize.addIrregularRule('its', 'their');
+  const skipText = skipped
+    ? `${skipped} ${pluralize('devices', skipped)} ${pluralize('have', skipped)} more than one pending authset. Expand ${pluralize(
+        'this',
+        skipped
+      )} ${pluralize('device', skipped)} to individually adjust ${pluralize('their', skipped)} authorization status. `
+    : '';
+  const doneText = done ? `${done} ${pluralize('device', done)} ${pluralize('was', done)} updated successfully. ` : '';
+  return `${doneText}${skipText}`;
 };

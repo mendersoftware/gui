@@ -2,11 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import pluralize from 'pluralize';
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
-
-import CreateGroup from './create-group';
 import AuthorizedDevices from './authorized-devices';
+import CreateGroup from './create-group';
 import Groups from './groups';
+import RemoveGroup from './remove-group';
 import {
   addDeviceToGroup,
   addDynamicGroup,
@@ -137,7 +136,7 @@ export class DeviceGroups extends React.Component {
 
   render() {
     const self = this;
-    const { acceptedCount, currentTab, groups, openSettingsDialog, selectedGroup, showHelptips } = self.props;
+    const { acceptedCount, groups, groupsById, openSettingsDialog, selectedGroup, showHelptips } = self.props;
     const { createGroupDialog, fromFilters, modifyGroupDialog, removeGroup, tmpDevices } = self.state;
     return (
       <div className="tab-container">
@@ -145,7 +144,7 @@ export class DeviceGroups extends React.Component {
           <Groups
             acceptedCount={acceptedCount}
             changeGroup={group => self._handleGroupChange(group)}
-            groups={groups}
+            groups={groupsById}
             openGroupDialog={() => self.setState({ createGroupDialog: !createGroupDialog })}
             selectedGroup={selectedGroup}
             showHelptips={showHelptips}
@@ -154,32 +153,13 @@ export class DeviceGroups extends React.Component {
         <div className="rightFluid" style={{ paddingTop: '0' }}>
           <AuthorizedDevices
             addDevicesToGroup={devices => self._addDevicesToGroup(devices)}
-            currentTab={currentTab}
-            groups={groups}
             onGroupClick={() => self.onGroupClick()}
             onGroupRemoval={() => self.setState({ removeGroup: !removeGroup })}
             openSettingsDialog={openSettingsDialog}
             removeDevicesFromGroup={devices => self._removeDevicesFromGroup(devices)}
           />
         </div>
-
-        {removeGroup && (
-          <Dialog open={removeGroup}>
-            <DialogTitle>Remove this group?</DialogTitle>
-            <DialogContent>
-              <p>This will remove the group from the list. Are you sure you want to continue?</p>
-            </DialogContent>
-            <DialogActions>
-              <Button key="remove-action-button-1" onClick={() => self.setState({ removeGroup: !removeGroup })} style={{ marginRight: '10px' }}>
-                Cancel
-              </Button>
-              <Button variant="contained" key="remove-action-button-2" color="primary" onClick={() => self._removeCurrentGroup()}>
-                Remove group
-              </Button>
-            </DialogActions>
-          </Dialog>
-        )}
-
+        {removeGroup && <RemoveGroup onClose={() => self.setState({ removeGroup: !removeGroup })} onRemove={() => self._removeCurrentGroup()} />}
         {(createGroupDialog || modifyGroupDialog) && (
           <CreateGroup
             addListOfDevices={(devices, group) => self._createGroupFromDialog(devices, group)}
@@ -219,19 +199,12 @@ const mapStateToProps = state => {
     groupCount = state.devices.groups.byId[selectedGroup].total;
     groupFilters = state.devices.groups.byId[selectedGroup].filters || [];
   }
-  const groups = Object.entries(state.devices.groups.byId)
-    .reduce((accu, [key, value]) => {
-      if (value.total || value.deviceIds.length || value.filters.length) {
-        accu.push(key);
-      }
-      return accu;
-    }, [])
-    .sort();
   const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
     acceptedCount: state.devices.byStatus.accepted.total || 0,
     filters: state.devices.filters || [],
-    groups,
+    groups: Object.keys(state.devices.groups.byId).sort(),
+    groupsById: state.devices.groups.byId,
     groupCount,
     groupFilters,
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),

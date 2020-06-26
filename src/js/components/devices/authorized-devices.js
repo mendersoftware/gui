@@ -6,19 +6,24 @@ import ReactTooltip from 'react-tooltip';
 import pluralize from 'pluralize';
 
 // material ui
-import { Button } from '@material-ui/core';
+import { Button, SvgIcon } from '@material-ui/core';
+import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
 
 import {
   AddCircle as AddCircleIcon,
+  Autorenew as AutorenewIcon,
   Delete as DeleteIcon,
+  FilterList as FilterListIcon,
   Help as HelpIcon,
-  LockOutlined,
-  RemoveCircleOutline as RemoveCircleOutlineIcon
+  HeightOutlined as HeightOutlinedIcon,
+  HighlightOffOutlined as HighlightOffOutlinedIcon,
+  LockOutlined
 } from '@material-ui/icons';
+import { mdiTrashCanOutline as TrashCan } from '@mdi/js';
 
-import { getDevicesByStatus, getGroupDevices, selectDevices, setDeviceFilters, trySelectDevice } from '../../actions/deviceActions';
+import { getDevicesByStatus, getGroupDevices, selectDevices, setDeviceFilters, trySelectDevice, updateDevicesAuth } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
-import DeviceConstants from '../../constants/deviceConstants';
+import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
 import { filtersCompare, isEmpty } from '../../helpers';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
@@ -39,6 +44,8 @@ export class Authorized extends React.Component {
       pageNo: 1,
       pageLength: 20,
       selectedRows: [],
+      showActions: false,
+      showFilters: false,
       tmpDevices: []
     };
   }
@@ -48,7 +55,7 @@ export class Authorized extends React.Component {
     self.props.setDeviceFilters([]);
     self.setState({ selectedRows: [], expandRow: null });
     if (!this.props.acceptedDevicesList.length && this.props.acceptedCount < this.props.deploymentDeviceLimit) {
-      this.props.getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted);
+      this.props.getDevicesByStatus(DEVICE_STATES.accepted);
     }
     if (self.props.acceptedDevicesList.length < 20) {
       self._getDevices(true);
@@ -82,7 +89,7 @@ export class Authorized extends React.Component {
     ) {
       var newState = { selectedRows: [], expandRow: null, allRowsSelected: false };
       if (prevProps.selectedGroup != self.props.selectedGroup) {
-        newState = { pageNo: 1, ...newState };
+        newState = { pageNo: 1, showFilters: false, ...newState };
       }
       self.setState(newState);
       if (self.props.showHelptips && self.props.showTips && !self.props.onboardingComplete && self.props.acceptedCount && self.props.acceptedCount < 2) {
@@ -108,7 +115,7 @@ export class Authorized extends React.Component {
     } else {
       // otherwise, get accepted devices from the inventory, eventually applying filters
       const hasFilters = filters.length && filters[0].value;
-      request = getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, pageNo, pageLength, shouldUpdate || hasFilters);
+      request = getDevicesByStatus(DEVICE_STATES.accepted, pageNo, pageLength, shouldUpdate || hasFilters);
     }
     request
       .catch(err => {
@@ -125,7 +132,7 @@ export class Authorized extends React.Component {
     var self = this;
     // do this via deviceauth not inventory
     return self.props
-      .trySelectDevice(id, DeviceConstants.DEVICE_STATES.accepted)
+      .trySelectDevice(id, DEVICE_STATES.accepted)
       .catch(err => {
         if (err.res.statusCode === 404) {
           var errormsg = err.error || 'Please check your connection.';
@@ -166,6 +173,13 @@ export class Authorized extends React.Component {
     }
   }
 
+  onRejectDevices(rows) {
+    var self = this;
+    self.setState({ loading: true });
+    const deviceIds = rows.map(row => self.props.devices[row]);
+    return self.props.updateDevicesAuth(deviceIds, DEVICE_STATES.rejected).then(() => self.setState({ selectedRows: [], loading: false }));
+  }
+
   render() {
     const self = this;
     const {
@@ -176,15 +190,13 @@ export class Authorized extends React.Component {
       groupFilters,
       highlightHelp,
       idAttribute,
-      isEnterprise,
-      loading,
       onGroupClick,
       onGroupRemoval,
       openSettingsDialog,
       selectedGroup,
       showHelptips
     } = self.props;
-    const { selectedRows } = self.state;
+    const { loading, selectedRows, showActions, showFilters } = self.state;
     const columnHeaders = [
       {
         title: idAttribute || 'Device ID',
@@ -217,41 +229,75 @@ export class Authorized extends React.Component {
 
     const groupLabel = selectedGroup ? decodeURIComponent(selectedGroup) : 'All devices';
     const pluralized = pluralize('devices', selectedRows.length);
-    const addLabel = selectedGroup ? `Move selected ${pluralized} to another group` : `Add selected ${pluralized} to a group`;
-    const removeLabel = `Remove selected ${pluralized} from this group`;
+    let actions = [{ icon: <HighlightOffOutlinedIcon className="red" />, title: `Reject ${pluralized}`, action: () => self.onRejectDevices(selectedRows) }];
+    if (selectedGroup) {
+      actions.push(
+        {
+          icon: <HeightOutlinedIcon className="rotated ninety" />,
+          title: `Move selected ${pluralized} to another group`,
+          action: () => self.onAddDevicesToGroup(selectedRows)
+        },
+        {
+          icon: (
+            <SvgIcon fontSize="inherit">
+              <path d={TrashCan} />
+            </SvgIcon>
+          ),
+          title: `Remove selected ${pluralized} from this group`,
+          action: () => self.onRemoveDevicesFromGroup(selectedRows)
+        }
+      );
+    } else {
+      actions.push({
+        icon: <AddCircleIcon className="green" />,
+        title: `Add selected ${pluralized} to a group`,
+        action: () => self.onAddDevicesToGroup(selectedRows)
+      });
+    }
 
     const anchor = { left: 200, top: 146 };
     let onboardingComponent = getOnboardingComponentFor('devices-accepted-onboarding', { anchor });
     onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor }, onboardingComponent);
     return (
       <div className="relative">
-        <div className="flexbox space-between" style={{ marginLeft: '20px' }}>
-          <div style={{ width: '100%' }}>
-            <h2 className="inline-block margin-right">{groupLabel}</h2>
-
-            {(!selectedGroup || !!groupFilters.length || filters.length !== 0) && (
-              <Filters
-                onFilterChange={() => self.setState({ pageNo: 1 }, () => self._getDevices(true))}
-                onGroupClick={onGroupClick}
-                isModification={!!groupFilters.length}
-              />
+        <div style={{ marginLeft: '20px' }}>
+          <div className="flexbox space-between" style={{ zIndex: 2, marginBottom: -1 }}>
+            <div className="flexbox">
+              <h2 className="margin-right">{groupLabel}</h2>
+              {(!selectedGroup || !!groupFilters.length) && (
+                <div className={`flexbox centered ${showFilters ? 'filter-toggle' : ''}`}>
+                  <Button
+                    color="secondary"
+                    disableRipple
+                    onClick={() => self.setState({ showFilters: !showFilters })}
+                    startIcon={<FilterListIcon />}
+                    style={{ backgroundColor: 'transparent' }}
+                  >
+                    {filters.length > 0 ? `Filters (${filters.length})` : 'Filters'}
+                  </Button>
+                </div>
+              )}
+              {selectedGroup && (
+                <p className="info flexbox centered">
+                  {!groupFilters.length ? <LockOutlined fontSize="small" /> : <AutorenewIcon fontSize="small" />}
+                  <span>{!groupFilters.length ? 'Static' : 'Dynamic'}</span>
+                </p>
+              )}
+            </div>
+            {selectedGroup && (
+              <div className="flexbox centered">
+                <Button onClick={onGroupRemoval} startIcon={<DeleteIcon />}>
+                  Remove group
+                </Button>
+              </div>
             )}
           </div>
-          {selectedGroup && (
-            <div className="flexbox centered" style={{ marginTop: 5, minWidth: 240, alignSelf: 'flex-start' }}>
-              {isEnterprise && !groupFilters.length && (
-                <>
-                  <p className="info flexbox centered" style={{ marginRight: 15 }}>
-                    <LockOutlined fontSize="small" />
-                    <span>Static</span>
-                  </p>
-                </>
-              )}
-              <Button onClick={onGroupRemoval} startIcon={<DeleteIcon />}>
-                Remove group
-              </Button>
-            </div>
-          )}
+          <Filters
+            onFilterChange={() => self.setState({ pageNo: 1 }, () => self._getDevices(true))}
+            onGroupClick={onGroupClick}
+            isModification={!!groupFilters.length}
+            open={showFilters}
+          />
         </div>
         <Loader show={loading} />
         {devices.length > 0 && !loading ? (
@@ -267,7 +313,6 @@ export class Authorized extends React.Component {
               refreshDevices={shouldUpdate => self._getDevices(shouldUpdate)}
               selectDeviceById={id => self.getDeviceById(id)}
             />
-
             {showHelptips && devices.length && (
               <div>
                 <div
@@ -287,44 +332,36 @@ export class Authorized extends React.Component {
             )}
           </div>
         ) : (
-          <div className={devices.length || loading ? 'hidden' : 'dashboard-placeholder'}>
-            <p>No devices found</p>
-            {!allCount ? <p>No devices have been authorized to connect to the Mender server yet.</p> : null}
-            {highlightHelp && (
-              <p>
-                Visit the <Link to="/help/getting-started">Help section</Link> to learn how to connect devices to the Mender server.
-              </p>
-            )}
-          </div>
+          !loading && (
+            <div className="dashboard-placeholder">
+              <p>No devices found</p>
+              {!allCount ? <p>No devices have been authorized to connect to the Mender server yet.</p> : null}
+              {highlightHelp && (
+                <p>
+                  Visit the <Link to="/help/getting-started">Help section</Link> to learn how to connect devices to the Mender server.
+                </p>
+              )}
+            </div>
+          )
         )}
         {onboardingComponent ? onboardingComponent : null}
         {!!selectedRows.length && (
-          <div className="fixedButtons">
-            <div className="float-right">
-              <span className="margin-right">
-                {selectedRows.length} {pluralize('devices', selectedRows.length)} selected
-              </span>
-              <Button
-                variant="contained"
-                disabled={!selectedRows.length}
-                color="secondary"
-                onClick={() => self.onAddDevicesToGroup(selectedRows)}
-                startIcon={<AddCircleIcon />}
-              >
-                {addLabel}
-              </Button>
-              {selectedGroup ? (
-                <Button
-                  variant="contained"
-                  disabled={!selectedRows.length}
-                  style={{ marginLeft: '4px' }}
-                  onClick={() => self.onRemoveDevicesFromGroup(selectedRows)}
-                  startIcon={<RemoveCircleOutlineIcon />}
-                >
-                  {removeLabel}
-                </Button>
-              ) : null}
+          <div className="flexbox fixedButtons">
+            <div className="margin-right">
+              {selectedRows.length} {pluralize('devices', selectedRows.length)} selected
             </div>
+            <SpeedDial
+              ariaLabel="device-actions"
+              className="margin-small"
+              icon={<SpeedDialIcon />}
+              onClose={() => self.setState({ showActions: false })}
+              onOpen={() => self.setState({ showActions: true })}
+              open={showActions}
+            >
+              {actions.map(action => (
+                <SpeedDialAction key={action.title} icon={action.icon} tooltipTitle={action.title} tooltipOpen onClick={action.action} />
+              ))}
+            </SpeedDial>
           </div>
         )}
       </div>
@@ -338,11 +375,12 @@ const actionCreators = {
   selectDevices,
   setDeviceFilters,
   setSnackbar,
-  trySelectDevice
+  trySelectDevice,
+  updateDevicesAuth
 };
 
 const mapStateToProps = state => {
-  let devices = state.devices.selectedDeviceList.slice(0, DeviceConstants.DEVICE_LIST_MAXIMUM_LENGTH);
+  let devices = state.devices.selectedDeviceList.slice(0, DEVICE_LIST_MAXIMUM_LENGTH);
   let groupCount = state.devices.byStatus.accepted.total;
   let selectedGroup;
   let groupFilters = [];
@@ -357,7 +395,6 @@ const mapStateToProps = state => {
   } else if (!devices.length && !state.devices.filters.length && state.devices.byStatus.accepted.total) {
     devices = state.devices.byStatus.accepted.deviceIds.slice(0, 20);
   }
-  const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
     acceptedCount: state.devices.byStatus.accepted.total || 0,
     acceptedDevicesList: state.devices.byStatus.accepted.deviceIds.slice(0, 20),
@@ -369,7 +406,6 @@ const mapStateToProps = state => {
     groupDevices,
     groupFilters,
     idAttribute: state.users.globalSettings.id_attribute,
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
     onboardingComplete: state.users.onboarding.complete,
     selectedGroup,
     showHelptips: state.users.showHelptips,

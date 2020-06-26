@@ -1,19 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Dropzone from 'react-dropzone';
 import Time from 'react-time';
 
 // material ui
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Fab, FormControl, FormHelperText, IconButton, Input, TextField } from '@material-ui/core';
-import { Add as ContentAddIcon, Clear as ClearIcon, CloudUpload as FileIcon, InfoOutlined as InfoIcon } from '@material-ui/icons';
+import { Button } from '@material-ui/core';
+import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import { getDeviceCount, getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
-import { isEmpty, preformatWithRequestID } from '../../helpers';
+import { preformatWithRequestID } from '../../helpers';
 import Loader from '../common/loader';
 import DeviceList from './devicelist';
 import { refreshLength as refreshDeviceLength } from './devices';
+import PreauthDialog from './preauth-dialog';
 
 export class Preauthorize extends React.Component {
   constructor(props, context) {
@@ -23,7 +23,6 @@ export class Preauthorize extends React.Component {
       pageLength: 20,
       pageLoading: true,
       openPreauth: false,
-      inputs: [{ key: '', value: '' }],
       public: '',
       devicesToRemove: []
     };
@@ -88,107 +87,33 @@ export class Preauthorize extends React.Component {
 
   _togglePreauth(openPreauth = !this.state.openPreauth) {
     this.setState({ openPreauth });
-    this._clearForm();
   }
 
-  _clearForm() {
-    this.setState({ public: '', filename: '', inputs: [{ key: '', value: '' }] });
-  }
-
-  _updateKey(index, event) {
-    var inputs = this.state.inputs;
-    inputs[index].key = event.target.value;
-    this.setState({ inputs: inputs, errortext: '' });
-    this._convertIdentityToJSON(inputs);
-  }
-
-  _updateValue(index, event) {
-    var inputs = this.state.inputs;
-    inputs[index].value = event.target.value;
-    this.setState({ inputs: inputs, errortext: '' });
-    this._convertIdentityToJSON(inputs);
-  }
-
-  _addKeyValue() {
-    var inputs = this.state.inputs;
-    inputs.push({ key: '', value: '' });
-    this.setState({ inputs: inputs, errortext: '' });
-  }
-
-  _removeInput(index) {
-    var inputs = this.state.inputs;
-    inputs.splice(index, 1);
-    this.setState({ inputs: inputs, errortext: '' });
-    this._convertIdentityToJSON(inputs);
-  }
-
-  _convertIdentityToJSON(arr) {
-    var obj = {};
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i].value) {
-        obj[arr[i].key] = arr[i].value;
-      }
-    }
-    this.setState({ json_identity: obj });
-  }
-
-  _savePreauth(close) {
+  _savePreauth(authset, close) {
     var self = this;
-    var authset = {
-      pubkey: this.state.public,
-      identity_data: this.state.json_identity
-    };
     self.props
       .preauthDevice(authset)
       .then(() => {
         self.props.setSnackbar('Device was successfully added to the preauthorization list', 5000);
-        self._getDevices();
-        self._togglePreauth(!close);
+        self._getDevices(true);
+        self.setState({ openPreauth: !close });
       })
-      .catch(err => {
-        console.log(err);
-        var errMsg = (err.res.body || {}).error || '';
-
-        if (err.res.status === 409) {
-          self.setState({ errortext: 'A device with a matching identity data set already exists' });
-        } else {
-          self.props.setSnackbar(preformatWithRequestID(err.res, `The device could not be added: ${errMsg}`), null, 'Copy to clipboard');
-        }
+      .catch(errorMessage => {
+        self.setState({ errorMessage });
       });
   }
 
-  onDrop(acceptedFiles, rejectedFiles) {
-    var self = this;
-    if (acceptedFiles.length) {
-      var reader = new FileReader();
-      reader.readAsBinaryString(acceptedFiles[0]);
-      reader.fileName = acceptedFiles[0].name;
-      reader.onload = function() {
-        var str = reader.result.replace(/\n|\r/g, '\n');
-        self.setState({ public: str, filename: reader.fileName });
-      };
-      reader.onerror = function(error) {
-        console.log('Error: ', error);
-      };
-    }
-    if (rejectedFiles.length) {
-      self.props.setSnackbar(`File '${rejectedFiles[0].name}' was rejected.`);
-    }
-  }
-
-  _removeKey() {
-    this.setState({ public: null, filename: null });
-  }
-
   render() {
-    var self = this;
-    var limitMaxed = self.props.deviceLimit && self.props.deviceLimit <= self.props.acceptedDevices;
+    const self = this;
+    const { acceptedDevices, count, deviceLimit, devices, globalSettings, openSettingsDialog } = self.props;
+    const { errorMessage, openPreauth, pageLoading } = self.state;
+    const limitMaxed = deviceLimit && deviceLimit <= acceptedDevices;
 
     const columnHeaders = [
       {
-        title: self.props.globalSettings.id_attribute || 'Device ID',
+        title: globalSettings.id_attribute || 'Device ID',
         name: 'device_id',
-        customize: () => self.props.openSettingsDialog(),
+        customize: openSettingsDialog,
         style: { flexGrow: 1 }
       },
       {
@@ -203,155 +128,57 @@ export class Preauthorize extends React.Component {
       }
     ];
 
-    var deviceLimitWarning = limitMaxed ? (
+    const deviceLimitWarning = limitMaxed ? (
       <p className="warning">
         <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
-        You have reached your limit of authorized devices: {this.props.acceptedDevices} of {this.props.deviceLimit}
+        You have reached your limit of authorized devices: {acceptedDevices} of {deviceLimit}
       </p>
     ) : null;
 
-    var preauthActions = [
-      <div key="auth-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <Button onClick={() => this._togglePreauth(false)}>Cancel</Button>
-      </div>,
-      <div key="auth-button-2" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <Button
-          variant="contained"
-          disabled={!this.state.public || isEmpty(this.state.json_identity) || !!limitMaxed}
-          onClick={() => this._savePreauth(false)}
-          color="primary"
-        >
-          Save and add another
-        </Button>
-      </div>,
-      <Button
-        variant="contained"
-        key="auth-button-3"
-        disabled={!this.state.public || isEmpty(this.state.json_identity) || !!limitMaxed}
-        onClick={() => this._savePreauth(true)}
-        color="secondary"
-      >
-        Save
-      </Button>
-    ];
-
-    var inputs = self.state.inputs.map((input, index) => {
-      const hasError = Boolean(index === self.state.inputs.length - 1 && self.state.errortext);
-      return (
-        <div className="key-value-container flexbox" key={index}>
-          <FormControl error={hasError} style={{ marginRight: 15, marginTop: 10 }}>
-            <Input id={`key-${index}`} value={input.key} placeholder="Key" onChange={e => self._updateKey(index, e)} type="text" />
-            <FormHelperText>{self.state.errortext}</FormHelperText>
-          </FormControl>
-          <FormControl error={hasError} style={{ marginTop: 10 }}>
-            <Input id={`value-${index}`} value={input.value} placeholder="Value" onChange={e => self._updateValue(index, e)} type="text" />
-          </FormControl>
-          {this.state.inputs.length > 1 ? (
-            <IconButton disabled={!this.state.inputs[index].key || !this.state.inputs[index].value} onClick={() => this._removeInput(index)}>
-              <ClearIcon fontSize="small" />
-            </IconButton>
-          ) : (
-            <span style={{ minWidth: 44 }} />
-          )}
-        </div>
-      );
-    });
-
     return (
       <div className="tab-container">
-        <Button
-          style={{ position: 'absolute' }}
-          color="secondary"
-          variant="contained"
-          disabled={!!limitMaxed}
-          className="top-right-button"
-          onClick={() => this._togglePreauth(true)}
-        >
-          Preauthorize devices
-        </Button>
-
-        <Loader show={this.state.pageLoading} />
-
-        {this.props.devices.length && !this.state.pageLoading ? (
+        <div className="flexbox space-between" style={{ zIndex: 2, marginBottom: -1 }}>
+          {count ? <h2 className="margin-right">Preauthorized devices</h2> : <div />}
+          <div className="flexbox centered">
+            <Button color="secondary" variant="contained" disabled={!!limitMaxed} onClick={() => this._togglePreauth(true)}>
+              Preauthorize devices
+            </Button>
+          </div>
+        </div>
+        {deviceLimitWarning}
+        <Loader show={pageLoading} />
+        {devices.length && !pageLoading ? (
           <div className="padding-bottom">
-            <h3 className="align-center">Preauthorized devices</h3>
-            {deviceLimitWarning}
             <DeviceList
               {...self.props}
               {...self.state}
               columnHeaders={columnHeaders}
-              limitMaxed={limitMaxed}
               onPageChange={e => self._handlePageChange(e)}
               onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}
-              pageTotal={self.props.count}
+              pageTotal={count}
               refreshDevices={shouldUpdate => self._getDevices(shouldUpdate)}
             />
           </div>
         ) : (
-          <div className={this.state.pageLoading ? 'hidden' : 'dashboard-placeholder'}>
+          <div className={pageLoading ? 'hidden' : 'dashboard-placeholder'}>
             <p>There are no preauthorized devices.</p>
             <p>
-              {limitMaxed ? 'Preauthorize devices' : <a onClick={() => this._togglePreauth(true)}>Preauthorize devices</a>} so that when they come online, they
+              {limitMaxed ? 'Preauthorize devices' : <a onClick={() => self._togglePreauth(true)}>Preauthorize devices</a>} so that when they come online, they
               will connect to the server immediately
             </p>
             <img src="assets/img/preauthorize.png" alt="preauthorize" />
           </div>
         )}
-
-        <Dialog open={this.state.openPreauth}>
-          <DialogTitle>Preauthorize devices</DialogTitle>
-          <DialogContent style={{ overflow: 'hidden' }}>
-            <p>You can preauthorize a device by adding its authentication dataset here.</p>
-            <p>This means when a device with the matching key and identity data comes online, it will automatically be authorized to connect to the server.</p>
-
-            <h4 className="margin-top margin-bottom-small">Public key</h4>
-            {this.state.filename ? (
-              <div>
-                <TextField
-                  id="keyfile"
-                  value={this.state.filename}
-                  disabled={true}
-                  style={{ color: 'rgba(0, 0, 0, 0.8)', borderBottom: '1px solid rgb(224, 224, 224)' }}
-                />
-                <IconButton style={{ top: '6px' }} onClick={() => this._removeKey()}>
-                  <ClearIcon />
-                </IconButton>
-              </div>
-            ) : (
-              <div>
-                <Dropzone activeClassName="active" rejectClassName="active" multiple={false} onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}>
-                  {({ getRootProps, getInputProps }) => (
-                    <div {...getRootProps()} style={{ fontSize: '16px', margin: 'auto' }} className="dropzone onboard dashboard-placeholder">
-                      <input {...getInputProps()} />
-                      <div className="icon inline-block">
-                        <FileIcon style={{ height: '24px', width: '24px', verticalAlign: 'middle', marginTop: '-2px' }} />
-                      </div>
-                      <div className="dashboard-placeholder inline">
-                        Drag here or <a>browse</a> to upload a public key file
-                      </div>
-                    </div>
-                  )}
-                </Dropzone>
-              </div>
-            )}
-
-            <h4 className="margin-bottom-none margin-top">Identity data</h4>
-            {inputs}
-
-            <Fab
-              disabled={!this.state.inputs[this.state.inputs.length - 1].key || !this.state.inputs[this.state.inputs.length - 1].value}
-              style={{ marginTop: '10px' }}
-              color="secondary"
-              size="small"
-              onClick={() => this._addKeyValue()}
-            >
-              <ContentAddIcon />
-            </Fab>
-
-            {deviceLimitWarning}
-          </DialogContent>
-          <DialogActions>{preauthActions}</DialogActions>
-        </Dialog>
+        {openPreauth && (
+          <PreauthDialog
+            deviceLimitWarning={deviceLimitWarning}
+            errortext={errorMessage}
+            limitMaxed={limitMaxed}
+            onSubmit={(data, addMore) => self._savePreauth(data, addMore)}
+            onCancel={() => self._togglePreauth(false)}
+            onChange={() => self.setState({ errorMessage: null })}
+          />
+        )}
       </div>
     );
   }
