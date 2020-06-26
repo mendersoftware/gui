@@ -268,7 +268,7 @@ export class Header extends React.Component {
                     Mender is currently running in <b>demo mode</b>.
                   </p>
                   <p>
-                    <a href={`https://docs.mender.io/${docsVersion}/administration/production-installation`} target="_blank">
+                    <a href={`https://docs.mender.io/${docsVersion}administration/production-installation`} target="_blank">
                       See the documentation for help switching to production mode
                     </a>
                     .
@@ -376,13 +376,14 @@ const mapStateToProps = state => {
         )
       );
   }
+  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
     acceptedDevices: state.devices.byStatus.accepted.total,
     allowUserManagement,
     announcement: state.app.hostedAnnouncement,
     deviceLimit: state.devices.limit,
     demo: state.app.features.isDemoMode,
-    docsVersion: state.app.docsVersion,
+    docsVersion: state.app.features.isHosted ? '' : docsVersion,
     hasTrackingEnabled: state.users.globalSettings[state.users.currentUser]?.trackingConsentGiven,
     inProgress: state.deployments.byStatus.inprogress.total,
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && organization.plan === 'enterprise'),

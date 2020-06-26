@@ -70,8 +70,9 @@ export class Global extends React.Component {
   }
 
   render() {
-    var changed = this.hasChanged();
-    const id_attributes = this.props.attributes.reduce(
+    const { attributes, dialog, docsVersion, settings } = this.props;
+    const changed = this.hasChanged();
+    const id_attributes = attributes.reduce(
       (accu, value) => {
         accu.push({ value, label: value });
         return accu;
@@ -83,7 +84,7 @@ export class Global extends React.Component {
       <div>
         <p>Choose a device identity attribute to use to identify your devices throughout the UI.</p>
         <p>
-          <a href="https://docs.mender.io/client-configuration/identity" target="_blank">
+          <a href={`https://docs.mender.io/${docsVersion}client-configuration/identity`} target="_blank">
             Learn how to add custom identity attributes
           </a>{' '}
           to your devices.
@@ -93,7 +94,7 @@ export class Global extends React.Component {
 
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
-        {!this.props.dialog && (
+        {!dialog && (
           <>
             <h2 style={{ marginTop: '15px' }}>Global settings</h2>
             <p className="info" style={{ marginBottom: '30px' }}>
@@ -110,13 +111,13 @@ export class Global extends React.Component {
             onChange={value => this.changeIdAttribute(value)}
             menuItems={id_attributes}
             style={{ width: '400px' }}
-            value={this.state.updatedSettings.id_attribute || this.props.settings.id_attribute || ''}
+            value={this.state.updatedSettings.id_attribute || settings.id_attribute || ''}
             hint={id_hint}
           />
         </Form>
 
         <div className="margin-top-large float-right">
-          <Button disabled={!changed && !this.props.dialog} onClick={() => this.undoChanges()} style={{ marginRight: '10px' }}>
+          <Button disabled={!changed && !dialog} onClick={() => this.undoChanges()} style={{ marginRight: '10px' }}>
             Cancel
           </Button>
           <Button variant="contained" onClick={() => this.saveSettings()} disabled={!changed} color="primary">
@@ -131,10 +132,12 @@ export class Global extends React.Component {
 const actionCreators = { getDevicesByStatus, getGlobalSettings, saveGlobalSettings, setSnackbar };
 
 const mapStateToProps = state => {
+  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
     // limit the selection of the available attribute to AVAILABLE_ATTRIBUTE_LIMIT
     attributes: state.devices.filteringAttributes.identityAttributes.slice(0, state.devices.filteringAttributesLimit),
     devicesCount: Object.keys(state.devices.byId).length,
+    docsVersion: state.app.features.isHosted ? '' : docsVersion,
     settings: state.users.globalSettings
   };
 };
