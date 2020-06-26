@@ -2,8 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
-import Linkify from 'react-linkify';
-import ReactTooltip from 'react-tooltip';
 
 import { Button, IconButton, ListItemText, ListItemSecondaryAction, Menu, MenuItem, Toolbar } from '@material-ui/core';
 
@@ -11,10 +9,7 @@ import {
   AccountCircle as AccountCircleIcon,
   ArrowDropDown as ArrowDropDownIcon,
   ArrowDropUp as ArrowDropUpIcon,
-  Close as CloseIcon,
-  ExitToApp as ExitIcon,
-  InfoOutlined as InfoIcon,
-  Payment
+  ExitToApp as ExitIcon
 } from '@material-ui/icons';
 
 import { logout } from '../../auth';
@@ -24,6 +19,7 @@ import Announcement from './announcement';
 import DemoNotification from './demonotification';
 import DeviceNotifications from './devicenotifications';
 import DeploymentNotifications from './deploymentnotifications';
+import TrialNotification from './trialnotification';
 
 import { getOnboardingState, setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus } from '../../actions/deploymentActions';
@@ -194,38 +190,10 @@ export class Header extends React.Component {
       <Toolbar id="fixedHeader" className="header" style={{ backgroundColor: '#fff', height: 56, minHeight: 'unset', paddingLeft: 32, paddingRight: 40 }}>
         <Link to="/" id="logo" className={plan === 'enterprise' || isEnterprise ? 'enterprise' : ''} />
         {demo && <DemoNotification docsVersion={docsVersion} />}
-        {organization && organization.trial ? (
-          <div style={{ display: 'flex', flexDirection: 'row' }}>
-            <div id="trialVersion">
-              <a id="trial-info" data-tip data-for="trial-version" data-event="click focus" data-offset="{'bottom': 15, 'right': 60}">
-                <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
-                Trial version
-              </a>
-
-              <ReactTooltip id="trial-version" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-                <h3>Trial version</h3>
-                <p>You&apos;re using the trial version of Mender – it&apos;s free for up to 10 devices for 12 months.</p>
-                <p>
-                  <Link to="/settings/upgrade">Upgrade to a plan</Link> to add more devices and continue using Mender after the trial expires.
-                </p>
-                <p>
-                  Or compare the plans at{' '}
-                  <a href={`https://mender.io/plans/pricing`} target="_blank">
-                    mender.io/plans/pricing
-                  </a>
-                  .
-                </p>
-              </ReactTooltip>
-            </div>
-
-            <Link id="trial-upgrade-now" to="/settings/upgrade">
-              <Button style={{ top: '5px' }} color="primary" startIcon={<Payment />}>
-                Upgrade now
-              </Button>
-            </Link>
-          </div>
-        ) : null}
-        {!!announcement && <Announcement announcement={announcement} showAnnouncement={showAnnouncement} onHide={() => self._hideAnnouncement()} />}
+        {!!announcement && showAnnouncement && (
+          <Announcement announcement={announcement} showAnnouncement={showAnnouncement} onHide={() => self._hideAnnouncement()} />
+        )}
+        {organization && organization.trial && <TrialNotification />}
         <div style={{ flexGrow: '1' }}></div>
         <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
         <DeploymentNotifications inprogress={inProgress} />
