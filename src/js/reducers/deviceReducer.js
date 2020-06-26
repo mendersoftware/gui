@@ -71,7 +71,7 @@ const deviceReducer = (state = initialState, action) => {
           ...state.groups.byId[action.group].deviceIds.slice(0, deviceIdsIndex),
           ...state.groups.byId[action.group].deviceIds.slice(deviceIdsIndex + 1)
         ],
-        total: state.groups.byId[action.group].total - 1
+        total: Math.max(state.groups.byId[action.group].total - 1, 0)
       };
       let byId = state.groups.byId;
       let selectedGroup = state.groups.selectedGroup;

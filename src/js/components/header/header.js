@@ -54,12 +54,15 @@ export class Header extends React.Component {
 
   componentDidUpdate(prevProps) {
     const sessionId = this.cookies.get('JWT');
-    const { hasTrackingEnabled, trackingCode, user } = this.props;
+    const { hasTrackingEnabled, organization, trackingCode, user } = this.props;
     if ((!sessionId || !user || !user.id || !user.email.length) && !this.state.gettingUser && !this.state.loggingOut) {
       this._updateUsername();
     }
-    if (prevProps.hasTrackingEnabled !== hasTrackingEnabled && trackingCode && hasTrackingEnabled) {
+    if (prevProps.hasTrackingEnabled !== hasTrackingEnabled && trackingCode && hasTrackingEnabled && user.id && organization.id) {
       ReactGA.initialize(trackingCode);
+      ReactGA.set({ tenant: organization.id });
+      ReactGA.set({ plan: organization.plan });
+      ReactGA.set({ userId: user.id });
     }
   }
 
@@ -317,7 +320,7 @@ const actionCreators = {
 };
 
 const mapStateToProps = state => {
-  const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const organization = state.users.organization ? state.users.organization : { plan: 'os', id: null };
   const currentUser = state.users.byId[state.users.currentUser];
   let allowUserManagement = false;
   if (currentUser?.roles) {
@@ -340,10 +343,11 @@ const mapStateToProps = state => {
     docsVersion: state.app.docsVersion,
     hasTrackingEnabled: state.users.globalSettings[state.users.currentUser]?.trackingConsentGiven,
     inProgress: state.deployments.byStatus.inprogress.total,
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
+    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && organization.plan === 'enterprise'),
     multitenancy: state.app.features.hasMultitenancy || state.app.features.isEnterprise || state.app.features.isHosted,
     showHelptips: state.users.showHelptips,
     pendingDevices: state.devices.byStatus.pending.total,
+    organization,
     trackingCode: state.app.trackerCode,
     user: state.users.byId[state.users.currentUser] || { email: '', id: null }
   };
