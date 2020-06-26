@@ -3,33 +3,38 @@ import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
 
 // material ui
-import { List, ListItem, ListItemText, ListSubheader } from '@material-ui/core';
+import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@material-ui/core';
+import PaymentIcon from '@material-ui/icons/Payment';
 
 import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
 import MyOrganization from './organization';
 import Roles from './roles';
 import Global from './global';
+import Upgrade from './upgrade';
 
-const sectionMap = {
-  'global-settings': { admin: false, enterprise: false, multitenancy: false, userManagement: false, component: <Global />, text: 'Global settings' },
-  'my-account': { admin: false, enterprise: false, multitenancy: false, userManagement: false, component: <SelfUserManagement />, text: 'My account' },
-  'user-management': { admin: false, enterprise: false, multitenancy: false, userManagement: true, component: <UserManagement />, text: 'User management' },
-  'role-management': { admin: true, enterprise: true, multitenancy: false, userManagement: false, component: <Roles />, text: 'Roles' },
-  'my-organization': { admin: false, enterprise: false, multitenancy: true, userManagement: false, component: <MyOrganization />, text: 'My organization' }
-};
+export const Settings = ({ allowUserManagement, currentUser, trial, hasMultitenancy, history, isAdmin, isEnterprise, match }) => {
 
-export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, history, isAdmin, isEnterprise, match }) => {
+  const sectionMap = {
+    'global-settings': { admin: false, enterprise: false, multitenancy: false, userManagement: false, component: <Global />, text: 'Global settings' },
+    'my-profile': { admin: false, enterprise: false, multitenancy: false, userManagement: false, component: <SelfUserManagement />, text: 'My profile' },
+    'user-management': { admin: false, enterprise: false, multitenancy: false, userManagement: true, component: <UserManagement />, text: 'User management' },
+    'role-management': { admin: true, enterprise: true, multitenancy: false, userManagement: false, component: <Roles />, text: 'Roles' },
+    'my-organization': { admin: false, enterprise: false, multitenancy: true, userManagement: false, component: <MyOrganization />, text: 'My organization' },
+    'upgrade': { admin: false, enterprise: false, multitenancy: true, trial: true, userManagement: false, component: <Upgrade history={history} />, text: 'Upgrade to a plan' }
+  };
+
   const checkDenyAccess = item =>
     (currentUser && item.admin && !isAdmin) ||
     (item.multitenancy && !hasMultitenancy) ||
     (item.enterprise && !isEnterprise) ||
-    (item.userManagement && !allowUserManagement);
+    (item.userManagement && !allowUserManagement) ||
+    (item.trial && !trial);
 
   const getCurrentSection = (sections, section = match.params.section) => {
     if (!sections.hasOwnProperty(section) || checkDenyAccess(sections[section])) {
-      history.replace('/settings/my-account');
-      return sections['my-account'];
+      history.replace('/settings/my-profile');
+      return sections['my-profile'];
     }
     return sections[section];
   };
@@ -44,6 +49,10 @@ export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, hi
               accu.push(
                 <ListItem component={NavLink} className="navLink settingsNav" to={`/settings/${key}`} key={key}>
                   <ListItemText>{item.text}</ListItemText>
+                  {key === 'upgrade' ? (
+                    <ListItemIcon>
+                      <PaymentIcon />
+                    </ListItemIcon>) : null}
                 </ListItem>
               );
             }
@@ -59,6 +68,7 @@ export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, hi
 const mapStateToProps = state => {
   const currentUser = state.users.byId[state.users.currentUser];
   const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const trial = state.users.organization ? state.users.organization.trial : false;
   let isAdmin = false || !(state.app.features.hasMultitenancy || state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'));
   let allowUserManagement = false || isAdmin;
   if (currentUser?.roles) {
@@ -76,8 +86,11 @@ const mapStateToProps = state => {
     allowUserManagement,
     currentUser,
     isAdmin,
+    isHosted: state.app.features.isHosted,
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
-    hasMultitenancy: state.app.features.hasMultitenancy
+    hasMultitenancy: state.app.features.hasMultitenancy,
+    plan,
+    trial
   };
 };
 
