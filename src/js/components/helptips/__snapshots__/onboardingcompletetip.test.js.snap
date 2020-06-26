@@ -67,13 +67,10 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
     <p>
       You've now got a good foundation in how to use Mender. Look for more help hints in the UI as you go along.
     </p>
-    <p>
-      If you used one of our pre-built images you can start using full-image updates right away.
-    </p>
     What next?
     <div>
       <a
-        href="https://docs.mender.io/hosted/artifacts/snapshots"
+        href="https://docs.mender.io/get-started/deploy-a-system-update"
         target="_blank"
       >
         Learn about full-image updates
@@ -82,7 +79,7 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
       or
        
       <a
-        href="https://hub.mender.io/c/update-modules"
+        href="https://docs.mender.io/get-started/deploy-a-container-update"
         target="_blank"
       >
         how to create other kinds of application updates.
