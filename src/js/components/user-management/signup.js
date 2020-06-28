@@ -55,7 +55,7 @@ export class Signup extends React.Component {
       organization: formData.name,
       plan: 'enterprise',
       tos: formData.tos,
-      marketing: formData.marketing,
+      marketing: formData.marketing == 'true',
       'g-recaptcha-response': recaptcha || 'empty'
     };
     return self.props
