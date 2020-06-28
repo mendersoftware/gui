@@ -102,7 +102,7 @@ export class Signup extends React.Component {
               {step == 1 && <UserDataEntry setSnackbar={setSnackbar} onSubmit={formdata => self._handleStep1(formdata)} />}
               {step == 2 && <OrgDataEntry setSnackbar={setSnackbar} onSubmit={formdata => self._handleSignup(formdata)} recaptchaSiteKey={recaptchaSiteKey} />}
               {step == 3 && (
-                <div className="flexbox centered" style={{ minHeight: '50vh' }}>
+                <div className="align-center" style={{ minHeight: '50vh' }}>
                   <h1>Sign up completed</h1>
                   <h2 className="margin-bottom-large">
                     Your account has been created,
