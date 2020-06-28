@@ -11,7 +11,15 @@ export const headerNames = {
   total: 'x-total-count'
 };
 
-const endHandler = (error, res, reject, resolve) => (error || !res.ok ? reject({ error, res }) : resolve(res));
+const endHandler = (error, res, reject, resolve) => {
+  if (error || !res.ok) {
+    if (res && res.statusCode == 403) {
+      res.body.error = res.body.error.message;
+    }
+    return reject({ error, res });
+  }
+  return resolve(res);
+}
 
 const Api = {
   get: url => {

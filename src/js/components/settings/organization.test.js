@@ -14,13 +14,14 @@ describe('MyOrganization Component', () => {
     store = mockStore({
       app: {
         features: {
-          isHosted: false
+          isHosted: true
         }
       },
       users: {
         organization: {
           id: 1,
           name: 'test',
+          plan: 'enterprise',
           tenant_token: 'test'
         }
       }

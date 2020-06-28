@@ -7,11 +7,14 @@ import './../less/main.less';
 import theme from './themes/mender-theme';
 import routes from './config/routes';
 import store from './reducers';
+import ErrorBoundary from './errorboundary';
 
 render(
   <Provider store={store}>
     <MuiThemeProvider theme={theme}>
-      <Router basename="/ui/#">{routes}</Router>
+      <ErrorBoundary>
+        <Router basename="/ui/#">{routes}</Router>
+      </ErrorBoundary>
     </MuiThemeProvider>
   </Provider>,
   document.getElementById('main')

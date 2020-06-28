@@ -8,6 +8,9 @@ import Loader from '../../common/loader';
 import Confirm from '../../common/confirm';
 import { chartColorPalette } from '../../../themes/mender-theme';
 
+
+const refreshDistributionData = 30000;
+
 export default class DistributionReport extends React.Component {
   constructor(props, state) {
     super(props, state);
@@ -15,10 +18,17 @@ export default class DistributionReport extends React.Component {
       distribution: [],
       removing: false
     };
+    this.timer = null;
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
   componentDidMount() {
+    var self = this;
     this.initializeDistributionData();
+    self.timer = setInterval(() => self.initializeDistributionData(), refreshDistributionData);
   }
 
   componentDidUpdate(prevProps) {
@@ -53,7 +63,8 @@ export default class DistributionReport extends React.Component {
 
   onSliceClick(thing) {
     const { attribute, group, selectGroup } = this.props;
-    selectGroup(group);
+    const filters = [{key: attribute, value: thing, operator: '$eq', scope: 'inventory'}];
+    selectGroup(group, filters);
     window.location.replace(`#/devices/${group ? `group=${group}&` : ''}${attribute}=${thing}`);
   }
 
@@ -61,6 +72,7 @@ export default class DistributionReport extends React.Component {
     const self = this;
     const { group, groups, onClick, style } = self.props;
     const { distribution: data, removing } = self.state;
+    const total = data.reduce((prev, item) => prev + item.y, 0);
     return (
       <div className="margin-right margin-bottom widget chart-widget" style={style}>
         {removing ? (
@@ -86,10 +98,10 @@ export default class DistributionReport extends React.Component {
                   parent: { display: 'flex', alignSelf: 'center', height: 'initial', width: 'initial' }
                 }}
                 data={data}
-                width={380}
-                height={230}
+                width={315}
+                height={240}
               >
-                <VictoryLegend x={30} y={150} width={270} height={65} orientation="horizontal" itemsPerRow={3} gutter={20} />
+                <VictoryLegend x={30} y={150} width={320} height={65} orientation="horizontal" itemsPerRow={3} gutter={20} />
                 <VictoryPie
                   endAngle={-90}
                   events={[
@@ -100,7 +112,7 @@ export default class DistributionReport extends React.Component {
                       }
                     }
                   ]}
-                  labelComponent={<VictoryLabel />}
+                  labelComponent={<VictoryLabel text={({ datum }) => datum.y.toString() + ' (' + (Math.round(datum.y * 1000 / (total || 1))/10.0).toString() + '%)'} dy={8} />}
                   radius={85}
                   startAngle={90}
                 />

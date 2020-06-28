@@ -157,40 +157,49 @@ exports[`Roles Component renders correctly 1`] = `
            role
         </h4>
         <div
-          className="MuiFormControl-root MuiTextField-root"
+          className="MuiFormControl-root"
           style={
             Object {
-              "marginRight": 30,
-              "marginTop": 0,
+              "marginTop": "0",
             }
           }
         >
-          <label
-            className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-            data-shrink={false}
-            htmlFor="role-name"
-            id="role-name-label"
-          >
-            Role name
-          </label>
           <div
-            className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-            onClick={[Function]}
+            className="MuiFormControl-root MuiTextField-root"
+            style={
+              Object {
+                "marginRight": 30,
+                "marginTop": 0,
+              }
+            }
           >
-            <input
-              aria-invalid={false}
-              autoFocus={false}
-              className="MuiInputBase-input MuiInput-input"
-              disabled={false}
-              id="role-name"
-              onAnimationStart={[Function]}
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              required={false}
-              type="text"
-              value=""
-            />
+            <label
+              className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+              data-shrink={false}
+              htmlFor="role-name"
+              id="role-name-label"
+            >
+              Role name
+            </label>
+            <div
+              className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+              onClick={[Function]}
+            >
+              <input
+                aria-invalid={false}
+                autoFocus={false}
+                className="MuiInputBase-input MuiInput-input"
+                disabled={false}
+                id="role-name"
+                onAnimationStart={[Function]}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
           </div>
         </div>
         <div

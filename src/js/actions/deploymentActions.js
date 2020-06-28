@@ -74,6 +74,8 @@ export const createDeployment = newDeployment => dispatch => {
   let request;
   if (newDeployment.filter_id) {
     request = GeneralApi.post(`${deploymentsApiUrlV2}/deployments`, newDeployment);
+  } else if (newDeployment.group) {
+    request = GeneralApi.post(`${deploymentsApiUrl}/deployments/group/${newDeployment.group}`, newDeployment);
   } else {
     request = GeneralApi.post(`${deploymentsApiUrl}/deployments`, newDeployment);
   }
@@ -149,7 +151,7 @@ export const abortDeployment = deploymentId => (dispatch, getState) =>
       accu[id] = state.deployments.byId[id];
       return accu;
     }, {});
-    const total = state.deployments.byStatus[status].total - 1;
+    const total = Math.max(state.deployments.byStatus[status].total - 1, 0);
     return Promise.all([
       dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status, total }),
       dispatch({

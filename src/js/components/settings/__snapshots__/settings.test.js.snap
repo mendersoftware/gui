@@ -36,7 +36,7 @@ exports[`Settings Component renders correctly 1`] = `
         aria-current="page"
         className="MuiListItem-root navLink settingsNav MuiListItem-gutters active"
         disabled={false}
-        href="/settings/my-account"
+        href="/settings/my-profile"
         onClick={[Function]}
         style={Object {}}
       >
@@ -46,7 +46,7 @@ exports[`Settings Component renders correctly 1`] = `
           <span
             className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
-            My account
+            My profile
           </span>
         </div>
       </a>
@@ -83,7 +83,7 @@ exports[`Settings Component renders correctly 1`] = `
       <h2
         className="margin-top-small"
       >
-        My account
+        My profile
       </h2>
       <form
         className="flexbox space-between"
