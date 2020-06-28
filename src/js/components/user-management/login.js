@@ -19,7 +19,7 @@ import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import { getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 
-const providers = [
+export const providers = [
   {
     id: 'Github',
     icon: (
@@ -51,6 +51,12 @@ export class Login extends React.Component {
   componentDidMount() {
     clearAllRetryTimers(this.props.setSnackbar);
     this.props.setCurrentUser(null);
+    const cookies = new Cookies();
+    const loginError = cookies.get('error');
+    if (loginError) {
+      this.props.setSnackbar(loginError, 10000);
+      cookies.remove('error');
+    }
   }
 
   componentDidUpdate(prevProps) {
