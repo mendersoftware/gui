@@ -23,6 +23,7 @@ const menderEnvironment = {
     guiVersion: ''
   },
   recaptchaSiteKey: '',
+  stripeAPIKey: '', 
   trackerCode: '',
   ...mender_environment
 };
@@ -45,6 +46,7 @@ export const initialState = {
   menderDebPackageVersion: menderEnvironment.menderDebPackageVersion || 'master',
   trackerCode: menderEnvironment.trackerCode,
   recaptchaSiteKey: menderEnvironment.recaptchaSiteKey,
+  stripeAPIKey: menderEnvironment.stripeAPIKey,
   versionInformation: {
     Integration: isNaN(menderEnvironment.integrationVersion.charAt(0)) ? 'master' : menderEnvironment.integrationVersion,
     'Mender-Client': isNaN(menderEnvironment.menderVersion.charAt(0)) ? 'master' : menderEnvironment.menderVersion,

@@ -69,7 +69,7 @@ export class SelfUserManagement extends React.Component {
     const email = currentUser.email;
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
-        <h2 className="margin-top-small">My account</h2>
+        <h2 className="margin-top-small">My profile</h2>
         {!editEmail && currentUser.email ? (
           <div className="flexbox space-between">
             <TextField

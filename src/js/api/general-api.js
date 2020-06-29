@@ -55,17 +55,14 @@ const Api = {
         .end((error, res) => endHandler(error, res, reject, resolve))
     );
   },
-  postForm: (url, data) => {
-    const token = cookies.get('JWT');
-    return new Promise((resolve, reject) =>
+  postUnauthorized: (url, data) =>
+    new Promise((resolve, reject) =>
       request
         .post(url)
-        .auth(token, { type: 'bearer' })
-        .type('form')
+        .set('Content-Type', 'application/json')
         .send(data)
         .end((error, res) => endHandler(error, res, reject, resolve))
-    );
-  },
+    ),
   put: (url, data) => {
     const token = cookies.get('JWT');
     return new Promise((resolve, reject) =>
