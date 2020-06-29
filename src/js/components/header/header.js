@@ -316,7 +316,7 @@ const mapStateToProps = state => {
     announcement: state.app.hostedAnnouncement,
     deviceLimit: state.devices.limit,
     demo: state.app.features.isDemoMode,
-    docsVersion: state.app.features.isHosted ? '' : docsVersion,
+    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion,
     hasTrackingEnabled: state.users.globalSettings[state.users.currentUser]?.trackingConsentGiven,
     inProgress: state.deployments.byStatus.inprogress.total,
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),

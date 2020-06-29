@@ -384,7 +384,7 @@ const actionCreators = { decommissionDevice, getReleases, selectDevice, setSnack
 const mapStateToProps = state => {
   const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
-    docsVersion: state.app.features.isHosted ? '' : docsVersion,
+    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion,
     onboardingComplete: state.users.onboarding.complete,
     showHelptips: state.users.showHelptips
   };

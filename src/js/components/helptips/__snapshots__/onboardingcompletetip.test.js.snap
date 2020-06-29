@@ -73,7 +73,7 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
     What next?
     <div>
       <a
-        href="https://docs.mender.io/artifacts/snapshots"
+        href="https://docs.mender.io/hosted/artifacts/snapshots"
         target="_blank"
       >
         Learn about full-image updates

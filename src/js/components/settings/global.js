@@ -137,7 +137,7 @@ const mapStateToProps = state => {
     // limit the selection of the available attribute to AVAILABLE_ATTRIBUTE_LIMIT
     attributes: state.devices.filteringAttributes.identityAttributes.slice(0, state.devices.filteringAttributesLimit),
     devicesCount: Object.keys(state.devices.byId).length,
-    docsVersion: state.app.features.isHosted ? '' : docsVersion,
+    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion,
     settings: state.users.globalSettings
   };
 };

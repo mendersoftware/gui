@@ -7,7 +7,7 @@ const actionCreators = { toggleHelptips };
 const mapStateToProps = state => {
   const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
-    docsVersion: state.app.features.isHosted ? '' : docsVersion
+    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion
   };
 };
 
