@@ -23,7 +23,7 @@ import { mdiTrashCanOutline as TrashCan } from '@mdi/js';
 
 import { getDevicesByStatus, getGroupDevices, selectDevices, setDeviceFilters, trySelectDevice, updateDevicesAuth } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
-import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
+import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { filtersCompare, isEmpty } from '../../helpers';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
@@ -258,13 +258,15 @@ export class Authorized extends React.Component {
     const anchor = { left: 200, top: 146 };
     let onboardingComponent = getOnboardingComponentFor('devices-accepted-onboarding', { anchor });
     onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor }, onboardingComponent);
+
+    const isUngroupedGroup = selectedGroup && selectedGroup === UNGROUPED_GROUP.id;
     return (
       <div className="relative">
         <div style={{ marginLeft: '20px' }}>
           <div className="flexbox space-between" style={{ zIndex: 2, marginBottom: -1 }}>
             <div className="flexbox">
-              <h2 className="margin-right">{groupLabel}</h2>
-              {(!selectedGroup || !!groupFilters.length) && (
+              <h2 className="margin-right">{isUngroupedGroup ? UNGROUPED_GROUP.name : groupLabel}</h2>
+              {(!selectedGroup || !!groupFilters.length) && !isUngroupedGroup && (
                 <div className={`flexbox centered ${showFilters ? 'filter-toggle' : ''}`}>
                   <Button
                     color="secondary"
@@ -277,14 +279,14 @@ export class Authorized extends React.Component {
                   </Button>
                 </div>
               )}
-              {selectedGroup && (
+              {selectedGroup && !isUngroupedGroup && (
                 <p className="info flexbox centered">
                   {!groupFilters.length ? <LockOutlined fontSize="small" /> : <AutorenewIcon fontSize="small" />}
                   <span>{!groupFilters.length ? 'Static' : 'Dynamic'}</span>
                 </p>
               )}
             </div>
-            {selectedGroup && (
+            {selectedGroup && !isUngroupedGroup && (
               <div className="flexbox centered">
                 <Button onClick={onGroupRemoval} startIcon={<DeleteIcon />}>
                   Remove group

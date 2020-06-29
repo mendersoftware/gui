@@ -4,7 +4,7 @@ import Cookies from 'universal-cookie';
 import { Button, Dialog, DialogActions, DialogTitle, DialogContent } from '@material-ui/core';
 
 import { getDevicesByStatus } from '../../actions/deviceActions';
-import * as DeviceConstants from '../../constants/deviceConstants';
+import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import GroupDefinition from './group-management/group-definition';
 import GroupDeviceList from './group-management/group-device-list';
 import Confirmation from './group-management/confirmation';
@@ -28,7 +28,7 @@ export class CreateGroup extends React.Component {
       steps,
       title: props.isCreation ? 'Create a new group' : `Add ${props.selectedDevices.length ? 'selected ' : ''}devices to group`
     };
-    this.props.getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength);
+    this.props.getDevicesByStatus(DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength);
   }
 
   componentDidMount() {
@@ -108,7 +108,9 @@ const mapStateToProps = (state, ownProps) => {
   const devices = deviceList.map(id => state.devices.byId[id]);
   const selectedGroupDevices = state.devices.groups.selectedGroup ? state.devices.groups.byId[state.devices.groups.selectedGroup].deviceIds : [];
   // ensure that existing dynamic groups are only listed if a dynamic group should be created
-  const groups = Object.keys(state.devices.groups.byId).filter(group => (ownProps.fromFilters ? true : !state.devices.groups.byId[group].filters.length));
+  const groups = Object.keys(state.devices.groups.byId).filter(group =>
+    ownProps.fromFilters ? group !== UNGROUPED_GROUP.id : !state.devices.groups.byId[group].filters.length
+  );
   return {
     devices,
     globalSettings: state.users.globalSettings,

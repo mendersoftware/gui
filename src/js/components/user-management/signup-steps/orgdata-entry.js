@@ -8,10 +8,11 @@ import FormCheckbox from '../../common/forms/formcheckbox';
 export class OrgDataEntry extends React.Component {
   constructor(props, context) {
     super(props, context);
+    const data = props.data || {};
     this.state = {
-      name: '',
-      tos: '',
-      marketing: '',
+      name: data.name || '',
+      tos: data.tos || '',
+      marketing: data.marketing || '',
       recaptcha: ''
     };
   }
