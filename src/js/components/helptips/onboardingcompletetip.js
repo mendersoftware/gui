@@ -107,7 +107,7 @@ const mapStateToProps = state => {
   const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
     acceptedDevices: state.devices.byStatus.accepted.deviceIds.map(id => state.devices.byId[id]),
-    docsVersion: state.app.features.hasMultitenancy && state.app.features.isHosted ? '' : docsVersion,
+    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion,
     hasDeltaAccess: state.app.features.isHosted && plan !== 'os'
   };
 };
