@@ -105,7 +105,7 @@ const mapStateToProps = state => {
   const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
     acceptedDevices: state.devices.byStatus.accepted.deviceIds.map(id => state.devices.byId[id]),
-    docsVersion: state.app.features.isHosted ? '' : docsVersion
+    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion
   };
 };
 

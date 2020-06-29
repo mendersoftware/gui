@@ -54,5 +54,6 @@ module.exports = {
     pending: 'pending',
     preauth: 'preauthorized',
     rejected: 'rejected'
-  }
+  },
+  UNGROUPED_GROUP: { id: '*|=ungrouped=|*', name: 'Unassigned' }
 };

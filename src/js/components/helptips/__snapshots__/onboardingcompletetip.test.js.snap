@@ -69,7 +69,7 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
     What next?
     <div>
       <a
-        href="https://docs.mender.io/get-started/deploy-a-system-update"
+        href="https://docs.mender.io/hosted/get-started/deploy-a-system-update"
         target="_blank"
       >
         Learn about full-image updates
@@ -78,7 +78,7 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
       or
        
       <a
-        href="https://docs.mender.io/get-started/deploy-a-container-update"
+        href="https://docs.mender.io/hosted/get-started/deploy-a-container-update"
         target="_blank"
       >
         how to create other kinds of application updates.
