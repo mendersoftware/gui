@@ -10,10 +10,9 @@ import { ErrorOutline as ErrorOutlineIcon, InfoOutlined as InfoOutlinedIcon } fr
 import AutoSelect from '../../common/forms/autoselect';
 import { getAllDevicesByStatus, getAllGroupDevices, selectDevices } from '../../../actions/deviceActions';
 import DeviceConstants from '../../../constants/deviceConstants';
-
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
+import { allDevices } from '../createdeployment';
 
-const allDevices = 'All devices';
 const styles = {
   textField: {
     minWidth: '400px'
@@ -39,23 +38,17 @@ export class SoftwareDevices extends React.Component {
     let state = { [property]: value };
     self.props.deploymentSettings(value, property);
 
-    if (property === 'group' && value) {
-      if (value !== allDevices) {
-        self.props.getAllGroupDevices(value);
-      } else {
-        self.props.selectDevices(self.props.acceptedDevices);
-      }
+    if (property === 'group' && value === allDevices) {
+      self.props.selectDevices(self.props.acceptedDevices);
     }
-    const currentState = Object.assign({}, self.state, state);
+    const currentState = { ...self.state, ...state };
     if (!currentState.release && property !== 'release') {
       self.props.deploymentSettings(self.props.release, 'release');
       currentState.release = state.release = self.props.release;
     }
     if ((self.props.device || currentState.group) && currentState.release) {
-      state.deploymentDeviceIds = self.props.acceptedDevices;
-      if (self.props.groups[currentState.group]) {
-        state.deploymentDeviceIds = self.props.groups[currentState.group].deviceIds;
-      } else if (self.props.device) {
+      state.deploymentDeviceIds = currentState.group === allDevices ? self.props.acceptedDevices : [];
+      if (self.props.device) {
         state.deploymentDeviceIds = [self.props.device.id];
       }
       self.props.deploymentSettings(state.deploymentDeviceIds, 'deploymentDeviceIds');

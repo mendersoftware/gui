@@ -7,7 +7,7 @@ import ChartAdditionWidget from './widgets/chart-addition';
 import DistributionReport from './widgets/distribution';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import { getAllDynamicGroupDevices, getAllGroupDevices, selectGroup } from '../../actions/deviceActions';
-import { saveGlobalSettings } from '../../actions/userActions';
+import { saveUserSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 
 export const defaultReports = [{ group: null, attribute: 'artifact_name', type: 'distribution' }];
@@ -21,7 +21,6 @@ const defaultChartStyle = {
   height: 280,
   justifyContent: 'initial',
   padding: 0,
-  width: 380
 };
 
 export class SoftwareDistribution extends React.Component {
@@ -58,14 +57,14 @@ export class SoftwareDistribution extends React.Component {
     const reports = [...this.state.reports, selection];
     this.setState({ reports });
     this.initializeReport(selection.group);
-    this.props.saveGlobalSettings({ [`${this.props.userId}-reports`]: reports });
+    this.props.saveUserSettings({ reports });
   }
 
   removeReport(index) {
     const reports = this.state.reports;
     reports.splice(index, 1);
     this.setState({ reports });
-    this.props.saveGlobalSettings({ [`${this.props.userId}-reports`]: reports });
+    this.props.saveUserSettings({ reports });
   }
 
   render() {
@@ -91,7 +90,7 @@ export class SoftwareDistribution extends React.Component {
                   devices={devices}
                   groups={groups}
                   group={report.group}
-                  key={`report-${report.group}`}
+                  key={`report-${report.group}-${index}`}
                   onClick={() => self.removeReport(index)}
                   selectGroup={selectGroup}
                   style={defaultChartStyle}
@@ -111,19 +110,18 @@ export class SoftwareDistribution extends React.Component {
   }
 }
 
-const actionCreators = { getAllDynamicGroupDevices, getAllGroupDevices, saveGlobalSettings, selectGroup };
+const actionCreators = { getAllDynamicGroupDevices, getAllGroupDevices, saveUserSettings, selectGroup };
 
 const mapStateToProps = state => {
   const plan = state.users.organization ? state.users.organization.plan : 'os';
-  const userId = (state.users.byId[state.users.currentUser] || {}).id;
+  const reports = state.users.globalSettings[state.users.currentUser]?.reports || state.users.globalSettings[`${state.users.currentUser}-reports`] || [];
   return {
     attributes: state.devices.filteringAttributes.inventoryAttributes.concat(state.devices.filteringAttributes.identityAttributes) || [],
     devices: state.devices.byId,
     hasDevices: state.devices.byStatus[DEVICE_STATES.accepted].total,
     groups: state.devices.groups.byId,
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
-    reports: state.users.globalSettings[`${userId}-reports`] || [],
-    userId
+    reports
   };
 };
 

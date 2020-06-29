@@ -59,6 +59,8 @@ export default class UserForm extends React.Component {
     const { submit, user } = this.props;
     const { isCreation, selectedRoles } = this.state;
     const submissionData = Object.assign({}, data, selectedRoles.length ? { roles: selectedRoles.map(role => role.id) } : {});
+    delete submissionData['password_new'];
+    submissionData['password'] = data.password_new;
     return !isCreation ? submit(submissionData, 'edit', user.id) : submit(submissionData, 'create');
   }
 
@@ -88,12 +90,13 @@ export default class UserForm extends React.Component {
             submitLabel={isCreation ? 'Create user' : 'Save changes'}
             submitButtonId="submit_button"
             showButtons={true}
+            autocomplete="off"
           >
-            <TextInput hint="Email" label="Email" id="email" value={user.email} validations="isLength:1,isEmail" required={isCreation} />
+            <TextInput hint="Email" label="Email" id="email" value={user.email} validations="isLength:1,isEmail" required={isCreation} autocomplete="off" />
             {editPass ? (
               <PasswordInput
                 className="edit-pass margin-top-small"
-                id="password"
+                id="password_new"
                 label="Password"
                 create={editPass}
                 validations="isLength:1"
@@ -101,6 +104,7 @@ export default class UserForm extends React.Component {
                 onClear={() => self.setState({ editPass: !editPass })}
                 edit={isCreation ? false : true}
                 required={isCreation}
+                autocomplete="off"
               />
             ) : (
               <Button

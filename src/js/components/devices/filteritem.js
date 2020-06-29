@@ -86,7 +86,7 @@ export default class FilterItem extends React.Component {
     clearTimeout(self.timer);
     self.timer = setTimeout(
       () =>
-        self.state.key && self.state.value
+        self.state.key
           ? self.props.onSelect({
               key: self.state.key,
               operator: self.state.operator,
@@ -105,7 +105,7 @@ export default class FilterItem extends React.Component {
 
   render() {
     const self = this;
-    const { attributes, filters, index, loading, plan } = self.props;
+    const { attributes, filters, loading, plan } = self.props;
     const { key, operator, reset, value } = self.state;
     const filterOptions = plan ? filterOptionsByPlan[plan] : DEVICE_FILTERING_OPTIONS;
     return (
@@ -131,7 +131,7 @@ export default class FilterItem extends React.Component {
           }}
           groupBy={option => option.category}
           getOptionLabel={option => option.value || option.key || option}
-          id={`filter-selection-${index}`}
+          id="filter-selection"
           includeInputInList={true}
           onChange={(e, changedValue) => {
             if (changedValue && changedValue.inputValue) {

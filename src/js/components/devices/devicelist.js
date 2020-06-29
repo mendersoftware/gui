@@ -53,7 +53,7 @@ export class DeviceList extends React.Component {
       if (!getOnboardingStepCompleted('devices-pending-accepting-onboarding')) {
         advanceOnboarding('devices-pending-accepting-onboarding');
       }
-      if (getOnboardingStepCompleted('devices-pending-accepting-onboarding')) {
+      if (getOnboardingStepCompleted('devices-pending-accepting-onboarding') && self.props.acceptedDevicesCount) {
         advanceOnboarding('devices-accepted-onboarding');
       }
     }
@@ -172,6 +172,7 @@ const mapStateToProps = (state, ownProps) => {
     return accu;
   }, []);
   return {
+    acceptedDevicesCount: state.devices.byStatus.accepted.total,
     devices,
     filters: state.devices.filters,
     globalSettings: state.users.globalSettings,

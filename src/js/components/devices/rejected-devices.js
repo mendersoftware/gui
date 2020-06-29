@@ -3,7 +3,10 @@ import { connect } from 'react-redux';
 import Time from 'react-time';
 import pluralize from 'pluralize';
 
-import { getDevicesByStatus, setDeviceFilters } from '../../actions/deviceActions';
+import { Button } from '@material-ui/core';
+import { FilterList as FilterListIcon } from '@material-ui/icons';
+
+import { getDevicesByStatus, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
@@ -26,6 +29,7 @@ export class Rejected extends React.Component {
   }
 
   componentDidMount() {
+    this.props.selectGroup();
     this.props.setDeviceFilters([]);
     this.timer = setInterval(() => this._getDevices(), refreshDeviceLength);
     this._getDevices(true);
@@ -79,9 +83,10 @@ export class Rejected extends React.Component {
   }
 
   render() {
-    var self = this;
+    const self = this;
     const { acceptedDevices, count, deviceLimit, devices, filters, globalSettings, openSettingsDialog } = self.props;
-    var limitMaxed = deviceLimit ? deviceLimit <= acceptedDevices : false;
+    const { pageLoading, showFilters } = this.state;
+    const limitMaxed = deviceLimit ? deviceLimit <= acceptedDevices : false;
     const columnHeaders = [
       {
         title: globalSettings.id_attribute || 'Device ID',
@@ -108,13 +113,33 @@ export class Rejected extends React.Component {
     return (
       <div className="tab-container">
         {!!count && (
-          <div className="align-center">
-            <h3 className="inline-block margin-right">Rejected devices</h3>
-            {!this.state.pageLoading && <Filters identityOnly={true} onFilterChange={filters => self._getDevices(true, filters)} />}
-          </div>
+          <>
+            <div className="flexbox" style={{ zIndex: 2, marginBottom: -1 }}>
+              <h2 className="inline-block margin-right">Rejected devices</h2>
+              {!pageLoading && (
+                <div className={`flexbox centered ${showFilters ? 'filter-toggle' : ''}`}>
+                  <Button
+                    color="secondary"
+                    disableRipple
+                    onClick={() => self.setState({ showFilters: !showFilters })}
+                    startIcon={<FilterListIcon />}
+                    style={{ backgroundColor: 'transparent' }}
+                  >
+                    {filters.length > 0 ? `Filters (${filters.length})` : 'Filters'}
+                  </Button>
+                </div>
+              )}
+            </div>
+            <Filters identityOnly={true} onFilterChange={filters => self._getDevices(true, filters)} open={showFilters} />
+            {!pageLoading && (
+              <p className="info">
+                Showing {devices.length} of {count} rejected {pluralize('devices', count)}
+              </p>
+            )}
+          </>
         )}
-        <Loader show={this.state.pageLoading} />
-        {devices.length && !this.state.pageLoading ? (
+        <Loader show={pageLoading} />
+        {devices.length && !pageLoading ? (
           <div className="padding-bottom">
             <DeviceList
               {...self.props}
@@ -128,7 +153,7 @@ export class Rejected extends React.Component {
             />
           </div>
         ) : (
-          <div className={this.state.pageLoading ? 'hidden' : 'dashboard-placeholder'}>
+          <div className={pageLoading ? 'hidden' : 'dashboard-placeholder'}>
             <p>
               {filters.length ? `There are no rejected devices matching the selected ${pluralize('filters', filters.length)}` : 'There are no rejected devices'}
             </p>
@@ -139,7 +164,7 @@ export class Rejected extends React.Component {
   }
 }
 
-const actionCreators = { getDevicesByStatus, setDeviceFilters, setSnackbar };
+const actionCreators = { getDevicesByStatus, selectGroup, setDeviceFilters, setSnackbar };
 
 const mapStateToProps = state => {
   return {

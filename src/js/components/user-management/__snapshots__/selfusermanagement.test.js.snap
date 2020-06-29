@@ -12,7 +12,7 @@ exports[`SelfUserManagement Component renders correctly 1`] = `
   <h2
     className="margin-top-small"
   >
-    My account
+    My profile
   </h2>
   <form
     className="flexbox space-between"

@@ -1,6 +1,6 @@
 import Cookies from 'universal-cookie';
 
-import { setSnackbar } from '../actions/appActions';
+import { setSnackbar } from './appActions';
 import GeneralApi from '../api/general-api';
 import UsersApi from '../api/users-api';
 import * as UserConstants from '../constants/userConstants';
@@ -222,6 +222,17 @@ export const saveGlobalSettings = (settings, beOptimistic = false) => (dispatch,
       }
       return Promise.reject();
     });
+};
+
+export const saveUserSettings = settings => (dispatch, getState) => {
+  const currentUserId = (getState().users.byId[getState().users.currentUser] || {}).id;
+  const updatedSettings = {
+    [currentUserId]: {
+      ...getState().users.globalSettings[currentUserId],
+      ...settings
+    }
+  };
+  return dispatch(saveGlobalSettings(updatedSettings));
 };
 
 export const get2FAQRCode = () => dispatch =>

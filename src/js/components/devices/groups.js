@@ -2,20 +2,35 @@ import React from 'react';
 import ReactTooltip from 'react-tooltip';
 
 // material ui
-import { Divider, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@material-ui/core';
 import { Add as AddIcon, Help as HelpIcon } from '@material-ui/icons';
 
 import { AddGroup } from '../helptips/helptooltips';
 
+const styles = {
+  subheader: { color: '#aaaaaa', height: 48 }
+};
+
 export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, selectedGroup, showHelptips }) => {
-  const groupItems = groups.map((group, index) => {
-    const isSelected = group === selectedGroup ? { backgroundColor: '#e7e7e7' } : {};
-    return (
-      <ListItem classes={{ root: 'grouplist' }} button key={group + index} style={isSelected} onClick={() => changeGroup(group)}>
-        <ListItemText primary={decodeURIComponent(group)} />
-      </ListItem>
+  const { dynamic: dynamicGroups, static: staticGroups } = Object.entries(groups)
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .reduce(
+      (accu, [groupname, group], index) => {
+        const isSelected = groupname === selectedGroup ? { backgroundColor: '#e7e7e7' } : {};
+        const groupItem = (
+          <ListItem classes={{ root: 'grouplist' }} button key={groupname + index} style={isSelected} onClick={() => changeGroup(groupname)}>
+            <ListItemText primary={decodeURIComponent(groupname)} />
+          </ListItem>
+        );
+        if (group.filters.length > 0) {
+          accu.dynamic.push(groupItem);
+        } else {
+          accu.static.push(groupItem);
+        }
+        return accu;
+      },
+      { dynamic: [], static: [] }
     );
-  });
 
   return (
     <div>
@@ -24,8 +39,20 @@ export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, se
         <ListItem classes={{ root: 'grouplist' }} button key="All" style={!selectedGroup ? { backgroundColor: '#e7e7e7' } : {}} onClick={() => changeGroup()}>
           <ListItemText primary="All devices" />
         </ListItem>
-        <Divider />
-        {groupItems}
+        {!!dynamicGroups.length && (
+          <ListSubheader classes={{ root: 'heading-lined' }} disableGutters disableSticky key="dynamic-groups-sub" style={styles.subheader}>
+            <span>Dynamic</span>
+            <div></div>
+          </ListSubheader>
+        )}
+        {dynamicGroups}
+        {!!staticGroups.length && (
+          <ListSubheader classes={{ root: 'heading-lined' }} disableGutters disableSticky key="static-groups-sub" style={styles.subheader}>
+            <span>Static</span>
+            <div></div>
+          </ListSubheader>
+        )}
+        {staticGroups}
         <ListItem
           button
           classes={{ root: 'grouplist' }}

@@ -1,7 +1,7 @@
 import * as UserConstants from '../constants/userConstants';
 import { stringToBoolean } from '../helpers';
 
-const initialState = {
+export const initialState = {
   byId: {},
   currentUser: null,
   jwtToken: null,
@@ -26,7 +26,7 @@ const initialState = {
     deviceType: null,
     demoArtifactPort: mender_environment && mender_environment.demoArtifactPort ? mender_environment.demoArtifactPort : 85,
     progress: 0,
-    showTips: true,
+    showTips: false,
     showTipsDialog: false,
     showConnectDeviceDialog: false,
     showCreateArtifactDialog: false
@@ -35,6 +35,9 @@ const initialState = {
     RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false, permissions: [] },
     RBAC_ROLE_OBSERVER: { title: 'Read only', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
     RBAC_ROLE_CI: { title: 'CI', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] }
+  },
+  stripe: {
+    // stripe secret
   }
 };
 
@@ -129,17 +132,17 @@ const userReducer = (state = initialState, action) => {
           }
         }
       };
-      case UserConstants.UPDATED_ROLE:
-        return {
-          ...state,
-          rolesById: {
-            ...state.rolesById,
-            [action.roleId]: {
-              ...state.rolesById[action.roleId],
-              ...action.role
-            }
+    case UserConstants.UPDATED_ROLE:
+      return {
+        ...state,
+        rolesById: {
+          ...state.rolesById,
+          [action.roleId]: {
+            ...state.rolesById[action.roleId],
+            ...action.role
           }
-        };
+        }
+      };
     case UserConstants.SET_GLOBAL_SETTINGS:
       return {
         ...state,
@@ -232,6 +235,7 @@ const userReducer = (state = initialState, action) => {
           artifactIncluded: action.value
         }
       };
+
     default:
       return state;
   }

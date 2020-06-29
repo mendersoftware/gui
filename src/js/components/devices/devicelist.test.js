@@ -14,6 +14,11 @@ describe('DeviceList Component', () => {
     store = mockStore({
       devices: {
         byId: {},
+        byStatus: {
+          accepted: {
+            total: 0
+          }
+        },
         filters: []
       },
       users: {

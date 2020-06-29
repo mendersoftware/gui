@@ -1,6 +1,7 @@
+import React from 'react';
 import jwtDecode from 'jwt-decode';
 import md5 from 'md5';
-import React from 'react';
+import pluralize from 'pluralize';
 
 import store from './reducers';
 import appConstants from './constants/appConstants';
@@ -23,17 +24,17 @@ export function fullyDecodeURI(uri) {
 const statCollector = (items, statistics) => items.reduce((accu, property) => accu + Number(statistics[property] || 0), 0);
 
 export const groupDeploymentStats = deployment => {
-  const stats = deployment.stats || {}
+  const stats = deployment.stats || {};
   // don't include 'pending' as inprogress, as all remaining devices will be pending - we don't discriminate based on phase membership
   const inprogress = statCollector(['downloading', 'installing', 'rebooting'], stats);
-  const pending  = (deployment.max_devices ? deployment.max_devices - deployment.device_count : 0) + (stats['pending'] || 0);
+  const pending = (deployment.max_devices ? deployment.max_devices - deployment.device_count : 0) + (stats['pending'] || 0);
   const successes = statCollector(['success', 'already-installed'], stats);
   const failures = statCollector(['failure', 'aborted', 'noartifact', 'decommissioned'], stats);
   return {
     inprogress: inprogress,
     pending: pending,
     successes: successes,
-    failures: failures,
+    failures: failures
   };
 };
 
@@ -249,7 +250,9 @@ export function hashString(str) {
 }
 
 export const formatTime = date => {
-  if (date) {
+  if (date && Object.prototype.toString.call(date) === '[object Date]' && !isNaN(date)) {
+    return date.toISOString().slice(0, -1);
+  } else if (date) {
     return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
   }
   return;
@@ -259,18 +262,6 @@ export function formatPublicKey(key) {
   key = key.replace('-----BEGIN PUBLIC KEY-----', '');
   key = key.replace('-----END PUBLIC KEY-----', '');
   return `${key.substring(0, 15)} ... ${key.substring(key.length - 15)}`;
-}
-
-export function intersection(o1, o2) {
-  return Object.keys(o1)
-    .concat(Object.keys(o2))
-    .sort()
-    .reduce((r, a, i, aa) => {
-      if (i && aa[i - 1] === a) {
-        r.push(a);
-      }
-      return r;
-    }, []);
 }
 
 export const customSort = (direction, field) => (a, b) => {
@@ -538,4 +529,16 @@ ${connectionInstructions} && \\
 systemctl restart mender-client'
 `;
   return codeToCopy;
+};
+
+export const getSnackbarMessage = (skipped, done) => {
+  pluralize.addIrregularRule('its', 'their');
+  const skipText = skipped
+    ? `${skipped} ${pluralize('devices', skipped)} ${pluralize('have', skipped)} more than one pending authset. Expand ${pluralize(
+        'this',
+        skipped
+      )} ${pluralize('device', skipped)} to individually adjust ${pluralize('their', skipped)} authorization status. `
+    : '';
+  const doneText = done ? `${done} ${pluralize('device', done)} ${pluralize('was', done)} updated successfully. ` : '';
+  return `${doneText}${skipText}`;
 };

@@ -19,7 +19,11 @@ describe('RejectedDevices Component', () => {
         },
         filters: [],
         selectedDeviceList: [],
-        limit: 500
+        limit: 500,
+        groups: {
+          byId: {},
+          selectedGroup: ''
+        },
       },
       users: {
         globalSettings: {}
