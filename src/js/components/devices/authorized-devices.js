@@ -387,7 +387,7 @@ const mapStateToProps = state => {
   let selectedGroup;
   let groupFilters = [];
   let groupDevices = [];
-  if (!isEmpty(state.devices.groups.selectedGroup)) {
+  if (state.devices.groups.selectedGroup && state.devices.groups.byId[state.devices.groups.selectedGroup]) {
     selectedGroup = state.devices.groups.selectedGroup;
     groupCount = state.devices.groups.byId[selectedGroup].total;
     groupFilters = state.devices.groups.byId[selectedGroup].filters || [];
