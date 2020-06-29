@@ -21,16 +21,6 @@ const filterOptionsByPlan = {
   enterprise: DEVICE_FILTERING_OPTIONS
 };
 
-const operatorHelpMessages = {
-  $gt: 'The "greater than" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.',
-  $gte: 'The "greater than or equal" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.',
-  $lt: 'The "lesser than" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.',
-  $lte: 'The "lesser than or equal" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.',
-  $in: 'The "in" operator accepts a list of comma-separated values. It matches if the selected field is equal to one of the specified values.',
-  $nin: 'The "not in" operator accepts a list of comma-separated values. It matches if the selected field\'s value is not equal to any of the specified options.',
-  $exists: 'The "exists" operator matches if the selected field\'s value has a value.'
-};
-
 const defaultScope = 'inventory';
 
 export default class FilterItem extends React.Component {
@@ -83,7 +73,9 @@ export default class FilterItem extends React.Component {
 
   updateFilterOperator(value) {
     const self = this;
-    self.setState({ operator: value }, () => self.notifyFilterUpdate());
+    const operator = DEVICE_FILTERING_OPTIONS[value] || {};
+    const opValue = operator.value !== 'undefined' ? operator.value : this.state.value;
+    self.setState({ operator: value, value: opValue }, () => self.notifyFilterUpdate());
   }
 
   updateFilterValue(value) {
@@ -118,7 +110,8 @@ export default class FilterItem extends React.Component {
     const { attributes, filters, loading, plan } = self.props;
     const { key, operator, reset, value } = self.state;
     const filterOptions = plan ? filterOptionsByPlan[plan] : DEVICE_FILTERING_OPTIONS;
-    const operatorHelpMessage = operatorHelpMessages[operator] || '';
+    const operatorHelpMessage = (DEVICE_FILTERING_OPTIONS[operator] || {}).help || '';
+    const showValue = typeof (filterOptions[operator] || {}).value === 'undefined';
     return (
       <>
         <div className="flexbox" style={{ alignItems: 'center' }}>
@@ -164,13 +157,15 @@ export default class FilterItem extends React.Component {
               </MenuItem>
             ))}
           </Select>
-          <TextField
-            label="Value"
-            value={value}
-            onChange={e => self.updateFilterValue(e.target.value)}
-            InputLabelProps={{ shrink: !!value }}
-            style={textFieldStyle}
-          />
+          {showValue && (
+            <TextField
+              label="Value"
+              value={value}
+              onChange={e => self.updateFilterValue(e.target.value)}
+              InputLabelProps={{ shrink: !!value }}
+              style={textFieldStyle}
+            />
+          )}
           {!!key && (
             <IconButton className="margin-left" onClick={() => self._removeFilter()} size="small">
               <HighlightOffIcon />
