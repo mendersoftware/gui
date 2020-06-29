@@ -39,7 +39,7 @@ export class OnboardingCompleteTip extends React.Component {
   }
 
   render() {
-    const { anchor, docsVersion, hasDeltaAccess, setOnboardingComplete } = this.props;
+    const { anchor, docsVersion, setOnboardingComplete } = this.props;
     const { loading, targetUrl } = this.state;
     const url = targetUrl ? targetUrl : this.props.targetUrl;
 
@@ -75,16 +75,21 @@ export class OnboardingCompleteTip extends React.Component {
             might have to refresh the page.
           </p>
           <p>You&apos;ve now got a good foundation in how to use Mender. Look for more help hints in the UI as you go along.</p>
-          <p>{`If you used one of our pre-built images you can start using full-image${hasDeltaAccess ? ` and delta` : ''} updates right away.`}</p>
           What next?
           <div>
-            <a href={`https://docs.mender.io/${docsVersion}artifacts/snapshots`} target="_blank">
-              Learn about full-image updates
-            </a>{' '}
-            or{' '}
-            <a href="https://hub.mender.io/c/update-modules" target="_blank">
-              how to create other kinds of application updates.
-            </a>
+            Proceed to one of the following tutorials (listed in recommended order):
+            <ol>
+              {[
+                { target: 'deploy-a-system-update', title: 'Deploy a system update' },
+                { target: 'deploy-a-container-update', title: 'Deploy a container update' }
+              ].map(option => (
+                <li key={option.target}>
+                  <a href={`https://docs.mender.io/${docsVersion}get-started/${option.target}`} target="_blank">
+                    {option.title}
+                  </a>
+                </li>
+              ))}
+            </ol>
           </div>
           <div className="flexbox">
             <div style={{ flexGrow: 1 }} />
@@ -104,11 +109,9 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
-  const plan = state.users.organization ? state.users.organization.plan : 'os';
   return {
     acceptedDevices: state.devices.byStatus.accepted.deviceIds.map(id => state.devices.byId[id]),
-    docsVersion: state.app.features.hasMultitenancy && state.app.features.isHosted ? '' : docsVersion,
-    hasDeltaAccess: state.app.features.isHosted && plan !== 'os'
+    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion
   };
 };
 
