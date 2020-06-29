@@ -3,13 +3,27 @@ import { connect } from 'react-redux';
 import validator from 'validator';
 
 // material ui
-import { Button, Checkbox, Chip, Collapse, FormControl, FormControlLabel, FormHelperText, Table, TableBody, TableCell, TableHead, TableRow, TextField } from '@material-ui/core';
+import {
+  Button,
+  Checkbox,
+  Chip,
+  Collapse,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TextField
+} from '@material-ui/core';
 import { Add as AddIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getGroups, getDynamicGroups } from '../../actions/deviceActions';
 import { createRole, editRole, getRoles, removeRole } from '../../actions/userActions';
-
+import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 
 export class RoleManagement extends React.Component {
   constructor(props, context) {
@@ -44,7 +58,7 @@ export class RoleManagement extends React.Component {
       nameInput: '',
       description: '',
       allowUserManagement: false,
-      groups: this.props.groups.map(group => ({ name: group, selected: false })),
+      groups: this.props.groups.map(group => ({ name: group, selected: false }))
     });
   }
 
@@ -56,7 +70,7 @@ export class RoleManagement extends React.Component {
       nameInput: role.id,
       description: role.description,
       allowUserManagement: role.allowUserManagement,
-      groups: this.props.groups.map(group => ({ name: group, selected: role.groups.indexOf(group) !== -1 })),
+      groups: this.props.groups.map(group => ({ name: group, selected: role.groups.indexOf(group) !== -1 }))
     });
   }
 
@@ -68,8 +82,8 @@ export class RoleManagement extends React.Component {
   onCancel() {
     this.setState({
       adding: false,
-      editing: false,
-    })
+      editing: false
+    });
   }
 
   onSubmit() {
@@ -149,7 +163,7 @@ export class RoleManagement extends React.Component {
         {!adding && <Chip className="margin-top-small" color="primary" icon={<AddIcon />} label="Add a role" onClick={() => self.addRole()} />}
         <Collapse in={adding || editing} className="margin-right-small filter-wrapper" classes={{ wrapperInner: 'margin-bottom-small margin-right' }}>
           <h4 style={{ marginTop: 5 }}>{adding ? 'Add a' : 'Edit the'} role</h4>
-          <FormControl style={{marginTop: '0'}}>
+          <FormControl style={{ marginTop: '0' }}>
             <TextField
               label="Role name"
               id="role-name"
@@ -158,7 +172,7 @@ export class RoleManagement extends React.Component {
               onChange={e => self.validateNameChange(e)}
               style={{ marginTop: 0, marginRight: 30 }}
             />
-            {name != nameInput && (<FormHelperText>Valid characters are a-z, A-Z, 0-9, _ and -</FormHelperText>)}
+            {name != nameInput && <FormHelperText>Valid characters are a-z, A-Z, 0-9, _ and -</FormHelperText>}
           </FormControl>
           <TextField
             label="Description"
@@ -211,8 +225,10 @@ export class RoleManagement extends React.Component {
 const actionCreators = { createRole, editRole, getDynamicGroups, getGroups, getRoles, removeRole, setSnackbar };
 
 const mapStateToProps = state => {
+  // eslint-disable-next-line no-unused-vars
+  const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
-    groups: Object.keys(state.devices.groups.byId),
+    groups: Object.keys(groups),
     isHosted: state.app.features.isHosted,
     org: state.users.organization,
     roles: Object.entries(state.users.rolesById).map(([id, role]) => ({ id, ...role }))

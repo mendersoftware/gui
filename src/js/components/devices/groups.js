@@ -6,37 +6,45 @@ import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@mate
 import { Add as AddIcon, Help as HelpIcon } from '@material-ui/icons';
 
 import { AddGroup } from '../helptips/helptooltips';
+import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
+
+const selectionStyle = { backgroundColor: '#e7e7e7' };
 
 const styles = {
   subheader: { color: '#aaaaaa', height: 48 }
 };
 
 export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, selectedGroup, showHelptips }) => {
-  const { dynamic: dynamicGroups, static: staticGroups } = Object.entries(groups)
+  const { dynamic: dynamicGroups, static: staticGroups, ungrouped } = Object.entries(groups)
     .sort((a, b) => a[0].localeCompare(b[0]))
     .reduce(
       (accu, [groupname, group], index) => {
-        const isSelected = groupname === selectedGroup ? { backgroundColor: '#e7e7e7' } : {};
+        const name = groupname === UNGROUPED_GROUP.id ? UNGROUPED_GROUP.name : groupname;
+        const isSelected = name === selectedGroup || groupname === selectedGroup ? selectionStyle : {};
         const groupItem = (
-          <ListItem classes={{ root: 'grouplist' }} button key={groupname + index} style={isSelected} onClick={() => changeGroup(groupname)}>
-            <ListItemText primary={decodeURIComponent(groupname)} />
+          <ListItem classes={{ root: 'grouplist' }} button key={groupname + index} style={isSelected} onClick={() => changeGroup(name)}>
+            <ListItemText primary={decodeURIComponent(name)} />
           </ListItem>
         );
         if (group.filters.length > 0) {
-          accu.dynamic.push(groupItem);
+          if (groupname !== UNGROUPED_GROUP.id) {
+            accu.dynamic.push(groupItem);
+          } else {
+            accu.ungrouped.push(groupItem);
+          }
         } else {
           accu.static.push(groupItem);
         }
         return accu;
       },
-      { dynamic: [], static: [] }
+      { dynamic: [], static: [], ungrouped: [] }
     );
 
   return (
     <div>
       <div className="muted margin-bottom-small">Groups</div>
       <List>
-        <ListItem classes={{ root: 'grouplist' }} button key="All" style={!selectedGroup ? { backgroundColor: '#e7e7e7' } : {}} onClick={() => changeGroup()}>
+        <ListItem classes={{ root: 'grouplist' }} button key="All" style={!selectedGroup ? selectionStyle : {}} onClick={() => changeGroup()}>
           <ListItemText primary="All devices" />
         </ListItem>
         {!!dynamicGroups.length && (
@@ -53,6 +61,7 @@ export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, se
           </ListSubheader>
         )}
         {staticGroups}
+        {!!staticGroups.length && ungrouped}
         <ListItem
           button
           classes={{ root: 'grouplist' }}
