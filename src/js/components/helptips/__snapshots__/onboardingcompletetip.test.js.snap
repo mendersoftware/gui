@@ -66,26 +66,27 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
     <p>
       You've now got a good foundation in how to use Mender. Look for more help hints in the UI as you go along.
     </p>
-    <p>
-      If you used one of our pre-built images you can start using full-image updates right away.
-    </p>
     What next?
     <div>
-      <a
-        href="https://docs.mender.io/hosted/artifacts/snapshots"
-        target="_blank"
-      >
-        Learn about full-image updates
-      </a>
-       
-      or
-       
-      <a
-        href="https://hub.mender.io/c/update-modules"
-        target="_blank"
-      >
-        how to create other kinds of application updates.
-      </a>
+      Proceed to one of the following tutorials (listed in recommended order):
+      <ol>
+        <li>
+          <a
+            href="https://docs.mender.io/hosted/get-started/deploy-a-system-update"
+            target="_blank"
+          >
+            Deploy a system update
+          </a>
+        </li>
+        <li>
+          <a
+            href="https://docs.mender.io/hosted/get-started/deploy-a-container-update"
+            target="_blank"
+          >
+            Deploy a container update
+          </a>
+        </li>
+      </ol>
     </div>
     <div
       className="flexbox"
