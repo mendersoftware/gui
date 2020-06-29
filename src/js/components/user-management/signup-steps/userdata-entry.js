@@ -11,10 +11,11 @@ import { providers } from '../login';
 export class UserDataEntry extends React.Component {
   constructor(props, context) {
     super(props, context);
+    const data = props.data || {};
     this.state = {
-      email: '',
-      password: '',
-      password_confirmation: ''
+      email: data.email || '',
+      password: data.password || '',
+      password_confirmation: data.password_confirmation || ''
     };
   }
 

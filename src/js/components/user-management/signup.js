@@ -47,7 +47,12 @@ export class Signup extends React.Component {
 
   _handleSignup(formData, recaptcha) {
     const self = this;
-    self.setState({ loading: true });
+    self.setState({
+      organization: formData.name,
+      tos: formData.tos,
+      marketing: formData.marketing,
+      loading: true
+    });
     const { email, password, oauthProvider, oauthId } = self.state;
     const credentials = oauthProvider ? { email, login: { [oauthProvider]: oauthId } } : { email, password };
     const signup = {
@@ -60,7 +65,10 @@ export class Signup extends React.Component {
     };
     return self.props
       .createOrganizationTrial(signup)
-      .catch(() => self.setState({ step: 1 }))
+      .catch(() => {
+        self.setState({ step: 1 })
+        return Promise.reject();
+      })
       .then(() => {
         if (!oauthProvider) {
           return new Promise((resolve, reject) => {
@@ -99,8 +107,8 @@ export class Signup extends React.Component {
             <Loader show={true} style={{ display: 'flex' }} />
           ) : (
             <>
-              {step == 1 && <UserDataEntry setSnackbar={setSnackbar} onSubmit={formdata => self._handleStep1(formdata)} />}
-              {step == 2 && <OrgDataEntry setSnackbar={setSnackbar} onSubmit={formdata => self._handleSignup(formdata)} recaptchaSiteKey={recaptchaSiteKey} />}
+              {step == 1 && <UserDataEntry setSnackbar={setSnackbar} data={{email: self.state.email, password: self.state.password, password_confirmation: self.state.password}} onSubmit={formdata => self._handleStep1(formdata)} />}
+              {step == 2 && <OrgDataEntry setSnackbar={setSnackbar} data={{name: self.state.organization, tos: self.state.tos, marketing: self.state.marketing }} onSubmit={formdata => self._handleSignup(formdata)} recaptchaSiteKey={recaptchaSiteKey} />}
               {step == 3 && (
                 <div className="align-center" style={{ minHeight: '50vh' }}>
                   <h1>Sign up completed</h1>
