@@ -68,21 +68,25 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
     </p>
     What next?
     <div>
-      <a
-        href="https://docs.mender.io/hosted/get-started/deploy-a-system-update"
-        target="_blank"
-      >
-        Learn about full-image updates
-      </a>
-       
-      or
-       
-      <a
-        href="https://docs.mender.io/hosted/get-started/deploy-a-container-update"
-        target="_blank"
-      >
-        how to create other kinds of application updates.
-      </a>
+      Proceed to one of the following tutorials (listed in recommended order):
+      <ol>
+        <li>
+          <a
+            href="https://docs.mender.io/hosted/get-started/deploy-a-system-update"
+            target="_blank"
+          >
+            Deploy a system update
+          </a>
+        </li>
+        <li>
+          <a
+            href="https://docs.mender.io/hosted/get-started/deploy-a-container-update"
+            target="_blank"
+          >
+            Deploy a container update
+          </a>
+        </li>
+      </ol>
     </div>
     <div
       className="flexbox"
