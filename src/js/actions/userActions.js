@@ -1,6 +1,6 @@
 import Cookies from 'universal-cookie';
 
-import { setSnackbar } from '../actions/appActions';
+import { setSnackbar } from './appActions';
 import GeneralApi from '../api/general-api';
 import UsersApi from '../api/users-api';
 import * as UserConstants from '../constants/userConstants';
