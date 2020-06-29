@@ -5,7 +5,10 @@ import ReactTooltip from 'react-tooltip';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 
-import HelpIcon from '@material-ui/icons/Help';
+import { Help as HelpIcon } from '@material-ui/icons';
+
+import raspberryPi from '../../../../assets/img/raspberrypi.png';
+import raspberryPi4 from '../../../../assets/img/raspberrypi4.jpg';
 
 import { getReleases } from '../../../actions/releaseActions';
 import { getUserOrganization } from '../../../actions/userActions';
@@ -51,7 +54,20 @@ export class DeviceConnectionDialog extends React.Component {
     let content = (
       <div>
         <div>
-          If you have your own device at hand, you can follow the steps to connect it right away.
+          During the guided evaluation we will walk you through installing Mender on a device and deploying:
+          <ul>
+            <li>
+              a simple <i>application</i> update
+            </li>
+            <li>
+              a full <i>system</i> update
+            </li>
+            <li>
+              a <i>Docker container</i> update
+            </li>
+          </ul>
+          The evaluation of hosted Mender is optimized for Raspberry Pi 3 & 4 running Raspberry Pi OS. If you have such a device at hand you can proceed to
+          prepare and connect your device.
           <div>
             <div
               id="deb-package-help"
@@ -65,23 +81,22 @@ export class DeviceConnectionDialog extends React.Component {
             </div>
             <ReactTooltip id="deb-package-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
               <p>
-                The Mender .deb package should work on most operating systems in the debian family (e.g. Debian, Ubuntu, Raspbian) and devices based on ARMv6 or
-                newer (e.g. Raspberry Pi 2/3/4, Beaglebone).
+                The Mender .deb package should work on most operating systems in the debian family (e.g. Debian, Ubuntu, Raspberry Pi OS) and devices based on
+                ARMv6 or newer (e.g. Raspberry Pi 2/3/4, Beaglebone).
               </p>
               <p>
                 Otherwise, use the virtual device or read more about <a href="https://hub.mender.io">Board integrations</a>
               </p>
             </ReactTooltip>
           </div>
-          <p>The steps are optimized for Linux workstations and Raspberry Pi devices, but can be used on any ARM device running a Debian family OS.</p>
           <div className="flexbox centered column os-list">
             <div>
-              {['assets/img/debian.png', 'assets/img/ubuntu.png', 'assets/img/raspbian.webp'].map((tile, index) => (
+              {[raspberryPi, raspberryPi4].map((tile, index) => (
                 <img key={`tile-${index}`} src={tile} />
               ))}
             </div>
             <Button variant="contained" onClick={() => self.setState({ onDevice: true })}>
-              Connect my own device!
+              Prepare and connect my Raspberry Pi
             </Button>
           </div>
         </div>
@@ -89,7 +104,7 @@ export class DeviceConnectionDialog extends React.Component {
           If you don&apos;t have your own device you can use a Docker-run virtual device to try out Mender.
           <div>
             <img src="assets/img/docker.png" style={{ height: '40px', verticalAlign: 'middle' }} />
-            <a onClick={() => self.setState({ virtualDevice: true })}>I don&apos;t have my own device - use a virtual device for now</a>
+            <a onClick={() => self.setState({ virtualDevice: true })}>Prepare a virtual device for now</a>
           </div>
         </div>
       </div>
