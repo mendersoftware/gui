@@ -3,7 +3,6 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import IdleTimer from 'react-idle-timer';
-import ReactGA from 'react-ga';
 
 import Header from './header/header';
 import LeftNav from './leftnav';
@@ -15,6 +14,7 @@ import { setSnackbar } from '../actions/appActions';
 import { setShowConnectingDialog, setShowCreateArtifactDialog } from '../actions/userActions';
 import SharedSnackbar from '../components/common/sharedsnackbar';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
+import Tracking from '../tracking';
 
 import {Elements} from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
@@ -36,7 +36,7 @@ class AppRoot extends React.PureComponent {
         const keyOnlyFilters = filters.split('&').reduce((accu, item) => `${accu}:${item.split('=')[0]}&`, ''); // assume the keys to filter by are not as revealing as the values things are filtered by
         page = `${location.pathname.substring(0, splitter)}?${keyOnlyFilters.substring(0, keyOnlyFilters.length - 1)}`; // cut off the last & of the reduced filters string
       }
-      ReactGA.pageview(page);
+      Tracking.pageview(page);
     });
   }
 

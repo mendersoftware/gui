@@ -4,7 +4,6 @@ import { Link, withRouter } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import Linkify from 'react-linkify';
 import ReactTooltip from 'react-tooltip';
-import ReactGA from 'react-ga';
 
 import { Button, IconButton, ListItemText, ListItemSecondaryAction, Menu, MenuItem, Toolbar } from '@material-ui/core';
 
@@ -42,6 +41,8 @@ import {
 
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 
+import Tracking from '../../tracking';
+
 export class Header extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -60,10 +61,10 @@ export class Header extends React.Component {
       this._updateUsername();
     }
     if (prevProps.hasTrackingEnabled !== hasTrackingEnabled && trackingCode && hasTrackingEnabled && user.id && organization.id) {
-      ReactGA.initialize(trackingCode);
-      ReactGA.set({ tenant: organization.id });
-      ReactGA.set({ plan: organization.plan });
-      ReactGA.set({ userId: user.id });
+      Tracking.initialize(trackingCode);
+      Tracking.set({ tenant: organization.id });
+      Tracking.set({ plan: organization.plan });
+      Tracking.set({ userId: user.id });
     }
   }
 
