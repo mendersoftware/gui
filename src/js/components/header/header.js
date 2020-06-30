@@ -16,7 +16,7 @@ import {
   Close as CloseIcon,
   ExitToApp as ExitIcon,
   InfoOutlined as InfoIcon,
-  Payment as Payment
+  Payment
 } from '@material-ui/icons';
 
 import { logout } from '../../auth';
@@ -268,7 +268,7 @@ export class Header extends React.Component {
                     Mender is currently running in <b>demo mode</b>.
                   </p>
                   <p>
-                    <a href={`https://docs.mender.io/${docsVersion}/administration/production-installation`} target="_blank">
+                    <a href={`https://docs.mender.io/${docsVersion}administration/production-installation`} target="_blank">
                       See the documentation for help switching to production mode
                     </a>
                     .
@@ -278,44 +278,36 @@ export class Header extends React.Component {
             ) : null}
 
             {organization && organization.trial ? (
+              <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <div id="trialVersion">
+                  <a id="trial-info" data-tip data-for="trial-version" data-event="click focus" data-offset="{'bottom': 15, 'right': 60}">
+                    <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
+                    Trial version
+                  </a>
 
-            <div style= {{ display: 'flex', flexDirection: 'row'}}>
-        
-              <div id="trialVersion"> 
-                <a id="trial-info" data-tip data-for="trial-version" data-event="click focus" data-offset="{'bottom': 15, 'right': 60}">
-                  <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
-                  Trial version
-                </a>
+                  <ReactTooltip id="trial-version" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+                    <h3>Trial version</h3>
+                    <p>You&apos;re using the trial version of Mender – it&apos;s free for up to 10 devices for 12 months.</p>
+                    <p>
+                      <Link to="/settings/upgrade">Upgrade to a plan</Link> to add more devices and continue using Mender after the trial expires.
+                    </p>
+                    <p>
+                      Or compare the plans at{' '}
+                      <a href={`https://mender.io/plans/pricing`} target="_blank">
+                        mender.io/plans/pricing
+                      </a>
+                      .
+                    </p>
+                  </ReactTooltip>
+                </div>
 
-                <ReactTooltip id="trial-version" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-                  <h3>Trial version</h3>
-                  <p>
-                   You&apos;re using the trial version of Mender – it&apos;s free for up to 10 devices for 12 months.
-                  </p>
-                  <p><Link to="/settings/upgrade">Upgrade to a plan</Link> to add more devices and continue using Mender after the trial expires.</p>
-                  <p>
-                    Or compare the plans at <a href={`https://mender.io/plans/pricing`} target="_blank">
-                      mender.io/plans/pricing
-                    </a>
-                    .
-                  </p>
-                </ReactTooltip>
-               
+                <Link id="trial-upgrade-now" to="/settings/upgrade">
+                  <Button style={{ top: '5px' }} color="primary" startIcon={<Payment />}>
+                    Upgrade now
+                  </Button>
+                </Link>
               </div>
-
-              <Link id="trial-upgrade-now" to="/settings/upgrade">
-                <Button
-                  style={{top: '5px'}}
-                  color="primary"
-                  startIcon={<Payment />}
-                >
-                  Upgrade now
-                </Button>
-              </Link>
-            </div>
-          ) : null }
-  
-
+            ) : null}
           </Toolbar>
 
           <Toolbar key={1} style={{ flexGrow: '2' }}>
@@ -376,13 +368,14 @@ const mapStateToProps = state => {
         )
       );
   }
+  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
     acceptedDevices: state.devices.byStatus.accepted.total,
     allowUserManagement,
     announcement: state.app.hostedAnnouncement,
     deviceLimit: state.devices.limit,
     demo: state.app.features.isDemoMode,
-    docsVersion: state.app.docsVersion,
+    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion,
     hasTrackingEnabled: state.users.globalSettings[state.users.currentUser]?.trackingConsentGiven,
     inProgress: state.deployments.byStatus.inprogress.total,
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && organization.plan === 'enterprise'),

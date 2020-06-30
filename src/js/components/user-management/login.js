@@ -4,9 +4,8 @@ import { Link, Redirect } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import ReactTooltip from 'react-tooltip';
 
-import { Button, SvgIcon } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { Help as HelpIcon } from '@material-ui/icons';
-import { mdiGithub, mdiGoogle } from '@mdi/js';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getUser, loginUser, setCurrentUser } from '../../actions/userActions';
@@ -19,24 +18,7 @@ import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import { getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 
-export const providers = [
-  {
-    id: 'Github',
-    icon: (
-      <SvgIcon fontSize="inherit">
-        <path d={mdiGithub} />
-      </SvgIcon>
-    )
-  },
-  {
-    id: 'Google',
-    icon: (
-      <SvgIcon fontSize="inherit">
-        <path d={mdiGoogle} />
-      </SvgIcon>
-    )
-  }
-];
+import { OAuth2Providers } from './oauth2providers';
 
 export class Login extends React.Component {
   constructor(props, context) {
@@ -132,15 +114,15 @@ export class Login extends React.Component {
             <>
               <div className="flexbox centered margin-bottom">Log in with:</div>
               <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                {providers.map(provider => (
+                {OAuth2Providers.map(provider => (
                   <Button
                     className="oauth-provider"
                     variant="contained"
                     key={provider.id}
-                    href={`/api/management/v1/useradm/oauth2/${provider.id.toLowerCase()}`}
+                    href={`/api/management/v1/useradm/oauth2/${provider.id}`}
                     startIcon={provider.icon}
                   >
-                    {provider.id}
+                    {provider.name}
                   </Button>
                 ))}
               </div>
