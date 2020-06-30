@@ -9,7 +9,7 @@ import { ErrorOutline as ErrorOutlineIcon, InfoOutlined as InfoOutlinedIcon } fr
 
 import AutoSelect from '../../common/forms/autoselect';
 import { getAllDevicesByStatus, getAllGroupDevices, selectDevices } from '../../../actions/deviceActions';
-import DeviceConstants from '../../../constants/deviceConstants';
+import { DEVICE_STATES, UNGROUPED_GROUP } from '../../../constants/deviceConstants';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 import { allDevices } from '../createdeployment';
 
@@ -27,7 +27,7 @@ export class SoftwareDevices extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    this.props.getAllDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted);
+    this.props.getAllDevicesByStatus(DEVICE_STATES.accepted);
     this.state = {
       deploymentDeviceIds: []
     };
@@ -202,12 +202,14 @@ export class SoftwareDevices extends React.Component {
 const actionCreators = { getAllDevicesByStatus, getAllGroupDevices, selectDevices };
 
 const mapStateToProps = state => {
+  // eslint-disable-next-line no-unused-vars
+  const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
     acceptedDevices: state.devices.byStatus.accepted.deviceIds,
     device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
-    groups: state.devices.groups.byId,
+    groups,
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
-    hasDynamicGroups: Object.values(state.devices.groups.byId).some(group => !!group.id),
+    hasDynamicGroups: Object.values(groups).some(group => !!group.id),
     hasPending: state.devices.byStatus.pending.total || state.devices.byStatus.pending.deviceIds.length > 0,
     releases: Object.values(state.releases.byId)
   };

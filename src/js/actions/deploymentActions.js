@@ -14,7 +14,7 @@ const default_page = 1;
 const transformDeployments = (deployments, deploymentsById) =>
   deployments.sort(startTimeSort).reduce(
     (accu, item) => {
-      accu.deployments[item.id] = { ...deploymentsById[item.id], ...item };
+      accu.deployments[item.id] = { ...deploymentsById[item.id], ...item, name: decodeURIComponent(item.name) };
       accu.deploymentIds.push(item.id);
       return accu;
     },
@@ -101,7 +101,7 @@ export const getSingleDeployment = id => dispatch =>
   GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}`).then(res =>
     dispatch({
       type: DeploymentConstants.RECEIVE_DEPLOYMENT,
-      deployment: res.body
+      deployment: { ...res.body, name: decodeURIComponent(res.body.name) }
     })
   );
 
