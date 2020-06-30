@@ -5,7 +5,7 @@ import { undefineds } from '../../../../tests/mockData';
 
 describe('Groups Component', () => {
   it('renders correctly', () => {
-    const tree = renderer.create(<Groups groups={[]} />).toJSON();
+    const tree = renderer.create(<Groups groups={[]} openGroupDialog={jest.fn} />).toJSON();
     expect(tree).toMatchSnapshot();
     expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });

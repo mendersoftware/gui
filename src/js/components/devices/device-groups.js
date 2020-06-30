@@ -22,12 +22,13 @@ import {
 import { setSnackbar } from '../../actions/appActions';
 
 import { isEmpty, preformatWithRequestID } from '../../helpers';
+import CreateGroupExplainer from './create-group-explainer';
 
 export class DeviceGroups extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      createGroupDialog: false,
+      createGroupExplanation: false,
       groupInvalid: true,
       modifyGroupDialog: false,
       removeGroup: false,
@@ -97,7 +98,7 @@ export class DeviceGroups extends React.Component {
     return request
       .then(() => {
         // reached end of list
-        self.setState({ createGroupDialog: false, modifyGroupDialog: false, fromFilters: false, tmpGroup: '', selectedField: '' }, () => {
+        self.setState({ createGroupExplanation: false, modifyGroupDialog: false, fromFilters: false, tmpGroup: '', selectedField: '' }, () => {
           self.props.setSnackbar('The group was updated successfully', 5000);
           self._refreshGroups();
         });
@@ -113,7 +114,7 @@ export class DeviceGroups extends React.Component {
     if (this.props.selectedGroup) {
       return this.props.updateDynamicGroup(this.props.selectedGroup, this.props.filters);
     }
-    this.setState({ createGroupDialog: true, fromFilters: true });
+    this.setState({ modifyGroupDialog: true, fromFilters: true });
   }
 
   _removeDevicesFromGroup(devices) {
@@ -136,8 +137,8 @@ export class DeviceGroups extends React.Component {
 
   render() {
     const self = this;
-    const { acceptedCount, groups, groupsById, openSettingsDialog, selectedGroup, showHelptips } = self.props;
-    const { createGroupDialog, fromFilters, modifyGroupDialog, removeGroup, tmpDevices } = self.state;
+    const { acceptedCount, groups, groupsById, isEnterprise, openSettingsDialog, selectedGroup, showHelptips } = self.props;
+    const { createGroupExplanation, fromFilters, modifyGroupDialog, removeGroup, tmpDevices } = self.state;
     return (
       <div className="tab-container">
         <div className="leftFixed">
@@ -145,7 +146,7 @@ export class DeviceGroups extends React.Component {
             acceptedCount={acceptedCount}
             changeGroup={group => self._handleGroupChange(group)}
             groups={groupsById}
-            openGroupDialog={() => self.setState({ createGroupDialog: !createGroupDialog })}
+            openGroupDialog={() => self.setState({ createGroupExplanation: true })}
             selectedGroup={selectedGroup}
             showHelptips={showHelptips}
           />
@@ -160,16 +161,17 @@ export class DeviceGroups extends React.Component {
           />
         </div>
         {removeGroup && <RemoveGroup onClose={() => self.setState({ removeGroup: !removeGroup })} onRemove={() => self._removeCurrentGroup()} />}
-        {(createGroupDialog || modifyGroupDialog) && (
+        {modifyGroupDialog && (
           <CreateGroup
             addListOfDevices={(devices, group) => self._createGroupFromDialog(devices, group)}
             fromFilters={fromFilters}
             groups={groups}
-            isCreation={createGroupDialog || !groups.length}
+            isCreation={fromFilters || !groups.length}
             selectedDevices={tmpDevices}
-            onClose={() => self.setState({ createGroupDialog: false, modifyGroupDialog: false, fromFilters: false, tmpDevices: [] })}
+            onClose={() => self.setState({ modifyGroupDialog: false, fromFilters: false, tmpDevices: [] })}
           />
         )}
+        {createGroupExplanation && <CreateGroupExplainer isEnterprise={isEnterprise} onClose={() => self.setState({ createGroupExplanation: false })} />}
       </div>
     );
   }
