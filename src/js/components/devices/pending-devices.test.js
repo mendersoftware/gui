@@ -25,7 +25,7 @@ describe('PendingDevices Component', () => {
         groups: {
           byId: {},
           selectedGroup: ''
-        },
+        }
       },
       users: {
         globalSettings: { id_attribute: null },

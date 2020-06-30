@@ -23,6 +23,6 @@ export const createOrganizationTrial = data => dispatch =>
       return Promise.resolve(res);
     });
 
-export const startUpgrade = (tenantId) => () => Api.post(`${tenantadmApiUrl}/tenants/${tenantId}/upgrade/start`);
-export const cancelUpgrade = (tenantId) => () => Api.post(`${tenantadmApiUrl}/tenants/${tenantId}/upgrade/cancel`);
+export const startUpgrade = tenantId => () => Api.post(`${tenantadmApiUrl}/tenants/${tenantId}/upgrade/start`);
+export const cancelUpgrade = tenantId => () => Api.post(`${tenantadmApiUrl}/tenants/${tenantId}/upgrade/cancel`);
 export const completeUpgrade = (tenantId, plan) => () => Api.post(`${tenantadmApiUrl}/tenants/${tenantId}/upgrade/complete`, { plan: plan });

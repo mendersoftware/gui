@@ -10,9 +10,6 @@ const defaultStyles = {
   image: { maxWidth: '100%' }
 };
 
-
-const Devices = ({ isEnterprise }) => (
-  <CreateGroupExplainerContent styles={defaultStyles} isEnterprise={isEnterprise} />
-);
+const Devices = ({ isEnterprise }) => <CreateGroupExplainerContent styles={defaultStyles} isEnterprise={isEnterprise} />;
 
 export default Devices;
