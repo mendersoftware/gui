@@ -7,6 +7,7 @@ import DeploymentCompleteTip from '../components/helptips/deploymentcompletetip'
 
 import { setOnboardingProgress, setShowCreateArtifactDialog } from '../actions/userActions';
 import store from '../reducers';
+import Tracking from '../tracking';
 
 import OnboardingCompleteTip from '../components/helptips/onboardingcompletetip';
 
@@ -289,6 +290,7 @@ export function advanceOnboarding(stepId) {
   const state = Object.assign(getCurrentOnboardingState(), { progress: madeProgress });
   state.complete = state.progress >= Object.keys(onboardingSteps).length ? true : state.complete;
   persistOnboardingState(state);
+  Tracking.event({ category: 'onboarding', action: stepId });
 }
 
 export function persistOnboardingState(state = getCurrentOnboardingState()) {

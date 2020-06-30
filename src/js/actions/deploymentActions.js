@@ -14,7 +14,7 @@ const default_page = 1;
 const transformDeployments = (deployments, deploymentsById) =>
   deployments.sort(startTimeSort).reduce(
     (accu, item) => {
-      accu.deployments[item.id] = { ...deploymentsById[item.id], ...item };
+      accu.deployments[item.id] = { ...deploymentsById[item.id], ...item, name: decodeURIComponent(item.name) };
       accu.deploymentIds.push(item.id);
       return accu;
     },
@@ -74,6 +74,8 @@ export const createDeployment = newDeployment => dispatch => {
   let request;
   if (newDeployment.filter_id) {
     request = GeneralApi.post(`${deploymentsApiUrlV2}/deployments`, newDeployment);
+  } else if (newDeployment.group) {
+    request = GeneralApi.post(`${deploymentsApiUrl}/deployments/group/${newDeployment.group}`, newDeployment);
   } else {
     request = GeneralApi.post(`${deploymentsApiUrl}/deployments`, newDeployment);
   }
@@ -99,7 +101,7 @@ export const getSingleDeployment = id => dispatch =>
   GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}`).then(res =>
     dispatch({
       type: DeploymentConstants.RECEIVE_DEPLOYMENT,
-      deployment: res.body
+      deployment: { ...res.body, name: decodeURIComponent(res.body.name) }
     })
   );
 
@@ -149,7 +151,7 @@ export const abortDeployment = deploymentId => (dispatch, getState) =>
       accu[id] = state.deployments.byId[id];
       return accu;
     }, {});
-    const total = state.deployments.byStatus[status].total - 1;
+    const total = Math.max(state.deployments.byStatus[status].total - 1, 0);
     return Promise.all([
       dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status, total }),
       dispatch({

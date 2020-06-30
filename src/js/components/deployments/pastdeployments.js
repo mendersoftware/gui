@@ -8,7 +8,7 @@ import MomentUtils from '@date-io/moment';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
-
+import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
 import AutoSelect from '../common/forms/autoselect';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
@@ -253,9 +253,11 @@ const actionCreators = { getDeploymentsByStatus, getSingleDeploymentStats, setSn
 
 const mapStateToProps = state => {
   const past = state.deployments.byStatus.finished.selectedDeploymentIds.map(id => state.deployments.byId[id]);
+  // eslint-disable-next-line no-unused-vars
+  const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
     count: state.deployments.byStatus.finished.total,
-    groups: Object.keys(state.devices.groups.byId),
+    groups: Object.keys(groups),
     onboardingComplete: state.users.onboarding.complete,
     past,
     showHelptips: state.users.showHelptips,

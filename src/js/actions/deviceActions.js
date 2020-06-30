@@ -1,6 +1,7 @@
+import { setSnackbar } from '../actions/appActions';
 import GeneralApi, { headerNames } from '../api/general-api';
 import * as DeviceConstants from '../constants/deviceConstants';
-import { deriveAttributesFromDevices, duplicateFilter, mapDeviceAttributes } from '../helpers';
+import { deriveAttributesFromDevices, duplicateFilter, getSnackbarMessage, mapDeviceAttributes, preformatWithRequestID } from '../helpers';
 
 // default per page until pagination and counting integrated
 const defaultPerPage = 20;
@@ -19,70 +20,74 @@ export const getGroups = () => (dispatch, getState) =>
       accu[group] = { deviceIds: [], filters: [], total: 0, ...state[group] };
       return accu;
     }, {});
-    return Promise.resolve(
+    return Promise.all([
       dispatch({
         type: DeviceConstants.RECEIVE_GROUPS,
         groups
+      }),
+      dispatch({
+        type: DeviceConstants.ADD_DYNAMIC_GROUP,
+        groupName: DeviceConstants.UNGROUPED_GROUP.id,
+        group: {
+          deviceIds: [],
+          total: 0,
+          ...getState().devices.groups.byId[DeviceConstants.UNGROUPED_GROUP.id],
+          filters: [{ key: 'group', value: res.body, operator: '$nin', scope: 'system' }]
+        }
       })
-    );
+    ]);
   });
 
 export const initializeGroupsDevices = () => (dispatch, getState) =>
   Promise.all(Object.keys(getState().devices.groups.byId).map(group => dispatch(getGroupDevices(group, 1, 1))));
 
-export const addDeviceToGroup = (group, deviceId) => dispatch =>
-  GeneralApi.put(`${inventoryApiUrl}/devices/${deviceId}/group`, { group: encodeURIComponent(group) }).then(() =>
+export const addDevicesToGroup = (group, deviceIds) => dispatch =>
+  GeneralApi.patch(`${inventoryApiUrl}/groups/${group}/devices`, deviceIds).then(() =>
     Promise.resolve(
       dispatch({
         type: DeviceConstants.ADD_TO_GROUP,
         group,
-        deviceId
+        deviceIds
       })
     )
   );
 
-export const removeDeviceFromGroup = (deviceId, group) => dispatch =>
-  GeneralApi.delete(`${inventoryApiUrl}/devices/${deviceId}/group/${group}`).then(() =>
+export const removeDevicesFromGroup = (group, deviceIds) => dispatch =>
+  GeneralApi.delete(`${inventoryApiUrl}/groups/${group}/devices`, deviceIds).then(() =>
     Promise.resolve(
       dispatch({
         type: DeviceConstants.REMOVE_FROM_GROUP,
         group,
-        deviceId
+        deviceIds
       })
     )
   );
 
 export const addStaticGroup = (group, deviceIds) => (dispatch, getState) =>
-  Promise.all(deviceIds.map(id => dispatch(addDeviceToGroup(group, id)))).then(() =>
+  Promise.resolve(dispatch(addDevicesToGroup(group, deviceIds))).then(() =>
     Promise.resolve(
       dispatch({
         type: DeviceConstants.ADD_STATIC_GROUP,
         group: { deviceIds: [], total: 0, filters: [], ...getState().devices.groups.byId[group] },
         groupName: group
       })
-    ).then(() => Promise.all([dispatch(selectDevice()), dispatch(selectGroup(group))]))
+    ).then(() => Promise.all([dispatch(selectDevice()), dispatch(selectGroup(group)), dispatch(getGroups())]))
   );
 
 export const removeStaticGroup = groupName => (dispatch, getState) => {
   const { deviceIds } = getState().devices.groups.byId[groupName];
-  const selectedGroup = getState().devices.groups.selectedGroup === groupName ? undefined : getState().devices.groups.selectedGroup;
-  return Promise.all(
-    deviceIds.reduce(
-      (accu, id) => {
-        accu.push(dispatch(removeDeviceFromGroup(id, groupName)));
-        return accu;
-      },
-      [dispatch(selectGroup(selectedGroup))]
-    )
-  ).then(() => {
-    let groups = getState().devices.groups.byId;
+  return Promise.resolve(dispatch(removeDevicesFromGroup(groupName, deviceIds))).then(() => {
+    const selectedGroup = getState().devices.groups.selectedGroup === groupName ? undefined : getState().devices.groups.selectedGroup;
+    let groups = { ...getState().devices.groups.byId };
     delete groups[groupName];
-    return Promise.resolve(
+    return Promise.all([
       dispatch({
         type: DeviceConstants.REMOVE_STATIC_GROUP,
         groups
-      })
-    );
+      }),
+      dispatch(getGroups()),
+      dispatch(selectGroup(selectedGroup))
+    ]);
   });
 };
 
@@ -93,13 +98,18 @@ const filterProcessors = {
   $lt: val => Number(val) || val,
   $lte: val => Number(val) || val,
   $in: val => ('' + val).split(','),
-  $nin: val => ('' + val).split(',')
+  $nin: val => ('' + val).split(','),
+  $exists: () => 1,
+  $nexists: () => 0
+};
+const filterAliases = {
+  $nexists: '$exists',
 };
 const mapFiltersToTerms = filters =>
   filters.map(filter => ({
     scope: filter.scope,
     attribute: filter.key,
-    type: filter.operator,
+    type: filterAliases[filter.operator] || filter.operator,
     value: filterProcessors.hasOwnProperty(filter.operator) ? filterProcessors[filter.operator](filter.value) : filter.value
   }));
 const mapTermsToFilters = terms => terms.map(term => ({ scope: term.scope, key: term.attribute, operator: term.type, value: term.value }));
@@ -165,19 +175,20 @@ export const removeDynamicGroup = groupName => (dispatch, getState) => {
 /*
  * Device inventory functions
  */
-export const selectGroup = group => (dispatch, getState) => {
-  if (getState().devices.groups.selectedGroup === group) {
+export const selectGroup = (group, filters = []) => (dispatch, getState) => {
+  const groupName = group === DeviceConstants.UNGROUPED_GROUP.id || group === DeviceConstants.UNGROUPED_GROUP.name ? DeviceConstants.UNGROUPED_GROUP.id : group;
+  if (getState().devices.groups.selectedGroup === groupName && filters.length === 0) {
     return;
   }
-  let selectedGroup = getState().devices.groups.byId[group];
   let tasks = [];
+  const selectedGroup = getState().devices.groups.byId[groupName];
   if (selectedGroup && selectedGroup.filters && selectedGroup.filters.length) {
-    tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: selectedGroup.filters }));
+    tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: selectedGroup.filters.concat(filters) }));
   } else {
-    tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: [] }));
+    tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: filters }));
   }
-  selectedGroup = getState().devices.groups.byId[group] ? group : null;
-  tasks.push(dispatch({ type: DeviceConstants.SELECT_GROUP, group: selectedGroup }));
+  const selectedGroupName = selectedGroup ? groupName : null;
+  tasks.push(dispatch({ type: DeviceConstants.SELECT_GROUP, group: selectedGroupName }));
   return Promise.all(tasks);
 };
 
@@ -243,10 +254,13 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
 export const getGroupDevices = (group, page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false) => (dispatch, getState) =>
   Promise.resolve(dispatch(getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, page, perPage, shouldSelectDevices, group))).then(results => {
     if (!group) {
-      Promise.resolve();
+      return Promise.resolve();
     }
     const { deviceAccu, total } = results[results.length - 1];
     const stateGroup = getState().devices.groups.byId[group];
+    if (!stateGroup && !total && !deviceAccu.ids.length) {
+      return Promise.resolve();
+    }
     return Promise.resolve(
       dispatch({
         type: DeviceConstants.RECEIVE_GROUP_DEVICES,
@@ -518,7 +532,7 @@ export const getDevicesWithAuth = devices => (dispatch, getState) =>
   Promise.all(devices.map(device => dispatch(getDeviceAuth(device.id, true)))).then(tasks => {
     const devices = tasks.map(task => task[task.length - 1]);
     const deviceAccu = reduceReceivedDevices(devices, [], getState());
-    dispatch({
+    return dispatch({
       type: DeviceConstants.RECEIVE_DEVICES,
       devicesById: deviceAccu.devicesById
     });
@@ -537,6 +551,51 @@ export const updateDeviceAuth = (deviceId, authId, status) => dispatch =>
     ])
   );
 
+export const updateDevicesAuth = (deviceIds, status) => (dispatch, getState) => {
+  let devices = getState().devices.byId;
+  const deviceIdsWithoutAuth = deviceIds.reduce((accu, id) => (devices[id].auth_sets ? accu : [...accu, { id }]), []);
+  return dispatch(getDevicesWithAuth(deviceIdsWithoutAuth)).then(() => {
+    devices = getState().devices.byId;
+    // for each device, get id and id of authset & make api call to accept
+    // if >1 authset, skip instead
+    const deviceAuthUpdates = deviceIds.map(id => {
+      const device = devices[id];
+      if (device.auth_sets.length !== 1) {
+        return Promise.reject();
+      }
+      // api call device.id and device.authsets[0].id
+      return dispatch(updateDeviceAuth(device.id, device.auth_sets[0].id, status)).catch(err => {
+        var errMsg = err.res.error.message || '';
+        // notify if an error occurs
+        dispatch(
+          setSnackbar(
+            preformatWithRequestID(err.res, `The action was stopped as there was a problem updating a device authorization status: ${errMsg}`),
+            null,
+            'Copy to clipboard'
+          )
+        );
+        return Promise.reject();
+      });
+    });
+    return Promise.allSettled(deviceAuthUpdates).then(results => {
+      const { skipped, count } = results.reduce(
+        (accu, item) => {
+          if (item.status === 'rejected') {
+            accu.skipped = accu.skipped + 1;
+          } else {
+            accu.count = accu.count + 1;
+          }
+          return accu;
+        },
+        { skipped: 0, count: 0 }
+      );
+      const message = getSnackbarMessage(skipped, count);
+      // break if an error occurs, display status up til this point before error message
+      return dispatch(setSnackbar(message));
+    });
+  });
+};
+
 export const deleteAuthset = (deviceId, authId) => dispatch =>
   GeneralApi.delete(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}`).then(() =>
     Promise.resolve(
@@ -549,15 +608,26 @@ export const deleteAuthset = (deviceId, authId) => dispatch =>
   );
 
 export const preauthDevice = authset => dispatch =>
-  GeneralApi.post(`${deviceAuthV2}/devices`, authset).then(() =>
-    Promise.all([
-      dispatch({
-        type: DeviceConstants.ADD_DEVICE_AUTHSET,
-        authset
-      }),
-      dispatch(getDeviceCount(DeviceConstants.DEVICE_STATES.preauth))
-    ])
-  );
+  GeneralApi.post(`${deviceAuthV2}/devices`, authset)
+    .then(() =>
+      Promise.all([
+        dispatch({
+          type: DeviceConstants.ADD_DEVICE_AUTHSET,
+          authset
+        }),
+        dispatch(getDeviceCount(DeviceConstants.DEVICE_STATES.preauth))
+      ])
+    )
+    .catch(err => {
+      console.log(err);
+      var errMsg = (err.res.body || {}).error || '';
+      if (err.res.status === 409) {
+        return Promise.reject('A device with a matching identity data set already exists');
+      } else {
+        dispatch(setSnackbar(preformatWithRequestID(err.res, `The device could not be added: ${errMsg}`), null, 'Copy to clipboard'));
+      }
+      return Promise.reject();
+    });
 
 export const decommissionDevice = deviceId => dispatch =>
   GeneralApi.delete(`${deviceAuthV2}/devices/${deviceId}`).then(() =>

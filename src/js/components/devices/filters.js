@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 // material ui
 import { Button, Chip, Collapse } from '@material-ui/core';
-import { Add as AddIcon, FilterList as FilterListIcon } from '@material-ui/icons';
+import { Add as AddIcon } from '@material-ui/icons';
 
 import { selectDevice as resetIdFilter, setDeviceFilters } from '../../actions/deviceActions';
 import { saveGlobalSettings } from '../../actions/userActions';
@@ -26,8 +26,7 @@ export class Filters extends React.Component {
     super(props, context);
     this.state = {
       adding: props.isModification || true,
-      newFilter: emptyFilter,
-      showFilters: false
+      newFilter: emptyFilter
     };
   }
 
@@ -84,14 +83,15 @@ export class Filters extends React.Component {
   }
 
   onFilterChange(filters) {
-    this.props.setDeviceFilters(filters);
-    this.props.onFilterChange(filters);
+    const activeFilters = filters.filter(item => item.value !== '');
+    this.props.setDeviceFilters(activeFilters);
+    this.props.onFilterChange(activeFilters);
   }
 
   render() {
     const self = this;
-    const { attributes, canFilterMultiple, filters, isEnterprise, isHosted, onGroupClick, plan, selectedGroup } = self.props;
-    const { adding, newFilter, showFilters } = self.state;
+    const { attributes, canFilterMultiple, filters, isEnterprise, isHosted, onGroupClick, open, plan, selectedGroup } = self.props;
+    const { adding, newFilter } = self.state;
     const addedFilters = filters.filter(filter => filter.key !== newFilter.key);
     const { currentFilters, remainingFilters } = attributes.reduce(
       (accu, currentFilter) => {
@@ -126,68 +126,63 @@ export class Filters extends React.Component {
     const filter = filters.find(item => item.key === newFilter.key) || newFilter;
     const addedFilterDefined = filter && Object.values(filter).every(thing => !!thing);
     return (
-      <>
-        <Button color="secondary" onClick={() => self.setState({ showFilters: !showFilters })} startIcon={<FilterListIcon />} style={{ marginTop: -8 }}>
-          {filters.length > 0 ? `Filters (${filters.length})` : 'Filters'}
-        </Button>
-        <Collapse in={showFilters} timeout="auto" unmountOnExit>
-          <>
-            <div className="flexbox">
-              <div className="margin-right" style={{ marginTop: currentFilters.length ? 8 : 25 }}>
-                Devices matching:
-              </div>
-              <div>
-                <div>
-                  {addedFilters.map(item => (
-                    <Chip
-                      className="margin-right-small"
-                      key={`filter-${item.key}`}
-                      label={`${getFilterLabelByKey(item.key, self.props.attributes)} ${DEVICE_FILTERING_OPTIONS[item.operator].shortform} ${
-                        item.operator === '$regex' ? `${item.value}.*` : item.value
-                      }`}
-                      onDelete={() => self.removeFilter(item)}
-                    />
-                  ))}
-                  {!adding && addButton}
-                </div>
-                {adding && (
-                  <FilterItem
-                    filter={filter}
-                    filters={remainingFilters}
-                    attributes={attributes}
-                    onRemove={filter => self.removeFilter(filter)}
-                    onSelect={filter => self.updateFilter(filter)}
-                    plan={plan}
-                  />
-                )}
-                {addedFilterDefined && addButton}
-              </div>
+      <Collapse in={open} timeout="auto" className="filter-wrapper" unmountOnExit>
+        <>
+          <div className="flexbox">
+            <div className="margin-right" style={{ marginTop: addedFilters.length ? 8 : 25 }}>
+              Devices matching:
             </div>
-            <div className="flexbox margin-top-small margin-bottom-small" style={{ justifyContent: 'flex-end' }}>
-              {filters.length > 1 && (
-                <span className="link margin-top-small margin-right-small" onClick={() => self.clearFilters()}>
-                  Clear filter
-                </span>
-              )}
-              {!canFilterMultiple && (
-                <EnterpriseNotification
-                  isEnterprise={canFilterMultiple}
-                  recommendedPlan={isHosted ? 'professional' : null}
-                  benefit="filter by multiple attributes to improve the device overview"
+            <div>
+              <div>
+                {addedFilters.map(item => (
+                  <Chip
+                    className="margin-right-small"
+                    key={`filter-${item.key}`}
+                    label={`${getFilterLabelByKey(item.key, self.props.attributes)} ${DEVICE_FILTERING_OPTIONS[item.operator].shortform} ${
+                      item.operator !== '$exists' && item.operator !== '$nexists' ? (item.operator === '$regex' ? `${item.value}.*` : item.value) : ''
+                    }`}
+                    onDelete={() => self.removeFilter(item)}
+                  />
+                ))}
+                {!adding && addButton}
+              </div>
+              {adding && (
+                <FilterItem
+                  filter={filter}
+                  filters={remainingFilters}
+                  attributes={attributes}
+                  onRemove={filter => self.removeFilter(filter)}
+                  onSelect={filter => self.updateFilter(filter)}
+                  plan={plan}
                 />
               )}
-              {!isEnterprise && plan !== 'enterprise' && (
-                <EnterpriseNotification isEnterprise={false} recommendedPlan="enterprise" benefit="save dynamic groups and ease device management" />
-              )}
-              {canFilterMultiple && (plan === 'enterprise' || isEnterprise) && currentFilters.length >= 1 && canSaveFilter && (
-                <Button variant="contained" color="secondary" onClick={onGroupClick}>
-                  {selectedGroup ? 'Save group' : 'Create group with this filter'}
-                </Button>
-              )}
+              {addedFilterDefined && addButton}
             </div>
-          </>
-        </Collapse>
-      </>
+          </div>
+          <div className="flexbox margin-top-small margin-bottom-small" style={{ justifyContent: 'flex-end' }}>
+            {filters.length > 1 && (
+              <span className="link margin-top-small margin-right-small" onClick={() => self.clearFilters()}>
+                Clear filter
+              </span>
+            )}
+            {!canFilterMultiple && (
+              <EnterpriseNotification
+                isEnterprise={canFilterMultiple}
+                recommendedPlan={isHosted ? 'professional' : null}
+                benefit="filter by multiple attributes to improve the device overview"
+              />
+            )}
+            {!isEnterprise && plan !== 'enterprise' && (
+              <EnterpriseNotification isEnterprise={false} recommendedPlan="enterprise" benefit="save dynamic groups and ease device management" />
+            )}
+            {canFilterMultiple && (plan === 'enterprise' || isEnterprise) && currentFilters.length >= 1 && canSaveFilter && (
+              <Button variant="contained" color="secondary" onClick={onGroupClick}>
+                {selectedGroup ? 'Save group' : 'Create group with this filter'}
+              </Button>
+            )}
+          </div>
+        </>
+      </Collapse>
     );
   }
 }

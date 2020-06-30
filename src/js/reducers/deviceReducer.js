@@ -40,7 +40,7 @@ const deviceReducer = (state = initialState, action) => {
       };
     case DeviceConstants.ADD_TO_GROUP: {
       let group = {
-        deviceIds: [action.deviceId],
+        deviceIds: action.deviceIds,
         filters: [],
         total: 1
       };
@@ -48,7 +48,7 @@ const deviceReducer = (state = initialState, action) => {
         group = {
           filters: [],
           ...state.groups.byId[action.group],
-          deviceIds: [...state.groups.byId[action.group].deviceIds, action.deviceId],
+          deviceIds: [...state.groups.byId[action.group].deviceIds, ...action.deviceIds],
           total: state.groups.byId[action.group].total + 1
         };
       }
@@ -64,14 +64,10 @@ const deviceReducer = (state = initialState, action) => {
       };
     }
     case DeviceConstants.REMOVE_FROM_GROUP: {
-      const deviceIdsIndex = state.groups.byId[action.group].deviceIds.findIndex(item => item === action.deviceId);
       const group = {
         ...state.groups.byId[action.group],
-        deviceIds: [
-          ...state.groups.byId[action.group].deviceIds.slice(0, deviceIdsIndex),
-          ...state.groups.byId[action.group].deviceIds.slice(deviceIdsIndex + 1)
-        ],
-        total: state.groups.byId[action.group].total - 1
+        deviceIds: state.groups.byId[action.group].deviceIds.filter(id => !action.deviceIds.includes(id)),
+        total: Math.max(state.groups.byId[action.group].total - 1, 0)
       };
       let byId = state.groups.byId;
       let selectedGroup = state.groups.selectedGroup;
@@ -179,9 +175,10 @@ const deviceReducer = (state = initialState, action) => {
       };
     }
     case DeviceConstants.SET_DEVICE_FILTERS: {
+      const filters = action.filters.filter(filter => filter.key && filter.operator && filter.scope && typeof filter.value !== 'undefined');
       return {
         ...state,
-        filters: action.filters
+        filters
       };
     }
 

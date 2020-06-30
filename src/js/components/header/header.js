@@ -4,7 +4,6 @@ import { Link, withRouter } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import Linkify from 'react-linkify';
 import ReactTooltip from 'react-tooltip';
-import ReactGA from 'react-ga';
 
 import { Button, IconButton, ListItemText, ListItemSecondaryAction, Menu, MenuItem, Toolbar } from '@material-ui/core';
 
@@ -15,7 +14,8 @@ import {
   ArrowDropUp as ArrowDropUpIcon,
   Close as CloseIcon,
   ExitToApp as ExitIcon,
-  InfoOutlined as InfoIcon
+  InfoOutlined as InfoIcon,
+  Payment
 } from '@material-ui/icons';
 
 import { logout } from '../../auth';
@@ -41,6 +41,8 @@ import {
 
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 
+import Tracking from '../../tracking';
+
 export class Header extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -52,14 +54,18 @@ export class Header extends React.Component {
     this.cookies = new Cookies();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     const sessionId = this.cookies.get('JWT');
-    const { hasTrackingEnabled, trackingCode, user } = this.props;
+    const { hasTrackingEnabled, organization, trackingCode, user } = this.props;
     if ((!sessionId || !user || !user.id || !user.email.length) && !this.state.gettingUser && !this.state.loggingOut) {
       this._updateUsername();
     }
-    if (prevProps.hasTrackingEnabled !== hasTrackingEnabled && trackingCode && hasTrackingEnabled) {
-      ReactGA.initialize(trackingCode);
+    if (hasTrackingEnabled && user.id && organization.id) {
+      if (Tracking.initialize(trackingCode)) {
+        Tracking.set({ tenant: organization.id });
+        Tracking.set({ plan: organization.plan });
+        Tracking.set({ userId: user.id });
+      }
     }
   }
 
@@ -180,6 +186,7 @@ export class Header extends React.Component {
       isEnterprise,
       location,
       multitenancy,
+      organization,
       pendingDevices,
       plan,
       showHelptips,
@@ -213,8 +220,8 @@ export class Header extends React.Component {
           <MenuItem component={Link} to="/settings">
             Settings
           </MenuItem>
-          <MenuItem component={Link} to="/settings/my-account">
-            My account
+          <MenuItem component={Link} to="/settings/my-profile">
+            My profile
           </MenuItem>
           {multitenancy && (
             <MenuItem component={Link} to="/settings/my-organization">
@@ -245,7 +252,7 @@ export class Header extends React.Component {
     const toolbarStyle = { height: '56px', minHeight: 'unset', paddingLeft: '16px', paddingRight: '16px' };
 
     return (
-      <div id="fixedHeader" className={`header ${location.pathname === '/login' ? 'hidden' : ''}`}>
+      <div id="fixedHeader" className={`header ${location.pathname === '/login' || location.pathname == '/signup' ? 'hidden' : ''}`}>
         <Toolbar style={Object.assign({ backgroundColor: '#fff' }, toolbarStyle)}>
           <Toolbar key={0} style={toolbarStyle}>
             <Link to="/" id="logo" className={plan === 'enterprise' || isEnterprise ? 'enterprise' : ''} />
@@ -263,12 +270,44 @@ export class Header extends React.Component {
                     Mender is currently running in <b>demo mode</b>.
                   </p>
                   <p>
-                    <a href={`https://docs.mender.io/${docsVersion}/administration/production-installation`} target="_blank">
+                    <a href={`https://docs.mender.io/${docsVersion}administration/production-installation`} target="_blank">
                       See the documentation for help switching to production mode
                     </a>
                     .
                   </p>
                 </ReactTooltip>
+              </div>
+            ) : null}
+
+            {organization && organization.trial ? (
+              <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <div id="trialVersion">
+                  <a id="trial-info" data-tip data-for="trial-version" data-event="click focus" data-offset="{'bottom': 15, 'right': 60}">
+                    <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
+                    Trial version
+                  </a>
+
+                  <ReactTooltip id="trial-version" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+                    <h3>Trial version</h3>
+                    <p>You&apos;re using the trial version of Mender – it&apos;s free for up to 10 devices for 12 months.</p>
+                    <p>
+                      <Link to="/settings/upgrade">Upgrade to a plan</Link> to add more devices and continue using Mender after the trial expires.
+                    </p>
+                    <p>
+                      Or compare the plans at{' '}
+                      <a href={`https://mender.io/plans/pricing`} target="_blank">
+                        mender.io/plans/pricing
+                      </a>
+                      .
+                    </p>
+                  </ReactTooltip>
+                </div>
+
+                <Link id="trial-upgrade-now" to="/settings/upgrade">
+                  <Button style={{ top: '5px' }} color="primary" startIcon={<Payment />}>
+                    Upgrade now
+                  </Button>
+                </Link>
               </div>
             ) : null}
           </Toolbar>
@@ -317,7 +356,7 @@ const actionCreators = {
 };
 
 const mapStateToProps = state => {
-  const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const organization = state.users.organization ? state.users.organization : { plan: 'os', id: null };
   const currentUser = state.users.byId[state.users.currentUser];
   let allowUserManagement = false;
   if (currentUser?.roles) {
@@ -331,19 +370,21 @@ const mapStateToProps = state => {
         )
       );
   }
+  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
     acceptedDevices: state.devices.byStatus.accepted.total,
     allowUserManagement,
     announcement: state.app.hostedAnnouncement,
     deviceLimit: state.devices.limit,
     demo: state.app.features.isDemoMode,
-    docsVersion: state.app.docsVersion,
+    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion,
     hasTrackingEnabled: state.users.globalSettings[state.users.currentUser]?.trackingConsentGiven,
     inProgress: state.deployments.byStatus.inprogress.total,
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
+    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && organization.plan === 'enterprise'),
     multitenancy: state.app.features.hasMultitenancy || state.app.features.isEnterprise || state.app.features.isHosted,
     showHelptips: state.users.showHelptips,
     pendingDevices: state.devices.byStatus.pending.total,
+    organization,
     trackingCode: state.app.trackerCode,
     user: state.users.byId[state.users.currentUser] || { email: '', id: null }
   };

@@ -14,10 +14,32 @@ import { setSnackbar } from '../actions/appActions';
 import { setShowConnectingDialog, setShowCreateArtifactDialog } from '../actions/userActions';
 import SharedSnackbar from '../components/common/sharedsnackbar';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
+import Tracking from '../tracking';
+
+import {Elements} from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
+
+// Make sure to call `loadStripe` outside of a component’s render to avoid
+// recreating the `Stripe` object on every render.
+const stripePromise = window.mender_environment.stripeAPIKey ? loadStripe(window.mender_environment.stripeAPIKey) : null;
 
 const timeout = 900000; // 15 minutes idle time
 
 class AppRoot extends React.PureComponent {
+  componentDidMount() {
+    this.props.history.listen(location => {
+      // if we're on page whose path might contain sensitive device/ group/ deployment names etc. we sanitize the sent information before submission
+      let page = location.pathname || '';
+      if (location.pathname.includes('=') && (location.pathname.startsWith('/devices') || location.pathname.startsWith('/deployments'))) {
+        const splitter = location.pathname.lastIndexOf('/');
+        const filters = location.pathname.slice(splitter + 1);
+        const keyOnlyFilters = filters.split('&').reduce((accu, item) => `${accu}:${item.split('=')[0]}&`, ''); // assume the keys to filter by are not as revealing as the values things are filtered by
+        page = `${location.pathname.substring(0, splitter)}?${keyOnlyFilters.substring(0, keyOnlyFilters.length - 1)}`; // cut off the last & of the reduced filters string
+      }
+      Tracking.pageview(page);
+    });
+  }
+
   onIdle() {
     if (expirySet() && this.props.currentUser) {
       // logout user and warn
@@ -52,7 +74,7 @@ class AppRoot extends React.PureComponent {
     });
 
     return (
-      <>
+      <Elements stripe={stripePromise}>
         <IdleTimer element={document} onAction={updateMaxAge} onIdle={() => self.onIdle()} timeout={timeout} />
         <Header history={history} isLoggedIn={isLoggedIn} />
         <LeftNav className="leftFixed leftNav" />
@@ -69,7 +91,7 @@ class AppRoot extends React.PureComponent {
         />
         <DeviceConnectionDialog open={showDeviceConnectionDialog} onCancel={() => setShowConnectingDialog(false)} />
         <SharedSnackbar />
-      </>
+      </Elements>
     );
   }
 }

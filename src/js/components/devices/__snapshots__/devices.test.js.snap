@@ -199,12 +199,9 @@ exports[`Devices Component renders correctly 1`] = `
               className="MuiTouchRipple-root"
             />
           </div>
-          <hr
-            className="MuiDivider-root"
-          />
           <div
-            aria-disabled={true}
-            className="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters Mui-disabled MuiListItem-button Mui-disabled"
+            aria-disabled={false}
+            className="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-button"
             onBlur={[Function]}
             onClick={[Function]}
             onDragLeave={[Function]}
@@ -220,10 +217,10 @@ exports[`Devices Component renders correctly 1`] = `
             role="button"
             style={
               Object {
-                "color": "#d4e9e7",
+                "marginTop": 30,
               }
             }
-            tabIndex={-1}
+            tabIndex={0}
           >
             <div
               className="MuiListItemIcon-root"
@@ -235,7 +232,7 @@ exports[`Devices Component renders correctly 1`] = `
                 viewBox="0 0 24 24"
               >
                 <path
-                  d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
                 />
               </svg>
             </div>
@@ -248,6 +245,9 @@ exports[`Devices Component renders correctly 1`] = `
                 Create a group
               </span>
             </div>
+            <span
+              className="MuiTouchRipple-root"
+            />
           </div>
         </ul>
       </div>
@@ -264,7 +264,6 @@ exports[`Devices Component renders correctly 1`] = `
         className="relative"
       >
         <div
-          className="flexbox space-between"
           style={
             Object {
               "marginLeft": "20px",
@@ -272,67 +271,74 @@ exports[`Devices Component renders correctly 1`] = `
           }
         >
           <div
+            className="flexbox space-between"
             style={
               Object {
-                "width": "100%",
+                "marginBottom": -1,
+                "zIndex": 2,
               }
             }
           >
-            <h2
-              className="inline-block margin-right"
+            <div
+              className="flexbox"
             >
-              All devices
-            </h2>
-            <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
-              disabled={false}
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              style={
-                Object {
-                  "marginTop": -8,
-                }
-              }
-              tabIndex={0}
-              type="button"
-            >
-              <span
-                className="MuiButton-label"
+              <h2
+                className="margin-right"
               >
-                <span
-                  className="MuiButton-startIcon MuiButton-iconSizeMedium"
+                All devices
+              </h2>
+              <div
+                className="flexbox centered "
+              >
+                <button
+                  className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
+                  disabled={false}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onDragLeave={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  onTouchEnd={[Function]}
+                  onTouchMove={[Function]}
+                  onTouchStart={[Function]}
+                  style={
+                    Object {
+                      "backgroundColor": "transparent",
+                    }
+                  }
+                  tabIndex={0}
+                  type="button"
                 >
-                  <svg
-                    aria-hidden={true}
-                    className="MuiSvgIcon-root"
-                    focusable="false"
-                    viewBox="0 0 24 24"
+                  <span
+                    className="MuiButton-label"
                   >
-                    <path
-                      d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
-                    />
-                  </svg>
-                </span>
-                Filters
-              </span>
-              <span
-                className="MuiTouchRipple-root"
-              />
-            </button>
+                    <span
+                      className="MuiButton-startIcon MuiButton-iconSizeMedium"
+                    >
+                      <svg
+                        aria-hidden={true}
+                        className="MuiSvgIcon-root"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
+                        />
+                      </svg>
+                    </span>
+                    Filters
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
         <div
-          className="loaderContainer shrunk"
+          className="loaderContainer"
         >
           <div
             className="loader"
@@ -350,16 +356,6 @@ exports[`Devices Component renders correctly 1`] = `
               className="dot dot_4"
             />
           </div>
-        </div>
-        <div
-          className="dashboard-placeholder"
-        >
-          <p>
-            No devices found
-          </p>
-          <p>
-            No devices have been authorized to connect to the Mender server yet.
-          </p>
         </div>
       </div>
     </div>

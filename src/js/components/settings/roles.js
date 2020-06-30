@@ -1,12 +1,29 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import validator from 'validator';
+
 // material ui
-import { Button, Checkbox, Chip, Collapse, FormControlLabel, Table, TableBody, TableCell, TableHead, TableRow, TextField } from '@material-ui/core';
+import {
+  Button,
+  Checkbox,
+  Chip,
+  Collapse,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TextField
+} from '@material-ui/core';
 import { Add as AddIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getGroups, getDynamicGroups } from '../../actions/deviceActions';
 import { createRole, editRole, getRoles, removeRole } from '../../actions/userActions';
+import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 
 export class RoleManagement extends React.Component {
   constructor(props, context) {
@@ -17,7 +34,8 @@ export class RoleManagement extends React.Component {
       allowUserManagement: false,
       groups: props.groups.map(group => ({ name: group, selected: false })),
       description: '',
-      name: ''
+      name: '',
+      nameInput: ''
     };
     if (!props.groups.length) {
       props.getDynamicGroups();
@@ -37,6 +55,7 @@ export class RoleManagement extends React.Component {
       adding: true,
       editing: false,
       name: '',
+      nameInput: '',
       description: '',
       allowUserManagement: false,
       groups: this.props.groups.map(group => ({ name: group, selected: false }))
@@ -48,6 +67,7 @@ export class RoleManagement extends React.Component {
       adding: false,
       editing: true,
       name: role.id,
+      nameInput: role.id,
       description: role.description,
       allowUserManagement: role.allowUserManagement,
       groups: this.props.groups.map(group => ({ name: group, selected: role.groups.indexOf(group) !== -1 }))
@@ -97,9 +117,19 @@ export class RoleManagement extends React.Component {
     this.setState({ groups });
   }
 
+  validateNameChange(e) {
+    const value = e.target.value;
+    if (value && validator.isWhitelisted(value, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-')) {
+      this.setState({ name: value });
+    } else {
+      this.setState({ name: '' });
+    }
+    this.setState({ nameInput: value });
+  }
+
   render() {
     const self = this;
-    const { adding, editing, allowUserManagement, description, groups, name } = self.state;
+    const { adding, editing, allowUserManagement, description, groups, name, nameInput } = self.state;
     const { roles } = self.props;
     return (
       <div>
@@ -133,14 +163,17 @@ export class RoleManagement extends React.Component {
         {!adding && <Chip className="margin-top-small" color="primary" icon={<AddIcon />} label="Add a role" onClick={() => self.addRole()} />}
         <Collapse in={adding || editing} className="margin-right-small filter-wrapper" classes={{ wrapperInner: 'margin-bottom-small margin-right' }}>
           <h4 style={{ marginTop: 5 }}>{adding ? 'Add a' : 'Edit the'} role</h4>
-          <TextField
-            label="Role name"
-            id="role-name"
-            value={name}
-            disabled={editing}
-            onChange={e => self.setState({ name: e.target.value })}
-            style={{ marginTop: 0, marginRight: 30 }}
-          />
+          <FormControl style={{ marginTop: '0' }}>
+            <TextField
+              label="Role name"
+              id="role-name"
+              value={nameInput}
+              disabled={editing}
+              onChange={e => self.validateNameChange(e)}
+              style={{ marginTop: 0, marginRight: 30 }}
+            />
+            {name != nameInput && <FormHelperText>Valid characters are a-z, A-Z, 0-9, _ and -</FormHelperText>}
+          </FormControl>
           <TextField
             label="Description"
             id="role-description"
@@ -192,8 +225,10 @@ export class RoleManagement extends React.Component {
 const actionCreators = { createRole, editRole, getDynamicGroups, getGroups, getRoles, removeRole, setSnackbar };
 
 const mapStateToProps = state => {
+  // eslint-disable-next-line no-unused-vars
+  const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
-    groups: Object.keys(state.devices.groups.byId),
+    groups: Object.keys(groups),
     isHosted: state.app.features.isHosted,
     org: state.users.organization,
     roles: Object.entries(state.users.rolesById).map(([id, role]) => ({ id, ...role }))

@@ -8,7 +8,7 @@ import DistributionReport from './widgets/distribution';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import { getAllDynamicGroupDevices, getAllGroupDevices, selectGroup } from '../../actions/deviceActions';
 import { saveUserSettings } from '../../actions/userActions';
-import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 
 export const defaultReports = [{ group: null, attribute: 'artifact_name', type: 'distribution' }];
 
@@ -20,8 +20,7 @@ const defaultChartStyle = {
   cursor: 'initial',
   height: 280,
   justifyContent: 'initial',
-  padding: 0,
-  width: 380
+  padding: 0
 };
 
 export class SoftwareDistribution extends React.Component {
@@ -91,7 +90,7 @@ export class SoftwareDistribution extends React.Component {
                   devices={devices}
                   groups={groups}
                   group={report.group}
-                  key={`report-${report.group}`}
+                  key={`report-${report.group}-${index}`}
                   onClick={() => self.removeReport(index)}
                   selectGroup={selectGroup}
                   style={defaultChartStyle}
@@ -116,11 +115,13 @@ const actionCreators = { getAllDynamicGroupDevices, getAllGroupDevices, saveUser
 const mapStateToProps = state => {
   const plan = state.users.organization ? state.users.organization.plan : 'os';
   const reports = state.users.globalSettings[state.users.currentUser]?.reports || state.users.globalSettings[`${state.users.currentUser}-reports`] || [];
+  // eslint-disable-next-line no-unused-vars
+  const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
     attributes: state.devices.filteringAttributes.inventoryAttributes.concat(state.devices.filteringAttributes.identityAttributes) || [],
     devices: state.devices.byId,
     hasDevices: state.devices.byStatus[DEVICE_STATES.accepted].total,
-    groups: state.devices.groups.byId,
+    groups,
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
     reports
   };

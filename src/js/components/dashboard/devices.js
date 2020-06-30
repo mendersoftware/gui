@@ -79,7 +79,7 @@ export class Devices extends React.Component {
 
   render() {
     const { deltaActivity } = this.state;
-    const { acceptedDevicesCount, inactiveDevicesCount, onboardingComplete, pendingDevicesCount, setShowConnectingDialog, showHelptips } = this.props;
+    const { acceptedDevicesCount, inactiveDevicesCount, pendingDevicesCount, setShowConnectingDialog, showHelptips } = this.props;
     const noDevicesAvailable = !(acceptedDevicesCount + pendingDevicesCount > 0);
     let onboardingComponent = null;
     if (this.anchor) {
@@ -95,7 +95,6 @@ export class Devices extends React.Component {
         onboardingComponent = getOnboardingComponentFor('dashboard-onboarding-pendings', { anchor });
       }
     }
-    const redirectionRoute = onboardingComplete ? '/help/getting-started' : '/devices';
     return (
       <div>
         <h4 className="dashboard-header">
@@ -113,15 +112,10 @@ export class Devices extends React.Component {
           )}
           <AcceptedDevices devicesCount={acceptedDevicesCount} inactiveCount={inactiveDevicesCount} delta={deltaActivity} onClick={this.props.clickHandle} />
           <RedirectionWidget
-            target={redirectionRoute}
-            content={`Learn how to connect ${onboardingComplete ? 'more devices' : 'a device'}`}
-            buttonContent={onboardingComplete ? 'Learn more' : 'Connect a device'}
-            onClick={() => {
-              if (onboardingComplete) {
-                return this.props.clickHandle({ route: redirectionRoute });
-              }
-              setShowConnectingDialog(true);
-            }}
+            target="/devices"
+            content="Learn how to connect a device"
+            buttonContent="Connect a device"
+            onClick={() => setShowConnectingDialog(true)}
             isActive={noDevicesAvailable}
           />
         </div>
@@ -139,7 +133,6 @@ const mapStateToProps = state => {
     deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
     inactiveDevicesCount: state.devices.byStatus.inactive.total,
-    onboardingComplete: state.users.onboarding.complete,
     pendingDevicesCount: state.devices.byStatus.pending.total,
     showHelptips: state.users.showHelptips
   };

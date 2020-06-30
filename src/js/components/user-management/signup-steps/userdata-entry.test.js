@@ -1,11 +1,11 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import Confirmation from './confirmation';
 import { undefineds } from '../../../../../tests/mockData';
+import UserDataEntry from './userdata-entry';
 
-describe('Group-creation-confirmation Component', () => {
+describe('Login Component', () => {
   it('renders correctly', () => {
-    const tree = renderer.create(<Confirmation newGroup="test" onConfirm={jest.fn} />).toJSON();
+    const tree = renderer.create(<UserDataEntry setSnackbar={jest.fn} onSubmit={jest.fn} />).toJSON();
     expect(tree).toMatchSnapshot();
     expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });

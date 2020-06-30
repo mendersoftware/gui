@@ -41,18 +41,20 @@ module.exports = {
   DEVICE_FILTERING_OPTIONS: {
     $eq: { title: 'equals', shortform: '=' },
     $ne: { title: 'not equal', shortform: '!=' },
-    $gt: { title: '>', shortform: '>' },
-    $gte: { title: '>=', shortform: '>=' },
-    $lt: { title: '<', shortform: '<' },
-    $lte: { title: '<=', shortform: '<=' },
-    $in: { title: 'in', shortform: 'in' },
-    $nin: { title: 'not in', shortform: 'not in' },
-    $exists: { title: 'exists', shortform: 'exists' }
+    $gt: { title: '>', shortform: '>', help: 'The "greater than" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.' },
+    $gte: { title: '>=', shortform: '>=', help: 'The "greater than or equal" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.' },
+    $lt: { title: '<', shortform: '<', help: 'The "lesser than" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.' },
+    $lte: { title: '<=', shortform: '<=', help: 'The "lesser than or equal" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.' },
+    $in: { title: 'in', shortform: 'in', help: 'The "in" operator accepts a list of comma-separated values. It matches if the selected field is equal to one of the specified values.' },
+    $nin: { title: 'not in', shortform: 'not in', help: 'The "not in" operator accepts a list of comma-separated values. It matches if the selected field\'s value is not equal to any of the specified options.' },
+    $exists: { title: 'exists', shortform: 'exists', value: '1', help: 'The "exists" operator matches if the selected field\'s value has a value. No value needs to be provided for this operator.' },
+    $nexists: { title: 'doesn\'t exist', shortform: 'doesn\'t exist', value: '1', help: 'The "doesn\'t exist" operator matches if the selected field\'s value has no value. No value needs to be provided for this operator.' }
   },
   DEVICE_STATES: {
     accepted: 'accepted',
     pending: 'pending',
     preauth: 'preauthorized',
     rejected: 'rejected'
-  }
+  },
+  UNGROUPED_GROUP: { id: '*|=ungrouped=|*', name: 'Unassigned' }
 };

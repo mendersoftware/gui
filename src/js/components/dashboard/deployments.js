@@ -119,12 +119,6 @@ export class Deployments extends React.Component {
             <Loader show={loading} fade={true} />
           ) : (
             <div style={this.props.styles}>
-              <CompletedDeployments
-                onClick={deploymentsTimeframe => self.props.clickHandle(deploymentsTimeframe)}
-                deployments={finished}
-                cutoffDate={lastDeploymentCheck}
-                innerRef={ref => (this.deploymentsRef = ref)}
-              />
               <BaseWidget
                 className={inprogressCount ? 'current-widget active' : 'current-widget'}
                 main={activeWidgetMain}
@@ -134,6 +128,12 @@ export class Deployments extends React.Component {
                 className={pendingCount ? 'current-widget pending' : 'current-widget'}
                 main={pendingWidgetMain}
                 onClick={() => self.props.clickHandle({ route: 'deployments/active' })}
+              />
+              <CompletedDeployments
+                onClick={deploymentsTimeframe => self.props.clickHandle(deploymentsTimeframe)}
+                deployments={finished}
+                cutoffDate={lastDeploymentCheck}
+                innerRef={ref => (this.deploymentsRef = ref)}
               />
               <RedirectionWidget
                 target={'/deployments/active?open=true'}

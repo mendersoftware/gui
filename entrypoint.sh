@@ -30,6 +30,8 @@ cat >/var/www/mender-gui/dist/env.js <<EOF
       isHosted: "$MENDER_HOSTED"
     },
     trackerCode: "$TRACKER_CODE",
+    recaptchaSiteKey: "$RECAPTCHA_SITE_KEY",
+    stripeAPIKey: "$STRIPE_API_KEY",
     integrationVersion: "$INTEGRATION_VERSION",
     menderVersion: "$MENDER_VERSION",
     menderArtifactVersion: "$MENDER_ARTIFACT_VERSION",
