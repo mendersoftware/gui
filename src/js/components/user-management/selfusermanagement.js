@@ -13,6 +13,7 @@ import { editUser, saveGlobalSettings, saveUserSettings } from '../../actions/us
 
 import { preformatWithRequestID } from '../../helpers';
 
+import { OAuth2Providers } from './oauth2providers';
 import TwoFactorAuthSetup from './twofactorauthsetup';
 
 export class SelfUserManagement extends React.Component {
@@ -67,6 +68,8 @@ export class SelfUserManagement extends React.Component {
     const { editEmail, editPass, emailFormId, qrExpanded } = self.state;
     const { canHave2FA, currentUser, has2FA, hasTracking, hasTrackingConsent, isEnterprise, saveUserSettings } = self.props;
     const email = currentUser.email;
+    const isOAuth2 = !!currentUser.login;
+    const provider = isOAuth2 ? OAuth2Providers.find(provider => !!currentUser.login[provider.id]) : null;
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
         <h2 className="margin-top-small">My profile</h2>
@@ -80,9 +83,11 @@ export class SelfUserManagement extends React.Component {
               defaultValue={email}
               style={{ width: '400px', maxWidth: '100%' }}
             />
-            <Button className="inline-block" color="primary" id="change_email" style={{ margin: '30px 0 0 15px' }} onClick={() => self.handleEmail()}>
-              Change email
-            </Button>
+            {!isOAuth2 && (
+              <Button className="inline-block" color="primary" id="change_email" style={{ margin: '30px 0 0 15px' }} onClick={() => self.handleEmail()}>
+                Change email
+              </Button>
+            )}
           </div>
         ) : (
           <Form
@@ -107,7 +112,7 @@ export class SelfUserManagement extends React.Component {
             />
           </Form>
         )}
-        {!editPass ? (
+        {!isOAuth2 && (!editPass ? (
           <form className="flexbox space-between">
             <TextField
               label="Password"
@@ -142,9 +147,8 @@ export class SelfUserManagement extends React.Component {
               edit={false}
             />
           </Form>
-        )}
-
-        {canHave2FA ? (
+        ))}
+        {!isOAuth2 && (canHave2FA ? (
           <div className="margin-top">
             <div
               className="clickable flexbox space-between"
@@ -166,6 +170,17 @@ export class SelfUserManagement extends React.Component {
             recommendedPlan={canHave2FA ? 'professional' : null}
             benefit="set up Two Factor Authentication to add an additional layer of security to accounts"
           />
+        ))}
+        {isOAuth2 && (
+          <div className="flexbox margin-top">
+            <div style={{ fontSize: '36px', marginRight: '10px' }}>
+              {provider.icon}
+            </div>
+            <div className="info">
+              You are logging in using your <strong>{provider.name}</strong> account.<br />
+              Please connect to {provider.name} to update your login settings.
+            </div>
+          </div>
         )}
         {isEnterprise && hasTracking && (
           <div className="margin-top">
