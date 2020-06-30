@@ -54,17 +54,18 @@ export class Header extends React.Component {
     this.cookies = new Cookies();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     const sessionId = this.cookies.get('JWT');
     const { hasTrackingEnabled, organization, trackingCode, user } = this.props;
     if ((!sessionId || !user || !user.id || !user.email.length) && !this.state.gettingUser && !this.state.loggingOut) {
       this._updateUsername();
     }
-    if (prevProps.hasTrackingEnabled !== hasTrackingEnabled && trackingCode && hasTrackingEnabled && user.id && organization.id) {
-      Tracking.initialize(trackingCode);
-      Tracking.set({ tenant: organization.id });
-      Tracking.set({ plan: organization.plan });
-      Tracking.set({ userId: user.id });
+    if (hasTrackingEnabled && user.id && organization.id) {
+      if (Tracking.initialize(trackingCode)) {
+        Tracking.set({ tenant: organization.id });
+        Tracking.set({ plan: organization.plan });
+        Tracking.set({ userId: user.id });
+      }
     }
   }
 

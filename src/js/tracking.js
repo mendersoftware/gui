@@ -15,8 +15,12 @@ class Tracker {
         }
     }
     initialize(trackingCode) {
+        if (this.initialized) {
+            return false;
+          }
         ReactGA.initialize(trackingCode);
         this.initialized = true;
+        return true;
     }
     pageview(data) {
         if (this.initialized) {
