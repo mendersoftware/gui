@@ -1,7 +1,7 @@
 import React from 'react';
 
 // material ui
-import { IconButton, MenuItem, Select, TextField } from '@material-ui/core';
+import { IconButton, MenuItem, Select, TextField, FormHelperText } from '@material-ui/core';
 import { HighlightOff as HighlightOffIcon } from '@material-ui/icons';
 import { Autocomplete, createFilterOptions } from '@material-ui/lab';
 
@@ -73,7 +73,9 @@ export default class FilterItem extends React.Component {
 
   updateFilterOperator(value) {
     const self = this;
-    self.setState({ operator: value }, () => self.notifyFilterUpdate());
+    const operator = DEVICE_FILTERING_OPTIONS[value] || {};
+    const opValue = operator.value !== 'undefined' ? operator.value : this.state.value;
+    self.setState({ operator: value, value: opValue }, () => self.notifyFilterUpdate());
   }
 
   updateFilterValue(value) {
@@ -108,64 +110,77 @@ export default class FilterItem extends React.Component {
     const { attributes, filters, loading, plan } = self.props;
     const { key, operator, reset, value } = self.state;
     const filterOptions = plan ? filterOptionsByPlan[plan] : DEVICE_FILTERING_OPTIONS;
+    const operatorHelpMessage = (DEVICE_FILTERING_OPTIONS[operator] || {}).help || '';
+    const showValue = typeof (filterOptions[operator] || {}).value === 'undefined';
     return (
-      <div className="flexbox" style={{ alignItems: 'center' }}>
-        <Autocomplete
-          autoComplete
-          autoHighlight
-          autoSelect
-          freeSolo
-          filterSelectedOptions
-          filterOptions={(options, params) => {
-            const filtered = filter(options, params);
-            if (filtered.length !== 1 && params.inputValue !== '') {
-              filtered.push({
-                inputValue: params.inputValue,
-                key: 'custom',
-                value: `Use "${params.inputValue}"`,
-                category: 'custom',
-                priority: 99
-              });
-            }
-            return filtered;
-          }}
-          groupBy={option => option.category}
-          getOptionLabel={option => option.value || option.key || option}
-          id="filter-selection"
-          includeInputInList={true}
-          onChange={(e, changedValue) => {
-            if (changedValue && changedValue.inputValue) {
-              // only circumvent updateFilterKey if we deal with a custom attribute - those will be treated as inventory attributes
-              return self.setState({ key: changedValue.inputValue, scope: defaultScope }, () => self.notifyFilterUpdate());
-            }
-            self.updateFilterKey(changedValue && changedValue.key ? changedValue.key : changedValue);
-          }}
-          options={filters.sort((a, b) => a.priority - b.priority)}
-          renderInput={params => <TextField {...params} label="Attribute" style={textFieldStyle} />}
-          key={reset}
-          value={getFilterLabelByKey(key, attributes)}
-        />
-        <Select className="margin-left-small margin-right-small" onChange={event => self.updateFilterOperator(event.target.value)} value={operator}>
-          {Object.entries(filterOptions).map(([optionKey, option]) => (
-            <MenuItem key={optionKey} value={optionKey}>
-              {option.title}
-            </MenuItem>
-          ))}
-        </Select>
-        <TextField
-          label="Value"
-          value={value}
-          onChange={e => self.updateFilterValue(e.target.value)}
-          InputLabelProps={{ shrink: !!value }}
-          style={textFieldStyle}
-        />
-        {!!key && (
-          <IconButton className="margin-left" onClick={() => self._removeFilter()} size="small">
-            <HighlightOffIcon />
-          </IconButton>
+      <>
+        <div className="flexbox" style={{ alignItems: 'center' }}>
+          <Autocomplete
+            autoComplete
+            autoHighlight
+            autoSelect
+            freeSolo
+            filterSelectedOptions
+            filterOptions={(options, params) => {
+              const filtered = filter(options, params);
+              if (filtered.length !== 1 && params.inputValue !== '') {
+                filtered.push({
+                  inputValue: params.inputValue,
+                  key: 'custom',
+                  value: `Use "${params.inputValue}"`,
+                  category: 'custom',
+                  priority: 99
+                });
+              }
+              return filtered;
+            }}
+            groupBy={option => option.category}
+            getOptionLabel={option => option.value || option.key || option}
+            id="filter-selection"
+            includeInputInList={true}
+            onChange={(e, changedValue) => {
+              if (changedValue && changedValue.inputValue) {
+                // only circumvent updateFilterKey if we deal with a custom attribute - those will be treated as inventory attributes
+                return self.setState({ key: changedValue.inputValue, scope: defaultScope }, () => self.notifyFilterUpdate());
+              }
+              self.updateFilterKey(changedValue && changedValue.key ? changedValue.key : changedValue);
+            }}
+            options={filters.sort((a, b) => a.priority - b.priority)}
+            renderInput={params => <TextField {...params} label="Attribute" style={textFieldStyle} />}
+            key={reset}
+            value={getFilterLabelByKey(key, attributes)}
+          />
+          <Select className="margin-left-small margin-right-small" onChange={event => self.updateFilterOperator(event.target.value)} value={operator}>
+            {Object.entries(filterOptions).map(([optionKey, option]) => (
+              <MenuItem key={optionKey} value={optionKey}>
+                {option.title}
+              </MenuItem>
+            ))}
+          </Select>
+          {showValue && (
+            <TextField
+              label="Value"
+              value={value}
+              onChange={e => self.updateFilterValue(e.target.value)}
+              InputLabelProps={{ shrink: !!value }}
+              style={textFieldStyle}
+            />
+          )}
+          {!!key && (
+            <IconButton className="margin-left" onClick={() => self._removeFilter()} size="small">
+              <HighlightOffIcon />
+            </IconButton>
+          )}
+          <Loader show={loading} />
+        </div>
+        {operatorHelpMessage && (
+          <div className="margin-bottom-small">
+            <FormHelperText>
+              {operatorHelpMessage}
+            </FormHelperText>
+          </div>
         )}
-        <Loader show={loading} />
-      </div>
+      </>
     );
   }
 }
