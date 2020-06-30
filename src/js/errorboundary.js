@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactGA from 'react-ga';
+import Tracking from './tracking';
 
 export default class ErrorBoundary extends React.Component {
   constructor(props, context) {
@@ -9,7 +9,7 @@ export default class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, info) {
     this.setState({ error, info });
-    ReactGA.exception(error);
+    Tracking.exception(error);
   }
 
   render() {
