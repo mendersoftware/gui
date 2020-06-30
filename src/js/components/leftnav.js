@@ -84,12 +84,9 @@ export class LeftNav extends React.PureComponent {
 }
 
 const mapStateToProps = state => {
-  let docsVersion = '';
-  if (!state.app.features.isHosted) {
-    docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
-  }
+  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
-    docsVersion,
+    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion,
     versionInformation: state.app.versionInformation
   };
 };

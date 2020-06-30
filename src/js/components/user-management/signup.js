@@ -12,7 +12,7 @@ import { loginUser } from '../../actions/userActions';
 import Loader from '../common/loader';
 import UserDataEntry from './signup-steps/userdata-entry';
 import OrgDataEntry from './signup-steps/orgdata-entry';
-import { providers } from './login';
+import { OAuth2Providers } from './oauth2providers';
 
 export class Signup extends React.Component {
   constructor(props, context) {
@@ -99,7 +99,7 @@ export class Signup extends React.Component {
     if (redirectToReferrer) {
       return <Redirect to={from} />;
     }
-    const provider = providers.find(item => item.id.toLowerCase() === oauthProvider);
+    const provider = OAuth2Providers.find(item => item.id === oauthProvider);
     return (
       <div className="full-screen">
         <div id="signup-box">
@@ -123,7 +123,7 @@ export class Signup extends React.Component {
                     href={`/api/management/v1/useradm/oauth2/${provider.id.toLowerCase()}`}
                     startIcon={provider.icon}
                   >
-                    {provider.id}
+                    {provider.name}
                   </Button>
                 </div>
               )}

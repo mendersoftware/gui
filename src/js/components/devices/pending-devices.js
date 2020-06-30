@@ -186,9 +186,8 @@ export class Pending extends React.Component {
       }
       if (selectedRows && this.authorizeRef) {
         const anchor = {
-          left: this.authorizeRef.offsetParent.offsetLeft + this.authorizeRef.offsetLeft,
-          top:
-            this.authorizeRef.offsetParent.offsetTop + this.authorizeRef.offsetParent.offsetHeight - this.authorizeRef.firstElementChild.offsetHeight / 2 - 15
+          left: this.authorizeRef.offsetParent.offsetLeft - this.authorizeRef.firstElementChild.offsetWidth,
+          top: this.authorizeRef.offsetParent.offsetTop + this.authorizeRef.firstElementChild.offsetHeight - 15
         };
         onboardingComponent = getOnboardingComponentFor('devices-pending-accepting-onboarding', { place: 'left', anchor });
       }

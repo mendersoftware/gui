@@ -113,9 +113,7 @@ export class ExpandedDevice extends React.Component {
     }
     this.setState({ filterByArtifact: filteredDevs });
   }
-  _clickLink() {
-    window.location.assign(`https://docs.mender.io/${this.props.docsVersion}/client-configuration/configuration-file/polling-intervals`);
-  }
+
   _copyLinkToClipboard() {
     var location = window.location.href.substring(0, window.location.href.indexOf('/devices') + '/devices'.length);
     copy(`${location}/id=${this.props.device.id}`);
@@ -153,7 +151,7 @@ export class ExpandedDevice extends React.Component {
 
   render() {
     const self = this;
-    const { className, device, highlightHelp, id_attribute, id_value, limitMaxed, setSnackbar, showHelptips, unauthorized } = self.props;
+    const { className, device, docsVersion, highlightHelp, id_attribute, id_value, limitMaxed, setSnackbar, showHelptips, unauthorized } = self.props;
     const { auth_sets, attributes, created_ts, id, identity_data, status = DEVICE_STATES.accepted } = device;
 
     let deviceIdentity = [<ExpandableAttribute key="id_checksum" primary="Device ID" secondary={id || '-'} />];
@@ -201,7 +199,7 @@ export class ExpandedDevice extends React.Component {
             <p>Inventory data not yet received from the device - this can take up to 30 minutes with default installation.</p>
             <p>
               Also see the documentation for{' '}
-              <a onClick={() => this._clickLink()} href="https://docs.mender.io/client-configuration/configuration-file/polling-intervals">
+              <a href={`https://docs.mender.io/${docsVersion}client-configuration/configuration-file/polling-intervals`} target="_blank">
                 Polling intervals
               </a>
               .
@@ -322,7 +320,7 @@ export class ExpandedDevice extends React.Component {
           </p>
           <p>
             In cases such as key rotation, each device may have more than one identity/key combination listed. See the documentation for more on{' '}
-            <a onClick={() => this._clickLink()} href="https://docs.mender.io/architecture/device-authentication">
+            <a href={`https://docs.mender.io/${docsVersion}overview/device-authentication`} target="_blank">
               Device authentication
             </a>
             .
@@ -384,8 +382,9 @@ export class ExpandedDevice extends React.Component {
 const actionCreators = { decommissionDevice, getReleases, selectDevice, setSnackbar };
 
 const mapStateToProps = state => {
+  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
-    docsVersion: state.app.docsVersion,
+    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion,
     onboardingComplete: state.users.onboarding.complete,
     showHelptips: state.users.showHelptips
   };

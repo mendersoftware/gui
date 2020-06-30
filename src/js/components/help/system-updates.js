@@ -37,7 +37,7 @@ const SystemUpdates = ({ docsVersion = '' }) => (
 
     <p>
       You can learn more about Mender&#39;s A&#47;B partition architecture{' '}
-      <a href={`https://docs.mender.io/${docsVersion}architecture/overview`} target="_blank">
+      <a href={`https://docs.mender.io/${docsVersion}overview/introduction`} target="_blank">
         here
       </a>
       .

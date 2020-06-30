@@ -6,7 +6,7 @@ import Form from '../../common/forms/form';
 import TextInput from '../../common/forms/textinput';
 import PasswordInput from '../../common/forms/passwordinput';
 
-import { providers } from '../login';
+import { OAuth2Providers } from '../oauth2providers';
 
 export class UserDataEntry extends React.Component {
   constructor(props, context) {
@@ -40,15 +40,15 @@ export class UserDataEntry extends React.Component {
         </h2>
         <div className="flexbox centered margin-bottom">Sign up with:</div>
         <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-          {providers.map(provider => (
+          {OAuth2Providers.map(provider => (
             <Button
               className="oauth-provider"
               variant="contained"
               key={provider.id}
-              href={`/api/management/v1/useradm/oauth2/${provider.id.toLowerCase()}`}
+              href={`/api/management/v1/useradm/oauth2/${provider.id}`}
               startIcon={provider.icon}
             >
-              {provider.id}
+              {provider.name}
             </Button>
           ))}
         </div>
