@@ -1,9 +1,7 @@
 import Cookies from 'universal-cookie';
 import { unauthorizedRedirect } from '../auth';
 const cookies = new Cookies();
-var request = require('superagent')
-  .agent()
-  .use(unauthorizedRedirect);
+var request = require('superagent').agent().use(unauthorizedRedirect);
 
 export const headerNames = {
   link: 'link',
@@ -19,7 +17,7 @@ const endHandler = (error, res, reject, resolve) => {
     return reject({ error, res });
   }
   return resolve(res);
-}
+};
 
 const Api = {
   get: url => {
@@ -35,12 +33,24 @@ const Api = {
         .end((error, res) => endHandler(error, res, reject, resolve));
     });
   },
-  delete: url => {
+  delete: (url, data) => {
     const token = cookies.get('JWT');
     return new Promise((resolve, reject) =>
       request
         .del(url)
         .auth(token, { type: 'bearer' })
+        .send(data)
+        .end((error, res) => endHandler(error, res, reject, resolve))
+    );
+  },
+  patch: (url, data) => {
+    const token = cookies.get('JWT');
+    return new Promise((resolve, reject) =>
+      request
+        .patch(url)
+        .auth(token, { type: 'bearer' })
+        .set('Content-Type', 'application/json')
+        .send(data)
         .end((error, res) => endHandler(error, res, reject, resolve))
     );
   },

@@ -4,7 +4,6 @@ import { Link, withRouter } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import Linkify from 'react-linkify';
 import ReactTooltip from 'react-tooltip';
-import ReactGA from 'react-ga';
 
 import { Button, IconButton, ListItemText, ListItemSecondaryAction, Menu, MenuItem, Toolbar } from '@material-ui/core';
 
@@ -42,6 +41,8 @@ import {
 
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 
+import Tracking from '../../tracking';
+
 export class Header extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -53,17 +54,18 @@ export class Header extends React.Component {
     this.cookies = new Cookies();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     const sessionId = this.cookies.get('JWT');
     const { hasTrackingEnabled, organization, trackingCode, user } = this.props;
     if ((!sessionId || !user || !user.id || !user.email.length) && !this.state.gettingUser && !this.state.loggingOut) {
       this._updateUsername();
     }
-    if (prevProps.hasTrackingEnabled !== hasTrackingEnabled && trackingCode && hasTrackingEnabled && user.id && organization.id) {
-      ReactGA.initialize(trackingCode);
-      ReactGA.set({ tenant: organization.id });
-      ReactGA.set({ plan: organization.plan });
-      ReactGA.set({ userId: user.id });
+    if (hasTrackingEnabled && user.id && organization.id) {
+      if (Tracking.initialize(trackingCode)) {
+        Tracking.set({ tenant: organization.id });
+        Tracking.set({ plan: organization.plan });
+        Tracking.set({ userId: user.id });
+      }
     }
   }
 

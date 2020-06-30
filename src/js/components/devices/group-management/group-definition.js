@@ -34,7 +34,7 @@ export default class GroupDefinition extends React.Component {
 
   render() {
     const self = this;
-    const { isModification, groups, newGroup, selectedGroup } = self.props;
+    const { isCreationDynamic, isModification, groups, newGroup, selectedGroup } = self.props;
     const filteredGroups = groups.filter(group => group !== selectedGroup);
     const { errortext } = self.state;
     return (
@@ -51,9 +51,11 @@ export default class GroupDefinition extends React.Component {
           )}
         />
         <FormHelperText>{errortext}</FormHelperText>
-        <p className="info">
-          Note: specific devices can&apos;t be added to dynamic groups. <Link to="/help/devices">Learn more about static vs. dynamic groups</Link>
-        </p>
+        {isCreationDynamic && (
+          <p className="info">
+            Note: individual devices can&apos;t be added to dynamic groups. <Link to="/help/devices">Learn more about static vs. dynamic groups</Link>
+          </p>
+        )}
       </>
     );
   }

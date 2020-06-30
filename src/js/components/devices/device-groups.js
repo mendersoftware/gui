@@ -7,13 +7,12 @@ import CreateGroup from './create-group';
 import Groups from './groups';
 import RemoveGroup from './remove-group';
 import {
-  addDeviceToGroup,
   addDynamicGroup,
   addStaticGroup,
   getDynamicGroups,
   getGroups,
   initializeGroupsDevices,
-  removeDeviceFromGroup,
+  removeDevicesFromGroup,
   removeDynamicGroup,
   removeStaticGroup,
   selectGroup,
@@ -21,13 +20,14 @@ import {
 } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 
-import { isEmpty, preformatWithRequestID } from '../../helpers';
+import { preformatWithRequestID } from '../../helpers';
+import CreateGroupExplainer from './create-group-explainer';
 
 export class DeviceGroups extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      createGroupDialog: false,
+      createGroupExplanation: false,
       groupInvalid: true,
       modifyGroupDialog: false,
       removeGroup: false,
@@ -73,18 +73,6 @@ export class DeviceGroups extends React.Component {
       .catch(err => console.log(err));
   }
 
-  _removeSingleDevice(idx, length, device, isGroupRemoval = false) {
-    // remove single device from group
-    var self = this;
-    return self.props.removeDeviceFromGroup(device, this.props.selectedGroup).then(() => {
-      if (idx === length - 1 && !isGroupRemoval) {
-        // if isGroupRemoval, whole group is being removed
-        self.props.setSnackbar(`The ${pluralize('devices', length)} ${pluralize('were', length)} removed from the group`, 5000);
-      }
-      return Promise.resolve();
-    });
-  }
-
   // Edit groups from device selection
   _addDevicesToGroup(tmpDevices) {
     // (save selected devices in state, open dialog)
@@ -97,7 +85,7 @@ export class DeviceGroups extends React.Component {
     return request
       .then(() => {
         // reached end of list
-        self.setState({ createGroupDialog: false, modifyGroupDialog: false, fromFilters: false, tmpGroup: '', selectedField: '' }, () => {
+        self.setState({ createGroupExplanation: false, modifyGroupDialog: false, fromFilters: false, tmpGroup: '', selectedField: '' }, () => {
           self.props.setSnackbar('The group was updated successfully', 5000);
           self._refreshGroups();
         });
@@ -113,22 +101,26 @@ export class DeviceGroups extends React.Component {
     if (this.props.selectedGroup) {
       return this.props.updateDynamicGroup(this.props.selectedGroup, this.props.filters);
     }
-    this.setState({ createGroupDialog: true, fromFilters: true });
+    this.setState({ modifyGroupDialog: true, fromFilters: true });
   }
 
   _removeDevicesFromGroup(devices) {
-    var self = this;
+    const self = this;
     clearInterval(self.deviceTimer);
     const isGroupRemoval = devices.length >= self.props.groupCount;
-    const deviceRemovals = devices.map((device, i) => self._removeSingleDevice(i, devices.length, device, isGroupRemoval));
-    return Promise.all(deviceRemovals)
+    let request;
+    if (isGroupRemoval) {
+      request = self.props.removeStaticGroup(self.props.selectedGroup);
+    } else {
+      request = self.props.removeDevicesFromGroup(self.props.selectedGroup, devices);
+    }
+    return request
       .then(() => {
-        // if devices.length === groupCount
-        // group now empty, go to all devices
         if (isGroupRemoval) {
           self.props.setSnackbar('Group was removed successfully', 5000);
           self.props.getGroups();
-          self._handleGroupChange();
+        } else {
+          self.props.setSnackbar(`The ${pluralize('devices', devices.length)} ${pluralize('were', devices.length)} removed from the group`, 5000);
         }
       })
       .catch(err => console.log(err));
@@ -136,8 +128,8 @@ export class DeviceGroups extends React.Component {
 
   render() {
     const self = this;
-    const { acceptedCount, groups, groupsById, openSettingsDialog, selectedGroup, showHelptips } = self.props;
-    const { createGroupDialog, fromFilters, modifyGroupDialog, removeGroup, tmpDevices } = self.state;
+    const { acceptedCount, groups, groupsById, isEnterprise, openSettingsDialog, selectedGroup, showHelptips } = self.props;
+    const { createGroupExplanation, fromFilters, modifyGroupDialog, removeGroup, tmpDevices } = self.state;
     return (
       <div className="tab-container">
         <div className="leftFixed">
@@ -145,7 +137,7 @@ export class DeviceGroups extends React.Component {
             acceptedCount={acceptedCount}
             changeGroup={group => self._handleGroupChange(group)}
             groups={groupsById}
-            openGroupDialog={() => self.setState({ createGroupDialog: !createGroupDialog })}
+            openGroupDialog={() => self.setState({ createGroupExplanation: true })}
             selectedGroup={selectedGroup}
             showHelptips={showHelptips}
           />
@@ -160,29 +152,29 @@ export class DeviceGroups extends React.Component {
           />
         </div>
         {removeGroup && <RemoveGroup onClose={() => self.setState({ removeGroup: !removeGroup })} onRemove={() => self._removeCurrentGroup()} />}
-        {(createGroupDialog || modifyGroupDialog) && (
+        {modifyGroupDialog && (
           <CreateGroup
             addListOfDevices={(devices, group) => self._createGroupFromDialog(devices, group)}
             fromFilters={fromFilters}
             groups={groups}
-            isCreation={createGroupDialog || !groups.length}
+            isCreation={fromFilters || !groups.length}
             selectedDevices={tmpDevices}
-            onClose={() => self.setState({ createGroupDialog: false, modifyGroupDialog: false, fromFilters: false, tmpDevices: [] })}
+            onClose={() => self.setState({ modifyGroupDialog: false, fromFilters: false, tmpDevices: [] })}
           />
         )}
+        {createGroupExplanation && <CreateGroupExplainer isEnterprise={isEnterprise} onClose={() => self.setState({ createGroupExplanation: false })} />}
       </div>
     );
   }
 }
 
 const actionCreators = {
-  addDeviceToGroup,
   addDynamicGroup,
   addStaticGroup,
   getDynamicGroups,
   getGroups,
   initializeGroupsDevices,
-  removeDeviceFromGroup,
+  removeDevicesFromGroup,
   removeDynamicGroup,
   removeStaticGroup,
   selectGroup,
@@ -194,7 +186,7 @@ const mapStateToProps = state => {
   let groupCount = state.devices.byStatus.accepted.total;
   let selectedGroup;
   let groupFilters = [];
-  if (!isEmpty(state.devices.groups.selectedGroup)) {
+  if (state.devices.groups.selectedGroup && state.devices.groups.byId[state.devices.groups.selectedGroup]) {
     selectedGroup = state.devices.groups.selectedGroup;
     groupCount = state.devices.groups.byId[selectedGroup].total;
     groupFilters = state.devices.groups.byId[selectedGroup].filters || [];

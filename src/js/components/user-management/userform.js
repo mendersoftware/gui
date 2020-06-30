@@ -12,13 +12,15 @@ import {
   ListItemText,
   InputLabel,
   MenuItem,
-  Select
+  Select,
 } from '@material-ui/core';
 
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
 import { colors } from '../../themes/mender-theme';
+
+import { OAuth2Providers } from './oauth2providers';
 
 export default class UserForm extends React.Component {
   constructor(props, context) {
@@ -78,6 +80,8 @@ export default class UserForm extends React.Component {
       }
       return typeof accu !== 'undefined' ? accu : true;
     }, undefined);
+    const isOAuth2 = !!user.login;
+    const provider = isOAuth2 ? OAuth2Providers.find(provider => !!user.login[provider.id]) : null;
     return (
       <Dialog open={true} fullWidth={true} maxWidth="sm">
         <DialogTitle>{isCreation ? 'Create new user' : 'Edit user'}</DialogTitle>
@@ -92,8 +96,18 @@ export default class UserForm extends React.Component {
             showButtons={true}
             autocomplete="off"
           >
-            <TextInput hint="Email" label="Email" id="email" value={user.email} validations="isLength:1,isEmail" required={isCreation} autocomplete="off" />
-            {editPass ? (
+            <TextInput hint="Email" label="Email" id="email" value={user.email} validations="isLength:1,isEmail" required={isCreation} disabled={isOAuth2} autocomplete="off" />
+            {isOAuth2 ? (
+              <div className="flexbox margin-top-small margin-bottom">
+                <div style={{ fontSize: '36px', marginRight: '10px' }}>
+                  {provider.icon}
+                </div>
+                <div className="info">
+                  This user logs in using his <strong>{provider.name}</strong> account.<br />
+                  He can connect to {provider.name} to update his login settings.
+                </div>
+              </div>
+          ) : (editPass ? (
               <PasswordInput
                 className="edit-pass margin-top-small"
                 id="password_new"
@@ -115,7 +129,7 @@ export default class UserForm extends React.Component {
               >
                 Change password
               </Button>
-            )}
+            ))}
             {isEnterprise && isAdmin ? (
               <div id="roles-form-container">
                 <FormControl id="roles-form">

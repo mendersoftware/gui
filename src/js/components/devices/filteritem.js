@@ -94,7 +94,7 @@ export default class FilterItem extends React.Component {
               value: self.state.value
             })
           : null,
-      300
+      700
     );
   }
 
