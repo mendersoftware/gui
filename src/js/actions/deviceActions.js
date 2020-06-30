@@ -98,13 +98,18 @@ const filterProcessors = {
   $lt: val => Number(val) || val,
   $lte: val => Number(val) || val,
   $in: val => ('' + val).split(','),
-  $nin: val => ('' + val).split(',')
+  $nin: val => ('' + val).split(','),
+  $exists: () => 1,
+  $nexists: () => 0
+};
+const filterAliases = {
+  $nexists: '$exists',
 };
 const mapFiltersToTerms = filters =>
   filters.map(filter => ({
     scope: filter.scope,
     attribute: filter.key,
-    type: filter.operator,
+    type: filterAliases[filter.operator] || filter.operator,
     value: filterProcessors.hasOwnProperty(filter.operator) ? filterProcessors[filter.operator](filter.value) : filter.value
   }));
 const mapTermsToFilters = terms => terms.map(term => ({ scope: term.scope, key: term.attribute, operator: term.type, value: term.value }));

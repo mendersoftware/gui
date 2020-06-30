@@ -139,7 +139,9 @@ export class Filters extends React.Component {
                     className="margin-right-small"
                     key={`filter-${item.key}`}
                     label={`${getFilterLabelByKey(item.key, self.props.attributes)} ${DEVICE_FILTERING_OPTIONS[item.operator].shortform} ${
-                      item.operator === '$regex' ? `${item.value}.*` : item.value
+                      item.operator !== '$exists' && item.operator !== '$nexists' ? (
+                        item.operator === '$regex' ? `${item.value}.*` : item.value
+                      ) : ''
                     }`}
                     onDelete={() => self.removeFilter(item)}
                   />

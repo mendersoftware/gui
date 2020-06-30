@@ -175,9 +175,10 @@ const deviceReducer = (state = initialState, action) => {
       };
     }
     case DeviceConstants.SET_DEVICE_FILTERS: {
+      const filters = action.filters.filter(filter => filter.key && filter.operator && filter.scope && typeof filter.value !== 'undefined');
       return {
         ...state,
-        filters: action.filters
+        filters
       };
     }
 
