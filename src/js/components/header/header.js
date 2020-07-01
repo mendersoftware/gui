@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import Linkify from 'react-linkify';
 import ReactTooltip from 'react-tooltip';
@@ -70,10 +70,7 @@ export class Header extends React.Component {
   }
 
   componentDidMount() {
-    // check logged in user
-    if (this.props.isLoggedIn) {
-      this._updateUsername();
-    }
+    this._updateUsername();
   }
 
   initializeHeaderData() {
@@ -167,10 +164,7 @@ export class Header extends React.Component {
     const self = this;
     self.setState({ gettingUser: false, loggingOut: true, anchorEl: null });
     clearAllRetryTimers(this.props.setSnackbar);
-    self.props
-      .logoutUser()
-      .then(() => logout())
-      .finally(() => self.setState({ loggingOut: false }));
+    self.props.logoutUser().then(() => logout());
   }
   render() {
     const self = this;
@@ -184,7 +178,6 @@ export class Header extends React.Component {
       docsVersion,
       inProgress,
       isEnterprise,
-      location,
       multitenancy,
       organization,
       pendingDevices,
@@ -252,7 +245,7 @@ export class Header extends React.Component {
     const toolbarStyle = { height: '56px', minHeight: 'unset', paddingLeft: '16px', paddingRight: '16px' };
 
     return (
-      <div id="fixedHeader" className={`header ${location.pathname === '/login' || location.pathname == '/signup' ? 'hidden' : ''}`}>
+      <div id="fixedHeader" className="header">
         <Toolbar style={Object.assign({ backgroundColor: '#fff' }, toolbarStyle)}>
           <Toolbar key={0} style={toolbarStyle}>
             <Link to="/" id="logo" className={plan === 'enterprise' || isEnterprise ? 'enterprise' : ''} />
@@ -390,4 +383,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, actionCreators)(Header));
+export default connect(mapStateToProps, actionCreators)(Header);
