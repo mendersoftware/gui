@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import Routes from './routes';
+import { publicRoutes } from './routes';
 import Login from '../components/user-management/login';
 import Settings from '../components/settings/settings';
 
@@ -57,7 +57,7 @@ describe('Router', () => {
   test('invalid path should redirect to Dashboard', () => {
     const wrapper = mount(
       <MemoryRouter initialEntries={['/random']}>
-        <Provider store={store}>{Routes}</Provider>
+        <Provider store={store}>{publicRoutes}</Provider>
       </MemoryRouter>
     );
     expect(wrapper.find(Settings)).toHaveLength(0);
@@ -67,7 +67,7 @@ describe('Router', () => {
   test('valid path should not redirect to 404', () => {
     const wrapper = mount(
       <MemoryRouter initialEntries={['/']}>
-        <Provider store={store}>{Routes}</Provider>
+        <Provider store={store}>{publicRoutes}</Provider>
       </MemoryRouter>
     );
     expect(wrapper.find(Settings)).toHaveLength(0);
