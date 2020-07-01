@@ -1,51 +1,31 @@
 import React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
-import App from '../components/app';
 import Artifacts from '../components/artifacts/artifacts';
 import Dashboard from '../components/dashboard/dashboard';
 import Deployments from '../components/deployments/deployments';
 import Devices from '../components/devices/devices';
 import Help from '../components/help/help';
+import Settings from '../components/settings/settings';
 import Login from '../components/user-management/login';
 import Signup from '../components/user-management/signup';
-import Settings from '../components/settings/settings';
 
-import { isLoggedIn } from '../auth';
+export const privateRoutes = (
+  <Switch>
+    <Route exact path="/" component={Dashboard} />
+    <Route path="/devices/:status(pending|preauthorized|rejected)?/:filters?" component={Devices} />
+    <Route path="/releases/:artifactVersion?" component={Artifacts} />
+    <Route path="/deployments/:tab?" component={Deployments} />
+    <Route path="/settings/:section?" component={Settings} />
+    <Route path="/help" component={Help} />
+    <Route component={Dashboard} />
+  </Switch>
+);
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
-  // if not logged in, redirect to login screen
-  return (
-    <Route
-      {...rest}
-      render={props =>
-        isLoggedIn() ? (
-          <Component {...props} {...rest} />
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/login',
-              state: { from: props.location }
-            }}
-          />
-        )
-      }
-    />
-  );
-};
-
-export default (
-  <App isLoggedIn={isLoggedIn()}>
-    <Switch>
-      <PrivateRoute exact path="/" component={Dashboard} />
-      <PrivateRoute path="/devices/:status(pending|preauthorized|rejected)?/:filters?" component={Devices} />
-      <PrivateRoute path="/releases/:artifactVersion?" component={Artifacts} />
-      <PrivateRoute path="/deployments/:tab?" component={Deployments} />
-      <PrivateRoute path="/settings/:section?" component={Settings} />
-      <PrivateRoute path="/help" component={Help} />
-      <Route path="/login" render={() => <Login />} />
-      <Route path="/signup" render={() => <Signup />} />
-      <PrivateRoute component={Dashboard} />
-    </Switch>
-  </App>
+export const publicRoutes = (
+  <Switch>
+    <Route path="/login" component={Login} />
+    <Route path="/signup" component={Signup} />
+    <Route component={Login} />
+  </Switch>
 );
