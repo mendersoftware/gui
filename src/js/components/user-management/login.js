@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import ReactTooltip from 'react-tooltip';
 
@@ -25,8 +25,7 @@ export class Login extends React.Component {
     super(props, context);
     const cookies = new Cookies();
     this.state = {
-      noExpiry: cookies.get('noExpiry'),
-      redirectToReferrer: false
+      noExpiry: cookies.get('noExpiry')
     };
   }
 
@@ -44,8 +43,6 @@ export class Login extends React.Component {
   componentDidUpdate(prevProps) {
     const self = this;
     if (prevProps.currentUser !== this.props.currentUser && !!this.props.currentUser.id) {
-      // logged in, so redirect
-      self.setState({ redirectToReferrer: true });
       setTimeout(() => {
         if (
           self.props.showHelptips &&
@@ -87,16 +84,8 @@ export class Login extends React.Component {
   }
 
   render() {
-    const { noExpiry, redirectToReferrer } = this.state;
-    const { has2FA, isHosted, location } = this.props;
-    let { from } = { from: { pathname: '/' } };
-    if (location && location.state && location.state.from.pathname !== '/ui/') {
-      from = location.state.from;
-    }
-    if (redirectToReferrer) {
-      return <Redirect to={from} />;
-    }
-
+    const { noExpiry } = this.state;
+    const { has2FA, isHosted } = this.props;
     let twoFAAnchor = {};
     if (this.twoFARef) {
       twoFAAnchor = {

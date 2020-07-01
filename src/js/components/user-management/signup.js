@@ -77,27 +77,23 @@ export class Signup extends React.Component {
         }
         return Promise.resolve();
       })
-      .then(() => self.setState({ step: 3, redirectToReferrer: !oauthProvider }))
+      .then(() => self.setState({ step: 3, redirectOnLogin: !oauthProvider }))
       .finally(() => self.setState({ loading: false }));
   }
 
   componentDidUpdate() {
     if (this.props.currentUserId) {
       this.props.setSnackbar('');
-      this.setState({ redirectToReferrer: true });
+      this.setState({ redirectOnLogin: true });
     }
   }
 
   render() {
     const self = this;
-    const { step, loading, oauthProvider, redirectToReferrer } = this.state;
+    const { step, loading, oauthProvider, redirectOnLogin } = this.state;
     const { recaptchaSiteKey, setSnackbar } = this.props;
-    let from = { pathname: '/' };
-    if (location && location.state && location.state.from.pathname !== '/ui/') {
-      from = location.state.from;
-    }
-    if (redirectToReferrer) {
-      return <Redirect to={from} />;
+    if (redirectOnLogin) {
+      return <Redirect to="/" />;
     }
     const provider = OAuth2Providers.find(item => item.id === oauthProvider);
     return (
