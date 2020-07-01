@@ -32,13 +32,7 @@ const Api = {
           response: 10000, // wait 10 seconds for server to start sending
           deadline: 60000 // allow one minute to finish loading
         })
-        .end((err, res) => {
-          if (err || !res.ok) {
-            reject({ error: err, res: res });
-          } else {
-            resolve(res);
-          }
-        });
+        .end((error, res) => endHandler(error, res, reject, resolve));
     });
   },
 
@@ -50,13 +44,7 @@ const Api = {
           response: 10000, // wait 10 seconds for server to start sending
           deadline: 60000 // allow one minute to finish loading
         })
-        .end((err, res) => {
-          if (err || !res.ok) {
-            reject({ error: err, res: res });
-          } else {
-            resolve(res);
-          }
-        });
+        .end((error, res) => endHandler(error, res, reject, resolve));
     });
   }
 };

@@ -130,23 +130,11 @@ export class MyOrganization extends React.Component {
                     Request to update your billing details
                   </a>
                 </p>
-                {this.state.cancelSubscriptionConfirmation ? (
-                  <Alert className="margin-top-large" severity="error" style={{ maxWidth: '500px' }}>
-                    <p>We&#39;ve started the process to cancel your plan and deactivate your account.</p>
-                    <p>
-                      We&#39;ll send you an email confirming your deactivation. If you have any question at all, contact us at{' '}
-                      <strong>
-                        <a href="mailto:support@mender.io">support@mender.io</a>
-                      </strong>
-                    </p>
-                  </Alert>
-                ) : (
-                  <p className="margin-left-small margin-right-small">
-                    <a href="" onClick={e => self.handleCancelSubscription(e)}>
-                      Cancel subscription and deactivate account
-                    </a>
-                  </p>
-                )}
+                <p className="margin-left-small margin-right-small">
+                  <a href="" onClick={e => self.handleCancelSubscription(e)}>
+                    Cancel subscription and deactivate account
+                  </a>
+                </p>
               </>
             )}
           </div>

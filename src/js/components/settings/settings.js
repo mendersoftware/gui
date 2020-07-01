@@ -67,6 +67,7 @@ const mapStateToProps = state => {
       );
   }
   return {
+    allowUserManagement,
     currentUser,
     isAdmin,
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
