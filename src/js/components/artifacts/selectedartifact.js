@@ -112,8 +112,25 @@ export class SelectedArtifact extends React.Component {
           return accu;
         }, [])
       : [];
+    const provides = artifact.artifact_provides
+      ? Object.entries(artifact.artifact_provides).reduce((accu, [key, value]) => {
+          if (!Array.isArray(value)) {
+            accu.push(<ExpandableAttribute key={key} primary={key} secondary={value} />);
+          } else if (!key.startsWith('device_type')) {
+            // we can expect this to be an array of artifacts or artifact groups this artifact depends on
+            const dependencies = value.reduce((dependencies, dependency, index) => {
+              const dependencyKey = value.length > 1 ? `${key}-${index + 1}` : key;
+              dependencies.push(<ExpandableAttribute key={dependencyKey} primary={dependencyKey} secondary={dependency} />);
+              return dependencies;
+            }, []);
+            accu = [...accu, ...dependencies];
+          }
+          return accu;
+        }, [])
+      : [];
     const artifactMetaInfo = [
       { title: 'Artifact dependencies', content: depends },
+      { title: 'Artifact provides', content: provides },
       { title: 'Artifact metadata', content: metaData }
     ];
     return (
