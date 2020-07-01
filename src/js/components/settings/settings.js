@@ -14,14 +14,21 @@ import Global from './global';
 import Upgrade from './upgrade';
 
 export const Settings = ({ allowUserManagement, currentUser, trial, hasMultitenancy, history, isAdmin, isEnterprise, match }) => {
-
   const sectionMap = {
     'global-settings': { admin: false, enterprise: false, multitenancy: false, userManagement: false, component: <Global />, text: 'Global settings' },
     'my-profile': { admin: false, enterprise: false, multitenancy: false, userManagement: false, component: <SelfUserManagement />, text: 'My profile' },
     'user-management': { admin: false, enterprise: false, multitenancy: false, userManagement: true, component: <UserManagement />, text: 'User management' },
     'role-management': { admin: true, enterprise: true, multitenancy: false, userManagement: false, component: <Roles />, text: 'Roles' },
     'my-organization': { admin: false, enterprise: false, multitenancy: true, userManagement: false, component: <MyOrganization />, text: 'My organization' },
-    'upgrade': { admin: false, enterprise: false, multitenancy: true, trial: true, userManagement: false, component: <Upgrade history={history} />, text: 'Upgrade to a plan' }
+    upgrade: {
+      admin: false,
+      enterprise: false,
+      multitenancy: true,
+      trial: true,
+      userManagement: false,
+      component: <Upgrade history={history} />,
+      text: 'Upgrade to a plan'
+    }
   };
 
   const checkDenyAccess = item =>
@@ -52,7 +59,8 @@ export const Settings = ({ allowUserManagement, currentUser, trial, hasMultitena
                   {key === 'upgrade' ? (
                     <ListItemIcon>
                       <PaymentIcon />
-                    </ListItemIcon>) : null}
+                    </ListItemIcon>
+                  ) : null}
                 </ListItem>
               );
             }

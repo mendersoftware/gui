@@ -175,9 +175,7 @@ export default class FilterItem extends React.Component {
         </div>
         {operatorHelpMessage && (
           <div className="margin-bottom-small">
-            <FormHelperText>
-              {operatorHelpMessage}
-            </FormHelperText>
+            <FormHelperText>{operatorHelpMessage}</FormHelperText>
           </div>
         )}
       </>

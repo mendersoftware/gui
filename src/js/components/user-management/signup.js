@@ -66,7 +66,7 @@ export class Signup extends React.Component {
     return self.props
       .createOrganizationTrial(signup)
       .catch(() => {
-        self.setState({ step: 1 })
+        self.setState({ step: 1 });
         return Promise.reject();
       })
       .then(() => {
@@ -107,8 +107,21 @@ export class Signup extends React.Component {
             <Loader show={true} style={{ display: 'flex' }} />
           ) : (
             <>
-              {step == 1 && <UserDataEntry setSnackbar={setSnackbar} data={{email: self.state.email, password: self.state.password, password_confirmation: self.state.password}} onSubmit={formdata => self._handleStep1(formdata)} />}
-              {step == 2 && <OrgDataEntry setSnackbar={setSnackbar} data={{name: self.state.organization, tos: self.state.tos, marketing: self.state.marketing }} onSubmit={formdata => self._handleSignup(formdata)} recaptchaSiteKey={recaptchaSiteKey} />}
+              {step == 1 && (
+                <UserDataEntry
+                  setSnackbar={setSnackbar}
+                  data={{ email: self.state.email, password: self.state.password, password_confirmation: self.state.password }}
+                  onSubmit={formdata => self._handleStep1(formdata)}
+                />
+              )}
+              {step == 2 && (
+                <OrgDataEntry
+                  setSnackbar={setSnackbar}
+                  data={{ name: self.state.organization, tos: self.state.tos, marketing: self.state.marketing }}
+                  onSubmit={formdata => self._handleSignup(formdata)}
+                  recaptchaSiteKey={recaptchaSiteKey}
+                />
+              )}
               {step == 3 && (
                 <div className="align-center" style={{ minHeight: '50vh' }}>
                   <h1>Sign up completed</h1>

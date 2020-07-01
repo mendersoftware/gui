@@ -12,7 +12,7 @@ import {
   ListItemText,
   InputLabel,
   MenuItem,
-  Select,
+  Select
 } from '@material-ui/core';
 
 import Form from '../common/forms/form';
@@ -96,18 +96,26 @@ export default class UserForm extends React.Component {
             showButtons={true}
             autocomplete="off"
           >
-            <TextInput hint="Email" label="Email" id="email" value={user.email} validations="isLength:1,isEmail" required={isCreation} disabled={isOAuth2} autocomplete="off" />
+            <TextInput
+              hint="Email"
+              label="Email"
+              id="email"
+              value={user.email}
+              validations="isLength:1,isEmail"
+              required={isCreation}
+              disabled={isOAuth2}
+              autocomplete="off"
+            />
             {isOAuth2 ? (
               <div className="flexbox margin-top-small margin-bottom">
-                <div style={{ fontSize: '36px', marginRight: '10px' }}>
-                  {provider.icon}
-                </div>
+                <div style={{ fontSize: '36px', marginRight: '10px' }}>{provider.icon}</div>
                 <div className="info">
-                  This user logs in using his <strong>{provider.name}</strong> account.<br />
+                  This user logs in using his <strong>{provider.name}</strong> account.
+                  <br />
                   He can connect to {provider.name} to update his login settings.
                 </div>
               </div>
-          ) : (editPass ? (
+            ) : editPass ? (
               <PasswordInput
                 className="edit-pass margin-top-small"
                 id="password_new"
@@ -129,7 +137,7 @@ export default class UserForm extends React.Component {
               >
                 Change password
               </Button>
-            ))}
+            )}
             {isEnterprise && isAdmin ? (
               <div id="roles-form-container">
                 <FormControl id="roles-form">

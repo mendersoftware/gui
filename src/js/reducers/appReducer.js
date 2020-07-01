@@ -23,7 +23,7 @@ const menderEnvironment = {
     guiVersion: ''
   },
   recaptchaSiteKey: '',
-  stripeAPIKey: '', 
+  stripeAPIKey: '',
   trackerCode: '',
   ...mender_environment
 };

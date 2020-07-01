@@ -64,7 +64,7 @@ export class Devices extends React.Component {
         if (filterPair[0] === 'group') {
           groupName = filterPair[1];
         } else {
-          const scope = filterPair[0] === 'group' ? { scope: 'system' } : (filterPair[0] === 'id' ? { scope: 'identity' } : {});
+          const scope = filterPair[0] === 'id' ? { scope: 'identity' } : {};
           filters.push({ ...emptyFilter, ...scope, key: filterPair[0], value: filterPair[1] });
         }
         return filters;
@@ -72,7 +72,7 @@ export class Devices extends React.Component {
       if (groupName) {
         this.props.selectGroup(groupName, filters);
       } else {
-        this.props.setDeviceFilters(filters)
+        this.props.setDeviceFilters(filters);
       }
     }
   }

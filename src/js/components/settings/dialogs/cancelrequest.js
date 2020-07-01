@@ -30,7 +30,7 @@ export class CancelRequestDialog extends React.Component {
   }
 
   _confirm() {
-    this.setState({confirm: true});
+    this.setState({ confirm: true });
   }
 
   _setCancelSubscriptionReason(evt) {
@@ -47,14 +47,12 @@ export class CancelRequestDialog extends React.Component {
   render() {
     return (
       <Dialog open={true}>
-        <DialogTitle>
-          {!this.state.confirm ? 'Cancel subscription and deactivate account?' : 'Confirm deactivation'}
-        </DialogTitle>
+        <DialogTitle>{!this.state.confirm ? 'Cancel subscription and deactivate account?' : 'Confirm deactivation'}</DialogTitle>
         {!this.state.confirm ? (
           <DialogContent>
             <p className="margin-top-small">
-              We&#39;ll be sorry to see you go. If you&#39;re sure you&#39;re ready to deactivate your account please let us know the reason you&#39;re canceling,
-              and we&#39;ll start the process.
+              We&#39;ll be sorry to see you go. If you&#39;re sure you&#39;re ready to deactivate your account please let us know the reason you&#39;re
+              canceling, and we&#39;ll start the process.
             </p>
             <p>Please select the reason for your cancellation to help us improve our service:</p>
             <FormControl component="fieldset">
@@ -74,14 +72,14 @@ export class CancelRequestDialog extends React.Component {
               />
             </FormControl>
           </DialogContent>
-          ) : (
+        ) : (
           <DialogContent>
             <p>
               <strong>You can now click &#39;confirm&#39; to cancel your plan and deactivate your account.</strong>
             </p>
             <p>
-              We will start the process of closing your account. Meanwhile, you can continue using Mender until the end of the current month. You will receive your
-              final charge for this period at the beginning of next month.
+              We will start the process of closing your account. Meanwhile, you can continue using Mender until the end of the current month. You will receive
+              your final charge for this period at the beginning of next month.
             </p>
             <p>Thank you for using Mender!</p>
           </DialogContent>
@@ -89,18 +87,26 @@ export class CancelRequestDialog extends React.Component {
         <DialogActions>
           <Button onClick={this.props.onCancel}>Stay subscribed</Button>
           <div style={{ flexGrow: 1 }} />
-          {!this.state.confirm ? <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => this._confirm()}
-            disabled={
-              this.state.cancelSubscriptionReason == '' || (this.state.cancelSubscriptionReason == 'Other' && this.state.cancelSubscriptionReasonOther == '')
-            }
-          >
-            Continue to deactivate
-          </Button> : <Button variant="contained" color="secondary" onClick={() => this.props.onSubmit(this.state.cancelSubscriptionReasonOther || this.state.cancelSubscriptionReason)}>
-            Confirm deactivation
-          </Button>}
+          {!this.state.confirm ? (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => this._confirm()}
+              disabled={
+                this.state.cancelSubscriptionReason == '' || (this.state.cancelSubscriptionReason == 'Other' && this.state.cancelSubscriptionReasonOther == '')
+              }
+            >
+              Continue to deactivate
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => this.props.onSubmit(this.state.cancelSubscriptionReasonOther || this.state.cancelSubscriptionReason)}
+            >
+              Confirm deactivation
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     );

@@ -21,6 +21,7 @@
   },
   "plugins": ["react", "prettier"],
   "rules": {
+    "prettier/prettier": 2,
     "consistent-this": ["error", "self"],
     "import/no-named-as-default": 0,
     "no-console": 0,
