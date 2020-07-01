@@ -19,7 +19,7 @@ const endHandler = (error, res, reject, resolve) => {
     return reject({ error, res });
   }
   return resolve(res);
-}
+};
 
 const Api = {
   get: url => {

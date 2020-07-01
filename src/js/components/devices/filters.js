@@ -17,7 +17,7 @@ export const emptyFilter = { key: null, value: '', operator: '$eq', scope: 'inve
 export const getFilterLabelByKey = (key, attributes) => {
   const attr = attributes.find(attr => attr.key === key);
   return attr != undefined ? attr.value : key;
-}
+};
 
 const MAX_PREVIOUS_FILTERS_COUNT = 3;
 
@@ -143,7 +143,9 @@ export class Filters extends React.Component {
                     <Chip
                       className="margin-right-small"
                       key={`filter-${item.key}`}
-                      label={`${getFilterLabelByKey(item.key, self.props.attributes)} ${DEVICE_FILTERING_OPTIONS[item.operator].shortform} ${item.operator === '$regex' ? `${item.value}.*` : item.value}`}
+                      label={`${getFilterLabelByKey(item.key, self.props.attributes)} ${DEVICE_FILTERING_OPTIONS[item.operator].shortform} ${
+                        item.operator === '$regex' ? `${item.value}.*` : item.value
+                      }`}
                       onDelete={() => self.removeFilter(item)}
                     />
                   ))}

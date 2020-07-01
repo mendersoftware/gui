@@ -102,35 +102,37 @@ export const uploadArtifact = (meta, file) => dispatch => {
 };
 
 export const editArtifact = (id, body) => (dispatch, getState) =>
-  ArtifactsApi.putJSON(`${deploymentsApiUrl}/artifacts/${id}`, body).then(() => {
-    const state = getState();
-    let { release, index } = findArtifactIndexInRelease(state.releases.byId, id);
-    if (!release || index === -1) {
-      return dispatch(getReleases());
-    }
-    release.Artifacts[index].description = body.description;
-    return dispatch({ type: ReleaseConstants.UPDATED_ARTIFACT, release });
-  })
-  .catch(err => {
-    const errMsg = err.res.body.error || '';
-    dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact details couldn't be updated. ${errMsg || err.error}`), null, 'Copy to clipboard'));
-    return Promise.reject();
-  });
+  ArtifactsApi.putJSON(`${deploymentsApiUrl}/artifacts/${id}`, body)
+    .then(() => {
+      const state = getState();
+      let { release, index } = findArtifactIndexInRelease(state.releases.byId, id);
+      if (!release || index === -1) {
+        return dispatch(getReleases());
+      }
+      release.Artifacts[index].description = body.description;
+      return dispatch({ type: ReleaseConstants.UPDATED_ARTIFACT, release });
+    })
+    .catch(err => {
+      const errMsg = err.res.body.error || '';
+      dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact details couldn't be updated. ${errMsg || err.error}`), null, 'Copy to clipboard'));
+      return Promise.reject();
+    });
 
 export const removeArtifact = id => (dispatch, getState) =>
-  ArtifactsApi.delete(`${deploymentsApiUrl}/artifacts/${id}`).then(() => {
-    const state = getState();
-    let { release, index } = findArtifactIndexInRelease(state.releases.byId, id);
-    release.Artifacts.splice(index, 1);
-    if (!release.Artifacts.length) {
-      return dispatch({ type: ReleaseConstants.RELEASE_REMOVED, release: release.Name });
-    }
-    return dispatch({ type: ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT, release });
-  })
-  .catch(err => {
-    const errMsg = err.res.body.error || '';
-    dispatch(setSnackbar(preformatWithRequestID(err.res, `Error removing artifact: ${errMsg || err.error}`), null, 'Copy to clipboard'));
-  });
+  ArtifactsApi.delete(`${deploymentsApiUrl}/artifacts/${id}`)
+    .then(() => {
+      const state = getState();
+      let { release, index } = findArtifactIndexInRelease(state.releases.byId, id);
+      release.Artifacts.splice(index, 1);
+      if (!release.Artifacts.length) {
+        return dispatch({ type: ReleaseConstants.RELEASE_REMOVED, release: release.Name });
+      }
+      return dispatch({ type: ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT, release });
+    })
+    .catch(err => {
+      const errMsg = err.res.body.error || '';
+      dispatch(setSnackbar(preformatWithRequestID(err.res, `Error removing artifact: ${errMsg || err.error}`), null, 'Copy to clipboard'));
+    });
 
 export const selectArtifact = artifact => (dispatch, getState) => {
   if (!artifact) {
