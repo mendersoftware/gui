@@ -91,7 +91,7 @@ export class Signup extends React.Component {
   render() {
     const self = this;
     const { step, loading, oauthProvider, redirectToReferrer } = this.state;
-    const { recaptchaSiteKey } = this.props;
+    const { recaptchaSiteKey, setSnackbar } = this.props;
     let from = { pathname: '/' };
     if (location && location.state && location.state.from.pathname !== '/ui/') {
       from = location.state.from;
@@ -118,7 +118,7 @@ export class Signup extends React.Component {
                 <OrgDataEntry
                   setSnackbar={setSnackbar}
                   data={{ name: self.state.organization, tos: self.state.tos, marketing: self.state.marketing }}
-                  onSubmit={formdata => self._handleSignup(formdata)}
+                  onSubmit={(formdata, recaptcha) => self._handleSignup(formdata, recaptcha)}
                   recaptchaSiteKey={recaptchaSiteKey}
                 />
               )}
