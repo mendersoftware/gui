@@ -11,17 +11,11 @@ context('Login', () => {
       cy.visit(`${Cypress.config().baseUrl}ui`);
       // enter valid username and password
       cy.get('[id=email]').type(Cypress.env('username'));
-      cy.get('[name=password]')
-        .clear()
-        .type(Cypress.env('password'));
-      cy.contains('button', 'Log in')
-        .click()
-        .wait(300);
+      cy.get('[name=password]').clear().type(Cypress.env('password'));
+      cy.contains('button', 'Log in').click().wait(300);
 
       // confirm we have logged in successfully
-      cy.location('hash')
-        .should('equal', '#/')
-        .then(() => cy.getCookie('JWT').should('have.property', 'value'));
+      cy.getCookie('JWT').should('have.property', 'value');
 
       // now we can log out
       cy.contains('.header-dropdown', Cypress.env('username')).click({ force: true });
@@ -30,7 +24,7 @@ context('Login', () => {
     });
 
     it('does not stay logged in across sessions, after browser restart', () => {
-      cy.location('hash').should('equal', '#/login');
+      cy.contains('Log in').should('be.visible');
     });
 
     it('fails to access unknown resource', () => {
@@ -44,15 +38,13 @@ context('Login', () => {
 
     it('Does not log in with invalid password', () => {
       cy.clearCookies();
-      cy.location('hash').should('equal', '#/login');
+      cy.contains('Log in').should('be.visible');
       cy.get('[id=email]').type(Cypress.env('username'));
       cy.get('[name=password]').type('lewrongpassword');
-      cy.contains('button', 'Log in')
-        .click()
-        .wait(3000);
+      cy.contains('button', 'Log in').click().wait(3000);
 
       // still on /login page plus an error is displayed
-      cy.location('hash').should('equal', '#/login');
+      cy.contains('Log in').should('be.visible');
       cy.contains('There was a problem logging in').should('be.visible');
     });
   });
@@ -68,14 +60,12 @@ context('Login', () => {
       cy.get('[id=email]').type(Cypress.env('username'));
       cy.get('[name=password]').type(Cypress.env('password'));
       cy.get('[type=checkbox]').check();
-      cy.contains('button', 'Log in')
-        .click()
-        .wait(3000);
+      cy.contains('button', 'Log in').click().wait(3000);
     });
 
     it('pt2', () => {
-      cy.location('hash')
-        .should('not.equal', '#/login')
+      cy.contains('Log in')
+        .should('not.be.visible')
         .then(() => cy.getCookie('JWT').should('have.property', 'value'));
     });
   });
