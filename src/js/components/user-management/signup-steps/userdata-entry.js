@@ -32,14 +32,15 @@ export class UserDataEntry extends React.Component {
     const { email, password, password_confirmation } = this.state;
     return (
       <>
+        <img src="assets/img/headerlogo.png" alt="mender-logo" id="signupLogo" />
         <h1>Try Mender for Free</h1>
-        <h2 className="margin-bottom-large">
+        <h2 className="margin-bottom">
           Sign up and connect up to 10 devices
           <br />
-          free for 12 months
+          free for 12 months – no credit card required.
         </h2>
         <div className="flexbox centered margin-bottom">Sign up with:</div>
-        <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
           {OAuth2Providers.map(provider => (
             <Button
               className="oauth-provider"
