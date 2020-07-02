@@ -34,7 +34,10 @@ export class Pending extends React.Component {
       pageLoading: true,
       pageNo: 1,
       selectedRows: [],
-      showActions: false
+      showActions: false,
+      sortCol: null,
+      sortDown: true,
+      sortScope: null
     };
     if (!props.pendingDeviceIds.length) {
       props.getDevicesByStatus(DEVICE_STATES.pending);
@@ -75,25 +78,19 @@ export class Pending extends React.Component {
   /*
    * Devices to show
    */
-  _getDevices(shouldUpdate = false, filters = []) {
-    var self = this;
-    self.setState({ pageNo: filters.length ? 1 : self.state.pageNo, pageLength: filters.length ? DEVICE_LIST_MAXIMUM_LENGTH : self.state.pageLength }, () =>
-      self.props
-        .getDevicesByStatus(DEVICE_STATES.pending, this.state.pageNo, this.state.pageLength, shouldUpdate)
-        .catch(error => {
-          console.log(error);
-          var errormsg = error.error || 'Please check your connection.';
-          self.props.setSnackbar(errormsg, 5000, '');
-          console.log(errormsg);
-        })
-        .finally(() => {
-          self.setState({ pageLoading: false, authLoading: null });
-        })
-    );
-  }
-
-  _sortColumn() {
-    console.log('sort');
+  _getDevices(shouldUpdate = false) {
+    const self = this;
+    const { pageNo, pageLength, sortCol, sortDown, sortScope } = self.state;
+    const sortBy = sortCol ? [{ attribute: sortCol, order: sortDown ? 'desc' : 'asc', scope: sortScope }] : undefined;
+    self.props
+      .getDevicesByStatus(DEVICE_STATES.pending, pageNo, pageLength, shouldUpdate, undefined, sortBy)
+      .catch(error => {
+        console.log(error);
+        var errormsg = error.error || 'Please check your connection.';
+        self.props.setSnackbar(errormsg, 5000, '');
+        console.log(errormsg);
+      })
+      .finally(() => self.setState({ pageLoading: false, authLoading: null }));
   }
 
   _handlePageChange(pageNo) {
@@ -121,6 +118,15 @@ export class Pending extends React.Component {
     this.setState({ selectedRows: selection });
   }
 
+  onSortChange(attribute) {
+    const self = this;
+    let state = { sortCol: attribute.name, sortDown: !self.state.sortDown, sortScope: attribute.scope };
+    if (attribute.name !== self.state.sortCol) {
+      state.sortDown = true;
+    }
+    self.setState(state, () => self._getDevices(true));
+  }
+
   render() {
     const self = this;
     const {
@@ -145,24 +151,28 @@ export class Pending extends React.Component {
     const columnHeaders = [
       {
         title: globalSettings.id_attribute || 'Device ID',
-        name: 'device_id',
         customize: openSettingsDialog,
-        style: { flexGrow: 1 }
+        attribute: { name: globalSettings.id_attribute, scope: 'identity' },
+        style: { flexGrow: 1 },
+        sortable: !!globalSettings.id_attribute && globalSettings.id_attribute !== 'Device ID'
       },
       {
         title: 'First request',
-        name: 'first_request',
-        render: device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-')
+        attribute: { name: 'created_ts', scope: 'system' },
+        render: device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-'),
+        sortable: true
       },
       {
         title: 'Last check-in',
-        name: 'last_checkin',
-        render: device => <RelativeTime updateTime={device.updated_ts} />
+        attribute: { name: 'updated_ts', scope: 'system' },
+        render: device => <RelativeTime updateTime={device.updated_ts} />,
+        sortable: true
       },
       {
         title: 'Status',
-        name: 'status',
-        render: device => (device.status ? <div className="capitalized">{device.status}</div> : '-')
+        attribute: { name: 'status', scope: 'identity' },
+        render: device => (device.status ? <div className="capitalized">{device.status}</div> : '-'),
+        sortable: true
       }
     ];
 
@@ -229,7 +239,7 @@ export class Pending extends React.Component {
                 </Button>
               </div>
             </div>
-            <Filters identityOnly={true} onFilterChange={filters => self._getDevices(true, filters)} open={showFilters} />
+            <Filters identityOnly={true} onFilterChange={() => self.setState({ pageNo: 1 }, () => self._getDevices(true))} open={showFilters} />
             {authLoading !== 'all' && (
               <p className="info">
                 Showing {devices.length} of {count} {pluralize('devices', count)} pending authorization
@@ -247,9 +257,10 @@ export class Pending extends React.Component {
               className="pending"
               columnHeaders={columnHeaders}
               limitMaxed={limitMaxed}
-              onSelect={selection => self.onRowSelection(selection)}
               onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}
               onPageChange={e => self._handlePageChange(e)}
+              onSelect={selection => self.onRowSelection(selection)}
+              onSort={attribute => self.onSortChange(attribute)}
               pageTotal={count}
               refreshDevices={shouldUpdate => self._getDevices(shouldUpdate)}
             />

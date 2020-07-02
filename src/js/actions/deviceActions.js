@@ -251,29 +251,31 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
     { ids, devicesById: {} }
   );
 
-export const getGroupDevices = (group, page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false) => (dispatch, getState) =>
-  Promise.resolve(dispatch(getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, page, perPage, shouldSelectDevices, group))).then(results => {
-    if (!group) {
-      return Promise.resolve();
+export const getGroupDevices = (group, page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false, sortOptions) => (dispatch, getState) =>
+  Promise.resolve(dispatch(getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, page, perPage, shouldSelectDevices, group, sortOptions))).then(
+    results => {
+      if (!group) {
+        return Promise.resolve();
+      }
+      const { deviceAccu, total } = results[results.length - 1];
+      const stateGroup = getState().devices.groups.byId[group];
+      if (!stateGroup && !total && !deviceAccu.ids.length) {
+        return Promise.resolve();
+      }
+      return Promise.resolve(
+        dispatch({
+          type: DeviceConstants.RECEIVE_GROUP_DEVICES,
+          group: {
+            filters: [],
+            ...stateGroup,
+            deviceIds: deviceAccu.ids.length === total || deviceAccu.ids.length > stateGroup.deviceIds ? deviceAccu.ids : stateGroup.deviceIds,
+            total
+          },
+          groupName: group
+        })
+      );
     }
-    const { deviceAccu, total } = results[results.length - 1];
-    const stateGroup = getState().devices.groups.byId[group];
-    if (!stateGroup && !total && !deviceAccu.ids.length) {
-      return Promise.resolve();
-    }
-    return Promise.resolve(
-      dispatch({
-        type: DeviceConstants.RECEIVE_GROUP_DEVICES,
-        group: {
-          filters: [],
-          ...stateGroup,
-          deviceIds: deviceAccu.ids.length === total || deviceAccu.ids.length > stateGroup.deviceIds ? deviceAccu.ids : stateGroup.deviceIds,
-          total
-        },
-        groupName: group
-      })
-    );
-  });
+  );
 
 export const getAllGroupDevices = group => (dispatch, getState) => {
   const state = getState();
@@ -438,7 +440,10 @@ export const getDeviceLimit = () => dispatch =>
   );
 
 // get devices from inventory
-export const getDevicesByStatus = (status, page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false, group) => (dispatch, getState) => {
+export const getDevicesByStatus = (status, page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false, group, sortOptions) => (
+  dispatch,
+  getState
+) => {
   const state = getState();
   let applicableFilters = state.devices.filters || [];
   if (typeof group === 'string' && !applicableFilters.length) {
@@ -447,7 +452,8 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
   return GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
     page,
     per_page: perPage,
-    filters: mapFiltersToTerms([...applicableFilters, { key: 'status', value: status, operator: '$eq', scope: 'identity' }])
+    filters: mapFiltersToTerms([...applicableFilters, { key: 'status', value: status, operator: '$eq', scope: 'identity' }]),
+    sort: sortOptions
   }).then(response => {
     const deviceAccu = reduceReceivedDevices(response.body, [], state, status);
     let total = !applicableFilters.length ? Number(response.headers[headerNames.total]) : null;
