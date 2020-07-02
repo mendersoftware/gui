@@ -23,19 +23,20 @@ describe('App Component', () => {
         versionInformation: {}
       },
       deployments: {
+        byId: {},
         byStatus: {
-          inprogress: { total: 0 }
+          finished: { total: 0 },
+          inprogress: { total: 0 },
+          pending: { total: 0 }
         }
       },
       devices: {
         byId: {},
         byStatus: {
-          accepted: {
-            total: 0
-          },
-          pending: {
-            total: 0
-          }
+          accepted: { total: 0 },
+          active: { total: 0 },
+          inactive: { total: 0 },
+          pending: { total: 0 }
         },
         limit: 500
       },
@@ -60,6 +61,10 @@ describe('App Component', () => {
   });
 
   it('renders correctly', () => {
+    Object.defineProperty(window.document, 'cookie', {
+      writable: true,
+      value: 'JWT=omnomnom'
+    });
     const tree = renderer
       .create(
         <MemoryRouter>

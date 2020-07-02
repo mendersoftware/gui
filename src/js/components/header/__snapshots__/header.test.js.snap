@@ -2,7 +2,7 @@
 
 exports[`Header Component renders correctly 1`] = `
 <div
-  className="header "
+  className="header"
   id="fixedHeader"
 >
   <div
