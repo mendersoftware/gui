@@ -84,11 +84,16 @@ export default class PasswordInput extends React.Component {
     this.setState({ copied: true });
   }
   render() {
-    var feedback = (<p>
-      {this.state.feedback.map((message, index) => {
-        return <><span key={index}>{message}</span><br /></>;
-      })}
-    </p>)
+    var feedback = (
+      <p>
+        {this.state.feedback.map((message, index) => (
+          <>
+            <span key={index}>{message}</span>
+            <br />
+          </>
+        ))}
+      </p>
+    );
 
     return (
       <div id={`${this.props.id}-holder`} className={this.props.className}>
@@ -120,7 +125,9 @@ export default class PasswordInput extends React.Component {
           <div>
             <div className="help-text" id="pass-strength">
               Strength: <meter max={4} min={0} value={this.state.score} high={3.9} optimum={4} low={2.5} />
-              {this.state.score > 3 ? <CheckIcon className="fadeIn" style={{ color: '#009E73', height: '18px', marginTop: '-3px', marginBottom: '-3px' }} /> : null}
+              {this.state.score > 3 ? (
+                <CheckIcon className="fadeIn" style={{ color: '#009E73', height: '18px', marginTop: '-3px', marginBottom: '-3px' }} />
+              ) : null}
             </div>
             {feedback}
             <div className="pass-buttons">

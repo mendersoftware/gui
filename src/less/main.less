@@ -17,7 +17,7 @@ body {
 }
 
 #main {
-  min-height: 400px;
+  min-height: 650px;
   display: grid;
   height: 100%;
   grid-template-columns: 200px 1fr;
@@ -92,16 +92,6 @@ a.warning:hover {
   -webkit-box-sizing: @type;
   -moz-box-sizing: @type;
   box-sizing: @type;
-}
-
-.full-screen {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  background-color: #ffffff;
 }
 
 ul.unstyled {
@@ -397,7 +387,7 @@ ul.link-list {
   }
 }
 
-#demoBox, 
+#demoBox,
 #trialVersion,
 #announcement {
   padding: 4px 2 * @defaultGutterWidth;
@@ -1440,11 +1430,10 @@ div:focus {
 #login-box,
 #signup-box {
   .animation(fadein 1s 1);
-  width: 25%;
+  grid-area: 1 / 1 / span 2 / span 2;
+  align-self: center;
+  justify-self: center;
   max-width: 400px;
-  min-width: 240px;
-  margin: 12% auto 0;
-  position: relative;
 
   h3 {
     text-transform: uppercase;
@@ -1524,7 +1513,6 @@ div:focus {
     margin-bottom: 15px;
   }
 }
-
 
 /* Upgrade */
 

@@ -8,7 +8,6 @@ import Loader from '../../common/loader';
 import Confirm from '../../common/confirm';
 import { chartColorPalette } from '../../../themes/mender-theme';
 
-
 const refreshDistributionData = 30000;
 
 export default class DistributionReport extends React.Component {
@@ -63,7 +62,7 @@ export default class DistributionReport extends React.Component {
 
   onSliceClick(thing) {
     const { attribute, group, selectGroup } = this.props;
-    const filters = [{key: attribute, value: thing, operator: '$eq', scope: 'inventory'}];
+    const filters = [{ key: attribute, value: thing, operator: '$eq', scope: 'inventory' }];
     selectGroup(group, filters);
     window.location.replace(`#/devices/${group ? `group=${group}&` : ''}${attribute}=${thing}`);
   }
@@ -112,7 +111,12 @@ export default class DistributionReport extends React.Component {
                       }
                     }
                   ]}
-                  labelComponent={<VictoryLabel text={({ datum }) => datum.y.toString() + ' (' + (Math.round(datum.y * 1000 / (total || 1))/10.0).toString() + '%)'} dy={8} />}
+                  labelComponent={
+                    <VictoryLabel
+                      text={({ datum }) => datum.y.toString() + ' (' + (Math.round((datum.y * 1000) / (total || 1)) / 10.0).toString() + '%)'}
+                      dy={8}
+                    />
+                  }
                   radius={85}
                   startAngle={90}
                 />

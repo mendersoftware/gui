@@ -23,7 +23,7 @@ describe('RejectedDevices Component', () => {
         groups: {
           byId: {},
           selectedGroup: ''
-        },
+        }
       },
       users: {
         globalSettings: {}

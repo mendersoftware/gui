@@ -23,7 +23,7 @@ describe('PreauthorizeDevices Component', () => {
         groups: {
           byId: {},
           selectedGroup: ''
-        },
+        }
       },
       users: {
         globalSettings: { id_attribute: null }

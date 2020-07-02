@@ -14,7 +14,7 @@ const columnData = [
   { id: 'actions', disablePadding: false, label: 'Manage', enterpriseOnly: false }
 ];
 
-const isAdmin = (currentUser) => {
+const isAdmin = currentUser => {
   return currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL');
 };
 

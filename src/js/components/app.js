@@ -9,15 +9,16 @@ import LeftNav from './leftnav';
 import CreateArtifactDialog from './common/dialogs/createartifactdialog';
 import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
 import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
-import { logout, updateMaxAge, expirySet } from '../auth';
+import { isLoggedIn, logout, updateMaxAge, expirySet } from '../auth';
 import { setSnackbar } from '../actions/appActions';
 import { setShowConnectingDialog, setShowCreateArtifactDialog } from '../actions/userActions';
+import { privateRoutes, publicRoutes } from '../config/routes';
 import SharedSnackbar from '../components/common/sharedsnackbar';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import Tracking from '../tracking';
 
-import {Elements} from '@stripe/react-stripe-js';
-import {loadStripe} from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
@@ -55,9 +56,7 @@ class AppRoot extends React.PureComponent {
   render() {
     const self = this;
     const {
-      children,
       history,
-      isLoggedIn,
       setShowConnectingDialog,
       setShowCreateArtifactDialog,
       showDismissHelptipsDialog,
@@ -74,24 +73,30 @@ class AppRoot extends React.PureComponent {
     });
 
     return (
-      <Elements stripe={stripePromise}>
-        <IdleTimer element={document} onAction={updateMaxAge} onIdle={() => self.onIdle()} timeout={timeout} />
-        <Header history={history} isLoggedIn={isLoggedIn} />
-        <LeftNav className="leftFixed leftNav" />
-        <div className="rightFluid container">{children}</div>
-        {onboardingComponent ? onboardingComponent : null}
-        <ConfirmDismissHelptips open={showDismissHelptipsDialog} />
-        <CreateArtifactDialog
-          open={showCreateArtifactDialog}
-          onCancel={() => setShowCreateArtifactDialog(false)}
-          onClose={() => {
-            history.push('/releases');
-            setShowCreateArtifactDialog(false);
-          }}
-        />
-        <DeviceConnectionDialog open={showDeviceConnectionDialog} onCancel={() => setShowConnectingDialog(false)} />
-        <SharedSnackbar />
-      </Elements>
+      <>
+        {isLoggedIn() ? (
+          <Elements stripe={stripePromise}>
+            <IdleTimer element={document} onAction={updateMaxAge} onIdle={() => self.onIdle()} timeout={timeout} />
+            <Header history={history} />
+            <LeftNav className="leftFixed leftNav" />
+            <div className="rightFluid container">{privateRoutes}</div>
+            {onboardingComponent ? onboardingComponent : null}
+            <ConfirmDismissHelptips open={showDismissHelptipsDialog} />
+            <CreateArtifactDialog
+              open={showCreateArtifactDialog}
+              onCancel={() => setShowCreateArtifactDialog(false)}
+              onClose={() => {
+                history.push('/releases');
+                setShowCreateArtifactDialog(false);
+              }}
+            />
+            <DeviceConnectionDialog open={showDeviceConnectionDialog} onCancel={() => setShowConnectingDialog(false)} />
+          </Elements>
+        ) : (
+          publicRoutes
+        )}
+        <SharedSnackbar />;
+      </>
     );
   }
 }

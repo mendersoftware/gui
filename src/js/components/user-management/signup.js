@@ -66,7 +66,7 @@ export class Signup extends React.Component {
     return self.props
       .createOrganizationTrial(signup)
       .catch(() => {
-        self.setState({ step: 1 })
+        self.setState({ step: 1 });
         return Promise.reject();
       })
       .then(() => {
@@ -77,67 +77,69 @@ export class Signup extends React.Component {
         }
         return Promise.resolve();
       })
-      .then(() => self.setState({ step: 3, redirectToReferrer: !oauthProvider }))
+      .then(() => self.setState({ step: 3, redirectOnLogin: !oauthProvider }))
       .finally(() => self.setState({ loading: false }));
   }
 
   componentDidUpdate() {
     if (this.props.currentUserId) {
       this.props.setSnackbar('');
-      this.setState({ redirectToReferrer: true });
+      this.setState({ redirectOnLogin: true });
     }
   }
 
   render() {
     const self = this;
-    const { step, loading, oauthProvider, redirectToReferrer } = this.state;
-    const { recaptchaSiteKey } = this.props;
-    let from = { pathname: '/' };
-    if (location && location.state && location.state.from.pathname !== '/ui/') {
-      from = location.state.from;
-    }
-    if (redirectToReferrer) {
-      return <Redirect to={from} />;
+    const { step, loading, oauthProvider, redirectOnLogin } = this.state;
+    const { recaptchaSiteKey, setSnackbar } = this.props;
+    if (redirectOnLogin) {
+      return <Redirect to="/" />;
     }
     const provider = OAuth2Providers.find(item => item.id === oauthProvider);
     return (
-      <div className="full-screen">
-        <div id="signup-box">
-          {loading ? (
-            <Loader show={true} style={{ display: 'flex' }} />
-          ) : (
-            <>
-              {step == 1 && <UserDataEntry setSnackbar={setSnackbar} data={{email: self.state.email, password: self.state.password, password_confirmation: self.state.password}} onSubmit={formdata => self._handleStep1(formdata)} />}
-              {step == 2 && <OrgDataEntry setSnackbar={setSnackbar} data={{name: self.state.organization, tos: self.state.tos, marketing: self.state.marketing }} onSubmit={formdata => self._handleSignup(formdata)} recaptchaSiteKey={recaptchaSiteKey} />}
-              {step == 3 && (
-                <div className="align-center" style={{ minHeight: '50vh' }}>
-                  <h1>Sign up completed</h1>
-                  <h2 className="margin-bottom-large">
-                    Your account has been created,
-                    <br />
-                    you can now log in.
-                  </h2>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    href={`/api/management/v1/useradm/oauth2/${provider.id.toLowerCase()}`}
-                    startIcon={provider.icon}
-                  >
-                    {provider.name}
-                  </Button>
-                </div>
-              )}
-              {step !== 3 && (
-                <div className="flexbox margin-top" style={{ color: 'rgba(0, 0, 0, 0.3)', justifyContent: 'center' }}>
-                  Already have an account?{' '}
-                  <Link style={{ marginLeft: '4px' }} to="/login">
-                    Log in
-                  </Link>
-                </div>
-              )}
-            </>
-          )}
-        </div>
+      <div className="flexbox column" id="signup-box">
+        {loading ? (
+          <Loader show={true} style={{ display: 'flex' }} />
+        ) : (
+          <>
+            {step == 1 && (
+              <UserDataEntry
+                setSnackbar={setSnackbar}
+                data={{ email: self.state.email, password: self.state.password, password_confirmation: self.state.password }}
+                onSubmit={formdata => self._handleStep1(formdata)}
+              />
+            )}
+            {step == 2 && (
+              <OrgDataEntry
+                setSnackbar={setSnackbar}
+                data={{ name: self.state.organization, tos: self.state.tos, marketing: self.state.marketing }}
+                onSubmit={(formdata, recaptcha) => self._handleSignup(formdata, recaptcha)}
+                recaptchaSiteKey={recaptchaSiteKey}
+              />
+            )}
+            {step == 3 && (
+              <div className="align-center" style={{ minHeight: '50vh' }}>
+                <h1>Sign up completed</h1>
+                <h2 className="margin-bottom-large">
+                  Your account has been created,
+                  <br />
+                  you can now log in.
+                </h2>
+                <Button variant="contained" color="secondary" href={`/api/management/v1/useradm/oauth2/${provider.id.toLowerCase()}`} startIcon={provider.icon}>
+                  {provider.name}
+                </Button>
+              </div>
+            )}
+            {step !== 3 && (
+              <div className="flexbox margin-top" style={{ color: 'rgba(0, 0, 0, 0.3)', justifyContent: 'center' }}>
+                Already have an account?{' '}
+                <Link style={{ marginLeft: '4px' }} to="/login">
+                  Log in
+                </Link>
+              </div>
+            )}
+          </>
+        )}
       </div>
     );
   }

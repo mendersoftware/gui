@@ -112,72 +112,73 @@ export class SelfUserManagement extends React.Component {
             />
           </Form>
         )}
-        {!isOAuth2 && (!editPass ? (
-          <form className="flexbox space-between">
-            <TextField
-              label="Password"
-              key="password-placeholder"
-              disabled
-              defaultValue="********"
-              style={{ width: '400px', maxWidth: '100%' }}
-              type="password"
-            />
-            <Button color="primary" id="change_password" style={{ margin: '30px 0 0 15px' }} onClick={() => self.handlePass()}>
-              Change password
-            </Button>
-          </form>
-        ) : (
-          <Form
-            onSubmit={userdata => self._editSubmit(currentUser.id, userdata)}
-            handleCancel={() => self.handlePass()}
-            submitLabel="Save"
-            submitButtonId="submit_pass"
-            buttonColor="secondary"
-            showButtons={editPass}
-            className="margin-top flexbox space-between"
-          >
-            <PasswordInput
-              className="edit-pass"
-              id="password"
-              label="Password"
-              create={editPass}
-              validations="isLength:1"
-              disabled={!editPass}
-              onClear={() => self.handleButton()}
-              edit={false}
-            />
-          </Form>
-        ))}
-        {!isOAuth2 && (canHave2FA ? (
-          <div className="margin-top">
-            <div
-              className="clickable flexbox space-between"
-              onClick={() => self.setState({ qrExpanded: has2FA && !qrExpanded ? self.handle2FAState(false) : !qrExpanded })}
+        {!isOAuth2 &&
+          (!editPass ? (
+            <form className="flexbox space-between">
+              <TextField
+                label="Password"
+                key="password-placeholder"
+                disabled
+                defaultValue="********"
+                style={{ width: '400px', maxWidth: '100%' }}
+                type="password"
+              />
+              <Button color="primary" id="change_password" style={{ margin: '30px 0 0 15px' }} onClick={() => self.handlePass()}>
+                Change password
+              </Button>
+            </form>
+          ) : (
+            <Form
+              onSubmit={userdata => self._editSubmit(currentUser.id, userdata)}
+              handleCancel={() => self.handlePass()}
+              submitLabel="Save"
+              submitButtonId="submit_pass"
+              buttonColor="secondary"
+              showButtons={editPass}
+              className="margin-top flexbox space-between"
             >
-              <p className="help-content">Enable Two Factor authentication</p>
-              <Switch checked={has2FA || qrExpanded} />
+              <PasswordInput
+                className="edit-pass"
+                id="password"
+                label="Password"
+                create={editPass}
+                validations="isLength:1"
+                disabled={!editPass}
+                onClear={() => self.handleButton()}
+                edit={false}
+              />
+            </Form>
+          ))}
+        {!isOAuth2 &&
+          (canHave2FA ? (
+            <div className="margin-top">
+              <div
+                className="clickable flexbox space-between"
+                onClick={() => self.setState({ qrExpanded: has2FA && !qrExpanded ? self.handle2FAState(false) : !qrExpanded })}
+              >
+                <p className="help-content">Enable Two Factor authentication</p>
+                <Switch checked={has2FA || qrExpanded} />
+              </div>
+              <p className="info" style={{ width: '75%', margin: 0 }}>
+                Two Factor Authentication adds a second layer of protection to your account by asking for an additional verification code each time you log in.
+              </p>
+              <Collapse in={qrExpanded} timeout="auto" unmountOnExit>
+                <TwoFactorAuthSetup handle2FAState={isEnabled => self.handle2FAState(isEnabled)} has2FA={has2FA} show={qrExpanded} user={currentUser} />
+              </Collapse>
             </div>
-            <p className="info" style={{ width: '75%', margin: 0 }}>
-              Two Factor Authentication adds a second layer of protection to your account by asking for an additional verification code each time you log in.
-            </p>
-            <Collapse in={qrExpanded} timeout="auto" unmountOnExit>
-              <TwoFactorAuthSetup handle2FAState={isEnabled => self.handle2FAState(isEnabled)} has2FA={has2FA} show={qrExpanded} user={currentUser} />
-            </Collapse>
-          </div>
-        ) : (
-          <EnterpriseNotification
-            isEnterprise={isEnterprise}
-            recommendedPlan={canHave2FA ? 'professional' : null}
-            benefit="set up Two Factor Authentication to add an additional layer of security to accounts"
-          />
-        ))}
+          ) : (
+            <EnterpriseNotification
+              isEnterprise={isEnterprise}
+              recommendedPlan={canHave2FA ? 'professional' : null}
+              benefit="set up Two Factor Authentication to add an additional layer of security to accounts"
+            />
+          ))}
         {isOAuth2 && (
           <div className="flexbox margin-top">
-            <div style={{ fontSize: '36px', marginRight: '10px' }}>
-              {provider.icon}
-            </div>
+            <div style={{ fontSize: '36px', marginRight: '10px' }}>{provider.icon}</div>
             <div className="info">
-              You are logging in using your <strong>{provider.name}</strong> account.<br />
+              You are logging in using your <strong>{provider.name}</strong> account.
+              <br />
               Please connect to {provider.name} to update your login settings.
             </div>
           </div>

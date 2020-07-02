@@ -13,7 +13,7 @@ const defaultStyles = {
   image: { maxWidth: '100%' }
 };
 
-export const CreateGroupExplainerContent = ({ styles=defaultStyles, isEnterprise }) => (
+export const CreateGroupExplainerContent = ({ styles = defaultStyles, isEnterprise }) => (
   <div className="flexbox column">
     <div className={`${styles.columns} margin-bottom`} style={styles.groupType}>
       <div className="margin-right-large">
@@ -28,7 +28,10 @@ export const CreateGroupExplainerContent = ({ styles=defaultStyles, isEnterprise
       </div>
       <img src={staticImage} style={styles.image} />
     </div>
-    <div className={`${styles.columns} ${isEnterprise ? '' : 'lightestgrey'}`} style={{...styles.groupType, padding: (isEnterprise ? styles.groupType.padding : 25)}}>
+    <div
+      className={`${styles.columns} ${isEnterprise ? '' : 'lightestgrey'}`}
+      style={{ ...styles.groupType, padding: isEnterprise ? styles.groupType.padding : 25 }}
+    >
       <div className="margin-right-large">
         <div className="flexbox margin-bottom" style={styles.heading}>
           <Autorenew fontSize="small" style={styles.icon} />

@@ -103,7 +103,7 @@ const filterProcessors = {
   $nexists: () => 0
 };
 const filterAliases = {
-  $nexists: '$exists',
+  $nexists: '$exists'
 };
 const mapFiltersToTerms = filters =>
   filters.map(filter => ({

@@ -29,10 +29,7 @@ export class ArtifactInformation extends React.Component {
       return;
     }
     const lastIndex = value.lastIndexOf(',');
-    const possibleCustomDeviceTypes = value
-      .substring(0, lastIndex)
-      .split(',')
-      .filter(duplicateFilter);
+    const possibleCustomDeviceTypes = value.substring(0, lastIndex).split(',').filter(duplicateFilter);
     const customDeviceTypes = value.substring(lastIndex + 1);
     const possibleDeviceTypeSelection = unionizeStrings(selectedDeviceTypes, possibleCustomDeviceTypes);
     updateCreation({ customDeviceTypes, selectedDeviceTypes: possibleDeviceTypeSelection });
