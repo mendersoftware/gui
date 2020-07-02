@@ -26,9 +26,6 @@ export class Rejected extends React.Component {
       sortDown: true,
       sortScope: null
     };
-    if (!props.rejectedDeviceIds.length) {
-      props.getDevicesByStatus(DEVICE_STATES.rejected);
-    }
   }
 
   componentDidMount() {
