@@ -2,15 +2,20 @@
 
 exports[`Login Component renders correctly 1`] = `
 Array [
+  <img
+    alt="mender-logo"
+    id="signupLogo"
+    src="assets/img/headerlogo.png"
+  />,
   <h1>
     Try Mender for Free
   </h1>,
   <h2
-    className="margin-bottom-large"
+    className="margin-bottom"
   >
     Sign up and connect up to 10 devices
     <br />
-    free for 12 months
+    free for 12 months – no credit card required.
   </h2>,
   <div
     className="flexbox centered margin-bottom"
@@ -21,7 +26,7 @@ Array [
     style={
       Object {
         "display": "flex",
-        "justifyContent": "space-around",
+        "justifyContent": "center",
       }
     }
   >
