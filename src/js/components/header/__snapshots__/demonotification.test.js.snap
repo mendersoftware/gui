@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DemoNotification Component renders correctly 1`] = `
+<div
+  className="flexbox centered"
+  id="demoBox"
+>
+  <a
+    data-event="click focus"
+    data-for="demo-mode"
+    data-offset="{'bottom': 15}"
+    data-tip={true}
+    id="demo-info"
+  >
+    <svg
+      aria-hidden={true}
+      className="MuiSvgIcon-root"
+      focusable="false"
+      style={
+        Object {
+          "height": "16px",
+          "marginRight": "2px",
+          "verticalAlign": "bottom",
+        }
+      }
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+      />
+    </svg>
+    Demo mode
+  </a>
+  <div
+    className="__react_component_tooltip place-bottom type-dark"
+    data-id="tooltip"
+    id="demo-mode"
+  >
+    <h3>
+      Demo mode
+    </h3>
+    <p>
+      Mender is currently running in 
+      <b>
+        demo mode
+      </b>
+      .
+    </p>
+    <p>
+      <a
+        href="https://docs.mender.io/development/administration/production-installation"
+        target="_blank"
+      >
+        See the documentation for help switching to production mode
+      </a>
+      .
+    </p>
+  </div>
+</div>
+`;

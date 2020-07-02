@@ -1,0 +1,107 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeviceNotifications Component renders correctly 1`] = `
+<div
+  className="flexbox centered"
+  id="trialVersion"
+>
+  <a
+    data-event="click focus"
+    data-for="trial-version"
+    data-offset="{'bottom': 15, 'right': 60}"
+    data-tip={true}
+    id="trial-info"
+  >
+    <svg
+      aria-hidden={true}
+      className="MuiSvgIcon-root"
+      focusable="false"
+      style={
+        Object {
+          "height": "16px",
+          "marginRight": "2px",
+          "verticalAlign": "bottom",
+        }
+      }
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+      />
+    </svg>
+    Trial version
+  </a>
+  <div
+    className="__react_component_tooltip place-bottom type-dark"
+    data-id="tooltip"
+    id="trial-version"
+  >
+    <h3>
+      Trial version
+    </h3>
+    <p>
+      You're using the trial version of Mender – it's free for up to 10 devices for 12 months.
+    </p>
+    <p>
+      <a
+        href="/settings/upgrade"
+        onClick={[Function]}
+      >
+        Upgrade to a plan
+      </a>
+       to add more devices and continue using Mender after the trial expires.
+    </p>
+    <p>
+      Or compare the plans at
+       
+      <a
+        href="https://mender.io/plans/pricing"
+        target="_blank"
+      >
+        mender.io/plans/pricing
+      </a>
+      .
+    </p>
+  </div>
+  <a
+    aria-disabled={false}
+    className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary"
+    href="/settings/upgrade"
+    id="trial-upgrade-now"
+    onBlur={[Function]}
+    onClick={[Function]}
+    onDragLeave={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    role="button"
+    tabIndex={0}
+  >
+    <span
+      className="MuiButton-label"
+    >
+      <span
+        className="MuiButton-startIcon MuiButton-iconSizeMedium"
+      >
+        <svg
+          aria-hidden={true}
+          className="MuiSvgIcon-root"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"
+          />
+        </svg>
+      </span>
+      Upgrade now
+    </span>
+  </a>
+</div>
+`;
