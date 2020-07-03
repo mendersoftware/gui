@@ -347,7 +347,6 @@ export const getDeviceById = id => dispatch =>
   DevicesApi.get(`${inventoryApiUrl}/devices/${id}`)
     .then(res => {
       const device = { ...res.body, attributes: mapDeviceAttributes(res.body.attributes) };
-      delete device.updated_ts;
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICE,
         device
