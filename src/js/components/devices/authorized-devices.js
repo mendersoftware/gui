@@ -58,6 +58,8 @@ export class Authorized extends React.Component {
 
   componentDidMount() {
     const self = this;
+    self.props.setDeviceFilters(self.props.groupFilters);
+    self.setState({ selectedRows: [], expandRow: null });
     if (!this.props.acceptedDevicesList.length && this.props.acceptedCount < this.props.deploymentDeviceLimit) {
       this.props.getAllDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted);
     }
@@ -88,7 +90,7 @@ export class Authorized extends React.Component {
     }
     const self = this;
     if (prevProps.currentTab !== self.props.currentTab) {
-      self.props.setDeviceFilters([]);
+      self.props.setDeviceFilters(self.props.groupFilters);
       self.setState({ selectedRows: [], expandRow: null });
     }
     if (

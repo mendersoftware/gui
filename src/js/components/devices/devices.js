@@ -5,7 +5,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Dialog, DialogContent, DialogTitle, Tab, Tabs } from '@material-ui/core';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getAllDeviceCounts, selectDevice, setDeviceFilters } from '../../actions/deviceActions';
+import { getAllDeviceCounts, selectDevice, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Global from '../settings/global';
@@ -13,6 +13,7 @@ import DeviceGroups from './device-groups';
 import PendingDevices from './pending-devices';
 import RejectedDevices from './rejected-devices';
 import PreauthDevices from './preauthorize-devices';
+import { emptyFilter } from './filters';
 
 const routes = {
   pending: {
@@ -53,12 +54,23 @@ export class Devices extends React.Component {
     this._restartInterval();
     this.props.getAllDeviceCounts();
     if (this.props.match.params.filters) {
-      var str = decodeURIComponent(this.props.match.params.filters);
-      const filters = str.split('&').map(filter => {
+      let groupName = '';
+      const str = decodeURIComponent(this.props.match.params.filters);
+      const filters = str.split('&').reduce((filters, filter) => {
         const filterPair = filter.split('=');
-        return { key: filterPair[0], value: filterPair[1] };
-      });
-      this.props.setDeviceFilters(filters);
+        if (filterPair[0] === 'group') {
+          groupName = filterPair[1];
+        } else {
+          const scope = filterPair[0] === 'id' ? { scope: 'identity' } : {};
+          filters.push({ ...emptyFilter, ...scope, key: filterPair[0], value: filterPair[1] });
+        }
+        return filters;
+      }, []);
+      if (groupName) {
+        this.props.selectGroup(groupName, filters);
+      } else {
+        this.props.setDeviceFilters(filters);
+      }
     }
   }
 
@@ -138,7 +150,7 @@ export class Devices extends React.Component {
   }
 }
 
-const actionCreators = { getAllDeviceCounts, selectDevice, setDeviceFilters, setSnackbar };
+const actionCreators = { getAllDeviceCounts, selectDevice, selectGroup, setDeviceFilters, setSnackbar };
 
 const mapStateToProps = state => {
   return {
