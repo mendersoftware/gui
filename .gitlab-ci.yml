@@ -19,20 +19,23 @@ include:
 
 test:lint:
   stage: test
+  except:
+    - master
+    - /^saas-[a-zA-Z0-9.]+$/
   image: node:12.14.0-alpine
   script:
     - npm ci
     - npm run lint
-  except:
-    - master
 
 test:acceptance:
+  stage: e2e-test
+  except:
+    - /^saas-[a-zA-Z0-9.]+$/
   image: tiangolo/docker-with-compose
   dependencies:
     - build:docker
   services:
     - docker:18-dind
-  stage: e2e-test
   before_script:
     - export DOCKER_TAG=${CI_COMMIT_REF_SLUG:-master}
     - export SERVICE_IMAGE=${DOCKER_REPOSITORY}:${DOCKER_TAG}
@@ -51,8 +54,10 @@ test:acceptance:
     - mender-qa-slave
 
 test:unit:
-  image: node:12.14.0-alpine
   stage: test
+  except:
+    - /^saas-[a-zA-Z0-9.]+$/
+  image: node:12.14.0-alpine
   script:
     - npm install
     - npm run test
@@ -62,10 +67,12 @@ test:unit:
       - coverage
 
 publish:tests:
+  stage: publish
+  except:
+    - /^saas-[a-zA-Z0-9.]+$/
   image: node:12.14.0-alpine
   dependencies:
     - test:unit
-  stage: publish
   before_script:
     - npm install -g codecov
   script:
