@@ -52,8 +52,6 @@ test:acceptance:
       - screenshots
       - logs
     when: on_failure
-  tags:
-    - mender-qa-slave
 
 test:unit:
   stage: test
