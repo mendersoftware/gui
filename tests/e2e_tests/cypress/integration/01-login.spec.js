@@ -41,7 +41,7 @@ context('Login', () => {
       cy.contains('Log in').should('be.visible');
       cy.get('[id=email]').type(Cypress.env('username'));
       cy.get('[name=password]').type('lewrongpassword');
-      cy.contains('button', 'Log in').click().wait(3000);
+      cy.contains('button', 'Log in').click().wait(2000).end();
 
       // still on /login page plus an error is displayed
       cy.contains('Log in').should('be.visible');
@@ -60,7 +60,7 @@ context('Login', () => {
       cy.get('[id=email]').type(Cypress.env('username'));
       cy.get('[name=password]').type(Cypress.env('password'));
       cy.get('[type=checkbox]').check();
-      cy.contains('button', 'Log in').click().wait(3000);
+      cy.contains('button', 'Log in').click().wait(2000).end();
     });
 
     it('pt2', () => {
