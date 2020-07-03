@@ -167,7 +167,7 @@ export class CreateDialog extends React.Component {
 const actionCreators = { saveGlobalSettings, selectDevice, selectRelease };
 
 const mapStateToProps = state => {
-  const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const { plan = 'os' } = state.users.organization;
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {

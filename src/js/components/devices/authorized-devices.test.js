@@ -40,6 +40,7 @@ describe('AuthorizedDevices Component', () => {
           complete: false,
           showTips: true
         },
+        organization: {},
         showHelptips: true
       }
     });

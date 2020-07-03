@@ -265,7 +265,7 @@ const actionCreators = {
 };
 
 const mapStateToProps = state => {
-  const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const { plan = 'os' } = state.users.organization;
   return {
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
     pastCount: state.deployments.byStatus.finished.total,

@@ -46,6 +46,7 @@ describe('ScheduledDeployments Component', () => {
         currentUser: 'a1',
         globalSettings: {},
         onboarding: { complete: false },
+        organization: {},
         showHelptips: true
       }
     });
