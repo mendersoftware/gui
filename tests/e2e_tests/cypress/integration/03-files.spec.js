@@ -20,10 +20,11 @@ context('Files', () => {
     const fileName = 'mender-demo-artifact.mender';
     cy.contains('button', 'Upload').click();
     cy.readFile(fileName, encoding).then(fileContent => {
-      cy.get('.MuiDialog-paper .dropzone input').upload({ fileContent, fileName, encoding, mimeType: 'application/octet-stream' });
-      cy.contains('.MuiDialog-paper button', 'Upload')
-        .click()
-        .wait(10000); // give some extra time for the upload
+      cy.get('.MuiDialog-paper .dropzone input').attachFile(
+        { filePath: fileName, fileContent, fileName, encoding, mimeType: 'application/octet-stream' },
+        { subjectType: 'drag-n-drop' }
+      );
+      cy.contains('.MuiDialog-paper button', 'Upload').click().wait(5000); // give some extra time for the upload
     });
   });
 
