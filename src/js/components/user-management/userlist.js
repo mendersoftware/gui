@@ -15,7 +15,7 @@ const columnData = [
 ];
 
 const isAdmin = currentUser => {
-  return currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL');
+  return !currentUser.roles || currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL');
 };
 
 const UserList = ({ currentUser, editUser, isEnterprise, removeUser, roles, users }) => (
