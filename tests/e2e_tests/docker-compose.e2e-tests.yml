@@ -25,6 +25,10 @@ services:
       - ${GUI_REPOSITORY}/videos:/e2e/cypress/videos
       - ${GUI_REPOSITORY}/logs:/root/.npm/_logs
 
+  mender-client:
+    image: mendersoftware/mender-stress-test-client
+    entrypoint: []
+    command: ./mender-stress-test-client -backend="https://docker.mender.io" -inventory="device_type:qemux86-64,artifact_name:mender-image-master,kernel:test Linux version,mac_enp0:12.34" -invfreq="5" -pollfreq="5" -count="1"
 
     ##
     ## to execute or edit the tests locally:
