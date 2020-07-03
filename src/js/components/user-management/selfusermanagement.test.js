@@ -19,9 +19,10 @@ describe('SelfUserManagement Component', () => {
         }
       },
       users: {
-        globalSettings: {},
+        byId: {},
         currentUser: null,
-        byId: {}
+        globalSettings: {},
+        organization: {}
       }
     });
   });

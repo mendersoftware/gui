@@ -159,7 +159,7 @@ export class CreateDialog extends React.Component {
 const actionCreators = { saveGlobalSettings, selectDevice, selectRelease };
 
 const mapStateToProps = state => {
-  const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const { plan = 'os' } = state.users.organization;
   return {
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
     isHosted: state.app.features.isHosted,

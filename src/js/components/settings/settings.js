@@ -52,7 +52,7 @@ export const Settings = ({ currentUser, hasMultitenancy, history, isAdmin, isEnt
 
 const mapStateToProps = state => {
   const currentUser = state.users.byId[state.users.currentUser];
-  const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const { plan = 'os' } = state.users.organization;
   let isAdmin = false || !(state.app.features.hasMultitenancy || state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'));
   let allowUserManagement = false || isAdmin;
   if (currentUser?.roles) {

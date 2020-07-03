@@ -227,7 +227,7 @@ const mapStateToProps = state => {
       return accu;
     }, [])
     .sort();
-  const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const { plan = 'os' } = state.users.organization;
   return {
     acceptedCount: state.devices.byStatus.accepted.total || 0,
     filters: state.devices.filters || [],
