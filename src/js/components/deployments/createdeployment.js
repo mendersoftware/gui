@@ -116,10 +116,13 @@ export class CreateDialog extends React.Component {
       activeStep === 0
         ? !(
             deploymentSettings.release &&
-            (deploymentSettings.deploymentDeviceIds.length || deploymentSettings.filterId || deploymentSettings.group !== allDevices)
+            (deploymentSettings.deploymentDeviceIds.length ||
+              deploymentSettings.filterId ||
+              (deploymentSettings.group && deploymentSettings.group !== allDevices))
           )
         : disableSchedule;
     const finalStep = activeStep === steps.length - 1;
+    console.log(deploymentSettings);
     return (
       <Dialog open={open || false} fullWidth={false} maxWidth="md">
         <DialogTitle>Create a deployment</DialogTitle>

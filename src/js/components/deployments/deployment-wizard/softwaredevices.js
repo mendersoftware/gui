@@ -51,10 +51,10 @@ export class SoftwareDevices extends React.Component {
       if (self.props.device) {
         state.deploymentDeviceIds = [self.props.device.id];
       }
-      self.props.deploymentSettings(state.deploymentDeviceIds, 'deploymentDeviceIds');
     } else {
       state.deploymentDeviceIds = [];
     }
+    self.props.deploymentSettings(state.deploymentDeviceIds, 'deploymentDeviceIds');
     self.setState(state);
   }
 
