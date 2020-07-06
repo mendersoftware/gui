@@ -20,8 +20,10 @@ describe('UserManagement Component', () => {
         }
       },
       users: {
+        byId: {},
         currentUser: null,
-        byId: {}
+        organization: {},
+        rolesById: {}
       }
     });
   });

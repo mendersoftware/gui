@@ -5,6 +5,22 @@ var request = require('superagent')
   .agent()
   .use(unauthorizedRedirect);
 
+export const headerNames = {
+  link: 'link',
+  location: 'location',
+  total: 'x-total-count'
+};
+
+const endHandler = (error, res, reject, resolve) => {
+  if (error || !res.ok) {
+    if (res && res.statusCode == 403) {
+      res.body.error = res.body.error.message;
+    }
+    return reject({ error, res });
+  }
+  return resolve(res);
+};
+
 const Api = {
   get: url => {
     var token = cookies.get('JWT');
@@ -16,13 +32,7 @@ const Api = {
           response: 10000, // wait 10 seconds for server to start sending
           deadline: 60000 // allow one minute to finish loading
         })
-        .end((err, res) => {
-          if (err || !res.ok) {
-            reject({ error: err, res: res });
-          } else {
-            resolve(res);
-          }
-        });
+        .end((error, res) => endHandler(error, res, reject, resolve));
     });
   },
 
@@ -34,13 +44,7 @@ const Api = {
           response: 10000, // wait 10 seconds for server to start sending
           deadline: 60000 // allow one minute to finish loading
         })
-        .end((err, res) => {
-          if (err || !res.ok) {
-            reject({ error: err, res: res });
-          } else {
-            resolve(res);
-          }
-        });
+        .end((error, res) => endHandler(error, res, reject, resolve));
     });
   }
 };

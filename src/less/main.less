@@ -711,6 +711,8 @@ ul.link-list {
   pointer-events: auto;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
   position: absolute;
+  z-index: 1500;
+
   a {
     color: @placeholder;
     text-decoration: underline;
@@ -728,7 +730,7 @@ ul.link-list {
     }
   }
 
-  .content {
+  .__react_component_tooltip.content {
     background-color: @linkgreen;
     font-size: 14px;
     color: @placeholder;
@@ -1573,7 +1575,7 @@ tr.expand {
   word-break: break-word;
   display: inline-block;
   overflow: hidden;
-  max-height: 46px;
+  max-height: 43px;
   &.expanded-attribute {
     display: inline;
     overflow: initial;
@@ -2012,7 +2014,10 @@ span.day {
     grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1.2fr 50px;
   }
   &.past-item {
-    grid-template-columns: 2fr 1fr 1fr 1fr 0.75fr 4fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr 0.75fr 3fr 1fr;
+  }
+  &.pending-item {
+    grid-template-columns: 2fr 1fr 1fr 1fr 0.75fr 2fr 1.2fr 50px;
   }
   &:last-of-type {
     border-bottom: transparent;
@@ -2060,6 +2065,10 @@ span.day {
       }
     }
   }
+  .deployment-item-title {
+    display: none;
+  }
+
   .confirmation-overlay {
     position: absolute;
     z-index: 1;
@@ -2082,6 +2091,38 @@ span.day {
     }
     .MuiChip-root {
       width: fit-content;
+    }
+  }
+}
+
+@media screen and (max-width: 1599px) {
+  .deployment-item {
+    display: block;
+    margin-left: 0;
+    margin-bottom: 30px;
+    min-width: initial;
+    padding-left: 120px;
+
+    &.deployment-header-item {
+      display: none;
+    }
+
+    > div {
+      margin-bottom: 10px;
+      position: relative;
+
+      .deployment-item-title {
+        display: block;
+        position: absolute;
+        left: -120px;
+        top: 0px;
+        width: 110px;
+        text-align: left;
+      }
+
+      .align-right {
+        text-align: left;
+      }
     }
   }
 }

@@ -137,11 +137,11 @@ export class UserManagement extends React.Component {
 const actionCreators = { createUser, editUser, getUserList, removeUser, setSnackbar };
 
 const mapStateToProps = state => {
-  const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const { plan = 'os' } = state.users.organization;
   return {
     currentUser: state.users.byId[state.users.currentUser] || {},
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
-    roles: state.users.roles,
+    roles: Object.entries(state.users.rolesById).map(([id, role]) => ({ id, ...role })),
     snackbar: state.app.snackbar,
     users: Object.values(state.users.byId)
   };

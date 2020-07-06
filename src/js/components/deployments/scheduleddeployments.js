@@ -179,7 +179,7 @@ const actionCreators = { getDeploymentsByStatus, getSingleDeploymentStats, setSn
 
 const mapStateToProps = state => {
   const scheduled = state.deployments.byStatus.scheduled.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
-  const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const { plan = 'os' } = state.users.organization;
   return {
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
     isHosted: state.app.features.isHosted,

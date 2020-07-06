@@ -102,7 +102,12 @@ export default class DeploymentOverview extends React.Component {
             <ExpandableAttribute primary="Status:" secondary={statusDescription} dividerDisabled={true} style={{ marginBottom: -15 }} />
           </div>
           {finished ? (
-            !!(deployment.stats.failure || deployment.stats.aborted || deployment.stats.success) && (
+            !!(
+              deployment.stats.failure ||
+              deployment.stats.aborted ||
+              deployment.stats.success ||
+              (deployment.stats.failure == 0 && deployment.stats.aborted == 0)
+            ) && (
               <div className="statusLarge margin-top-large flexbox centered" style={{ alignItems: 'flex-start' }}>
                 <img src={deployment.stats.success ? 'assets/img/largeSuccess.png' : 'assets/img/largeFail.png'} />
                 <div className="statusWrapper">
@@ -113,6 +118,11 @@ export default class DeploymentOverview extends React.Component {
                         {deployment.stats.success}
                       </b>{' '}
                       {pluralize('devices', deployment.stats.success)} updated successfully
+                    </>
+                  )}
+                  {deployment.stats.success == 0 && deployment.stats.failure == 0 && deployment.stats.aborted == 0 && (
+                    <>
+                      <b className="red">0</b> devices updated successfully
                     </>
                   )}
                   {!!(deployment.stats.failure || deployment.stats.aborted) && (
@@ -137,7 +147,7 @@ export default class DeploymentOverview extends React.Component {
                   <Time value={formatTime(created)} format="YYYY-MM-DD HH:mm" />
                 </div>
               </div>
-              <DeploymentStatus vertical={true} stats={deployment.stats} />
+              <DeploymentStatus vertical={true} deployment={deployment} />
             </div>
           )}
           {!finished ? (

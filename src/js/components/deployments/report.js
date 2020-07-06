@@ -126,7 +126,7 @@ export class DeploymentReport extends React.Component {
           )}
           {tabIndex === 'details' && (
             <div className="margin-left margin-right">
-              <Review {...self.props} deploymentDeviceIds={Object.keys(allDevices)} group={deployment.name} />
+              <Review {...self.props} deploymentDeviceIds={Object.keys(allDevices)} group={deployment.name} phases={deployment.phases} />
             </div>
           )}
           {type === 'scheduled' && (
@@ -158,7 +158,7 @@ const mapStateToProps = state => {
   const devices = state.deployments.byId[state.deployments.selectedDeployment]?.devices || {};
   const allDevices = sortDeploymentDevices(Object.values(devices)).map(device => ({ ...state.devices.byId[device.id], ...device }));
   const deployment = state.deployments.byId[state.deployments.selectedDeployment] || {};
-  const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const { plan = 'os' } = state.users.organization;
   return {
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
     allDevices,

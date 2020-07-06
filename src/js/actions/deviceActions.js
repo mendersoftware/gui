@@ -189,6 +189,9 @@ export const removeDynamicGroup = groupName => (dispatch, getState) => {
  * Device inventory functions
  */
 export const selectGroup = group => (dispatch, getState) => {
+  if (getState().devices.groups.selectedGroup === group) {
+    return;
+  }
   let selectedGroup = getState().devices.groups.byId[group];
   let tasks = [];
   if (selectedGroup && selectedGroup.filters && selectedGroup.filters.length) {
@@ -344,7 +347,6 @@ export const getDeviceById = id => dispatch =>
   DevicesApi.get(`${inventoryApiUrl}/devices/${id}`)
     .then(res => {
       const device = { ...res.body, attributes: mapDeviceAttributes(res.body.attributes) };
-      delete device.updated_ts;
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICE,
         device

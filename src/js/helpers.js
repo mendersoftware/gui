@@ -22,13 +22,20 @@ export function fullyDecodeURI(uri) {
 
 const statCollector = (items, statistics) => items.reduce((accu, property) => accu + Number(statistics[property] || 0), 0);
 
-export const groupDeploymentStats = stats => ({
+export const groupDeploymentStats = deployment => {
+  const stats = deployment.stats || {};
   // don't include 'pending' as inprogress, as all remaining devices will be pending - we don't discriminate based on phase membership
-  inprogress: statCollector(['downloading', 'installing', 'rebooting'], stats),
-  pending: stats['pending'] || 0,
-  successes: statCollector(['success', 'already-installed'], stats),
-  failures: statCollector(['failure', 'aborted', 'noartifact', 'decommissioned'], stats)
-});
+  const inprogress = statCollector(['downloading', 'installing', 'rebooting'], stats);
+  const pending = (deployment.max_devices ? deployment.max_devices - deployment.device_count : 0) + (stats['pending'] || 0);
+  const successes = statCollector(['success', 'already-installed'], stats);
+  const failures = statCollector(['failure', 'aborted', 'noartifact', 'decommissioned'], stats);
+  return {
+    inprogress: inprogress,
+    pending: pending,
+    successes: successes,
+    failures: failures
+  };
+};
 
 export function statusToPercentage(state, intervals) {
   var time;
@@ -242,7 +249,9 @@ export function hashString(str) {
 }
 
 export const formatTime = date => {
-  if (date) {
+  if (date && Object.prototype.toString.call(date) === '[object Date]' && !isNaN(date)) {
+    return date.toISOString().slice(0, -1);
+  } else if (date) {
     return date
       .replace(' ', 'T')
       .replace(/ /g, '')
@@ -461,7 +470,7 @@ export const sortDeploymentDevices = devices => {
     rebooting: [],
     success: []
   };
-  devices.map(device => newList[device.status].push(device));
+  devices.map(device => (newList.hasOwnProperty(device.status) ? newList[device.status].push(device) : newList.decommissioned.push(device)));
   const newCombine = newList.failure.concat(
     newList.downloading,
     newList.installing,

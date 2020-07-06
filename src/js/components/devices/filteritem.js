@@ -8,7 +8,7 @@ import { Autocomplete, createFilterOptions } from '@material-ui/lab';
 import { DEVICE_FILTERING_OPTIONS } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
 
-import { emptyFilter } from './filters';
+import { emptyFilter, getFilterLabelByKey } from './filters';
 import { filtersCompare } from '../../helpers';
 
 const filter = createFilterOptions();
@@ -86,7 +86,7 @@ export default class FilterItem extends React.Component {
     clearTimeout(self.timer);
     self.timer = setTimeout(
       () =>
-        self.state.key && self.state.value
+        self.state.key
           ? self.props.onSelect({
               key: self.state.key,
               operator: self.state.operator,
@@ -105,7 +105,7 @@ export default class FilterItem extends React.Component {
 
   render() {
     const self = this;
-    const { filters, index, loading, plan } = self.props;
+    const { attributes, filters, index, loading, plan } = self.props;
     const { key, operator, reset, value } = self.state;
     const filterOptions = plan ? filterOptionsByPlan[plan] : DEVICE_FILTERING_OPTIONS;
     return (
@@ -143,7 +143,7 @@ export default class FilterItem extends React.Component {
           options={filters.sort((a, b) => a.priority - b.priority)}
           renderInput={params => <TextField {...params} label="Attribute" style={textFieldStyle} />}
           key={reset}
-          value={key}
+          value={getFilterLabelByKey(key, attributes)}
         />
         <Select className="margin-left-small margin-right-small" onChange={event => self.updateFilterOperator(event.target.value)} value={operator}>
           {Object.entries(filterOptions).map(([optionKey, option]) => (

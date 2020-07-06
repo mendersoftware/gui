@@ -122,8 +122,9 @@
     ],
     "testEnvironment": "jest-environment-jsdom-fifteen",
     "transform": {
-      "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.(css|less)$": "<rootDir>/tests/cssTransform.js"
+      "^.+\\.js$": "babel-jest",
+      "^.+\\.(css|less)$": "<rootDir>/tests/cssTransform.js",
+      "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/tests/assetsTransformer.js"
     },
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.js$",

@@ -51,6 +51,7 @@ describe('DeviceGroups Component', () => {
         onboarding: {
           complete: false
         },
+        organization: {},
         showHelptips: false
       }
     });

@@ -26,7 +26,9 @@ export default class ExpandableAttribute extends React.Component {
     const self = this;
     const { primary, secondary, classes, textClasses, dividerDisabled, style } = self.props;
     const defaultClasses = { root: 'attributes' };
-    const currentTextClasses = `${textClasses ? textClasses.secondary : ''} ${self.state.expanded && self.state.overflowActive ? 'expanded-attribute' : ''}`;
+    const currentTextClasses = `${textClasses ? textClasses.secondary : 'inventory-text'}${
+      self.state.expanded && self.state.overflowActive ? ' expanded-attribute' : ''
+    }`;
     const secondaryText = (
       <div>
         <span className={currentTextClasses} ref={r => (self.textContent = r)} style={self.state.overflowActive ? { marginBottom: '-0.5em' } : {}}>

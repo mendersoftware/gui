@@ -18,7 +18,7 @@ import {
 } from '@material-ui/icons';
 
 import { logout } from '../../auth';
-import { decodeSessionToken, hashString } from '../../helpers';
+import { decodeSessionToken, hashString, isEmpty } from '../../helpers';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import DeviceNotifications from './devicenotifications';
 import DeploymentNotifications from './deploymentnotifications';
@@ -154,6 +154,7 @@ export class Header extends React.Component {
 
     const {
       acceptedDevices,
+      allowUserManagement,
       announcement,
       deviceLimit,
       docsVersion,
@@ -202,9 +203,11 @@ export class Header extends React.Component {
               My organization
             </MenuItem>
           )}
-          <MenuItem component={Link} to="/settings/user-management">
-            User management
-          </MenuItem>
+          {allowUserManagement && (
+            <MenuItem component={Link} to="/settings/user-management">
+              User management
+            </MenuItem>
+          )}
           <MenuItem onClick={() => toggleHelptips()}>{showHelptips ? 'Hide help tooltips' : 'Show help tooltips'}</MenuItem>
           <MenuItem component={Link} to="/help/getting-started">
             Help
@@ -242,7 +245,7 @@ export class Header extends React.Component {
                     Mender is currently running in <b>demo mode</b>.
                   </p>
                   <p>
-                    <a href={`https://docs.mender.io/${docsVersion}/administration/production-installation`} target="_blank">
+                    <a href={`https://docs.mender.io/${docsVersion}administration/production-installation`} target="_blank">
                       See the documentation for help switching to production mode
                     </a>
                     .
@@ -292,15 +295,31 @@ const actionCreators = {
 };
 
 const mapStateToProps = state => {
-  const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const organization = !isEmpty(state.users.organization) ? state.users.organization : { plan: 'os', id: null };
+  const currentUser = state.users.byId[state.users.currentUser];
+  let allowUserManagement = false;
+  if (currentUser?.roles) {
+    // TODO: move these + additional role checks into selectors
+    const isAdmin = currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL');
+    allowUserManagement =
+      isAdmin ||
+      currentUser.roles.some(role =>
+        state.users.rolesById[role]?.permissions.some(
+          permission => permission.action === 'http' && permission.object.value === '/api/management/v1/useradm/.*' && ['any'].includes(permission.object.type)
+        )
+      );
+  }
+  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
     acceptedDevices: state.devices.byStatus.accepted.total,
+    allowUserManagement,
     announcement: state.app.hostedAnnouncement,
     deviceLimit: state.devices.limit,
     demo: state.app.features.isDemoMode,
-    docsVersion: state.app.docsVersion,
+    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion,
+    hasTrackingEnabled: state.users.globalSettings[state.users.currentUser]?.trackingConsentGiven,
     inProgress: state.deployments.byStatus.inprogress.total,
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
+    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && organization.plan === 'enterprise'),
     multitenancy: state.app.features.hasMultitenancy || state.app.features.isEnterprise || state.app.features.isHosted,
     showHelptips: state.users.showHelptips,
     pendingDevices: state.devices.byStatus.pending.total,

@@ -52,10 +52,24 @@ export const Settings = ({ currentUser, hasMultitenancy, history, isAdmin, isEnt
 
 const mapStateToProps = state => {
   const currentUser = state.users.byId[state.users.currentUser];
-  const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const { plan = 'os' } = state.users.organization;
+  let isAdmin = false || !(state.app.features.hasMultitenancy || state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'));
+  let allowUserManagement = false || isAdmin;
+  if (currentUser?.roles) {
+    // TODO: move these + additional role checks into selectors
+    isAdmin = currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL');
+    allowUserManagement =
+      isAdmin ||
+      currentUser.roles.some(role =>
+        state.users.rolesById[role]?.permissions.some(
+          permission => permission.action === 'http' && permission.object.value === '/api/management/v1/useradm/.*' && ['any'].includes(permission.object.type)
+        )
+      );
+  }
   return {
+    allowUserManagement,
     currentUser,
-    isAdmin: currentUser && currentUser.roles ? currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL') : false,
+    isAdmin,
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
     hasMultitenancy: state.app.features.hasMultitenancy
   };

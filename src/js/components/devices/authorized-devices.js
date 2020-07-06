@@ -58,6 +58,8 @@ export class Authorized extends React.Component {
 
   componentDidMount() {
     const self = this;
+    self.props.setDeviceFilters(self.props.groupFilters);
+    self.setState({ selectedRows: [], expandRow: null });
     if (!this.props.acceptedDevicesList.length && this.props.acceptedCount < this.props.deploymentDeviceLimit) {
       this.props.getAllDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted);
     }
@@ -88,17 +90,21 @@ export class Authorized extends React.Component {
     }
     const self = this;
     if (prevProps.currentTab !== self.props.currentTab) {
-      self.props.setDeviceFilters([]);
+      self.props.setDeviceFilters(self.props.groupFilters);
       self.setState({ selectedRows: [], expandRow: null });
     }
     if (
       prevProps.allCount !== self.props.allCount ||
-      prevProps.group !== self.props.group ||
+      prevProps.selectedGroup !== self.props.selectedGroup ||
       prevProps.devices.length !== self.props.devices.length ||
       prevProps.groupCount !== self.props.groupCount ||
       filtersCompare(prevProps.filters, self.props.filters)
     ) {
-      self.setState({ selectedRows: [], expandRow: null, allRowsSelected: false });
+      var newState = { selectedRows: [], expandRow: null, allRowsSelected: false };
+      if (prevProps.selectedGroup != self.props.selectedGroup) {
+        newState = { pageNo: 1, ...newState };
+      }
+      self.setState(newState);
       if (self.props.showHelptips && self.props.showTips && !self.props.onboardingComplete && self.props.acceptedCount && self.props.acceptedCount < 2) {
         setTimeout(() => self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, self.onCloseSnackbar), 400);
       }

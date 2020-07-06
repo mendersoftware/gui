@@ -13,7 +13,8 @@ const tenantadmUrl = `${apiUrl}/tenantadm`;
 const useradmApiUrl = `${apiUrl}/useradm`;
 
 const handleLoginError = (err, has2FA) => dispatch => {
-  const is2FABackend = err.error.text.error && err.error.text.error.includes('2fa');
+  const errorText = err.error.text ? err.error.text.error : err.error.message;
+  const is2FABackend = errorText.includes('2fa');
   if (is2FABackend && !has2FA) {
     return dispatch(saveGlobalSettings({ '2fa': 'enabled' }, true));
   }
@@ -24,7 +25,7 @@ const handleLoginError = (err, has2FA) => dispatch => {
       twoFAError ? ',' : ' and'
     } password${twoFAError}. If you still have problems, contact an administrator.`;
     // if error message, check for "unauthorized"
-    errMsg = err.res.body['error'] === 'unauthorized' ? errorMessage : `${errMsg}: ${err.res.body['error']}`;
+    errMsg = err.res.body['error'] === 'unauthorized' ? errorMessage : `${errMsg}: ${err.res.body.error?.message || err.res.body.error}`;
   } else {
     errMsg = `${errMsg}\n${err.error.text && err.error.text.message ? err.error.text.message : ''}`;
   }
@@ -58,6 +59,7 @@ export const loginUser = userData => (dispatch, getState) =>
       return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), dispatch(getUser(userId))]);
     })
     .catch(err => {
+      cookies.remove('JWT');
       const has2FA = getState().users.globalSettings.hasOwnProperty('2fa') && getState().users.globalSettings['2fa'] === 'enabled';
       return Promise.all([Promise.reject(err), dispatch(handleLoginError(err, has2FA))]);
     });
@@ -107,6 +109,54 @@ export const editUser = (userId, userData) => dispatch =>
   UsersApi.put(`${useradmApiUrl}/users/${userId}`, userData).then(() => dispatch({ type: UserConstants.UPDATED_USER, userId, user: userData }));
 
 export const setCurrentUser = user => dispatch => dispatch({ type: UserConstants.SET_CURRENT_USER, user });
+
+export const getRoles = () => (dispatch, getState) =>
+  UsersApi.get(`${useradmApiUrl}/roles`).then(res => {
+    const rolesState = getState().users.rolesById;
+    const rolesById = res.reduce((accu, role) => {
+      const groups = role.permissions.reduce((accu, permission) => {
+        if (permission.action === 'any' && permission.object.type === 'DEVICE_GROUP') {
+          accu.push(permission.object.value);
+        }
+        return accu;
+      }, []);
+      accu[role.name] = {
+        ...UserConstants.emptyRole,
+        ...rolesState[role.name],
+        groups,
+        description: rolesState[role.name] && rolesState[role.name].description ? rolesState[role.name].description : role.description,
+        editable: rolesState[role.name] && typeof rolesState[role.name].editable !== 'undefined' ? rolesState[role.name].editable : true,
+        title: rolesState[role.name] && rolesState[role.name].title ? rolesState[role.name].title : role.name,
+        permissions: role.permissions
+      };
+      return accu;
+    }, {});
+    return dispatch({ type: UserConstants.RECEIVED_ROLES, rolesById });
+  });
+
+export const createRole = roleData => dispatch => {
+  let permissions = roleData.groups.map(group => ({ action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: group } }));
+  if (roleData.allowUserManagement) {
+    permissions.push({
+      action: 'http',
+      object: {
+        type: 'any',
+        value: `${useradmApiUrl}/.*`
+      }
+    });
+  }
+  const role = {
+    name: roleData.name,
+    description: roleData.description,
+    permissions
+  };
+  return UsersApi.post(`${useradmApiUrl}/roles`, role).then(() =>
+    Promise.all([dispatch({ type: UserConstants.CREATED_ROLE, role: { ...UserConstants.emptyRole, ...role }, roleId: role.name }), dispatch(getRoles())])
+  );
+};
+
+export const removeRole = roleId => dispatch =>
+  UsersApi.delete(`${useradmApiUrl}/roles/${roleId}`).then(() => Promise.all([dispatch({ type: UserConstants.REMOVED_ROLE, roleId }), dispatch(getRoles())]));
 
 /* 
   Tenant management + Hosted Mender

@@ -48,12 +48,9 @@ export const getDeploymentsByStatus = (status, page = default_page, per_page = d
     `${deploymentsApiUrl}/deployments?status=${status}&per_page=${per_page}&page=${page}${created_after}${created_before}${search}`
   ).then(res => {
     const { deployments, deploymentIds } = transformDeployments(res.body, getState().deployments.byId);
-    const deploymentsState = getState().deployments.byId;
     let tasks = deploymentIds.reduce(
       (accu, deploymentId) => {
-        if (status !== 'finished' || !deploymentsState[deploymentId] || !deploymentsState[deploymentId].stats) {
-          accu.push(dispatch(getSingleDeploymentStats(deploymentId)));
-        }
+        accu.push(dispatch(getSingleDeploymentStats(deploymentId)));
         return accu;
       },
       [
@@ -152,7 +149,7 @@ export const abortDeployment = deploymentId => (dispatch, getState) =>
       accu[id] = state.deployments.byId[id];
       return accu;
     }, {});
-    const total = state.deployments.byStatus[status].total - 1;
+    const total = Math.max(state.deployments.byStatus[status].total - 1, 0);
     return Promise.all([
       dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status, total }),
       dispatch({

@@ -14,6 +14,11 @@ import { DEVICE_FILTERING_OPTIONS } from '../../constants/deviceConstants';
 
 export const emptyFilter = { key: null, value: '', operator: '$eq', scope: 'inventory' };
 
+export const getFilterLabelByKey = (key, attributes) => {
+  const attr = attributes.find(attr => attr.key === key);
+  return attr != undefined ? attr.value : key;
+};
+
 const MAX_PREVIOUS_FILTERS_COUNT = 3;
 
 export class Filters extends React.Component {
@@ -79,8 +84,9 @@ export class Filters extends React.Component {
   }
 
   onFilterChange(filters) {
-    this.props.setDeviceFilters(filters);
-    this.props.onFilterChange(filters);
+    const activeFilters = filters.filter(item => item.value !== '');
+    this.props.setDeviceFilters(activeFilters);
+    this.props.onFilterChange(activeFilters);
   }
 
   render() {
@@ -128,7 +134,7 @@ export class Filters extends React.Component {
         <Collapse in={showFilters} timeout="auto" unmountOnExit>
           <>
             <div className="flexbox">
-              <div className="margin-right" style={{ marginTop: currentFilters.length ? 8 : 25 }}>
+              <div className="margin-right" style={{ marginTop: addedFilters.length ? 8 : 25 }}>
                 Devices matching:
               </div>
               <div>
@@ -137,7 +143,9 @@ export class Filters extends React.Component {
                     <Chip
                       className="margin-right-small"
                       key={`filter-${item.key}`}
-                      label={`${item.key} ${DEVICE_FILTERING_OPTIONS[item.operator].shortform} ${item.operator === '$regex' ? `${item.value}.*` : item.value}`}
+                      label={`${getFilterLabelByKey(item.key, self.props.attributes)} ${DEVICE_FILTERING_OPTIONS[item.operator].shortform} ${
+                        item.operator === '$regex' ? `${item.value}.*` : item.value
+                      }`}
                       onDelete={() => self.removeFilter(item)}
                     />
                   ))}
@@ -147,6 +155,7 @@ export class Filters extends React.Component {
                   <FilterItem
                     filter={filter}
                     filters={remainingFilters}
+                    attributes={attributes}
                     onRemove={filter => self.removeFilter(filter)}
                     onSelect={filter => self.updateFilter(filter)}
                     plan={plan}
@@ -191,7 +200,7 @@ const actionCreators = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const { plan = 'os' } = state.users.organization;
   const deviceIdAttribute = { key: 'id', value: 'Device ID', scope: 'identity', category: 'identity', priority: 1 };
   let attributes = [
     deviceIdAttribute,

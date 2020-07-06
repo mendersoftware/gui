@@ -107,30 +107,36 @@ export class MyOrganization extends React.Component {
                   <p style={{ marginBottom: '30px' }}>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
                 </div>
               </div>
-              <ListItem style={{ maxWidth: '500px' }} divider={true} key="plan" disabled={true}>
-                <ListItemText primary="Current plan" secondary={plans[currentPlan]} />
-              </ListItem>
+              {isHosted && (
+                <ListItem style={{ maxWidth: '500px' }} divider={true} key="plan" disabled={true}>
+                  <ListItemText primary="Current plan" secondary={plans[currentPlan]} />
+                </ListItem>
+              )}
             </List>
-            <p className="margin-top margin-left-small margin-right-small">
-              <a href={`mailto:support@mender.io?subject=` + org.name + `: Change plan&body=` + mailBodyTexts.upgrade.toString()} target="_blank">
-                Upgrade your plan
-              </a>{' '}
-              or compare product plans at{' '}
-              <a href="https://mender.io/pricing" target="_blank">
-                mender.io/pricing
-              </a>
-              .
-            </p>
-            <p className="margin-left-small margin-right-small">
-              <a href={`mailto:support@mender.io?subject=` + org.name + `: Update billing&body=` + mailBodyTexts.billing.toString()} target="_blank">
-                Request to update your billing details
-              </a>
-            </p>
-            <p className="margin-left-small margin-right-small">
-              <a href={`mailto:support@mender.io?subject=` + org.name + `: Cancel subscription&body=` + mailBodyTexts.cancel.toString()} target="_blank">
-                Cancel subscription
-              </a>
-            </p>
+            {isHosted && (
+              <>
+                <p className="margin-top margin-left-small margin-right-small">
+                  <a href={`mailto:support@mender.io?subject=` + org.name + `: Change plan&body=` + mailBodyTexts.upgrade.toString()} target="_blank">
+                    Upgrade your plan
+                  </a>{' '}
+                  or compare product plans at{' '}
+                  <a href="https://mender.io/pricing" target="_blank">
+                    mender.io/pricing
+                  </a>
+                  .
+                </p>
+                <p className="margin-left-small margin-right-small">
+                  <a href={`mailto:support@mender.io?subject=` + org.name + `: Update billing&body=` + mailBodyTexts.billing.toString()} target="_blank">
+                    Request to update your billing details
+                  </a>
+                </p>
+                <p className="margin-left-small margin-right-small">
+                  <a href="" onClick={e => self.handleCancelSubscription(e)}>
+                    Cancel subscription and deactivate account
+                  </a>
+                </p>
+              </>
+            )}
           </div>
         ) : null}
       </div>

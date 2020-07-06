@@ -69,8 +69,8 @@ export const createArtifact = (meta, file) => dispatch => {
     .then(() => Promise.all([dispatch(selectArtifact(meta.name)), dispatch(setSnackbar('Upload successful', 5000))]))
     .catch(err => {
       try {
-        var errMsg = err.res.body.error || '';
-        dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be generated. ${errMsg}`), null, 'Copy to clipboard'));
+        const errMsg = err.res.body.error || '';
+        dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be generated. ${errMsg || err.error}`), null, 'Copy to clipboard'));
       } catch (e) {
         console.log(e);
       }
@@ -92,8 +92,8 @@ export const uploadArtifact = (meta, file) => dispatch => {
     .then(() => Promise.all([dispatch(selectArtifact(file)), dispatch(setSnackbar('Upload successful', 5000))]))
     .catch(err => {
       try {
-        var errMsg = err.res.body.error || '';
-        dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be uploaded. ${errMsg}`), null, 'Copy to clipboard'));
+        const errMsg = err.res.body.error || '';
+        dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be uploaded. ${errMsg || err.error}`), null, 'Copy to clipboard'));
       } catch (e) {
         console.log(e);
       }
@@ -102,26 +102,37 @@ export const uploadArtifact = (meta, file) => dispatch => {
 };
 
 export const editArtifact = (id, body) => (dispatch, getState) =>
-  ArtifactsApi.putJSON(`${deploymentsApiUrl}/artifacts/${id}`, body).then(() => {
-    const state = getState();
-    let { release, index } = findArtifactIndexInRelease(state.releases.byId, id);
-    if (!release || index === -1) {
-      return dispatch(getReleases());
-    }
-    release.Artifacts[index].description = body.description;
-    return dispatch({ type: ReleaseConstants.UPDATED_ARTIFACT, release });
-  });
+  ArtifactsApi.putJSON(`${deploymentsApiUrl}/artifacts/${id}`, body)
+    .then(() => {
+      const state = getState();
+      let { release, index } = findArtifactIndexInRelease(state.releases.byId, id);
+      if (!release || index === -1) {
+        return dispatch(getReleases());
+      }
+      release.Artifacts[index].description = body.description;
+      return dispatch({ type: ReleaseConstants.UPDATED_ARTIFACT, release });
+    })
+    .catch(err => {
+      const errMsg = err.res.body.error || '';
+      dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact details couldn't be updated. ${errMsg || err.error}`), null, 'Copy to clipboard'));
+      return Promise.reject();
+    });
 
 export const removeArtifact = id => (dispatch, getState) =>
-  ArtifactsApi.delete(`${deploymentsApiUrl}/artifacts/${id}`).then(() => {
-    const state = getState();
-    let { release, index } = findArtifactIndexInRelease(state.releases.byId, id);
-    release.Artifacts.splice(index, 1);
-    if (!release.Artifacts.length) {
-      return dispatch({ type: ReleaseConstants.RELEASE_REMOVED, release: release.Name });
-    }
-    return dispatch({ type: ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT, release });
-  });
+  ArtifactsApi.delete(`${deploymentsApiUrl}/artifacts/${id}`)
+    .then(() => {
+      const state = getState();
+      let { release, index } = findArtifactIndexInRelease(state.releases.byId, id);
+      release.Artifacts.splice(index, 1);
+      if (!release.Artifacts.length) {
+        return dispatch({ type: ReleaseConstants.RELEASE_REMOVED, release: release.Name });
+      }
+      return dispatch({ type: ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT, release });
+    })
+    .catch(err => {
+      const errMsg = err.res.body.error || '';
+      dispatch(setSnackbar(preformatWithRequestID(err.res, `Error removing artifact: ${errMsg || err.error}`), null, 'Copy to clipboard'));
+    });
 
 export const selectArtifact = artifact => (dispatch, getState) => {
   if (!artifact) {
@@ -161,6 +172,6 @@ export const getReleases = () => dispatch =>
   });
 
 export const getRelease = name => dispatch =>
-  ArtifactsApi.get(`${deploymentsApiUrl}/deployments/releases?name=${name}`).then(([release]) =>
-    Promise.resolve(dispatch({ type: ReleaseConstants.RECEIVE_RELEASE, release: flattenRelease(release) }))
+  ArtifactsApi.get(`${deploymentsApiUrl}/deployments/releases?name=${name}`).then(({ body: releases }) =>
+    releases.length ? Promise.resolve(dispatch({ type: ReleaseConstants.RECEIVE_RELEASE, release: flattenRelease(releases[0]) })) : Promise.resolve(null)
   );

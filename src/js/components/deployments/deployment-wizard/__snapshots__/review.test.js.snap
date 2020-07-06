@@ -44,7 +44,7 @@ exports[`Review deployment Component renders correctly 1`] = `
               >
                 <div>
                   <span
-                    className=" "
+                    className="inventory-text"
                     style={Object {}}
                   >
                     test-release
@@ -81,7 +81,7 @@ exports[`Review deployment Component renders correctly 1`] = `
               >
                 <div>
                   <span
-                    className=" "
+                    className="inventory-text"
                     style={Object {}}
                   >
                     
@@ -118,7 +118,7 @@ exports[`Review deployment Component renders correctly 1`] = `
               >
                 <div>
                   <span
-                    className=" "
+                    className="inventory-text"
                     style={Object {}}
                   >
                     test
@@ -155,7 +155,7 @@ exports[`Review deployment Component renders correctly 1`] = `
               >
                 <div>
                   <span
-                    className=" "
+                    className="inventory-text"
                     style={Object {}}
                   >
                     0
@@ -212,7 +212,7 @@ exports[`Review deployment Component renders correctly 1`] = `
               >
                 <div>
                   <span
-                    className=" "
+                    className="inventory-text"
                     style={Object {}}
                   >
                     <time
@@ -261,7 +261,7 @@ exports[`Review deployment Component renders correctly 1`] = `
               >
                 <div>
                   <span
-                    className=" "
+                    className="inventory-text"
                     style={Object {}}
                   >
                     <time
@@ -303,7 +303,7 @@ exports[`Review deployment Component renders correctly 1`] = `
               >
                 <div>
                   <span
-                    className=" "
+                    className="inventory-text"
                     style={Object {}}
                   >
                     -
