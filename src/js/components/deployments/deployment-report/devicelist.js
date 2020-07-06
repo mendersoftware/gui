@@ -9,7 +9,7 @@ import { Button, LinearProgress, Table, TableBody, TableCell, TableHead, TableRo
 import { formatTime, statusToPercentage } from '../../../helpers';
 
 const stateTitleMap = {
-  noartifact: 'No artifact',
+  noartifact: 'No compatible artifact found',
   'already-installed': 'Already installed'
 };
 
