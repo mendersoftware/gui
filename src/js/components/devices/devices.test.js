@@ -38,6 +38,7 @@ describe('Devices Component', () => {
         onboarding: {
           complete: false
         },
+        organization: {},
         showHelptips: true
       }
     });

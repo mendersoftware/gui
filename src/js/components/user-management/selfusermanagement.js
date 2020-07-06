@@ -202,7 +202,7 @@ export class SelfUserManagement extends React.Component {
 const actionCreators = { editUser, saveGlobalSettings, saveUserSettings, setSnackbar };
 
 const mapStateToProps = state => {
-  const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const { plan = 'os' } = state.users.organization;
   return {
     canHave2FA: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
     currentUser: state.users.byId[state.users.currentUser] || {},

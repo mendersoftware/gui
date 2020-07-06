@@ -13,7 +13,7 @@ import {
 } from '@material-ui/icons';
 
 import { logout } from '../../auth';
-import { decodeSessionToken, hashString } from '../../helpers';
+import { decodeSessionToken, hashString, isEmpty } from '../../helpers';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Announcement from './announcement';
 import DemoNotification from './demonotification';
@@ -271,7 +271,7 @@ const actionCreators = {
 };
 
 const mapStateToProps = state => {
-  const organization = state.users.organization ? state.users.organization : { plan: 'os', id: null };
+  const organization = !isEmpty(state.users.organization) ? state.users.organization : { plan: 'os', id: null };
   const currentUser = state.users.byId[state.users.currentUser];
   let allowUserManagement = false;
   if (currentUser?.roles) {
