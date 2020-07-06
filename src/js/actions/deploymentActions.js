@@ -110,10 +110,15 @@ export const getSingleDeploymentStats = id => dispatch =>
     dispatch({ type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS, stats: res.body, deploymentId: id })
   );
 
-export const getSingleDeploymentDevices = id => dispatch =>
+export const getSingleDeploymentDevices = id => (dispatch, getState) =>
   GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}/devices`).then(res => {
+    const deploymentDevices = (getState().deployments.byId[id] || {}).devices || {};
     const devices = res.body.reduce((accu, item) => {
       accu[item.id] = item;
+      const log = (deploymentDevices[item.id] || {}).log;
+      if (log) {
+        accu[item.id].log = log;
+      }
       return accu;
     }, {});
     return dispatch({
