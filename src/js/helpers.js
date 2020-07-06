@@ -28,8 +28,8 @@ export const groupDeploymentStats = deployment => {
   // don't include 'pending' as inprogress, as all remaining devices will be pending - we don't discriminate based on phase membership
   const inprogress = statCollector(['downloading', 'installing', 'rebooting'], stats);
   const pending = (deployment.max_devices ? deployment.max_devices - deployment.device_count : 0) + (stats['pending'] || 0);
-  const successes = statCollector(['success', 'already-installed'], stats);
-  const failures = statCollector(['failure', 'aborted', 'noartifact', 'decommissioned'], stats);
+  const successes = statCollector(['success', 'already-installed', 'noartifact'], stats);
+  const failures = statCollector(['failure', 'aborted', 'decommissioned'], stats);
   return {
     inprogress: inprogress,
     pending: pending,
