@@ -194,7 +194,7 @@ const actionCreators = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const { plan = 'os' } = state.users.organization;
   const deviceIdAttribute = { key: 'id', value: 'Device ID', scope: 'identity', category: 'identity', priority: 1 };
   let attributes = [
     deviceIdAttribute,

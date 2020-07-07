@@ -116,10 +116,13 @@ export class CreateDialog extends React.Component {
       activeStep === 0
         ? !(
             deploymentSettings.release &&
-            (deploymentSettings.deploymentDeviceIds.length || deploymentSettings.filterId || deploymentSettings.group !== allDevices)
+            (deploymentSettings.deploymentDeviceIds.length ||
+              deploymentSettings.filterId ||
+              (deploymentSettings.group && deploymentSettings.group !== allDevices))
           )
         : disableSchedule;
     const finalStep = activeStep === steps.length - 1;
+    console.log(deploymentSettings);
     return (
       <Dialog open={open || false} fullWidth={false} maxWidth="md">
         <DialogTitle>Create a deployment</DialogTitle>
@@ -167,7 +170,7 @@ export class CreateDialog extends React.Component {
 const actionCreators = { saveGlobalSettings, selectDevice, selectRelease };
 
 const mapStateToProps = state => {
-  const plan = state.users.organization ? state.users.organization.plan : 'os';
+  const { plan = 'os' } = state.users.organization;
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {

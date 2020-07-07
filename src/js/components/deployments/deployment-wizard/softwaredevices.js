@@ -51,10 +51,10 @@ export class SoftwareDevices extends React.Component {
       if (self.props.device) {
         state.deploymentDeviceIds = [self.props.device.id];
       }
-      self.props.deploymentSettings(state.deploymentDeviceIds, 'deploymentDeviceIds');
     } else {
       state.deploymentDeviceIds = [];
     }
+    self.props.deploymentSettings(state.deploymentDeviceIds, 'deploymentDeviceIds');
     self.setState(state);
   }
 
@@ -97,7 +97,6 @@ export class SoftwareDevices extends React.Component {
     }
 
     const groupLink = group ? `/devices/group=${group}` : '/devices/';
-    const isDynamicGroup = groups[group] && groups[group].filters ? !!groups[group].filters.length : false;
 
     let onboardingComponent = null;
     if (this.releaseRef && this.groupRef && deploymentAnchor) {
@@ -172,9 +171,9 @@ export class SoftwareDevices extends React.Component {
                   )}
                 </div>
               )}
-              {(deploymentDeviceIds.length > 0 || isDynamicGroup) && (
+              {(deploymentDeviceIds.length > 0 || group) && (
                 <p className="info">
-                  {isDynamicGroup ? (
+                  {group ? (
                     <>All devices in this group</>
                   ) : (
                     <>

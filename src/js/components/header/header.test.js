@@ -41,6 +41,7 @@ describe('Header Component', () => {
             trackingConsentGiven: false
           }
         },
+        organization: {},
         showHelptips: true
       }
     });

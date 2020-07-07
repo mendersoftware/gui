@@ -4,8 +4,8 @@
   "description": "Test mender e2e - with focusing on the GUI",
   "main": "login.spec.js",
   "dependencies": {
-    "cypress": "^3.8.3",
-    "cypress-file-upload": "^3.5.3",
+    "cypress": "^4.9.0",
+    "cypress-file-upload": "^4.0.7",
     "jwt-decode": "^2.2.0"
   },
   "repository": {
@@ -13,8 +13,8 @@
     "url": "git+https://github.com/mendersoftware/integration.git"
   },
   "scripts": {
-    "test": "cypress run --project .",
-    "ciTest": "cypress run --project . --config video=false",
+    "test": "cypress run --headless -b chrome --project .",
+    "ciTest": "cypress run --headless -b chrome --project . --config video=false",
     "watch": "cypress open --port 8888 --project . --config pageLoadTimeout=100000,watchForFileChanges=true"
   },
   "author": "Michael Clelland",
