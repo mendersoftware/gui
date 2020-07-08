@@ -1,6 +1,7 @@
 import * as DeploymentConstants from '../constants/deploymentConstants';
 import DeploymentsApi, { headerNames } from '../api/deployments-api';
-import { mapAttributesToAggregator, startTimeSort } from '../helpers';
+import { setSnackbar } from '../actions/appActions';
+import { mapAttributesToAggregator, preformatWithRequestID, startTimeSort } from '../helpers';
 
 const apiUrl = '/api/management/v1';
 const apiUrlV2 = '/api/management/v2';
@@ -77,22 +78,29 @@ export const createDeployment = newDeployment => dispatch => {
   } else {
     request = DeploymentsApi.post(`${deploymentsApiUrl}/deployments`, newDeployment);
   }
-  return request.then(data => {
-    const lastslashindex = data.location.lastIndexOf('/');
-    const deploymentId = data.location.substring(lastslashindex + 1);
-    const deployment = {
-      ...newDeployment,
-      devices: newDeployment.devices ? newDeployment.devices.map(id => ({ id, status: 'pending' })) : []
-    };
-    return Promise.all([
-      dispatch({
-        type: DeploymentConstants.CREATE_DEPLOYMENT,
-        deployment,
-        deploymentId
-      }),
-      dispatch(getSingleDeployment(deploymentId))
-    ]);
-  });
+  return request
+    .catch(err => {
+      const errMsg = err.res.body?.error?.message || err.res.body?.error || err.error || '';
+      dispatch(setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard'));
+      return Promise.reject();
+    })
+    .then(data => {
+      const lastslashindex = data.location.lastIndexOf('/');
+      const deploymentId = data.location.substring(lastslashindex + 1);
+      const deployment = {
+        ...newDeployment,
+        devices: newDeployment.devices ? newDeployment.devices.map(id => ({ id, status: 'pending' })) : []
+      };
+      return Promise.all([
+        dispatch({
+          type: DeploymentConstants.CREATE_DEPLOYMENT,
+          deployment,
+          deploymentId
+        }),
+        dispatch(getSingleDeployment(deploymentId)),
+        dispatch(setSnackbar('Deployment created successfully', 8000))
+      ]);
+    });
 };
 
 export const getSingleDeployment = id => dispatch =>

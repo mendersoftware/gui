@@ -140,18 +140,12 @@ export class Preauthorize extends React.Component {
     self.props
       .preauthDevice(authset)
       .then(() => {
-        self.props.setSnackbar('Device was successfully added to the preauthorization list', 5000);
-        self._getDevices();
+        self._getDevices(true);
         self._togglePreauth(!close);
       })
-      .catch(err => {
-        console.log(err);
-        var errMsg = (err.res.body || {}).error || '';
-
-        if (err.res.status === 409) {
-          self.setState({ errortext: 'A device with a matching identity data set already exists' });
-        } else {
-          self.props.setSnackbar(preformatWithRequestID(err.res, `The device could not be added: ${errMsg}`), null, 'Copy to clipboard');
+      .catch(errortext => {
+        if (errortext) {
+          self.setState({ errortext });
         }
       });
   }

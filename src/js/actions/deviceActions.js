@@ -1,8 +1,9 @@
 import parse from 'parse-link-header';
 
+import { setSnackbar } from '../actions/appActions';
 import DevicesApi, { headerNames } from '../api/devices-api';
 import * as DeviceConstants from '../constants/deviceConstants';
-import { deriveAttributesFromDevices, duplicateFilter, filterDevices, mapDeviceAttributes } from '../helpers';
+import { deriveAttributesFromDevices, duplicateFilter, filterDevices, mapDeviceAttributes, preformatWithRequestID } from '../helpers';
 
 // default per page until pagination and counting integrated
 const defaultPerPage = 20;
@@ -618,15 +619,19 @@ export const deleteAuthset = (deviceId, authId) => dispatch =>
   );
 
 export const preauthDevice = authset => dispatch =>
-  DevicesApi.post(`${deviceAuthV2}/devices`, authset).then(() =>
-    Promise.all([
-      dispatch({
-        type: DeviceConstants.ADD_DEVICE_AUTHSET,
-        authset
-      }),
-      dispatch(getDeviceCount(DeviceConstants.DEVICE_STATES.preauth))
-    ])
-  );
+  DevicesApi.post(`${deviceAuthV2}/devices`, authset)
+    .catch(err => {
+      console.log(err);
+      const errMsg = err.res.body?.error?.message || err.res.body?.error || err.error || '';
+      if (err.res.status === 409) {
+        return Promise.reject('A device with a matching identity data set already exists');
+      }
+      return Promise.all([
+        dispatch(setSnackbar(preformatWithRequestID(err.res, `The device could not be added: ${errMsg}`), null, 'Copy to clipboard')),
+        Promise.reject()
+      ]);
+    })
+    .then(() => Promise.resolve(dispatch(setSnackbar('Device was successfully added to the preauthorization list', 5000))));
 
 export const decommissionDevice = deviceId => dispatch =>
   DevicesApi.delete(`${deviceAuthV2}/devices/${deviceId}`).then(() =>

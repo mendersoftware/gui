@@ -10,7 +10,7 @@ import { Help as HelpIcon, Sort as SortIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { editArtifact, uploadArtifact, selectArtifact, selectRelease } from '../../actions/releaseActions';
-import { preformatWithRequestID, customSort } from '../../helpers';
+import { customSort } from '../../helpers';
 import { ExpandArtifact } from '../helptips/helptooltips';
 import Loader from '../common/loader';
 import ReleaseRepositoryItem from './releaserepositoryitem';
@@ -65,16 +65,7 @@ export class ReleaseRepository extends React.Component {
 
   _editArtifactData(id, description) {
     var self = this;
-    return self.props
-      .editArtifact(id, { description })
-      .then(() => {
-        self.props.setSnackbar('Artifact details were updated successfully.', 5000, '');
-        self.props.refreshArtifacts();
-      })
-      .catch(err => {
-        const errMsg = err.res.body.error || '';
-        self.props.setSnackbar(preformatWithRequestID(err.res, `Artifact details couldn't be updated. ${errMsg || err.error}`), null, 'Copy to clipboard');
-      });
+    return self.props.editArtifact(id, { description }).then(() => self.props.refreshArtifacts());
   }
 
   onCreateDeploymentFrom(release) {

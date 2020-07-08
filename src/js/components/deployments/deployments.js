@@ -119,29 +119,23 @@ export class Deployments extends React.Component {
     };
     self.setState({ doneLoading: false, createDialog: false, reportDialog: false });
 
-    return self.props
-      .createDeployment(newDeployment)
-      .then(() => {
-        self.props.setSnackbar('Deployment created successfully', 8000);
-        if (phases) {
-          const standardPhases = standardizePhases(phases);
-          let previousPhases = self.props.settings.previousPhases || [];
-          previousPhases = previousPhases.map(standardizePhases);
-          if (!previousPhases.find(previousPhaseList => previousPhaseList.every(oldPhase => standardPhases.find(phase => deepCompare(phase, oldPhase))))) {
-            previousPhases.push(standardPhases);
-          }
-          self.props.saveGlobalSettings({ previousPhases: previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT) });
+    return self.props.createDeployment(newDeployment).then(() => {
+      if (phases) {
+        const standardPhases = standardizePhases(phases);
+        let previousPhases = self.props.settings.previousPhases || [];
+        previousPhases = previousPhases.map(standardizePhases);
+        if (!previousPhases.find(previousPhaseList => previousPhaseList.every(oldPhase => standardPhases.find(phase => deepCompare(phase, oldPhase))))) {
+          previousPhases.push(standardPhases);
         }
-        self.setState({ doneLoading: true, deploymentObject: {} });
-        // successfully retrieved new deployment
-        if (self._getCurrentRoute().title !== routes.active.title) {
-          self.props.history.push(routes.active.route);
-          self._changeTab(routes.active.route);
-        }
-      })
-      .catch(err =>
-        self.props.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${err.res.body.error || ''}`), null, 'Copy to clipboard')
-      );
+        self.props.saveGlobalSettings({ previousPhases: previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT) });
+      }
+      self.setState({ doneLoading: true, deploymentObject: {} });
+      // successfully retrieved new deployment
+      if (self._getCurrentRoute().title !== routes.active.title) {
+        self.props.history.push(routes.active.route);
+        self._changeTab(routes.active.route);
+      }
+    });
   }
 
   _abortDeployment(id) {
