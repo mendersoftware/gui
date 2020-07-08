@@ -70,6 +70,7 @@ export class Global extends React.Component {
   }
 
   render() {
+    const { docsVersion } = this.props;
     var changed = this.hasChanged();
     const id_attributes = this.props.attributes.reduce(
       (accu, value) => {
@@ -83,7 +84,7 @@ export class Global extends React.Component {
       <div>
         <p>Choose a device identity attribute to use to identify your devices throughout the UI.</p>
         <p>
-          <a href="https://docs.mender.io/client-configuration/identity" target="_blank">
+          <a href={`https://docs.mender.io/${docsVersion}client-configuration/identity`} target="_blank">
             Learn how to add custom identity attributes
           </a>{' '}
           to your devices.
@@ -131,9 +132,11 @@ export class Global extends React.Component {
 const actionCreators = { getDevicesByStatus, getGlobalSettings, saveGlobalSettings, setSnackbar };
 
 const mapStateToProps = state => {
+  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
     // limit the selection of the available attribute to AVAILABLE_ATTRIBUTE_LIMIT
     attributes: state.devices.filteringAttributes.identityAttributes.slice(0, state.devices.filteringAttributesLimit),
+    docsVersion: state.app.features.hasMultitenancy && state.app.features.isHosted ? '' : docsVersion,
     devicesCount: Object.keys(state.devices.byId).length,
     settings: state.users.globalSettings
   };
