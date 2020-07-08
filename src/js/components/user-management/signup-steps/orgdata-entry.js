@@ -53,25 +53,36 @@ export class OrgDataEntry extends React.Component {
           />
           <FormCheckbox
             id="tos"
-            label="By checking this you agree to our Terms of service and Privacy Policy *"
+            label={
+              <label htmlFor={tos}>
+                By checking this you agree to our{' '}
+                <a href="https://northern.tech/legal/Hosted%20Mender%20Agreement%20-%2005-23-2020%20-%20Northern.tech%20AS.pdf" target="_blank">
+                  Terms of service
+                </a>{' '}
+                and{' '}
+                <a href="https://northern.tech/legal/privacy-policy" target="_blank">
+                  Privacy Policy
+                </a>{' '}
+                *
+              </label>
+            }
             required={true}
             value={'true'}
             checked={tos === 'true'}
           />
           <FormCheckbox
             id="marketing"
-            label="If you would like to receive occasional email updates about Mender and upcoming features, please consent to us storing your email
-address only for this purpose. By checking this box, you agree that we may contact you by email from time tom time.
-You can unsubscribe by emailing contact@mender.io"
+            label="By checking this you agree that we can send you occasional email updates about Mender. You can unsubscribe from these emails at any time *"
+            required={true}
             value={'true'}
             checked={marketing === 'true'}
           />
+          {recaptchaSiteKey && (
+            <div className="margin-top">
+              <ReCAPTCHA sitekey={recaptchaSiteKey} onChange={recaptcha => self.setState({ recaptcha })} />
+            </div>
+          )}
         </Form>
-        {recaptchaSiteKey && (
-          <div className="margin-top">
-            <ReCAPTCHA sitekey={recaptchaSiteKey} onChange={recaptcha => self.setState({ recaptcha })} />
-          </div>
-        )}
       </>
     );
   }

@@ -107,7 +107,29 @@ Array [
       <span
         className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
       >
-        By checking this you agree to our Terms of service and Privacy Policy *
+        <label
+          htmlFor=""
+        >
+          By checking this you agree to our
+           
+          <a
+            href="https://northern.tech/legal/Hosted%20Mender%20Agreement%20-%2005-23-2020%20-%20Northern.tech%20AS.pdf"
+            target="_blank"
+          >
+            Terms of service
+          </a>
+           
+          and
+           
+          <a
+            href="https://northern.tech/legal/privacy-policy"
+            target="_blank"
+          >
+            Privacy Policy
+          </a>
+           
+          *
+        </label>
       </span>
     </label>
     <label
@@ -159,11 +181,20 @@ Array [
       <span
         className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
       >
-        If you would like to receive occasional email updates about Mender and upcoming features, please consent to us storing your email
-address only for this purpose. By checking this box, you agree that we may contact you by email from time tom time.
-You can unsubscribe by emailing contact@mender.io
+        By checking this you agree that we can send you occasional email updates about Mender. You can unsubscribe from these emails at any time *
       </span>
     </label>
+    <div
+      attachToForm={[Function]}
+      className="margin-top"
+      detachFromForm={[Function]}
+      handleKeyPress={[Function]}
+      updateModel={[Function]}
+      validate={[Function]}
+      validations=""
+    >
+      <div />
+    </div>
     <div
       className="flexbox"
       style={
@@ -201,10 +232,5 @@ You can unsubscribe by emailing contact@mender.io
       </button>
     </div>
   </form>,
-  <div
-    className="margin-top"
-  >
-    <div />
-  </div>,
 ]
 `;
