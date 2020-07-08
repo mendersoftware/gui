@@ -101,7 +101,7 @@ export class Login extends React.Component {
         {isHosted && (
           <>
             <div className="flexbox centered margin-bottom">Log in with:</div>
-            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
               {OAuth2Providers.map(provider => (
                 <Button
                   className="oauth-provider"
