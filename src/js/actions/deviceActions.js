@@ -431,17 +431,20 @@ export const updateDeviceAuth = (deviceId, authId, status) => dispatch =>
     ])
   );
 
-export const deleteAuthset = (deviceId, authId) => dispatch =>
-  DevicesApi.delete(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}`).then(() =>
-    Promise.all([
+export const deleteAuthset = (deviceId, authId) => (dispatch, getState) =>
+  DevicesApi.delete(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}`).then(() => {
+    let tasks = [
       dispatch({
         type: DeviceConstants.REMOVE_DEVICE_AUTHSET,
         authId,
         deviceId
-      }),
-      dispatch(getDeviceAuth(deviceId))
-    ])
-  );
+      })
+    ];
+    if (getState().devices.byId[deviceId].auth_sets.length > 1) {
+      tasks.push(dispatch(getDeviceAuth(deviceId)));
+    }
+    Promise.all(tasks);
+  });
 
 export const preauthDevice = authset => dispatch =>
   DevicesApi.post(`${deviceAuthV2}/devices`, authset).then(() =>
