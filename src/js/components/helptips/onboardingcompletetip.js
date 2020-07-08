@@ -77,19 +77,13 @@ export class OnboardingCompleteTip extends React.Component {
           <p>You&apos;ve now got a good foundation in how to use Mender. Look for more help hints in the UI as you go along.</p>
           What next?
           <div>
-            Proceed to one of the following tutorials (listed in recommended order):
-            <ol>
-              {[
-                { target: 'deploy-a-system-update', title: 'Deploy a system update' },
-                { target: 'deploy-a-container-update', title: 'Deploy a container update' }
-              ].map(option => (
-                <li key={option.target}>
-                  <a href={`https://docs.mender.io/${docsVersion}get-started/${option.target}`} target="_blank">
-                    {option.title}
-                  </a>
-                </li>
-              ))}
-            </ol>
+            <a href={`https://docs.mender.io/${docsVersion}get-started/deploy-a-system-update`} target="_blank">
+              Learn about full-image updates
+            </a>{' '}
+            or{' '}
+            <a href={`https://docs.mender.io/${docsVersion}get-started/deploy-a-container-update`} target="_blank">
+              how to create other kinds of application updates.
+            </a>
           </div>
           <div className="flexbox">
             <div style={{ flexGrow: 1 }} />
