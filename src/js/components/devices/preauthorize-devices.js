@@ -94,12 +94,13 @@ export class Preauthorize extends React.Component {
     self.props
       .preauthDevice(authset)
       .then(() => {
-        self.props.setSnackbar('Device was successfully added to the preauthorization list', 5000);
         self._getDevices(true);
         self.setState({ openPreauth: !close });
       })
-      .catch(errorMessage => {
-        self.setState({ errorMessage });
+      .catch(errortext => {
+        if (errortext) {
+          self.setState({ errortext });
+        }
       });
   }
 
