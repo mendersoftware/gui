@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
@@ -11,10 +12,18 @@ const mockStore = configureStore([thunk]);
 describe('MyOrganization Component', () => {
   let store;
   beforeEach(() => {
+    Date.now = jest.fn(() => new Date('2020-07-01T12:00:00.000Z'));
     store = mockStore({
       app: {
         features: {
           isHosted: true
+        }
+      },
+      devices: {
+        byStatus: {
+          accepted: {
+            total: 1
+          }
         }
       },
       users: {
@@ -22,7 +31,9 @@ describe('MyOrganization Component', () => {
           id: 1,
           name: 'test',
           plan: 'enterprise',
-          tenant_token: 'test'
+          tenant_token: 'test',
+          trial: true,
+          trial_expiration: new Date('2021-01-01T00:00:00Z')
         }
       }
     });
@@ -31,9 +42,11 @@ describe('MyOrganization Component', () => {
   it('renders correctly', () => {
     const tree = renderer
       .create(
-        <Provider store={store}>
-          <MyOrganization />
-        </Provider>
+        <MemoryRouter>
+          <Provider store={store}>
+            <MyOrganization />
+          </Provider>
+        </MemoryRouter>
       )
       .toJSON();
     expect(tree).toMatchSnapshot();

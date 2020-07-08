@@ -221,31 +221,56 @@ exports[`MyOrganization Component renders correctly 1`] = `
           <p
             className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
           >
-            Mender Enterprise
+            <div
+              className="flexbox space-between"
+            >
+              Mender Enterprise
+              <a
+                href="https://mender.io/plans/pricing"
+                target="_blank"
+              >
+                Compare product plans
+              </a>
+            </div>
+          </p>
+        </div>
+      </li>
+      <li
+        className="MuiListItem-root MuiListItem-gutters MuiListItem-divider Mui-disabled"
+        disabled={true}
+        style={
+          Object {
+            "maxWidth": "500px",
+          }
+        }
+      >
+        <div
+          className="MuiListItemText-root MuiListItemText-multiline"
+        >
+          <span
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+          >
+            Trial
+          </span>
+          <p
+            className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+          >
+            <div
+              className="flexbox space-between"
+            >
+              Expires in 
+              6 months
+              <a
+                href="/settings/upgrade"
+                onClick={[Function]}
+              >
+                Upgrade to a paid plan
+              </a>
+            </div>
           </p>
         </div>
       </li>
     </ul>
-    <p
-      className="margin-top margin-left-small margin-right-small"
-    >
-      <a
-        href="mailto:support@mender.io?subject=test: Change plan&body=Organization%20ID%3A%201%0AOrganization%20name%3A%20test%0APlan%20name%3A%20Mender Enterprise%0A%0AI%20would%20like%20to%20make%20a%20change%20to%20my%20Mender%20plan."
-        target="_blank"
-      >
-        Upgrade your plan
-      </a>
-       
-      or compare product plans at
-       
-      <a
-        href="https://mender.io/pricing"
-        target="_blank"
-      >
-        mender.io/pricing
-      </a>
-      .
-    </p>
     <p
       className="margin-left-small margin-right-small"
     >
@@ -263,7 +288,8 @@ exports[`MyOrganization Component renders correctly 1`] = `
         href=""
         onClick={[Function]}
       >
-        Cancel subscription and deactivate account
+        End trial
+         and deactivate account
       </a>
     </p>
   </div>
