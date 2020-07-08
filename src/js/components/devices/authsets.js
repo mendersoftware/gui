@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { deleteAuthset, updateDeviceAuth } from '../../actions/deviceActions';
+import { deleteAuthset, getDeviceAuth, updateDeviceAuth } from '../../actions/deviceActions';
 
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
@@ -147,7 +147,7 @@ export class Authsets extends React.Component {
   }
 }
 
-const actionCreators = { deleteAuthset, updateDeviceAuth, setSnackbar };
+const actionCreators = { deleteAuthset, getDeviceAuth, updateDeviceAuth, setSnackbar };
 
 const mapStateToProps = (state, ownProps) => {
   const device = state.devices.byId[ownProps.device.id];

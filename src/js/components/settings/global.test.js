@@ -11,6 +11,9 @@ describe('GlobalSettings Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
+      app: {
+        features: { hasMultitenancy: true, isHosted: true }
+      },
       devices: {
         byId: {},
         filteringAttributes: { identityAttributes: ['id_attribute'] },

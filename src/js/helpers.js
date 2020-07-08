@@ -537,8 +537,8 @@ export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token
   --retry-poll 30 \\
   --update-poll 5 \\
   --inventory-poll 5`;
-    connectionInstructions = `--quiet ${ipAddress ? `  --server-url ${ipAddress}` : ' '} \\
-    --server-cert="" {enterpriseSettings}`;
+    connectionInstructions = `--quiet ${ipAddress ? `  --server-url https://${ipAddress}` : ' '} \\
+    --server-cert="" ${enterpriseSettings}`;
     if (isHosted) {
       connectionInstructions = `  --quiet --hosted-mender \\
 ${enterpriseSettings}`;
