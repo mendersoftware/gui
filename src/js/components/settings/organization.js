@@ -1,9 +1,12 @@
 import React from 'react';
+import moment from 'moment';
 import { connect } from 'react-redux';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import ReactTooltip from 'react-tooltip';
+import { Link } from 'react-router-dom';
+
 // material ui
-import { Button, List, ListItem, ListItemText } from '@material-ui/core';
+import { Button, List, LinearProgress, ListItem, ListItemText } from '@material-ui/core';
 import { FileCopy as CopyPasteIcon, Info as InfoIcon } from '@material-ui/icons';
 
 import { getUserOrganization } from '../../actions/userActions';
@@ -54,7 +57,7 @@ export class MyOrganization extends React.Component {
 
   render() {
     var self = this;
-    const { org, isHosted } = this.props;
+    const { org, isHosted, acceptedDevices, deviceLimit } = this.props;
     const currentPlan = isHosted ? org && org.plan : 'enterprise';
     const mailBodyTexts = {
       upgrade:
@@ -124,22 +127,56 @@ export class MyOrganization extends React.Component {
               </div>
               {isHosted && (
                 <ListItem style={{ maxWidth: '500px' }} divider={true} key="plan" disabled={true}>
-                  <ListItemText primary="Current plan" secondary={plans[currentPlan]} />
+                  <ListItemText
+                    primary="Current plan"
+                    secondary={
+                      <div className="flexbox space-between">
+                        {plans[currentPlan]}
+                        <a href="https://mender.io/plans/pricing" target="_blank">
+                          Compare product plans
+                        </a>
+                      </div>
+                    }
+                  />
+                </ListItem>
+              )}
+              {isHosted && org.trial && (
+                <ListItem style={{ maxWidth: '500px' }} divider={true} key="trial" disabled={true}>
+                  <ListItemText
+                    primary="Trial"
+                    secondary={
+                      <div className="flexbox space-between">
+                        Expires in {moment().from(moment(org.trial_expiration), true)}
+                        <Link to="/settings/upgrade">Upgrade to a paid plan</Link>
+                      </div>
+                    }
+                  />
+                </ListItem>
+              )}
+              {isHosted && deviceLimit && (
+                <ListItem style={{ maxWidth: '500px' }} divider={true} key="device_limit" disabled={true}>
+                  <ListItemText
+                    primary={`Device limit: ${acceptedDevices}/${deviceLimit}`}
+                    secondary={
+                      <div>
+                        <LinearProgress
+                          variant="determinate"
+                          style={{ backgroundColor: '#c7c7c7', margin: '15px 0' }}
+                          value={(acceptedDevices * 100) / deviceLimit}
+                        />
+                        {org.trial && (
+                          <>
+                            To increase your device limit, <Link to="/settings/upgrade">upgrade to a paid plan</Link>.
+                          </>
+                        )}
+                      </div>
+                    }
+                  />
                 </ListItem>
               )}
             </List>
             {isHosted && (
               <>
-                <p className="margin-top margin-left-small margin-right-small">
-                  <a href={`mailto:support@mender.io?subject=` + org.name + `: Change plan&body=` + mailBodyTexts.upgrade.toString()} target="_blank">
-                    Upgrade your plan
-                  </a>{' '}
-                  or compare product plans at{' '}
-                  <a href="https://mender.io/pricing" target="_blank">
-                    mender.io/pricing
-                  </a>
-                  .
-                </p>
                 <p className="margin-left-small margin-right-small">
                   <a href={`mailto:support@mender.io?subject=` + org.name + `: Update billing&body=` + mailBodyTexts.billing.toString()} target="_blank">
                     Request to update your billing details
@@ -158,7 +195,7 @@ export class MyOrganization extends React.Component {
                 ) : (
                   <p className="margin-left-small margin-right-small">
                     <a href="" onClick={e => self.handleCancelSubscription(e)}>
-                      Cancel subscription and deactivate account
+                      {org.trial ? 'End trial' : 'Cancel subscription'} and deactivate account
                     </a>
                   </p>
                 )}
@@ -179,7 +216,9 @@ const actionCreators = { getUserOrganization, setSnackbar, cancelRequest };
 const mapStateToProps = state => {
   return {
     isHosted: state.app.features.isHosted,
-    org: state.users.organization
+    org: state.users.organization,
+    acceptedDevices: state.devices.byStatus.accepted.total,
+    deviceLimit: state.devices.limit
   };
 };
 
