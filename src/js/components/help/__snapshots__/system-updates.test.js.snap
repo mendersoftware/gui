@@ -58,7 +58,7 @@ exports[`SystemUpdates Component renders correctly 1`] = `
     You can learn more about Mender's A/B partition architecture
      
     <a
-      href="https://docs.mender.io/overview/introduction"
+      href="https://docs.mender.io/architecture/overview"
       target="_blank"
     >
       here
