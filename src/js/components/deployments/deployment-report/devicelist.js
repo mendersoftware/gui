@@ -13,7 +13,7 @@ const stateTitleMap = {
   'already-installed': 'Already installed'
 };
 
-const ProgressDeviceList = ({ created, devices, globalSettings, viewLog }) => {
+const ProgressDeviceList = ({ created, devices, globalSettings, viewLog, retries }) => {
   const deviceList = devices.map((device, index) => {
     var encodedDevice = `id=${device.id}`;
     var id_attribute = device.id || '-';
@@ -50,6 +50,11 @@ const ProgressDeviceList = ({ created, devices, globalSettings, viewLog }) => {
         <TableCell>{currentArtifactLink}</TableCell>
         <TableCell>{device.created ? <Time value={formatTime(device.created)} format="YYYY-MM-DD HH:mm" /> : '-'}</TableCell>
         <TableCell>{device.finished ? <Time value={formatTime(device.finished)} format="YYYY-MM-DD HH:mm" /> : '-'}</TableCell>
+        {retries ? (
+          <TableCell>
+            {device.attempts}/{device.retries}
+          </TableCell>
+        ) : null}
         <TableCell style={{ paddingRight: '0px', position: 'relative', minWidth: 200 }}>
           {device.substate ? (
             <div className="flexbox">
@@ -79,11 +84,13 @@ const ProgressDeviceList = ({ created, devices, globalSettings, viewLog }) => {
             <TableCell style={headerStyle} tooltip={globalSettings.id_attribute || 'Device ID'}>
               {globalSettings.id_attribute || 'Device ID'}
             </TableCell>
-            {['Device type', 'Current software', 'Started', 'Finished', 'Deployment status', ''].map((content, index) => (
-              <TableCell key={`device-list-header-${index + 1}`} style={headerStyle} tooltip={content}>
-                {content}
-              </TableCell>
-            ))}
+            {['Device type', 'Current software', 'Started', 'Finished', 'Retries', 'Deployment status', ''].map((content, index) =>
+              content != 'Retries' || retries ? (
+                <TableCell key={`device-list-header-${index + 1}`} style={headerStyle} tooltip={content}>
+                  {content}
+                </TableCell>
+              ) : null
+            )}
           </TableRow>
         </TableHead>
         <TableBody>{deviceList}</TableBody>
