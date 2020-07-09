@@ -185,7 +185,7 @@ export default class DeploymentOverview extends React.Component {
         </div>
         {(deviceCount || deployment.deviceCount || !!pagedDevices.length) && (
           <div style={{ minHeight: '20vh' }}>
-            <DeviceList created={created} status={deployment.status} devices={pagedDevices} viewLog={viewLog} past={finished} />
+            <DeviceList created={created} status={deployment.status} devices={pagedDevices} viewLog={viewLog} past={finished} retries={deployment.retries} />
             <Pagination
               count={deviceCount || deployment.device_count}
               rowsPerPage={perPage}
