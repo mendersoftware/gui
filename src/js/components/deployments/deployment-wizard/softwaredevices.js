@@ -48,13 +48,17 @@ export class SoftwareDevices extends React.Component {
     }
     if ((self.props.device || currentState.group) && currentState.release) {
       state.deploymentDeviceIds = currentState.group === allDevices ? self.props.acceptedDevices : [];
+      state.deploymentDeviceCount = state.deploymentDeviceIds.length;
       if (self.props.device) {
         state.deploymentDeviceIds = [self.props.device.id];
+      } else if (currentState.group !== allDevices) {
+        state.deploymentDeviceCount = self.props.groups[currentState.group].total;
       }
     } else {
       state.deploymentDeviceIds = [];
     }
     self.props.deploymentSettings(state.deploymentDeviceIds, 'deploymentDeviceIds');
+    self.props.deploymentSettings(state.deploymentDeviceCount, 'deploymentDeviceCount');
     self.setState(state);
   }
 

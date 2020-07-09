@@ -79,7 +79,7 @@ export class ScheduleRollout extends React.Component {
     const phaseStart = this.props.phases ? { start_ts: this.props.phases[0].start_ts } : {};
     // if setting new custom pattern we use default 2 phases
     // for small groups get minimum batch size containing at least 1 device
-    const minBatch = this.props.deploymentDeviceIds.length < 10 ? Math.ceil((1 / this.props.deploymentDeviceIds.length) * 100) : 10;
+    const minBatch = this.props.deploymentDeviceCount < 10 ? Math.ceil((1 / this.props.deploymentDeviceCount) * 100) : 10;
     switch (value) {
       case 0:
         phases = [{ batch_size: 100, ...phaseStart }];
@@ -103,6 +103,7 @@ export class ScheduleRollout extends React.Component {
     const self = this;
     const {
       deploymentDeviceIds = [],
+      deploymentDeviceCount = 0,
       hasNewRetryDefault,
       isEnterprise,
       isHosted,
@@ -113,7 +114,7 @@ export class ScheduleRollout extends React.Component {
       previousRetries
     } = self.props;
     const retries = self.props.retries ? self.props.retries : previousRetries;
-    const numberDevices = deploymentDeviceIds ? deploymentDeviceIds.length : 0;
+    const numberDevices = deploymentDeviceCount ? deploymentDeviceCount : deploymentDeviceIds ? deploymentDeviceIds.length : 0;
     let start_time = phases && phases.length ? phases[0].start_ts : null;
     const customPattern = phases && phases.length > 1 ? 1 : 0;
 
