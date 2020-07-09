@@ -9,7 +9,7 @@ import ExpandableAttribute from '../../common/expandable-attribute';
 import { PLANS as plans } from '../../../constants/appConstants';
 import { formatTime, generateDeploymentGroupDetails, getRemainderPercent } from '../../../helpers';
 
-const Review = ({ deployment = {}, deploymentDeviceIds, device, filters, group, isEnterprise, isHosted, phases, plan, release, retries = 0 }) => {
+const Review = ({ deployment = {}, deploymentDeviceCount, device, filters, group, isEnterprise, isHosted, phases, plan, release, retries = 0 }) => {
   // Create 'phases' for view only
   const deploymentPhases = phases || [{ batch_size: 100 }];
   const start_time = deploymentPhases[0].start_ts || deployment.created || new Date().toISOString();
@@ -71,8 +71,8 @@ const Review = ({ deployment = {}, deploymentDeviceIds, device, filters, group, 
             row.batch_size = row.batch_size || getRemainderPercent(deploymentPhases);
             const deviceCount =
               index === deploymentPhases.length - 1
-                ? Math.ceil(((deployment.max_devices || deploymentDeviceIds.length) / 100) * row.batch_size)
-                : Math.floor(((deployment.max_devices || deploymentDeviceIds.length) / 100) * row.batch_size);
+                ? Math.ceil(((deployment.max_devices || deploymentDeviceCount) / 100) * row.batch_size)
+                : Math.floor(((deployment.max_devices || deploymentDeviceCount) / 100) * row.batch_size);
             return (
               <div className="flexbox column" key={row.start_ts || start_time}>
                 <Chip size="small" label={`Phase ${index + 1}`} />
