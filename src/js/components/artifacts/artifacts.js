@@ -23,6 +23,7 @@ import ReleaseRepository from './releaserepository';
 import ReleasesList from './releaseslist';
 import RemoveArtifactDialog from './dialogs/removeartifact';
 import AddArtifactDialog from './dialogs/addartifact';
+import Tracking from '../../tracking';
 
 const refreshArtifactsLength = 30000; //60000
 
@@ -99,6 +100,8 @@ export class Artifacts extends React.Component {
             advanceOnboarding('upload-new-artifact-dialog-release-name');
           }
         }
+        // track in GA
+        Tracking.event({ category: 'artifacts', action: 'create' });
         return setTimeout(() => self._getReleases(), 2000);
       })
     );
