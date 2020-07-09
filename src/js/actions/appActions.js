@@ -106,3 +106,9 @@ export const getOnboardingState = () => (dispatch, getState) => {
     })
     .catch(e => console.log(e));
 };
+
+export const setFirstLoginAfterSignup = firstLoginAfterSignup => dispatch =>
+  dispatch({
+    type: AppConstants.SET_FIRST_LOGIN_AFTER_SIGNUP,
+    firstLoginAfterSignup: firstLoginAfterSignup
+  });

@@ -21,7 +21,7 @@ import DeviceNotifications from './devicenotifications';
 import DeploymentNotifications from './deploymentnotifications';
 import TrialNotification from './trialnotification';
 
-import { getOnboardingState, setSnackbar } from '../../actions/appActions';
+import { getOnboardingState, setFirstLoginAfterSignup, setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus } from '../../actions/deploymentActions';
 import { getDeviceCount, getDeviceLimit, getDevicesByStatus, getDynamicGroups, getGroups } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
@@ -54,7 +54,7 @@ export class Header extends React.Component {
 
   componentDidUpdate() {
     const sessionId = this.cookies.get('JWT');
-    const { hasTrackingEnabled, organization, trackingCode, user } = this.props;
+    const { firstLoginAfterSignup, hasTrackingEnabled, organization, setFirstLoginAfterSignup, trackingCode, user } = this.props;
     if ((!sessionId || !user || !user.id || !user.email.length) && !this.state.gettingUser && !this.state.loggingOut) {
       this._updateUsername();
     }
@@ -63,6 +63,11 @@ export class Header extends React.Component {
         Tracking.set({ tenant: organization.id });
         Tracking.set({ plan: organization.plan });
         Tracking.set({ userId: user.id });
+      }
+      console.log('firstLoginAfterSignup', firstLoginAfterSignup);
+      if (firstLoginAfterSignup) {
+        Tracking.pageview('/signup/complete');
+        setFirstLoginAfterSignup(false);
       }
     }
   }
@@ -265,6 +270,7 @@ const actionCreators = {
   getUserOrganization,
   logoutUser,
   saveUserSettings,
+  setFirstLoginAfterSignup,
   setShowHelptips,
   setSnackbar,
   toggleHelptips
@@ -293,6 +299,7 @@ const mapStateToProps = state => {
     deviceLimit: state.devices.limit,
     demo: state.app.features.isDemoMode,
     docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion,
+    firstLoginAfterSignup: state.app.firstLoginAfterSignup,
     hasTrackingEnabled: state.users.globalSettings[state.users.currentUser]?.trackingConsentGiven,
     inProgress: state.deployments.byStatus.inprogress.total,
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && organization.plan === 'enterprise'),
