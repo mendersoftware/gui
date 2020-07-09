@@ -320,7 +320,7 @@ export class ExpandedDevice extends React.Component {
           </p>
           <p>
             In cases such as key rotation, each device may have more than one identity/key combination listed. See the documentation for more on{' '}
-            <a href={`https://docs.mender.io/${docsVersion}overview/device-authentication`} target="_blank">
+            <a href={`https://docs.mender.io/${docsVersion}architecture/device-authentication`} target="_blank">
               Device authentication
             </a>
             .
