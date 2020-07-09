@@ -6,6 +6,7 @@ import { Button, LinearProgress } from '@material-ui/core';
 
 import { CloudUpload, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
+import { setSnackbar } from '../../actions/appActions';
 import { selectDevices } from '../../actions/deviceActions';
 import {
   createArtifact,
@@ -119,6 +120,7 @@ export class Artifacts extends React.Component {
       showRemoveDialog,
       selectedArtifact,
       selectedRelease,
+      setSnackbar,
       showOnboardingDialog,
       showRemoveArtifactDialog
     } = self.props;
@@ -185,6 +187,7 @@ export class Artifacts extends React.Component {
         {showCreateArtifactDialog && (
           <AddArtifactDialog
             selectedFile={selectedFile}
+            setSnackbar={setSnackbar}
             deviceTypes={deviceTypes}
             open={showCreateArtifactDialog}
             onboardingComplete={onboardingComplete}
@@ -205,6 +208,7 @@ const actionCreators = {
   selectArtifact,
   selectDevices,
   selectRelease,
+  setSnackbar,
   showRemoveArtifactDialog,
   uploadArtifact
 };
