@@ -41,6 +41,7 @@ export const initialState = {
     isEnterprise: stringToBoolean(menderEnvironment.features.isEnterprise),
     isDemoMode: stringToBoolean(menderEnvironment.isDemoMode)
   },
+  firstLoginAfterSignup: false,
   hostedAnnouncement: menderEnvironment.hostedAnnouncement,
   docsVersion: isNaN(menderEnvironment.integrationVersion.charAt(0)) ? '' : menderEnvironment.integrationVersion.split('.').slice(0, 2).join('.'),
   menderDebPackageVersion: menderEnvironment.menderDebPackageVersion || 'master',
@@ -59,7 +60,7 @@ export const initialState = {
   }
 };
 
-const userReducer = (state = initialState, action) => {
+const appReducer = (state = initialState, action) => {
   switch (action.type) {
     case AppConstants.SET_SNACKBAR:
       return {
@@ -71,9 +72,15 @@ const userReducer = (state = initialState, action) => {
         ...state,
         hostAddress: action.ipAddress
       };
+    case AppConstants.SET_FIRST_LOGIN_AFTER_SIGNUP:
+      console.log(action);
+      return {
+        ...state,
+        firstLoginAfterSignup: action.firstLoginAfterSignup
+      };
     default:
       return state;
   }
 };
 
-export default userReducer;
+export default appReducer;

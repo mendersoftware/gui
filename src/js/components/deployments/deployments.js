@@ -17,6 +17,7 @@ import Scheduled from './scheduleddeployments';
 
 import { deepCompare, preformatWithRequestID, standardizePhases } from '../../helpers';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import Tracking from '../../tracking';
 
 const MAX_PREVIOUS_PHASES_COUNT = 5;
 
@@ -134,6 +135,8 @@ export class Deployments extends React.Component {
           self.props.saveGlobalSettings({ previousPhases: previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT) });
         }
         self.setState({ doneLoading: true, deploymentObject: {} });
+        // track in GA
+        Tracking.event({ category: 'deployments', action: 'create' });
         // successfully retrieved new deployment
         if (self._getCurrentRoute().title !== routes.active.title) {
           self.props.history.push(routes.active.route);

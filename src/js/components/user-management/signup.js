@@ -5,7 +5,7 @@ import Cookies from 'universal-cookie';
 
 import { Button } from '@material-ui/core';
 
-import { setSnackbar } from '../../actions/appActions';
+import { setFirstLoginAfterSignup, setSnackbar } from '../../actions/appActions';
 import { createOrganizationTrial } from '../../actions/organizationActions';
 import { loginUser } from '../../actions/userActions';
 
@@ -70,6 +70,7 @@ export class Signup extends React.Component {
         return Promise.reject();
       })
       .then(() => {
+        self.props.setFirstLoginAfterSignup(true);
         if (!oauthProvider) {
           return new Promise((resolve, reject) => {
             setTimeout(() => self.props.loginUser({ email, password }).catch(reject).then(resolve), 3000);
@@ -145,7 +146,7 @@ export class Signup extends React.Component {
   }
 }
 
-const actionCreators = { createOrganizationTrial, loginUser, setSnackbar };
+const actionCreators = { createOrganizationTrial, loginUser, setFirstLoginAfterSignup, setSnackbar };
 
 const mapStateToProps = state => {
   return {
