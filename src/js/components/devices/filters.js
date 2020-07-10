@@ -123,7 +123,7 @@ export class Filters extends React.Component {
       />
     );
 
-    const canSaveFilter = newFilter.scope === 'inventory' || (!!addedFilters.length && addedFilters[0].scope === 'inventory');
+    const canSaveFilter = ![...addedFilters, newFilter].some(someFilter => someFilter.scope !== 'inventory');
     const filter = filters.find(item => item.key === newFilter.key) || newFilter;
     const addedFilterDefined = filter && Object.values(filter).every(thing => !!thing);
     return (
@@ -165,6 +165,11 @@ export class Filters extends React.Component {
               </div>
             </div>
             <div className="flexbox margin-top-small margin-bottom-small" style={{ justifyContent: 'flex-end' }}>
+              {!canSaveFilter && currentFilters.length >= 1 && (plan === 'enterprise' || isEnterprise) && (
+                <span className="info margin-top-small" style={{ marginRight: 30 }}>
+                  Only inventory attributes can be used to create groups
+                </span>
+              )}
               {filters.length > 1 && (
                 <span className="link margin-top-small margin-right-small" onClick={() => self.clearFilters()}>
                   Clear filter
