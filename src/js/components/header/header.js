@@ -23,7 +23,7 @@ import TrialNotification from './trialnotification';
 
 import { getOnboardingState, setFirstLoginAfterSignup, setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus } from '../../actions/deploymentActions';
-import { getDeviceCount, getDeviceLimit, getDevicesByStatus, getDynamicGroups, getGroups } from '../../actions/deviceActions';
+import { getDeviceLimit, getDevicesByStatus, getDynamicGroups, getGroups } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
 import {
   getUser,
@@ -260,7 +260,6 @@ export class Header extends React.Component {
 
 const actionCreators = {
   getDeploymentsByStatus,
-  getDeviceCount,
   getDeviceLimit,
   getDynamicGroups,
   getDevicesByStatus,
