@@ -137,6 +137,7 @@ export class Artifacts extends React.Component {
       showRemoveDialog,
       selectedArtifact,
       selectedRelease,
+      setSnackbar,
       showOnboardingDialog,
       showRemoveArtifactDialog
     } = self.props;
@@ -203,6 +204,7 @@ export class Artifacts extends React.Component {
         {showCreateArtifactDialog && (
           <AddArtifactDialog
             selectedFile={selectedFile}
+            setSnackbar={setSnackbar}
             deviceTypes={deviceTypes}
             open={showCreateArtifactDialog}
             onboardingComplete={onboardingComplete}
@@ -223,8 +225,8 @@ const actionCreators = {
   selectArtifact,
   selectDevices,
   selectRelease,
-  showRemoveArtifactDialog,
   setSnackbar,
+  showRemoveArtifactDialog,
   uploadArtifact
 };
 

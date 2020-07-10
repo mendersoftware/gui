@@ -12,6 +12,7 @@ import { selectRelease } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { getRemainderPercent } from '../../helpers';
 
+const allDevices = 'All devices';
 const deploymentSteps = [
   { title: 'Select target software and devices', closed: false, component: SoftwareDevices },
   { title: 'Set a rollout schedule', closed: true, component: ScheduleRollout },
@@ -74,12 +75,12 @@ export class CreateDialog extends React.Component {
     if (this.state.hasNewRetryDefault) {
       this.props.saveGlobalSettings({ retries: settings.retries });
     }
-    this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: null, disableSchedule: false });
+    this.setState({ activeStep: 0, deploymentDeviceIds: [], deploymentDeviceCount: 0, group: null, phases: null, disableSchedule: false });
     this.cleanUpDeploymentsStatus();
   }
 
   closeWizard() {
-    this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: null, disableSchedule: false });
+    this.setState({ activeStep: 0, deploymentDeviceIds: [], deploymentDeviceCount: 0, group: null, phases: null, disableSchedule: false });
     this.cleanUpDeploymentsStatus();
     this.props.onDismiss();
   }
@@ -88,7 +89,7 @@ export class CreateDialog extends React.Component {
     let valid = true;
     const remainder = getRemainderPercent(phases);
     for (var phase of phases) {
-      const deviceCount = Math.floor((this.state.deploymentDeviceIds.length / 100) * (phase.batch_size || remainder));
+      const deviceCount = Math.floor((this.state.deploymentDeviceCount / 100) * (phase.batch_size || remainder));
       if (deviceCount < 1) {
         valid = false;
       }
@@ -99,10 +100,11 @@ export class CreateDialog extends React.Component {
   render() {
     const self = this;
     const { device, deploymentObject, groups, open, release } = self.props;
-    const { activeStep, deploymentDeviceIds, disableSchedule, group, phases, retries, steps } = self.state;
+    const { activeStep, deploymentDeviceIds, deploymentDeviceCount, disableSchedule, group, phases, retries, steps } = self.state;
     const ComponentToShow = steps[activeStep].component;
     const deploymentSettings = {
       deploymentDeviceIds: deploymentObject.deploymentDeviceIds || deploymentDeviceIds,
+      deploymentDeviceCount: deploymentObject.deploymentDeviceCount || deploymentDeviceCount,
       filterId: groups[deploymentObject.group || group] ? groups[deploymentObject.group || group].id : undefined,
       group: device ? device.id : deploymentObject.group || group,
       phases,
@@ -110,7 +112,12 @@ export class CreateDialog extends React.Component {
       retries: deploymentObject.retries || retries
     };
     const disabled =
-      activeStep === 0 ? !(deploymentSettings.release && (deploymentSettings.deploymentDeviceIds.length || deploymentSettings.filterId)) : disableSchedule;
+      activeStep === 0
+        ? !(
+            deploymentSettings.release &&
+            (deploymentSettings.deploymentDeviceCount || deploymentSettings.filterId || (deploymentSettings.group && deploymentSettings.group !== allDevices))
+          )
+        : disableSchedule;
     const finalStep = activeStep === steps.length - 1;
     return (
       <Dialog open={open || false} fullWidth={false} maxWidth="md">

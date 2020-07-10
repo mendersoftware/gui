@@ -7,6 +7,8 @@ import { CloudUpload, Delete as DeleteIcon, InfoOutlined as InfoIcon } from '@ma
 import { FileSize } from '../../../helpers';
 import { advanceOnboarding, getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 
+const reFilename = new RegExp(/^[a-z0-9.,_-]+$/i);
+
 export default class ArtifactUpload extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -19,8 +21,13 @@ export default class ArtifactUpload extends React.Component {
   onDrop(acceptedFiles) {
     if (acceptedFiles.length === 1) {
       const self = this;
-      advanceOnboarding('upload-new-artifact-dialog-upload');
-      self.setState({ acceptedFiles }, () => self.props.updateCreation({ file: acceptedFiles[0] }));
+      if (!reFilename.test(acceptedFiles[0].name)) {
+        this.setState({ acceptedFiles: [] });
+        this.props.setSnackbar('Only letters, digits and characters in the set ".,_-" are allowed in the filename.', null);
+      } else {
+        advanceOnboarding('upload-new-artifact-dialog-upload');
+        self.setState({ acceptedFiles }, () => self.props.updateCreation({ file: acceptedFiles[0] }));
+      }
     } else {
       this.setState({ acceptedFiles: [] });
       this.props.setSnackbar('The selected file is not supported.', null);
@@ -70,7 +77,7 @@ export default class ArtifactUpload extends React.Component {
               <input {...getInputProps()} />
               <span className="icon">
                 <CloudUpload fontSize="small" />
-              </span>
+              </span>{' '}
               <span>
                 Drag here or <a>browse</a> to upload an Artifact file
               </span>
