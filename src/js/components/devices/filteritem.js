@@ -27,8 +27,8 @@ export default class FilterItem extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      key: props.filter.key, // this refers to the selected filter with key as the id
-      value: props.filter.value, // while this is the value that is applied with the filter
+      key: props.filter.key || '', // this refers to the selected filter with key as the id
+      value: props.filter.value || '', // while this is the value that is applied with the filter
       operator: props.filter.operator || '$eq',
       scope: props.filter.scope || defaultScope,
       reset: true
@@ -75,12 +75,12 @@ export default class FilterItem extends React.Component {
     const self = this;
     const operator = DEVICE_FILTERING_OPTIONS[value] || {};
     const opValue = operator.value !== 'undefined' ? operator.value : this.state.value;
-    self.setState({ operator: value, value: opValue }, () => self.notifyFilterUpdate());
+    self.setState({ operator: value, value: opValue || '' }, () => self.notifyFilterUpdate());
   }
 
   updateFilterValue(value) {
     const self = this;
-    self.setState({ value }, () => self.notifyFilterUpdate());
+    self.setState({ value: value || '' }, () => self.notifyFilterUpdate());
   }
 
   notifyFilterUpdate() {

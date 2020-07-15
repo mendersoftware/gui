@@ -97,8 +97,8 @@ const filterProcessors = {
   $gte: val => Number(val) || val,
   $lt: val => Number(val) || val,
   $lte: val => Number(val) || val,
-  $in: val => ('' + val).split(','),
-  $nin: val => ('' + val).split(','),
+  $in: val => ('' + val).split(',').map(i => i.trim()),
+  $nin: val => ('' + val).split(',').map(i => i.trim()),
   $exists: () => 1,
   $nexists: () => 0
 };
