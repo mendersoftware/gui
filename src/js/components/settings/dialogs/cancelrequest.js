@@ -4,15 +4,12 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, FormC
 
 const cancelSubscriptionReasons = [
   'Just learning about Mender',
-  'Decided to use Mender on-premise',
-  'Decided to use a different OTA update manager',
   'Too expensive',
   'Lack of features',
-  'Was not able to get my device working properly with Mender',
-  'Security concerns',
-  'I am using a different hosted Mender account',
-  'My project is delayed or cancelled',
-  'Other'
+  'Mender did not work as expected',
+  'Chose a different solution',
+  'My project is delayed',
+  'My project is cancelled'
 ];
 
 export class CancelRequestDialog extends React.Component {
@@ -21,8 +18,10 @@ export class CancelRequestDialog extends React.Component {
     this.state = {
       confirm: false,
       cancelSubscriptionReason: '',
-      cancelSubscriptionReasonOther: ''
+      cancelSubscriptionReasonOther: '',
+      cancelSubscriptionSuggestions: ''
     };
+    this.cancelSubscriptionReasons = cancelSubscriptionReasons.sort(() => Math.random() - 0.5).concat(['Other']);
   }
 
   componentDidMount() {
@@ -44,6 +43,10 @@ export class CancelRequestDialog extends React.Component {
     this.setState({ cancelSubscriptionReasonOther: evt.target.value });
   }
 
+  _setCancelSubscriptionSuggestions(evt) {
+    this.setState({ cancelSubscriptionSuggestions: evt.target.value });
+  }
+
   render() {
     return (
       <Dialog open={true}>
@@ -55,9 +58,9 @@ export class CancelRequestDialog extends React.Component {
               canceling, and we&#39;ll start the process.
             </p>
             <p>Please select the reason for your cancellation to help us improve our service:</p>
-            <FormControl component="fieldset">
+            <FormControl component="fieldset" style={{ marginTop: '0' }}>
               <RadioGroup name="cancellation-selection" onChange={e => this._setCancelSubscriptionReason(e)}>
-                {cancelSubscriptionReasons.map((item, index) => (
+                {this.cancelSubscriptionReasons.map((item, index) => (
                   <FormControlLabel value={item} control={<Radio />} label={item} key={index} style={{ marginTop: '0px' }} />
                 ))}
               </RadioGroup>
@@ -71,6 +74,16 @@ export class CancelRequestDialog extends React.Component {
                 style={{ marginLeft: '30px' }}
               />
             </FormControl>
+            <p className="margin-top">Which key areas should we improve?</p>
+            <Input
+              id="suggestions"
+              name="suggestions"
+              className="margin-bottom"
+              value={this.state.cancelSubscriptionSuggestions}
+              onChange={e => this._setCancelSubscriptionSuggestions(e)}
+              placeholder="Fill in suggestions"
+              style={{ width: '100%' }}
+            />
           </DialogContent>
         ) : (
           <DialogContent>
@@ -102,7 +115,11 @@ export class CancelRequestDialog extends React.Component {
             <Button
               variant="contained"
               color="secondary"
-              onClick={() => this.props.onSubmit(this.state.cancelSubscriptionReasonOther || this.state.cancelSubscriptionReason)}
+              onClick={() =>
+                this.props.onSubmit(
+                  (this.state.cancelSubscriptionReasonOther || this.state.cancelSubscriptionReason) + '\n' + this.state.cancelSubscriptionSuggestions
+                )
+              }
             >
               Confirm deactivation
             </Button>
