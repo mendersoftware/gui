@@ -4,6 +4,9 @@ import CancelRequestDialog from './cancelrequest';
 import { undefineds } from '../../../../../tests/mockData';
 
 describe('CancelRequestDialog Component', () => {
+  beforeEach(() => {
+    Math.random = jest.fn(() => 0);
+  });
   it('renders correctly', () => {
     const tree = createMount()(<CancelRequestDialog open={true} />).html();
     expect(tree).toMatchSnapshot();
