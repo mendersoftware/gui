@@ -181,7 +181,7 @@ Array [
       <span
         className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
       >
-        By checking this you agree that we can send you occasional email updates about Mender. You can unsubscribe from these emails at any time *
+        By checking this you agree that we can send you occasional email updates about Mender. You can unsubscribe from these emails at any time
       </span>
     </label>
     <div
