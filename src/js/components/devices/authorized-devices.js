@@ -296,7 +296,12 @@ export class Authorized extends React.Component {
           </div>
           <Filters
             onFilterChange={() => self.setState({ pageNo: 1 }, () => self._getDevices(true))}
-            onGroupClick={onGroupClick}
+            onGroupClick={() => {
+              if (selectedGroup) {
+                this.setState({ showFilters: !showFilters });
+              }
+              return onGroupClick();
+            }}
             isModification={!!groupFilters.length}
             open={showFilters}
           />
