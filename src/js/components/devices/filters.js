@@ -98,7 +98,7 @@ export class Filters extends React.Component {
         const isInUse = filters.find(filter => filter.key === currentFilter.key);
         if (isInUse) {
           accu.currentFilters.push(currentFilter);
-        } else if (!addedFilters.length || (addedFilters.length && currentFilter.scope === addedFilters[0].scope)) {
+        } else {
           accu.remainingFilters.push(currentFilter);
         }
         return accu;
@@ -122,7 +122,6 @@ export class Filters extends React.Component {
       />
     );
 
-    const canSaveFilter = newFilter.scope === 'inventory' || (!!addedFilters.length && addedFilters[0].scope === 'inventory');
     const filter = filters.find(item => item.key === newFilter.key) || newFilter;
     const addedFilterDefined = filter && Object.values(filter).every(thing => !!thing);
     return (
@@ -133,7 +132,7 @@ export class Filters extends React.Component {
               Devices matching:
             </div>
             <div>
-              <div>
+              <div className="filter-list">
                 {addedFilters.map(item => (
                   <Chip
                     className="margin-right-small"
@@ -175,7 +174,7 @@ export class Filters extends React.Component {
             {!isEnterprise && plan !== 'enterprise' && (
               <EnterpriseNotification isEnterprise={false} recommendedPlan="enterprise" benefit="save dynamic groups and ease device management" />
             )}
-            {canFilterMultiple && (plan === 'enterprise' || isEnterprise) && currentFilters.length >= 1 && canSaveFilter && (
+            {canFilterMultiple && (plan === 'enterprise' || isEnterprise) && currentFilters.length >= 1 && (
               <Button variant="contained" color="secondary" onClick={onGroupClick}>
                 {selectedGroup ? 'Save group' : 'Create group with this filter'}
               </Button>
