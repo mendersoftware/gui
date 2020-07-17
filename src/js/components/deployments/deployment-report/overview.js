@@ -111,26 +111,28 @@ export default class DeploymentOverview extends React.Component {
               <div className="statusLarge margin-top-large flexbox centered" style={{ alignItems: 'flex-start' }}>
                 <img src={deployment.stats.success ? 'assets/img/largeSuccess.png' : 'assets/img/largeFail.png'} />
                 <div className="statusWrapper">
-                  {!!deployment.stats.success && (
-                    <>
-                      <b className="green">
-                        {deployment.stats.success === pagedDevices.length && <span>All </span>}
-                        {deployment.stats.success}
-                      </b>{' '}
-                      {pluralize('devices', deployment.stats.success)} updated successfully
-                    </>
-                  )}
-                  {deployment.stats.success == 0 && deployment.stats.failure == 0 && deployment.stats.aborted == 0 && (
-                    <>
-                      <b className="red">0</b> devices updated successfully
-                    </>
-                  )}
-                  {!!(deployment.stats.failure || deployment.stats.aborted) && (
-                    <>
-                      <b className="red">{deployment.stats.failure || deployment.stats.aborted}</b> {pluralize('devices', deployment.stats.failure)} failed to
-                      update
-                    </>
-                  )}
+                  <div className="statusWrapperMessage">
+                    {!!deployment.stats.success && (
+                      <div>
+                        <b className="green">
+                          {deployment.stats.success === pagedDevices.length && <span>All </span>}
+                          {deployment.stats.success}
+                        </b>{' '}
+                        {pluralize('devices', deployment.stats.success)} updated successfully
+                      </div>
+                    )}
+                    {deployment.stats.success == 0 && deployment.stats.failure == 0 && deployment.stats.aborted == 0 && (
+                      <div>
+                        <b className="red">0</b> devices updated successfully
+                      </div>
+                    )}
+                    {!!(deployment.stats.failure || deployment.stats.aborted) && (
+                      <div>
+                        <b className="red">{deployment.stats.failure || deployment.stats.aborted}</b> {pluralize('devices', deployment.stats.failure)} failed to
+                        update
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             )
