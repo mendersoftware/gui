@@ -122,7 +122,6 @@ export class Filters extends React.Component {
       />
     );
 
-    const canSaveFilter = newFilter.scope === 'inventory' || (!!addedFilters.length && addedFilters[0].scope === 'inventory');
     const filter = filters.find(item => item.key === newFilter.key) || newFilter;
     const addedFilterDefined = filter && Object.values(filter).every(thing => !!thing);
     return (
@@ -175,7 +174,7 @@ export class Filters extends React.Component {
             {!isEnterprise && plan !== 'enterprise' && (
               <EnterpriseNotification isEnterprise={false} recommendedPlan="enterprise" benefit="save dynamic groups and ease device management" />
             )}
-            {canFilterMultiple && (plan === 'enterprise' || isEnterprise) && currentFilters.length >= 1 && canSaveFilter && (
+            {canFilterMultiple && (plan === 'enterprise' || isEnterprise) && currentFilters.length >= 1 && (
               <Button variant="contained" color="secondary" onClick={onGroupClick}>
                 {selectedGroup ? 'Save group' : 'Create group with this filter'}
               </Button>
