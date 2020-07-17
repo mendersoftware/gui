@@ -29,7 +29,9 @@ exports[`Filters Component renders correctly 1`] = `
           Devices matching:
         </div>
         <div>
-          <div />
+          <div
+            className="filter-list"
+          />
           <div
             className="flexbox"
             style={

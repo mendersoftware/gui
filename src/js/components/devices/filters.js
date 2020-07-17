@@ -98,7 +98,7 @@ export class Filters extends React.Component {
         const isInUse = filters.find(filter => filter.key === currentFilter.key);
         if (isInUse) {
           accu.currentFilters.push(currentFilter);
-        } else if (!addedFilters.length || (addedFilters.length && currentFilter.scope === addedFilters[0].scope)) {
+        } else {
           accu.remainingFilters.push(currentFilter);
         }
         return accu;
@@ -133,7 +133,7 @@ export class Filters extends React.Component {
               Devices matching:
             </div>
             <div>
-              <div>
+              <div className="filter-list">
                 {addedFilters.map(item => (
                   <Chip
                     className="margin-right-small"
