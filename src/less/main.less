@@ -1093,6 +1093,13 @@ ul.link-list {
 .filter-wrapper {
   padding: 20px;
 }
+.filter-list {
+  margin-bottom: -8px;
+
+  > .MuiChip-root {
+    margin-bottom: 8px;
+  }
+}
 
 .maxTable {
   max-height: 50vh;
@@ -2275,15 +2282,14 @@ span.day {
     display: inline;
   }
   .statusWrapper {
-    max-width: 160px;
-    min-height: 38px;
-    padding: @defaultGutterWidth @defaultGutterWidth 25px 20px;
+    min-height: 60px;
+    padding: 10px 10px 10px 20px;
     margin: 0 8px 10px 10px;
     background-color: @lightestgrey;
     position: relative;
     display: inline-block;
     font-size: 16px;
-    vertical-align: top;
+    display: table;
     white-space: normal;
     &:after {
       content: '';
@@ -2295,6 +2301,11 @@ span.day {
       left: -19px;
       border-bottom: 10px solid transparent;
       border-right: 20px solid @lightestgrey;
+    }
+
+    .statusWrapperMessage {
+      display: table-cell;
+      vertical-align: middle;
     }
   }
 }

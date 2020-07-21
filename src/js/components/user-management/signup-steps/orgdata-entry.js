@@ -72,8 +72,7 @@ export class OrgDataEntry extends React.Component {
           />
           <FormCheckbox
             id="marketing"
-            label="By checking this you agree that we can send you occasional email updates about Mender. You can unsubscribe from these emails at any time *"
-            required={true}
+            label="By checking this you agree that we can send you occasional email updates about Mender. You can unsubscribe from these emails at any time"
             value={'true'}
             checked={marketing === 'true'}
           />

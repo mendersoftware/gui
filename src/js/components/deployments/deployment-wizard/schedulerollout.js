@@ -39,7 +39,7 @@ export class ScheduleRollout extends React.Component {
   handleStartTimeChange(value) {
     const self = this;
     // if there is no existing phase, set phase and start time
-    if (!self.props.phases) {
+    if (!self.props.phases || value === null) {
       self.props.deploymentSettings([{ batch_size: 100, start_ts: value, delay: 0 }], 'phases');
     } else {
       //if there are existing phases, set the first phases to the new start time and adjust later phases in different function
@@ -70,6 +70,8 @@ export class ScheduleRollout extends React.Component {
     // To be used with updated datetimepicker to open programmatically
     if (value) {
       this.setPickerOpen(true);
+    } else {
+      this.handleStartTimeChange(null);
     }
   }
 
@@ -137,8 +139,17 @@ export class ScheduleRollout extends React.Component {
     return (
       <form style={{ overflow: 'visible', minHeight: '300px', marginTop: '15px' }}>
         <Grid container alignItems="center" direction="column">
-          <Grid item style={{ width: 'min-content', marginBottom: 30 }}>
-            {self.state.isPickerOpen || start_time ? (
+          <Grid item style={{ width: 'min-content', marginBottom: self.state.isPickerOpen || start_time ? 0 : 30 }}>
+            <FormControl>
+              <InputLabel>Set a start time</InputLabel>
+              <Select onChange={event => this.handleStartChange(event.target.value)} value={start_time ? 'custom' : 0} style={styles.textField}>
+                <MenuItem value={0}>Start immediately</MenuItem>
+                <MenuItem value="custom">Schedule the start date &amp; time</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          {self.state.isPickerOpen || start_time ? (
+            <Grid item style={{ width: 'min-content', marginBottom: 30 }}>
               <FormControl>
                 <MuiPickersUtilsProvider utils={MomentUtils}>
                   <DateTimePicker
@@ -155,16 +166,8 @@ export class ScheduleRollout extends React.Component {
                   />
                 </MuiPickersUtilsProvider>
               </FormControl>
-            ) : (
-              <FormControl>
-                <InputLabel>Set a start time</InputLabel>
-                <Select onChange={event => this.handleStartChange(event.target.value)} value={0} style={styles.textField}>
-                  <MenuItem value={0}>Start immediately</MenuItem>
-                  <MenuItem value="custom">Schedule a start date & time</MenuItem>
-                </Select>
-              </FormControl>
-            )}
-          </Grid>
+            </Grid>
+          ) : null}
           <Grid item>
             <FormControl style={{ width: 400, marginBottom: 30 }}>
               <FormGroup row>

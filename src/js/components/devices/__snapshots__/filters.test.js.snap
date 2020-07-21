@@ -29,7 +29,9 @@ exports[`Filters Component renders correctly 1`] = `
           Devices matching:
         </div>
         <div>
-          <div />
+          <div
+            className="filter-list"
+          />
           <div
             className="flexbox"
             style={
@@ -94,7 +96,7 @@ exports[`Filters Component renders correctly 1`] = `
                   >
                     <button
                       aria-label="Clear"
-                      className="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator"
+                      className="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty"
                       disabled={false}
                       onBlur={[Function]}
                       onClick={[Function]}
