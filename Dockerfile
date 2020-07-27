@@ -5,7 +5,7 @@ RUN npm ci
 COPY . ./
 RUN npm run build
 
-FROM nginx:1.19.0-alpine
+FROM nginx:1.19.1-alpine
 RUN mkdir -p /var/www/mender-gui/dist
 WORKDIR /var/www/mender-gui/dist
 ARG GIT_COMMIT_TAG
