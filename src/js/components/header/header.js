@@ -64,7 +64,6 @@ export class Header extends React.Component {
         Tracking.set({ plan: organization.plan });
         Tracking.set({ userId: user.id });
       }
-      console.log('firstLoginAfterSignup', firstLoginAfterSignup);
       if (firstLoginAfterSignup) {
         Tracking.pageview('/signup/complete');
         setFirstLoginAfterSignup(false);

@@ -73,7 +73,6 @@ const appReducer = (state = initialState, action) => {
         hostAddress: action.ipAddress
       };
     case AppConstants.SET_FIRST_LOGIN_AFTER_SIGNUP:
-      console.log(action);
       return {
         ...state,
         firstLoginAfterSignup: action.firstLoginAfterSignup
