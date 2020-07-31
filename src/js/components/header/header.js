@@ -58,13 +58,12 @@ export class Header extends React.Component {
     if ((!sessionId || !user || !user.id || !user.email.length) && !this.state.gettingUser && !this.state.loggingOut) {
       this._updateUsername();
     }
-    if (hasTrackingEnabled && user.id && organization.id) {
+    if (trackingCode && hasTrackingEnabled && user.id && organization.id) {
       if (Tracking.initialize(trackingCode)) {
         Tracking.set({ tenant: organization.id });
         Tracking.set({ plan: organization.plan });
         Tracking.set({ userId: user.id });
       }
-      console.log('firstLoginAfterSignup', firstLoginAfterSignup);
       if (firstLoginAfterSignup) {
         Tracking.pageview('/signup/complete');
         setFirstLoginAfterSignup(false);
@@ -83,8 +82,12 @@ export class Header extends React.Component {
     this.props.getDevicesByStatus(DEVICE_STATES.pending);
     this.props.getDeviceLimit();
     this.props.getGlobalSettings().then(() => {
-      if (this.cookies.get('_ga') && typeof this.props.hasTrackingEnabled === 'undefined') {
-        this.props.saveUserSettings({ trackingConsentGiven: true });
+      if (this.props.trackingCode) {
+        if (!this.cookies.get('_ga') && typeof this.props.hasTrackingEnabled === 'undefined') {
+          Tracking.cookieconsent(this.props.saveUserSettings);
+        } else if (this.cookies.get('_ga') && typeof this.props.hasTrackingEnabled === 'undefined') {
+          this.props.saveUserSettings({ trackingConsentGiven: true });
+        }
       }
     });
     this.props.getDynamicGroups();

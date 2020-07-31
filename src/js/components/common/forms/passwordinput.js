@@ -84,6 +84,7 @@ export default class PasswordInput extends React.Component {
     this.setState({ copied: true });
   }
   render() {
+    var { generate = true } = this.props;
     var feedback = (
       <p>
         {this.state.feedback.map((message, index) => (
@@ -130,12 +131,14 @@ export default class PasswordInput extends React.Component {
               ) : null}
             </div>
             {feedback}
-            <div className="pass-buttons">
-              <Button color="primary" onClick={() => this.generatePass()}>
-                Generate
-              </Button>
-              {this.props.edit ? <Button onClick={() => this.clearPass()}>Cancel</Button> : null}
-            </div>
+            {generate ? (
+              <div className="pass-buttons">
+                <Button color="primary" onClick={() => this.generatePass()}>
+                  Generate
+                </Button>
+                {this.props.edit ? <Button onClick={() => this.clearPass()}>Cancel</Button> : null}
+              </div>
+            ) : null}
           </div>
         ) : null}
       </div>

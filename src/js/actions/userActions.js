@@ -66,6 +66,11 @@ export const loginUser = userData => (dispatch, getState) =>
 
 export const logoutUser = () => dispatch => Promise.resolve(dispatch({ type: UserConstants.USER_LOGOUT }));
 
+export const passwordResetStart = email => () => GeneralApi.post(`${useradmApiUrl}/auth/password-reset/start`, { email: email });
+
+export const passwordResetComplete = (secretHash, newPassword) => () =>
+  GeneralApi.post(`${useradmApiUrl}/auth/password-reset/complete`, { secret_hash: secretHash, password: newPassword });
+
 export const verify2FA = tfaData => dispatch =>
   UsersApi.putVerifyTFA(`${useradmApiUrl}/2faverify`, tfaData)
     .then(() => {
