@@ -58,7 +58,16 @@ export class UserDataEntry extends React.Component {
         </h4>
         <Form showButtons={true} buttonColor="primary" onSubmit={formdata => self.handleSubmit(formdata)} submitLabel="Sign up" submitButtonId="login_button">
           <TextInput hint="Email *" label="Email *" id="email" required={true} validations="isLength:1,isEmail" value={email} />
-          <PasswordInput id="password_new" label="Password *" validations="isLength:8" required={true} value={password} />
+          <PasswordInput
+            id="password_new"
+            label="Password *"
+            validations="isLength:8"
+            create={true}
+            generate={false}
+            required={true}
+            value={password}
+            className="margin-bottom-small"
+          />
           <PasswordInput id="password_confirmation" label="Confirm password *" validations="isLength:8" required={true} value={password_confirmation} />
         </Form>
       </>

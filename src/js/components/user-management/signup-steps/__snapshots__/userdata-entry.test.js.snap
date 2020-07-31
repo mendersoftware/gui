@@ -172,6 +172,7 @@ Array [
       />
     </div>
     <div
+      className="margin-bottom-small"
       id="password_new-holder"
     >
       <div
@@ -251,6 +252,23 @@ Array [
           className="MuiFormHelperText-root"
           id="component-error-text"
         />
+      </div>
+      <div>
+        <div
+          className="help-text"
+          id="pass-strength"
+        >
+          Strength: 
+          <meter
+            high={3.9}
+            low={2.5}
+            max={4}
+            min={0}
+            optimum={4}
+            value=""
+          />
+        </div>
+        <p />
       </div>
     </div>
     <div
