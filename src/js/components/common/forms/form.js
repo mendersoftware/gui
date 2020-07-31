@@ -67,7 +67,7 @@ export default class Form extends React.Component {
         isValid = false;
         errortext = 'You must choose a file to upload';
       }
-    } else if (component.props.id === 'password') {
+    } else if (component.props.id && component.props.id.substr(0, 8) === 'password') {
       if (component.props.required && !value) {
         isValid = false;
         errortext = 'Password is required';
