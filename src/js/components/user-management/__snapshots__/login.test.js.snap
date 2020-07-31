@@ -144,6 +144,27 @@ exports[`Login Component renders correctly 1`] = `
     </div>
     <div
       attachToForm={[Function]}
+      className="flexbox"
+      detachFromForm={[Function]}
+      handleKeyPress={[Function]}
+      updateModel={[Function]}
+      validate={[Function]}
+      validations=""
+    >
+      <a
+        href="/password"
+        onClick={[Function]}
+        style={
+          Object {
+            "marginLeft": "4px",
+          }
+        }
+      >
+        Forgot your password?
+      </a>
+    </div>
+    <div
+      attachToForm={[Function]}
       detachFromForm={[Function]}
       handleKeyPress={[Function]}
       updateModel={[Function]}

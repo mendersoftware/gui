@@ -8,6 +8,8 @@ import Devices from '../components/devices/devices';
 import Help from '../components/help/help';
 import Settings from '../components/settings/settings';
 import Login from '../components/user-management/login';
+import Password from '../components/user-management/password';
+import PasswordReset from '../components/user-management/passwordreset';
 import Signup from '../components/user-management/signup';
 
 export const privateRoutes = (
@@ -25,6 +27,8 @@ export const privateRoutes = (
 export const publicRoutes = (
   <Switch>
     <Route path="/login" component={Login} />
+    <Route exact path="/password" component={Password} />
+    <Route exact path="/password/:secretHash" component={PasswordReset} />
     <Route path="/signup" component={Signup} />
     <Route component={Login} />
   </Switch>
