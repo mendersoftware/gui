@@ -11,7 +11,7 @@ import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
 import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
 import { isLoggedIn, logout, updateMaxAge, expirySet } from '../auth';
 import { setSnackbar } from '../actions/appActions';
-import { setShowConnectingDialog, setShowCreateArtifactDialog } from '../actions/userActions';
+import { saveUserSettings, setShowConnectingDialog, setShowCreateArtifactDialog } from '../actions/userActions';
 import { privateRoutes, publicRoutes } from '../config/routes';
 import SharedSnackbar from '../components/common/sharedsnackbar';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
@@ -101,7 +101,7 @@ class AppRoot extends React.PureComponent {
   }
 }
 
-const actionCreators = { setShowConnectingDialog, setShowCreateArtifactDialog, setSnackbar };
+const actionCreators = { saveUserSettings, setShowConnectingDialog, setShowCreateArtifactDialog, setSnackbar };
 
 const mapStateToProps = state => {
   return {
