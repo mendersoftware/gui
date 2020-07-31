@@ -12,6 +12,8 @@ import {
 
 import { setShowDismissOnboardingTipsDialog } from '../../actions/userActions';
 
+import Tracking from '../../tracking';
+
 const iconWidth = 30;
 
 const orientations = {
@@ -52,6 +54,7 @@ const orientations = {
 
 class BaseOnboardingTipComponent extends React.PureComponent {
   componentDidMount() {
+    Tracking.event({ category: 'onboarding', action: this.props.id });
     ReactTooltip.show(this.tipRef);
   }
   componentDidUpdate() {
