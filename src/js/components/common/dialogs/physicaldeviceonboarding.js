@@ -7,7 +7,6 @@ import HelpIcon from '@material-ui/icons/Help';
 import CopyCode from '../copy-code';
 import AutoSelect from '../forms/autoselect';
 import { setOnboardingApproach, setOnboardingDeviceType } from '../../../actions/userActions';
-import { findLocalIpAddress } from '../../../actions/appActions';
 import { getDebConfigurationCode } from '../../../helpers';
 import { advanceOnboarding } from '../../../utils/onboardingmanager';
 
@@ -31,11 +30,7 @@ export class PhysicalDeviceOnboarding extends React.Component {
   }
 
   componentDidMount() {
-    const self = this;
-    if (!self.props.ipAddress || self.props.ipAddress === 'X.X.X.X') {
-      self.props.findLocalIpAddress();
-    }
-    self.props.setOnboardingApproach('physical');
+    this.props.setOnboardingApproach('physical');
   }
 
   onSelect(deviceType) {
@@ -112,7 +107,7 @@ export class PhysicalDeviceOnboarding extends React.Component {
   }
 }
 
-const actionCreators = { findLocalIpAddress, setOnboardingApproach, setOnboardingDeviceType };
+const actionCreators = { setOnboardingApproach, setOnboardingDeviceType };
 
 const mapStateToProps = state => {
   const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';

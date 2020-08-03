@@ -1,6 +1,5 @@
 import Cookies from 'universal-cookie';
 import AppConstants from '../constants/appConstants';
-import * as Helpers from '../helpers';
 import { DEVICE_STATES } from '../constants/deviceConstants';
 import { getDevicesByStatus } from './deviceActions';
 import { getReleases } from './releaseActions';
@@ -18,8 +17,8 @@ export const sortTable = (table, column, direction) => dispatch =>
     direction: direction
   });
 
-/* 
-  General 
+/*
+  General
 */
 export const setSnackbar = (message, duration, action, component, onClick, onClose) => dispatch =>
   dispatch({
@@ -35,9 +34,6 @@ export const setSnackbar = (message, duration, action, component, onClick, onClo
       onClose: onClose
     }
   });
-
-export const findLocalIpAddress = () => dispatch =>
-  Helpers.findLocalIpAddress().then(ipAddress => dispatch({ type: AppConstants.SET_LOCAL_IPADDRESS, ipAddress }));
 
 export const getOnboardingState = () => (dispatch, getState) => {
   let promises = Promise.resolve(getCurrentOnboardingState());
