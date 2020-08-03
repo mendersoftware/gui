@@ -28,7 +28,6 @@ import { undefineds } from '../../tests/mockData';
 //   collectAddressesFrom,
 //   getDemoDeviceAddress,
 //   detectOsIdentifier,
-//   findLocalIpAddress
 // ];
 
 describe('FileSize Component', () => {

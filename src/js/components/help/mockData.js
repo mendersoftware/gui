@@ -1,6 +1,5 @@
 export const helpProps = {
   docsVersion: '',
-  findLocalIpAddress: jest.fn,
   isHosted: false,
   isEnterprise: false,
   menderDebPackageVersion: 'master',

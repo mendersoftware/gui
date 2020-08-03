@@ -4,13 +4,6 @@ import { getDebConfigurationCode, getDebInstallationCode } from '../../../helper
 import CopyCode from '../../common/copy-code';
 
 export default class DebPackage extends React.PureComponent {
-  componentDidMount() {
-    const self = this;
-    if (!self.props.ipAddress || self.props.ipAddress === 'X.X.X.X') {
-      self.props.findLocalIpAddress();
-    }
-  }
-
   render() {
     const self = this;
     const { menderDebPackageVersion, ipAddress, isHosted, isEnterprise, org } = self.props;
