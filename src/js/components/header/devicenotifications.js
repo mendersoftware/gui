@@ -24,7 +24,7 @@ const DeviceNotifications = ({ total, limit, pending }) => {
         >
           <h3>Device limit</h3>
           {approaching || warning ? (
-            <p>You {approaching ? <span>have reached</span> : <span>are nearing</span>} your device limit.</p>
+            <p>You {approaching ? <span>are nearing</span> : <span>have reached</span>} your device limit.</p>
           ) : (
             <p>
               You can still connect another {(limit - total).toLocaleString()} {pluralize('devices', limit - total)}.
