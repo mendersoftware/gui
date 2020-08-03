@@ -6,7 +6,7 @@ import Time from 'react-time';
 import { Button } from '@material-ui/core';
 import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 
-import { getDeviceCount, getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
+import { getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { preformatWithRequestID } from '../../helpers';
@@ -63,10 +63,8 @@ export class Preauthorize extends React.Component {
    */
   _getDevices(shouldUpdate = false) {
     var self = this;
-    Promise.all([
-      self.props.getDevicesByStatus(DEVICE_STATES.preauth, this.state.pageNo, this.state.pageLength, shouldUpdate),
-      self.props.getDeviceCount(DEVICE_STATES.preauth)
-    ])
+    self.props
+      .getDevicesByStatus(DEVICE_STATES.preauth, this.state.pageNo, this.state.pageLength, shouldUpdate)
       .catch(error => {
         console.log(error);
         var errormsg = error.res.body.error || 'Please check your connection.';
@@ -94,12 +92,13 @@ export class Preauthorize extends React.Component {
     self.props
       .preauthDevice(authset)
       .then(() => {
-        self.props.setSnackbar('Device was successfully added to the preauthorization list', 5000);
         self._getDevices(true);
         self.setState({ openPreauth: !close });
       })
-      .catch(errorMessage => {
-        self.setState({ errorMessage });
+      .catch(errortext => {
+        if (errortext) {
+          self.setState({ errortext });
+        }
       });
   }
 
@@ -184,7 +183,7 @@ export class Preauthorize extends React.Component {
   }
 }
 
-const actionCreators = { getDeviceCount, getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters, setSnackbar };
+const actionCreators = { getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters, setSnackbar };
 
 const mapStateToProps = state => {
   return {

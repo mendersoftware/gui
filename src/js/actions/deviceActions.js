@@ -451,7 +451,7 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
   }).then(response => {
     const deviceAccu = reduceReceivedDevices(response.body, [], state, status);
     let total = !applicableFilters.length ? Number(response.headers[headerNames.total]) : null;
-    if (state.devices.byStatus[status].total === deviceAccu.ids.length) {
+    if (state.devices.byStatus[status].total === deviceAccu.ids.length || !applicableFilters.length) {
       total = deviceAccu.ids.length;
     }
     let tasks = [
@@ -609,25 +609,18 @@ export const deleteAuthset = (deviceId, authId) => dispatch =>
 
 export const preauthDevice = authset => dispatch =>
   GeneralApi.post(`${deviceAuthV2}/devices`, authset)
-    .then(() =>
-      Promise.all([
-        dispatch({
-          type: DeviceConstants.ADD_DEVICE_AUTHSET,
-          authset
-        }),
-        dispatch(getDeviceCount(DeviceConstants.DEVICE_STATES.preauth))
-      ])
-    )
     .catch(err => {
       console.log(err);
-      var errMsg = (err.res.body || {}).error || '';
+      const errMsg = err.res.body?.error?.message || err.res.body?.error || err.error || '';
       if (err.res.status === 409) {
         return Promise.reject('A device with a matching identity data set already exists');
-      } else {
-        dispatch(setSnackbar(preformatWithRequestID(err.res, `The device could not be added: ${errMsg}`), null, 'Copy to clipboard'));
       }
-      return Promise.reject();
-    });
+      return Promise.all([
+        dispatch(setSnackbar(preformatWithRequestID(err.res, `The device could not be added: ${errMsg}`), null, 'Copy to clipboard')),
+        Promise.reject()
+      ]);
+    })
+    .then(() => Promise.resolve(dispatch(setSnackbar('Device was successfully added to the preauthorization list', 5000))));
 
 export const decommissionDevice = deviceId => dispatch =>
   GeneralApi.delete(`${deviceAuthV2}/devices/${deviceId}`).then(() =>

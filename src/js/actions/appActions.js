@@ -47,8 +47,8 @@ export const getOnboardingState = () => (dispatch, getState) => {
   if (!Object.keys(savedState).length || !savedState.complete) {
     const userCookie = cookies.get(`${userId}-onboarded`);
     // to prevent tips from showing up for previously onboarded users completion is set explicitly before the additional requests complete
-    if (userCookie) {
-      return dispatch(setOnboardingComplete(Boolean(userCookie)));
+    if (userCookie || getState().users.onboarding.complete) {
+      return dispatch(setOnboardingComplete(Boolean(userCookie) || getState().users.onboarding.complete));
     }
     const requests = [
       dispatch(getDevicesByStatus(DEVICE_STATES.accepted)),
