@@ -46,6 +46,9 @@ export class Authorized extends React.Component {
       selectedRows: [],
       showActions: false,
       showFilters: false,
+      sortCol: null,
+      sortDown: true,
+      sortScope: null,
       tmpDevices: []
     };
   }
@@ -107,15 +110,16 @@ export class Authorized extends React.Component {
   _getDevices(shouldUpdate = false) {
     const self = this;
     const { filters, getDevicesByStatus, getGroupDevices, selectedGroup, setSnackbar } = self.props;
-    const { pageLength, pageNo } = self.state;
+    const { pageLength, pageNo, sortCol, sortDown, sortScope } = self.state;
+    const sortBy = sortCol ? [{ attribute: sortCol, order: sortDown ? 'desc' : 'asc', scope: sortScope }] : undefined;
     let request;
     // if a group is selected, use getGroupDevices
     if (selectedGroup) {
-      request = getGroupDevices(selectedGroup, pageNo, pageLength, true);
+      request = getGroupDevices(selectedGroup, pageNo, pageLength, true, sortBy);
     } else {
       // otherwise, get accepted devices from the inventory, eventually applying filters
       const hasFilters = filters.length && filters[0].value;
-      request = getDevicesByStatus(DEVICE_STATES.accepted, pageNo, pageLength, shouldUpdate || hasFilters);
+      request = getDevicesByStatus(DEVICE_STATES.accepted, pageNo, pageLength, shouldUpdate || hasFilters, undefined, sortBy);
     }
     request
       .catch(err => {
@@ -180,6 +184,15 @@ export class Authorized extends React.Component {
     return self.props.updateDevicesAuth(deviceIds, DEVICE_STATES.rejected).then(() => self.setState({ selectedRows: [], loading: false }));
   }
 
+  onSortChange(attribute) {
+    const self = this;
+    let state = { sortCol: attribute.name, sortDown: !self.state.sortDown, sortScope: attribute.scope };
+    if (attribute.name !== self.state.sortCol) {
+      state.sortDown = true;
+    }
+    self.setState(state, () => self._getDevices(true));
+  }
+
   render() {
     const self = this;
     const {
@@ -200,30 +213,34 @@ export class Authorized extends React.Component {
     const columnHeaders = [
       {
         title: idAttribute || 'Device ID',
-        name: 'device_id',
         customize: openSettingsDialog,
-        style: { flexGrow: 1 }
+        attribute: { name: idAttribute, scope: 'identity' },
+        style: { flexGrow: 1 },
+        sortable: !!idAttribute && idAttribute !== 'Device ID'
       },
       {
         title: 'Device type',
-        name: 'device_type',
-        render: device => (device.attributes && device.attributes.device_type ? device.attributes.device_type : '-')
+        attribute: { name: 'device_type', scope: 'inventory' },
+        render: device => (device.attributes && device.attributes.device_type ? device.attributes.device_type : '-'),
+        sortable: true
       },
       {
         title: 'Current software',
-        name: 'current_software',
-        render: device => (device.attributes && device.attributes.artifact_name ? device.attributes.artifact_name : '-')
+        attribute: { name: 'artifact_name', scope: 'inventory' },
+        render: device => (device.attributes && device.attributes.artifact_name ? device.attributes.artifact_name : '-'),
+        sortable: true
       },
       {
         title: 'Last check-in',
-        name: 'last_checkin',
-        property: 'updated_ts',
-        render: device => <RelativeTime updateTime={device.updated_ts} />
+        attribute: { name: 'updated_ts', scope: 'system' },
+        render: device => <RelativeTime updateTime={device.updated_ts} />,
+        sortable: true
       },
       {
         title: '',
-        name: 'status',
-        render: device => <DeviceStatus device={device} />
+        attribute: { name: 'status', scope: 'identity' },
+        render: device => <DeviceStatus device={device} />,
+        sortable: true
       }
     ];
 
@@ -316,6 +333,7 @@ export class Authorized extends React.Component {
               onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}
               onPageChange={e => self._handlePageChange(e)}
               onSelect={selection => self.onRowSelection(selection)}
+              onSort={attribute => self.onSortChange(attribute)}
               pageTotal={groupCount}
               refreshDevices={shouldUpdate => self._getDevices(shouldUpdate)}
               selectDeviceById={id => self.getDeviceById(id)}

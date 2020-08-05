@@ -14,6 +14,7 @@ exports[`DeviceList Component renders correctly 1`] = `
   >
     <div
       className="columnHeader"
+      onClick={[Function]}
       style={
         Object {
           "width": "25%",
@@ -22,6 +23,7 @@ exports[`DeviceList Component renders correctly 1`] = `
     />
     <div
       className="columnHeader"
+      onClick={[Function]}
       style={
         Object {
           "width": "25%",
@@ -30,6 +32,7 @@ exports[`DeviceList Component renders correctly 1`] = `
     />
     <div
       className="columnHeader"
+      onClick={[Function]}
       style={
         Object {
           "width": "25%",
@@ -38,6 +41,7 @@ exports[`DeviceList Component renders correctly 1`] = `
     />
     <div
       className="columnHeader"
+      onClick={[Function]}
       style={
         Object {
           "width": "25%",
