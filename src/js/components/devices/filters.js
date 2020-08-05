@@ -86,6 +86,9 @@ export class Filters extends React.Component {
     const activeFilters = filters.filter(item => item.value !== '');
     this.props.setDeviceFilters(activeFilters);
     this.props.onFilterChange(activeFilters);
+    if (activeFilters.length === 0) {
+      this.setState({ adding: true });
+    }
   }
 
   render() {
@@ -132,19 +135,21 @@ export class Filters extends React.Component {
               Devices matching:
             </div>
             <div>
-              <div className="filter-list">
-                {addedFilters.map(item => (
-                  <Chip
-                    className="margin-right-small"
-                    key={`filter-${item.key}`}
-                    label={`${getFilterLabelByKey(item.key, self.props.attributes)} ${DEVICE_FILTERING_OPTIONS[item.operator].shortform} ${
-                      item.operator !== '$exists' && item.operator !== '$nexists' ? (item.operator === '$regex' ? `${item.value}.*` : item.value) : ''
-                    }`}
-                    onDelete={() => self.removeFilter(item)}
-                  />
-                ))}
-                {!adding && addButton}
-              </div>
+              {addedFilters.length ? (
+                <div className="filter-list">
+                  {addedFilters.map(item => (
+                    <Chip
+                      className="margin-right-small"
+                      key={`filter-${item.key}`}
+                      label={`${getFilterLabelByKey(item.key, self.props.attributes)} ${DEVICE_FILTERING_OPTIONS[item.operator].shortform} ${
+                        item.operator !== '$exists' && item.operator !== '$nexists' ? (item.operator === '$regex' ? `${item.value}.*` : item.value) : ''
+                      }`}
+                      onDelete={() => self.removeFilter(item)}
+                    />
+                  ))}
+                  {!adding && addButton}
+                </div>
+              ) : null}
               {adding && (
                 <FilterItem
                   filter={filter}
@@ -159,7 +164,7 @@ export class Filters extends React.Component {
             </div>
           </div>
           <div className="flexbox margin-top-small margin-bottom-small" style={{ justifyContent: 'flex-end' }}>
-            {filters.length > 1 && (
+            {filters.length > 0 && (
               <span className="link margin-top-small margin-right-small" onClick={() => self.clearFilters()}>
                 Clear filter
               </span>
