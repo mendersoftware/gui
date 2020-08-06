@@ -16,7 +16,7 @@ const inventoryApiUrlV2 = `${apiUrlV2}/inventory`;
 export const getGroups = () => (dispatch, getState) =>
   GeneralApi.get(`${inventoryApiUrl}/groups`).then(res => {
     const state = getState().devices.groups.byId;
-    const groups = res.body.reduce((accu, group) => {
+    const groups = res.data.reduce((accu, group) => {
       accu[group] = { deviceIds: [], filters: [], total: 0, ...state[group] };
       return accu;
     }, {});
@@ -32,7 +32,7 @@ export const getGroups = () => (dispatch, getState) =>
           deviceIds: [],
           total: 0,
           ...getState().devices.groups.byId[DeviceConstants.UNGROUPED_GROUP.id],
-          filters: [{ key: 'group', value: res.body, operator: '$nin', scope: 'system' }]
+          filters: [{ key: 'group', value: res.data, operator: '$nin', scope: 'system' }]
         }
       })
     ]);
@@ -115,7 +115,7 @@ const mapFiltersToTerms = filters =>
 const mapTermsToFilters = terms => terms.map(term => ({ scope: term.scope, key: term.attribute, operator: term.type, value: term.value }));
 
 export const getDynamicGroups = () => (dispatch, getState) =>
-  GeneralApi.get(`${inventoryApiUrlV2}/filters`).then(({ body: filters }) => {
+  GeneralApi.get(`${inventoryApiUrlV2}/filters`).then(({ data: filters }) => {
     const state = getState().devices.groups.byId;
     const groups = (filters || []).reduce((accu, filter) => {
       accu[filter.name] = {
@@ -288,7 +288,7 @@ export const getAllGroupDevices = group => (dispatch, getState) => {
       per_page: perPage,
       filters: mapFiltersToTerms([{ key: 'group', value: group, operator: '$eq', scope: 'system' }])
     }).then(res => {
-      const deviceAccu = reduceReceivedDevices(res.body, devices, state);
+      const deviceAccu = reduceReceivedDevices(res.data, devices, state);
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICES,
         devicesById: deviceAccu.devicesById
@@ -321,7 +321,7 @@ export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
   const filters = mapFiltersToTerms(state.devices.groups.byId[group].filters);
   const getAllDevices = (perPage = 500, page = defaultPage, devices = []) =>
     GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, { page, per_page: perPage, filters }).then(res => {
-      const deviceAccu = reduceReceivedDevices(res.body, devices, state);
+      const deviceAccu = reduceReceivedDevices(res.data, devices, state);
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICES,
         devicesById: deviceAccu.devicesById
@@ -364,7 +364,7 @@ export const setDeviceFilters = filters => dispatch =>
 export const getDeviceById = id => dispatch =>
   GeneralApi.get(`${inventoryApiUrl}/devices/${id}`)
     .then(res => {
-      const device = { ...res.body, attributes: mapDeviceAttributes(res.body.attributes).inventory };
+      const device = { ...res.data, attributes: mapDeviceAttributes(res.data.attributes).inventory };
       delete device.updated_ts;
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICE,
@@ -373,7 +373,7 @@ export const getDeviceById = id => dispatch =>
       return Promise.resolve(device);
     })
     .catch(err => {
-      if (err.res && err.res.body && err.res.body.error.startsWith('Device not found')) {
+      if (err.res && err.res.data && err.res.data.error.startsWith('Device not found')) {
         console.log(`${id} does not have any inventory information`);
         return;
       }
@@ -417,13 +417,13 @@ export const getDeviceCount = status => dispatch => {
       case DeviceConstants.DEVICE_STATES.rejected:
         return dispatch({
           type: DeviceConstants[`SET_${status.toUpperCase()}_DEVICES_COUNT`],
-          count: res.body.count,
+          count: res.data.count,
           status
         });
       default:
         return dispatch({
           type: DeviceConstants.SET_TOTAL_DEVICES,
-          count: res.body.count
+          count: res.data.count
         });
     }
   });
@@ -435,7 +435,7 @@ export const getDeviceLimit = () => dispatch =>
   GeneralApi.get(`${deviceAuthV2}/limits/max_devices`).then(res =>
     dispatch({
       type: DeviceConstants.SET_DEVICE_LIMIT,
-      limit: res.body.limit
+      limit: res.data.limit
     })
   );
 
@@ -455,7 +455,7 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
     filters: mapFiltersToTerms([...applicableFilters, { key: 'status', value: status, operator: '$eq', scope: 'identity' }]),
     sort: sortOptions
   }).then(response => {
-    const deviceAccu = reduceReceivedDevices(response.body, [], state, status);
+    const deviceAccu = reduceReceivedDevices(response.data, [], state, status);
     let total = !applicableFilters.length ? Number(response.headers[headerNames.total]) : null;
     if (state.devices.byStatus[status].total === deviceAccu.ids.length || !applicableFilters.length) {
       total = deviceAccu.ids.length;
@@ -472,7 +472,7 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
         devicesById: deviceAccu.devicesById
       })
     ];
-    if (response.body.length < 200) {
+    if (response.data.length < 200) {
       tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(Object.values(deviceAccu.devicesById)))));
     }
     if (status === DeviceConstants.DEVICE_STATES.pending) {
@@ -494,7 +494,7 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
       per_page: perPage,
       filters: mapFiltersToTerms([{ key: 'status', value: status, operator: '$eq', scope: 'identity' }])
     }).then(res => {
-      const deviceAccu = reduceReceivedDevices(res.body, devices, getState(), status);
+      const deviceAccu = reduceReceivedDevices(res.data, devices, getState(), status);
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICES,
         devicesById: deviceAccu.devicesById
@@ -526,11 +526,11 @@ export const getDeviceAuth = (id, isBulkRetrieval = false) => dispatch =>
       tasks.push(
         dispatch({
           type: DeviceConstants.RECEIVE_DEVICE_AUTH,
-          device: res.body
+          device: res.data
         })
       );
     }
-    tasks.push(Promise.resolve(res.body));
+    tasks.push(Promise.resolve(res.data));
     return Promise.all(tasks);
   });
 
@@ -617,7 +617,7 @@ export const preauthDevice = authset => dispatch =>
   GeneralApi.post(`${deviceAuthV2}/devices`, authset)
     .catch(err => {
       console.log(err);
-      const errMsg = err.res.body?.error?.message || err.res.body?.error || err.error || '';
+      const errMsg = err.res.data?.error?.message || err.res.data?.error || err.error || '';
       if (err.res.status === 409) {
         return Promise.reject('A device with a matching identity data set already exists');
       }

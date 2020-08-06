@@ -75,7 +75,7 @@ export class Deployments extends React.Component {
           } else if (params.get('deviceId')) {
             self.props.selectDevice(params.get('deviceId')).catch(err => {
               console.log(err);
-              var errMsg = err.res.body.error || '';
+              var errMsg = err.res.data.error || '';
               self.props.setSnackbar(preformatWithRequestID(err.res, `Error fetching device details. ${errMsg}`), null, 'Copy to clipboard');
             });
           } else {
@@ -153,7 +153,7 @@ export class Deployments extends React.Component {
       })
       .catch(err => {
         console.log(err);
-        var errMsg = err.res ? err.res.body.error : '';
+        var errMsg = err.res ? err.res.data.error : '';
         self.props.setSnackbar(preformatWithRequestID(err.res, `There was wan error while aborting the deployment: ${errMsg}`));
       });
   }

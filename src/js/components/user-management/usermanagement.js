@@ -81,7 +81,7 @@ export class UserManagement extends React.Component {
       })
       .catch(err => {
         console.log(err);
-        var errMsg = err.res.body.error || '';
+        var errMsg = err.res.data.error || '';
         self.props.setSnackbar(preformatWithRequestID(err.res, `There was an error ${actions[type].errorMessage} the user. ${errMsg}`));
       });
   }

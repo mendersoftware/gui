@@ -43,9 +43,14 @@ export const getArtifactUrl = id => (dispatch, getState) =>
     if (!release || index === -1) {
       return dispatch(getReleases());
     }
-    release.Artifacts[index].url = response.body.uri;
+    release.Artifacts[index].url = response.data.uri;
     return dispatch({ type: ReleaseConstants.ARTIFACTS_SET_ARTIFACT_URL, release });
   });
+
+const progress = (e, dispatch) => {
+  const uploadProgress = Math.round((e.loaded / e.total) * 100);
+  return dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, uploadProgress });
+};
 
 export const createArtifact = (meta, file) => dispatch => {
   let formData = Object.entries(meta).reduce((accu, [key, value]) => {
@@ -60,16 +65,15 @@ export const createArtifact = (meta, file) => dispatch => {
   }, new FormData());
   formData.append('type', ReleaseConstants.ARTIFACT_GENERATION_TYPE.SINGLE_FILE);
   formData.append('file', file);
-  var progress = percent => dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, uploadProgress: percent });
   return Promise.all([
     dispatch(setSnackbar('Generating artifact')),
     dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 }),
-    GeneralApi.upload(`${deploymentsApiUrl}/artifacts/generate`, formData, e => progress(e.percent))
+    GeneralApi.upload(`${deploymentsApiUrl}/artifacts/generate`, formData, e => progress(e, dispatch))
   ])
     .then(() => Promise.all([dispatch(selectArtifact(meta.name)), dispatch(setSnackbar('Upload successful', 5000))]))
     .catch(err => {
       try {
-        const errMsg = err.res.body?.error?.message || err.res.body?.error || err.error || '';
+        const errMsg = err.res.data?.error?.message || err.res.data?.error || err.error || '';
         dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be generated. ${errMsg}`), null, 'Copy to clipboard'));
       } catch (e) {
         console.log(e);
@@ -83,15 +87,14 @@ export const uploadArtifact = (meta, file) => dispatch => {
   formData.append('size', file.size);
   formData.append('description', meta.description);
   formData.append('artifact', file);
-  var progress = percent => dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, uploadProgress: percent });
   return Promise.all([
     dispatch(setSnackbar('Uploading artifact')),
     dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 }),
-    GeneralApi.upload(`${deploymentsApiUrl}/artifacts`, formData, e => progress(e.percent))
+    GeneralApi.upload(`${deploymentsApiUrl}/artifacts`, formData, e => progress(e, dispatch))
   ])
     .then(() => Promise.all([dispatch(selectArtifact(file)), dispatch(setSnackbar('Upload successful', 5000))]))
     .catch(err => {
-      const errMsg = err.res.body?.error?.message || err.res.body?.error || err.error || '';
+      const errMsg = err.res.data?.error?.message || err.res.data?.error || err.error || '';
       dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be uploaded. ${errMsg}`), null, 'Copy to clipboard'));
     })
     .finally(() => dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 }));
@@ -100,7 +103,7 @@ export const uploadArtifact = (meta, file) => dispatch => {
 export const editArtifact = (id, body) => (dispatch, getState) =>
   GeneralApi.put(`${deploymentsApiUrl}/artifacts/${id}`, body)
     .catch(err => {
-      const errMsg = err.res.body?.error?.message || err.res.body?.error || err.error || '';
+      const errMsg = err.res.data?.error?.message || err.res.data?.error || err.error || '';
       dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact details couldn't be updated. ${errMsg}`), null, 'Copy to clipboard'));
       return Promise.reject();
     })
@@ -129,7 +132,7 @@ export const removeArtifact = id => (dispatch, getState) =>
       return Promise.all([dispatch(setSnackbar('Artifact was removed', 5000, '')), dispatch({ type: ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT, release })]);
     })
     .catch(err => {
-      const errMsg = err.res.body?.error?.message || err.res.body?.error || err.error || '';
+      const errMsg = err.res.data?.error?.message || err.res.data?.error || err.error || '';
       dispatch(setSnackbar(preformatWithRequestID(err.res, `Error removing artifact: ${errMsg}`), null, 'Copy to clipboard'));
     });
 
@@ -160,7 +163,7 @@ export const showRemoveArtifactDialog = showRemoveDialog => dispatch => dispatch
 /* Releases */
 export const getReleases = () => dispatch =>
   GeneralApi.get(`${deploymentsApiUrl}/deployments/releases`)
-    .then(({ body: releases }) => {
+    .then(({ data: releases }) => {
       const flatReleases = releases.sort(customSort(1, 'Name')).reduce((accu, release) => {
         accu[release.Name] = flattenRelease(release);
         return accu;
@@ -177,6 +180,6 @@ export const getReleases = () => dispatch =>
     });
 
 export const getRelease = name => dispatch =>
-  GeneralApi.get(`${deploymentsApiUrl}/deployments/releases?name=${name}`).then(({ body: releases }) =>
+  GeneralApi.get(`${deploymentsApiUrl}/deployments/releases?name=${name}`).then(({ data: releases }) =>
     releases.length ? Promise.resolve(dispatch({ type: ReleaseConstants.RECEIVE_RELEASE, release: flattenRelease(releases[0]) })) : Promise.resolve(null)
   );

@@ -70,7 +70,7 @@ export class Preauthorize extends React.Component {
       .getDevicesByStatus(DEVICE_STATES.preauth, pageNo, pageLength, shouldUpdate, undefined, sortBy)
       .catch(error => {
         console.log(error);
-        var errormsg = error.res.body.error || 'Please check your connection.';
+        var errormsg = error.res.data.error || 'Please check your connection.';
         self.props.setSnackbar(preformatWithRequestID(error.res, `Preauthorized devices couldn't be loaded. ${errormsg}`), null, 'Copy to clipboard');
         console.log(errormsg);
       })

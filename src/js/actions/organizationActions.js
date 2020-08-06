@@ -12,7 +12,7 @@ export const createOrganizationTrial = data => dispatch =>
   Api.postUnauthorized(`${tenantadmApiUrl}/tenants/trial`, data)
     .catch(err => {
       if (err.error.status >= 400 && err.error.status < 500) {
-        dispatch(setSnackbar(err.error.response.body.error, 5000, ''));
+        dispatch(setSnackbar(err.error.response.data.error, 5000, ''));
       }
     })
     .then(res => {

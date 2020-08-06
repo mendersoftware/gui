@@ -92,7 +92,7 @@ export class DeviceGroups extends React.Component {
       })
       .catch(err => {
         console.log(err);
-        var errMsg = err.res.body.error || '';
+        var errMsg = err.res.data.error || '';
         self.props.setSnackbar(preformatWithRequestID(err.res, `Group could not be updated: ${errMsg}`), null, 'Copy to clipboard');
       });
   }
