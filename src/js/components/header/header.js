@@ -60,8 +60,9 @@ export class Header extends React.Component {
     }
     if (trackingCode && hasTrackingEnabled && user.id && organization.id) {
       if (Tracking.initialize(trackingCode)) {
-        Tracking.set({ tenant: organization.id });
-        Tracking.set({ plan: organization.plan });
+        Tracking.set({ dimension1: organization.plan });
+        Tracking.set({ dimension2: organization.id });
+        Tracking.set({ dimension3: user.id });
         Tracking.set({ userId: user.id });
       }
       if (firstLoginAfterSignup) {
