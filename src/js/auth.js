@@ -5,15 +5,6 @@ export function isLoggedIn() {
   return cookies.get('JWT');
 }
 
-export function unauthorizedRedirect(req) {
-  //  redirect on 401 invalid token
-  req.on('response', res => {
-    if (res.status === 401) {
-      logout();
-    }
-  });
-}
-
 export function logout() {
   cookies.remove('JWT');
   window.location.replace('#/login');

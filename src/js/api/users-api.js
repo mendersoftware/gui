@@ -1,6 +1,10 @@
 import Cookies from 'universal-cookie';
+import * as request from 'axios';
+
 const cookies = new Cookies();
-const request = require('superagent');
+
+const errorHandler = err =>
+  Promise.reject({ error: { text: err.response ? JSON.parse(err.response.text) : err, code: err.response.status }, res: err.response });
 
 const Api = {
   postLogin: (url, userData) => {
@@ -8,28 +12,10 @@ const Api = {
     if (userData.hasOwnProperty('token2fa')) {
       body = { token2fa: userData.token2fa };
     }
-    return new Promise((resolve, reject) =>
-      request
-        .post(url)
-        .auth(userData.email, userData.password)
-        .set('Content-Type', 'application/json')
-        .send(body)
-        .end((err, res) => {
-          if (err || !res.ok) {
-            var errorResponse = {
-              text: err.response ? JSON.parse(err.response.text) : err,
-              code: err.status
-            };
-            reject({ error: errorResponse, res: res });
-          } else {
-            var response = {
-              text: res.text,
-              code: res.status
-            };
-            resolve(response);
-          }
-        })
-    );
+    return request
+      .post(url, body, { auth: { username: userData.email, password: userData.password } })
+      .then(res => ({ text: res.data, code: res.status }))
+      .catch(errorHandler);
   },
   putVerifyTFA: (url, userData) => {
     var token = cookies.get('JWT');
@@ -37,28 +23,10 @@ const Api = {
     if (userData.hasOwnProperty('token2fa')) {
       body = { token2fa: userData.token2fa };
     }
-    return new Promise((resolve, reject) =>
-      request
-        .put(url)
-        .auth(token, { type: 'bearer' })
-        .set('Content-Type', 'application/json')
-        .send(body)
-        .end((err, res) => {
-          if (err || !res.ok) {
-            var errorResponse = {
-              text: err.response ? JSON.parse(err.response.text) : err,
-              code: err.status
-            };
-            reject({ error: errorResponse, res: res });
-          } else {
-            var response = {
-              text: res.text,
-              code: res.status
-            };
-            resolve(response);
-          }
-        })
-    );
+    return request
+      .put(url, body, { headers: { Authentication: `Bearer ${token}` } })
+      .then(res => ({ text: res.data, code: res.status }))
+      .catch(errorHandler);
   }
 };
 
