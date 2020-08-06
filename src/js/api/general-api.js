@@ -1,6 +1,6 @@
-import Cookies from 'universal-cookie';
-import { unauthorizedRedirect } from '../auth';
 import axios from 'axios';
+
+import { getToken, logout } from '../auth';
 
 export const headerNames = {
   link: 'link',
@@ -14,7 +14,7 @@ axios.interceptors.response.use(res => res, unauthorizedRedirect);
 export const authenticatedRequest = axios.create({ timeout: 10000 });
 authenticatedRequest.interceptors.response.use(res => res, unauthorizedRedirect);
 authenticatedRequest.interceptors.request.use(
-  config => ({ ...config, headers: { ...config.headers, Authorization: `Bearer ${cookies.get('JWT')}` } }),
+  config => ({ ...config, headers: { ...config.headers, Authorization: `Bearer ${getToken()}` } }),
   error => Promise.reject(error)
 );
 

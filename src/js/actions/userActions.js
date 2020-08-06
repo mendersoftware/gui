@@ -5,6 +5,7 @@ import GeneralApi from '../api/general-api';
 import UsersApi from '../api/users-api';
 import * as UserConstants from '../constants/userConstants';
 import { advanceOnboarding } from '../utils/onboardingmanager';
+import { getToken } from '../auth';
 import { preformatWithRequestID, decodeSessionToken } from '../helpers';
 
 const cookies = new Cookies();
@@ -74,7 +75,7 @@ export const passwordResetComplete = (secretHash, newPassword) => () =>
 export const verify2FA = tfaData => dispatch =>
   UsersApi.putVerifyTFA(`${useradmApiUrl}/2faverify`, tfaData)
     .then(() => {
-      return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: cookies.get('JWT') })]);
+      return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: getToken() })]);
     })
     .catch(err => {
       return Promise.all([

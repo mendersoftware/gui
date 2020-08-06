@@ -12,7 +12,7 @@ import {
   ExitToApp as ExitIcon
 } from '@material-ui/icons';
 
-import { logout } from '../../auth';
+import { getToken, logout } from '../../auth';
 import { decodeSessionToken, hashString, isEmpty } from '../../helpers';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Announcement from './announcement';
@@ -53,7 +53,7 @@ export class Header extends React.Component {
   }
 
   componentDidUpdate() {
-    const sessionId = this.cookies.get('JWT');
+    const sessionId = getToken();
     const { firstLoginAfterSignup, hasTrackingEnabled, organization, setFirstLoginAfterSignup, user } = this.props;
     if ((!sessionId || !user || !user.id || !user.email.length) && !this.state.gettingUser && !this.state.loggingOut) {
       this._updateUsername();
@@ -128,7 +128,7 @@ export class Header extends React.Component {
   }
 
   _updateUsername() {
-    const userId = decodeSessionToken(this.cookies.get('JWT'));
+    const userId = decodeSessionToken(getToken());
     if (this.state.gettingUser || !userId) {
       return;
     }

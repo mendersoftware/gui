@@ -10,7 +10,7 @@ import LeftNav from './leftnav';
 import CreateArtifactDialog from './common/dialogs/createartifactdialog';
 import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
 import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
-import { isLoggedIn, logout, updateMaxAge, expirySet } from '../auth';
+import { getToken, logout, updateMaxAge, expirySet } from '../auth';
 import { setSnackbar } from '../actions/appActions';
 import { saveUserSettings, setShowConnectingDialog, setShowCreateArtifactDialog } from '../actions/userActions';
 import { privateRoutes, publicRoutes } from '../config/routes';
@@ -95,7 +95,7 @@ class AppRoot extends React.PureComponent {
 
     return (
       <>
-        {isLoggedIn() ? (
+        {getToken() ? (
           <Elements stripe={stripePromise}>
             <IdleTimer element={document} onAction={updateMaxAge} onIdle={() => self.onIdle()} timeout={timeout} />
             <Header history={history} />

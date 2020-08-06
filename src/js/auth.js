@@ -1,7 +1,7 @@
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
-export function isLoggedIn() {
+export function getToken() {
   return cookies.get('JWT');
 }
 
@@ -11,7 +11,7 @@ export function logout() {
 }
 
 export function updateMaxAge() {
-  var userCookie = cookies.get('JWT');
+  const userCookie = getToken();
   if (userCookie && expirySet()) {
     cookies.set('JWT', userCookie, { maxAge: 900 });
   }

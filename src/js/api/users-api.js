@@ -1,7 +1,6 @@
-import Cookies from 'universal-cookie';
 import * as request from 'axios';
 
-const cookies = new Cookies();
+import { getToken } from '../auth';
 
 const errorHandler = err =>
   Promise.reject({ error: { text: err.response ? JSON.parse(err.response.text) : err, code: err.response.status }, res: err.response });
@@ -18,13 +17,12 @@ const Api = {
       .catch(errorHandler);
   },
   putVerifyTFA: (url, userData) => {
-    var token = cookies.get('JWT');
     let body = {};
     if (userData.hasOwnProperty('token2fa')) {
       body = { token2fa: userData.token2fa };
     }
     return request
-      .put(url, body, { headers: { Authentication: `Bearer ${token}` } })
+      .put(url, body, { headers: { Authentication: `Bearer ${getToken()}` } })
       .then(res => ({ text: res.data, code: res.status }))
       .catch(errorHandler);
   }
