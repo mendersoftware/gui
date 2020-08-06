@@ -54,17 +54,13 @@ export class Header extends React.Component {
 
   componentDidUpdate() {
     const sessionId = this.cookies.get('JWT');
-    const { firstLoginAfterSignup, hasTrackingEnabled, organization, setFirstLoginAfterSignup, trackingCode, user } = this.props;
+    const { firstLoginAfterSignup, hasTrackingEnabled, organization, setFirstLoginAfterSignup, user } = this.props;
     if ((!sessionId || !user || !user.id || !user.email.length) && !this.state.gettingUser && !this.state.loggingOut) {
       this._updateUsername();
     }
-    if (trackingCode && hasTrackingEnabled && user.id && organization.id) {
-      if (Tracking.initialize(trackingCode)) {
-        Tracking.set({ dimension1: organization.plan });
-        Tracking.set({ dimension2: organization.id });
-        Tracking.set({ dimension3: user.id });
-        Tracking.set({ userId: user.id });
-      }
+    Tracking.setTrackingEnabled(hasTrackingEnabled);
+    if (hasTrackingEnabled && user.id && organization.id) {
+      Tracking.setOrganizationUser(organization, user);
       if (firstLoginAfterSignup) {
         Tracking.pageview('/signup/complete');
         setFirstLoginAfterSignup(false);
@@ -83,12 +79,8 @@ export class Header extends React.Component {
     this.props.getDevicesByStatus(DEVICE_STATES.pending);
     this.props.getDeviceLimit();
     this.props.getGlobalSettings().then(() => {
-      if (this.props.trackingCode) {
-        if (!this.cookies.get('_ga') && typeof this.props.hasTrackingEnabled === 'undefined') {
-          Tracking.cookieconsent(this.props.saveUserSettings);
-        } else if (this.cookies.get('_ga') && typeof this.props.hasTrackingEnabled === 'undefined') {
-          this.props.saveUserSettings({ trackingConsentGiven: true });
-        }
+      if (this.cookies.get('_ga') && typeof this.props.hasTrackingEnabled === 'undefined') {
+        this.props.saveUserSettings({ trackingConsentGiven: true });
       }
     });
     this.props.getDynamicGroups();
@@ -310,7 +302,6 @@ const mapStateToProps = state => {
     showHelptips: state.users.showHelptips,
     pendingDevices: state.devices.byStatus.pending.total,
     organization,
-    trackingCode: state.app.trackerCode,
     user: state.users.byId[state.users.currentUser] || { email: '', id: null }
   };
 };

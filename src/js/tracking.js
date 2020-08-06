@@ -6,6 +6,9 @@ const cookieConsentJS = 'https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cook
 class Tracker {
   constructor() {
     this.initialized = false;
+    this.trackingEnabled = true;
+    this.currentPageView = null;
+    this.currentOrganizationUser = null;
   }
   cookieconsent(saveUserSettings) {
     const style = document.createElement('link');
@@ -50,17 +53,17 @@ class Tracker {
     document.body.appendChild(script);
   }
   exception(error) {
-    if (this.initialized) {
+    if (this.initialized && this.trackingEnabled) {
       ReactGA.exception(error);
     }
   }
   event(data) {
-    if (this.initialized) {
+    if (this.initialized && this.trackingEnabled) {
       ReactGA.event(data);
     }
   }
   initialize(trackingCode) {
-    if (this.initialized) {
+    if (this.initialized && this.trackingEnabled) {
       return false;
     }
     ReactGA.initialize(trackingCode);
@@ -68,14 +71,31 @@ class Tracker {
     return true;
   }
   pageview(data) {
-    if (this.initialized) {
+    if (data) {
+      this.currentPageView = data;
+    } else {
+      data = this.currentPageView;
+    }
+    if (this.initialized && this.trackingEnabled) {
       ReactGA.pageview(data);
     }
   }
   set(value) {
-    if (this.initialized) {
+    if (this.initialized && this.trackingEnabled) {
       ReactGA.set(value);
     }
+  }
+  setOrganizationUser(organization, user) {
+    if (this.initialized && this.trackingEnabled && this.currentOrganizationUser != { organization, user }) {
+      this.currentOrganizationUser = { organization, user };
+      this.set({ dimension1: organization.plan });
+      this.set({ dimension2: organization.id });
+      this.set({ dimension3: user.id });
+      this.set({ userId: user.id });
+    }
+  }
+  setTrackingEnabled(trackingEnabled) {
+    this.trackingEnabled = trackingEnabled;
   }
 }
 
