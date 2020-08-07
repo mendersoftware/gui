@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import SelfUserManagement from './selfusermanagement';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -12,17 +12,11 @@ describe('SelfUserManagement Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
-      app: {
-        features: {
-          isEnterprise: false,
-          isHosted: false
-        }
-      },
+      ...defaultState,
       users: {
+        ...defaultState.users,
         byId: {},
-        currentUser: null,
-        globalSettings: {},
-        organization: {}
+        currentUser: null
       }
     });
   });

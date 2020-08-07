@@ -4,26 +4,14 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import AddArtifact from './addartifact';
-import { undefineds } from '../../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
 describe('AddArtifact Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      devices: {
-        byId: {},
-        selectedDevice: null,
-        byStatus: {
-          accepted: { deviceIds: [], total: 0 },
-          pending: { deviceIds: [], total: 0 }
-        }
-      },
-      releases: {
-        byId: {}
-      }
-    });
+    store = mockStore({ ...defaultState });
   });
 
   it('renders correctly', () => {

@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Deployments from './deployments';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -13,13 +13,10 @@ describe('Deployments Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
+      ...defaultState,
       deployments: {
-        byId: {},
-        byStatus: {
-          finished: { total: 0 },
-          inprogress: { total: 0 },
-          pending: { total: 0 }
-        }
+        ...defaultState.deployments,
+        byId: {}
       }
     });
   });

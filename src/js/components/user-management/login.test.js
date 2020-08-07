@@ -5,26 +5,14 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Login from './login';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
 describe('Login Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      app: { features: { isHosted: false } },
-      users: {
-        byId: {},
-        currentUser: null,
-        globalSettings: {},
-        onboarding: {
-          complete: false,
-          showTips: false
-        },
-        showHelptips: false
-      }
-    });
+    store = mockStore({ ...defaultState });
   });
 
   it('renders correctly', () => {

@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import OnboardingCompleteTip from './onboardingcompletetip';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -12,13 +12,15 @@ describe('OnboardingCompleteTip Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
-      app: { docsVersion: null, features: { hasMultitenancy: true, isHosted: true } },
-      devices: {
-        byId: {},
-        byStatus: { accepted: { deviceIds: [] } },
-        filters: []
-      },
-      users: {}
+      ...defaultState,
+      app: {
+        ...defaultState.app,
+        features: {
+          ...defaultState.app.features,
+          hasMultitenancy: true,
+          isHosted: true
+        }
+      }
     });
   });
 

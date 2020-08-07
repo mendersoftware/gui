@@ -4,31 +4,14 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Rejected from './rejected-devices';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
 describe('RejectedDevices Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      devices: {
-        byStatus: {
-          accepted: { total: 0 },
-          rejected: { total: 0, deviceIds: [] }
-        },
-        filters: [],
-        selectedDeviceList: [],
-        limit: 500,
-        groups: {
-          byId: {},
-          selectedGroup: ''
-        }
-      },
-      users: {
-        globalSettings: {}
-      }
-    });
+    store = mockStore({ ...defaultState });
   });
 
   it('renders correctly', () => {

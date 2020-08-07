@@ -4,31 +4,14 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Preauthorize from './preauthorize-devices';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
 describe('PreauthorizeDevices Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      devices: {
-        byStatus: {
-          accepted: { total: 0 },
-          preauthorized: { total: 0 }
-        },
-        filters: [],
-        selectedDeviceList: [],
-        limit: 500,
-        groups: {
-          byId: {},
-          selectedGroup: ''
-        }
-      },
-      users: {
-        globalSettings: { id_attribute: null }
-      }
-    });
+    store = mockStore({ ...defaultState });
   });
 
   it('renders correctly', () => {

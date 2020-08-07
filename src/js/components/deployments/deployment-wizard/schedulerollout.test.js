@@ -4,20 +4,14 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import ScheduleRollout from './schedulerollout';
-import { undefineds } from '../../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
 describe('ScheduleRollout Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      users: {
-        globalSettings: {
-          previousPhases: []
-        }
-      }
-    });
+    store = mockStore({ ...defaultState });
   });
   it('renders correctly', () => {
     const tree = renderer
