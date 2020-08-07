@@ -82,8 +82,8 @@ export const createDeployment = newDeployment => dispatch => {
   }
   return request
     .catch(err => {
-      const errMsg = err.res.data?.error?.message || err.res.data?.error || err.error || '';
-      dispatch(setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard'));
+      const errMsg = err.response.data?.error?.message || err.response.data?.error || err.error || '';
+      dispatch(setSnackbar(preformatWithRequestID(err.response, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard'));
       return Promise.reject();
     })
     .then(data => {

@@ -8,7 +8,12 @@ export const headerNames = {
   total: 'x-total-count'
 };
 
-const unauthorizedRedirect = error => (error.response.status === 401 ? logout() : null);
+const unauthorizedRedirect = error => {
+  if (error.response.status === 401) {
+    logout();
+  }
+  return Promise.reject(error);
+};
 
 axios.interceptors.response.use(res => res, unauthorizedRedirect);
 export const authenticatedRequest = axios.create({ timeout: 10000 });
@@ -22,7 +27,7 @@ const errorHandler = error => {
   if (error.response && error.response.status == 403) {
     error.response.data.error = error.response.data.error.message;
   }
-  return Promise.reject({ error, res: error.response });
+  return Promise.reject(error);
 };
 
 const Api = {

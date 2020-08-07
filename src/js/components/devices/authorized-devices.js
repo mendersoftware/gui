@@ -138,8 +138,8 @@ export class Authorized extends React.Component {
     return self.props
       .trySelectDevice(id, DEVICE_STATES.accepted)
       .catch(err => {
-        if (err.res.statusCode === 404) {
-          var errormsg = err.error || 'Please check your connection.';
+        if (err.response.status === 404) {
+          var errormsg = err.response?.data?.error || 'Please check your connection.';
           setRetryTimer(err, 'devices', `Device couldn't be loaded. ${errormsg}`, refreshDeviceLength, self.props.setSnackbar);
         }
       })

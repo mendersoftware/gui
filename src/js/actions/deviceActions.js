@@ -373,7 +373,7 @@ export const getDeviceById = id => dispatch =>
       return Promise.resolve(device);
     })
     .catch(err => {
-      if (err.res && err.res.data && err.res.data.error.startsWith('Device not found')) {
+      if (err.response?.data?.error.startsWith('Device not found')) {
         console.log(`${id} does not have any inventory information`);
         return;
       }
@@ -571,11 +571,11 @@ export const updateDevicesAuth = (deviceIds, status) => (dispatch, getState) => 
       }
       // api call device.id and device.authsets[0].id
       return dispatch(updateDeviceAuth(device.id, device.auth_sets[0].id, status)).catch(err => {
-        var errMsg = err.res.error.message || '';
+        var errMsg = err.response.data.error.message || '';
         // notify if an error occurs
         dispatch(
           setSnackbar(
-            preformatWithRequestID(err.res, `The action was stopped as there was a problem updating a device authorization status: ${errMsg}`),
+            preformatWithRequestID(err.response, `The action was stopped as there was a problem updating a device authorization status: ${errMsg}`),
             null,
             'Copy to clipboard'
           )
@@ -617,12 +617,12 @@ export const preauthDevice = authset => dispatch =>
   GeneralApi.post(`${deviceAuthV2}/devices`, authset)
     .catch(err => {
       console.log(err);
-      const errMsg = err.res.data?.error?.message || err.res.data?.error || err.error || '';
-      if (err.res.status === 409) {
+      const errMsg = err.response.data?.error?.message || err.response.data?.error || err.error || '';
+      if (err.response.status === 409) {
         return Promise.reject('A device with a matching identity data set already exists');
       }
       return Promise.all([
-        dispatch(setSnackbar(preformatWithRequestID(err.res, `The device could not be added: ${errMsg}`), null, 'Copy to clipboard')),
+        dispatch(setSnackbar(preformatWithRequestID(err.response, `The device could not be added: ${errMsg}`), null, 'Copy to clipboard')),
         Promise.reject()
       ]);
     })

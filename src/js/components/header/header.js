@@ -143,7 +143,7 @@ export class Header extends React.Component {
           self.initializeHeaderData();
         })
         // this is allowed to fail if no user information are available
-        .catch(err => console.log(err.res ? err.res.error : err))
+        .catch(err => console.log(err.response ? err.response.data.error : err))
         .finally(() => self.setState({ gettingUser: false }))
     );
   }

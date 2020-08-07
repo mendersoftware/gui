@@ -65,7 +65,7 @@ export class Global extends React.Component {
       })
       .catch(err => {
         console.log(err);
-        self.props.setSnackbar(preformatWithRequestID(err.res, `The settings couldn't be saved. ${err.res.data.error}`));
+        self.props.setSnackbar(preformatWithRequestID(err.response, `The settings couldn't be saved. ${err.response.data.error}`));
       });
   }
 

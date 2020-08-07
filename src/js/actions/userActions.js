@@ -14,23 +14,16 @@ const tenantadmUrl = `${apiUrl}/tenantadm`;
 const useradmApiUrl = `${apiUrl}/useradm`;
 
 const handleLoginError = (err, has2FA) => dispatch => {
-  const errorText = err.error.text ? err.error.text.error : err.error.message;
+  const errorText = err.response.data?.error?.message || err.message;
   const is2FABackend = errorText.includes('2fa');
   if (is2FABackend && !has2FA) {
     return dispatch(saveGlobalSettings({ '2fa': 'enabled' }, true));
   }
-  let errMsg = 'There was a problem logging in';
-  if (err.res && err.res.data && Object.keys(err.res.data).includes('error')) {
-    const twoFAError = is2FABackend || has2FA ? ' and verification code' : '';
-    const errorMessage = `There was a problem logging in. Please check your email${
-      twoFAError ? ',' : ' and'
-    } password${twoFAError}. If you still have problems, contact an administrator.`;
-    // if error message, check for "unauthorized"
-    errMsg = err.res.data['error'] === 'unauthorized' ? errorMessage : `${errMsg}: ${err.res.data['error']}`;
-  } else {
-    errMsg = `${errMsg}\n${err.error.text && err.error.text.message ? err.error.text.message : ''}`;
-  }
-  return dispatch(setSnackbar(preformatWithRequestID(err.res, errMsg), null, 'Copy to clipboard'));
+  const twoFAError = is2FABackend || has2FA ? ' and verification code' : '';
+  const errorMessage = `There was a problem logging in. Please check your email${
+    twoFAError ? ',' : ' and'
+  } password${twoFAError}. If you still have problems, contact an administrator.`;
+  return dispatch(setSnackbar(preformatWithRequestID(err.response, errorMessage), null, 'Copy to clipboard'));
 };
 
 /*
@@ -82,7 +75,7 @@ export const verify2FA = tfaData => dispatch =>
         Promise.reject(err),
         dispatch(
           setSnackbar(
-            preformatWithRequestID(err.res, 'An error occured validating the verification code: failed to verify token, please try again.'),
+            preformatWithRequestID(err.response, 'An error occured validating the verification code: failed to verify token, please try again.'),
             null,
             'Copy to clipboard'
           )
@@ -100,8 +93,8 @@ export const getUserList = () => dispatch =>
       return dispatch({ type: UserConstants.RECEIVED_USER_LIST, users });
     })
     .catch(err => {
-      var errormsg = err.error || 'Please check your connection';
-      dispatch(setSnackbar(preformatWithRequestID(err.res, `Users couldn't be loaded. ${errormsg}`)));
+      var errormsg = err.response?.data?.error.message || err.error || 'Please check your connection';
+      dispatch(setSnackbar(preformatWithRequestID(err.response, `Users couldn't be loaded. ${errormsg}`)));
     });
 
 export const getUser = id => dispatch =>
@@ -194,7 +187,9 @@ export const editRole = roleData => dispatch => {
 export const removeRole = roleId => dispatch =>
   GeneralApi.delete(`${useradmApiUrl}/roles/${roleId}`)
     .then(() => Promise.all([dispatch({ type: UserConstants.REMOVED_ROLE, roleId }), dispatch(getRoles())]))
-    .catch(err => Promise.all([Promise.reject(err), dispatch(setSnackbar(preformatWithRequestID(err.res, err.res.data.error), null, 'Copy to clipboard'))]));
+    .catch(err =>
+      Promise.all([Promise.reject(err), dispatch(setSnackbar(preformatWithRequestID(err.response, err.response.data.error), null, 'Copy to clipboard'))])
+    );
 
 /*
   Tenant management + Hosted Mender

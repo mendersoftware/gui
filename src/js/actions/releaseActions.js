@@ -73,8 +73,8 @@ export const createArtifact = (meta, file) => dispatch => {
     .then(() => Promise.all([dispatch(selectArtifact(meta.name)), dispatch(setSnackbar('Upload successful', 5000))]))
     .catch(err => {
       try {
-        const errMsg = err.res.data?.error?.message || err.res.data?.error || err.error || '';
-        dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be generated. ${errMsg}`), null, 'Copy to clipboard'));
+        const errMsg = err.response.data?.error?.message || err.response.data?.error || err.error || '';
+        dispatch(setSnackbar(preformatWithRequestID(err.response, `Artifact couldn't be generated. ${errMsg}`), null, 'Copy to clipboard'));
       } catch (e) {
         console.log(e);
       }
@@ -94,8 +94,8 @@ export const uploadArtifact = (meta, file) => dispatch => {
   ])
     .then(() => Promise.all([dispatch(selectArtifact(file)), dispatch(setSnackbar('Upload successful', 5000))]))
     .catch(err => {
-      const errMsg = err.res.data?.error?.message || err.res.data?.error || err.error || '';
-      dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be uploaded. ${errMsg}`), null, 'Copy to clipboard'));
+      const errMsg = err.response.data?.error?.message || err.response.data?.error || err.error || '';
+      dispatch(setSnackbar(preformatWithRequestID(err.response, `Artifact couldn't be uploaded. ${errMsg}`), null, 'Copy to clipboard'));
     })
     .finally(() => dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 }));
 };
@@ -103,8 +103,8 @@ export const uploadArtifact = (meta, file) => dispatch => {
 export const editArtifact = (id, body) => (dispatch, getState) =>
   GeneralApi.put(`${deploymentsApiUrl}/artifacts/${id}`, body)
     .catch(err => {
-      const errMsg = err.res.data?.error?.message || err.res.data?.error || err.error || '';
-      dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact details couldn't be updated. ${errMsg}`), null, 'Copy to clipboard'));
+      const errMsg = err.response.data?.error?.message || err.response.data?.error || err.error || '';
+      dispatch(setSnackbar(preformatWithRequestID(err.response, `Artifact details couldn't be updated. ${errMsg}`), null, 'Copy to clipboard'));
       return Promise.reject();
     })
     .then(() => {
@@ -132,8 +132,8 @@ export const removeArtifact = id => (dispatch, getState) =>
       return Promise.all([dispatch(setSnackbar('Artifact was removed', 5000, '')), dispatch({ type: ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT, release })]);
     })
     .catch(err => {
-      const errMsg = err.res.data?.error?.message || err.res.data?.error || err.error || '';
-      dispatch(setSnackbar(preformatWithRequestID(err.res, `Error removing artifact: ${errMsg}`), null, 'Copy to clipboard'));
+      const errMsg = err.response.data?.error?.message || err.response.data?.error || err.error || '';
+      dispatch(setSnackbar(preformatWithRequestID(err.response, `Error removing artifact: ${errMsg}`), null, 'Copy to clipboard'));
     });
 
 export const selectArtifact = artifact => (dispatch, getState) => {

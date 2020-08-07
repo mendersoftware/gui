@@ -9,7 +9,9 @@ export function setRetryTimer(err, service, msg, timeLeft, setSnackbar) {
     var remaining = timeLeft - 1000;
     timerArr[service] = setInterval(() => {
       remaining -= 1000;
-      remaining > 0 ? setSnackbar(preformatWithRequestID(err.res, `${msg} Retrying in ${remaining / 1000} seconds`)) : clearRetryTimer(service, setSnackbar);
+      remaining > 0
+        ? setSnackbar(preformatWithRequestID(err.response, `${msg} Retrying in ${remaining / 1000} seconds`))
+        : clearRetryTimer(service, setSnackbar);
     }, 1000);
   }
 }
