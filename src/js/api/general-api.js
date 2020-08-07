@@ -37,7 +37,7 @@ const Api = {
   post: (url, data) => authenticatedRequest.post(url, data).catch(errorHandler),
   postUnauthorized: (url, data) => axios.post(url, data).catch(errorHandler),
   put: (url, data) => authenticatedRequest.put(url, data).catch(errorHandler),
-  upload: (url, formData, progress) => authenticatedRequest.post(url, formData, { onUploadProgress: progress }).catch(errorHandler)
+  upload: (url, formData, progress) => authenticatedRequest.post(url, formData, { onUploadProgress: progress, timeout: 0 }).catch(errorHandler)
 };
 
 export default Api;
