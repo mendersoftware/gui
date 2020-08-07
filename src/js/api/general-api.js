@@ -15,8 +15,9 @@ const unauthorizedRedirect = error => {
   return Promise.reject(error);
 };
 
-axios.interceptors.response.use(res => res, unauthorizedRedirect);
-export const authenticatedRequest = axios.create({ timeout: 10000 });
+export const commonRequestConfig = { timeout: 10000, headers: { 'Content-Type': 'application/json' } };
+
+export const authenticatedRequest = axios.create(commonRequestConfig);
 authenticatedRequest.interceptors.response.use(res => res, unauthorizedRedirect);
 authenticatedRequest.interceptors.request.use(
   config => ({ ...config, headers: { ...config.headers, Authorization: `Bearer ${getToken()}` } }),
@@ -35,7 +36,7 @@ const Api = {
   delete: (url, data) => authenticatedRequest.request({ method: 'delete', url, data }).catch(errorHandler),
   patch: (url, data) => authenticatedRequest.patch(url, data).catch(errorHandler),
   post: (url, data) => authenticatedRequest.post(url, data).catch(errorHandler),
-  postUnauthorized: (url, data) => axios.post(url, data).catch(errorHandler),
+  postUnauthorized: (url, data) => axios.post(url, data, commonRequestConfig).catch(errorHandler),
   put: (url, data) => authenticatedRequest.put(url, data).catch(errorHandler),
   upload: (url, formData, progress) => authenticatedRequest.post(url, formData, { onUploadProgress: progress, timeout: 0 }).catch(errorHandler)
 };
