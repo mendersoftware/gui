@@ -3,6 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import IdleTimer from 'react-idle-timer';
+import Cookies from 'universal-cookie';
 
 import Header from './header/header';
 import LeftNav from './leftnav';
@@ -27,8 +28,26 @@ const stripePromise = window.mender_environment.stripeAPIKey ? loadStripe(window
 const timeout = 900000; // 15 minutes idle time
 
 class AppRoot extends React.PureComponent {
+  constructor(props, context) {
+    super(props, context);
+    this.cookies = new Cookies();
+  }
+
   componentDidMount() {
-    this.props.history.listen(location => {
+    const { trackingCode } = this.props;
+    if (trackingCode) {
+      if (!this.cookies.get('_ga')) {
+        Tracking.cookieconsent().then(({ trackingConsentGiven }) => {
+          if (trackingConsentGiven) {
+            Tracking.initialize(trackingCode);
+            Tracking.pageview();
+          }
+        });
+      } else {
+        Tracking.initialize(trackingCode);
+      }
+    }
+    const trackLocationChange = location => {
       // if we're on page whose path might contain sensitive device/ group/ deployment names etc. we sanitize the sent information before submission
       let page = location.pathname || '';
       if (location.pathname.includes('=') && (location.pathname.startsWith('/devices') || location.pathname.startsWith('/deployments'))) {
@@ -38,7 +57,9 @@ class AppRoot extends React.PureComponent {
         page = `${location.pathname.substring(0, splitter)}?${keyOnlyFilters.substring(0, keyOnlyFilters.length - 1)}`; // cut off the last & of the reduced filters string
       }
       Tracking.pageview(page);
-    });
+    };
+    this.props.history.listen(location => trackLocationChange(location));
+    trackLocationChange(this.props.history.location);
   }
 
   onIdle() {
@@ -109,7 +130,8 @@ const mapStateToProps = state => {
     currentUser: state.users.currentUser,
     showDismissHelptipsDialog: !state.users.onboarding.complete && state.users.onboarding.showTipsDialog,
     showCreateArtifactDialog: state.users.onboarding.showCreateArtifactDialog,
-    showDeviceConnectionDialog: state.users.onboarding.showConnectDeviceDialog
+    showDeviceConnectionDialog: state.users.onboarding.showConnectDeviceDialog,
+    trackingCode: state.app.trackerCode
   };
 };
 
