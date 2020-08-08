@@ -10,47 +10,49 @@ class Tracker {
     this.currentPageView = null;
     this.currentOrganizationUser = null;
   }
-  cookieconsent(saveUserSettings) {
-    const style = document.createElement('link');
-    style.href = cookieConsentCSS;
-    style.rel = 'stylesheet';
-    style.async = true;
-    document.head.appendChild(style);
-    //
-    const script = document.createElement('script');
-    script.src = cookieConsentJS;
-    script.async = false;
-    script.addEventListener('load', () => {
-      window.cookieconsent.initialise({
-        palette: {
-          popup: {
-            background: '#5d0f43',
-            text: '#ffffff'
+  cookieconsent() {
+    return new Promise(resolve => {
+      const style = document.createElement('link');
+      style.href = cookieConsentCSS;
+      style.rel = 'stylesheet';
+      style.async = true;
+      document.head.appendChild(style);
+      //
+      const script = document.createElement('script');
+      script.src = cookieConsentJS;
+      script.async = false;
+      script.addEventListener('load', () => {
+        window.cookieconsent.initialise({
+          palette: {
+            popup: {
+              background: '#5d0f43',
+              text: '#ffffff'
+            },
+            button: {
+              background: '#73a4ad',
+              text: '#ffffff'
+            }
           },
-          button: {
-            background: '#73a4ad',
-            text: '#ffffff'
+          position: 'bottom-left',
+          type: 'opt-out',
+          content: {
+            message: 'We use cookies to analyze our traffic so we can improve our website and give you a better experience.',
+            link: 'View our cookie policy',
+            href: 'https://northern.tech/legal/cookies'
+          },
+          autoOpen: true,
+          revokable: false,
+          law: {
+            regionalLaw: false
+          },
+          onStatusChange: status => {
+            let hasConsented = status == 'allow';
+            resolve({ trackingConsentGiven: hasConsented });
           }
-        },
-        position: 'bottom-left',
-        type: 'opt-out',
-        content: {
-          message: 'We use cookies to analyze our traffic so we can improve our website and give you a better experience.',
-          link: 'View our cookie policy',
-          href: 'https://northern.tech/legal/cookies'
-        },
-        autoOpen: true,
-        revokable: false,
-        law: {
-          regionalLaw: false
-        },
-        onStatusChange: status => {
-          let hasConsented = status == 'allow';
-          saveUserSettings({ trackingConsentGiven: hasConsented });
-        }
+        });
       });
+      document.body.appendChild(script);
     });
-    document.body.appendChild(script);
   }
   exception(error) {
     if (this.initialized && this.trackingEnabled) {

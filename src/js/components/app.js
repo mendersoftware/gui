@@ -37,7 +37,7 @@ class AppRoot extends React.PureComponent {
     const { trackingCode } = this.props;
     if (trackingCode) {
       if (!this.cookies.get('_ga')) {
-        Tracking.cookieconsent(({ trackingConsentGiven }) => {
+        Tracking.cookieconsent().then(({ trackingConsentGiven }) => {
           if (trackingConsentGiven) {
             Tracking.initialize(trackingCode);
             Tracking.pageview();
