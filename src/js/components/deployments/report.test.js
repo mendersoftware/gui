@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import DeploymentReport from './report';
+import { defaultState } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 let dateMock;
@@ -13,39 +14,19 @@ describe('DeploymentReport Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
-      app: {
-        features: {
-          isEnterprise: false
-        }
-      },
-      devices: {
-        byStatus: {
-          accepted: { total: 0 }
-        }
-      },
+      ...defaultState,
       deployments: {
+        ...defaultState.deployments,
         byId: {
-          a1: {
-            artifact_name: 'test',
+          ...defaultState.deployments.byId,
+          d1: {
+            ...defaultState.deployments.byId.d1,
+            name: null,
             created: '2019-01-01',
             devices: {},
             finished: '2019-01-01',
             stats: {}
           }
-        },
-        selectedDeployment: 'a1'
-      },
-      releases: {
-        byId: {
-          a1: {
-            Name: 'a1',
-            device_types_compatible: []
-          }
-        }
-      },
-      users: {
-        organization: {
-          plan: 'os'
         }
       }
     });

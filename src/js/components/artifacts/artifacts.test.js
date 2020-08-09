@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Artifacts from './artifacts';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -13,25 +13,17 @@ describe('Artifacts Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
+      ...defaultState,
       devices: {
-        byId: {},
+        ...defaultState.devices,
         byStatus: {
-          accepted: {
-            deviceIds: []
-          }
+          ...defaultState.devices.byStatus,
+          accepted: { deviceIds: [], total: 0 }
         }
       },
       releases: {
-        byId: {},
-        selectedArtifact: null,
-        selectedRelease: null,
-        showRemoveDialog: false,
-        uploadProgress: 0
-      },
-      users: {
-        onboarding: {
-          complete: false
-        }
+        ...defaultState.releases,
+        byId: {}
       }
     });
   });

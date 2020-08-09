@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Header from './header';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -13,36 +13,16 @@ describe('Header Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
-      app: {
-        hostedAnnouncement: null,
-        features: { hasMultitenancy: false, isDemoMode: false },
-        docsVersion: null
-      },
+      ...defaultState,
       deployments: {
-        byStatus: { inprogress: { total: 0 } }
-      },
-      devices: {
-        byId: {},
+        ...defaultState.deployments,
         byStatus: {
-          accepted: {
-            total: 0
-          },
-          pending: {
+          ...defaultState.deployments.byStatus,
+          inprogress: {
+            ...defaultState.deployments.byStatus.inprogress,
             total: 0
           }
-        },
-        limit: 500
-      },
-      users: {
-        byId: { a1: { email: 'a@b.com', id: 'a1' } },
-        currentUser: 'a1',
-        globalSettings: {
-          a1: {
-            trackingConsentGiven: false
-          }
-        },
-        organization: {},
-        showHelptips: true
+        }
       }
     });
   });

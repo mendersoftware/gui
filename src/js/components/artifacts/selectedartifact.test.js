@@ -4,14 +4,14 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import SelectedArtifact from './selectedartifact';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
 describe('SelectedArtifact Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({});
+    store = mockStore({ ...defaultState });
   });
 
   it('renders correctly', () => {

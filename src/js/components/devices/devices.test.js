@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Devices from './devices';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -13,33 +13,17 @@ describe('Devices Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
-      app: { features: { isEnterprise: false, isHosted: false } },
-      deployments: {
-        deploymentDeviceLimit: 5000
-      },
+      ...defaultState,
       devices: {
+        ...defaultState.devices,
         byStatus: {
-          accepted: { total: 0, deviceIds: [] },
-          pending: { total: 0 },
-          rejected: { total: 0 }
+          ...defaultState.devices.byStatus,
+          accepted: { total: 0, deviceIds: [] }
         },
-        filters: [],
-        filteringAttributes: { identityAttributes: [], inventoryAttributes: [] },
         groups: {
-          byId: {},
-          selectedGroup: {}
-        },
-        selectedDeviceList: []
-      },
-      users: {
-        byId: {},
-        currentUser: {},
-        globalSettings: { previousFilters: [] },
-        onboarding: {
-          complete: false
-        },
-        organization: {},
-        showHelptips: true
+          ...defaultState.devices.groups,
+          byId: {}
+        }
       }
     });
   });

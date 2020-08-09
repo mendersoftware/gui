@@ -4,23 +4,14 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
-import { undefineds } from '../../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
 describe('PhysicalDeviceOnboarding Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      app: {
-        features: { isEnterprise: false, isHosted: false },
-        hostAddress: null,
-        menderDebPackageVersion: null
-      },
-      users: {
-        organization: { tenant_token: null }
-      }
-    });
+    store = mockStore({ ...defaultState });
   });
 
   it('renders correctly', () => {

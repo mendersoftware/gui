@@ -7,51 +7,14 @@ import configureStore from 'redux-mock-store';
 import { publicRoutes } from './routes';
 import Login from '../components/user-management/login';
 import Settings from '../components/settings/settings';
+import { defaultState } from '../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
 describe('Router', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      app: {
-        docsVersion: null,
-        features: { isDemoMode: false, hasMultitenancy: false },
-        hostedAnnouncement: null,
-        snackbar: {},
-        versionInformation: {}
-      },
-      deployments: { byStatus: { inprogress: { total: 0 } } },
-      devices: {
-        byId: {},
-        byStatus: {
-          accepted: {
-            total: 0
-          },
-          pending: {
-            total: 0
-          }
-        },
-        limit: 500
-      },
-      releases: {
-        artifactProgress: 0,
-        uploadInProgress: false
-      },
-      users: {
-        byId: {},
-        currentUser: null,
-        globalSettings: {},
-        onboarding: {
-          complete: false,
-          showCreateArtifactDialog: false,
-          showConnectDeviceDialog: false,
-          showTipsDialog: false
-        },
-        organization: {},
-        showHelptips: true
-      }
-    });
+    store = mockStore({ ...defaultState });
   });
 
   test('invalid path should redirect to Dashboard', () => {

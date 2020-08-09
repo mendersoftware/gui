@@ -4,19 +4,14 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import TwoFactorAuthSetup from './twofactorauthsetup';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
 describe('TwoFactorAuthSetup Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      users: {
-        globalSettings: { previousPhases: [] },
-        qrCode: null
-      }
-    });
+    store = mockStore({ ...defaultState });
   });
   it('renders correctly', () => {
     const tree = renderer

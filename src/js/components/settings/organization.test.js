@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import MyOrganization from './organization';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -14,22 +14,29 @@ describe('MyOrganization Component', () => {
   beforeEach(() => {
     Date.now = jest.fn(() => new Date('2020-07-01T12:00:00.000Z'));
     store = mockStore({
+      ...defaultState,
       app: {
+        ...defaultState.app,
         features: {
+          ...defaultState.app.features,
           isHosted: true
         }
       },
       devices: {
+        ...defaultState.devices,
         byStatus: {
+          ...defaultState.devices.byStatus,
           accepted: {
+            ...defaultState.devices.byStatus.accepted,
             total: 1
           }
-        }
+        },
+        limit: null
       },
       users: {
+        ...defaultState.users,
         organization: {
-          id: 1,
-          name: 'test',
+          ...defaultState.users.organization,
           plan: 'enterprise',
           tenant_token: 'test',
           trial: true,

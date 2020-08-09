@@ -5,40 +5,14 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Devices from './devices';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
 describe('Devices Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      deployments: {
-        deploymentDeviceLimit: 5000
-      },
-      devices: {
-        byId: {},
-        byStatus: {
-          accepted: {
-            total: 0,
-            deviceIds: []
-          },
-          active: {
-            total: 0
-          },
-          inactive: {
-            total: 0
-          },
-          pending: {
-            total: 0
-          }
-        }
-      },
-      users: {
-        onboarding: { complete: false },
-        showHelptips: true
-      }
-    });
+    store = mockStore({ ...defaultState });
   });
 
   it('renders correctly', () => {

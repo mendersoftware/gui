@@ -5,37 +5,14 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Pending from './pending-devices';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
 describe('PendingDevices Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      devices: {
-        byId: {},
-        byStatus: {
-          accepted: { total: 0 },
-          pending: { total: 0, deviceIds: [] }
-        },
-        filters: [],
-        selectedDeviceList: [],
-        limit: 500,
-        groups: {
-          byId: {},
-          selectedGroup: ''
-        }
-      },
-      users: {
-        globalSettings: { id_attribute: null },
-        showHelptips: false,
-        onboarding: {
-          complete: false,
-          showTips: true
-        }
-      }
-    });
+    store = mockStore({ ...defaultState });
   });
 
   it('renders correctly', () => {

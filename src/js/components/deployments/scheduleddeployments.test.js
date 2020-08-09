@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import ScheduledDeployments from './scheduleddeployments';
+import { defaultState } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -12,42 +13,21 @@ describe('ScheduledDeployments Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
+      ...defaultState,
       app: {
-        hostedAnnouncement: null,
-        features: { isEnterprise: true, isHosted: false },
-        docsVersion: null
+        ...defaultState.app,
+        features: {
+          ...defaultState.app.features,
+          isEnterprise: true,
+          isHosted: false
+        }
       },
       deployments: {
-        byId: {},
+        ...defaultState.deployments,
         byStatus: {
-          finished: { deploymentIds: [], selectedDeploymentIds: [], total: 0 },
-          inprogress: { deploymentIds: [], selectedDeploymentIds: [], total: 0 },
-          pending: { deploymentIds: [], selectedDeploymentIds: [], total: 0 },
+          ...defaultState.deployments.byStatus,
           scheduled: { deploymentIds: [], selectedDeploymentIds: [], total: 0 }
-        },
-        selectedDeployment: null
-      },
-      devices: {
-        byId: {},
-        byStatus: {
-          accepted: {
-            total: 0
-          },
-          pending: {
-            total: 0
-          }
-        },
-        groups: { byId: {} },
-
-        limit: 500
-      },
-      users: {
-        byId: { a1: { email: 'a@b.com', id: 'a1' } },
-        currentUser: 'a1',
-        globalSettings: {},
-        onboarding: { complete: false },
-        organization: {},
-        showHelptips: true
+        }
       }
     });
   });

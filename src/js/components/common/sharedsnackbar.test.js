@@ -4,18 +4,14 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import SharedSnackbar from './sharedsnackbar';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
 describe('SharedSnackbar Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      app: {
-        snackbar: {}
-      }
-    });
+    store = mockStore({ ...defaultState });
   });
 
   it('renders correctly', () => {
