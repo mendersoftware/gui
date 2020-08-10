@@ -17,6 +17,7 @@ import {
   showRemoveArtifactDialog,
   uploadArtifact
 } from '../../actions/releaseActions';
+import { colors } from '../../themes/mender-theme';
 import { advanceOnboarding, getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 import ReleaseRepository from './releaserepository';
@@ -177,7 +178,7 @@ export class Artifacts extends React.Component {
         {artifactProgress ? (
           <div id="progressBarContainer">
             <p className="align-center">Upload in progress ({Math.round(artifactProgress)}%)</p>
-            <LinearProgress variant="determinate" style={{ backgroundColor: '#c7c7c7', gridColumn: 1, margin: '15px 0' }} value={artifactProgress} />
+            <LinearProgress variant="determinate" style={{ backgroundColor: colors.grey, gridColumn: 1, margin: '15px 0' }} value={artifactProgress} />
             <Tooltip title="Abort" placement="top">
               <IconButton onClick={cancelArtifactUpload}>
                 <CancelIcon />

@@ -36,11 +36,11 @@ import {
   setShowHelptips,
   toggleHelptips
 } from '../../actions/userActions';
-
 import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { colors } from '../../themes/mender-theme';
 
 import Tracking from '../../tracking';
-const menuButtonColor = '#c7c7c7';
+const menuButtonColor = colors.grey;
 
 export class Header extends React.Component {
   constructor(props, context) {

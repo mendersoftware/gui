@@ -7,6 +7,7 @@ import copy from 'copy-to-clipboard';
 import { List, ListItem, ListItemText, Tooltip } from '@material-ui/core';
 
 import { getDocsVersion } from '../selectors';
+import { colors } from '../themes/mender-theme';
 
 const listItems = [
   { route: '/', text: 'Dashboard' },
@@ -28,7 +29,7 @@ export class LeftNav extends React.PureComponent {
         target="_blank"
         rel="noopener noreferrer"
         href={`https://docs.mender.io/${docsVersion}release-information/open-source-licenses`}
-        style={{ fontSize: '13px', position: 'relative', top: '6px', color: '#347A87' }}
+        style={{ fontSize: '13px', position: 'relative', top: '6px', color: colors.linkgreen }}
       >
         License information
       </a>
@@ -76,7 +77,7 @@ export class LeftNav extends React.PureComponent {
           <ListItem className="navLink leftNav" component={Link} style={listItemStyle.container} to="/help">
             <ListItemText primary="Help" style={listItemStyle.font} />
           </ListItem>
-          <ListItem style={Object.assign({ color: '#949495' }, listItemStyle.container)} disabled={true}>
+          <ListItem style={{ ...listItemStyle.container, color: '#949495' }} disabled={true}>
             <ListItemText primary={versionInfo} secondary={licenseLink} style={listItemStyle.font} />
           </ListItem>
         </List>

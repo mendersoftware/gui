@@ -2,17 +2,10 @@ import React from 'react';
 import copy from 'copy-to-clipboard';
 import generator from 'generate-password';
 
-import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import InputLabel from '@material-ui/core/InputLabel';
+import { Button, FormControl, FormHelperText, IconButton, Input, InputAdornment, InputLabel } from '@material-ui/core';
+import { CheckCircle as CheckIcon, Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon } from '@material-ui/icons';
 
-import CheckIcon from '@material-ui/icons/CheckCircle';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import { colors } from '../../../themes/mender-theme';
 
 export default class PasswordInput extends React.Component {
   constructor(props, context) {
@@ -127,7 +120,7 @@ export default class PasswordInput extends React.Component {
             <div className="help-text" id="pass-strength">
               Strength: <meter max={4} min={0} value={this.state.score} high={3.9} optimum={4} low={2.5} />
               {this.state.score > 3 ? (
-                <CheckIcon className="fadeIn" style={{ color: '#009E73', height: '18px', marginTop: '-3px', marginBottom: '-3px' }} />
+                <CheckIcon className="fadeIn" style={{ color: colors.successStyleColor, height: '18px', marginTop: '-3px', marginBottom: '-3px' }} />
               ) : null}
             </div>
             {feedback}

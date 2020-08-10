@@ -6,13 +6,15 @@ import CheckIcon from '@material-ui/icons/CheckCircle';
 import ReportProblemIcon from '@material-ui/icons/ReportProblem';
 import { BaseWidget, styles } from './baseWidget';
 
+import { colors } from '../../../themes/mender-theme';
+
 const notificationStyles = {
   base: {
     marginRight: '10px',
     height: '14px',
     width: '14px'
   },
-  green: { color: '#009E73' }
+  green: { color: colors.successStyleColor }
 };
 
 export default class AcceptedDevices extends React.Component {
