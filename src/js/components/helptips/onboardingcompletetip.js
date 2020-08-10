@@ -79,16 +79,16 @@ export class OnboardingCompleteTip extends React.Component {
           <div>
             Proceed to one of the following tutorials (listed in recommended order):
             <ol>
-              {[
-                { target: 'deploy-a-system-update', title: 'Deploy a system update' },
-                { target: 'deploy-a-container-update', title: 'Deploy a container update' }
-              ].map(option => (
-                <li key={option.target}>
-                  <a href={`https://docs.mender.io/${docsVersion}get-started/${option.target}`} target="_blank">
-                    {option.title}
-                  </a>
-                </li>
-              ))}
+              <li key="deploy-a-system-update">
+                <a href={`https://docs.mender.io/${docsVersion}get-started/deploy-a-system-update`} target="_blank">
+                  Deploy a system update
+                </a>
+              </li>
+              <li key="deploy-a-container-update">
+                <a href={`https://docs.mender.io/${docsVersion}get-started/deploy-a-container-update`} target="_blank">
+                  Deploy a container update
+                </a>
+              </li>
             </ol>
           </div>
           <div className="flexbox">
