@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import ExpandedDevice from './expanded-device';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -12,11 +12,21 @@ describe('ExpandedDevice Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
-      app: { docsVersion: null, features: { isHosted: true } },
-      releases: {},
+      ...defaultState,
+      app: {
+        ...defaultState.app,
+        features: {
+          ...defaultState.app.features,
+          hasMultitenancy: true,
+          isHosted: true
+        }
+      },
       users: {
-        onboarding: { complete: false },
-        showHelptips: true
+        ...defaultState.users,
+        onboarding: {
+          ...defaultState.users.onboarding,
+          complete: false
+        }
       }
     });
   });

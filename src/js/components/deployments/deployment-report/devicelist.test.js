@@ -4,21 +4,14 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import ProgressDeviceList from './devicelist';
-import { undefineds } from '../../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
 describe('ProgressDeviceList Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      devices: {
-        byId: {}
-      },
-      users: {
-        globalSettings: { id_attribute: null }
-      }
-    });
+    store = mockStore({ ...defaultState });
   });
 
   it('renders correctly', () => {

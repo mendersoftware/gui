@@ -2,7 +2,6 @@ import React from 'react';
 import moment from 'moment';
 import Time from 'react-time';
 import { Tooltip } from '@material-ui/core';
-moment.relativeTimeThreshold('ss', 0);
 
 const cutoff = -5 * 60;
 

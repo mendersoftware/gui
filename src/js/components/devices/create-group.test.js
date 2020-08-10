@@ -5,32 +5,14 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import CreateGroup from './create-group';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
 describe('CreateGroup Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      devices: {
-        byId: {},
-        byStatus: {
-          accepted: { deviceIds: [], total: 0 }
-        },
-        groups: {
-          byId: {},
-          selectedGroup: null
-        },
-        selectedDeviceList: [],
-        filters: [],
-        limit: 500
-      },
-      users: {
-        globalSettings: {},
-        currentUser: null
-      }
-    });
+    store = mockStore({ ...defaultState });
   });
 
   it('renders correctly', () => {

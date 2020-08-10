@@ -6,7 +6,7 @@ import Time from 'react-time';
 import { Button } from '@material-ui/core';
 import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 
-import { getDeviceCount, getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
+import { getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { preformatWithRequestID } from '../../helpers';
@@ -19,12 +19,13 @@ export class Preauthorize extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
+      openPreauth: false,
       pageNo: 1,
       pageLength: 20,
       pageLoading: true,
-      openPreauth: false,
-      public: '',
-      devicesToRemove: []
+      sortCol: null,
+      sortDown: true,
+      sortScope: null
     };
   }
 
@@ -62,11 +63,11 @@ export class Preauthorize extends React.Component {
    * Devices to show
    */
   _getDevices(shouldUpdate = false) {
-    var self = this;
-    Promise.all([
-      self.props.getDevicesByStatus(DEVICE_STATES.preauth, this.state.pageNo, this.state.pageLength, shouldUpdate),
-      self.props.getDeviceCount(DEVICE_STATES.preauth)
-    ])
+    const self = this;
+    const { pageNo, pageLength, sortCol, sortDown, sortScope } = self.state;
+    const sortBy = sortCol ? [{ attribute: sortCol, order: sortDown ? 'desc' : 'asc', scope: sortScope }] : undefined;
+    self.props
+      .getDevicesByStatus(DEVICE_STATES.preauth, pageNo, pageLength, shouldUpdate, undefined, sortBy)
       .catch(error => {
         console.log(error);
         var errormsg = error.res.body.error || 'Please check your connection.';
@@ -74,10 +75,6 @@ export class Preauthorize extends React.Component {
         console.log(errormsg);
       })
       .finally(() => self.setState({ pageLoading: false }));
-  }
-
-  _sortColumn() {
-    console.log('sort');
   }
 
   _handlePageChange(pageNo) {
@@ -94,13 +91,23 @@ export class Preauthorize extends React.Component {
     self.props
       .preauthDevice(authset)
       .then(() => {
-        self.props.setSnackbar('Device was successfully added to the preauthorization list', 5000);
         self._getDevices(true);
         self.setState({ openPreauth: !close });
       })
-      .catch(errorMessage => {
-        self.setState({ errorMessage });
+      .catch(errortext => {
+        if (errortext) {
+          self.setState({ errortext });
+        }
       });
+  }
+
+  onSortChange(attribute) {
+    const self = this;
+    let state = { sortCol: attribute.name, sortDown: !self.state.sortDown, sortScope: attribute.scope };
+    if (attribute.name !== self.state.sortCol) {
+      state.sortDown = true;
+    }
+    self.setState(state, () => self._getDevices(true));
   }
 
   render() {
@@ -112,19 +119,22 @@ export class Preauthorize extends React.Component {
     const columnHeaders = [
       {
         title: globalSettings.id_attribute || 'Device ID',
-        name: 'device_id',
         customize: openSettingsDialog,
-        style: { flexGrow: 1 }
+        attribute: { name: globalSettings.id_attribute, scope: 'identity' },
+        style: { flexGrow: 1 },
+        sortable: !!globalSettings.id_attribute && globalSettings.id_attribute !== 'Device ID'
       },
       {
         title: 'Date added',
-        name: 'date_added',
-        render: device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-')
+        attribute: { name: 'created_ts', scope: 'system' },
+        render: device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-'),
+        sortable: true
       },
       {
         title: 'Status',
-        name: 'status',
-        render: device => (device.status ? <div className="capitalized">{device.status}</div> : '-')
+        attribute: { name: 'status', scope: 'identity' },
+        render: device => (device.status ? <div className="capitalized">{device.status}</div> : '-'),
+        sortable: true
       }
     ];
 
@@ -155,6 +165,7 @@ export class Preauthorize extends React.Component {
               columnHeaders={columnHeaders}
               onPageChange={e => self._handlePageChange(e)}
               onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}
+              onSort={attribute => self.onSortChange(attribute)}
               pageTotal={count}
               refreshDevices={shouldUpdate => self._getDevices(shouldUpdate)}
             />
@@ -184,7 +195,7 @@ export class Preauthorize extends React.Component {
   }
 }
 
-const actionCreators = { getDeviceCount, getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters, setSnackbar };
+const actionCreators = { getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters, setSnackbar };
 
 const mapStateToProps = state => {
   return {

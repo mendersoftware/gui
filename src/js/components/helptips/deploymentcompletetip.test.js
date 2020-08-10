@@ -4,20 +4,14 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import DeploymentCompleteTip from './deploymentcompletetip';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
 describe('DeploymentCompleteTip Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      devices: {
-        byId: {},
-        byStatus: { accepted: { deviceIds: [] } },
-        filters: []
-      }
-    });
+    store = mockStore({ ...defaultState });
   });
 
   it('renders correctly', () => {

@@ -150,8 +150,15 @@ export const getRoles = () => (dispatch, getState) =>
     return dispatch({ type: UserConstants.RECEIVED_ROLES, rolesById });
   });
 
-export const createRole = roleData => dispatch => {
-  let permissions = roleData.groups.map(group => ({ action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: group } }));
+const transformRoleDataToRole = roleData => {
+  let permissions = roleData.groups.reduce(
+    (accu, group) => [
+      ...accu,
+      { action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: group } },
+      { action: 'VIEW_DEVICE', object: { type: 'DEVICE_GROUP', value: group } }
+    ],
+    []
+  );
   if (roleData.allowUserManagement) {
     permissions.push({
       action: 'http',
@@ -161,32 +168,22 @@ export const createRole = roleData => dispatch => {
       }
     });
   }
-  const role = {
+  return {
     name: roleData.name,
     description: roleData.description,
     permissions
   };
+};
+
+export const createRole = roleData => dispatch => {
+  const role = transformRoleDataToRole(roleData);
   return GeneralApi.post(`${useradmApiUrl}/roles`, role).then(() =>
     Promise.all([dispatch({ type: UserConstants.CREATED_ROLE, role: { ...UserConstants.emptyRole, ...role }, roleId: role.name }), dispatch(getRoles())])
   );
 };
 
 export const editRole = roleData => dispatch => {
-  let permissions = roleData.groups.map(group => ({ action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: group } }));
-  if (roleData.allowUserManagement) {
-    permissions.push({
-      action: 'http',
-      object: {
-        type: 'any',
-        value: `${useradmApiUrl}/.*`
-      }
-    });
-  }
-  const role = {
-    name: roleData.name,
-    description: roleData.description,
-    permissions
-  };
+  const role = transformRoleDataToRole(roleData);
   const roleId = role.name;
   return GeneralApi.put(`${useradmApiUrl}/roles/${roleId}`, role).then(() =>
     Promise.all([dispatch({ type: UserConstants.UPDATED_ROLE, role: { ...UserConstants.emptyRole, ...role }, roleId: roleId }), dispatch(getRoles())])

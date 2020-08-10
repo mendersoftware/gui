@@ -5,21 +5,14 @@ import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import renderer from 'react-test-renderer';
 import Help from './help';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
 describe('Help Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      app: {
-        features: { isHosted: false, isEnterprise: false },
-        versionInformation: {},
-        menderDebPackageVersion: null
-      },
-      users: { organization: {} }
-    });
+    store = mockStore({ ...defaultState });
   });
 
   it('renders correctly', () => {

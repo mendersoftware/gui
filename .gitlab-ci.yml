@@ -1,4 +1,4 @@
-image: docker:git
+image: node:14.7.0-alpine
 
 stages:
   - test
@@ -22,7 +22,6 @@ test:lint:
   except:
     - master
     - /^saas-[a-zA-Z0-9.]+$/
-  image: node:12.14.0-alpine
   script:
     - npm ci
     - npm run lint
@@ -57,7 +56,6 @@ test:unit:
   stage: test
   except:
     - /^saas-[a-zA-Z0-9.]+$/
-  image: node:12.14.0-alpine
   script:
     - npm install
     - npm run test
@@ -70,16 +68,14 @@ publish:tests:
   stage: publish
   except:
     - /^saas-[a-zA-Z0-9.]+$/
-  image: node:12.14.0-alpine
   dependencies:
     - test:unit
-  before_script:
-    - npm install -g codecov
   script:
-    - codecov
+    - npx codecov
 
 publish:disclaimer:
   stage: publish
+  image: docker:git
   services:
     - docker:19.03.5-dind
   script:

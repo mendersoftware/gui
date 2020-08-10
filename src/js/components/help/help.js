@@ -17,7 +17,6 @@ import BuildDemoArtifact from './releases-and-artifacts/build-demo-artifact';
 import Support from './support';
 import MoreHelp from './more-help-resources';
 
-import { findLocalIpAddress } from '../../actions/appActions';
 import { getUserOrganization } from '../../actions/userActions';
 
 var components = {
@@ -117,7 +116,6 @@ export class Help extends React.PureComponent {
           <div style={{ position: 'relative', top: '12px', maxWidth: contentWidth }} className="help-content">
             <ComponentToShow
               docsVersion={this.props.docsVersion}
-              findLocalIpAddress={this.props.findLocalIpAddress}
               isHosted={this.props.isHosted}
               isEnterprise={this.props.isEnterprise}
               menderDebPackageVersion={this.props.menderDebPackageVersion}
@@ -132,7 +130,7 @@ export class Help extends React.PureComponent {
   }
 }
 
-const actionCreators = { getUserOrganization, findLocalIpAddress };
+const actionCreators = { getUserOrganization };
 
 const mapStateToProps = state => {
   // if hosted, use latest docs version

@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import CreateDeployment from './createdeployment';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -14,34 +14,18 @@ describe('CreateDeployment Component', () => {
 
   beforeEach(() => {
     store = mockStore({
+      ...defaultState,
       app: {
+        ...defaultState.app,
         features: {
+          ...defaultState.features,
           isEnterprise: true,
           isHosted: false
         }
       },
-      devices: {
-        byStatus: {
-          accepted: { deviceIds: [], total: 0 },
-          pending: { deviceIds: [], total: 0 }
-        },
-        selectedDevice: null,
-        groups: {
-          byId: {}
-        },
-        limit: 500
-      },
       releases: {
-        byId: {},
-        selectedRelease: null
-      },
-      users: {
-        globalSettings: {
-          retries: 0
-        },
-        organization: {
-          plan: 'professional'
-        }
+        ...defaultState.releases,
+        byId: {}
       }
     });
   });

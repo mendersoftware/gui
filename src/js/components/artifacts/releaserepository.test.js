@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import ReleaseRepository from './releaserepository';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -12,15 +12,10 @@ describe('ReleaseRepository Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
+      ...defaultState,
       releases: {
-        byId: {},
-        selectedArtifact: null,
-        selectedRelease: null,
-        uploading: false
-      },
-      users: {
-        onboarding: { complete: false },
-        showHelptips: true
+        ...defaultState.releases,
+        byId: {}
       }
     });
   });

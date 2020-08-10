@@ -5,16 +5,14 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import LeftNav from './leftnav';
-import { undefineds } from '../../../tests/mockData';
+import { defaultState, undefineds } from '../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
 describe('LeftNav Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      app: { features: { isHosted: false }, versionInformation: {} }
-    });
+    store = mockStore({ ...defaultState });
   });
 
   it('renders correctly', () => {

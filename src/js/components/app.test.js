@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import App from './app';
-import { undefineds } from '../../../tests/mockData';
+import { defaultState, undefineds } from '../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -14,48 +14,22 @@ describe('App Component', () => {
 
   beforeEach(() => {
     store = mockStore({
-      app: {
-        hostedAnnouncement: null,
-        features: {
-          isDemoMode: false
-        },
-        snackbar: {},
-        versionInformation: {}
-      },
+      ...defaultState,
       deployments: {
+        ...defaultState.deployments,
         byId: {},
         byStatus: {
-          finished: { total: 0 },
-          inprogress: { total: 0 },
-          pending: { total: 0 }
-        }
-      },
-      devices: {
-        byId: {},
-        byStatus: {
-          accepted: { total: 0 },
-          active: { total: 0 },
-          inactive: { total: 0 },
-          pending: { total: 0 }
+          ...defaultState.deployments.byStatus,
+          inprogress: {
+            ...defaultState.deployments.byStatus.inprogress,
+            total: 0
+          }
         },
-        limit: 500
-      },
-      releases: {
-        artifactProgress: 0,
-        uploadInProgress: false
+        deploymentDeviceLimit: null
       },
       users: {
-        byId: {},
-        currentUser: null,
-        globalSettings: {},
-        onboarding: {
-          complete: false,
-          showCreateArtifactDialog: false,
-          showConnectDeviceDialog: false,
-          showTipsDialog: false
-        },
-        organization: {},
-        showHelptips: true
+        ...defaultState.users,
+        currentUser: null
       }
     });
   });

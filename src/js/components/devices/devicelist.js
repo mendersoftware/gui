@@ -20,8 +20,7 @@ export class DeviceList extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      expandedDeviceId: null,
-      pageSize: 20
+      expandedDeviceId: null
     };
   }
 
@@ -103,12 +102,15 @@ export class DeviceList extends React.Component {
       pageLoading,
       pageNo,
       pageTotal,
-      onSelect,
       onChangeRowsPerPage,
+      onSelect,
+      onSort,
       selectedRows,
-      showPagination = true
+      showPagination = true,
+      sortCol,
+      sortDown
     } = self.props;
-    const { sortCol, sortDown, expandedDeviceId } = self.state;
+    const { expandedDeviceId } = self.state;
     const columnWidth = `${(onSelect ? 90 : 100) / columnHeaders.length}%`;
     const numSelected = (selectedRows || []).length;
     return (
@@ -121,10 +123,15 @@ export class DeviceList extends React.Component {
               onChange={() => self.onSelectAllClick()}
             />
           ) : null}
-          {columnHeaders.map(item => (
-            <div className="columnHeader" key={item.name} style={Object.assign({ width: item.width || columnWidth }, item.style)}>
+          {columnHeaders.map((item, index) => (
+            <div
+              className="columnHeader"
+              key={`columnHeader-${index}`}
+              style={Object.assign({ width: item.width || columnWidth }, item.style)}
+              onClick={() => onSort(item.attribute ? item.attribute : {})}
+            >
               {item.title}
-              {item.sortable ? <SortIcon className={`sortIcon ${sortCol === item.name ? 'selected' : ''} ${sortDown.toString()}`} /> : null}
+              {item.sortable ? <SortIcon className={`sortIcon ${sortCol === item.attribute.name ? 'selected' : ''} ${sortDown.toString()}`} /> : null}
               {item.customize ? <SettingsIcon onClick={item.customize} style={{ fontSize: 16, marginLeft: 'auto' }} /> : null}
             </div>
           ))}

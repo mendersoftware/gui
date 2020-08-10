@@ -4,21 +4,14 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import CreateArtifactDialog from './createartifactdialog';
+import { defaultState } from '../../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
 describe('CreateArtifactDialog Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      app: {
-        versionInformation: {
-          'Mender-Client': 'master',
-          'Mender-Artifact': 'master'
-        }
-      },
-      users: { onboarding: { deviceType: 'qemux86-64' } }
-    });
+    store = mockStore({ ...defaultState });
   });
 
   it('renders correctly', () => {

@@ -1,6 +1,5 @@
 import Cookies from 'universal-cookie';
 import AppConstants from '../constants/appConstants';
-import * as Helpers from '../helpers';
 import { DEVICE_STATES } from '../constants/deviceConstants';
 import { getDevicesByStatus } from './deviceActions';
 import { getReleases } from './releaseActions';
@@ -18,8 +17,8 @@ export const sortTable = (table, column, direction) => dispatch =>
     direction: direction
   });
 
-/* 
-  General 
+/*
+  General
 */
 export const setSnackbar = (message, duration, action, component, onClick, onClose) => dispatch =>
   dispatch({
@@ -36,9 +35,6 @@ export const setSnackbar = (message, duration, action, component, onClick, onClo
     }
   });
 
-export const findLocalIpAddress = () => dispatch =>
-  Helpers.findLocalIpAddress().then(ipAddress => dispatch({ type: AppConstants.SET_LOCAL_IPADDRESS, ipAddress }));
-
 export const getOnboardingState = () => (dispatch, getState) => {
   let promises = Promise.resolve(getCurrentOnboardingState());
   const userId = getState().users.currentUser;
@@ -47,8 +43,8 @@ export const getOnboardingState = () => (dispatch, getState) => {
   if (!Object.keys(savedState).length || !savedState.complete) {
     const userCookie = cookies.get(`${userId}-onboarded`);
     // to prevent tips from showing up for previously onboarded users completion is set explicitly before the additional requests complete
-    if (userCookie) {
-      return dispatch(setOnboardingComplete(Boolean(userCookie)));
+    if (userCookie || getState().users.onboarding.complete) {
+      return dispatch(setOnboardingComplete(Boolean(userCookie) || getState().users.onboarding.complete));
     }
     const requests = [
       dispatch(getDevicesByStatus(DEVICE_STATES.accepted)),

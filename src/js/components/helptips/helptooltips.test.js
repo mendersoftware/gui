@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import { AuthButton, ExpandArtifact, ExpandDevice, AddGroup } from './helptooltips';
+import { defaultState } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -12,9 +13,14 @@ describe('Helptooltips Components', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
+      ...defaultState,
       app: {
-        docsVersion: null,
-        features: { hasMultitenancy: true, isHosted: true }
+        ...defaultState.app,
+        features: {
+          ...defaultState.app.features,
+          hasMultitenancy: true,
+          isHosted: true
+        }
       }
     });
   });

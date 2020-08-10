@@ -7,7 +7,7 @@ import configureStore from 'redux-mock-store';
 
 import { mount } from 'enzyme';
 import Dashboard from './dashboard';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -15,41 +15,10 @@ describe('Dashboard Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
-      app: {
-        features: {
-          isEnterprise: false
-        }
-      },
-      devices: {
-        byId: {},
-        byStatus: {
-          accepted: { deviceIds: [], total: 0 },
-          active: { total: 0 },
-          inactive: { total: 0 },
-          pending: { deviceIds: [], total: 0 }
-        },
-        filteringAttributes: {
-          inventoryAttributes: []
-        },
-        groups: {
-          byId: {}
-        }
-      },
+      ...defaultState,
       deployments: {
-        byId: {},
-        byStatus: {
-          finished: { total: 0 },
-          inprogress: { total: 0 },
-          pending: { total: 0 }
-        },
-        deploymentDeviceLimit: 500
-      },
-      users: {
-        byId: {},
-        currentUser: null,
-        globalSettings: {},
-        showHelptips: true,
-        onboarding: { complete: false, showTips: true }
+        ...defaultState.deployments,
+        byId: {}
       }
     });
   });

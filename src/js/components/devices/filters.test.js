@@ -4,31 +4,14 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Filters from './filters';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
 describe('Filters Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      app: {
-        features: { hasMultitenancy: false, isEnterprise: false, isHosted: false }
-      },
-      devices: {
-        filters: [],
-        filteringAttributes: { identityAttributes: [], inventoryAttributes: [] },
-        groups: {
-          selectedGroup: null
-        }
-      },
-      users: {
-        globalSettings: {
-          previousFilters: []
-        },
-        organization: {}
-      }
-    });
+    store = mockStore({ ...defaultState });
   });
   it('renders correctly', () => {
     const tree = renderer

@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Settings from './settings';
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -13,11 +13,19 @@ describe('Settings Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
-      app: { features: { isHosted: false, hasMultitenancy: true } },
+      ...defaultState,
+      app: {
+        ...defaultState.app,
+        features: {
+          ...defaultState.app.features,
+          isHosted: false,
+          hasMultitenancy: true
+        }
+      },
       users: {
+        ...defaultState.users,
         byId: {},
         currentUser: null,
-        globalSettings: {},
         organization: {}
       }
     });
