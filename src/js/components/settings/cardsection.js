@@ -22,11 +22,11 @@ const CheckoutForm = props => {
     props
       .startUpgrade(props.org.id)
       .catch(err => {
-        props.setSnackbar(preformatWithRequestID(err.res, err.res.body.error), null, 'Copy to clipboard');
+        props.setSnackbar(preformatWithRequestID(err.response, err.response.data.error), null, 'Copy to clipboard');
         setLoading(false);
       })
-      .then(data => {
-        confirmCard(data.body.secret);
+      .then(res => {
+        confirmCard(res.data.secret);
       });
   };
 
@@ -56,7 +56,7 @@ const CheckoutForm = props => {
           .completeUpgrade(props.org.id, props.plan)
           .catch(err => {
             setLoading(false);
-            props.setSnackbar(preformatWithRequestID(err.res, `There was an error upgrading your account. ${err.res.body.error}`));
+            props.setSnackbar(preformatWithRequestID(err.response, `There was an error upgrading your account. ${err.response.data.error}`));
           })
           .then(() => {
             setLoading(false);

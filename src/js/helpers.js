@@ -88,8 +88,8 @@ export function preformatWithRequestID(res, failMsg) {
   if (failMsg.length > 100) failMsg = `${failMsg.substring(0, 220)}...`;
 
   try {
-    if (res.body && Object.keys(res.body).includes('request_id')) {
-      let shortRequestUUID = res.body['request_id'].substring(0, 8);
+    if (res.data && Object.keys(res.data).includes('request_id')) {
+      let shortRequestUUID = res.data['request_id'].substring(0, 8);
       let finalMessage = `${failMsg} [Request ID: ${shortRequestUUID}]`;
       return finalMessage;
     }

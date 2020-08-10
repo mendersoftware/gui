@@ -1,80 +1,49 @@
-import Api from './general-api';
-let request = require('superagent');
-const superagentMock = require('superagent-mock');
+import Api, { authenticatedRequest } from './general-api';
+import MockAdapter from 'axios-mock-adapter';
 
 const testLocation = '/test';
-
-const mockApiBase = () => [
-  {
-    pattern: testLocation,
-    fixtures: (match, params, headers, context) => {
-      if (match[0] === testLocation) {
-        return {
-          headers,
-          method: context.method
-        };
-      }
-    },
-    get: (match, data) => ({
-      ...data,
-      body: data,
-      ok: true
-    }),
-    delete: (match, data) => ({
-      ...data,
-      ok: true
-    }),
-    post: (match, data) => ({
-      ...data,
-      ok: true
-    }),
-    put: (match, data) => ({
-      ...data,
-      ok: true
-    })
-  }
-];
 
 let mockApi;
 
 describe('General API module', () => {
   beforeAll(() => {
-    mockApi = superagentMock(request, mockApiBase());
+    mockApi = new MockAdapter(authenticatedRequest);
+    mockApi.onGet(testLocation).reply(200).onPost(testLocation).reply(200, {}).onPut(testLocation).reply(200, {}).onDelete(testLocation).reply(200, {});
   });
 
   afterAll(() => {
-    mockApi.unset();
+    mockApi.restore();
   });
 
   it('should allow GET requests', done => {
-    Api.get('/test')
+    Api.get(testLocation)
       .then(res => {
-        expect(res.headers.Authorization).toMatch(/Bearer/);
-        return res.method === 'get' ? done() : done('failed');
+        expect(res.config.headers.Authorization).toMatch(/Bearer/);
+        return res.config.method === 'get' ? done() : done('failed');
       })
       .catch(done);
   });
   it('should allow POST requests', done => {
-    Api.post('/test')
+    Api.post(testLocation)
       .then(res => {
-        expect(res.headers.Authorization).toMatch(/Bearer/);
-        return res.method === 'post' ? done() : done('failed');
+        expect(res.config.headers.Authorization).toMatch(/Bearer/);
+        return res.config.method === 'post' ? done() : done('failed');
       })
       .catch(done);
   });
   it('should allow PUT requests', done => {
-    Api.put('/test')
+    Api.put(testLocation)
       .then(res => {
-        expect(res.headers.Authorization).toMatch(/Bearer/);
-        return res.method === 'put' ? done() : done('failed');
+        expect(res.config.headers.Authorization).toMatch(/Bearer/);
+        return res.config.method === 'put' ? done() : done('failed');
       })
       .catch(done);
   });
   it('should allow DELETE requests', done => {
-    Api.delete('/test')
+    Api.delete(testLocation)
       .then(res => {
-        expect(res.headers.Authorization).toMatch(/Bearer/);
-        return res.method === 'del' || res.method === 'delete' ? done() : done('failed');
+        expect(res.config.headers.Authorization).toMatch(/Bearer/);
+        return res.config.method === 'del' || res.config.method === 'delete' ? done() : done('failed');
       })
       .catch(done);
   });

@@ -49,10 +49,10 @@ export class Authsets extends React.Component {
         self.props.setSnackbar('Device authorization status was updated successfully');
       })
       .catch(err => {
-        var errMsg = err ? (err.res ? err.res.error.message : err.message) : '';
+        var errMsg = err ? (err.response ? err.response.data.error.message : err.message) : '';
         console.log(errMsg);
         self.props.setSnackbar(
-          preformatWithRequestID(err.res, `There was a problem updating the device authorization status: ${errMsg}`),
+          preformatWithRequestID(err.response, `There was a problem updating the device authorization status: ${errMsg}`),
           null,
           'Copy to clipboard'
         );
