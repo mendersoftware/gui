@@ -24,21 +24,14 @@ authenticatedRequest.interceptors.request.use(
   error => Promise.reject(error)
 );
 
-const errorHandler = error => {
-  if (error.response && error.response.status == 403) {
-    error.response.data.error = error.response.data.error.message;
-  }
-  return Promise.reject(error);
-};
-
 const Api = {
-  get: url => authenticatedRequest.get(url).catch(errorHandler),
-  delete: (url, data) => authenticatedRequest.request({ method: 'delete', url, data }).catch(errorHandler),
-  patch: (url, data) => authenticatedRequest.patch(url, data).catch(errorHandler),
-  post: (url, data) => authenticatedRequest.post(url, data).catch(errorHandler),
-  postUnauthorized: (url, data) => axios.post(url, data, commonRequestConfig).catch(errorHandler),
-  put: (url, data) => authenticatedRequest.put(url, data).catch(errorHandler),
-  upload: (url, formData, progress) => authenticatedRequest.post(url, formData, { onUploadProgress: progress, timeout: 0 }).catch(errorHandler)
+  get: url => authenticatedRequest.get(url),
+  delete: (url, data) => authenticatedRequest.request({ method: 'delete', url, data }),
+  patch: (url, data) => authenticatedRequest.patch(url, data),
+  post: (url, data) => authenticatedRequest.post(url, data),
+  postUnauthorized: (url, data) => axios.post(url, data, commonRequestConfig),
+  put: (url, data) => authenticatedRequest.put(url, data),
+  upload: (url, formData, progress) => authenticatedRequest.post(url, formData, { onUploadProgress: progress, timeout: 0 })
 };
 
 export default Api;
