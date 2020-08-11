@@ -17,7 +17,7 @@ exports[`IntegrateDebian Component renders correctly 1`] = `
   </p>
   <p>
     <a
-      href="https://docs.mender.io/artifacts/debian-family"
+      href="https://docs.mender.io/system-updates-debian-family"
       target="_blank"
     >
       Read our documentation

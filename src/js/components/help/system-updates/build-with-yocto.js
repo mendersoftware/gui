@@ -33,8 +33,8 @@ export default class BuildYocto extends React.PureComponent {
 
         <p>
           Follow the docs at{' '}
-          <a href={`https://docs.mender.io/${docsVersion}artifacts/yocto-project/building`} target="_blank">
-            {`https://docs.mender.io/${docsVersion}artifacts/yocto-project/building`}
+          <a href={`https://docs.mender.io/${docsVersion}system-updates-yocto-project/build-for-demo`} target="_blank">
+            {`https://docs.mender.io/${docsVersion}system-updates-yocto-project/build-for-demo`}
           </a>{' '}
           to build your .sdimg and .mender files.
         </p>
@@ -63,7 +63,7 @@ export default class BuildYocto extends React.PureComponent {
 
             <p>
               You can the use the output .sdimg and .mender files to connect to your Mender server and deploy updates, as outlined{' '}
-              <a href={`https://docs.mender.io/${docsVersion}artifacts/yocto-project/building`} target="_blank">
+              <a href={`https://docs.mender.io/${docsVersion}system-updates-yocto-project/build-for-demo`} target="_blank">
                 in the tutorial
               </a>
               .

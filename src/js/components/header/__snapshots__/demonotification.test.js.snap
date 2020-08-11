@@ -48,7 +48,7 @@ exports[`DemoNotification Component renders correctly 1`] = `
     </p>
     <p>
       <a
-        href="https://docs.mender.io/development/administration/production-installation"
+        href="https://docs.mender.io/development/server-installation/production-installation"
         target="_blank"
       >
         See the documentation for help switching to production mode

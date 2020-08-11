@@ -27,7 +27,7 @@ const UpdateModules = ({ docsVersion = '' }) => (
     </p>
 
     <p>
-      <a href={`https://docs.mender.io/${docsVersion}devices/update-modules`} target="_blank">
+      <a href={`https://docs.mender.io/${docsVersion}artifact-creation/create-a-custom-update-module`} target="_blank">
         Read our documentation
       </a>{' '}
       to learn how to develop your own Update Modules.

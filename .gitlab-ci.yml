@@ -8,7 +8,7 @@ stages:
 
 variables:
   DOCKER_REPOSITORY: mendersoftware/gui
-  DOCS_VERSION: hosted
+  DOCS_VERSION: development
 
 include:
   - project: 'Northern.tech/Mender/mendertesting'
@@ -68,7 +68,7 @@ test:unit:
 test:docs-links:
   stage: test
   except:
-    - /^saas-[a-zA-Z0-9.]+$/
+    - /^(staging|saas-[a-zA-Z0-9.]+)$/
   before_script:
     - apk add --no-cache curl
   script:
@@ -85,7 +85,14 @@ test:docs-links:
     - if [ $error -gt 0 ]; then
     -   exit 1
     - fi
-  allow_failure: true
+
+test:docs-links:hosted:
+  extends: test:docs-links
+  only:
+    - /^(staging|saas-[a-zA-Z0-9.]+)$/
+  except: []
+  variables:
+    DOCS_VERSION: hosted
 
 publish:tests:
   stage: publish

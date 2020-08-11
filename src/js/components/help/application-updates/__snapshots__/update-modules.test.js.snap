@@ -41,7 +41,7 @@ exports[`UpdateModules Component renders correctly 1`] = `
   </p>
   <p>
     <a
-      href="https://docs.mender.io/devices/update-modules"
+      href="https://docs.mender.io/artifact-creation/create-a-custom-update-module"
       target="_blank"
     >
       Read our documentation
