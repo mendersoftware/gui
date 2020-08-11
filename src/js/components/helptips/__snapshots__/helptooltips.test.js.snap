@@ -99,7 +99,7 @@ exports[`Helptooltips Components ExpandDevice renders correctly 1`] = `
     Which information is collected about devices is fully configurable;
      
     <a
-      href="https://docs.mender.io/hosted/client-configuration/identity"
+      href="https://docs.mender.io/hosted/client-installation/identity"
       target="_blank"
     >
       see the documentation for how to configure this

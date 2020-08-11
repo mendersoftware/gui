@@ -84,7 +84,7 @@ export class Global extends React.Component {
       <div>
         <p>Choose a device identity attribute to use to identify your devices throughout the UI.</p>
         <p>
-          <a href={`https://docs.mender.io/${docsVersion}client-configuration/identity`} target="_blank">
+          <a href={`https://docs.mender.io/${docsVersion}client-installation/identity`} target="_blank">
             Learn how to add custom identity attributes
           </a>{' '}
           to your devices.

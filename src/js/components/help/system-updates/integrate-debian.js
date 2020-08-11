@@ -10,7 +10,7 @@ const IntegrateDebian = ({ docsVersion = '' }) => (
     </p>
 
     <p>
-      <a href={`https://docs.mender.io/${docsVersion}artifacts/debian-family`} target="_blank">
+      <a href={`https://docs.mender.io/${docsVersion}system-updates-debian-family`} target="_blank">
         Read our documentation
       </a>{' '}
       on building a Mender Debian image.
