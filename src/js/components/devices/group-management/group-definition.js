@@ -43,7 +43,7 @@ export default class GroupDefinition extends React.Component {
           id="group-creation-selection"
           disableClearable
           freeSolo
-          value={newGroup}
+          inputValue={newGroup}
           options={filteredGroups}
           onInputChange={(e, newValue) => self.validateName(newValue)}
           renderInput={params => (
