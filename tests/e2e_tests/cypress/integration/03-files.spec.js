@@ -47,7 +47,7 @@ context('Files', () => {
     // .click().then(anchor => {
     //   const url = anchor.attr('href');
     //   cy.request(url).then(response =>
-    //     cy.writeFile('tempArtifact', response.body)
+    //     cy.writeFile('tempArtifact', response.data)
     //   )
     // })
   });

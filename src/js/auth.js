@@ -1,17 +1,8 @@
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
-export function isLoggedIn() {
+export function getToken() {
   return cookies.get('JWT');
-}
-
-export function unauthorizedRedirect(req) {
-  //  redirect on 401 invalid token
-  req.on('response', res => {
-    if (res.status === 401) {
-      logout();
-    }
-  });
 }
 
 export function logout() {
@@ -20,7 +11,7 @@ export function logout() {
 }
 
 export function updateMaxAge() {
-  var userCookie = cookies.get('JWT');
+  const userCookie = getToken();
   if (userCookie && expirySet()) {
     cookies.set('JWT', userCookie, { maxAge: 900 });
   }

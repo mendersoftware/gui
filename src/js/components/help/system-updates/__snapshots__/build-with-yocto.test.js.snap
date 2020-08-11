@@ -30,10 +30,10 @@ exports[`BuildYocto Component renders correctly 1`] = `
     Follow the docs at
      
     <a
-      href="https://docs.mender.io/artifacts/yocto-project/building"
+      href="https://docs.mender.io/system-updates-yocto-project/build-for-demo"
       target="_blank"
     >
-      https://docs.mender.io/artifacts/yocto-project/building
+      https://docs.mender.io/system-updates-yocto-project/build-for-demo
     </a>
      
     to build your .sdimg and .mender files.

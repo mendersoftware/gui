@@ -65,7 +65,7 @@ export class Global extends React.Component {
       })
       .catch(err => {
         console.log(err);
-        self.props.setSnackbar(preformatWithRequestID(err.res, `The settings couldn't be saved. ${err.res.body.error}`));
+        self.props.setSnackbar(preformatWithRequestID(err.response, `The settings couldn't be saved. ${err.response.data.error}`));
       });
   }
 
@@ -84,7 +84,7 @@ export class Global extends React.Component {
       <div>
         <p>Choose a device identity attribute to use to identify your devices throughout the UI.</p>
         <p>
-          <a href={`https://docs.mender.io/${docsVersion}client-configuration/identity`} target="_blank">
+          <a href={`https://docs.mender.io/${docsVersion}client-installation/identity`} target="_blank">
             Learn how to add custom identity attributes
           </a>{' '}
           to your devices.

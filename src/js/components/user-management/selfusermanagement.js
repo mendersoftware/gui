@@ -37,8 +37,8 @@ export class SelfUserManagement extends React.Component {
       })
       .catch(err => {
         console.log(err);
-        var errMsg = err.res.body.error || '';
-        self.props.setSnackbar(preformatWithRequestID(err.res, `There was an error editing the user. ${errMsg}`));
+        var errMsg = err.response.data.error || '';
+        self.props.setSnackbar(preformatWithRequestID(err.response, `There was an error editing the user. ${errMsg}`));
       });
   }
 

@@ -142,9 +142,9 @@ export class ExpandedDevice extends React.Component {
         self.props.setSnackbar('Device was decommissioned successfully');
       })
       .catch(err => {
-        var errMsg = err.res.error.message || '';
+        var errMsg = err.response.data.error.message || '';
         console.log(errMsg);
-        self.props.setSnackbar(preformatWithRequestID(err.res, `There was a problem decommissioning the device: ${errMsg}`), null, 'Copy to clipboard');
+        self.props.setSnackbar(preformatWithRequestID(err.response, `There was a problem decommissioning the device: ${errMsg}`), null, 'Copy to clipboard');
       })
       .finally(() => self.props.refreshDevices(true));
   }
@@ -199,7 +199,7 @@ export class ExpandedDevice extends React.Component {
             <p>Inventory data not yet received from the device - this can take up to 30 minutes with default installation.</p>
             <p>
               Also see the documentation for{' '}
-              <a href={`https://docs.mender.io/${docsVersion}client-configuration/configuration-file/polling-intervals`} target="_blank">
+              <a href={`https://docs.mender.io/${docsVersion}client-installation/configuration-file/polling-intervals`} target="_blank">
                 Polling intervals
               </a>
               .

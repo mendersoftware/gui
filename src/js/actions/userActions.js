@@ -5,6 +5,7 @@ import GeneralApi from '../api/general-api';
 import UsersApi from '../api/users-api';
 import * as UserConstants from '../constants/userConstants';
 import { advanceOnboarding } from '../utils/onboardingmanager';
+import { getToken } from '../auth';
 import { preformatWithRequestID, decodeSessionToken } from '../helpers';
 
 const cookies = new Cookies();
@@ -13,23 +14,16 @@ const tenantadmUrl = `${apiUrl}/tenantadm`;
 const useradmApiUrl = `${apiUrl}/useradm`;
 
 const handleLoginError = (err, has2FA) => dispatch => {
-  const errorText = err.error.text ? err.error.text.error : err.error.message;
+  const errorText = err.response.data?.error?.message || err.message;
   const is2FABackend = errorText.includes('2fa');
   if (is2FABackend && !has2FA) {
     return dispatch(saveGlobalSettings({ '2fa': 'enabled' }, true));
   }
-  let errMsg = 'There was a problem logging in';
-  if (err.res && err.res.body && Object.keys(err.res.body).includes('error')) {
-    const twoFAError = is2FABackend || has2FA ? ' and verification code' : '';
-    const errorMessage = `There was a problem logging in. Please check your email${
-      twoFAError ? ',' : ' and'
-    } password${twoFAError}. If you still have problems, contact an administrator.`;
-    // if error message, check for "unauthorized"
-    errMsg = err.res.body['error'] === 'unauthorized' ? errorMessage : `${errMsg}: ${err.res.body['error']}`;
-  } else {
-    errMsg = `${errMsg}\n${err.error.text && err.error.text.message ? err.error.text.message : ''}`;
-  }
-  return dispatch(setSnackbar(preformatWithRequestID(err.res, errMsg), null, 'Copy to clipboard'));
+  const twoFAError = is2FABackend || has2FA ? ' and verification code' : '';
+  const errorMessage = `There was a problem logging in. Please check your email${
+    twoFAError ? ',' : ' and'
+  } password${twoFAError}. If you still have problems, contact an administrator.`;
+  return dispatch(setSnackbar(preformatWithRequestID(err.response, errorMessage), null, 'Copy to clipboard'));
 };
 
 /*
@@ -74,14 +68,14 @@ export const passwordResetComplete = (secretHash, newPassword) => () =>
 export const verify2FA = tfaData => dispatch =>
   UsersApi.putVerifyTFA(`${useradmApiUrl}/2faverify`, tfaData)
     .then(() => {
-      return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: cookies.get('JWT') })]);
+      return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: getToken() })]);
     })
     .catch(err => {
       return Promise.all([
         Promise.reject(err),
         dispatch(
           setSnackbar(
-            preformatWithRequestID(err.res, 'An error occured validating the verification code: failed to verify token, please try again.'),
+            preformatWithRequestID(err.response, 'An error occured validating the verification code: failed to verify token, please try again.'),
             null,
             'Copy to clipboard'
           )
@@ -92,19 +86,19 @@ export const verify2FA = tfaData => dispatch =>
 export const getUserList = () => dispatch =>
   GeneralApi.get(`${useradmApiUrl}/users`)
     .then(res => {
-      const users = res.body.reduce((accu, item) => {
+      const users = res.data.reduce((accu, item) => {
         accu[item.id] = item;
         return accu;
       }, {});
       return dispatch({ type: UserConstants.RECEIVED_USER_LIST, users });
     })
     .catch(err => {
-      var errormsg = err.error || 'Please check your connection';
-      dispatch(setSnackbar(preformatWithRequestID(err.res, `Users couldn't be loaded. ${errormsg}`)));
+      var errormsg = err.response?.data?.error.message || err.error || 'Please check your connection';
+      dispatch(setSnackbar(preformatWithRequestID(err.response, `Users couldn't be loaded. ${errormsg}`)));
     });
 
 export const getUser = id => dispatch =>
-  GeneralApi.get(`${useradmApiUrl}/users/${id}`).then(({ body: user }) => Promise.resolve(dispatch({ type: UserConstants.RECEIVED_USER, user })));
+  GeneralApi.get(`${useradmApiUrl}/users/${id}`).then(({ data: user }) => Promise.resolve(dispatch({ type: UserConstants.RECEIVED_USER, user })));
 
 export const createUser = userData => dispatch =>
   GeneralApi.post(`${useradmApiUrl}/users`, userData).then(() =>
@@ -122,7 +116,7 @@ export const editUser = (userId, userData) => dispatch =>
 export const setCurrentUser = user => dispatch => dispatch({ type: UserConstants.SET_CURRENT_USER, user });
 
 export const getRoles = () => (dispatch, getState) =>
-  GeneralApi.get(`${useradmApiUrl}/roles`).then(({ body: roles }) => {
+  GeneralApi.get(`${useradmApiUrl}/roles`).then(({ data: roles }) => {
     const rolesState = getState().users.rolesById;
     const rolesById = roles.reduce((accu, role) => {
       var allowUserManagement = false;
@@ -193,19 +187,21 @@ export const editRole = roleData => dispatch => {
 export const removeRole = roleId => dispatch =>
   GeneralApi.delete(`${useradmApiUrl}/roles/${roleId}`)
     .then(() => Promise.all([dispatch({ type: UserConstants.REMOVED_ROLE, roleId }), dispatch(getRoles())]))
-    .catch(err => Promise.all([Promise.reject(err), dispatch(setSnackbar(preformatWithRequestID(err.res, err.res.body.error), null, 'Copy to clipboard'))]));
+    .catch(err =>
+      Promise.all([Promise.reject(err), dispatch(setSnackbar(preformatWithRequestID(err.response, err.response.data.error), null, 'Copy to clipboard'))])
+    );
 
 /*
   Tenant management + Hosted Mender
 */
 export const getUserOrganization = () => dispatch =>
-  GeneralApi.get(`${tenantadmUrl}/user/tenant`).then(res => Promise.resolve(dispatch({ type: UserConstants.SET_ORGANIZATION, organization: res.body })));
+  GeneralApi.get(`${tenantadmUrl}/user/tenant`).then(res => Promise.resolve(dispatch({ type: UserConstants.SET_ORGANIZATION, organization: res.data })));
 
 /*
   Global settings
 */
 export const getGlobalSettings = () => dispatch =>
-  GeneralApi.get(`${useradmApiUrl}/settings`).then(({ body: settings }) => dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings }));
+  GeneralApi.get(`${useradmApiUrl}/settings`).then(({ data: settings }) => dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings }));
 
 export const saveGlobalSettings = (settings, beOptimistic = false) => (dispatch, getState) => {
   const updatedSettings = { ...getState().users.globalSettings, ...settings };
@@ -238,7 +234,7 @@ export const saveUserSettings = settings => (dispatch, getState) => {
 };
 
 export const get2FAQRCode = () => dispatch =>
-  GeneralApi.get(`${useradmApiUrl}/2faqr`).then(res => dispatch({ type: UserConstants.RECEIVED_QR_CODE, value: res.body.qr }));
+  GeneralApi.get(`${useradmApiUrl}/2faqr`).then(res => dispatch({ type: UserConstants.RECEIVED_QR_CODE, value: res.data.qr }));
 
 /*
   Onboarding

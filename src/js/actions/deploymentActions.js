@@ -26,7 +26,7 @@ const transformDeployments = (deployments, deploymentsById) =>
 // all deployments
 export const getDeployments = (page = default_page, per_page = default_per_page) => (dispatch, getState) =>
   GeneralApi.get(`${deploymentsApiUrl}/deployments?page=${page}&per_page=${per_page}`).then(res => {
-    const deploymentsByStatus = res.body.reduce((accu, item) => {
+    const deploymentsByStatus = res.data.reduce((accu, item) => {
       accu[item.status].push(item);
       return accu;
     }, mapAttributesToAggregator(getState().deployments.byStatus));
@@ -47,7 +47,7 @@ export const getDeploymentsByStatus = (status, page = default_page, per_page = d
   var search = group ? `&search=${group}` : '';
   return GeneralApi.get(`${deploymentsApiUrl}/deployments?status=${status}&per_page=${per_page}&page=${page}${created_after}${created_before}${search}`).then(
     res => {
-      const { deployments, deploymentIds } = transformDeployments(res.body, getState().deployments.byId);
+      const { deployments, deploymentIds } = transformDeployments(res.data, getState().deployments.byId);
       let tasks = deploymentIds.reduce(
         (accu, deploymentId) => {
           accu.push(dispatch(getSingleDeploymentStats(deploymentId)));
@@ -82,8 +82,8 @@ export const createDeployment = newDeployment => dispatch => {
   }
   return request
     .catch(err => {
-      const errMsg = err.res.body?.error?.message || err.res.body?.error || err.error || '';
-      dispatch(setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard'));
+      const errMsg = err.response.data?.error?.message || err.response.data?.error || err.error || '';
+      dispatch(setSnackbar(preformatWithRequestID(err.response, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard'));
       return Promise.reject();
     })
     .then(data => {
@@ -109,19 +109,19 @@ export const getSingleDeployment = id => dispatch =>
   GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}`).then(res =>
     dispatch({
       type: DeploymentConstants.RECEIVE_DEPLOYMENT,
-      deployment: { ...res.body, name: decodeURIComponent(res.body.name) }
+      deployment: { ...res.data, name: decodeURIComponent(res.data.name) }
     })
   );
 
 export const getSingleDeploymentStats = id => dispatch =>
   GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}/statistics`).then(res =>
-    dispatch({ type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS, stats: res.body, deploymentId: id })
+    dispatch({ type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS, stats: res.data, deploymentId: id })
   );
 
 export const getSingleDeploymentDevices = id => (dispatch, getState) =>
   GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}/devices`).then(res => {
     const deploymentDevices = (getState().deployments.byId[id] || {}).devices || {};
-    const devices = res.body.reduce((accu, item) => {
+    const devices = res.data.reduce((accu, item) => {
       accu[item.id] = item;
       const log = (deploymentDevices[item.id] || {}).log;
       if (log) {
