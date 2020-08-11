@@ -2,13 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { Button, LinearProgress } from '@material-ui/core';
-
-import { CloudUpload, InfoOutlined as InfoIcon } from '@material-ui/icons';
+import { Button, LinearProgress, IconButton, Tooltip } from '@material-ui/core';
+import { Cancel as CancelIcon, CloudUpload, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { selectDevices } from '../../actions/deviceActions';
 import {
+  cancelArtifactUpload,
   createArtifact,
   getReleases,
   removeArtifact,
@@ -117,6 +117,7 @@ export class Artifacts extends React.Component {
     const { artifact, doneLoading, selectedFile, showCreateArtifactDialog } = self.state;
     const {
       artifactProgress,
+      cancelArtifactUpload,
       deviceTypes,
       onboardingComplete,
       releases,
@@ -176,7 +177,12 @@ export class Artifacts extends React.Component {
         {artifactProgress ? (
           <div id="progressBarContainer">
             <p className="align-center">Upload in progress ({Math.round(artifactProgress)}%)</p>
-            <LinearProgress variant="determinate" style={{ backgroundColor: '#c7c7c7', margin: '15px 0' }} value={artifactProgress} />
+            <LinearProgress variant="determinate" style={{ backgroundColor: '#c7c7c7', gridColumn: 1, margin: '15px 0' }} value={artifactProgress} />
+            <Tooltip title="Abort" placement="top">
+              <IconButton onClick={cancelArtifactUpload}>
+                <CancelIcon />
+              </IconButton>
+            </Tooltip>
           </div>
         ) : null}
         {showRemoveDialog && (
@@ -205,6 +211,7 @@ export class Artifacts extends React.Component {
 }
 
 const actionCreators = {
+  cancelArtifactUpload,
   createArtifact,
   getReleases,
   removeArtifact,
