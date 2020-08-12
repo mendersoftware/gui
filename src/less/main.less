@@ -195,10 +195,6 @@ ul.link-list {
   word-wrap: break-all;
 }
 
-.clear {
-  clear: both;
-}
-
 .hidden {
   display: none !important;
 }
@@ -1740,15 +1736,34 @@ div.waiting-inventory {
 }
 
 /* device auth */
-.actionButtons > span,
-.actionButtons > a {
-  margin-right: 20px;
+.authsets {
+  font-size: 0.875rem;
+  .header, .body .MuiExpansionPanelSummary-content {
+    display: grid;
+    grid-template-columns: 3fr 1fr  1fr 2fr;
+    grid-column-gap: 20px;
+  }
+  .header, .MuiExpansionPanel-root {
+    border-bottom: 1px solid @grey;
+  }
+  .MuiExpansionPanelDetails-root {
+    flex-direction: row;
+  }
+  .header {
+    padding: @defaultGutterWidth;
+  }
+  .action-buttons > * {
+    margin-right: @defaultGutterWidth;
+    font-weight: bold;
+  }
+  .action-buttons > div {
+    opacity: 0.4;
+  }
+  .expanded {
+    max-width: 400px;
+  }
 }
 
-.expand-confirm {
-  overflow: hidden;
-  padding: 0 5px 5px 0;
-}
 
 /* Buttons */
 
