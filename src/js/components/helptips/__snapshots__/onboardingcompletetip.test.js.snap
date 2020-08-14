@@ -8,7 +8,7 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
     className="tooltip onboard-icon"
     data-event="click focus"
     data-event-off="dblclick"
-    data-for="pending-device-onboarding-tip"
+    data-for="onboarding-complete-tip"
     data-tip={true}
   >
     <svg
@@ -25,7 +25,7 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
   <div
     className="__react_component_tooltip place-bottom type-dark allow_click"
     data-id="tooltip"
-    id="pending-device-onboarding-tip"
+    id="onboarding-complete-tip"
   >
     <p>
       Great work! You updated your device with the new Release!
