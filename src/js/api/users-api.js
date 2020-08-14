@@ -19,7 +19,7 @@ const Api = {
       body = { token2fa: userData.token2fa };
     }
     return request
-      .put(url, body, { ...commonRequestConfig, headers: { ...commonRequestConfig.headers, Authentication: `Bearer ${getToken()}` } })
+      .put(url, body, { ...commonRequestConfig, headers: { ...commonRequestConfig.headers, Authorization: `Bearer ${getToken()}` } })
       .then(res => ({ text: res.data, code: res.status }));
   }
 };
