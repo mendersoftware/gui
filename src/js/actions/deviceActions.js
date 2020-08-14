@@ -457,7 +457,7 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
   }).then(response => {
     const deviceAccu = reduceReceivedDevices(response.data, [], state, status);
     let total = !applicableFilters.length ? Number(response.headers[headerNames.total]) : null;
-    if (state.devices.byStatus[status].total === deviceAccu.ids.length || !applicableFilters.length) {
+    if (state.devices.byStatus[status].total === deviceAccu.ids.length) {
       total = deviceAccu.ids.length;
     }
     let tasks = [
