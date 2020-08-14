@@ -48,14 +48,14 @@ export class OnboardingCompleteTip extends React.Component {
         <a
           className="tooltip onboard-icon"
           data-tip
-          data-for="pending-device-onboarding-tip"
+          data-for="onboarding-complete-tip"
           data-event="click focus"
           data-event-off="dblclick"
           ref={ref => (this.tipRef = ref)}
         >
           <CheckCircleIcon />
         </a>
-        <ReactTooltip id="pending-device-onboarding-tip" place="bottom" type="light" effect="solid" className="content" clickable={true}>
+        <ReactTooltip id="onboarding-complete-tip" place="bottom" type="light" effect="solid" className="content" clickable={true}>
           <p>Great work! You updated your device with the new Release!</p>
           <p>
             Your device is now running the updated version of the software. At
