@@ -45,7 +45,7 @@ export default class DistributionReport extends React.Component {
     const { attribute, devices, group, groups } = this.props;
     const relevantDevices = group && groups[group] ? groups[group].deviceIds.map(id => devices[id]) : Object.values(devices);
     const distributionByAttribute = relevantDevices.reduce((accu, item) => {
-      if (!item.attributes) return accu;
+      if (!item.attributes || item.status !== 'accepted') return accu;
       if (!accu[item.attributes[attribute]]) {
         accu[item.attributes[attribute]] = 0;
       }
