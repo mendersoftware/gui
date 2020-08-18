@@ -9,7 +9,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "4.0.0-alpha.55",
     "@material-ui/pickers": "^3.2.10",
-    "@mdi/js": "^5.4.55",
+    "@mdi/js": "^5.5.55",
     "@stripe/react-stripe-js": "^1.1.2",
     "@stripe/stripe-js": "^1.8.0",
     "axios": "^0.19.2",
