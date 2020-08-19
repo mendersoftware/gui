@@ -37,11 +37,7 @@ exports[`Authsets Component renders correctly 1`] = `
     </p>
   </div>
   <div
-    className="clear"
-  >
-    <div
-      className="margin-top-large margin-bottom auto"
-    />
-  </div>
+    className="margin-top-large margin-bottom auto"
+  />
 </div>
 `;
