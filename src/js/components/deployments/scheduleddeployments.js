@@ -118,7 +118,7 @@ export class Scheduled extends React.Component {
   render() {
     const self = this;
     const { calendarEvents, tabIndex } = self.state;
-    const { createClick, isEnterprise, isHosted, items, openReport } = self.props;
+    const { createClick, isEnterprise, items, openReport } = self.props;
     return (
       <div className="fadeIn margin-left">
         {items.length ? (
@@ -160,11 +160,7 @@ export class Scheduled extends React.Component {
               </>
             ) : (
               <div className="flexbox centered">
-                <EnterpriseNotification
-                  isEnterprise={isEnterprise}
-                  recommendedPlan={isHosted ? 'professional' : null}
-                  benefit="schedule deployments to steer the distribution of your updates."
-                />
+                <EnterpriseNotification isEnterprise={isEnterprise} benefit="scheduled deployments to steer the distribution of your updates." />
               </div>
             )}
             <img src="assets/img/deployments.png" alt="In progress" />
@@ -182,7 +178,6 @@ const mapStateToProps = state => {
   const { plan = 'os' } = state.users.organization;
   return {
     isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
-    isHosted: state.app.features.isHosted,
     plan,
     items: scheduled
   };

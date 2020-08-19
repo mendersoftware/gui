@@ -167,11 +167,7 @@ export class SelfUserManagement extends React.Component {
               </Collapse>
             </div>
           ) : (
-            <EnterpriseNotification
-              isEnterprise={isEnterprise}
-              recommendedPlan={canHave2FA ? 'professional' : null}
-              benefit="set up Two Factor Authentication to add an additional layer of security to accounts"
-            />
+            <EnterpriseNotification isEnterprise={isEnterprise} benefit="Two Factor Authentication to add an additional layer of security to accounts" />
           ))}
         {isOAuth2 && (
           <div className="flexbox margin-top">

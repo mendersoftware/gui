@@ -109,19 +109,13 @@ export class Filters extends React.Component {
       { currentFilters: [], remainingFilters: [] }
     );
 
-    const addButton = canFilterMultiple ? (
+    const addButton = (
       <Chip
         icon={<AddIcon />}
         disabled={!remainingFilters.length}
         label="Add a rule"
         color="primary"
         onClick={() => self.setState({ adding: !adding, newFilter: emptyFilter })}
-      />
-    ) : (
-      <EnterpriseNotification
-        isEnterprise={canFilterMultiple}
-        recommendedPlan={isHosted ? 'professional' : null}
-        benefit="filter by multiple attributes to improve the device overview"
       />
     );
 
@@ -163,22 +157,16 @@ export class Filters extends React.Component {
               {addedFilterDefined && addButton}
             </div>
           </div>
-          <div className="flexbox margin-top-small margin-bottom-small" style={{ justifyContent: 'flex-end' }}>
+          <div className="flexbox column margin-top-small margin-bottom-small" style={{ alignItems: 'flex-end' }}>
             {filters.length > 0 && (
               <span className="link margin-top-small margin-right-small" onClick={() => self.clearFilters()}>
                 Clear filter
               </span>
             )}
-            {!canFilterMultiple && (
-              <EnterpriseNotification
-                isEnterprise={canFilterMultiple}
-                recommendedPlan={isHosted ? 'professional' : null}
-                benefit="filter by multiple attributes to improve the device overview"
-              />
-            )}
-            {!isEnterprise && plan !== 'enterprise' && (
-              <EnterpriseNotification isEnterprise={false} recommendedPlan="enterprise" benefit="save dynamic groups and ease device management" />
-            )}
+            <EnterpriseNotification
+              isEnterprise={isEnterprise || (isHosted && plan === 'enterprise')}
+              benefit="filtering by multiple attributes to improve the device overview and the creation of dynamic groups to ease device management"
+            />
             {canFilterMultiple && (plan === 'enterprise' || isEnterprise) && currentFilters.length >= 1 && (
               <Button variant="contained" color="secondary" onClick={onGroupClick}>
                 {selectedGroup ? 'Save group' : 'Create group with this filter'}

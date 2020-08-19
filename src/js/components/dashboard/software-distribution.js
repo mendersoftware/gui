@@ -73,7 +73,7 @@ export class SoftwareDistribution extends React.Component {
     const { reports } = self.state;
     return !isEnterprise ? (
       <div className="flexbox centered">
-        <EnterpriseNotification isEnterprise={isEnterprise} benefit="gain actionable insights into the devices you are updating with Mender" />
+        <EnterpriseNotification isEnterprise={isEnterprise} benefit="actionable insights into the devices you are updating with Mender" />
       </div>
     ) : (
       <div>
