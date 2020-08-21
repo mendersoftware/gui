@@ -78,7 +78,7 @@ export const createArtifact = (meta, file) => dispatch => {
     .then(() => Promise.all([dispatch(selectArtifact(meta.name)), dispatch(setSnackbar('Upload successful', 5000))]))
     .catch(err => {
       if (axios.isCancel(err)) {
-        return dispatch(setSnackbar('Artifact generation aborted.', 5000));
+        return dispatch(setSnackbar('The artifact generation has been cancelled', 5000));
       }
       const errMsg = err.response.data?.error?.message || err.response.data?.error || err.error || '';
       return dispatch(setSnackbar(preformatWithRequestID(err.response, `Artifact couldn't be generated. ${errMsg}`), null, 'Copy to clipboard'));
@@ -103,7 +103,7 @@ export const uploadArtifact = (meta, file) => dispatch => {
     .then(() => Promise.all([dispatch(selectArtifact(file)), dispatch(setSnackbar('Upload successful', 5000))]))
     .catch(err => {
       if (axios.isCancel(err)) {
-        return dispatch(setSnackbar('Artifact upload aborted.', 5000));
+        return dispatch(setSnackbar('The upload has been cancelled', 5000));
       }
       const errMsg = err.response.data?.error?.message || err.response.data?.error || err.error || '';
       return dispatch(setSnackbar(preformatWithRequestID(err.response, `Artifact couldn't be uploaded. ${errMsg}`), null, 'Copy to clipboard'));
