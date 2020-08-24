@@ -9,7 +9,7 @@ export const headerNames = {
 };
 
 const unauthorizedRedirect = error => {
-  if (error.response.status === 401) {
+  if (!axios.isCancel(error) && error.response.status === 401) {
     logout();
   }
   return Promise.reject(error);
@@ -31,7 +31,7 @@ const Api = {
   post: (url, data) => authenticatedRequest.post(url, data),
   postUnauthorized: (url, data) => axios.post(url, data, commonRequestConfig),
   put: (url, data) => authenticatedRequest.put(url, data),
-  upload: (url, formData, progress) => authenticatedRequest.post(url, formData, { onUploadProgress: progress, timeout: 0 })
+  upload: (url, formData, progress, cancelToken) => authenticatedRequest.post(url, formData, { onUploadProgress: progress, timeout: 0, cancelToken })
 };
 
 export default Api;

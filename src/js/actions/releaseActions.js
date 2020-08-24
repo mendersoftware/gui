@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import GeneralApi from '../api/general-api';
 import { setSnackbar } from '../actions/appActions';
 import * as ReleaseConstants from '../constants/releaseConstants';
@@ -48,9 +50,11 @@ export const getArtifactUrl = id => (dispatch, getState) =>
   });
 
 const progress = (e, dispatch) => {
-  const uploadProgress = Math.round((e.loaded / e.total) * 100);
-  return dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, uploadProgress });
+  const uploadProgress = (e.loaded / e.total) * 100;
+  return dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, uploadProgress: uploadProgress < 50 ? Math.ceil(uploadProgress) : Math.round(uploadProgress) });
 };
+
+let cancelSource;
 
 export const createArtifact = (meta, file) => dispatch => {
   let formData = Object.entries(meta).reduce((accu, [key, value]) => {
@@ -65,21 +69,24 @@ export const createArtifact = (meta, file) => dispatch => {
   }, new FormData());
   formData.append('type', ReleaseConstants.ARTIFACT_GENERATION_TYPE.SINGLE_FILE);
   formData.append('file', file);
+  cancelSource = axios.CancelToken.source();
   return Promise.all([
     dispatch(setSnackbar('Generating artifact')),
     dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 }),
-    GeneralApi.upload(`${deploymentsApiUrl}/artifacts/generate`, formData, e => progress(e, dispatch))
+    GeneralApi.upload(`${deploymentsApiUrl}/artifacts/generate`, formData, e => progress(e, dispatch), cancelSource.token)
   ])
     .then(() => Promise.all([dispatch(selectArtifact(meta.name)), dispatch(setSnackbar('Upload successful', 5000))]))
     .catch(err => {
-      try {
-        const errMsg = err.response.data?.error?.message || err.response.data?.error || err.error || '';
-        dispatch(setSnackbar(preformatWithRequestID(err.response, `Artifact couldn't be generated. ${errMsg}`), null, 'Copy to clipboard'));
-      } catch (e) {
-        console.log(e);
+      if (axios.isCancel(err)) {
+        return dispatch(setSnackbar('The artifact generation has been cancelled', 5000));
       }
+      const errMsg = err.response.data?.error?.message || err.response.data?.error || err.error || '';
+      return dispatch(setSnackbar(preformatWithRequestID(err.response, `Artifact couldn't be generated. ${errMsg}`), null, 'Copy to clipboard'));
     })
-    .finally(() => dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 }));
+    .finally(() => {
+      cancelSource = undefined;
+      dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 });
+    });
 };
 
 export const uploadArtifact = (meta, file) => dispatch => {
@@ -87,17 +94,30 @@ export const uploadArtifact = (meta, file) => dispatch => {
   formData.append('size', file.size);
   formData.append('description', meta.description);
   formData.append('artifact', file);
+  cancelSource = axios.CancelToken.source();
   return Promise.all([
     dispatch(setSnackbar('Uploading artifact')),
     dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 }),
-    GeneralApi.upload(`${deploymentsApiUrl}/artifacts`, formData, e => progress(e, dispatch))
+    GeneralApi.upload(`${deploymentsApiUrl}/artifacts`, formData, e => progress(e, dispatch), cancelSource.token)
   ])
     .then(() => Promise.all([dispatch(selectArtifact(file)), dispatch(setSnackbar('Upload successful', 5000))]))
     .catch(err => {
+      if (axios.isCancel(err)) {
+        return dispatch(setSnackbar('The upload has been cancelled', 5000));
+      }
       const errMsg = err.response.data?.error?.message || err.response.data?.error || err.error || '';
-      dispatch(setSnackbar(preformatWithRequestID(err.response, `Artifact couldn't be uploaded. ${errMsg}`), null, 'Copy to clipboard'));
+      return dispatch(setSnackbar(preformatWithRequestID(err.response, `Artifact couldn't be uploaded. ${errMsg}`), null, 'Copy to clipboard'));
     })
-    .finally(() => dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 }));
+    .finally(() => {
+      cancelSource = undefined;
+      return dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 });
+    });
+};
+
+export const cancelArtifactUpload = () => dispatch => {
+  cancelSource.cancel();
+  cancelSource = undefined;
+  return Promise.resolve(dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 }));
 };
 
 export const editArtifact = (id, body) => (dispatch, getState) =>
