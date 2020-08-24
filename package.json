@@ -75,7 +75,7 @@
     "husky": "^4.2.5",
     "jest": "~26.0.1",
     "jest-environment-jsdom-fifteen": "1.0.2",
-    "jest-resolve": "~26.0.1",
+    "jest-resolve": "~26.4.0",
     "jest-watch-typeahead": "0.6.0",
     "less": "^3.11.3",
     "less-loader": "^6.1.1",
