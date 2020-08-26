@@ -118,7 +118,7 @@ class AppRoot extends React.PureComponent {
         ) : (
           publicRoutes
         )}
-        <SharedSnackbar />;
+        <SharedSnackbar />
       </>
     );
   }
