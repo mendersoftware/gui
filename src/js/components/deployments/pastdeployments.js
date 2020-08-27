@@ -56,9 +56,7 @@ export class Past extends React.Component {
     if (self.props.showHelptips && self.props.showOnboardingTips && !self.props.onboardingComplete && this.props.past.length) {
       const progress = getOnboardingStepCompleted('artifact-modified-onboarding') && this.props.past.length > 1 ? 4 : 3;
       setTimeout(() => {
-        !self.props.onboardingComplete
-          ? self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={progress} />, () => {}, self.onCloseSnackbar)
-          : null;
+        !self.props.onboardingComplete ? self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={progress} />, () => {}, true) : null;
       }, 400);
     }
   }
@@ -67,13 +65,6 @@ export class Past extends React.Component {
     clearInterval(this.timer);
     clearAllRetryTimers(this.props.setSnackbar);
   }
-
-  onCloseSnackbar = (_, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    this.props.setSnackbar('');
-  };
 
   _setDateRange(after, before) {
     let startDate = new Date();
