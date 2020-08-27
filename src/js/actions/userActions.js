@@ -59,10 +59,24 @@ export const loginUser = userData => (dispatch, getState) =>
 
 export const logoutUser = () => dispatch => Promise.resolve(dispatch({ type: UserConstants.USER_LOGOUT }));
 
-export const passwordResetStart = email => () => GeneralApi.post(`${useradmApiUrl}/auth/password-reset/start`, { email: email });
+export const passwordResetStart = email => dispatch =>
+  GeneralApi.post(`${useradmApiUrl}/auth/password-reset/start`, { email: email }).catch(err => {
+    dispatch(setSnackbar('The password reset request cannot be processed: ' + (err || {}).error));
+    return Promise.reject(err);
+  });
 
-export const passwordResetComplete = (secretHash, newPassword) => () =>
-  GeneralApi.post(`${useradmApiUrl}/auth/password-reset/complete`, { secret_hash: secretHash, password: newPassword });
+export const passwordResetComplete = (secretHash, newPassword) => dispatch =>
+  GeneralApi.post(`${useradmApiUrl}/auth/password-reset/complete`, { secret_hash: secretHash, password: newPassword }).catch(err => {
+    let status = ((err || {}).res || {}).status,
+      errorMsg;
+    if (status == 400) {
+      errorMsg = 'the link you are using expired or the request is not valid, please try again.';
+    } else {
+      errorMsg = (err || {}).error;
+    }
+    dispatch(setSnackbar('The password reset request cannot be processed: ' + errorMsg));
+    return Promise.reject(err);
+  });
 
 export const verify2FA = tfaData => dispatch =>
   UsersApi.putVerifyTFA(`${useradmApiUrl}/2faverify`, tfaData)
@@ -99,18 +113,50 @@ export const getUserList = () => dispatch =>
 export const getUser = id => dispatch =>
   GeneralApi.get(`${useradmApiUrl}/users/${id}`).then(({ data: user }) => Promise.resolve(dispatch({ type: UserConstants.RECEIVED_USER, user })));
 
+const actions = {
+  create: {
+    successMessage: 'The user was created successfully.',
+    errorMessage: 'creating'
+  },
+  edit: {
+    successMessage: 'The user has been updated.',
+    errorMessage: 'editing'
+  },
+  remove: {
+    successMessage: 'The user was removed from the system.',
+    errorMessage: 'removing'
+  }
+};
+
+const userActionErrorHandler = (err, type, dispatch) => {
+  console.log(err);
+  var errMsg = err.response.data.error || '';
+  dispatch(setSnackbar(preformatWithRequestID(err.response, `There was an error ${actions[type].errorMessage} the user. ${errMsg}`)));
+  return Promise.reject(err);
+};
+
 export const createUser = userData => dispatch =>
-  GeneralApi.post(`${useradmApiUrl}/users`, userData).then(() =>
-    Promise.all([dispatch({ type: UserConstants.CREATED_USER, user: userData }), dispatch(getUserList())])
-  );
+  GeneralApi.post(`${useradmApiUrl}/users`, userData)
+    .then(() =>
+      Promise.all([
+        dispatch({ type: UserConstants.CREATED_USER, user: userData }),
+        dispatch(getUserList()),
+        dispatch(setSnackbar(actions.create.successMessage))
+      ])
+    )
+    .catch(err => userActionErrorHandler(err, 'create', dispatch));
 
 export const removeUser = userId => dispatch =>
-  GeneralApi.delete(`${useradmApiUrl}/users/${userId}`).then(() =>
-    Promise.all([dispatch({ type: UserConstants.REMOVED_USER, userId }), dispatch(getUserList())])
-  );
+  GeneralApi.delete(`${useradmApiUrl}/users/${userId}`)
+    .then(() =>
+      Promise.all([dispatch({ type: UserConstants.REMOVED_USER, userId }), dispatch(getUserList()), dispatch(setSnackbar(actions.remove.successMessage))])
+    )
+    .catch(err => userActionErrorHandler(err, 'remove', dispatch));
 
 export const editUser = (userId, userData) => dispatch =>
-  GeneralApi.put(`${useradmApiUrl}/users/${userId}`, userData).then(() => dispatch({ type: UserConstants.UPDATED_USER, userId, user: userData }));
+  GeneralApi.put(`${useradmApiUrl}/users/${userId}`, userData)
+    .then(() => Promise.all([dispatch({ type: UserConstants.UPDATED_USER, userId, user: userData }), dispatch(setSnackbar(actions.edit.successMessage))]))
+    .catch(err => userActionErrorHandler(err, 'edit', dispatch));
 
 export const setCurrentUser = user => dispatch => dispatch({ type: UserConstants.SET_CURRENT_USER, user });
 
@@ -202,7 +248,7 @@ export const getUserOrganization = () => dispatch =>
 export const getGlobalSettings = () => dispatch =>
   GeneralApi.get(`${useradmApiUrl}/settings`).then(({ data: settings }) => dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings }));
 
-export const saveGlobalSettings = (settings, beOptimistic = false) => (dispatch, getState) => {
+export const saveGlobalSettings = (settings, beOptimistic = false, notify = false) => (dispatch, getState) => {
   const updatedSettings = { ...getState().users.globalSettings, ...settings };
   let tasks = [dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: updatedSettings })];
   return GeneralApi.post(`${useradmApiUrl}/settings`, updatedSettings)
@@ -211,11 +257,18 @@ export const saveGlobalSettings = (settings, beOptimistic = false) => (dispatch,
         const state = getState();
         tasks.push(dispatch(get2FAQRCode(state.users.byId[state.users.currentUser].email)));
       }
+      if (notify) {
+        tasks.push(dispatch(setSnackbar('Settings saved successfully')));
+      }
       return Promise.all(tasks);
     })
-    .catch(() => {
+    .catch(err => {
       if (beOptimistic) {
         return Promise.all([tasks]);
+      }
+      console.log(err);
+      if (notify) {
+        dispatch(setSnackbar(preformatWithRequestID(err.response, `The settings couldn't be saved. ${err.response.data.error}`)));
       }
       return Promise.reject();
     });

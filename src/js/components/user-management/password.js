@@ -2,13 +2,12 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { passwordResetStart } from '../../actions/userActions';
-import { setSnackbar } from '../../actions/appActions';
 
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 
 export const Password = props => {
-  const { passwordResetStart, setSnackbar } = props;
+  const { passwordResetStart } = props;
 
   const [confirm, setConfirm] = useState(false);
 
@@ -16,13 +15,7 @@ export const Password = props => {
     if (!formData.hasOwnProperty('email')) {
       return;
     }
-    passwordResetStart(formData.email)
-      .then(() => {
-        setConfirm(true);
-      })
-      .catch(err => {
-        setSnackbar('The password reset request cannot be processed: ' + (err || {}).error);
-      });
+    passwordResetStart(formData.email).then(() => setConfirm(true));
   };
 
   return (
@@ -64,7 +57,7 @@ export const Password = props => {
   );
 };
 
-const actionCreators = { passwordResetStart, setSnackbar };
+const actionCreators = { passwordResetStart };
 
 const mapStateToProps = () => {};
 

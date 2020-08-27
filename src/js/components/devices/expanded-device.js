@@ -22,7 +22,6 @@ import { decommissionDevice, selectDevice } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
-import { preformatWithRequestID } from '../../helpers';
 import { getDocsVersion } from '../../selectors';
 import { advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import { AuthButton } from '../helptips/helptooltips';
@@ -137,15 +136,9 @@ export class ExpandedDevice extends React.Component {
       .decommissionDevice(device_id)
       .then(() => {
         // close dialog!
-        self.toggleAuthsets(false);
         // close expanded device
         // trigger reset of list!
-        self.props.setSnackbar('Device was decommissioned successfully');
-      })
-      .catch(err => {
-        var errMsg = err.response.data.error.message || '';
-        console.log(errMsg);
-        self.props.setSnackbar(preformatWithRequestID(err.response, `There was a problem decommissioning the device: ${errMsg}`), null, 'Copy to clipboard');
+        self.toggleAuthsets(false);
       })
       .finally(() => self.props.refreshDevices(true));
   }

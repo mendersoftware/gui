@@ -7,7 +7,6 @@ import { Button } from '@material-ui/core';
 import { FilterList as FilterListIcon } from '@material-ui/icons';
 
 import { getDevicesByStatus, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
-import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
 import RelativeTime from '../common/relative-time';
@@ -63,15 +62,7 @@ export class Rejected extends React.Component {
     const sortBy = sortCol ? [{ attribute: sortCol, order: sortDown ? 'desc' : 'asc', scope: sortScope }] : undefined;
     self.props
       .getDevicesByStatus(DEVICE_STATES.rejected, pageNo, pageLength, shouldUpdate, undefined, sortBy)
-      .catch(error => {
-        console.log(error);
-        var errormsg = error.error || 'Please check your connection.';
-        self.props.setSnackbar(errormsg, 5000, '');
-        console.log(errormsg);
-      })
-      .finally(() => {
-        self.setState({ pageLoading: false });
-      });
+      .finally(() => self.setState({ pageLoading: false }));
   }
 
   _handlePageChange(pageNo) {
@@ -176,7 +167,7 @@ export class Rejected extends React.Component {
   }
 }
 
-const actionCreators = { getDevicesByStatus, selectGroup, setDeviceFilters, setSnackbar };
+const actionCreators = { getDevicesByStatus, selectGroup, setDeviceFilters };
 
 const mapStateToProps = state => {
   return {

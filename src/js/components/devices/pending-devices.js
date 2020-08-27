@@ -15,7 +15,6 @@ import {
 } from '@material-ui/icons';
 
 import { getDevicesByStatus, selectGroup, setDeviceFilters, updateDevicesAuth } from '../../actions/deviceActions';
-import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
 import { getOnboardingComponentFor, advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
@@ -84,12 +83,6 @@ export class Pending extends React.Component {
     const sortBy = sortCol ? [{ attribute: sortCol, order: sortDown ? 'desc' : 'asc', scope: sortScope }] : undefined;
     self.props
       .getDevicesByStatus(DEVICE_STATES.pending, pageNo, pageLength, shouldUpdate, undefined, sortBy)
-      .catch(error => {
-        console.log(error);
-        var errormsg = error.error || 'Please check your connection.';
-        self.props.setSnackbar(errormsg, 5000, '');
-        console.log(errormsg);
-      })
       .finally(() => self.setState({ pageLoading: false, authLoading: null }));
   }
 
@@ -315,7 +308,7 @@ export class Pending extends React.Component {
   }
 }
 
-const actionCreators = { getDevicesByStatus, selectGroup, setDeviceFilters, setSnackbar, updateDevicesAuth };
+const actionCreators = { getDevicesByStatus, selectGroup, setDeviceFilters, updateDevicesAuth };
 
 const mapStateToProps = state => {
   return {

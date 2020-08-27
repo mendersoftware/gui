@@ -1,3 +1,5 @@
+import pluralize from 'pluralize';
+
 import { setSnackbar } from '../actions/appActions';
 import GeneralApi, { headerNames } from '../api/general-api';
 import * as DeviceConstants from '../constants/deviceConstants';
@@ -54,25 +56,39 @@ export const addDevicesToGroup = (group, deviceIds) => dispatch =>
 
 export const removeDevicesFromGroup = (group, deviceIds) => dispatch =>
   GeneralApi.delete(`${inventoryApiUrl}/groups/${group}/devices`, deviceIds).then(() =>
-    Promise.resolve(
+    Promise.all([
       dispatch({
         type: DeviceConstants.REMOVE_FROM_GROUP,
         group,
         deviceIds
-      })
-    )
+      }),
+      dispatch(setSnackbar(`The ${pluralize('devices', deviceIds.length)} ${pluralize('were', deviceIds.length)} removed from the group`, 5000))
+    ])
   );
 
 export const addStaticGroup = (group, deviceIds) => (dispatch, getState) =>
-  Promise.resolve(dispatch(addDevicesToGroup(group, deviceIds))).then(() =>
-    Promise.resolve(
-      dispatch({
-        type: DeviceConstants.ADD_STATIC_GROUP,
-        group: { deviceIds: [], total: 0, filters: [], ...getState().devices.groups.byId[group] },
-        groupName: group
-      })
-    ).then(() => Promise.all([dispatch(selectDevice()), dispatch(selectGroup(group)), dispatch(getGroups())]))
-  );
+  Promise.resolve(dispatch(addDevicesToGroup(group, deviceIds)))
+    .then(() =>
+      Promise.resolve(
+        dispatch({
+          type: DeviceConstants.ADD_STATIC_GROUP,
+          group: { deviceIds: [], total: 0, filters: [], ...getState().devices.groups.byId[group] },
+          groupName: group
+        })
+      ).then(() =>
+        Promise.all([
+          dispatch(selectDevice()),
+          dispatch(selectGroup(group)),
+          dispatch(getGroups()),
+          dispatch(setSnackbar('The group was updated successfully', 5000))
+        ])
+      )
+    )
+    .catch(err => {
+      console.log(err);
+      dispatch(setSnackbar(preformatWithRequestID(err.response, `Group could not be updated: ${err.response.data.error || ''}`), null, 'Copy to clipboard'));
+      return Promise.reject(err);
+    });
 
 export const removeStaticGroup = groupName => (dispatch, getState) => {
   const { deviceIds } = getState().devices.groups.byId[groupName];
@@ -86,7 +102,8 @@ export const removeStaticGroup = groupName => (dispatch, getState) => {
         groups
       }),
       dispatch(getGroups()),
-      dispatch(selectGroup(selectedGroup))
+      dispatch(selectGroup(selectedGroup)),
+      dispatch(setSnackbar('Group was removed successfully', 5000))
     ]);
   });
 };
@@ -136,21 +153,27 @@ export const getDynamicGroups = () => (dispatch, getState) =>
   });
 
 export const addDynamicGroup = (groupName, filterPredicates) => (dispatch, getState) =>
-  GeneralApi.post(`${inventoryApiUrlV2}/filters`, { name: groupName, terms: mapFiltersToTerms(filterPredicates) }).then(res =>
-    Promise.resolve(
-      dispatch({
-        type: DeviceConstants.ADD_DYNAMIC_GROUP,
-        groupName,
-        group: {
-          deviceIds: [],
-          total: 0,
-          ...getState().devices.groups.byId[groupName],
-          id: res.headers[headerNames.location].substring(res.headers[headerNames.location].lastIndexOf('/') + 1),
-          filters: filterPredicates
-        }
-      })
-    ).then(() => Promise.resolve(dispatch(selectGroup(groupName))))
-  );
+  GeneralApi.post(`${inventoryApiUrlV2}/filters`, { name: groupName, terms: mapFiltersToTerms(filterPredicates) })
+    .then(res =>
+      Promise.resolve(
+        dispatch({
+          type: DeviceConstants.ADD_DYNAMIC_GROUP,
+          groupName,
+          group: {
+            deviceIds: [],
+            total: 0,
+            ...getState().devices.groups.byId[groupName],
+            id: res.headers[headerNames.location].substring(res.headers[headerNames.location].lastIndexOf('/') + 1),
+            filters: filterPredicates
+          }
+        })
+      ).then(() => Promise.all([dispatch(selectGroup(groupName)), dispatch(setSnackbar('The group was updated successfully', 5000))]))
+    )
+    .catch(err => {
+      console.log(err);
+      dispatch(setSnackbar(preformatWithRequestID(err.response, `Group could not be updated: ${err.response.data.error || ''}`), null, 'Copy to clipboard'));
+      return Promise.reject(err);
+    });
 
 export const updateDynamicGroup = (groupName, filterPredicates) => (dispatch, getState) => {
   const filterId = getState().devices.groups.byId[groupName].id;
@@ -163,12 +186,13 @@ export const removeDynamicGroup = groupName => (dispatch, getState) => {
   let groups = getState().devices.groups.byId;
   delete groups[groupName];
   return Promise.all([GeneralApi.delete(`${inventoryApiUrlV2}/filters/${filterId}`), dispatch(selectGroup(selectedGroup))]).then(() =>
-    Promise.resolve(
+    Promise.all([
       dispatch({
         type: DeviceConstants.REMOVE_DYNAMIC_GROUP,
         groups
-      })
-    )
+      }),
+      dispatch(setSnackbar('Group was removed successfully', 5000))
+    ])
   );
 };
 
@@ -214,15 +238,19 @@ export const selectDevice = (deviceId, status) => dispatch => {
           deviceId
         });
       })
-      .catch(() =>
+      .catch(err => {
+        console.log(err);
         Promise.all([
           dispatch(selectDevices([])),
           dispatch({
             type: DeviceConstants.SELECT_DEVICE,
             deviceId: null
-          })
-        ])
-      );
+          }),
+          dispatch(
+            setSnackbar(preformatWithRequestID(err.response, `Error fetching device details. ${err.response.data.error || ''}`), null, 'Copy to clipboard')
+          )
+        ]);
+      });
   }
   return Promise.resolve(
     dispatch({
@@ -454,37 +482,44 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
     per_page: perPage,
     filters: mapFiltersToTerms([...applicableFilters, { key: 'status', value: status, operator: '$eq', scope: 'identity' }]),
     sort: sortOptions
-  }).then(response => {
-    const deviceAccu = reduceReceivedDevices(response.data, [], state, status);
-    let total = !applicableFilters.length ? Number(response.headers[headerNames.total]) : null;
-    if (state.devices.byStatus[status].total === deviceAccu.ids.length) {
-      total = deviceAccu.ids.length;
-    }
-    let tasks = [
-      dispatch({
-        type: DeviceConstants[`SET_${status.toUpperCase()}_DEVICES`],
-        deviceIds: deviceAccu.ids,
-        status,
-        total
-      }),
-      dispatch({
-        type: DeviceConstants.RECEIVE_DEVICES,
-        devicesById: deviceAccu.devicesById
-      })
-    ];
-    if (response.data.length < 200) {
-      tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(Object.values(deviceAccu.devicesById)))));
-    }
-    if (status === DeviceConstants.DEVICE_STATES.pending) {
-      // for each device, get device identity info
-      tasks.push(dispatch(getDevicesWithAuth(Object.values(deviceAccu.devicesById))));
-    }
-    if (shouldSelectDevices) {
-      tasks.push(dispatch(selectDevices(deviceAccu.ids)));
-    }
-    tasks.push(Promise.resolve({ deviceAccu, total: Number(response.headers[headerNames.total]) }));
-    return Promise.all(tasks);
-  });
+  })
+    .then(response => {
+      const deviceAccu = reduceReceivedDevices(response.data, [], state, status);
+      let total = !applicableFilters.length ? Number(response.headers[headerNames.total]) : null;
+      if (state.devices.byStatus[status].total === deviceAccu.ids.length) {
+        total = deviceAccu.ids.length;
+      }
+      let tasks = [
+        dispatch({
+          type: DeviceConstants[`SET_${status.toUpperCase()}_DEVICES`],
+          deviceIds: deviceAccu.ids,
+          status,
+          total
+        }),
+        dispatch({
+          type: DeviceConstants.RECEIVE_DEVICES,
+          devicesById: deviceAccu.devicesById
+        })
+      ];
+      if (response.data.length < 200) {
+        tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(Object.values(deviceAccu.devicesById)))));
+      }
+      if (status === DeviceConstants.DEVICE_STATES.pending) {
+        // for each device, get device identity info
+        tasks.push(dispatch(getDevicesWithAuth(Object.values(deviceAccu.devicesById))));
+      }
+      if (shouldSelectDevices) {
+        tasks.push(dispatch(selectDevices(deviceAccu.ids)));
+      }
+      tasks.push(Promise.resolve({ deviceAccu, total: Number(response.headers[headerNames.total]) }));
+      return Promise.all(tasks);
+    })
+    .catch(error => {
+      const errormsg = error.error || error.response.data.error || 'Please check your connection.';
+      console.log(errormsg);
+      dispatch(setSnackbar(preformatWithRequestID(error.response, `${status} devices couldn't be loaded. ${errormsg}`), null, 'Copy to clipboard'));
+      return Promise.reject(error);
+    });
 };
 
 export const getAllDevicesByStatus = status => (dispatch, getState) => {
@@ -545,17 +580,27 @@ export const getDevicesWithAuth = devices => (dispatch, getState) =>
   });
 
 export const updateDeviceAuth = (deviceId, authId, status) => dispatch =>
-  GeneralApi.put(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}/status`, { status }).then(() =>
-    Promise.all([
-      dispatch({
-        type: DeviceConstants.UPDATE_DEVICE_AUTHSET,
-        authId,
-        deviceId,
-        status
-      }),
-      dispatch(getDeviceAuth(deviceId))
-    ])
-  );
+  GeneralApi.put(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}/status`, { status })
+    .then(() =>
+      Promise.all([
+        dispatch({
+          type: DeviceConstants.UPDATE_DEVICE_AUTHSET,
+          authId,
+          deviceId,
+          status
+        }),
+        dispatch(getDeviceAuth(deviceId)),
+        dispatch(setSnackbar('Device authorization status was updated successfully'))
+      ])
+    )
+    .catch(err => {
+      var errMsg = err ? (err.response ? err.response.data.error.message : err.message) : '';
+      console.log(errMsg);
+      dispatch(
+        setSnackbar(preformatWithRequestID(err.response, `There was a problem updating the device authorization status: ${errMsg}`), null, 'Copy to clipboard')
+      );
+      return Promise.reject(err);
+    });
 
 export const updateDevicesAuth = (deviceIds, status) => (dispatch, getState) => {
   let devices = getState().devices.byId;
@@ -603,15 +648,25 @@ export const updateDevicesAuth = (deviceIds, status) => (dispatch, getState) => 
 };
 
 export const deleteAuthset = (deviceId, authId) => dispatch =>
-  GeneralApi.delete(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}`).then(() =>
-    Promise.resolve(
-      dispatch({
-        type: DeviceConstants.REMOVE_DEVICE_AUTHSET,
-        authId,
-        deviceId
-      })
+  GeneralApi.delete(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}`)
+    .then(() =>
+      Promise.all([
+        dispatch({
+          type: DeviceConstants.REMOVE_DEVICE_AUTHSET,
+          authId,
+          deviceId
+        }),
+        dispatch(setSnackbar('Device authorization status was updated successfully'))
+      ])
     )
-  );
+    .catch(err => {
+      var errMsg = err ? (err.response ? err.response.data.error.message : err.message) : '';
+      console.log(errMsg);
+      dispatch(
+        setSnackbar(preformatWithRequestID(err.response, `There was a problem updating the device authorization status: ${errMsg}`), null, 'Copy to clipboard')
+      );
+      return Promise.reject(err);
+    });
 
 export const preauthDevice = authset => dispatch =>
   GeneralApi.post(`${deviceAuthV2}/devices`, authset)
@@ -629,9 +684,19 @@ export const preauthDevice = authset => dispatch =>
     .then(() => Promise.resolve(dispatch(setSnackbar('Device was successfully added to the preauthorization list', 5000))));
 
 export const decommissionDevice = deviceId => dispatch =>
-  GeneralApi.delete(`${deviceAuthV2}/devices/${deviceId}`).then(() =>
-    dispatch({
-      type: DeviceConstants.DECOMMISION_DEVICE,
-      deviceId
-    })
-  );
+  GeneralApi.delete(`${deviceAuthV2}/devices/${deviceId}`)
+    .then(() =>
+      Promise.all([
+        dispatch({
+          type: DeviceConstants.DECOMMISION_DEVICE,
+          deviceId
+        }),
+        dispatch(setSnackbar('Device was decommissioned successfully'))
+      ])
+    )
+    .catch(err => {
+      var errMsg = err.response.data.error.message || '';
+      console.log(errMsg);
+      dispatch(setSnackbar(preformatWithRequestID(err.response, `There was a problem decommissioning the device: ${errMsg}`), null, 'Copy to clipboard'));
+      return Promise.reject(err);
+    });

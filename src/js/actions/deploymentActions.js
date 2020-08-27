@@ -148,31 +148,40 @@ export const getDeviceLog = (deploymentId, deviceId) => (dispatch, getState) =>
   });
 
 export const abortDeployment = deploymentId => (dispatch, getState) =>
-  GeneralApi.put(`${deploymentsApiUrl}/deployments/${deploymentId}/status`, { status: 'aborted' }).then(() => {
-    const state = getState();
-    let status = 'pending';
-    let index = state.deployments.byStatus.pending.deploymentIds.findIndex(id => id === deploymentId);
-    if (index < 0) {
-      status = 'inprogress';
-      index = state.deployments.byStatus.inprogress.deploymentIds.findIndex(id => id === deploymentId);
-    }
-    const deploymentIds = [
-      ...state.deployments.byStatus[status].deploymentIds.slice(0, index),
-      ...state.deployments.byStatus[status].deploymentIds.slice(index)
-    ];
-    const deployments = deploymentIds.reduce((accu, id) => {
-      accu[id] = state.deployments.byId[id];
-      return accu;
-    }, {});
-    const total = Math.max(state.deployments.byStatus[status].total - 1, 0);
-    return Promise.all([
-      dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status, total }),
-      dispatch({
-        type: DeploymentConstants.REMOVE_DEPLOYMENT,
-        deploymentId
-      })
-    ]);
-  });
+  GeneralApi.put(`${deploymentsApiUrl}/deployments/${deploymentId}/status`, { status: 'aborted' })
+    .then(() => {
+      const state = getState();
+      let status = 'pending';
+      let index = state.deployments.byStatus.pending.deploymentIds.findIndex(id => id === deploymentId);
+      if (index < 0) {
+        status = 'inprogress';
+        index = state.deployments.byStatus.inprogress.deploymentIds.findIndex(id => id === deploymentId);
+      }
+      const deploymentIds = [
+        ...state.deployments.byStatus[status].deploymentIds.slice(0, index),
+        ...state.deployments.byStatus[status].deploymentIds.slice(index)
+      ];
+      const deployments = deploymentIds.reduce((accu, id) => {
+        accu[id] = state.deployments.byId[id];
+        return accu;
+      }, {});
+      const total = Math.max(state.deployments.byStatus[status].total - 1, 0);
+      return Promise.all([
+        dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status, total }),
+        dispatch({
+          type: DeploymentConstants.REMOVE_DEPLOYMENT,
+          deploymentId
+        }),
+        dispatch(setSnackbar('The deployment was successfully aborted'))
+      ]);
+    })
+    .catch(err => {
+      console.log(err);
+      return Promise.all([
+        dispatch(setSnackbar(preformatWithRequestID(err.response, `There was wan error while aborting the deployment: ${err.response.data.error || ''}`))),
+        Promise.reject(err)
+      ]);
+    });
 
 export const selectDeployment = deploymentId => dispatch => {
   let tasks = [

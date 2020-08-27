@@ -4,14 +4,12 @@ import { Button } from '@material-ui/core';
 
 import { InfoOutlined as InfoOutlinedIcon } from '@material-ui/icons';
 
-import Form from '../common/forms/form';
-import SelectInput from '../common/forms/selectinput';
-
-import { setSnackbar } from '../../actions/appActions';
 import { getDevicesByStatus } from '../../actions/deviceActions';
 import { getGlobalSettings, saveGlobalSettings } from '../../actions/userActions';
-import { preformatWithRequestID, deepCompare } from '../../helpers';
+import { deepCompare } from '../../helpers';
 import { getDocsVersion } from '../../selectors';
+import Form from '../common/forms/form';
+import SelectInput from '../common/forms/selectinput';
 
 export class Global extends React.Component {
   constructor(props, context) {
@@ -55,18 +53,11 @@ export class Global extends React.Component {
 
   saveSettings() {
     var self = this;
-    return self.props
-      .saveGlobalSettings(self.state.updatedSettings)
-      .then(() => {
-        self.props.setSnackbar('Settings saved successfully');
-        if (self.props.dialog) {
-          self.props.closeDialog();
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        self.props.setSnackbar(preformatWithRequestID(err.response, `The settings couldn't be saved. ${err.response.data.error}`));
-      });
+    return self.props.saveGlobalSettings(self.state.updatedSettings, false, true).then(() => {
+      if (self.props.dialog) {
+        self.props.closeDialog();
+      }
+    });
   }
 
   render() {
@@ -129,7 +120,7 @@ export class Global extends React.Component {
   }
 }
 
-const actionCreators = { getDevicesByStatus, getGlobalSettings, saveGlobalSettings, setSnackbar };
+const actionCreators = { getDevicesByStatus, getGlobalSettings, saveGlobalSettings };
 
 const mapStateToProps = state => {
   return {
