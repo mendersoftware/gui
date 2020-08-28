@@ -10,6 +10,7 @@ import { CalendarToday as CalendarTodayIcon, List as ListIcon } from '@material-
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
 import { tryMapDeployments } from '../../helpers';
+import { getIsEnterprise } from '../../selectors';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
@@ -175,10 +176,8 @@ const actionCreators = { getDeploymentsByStatus, getSingleDeploymentStats, setSn
 
 const mapStateToProps = state => {
   const scheduled = state.deployments.byStatus.scheduled.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
-  const { plan = 'os' } = state.users.organization;
   return {
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
-    plan,
+    isEnterprise: getIsEnterprise(state),
     items: scheduled
   };
 };

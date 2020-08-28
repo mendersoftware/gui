@@ -6,6 +6,7 @@ import { NavLink, withRouter } from 'react-router-dom';
 import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@material-ui/core';
 import PaymentIcon from '@material-ui/icons/Payment';
 
+import { getIsEnterprise } from '../../selectors';
 import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
 import MyOrganization from './organization';
@@ -94,7 +95,7 @@ const mapStateToProps = state => {
     currentUser,
     isAdmin,
     isHosted: state.app.features.isHosted,
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
+    isEnterprise: getIsEnterprise(state),
     hasMultitenancy: state.app.features.hasMultitenancy,
     plan,
     trial

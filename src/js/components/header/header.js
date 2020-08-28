@@ -14,6 +14,7 @@ import {
 
 import { getToken, logout } from '../../auth';
 import { decodeSessionToken, hashString, isEmpty } from '../../helpers';
+import { getIsEnterprise } from '../../selectors';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Announcement from './announcement';
 import DemoNotification from './demonotification';
@@ -297,7 +298,7 @@ const mapStateToProps = state => {
     firstLoginAfterSignup: state.app.firstLoginAfterSignup,
     hasTrackingEnabled: state.users.globalSettings[state.users.currentUser]?.trackingConsentGiven,
     inProgress: state.deployments.byStatus.inprogress.total,
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && organization.plan === 'enterprise'),
+    isEnterprise: getIsEnterprise(state),
     multitenancy: state.app.features.hasMultitenancy || state.app.features.isEnterprise || state.app.features.isHosted,
     showHelptips: state.users.showHelptips,
     pendingDevices: state.devices.byStatus.pending.total,

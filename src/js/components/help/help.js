@@ -18,6 +18,7 @@ import Support from './support';
 import MoreHelp from './more-help-resources';
 
 import { getUserOrganization } from '../../actions/userActions';
+import { getIsEnterprise } from '../../selectors';
 
 var components = {
   'getting-started': {
@@ -135,11 +136,10 @@ const actionCreators = { getUserOrganization };
 const mapStateToProps = state => {
   // if hosted, use latest docs version
   const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
-  const { plan = 'os' } = state.users.organization;
   return {
     docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion,
     isHosted: state.app.features.isHosted,
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
+    isEnterprise: getIsEnterprise(state),
     menderVersion: state.app.versionInformation['Mender-Client'],
     menderDebPackageVersion: state.app.menderDebPackageVersion,
     menderArtifactVersion: state.app.versionInformation['Mender-Artifact'],
