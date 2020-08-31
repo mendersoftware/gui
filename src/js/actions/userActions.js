@@ -152,8 +152,8 @@ const transformRoleDataToRole = roleData => {
   let permissions = roleData.groups.reduce(
     (accu, group) => [
       ...accu,
-      { ...rolesByName.deploymentCreation, object: { ...rolesByName.deploymentCreation, value: group } },
-      { ...rolesByName.groupAccess, object: { ...rolesByName.groupAccess, value: group } }
+      { ...rolesByName.deploymentCreation, object: { ...rolesByName.deploymentCreation.object, value: group } },
+      { ...rolesByName.groupAccess, object: { ...rolesByName.groupAccess.object, value: group } }
     ],
     []
   );
