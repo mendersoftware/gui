@@ -2,12 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { toggleHelptips } from '../../actions/userActions';
+import { getDocsVersion } from '../../selectors';
 
 const actionCreators = { toggleHelptips };
 const mapStateToProps = state => {
-  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
-    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion
+    docsVersion: getDocsVersion(state)
   };
 };
 

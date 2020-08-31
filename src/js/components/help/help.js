@@ -18,7 +18,7 @@ import Support from './support';
 import MoreHelp from './more-help-resources';
 
 import { getUserOrganization } from '../../actions/userActions';
-import { getIsEnterprise } from '../../selectors';
+import { getDocsVersion, getIsEnterprise } from '../../selectors';
 
 var components = {
   'getting-started': {
@@ -134,10 +134,8 @@ export class Help extends React.PureComponent {
 const actionCreators = { getUserOrganization };
 
 const mapStateToProps = state => {
-  // if hosted, use latest docs version
-  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
-    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion,
+    docsVersion: getDocsVersion(state),
     isHosted: state.app.features.isHosted,
     isEnterprise: getIsEnterprise(state),
     menderVersion: state.app.versionInformation['Mender-Client'],

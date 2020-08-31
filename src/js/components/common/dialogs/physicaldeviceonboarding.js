@@ -8,6 +8,7 @@ import CopyCode from '../copy-code';
 import AutoSelect from '../forms/autoselect';
 import { setOnboardingApproach, setOnboardingDeviceType } from '../../../actions/userActions';
 import { getDebConfigurationCode } from '../../../helpers';
+import { getDocsVersion, getIsEnterprise } from '../../../selectors';
 import { advanceOnboarding } from '../../../utils/onboardingmanager';
 
 const types = [
@@ -110,11 +111,10 @@ export class PhysicalDeviceOnboarding extends React.Component {
 const actionCreators = { setOnboardingApproach, setOnboardingDeviceType };
 
 const mapStateToProps = state => {
-  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
-    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion,
+    docsVersion: getDocsVersion(state),
     ipAddress: state.app.hostAddress,
-    isEnterprise: state.app.features.isEnterprise,
+    isEnterprise: getIsEnterprise(state),
     isHosted: state.app.features.isHosted,
     debPackageVersion: state.app.menderDebPackageVersion,
     token: state.users.organization.tenant_token

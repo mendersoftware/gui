@@ -14,7 +14,7 @@ import {
 
 import { getToken, logout } from '../../auth';
 import { decodeSessionToken, hashString, isEmpty } from '../../helpers';
-import { getIsEnterprise, getUserRoles } from '../../selectors';
+import { getDocsVersion, getIsEnterprise, getUserRoles } from '../../selectors';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Announcement from './announcement';
 import DemoNotification from './demonotification';
@@ -275,15 +275,13 @@ const actionCreators = {
 const mapStateToProps = state => {
   const organization = !isEmpty(state.users.organization) ? state.users.organization : { plan: 'os', id: null };
   const { allowUserManagement } = getUserRoles(state);
-
-  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
     acceptedDevices: state.devices.byStatus.accepted.total,
     allowUserManagement,
     announcement: state.app.hostedAnnouncement,
     deviceLimit: state.devices.limit,
     demo: state.app.features.isDemoMode,
-    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion,
+    docsVersion: getDocsVersion(state),
     firstLoginAfterSignup: state.app.firstLoginAfterSignup,
     hasTrackingEnabled: state.users.globalSettings[state.users.currentUser]?.trackingConsentGiven,
     inProgress: state.deployments.byStatus.inprogress.total,
