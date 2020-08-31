@@ -8,7 +8,7 @@ import UserForm from './userform';
 import { setSnackbar } from '../../actions/appActions';
 import { createUser, editUser, getUserList, removeUser } from '../../actions/userActions';
 import { preformatWithRequestID } from '../../helpers';
-import { getIsEnterprise } from '../../selectors';
+import { getIsEnterprise, getUserRoles } from '../../selectors';
 
 const actions = {
   create: {
@@ -138,8 +138,10 @@ export class UserManagement extends React.Component {
 const actionCreators = { createUser, editUser, getUserList, removeUser, setSnackbar };
 
 const mapStateToProps = state => {
+  const { isAdmin } = getUserRoles(state);
   return {
     currentUser: state.users.byId[state.users.currentUser] || {},
+    isAdmin,
     isEnterprise: getIsEnterprise(state),
     roles: Object.entries(state.users.rolesById).map(([id, role]) => ({ id, ...role })),
     snackbar: state.app.snackbar,

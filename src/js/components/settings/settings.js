@@ -6,7 +6,7 @@ import { NavLink, withRouter } from 'react-router-dom';
 import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@material-ui/core';
 import PaymentIcon from '@material-ui/icons/Payment';
 
-import { getIsEnterprise } from '../../selectors';
+import { getIsEnterprise, getUserRoles } from '../../selectors';
 import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
 import MyOrganization from './organization';
@@ -77,19 +77,7 @@ export const Settings = ({ allowUserManagement, currentUser, trial, hasMultitena
 const mapStateToProps = state => {
   const currentUser = state.users.byId[state.users.currentUser];
   const { plan = 'os', trial = false } = state.users.organization;
-  let isAdmin = false || !(state.app.features.hasMultitenancy || state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'));
-  let allowUserManagement = false || isAdmin;
-  if (currentUser?.roles) {
-    // TODO: move these + additional role checks into selectors
-    isAdmin = currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL');
-    allowUserManagement =
-      isAdmin ||
-      currentUser.roles.some(role =>
-        state.users.rolesById[role]?.permissions.some(
-          permission => permission.action === 'http' && permission.object.value === '/api/management/v1/useradm/.*' && ['any'].includes(permission.object.type)
-        )
-      );
-  }
+  const { allowUserManagement, isAdmin } = getUserRoles(state);
   return {
     allowUserManagement,
     currentUser,

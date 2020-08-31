@@ -9,9 +9,7 @@ import { getToken } from '../auth';
 import { preformatWithRequestID, decodeSessionToken } from '../helpers';
 
 const cookies = new Cookies();
-const apiUrl = '/api/management/v1';
-const tenantadmUrl = `${apiUrl}/tenantadm`;
-const useradmApiUrl = `${apiUrl}/useradm`;
+const { emptyRole, rolesByName, tenantadmUrl, useradmApiUrl } = UserConstants;
 
 const handleLoginError = (err, has2FA) => dispatch => {
   const errorText = err.response.data?.error || err.message;
@@ -119,18 +117,24 @@ export const getRoles = () => (dispatch, getState) =>
   GeneralApi.get(`${useradmApiUrl}/roles`).then(({ data: roles }) => {
     const rolesState = getState().users.rolesById;
     const rolesById = roles.reduce((accu, role) => {
-      var allowUserManagement = false;
-      const groups = role.permissions.reduce((accu, permission) => {
-        if (permission.action === 'CREATE_DEPLOYMENT' && permission.object.type === 'DEVICE_GROUP') {
-          accu.push(permission.object.value);
-        }
-        if (permission.action == 'http' && permission.object.type == 'any' && permission.object.value == `${useradmApiUrl}/.*`) {
-          allowUserManagement = true;
-        }
-        return accu;
-      }, []);
+      const { allowUserManagement, groups } = role.permissions.reduce(
+        (accu, permission) => {
+          if (permission.action === rolesByName.deploymentCreation.action && permission.object.type === rolesByName.deploymentCreation.object.type) {
+            accu.groups.push(permission.object.value);
+          }
+          if (
+            permission.action == rolesByName.userManagement.action &&
+            permission.object.type == rolesByName.userManagement.object.type &&
+            permission.object.value == rolesByName.userManagement.object.value
+          ) {
+            accu.allowUserManagement = true;
+          }
+          return accu;
+        },
+        { allowUserManagement: false, groups: [] }
+      );
       accu[role.name] = {
-        ...UserConstants.emptyRole,
+        ...emptyRole,
         ...rolesState[role.name],
         groups,
         description: rolesState[role.name] && rolesState[role.name].description ? rolesState[role.name].description : role.description,
@@ -148,19 +152,13 @@ const transformRoleDataToRole = roleData => {
   let permissions = roleData.groups.reduce(
     (accu, group) => [
       ...accu,
-      { action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: group } },
-      { action: 'VIEW_DEVICE', object: { type: 'DEVICE_GROUP', value: group } }
+      { ...rolesByName.deploymentCreation, object: { ...rolesByName.deploymentCreation, value: group } },
+      { ...rolesByName.groupAccess, object: { ...rolesByName.groupAccess, value: group } }
     ],
     []
   );
   if (roleData.allowUserManagement) {
-    permissions.push({
-      action: 'http',
-      object: {
-        type: 'any',
-        value: `${useradmApiUrl}/.*`
-      }
-    });
+    permissions.push(rolesByName.userManagement);
   }
   return {
     name: roleData.name,
@@ -172,7 +170,7 @@ const transformRoleDataToRole = roleData => {
 export const createRole = roleData => dispatch => {
   const role = transformRoleDataToRole(roleData);
   return GeneralApi.post(`${useradmApiUrl}/roles`, role).then(() =>
-    Promise.all([dispatch({ type: UserConstants.CREATED_ROLE, role: { ...UserConstants.emptyRole, ...role }, roleId: role.name }), dispatch(getRoles())])
+    Promise.all([dispatch({ type: UserConstants.CREATED_ROLE, role: { ...emptyRole, ...role }, roleId: role.name }), dispatch(getRoles())])
   );
 };
 
@@ -180,7 +178,7 @@ export const editRole = roleData => dispatch => {
   const role = transformRoleDataToRole(roleData);
   const roleId = role.name;
   return GeneralApi.put(`${useradmApiUrl}/roles/${roleId}`, role).then(() =>
-    Promise.all([dispatch({ type: UserConstants.UPDATED_ROLE, role: { ...UserConstants.emptyRole, ...role }, roleId: roleId }), dispatch(getRoles())])
+    Promise.all([dispatch({ type: UserConstants.UPDATED_ROLE, role: { ...emptyRole, ...role }, roleId: roleId }), dispatch(getRoles())])
   );
 };
 

@@ -14,7 +14,7 @@ import {
 
 import { getToken, logout } from '../../auth';
 import { decodeSessionToken, hashString, isEmpty } from '../../helpers';
-import { getIsEnterprise } from '../../selectors';
+import { getIsEnterprise, getUserRoles } from '../../selectors';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Announcement from './announcement';
 import DemoNotification from './demonotification';
@@ -274,19 +274,8 @@ const actionCreators = {
 
 const mapStateToProps = state => {
   const organization = !isEmpty(state.users.organization) ? state.users.organization : { plan: 'os', id: null };
-  const currentUser = state.users.byId[state.users.currentUser];
-  let allowUserManagement = false;
-  if (currentUser?.roles) {
-    // TODO: move these + additional role checks into selectors
-    const isAdmin = currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL');
-    allowUserManagement =
-      isAdmin ||
-      currentUser.roles.some(role =>
-        state.users.rolesById[role]?.permissions.some(
-          permission => permission.action === 'http' && permission.object.value === '/api/management/v1/useradm/.*' && ['any'].includes(permission.object.type)
-        )
-      );
-  }
+  const { allowUserManagement } = getUserRoles(state);
+
   const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
     acceptedDevices: state.devices.byStatus.accepted.total,
