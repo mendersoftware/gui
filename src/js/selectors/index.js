@@ -13,7 +13,7 @@ export const getDocsVersion = createSelector([getAppDocsVersion, getFeatures], (
 });
 
 export const getIsEnterprise = createSelector(
-  [getOrganization, getRolesById],
+  [getOrganization, getFeatures],
   ({ plan = 'os' }, { isEnterprise, isHosted }) => isEnterprise || (isHosted && plan === 'enterprise')
 );
 
