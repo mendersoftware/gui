@@ -515,7 +515,7 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
       return Promise.all(tasks);
     })
     .catch(error => {
-      const errormsg = error.error || error.response.data.error || 'Please check your connection.';
+      const errormsg = error.error || error.response?.data.error.message || 'Please check your connection.';
       console.log(errormsg);
       dispatch(setSnackbar(preformatWithRequestID(error.response, `${status} devices couldn't be loaded. ${errormsg}`), null, 'Copy to clipboard'));
       return Promise.reject(error);
