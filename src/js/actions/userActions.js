@@ -13,7 +13,7 @@ const cookies = new Cookies();
 const { emptyRole, rolesByName, tenantadmUrl, useradmApiUrl } = UserConstants;
 
 const handleLoginError = (err, has2FA) => dispatch => {
-  const errorText = err.response.data?.error || err.message;
+  const errorText = err.response.data?.error?.message || err.response.data?.error || err.message;
   const is2FABackend = errorText.includes('2fa');
   if (is2FABackend && !has2FA) {
     return dispatch(saveGlobalSettings({ '2fa': 'enabled' }, true));
