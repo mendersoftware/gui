@@ -8,7 +8,11 @@ const cookies = new Cookies();
 const apiUrl = '/api/management/v2';
 const tenantadmApiUrl = `${apiUrl}/tenantadm`;
 
-export const cancelRequest = (tenantId, reason) => () => Api.post(`${tenantadmApiUrl}/tenants/${tenantId}/cancel`, { reason: reason });
+export const cancelRequest = (tenantId, reason) => dispatch =>
+  Api.post(`${tenantadmApiUrl}/tenants/${tenantId}/cancel`, { reason: reason }).then(() =>
+    Promise.resolve(dispatch(setSnackbar('Deactivation request was sent successfully', 5000, '')))
+  );
+
 export const createOrganizationTrial = data => dispatch =>
   Api.postUnauthorized(`${tenantadmApiUrl}/tenants/trial`, data)
     .catch(err => {
@@ -22,7 +26,6 @@ export const createOrganizationTrial = data => dispatch =>
       cookies.remove('oauth');
       cookies.remove('externalID');
       cookies.remove('email');
-      dispatch(setSnackbar('Deactivation request was sent successfully', 5000, ''));
       return Promise.resolve(res);
     });
 
