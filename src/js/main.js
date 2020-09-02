@@ -6,6 +6,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 
 import './../less/main.less';
+import './i18n';
 import theme from './themes/mender-theme';
 import App from './components/app';
 import store from './reducers';

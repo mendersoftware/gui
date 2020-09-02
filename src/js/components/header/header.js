@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
+import { withTranslation } from 'react-i18next';
 
 import { Button, IconButton, ListItemText, ListItemSecondaryAction, Menu, MenuItem, Toolbar } from '@material-ui/core';
 
@@ -179,6 +180,7 @@ export class Header extends React.Component {
       pendingDevices,
       plan,
       showHelptips,
+      t,
       toggleHelptips,
       user
     } = self.props;
@@ -214,27 +216,27 @@ export class Header extends React.Component {
           }}
         >
           <MenuItem component={Link} to="/settings">
-            Settings
+            {t('settings.title')}
           </MenuItem>
           <MenuItem component={Link} to="/settings/my-profile">
-            My profile
+            {t('settings.user')}
           </MenuItem>
           {multitenancy && (
             <MenuItem component={Link} to="/settings/my-organization">
-              My organization
+              {t('settings.organization')}
             </MenuItem>
           )}
           {allowUserManagement && (
             <MenuItem component={Link} to="/settings/user-management">
-              User management
+              {t('settings.userManagement')}
             </MenuItem>
           )}
-          <MenuItem onClick={toggleHelptips}>{showHelptips ? 'Hide help tooltips' : 'Show help tooltips'}</MenuItem>
+          <MenuItem onClick={toggleHelptips}>{t('settings.helpTooltips', { context: showHelptips })}</MenuItem>
           <MenuItem component={Link} to="/help/getting-started">
-            Help
+            {t('help.title')}
           </MenuItem>
           <MenuItem onClick={() => self.onLogoutClick()}>
-            <ListItemText primary="Log out" />
+            <ListItemText primary={t('logout')} />
             <ListItemSecondaryAction>
               <IconButton>
                 <ExitIcon style={{ color: menuButtonColor, fill: menuButtonColor }} />
@@ -289,4 +291,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, actionCreators)(Header);
+export default withTranslation()(connect(mapStateToProps, actionCreators)(Header));

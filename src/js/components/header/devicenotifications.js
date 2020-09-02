@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
-import pluralize from 'pluralize';
+import { Trans, useTranslation } from 'react-i18next';
 
 // material ui
 import DeveloperBoardIcon from '@material-ui/icons/DeveloperBoard';
@@ -9,6 +9,7 @@ import DeveloperBoardIcon from '@material-ui/icons/DeveloperBoard';
 const DeviceNotifications = ({ total, limit, pending }) => {
   const approaching = limit && total / limit > 0.8;
   const warning = limit && limit <= total;
+  const { t } = useTranslation();
   return (
     <div>
       <div id="limit" data-tip data-for="limit-tip" data-offset="{'bottom': 0, 'right': 0}" data-tip-disable={!limit}>
@@ -22,36 +23,24 @@ const DeviceNotifications = ({ total, limit, pending }) => {
           className="react-tooltip"
           disabled={!limit}
         >
-          <h3>Device limit</h3>
-          {approaching || warning ? (
-            <p>You {approaching ? <span>are nearing</span> : <span>have reached</span>} your device limit.</p>
-          ) : (
-            <p>
-              You can still connect another {(limit - total).toLocaleString()} {pluralize('devices', limit - total)}.
-            </p>
-          )}
-          <p>
-            If you need a higher device limit, you can contact us by email at <a href="mailto:support@mender.io">support@mender.io</a> to change your plan.
-          </p>
-          <p>
-            Learn about the different plans available by visiting{' '}
-            <a href="https://mender.io/pricing" target="_blank">
-              mender.io/pricing
-            </a>
-          </p>
+          <Trans
+            i18nKey="devices.limitNotification"
+            delta={limit - total}
+            limitStatus={approaching || warning ? { context: approaching ? 'approaching' : 'reached' } : {}}
+            components={{ supportMailLink: <a href="mailto:support@mender.io" />, externalLink: <a href="https://mender.io/pricing" target="_blank" /> }}
+          />
         </ReactTooltip>
 
         <div className="header-section">
           <Link to="/devices" className={warning ? 'warning inline' : approaching ? 'approaching inline' : 'inline'}>
             <span>{total.toLocaleString()}</span>
             {limit ? <span>/{limit.toLocaleString()}</span> : null}
-
             <DeveloperBoardIcon style={{ margin: '0 7px 0 10px', fontSize: '20px' }} />
           </Link>
 
           {pending ? (
             <Link to="/devices/pending" style={{ marginLeft: '7px' }} className={limit && limit < pending + total ? 'warning' : null}>
-              {pending.toLocaleString()} pending
+              {t('devices.pending.counter', { count: pending })}
             </Link>
           ) : null}
         </div>
