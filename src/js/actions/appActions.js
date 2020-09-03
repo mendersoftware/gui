@@ -4,7 +4,7 @@ import { DEVICE_STATES } from '../constants/deviceConstants';
 import { getDevicesByStatus } from './deviceActions';
 import { getReleases } from './releaseActions';
 import { getDeploymentsByStatus } from './deploymentActions';
-import { setOnboardingComplete, setOnboardingState } from './userActions';
+import { getGlobalSettings, setOnboardingState } from './userActions';
 import { getCurrentOnboardingState, determineProgress, persistOnboardingState, onboardingSteps } from '../utils/onboardingmanager';
 
 const cookies = new Cookies();
@@ -39,14 +39,10 @@ export const getOnboardingState = () => (dispatch, getState) => {
   let promises = Promise.resolve(getCurrentOnboardingState());
   const userId = getState().users.currentUser;
   const onboardingKey = `${userId}-onboarding`;
-  const savedState = JSON.parse(window.localStorage.getItem(onboardingKey)) || {};
+  let savedState = JSON.parse(window.localStorage.getItem(onboardingKey)) || {};
   if (!Object.keys(savedState).length || !savedState.complete) {
-    const userCookie = cookies.get(`${userId}-onboarded`);
-    // to prevent tips from showing up for previously onboarded users completion is set explicitly before the additional requests complete
-    if (userCookie || getState().users.onboarding.complete) {
-      return dispatch(setOnboardingComplete(Boolean(userCookie) || getState().users.onboarding.complete));
-    }
     const requests = [
+      dispatch(getGlobalSettings()),
       dispatch(getDevicesByStatus(DEVICE_STATES.accepted)),
       dispatch(getDevicesByStatus(DEVICE_STATES.pending)),
       dispatch(getDevicesByStatus(DEVICE_STATES.preauth)),
@@ -55,6 +51,7 @@ export const getOnboardingState = () => (dispatch, getState) => {
       dispatch(getDeploymentsByStatus('finished', undefined, undefined, undefined, undefined, undefined, false))
     ];
     promises = Promise.all(requests).then(() => {
+      const userCookie = cookies.get(`${userId}-onboarded`);
       const store = getState();
       const acceptedDevices = store.devices.byStatus[DEVICE_STATES.accepted].deviceIds;
       const pendingDevices = store.devices.byStatus[DEVICE_STATES.pending].deviceIds;
@@ -65,10 +62,14 @@ export const getOnboardingState = () => (dispatch, getState) => {
         acceptedDevices.length && store.devices.byId[acceptedDevices[0]].hasOwnProperty('attributes')
           ? store.devices.byId[acceptedDevices[0]].attributes.device_type
           : null;
+      const { onboarding = {} } = store.users.globalSettings[store.users.currentUser] || {};
+      savedState = { ...savedState, ...onboarding };
       const progress = savedState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments);
       const state = {
         complete: !!(
           savedState.complete ||
+          Boolean(userCookie) ||
+          store.users.onboarding.complete ||
           (acceptedDevices.length > 1 && pendingDevices.length > 0 && releases.length > 1 && pastDeployments.length > 1) ||
           (acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length > 2) ||
           (acceptedDevices.length >= 1 && pendingDevices.length > 0 && releases.length >= 2 && pastDeployments.length >= 2) ||

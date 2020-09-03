@@ -276,6 +276,13 @@ export const setOnboardingComplete = val => dispatch => {
   ]);
 };
 
+export const setOnboardingCanceled = () => dispatch =>
+  Promise.all([
+    dispatch(setShowOnboardingHelp(false)),
+    dispatch(setShowDismissOnboardingTipsDialog(false)),
+    dispatch({ type: UserConstants.SET_ONBOARDING_COMPLETE, complete: true })
+  ]).then(() => Promise.resolve(advanceOnboarding('onboarding-canceled')));
+
 export const setShowConnectingDialog = show => dispatch => dispatch({ type: UserConstants.SET_SHOW_CONNECT_DEVICE, show });
 
 export const setShowCreateArtifactDialog = show => dispatch => dispatch({ type: UserConstants.SET_SHOW_CREATE_ARTIFACT, show });
