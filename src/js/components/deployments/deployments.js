@@ -8,6 +8,7 @@ import { selectRelease } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, createDeployment, selectDeployment } from '../../actions/deploymentActions';
+import { getIsEnterprise } from '../../selectors';
 
 import CreateDialog from './createdeployment';
 import Progress from './inprogressdeployments';
@@ -262,9 +263,8 @@ const actionCreators = {
 };
 
 const mapStateToProps = state => {
-  const { plan = 'os' } = state.users.organization;
   return {
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
+    isEnterprise: getIsEnterprise(state),
     pastCount: state.deployments.byStatus.finished.total,
     settings: state.users.globalSettings
   };

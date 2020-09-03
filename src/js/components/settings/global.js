@@ -6,12 +6,12 @@ import { InfoOutlined as InfoOutlinedIcon } from '@material-ui/icons';
 
 import Form from '../common/forms/form';
 import SelectInput from '../common/forms/selectinput';
-import { preformatWithRequestID, deepCompare } from '../../helpers';
-
-import { getDevicesByStatus } from '../../actions/deviceActions';
-import { getGlobalSettings, saveGlobalSettings } from '../../actions/userActions';
 
 import { setSnackbar } from '../../actions/appActions';
+import { getDevicesByStatus } from '../../actions/deviceActions';
+import { getGlobalSettings, saveGlobalSettings } from '../../actions/userActions';
+import { preformatWithRequestID, deepCompare } from '../../helpers';
+import { getDocsVersion } from '../../selectors';
 
 export class Global extends React.Component {
   constructor(props, context) {
@@ -132,12 +132,11 @@ export class Global extends React.Component {
 const actionCreators = { getDevicesByStatus, getGlobalSettings, saveGlobalSettings, setSnackbar };
 
 const mapStateToProps = state => {
-  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
     // limit the selection of the available attribute to AVAILABLE_ATTRIBUTE_LIMIT
     attributes: state.devices.filteringAttributes.identityAttributes.slice(0, state.devices.filteringAttributesLimit),
     devicesCount: Object.keys(state.devices.byId).length,
-    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion,
+    docsVersion: getDocsVersion(state),
     settings: state.users.globalSettings
   };
 };

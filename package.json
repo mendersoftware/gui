@@ -41,6 +41,7 @@
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
+    "reselect": "^4.0.0",
     "universal-cookie": "^4.0.3",
     "validator": "^13.1.1",
     "victory": "^35.0.8",

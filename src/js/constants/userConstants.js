@@ -1,3 +1,6 @@
+const apiUrl = '/api/management/v1';
+const useradmApiUrl = `${apiUrl}/useradm`;
+
 module.exports = {
   RECEIVED_QR_CODE: 'RECEIVED_QR_CODE',
 
@@ -28,5 +31,15 @@ module.exports = {
   SET_ONBOARDING_APPROACH: 'SET_ONBOARDING_APPROACH',
   SET_ONBOARDING_ARTIFACT_INCLUDED: 'SET_ONBOARDING_ARTIFACT_INCLUDED',
 
-  emptyRole: { title: undefined, allowUserManagement: false, groups: [], description: '', editable: undefined, permissions: [] }
+  emptyRole: { title: undefined, allowUserManagement: false, groups: [], description: '', editable: undefined, permissions: [] },
+  rolesByName: {
+    admin: 'RBAC_ROLE_PERMIT_ALL',
+    readOnly: 'RBAC_ROLE_OBSERVER',
+    ci: 'RBAC_ROLE_CI',
+    userManagement: { action: 'http', object: { type: 'any', value: `${useradmApiUrl}/.*` } },
+    deploymentCreation: { action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: undefined } },
+    groupAccess: { action: 'VIEW_DEVICE', object: { type: 'DEVICE_GROUP', value: undefined } }
+  },
+  tenantadmUrl: `${apiUrl}/tenantadm`,
+  useradmApiUrl
 };

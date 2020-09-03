@@ -12,6 +12,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { editUser, saveGlobalSettings, saveUserSettings } from '../../actions/userActions';
 
 import { preformatWithRequestID } from '../../helpers';
+import { getIsEnterprise } from '../../selectors';
 
 import { OAuth2Providers } from './oauth2providers';
 import TwoFactorAuthSetup from './twofactorauthsetup';
@@ -199,13 +200,14 @@ const actionCreators = { editUser, saveGlobalSettings, saveUserSettings, setSnac
 
 const mapStateToProps = state => {
   const { plan = 'os' } = state.users.organization;
+  const isEnterprise = getIsEnterprise(state);
   return {
-    canHave2FA: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
+    canHave2FA: isEnterprise || (state.app.features.isHosted && plan !== 'os'),
     currentUser: state.users.byId[state.users.currentUser] || {},
     has2FA: state.users.globalSettings.hasOwnProperty('2fa') && state.users.globalSettings['2fa'] === 'enabled',
     hasTracking: !!state.app.trackerCode,
     hasTrackingConsent: state.users.globalSettings[state.users.currentUser]?.trackingConsentGiven,
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise')
+    isEnterprise
   };
 };
 

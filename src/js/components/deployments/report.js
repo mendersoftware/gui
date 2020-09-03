@@ -12,6 +12,7 @@ import { Block as BlockIcon } from '@material-ui/icons';
 import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
 import { getDeviceLog, getSingleDeploymentDevices, getSingleDeploymentStats } from '../../actions/deploymentActions';
 import { getRelease } from '../../actions/releaseActions';
+import { getIsEnterprise } from '../../selectors';
 import DeploymentLog from './deployment-report/log';
 import DeploymentOverview from './deployment-report/overview';
 import Review from './deployment-wizard/review';
@@ -164,14 +165,13 @@ const mapStateToProps = state => {
   const devices = state.deployments.byId[state.deployments.selectedDeployment]?.devices || {};
   const allDevices = sortDeploymentDevices(Object.values(devices)).map(device => ({ ...state.devices.byId[device.id], ...device }));
   const deployment = state.deployments.byId[state.deployments.selectedDeployment] || {};
-  const { plan = 'os' } = state.users.organization;
   return {
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
     allDevices,
     deviceCount: allDevices.length,
     devicesById: state.devices.byId,
     deployment,
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
+    isEnterprise: getIsEnterprise(state),
     isHosted: state.app.features.isHosted,
     release:
       deployment.artifact_name && state.releases.byId[deployment.artifact_name]

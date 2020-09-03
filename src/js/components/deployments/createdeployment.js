@@ -11,6 +11,7 @@ import { selectDevice } from '../../actions/deviceActions';
 import { selectRelease } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { getIsEnterprise } from '../../selectors';
 import { getRemainderPercent } from '../../helpers';
 
 export const allDevices = 'All devices';
@@ -172,7 +173,7 @@ const mapStateToProps = state => {
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
+    isEnterprise: getIsEnterprise(state),
     isHosted: state.app.features.isHosted,
     device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
     groups,

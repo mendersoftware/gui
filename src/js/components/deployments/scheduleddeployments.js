@@ -10,6 +10,7 @@ import { CalendarToday as CalendarTodayIcon, List as ListIcon } from '@material-
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
 import { tryMapDeployments } from '../../helpers';
+import { getIsEnterprise } from '../../selectors';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
@@ -177,8 +178,8 @@ const mapStateToProps = state => {
   const scheduled = state.deployments.byStatus.scheduled.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   const { plan = 'os' } = state.users.organization;
   return {
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
-    plan,
+    // TODO: isEnterprise is misleading here, but is passed down to the DeploymentListItem, this should be renamed
+    isEnterprise: getIsEnterprise(state) || plan !== 'os',
     items: scheduled
   };
 };

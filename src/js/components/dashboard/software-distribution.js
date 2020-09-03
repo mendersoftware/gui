@@ -9,6 +9,7 @@ import EnterpriseNotification from '../common/enterpriseNotification';
 import { getAllDynamicGroupDevices, getAllGroupDevices, selectGroup } from '../../actions/deviceActions';
 import { saveUserSettings } from '../../actions/userActions';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { getIsEnterprise } from '../../selectors';
 
 export const defaultReports = [{ group: null, attribute: 'artifact_name', type: 'distribution' }];
 
@@ -113,7 +114,6 @@ export class SoftwareDistribution extends React.Component {
 const actionCreators = { getAllDynamicGroupDevices, getAllGroupDevices, saveUserSettings, selectGroup };
 
 const mapStateToProps = state => {
-  const plan = state.users.organization ? state.users.organization.plan : 'os';
   const reports = state.users.globalSettings[state.users.currentUser]?.reports || state.users.globalSettings[`${state.users.currentUser}-reports`] || [];
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
@@ -122,7 +122,7 @@ const mapStateToProps = state => {
     devices: state.devices.byId,
     hasDevices: state.devices.byStatus[DEVICE_STATES.accepted].total,
     groups,
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
+    isEnterprise: getIsEnterprise(state),
     reports
   };
 };

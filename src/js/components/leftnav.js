@@ -6,6 +6,8 @@ import copy from 'copy-to-clipboard';
 // material ui
 import { List, ListItem, ListItemText, Tooltip } from '@material-ui/core';
 
+import { getDocsVersion } from '../selectors';
+
 const listItems = [
   { route: '/', text: 'Dashboard' },
   { route: '/devices', text: 'Devices' },
@@ -84,9 +86,8 @@ export class LeftNav extends React.PureComponent {
 }
 
 const mapStateToProps = state => {
-  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
-    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion,
+    docsVersion: getDocsVersion(state),
     versionInformation: state.app.versionInformation
   };
 };

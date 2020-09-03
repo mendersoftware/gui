@@ -14,6 +14,7 @@ import {
 
 import { getToken, logout } from '../../auth';
 import { decodeSessionToken, hashString, isEmpty } from '../../helpers';
+import { getDocsVersion, getIsEnterprise, getUserRoles } from '../../selectors';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Announcement from './announcement';
 import DemoNotification from './demonotification';
@@ -273,31 +274,18 @@ const actionCreators = {
 
 const mapStateToProps = state => {
   const organization = !isEmpty(state.users.organization) ? state.users.organization : { plan: 'os', id: null };
-  const currentUser = state.users.byId[state.users.currentUser];
-  let allowUserManagement = false;
-  if (currentUser?.roles) {
-    // TODO: move these + additional role checks into selectors
-    const isAdmin = currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL');
-    allowUserManagement =
-      isAdmin ||
-      currentUser.roles.some(role =>
-        state.users.rolesById[role]?.permissions.some(
-          permission => permission.action === 'http' && permission.object.value === '/api/management/v1/useradm/.*' && ['any'].includes(permission.object.type)
-        )
-      );
-  }
-  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
+  const { allowUserManagement } = getUserRoles(state);
   return {
     acceptedDevices: state.devices.byStatus.accepted.total,
     allowUserManagement,
     announcement: state.app.hostedAnnouncement,
     deviceLimit: state.devices.limit,
     demo: state.app.features.isDemoMode,
-    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion,
+    docsVersion: getDocsVersion(state),
     firstLoginAfterSignup: state.app.firstLoginAfterSignup,
     hasTrackingEnabled: state.users.globalSettings[state.users.currentUser]?.trackingConsentGiven,
     inProgress: state.deployments.byStatus.inprogress.total,
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && organization.plan === 'enterprise'),
+    isEnterprise: getIsEnterprise(state),
     multitenancy: state.app.features.hasMultitenancy || state.app.features.isEnterprise || state.app.features.isHosted,
     showHelptips: state.users.showHelptips,
     pendingDevices: state.devices.byStatus.pending.total,

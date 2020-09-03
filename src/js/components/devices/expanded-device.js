@@ -23,6 +23,7 @@ import { getReleases } from '../../actions/releaseActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { preformatWithRequestID } from '../../helpers';
+import { getDocsVersion } from '../../selectors';
 import { advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import { AuthButton } from '../helptips/helptooltips';
 import ExpandableAttribute from '../common/expandable-attribute';
@@ -382,9 +383,8 @@ export class ExpandedDevice extends React.Component {
 const actionCreators = { decommissionDevice, getReleases, selectDevice, setSnackbar };
 
 const mapStateToProps = state => {
-  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
-    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion,
+    docsVersion: getDocsVersion(state),
     onboardingComplete: state.users.onboarding.complete,
     showHelptips: state.users.showHelptips
   };

@@ -10,6 +10,7 @@ import { getDevicesByStatus } from '../../actions/deviceActions';
 import { setOnboardingComplete } from '../../actions/userActions';
 import * as DeviceConstants from '../../constants/deviceConstants';
 import { getDemoDeviceAddress } from '../../helpers';
+import { getDocsVersion } from '../../selectors';
 import Loader from '../common/loader';
 
 export class OnboardingCompleteTip extends React.Component {
@@ -108,10 +109,9 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = state => {
-  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
     acceptedDevices: state.devices.byStatus.accepted.deviceIds.map(id => state.devices.byId[id]),
-    docsVersion: state.app.features.isHosted ? 'hosted/' : docsVersion
+    docsVersion: getDocsVersion(state)
   };
 };
 
