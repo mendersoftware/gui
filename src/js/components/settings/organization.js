@@ -153,7 +153,7 @@ export class MyOrganization extends React.Component {
                   />
                 </ListItem>
               )}
-              {isHosted && deviceLimit && (
+              {isHosted && deviceLimit > 0 && (
                 <ListItem style={{ maxWidth: '500px' }} divider={true} key="device_limit" disabled={true}>
                   <ListItemText
                     primary={`Device limit: ${acceptedDevices}/${deviceLimit}`}

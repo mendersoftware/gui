@@ -14,14 +14,13 @@ export class CreateGroup extends React.Component {
       invalid: true,
       isModification: !props.isCreation,
       newGroup: '',
-      title: props.isCreation ? 'Create a new group' : `Add ${props.selectedDevices.length ? 'selected ' : ''}devices to group`
+      title: props.isCreationDynamic ? 'Create a new group' : `Add ${props.selectedDevices.length ? 'selected ' : ''}devices to group`
     };
     this.props.getDevicesByStatus(DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength);
   }
 
   onNameChange(isNotValid, newGroup, isModification) {
-    const title =
-      isModification && !this.props.isCreationDynamic ? `Add ${this.props.selectedDevices.length ? 'selected ' : ''}devices to group` : 'Create a new group';
+    const title = !this.props.isCreationDynamic ? `Add ${this.props.selectedDevices.length ? 'selected ' : ''}devices to group` : 'Create a new group';
     const invalid = isModification && this.props.isCreationDynamic ? true : isNotValid;
     this.setState({ invalid, isModification, newGroup, title });
   }
@@ -48,7 +47,7 @@ export class CreateGroup extends React.Component {
             Cancel
           </Button>
           <Button variant="contained" color="primary" onClick={() => addListOfDevices(selectedDevices, newGroup)} disabled={!newGroup.length || invalid}>
-            {!isModification || isCreationDynamic ? 'Create group' : 'Add to group'}
+            {!isModification || isCreationDynamic || groups.length === 0 ? 'Create group' : 'Add to group'}
           </Button>
         </DialogActions>
       </Dialog>

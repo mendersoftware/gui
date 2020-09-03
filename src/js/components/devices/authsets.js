@@ -117,28 +117,23 @@ export class Authsets extends React.Component {
           </p>
         </div>
 
-        <div className="clear">
-          {this.props.active.length ? activeList : null}
-
-          <div className="margin-top-large margin-bottom auto" />
-
-          {this.props.inactive.length ? (
-            <div>
-              <h4 className="align-center">Inactive authentication sets</h4>
-              {inactiveList}
-            </div>
-          ) : null}
-
-          {this.props.limitMaxed ? (
-            <div className="warning">
-              <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
-              You have reached your limit of authorized devices.
-              <p>
-                Contact us by email at <a href="mailto:support@mender.io">support@mender.io</a> to request a higher limit.
-              </p>
-            </div>
-          ) : null}
-        </div>
+        {this.props.active.length ? activeList : null}
+        <div className="margin-top-large margin-bottom auto" />
+        {this.props.inactive.length ? (
+          <div>
+            <h4 className="align-center">Inactive authentication sets</h4>
+            {inactiveList}
+          </div>
+        ) : null}
+        {this.props.limitMaxed && (
+          <div className="warning">
+            <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
+            You have reached your limit of authorized devices.
+            <p>
+              Contact us by email at <a href="mailto:support@mender.io">support@mender.io</a> to request a higher limit.
+            </p>
+          </div>
+        )}
       </div>
     );
   }

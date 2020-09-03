@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogTitle, Tab, Tabs } from '@material-ui/core
 import { setSnackbar } from '../../actions/appActions';
 import { getAllDeviceCounts, selectDevice, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { getUserRoles } from '../../selectors';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Global from '../settings/global';
 import DeviceGroups from './device-groups';
@@ -134,14 +135,7 @@ export class Devices extends React.Component {
 const actionCreators = { getAllDeviceCounts, selectDevice, selectGroup, setDeviceFilters, setSnackbar };
 
 const mapStateToProps = state => {
-  const currentUser = state.users.byId[state.users.currentUser];
-  let isGroupRestricted = false;
-  if (currentUser?.roles) {
-    // TODO: move these + additional role checks into selectors
-    const isAdmin = currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL');
-    isGroupRestricted =
-      !isAdmin && currentUser.roles.some(role => state.users.rolesById[role]?.permissions.some(permission => permission.object.type === 'DEVICE_GROUP'));
-  }
+  const { isGroupRestricted } = getUserRoles(state);
   return {
     isGroupRestricted,
     pendingCount: state.devices.byStatus.pending.total

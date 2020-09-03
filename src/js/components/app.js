@@ -17,6 +17,7 @@ import { privateRoutes, publicRoutes } from '../config/routes';
 import SharedSnackbar from '../components/common/sharedsnackbar';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import Tracking from '../tracking';
+import LiveChatBox from './livechatbox';
 
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -112,11 +113,12 @@ class AppRoot extends React.PureComponent {
               }}
             />
             <DeviceConnectionDialog open={showDeviceConnectionDialog} onCancel={() => setShowConnectingDialog(false)} />
+            <LiveChatBox />
           </Elements>
         ) : (
           publicRoutes
         )}
-        <SharedSnackbar />;
+        <SharedSnackbar />
       </>
     );
   }

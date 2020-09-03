@@ -108,7 +108,6 @@ export class ScheduleRollout extends React.Component {
       deploymentDeviceCount = 0,
       hasNewRetryDefault,
       isEnterprise,
-      isHosted,
       onSaveRetriesSetting,
       phases = [],
       plan,
@@ -208,13 +207,7 @@ export class ScheduleRollout extends React.Component {
                 ]}
               </Select>
             </FormControl>
-            {(!isHosted || (isHosted && plan !== 'enterprise') || !isEnterprise) && (
-              <EnterpriseNotification
-                isEnterprise={isEnterprise}
-                benefit={`choose to roll out deployments in multiple phases`}
-                recommendedPlan={isHosted ? 'enterprise' : null}
-              />
-            )}
+            <EnterpriseNotification isEnterprise={isEnterprise} benefit="choose to roll out deployments in multiple phases" />
           </Grid>
           {customPattern ? (
             <Grid item style={{ marginBottom: '15px' }}>

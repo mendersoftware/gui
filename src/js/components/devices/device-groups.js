@@ -21,6 +21,7 @@ import {
 import { setSnackbar } from '../../actions/appActions';
 
 import { preformatWithRequestID } from '../../helpers';
+import { getIsEnterprise } from '../../selectors';
 import CreateGroupExplainer from './create-group-explainer';
 
 export class DeviceGroups extends React.Component {
@@ -191,7 +192,6 @@ const mapStateToProps = state => {
     groupCount = state.devices.groups.byId[selectedGroup].total;
     groupFilters = state.devices.groups.byId[selectedGroup].filters || [];
   }
-  const { plan = 'os' } = state.users.organization;
   return {
     acceptedCount: state.devices.byStatus.accepted.total || 0,
     filters: state.devices.filters || [],
@@ -199,7 +199,7 @@ const mapStateToProps = state => {
     groupsById: state.devices.groups.byId,
     groupCount,
     groupFilters,
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan === 'enterprise'),
+    isEnterprise: getIsEnterprise(state),
     selectedGroup,
     showHelptips: state.users.showHelptips
   };

@@ -6,10 +6,9 @@ import { Chip, List } from '@material-ui/core';
 
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import ExpandableAttribute from '../../common/expandable-attribute';
-import { PLANS as plans } from '../../../constants/appConstants';
 import { formatTime, generateDeploymentGroupDetails, getRemainderPercent } from '../../../helpers';
 
-const Review = ({ deployment = {}, deploymentDeviceCount, device, filters, group, isEnterprise, isHosted, phases, plan, release, retries = 0 }) => {
+const Review = ({ deployment = {}, deploymentDeviceCount, device, filters, group, isEnterprise, phases, release, retries = 0 }) => {
   // Create 'phases' for view only
   const deploymentPhases = phases || [{ batch_size: 100 }];
   const start_time = deploymentPhases[0].start_ts || deployment.created || new Date().toISOString();
@@ -31,10 +30,6 @@ const Review = ({ deployment = {}, deploymentDeviceCount, device, filters, group
       { primary: 'End time', secondary: end_time ? <Time value={end_time} format="YYYY-MM-DD HH:mm" /> : '-' }
     ]
   };
-
-  const planKeys = Object.keys(plans);
-  const planIndex = !isEnterprise || !plan === 'enterprise' ? planKeys.indexOf(plan) : planKeys.length - 1;
-  const recommendedPlan = planKeys[planIndex + 1];
 
   return (
     <div className="margin-small">
@@ -85,13 +80,7 @@ const Review = ({ deployment = {}, deploymentDeviceCount, device, filters, group
           })}
         </div>
       </div>
-      {!isEnterprise && (!isHosted || (isHosted && plan !== 'enterprise')) && (
-        <EnterpriseNotification
-          isEnterprise={isEnterprise}
-          benefit={`choose to ${plan === 'os' ? 'retry, schedule or ' : ''}roll out deployments in multiple phases`}
-          recommendedPlan={isHosted ? recommendedPlan : null}
-        />
-      )}
+      {<EnterpriseNotification isEnterprise={isEnterprise} benefit="deployment roll outs in multiple phases and on schedule, as well as deployment retries" />}
     </div>
   );
 };

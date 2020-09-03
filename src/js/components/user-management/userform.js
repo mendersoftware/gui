@@ -18,6 +18,7 @@ import {
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
+import { rolesByName } from '../../constants/userConstants';
 import { colors } from '../../themes/mender-theme';
 
 import { OAuth2Providers } from './oauth2providers';
@@ -69,12 +70,11 @@ export default class UserForm extends React.Component {
   render() {
     const self = this;
     const { editPass, isCreation, selectedRoles } = self.state;
-    const { closeDialog, currentUser, isEnterprise, roles, user } = self.props;
-    const isAdmin = currentUser.roles && currentUser.roles.some(role => role === 'RBAC_ROLE_PERMIT_ALL');
+    const { closeDialog, currentUser, isAdmin, isEnterprise, roles, user } = self.props;
     const showRoleUsageNotification = selectedRoles.reduce((accu, item) => {
-      const hasUiApiAccess = ['RBAC_ROLE_CI'].includes(item.id)
+      const hasUiApiAccess = [rolesByName.ci].includes(item.id)
         ? false
-        : item.id === 'RBAC_ROLE_PERMIT_ALL' || item.permissions.some(permission => !['CREATE_DEPLOYMENT'].includes(permission.action));
+        : item.id === rolesByName.admin || item.permissions.some(permission => ![rolesByName.deploymentCreation.action].includes(permission.action));
       if (hasUiApiAccess) {
         return false;
       }

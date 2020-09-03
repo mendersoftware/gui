@@ -10,6 +10,7 @@ import { CalendarToday as CalendarTodayIcon, List as ListIcon } from '@material-
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
 import { tryMapDeployments } from '../../helpers';
+import { getIsEnterprise } from '../../selectors';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
@@ -118,7 +119,7 @@ export class Scheduled extends React.Component {
   render() {
     const self = this;
     const { calendarEvents, tabIndex } = self.state;
-    const { createClick, isEnterprise, isHosted, items, openReport } = self.props;
+    const { createClick, isEnterprise, items, openReport } = self.props;
     return (
       <div className="fadeIn margin-left">
         {items.length ? (
@@ -160,11 +161,7 @@ export class Scheduled extends React.Component {
               </>
             ) : (
               <div className="flexbox centered">
-                <EnterpriseNotification
-                  isEnterprise={isEnterprise}
-                  recommendedPlan={isHosted ? 'professional' : null}
-                  benefit="schedule deployments to steer the distribution of your updates."
-                />
+                <EnterpriseNotification isEnterprise={isEnterprise} benefit="scheduled deployments to steer the distribution of your updates." />
               </div>
             )}
             <img src="assets/img/deployments.png" alt="In progress" />
@@ -181,9 +178,8 @@ const mapStateToProps = state => {
   const scheduled = state.deployments.byStatus.scheduled.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   const { plan = 'os' } = state.users.organization;
   return {
-    isEnterprise: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
-    isHosted: state.app.features.isHosted,
-    plan,
+    // TODO: isEnterprise is misleading here, but is passed down to the DeploymentListItem, this should be renamed
+    isEnterprise: getIsEnterprise(state) || plan !== 'os',
     items: scheduled
   };
 };

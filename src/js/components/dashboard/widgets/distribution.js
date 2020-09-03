@@ -9,6 +9,7 @@ import Confirm from '../../common/confirm';
 import { chartColorPalette } from '../../../themes/mender-theme';
 
 const refreshDistributionData = 30000;
+const seriesOther = '__OTHER__';
 
 export default class DistributionReport extends React.Component {
   constructor(props, state) {
@@ -45,26 +46,35 @@ export default class DistributionReport extends React.Component {
     const { attribute, devices, group, groups } = this.props;
     const relevantDevices = group && groups[group] ? groups[group].deviceIds.map(id => devices[id]) : Object.values(devices);
     const distributionByAttribute = relevantDevices.reduce((accu, item) => {
-      if (!item.attributes) return accu;
+      if (!item.attributes || item.status !== 'accepted') return accu;
       if (!accu[item.attributes[attribute]]) {
         accu[item.attributes[attribute]] = 0;
       }
       accu[item.attributes[attribute]] = accu[item.attributes[attribute]] + 1;
       return accu;
     }, {});
-    const colors = chartColorPalette.slice(0, Object.keys(distributionByAttribute).length).reverse();
-    const distribution = Object.entries(distributionByAttribute)
-      .sort((pairA, pairB) => pairB[1] - pairA[1])
+    const distributionByAttributeSorted = Object.entries(distributionByAttribute).sort((pairA, pairB) => pairB[1] - pairA[1]);
+    const numberOfItems =
+      distributionByAttributeSorted.length > chartColorPalette.length ? chartColorPalette.length - 1 : Object.keys(distributionByAttribute).length;
+    const colors = chartColorPalette.slice(0, numberOfItems).reverse();
+    var distribution = distributionByAttributeSorted
       .slice(0, colors.length)
-      .reduce((accu, [key, value], index) => [{ x: key, y: value, name: key, fill: colors[index] }, ...accu], []);
+      .reduce((accu, [key, value], index) => [{ x: key, y: value, name: key.length > 15 ? key.slice(0, 15) + '...' : key, fill: colors[index] }, ...accu], []);
+    if (distributionByAttributeSorted.length > chartColorPalette.length) {
+      const others = distributionByAttributeSorted.slice(colors.length).reduce((accu, [, value]) => accu + value, 0);
+      distribution.splice(0, 0, { x: seriesOther, name: 'other', y: others, fill: chartColorPalette[chartColorPalette.length - 1] });
+    }
+    distribution = distribution.reverse();
     this.setState({ distribution });
   }
 
   onSliceClick(thing) {
-    const { attribute, group, selectGroup } = this.props;
-    const filters = [{ key: attribute, value: thing, operator: '$eq', scope: 'inventory' }];
-    selectGroup(group, filters);
-    window.location.replace(`#/devices/${group ? `group=${group}&` : ''}${attribute}=${thing}`);
+    if (thing != seriesOther) {
+      const { attribute, group, selectGroup } = this.props;
+      const filters = [{ key: attribute, value: thing, operator: '$eq', scope: 'inventory' }];
+      selectGroup(group, filters);
+      window.location.replace(`#/devices/${group ? `group=${group}&` : ''}${attribute}=${thing}`);
+    }
   }
 
   render() {
@@ -97,12 +107,12 @@ export default class DistributionReport extends React.Component {
                   parent: { display: 'flex', alignSelf: 'center', height: 'initial', width: 'initial' }
                 }}
                 data={data}
-                width={315}
-                height={240}
+                width={300}
+                height={228}
               >
-                <VictoryLegend x={30} y={150} width={320} height={65} orientation="horizontal" itemsPerRow={3} gutter={20} />
+                <VictoryLegend x={30} y={150} width={320} height={65} orientation="horizontal" itemsPerRow={2} gutter={15} rowGutter={-10} />
                 <VictoryPie
-                  endAngle={-90}
+                  endAngle={90}
                   events={[
                     {
                       target: 'data',
@@ -117,8 +127,8 @@ export default class DistributionReport extends React.Component {
                       dy={8}
                     />
                   }
-                  radius={85}
-                  startAngle={90}
+                  radius={75}
+                  startAngle={-90}
                 />
               </VictoryGroup>
             ) : groups[group]?.filters.length && !groups[group]?.deviceIds.length ? (

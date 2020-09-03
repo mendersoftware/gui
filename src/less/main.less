@@ -195,10 +195,6 @@ ul.link-list {
   word-wrap: break-all;
 }
 
-.clear {
-  clear: both;
-}
-
 .hidden {
   display: none !important;
 }
@@ -1443,6 +1439,12 @@ div:focus {
   justify-self: center;
   max-width: 400px;
 
+  @media screen and (max-height: 900px) {
+    align-self: self-start;
+    margin-bottom: 80px;
+    margin-top: 40px;
+  } 
+
   h3 {
     text-transform: uppercase;
     color: @grey;
@@ -1740,15 +1742,34 @@ div.waiting-inventory {
 }
 
 /* device auth */
-.actionButtons > span,
-.actionButtons > a {
-  margin-right: 20px;
+.authsets {
+  font-size: 0.875rem;
+  .header, .body .MuiExpansionPanelSummary-content {
+    display: grid;
+    grid-template-columns: 3fr 1fr  1fr 2fr;
+    grid-column-gap: 20px;
+  }
+  .header, .MuiExpansionPanel-root {
+    border-bottom: 1px solid @grey;
+  }
+  .MuiExpansionPanelDetails-root {
+    flex-direction: row;
+  }
+  .header {
+    padding: @defaultGutterWidth;
+  }
+  .action-buttons > * {
+    margin-right: @defaultGutterWidth;
+    font-weight: bold;
+  }
+  .action-buttons > div {
+    opacity: 0.4;
+  }
+  .expanded {
+    max-width: 400px;
+  }
 }
 
-.expand-confirm {
-  overflow: hidden;
-  padding: 0 5px 5px 0;
-}
 
 /* Buttons */
 
@@ -2670,6 +2691,7 @@ div.shake-alert {
 /* Progress bar */
 #progressBarContainer {
   position: fixed;
+  display: grid;
   left: 230px;
   right: 2 * @defaultGutterWidth;
   bottom: 80px;
@@ -2681,6 +2703,14 @@ div.shake-alert {
   overflow: hidden;
   color: @grey;
   margin: 25px 0 @defaultGutterWidth;
+  grid-template-rows: 30px 30px;
+  grid-template-columns: 1fr 60px;
+  >.MuiIconButton-root {
+    grid-column: 2;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    height: inherit;
+  }
   .transition(all 0.2s ease-in-out);
   &.shrunk {
     border: none;

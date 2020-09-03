@@ -1,69 +1,35 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AuthsetList Component renders correctly 1`] = `
-<table
-  className="MuiTable-root"
-  role={null}
+<div
+  className="authsets"
 >
-  <thead
-    className="MuiTableHead-root"
-    role={null}
-    style={Object {}}
+  <div
+    className="flexbox header"
   >
-    <tr
-      className="MuiTableRow-root MuiTableRow-head"
-      role={null}
+    <div
+      className="columnHeader"
     >
-      <th
-        aria-sort={null}
-        className="MuiTableCell-root MuiTableCell-head"
-        scope="col"
-        style={
-          Object {
-            "width": "400px",
-          }
-        }
-      >
-        Public key
-      </th>
-      <th
-        aria-sort={null}
-        className="MuiTableCell-root MuiTableCell-head"
-        scope="col"
-      >
-        Request time
-      </th>
-      <th
-        aria-sort={null}
-        className="MuiTableCell-root MuiTableCell-head"
-        scope="col"
-      >
-        Status
-      </th>
-      <th
-        aria-sort={null}
-        className="MuiTableCell-root MuiTableCell-head"
-        scope="col"
-      >
-        Actions
-      </th>
-      <th
-        aria-sort={null}
-        className="MuiTableCell-root MuiTableCell-head columnHeader"
-        scope="col"
-        style={
-          Object {
-            "paddingLeft": "0",
-            "paddingRight": "0",
-            "width": "0px",
-          }
-        }
-      />
-    </tr>
-  </thead>
-  <tbody
-    className="MuiTableBody-root"
-    role={null}
+      Public key
+    </div>
+    <div
+      className="columnHeader"
+    >
+      Request time
+    </div>
+    <div
+      className="columnHeader"
+    >
+      Status
+    </div>
+    <div
+      className="columnHeader"
+    >
+      Actions
+    </div>
+  </div>
+  <div
+    className="body"
   />
-</table>
+</div>
 `;
