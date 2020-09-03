@@ -137,7 +137,7 @@ export const getSingleDeploymentDevices = id => (dispatch, getState) =>
   });
 
 export const getDeviceLog = (deploymentId, deviceId) => (dispatch, getState) =>
-  GeneralApi.get(`${deploymentsApiUrl}/deployments/${deploymentId}/devices/${deviceId}/log`).then(({ text: log }) => {
+  GeneralApi.get(`${deploymentsApiUrl}/deployments/${deploymentId}/devices/${deviceId}/log`).then(({ data: log }) => {
     const devices = getState().deployments.byId[deploymentId].devices;
     devices[deviceId].log = log;
     return dispatch({
