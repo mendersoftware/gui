@@ -2,6 +2,8 @@ import { createSelector } from 'reselect';
 import { rolesByName } from '../constants/userConstants';
 
 export const getCurrentUser = state => state.users.byId[state.users.currentUser];
+export const getUserSettings = state => state.users.globalSettings[state.users.currentUser] || {};
+
 const getAppDocsVersion = state => state.app.docsVersion;
 const getFeatures = state => state.app.features;
 const getRolesById = state => state.users.rolesById;
@@ -43,3 +45,8 @@ export const getUserRoles = createSelector(
     return { allowUserManagement, isAdmin, isGroupRestricted };
   }
 );
+
+export const getStoredOnboardingState = createSelector([getUserSettings], userSettings => {
+  const { onboarding = {} } = userSettings;
+  return onboarding;
+});

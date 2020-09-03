@@ -5,6 +5,7 @@ import { getDevicesByStatus } from './deviceActions';
 import { getReleases } from './releaseActions';
 import { getDeploymentsByStatus } from './deploymentActions';
 import { getGlobalSettings, setOnboardingState } from './userActions';
+import { getStoredOnboardingState } from '../selectors';
 import { getCurrentOnboardingState, determineProgress, persistOnboardingState, onboardingSteps } from '../utils/onboardingmanager';
 
 const cookies = new Cookies();
@@ -62,7 +63,7 @@ export const getOnboardingState = () => (dispatch, getState) => {
         acceptedDevices.length && store.devices.byId[acceptedDevices[0]].hasOwnProperty('attributes')
           ? store.devices.byId[acceptedDevices[0]].attributes.device_type
           : null;
-      const { onboarding = {} } = store.users.globalSettings[store.users.currentUser] || {};
+      const onboarding = getStoredOnboardingState(store.getState());
       savedState = { ...savedState, ...onboarding };
       const progress = savedState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments);
       const state = {

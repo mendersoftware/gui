@@ -7,6 +7,7 @@ import DeploymentCompleteTip from '../components/helptips/deploymentcompletetip'
 
 import { saveUserSettings, setOnboardingProgress, setShowCreateArtifactDialog } from '../actions/userActions';
 import store from '../reducers';
+import { getStoredOnboardingState } from '../selectors';
 import Tracking from '../tracking';
 
 import OnboardingCompleteTip from '../components/helptips/onboardingcompletetip';
@@ -249,7 +250,7 @@ export const onboardingSteps = {
 
 export const getCurrentOnboardingState = () => {
   const { showTipsDialog, showConnectDeviceDialog, showCreateArtifactDialog, ...state } = store.getState().users.onboarding; // eslint-disable-line no-unused-vars
-  const { onboarding = {} } = store.getState().users.globalSettings[store.getState().users.currentUser] || {};
+  const onboarding = getStoredOnboardingState(store.getState());
   return { ...state, ...onboarding };
 };
 
@@ -302,7 +303,7 @@ export function advanceOnboarding(stepId) {
 export const persistOnboardingState = (state = getCurrentOnboardingState()) => {
   const userId = store.getState().users.currentUser;
   const onboardingKey = `${userId}-onboarding`;
-  const { onboarding = {} } = store.getState().users.globalSettings[userId] || {};
+  const onboarding = getStoredOnboardingState(store.getState());
   store.dispatch(saveUserSettings({ onboarding: { ...onboarding, ...state } }));
   window.localStorage.setItem(onboardingKey, JSON.stringify(state));
 };

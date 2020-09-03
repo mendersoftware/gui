@@ -14,7 +14,7 @@ import {
 
 import { getToken, logout } from '../../auth';
 import { decodeSessionToken, hashString, isEmpty } from '../../helpers';
-import { getDocsVersion, getIsEnterprise, getUserRoles } from '../../selectors';
+import { getDocsVersion, getIsEnterprise, getUserRoles, getUserSettings } from '../../selectors';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Announcement from './announcement';
 import DemoNotification from './demonotification';
@@ -283,7 +283,7 @@ const mapStateToProps = state => {
     demo: state.app.features.isDemoMode,
     docsVersion: getDocsVersion(state),
     firstLoginAfterSignup: state.app.firstLoginAfterSignup,
-    hasTrackingEnabled: state.users.globalSettings[state.users.currentUser]?.trackingConsentGiven,
+    hasTrackingEnabled: getUserSettings(state).trackingConsentGiven,
     inProgress: state.deployments.byStatus.inprogress.total,
     isEnterprise: getIsEnterprise(state),
     multitenancy: state.app.features.hasMultitenancy || state.app.features.isEnterprise || state.app.features.isHosted,

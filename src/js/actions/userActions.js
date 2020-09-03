@@ -4,6 +4,7 @@ import { setSnackbar } from './appActions';
 import GeneralApi from '../api/general-api';
 import UsersApi from '../api/users-api';
 import * as UserConstants from '../constants/userConstants';
+import { getUserSettings } from '../selectors';
 import { advanceOnboarding } from '../utils/onboardingmanager';
 import { getToken } from '../auth';
 import { preformatWithRequestID, decodeSessionToken } from '../helpers';
@@ -221,10 +222,10 @@ export const saveGlobalSettings = (settings, beOptimistic = false) => (dispatch,
 };
 
 export const saveUserSettings = settings => (dispatch, getState) => {
-  const currentUserId = (getState().users.byId[getState().users.currentUser] || {}).id;
+  const userSettings = getUserSettings(getState());
   const updatedSettings = {
-    [currentUserId]: {
-      ...getState().users.globalSettings[currentUserId],
+    [getState().users.currentUser]: {
+      ...userSettings,
       ...settings
     }
   };
