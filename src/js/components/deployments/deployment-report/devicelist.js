@@ -52,7 +52,7 @@ const ProgressDeviceList = ({ created, devices, globalSettings, viewLog, retries
         <TableCell>{device.finished ? <Time value={formatTime(device.finished)} format="YYYY-MM-DD HH:mm" /> : '-'}</TableCell>
         {retries ? (
           <TableCell>
-            {device.attempts}/{device.retries}
+            {device.attempts}/{device.retries + 1}
           </TableCell>
         ) : null}
         <TableCell style={{ paddingRight: '0px', position: 'relative', minWidth: 200 }}>
@@ -84,8 +84,8 @@ const ProgressDeviceList = ({ created, devices, globalSettings, viewLog, retries
             <TableCell style={headerStyle} tooltip={globalSettings.id_attribute || 'Device ID'}>
               {globalSettings.id_attribute || 'Device ID'}
             </TableCell>
-            {['Device type', 'Current software', 'Started', 'Finished', 'Retries', 'Deployment status', ''].map((content, index) =>
-              content != 'Retries' || retries ? (
+            {['Device type', 'Current software', 'Started', 'Finished', 'Attempts', 'Deployment status', ''].map((content, index) =>
+              content != 'Attempts' || retries ? (
                 <TableCell key={`device-list-header-${index + 1}`} style={headerStyle} tooltip={content}>
                   {content}
                 </TableCell>
