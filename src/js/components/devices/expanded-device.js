@@ -21,7 +21,7 @@ import {
 import { decommissionDevice, selectDevice } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
 import { setSnackbar } from '../../actions/appActions';
-import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { DEVICE_STATES, DEVICE_CONNECT_STATES } from '../../constants/deviceConstants';
 import { preformatWithRequestID } from '../../helpers';
 import { getDocsVersion } from '../../selectors';
 import { advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
@@ -153,7 +153,7 @@ export class ExpandedDevice extends React.Component {
   render() {
     const self = this;
     const { className, device, docsVersion, highlightHelp, id_attribute, id_value, limitMaxed, setSnackbar, showHelptips, unauthorized } = self.props;
-    const { auth_sets, attributes, created_ts, id, identity_data, status = DEVICE_STATES.accepted } = device;
+    const { auth_sets, attributes, created_ts, id, identity_data, status = DEVICE_STATES.accepted, status_connect } = device;
 
     let deviceIdentity = [<ExpandableAttribute key="id_checksum" primary="Device ID" secondary={id || '-'} />];
     if (identity_data) {
@@ -238,7 +238,7 @@ export class ExpandedDevice extends React.Component {
           </div>
 
           <div className="margin-bottom-small flexbox" style={{ flexDirection: 'row' }}>
-            <span style={{ display: 'flex', minWidth: 180, justifyContent: 'space-evenly', alignItems: 'center', marginRight: '2vw' }}>
+            <span style={{ display: 'flex', minWidth: 180, alignItems: 'center', marginRight: '2vw' }}>
               {statusIcon}
               <span className="inline-block">
                 <Typography variant="subtitle2" style={Object.assign({}, buttonStyle, { textTransform: 'capitalize' })}>
@@ -268,6 +268,47 @@ export class ExpandedDevice extends React.Component {
             </Button>
           </div>
         </div>
+
+        {status === DEVICE_STATES.accepted && (
+          <div className="device-connect bordered report-list">
+            <h4 className="margin-bottom-small">Device connection</h4>
+            <div className="margin-bottom-small flexbox" style={{ flexDirection: 'row' }}>
+              <span style={{ display: 'flex', minWidth: 180, alignItems: 'center', marginRight: '2vw' }}>
+                {status_connect === DEVICE_CONNECT_STATES.connected && <CheckCircleIcon className="green" style={iconStyle} />}
+                {status_connect === DEVICE_CONNECT_STATES.disconnected && <BlockIcon className="red" style={iconStyle} />}
+                {status_connect !== DEVICE_CONNECT_STATES.connected && status_connect !== DEVICE_CONNECT_STATES.disconnected && (
+                  <Icon className="pending-icon" style={iconStyle} />
+                )}
+                <span className="inline-block">
+                  <Typography variant="subtitle2" style={Object.assign({}, buttonStyle, { textTransform: 'capitalize' })}>
+                    Connection status
+                  </Typography>
+                  <Typography variant="body1" style={Object.assign({}, buttonStyle, { textTransform: 'capitalize' })}>
+                    {status_connect === DEVICE_CONNECT_STATES.connected && 'Connected'}
+                    {status_connect === DEVICE_CONNECT_STATES.disconnected && 'Disconnected'}
+                    {status_connect !== DEVICE_CONNECT_STATES.connected && status_connect !== DEVICE_CONNECT_STATES.disconnected && 'Unknown'}
+                  </Typography>
+                </span>
+              </span>
+              {status_connect === DEVICE_CONNECT_STATES.connected && (
+                <Button
+                  onClick={() => {
+                    setSnackbar('');
+                  }}
+                >
+                  <span className="inline-block">
+                    <Typography variant="subtitle2" style={buttonStyle}>
+                      Launch a new Terminal
+                    </Typography>
+                    <Typography variant="body1" className="muted" style={buttonStyle}>
+                      Click to launch a terminal connecteed to a shell running on the device
+                    </Typography>
+                  </span>
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
 
         {(attributes || status === DEVICE_STATES.accepted) && (
           <div className={`device-inventory bordered ${unauthorized ? 'hidden' : 'report-list'}`}>

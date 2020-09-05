@@ -67,7 +67,6 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
             Object {
               "alignItems": "center",
               "display": "flex",
-              "justifyContent": "space-evenly",
               "marginRight": "2vw",
               "minWidth": 180,
             }
@@ -164,6 +163,70 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
             </span>
           </span>
         </button>
+      </div>
+    </div>
+    <div
+      className="device-connect bordered report-list"
+    >
+      <h4
+        className="margin-bottom-small"
+      >
+        Device connection
+      </h4>
+      <div
+        className="margin-bottom-small flexbox"
+        style={
+          Object {
+            "flexDirection": "row",
+          }
+        }
+      >
+        <span
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "marginRight": "2vw",
+              "minWidth": 180,
+            }
+          }
+        >
+          <span
+            aria-hidden={true}
+            className="material-icons MuiIcon-root pending-icon"
+            style={
+              Object {
+                "margin": 12,
+              }
+            }
+          />
+          <span
+            className="inline-block"
+          >
+            <h6
+              className="MuiTypography-root MuiTypography-subtitle2"
+              style={
+                Object {
+                  "textAlign": "left",
+                  "textTransform": "capitalize",
+                }
+              }
+            >
+              Connection status
+            </h6>
+            <p
+              className="MuiTypography-root MuiTypography-body1"
+              style={
+                Object {
+                  "textAlign": "left",
+                  "textTransform": "capitalize",
+                }
+              }
+            >
+              Unknown
+            </p>
+          </span>
+        </span>
       </div>
     </div>
     <div
