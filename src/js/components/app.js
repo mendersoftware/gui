@@ -103,7 +103,7 @@ class AppRoot extends React.PureComponent {
             <LeftNav className="leftFixed leftNav" />
             <div className="rightFluid container">{privateRoutes}</div>
             {onboardingComponent ? onboardingComponent : null}
-            <ConfirmDismissHelptips open={showDismissHelptipsDialog} />
+            {showDismissHelptipsDialog && <ConfirmDismissHelptips />}
             <CreateArtifactDialog
               open={showCreateArtifactDialog}
               onCancel={() => setShowCreateArtifactDialog(false)}

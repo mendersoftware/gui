@@ -4,6 +4,7 @@ import { setSnackbar } from './appActions';
 import GeneralApi from '../api/general-api';
 import UsersApi from '../api/users-api';
 import * as UserConstants from '../constants/userConstants';
+import { getUserSettings } from '../selectors';
 import { advanceOnboarding } from '../utils/onboardingmanager';
 import { getToken } from '../auth';
 import { preformatWithRequestID, decodeSessionToken } from '../helpers';
@@ -221,10 +222,10 @@ export const saveGlobalSettings = (settings, beOptimistic = false) => (dispatch,
 };
 
 export const saveUserSettings = settings => (dispatch, getState) => {
-  const currentUserId = (getState().users.byId[getState().users.currentUser] || {}).id;
+  const userSettings = getUserSettings(getState());
   const updatedSettings = {
-    [currentUserId]: {
-      ...getState().users.globalSettings[currentUserId],
+    [getState().users.currentUser]: {
+      ...userSettings,
       ...settings
     }
   };
@@ -275,6 +276,13 @@ export const setOnboardingComplete = val => dispatch => {
     dispatch({ type: UserConstants.SET_SHOW_ONBOARDING_HELP, show: !val })
   ]);
 };
+
+export const setOnboardingCanceled = () => dispatch =>
+  Promise.all([
+    dispatch(setShowOnboardingHelp(false)),
+    dispatch(setShowDismissOnboardingTipsDialog(false)),
+    dispatch({ type: UserConstants.SET_ONBOARDING_COMPLETE, complete: true })
+  ]).then(() => Promise.resolve(advanceOnboarding('onboarding-canceled')));
 
 export const setShowConnectingDialog = show => dispatch => dispatch({ type: UserConstants.SET_SHOW_CONNECT_DEVICE, show });
 

@@ -5,8 +5,9 @@ import { compose, setDisplayName } from 'recompose';
 import BaseOnboardingTip from '../components/helptips/baseonboardingtip';
 import DeploymentCompleteTip from '../components/helptips/deploymentcompletetip';
 
-import { setOnboardingProgress, setShowCreateArtifactDialog } from '../actions/userActions';
+import { saveUserSettings, setOnboardingProgress, setShowCreateArtifactDialog } from '../actions/userActions';
 import store from '../reducers';
+import { getStoredOnboardingState } from '../selectors';
 import Tracking from '../tracking';
 
 import OnboardingCompleteTip from '../components/helptips/onboardingcompletetip';
@@ -239,12 +240,18 @@ export const onboardingSteps = {
       getOnboardingStepCompleted('artifact-modified-onboarding') &&
       store.getState().deployments.byStatus.finished.total > 1,
     specialComponent: <OnboardingCompleteTip targetUrl="destination-unreachable" />
+  },
+  'onboarding-canceled': {
+    condition: () => true,
+    component: <div />,
+    progress: 3
   }
 };
 
 export const getCurrentOnboardingState = () => {
   const { showTipsDialog, showConnectDeviceDialog, showCreateArtifactDialog, ...state } = store.getState().users.onboarding; // eslint-disable-line no-unused-vars
-  return state;
+  const onboarding = getStoredOnboardingState(store.getState());
+  return { ...state, ...onboarding };
 };
 
 export function getOnboardingComponentFor(id, params, previousComponent = null) {
@@ -287,14 +294,16 @@ export function advanceOnboarding(stepId) {
   const stepIndex = Object.keys(onboardingSteps).findIndex(step => step === stepId);
   const madeProgress = progress <= stepIndex ? stepIndex + 1 : progress;
   store.dispatch(setOnboardingProgress(madeProgress));
-  const state = Object.assign(getCurrentOnboardingState(), { progress: madeProgress });
-  state.complete = state.progress >= Object.keys(onboardingSteps).length ? true : state.complete;
+  const state = { ...getCurrentOnboardingState(), progress: madeProgress };
+  state.complete = state.progress >= Object.keys(onboardingSteps).length - 1 ? true : state.complete;
   persistOnboardingState(state);
   Tracking.event({ category: 'onboarding', action: stepId });
 }
 
-export function persistOnboardingState(state = getCurrentOnboardingState()) {
+export const persistOnboardingState = (state = getCurrentOnboardingState()) => {
   const userId = store.getState().users.currentUser;
   const onboardingKey = `${userId}-onboarding`;
+  const onboarding = getStoredOnboardingState(store.getState());
+  store.dispatch(saveUserSettings({ onboarding: { ...onboarding, ...state } }));
   window.localStorage.setItem(onboardingKey, JSON.stringify(state));
-}
+};

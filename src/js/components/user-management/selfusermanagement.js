@@ -12,7 +12,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { editUser, saveGlobalSettings, saveUserSettings } from '../../actions/userActions';
 
 import { preformatWithRequestID } from '../../helpers';
-import { getIsEnterprise } from '../../selectors';
+import { getIsEnterprise, getUserSettings } from '../../selectors';
 
 import { OAuth2Providers } from './oauth2providers';
 import TwoFactorAuthSetup from './twofactorauthsetup';
@@ -206,7 +206,7 @@ const mapStateToProps = state => {
     currentUser: state.users.byId[state.users.currentUser] || {},
     has2FA: state.users.globalSettings.hasOwnProperty('2fa') && state.users.globalSettings['2fa'] === 'enabled',
     hasTracking: !!state.app.trackerCode,
-    hasTrackingConsent: state.users.globalSettings[state.users.currentUser]?.trackingConsentGiven,
+    hasTrackingConsent: getUserSettings(state).trackingConsentGiven,
     isEnterprise
   };
 };
