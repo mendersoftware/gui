@@ -149,11 +149,6 @@ export class Header extends React.Component {
     );
   }
 
-  changeTab() {
-    this.props.getGlobalSettings();
-    this._checkHeaderInfo();
-    this.props.setSnackbar('');
-  }
   handleClick = event => {
     this.setState({ anchorEl: event.currentTarget });
   };

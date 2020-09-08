@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import pluralize from 'pluralize';
 
 import AuthorizedDevices from './authorized-devices';
 import CreateGroup from './create-group';
@@ -18,9 +17,6 @@ import {
   selectGroup,
   updateDynamicGroup
 } from '../../actions/deviceActions';
-import { setSnackbar } from '../../actions/appActions';
-
-import { preformatWithRequestID } from '../../helpers';
 import { getIsEnterprise } from '../../selectors';
 import CreateGroupExplainer from './create-group-explainer';
 
@@ -65,13 +61,7 @@ export class DeviceGroups extends React.Component {
     const request = self.props.groupFilters.length
       ? self.props.removeDynamicGroup(self.props.selectedGroup)
       : self.props.removeStaticGroup(self.props.selectedGroup);
-    return request
-      .then(() => {
-        self.props.setSnackbar('Group was removed successfully', 5000);
-        self.props.selectGroup();
-        self.setState({ pageNo: 1, removeGroup: !self.state.removeGroup });
-      })
-      .catch(err => console.log(err));
+    return request.then(() => self.setState({ pageNo: 1, removeGroup: !self.state.removeGroup })).catch(err => console.log(err));
   }
 
   // Edit groups from device selection
@@ -83,19 +73,12 @@ export class DeviceGroups extends React.Component {
   _createGroupFromDialog(devices, group) {
     var self = this;
     let request = self.state.fromFilters ? self.props.addDynamicGroup(group, this.props.filters) : self.props.addStaticGroup(group, devices);
-    return request
-      .then(() => {
-        // reached end of list
-        self.setState({ createGroupExplanation: false, modifyGroupDialog: false, fromFilters: false, tmpGroup: '', selectedField: '' }, () => {
-          self.props.setSnackbar('The group was updated successfully', 5000);
-          self._refreshGroups();
-        });
-      })
-      .catch(err => {
-        console.log(err);
-        var errMsg = err.response.data.error || '';
-        self.props.setSnackbar(preformatWithRequestID(err.response, `Group could not be updated: ${errMsg}`), null, 'Copy to clipboard');
-      });
+    return request.then(() => {
+      // reached end of list
+      self.setState({ createGroupExplanation: false, modifyGroupDialog: false, fromFilters: false, tmpGroup: '', selectedField: '' }, () =>
+        self._refreshGroups()
+      );
+    });
   }
 
   onGroupClick() {
@@ -115,16 +98,7 @@ export class DeviceGroups extends React.Component {
     } else {
       request = self.props.removeDevicesFromGroup(self.props.selectedGroup, devices);
     }
-    return request
-      .then(() => {
-        if (isGroupRemoval) {
-          self.props.setSnackbar('Group was removed successfully', 5000);
-          self.props.getGroups();
-        } else {
-          self.props.setSnackbar(`The ${pluralize('devices', devices.length)} ${pluralize('were', devices.length)} removed from the group`, 5000);
-        }
-      })
-      .catch(err => console.log(err));
+    return request.catch(err => console.log(err));
   }
 
   render() {
@@ -179,7 +153,6 @@ const actionCreators = {
   removeDynamicGroup,
   removeStaticGroup,
   selectGroup,
-  setSnackbar,
   updateDynamicGroup
 };
 

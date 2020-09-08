@@ -9,7 +9,7 @@ export const headerNames = {
 };
 
 const unauthorizedRedirect = error => {
-  if (!axios.isCancel(error) && error.response.status === 401) {
+  if (!axios.isCancel(error) && error.response?.status === 401) {
     logout();
   }
   return Promise.reject(error);

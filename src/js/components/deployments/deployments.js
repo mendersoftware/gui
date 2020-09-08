@@ -16,7 +16,7 @@ import Past from './pastdeployments';
 import Report from './report';
 import Scheduled from './scheduleddeployments';
 
-import { deepCompare, preformatWithRequestID, standardizePhases } from '../../helpers';
+import { deepCompare, standardizePhases } from '../../helpers';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Tracking from '../../tracking';
 
@@ -74,11 +74,7 @@ export class Deployments extends React.Component {
           } else if (params.get('release')) {
             self.props.selectRelease(params.get('release'));
           } else if (params.get('deviceId')) {
-            self.props.selectDevice(params.get('deviceId')).catch(err => {
-              console.log(err);
-              var errMsg = err.response.data.error || '';
-              self.props.setSnackbar(preformatWithRequestID(err.response, `Error fetching device details. ${errMsg}`), null, 'Copy to clipboard');
-            });
+            self.props.selectDevice(params.get('deviceId'));
           } else {
             setTimeout(() => self.setState({ createDialog: true }), 400);
           }
@@ -145,18 +141,10 @@ export class Deployments extends React.Component {
 
   _abortDeployment(id) {
     var self = this;
-    return self.props
-      .abortDeployment(id)
-      .then(() => {
-        self.setState({ createDialog: false, reportDialog: false, doneLoading: false });
-        self.props.setSnackbar('The deployment was successfully aborted');
-        return Promise.resolve();
-      })
-      .catch(err => {
-        console.log(err);
-        var errMsg = err.response ? err.response.data.error : '';
-        self.props.setSnackbar(preformatWithRequestID(err.response, `There was wan error while aborting the deployment: ${errMsg}`));
-      });
+    return self.props.abortDeployment(id).then(() => {
+      self.setState({ createDialog: false, reportDialog: false, doneLoading: false });
+      return Promise.resolve();
+    });
   }
 
   _updateActive(tab = this.props.match.params.tab) {

@@ -50,7 +50,7 @@ export class Login extends React.Component {
           !self.props.onboardingComplete &&
           !getOnboardingStepCompleted('devices-pending-accepting-onboarding')
         ) {
-          self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={1} />, () => {}, self.onCloseSnackbar);
+          self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={1} />, () => {}, true);
         }
       }, 1000);
       self.props.setSnackbar('');
@@ -63,13 +63,6 @@ export class Login extends React.Component {
   componentWillUnmount() {
     this.props.setSnackbar('');
   }
-
-  onCloseSnackbar = (_, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    this.props.setSnackbar('');
-  };
 
   _handleLogin(formData) {
     var self = this;

@@ -2,12 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { deleteAuthset, getDeviceAuth, updateDeviceAuth } from '../../actions/deviceActions';
-
-import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import Authsetlist from './authsetlist';
 import ConfirmDecommission from './confirmdecommission';
-import { preformatWithRequestID } from '../../helpers';
 
 // material ui
 import { Button } from '@material-ui/core';
@@ -33,30 +30,19 @@ export class Authsets extends React.Component {
       // call API to update authset
       changeRequest = self.props.updateDeviceAuth(device_id, auth_id, status);
     }
-    return changeRequest
-      .then(() => {
-        // if only authset, close dialog and refresh!
-        if (self.props.device.auth_sets.length <= 1) {
-          self.props.dialogToggle('authsets');
-        } else {
-          // refresh authset list
-          self.props
-            .getDeviceAuth(device_id)
-            .catch(err => console.log(`Error: ${err}`))
-            // on finish, change "loading" back to null
-            .finally(() => self.setState({ loading: null }));
-        }
-        self.props.setSnackbar('Device authorization status was updated successfully');
-      })
-      .catch(err => {
-        var errMsg = err ? (err.response ? err.response.data.error.message : err.message) : '';
-        console.log(errMsg);
-        self.props.setSnackbar(
-          preformatWithRequestID(err.response, `There was a problem updating the device authorization status: ${errMsg}`),
-          null,
-          'Copy to clipboard'
-        );
-      });
+    return changeRequest.then(() => {
+      // if only authset, close dialog and refresh!
+      if (self.props.device.auth_sets.length <= 1) {
+        self.props.dialogToggle('authsets');
+      } else {
+        // refresh authset list
+        self.props
+          .getDeviceAuth(device_id)
+          .catch(err => console.log(`Error: ${err}`))
+          // on finish, change "loading" back to null
+          .finally(() => self.setState({ loading: null }));
+      }
+    });
   }
 
   _showConfirm() {
@@ -139,7 +125,7 @@ export class Authsets extends React.Component {
   }
 }
 
-const actionCreators = { deleteAuthset, getDeviceAuth, setSnackbar, updateDeviceAuth };
+const actionCreators = { deleteAuthset, getDeviceAuth, updateDeviceAuth };
 
 const mapStateToProps = (state, ownProps) => {
   const device = state.devices.byId[ownProps.device.id];

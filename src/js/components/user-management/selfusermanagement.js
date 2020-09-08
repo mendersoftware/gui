@@ -10,10 +10,7 @@ import EnterpriseNotification from '../common/enterpriseNotification';
 
 import { setSnackbar } from '../../actions/appActions';
 import { editUser, saveGlobalSettings, saveUserSettings } from '../../actions/userActions';
-
-import { preformatWithRequestID } from '../../helpers';
 import { getIsEnterprise, getUserSettings } from '../../selectors';
-
 import { OAuth2Providers } from './oauth2providers';
 import TwoFactorAuthSetup from './twofactorauthsetup';
 
@@ -30,17 +27,7 @@ export class SelfUserManagement extends React.Component {
 
   _editSubmit(userId, userData) {
     var self = this;
-    return self.props
-      .editUser(userId, userData)
-      .then(() => {
-        self.props.setSnackbar('The user has been updated.');
-        self.setState({ editPass: false, editEmail: false });
-      })
-      .catch(err => {
-        console.log(err);
-        var errMsg = err.response.data.error || '';
-        self.props.setSnackbar(preformatWithRequestID(err.response, `There was an error editing the user. ${errMsg}`));
-      });
+    return self.props.editUser(userId, userData).then(() => self.setState({ editPass: false, editEmail: false }));
   }
 
   handleEmail() {

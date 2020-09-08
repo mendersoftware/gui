@@ -21,12 +21,9 @@ const CheckoutForm = props => {
 
     props
       .startUpgrade(props.org.id)
-      .catch(err => {
-        props.setSnackbar(preformatWithRequestID(err.response, err.response.data.error), null, 'Copy to clipboard');
+      .then(res => confirmCard(res.data.secret))
+      .finally(() => {
         setLoading(false);
-      })
-      .then(res => {
-        confirmCard(res.data.secret);
       });
   };
 
@@ -54,14 +51,8 @@ const CheckoutForm = props => {
         // to our backend
         props
           .completeUpgrade(props.org.id, props.plan)
-          .catch(err => {
-            setLoading(false);
-            props.setSnackbar(preformatWithRequestID(err.response, `There was an error upgrading your account. ${err.response.data.error}`));
-          })
-          .then(() => {
-            setLoading(false);
-            props.upgradeSuccess();
-          });
+          .then(() => props.upgradeSuccess())
+          .finally(() => setLoading(false));
       }
     } catch (err) {
       setLoading(false);

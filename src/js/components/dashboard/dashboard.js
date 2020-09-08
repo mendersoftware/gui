@@ -36,17 +36,10 @@ export class Dashboard extends React.Component {
         !self.props.onboardingComplete &&
         !getOnboardingStepCompleted('devices-pending-accepting-onboarding')
       ) {
-        self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={1} />, () => {}, self.onCloseSnackbar);
+        self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={1} />, () => {}, true);
       }
     }, 1000);
   }
-
-  onCloseSnackbar = (_, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    this.props.setSnackbar('');
-  };
 
   _handleClick(params) {
     let redirect;

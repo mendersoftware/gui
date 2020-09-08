@@ -96,7 +96,7 @@ export class Authorized extends React.Component {
       }
       self.setState(newState);
       if (self.props.showHelptips && self.props.showTips && !self.props.onboardingComplete && self.props.acceptedCount && self.props.acceptedCount < 2) {
-        setTimeout(() => self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, self.onCloseSnackbar), 400);
+        setTimeout(() => self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, true), 400);
       }
       clearInterval(self.deviceTimer);
       self.deviceTimer = setInterval(() => self._getDevices(), refreshDeviceLength);
@@ -150,13 +150,6 @@ export class Authorized extends React.Component {
     var self = this;
     self.setState({ pageLoading: true, pageNo: pageNo }, () => self._getDevices(true));
   }
-
-  onCloseSnackbar = (_, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    this.props.setSnackbar('');
-  };
 
   onRowSelection(selection) {
     this.setState({ selectedRows: selection });

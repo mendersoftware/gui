@@ -11,14 +11,24 @@ export class SharedSnackbar extends React.PureComponent {
     this.props.setSnackbar('Copied to clipboard');
   }
 
+  onCloseSnackbar = (_, reason) => {
+    const {
+      setSnackbar,
+      snackbar: { onClose = false }
+    } = this.props;
+    if (onClose && reason === 'clickaway') {
+      return;
+    }
+    setSnackbar('');
+  };
+
   render() {
-    const { maxWidth, onClick, onClose, ...snackProps } = this.props.snackbar;
-    const { setSnackbar } = this.props;
+    const { maxWidth, onClick, ...snackProps } = this.props.snackbar;
     return (
       <Snackbar
         style={{ maxWidth: maxWidth, height: 'auto', lineHeight: '28px', padding: 24, whiteSpace: 'pre-line' }}
         onClick={onClick ? onClick : () => this.handleActionClick()}
-        onClose={onClose ? onClose : () => setSnackbar()}
+        onClose={this.onCloseSnackbar}
         {...snackProps}
       />
     );
