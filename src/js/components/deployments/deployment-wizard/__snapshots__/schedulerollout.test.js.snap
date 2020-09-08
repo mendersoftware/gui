@@ -2,19 +2,19 @@
 
 exports[`ScheduleRollout Component renders correctly 1`] = `
 <form
+  className="flexbox column margin-top-small"
   style={
     Object {
-      "marginTop": "15px",
       "minHeight": "300px",
       "overflow": "visible",
     }
   }
 >
   <div
-    className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column MuiGrid-align-items-xs-center"
+    className="deployment-scheduling-view"
   >
     <div
-      className="MuiGrid-root MuiGrid-item"
+      className="MuiFormControl-root"
       style={
         Object {
           "marginBottom": 30,
@@ -22,21 +22,74 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
         }
       }
     >
+      <label
+        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+        data-shrink={true}
+      >
+        Set a start time
+      </label>
       <div
-        className="MuiFormControl-root"
+        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+        onClick={[Function]}
+        style={
+          Object {
+            "minWidth": 400,
+          }
+        }
+      >
+        <div
+          aria-haspopup="listbox"
+          className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onMouseDown={[Function]}
+          role="button"
+          tabIndex={0}
+        >
+          Start immediately
+        </div>
+        <input
+          onAnimationStart={[Function]}
+          type="hidden"
+          value={0}
+        />
+        <svg
+          aria-hidden={true}
+          className="MuiSvgIcon-root MuiSelect-icon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M7 10l5 5 5-5z"
+          />
+        </svg>
+      </div>
+    </div>
+    <div />
+    <div
+      className="MuiFormControl-root margin-bottom"
+      style={
+        Object {
+          "width": 400,
+        }
+      }
+    >
+      <div
+        className="MuiFormGroup-root MuiFormGroup-row"
       >
         <label
           className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
           data-shrink={true}
         >
-          Set a start time
+          Retries
         </label>
         <div
-          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+          className="MuiInputBase-root MuiInput-root MuiInput-underline margin-right MuiInputBase-formControl MuiInput-formControl"
           onClick={[Function]}
           style={
             Object {
-              "minWidth": 400,
+              "width": 150,
             }
           }
         >
@@ -50,7 +103,7 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
             role="button"
             tabIndex={0}
           >
-            Start immediately
+            Don't retry
           </div>
           <input
             onAnimationStart={[Function]}
@@ -68,221 +121,153 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
             />
           </svg>
         </div>
-      </div>
-    </div>
-    <div
-      className="MuiGrid-root MuiGrid-item"
-    >
-      <div
-        className="MuiFormControl-root"
-        style={
-          Object {
-            "marginBottom": 30,
-            "width": 400,
+        <label
+          className="MuiFormControlLabel-root"
+          style={
+            Object {
+              "marginBottom": -15,
+              "marginTop": 0,
+            }
           }
-        }
-      >
-        <div
-          className="MuiFormGroup-root MuiFormGroup-row"
         >
-          <label
-            className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
-            data-shrink={true}
-          >
-            Retries
-          </label>
-          <div
-            className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-            onClick={[Function]}
-            style={
-              Object {
-                "marginRight": 30,
-                "width": 150,
-              }
-            }
-          >
-            <div
-              aria-haspopup="listbox"
-              className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
-              onBlur={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onMouseDown={[Function]}
-              role="button"
-              tabIndex={0}
-            >
-              Don't retry
-            </div>
-            <input
-              onAnimationStart={[Function]}
-              type="hidden"
-              value={0}
-            />
-            <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root MuiSelect-icon"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M7 10l5 5 5-5z"
-              />
-            </svg>
-          </div>
-          <label
-            className="MuiFormControlLabel-root"
-            style={
-              Object {
-                "marginBottom": -15,
-                "marginTop": 0,
-              }
-            }
+          <span
+            aria-disabled={false}
+            className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+            onBlur={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={null}
           >
             <span
-              aria-disabled={false}
-              className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
-              onBlur={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              tabIndex={null}
+              className="MuiIconButton-label"
             >
-              <span
-                className="MuiIconButton-label"
+              <input
+                className="PrivateSwitchBase-input-4"
+                data-indeterminate={false}
+                disabled={false}
+                onChange={[Function]}
+                type="checkbox"
+              />
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
               >
-                <input
-                  className="PrivateSwitchBase-input-4"
-                  data-indeterminate={false}
-                  disabled={false}
-                  onChange={[Function]}
-                  type="checkbox"
+                <path
+                  d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
                 />
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
-                  />
-                </svg>
-              </span>
-              <span
-                className="MuiTouchRipple-root"
-              />
+              </svg>
             </span>
             <span
-              className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
-            >
-              Save as default
-            </span>
-          </label>
-        </div>
-        <p
-          className="MuiFormHelperText-root MuiFormHelperText-filled"
-        >
-          Number of times a device will retry the update if it fails
-        </p>
+              className="MuiTouchRipple-root"
+            />
+          </span>
+          <span
+            className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+          >
+            Save as default
+          </span>
+        </label>
       </div>
+      <p
+        className="MuiFormHelperText-root MuiFormHelperText-filled"
+      >
+        Number of times a device will retry the update if it fails
+      </p>
     </div>
+    <div />
     <div
-      className="MuiGrid-root MuiGrid-item"
+      className="MuiFormControl-root"
       style={
         Object {
+          "maxWidth": 515,
           "width": "min-content",
         }
       }
     >
+      <label
+        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+        data-shrink={true}
+      >
+        Select a rollout pattern
+      </label>
       <div
-        className="MuiFormControl-root"
+        className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl"
+        onClick={[Function]}
         style={
           Object {
-            "maxWidth": 515,
+            "minWidth": 400,
           }
         }
       >
-        <label
-          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
-          data-shrink={true}
-        >
-          Select a rollout pattern
-        </label>
         <div
-          className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl"
-          onClick={[Function]}
-          style={
-            Object {
-              "minWidth": 400,
-            }
-          }
+          aria-disabled="true"
+          aria-haspopup="listbox"
+          className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled Mui-disabled"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onMouseDown={null}
+          role="button"
+          tabIndex={null}
         >
-          <div
-            aria-disabled="true"
-            aria-haspopup="listbox"
-            className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled Mui-disabled"
-            onBlur={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onMouseDown={null}
-            role="button"
-            tabIndex={null}
-          >
-            Single phase: 100%
-          </div>
-          <input
-            onAnimationStart={[Function]}
-            type="hidden"
-            value={0}
-          />
-          <svg
-            aria-hidden={true}
-            className="MuiSvgIcon-root MuiSelect-icon Mui-disabled"
-            focusable="false"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M7 10l5 5 5-5z"
-            />
-          </svg>
+          Single phase: 100%
         </div>
-      </div>
-      <p
-        className="info icon"
-      >
+        <input
+          onAnimationStart={[Function]}
+          type="hidden"
+          value={0}
+        />
         <svg
           aria-hidden={true}
-          className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+          className="MuiSvgIcon-root MuiSelect-icon Mui-disabled"
           focusable="false"
-          style={
-            Object {
-              "margin": "0 6px 4px 0",
-              "verticalAlign": "middle",
-            }
-          }
           viewBox="0 0 24 24"
         >
           <path
-            d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+            d="M7 10l5 5 5-5z"
           />
         </svg>
-        With a more advanced commercial Mender plan you get access to choose to roll out deployments in multiple phases. Get an overview of the Mender plans on the 
-        <a
-          href="https://mender.io/plans/features"
-          target="_blank"
-        >
-          features page
-        </a>
-        .
-      </p>
+      </div>
     </div>
+    <div />
   </div>
+  <p
+    className="info icon"
+  >
+    <svg
+      aria-hidden={true}
+      className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+      focusable="false"
+      style={
+        Object {
+          "margin": "0 6px 4px 0",
+          "verticalAlign": "middle",
+        }
+      }
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+      />
+    </svg>
+    With a more advanced commercial Mender plan you get access to choose to roll out deployments in multiple phases. Get an overview of the Mender plans on the 
+    <a
+      href="https://mender.io/plans/features"
+      target="_blank"
+    >
+      features page
+    </a>
+    .
+  </p>
 </form>
 `;

@@ -1443,7 +1443,7 @@ div:focus {
     align-self: self-start;
     margin-bottom: 80px;
     margin-top: 40px;
-  } 
+  }
 
   h3 {
     text-transform: uppercase;
@@ -2236,6 +2236,17 @@ span.day {
     height: 100%;
     justify-content: flex-end;
   }
+}
+
+.deployment-scheduling-view {
+  display: grid;
+  margin-left: 35px;
+  grid-template-columns: 1fr 20px;
+  grid-auto-rows: min-content;
+  grid-column-gap: @defaultGutterWidth;
+  grid-row-gap: @defaultGutterWidth;
+  align-self: center;
+  align-items: baseline;
 }
 
 .deployment-phases-list {

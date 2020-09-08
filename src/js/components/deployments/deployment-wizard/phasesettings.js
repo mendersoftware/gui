@@ -83,7 +83,7 @@ export default class PhaseSettings extends React.Component {
 
   render() {
     const self = this;
-    const { disabled, numberDevices, phases = [] } = self.props;
+    const { classNames, disabled, numberDevices, phases = [] } = self.props;
     const remainder = getRemainderPercent(phases);
 
     // disable 'add phase' button if last phase/remainder has only 1 device left
@@ -176,7 +176,7 @@ export default class PhaseSettings extends React.Component {
       : null;
 
     return (
-      <div>
+      <div className={classNames}>
         <Table size="small">
           <TableHead>
             <TableRow>
