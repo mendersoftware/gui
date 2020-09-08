@@ -79,7 +79,7 @@ export class MyOrganization extends React.Component {
     };
     const orgHeader = (
       <div>
-        <h4 style={{ display: 'inline', paddingRight: '10px' }}>Token</h4>
+        <span style={{ paddingRight: 10 }}>Token</span>
         <div
           id="token-info"
           className="tooltip info"
