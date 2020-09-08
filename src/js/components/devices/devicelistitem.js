@@ -7,6 +7,14 @@ import { ArrowDropDown as ArrowDropDownIcon, ArrowDropUp as ArrowDropUpIcon } fr
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import ExpandedDevice from './expanded-device';
 
+const defaultColumnStyle = {
+  padding: '0 24px',
+  overflow: 'hidden',
+  wordBreak: 'break-all',
+  maxHeight: 48,
+  textOverflow: 'ellipsis'
+};
+
 const DeviceListItem = props => {
   const { columnHeaders, device, expandable = true, expanded, globalSettings, onClick, onRowSelect, selectable, selected } = props;
   const id_attribute = globalSettings.id_attribute !== 'Device ID' ? (device.identity_data || {})[globalSettings.id_attribute] : device.id;
@@ -15,16 +23,10 @@ const DeviceListItem = props => {
     <ExpansionPanel className="deviceListItem" square expanded={expanded} onChange={onClick}>
       <ExpansionPanelSummary style={{ padding: '0 12px' }}>
         {selectable ? <Checkbox checked={selected} onChange={onRowSelect} /> : null}
-        <div style={Object.assign({ width: columnHeaders[0].width || columnWidth, padding: '0 24px' }, columnHeaders[0].style)}>{id_attribute}</div>
+        <div style={{ ...defaultColumnStyle, width: columnHeaders[0].width || columnWidth, ...columnHeaders[0].style }}>{id_attribute}</div>
         {/* we'll skip the first column, since this is the id and that gets resolved differently in the lines above */}
         {columnHeaders.slice(1).map((item, index) => (
-          <div
-            key={`column-${index}`}
-            style={Object.assign(
-              { width: item.width || columnWidth, padding: '0 24px', overflow: 'hidden', wordBreak: 'break-all', maxHeight: 48 },
-              item.style
-            )}
-          >
+          <div key={`column-${index}`} style={{ ...defaultColumnStyle, width: item.width || columnWidth, ...item.style }}>
             {item.render(device)}
           </div>
         ))}
