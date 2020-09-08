@@ -170,9 +170,10 @@ export const getRoles = () => (dispatch, getState) =>
             accu.groups.push(permission.object.value);
           }
           if (
-            permission.action == rolesByName.userManagement.action &&
-            permission.object.type == rolesByName.userManagement.object.type &&
-            permission.object.value == rolesByName.userManagement.object.value
+            role.name === rolesByName.admin ||
+            (permission.action == rolesByName.userManagement.action &&
+              permission.object.type == rolesByName.userManagement.object.type &&
+              permission.object.value == rolesByName.userManagement.object.value)
           ) {
             accu.allowUserManagement = true;
           }
