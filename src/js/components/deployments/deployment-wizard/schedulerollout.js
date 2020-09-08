@@ -137,7 +137,10 @@ export class ScheduleRollout extends React.Component {
           ];
 
     const deploymentTimeNotification = (
-      <Tooltip title="Because the devices ask the server for new deployments, the deployment times are based on the server side." placement="top">
+      <Tooltip
+        title="This time is relative to the server only – each device’s time zone will not be taken into account. Devices across different time zones will receive the update at the same time."
+        placement="top"
+      >
         <InfoIcon className="fadeIn" fontSize="small" />
       </Tooltip>
     );
@@ -152,7 +155,7 @@ export class ScheduleRollout extends React.Component {
               <MenuItem value="custom">Schedule the start date &amp; time</MenuItem>
             </Select>
           </FormControl>
-          {deploymentTimeNotification}
+          <div />
           {self.state.isPickerOpen || start_time ? (
             <>
               <FormControl className="margin-bottom" style={{ width: 'min-content' }}>
@@ -171,7 +174,7 @@ export class ScheduleRollout extends React.Component {
                   />
                 </MuiPickersUtilsProvider>
               </FormControl>
-              <div />
+              {deploymentTimeNotification}
             </>
           ) : null}
           <FormControl className="margin-bottom" style={{ width: 400 }}>
