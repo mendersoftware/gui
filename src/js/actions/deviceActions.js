@@ -616,7 +616,7 @@ export const updateDevicesAuth = (deviceIds, status) => (dispatch, getState) => 
       }
       // api call device.id and device.authsets[0].id
       return dispatch(updateDeviceAuth(device.id, device.auth_sets[0].id, status)).catch(err => {
-        var errMsg = err.response.data.error.message || '';
+        const errMsg = err.response.data.error?.message || err.response.statusText || '';
         // notify if an error occurs
         dispatch(
           setSnackbar(
