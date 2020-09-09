@@ -141,7 +141,7 @@ export class Scheduled extends React.Component {
             {tabIndex === tabs.calendar.index && (
               <Calendar
                 localizer={localizer}
-                className="margin-left"
+                className="margin-left margin-bottom"
                 events={calendarEvents}
                 startAccessor="start"
                 endAccessor="end"

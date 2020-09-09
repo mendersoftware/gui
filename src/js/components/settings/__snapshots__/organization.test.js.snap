@@ -69,16 +69,15 @@ exports[`MyOrganization Component renders correctly 1`] = `
                 className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
                 <div>
-                  <h4
+                  <span
                     style={
                       Object {
-                        "display": "inline",
-                        "paddingRight": "10px",
+                        "paddingRight": 10,
                       }
                     }
                   >
                     Token
-                  </h4>
+                  </span>
                   <div
                     className="tooltip info"
                     data-event="click focus"
