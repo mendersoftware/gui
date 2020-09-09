@@ -9,6 +9,7 @@ stages:
 variables:
   DOCKER_REPOSITORY: mendersoftware/gui
   DOCS_VERSION: development
+  HUSKY_SKIP_INSTALL: 1
 
 include:
   - project: 'Northern.tech/Mender/mendertesting'
@@ -75,15 +76,15 @@ test:docs-links:
     - links=$(grep -r docs.mender.io src/ | grep -v snapshots | sed -e 's,\${docsVersion},'${DOCS_VERSION}'/,g' | egrep -o 'https?://[^ `]+' | sort | uniq)
     - error=0
     - for url in $links; do
-    -   if ! curl --output /dev/null --silent --head --fail $url; then
-    -     error=1
-    -     echo "[ko] $url"
-    -   else
-    -     echo "[ok] $url"
-    -   fi
+    - if ! curl --output /dev/null --silent --head --fail $url; then
+    - error=1
+    - echo "[ko] $url"
+    - else
+    - echo "[ok] $url"
+    - fi
     - done
     - if [ $error -gt 0 ]; then
-    -   exit 1
+    - exit 1
     - fi
 
 test:docs-links:hosted:

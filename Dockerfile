@@ -1,5 +1,6 @@
 FROM node:14.9.0-alpine AS build
 WORKDIR /usr/src/app
+ENV HUSKY_SKIP_INSTALL=1
 COPY package-lock.json package.json ./
 RUN npm ci
 COPY . ./
