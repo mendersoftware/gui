@@ -12,7 +12,16 @@ const mockStore = configureStore([thunk]);
 describe('Login Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({ ...defaultState });
+    store = mockStore({
+      ...defaultState,
+      app: {
+        ...defaultState.app,
+        features: {
+          ...defaultState.app.features,
+          isHosted: true
+        }
+      }
+    });
   });
 
   it('renders correctly', () => {
