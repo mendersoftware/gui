@@ -44,98 +44,82 @@ exports[`GlobalSettings Component renders correctly 1`] = `
     </svg>
     These settings apply to all users, so changes made here may affect other users' experience.
   </p>
-  <form
-    className=""
+  <div
+    className="MuiFormControl-root"
   >
-    <div
-      className="MuiFormControl-root"
+    <label
+      className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
+      data-shrink={true}
+      id="device-id"
     >
-      <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-        data-shrink={false}
-        htmlFor="simple-select"
-      >
-        Device identity attribute
-      </label>
+      Device identity attribute
+    </label>
+    <div
+      className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+      onClick={[Function]}
+    >
       <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-        onClick={[Function]}
-        style={
-          Object {
-            "width": "400px",
-          }
-        }
+        aria-haspopup="listbox"
+        className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
+        onBlur={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onMouseDown={[Function]}
+        role="button"
+        tabIndex={0}
       >
-        <div
-          aria-haspopup="listbox"
-          aria-labelledby="deviceid"
-          className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
-          id="deviceid"
-          onBlur={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onMouseDown={[Function]}
-          role="button"
-          tabIndex={0}
-        >
-          <span
-            dangerouslySetInnerHTML={
-              Object {
-                "__html": "&#8203;",
-              }
+        <span
+          dangerouslySetInnerHTML={
+            Object {
+              "__html": "&#8203;",
             }
-          />
-        </div>
-        <input
-          id="simple-select"
-          name="selector"
-          onAnimationStart={[Function]}
-          type="hidden"
-          value=""
-        />
-        <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root MuiSelect-icon"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M7 10l5 5 5-5z"
-          />
-        </svg>
-      </div>
-      <p
-        className="MuiFormHelperText-root info"
-        style={
-          Object {
-            "width": "500px",
           }
-        }
+        />
+      </div>
+      <input
+        onAnimationStart={[Function]}
+        type="hidden"
+        value=""
+      />
+      <svg
+        aria-hidden={true}
+        className="MuiSvgIcon-root MuiSelect-icon"
+        focusable="false"
+        viewBox="0 0 24 24"
       >
-        <div>
-          <p>
-            Choose a device identity attribute to use to identify your devices throughout the UI.
-          </p>
-          <p>
-            <a
-              href="https://docs.mender.io/hosted/client-installation/identity"
-              target="_blank"
-            >
-              Learn how to add custom identity attributes
-            </a>
-             
-            to your devices.
-          </p>
-        </div>
-      </p>
+        <path
+          d="M7 10l5 5 5-5z"
+        />
+      </svg>
     </div>
-  </form>
+    <p
+      className="MuiFormHelperText-root info"
+    >
+      <div
+        className="margin-top-small margin-bottom-small"
+      >
+        Choose a device identity attribute to use to identify your devices throughout the UI.
+      </div>
+      <div
+        className="margin-top-small margin-bottom-small"
+      >
+        <a
+          href="https://docs.mender.io/hosted/client-installation/identity"
+          target="_blank"
+        >
+          Learn how to add custom identity attributes
+        </a>
+         
+        to your devices.
+      </div>
+    </p>
+  </div>
   <div
     className="margin-top-large float-right"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-text"
-      disabled={false}
+      className="MuiButtonBase-root MuiButton-root MuiButton-text Mui-disabled Mui-disabled"
+      disabled={true}
       onBlur={[Function]}
       onClick={[Function]}
       onDragLeave={[Function]}
@@ -153,7 +137,7 @@ exports[`GlobalSettings Component renders correctly 1`] = `
           "marginRight": "10px",
         }
       }
-      tabIndex={0}
+      tabIndex={-1}
       type="button"
     >
       <span
@@ -161,13 +145,10 @@ exports[`GlobalSettings Component renders correctly 1`] = `
       >
         Cancel
       </span>
-      <span
-        className="MuiTouchRipple-root"
-      />
     </button>
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
-      disabled={false}
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled"
+      disabled={true}
       onBlur={[Function]}
       onClick={[Function]}
       onDragLeave={[Function]}
@@ -180,7 +161,7 @@ exports[`GlobalSettings Component renders correctly 1`] = `
       onTouchEnd={[Function]}
       onTouchMove={[Function]}
       onTouchStart={[Function]}
-      tabIndex={0}
+      tabIndex={-1}
       type="button"
     >
       <span
@@ -188,9 +169,6 @@ exports[`GlobalSettings Component renders correctly 1`] = `
       >
         Save
       </span>
-      <span
-        className="MuiTouchRipple-root"
-      />
     </button>
   </div>
 </div>
