@@ -46,9 +46,11 @@ export const CreateGroupExplainerContent = ({ styles = defaultStyles, isEnterpri
           You can set filters based on device attributes, and save them as a group. At any point in time, all devices that match the filters will be part of
           this group. This means that new devices will automatically join the group if they match the filters.
         </p>
-        <p className="info">
-          Dynamic grouping is only available to Enterprise users. <a href="mailto:contact@mender.io">Contact us</a> to ask about upgrading.
-        </p>
+        {!isEnterprise && (
+          <p className="info">
+            Dynamic grouping is only available to Enterprise users. <a href="mailto:contact@mender.io">Contact us</a> to ask about upgrading.
+          </p>
+        )}
       </div>
       <img src={dynamicImage} style={styles.image} />
     </div>
