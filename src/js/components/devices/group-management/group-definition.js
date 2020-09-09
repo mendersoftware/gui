@@ -50,7 +50,7 @@ export default class GroupDefinition extends React.Component {
       <>
         <Autocomplete
           id="group-creation-selection"
-          clearOnBlur
+          autoSelect
           freeSolo
           filterSelectedOptions
           filterOptions={(options, params) => {
@@ -78,7 +78,6 @@ export default class GroupDefinition extends React.Component {
           onInputChange={(e, newValue) => self.validateName(newValue)}
           renderInput={params => <TextField {...params} label="Select a group, or type to create new" InputProps={{ ...params.InputProps }} />}
           renderOption={option => option.title}
-          selectOnFocus
         />
         <FormHelperText>{errortext}</FormHelperText>
         {isCreationDynamic && (
