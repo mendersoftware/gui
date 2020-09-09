@@ -28,6 +28,9 @@ export default class GroupDefinition extends React.Component {
     } else if (this.props.selectedGroup && name === this.props.selectedGroup) {
       invalid = true;
       errortext = `${name} is the same group the selected devices are already in`;
+    } else if (isModification && this.props.isCreationDynamic) {
+      invalid = true;
+      errortext = 'A group with the same name already exists';
     }
     this.setState({ errortext });
     this.props.onInputChange(invalid, name, isModification);
