@@ -2065,7 +2065,12 @@ span.day {
 // Past deployments
 .datepicker-container {
   background-color: @lightestgrey;
-  padding: 0px 25px 5px;
+  padding: 4px 25px 5px;
+  display: flex;
+  align-items: flex-end;
+  > div {
+    margin: 0.5 * @defaultGutterWidth;
+  }
 }
 
 // Releases & Artifacts

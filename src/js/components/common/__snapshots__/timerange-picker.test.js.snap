@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TimerangePicker Component renders correctly 1`] = `
+<div
+  className=""
+>
+  <span>
+    Filter by date
+  </span>
+  <ul
+    className="unstyled link-list horizontal"
+  >
+    <li>
+      <a
+        className="active"
+        onClick={[Function]}
+      >
+        Today
+      </a>
+    </li>
+    <li>
+      <a
+        className=""
+        onClick={[Function]}
+      >
+        Yesterday
+      </a>
+    </li>
+    <li>
+      <a
+        className=""
+        onClick={[Function]}
+      >
+        Last 7 days
+      </a>
+    </li>
+    <li>
+      <a
+        className=""
+        onClick={[Function]}
+      >
+        Last 30 days
+      </a>
+    </li>
+  </ul>
+</div>
+`;
