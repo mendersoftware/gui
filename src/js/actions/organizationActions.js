@@ -2,11 +2,14 @@ import Cookies from 'universal-cookie';
 
 import { setSnackbar } from './appActions';
 import Api from '../api/general-api';
+import OrganizationConstants from '../constants/organizationConstants';
 import { preformatWithRequestID } from '../helpers';
 
 const cookies = new Cookies();
-const apiUrl = '/api/management/v2';
-const tenantadmApiUrl = `${apiUrl}/tenantadm`;
+const apiUrlv1 = '/api/management/v1';
+const apiUrlv2 = '/api/management/v2';
+const auditLogsApiUrl = `${apiUrlv1}/auditlogs`;
+const tenantadmApiUrl = `${apiUrlv2}/tenantadm`;
 
 export const cancelRequest = (tenantId, reason) => dispatch =>
   Api.post(`${tenantadmApiUrl}/tenants/${tenantId}/cancel`, { reason: reason }).then(() =>
@@ -40,3 +43,18 @@ export const completeUpgrade = (tenantId, plan) => dispatch =>
     dispatch(setSnackbar(preformatWithRequestID(err.response, `There was an error upgrading your account. ${err.response.data.error}`)));
     return Promise.reject(err);
   });
+
+export const getAuditLogs = (page, perPage, startDate, endDate, type, userId, sort = 'desc') => dispatch => {
+  const created_after = startDate ? `&created_after=${Math.round(Date.parse(startDate) / 1000)}` : '';
+  const created_before = endDate ? `&created_before=${Math.round(Date.parse(endDate) / 1000)}` : '';
+  const typeSearch = type ? `&object_type=${type}` : '';
+  const userSearch = type ? `&actor_id=${userId}` : '';
+  return Api.get(`${auditLogsApiUrl}/logs?page=${page}&per_page=${perPage}${created_after}${created_before}${userSearch}${typeSearch}&sort=${sort}`)
+    .then(({ data: events }) => {
+      return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_AUDIT_LOGS, events }));
+    })
+    .catch(err => {
+      dispatch(setSnackbar(preformatWithRequestID(err.response, err.response.data.error.message), null, 'Copy to clipboard'));
+      return Promise.reject(err);
+    });
+};

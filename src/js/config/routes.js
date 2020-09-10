@@ -11,10 +11,12 @@ import Login from '../components/user-management/login';
 import Password from '../components/user-management/password';
 import PasswordReset from '../components/user-management/passwordreset';
 import Signup from '../components/user-management/signup';
+import AuditLogs from '../components/auditlogs/auditlogs';
 
 export const privateRoutes = (
   <Switch>
     <Route exact path="/" component={Dashboard} />
+    <Route path="/auditlogs/:filters?" component={AuditLogs} />
     <Route path="/devices/:status(pending|preauthorized|rejected)?/:filters?" component={Devices} />
     <Route path="/releases/:artifactVersion?" component={Artifacts} />
     <Route path="/deployments/:tab?" component={Deployments} />
