@@ -61,14 +61,20 @@ export class UserDataEntry extends React.Component {
           <PasswordInput
             id="password_new"
             label="Password *"
-            validations="isLength:8"
+            validations={`isLength:8,isNot:${email}`}
             create={true}
             generate={false}
             required={true}
             value={password}
             className="margin-bottom-small"
           />
-          <PasswordInput id="password_confirmation" label="Confirm password *" validations="isLength:8" required={true} value={password_confirmation} />
+          <PasswordInput
+            id="password_confirmation"
+            label="Confirm password *"
+            validations={`isLength:8,isNot:${email}`}
+            required={true}
+            value={password_confirmation}
+          />
         </Form>
       </>
     );
