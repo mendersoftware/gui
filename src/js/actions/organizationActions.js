@@ -22,7 +22,7 @@ export const createOrganizationTrial = data => dispatch =>
       }
     })
     .then(res => {
-      cookies.set('JWT', res.text, { maxAge: 900 });
+      cookies.set('JWT', res.text, { maxAge: 900, sameSite: 'strict' });
       cookies.remove('oauth');
       cookies.remove('externalID');
       cookies.remove('email');
