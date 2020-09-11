@@ -34,7 +34,7 @@ export const createOrganizationTrial = data => dispatch =>
 
 export const startUpgrade = tenantId => dispatch =>
   Api.post(`${tenantadmApiUrl}/tenants/${tenantId}/upgrade/start`).catch(err => {
-    dispatch(setSnackbar(preformatWithRequestID(err.response, err.response.data.error), null, 'Copy to clipboard'));
+    dispatch(setSnackbar(preformatWithRequestID(err.response, err.response.data?.error.message), null, 'Copy to clipboard'));
     return Promise.reject(err);
   });
 export const cancelUpgrade = tenantId => () => Api.post(`${tenantadmApiUrl}/tenants/${tenantId}/upgrade/cancel`);

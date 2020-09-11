@@ -247,7 +247,10 @@ export const removeRole = roleId => dispatch =>
   GeneralApi.delete(`${useradmApiUrl}/roles/${roleId}`)
     .then(() => Promise.all([dispatch({ type: UserConstants.REMOVED_ROLE, roleId }), dispatch(getRoles())]))
     .catch(err =>
-      Promise.all([Promise.reject(err), dispatch(setSnackbar(preformatWithRequestID(err.response, err.response.data.error), null, 'Copy to clipboard'))])
+      Promise.all([
+        Promise.reject(err),
+        dispatch(setSnackbar(preformatWithRequestID(err.response, err.response.data?.error.message), null, 'Copy to clipboard'))
+      ])
     );
 
 /*
