@@ -13,7 +13,7 @@ export function logout() {
 export function updateMaxAge() {
   const userCookie = getToken();
   if (userCookie && expirySet()) {
-    cookies.set('JWT', userCookie, { maxAge: 900 });
+    cookies.set('JWT', userCookie, { maxAge: 900, sameSite: 'strict' });
   }
 }
 
