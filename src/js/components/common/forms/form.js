@@ -54,6 +54,35 @@ export default class Form extends React.Component {
     });
   }
 
+  tryApplyValidations(value, validations, initialValidationResult) {
+    return validations.split(',').reduce((accu, validation) => {
+      if (!accu.isValid) {
+        return accu;
+      }
+      var args = validation.split(':');
+      var validateMethod = args.shift();
+      // We use JSON.parse to convert the string values passed to the
+      // correct type. Ex. 'isLength:1' will make '1' actually a number
+      args = args.map(arg => JSON.parse(JSON.stringify(arg)));
+
+      var tmpArgs = args;
+      // We then merge two arrays, ending up with the value
+      // to pass first, then options, if any. ['valueFromInput', 5]
+      args = [value].concat(args);
+      try {
+        // So the next line of code is actually:
+        // validator.isLength('valueFromInput', 5)
+        if (!validator[validateMethod].apply(validator, args)) {
+          return { errortext: this.getErrorMsg(validateMethod, tmpArgs), isValid: false };
+        }
+      } catch {
+        const errortext = this.getErrorMsg(validateMethod, args) || '';
+        return { errortext, isValid: !errortext };
+      }
+      return accu;
+    }, initialValidationResult);
+  }
+
   validate(component, value) {
     if (!component.props.validations) {
       return;
@@ -71,37 +100,15 @@ export default class Form extends React.Component {
       if (component.props.required && !value) {
         isValid = false;
         errortext = 'Password is required';
-      } else if (value && value.length < 2) {
-        isValid = false;
-        errortext = 'Password too weak';
+      } else {
+        isValid = this.tryApplyValidations(value, component.props.validations, { isValid, errortext }).isValid;
+        errortext = !isValid ? 'Password too weak' : errortext;
       }
     } else {
       if (value || component.props.required) {
-        component.props.validations.split(',').forEach(validation => {
-          var args = validation.split(':');
-          var validateMethod = args.shift();
-          // We use JSON.parse to convert the string values passed to the
-          // correct type. Ex. 'isLength:1' will make '1' actually a number
-          args = args.map(arg => {
-            return JSON.parse(arg);
-          });
-
-          var tmpArgs = args;
-          // We then merge two arrays, ending up with the value
-          // to pass first, then options, if any. ['valueFromInput', 5]
-          args = [value].concat(args);
-          try {
-            // So the next line of code is actually:
-            // validator.isLength('valueFromInput', 5)
-            if (!validator[validateMethod].apply(validator, args)) {
-              errortext = this.getErrorMsg(validateMethod, tmpArgs);
-              isValid = false;
-            }
-          } catch {
-            errortext = this.getErrorMsg(validateMethod, tmpArgs);
-            isValid = false;
-          }
-        });
+        const { isValid: appliedValid, errortext: appliedError } = this.tryApplyValidations(value, component.props.validations, { isValid, errortext });
+        isValid = appliedValid;
+        errortext = appliedError;
       }
     }
 
@@ -134,6 +141,11 @@ export default class Form extends React.Component {
         return 'Please enter a valid code';
       case 'isEmail':
         return 'Please enter a valid email address';
+      case 'isNot':
+        if (args[0] === args[1]) {
+          return `This field should have a value other than ${args[0]}`;
+        }
+        break;
       default:
         return 'There is an error with this field';
     }

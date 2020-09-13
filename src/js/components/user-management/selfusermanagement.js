@@ -130,7 +130,7 @@ export class SelfUserManagement extends React.Component {
                 id="password"
                 label="Password"
                 create={editPass}
-                validations="isLength:1"
+                validations={`isLength:8,isNot:${email}`}
                 disabled={!editPass}
                 onClear={() => self.handleButton()}
                 edit={false}
