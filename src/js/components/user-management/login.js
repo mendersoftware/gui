@@ -50,7 +50,7 @@ export class Login extends React.Component {
           !self.props.onboardingComplete &&
           !getOnboardingStepCompleted('devices-pending-accepting-onboarding')
         ) {
-          self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={1} />, () => {}, self.onCloseSnackbar);
+          self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={1} />, () => {}, true);
         }
       }, 1000);
       self.props.setSnackbar('');
@@ -63,13 +63,6 @@ export class Login extends React.Component {
   componentWillUnmount() {
     this.props.setSnackbar('');
   }
-
-  onCloseSnackbar = (_, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    this.props.setSnackbar('');
-  };
 
   _handleLogin(formData) {
     var self = this;
@@ -123,11 +116,15 @@ export class Login extends React.Component {
         <Form showButtons={true} buttonColor="primary" onSubmit={formdata => this._handleLogin(formdata)} submitLabel="Log in" submitButtonId="login_button">
           <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
           <PasswordInput className="margin-bottom-small" id="password" label="Password" required={true} />
-          <div className="flexbox">
-            <Link style={{ marginLeft: '4px' }} to="/password">
-              Forgot your password?
-            </Link>
-          </div>
+          {isHosted ? (
+            <div className="flexbox">
+              <Link style={{ marginLeft: '4px' }} to="/password">
+                Forgot your password?
+              </Link>
+            </div>
+          ) : (
+            <div />
+          )}
           {has2FA ? (
             <TextInput
               hint="Two Factor Authentication Code"

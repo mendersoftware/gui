@@ -20,7 +20,6 @@ import {
 } from '@material-ui/core';
 import { Add as AddIcon } from '@material-ui/icons';
 
-import { setSnackbar } from '../../actions/appActions';
 import { getGroups, getDynamicGroups } from '../../actions/deviceActions';
 import { createRole, editRole, getRoles, removeRole } from '../../actions/userActions';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
@@ -222,7 +221,7 @@ export class RoleManagement extends React.Component {
   }
 }
 
-const actionCreators = { createRole, editRole, getDynamicGroups, getGroups, getRoles, removeRole, setSnackbar };
+const actionCreators = { createRole, editRole, getDynamicGroups, getGroups, getRoles, removeRole };
 
 const mapStateToProps = state => {
   // eslint-disable-next-line no-unused-vars

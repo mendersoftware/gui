@@ -10,10 +10,7 @@ import EnterpriseNotification from '../common/enterpriseNotification';
 
 import { setSnackbar } from '../../actions/appActions';
 import { editUser, saveGlobalSettings, saveUserSettings } from '../../actions/userActions';
-
-import { preformatWithRequestID } from '../../helpers';
-import { getIsEnterprise } from '../../selectors';
-
+import { getIsEnterprise, getUserSettings } from '../../selectors';
 import { OAuth2Providers } from './oauth2providers';
 import TwoFactorAuthSetup from './twofactorauthsetup';
 
@@ -30,17 +27,7 @@ export class SelfUserManagement extends React.Component {
 
   _editSubmit(userId, userData) {
     var self = this;
-    return self.props
-      .editUser(userId, userData)
-      .then(() => {
-        self.props.setSnackbar('The user has been updated.');
-        self.setState({ editPass: false, editEmail: false });
-      })
-      .catch(err => {
-        console.log(err);
-        var errMsg = err.response.data.error || '';
-        self.props.setSnackbar(preformatWithRequestID(err.response, `There was an error editing the user. ${errMsg}`));
-      });
+    return self.props.editUser(userId, userData).then(() => self.setState({ editPass: false, editEmail: false }));
   }
 
   handleEmail() {
@@ -143,7 +130,7 @@ export class SelfUserManagement extends React.Component {
                 id="password"
                 label="Password"
                 create={editPass}
-                validations="isLength:1"
+                validations={`isLength:8,isNot:${email}`}
                 disabled={!editPass}
                 onClear={() => self.handleButton()}
                 edit={false}
@@ -206,7 +193,7 @@ const mapStateToProps = state => {
     currentUser: state.users.byId[state.users.currentUser] || {},
     has2FA: state.users.globalSettings.hasOwnProperty('2fa') && state.users.globalSettings['2fa'] === 'enabled',
     hasTracking: !!state.app.trackerCode,
-    hasTrackingConsent: state.users.globalSettings[state.users.currentUser]?.trackingConsentGiven,
+    hasTrackingConsent: getUserSettings(state).trackingConsentGiven,
     isEnterprise
   };
 };

@@ -121,7 +121,7 @@ export default class UserForm extends React.Component {
                 id="password_new"
                 label="Password"
                 create={editPass}
-                validations="isLength:1"
+                validations={`isLength:8,isNot:${user.email}`}
                 disabled={!editPass}
                 onClear={() => self.setState({ editPass: !editPass })}
                 edit={isCreation ? false : true}

@@ -7,25 +7,12 @@ import UserList from './userlist';
 import UserForm from './userform';
 import { setSnackbar } from '../../actions/appActions';
 import { createUser, editUser, getUserList, removeUser } from '../../actions/userActions';
-import { preformatWithRequestID } from '../../helpers';
 import { getIsEnterprise, getUserRoles } from '../../selectors';
 
 const actions = {
-  create: {
-    successMessage: 'The user was created successfully.',
-    errorMessage: 'creating',
-    action: 'createUser'
-  },
-  edit: {
-    successMessage: 'The user has been updated.',
-    errorMessage: 'editing',
-    action: 'editUser'
-  },
-  remove: {
-    successMessage: 'The user was removed from the system.',
-    errorMessage: 'removing',
-    action: 'removeUser'
-  }
+  create: 'createUser',
+  edit: 'editUser',
+  remove: 'removeUser'
 };
 
 export class UserManagement extends React.Component {
@@ -71,20 +58,11 @@ export class UserManagement extends React.Component {
     const self = this;
     let request = null;
     if (id) {
-      request = self.props[actions[type].action](id, userData);
+      request = self.props[actions[type]](id, userData);
     } else {
-      request = self.props[actions[type].action](userData);
+      request = self.props[actions[type]](userData);
     }
-    return request
-      .then(() => {
-        self.dialogDismiss();
-        self.props.setSnackbar(actions[type].successMessage);
-      })
-      .catch(err => {
-        console.log(err);
-        var errMsg = err.response.data.error || '';
-        self.props.setSnackbar(preformatWithRequestID(err.response, `There was an error ${actions[type].errorMessage} the user. ${errMsg}`));
-      });
+    return request.then(() => self.dialogDismiss());
   }
 
   render() {

@@ -34,8 +34,12 @@ exports[`DeviceListItem Component renders correctly 1`] = `
       <div
         style={
           Object {
+            "maxHeight": 48,
+            "overflow": "hidden",
             "padding": "0 24px",
+            "textOverflow": "ellipsis",
             "width": "100%",
+            "wordBreak": "break-all",
           }
         }
       >

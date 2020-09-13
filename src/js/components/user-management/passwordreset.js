@@ -22,24 +22,11 @@ export const PasswordReset = props => {
       return;
     }
     if (formData.password_new != formData.password_confirmation) {
-      props.setSnackbar('The passwords you provided do not match, please check again.', 5000, '');
+      setSnackbar('The passwords you provided do not match, please check again.', 5000, '');
       return;
     }
 
-    passwordResetComplete(secretHash, formData.password_new)
-      .then(() => {
-        setConfirm(true);
-      })
-      .catch(err => {
-        let status = ((err || {}).res || {}).status,
-          errorMsg;
-        if (status == 400) {
-          errorMsg = 'the link you are using expired or the request is not valid, please try again.';
-        } else {
-          errorMsg = (err || {}).error;
-        }
-        setSnackbar('The password reset request cannot be processed: ' + errorMsg);
-      });
+    passwordResetComplete(secretHash, formData.password_new).then(() => setConfirm(true));
   };
 
   return (

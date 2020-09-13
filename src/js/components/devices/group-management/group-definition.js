@@ -28,6 +28,9 @@ export default class GroupDefinition extends React.Component {
     } else if (this.props.selectedGroup && name === this.props.selectedGroup) {
       invalid = true;
       errortext = `${name} is the same group the selected devices are already in`;
+    } else if (isModification && this.props.isCreationDynamic) {
+      invalid = true;
+      errortext = 'A group with the same name already exists';
     }
     this.setState({ errortext });
     this.props.onInputChange(invalid, name, isModification);
@@ -47,7 +50,7 @@ export default class GroupDefinition extends React.Component {
       <>
         <Autocomplete
           id="group-creation-selection"
-          clearOnBlur
+          autoSelect
           freeSolo
           filterSelectedOptions
           filterOptions={(options, params) => {
@@ -75,7 +78,6 @@ export default class GroupDefinition extends React.Component {
           onInputChange={(e, newValue) => self.validateName(newValue)}
           renderInput={params => <TextField {...params} label="Select a group, or type to create new" InputProps={{ ...params.InputProps }} />}
           renderOption={option => option.title}
-          selectOnFocus
         />
         <FormHelperText>{errortext}</FormHelperText>
         {isCreationDynamic && (

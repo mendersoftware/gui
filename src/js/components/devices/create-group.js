@@ -19,9 +19,8 @@ export class CreateGroup extends React.Component {
     this.props.getDevicesByStatus(DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength);
   }
 
-  onNameChange(isNotValid, newGroup, isModification) {
+  onNameChange(invalid, newGroup, isModification) {
     const title = !this.props.isCreationDynamic ? `Add ${this.props.selectedDevices.length ? 'selected ' : ''}devices to group` : 'Create a new group';
-    const invalid = isModification && this.props.isCreationDynamic ? true : isNotValid;
     this.setState({ invalid, isModification, newGroup, title });
   }
 

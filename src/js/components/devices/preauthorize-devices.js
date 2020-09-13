@@ -7,9 +7,7 @@ import { Button } from '@material-ui/core';
 import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import { getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
-import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
-import { preformatWithRequestID } from '../../helpers';
 import Loader from '../common/loader';
 import DeviceList from './devicelist';
 import { refreshLength as refreshDeviceLength } from './devices';
@@ -68,12 +66,6 @@ export class Preauthorize extends React.Component {
     const sortBy = sortCol ? [{ attribute: sortCol, order: sortDown ? 'desc' : 'asc', scope: sortScope }] : undefined;
     self.props
       .getDevicesByStatus(DEVICE_STATES.preauth, pageNo, pageLength, shouldUpdate, undefined, sortBy)
-      .catch(error => {
-        console.log(error);
-        var errormsg = error.response.data.error || 'Please check your connection.';
-        self.props.setSnackbar(preformatWithRequestID(error.response, `Preauthorized devices couldn't be loaded. ${errormsg}`), null, 'Copy to clipboard');
-        console.log(errormsg);
-      })
       .finally(() => self.setState({ pageLoading: false }));
   }
 
@@ -195,7 +187,7 @@ export class Preauthorize extends React.Component {
   }
 }
 
-const actionCreators = { getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters, setSnackbar };
+const actionCreators = { getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters };
 
 const mapStateToProps = state => {
   return {

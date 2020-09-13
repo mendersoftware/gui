@@ -88,10 +88,10 @@ export default class PasswordInput extends React.Component {
     var feedback = (
       <p>
         {this.state.feedback.map((message, index) => (
-          <>
-            <span key={index}>{message}</span>
+          <React.Fragment key={`feedback-${index}`}>
+            <span>{message}</span>
             <br />
-          </>
+          </React.Fragment>
         ))}
       </p>
     );

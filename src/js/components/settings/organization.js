@@ -11,7 +11,6 @@ import { FileCopy as CopyPasteIcon, Info as InfoIcon } from '@material-ui/icons'
 
 import { getUserOrganization } from '../../actions/userActions';
 import { cancelRequest } from '../../actions/organizationActions';
-import { setSnackbar } from '../../actions/appActions';
 import { PLANS as plans } from '../../constants/appConstants';
 import CancelRequestDialog from './dialogs/cancelrequest';
 
@@ -42,10 +41,7 @@ export class MyOrganization extends React.Component {
   }
 
   _cancelSubscriptionSubmit(reason) {
-    this.props.cancelRequest(this.props.org.id, reason).then(() => {
-      this.setState({ cancelSubscription: false, cancelSubscriptionConfirmation: true });
-      this.props.setSnackbar('Deactivation request was sent successfully', 5000, '');
-    });
+    this.props.cancelRequest(this.props.org.id, reason).then(() => this.setState({ cancelSubscription: false, cancelSubscriptionConfirmation: true }));
   }
 
   handleCancelSubscription(e) {
@@ -79,7 +75,7 @@ export class MyOrganization extends React.Component {
     };
     const orgHeader = (
       <div>
-        <h4 style={{ display: 'inline', paddingRight: '10px' }}>Token</h4>
+        <span style={{ paddingRight: 10 }}>Token</span>
         <div
           id="token-info"
           className="tooltip info"
@@ -211,7 +207,7 @@ export class MyOrganization extends React.Component {
   }
 }
 
-const actionCreators = { getUserOrganization, setSnackbar, cancelRequest };
+const actionCreators = { getUserOrganization, cancelRequest };
 
 const mapStateToProps = state => {
   return {

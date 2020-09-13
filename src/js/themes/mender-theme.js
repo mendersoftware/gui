@@ -175,7 +175,8 @@ export default createMuiTheme({
         height: '48px'
       },
       head: {
-        height: '56px'
+        height: '56px',
+        lineHeight: '1.15rem'
       },
       paddingCheckbox: {
         padding: '0 0 0 6px',
