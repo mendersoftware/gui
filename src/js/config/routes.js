@@ -19,7 +19,7 @@ export const privateRoutes = (
     <Route path="/auditlogs/:filters?" component={AuditLogs} />
     <Route path="/devices/:status(pending|preauthorized|rejected)?/:filters?" component={Devices} />
     <Route path="/releases/:artifactVersion?" component={Artifacts} />
-    <Route path="/deployments/:tab?" component={Deployments} />
+    <Route path="/deployments/:tab(active|scheduled|finished)?" component={Deployments} />
     <Route path="/settings/:section?" component={Settings} />
     <Route path="/help" component={Help} />
     <Route component={Dashboard} />

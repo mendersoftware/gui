@@ -70,7 +70,7 @@ export class Deployments extends React.Component {
       if (params) {
         if (params.get('open')) {
           if (params.get('id')) {
-            self.showReport(self.state.reportType, params.get('id'));
+            self.showReport(self.state.reportType || self.props.match.params.tab, params.get('id'));
           } else if (params.get('release')) {
             self.props.selectRelease(params.get('release'));
           } else if (params.get('deviceId')) {
