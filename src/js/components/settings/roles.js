@@ -229,7 +229,7 @@ const mapStateToProps = state => {
   return {
     groups: Object.keys(groups),
     isHosted: state.app.features.isHosted,
-    org: state.users.organization,
+    org: state.organization.organization,
     roles: Object.entries(state.users.rolesById).map(([id, role]) => ({ id, ...role }))
   };
 };

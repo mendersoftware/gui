@@ -100,6 +100,12 @@ export const defaultState = {
     limit: 500,
     selectedDeviceList: []
   },
+  organization: {
+    organization: {
+      id: 1,
+      name: 'test'
+    }
+  },
   releases: {
     artifactProgress: 0,
     byId: {
@@ -122,10 +128,6 @@ export const defaultState = {
       showCreateArtifactDialog: false,
       showConnectDeviceDialog: false,
       showTipsDialog: false
-    },
-    organization: {
-      id: 1,
-      name: 'test'
     },
     rolesById: { RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false } },
     showHelptips: true

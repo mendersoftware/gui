@@ -9,15 +9,16 @@ const cookies = new Cookies();
 const apiUrlv1 = '/api/management/v1';
 const apiUrlv2 = '/api/management/v2';
 const auditLogsApiUrl = `${apiUrlv1}/auditlogs`;
-const tenantadmApiUrl = `${apiUrlv2}/tenantadm`;
+const tenantadmApiUrlv1 = `${apiUrlv1}/tenantadm`;
+const tenantadmApiUrlv2 = `${apiUrlv2}/tenantadm`;
 
 export const cancelRequest = (tenantId, reason) => dispatch =>
-  Api.post(`${tenantadmApiUrl}/tenants/${tenantId}/cancel`, { reason: reason }).then(() =>
+  Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/cancel`, { reason: reason }).then(() =>
     Promise.resolve(dispatch(setSnackbar('Deactivation request was sent successfully', 5000, '')))
   );
 
 export const createOrganizationTrial = data => dispatch =>
-  Api.postUnauthorized(`${tenantadmApiUrl}/tenants/trial`, data)
+  Api.postUnauthorized(`${tenantadmApiUrlv2}/tenants/trial`, data)
     .catch(err => {
       if (err.response.status >= 400 && err.response.status < 500) {
         dispatch(setSnackbar(err.response.data.error, 5000, ''));
@@ -33,13 +34,13 @@ export const createOrganizationTrial = data => dispatch =>
     });
 
 export const startUpgrade = tenantId => dispatch =>
-  Api.post(`${tenantadmApiUrl}/tenants/${tenantId}/upgrade/start`).catch(err => {
+  Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/upgrade/start`).catch(err => {
     dispatch(setSnackbar(preformatWithRequestID(err.response, err.response.data?.error.message), null, 'Copy to clipboard'));
     return Promise.reject(err);
   });
-export const cancelUpgrade = tenantId => () => Api.post(`${tenantadmApiUrl}/tenants/${tenantId}/upgrade/cancel`);
+export const cancelUpgrade = tenantId => () => Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/upgrade/cancel`);
 export const completeUpgrade = (tenantId, plan) => dispatch =>
-  Api.post(`${tenantadmApiUrl}/tenants/${tenantId}/upgrade/complete`, { plan: plan }).catch(err => {
+  Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/upgrade/complete`, { plan: plan }).catch(err => {
     dispatch(setSnackbar(preformatWithRequestID(err.response, `There was an error upgrading your account. ${err.response.data.error}`)));
     return Promise.reject(err);
   });
@@ -68,3 +69,9 @@ export const getAuditLogs = (page, perPage, startDate, endDate, userId, type, gr
       // return Promise.reject(err);
     });
 };
+
+/*
+  Tenant management + Hosted Mender
+*/
+export const getUserOrganization = () => dispatch =>
+  Api.get(`${tenantadmApiUrlv1}/user/tenant`).then(res => Promise.resolve(dispatch({ type: OrganizationConstants.SET_ORGANIZATION, organization: res.data })));

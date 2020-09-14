@@ -41,7 +41,10 @@ export const initialState = {
       change: 'change2'
     }
   ],
-  eventsTotal: 2
+  eventsTotal: 2,
+  organization: {
+    // id, name, status, tenant_token, plan
+  }
 };
 
 const organizationReducer = (state = initialState, action) => {
@@ -51,6 +54,13 @@ const organizationReducer = (state = initialState, action) => {
         ...state,
         events: action.events,
         eventsTotal: action.total
+      };
+    case OrganizationConstants.SET_ORGANIZATION:
+      return {
+        ...state,
+        organization: {
+          ...action.organization
+        }
       };
     default:
       return state;

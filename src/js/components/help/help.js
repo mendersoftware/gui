@@ -17,7 +17,7 @@ import BuildDemoArtifact from './releases-and-artifacts/build-demo-artifact';
 import Support from './support';
 import MoreHelp from './more-help-resources';
 
-import { getUserOrganization } from '../../actions/userActions';
+import { getUserOrganization } from '../../actions/organizationActions';
 import { getDocsVersion, getIsEnterprise } from '../../selectors';
 
 var components = {
@@ -141,7 +141,7 @@ const mapStateToProps = state => {
     menderVersion: state.app.versionInformation['Mender-Client'],
     menderDebPackageVersion: state.app.menderDebPackageVersion,
     menderArtifactVersion: state.app.versionInformation['Mender-Artifact'],
-    org: state.users.organization,
+    org: state.organization.organization,
     version: state.app.versionInformation.Integration
   };
 };
