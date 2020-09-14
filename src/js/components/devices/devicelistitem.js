@@ -1,7 +1,7 @@
 import React from 'react';
 
 // material ui
-import { Checkbox, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, IconButton } from '@material-ui/core';
+import { Checkbox, Accordion, AccordionDetails, AccordionSummary, IconButton } from '@material-ui/core';
 import { ArrowDropDown as ArrowDropDownIcon, ArrowDropUp as ArrowDropUpIcon } from '@material-ui/icons';
 
 import { DEVICE_STATES } from '../../constants/deviceConstants';
@@ -20,8 +20,8 @@ const DeviceListItem = props => {
   const id_attribute = globalSettings.id_attribute !== 'Device ID' ? (device.identity_data || {})[globalSettings.id_attribute] : device.id;
   const columnWidth = `${(selectable ? 90 : 100) / columnHeaders.length}%`;
   return expandable ? (
-    <ExpansionPanel className="deviceListItem" square expanded={expanded} onChange={onClick}>
-      <ExpansionPanelSummary style={{ padding: '0 12px' }}>
+    <Accordion className="deviceListItem" square expanded={expanded} onChange={onClick}>
+      <AccordionSummary style={{ padding: '0 12px' }}>
         {selectable ? <Checkbox checked={selected} onChange={onRowSelect} /> : null}
         <div style={{ ...defaultColumnStyle, width: columnHeaders[0].width || columnWidth, ...columnHeaders[0].style }}>{id_attribute}</div>
         {/* we'll skip the first column, since this is the id and that gets resolved differently in the lines above */}
@@ -31,8 +31,8 @@ const DeviceListItem = props => {
           </div>
         ))}
         <IconButton className="expandButton">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
+      </AccordionSummary>
+      <AccordionDetails>
         {expanded ? (
           <ExpandedDevice
             {...props}
@@ -47,8 +47,8 @@ const DeviceListItem = props => {
         ) : (
           <div />
         )}
-      </ExpansionPanelDetails>
-    </ExpansionPanel>
+      </AccordionDetails>
+    </Accordion>
   ) : (
     <div className="deviceListItem flexbox" style={{ padding: '0px 12px', alignItems: 'center' }}>
       {selectable ? <Checkbox checked={selected} onChange={onRowSelect} /> : null}

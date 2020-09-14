@@ -2,18 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // material ui
-import {
-  Button,
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
-  FormControl,
-  IconButton,
-  Input,
-  InputAdornment,
-  InputLabel,
-  List
-} from '@material-ui/core';
+import { Button, Accordion, AccordionDetails, AccordionSummary, FormControl, IconButton, Input, InputAdornment, InputLabel, List } from '@material-ui/core';
 
 import {
   Add as AddIcon,
@@ -182,25 +171,25 @@ export class SelectedArtifact extends React.Component {
               </React.Fragment>
             )
         )}
-        <ExpansionPanel
+        <Accordion
           square
           expanded={self.state.showPayloads}
           onChange={() => self._toggleArtifactContentVisibility()}
           TransitionProps={{ onEntered: () => onExpansion(), onExited: () => onExpansion() }}
           style={{ background: '#e9e9e9', borderTop: 'none', padding: '0 15px', margin: '30px 0' }}
         >
-          <ExpansionPanelSummary style={{ padding: 0 }}>
+          <AccordionSummary style={{ padding: 0 }}>
             <p>Artifact contents</p>
             <div style={{ marginLeft: 'auto' }}>{self.state.showPayloads ? <RemoveIcon /> : <AddIcon />}</div>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails style={{ padding: 0 }}>
+          </AccordionSummary>
+          <AccordionDetails style={{ padding: 0 }}>
             {artifact.updates ? (
               artifact.updates.map((update, index) => <ArtifactPayload index={index} payload={update} key={`artifact-update-${index}`} />)
             ) : (
               <div />
             )}
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
+          </AccordionDetails>
+        </Accordion>
 
         <Button href={artifact.url} target="_blank" disabled={!artifact.url} startIcon={<ExitToAppIcon style={{ transform: 'rotateZ(90deg)' }} />}>
           Download Artifact

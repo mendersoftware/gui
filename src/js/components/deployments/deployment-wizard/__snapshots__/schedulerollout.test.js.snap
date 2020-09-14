@@ -50,8 +50,12 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
           Start immediately
         </div>
         <input
+          aria-hidden={true}
+          className="MuiSelect-nativeInput"
           onAnimationStart={[Function]}
-          type="hidden"
+          onChange={[Function]}
+          required={false}
+          tabIndex={-1}
           value={0}
         />
         <svg
@@ -106,8 +110,12 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
             Don't retry
           </div>
           <input
+            aria-hidden={true}
+            className="MuiSelect-nativeInput"
             onAnimationStart={[Function]}
-            type="hidden"
+            onChange={[Function]}
+            required={false}
+            tabIndex={-1}
             value={0}
           />
           <svg
@@ -223,8 +231,12 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
           Single phase: 100%
         </div>
         <input
+          aria-hidden={true}
+          className="MuiSelect-nativeInput"
           onAnimationStart={[Function]}
-          type="hidden"
+          onChange={[Function]}
+          required={false}
+          tabIndex={-1}
           value={0}
         />
         <svg

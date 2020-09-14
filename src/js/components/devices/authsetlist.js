@@ -1,7 +1,7 @@
 import React from 'react';
 import Time from 'react-time';
 
-import { Button, ExpansionPanel, ExpansionPanelActions, ExpansionPanelDetails, ExpansionPanelSummary } from '@material-ui/core';
+import { Button, Accordion, AccordionActions, AccordionDetails, AccordionSummary } from '@material-ui/core';
 
 import { formatTime, formatPublicKey } from '../../helpers';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
@@ -129,8 +129,8 @@ export default class AuthsetList extends React.Component {
       );
 
       return (
-        <ExpansionPanel square expanded={!!expanded} key={authset.id} style={active ? { backgroundColor: '#e9f4f3' } : {}}>
-          <ExpansionPanelSummary style={{ cursor: 'default' }}>
+        <Accordion square expanded={!!expanded} key={authset.id} style={active ? { backgroundColor: '#e9f4f3' } : {}}>
+          <AccordionSummary style={{ cursor: 'default' }}>
             {key}
             <Time value={formatTime(authset.ts)} format="YYYY-MM-DD HH:mm" />
             <div className="capitalized">{authset.status}</div>
@@ -141,10 +141,10 @@ export default class AuthsetList extends React.Component {
             ) : (
               actionButtons
             )}
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>{showKey ? [expanded, padder] : [padder, expanded]}</ExpansionPanelDetails>
+          </AccordionSummary>
+          <AccordionDetails>{showKey ? [expanded, padder] : [padder, expanded]}</AccordionDetails>
           {expanded && !showKey && (
-            <ExpansionPanelActions className="margin-right-small">
+            <AccordionActions className="margin-right-small">
               {loading === authset.id ? (
                 <Loader table={true} waiting={true} show={true} style={{ height: '4px' }} />
               ) : (
@@ -157,9 +157,9 @@ export default class AuthsetList extends React.Component {
                   </Button>
                 </>
               )}
-            </ExpansionPanelActions>
+            </AccordionActions>
           )}
-        </ExpansionPanel>
+        </Accordion>
       );
     });
 

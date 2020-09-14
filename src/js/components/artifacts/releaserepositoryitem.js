@@ -2,9 +2,9 @@ import React from 'react';
 import Time from 'react-time';
 
 // material ui
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 
@@ -27,14 +27,14 @@ export default class ReleaseRepositoryItem extends React.PureComponent {
     return (
       <div className="release-repo-item flexbox" ref={ref => (this.itemRef = ref)}>
         <div className="muted">{index + 1}</div>
-        <ExpansionPanel
+        <Accordion
           square
           expanded={expanded}
           onChange={() => onRowSelection(artifact)}
           TransitionProps={{ onEntered: () => onExpanded(), onExited: () => onExpanded() }}
           style={{ width: '100%', border: '1px solid', borderColor: '#e0e0e0' }}
         >
-          <ExpansionPanelSummary style={{ padding: '0 12px' }} classes={{ content: 'repo-item' }}>
+          <AccordionSummary style={{ padding: '0 12px' }} classes={{ content: 'repo-item' }}>
             <Tooltip title={compatible} placement="top-start">
               <div className="text-overflow">{compatible}</div>
             </Tooltip>
@@ -42,15 +42,15 @@ export default class ReleaseRepositoryItem extends React.PureComponent {
             <div style={{ maxWidth: '100vw' }}>{artifactType}</div>
             <FileSize fileSize={artifact.size} />
             <IconButton className="expandButton">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
+          </AccordionSummary>
+          <AccordionDetails>
             {expanded ? (
               <SelectedArtifact artifact={artifact} editArtifact={(id, description) => onEdit(id, description)} onExpansion={() => onExpanded()} />
             ) : (
               <div />
             )}
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
+          </AccordionDetails>
+        </Accordion>
       </div>
     );
   }
