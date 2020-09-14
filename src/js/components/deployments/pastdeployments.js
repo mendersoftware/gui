@@ -113,7 +113,7 @@ export class Past extends React.Component {
             onChange={(start, end) => self.refreshPast(1, perPage, start, end)}
             endDate={endDate}
             startDate={startDate}
-            today={today}
+            tonight={tonight}
           />
           <Autocomplete
             id="device-group-selection"

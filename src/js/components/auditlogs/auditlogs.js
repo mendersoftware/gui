@@ -98,7 +98,7 @@ export const AuditLogs = ({ count, events, getAuditLogs, groups, users }) => {
             onChange={(startDate, endDate) => refresh(1, perPage, startDate, endDate)}
             endDate={endDate}
             startDate={startDate}
-            today={today}
+            tonight={tonight}
           />
         </div>
       </div>

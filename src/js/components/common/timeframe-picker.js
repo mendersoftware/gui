@@ -4,7 +4,7 @@ import MomentUtils from '@date-io/moment';
 
 const pickerStyle = { width: 160, margin: 7.5, marginTop: 0 };
 
-export const TimeframePicker = ({ classNames, endDate, onChange, startDate, today }) => {
+export const TimeframePicker = ({ classNames, endDate, onChange, startDate, tonight }) => {
   const handleChangeStartDate = date => {
     let currentEndDate = endDate;
     if (date > currentEndDate) {
@@ -33,10 +33,10 @@ export const TimeframePicker = ({ classNames, endDate, onChange, startDate, toda
         autoOk={true}
         label="From"
         value={startDate}
-        maxDate={endDate || today}
+        maxDate={endDate || tonight}
         style={pickerStyle}
       />
-      <DatePicker variant="inline" onChange={handleChangeEndDate} autoOk={true} label="To" value={endDate} maxDate={today} style={pickerStyle} />
+      <DatePicker variant="inline" onChange={handleChangeEndDate} autoOk={true} label="To" value={endDate} maxDate={tonight} style={pickerStyle} />
     </MuiPickersUtilsProvider>
   );
 };
