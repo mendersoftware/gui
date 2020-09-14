@@ -1,0 +1,166 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Auditlogs Component renders correctly 1`] = `
+<div
+  className="fadeIn deploy-table-contain"
+>
+  <div
+    className="auditlogs-list-item auditlogs-list-item-header muted"
+  >
+    <div
+      className="columnHeader"
+      onClick={[Function]}
+      style={
+        Object {
+          "cursor": "initial",
+        }
+      }
+    >
+      User
+    </div>
+    <div
+      className="columnHeader"
+      onClick={[Function]}
+      style={
+        Object {
+          "cursor": "initial",
+        }
+      }
+    >
+      Action
+    </div>
+    <div
+      className="columnHeader"
+      onClick={[Function]}
+      style={
+        Object {
+          "cursor": "initial",
+        }
+      }
+    >
+      Changed
+    </div>
+    <div
+      className="columnHeader"
+      onClick={[Function]}
+      style={
+        Object {
+          "cursor": "initial",
+        }
+      }
+    >
+      More details
+    </div>
+    <div
+      className="columnHeader"
+      onClick={[Function]}
+      style={Object {}}
+    >
+      Time
+      <svg
+        aria-hidden={true}
+        className="MuiSvgIcon-root sortIcon selected true"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"
+        />
+      </svg>
+    </div>
+  </div>
+  <div
+    className="loaderContainer shrunk"
+  >
+    <div
+      className="loader"
+    >
+      <span
+        className="dot dot_1"
+      />
+      <span
+        className="dot dot_2"
+      />
+      <span
+        className="dot dot_3"
+      />
+      <span
+        className="dot dot_4"
+      />
+    </div>
+  </div>
+  <div
+    className="auditlogs-list-item"
+  >
+    <div>
+      <div>
+        string@example.com
+      </div>
+    </div>
+    <div>
+      <div
+        className="uppercased"
+      >
+        create
+      </div>
+    </div>
+    <div>
+      <div>
+        User user@acme.com
+      </div>
+    </div>
+    <div>
+      <div
+        className="capitalized"
+      >
+        change1
+      </div>
+    </div>
+    <div>
+      <time
+        dateTime="2020-09-10T12:10:22+00:00"
+        title={null}
+      >
+        2020-09-10 12:10
+      </time>
+    </div>
+  </div>
+  <div
+    className="auditlogs-list-item"
+  >
+    <div>
+      <div>
+        string
+      </div>
+    </div>
+    <div>
+      <div
+        className="uppercased"
+      >
+        create
+      </div>
+    </div>
+    <div>
+      <div>
+        Deployment to production
+      </div>
+    </div>
+    <div>
+      <a
+        href="/deployments/finished?open=true&id=string"
+        onClick={[Function]}
+      >
+        View deployment
+      </a>
+    </div>
+    <div>
+      <time
+        dateTime="2020-09-10T12:16:22+00:00"
+        title={null}
+      >
+        2020-09-10 12:16
+      </time>
+    </div>
+  </div>
+</div>
+`;
