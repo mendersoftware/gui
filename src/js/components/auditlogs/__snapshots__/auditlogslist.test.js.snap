@@ -38,7 +38,18 @@ exports[`Auditlogs Component renders correctly 1`] = `
         }
       }
     >
-      Changed
+      Type
+    </div>
+    <div
+      className="columnHeader"
+      onClick={[Function]}
+      style={
+        Object {
+          "cursor": "initial",
+        }
+      }
+    >
+      Change
     </div>
     <div
       className="columnHeader"
@@ -105,8 +116,15 @@ exports[`Auditlogs Component renders correctly 1`] = `
       </div>
     </div>
     <div>
+      <div
+        className="capitalized"
+      >
+        user
+      </div>
+    </div>
+    <div>
       <div>
-        User user@acme.com
+        user@acme.com
       </div>
     </div>
     <div>
@@ -141,8 +159,15 @@ exports[`Auditlogs Component renders correctly 1`] = `
       </div>
     </div>
     <div>
+      <div
+        className="capitalized"
+      >
+        deployment
+      </div>
+    </div>
+    <div>
       <div>
-        Deployment to production
+        to production
       </div>
     </div>
     <div>
