@@ -104,7 +104,7 @@ exports[`GlobalSettings Component renders correctly 1`] = `
         className="margin-top-small margin-bottom-small"
       >
         <a
-          href="https://docs.mender.io/hosted/client-installation/identity"
+          href="https://docs.mender.io/client-installation/identity"
           target="_blank"
         >
           Learn how to add custom identity attributes

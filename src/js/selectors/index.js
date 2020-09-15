@@ -12,7 +12,7 @@ const getOrganization = state => state.users.organization;
 export const getDocsVersion = createSelector([getAppDocsVersion, getFeatures], (appDocsVersion, { isHosted }) => {
   // if hosted, use latest docs version
   const docsVersion = appDocsVersion ? `${appDocsVersion}/` : 'development/';
-  return isHosted ? 'hosted/' : docsVersion;
+  return isHosted ? '' : docsVersion;
 });
 
 export const getIsEnterprise = createSelector(
