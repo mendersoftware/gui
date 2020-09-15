@@ -72,7 +72,7 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
       <ol>
         <li>
           <a
-            href="https://docs.mender.io/hosted/get-started/deploy-a-system-update"
+            href="https://docs.mender.io/get-started/deploy-a-system-update"
             target="_blank"
           >
             Deploy a system update
@@ -80,7 +80,7 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
         </li>
         <li>
           <a
-            href="https://docs.mender.io/hosted/get-started/deploy-a-container-update"
+            href="https://docs.mender.io/get-started/deploy-a-container-update"
             target="_blank"
           >
             Deploy a container update
