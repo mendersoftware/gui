@@ -25,8 +25,7 @@ const DeviceNotifications = ({ total, limit, pending }) => {
         >
           <Trans
             i18nKey="devices.limitNotification"
-            delta={limit - total}
-            limitStatus={approaching || warning ? { context: approaching ? 'approaching' : 'reached' } : {}}
+            values={{ delta: Math.max(limit - total, 0), limitStatus: approaching || warning ? (warning ? 'reached' : 'approaching') : '' }}
             components={{ supportMailLink: <a href="mailto:support@mender.io" />, externalLink: <a href="https://mender.io/pricing" target="_blank" /> }}
           />
         </ReactTooltip>

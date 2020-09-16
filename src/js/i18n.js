@@ -10,18 +10,17 @@ const resources = {
         note: 'Mender is currently running in <b>demo mode</b>.',
         reference: 'See the documentation for help switching to production mode'
       },
+
       devices: {
-        limitNotification: `<h3>Device limit</h3>
-          <p>$t(limit, { context: limitStatus, delta })</p>
-          <p>
-            If you need a higher device limit, you can contact us by email at <supportMailLink>support@mender.io</supportMailLink> to change your plan.
-          </p>
-          <p>Learn about the different plans available by visiting <externalLink>mender.io/pricing</externalLink></p>`,
-        limit: 'You can still connect another {{delta}} $t(devices, { count: {{delta}} }).',
-        limit_approaching: 'You are nearing your device limit.',
-        limit_reached: 'You have reached your device limit.',
         devices: 'device',
         devices_plural: 'devices',
+        limitNotification: `<h3>Device limit</h3>
+        <p>$t(devices.limit, { "context": "{{limitStatus}}", "delta": {{delta}} })</p>
+        <p>If you need a higher device limit, you can contact us by email at <supportMailLink>support@mender.io</supportMailLink> to change your plan.</p>
+        <p>Learn about the different plans available by visiting<externalLink>mender.io/pricing</externalLink></p>`,
+        limit: `You can still connect another {{delta}} $t(devices.devices, { "count": {{delta}} }).`,
+        limit_approaching: 'You are nearing your device limit.',
+        limit_reached: 'You have reached your device limit.',
         pending: {
           title: 'Pending',
           counter: '{{count}} pending'
@@ -49,7 +48,7 @@ const resources = {
         <p>
           <internalLink>Upgrade to a plan</internalLink> to add more devices and continue using Mender after the trial expires.
         </p>
-        <p>Or compare the plans at <externalLink>mender.io/plans/pricing</externalLink>.</p>`
+        <p>Or compare the plans at<externalLink>mender.io/plans/pricing</externalLink>.</p>`
       }
     }
   }
@@ -59,10 +58,7 @@ i18n.use(initReactI18next).init({
   resources,
   fallbackLng: 'en',
   lng: 'en',
-  keySeparator: '.',
-  interpolation: {
-    escapeValue: false
-  }
+  keySeparator: '.'
 });
 
 i18n.on('languageChanged', lng => {

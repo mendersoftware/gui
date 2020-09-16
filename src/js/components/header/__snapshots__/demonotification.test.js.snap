@@ -40,11 +40,7 @@ exports[`DemoNotification Component renders correctly 1`] = `
       Demo mode
     </h3>
     <p>
-      Mender is currently running in 
-      <b>
-        demo mode
-      </b>
-      .
+      Mender is currently running in &lt;b&gt;demo mode&lt;/b&gt;.
     </p>
     <p>
       <a

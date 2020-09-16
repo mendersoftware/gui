@@ -41,16 +41,12 @@ Array [
           data-id="tooltip"
           id="limit-tip"
         >
-          <h3>
-            Device limit
-          </h3>
+          &lt;h3&gt;Device limit&lt;/h3&gt;
+           
           <p>
-            You can still connect another 
-            500
-             
-            devices
-            .
+            You can still connect another 500 devices.
           </p>
+           
           <p>
             If you need a higher device limit, you can contact us by email at 
             <a
@@ -60,9 +56,9 @@ Array [
             </a>
              to change your plan.
           </p>
+           
           <p>
             Learn about the different plans available by visiting
-             
             <a
               href="https://mender.io/pricing"
               target="_blank"

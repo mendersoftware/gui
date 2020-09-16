@@ -42,7 +42,9 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
     <p>
       You're using the trial version of Mender – it's free for up to 10 devices for 12 months.
     </p>
+     
     <p>
+       
       <a
         href="/settings/upgrade"
         onClick={[Function]}
@@ -50,10 +52,11 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
         Upgrade to a plan
       </a>
        to add more devices and continue using Mender after the trial expires.
+        
     </p>
+     
     <p>
       Or compare the plans at
-       
       <a
         href="https://mender.io/plans/pricing"
         target="_blank"
