@@ -6,6 +6,7 @@ COPY . ./
 RUN npm run build
 
 FROM nginx:1.19.2-alpine
+EXPOSE 8080
 RUN mkdir -p /var/www/mender-gui/dist
 WORKDIR /var/www/mender-gui/dist
 ARG GIT_COMMIT_TAG
