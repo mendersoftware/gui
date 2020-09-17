@@ -16,14 +16,32 @@ exports[`ReleasesList Component renders correctly 1`] = `
       Releases
     </h3>
     <div
-      className="search margin-left"
+      className="MuiFormControl-root MuiTextField-root search"
+      style={
+        Object {
+          "marginLeft": 30,
+          "marginTop": 0,
+        }
+      }
     >
-      <input
-        onChange={[Function]}
-        placeholder="Filter"
-        type="search"
-        value=""
-      />
+      <div
+        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+        onClick={[Function]}
+      >
+        <input
+          aria-invalid={false}
+          autoFocus={false}
+          className="MuiInputBase-input MuiInput-input"
+          disabled={false}
+          onAnimationStart={[Function]}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder="Filter"
+          required={false}
+          type="text"
+        />
+      </div>
     </div>
   </div>
   <button
