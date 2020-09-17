@@ -5,25 +5,30 @@ import { setSnackbar } from '../../actions/appActions';
 import Snackbar from '@material-ui/core/Snackbar';
 import copy from 'copy-to-clipboard';
 
-export class SharedSnackbar extends React.PureComponent {
-  handleActionClick() {
-    copy(this.props.snackbar.message);
-    this.props.setSnackbar('Copied to clipboard');
-  }
+export const SharedSnackbar = ({ setSnackbar, snackbar }) => {
+  const handleActionClick = () => {
+    copy(snackbar.message);
+    setSnackbar('Copied to clipboard');
+  };
 
-  render() {
-    const { maxWidth, onClick, onClose, ...snackProps } = this.props.snackbar;
-    const { setSnackbar } = this.props;
-    return (
-      <Snackbar
-        style={{ maxWidth: maxWidth, height: 'auto', lineHeight: '28px', padding: 24, whiteSpace: 'pre-line' }}
-        onClick={onClick ? onClick : () => this.handleActionClick()}
-        onClose={onClose ? onClose : () => setSnackbar()}
-        {...snackProps}
-      />
-    );
-  }
-}
+  const onCloseSnackbar = (_, reason) => {
+    const { onClose = false } = snackbar;
+    if (onClose && reason === 'clickaway') {
+      return;
+    }
+    setSnackbar('');
+  };
+
+  const { maxWidth, onClick, ...snackProps } = snackbar;
+  return (
+    <Snackbar
+      {...snackProps}
+      style={{ maxWidth, height: 'auto', lineHeight: '28px', padding: 24, whiteSpace: 'pre-line' }}
+      onClick={onClick ? onClick : handleActionClick}
+      onClose={onCloseSnackbar}
+    />
+  );
+};
 
 const actionCreators = { setSnackbar };
 

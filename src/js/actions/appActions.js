@@ -20,18 +20,18 @@ export const sortTable = (table, column, direction) => dispatch =>
 /*
   General
 */
-export const setSnackbar = (message, duration, action, component, onClick, onClose) => dispatch =>
+export const setSnackbar = (message, autoHideDuration, action, children, onClick, onClose) => dispatch =>
   dispatch({
     type: AppConstants.SET_SNACKBAR,
     snackbar: {
       open: message ? true : false,
-      message: message,
+      message,
       maxWidth: '900px',
-      autoHideDuration: duration,
-      action: action,
-      children: component,
-      onClick: onClick,
-      onClose: onClose
+      autoHideDuration,
+      action,
+      children,
+      onClick,
+      onClose
     }
   });
 
