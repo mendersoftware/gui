@@ -125,6 +125,7 @@ export class MyOrganization extends React.Component {
                 <ListItem style={{ maxWidth: '500px' }} divider={true} key="plan" disabled={true}>
                   <ListItemText
                     primary="Current plan"
+                    secondaryTypographyProps={{ component: 'div' }}
                     secondary={
                       <div className="flexbox space-between">
                         {plans[currentPlan]}
@@ -140,6 +141,7 @@ export class MyOrganization extends React.Component {
                 <ListItem style={{ maxWidth: '500px' }} divider={true} key="trial" disabled={true}>
                   <ListItemText
                     primary="Trial"
+                    secondaryTypographyProps={{ component: 'div' }}
                     secondary={
                       <div className="flexbox space-between">
                         Expires in {moment().from(moment(org.trial_expiration), true)}
@@ -153,6 +155,7 @@ export class MyOrganization extends React.Component {
                 <ListItem style={{ maxWidth: '500px' }} divider={true} key="device_limit" disabled={true}>
                   <ListItemText
                     primary={`Device limit: ${acceptedDevices}/${deviceLimit}`}
+                    secondaryTypographyProps={{ component: 'div' }}
                     secondary={
                       <div>
                         <LinearProgress
