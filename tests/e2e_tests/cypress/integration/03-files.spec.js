@@ -68,7 +68,7 @@ context('Deployments', () => {
     // create an artifact to download first
     cy.get('.repository-list-item').contains('mender-demo-artifact').click().end();
     cy.get('a').contains('Create deployment').click({ force: true }).wait(5000).end();
-    cy.get('[placeholder="Select a device group to deploy to"]').click({ force: true });
+    cy.get('label').contains('Select a device group to deploy to').click({ force: true });
     cy.get('[role="tooltip"]').get('li').contains('All devices').click().end();
     cy.get('button').contains('Next').click().end();
     cy.get('.MuiDialog-container button').contains('Create').click().wait(20000).end();

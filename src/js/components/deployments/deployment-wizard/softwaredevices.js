@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 import pluralize from 'pluralize';
 
 import { TextField, Tooltip } from '@material-ui/core';
+import { Autocomplete } from '@material-ui/lab';
 import { ErrorOutline as ErrorOutlineIcon, InfoOutlined as InfoOutlinedIcon } from '@material-ui/icons';
 
-import AutoSelect from '../../common/forms/autoselect';
 import { getAllDevicesByStatus, getAllGroupDevices, selectDevices } from '../../../actions/deviceActions';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../../constants/deviceConstants';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
@@ -82,22 +82,12 @@ export class SoftwareDevices extends React.Component {
       value: rel
     }));
 
-    let groupItems = [{ title: 'All devices', value: 'All devices' }];
+    let groupItems = [];
     if (device && device.attributes) {
       // If single device, don't show groups
-      groupItems[0] = {
-        title: device.id,
-        value: device
-      };
       releaseItems = releaseItems.filter(rel => rel.value.device_types_compatible.some(type => type === device.attributes.device_type));
     } else {
-      groupItems = Object.keys(groups).reduce((accu, currentGroup) => {
-        accu.push({
-          title: currentGroup,
-          value: currentGroup
-        });
-        return accu;
-      }, groupItems);
+      groupItems = [allDevices, ...Object.keys(groups)];
     }
 
     const groupLink = group ? `/devices/group=${group}` : '/devices/';
@@ -129,13 +119,18 @@ export class SoftwareDevices extends React.Component {
               {selectedRelease ? (
                 <TextField value={selectedRelease.Name} label="Release" disabled={true} style={styles.infoStyle} />
               ) : (
-                <AutoSelect
-                  label="Select a Release to deploy"
-                  errorText="Select a Release to deploy"
-                  items={releaseItems}
-                  onChange={item => self.deploymentSettingsUpdate(item, 'release')}
-                  style={styles.textField}
-                  value={release ? release.Name : null}
+                <Autocomplete
+                  id="deployment-release-selection"
+                  autoSelect
+                  autoHighlight
+                  filterSelectedOptions
+                  getOptionLabel={option => option.title || option}
+                  handleHomeEndKeys
+                  options={releaseItems}
+                  onChange={(e, item) => self.deploymentSettingsUpdate(item.value, 'release')}
+                  renderInput={params => (
+                    <TextField {...params} label="Select a Release to deploy" InputProps={{ ...params.InputProps }} style={styles.textField} />
+                  )}
                 />
               )}
               {releaseDeviceTypes.length ? (
@@ -149,14 +144,18 @@ export class SoftwareDevices extends React.Component {
                 <TextField value={device ? device.id : ''} label="Device" disabled={true} style={styles.infoStyle} />
               ) : (
                 <div>
-                  <AutoSelect
-                    label="Select a device group to deploy to"
-                    errorText="Please select a group from the list"
-                    value={group}
-                    items={groupItems}
+                  <Autocomplete
+                    id="deployment-device-group-selection"
+                    autoSelect
+                    autoHighlight
+                    filterSelectedOptions
+                    handleHomeEndKeys
                     disabled={!(hasDevices || hasDynamicGroups)}
-                    onChange={item => self.deploymentSettingsUpdate(item, 'group')}
-                    style={styles.textField}
+                    options={groupItems}
+                    onChange={(e, item) => self.deploymentSettingsUpdate(item, 'group')}
+                    renderInput={params => (
+                      <TextField {...params} label="Select a device group to deploy to" InputProps={{ ...params.InputProps }} style={styles.textField} />
+                    )}
                   />
                   {!(hasDevices || hasDynamicGroups) && (
                     <p className="info" style={{ marginTop: '10px' }}>
