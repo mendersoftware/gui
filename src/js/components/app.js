@@ -19,13 +19,6 @@ import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import Tracking from '../tracking';
 import LiveChatBox from './livechatbox';
 
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-
-// Make sure to call `loadStripe` outside of a component’s render to avoid
-// recreating the `Stripe` object on every render.
-const stripePromise = window.mender_environment.stripeAPIKey ? loadStripe(window.mender_environment.stripeAPIKey) : null;
-
 const timeout = 900000; // 15 minutes idle time
 
 class AppRoot extends React.PureComponent {
@@ -97,7 +90,7 @@ class AppRoot extends React.PureComponent {
     return (
       <>
         {getToken() ? (
-          <Elements stripe={stripePromise}>
+          <>
             <IdleTimer element={document} onAction={updateMaxAge} onIdle={() => self.onIdle()} timeout={timeout} />
             <Header history={history} />
             <LeftNav className="leftFixed leftNav" />
@@ -114,7 +107,7 @@ class AppRoot extends React.PureComponent {
             />
             <DeviceConnectionDialog open={showDeviceConnectionDialog} onCancel={() => setShowConnectingDialog(false)} />
             <LiveChatBox />
-          </Elements>
+          </>
         ) : (
           publicRoutes
         )}
