@@ -63,7 +63,7 @@ export const getOnboardingState = () => (dispatch, getState) => {
         acceptedDevices.length && store.devices.byId[acceptedDevices[0]].hasOwnProperty('attributes')
           ? store.devices.byId[acceptedDevices[0]].attributes.device_type
           : null;
-      const onboarding = getStoredOnboardingState(store.getState());
+      const onboarding = getStoredOnboardingState(store);
       savedState = { ...savedState, ...onboarding };
       const progress = savedState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments);
       const state = {
