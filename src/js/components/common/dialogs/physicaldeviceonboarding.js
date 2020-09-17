@@ -2,14 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
 
+import { TextField } from '@material-ui/core';
+import { Autocomplete, createFilterOptions } from '@material-ui/lab';
 import HelpIcon from '@material-ui/icons/Help';
 
 import CopyCode from '../copy-code';
-import AutoSelect from '../forms/autoselect';
 import { setOnboardingApproach, setOnboardingDeviceType } from '../../../actions/userActions';
 import { getDebConfigurationCode } from '../../../helpers';
 import { getDocsVersion, getIsEnterprise } from '../../../selectors';
 import { advanceOnboarding } from '../../../utils/onboardingmanager';
+
+const filter = createFilterOptions();
 
 const types = [
   {
@@ -26,7 +29,7 @@ export class PhysicalDeviceOnboarding extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      selection: null
+      selection: { title: '', value: '' }
     };
   }
 
@@ -34,9 +37,11 @@ export class PhysicalDeviceOnboarding extends React.Component {
     this.props.setOnboardingApproach('physical');
   }
 
-  onSelect(deviceType) {
-    this.props.setOnboardingDeviceType(deviceType);
-    this.setState({ selection: deviceType });
+  onSelect(deviceType, reason) {
+    if (reason === 'select-option') {
+      this.props.setOnboardingDeviceType(deviceType.value);
+      this.setState({ selection: deviceType.value });
+    }
   }
 
   render() {
@@ -52,7 +57,42 @@ export class PhysicalDeviceOnboarding extends React.Component {
           <b>1. Enter your device type</b>
           <p>Setting this attribute on the device ensures that the device will only receive updates for compatible software releases.</p>
           <div className="flexbox centered">
-            <AutoSelect label="Device type" errorText="Choose a device type" items={types} onChange={item => self.onSelect(item)} />
+            <Autocomplete
+              id="device-type-selection"
+              autoSelect
+              autoHighlight
+              filterSelectedOptions
+              freeSolo
+              getOptionLabel={option => {
+                // Value selected with enter, right from the input
+                if (typeof option === 'string') {
+                  return option;
+                }
+                if (option.key === 'custom' && option.value === selection) {
+                  return option.value;
+                }
+                return option.title;
+              }}
+              handleHomeEndKeys
+              includeInputInList
+              filterOptions={(options, params) => {
+                const filtered = filter(options, params);
+                if (filtered.length !== 1 && params.inputValue !== '') {
+                  filtered.push({
+                    value: params.inputValue,
+                    key: 'custom',
+                    title: `Use "${params.inputValue}"`
+                  });
+                }
+                return filtered;
+              }}
+              options={types}
+              onChange={(e, item, reason) => self.onSelect(item, reason)}
+              renderInput={params => (
+                <TextField {...params} label="Device type" placeholder="Choose a device type" InputProps={{ ...params.InputProps }} style={{ marginTop: 0 }} />
+              )}
+              value={selection}
+            />
           </div>
           <div id="onboard-connect-1" className="tooltip help" data-tip data-for="physical-device-type-tip" data-event="click focus">
             <HelpIcon />
