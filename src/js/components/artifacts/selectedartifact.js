@@ -53,7 +53,8 @@ export class SelectedArtifact extends React.Component {
     this.state = {
       descEdit: false,
       description: this.props.artifact.description || '-',
-      gettingUrl: false
+      gettingUrl: false,
+      showPayloads: false
     };
   }
   componentDidUpdate(prevProps) {
@@ -171,14 +172,14 @@ export class SelectedArtifact extends React.Component {
           </FormControl>
         </div>
         {artifactMetaInfo.map(
-          info =>
+          (info, index) =>
             !!info.content.length && (
-              <>
+              <React.Fragment key={`artifact-info-${index}`}>
                 <p className="margin-bottom-none">{info.title}</p>
                 <List className="list-horizontal-flex" style={{ paddingTop: 0 }}>
                   {info.content}
                 </List>
-              </>
+              </React.Fragment>
             )
         )}
         <ExpansionPanel
