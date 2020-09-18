@@ -18,12 +18,11 @@ import {
   Warning as WarningIcon
 } from '@material-ui/icons';
 
-import { decommissionDevice, selectDevice } from '../../actions/deviceActions';
+import { decommissionDevice } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { getDocsVersion } from '../../selectors';
-import { advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import { AuthButton } from '../helptips/helptooltips';
 import ExpandableAttribute from '../common/expandable-attribute';
 import Loader from '../common/loader';
@@ -67,67 +66,19 @@ export class ExpandedDevice extends React.Component {
     }
   }
 
-  dialogToggle(ref) {
-    var state = {};
-    state[ref] = !this.state[ref];
-    this.setState({ filterByArtifact: null });
-  }
-
   toggleAuthsets(authsets = !this.state.authsets, shouldUpdate = false) {
     this.setState({ authsets });
     this.props.refreshDevices(shouldUpdate);
-  }
-
-  _updateParams(val, attr) {
-    // updating params from child schedule form
-    var tmp = {};
-    tmp[attr] = val;
-    this.setState(tmp);
-  }
-
-  _clickListItem() {
-    this.props.setSnackbar('');
-    this.setState({ schedule: false });
   }
 
   _handleStopProp(e) {
     e.stopPropagation();
   }
 
-  _deploymentParams(val, attr) {
-    // updating params from child schedule form
-    var tmp = {};
-    tmp[attr] = val;
-    this.setState(tmp);
-
-    // check that device type matches
-    var filteredDevs = null;
-    if (attr === 'artifact' && val) {
-      const device_type = this.props.device.attributes.find(item => item.name === 'device_type').value;
-      for (var i = 0; i < val.device_types_compatible.length; i++) {
-        if (val.device_types_compatible[i] === device_type) {
-          filteredDevs = [this.props.device];
-          break;
-        }
-      }
-    }
-    this.setState({ filterByArtifact: filteredDevs });
-  }
-
   _copyLinkToClipboard() {
     var location = window.location.href.substring(0, window.location.href.indexOf('/devices') + '/devices'.length);
     copy(`${location}/id=${this.props.device.id}`);
     this.props.setSnackbar('Link copied to clipboard');
-  }
-
-  _scheduleDeploymentFor(device) {
-    if (!this.props.onboardingComplete) {
-      if (!getOnboardingStepCompleted('upload-prepared-artifact-tip')) {
-        advanceOnboarding('upload-prepared-artifact-tip');
-      }
-    }
-    this.props.selectDevice(device);
-    this.setState({ schedule: true });
   }
 
   _decommissionDevice(device_id) {
@@ -373,7 +324,7 @@ export class ExpandedDevice extends React.Component {
   }
 }
 
-const actionCreators = { decommissionDevice, getReleases, selectDevice, setSnackbar };
+const actionCreators = { decommissionDevice, getReleases, setSnackbar };
 
 const mapStateToProps = state => {
   return {
