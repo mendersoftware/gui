@@ -30,19 +30,23 @@ export class Authsets extends React.Component {
       // call API to update authset
       changeRequest = self.props.updateDeviceAuth(device_id, auth_id, status);
     }
-    return changeRequest.then(() => {
-      // if only authset, close dialog and refresh!
-      if (self.props.device.auth_sets.length <= 1) {
-        self.props.dialogToggle('authsets');
-      } else {
-        // refresh authset list
-        self.props
-          .getDeviceAuth(device_id)
-          .catch(err => console.log(`Error: ${err}`))
-          // on finish, change "loading" back to null
-          .finally(() => self.setState({ loading: null }));
-      }
-    });
+    return changeRequest
+      .then(() => {
+        // if only authset, close dialog and refresh!
+        if (self.props.device.auth_sets.length <= 1) {
+          self.props.dialogToggle('authsets');
+        } else {
+          // refresh authset list
+          self.props
+            .getDeviceAuth(device_id)
+            .catch(err => console.log(`Error: ${err}`))
+            // on finish, change "loading" back to null
+            .finally(() => self.setState({ loading: null }));
+        }
+      })
+      .catch(() => {
+        self.setState({ loading: null });
+      });
   }
 
   _showConfirm() {
