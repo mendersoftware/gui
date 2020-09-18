@@ -15,39 +15,96 @@ exports[`PhysicalDeviceOnboarding Component renders correctly 1`] = `
       className="flexbox centered"
     >
       <div
-        className="MuiFormControl-root"
+        aria-expanded={false}
+        aria-owns={null}
+        className="MuiAutocomplete-root MuiAutocomplete-hasClearIcon"
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onMouseDown={[Function]}
+        role="combobox"
       >
-        <label
-          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-          data-shrink={false}
-          htmlFor="adornment-target-select"
-        >
-          Device type
-        </label>
         <div
-          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-          onClick={[Function]}
+          className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
           style={
             Object {
-              "minWidth": "250px",
+              "marginTop": 0,
             }
           }
         >
-          <input
-            aria-invalid={false}
-            autoComplete="off"
-            className="MuiInputBase-input MuiInput-input"
-            disabled={false}
-            id="adornment-target-select"
-            onAnimationStart={[Function]}
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            placeholder="Device type"
-            required={false}
-            type="text"
-            value=""
-          />
+          <label
+            className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+            data-shrink={false}
+            htmlFor="device-type-selection"
+            id="device-type-selection-label"
+          >
+            Device type
+          </label>
+          <div
+            className="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+            onClick={[Function]}
+          >
+            <input
+              aria-activedescendant={null}
+              aria-autocomplete="list"
+              aria-controls={null}
+              aria-invalid={false}
+              autoCapitalize="none"
+              autoComplete="off"
+              autoFocus={false}
+              className="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
+              disabled={false}
+              id="device-type-selection"
+              onAnimationStart={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onMouseDown={[Function]}
+              placeholder="Choose a device type"
+              required={false}
+              spellCheck="false"
+              type="text"
+              value=""
+            />
+            <div
+              className="MuiAutocomplete-endAdornment"
+            >
+              <button
+                aria-label="Clear"
+                className="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty"
+                disabled={false}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                tabIndex={-1}
+                title="Clear"
+                type="button"
+              >
+                <span
+                  className="MuiIconButton-label"
+                >
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

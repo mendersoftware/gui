@@ -87,8 +87,8 @@ export const createDeployment = newDeployment => dispatch => {
       return Promise.reject();
     })
     .then(data => {
-      const lastslashindex = data.header.location.lastIndexOf('/');
-      const deploymentId = data.header.location.substring(lastslashindex + 1);
+      const lastslashindex = data.headers.location.lastIndexOf('/');
+      const deploymentId = data.headers.location.substring(lastslashindex + 1);
       const deployment = {
         ...newDeployment,
         devices: newDeployment.devices ? newDeployment.devices.map(id => ({ id, status: 'pending' })) : []

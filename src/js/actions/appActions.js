@@ -21,18 +21,18 @@ export const sortTable = (table, column, direction) => dispatch =>
 /*
   General
 */
-export const setSnackbar = (message, duration, action, component, onClick, onClose) => dispatch =>
+export const setSnackbar = (message, autoHideDuration, action, children, onClick, onClose) => dispatch =>
   dispatch({
     type: AppConstants.SET_SNACKBAR,
     snackbar: {
       open: message ? true : false,
-      message: message,
+      message,
       maxWidth: '900px',
-      autoHideDuration: duration,
-      action: action,
-      children: component,
-      onClick: onClick,
-      onClose: onClose
+      autoHideDuration,
+      action,
+      children,
+      onClick,
+      onClose
     }
   });
 
@@ -63,7 +63,7 @@ export const getOnboardingState = () => (dispatch, getState) => {
         acceptedDevices.length && store.devices.byId[acceptedDevices[0]].hasOwnProperty('attributes')
           ? store.devices.byId[acceptedDevices[0]].attributes.device_type
           : null;
-      const onboarding = getStoredOnboardingState(store.getState());
+      const onboarding = getStoredOnboardingState(store);
       savedState = { ...savedState, ...onboarding };
       const progress = savedState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments);
       const state = {
