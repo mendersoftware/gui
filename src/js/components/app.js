@@ -10,9 +10,8 @@ import LeftNav from './leftnav';
 import CreateArtifactDialog from './common/dialogs/createartifactdialog';
 import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
 import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
-import { getToken, logout, updateMaxAge, expirySet } from '../auth';
-import { setSnackbar } from '../actions/appActions';
-import { saveUserSettings, setShowConnectingDialog, setShowCreateArtifactDialog } from '../actions/userActions';
+import { getToken, updateMaxAge, expirySet } from '../auth';
+import { logoutUser, saveUserSettings, setShowConnectingDialog, setShowCreateArtifactDialog } from '../actions/userActions';
 import { privateRoutes, publicRoutes } from '../config/routes';
 import SharedSnackbar from '../components/common/sharedsnackbar';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
@@ -59,12 +58,7 @@ class AppRoot extends React.PureComponent {
   onIdle() {
     if (expirySet() && this.props.currentUser) {
       // logout user and warn
-      if (!this.props.artifactProgress) {
-        this.props.setSnackbar('Your session has expired. You have been automatically logged out due to inactivity.');
-        logout();
-        return;
-      }
-      updateMaxAge();
+      return this.props.logoutUser('Your session has expired. You have been automatically logged out due to inactivity.').catch(() => updateMaxAge());
     }
   }
 
@@ -117,11 +111,10 @@ class AppRoot extends React.PureComponent {
   }
 }
 
-const actionCreators = { saveUserSettings, setShowConnectingDialog, setShowCreateArtifactDialog, setSnackbar };
+const actionCreators = { logoutUser, saveUserSettings, setShowConnectingDialog, setShowCreateArtifactDialog };
 
 const mapStateToProps = state => {
   return {
-    artifactProgress: state.releases.uploadProgress,
     currentUser: state.users.currentUser,
     showDismissHelptipsDialog: !state.users.onboarding.complete && state.users.onboarding.showTipsDialog,
     showCreateArtifactDialog: state.users.onboarding.showCreateArtifactDialog,
