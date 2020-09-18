@@ -409,7 +409,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             readOnly={true}
             required={false}
             type="text"
-            value="September 16th"
+            value="January 1st"
           />
         </div>
         
@@ -449,7 +449,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             readOnly={true}
             required={false}
             type="text"
-            value="September 16th"
+            value="January 1st"
           />
         </div>
         
@@ -650,10 +650,10 @@ exports[`Auditlogs Component renders correctly 1`] = `
       </div>
       <div>
         <time
-          dateTime="2020-09-10T12:10:22+00:00"
+          dateTime="2019-01-01T12:59:59+00:00"
           title={null}
         >
-          2020-09-10 12:10
+          2019-01-01 12:59
         </time>
       </div>
     </div>
@@ -694,10 +694,10 @@ exports[`Auditlogs Component renders correctly 1`] = `
       </div>
       <div>
         <time
-          dateTime="2020-09-10T12:16:22+00:00"
+          dateTime="2019-01-01T12:59:59+00:00"
           title={null}
         >
-          2020-09-10 12:16
+          2019-01-01 12:59
         </time>
       </div>
     </div>
