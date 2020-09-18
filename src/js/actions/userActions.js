@@ -6,7 +6,7 @@ import UsersApi from '../api/users-api';
 import * as UserConstants from '../constants/userConstants';
 import { getUserSettings } from '../selectors';
 import { advanceOnboarding } from '../utils/onboardingmanager';
-import { getToken } from '../auth';
+import { getToken, logout } from '../auth';
 import { preformatWithRequestID, decodeSessionToken } from '../helpers';
 
 const cookies = new Cookies();
@@ -49,6 +49,7 @@ export const loginUser = userData => (dispatch, getState) =>
       cookies.set('JWT', token, options);
 
       const userId = decodeSessionToken(token);
+      window.location.replace('#/');
       return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), dispatch(getUser(userId))]);
     })
     .catch(err => {
@@ -57,7 +58,19 @@ export const loginUser = userData => (dispatch, getState) =>
       return Promise.all([Promise.reject(err), dispatch(handleLoginError(err, has2FA))]);
     });
 
-export const logoutUser = () => dispatch => Promise.resolve(dispatch({ type: UserConstants.USER_LOGOUT }));
+export const logoutUser = reason => (dispatch, getState) => {
+  if (getState().releases.uploadProgress) {
+    return Promise.reject();
+  }
+  return GeneralApi.post(`${useradmApiUrl}/auth/logout`).finally(() => {
+    logout();
+    let tasks = [dispatch({ type: UserConstants.USER_LOGOUT })];
+    if (reason) {
+      tasks.push(dispatch(setSnackbar(reason)));
+    }
+    return Promise.all(tasks);
+  });
+};
 
 export const passwordResetStart = email => dispatch =>
   GeneralApi.post(`${useradmApiUrl}/auth/password-reset/start`, { email: email }).catch(err => {
