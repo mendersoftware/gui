@@ -12,7 +12,7 @@ import {
   ExitToApp as ExitIcon
 } from '@material-ui/icons';
 
-import { getToken, logout } from '../../auth';
+import { getToken } from '../../auth';
 import { decodeSessionToken, hashString, isEmpty } from '../../helpers';
 import { getDocsVersion, getIsEnterprise, getUserRoles, getUserSettings } from '../../selectors';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
@@ -156,10 +156,9 @@ export class Header extends React.Component {
     this.setState({ anchorEl: null });
   };
   onLogoutClick() {
-    const self = this;
-    self.setState({ gettingUser: false, loggingOut: true, anchorEl: null });
+    this.setState({ gettingUser: false, loggingOut: true, anchorEl: null });
     clearAllRetryTimers(this.props.setSnackbar);
-    self.props.logoutUser().then(() => logout());
+    this.props.logoutUser();
   }
   render() {
     const self = this;

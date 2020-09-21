@@ -1,4 +1,4 @@
-FROM node:14.9.0-alpine AS build
+FROM node:14.11.0-alpine AS build
 WORKDIR /usr/src/app
 COPY package-lock.json package.json ./
 RUN npm ci
@@ -6,6 +6,7 @@ COPY . ./
 RUN npm run build
 
 FROM nginx:1.19.2-alpine
+EXPOSE 8080
 RUN mkdir -p /var/www/mender-gui/dist
 WORKDIR /var/www/mender-gui/dist
 ARG GIT_COMMIT_TAG

@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // material ui
-import { Grid, RootRef } from '@material-ui/core';
+import { Grid, RootRef, TextField } from '@material-ui/core';
+import { Autocomplete } from '@material-ui/lab';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
@@ -10,7 +11,6 @@ import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
-import AutoSelect from '../common/forms/autoselect';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
@@ -37,7 +37,7 @@ export class Past extends React.Component {
     super(props, context);
     this.state = {
       active: 'today',
-      deviceGroup: null,
+      deviceGroup: '',
       doneLoading: false,
       endDate: tonight,
       startDate: props.startDate || today,
@@ -85,13 +85,13 @@ export class Past extends React.Component {
     perPage = this.state.perPage,
     startDate = this.state.startDate,
     endDate = this.state.endDate,
-    group = this.state.deviceGroup
+    deviceGroup = this.state.deviceGroup
   ) {
     const self = this;
-    self.setState({ page, perPage, endDate, startDate, group }, () => {
+    self.setState({ page, perPage, endDate, startDate, deviceGroup }, () => {
       const roundedStartDate = Math.round(Date.parse(startDate) / 1000);
       const roundedEndDate = Math.round(Date.parse(endDate) / 1000);
-      return Promise.resolve(self.props.getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, group))
+      return Promise.resolve(self.props.getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, deviceGroup))
         .then(deploymentsAction => {
           clearRetryTimer(type, self.props.setSnackbar);
           if (deploymentsAction && deploymentsAction[0].total && !deploymentsAction[0].deploymentIds.length) {
@@ -130,15 +130,7 @@ export class Past extends React.Component {
   render() {
     const self = this;
     const { count, createClick, groups, loading, past, showHelptips } = self.props;
-    const { active, page, perPage, endDate, startDate } = self.state;
-
-    const menuItems = groups.reduce(
-      (accu, item) => {
-        accu.push({ title: item, value: item });
-        return accu;
-      },
-      [{ title: 'All devices', value: 'All devices' }]
-    );
+    const { active, deviceGroup, page, perPage, endDate, startDate } = self.state;
 
     let onboardingComponent = null;
     if (this.deploymentsRef) {
@@ -195,12 +187,24 @@ export class Past extends React.Component {
             </Grid>
           </MuiPickersUtilsProvider>
           <Grid item>
-            <AutoSelect
-              label="Filter by device group"
-              placeholder="Select a group"
-              items={menuItems}
-              onChange={value => self.refreshPast(1, perPage, startDate, endDate, value)}
-              style={{ marginTop: 0 }}
+            <Autocomplete
+              id="device-group-selection"
+              autoSelect
+              filterSelectedOptions
+              freeSolo
+              handleHomeEndKeys
+              inputValue={deviceGroup}
+              options={groups}
+              onInputChange={(e, value) => self.refreshPast(1, perPage, startDate, endDate, value)}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  label="Filter by device group"
+                  placeholder="Select a group"
+                  InputProps={{ ...params.InputProps }}
+                  style={{ marginTop: 0 }}
+                />
+              )}
             />
           </Grid>
         </Grid>
@@ -248,7 +252,7 @@ const mapStateToProps = state => {
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
     count: state.deployments.byStatus.finished.total,
-    groups: Object.keys(groups),
+    groups: ['All devices', ...Object.keys(groups)],
     onboardingComplete: state.users.onboarding.complete,
     past,
     showHelptips: state.users.showHelptips,

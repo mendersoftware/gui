@@ -36,11 +36,7 @@ export default class TextInput extends React.Component {
       this.setState({ value: this.props.value }, self.props.validate(self, self.props.value));
     }
   }
-  setControlRef(ref) {
-    if (this.props.setControlRef) {
-      this.props.setControlRef(ref);
-    }
-  }
+
   setValue(event) {
     this.setState({
       value: event.currentTarget.value
