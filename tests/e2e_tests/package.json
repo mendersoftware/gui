@@ -1,12 +1,18 @@
 {
   "name": "mender-gui-e2e-tests",
   "version": "1.0.0",
-  "description": "Test mender e2e - with focusing on the GUI",
+  "description": "Test mender e2e - with focus on the GUI",
   "main": "login.spec.js",
   "dependencies": {
-    "cypress": "^4.9.0",
-    "cypress-file-upload": "^4.0.7",
-    "jwt-decode": "^2.2.0"
+    "@cypress/skip-test": "^2.5.0",
+    "@nuintun/qrcode": "^3.0.1",
+    "cypress": "~5.4.0",
+    "cypress-localstorage-commands": "^1.2.3",
+    "cypress-file-upload": "^4.1.1",
+    "cypress-otp": "^1.0.3",
+    "cypress-wait-until": "^1.7.1",
+    "jwt-decode": "^2.2.0",
+    "uuid": "^8.3.1"
   },
   "repository": {
     "type": "git",
