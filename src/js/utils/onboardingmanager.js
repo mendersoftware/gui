@@ -62,7 +62,8 @@ export const onboardingSteps = {
       onboardingTipSanityCheck('artifact-included-deploy-onboarding') &&
       window.location.hash.endsWith('#/devices') &&
       store.getState().devices.byStatus.accepted.total > 0 &&
-      (Object.values(store.getState().devices.byId).every(item => !!item.attributes) || getOnboardingStepCompleted('devices-accepted-onboarding')),
+      (Object.values(store.getState().devices.byId).every(item => Object.values(item.attributes).some(value => value)) ||
+        getOnboardingStepCompleted('devices-accepted-onboarding')),
     component: (
       <div>
         <b>Deploy your first Application update</b>
