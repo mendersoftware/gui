@@ -56,9 +56,7 @@ export const getAuditLogs = (page, perPage, startDate, endDate, userId, type, gr
   )
     .then(res => {
       const total = Number(res.headers[headerNames.total]);
-      return Promise.resolve(
-        dispatch({ type: OrganizationConstants.RECEIVE_AUDIT_LOGS, events: [...getState().organization.events, ...res.data.events], total })
-      );
+      return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_AUDIT_LOGS, events: [...getState().organization.events, ...res.data], total }));
     })
     .catch(err => {
       console.log(err);
