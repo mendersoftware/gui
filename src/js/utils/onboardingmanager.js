@@ -292,7 +292,10 @@ export const determineProgress = (acceptedDevices, pendingDevices, releases, pas
 export function advanceOnboarding(stepId) {
   const progress = store.getState().users.onboarding.progress;
   const stepIndex = Object.keys(onboardingSteps).findIndex(step => step === stepId);
-  const madeProgress = progress <= stepIndex ? stepIndex + 1 : progress;
+  if (progress > stepIndex) {
+    return;
+  }
+  const madeProgress = stepIndex + 1;
   store.dispatch(setOnboardingProgress(madeProgress));
   const state = { ...getCurrentOnboardingState(), progress: madeProgress };
   state.complete = state.progress >= Object.keys(onboardingSteps).length - 1 ? true : state.complete;
