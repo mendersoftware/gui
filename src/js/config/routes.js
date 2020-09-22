@@ -16,7 +16,7 @@ import AuditLogs from '../components/auditlogs/auditlogs';
 export const privateRoutes = (
   <Switch>
     <Route exact path="/" component={Dashboard} />
-    <Route path="/auditlogs/:filters?" component={AuditLogs} />
+    <Route path="/auditlog/:filters?" component={AuditLogs} />
     <Route path="/devices/:status(pending|preauthorized|rejected)?/:filters?" component={Devices} />
     <Route path="/releases/:artifactVersion?" component={Artifacts} />
     <Route path="/deployments/:tab(active|scheduled|finished)?" component={Deployments} />

@@ -14,7 +14,7 @@ const listItems = [
   { route: '/devices', text: 'Devices', isAdmin: false, isEnterprise: false },
   { route: '/releases', text: 'Releases', isAdmin: false, isEnterprise: false },
   { route: '/deployments', text: 'Deployments', isAdmin: false, isEnterprise: false },
-  { route: '/auditlogs', text: 'Auditlogs', isAdmin: true, isEnterprise: true }
+  { route: '/auditlog', text: 'Audit log', isAdmin: true, isEnterprise: true }
 ];
 
 const listItemStyle = {

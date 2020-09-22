@@ -104,9 +104,7 @@ export const AuditLogsList = ({ count, items, loading, onChangePage, onChangeRow
             })}
           </div>
         ))}
-        {(count > items.length || items.length > defaultRowsPerPage) && (
-          <Pagination count={count} rowsPerPage={perPage} onChangeRowsPerPage={onChangeRowsPerPage} page={page} onChangePage={onChangePage} />
-        )}
+        <Pagination count={count} rowsPerPage={perPage} onChangeRowsPerPage={onChangeRowsPerPage} page={page} onChangePage={onChangePage} />
       </div>
     )
   );

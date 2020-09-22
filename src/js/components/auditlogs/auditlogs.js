@@ -21,7 +21,7 @@ const detailsMap = {
 
 const csvHeader = `data:text/csv;charset=utf-8,${auditLogColumns.map(column => column.title).join(',')}`;
 
-export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, groups, users }) => {
+export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, groups, users, ...props }) => {
   const [endDate, setEndDate] = useState(endDate || tonight);
   const [csvLoading, setCsvLoading] = useState(false);
   const [detail, setDetail] = useState('');
@@ -87,9 +87,9 @@ export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, groups, users
   const availableChangeTypes = AUDIT_LOGS_TYPES; // || AUDIT_LOGS_TYPES.filter(type => events.some(e => e.type === type));
 
   return (
-    <div className="fadeIn margin-left margin-top-large flexbox column" style={{ marginRight: '5%' }}>
+    <div className="fadeIn margin-left flexbox column" style={{ marginRight: '5%' }}>
       <h3>Audit log</h3>
-      <div className="auditlogs-filters margin-bottom">
+      <div className="auditlogs-filters margin-bottom margin-top-small">
         <Autocomplete
           id="audit-log-user-selection"
           autoSelect
@@ -162,15 +162,15 @@ export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, groups, users
       </div>
       {!!events.length && (
         <AuditLogsList
-          {...self.props}
+          {...props}
           componentClass="margin-left-small"
           items={events}
           loading={loading}
-          page={page}
           onChangeRowsPerPage={newPerPage => refresh(1, newPerPage)}
           onChangePage={refresh}
           onChangeSorting={() => setSorting(sorting === 'desc' ? 'asc' : 'desc')}
-          pageSize={perPage}
+          page={page}
+          perPage={perPage}
           sortDirection={sorting}
         />
       )}
