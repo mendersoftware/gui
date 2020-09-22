@@ -26,7 +26,10 @@ const actorMap = {
 
 const changeMap = {
   user: { component: UserChange, actionFormatter: data => data.user.email },
-  deployment: { component: DeploymentLink, actionFormatter: data => `to ${data.deployment['application/json'].name}` }
+  deployment: {
+    component: DeploymentLink,
+    actionFormatter: data => `to ${decodeURIComponent(data.deployment.name)}`
+  }
 };
 
 export const auditLogColumns = [

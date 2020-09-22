@@ -45,51 +45,47 @@ export const completeUpgrade = (tenantId, plan) => dispatch =>
     return Promise.reject(err);
   });
 
-export const getAuditLogs = (page, perPage, startDate, endDate, userId, type, group, sort = 'desc') => (dispatch, getState) => {
-  const created_after = startDate ? `&created_after=${Math.round(Date.parse(startDate) / 1000)}` : '';
-  const created_before = endDate ? `&created_before=${Math.round(Date.parse(endDate) / 1000)}` : '';
+export const getAuditLogs = (page, perPage, startDate, endDate, userId, type, detail, sort = 'desc') => dispatch => {
+  const createdAfter = endDate ? `&created_after=${Math.round(Date.parse(endDate) / 1000)}` : '';
+  const createdBefore = startDate ? `&created_before=${Math.round(Date.parse(startDate) / 1000)}` : '';
   const typeSearch = type ? `&object_type=${type}` : '';
   const userSearch = userId ? `&actor_id=${userId}` : '';
-  const objectSearch = group ? `&object_id=${group}` : '';
+  const objectSearch = detail ? `&object_id=${encodeURIComponent(detail)}` : '';
   return Api.get(
-    `${auditLogsApiUrl}/logs?page=${page}&per_page=${perPage}${created_after}${created_before}${userSearch}${typeSearch}${objectSearch}&sort=${sort}`
+    `${auditLogsApiUrl}/logs?page=${page}&per_page=${perPage}${createdAfter}${createdBefore}${userSearch}${typeSearch}${objectSearch}&sort=${sort}`
   )
     .then(res => {
       const total = Number(res.headers[headerNames.total]);
-      return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_AUDIT_LOGS, events: [...getState().organization.events, ...res.data], total }));
+      return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_AUDIT_LOGS, events: res.data, total }));
     })
     .catch(err => {
       console.log(err);
-      return Promise.resolve(
-        dispatch({ type: OrganizationConstants.RECEIVE_AUDIT_LOGS, events: getState().organization.events, total: getState().organization.events.length })
-      );
-      // dispatch(setSnackbar(preformatWithRequestID(err.response, err.response.data.error.message), null, 'Copy to clipboard'));
-      // return Promise.reject(err);
+      dispatch(setSnackbar(preformatWithRequestID(err.response, err.response?.data.error.message), null, 'Copy to clipboard'));
+      return Promise.reject(err);
     });
 };
 
-export const getAllAuditLogs = (startDate, endDate, userId, type, group, sort = 'desc') => (_, getState) => {
-  const created_after = startDate ? `&created_after=${Math.round(Date.parse(startDate) / 1000)}` : '';
-  const created_before = endDate ? `&created_before=${Math.round(Date.parse(endDate) / 1000)}` : '';
+export const getAllAuditLogs = (startDate, endDate, userId, type, detail, sort = 'desc') => dispatch => {
+  const createdAfter = endDate ? `&created_after=${Math.round(Date.parse(endDate) / 1000)}` : '';
+  const createdBefore = startDate ? `&created_before=${Math.round(Date.parse(startDate) / 1000)}` : '';
   const typeSearch = type ? `&object_type=${type}` : '';
   const userSearch = userId ? `&actor_id=${userId}` : '';
-  const objectSearch = group ? `&object_id=${group}` : '';
+  const objectSearch = detail ? `&object_id=${encodeURIComponent(detail)}` : '';
 
   const getLogs = (perPage = 500, page = 1, logEntries = []) =>
-    Api.get(`${auditLogsApiUrl}/logs?page=${page}&per_page=${perPage}${created_after}${created_before}${userSearch}${typeSearch}${objectSearch}&sort=${sort}`)
+    Api.get(`${auditLogsApiUrl}/logs?page=${page}&per_page=${perPage}${createdAfter}${createdBefore}${userSearch}${typeSearch}${objectSearch}&sort=${sort}`)
       .then(res => {
         const total = Number(res.headers[headerNames.total]);
         const entries = logEntries.concat(res.data);
         if (total > perPage * page) {
           return getLogs(perPage, page + 1, entries);
         }
-        return Promise.resolve(entries);
+        return entries;
       })
       .catch(err => {
         console.log(err);
-        return Promise.resolve(getState().organization.events);
-        // dispatch(setSnackbar(preformatWithRequestID(err.response, err.response.data.error.message), null, 'Copy to clipboard'));
-        // return Promise.reject(err);
+        dispatch(setSnackbar(preformatWithRequestID(err.response, err.response?.data.error.message), null, 'Copy to clipboard'));
+        return Promise.reject(err);
       });
   return getLogs();
 };

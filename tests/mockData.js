@@ -132,10 +132,8 @@ export const defaultState = {
           id: 'string',
           type: 'deployment',
           deployment: {
-            'application/json': {
-              name: 'production',
-              artifact_name: 'Application 0.0.1'
-            }
+            name: 'production',
+            artifact_name: 'Application 0.0.1'
           }
         },
         change: 'change2'

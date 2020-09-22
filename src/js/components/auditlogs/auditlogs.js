@@ -9,6 +9,7 @@ import Loader from '../common/loader';
 import TimeframePicker from '../common/timeframe-picker';
 import TimerangePicker from '../common/timerange-picker';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
+import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import AuditLogsList, { auditLogColumns, defaultRowsPerPage } from './auditlogslist';
 
 const today = new Date(new Date().setHours(0, 0, 0));
@@ -24,18 +25,18 @@ const csvHeader = `data:text/csv;charset=utf-8,${auditLogColumns.map(column => c
 export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, groups, users, ...props }) => {
   const [endDate, setEndDate] = useState(endDate || tonight);
   const [csvLoading, setCsvLoading] = useState(false);
-  const [detail, setDetail] = useState('');
+  const [detail, setDetail] = useState(undefined);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(defaultRowsPerPage);
   const [startDate, setStartDate] = useState(startDate || today);
   const [type, setType] = useState('');
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState(undefined);
   const [sorting, setSorting] = useState('desc');
 
   useEffect(() => {
     setLoading(true);
-    getAuditLogs(page, perPage, endDate, startDate, user, type, detail, sorting).then(() => setLoading(false));
+    getAuditLogs(page, perPage, endDate, startDate, user?.id || user, `${type}`.toLowerCase(), detail?.id || detail, sorting).then(() => setLoading(false));
   }, [page, perPage, endDate, startDate, user, type, detail, sorting]);
 
   const reset = () => {
@@ -95,10 +96,10 @@ export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, groups, users
           autoSelect
           freeSolo
           filterSelectedOptions
+          getOptionLabel={option => option.email || option}
           handleHomeEndKeys
-          inputValue={user}
-          options={users}
-          onInputChange={(e, value) => refresh(1, perPage, startDate, endDate, value)}
+          options={Object.values(users)}
+          onChange={(e, value) => refresh(1, perPage, startDate, endDate, value)}
           renderInput={params => (
             <TextField
               {...params}
@@ -108,17 +109,17 @@ export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, groups, users
               InputProps={{ ...params.InputProps }}
             />
           )}
+          renderOption={option => option.email || option}
           style={{ maxWidth: 250 }}
         />
         <Autocomplete
           id="audit-log-type-selection"
           autoSelect
           filterSelectedOptions
+          getOptionLabel={option => option.title || option}
           handleHomeEndKeys
-          inputValue={type}
+          onInputChange={(e, value) => refresh(1, perPage, startDate, endDate, user, value, '')}
           options={availableChangeTypes}
-          getOptionLabel={option => option.title}
-          onInputChange={(e, value) => refresh(1, perPage, startDate, endDate, user, value)}
           renderInput={params => (
             <TextField {...params} label="Filter by change" placeholder="Type" InputLabelProps={{ shrink: true }} InputProps={{ ...params.InputProps }} />
           )}
@@ -128,13 +129,14 @@ export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, groups, users
         <Autocomplete
           id="audit-log-type-details-selection"
           autoSelect
-          filterSelectedOptions
-          handleHomeEndKeys
-          inputValue={detail}
-          options={type === 'Deployment' ? groups : users}
           disabled={!type}
-          onInputChange={(e, value) => refresh(1, perPage, startDate, endDate, user, type, value)}
+          filterSelectedOptions
+          getOptionLabel={option => option.email || option}
+          handleHomeEndKeys
+          onChange={(e, value) => refresh(1, perPage, startDate, endDate, user, type, value)}
+          options={type === 'Deployment' ? groups : Object.values(users)}
           renderInput={params => <TextField {...params} placeholder={detailsMap[type] || '-'} InputProps={{ ...params.InputProps }} />}
+          renderOption={option => option.email || option}
           style={{ marginRight: 15, marginTop: 16 }}
         />
         <div />
@@ -166,8 +168,8 @@ export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, groups, users
           componentClass="margin-left-small"
           items={events}
           loading={loading}
-          onChangeRowsPerPage={newPerPage => refresh(1, newPerPage)}
           onChangePage={refresh}
+          onChangeRowsPerPage={newPerPage => refresh(1, newPerPage)}
           onChangeSorting={() => setSorting(sorting === 'desc' ? 'asc' : 'desc')}
           page={page}
           perPage={perPage}
@@ -188,11 +190,13 @@ export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, groups, users
 const actionCreators = { getAllAuditLogs, getAuditLogs };
 
 const mapStateToProps = state => {
+  // eslint-disable-next-line no-unused-vars
+  const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
     count: state.organization.eventsTotal || state.organization.events.length,
     events: state.organization.events,
-    groups: Object.keys(state.devices.groups.byId).sort(),
-    users: Object.values(state.users.byId).map(user => user.email)
+    groups: ['All devices', ...Object.keys(groups).sort()],
+    users: state.users.byId
   };
 };
 
