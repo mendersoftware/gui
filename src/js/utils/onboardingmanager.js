@@ -62,7 +62,8 @@ export const onboardingSteps = {
       onboardingTipSanityCheck('artifact-included-deploy-onboarding') &&
       window.location.hash.endsWith('#/devices') &&
       store.getState().devices.byStatus.accepted.total > 0 &&
-      (Object.values(store.getState().devices.byId).every(item => !!item.attributes) || getOnboardingStepCompleted('devices-accepted-onboarding')),
+      (Object.values(store.getState().devices.byId).every(item => Object.values(item.attributes).some(value => value)) ||
+        getOnboardingStepCompleted('devices-accepted-onboarding')),
     component: (
       <div>
         <b>Deploy your first Application update</b>
@@ -292,7 +293,10 @@ export const determineProgress = (acceptedDevices, pendingDevices, releases, pas
 export function advanceOnboarding(stepId) {
   const progress = store.getState().users.onboarding.progress;
   const stepIndex = Object.keys(onboardingSteps).findIndex(step => step === stepId);
-  const madeProgress = progress <= stepIndex ? stepIndex + 1 : progress;
+  if (progress > stepIndex) {
+    return;
+  }
+  const madeProgress = stepIndex + 1;
   store.dispatch(setOnboardingProgress(madeProgress));
   const state = { ...getCurrentOnboardingState(), progress: madeProgress };
   state.complete = state.progress >= Object.keys(onboardingSteps).length - 1 ? true : state.complete;
