@@ -90,8 +90,11 @@ exports[`DeviceList Component renders correctly 1`] = `
           10
         </div>
         <input
+          aria-hidden={true}
+          className="MuiSelect-nativeInput"
           onAnimationStart={[Function]}
-          type="hidden"
+          onChange={[Function]}
+          tabIndex={-1}
           value={10}
         />
         <svg

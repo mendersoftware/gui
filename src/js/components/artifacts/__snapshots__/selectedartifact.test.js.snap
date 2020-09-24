@@ -143,7 +143,7 @@ exports[`SelectedArtifact Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    className="MuiPaper-root MuiExpansionPanel-root MuiPaper-elevation1"
+    className="MuiPaper-root MuiAccordion-root MuiPaper-elevation1"
     style={
       Object {
         "background": "#e9e9e9",
@@ -156,7 +156,7 @@ exports[`SelectedArtifact Component renders correctly 1`] = `
     <div
       aria-disabled={false}
       aria-expanded={false}
-      className="MuiButtonBase-root MuiExpansionPanelSummary-root"
+      className="MuiButtonBase-root MuiAccordionSummary-root"
       onBlur={[Function]}
       onClick={[Function]}
       onDragLeave={[Function]}
@@ -178,7 +178,7 @@ exports[`SelectedArtifact Component renders correctly 1`] = `
       tabIndex={0}
     >
       <div
-        className="MuiExpansionPanelSummary-content"
+        className="MuiAccordionSummary-content"
       >
         <p>
           Artifact contents
@@ -221,7 +221,7 @@ exports[`SelectedArtifact Component renders correctly 1`] = `
             role="region"
           >
             <div
-              className="MuiExpansionPanelDetails-root"
+              className="MuiAccordionDetails-root"
               style={
                 Object {
                   "padding": 0,
