@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { Button } from '@material-ui/core';
 import Loader from '../common/loader';
-import { startUpgrade, cancelUpgrade, completeUpgrade } from '../../actions/organizationActions';
 
-import { setSnackbar } from '../../actions/appActions';
-import { preformatWithRequestID } from '../../helpers';
+import stripeImage from '../../../assets/img/powered_by_stripe.png';
 
-const CheckoutForm = props => {
+const CardSection = ({ isSignUp, onCancel, onComplete, onSubmit, setSnackbar }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [errors, setErrors] = useState(false);
@@ -18,13 +15,9 @@ const CheckoutForm = props => {
   const handleSubmit = async event => {
     event.preventDefault();
     setLoading(true);
-
-    props
-      .startUpgrade(props.org.id)
+    return onSubmit()
       .then(res => confirmCard(res.data.secret))
-      .finally(() => {
-        setLoading(false);
-      });
+      .finally(() => setLoading(false));
   };
 
   const confirmCard = async secret => {
@@ -40,24 +33,15 @@ const CheckoutForm = props => {
       });
 
       if (result.error) {
-        setLoading(false);
-        props.setSnackbar(`Error while confirming card: ` + result.error.message);
-        props.cancelUpgrade(props.org.id).then(() => {
-          setLoading(false);
-        });
+        setSnackbar(`Error while confirming card: ` + result.error.message);
+        onCancel();
       } else {
-        props.setSnackbar(`Card confirmed. Updating your account...`);
-        // The card setup has succeeded. Display a success message and send
-        // to our backend
-        props
-          .completeUpgrade(props.org.id, props.plan)
-          .then(() => props.upgradeSuccess())
-          .finally(() => setLoading(false));
+        setSnackbar(`Card confirmed. Updating your account...`);
+        onComplete();
       }
     } catch (err) {
-      setLoading(false);
-      props.setSnackbar(`Something went wrong while submitting the form. Please contact support.`);
-      props.cancelUpgrade(props.org.id);
+      setSnackbar(`Something went wrong while submitting the form. Please contact support.`);
+      onCancel();
     }
   };
 
@@ -73,28 +57,30 @@ const CheckoutForm = props => {
   };
 
   return (
-    <form className="margin-top-small" onSubmit={handleSubmit}>
+    <form className="margin-top-small" onSubmit={handleSubmit} onReset={onCancel}>
       <CardElement className="warning" onChange={event => stripeElementChange(event)} />
-      {errors ? <p className="warning">There is an error in the form. Please check that your details are correct</p> : null}
+      {!!errors && <p className="warning">There is an error in the form. Please check that your details are correct</p>}
 
-      <div id="poweredByStripe">All standard credit card fees apply (e.g. foreign transaction fee, if your card has one)</div>
+      <div id="poweredByStripe">
+        <div>All standard credit card fees apply (e.g. foreign transaction fee, if your card has one)</div>
+        <img src={stripeImage} />
+      </div>
 
-      <p className="info">Billing will be scheduled monthly, starting from today. You can cancel at any time.</p>
+      {isSignUp && <p className="info">Billing will be scheduled monthly, starting from today. You can cancel at any time.</p>}
 
-      <Button style={{ marginTop: '20px' }} variant="contained" color="secondary" type="submit" disabled={errors || loading || empty}>
-        Sign up
-      </Button>
+      <div className="flexbox margin-top-small" style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
+        {!isSignUp && (
+          <Button type="reset" disabled={loading} style={{ marginRight: 15 }}>
+            Cancel
+          </Button>
+        )}
+        <Button variant="contained" color="secondary" type="submit" disabled={errors || loading || empty}>
+          {isSignUp ? 'Sign up' : 'Save'}
+        </Button>
+      </div>
       <Loader show={loading} />
     </form>
   );
 };
 
-const actionCreators = { setSnackbar, preformatWithRequestID, startUpgrade, cancelUpgrade, completeUpgrade };
-
-const mapStateToProps = state => {
-  return {
-    secret: state.secret
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(CheckoutForm);
+export default CardSection;
