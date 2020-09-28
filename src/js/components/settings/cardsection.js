@@ -16,7 +16,7 @@ const CardSection = ({ isSignUp, onCancel, onComplete, onSubmit, setSnackbar }) 
     event.preventDefault();
     setLoading(true);
     return onSubmit()
-      .then(res => confirmCard(res.data.secret))
+      .then(confirmCard)
       .finally(() => setLoading(false));
   };
 
@@ -33,7 +33,7 @@ const CardSection = ({ isSignUp, onCancel, onComplete, onSubmit, setSnackbar }) 
       });
 
       if (result.error) {
-        setSnackbar(`Error while confirming card: ` + result.error.message);
+        setSnackbar(`Error while confirming card: ${result.error.message}`);
         onCancel();
       } else {
         setSnackbar(`Card confirmed. Updating your account...`);

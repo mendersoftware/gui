@@ -1,6 +1,11 @@
-import * as OrganizationConstants from '../constants/organizationConstants';
+import OrganizationConstants from '../constants/organizationConstants';
 
 export const initialState = {
+  card: {
+    last4: '',
+    expiration: { month: 1, year: 2020 },
+    brand: ''
+  },
   events: [],
   eventsTotal: 2,
   organization: {
@@ -15,6 +20,11 @@ const organizationReducer = (state = initialState, action) => {
         ...state,
         events: action.events,
         eventsTotal: action.total
+      };
+    case OrganizationConstants.RECEIVE_CURRENT_CARD:
+      return {
+        ...state,
+        card: action.card
       };
     case OrganizationConstants.SET_ORGANIZATION:
       return {

@@ -5,7 +5,6 @@ import { InfoOutlined as InfoOutlinedIcon, Mail as MailIcon } from '@material-ui
 import { setSnackbar } from '../../actions/appActions';
 import { getDeviceLimit } from '../../actions/deviceActions';
 import { getUserOrganization, startUpgrade, cancelUpgrade, completeUpgrade } from '../../actions/organizationActions';
-
 import CardSection from './cardsection';
 import Loader from '../common/loader';
 
@@ -43,7 +42,7 @@ export const Upgrade = ({ cancelUpgrade, completeUpgrade, getDeviceLimit, getUse
       setUpgraded(true);
       setTimeout(() => {
         getDeviceLimit();
-        history.push('/settings/my-organization');
+        history.push('/settings/organization-and-billing');
       }, 3000);
     });
 

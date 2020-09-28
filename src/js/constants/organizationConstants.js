@@ -4,5 +4,6 @@ module.exports = {
     { title: 'User', queryParameter: 'object_id', value: 'user' }
   ],
   RECEIVE_AUDIT_LOGS: 'RECEIVE_AUDIT_LOGS',
+  RECEIVE_CURRENT_CARD: 'RECEIVE_CURRENT_CARD',
   SET_ORGANIZATION: 'SET_ORGANIZATION'
 };

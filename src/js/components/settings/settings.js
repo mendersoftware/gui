@@ -11,7 +11,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { getIsEnterprise, getUserRoles } from '../../selectors';
 import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
-import MyOrganization from './organization';
+import Organization from './organization';
 import Roles from './roles';
 import Global from './global';
 import Upgrade from './upgrade';
@@ -32,9 +32,16 @@ export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, hi
   const sectionMap = {
     'global-settings': { admin: false, enterprise: false, multitenancy: false, userManagement: false, component: <Global />, text: 'Global settings' },
     'my-profile': { admin: false, enterprise: false, multitenancy: false, userManagement: false, component: <SelfUserManagement />, text: 'My profile' },
+    'organization-and-billing': {
+      admin: false,
+      enterprise: false,
+      multitenancy: true,
+      userManagement: false,
+      component: <Organization />,
+      text: 'Organization and billing'
+    },
     'user-management': { admin: false, enterprise: false, multitenancy: false, userManagement: true, component: <UserManagement />, text: 'User management' },
     'role-management': { admin: true, enterprise: true, multitenancy: false, userManagement: false, component: <Roles />, text: 'Roles' },
-    'my-organization': { admin: false, enterprise: false, multitenancy: true, userManagement: false, component: <MyOrganization />, text: 'My organization' },
     upgrade: {
       admin: false,
       enterprise: false,
