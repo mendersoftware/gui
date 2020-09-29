@@ -1,134 +1,181 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import ReactTooltip from 'react-tooltip';
+import pluralize from 'pluralize';
+
+// material ui
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import { InfoOutlined as InfoIcon, Delete as TrashIcon } from '@material-ui/icons';
 
 import { deleteAuthset, getDeviceAuth, updateDeviceAuth } from '../../actions/deviceActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { getDocsVersion } from '../../selectors';
 import Authsetlist from './authsetlist';
 import ConfirmDecommission from './confirmdecommission';
 
-// material ui
-import { Button } from '@material-ui/core';
-import { InfoOutlined as InfoIcon, Delete as TrashIcon } from '@material-ui/icons';
+export const AuthsetsDialog = ({
+  active,
+  decommission,
+  deleteAuthset,
+  device,
+  dialogToggle,
+  docsVersion,
+  getDeviceAuth,
+  id_attribute,
+  id_value,
+  inactive,
+  limitMaxed,
+  open,
+  updateDeviceAuth
+}) => {
+  const [confirmDecommission, setConfirmDecomission] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { auth_sets, status = DEVICE_STATES.accepted } = device;
 
-export class Authsets extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-
-    this.state = {
-      loading: false
-    };
-  }
-
-  _updateDeviceAuthStatus(device_id, auth_id, status) {
-    var self = this;
-    self.setState({ loading: auth_id });
+  const updateDeviceAuthStatus = (device_id, auth_id, status) => {
+    setLoading(auth_id);
     status = status === 'accept' ? DEVICE_STATES.accepted : status === 'reject' ? DEVICE_STATES.rejected : status;
     let changeRequest;
     if (status === 'dismiss') {
-      changeRequest = self.props.deleteAuthset(device_id, auth_id);
+      changeRequest = deleteAuthset(device_id, auth_id);
     } else {
       // call API to update authset
-      changeRequest = self.props.updateDeviceAuth(device_id, auth_id, status);
+      changeRequest = updateDeviceAuth(device_id, auth_id, status);
     }
     return changeRequest
       .then(() => {
         // if only authset, close dialog and refresh!
-        if (self.props.device.auth_sets.length <= 1) {
-          self.props.dialogToggle('authsets');
+        if (device.auth_sets.length <= 1) {
+          dialogToggle('authsets');
         } else {
           // refresh authset list
-          self.props
-            .getDeviceAuth(device_id)
+          getDeviceAuth(device_id)
             .catch(err => console.log(`Error: ${err}`))
             // on finish, change "loading" back to null
-            .finally(() => self.setState({ loading: null }));
+            .finally(() => setLoading(null));
         }
       })
-      .catch(() => {
-        self.setState({ loading: null });
-      });
+      .catch(() => setLoading(null));
+  };
+
+  let decommissionButton = (
+    <div className="float-right">
+      <Button
+        color="secondary"
+        onClick={() => setConfirmDecomission(true)}
+        icon={<TrashIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
+      >
+        Decommission device
+      </Button>
+    </div>
+  );
+  if (confirmDecommission) {
+    decommissionButton = <ConfirmDecommission cancel={() => setConfirmDecomission(false)} decommission={() => decommission(device.id)} />;
   }
 
-  _showConfirm() {
-    var decommission = !this.state.decommission;
-    this.setState({ decommission: decommission });
-  }
-
-  _decommissionHandler() {
-    //handle decommission, close dialog when done
-    this.props.decommission(this.props.device.id);
-  }
-
-  render() {
-    var activeList = (
-      <Authsetlist
-        limitMaxed={this.props.limitMaxed}
-        total={this.props.device.auth_sets.length}
-        confirm={(...args) => this._updateDeviceAuthStatus(...args)}
-        loading={this.state.loading}
-        device={this.props.device}
-        active={true}
-        authsets={this.props.active}
-      />
-    );
-    var inactiveList = (
-      <Authsetlist
-        limitMaxed={this.props.limitMaxed}
-        total={this.props.device.auth_sets.length}
-        confirm={(...args) => this._updateDeviceAuthStatus(...args)}
-        loading={this.state.loading}
-        device={this.props.device}
-        hideHeader={this.props.active.length}
-        authsets={this.props.inactive}
-      />
-    );
-
-    var decommission = (
-      <div className="float-right">
-        <Button color="secondary" onClick={() => this._showConfirm()} icon={<TrashIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}>
-          Decommission device
-        </Button>
-      </div>
-    );
-    if (this.state.decommission) {
-      decommission = <ConfirmDecommission cancel={() => this._showConfirm()} decommission={() => this._decommissionHandler()} />;
-    }
-
-    return (
-      <div style={{ minWidth: '900px' }}>
-        {this.props.device.status === DEVICE_STATES.accepted || this.props.device.status === DEVICE_STATES.rejected ? decommission : null}
-
-        <div className="margin-bottom-small" style={{ fontSize: '15px', padding: '14px 40px 0px 20px', border: '1px solid #f1f2f3', width: 'fit-content' }}>
-          <span className="bold margin-right">{this.props.id_attribute || 'Device ID'}</span>
-          <span>{this.props.id_value}</span>
-          <p>
-            <span className="bold margin-right">Device status</span>
-            <span className="capitalized inline-block">{this.props.device.status}</span>
-          </p>
-        </div>
-
-        {this.props.active.length ? activeList : null}
-        <div className="margin-top-large margin-bottom auto" />
-        {this.props.inactive.length ? (
-          <div>
-            <h4 className="align-center">Inactive authentication sets</h4>
-            {inactiveList}
+  return (
+    <Dialog
+      open={open}
+      fullWidth={true}
+      maxWidth="lg"
+      style={{
+        paddingTop: '0',
+        fontSize: '13px',
+        overflow: 'hidden'
+      }}
+    >
+      <DialogTitle>
+        <div style={{ width: 'fit-content', position: 'relative' }}>
+          {status === DEVICE_STATES.pending
+            ? `Authorization ${pluralize('request', auth_sets.length)} for this device`
+            : 'Authorization status for this device'}
+          <div
+            onClick={e => this._handleStopProp(e)}
+            id="inventory-info"
+            className="tooltip info"
+            style={{ top: '5px', right: '-35px' }}
+            data-tip
+            data-for="inventory-wait"
+            data-event="click focus"
+          >
+            <InfoIcon />
           </div>
-        ) : null}
-        {this.props.limitMaxed && (
-          <div className="warning">
-            <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
-            You have reached your limit of authorized devices.
+          <ReactTooltip id="inventory-wait" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+            <h3>Device authorization status</h3>
             <p>
-              Contact us by email at <a href="mailto:support@mender.io">support@mender.io</a> to request a higher limit.
+              Each device sends an authentication request containing its identity attributes and its current public key. You can accept, reject or dismiss these
+              requests to determine the authorization status of the device.
+            </p>
+            <p>
+              In cases such as key rotation, each device may have more than one identity/key combination listed. See the documentation for more on{' '}
+              <a href={`https://docs.mender.io/${docsVersion}overview/device-authentication`} target="_blank">
+                Device authentication
+              </a>
+              .
+            </p>
+          </ReactTooltip>
+        </div>
+      </DialogTitle>
+      <DialogContent>
+        <div style={{ minWidth: '900px' }}>
+          {device.status === DEVICE_STATES.accepted || device.status === DEVICE_STATES.rejected ? decommissionButton : null}
+
+          <div className="margin-bottom-small" style={{ fontSize: '15px', padding: '14px 40px 0px 20px', border: '1px solid #f1f2f3', width: 'fit-content' }}>
+            <span className="bold margin-right">{id_attribute || 'Device ID'}</span>
+            <span>{id_value}</span>
+            <p>
+              <span className="bold margin-right">Device status</span>
+              <span className="capitalized inline-block">{device.status}</span>
             </p>
           </div>
-        )}
-      </div>
-    );
-  }
-}
 
+          {!!active.length && (
+            <Authsetlist
+              limitMaxed={limitMaxed}
+              total={device.auth_sets.length}
+              confirm={updateDeviceAuthStatus}
+              loading={loading}
+              device={device}
+              active={true}
+              authsets={active}
+            />
+          )}
+          <div className="margin-top-large margin-bottom auto" />
+          {!!inactive.length && (
+            <div>
+              <h4 className="align-center">Inactive authentication sets</h4>
+              {
+                <Authsetlist
+                  limitMaxed={limitMaxed}
+                  total={device.auth_sets.length}
+                  confirm={updateDeviceAuthStatus}
+                  loading={loading}
+                  device={device}
+                  hideHeader={active.length}
+                  authsets={inactive}
+                />
+              }
+            </div>
+          )}
+          {limitMaxed && (
+            <div className="warning">
+              <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
+              You have reached your limit of authorized devices.
+              <p>
+                Contact us by email at <a href="mailto:support@mender.io">support@mender.io</a> to request a higher limit.
+              </p>
+            </div>
+          )}
+        </div>
+      </DialogContent>
+      <DialogActions>
+        <Button key="authset-button-1" style={{ marginRight: '10px', display: 'inline-block' }} onClick={() => dialogToggle(false)}>
+          Close
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 const actionCreators = { deleteAuthset, getDeviceAuth, updateDeviceAuth };
 
 const mapStateToProps = (state, ownProps) => {
@@ -150,8 +197,9 @@ const mapStateToProps = (state, ownProps) => {
     : authsets;
   return {
     device,
+    docsVersion: getDocsVersion(state),
     ...authsets
   };
 };
 
-export default connect(mapStateToProps, actionCreators)(Authsets);
+export default connect(mapStateToProps, actionCreators)(AuthsetsDialog);
