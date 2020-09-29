@@ -454,37 +454,42 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
     per_page: perPage,
     filters: mapFiltersToTerms([...applicableFilters, { key: 'status', value: status, operator: '$eq', scope: 'identity' }]),
     sort: sortOptions
-  }).then(response => {
-    const deviceAccu = reduceReceivedDevices(response.data, [], state, status);
-    let total = !applicableFilters.length ? Number(response.headers[headerNames.total]) : null;
-    if (state.devices.byStatus[status].total === deviceAccu.ids.length) {
-      total = deviceAccu.ids.length;
-    }
-    let tasks = [
-      dispatch({
-        type: DeviceConstants[`SET_${status.toUpperCase()}_DEVICES`],
-        deviceIds: deviceAccu.ids,
-        status,
-        total
-      }),
-      dispatch({
-        type: DeviceConstants.RECEIVE_DEVICES,
-        devicesById: deviceAccu.devicesById
-      })
-    ];
-    if (response.data.length < 200) {
-      tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(Object.values(deviceAccu.devicesById)))));
-    }
-    if (status === DeviceConstants.DEVICE_STATES.pending) {
+  })
+    .then(response => {
+      const deviceAccu = reduceReceivedDevices(response.data, [], state, status);
+      let total = !applicableFilters.length ? Number(response.headers[headerNames.total]) : null;
+      if (state.devices.byStatus[status].total === deviceAccu.ids.length) {
+        total = deviceAccu.ids.length;
+      }
+      let tasks = [
+        dispatch({
+          type: DeviceConstants[`SET_${status.toUpperCase()}_DEVICES`],
+          deviceIds: deviceAccu.ids,
+          status,
+          total
+        }),
+        dispatch({
+          type: DeviceConstants.RECEIVE_DEVICES,
+          devicesById: deviceAccu.devicesById
+        })
+      ];
+      if (response.data.length < 200) {
+        tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(Object.values(deviceAccu.devicesById)))));
+      }
       // for each device, get device identity info
       tasks.push(dispatch(getDevicesWithAuth(Object.values(deviceAccu.devicesById))));
-    }
-    if (shouldSelectDevices) {
-      tasks.push(dispatch(selectDevices(deviceAccu.ids)));
-    }
-    tasks.push(Promise.resolve({ deviceAccu, total: Number(response.headers[headerNames.total]) }));
-    return Promise.all(tasks);
-  });
+      if (shouldSelectDevices) {
+        tasks.push(dispatch(selectDevices(deviceAccu.ids)));
+      }
+      tasks.push(Promise.resolve({ deviceAccu, total: Number(response.headers[headerNames.total]) }));
+      return Promise.all(tasks);
+    })
+    .catch(error => {
+      const errormsg = error.error || error.response?.data.error.message || 'Please check your connection.';
+      console.log(errormsg);
+      dispatch(setSnackbar(preformatWithRequestID(error.response, `${status} devices couldn't be loaded. ${errormsg}`), null, 'Copy to clipboard'));
+      return Promise.reject(error);
+    });
 };
 
 export const getAllDevicesByStatus = status => (dispatch, getState) => {
@@ -534,15 +539,10 @@ export const getDeviceAuth = (id, isBulkRetrieval = false) => dispatch =>
     return Promise.all(tasks);
   });
 
-export const getDevicesWithAuth = devices => (dispatch, getState) =>
-  Promise.all(devices.map(device => dispatch(getDeviceAuth(device.id, true)))).then(tasks => {
-    const devices = tasks.map(task => task[task.length - 1]);
-    const deviceAccu = reduceReceivedDevices(devices, [], getState());
-    return dispatch({
-      type: DeviceConstants.RECEIVE_DEVICES,
-      devicesById: deviceAccu.devicesById
-    });
-  });
+export const getDevicesWithAuth = devices => dispatch =>
+  GeneralApi.get(`${deviceAuthV2}/devices?id=${devices.map(device => device.id).join('&id=')}`).then(({ data: receivedDevices }) =>
+    Promise.all(receivedDevices.map(device => dispatch({ type: DeviceConstants.RECEIVE_DEVICE_AUTH, device })))
+  );
 
 export const updateDeviceAuth = (deviceId, authId, status) => dispatch =>
   GeneralApi.put(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}/status`, { status }).then(() =>
