@@ -90,7 +90,7 @@ export class SoftwareDevices extends React.Component {
       groupItems = [allDevices, ...Object.keys(groups)];
     }
 
-    const groupLink = group ? `/devices/group=${group}` : '/devices/';
+    const groupLink = group ? `/devices?group=${group}` : '/devices/';
 
     let onboardingComponent = null;
     if (this.releaseRef && this.groupRef && deploymentAnchor) {
