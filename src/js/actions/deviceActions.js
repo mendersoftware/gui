@@ -504,10 +504,8 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
       if (response.data.length < 200) {
         tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(Object.values(deviceAccu.devicesById)))));
       }
-      if (status === DeviceConstants.DEVICE_STATES.pending) {
-        // for each device, get device identity info
-        tasks.push(dispatch(getDevicesWithAuth(Object.values(deviceAccu.devicesById))));
-      }
+      // for each device, get device identity info
+      tasks.push(dispatch(getDevicesWithAuth(Object.values(deviceAccu.devicesById))));
       if (shouldSelectDevices) {
         tasks.push(dispatch(selectDevices(deviceAccu.ids)));
       }
@@ -569,15 +567,10 @@ export const getDeviceAuth = (id, isBulkRetrieval = false) => dispatch =>
     return Promise.all(tasks);
   });
 
-export const getDevicesWithAuth = devices => (dispatch, getState) =>
-  Promise.all(devices.map(device => dispatch(getDeviceAuth(device.id, true)))).then(tasks => {
-    const devices = tasks.map(task => task[task.length - 1]);
-    const deviceAccu = reduceReceivedDevices(devices, [], getState());
-    return dispatch({
-      type: DeviceConstants.RECEIVE_DEVICES,
-      devicesById: deviceAccu.devicesById
-    });
-  });
+export const getDevicesWithAuth = devices => dispatch =>
+  GeneralApi.get(`${deviceAuthV2}/devices?id=${devices.map(device => device.id).join('&id=')}`).then(({ data: receivedDevices }) =>
+    Promise.all(receivedDevices.map(device => dispatch({ type: DeviceConstants.RECEIVE_DEVICE_AUTH, device })))
+  );
 
 export const updateDeviceAuth = (deviceId, authId, status) => dispatch =>
   GeneralApi.put(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}/status`, { status })

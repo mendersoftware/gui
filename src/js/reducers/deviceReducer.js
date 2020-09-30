@@ -161,19 +161,6 @@ const deviceReducer = (state = initialState, action) => {
           ...action.devicesById
         }
       };
-    case DeviceConstants.RECEIVE_ALL_DEVICE_IDS: {
-      const devicesById = action.deviceIds.reduce((accu, deviceId) => {
-        accu[deviceId] = state.byId[deviceId];
-        return accu;
-      }, {});
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          ...devicesById
-        }
-      };
-    }
     case DeviceConstants.SET_DEVICE_FILTERS: {
       const filters = action.filters.filter(filter => filter.key && filter.operator && filter.scope && typeof filter.value !== 'undefined');
       return {
