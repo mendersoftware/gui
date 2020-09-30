@@ -594,7 +594,7 @@ export const updateDeviceAuth = (deviceId, authId, status) => dispatch =>
       ])
     )
     .catch(err => {
-      var errMsg = err ? (err.response ? err.response.data.error.message : err.message) : '';
+      var errMsg = err ? (err.response ? err.response.data.error : err.message) : '';
       console.log(errMsg);
       dispatch(
         setSnackbar(preformatWithRequestID(err.response, `There was a problem updating the device authorization status: ${errMsg}`), null, 'Copy to clipboard')

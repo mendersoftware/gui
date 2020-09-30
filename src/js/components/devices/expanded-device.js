@@ -3,10 +3,9 @@ import { connect } from 'react-redux';
 import Time from 'react-time';
 import ReactTooltip from 'react-tooltip';
 import { Link } from 'react-router-dom';
-import pluralize from 'pluralize';
 import copy from 'copy-to-clipboard';
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, List, Typography } from '@material-ui/core';
+import { Button, Icon, List, Typography } from '@material-ui/core';
 import {
   Block as BlockIcon,
   Check as CheckIcon,
@@ -26,7 +25,7 @@ import { getDocsVersion } from '../../selectors';
 import { AuthButton } from '../helptips/helptooltips';
 import ExpandableAttribute from '../common/expandable-attribute';
 import Loader from '../common/loader';
-import Authsets from './authsets';
+import AuthsetsDialog from './authsets';
 
 const iconStyle = { margin: 12 };
 
@@ -237,47 +236,9 @@ export class ExpandedDevice extends React.Component {
       </div>
     );
 
-    var authsetActions = [
-      <Button key="authset-button-1" style={{ marginRight: '10px', display: 'inline-block' }} onClick={() => this.toggleAuthsets(false)}>
-        Close
-      </Button>
-    ];
-
-    var authsetTitle = (
-      <div style={{ width: 'fit-content', position: 'relative' }}>
-        {status === DEVICE_STATES.pending ? `Authorization ${pluralize('request', auth_sets.length)} for this device` : 'Authorization status for this device'}
-        <div
-          onClick={e => this._handleStopProp(e)}
-          id="inventory-info"
-          className="tooltip info"
-          style={{ top: '5px', right: '-35px' }}
-          data-tip
-          data-for="inventory-wait"
-          data-event="click focus"
-        >
-          <InfoIcon />
-        </div>
-        <ReactTooltip id="inventory-wait" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-          <h3>Device authorization status</h3>
-          <p>
-            Each device sends an authentication request containing its identity attributes and its current public key. You can accept, reject or dismiss these
-            requests to determine the authorization status of the device.
-          </p>
-          <p>
-            In cases such as key rotation, each device may have more than one identity/key combination listed. See the documentation for more on{' '}
-            <a href={`https://docs.mender.io/${docsVersion}overview/device-authentication`} target="_blank">
-              Device authentication
-            </a>
-            .
-          </p>
-        </ReactTooltip>
-      </div>
-    );
-
     return (
       <div className={className}>
         {deviceInfo}
-
         {showHelptips && status === DEVICE_STATES.pending ? (
           <div>
             <div
@@ -296,29 +257,15 @@ export class ExpandedDevice extends React.Component {
           </div>
         ) : null}
 
-        <Dialog
+        <AuthsetsDialog
+          dialogToggle={shouldUpdate => this.toggleAuthsets(false, shouldUpdate)}
+          decommission={id => this._decommissionDevice(id)}
+          device={device}
+          id_attribute={id_attribute}
+          id_value={id_value}
+          limitMaxed={limitMaxed}
           open={this.state.authsets}
-          fullWidth={true}
-          maxWidth="lg"
-          style={{
-            paddingTop: '0',
-            fontSize: '13px',
-            overflow: 'hidden'
-          }}
-        >
-          <DialogTitle>{authsetTitle}</DialogTitle>
-          <DialogContent>
-            <Authsets
-              dialogToggle={shouldUpdate => this.toggleAuthsets(false, shouldUpdate)}
-              decommission={id => this._decommissionDevice(id)}
-              device={device}
-              id_attribute={id_attribute}
-              id_value={id_value}
-              limitMaxed={limitMaxed}
-            />
-          </DialogContent>
-          <DialogActions>{authsetActions}</DialogActions>
-        </Dialog>
+        />
       </div>
     );
   }
