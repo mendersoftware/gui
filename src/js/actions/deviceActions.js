@@ -408,26 +408,23 @@ const deriveInactiveDevices = deviceIds => (dispatch, getState) => {
 /*
     Device Auth + admission
   */
-export const getDeviceCount = status => dispatch => {
-  return GeneralApi.get(`${deviceAuthV2}/devices/count${status ? `?status=${status}` : ''}`).then(res => {
+export const getDeviceCount = status => dispatch =>
+  GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
+    page: 1,
+    per_page: 1,
+    filters: mapFiltersToTerms([{ key: 'status', value: status, operator: '$eq', scope: 'identity' }])
+  }).then(response => {
+    const count = Number(response.headers[headerNames.total]);
     switch (status) {
       case DeviceConstants.DEVICE_STATES.accepted:
       case DeviceConstants.DEVICE_STATES.pending:
       case DeviceConstants.DEVICE_STATES.preauth:
       case DeviceConstants.DEVICE_STATES.rejected:
-        return dispatch({
-          type: DeviceConstants[`SET_${status.toUpperCase()}_DEVICES_COUNT`],
-          count: res.data.count,
-          status
-        });
+        return dispatch({ type: DeviceConstants[`SET_${status.toUpperCase()}_DEVICES_COUNT`], count, status });
       default:
-        return dispatch({
-          type: DeviceConstants.SET_TOTAL_DEVICES,
-          count: res.data.count
-        });
+        return dispatch({ type: DeviceConstants.SET_TOTAL_DEVICES, count });
     }
   });
-};
 
 export const getAllDeviceCounts = () => dispatch => Promise.all(Object.values(DeviceConstants.DEVICE_STATES).map(status => dispatch(getDeviceCount(status))));
 
@@ -524,25 +521,16 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
   return getAllDevices();
 };
 
-export const getDeviceAuth = (id, isBulkRetrieval = false) => dispatch =>
-  GeneralApi.get(`${deviceAuthV2}/devices/${id}`).then(res => {
-    let tasks = [];
-    if (!isBulkRetrieval) {
-      tasks.push(
-        dispatch({
-          type: DeviceConstants.RECEIVE_DEVICE_AUTH,
-          device: res.data
-        })
-      );
-    }
-    tasks.push(Promise.resolve(res.data));
-    return Promise.all(tasks);
-  });
+export const getDeviceAuth = id => dispatch => Promise.resolve(dispatch(getDevicesWithAuth([{ id }]))).then(results => Promise.resolve(results[1]));
 
 export const getDevicesWithAuth = devices => dispatch =>
-  GeneralApi.get(`${deviceAuthV2}/devices?id=${devices.map(device => device.id).join('&id=')}`).then(({ data: receivedDevices }) =>
-    Promise.all(receivedDevices.map(device => dispatch({ type: DeviceConstants.RECEIVE_DEVICE_AUTH, device })))
-  );
+  GeneralApi.get(`${deviceAuthV2}/devices?id=${devices.map(device => device.id).join('&id=')}`)
+    .catch(err => console.log(`Error: ${err}`))
+    .then(({ data: receivedDevices }) => {
+      let tasks = receivedDevices.map(device => dispatch({ type: DeviceConstants.RECEIVE_DEVICE_AUTH, device }));
+      tasks.push(Promise.resolve(receivedDevices));
+      return Promise.all(tasks);
+    });
 
 export const updateDeviceAuth = (deviceId, authId, status) => dispatch =>
   GeneralApi.put(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}/status`, { status }).then(() =>
