@@ -50,7 +50,6 @@ export const AuthsetsDialog = ({
         } else {
           // refresh authset list
           getDeviceAuth(device_id)
-            .catch(err => console.log(`Error: ${err}`))
             // on finish, change "loading" back to null
             .finally(() => setLoading(null));
         }
