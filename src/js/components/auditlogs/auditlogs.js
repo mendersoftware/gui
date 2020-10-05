@@ -5,6 +5,7 @@ import { Button, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 
 import { getAllAuditLogs, getAuditLogs } from '../../actions/organizationActions';
+import { getUserList } from '../../actions/userActions';
 import Loader from '../common/loader';
 import TimeframePicker from '../common/timeframe-picker';
 import TimerangePicker from '../common/timerange-picker';
@@ -22,7 +23,7 @@ const detailsMap = {
 
 const csvHeader = `data:text/csv;charset=utf-8,${auditLogColumns.map(column => column.title).join(',')}`;
 
-export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, groups, users, ...props }) => {
+export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, getUserList, groups, users, ...props }) => {
   const [endDate, setEndDate] = useState(endDate || tonight);
   const [csvLoading, setCsvLoading] = useState(false);
   const [detail, setDetail] = useState(undefined);
@@ -33,6 +34,10 @@ export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, groups, users
   const [type, setType] = useState('');
   const [user, setUser] = useState(undefined);
   const [sorting, setSorting] = useState('desc');
+
+  useEffect(() => {
+    getUserList();
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -48,15 +53,8 @@ export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, groups, users
     setDetail('');
   };
 
-  const refresh = (
-    currentPage,
-    currentPerPage,
-    currentStartDate = startDate,
-    currentEndDate = endDate,
-    userFilter = user,
-    typeFilter = type,
-    detailFilter = detail
-  ) => {
+  const refresh = (currentPage, currentPerPage, currentStartDate = startDate, currentEndDate = endDate, userFilter = user, typeFilter = type, detailFilter) => {
+    detailFilter = !detailFilter && typeof detailFilter === 'string' ? undefined : detailFilter || detail;
     setPage(currentPage);
     setPerPage(currentPerPage);
     setStartDate(currentStartDate);
@@ -85,7 +83,7 @@ export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, groups, users
     });
   };
 
-  const availableChangeTypes = AUDIT_LOGS_TYPES; // || AUDIT_LOGS_TYPES.filter(type => events.some(e => e.type === type));
+  const availableChangeTypes = AUDIT_LOGS_TYPES.filter(type => events.some(e => e.object.type === type.value));
 
   return (
     <div className="fadeIn margin-left flexbox column" style={{ marginRight: '5%' }}>
@@ -99,7 +97,7 @@ export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, groups, users
           getOptionLabel={option => option.email || option}
           handleHomeEndKeys
           options={Object.values(users)}
-          onChange={(e, value) => refresh(1, perPage, startDate, endDate, value)}
+          onChange={(e, value, reason) => (reason !== 'blur' ? refresh(1, perPage, startDate, endDate, value) : null)}
           renderInput={params => (
             <TextField
               {...params}
@@ -178,7 +176,7 @@ export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, groups, users
       )}
       {!(loading || events.length) && (
         <div className="dashboard-placeholder">
-          <p>No auditlogs entries were found.</p>
+          <p>No log entries were found.</p>
           <p>Try a different date range.</p>
           <img src="assets/img/history.png" alt="Past" />
         </div>
@@ -187,7 +185,7 @@ export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, groups, users
   );
 };
 
-const actionCreators = { getAllAuditLogs, getAuditLogs };
+const actionCreators = { getAllAuditLogs, getAuditLogs, getUserList };
 
 const mapStateToProps = state => {
   // eslint-disable-next-line no-unused-vars
