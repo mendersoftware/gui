@@ -35,7 +35,7 @@ describe('ExpandedDevice Component', () => {
     const tree = renderer
       .create(
         <Provider store={store}>
-          <ExpandedDevice device={{ status: 'accepted', attributes: [], auth_sets: [] }} attrs={[]} getReleases={jest.fn()} />
+          <ExpandedDevice device={{ id: 'a1', status: 'accepted', attributes: [], auth_sets: [] }} attrs={[]} getReleases={jest.fn()} />
         </Provider>
       )
       .toJSON();

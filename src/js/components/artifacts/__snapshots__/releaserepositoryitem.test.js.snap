@@ -10,7 +10,7 @@ exports[`ReleaseRepositoryItem Component renders correctly 1`] = `
     NaN
   </div>
   <div
-    className="MuiPaper-root MuiExpansionPanel-root MuiPaper-elevation1"
+    className="MuiPaper-root MuiAccordion-root MuiPaper-elevation1"
     style={
       Object {
         "border": "1px solid",
@@ -22,7 +22,7 @@ exports[`ReleaseRepositoryItem Component renders correctly 1`] = `
     <div
       aria-disabled={false}
       aria-expanded={false}
-      className="MuiButtonBase-root MuiExpansionPanelSummary-root"
+      className="MuiButtonBase-root MuiAccordionSummary-root"
       onBlur={[Function]}
       onClick={[Function]}
       onDragLeave={[Function]}
@@ -44,7 +44,7 @@ exports[`ReleaseRepositoryItem Component renders correctly 1`] = `
       tabIndex={0}
     >
       <div
-        className="MuiExpansionPanelSummary-content repo-item"
+        className="MuiAccordionSummary-content repo-item"
       >
         <div
           aria-describedby={null}
@@ -132,7 +132,7 @@ exports[`ReleaseRepositoryItem Component renders correctly 1`] = `
             role="region"
           >
             <div
-              className="MuiExpansionPanelDetails-root"
+              className="MuiAccordionDetails-root"
             >
               <div />
             </div>

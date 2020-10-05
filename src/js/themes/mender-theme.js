@@ -48,7 +48,7 @@ export default createMuiTheme({
         textTransform: 'none'
       }
     },
-    MuiExpansionPanel: {
+    MuiAccordion: {
       root: {
         border: 'none',
         boxShadow: 'none',
@@ -62,7 +62,7 @@ export default createMuiTheme({
         }
       }
     },
-    MuiExpansionPanelSummary: {
+    MuiAccordionSummary: {
       root: {
         marginBottom: 0,
         height: 48,
@@ -81,7 +81,7 @@ export default createMuiTheme({
         }
       }
     },
-    MuiExpansionPanelDetails: {
+    MuiAccordionDetails: {
       root: {
         flexDirection: 'column'
       }

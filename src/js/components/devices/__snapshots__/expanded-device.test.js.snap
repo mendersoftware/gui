@@ -34,14 +34,14 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
                 </span>
                 <div
                   className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                  title="-"
+                  title="a1"
                 >
                   <div>
                     <span
                       className="inventory-text"
                       style={Object {}}
                     >
-                      -
+                      a1
                     </span>
                      
                   </div>

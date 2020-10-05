@@ -77,8 +77,12 @@ exports[`GlobalSettings Component renders correctly 1`] = `
         />
       </div>
       <input
+        aria-hidden={true}
+        className="MuiSelect-nativeInput"
         onAnimationStart={[Function]}
-        type="hidden"
+        onChange={[Function]}
+        required={false}
+        tabIndex={-1}
         value=""
       />
       <svg
