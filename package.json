@@ -90,7 +90,7 @@
     "url-loader": "^4.1.0",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12",
-    "yarn": "^1.22.5"
+    "yarn": "^1.22.10"
   },
   "browserslist": [
     ">0.2%",
