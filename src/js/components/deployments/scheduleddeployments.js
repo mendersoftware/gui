@@ -5,12 +5,13 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import { Button } from '@material-ui/core';
-import { CalendarToday as CalendarTodayIcon, List as ListIcon } from '@material-ui/icons';
+import { CalendarToday as CalendarTodayIcon, List as ListIcon, Refresh as RefreshIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
 import { tryMapDeployments } from '../../helpers';
 import { getIsEnterprise } from '../../selectors';
+import { colors } from '../../themes/mender-theme';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
@@ -130,7 +131,7 @@ export class Scheduled extends React.Component {
                   color="primary"
                   key={currentIndex}
                   startIcon={tab.icon}
-                  style={Object.assign({ textTransform: 'none' }, currentIndex !== tabIndex ? { color: '#c7c7c7' } : {})}
+                  style={Object.assign({ textTransform: 'none' }, currentIndex !== tabIndex ? { color: colors.grey } : {})}
                   onClick={() => self.setState({ tabIndex: currentIndex })}
                 >
                   {tab.title}
@@ -164,7 +165,7 @@ export class Scheduled extends React.Component {
                 <EnterpriseNotification isEnterprise={isEnterprise} benefit="scheduled deployments to steer the distribution of your updates." />
               </div>
             )}
-            <img src="assets/img/deployments.png" alt="In progress" />
+            <RefreshIcon style={{ transform: 'rotateY(-180deg)', fill: '#e3e3e3', width: 111, height: 111 }} />
           </div>
         )}
       </div>

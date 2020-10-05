@@ -5,7 +5,7 @@ import { Autorenew, LockOutlined } from '@material-ui/icons';
 import staticImage from '../../../assets/img/static-group-creation.gif';
 import dynamicImage from '../../../assets/img/dynamic-group-creation.gif';
 
-const defaultStyles = {
+export const defaultStyles = {
   columns: 'two-columns',
   groupType: { flexGrow: 1, padding: 25 },
   heading: { alignItems: 'center' },
