@@ -50,7 +50,8 @@ export const getAuditLogs = (page, perPage, startDate, endDate, userId, type, de
   const createdBefore = startDate ? `&created_before=${Math.round(Date.parse(startDate) / 1000)}` : '';
   const typeSearch = type ? `&object_type=${type}` : '';
   const userSearch = userId ? `&actor_id=${userId}` : '';
-  const objectSearch = detail ? `&object_id=${encodeURIComponent(detail)}` : '';
+  const queryParameter = type && detail ? OrganizationConstants.AUDIT_LOGS_TYPES.find(typeObject => typeObject.value === type).queryParameter : '';
+  const objectSearch = detail ? `&${queryParameter}=${encodeURIComponent(detail)}` : '';
   return Api.get(
     `${auditLogsApiUrl}/logs?page=${page}&per_page=${perPage}${createdAfter}${createdBefore}${userSearch}${typeSearch}${objectSearch}&sort=${sort}`
   )
