@@ -8,6 +8,7 @@ export const initialState = {
   },
   events: [],
   eventsTotal: 2,
+  intentId: null,
   organization: {
     // id, name, status, tenant_token, plan
   }
@@ -25,6 +26,11 @@ const organizationReducer = (state = initialState, action) => {
       return {
         ...state,
         card: action.card
+      };
+    case OrganizationConstants.RECEIVE_SETUP_INTENT:
+      return {
+        ...state,
+        intentId: action.intentId
       };
     case OrganizationConstants.SET_ORGANIZATION:
       return {

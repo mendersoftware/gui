@@ -10,7 +10,7 @@ import { Button, List, LinearProgress } from '@material-ui/core';
 import { Error as ErrorIcon, FileCopy as CopyPasteIcon, Info as InfoIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getUserOrganization, cancelRequest, getCurrentCard, getStripeSecret } from '../../actions/organizationActions';
+import { cancelRequest, confirmCardUpdate, getCurrentCard, getUserOrganization, startCardUpdate } from '../../actions/organizationActions';
 import { PLANS as plans } from '../../constants/appConstants';
 import { colors } from '../../themes/mender-theme';
 import Alert from '../common/alert';
@@ -19,7 +19,19 @@ import CancelRequestDialog from './dialogs/cancelrequest';
 import OrganizationSettingsItem from './organizationsettingsitem';
 import CardSection from './cardsection';
 
-export const Organization = ({ cancelRequest, card, getUserOrganization, org, hasUnpaid, isHosted, acceptedDevices, deviceLimit, setSnackbar }) => {
+export const Organization = ({
+  cancelRequest,
+  card,
+  confirmCardUpdate,
+  getUserOrganization,
+  org,
+  hasUnpaid,
+  isHosted,
+  acceptedDevices,
+  deviceLimit,
+  setSnackbar,
+  startCardUpdate
+}) => {
   const [copied, setCopied] = useState(false);
   const [cancelSubscription, setCancelSubscription] = useState(false);
   const [cancelSubscriptionConfirmation, setCancelSubscriptionConfirmation] = useState(false);
@@ -163,8 +175,8 @@ export const Organization = ({ cancelRequest, card, getUserOrganization, org, ha
                     isUpdatingPaymentDetails ? (
                       <CardSection
                         onCancel={() => setIsUpdatingPaymentDetails(false)}
-                        onComplete={() => setSnackbar('Payment card was updated successfully')}
-                        onSubmit={getStripeSecret}
+                        onComplete={confirmCardUpdate}
+                        onSubmit={startCardUpdate}
                         setSnackbar={setSnackbar}
                       />
                     ) : null
@@ -209,7 +221,7 @@ export const Organization = ({ cancelRequest, card, getUserOrganization, org, ha
   );
 };
 
-const actionCreators = { cancelRequest, getCurrentCard, getStripeSecret, getUserOrganization, setSnackbar };
+const actionCreators = { cancelRequest, confirmCardUpdate, getCurrentCard, startCardUpdate, getUserOrganization, setSnackbar };
 
 const mapStateToProps = state => {
   return {

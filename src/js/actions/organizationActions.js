@@ -33,11 +33,39 @@ export const createOrganizationTrial = data => dispatch =>
       return Promise.resolve(res);
     });
 
-export const getStripeSecret = () => Api.post(`${tenantadmApiUrlv2}/billing/secret`).then(res => res.data.secret);
+export const startCardUpdate = () => dispatch =>
+  Api.post(`${tenantadmApiUrlv2}/billing/card`)
+    .then(res => {
+      dispatch({
+        type: OrganizationConstants.RECEIVE_SETUP_INTENT,
+        intentId: res.data.intent_id
+      });
+      return Promise.resolve(res.data.secret);
+    })
+    .catch(err => {
+      dispatch(setSnackbar(preformatWithRequestID(err.response, err.response.data.error), null, 'Copy to clipboard'));
+      return Promise.reject(err);
+    });
+
+export const confirmCardUpdate = () => (dispatch, getState) =>
+  Api.post(`${tenantadmApiUrlv2}/billing/${getState().organization.intentId}/confirm`)
+    .then(() =>
+      Promise.all([
+        dispatch(setSnackbar('Payment card was updated successfully')),
+        dispatch({
+          type: OrganizationConstants.RECEIVE_SETUP_INTENT,
+          intentId: null
+        })
+      ])
+    )
+    .catch(err => {
+      dispatch(setSnackbar(preformatWithRequestID(err.response, err.response.data.error), null, 'Copy to clipboard'));
+      return Promise.reject(err);
+    });
 
 export const getCurrentCard = () => dispatch =>
   Api.get(`${tenantadmApiUrlv2}/billing`).then(res => {
-    const { last4, exp_month, exp_year, brand } = res.data.card;
+    const { last4, exp_month, exp_year, brand } = res.data.card || {};
     return Promise.resolve(
       dispatch({
         type: OrganizationConstants.RECEIVE_CURRENT_CARD,
