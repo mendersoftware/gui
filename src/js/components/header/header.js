@@ -25,17 +25,10 @@ import TrialNotification from './trialnotification';
 import { getOnboardingState, setFirstLoginAfterSignup, setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus } from '../../actions/deploymentActions';
 import { getDeviceLimit, getDevicesByStatus, getDynamicGroups, getGroups } from '../../actions/deviceActions';
+import { getUserOrganization } from '../../actions/organizationActions';
 import { getReleases } from '../../actions/releaseActions';
-import {
-  getUser,
-  getGlobalSettings,
-  getRoles,
-  getUserOrganization,
-  logoutUser,
-  saveUserSettings,
-  setShowHelptips,
-  toggleHelptips
-} from '../../actions/userActions';
+import { getUser, getGlobalSettings, getRoles, logoutUser, saveUserSettings, setShowHelptips, toggleHelptips } from '../../actions/userActions';
+
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { colors } from '../../themes/mender-theme';
 
@@ -267,7 +260,7 @@ const actionCreators = {
 };
 
 const mapStateToProps = state => {
-  const organization = !isEmpty(state.users.organization) ? state.users.organization : { plan: 'os', id: null };
+  const organization = !isEmpty(state.organization.organization) ? state.organization.organization : { plan: 'os', id: null };
   const { allowUserManagement } = getUserRoles(state);
   return {
     acceptedDevices: state.devices.byStatus.accepted.total,

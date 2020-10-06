@@ -2,28 +2,21 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // material ui
-import { Grid, RootRef, TextField } from '@material-ui/core';
+import { RootRef, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
-import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
+import TimeframePicker from '../common/timeframe-picker';
+import TimerangePicker from '../common/timerange-picker';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
 import { DeploymentStatus } from './deploymentitem';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
-
-const timeranges = {
-  today: { start: 0, end: 0, title: 'Today' },
-  yesterday: { start: 1, end: 1, title: 'Yesterday' },
-  week: { start: 6, end: 0, title: 'Last 7 days' },
-  month: { start: 29, end: 0, title: 'Last 30 days' }
-};
 
 const today = new Date(new Date().setHours(0, 0, 0));
 const tonight = new Date(new Date().setHours(23, 59, 59));
@@ -36,10 +29,9 @@ export class Past extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      active: 'today',
       deviceGroup: '',
       doneLoading: false,
-      endDate: tonight,
+      endDate: props.endDate || tonight,
       startDate: props.startDate || today,
       page: 1,
       perPage: 20,
@@ -49,7 +41,6 @@ export class Past extends React.Component {
 
   componentDidMount() {
     const self = this;
-    self._setDateRange(timeranges['today'].start, timeranges['today'].end);
     clearInterval(self.timer);
     self.timer = setInterval(() => self.refreshPast(), refreshDeploymentsLength);
     self.refreshPast();
@@ -64,16 +55,6 @@ export class Past extends React.Component {
   componentWillUnmount() {
     clearInterval(this.timer);
     clearAllRetryTimers(this.props.setSnackbar);
-  }
-
-  _setDateRange(after, before) {
-    let startDate = new Date();
-    startDate.setDate(startDate.getDate() - (after || 0));
-    startDate.setHours(0, 0, 0, 0);
-    let endDate = new Date();
-    endDate.setDate(endDate.getDate() - (before || 0));
-    endDate.setHours(23, 59, 59, 999);
-    this.refreshPast(1, this.state.perPage, startDate, endDate, this.state.deviceGroup);
   }
 
   /*
@@ -107,31 +88,10 @@ export class Past extends React.Component {
     });
   }
 
-  _handleChangeEndDate(date) {
-    let startDate = this.state.startDate;
-    if (date < startDate) {
-      startDate = date;
-      startDate._isAMomentObject ? startDate.startOf('day') : startDate.setHours(0, 0, 0, 0);
-    }
-    this.setState({
-      active: ''
-    });
-    date._isAMomentObject ? date.endOf('day') : date.setHours(23, 59, 59, 999);
-
-    // refresh deployment list
-    this.refreshPast(1, this.state.perPage, startDate, date, this.state.deviceGroup);
-  }
-
-  setDefaultRange(after, before, active) {
-    const self = this;
-    self.setState({ active, doneLoading: false }, () => self._setDateRange(after, before));
-  }
-
   render() {
     const self = this;
     const { count, createClick, groups, loading, past, showHelptips } = self.props;
-    const { active, deviceGroup, page, perPage, endDate, startDate } = self.state;
-
+    const { deviceGroup, page, perPage, endDate, startDate } = self.state;
     let onboardingComponent = null;
     if (this.deploymentsRef) {
       const detailsButtons = self.deploymentsRef.getElementsByClassName('MuiButton-contained');
@@ -146,69 +106,35 @@ export class Past extends React.Component {
 
     return (
       <div className="fadeIn margin-left margin-top-large">
-        <Grid container spacing={2} className="datepicker-container" style={{ paddingTop: '4px' }}>
-          <Grid item>
-            <span>Filter by date</span>
-            <ul className="unstyled link-list horizontal">
-              {Object.entries(timeranges).map(([key, range]) => (
-                <li key={`filter-by-${key}`}>
-                  <a className={active === key ? 'active' : ''} onClick={() => self.setDefaultRange(range.start, range.end, key)}>
-                    {range.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </Grid>
-
-          <MuiPickersUtilsProvider utils={MomentUtils} className="margin-left margin-right inline-block">
-            <Grid item>
-              <DatePicker
-                variant="inline"
-                className="margin-right"
-                onChange={date => self.refreshPast(1, perPage, date)}
-                autoOk={true}
-                label="From"
-                value={startDate}
-                maxDate={endDate || today}
-                style={{ width: '160px', marginTop: 0 }}
+        <div className="datepicker-container">
+          <TimerangePicker onChange={(start, end) => self.refreshPast(1, perPage, start, end)} />
+          <TimeframePicker
+            classNames="margin-left margin-right inline-block"
+            onChange={(start, end) => self.refreshPast(1, perPage, start, end)}
+            endDate={endDate}
+            startDate={startDate}
+            tonight={tonight}
+          />
+          <Autocomplete
+            id="device-group-selection"
+            autoSelect
+            filterSelectedOptions
+            freeSolo
+            handleHomeEndKeys
+            inputValue={deviceGroup}
+            options={groups}
+            onInputChange={(e, value) => self.refreshPast(1, perPage, startDate, endDate, value)}
+            renderInput={params => (
+              <TextField
+                {...params}
+                label="Filter by device group"
+                placeholder="Select a group"
+                InputProps={{ ...params.InputProps }}
+                style={{ marginTop: 0 }}
               />
-            </Grid>
-            <Grid item>
-              <DatePicker
-                variant="inline"
-                className="margin-right"
-                onChange={date => self._handleChangeEndDate(date)}
-                autoOk={true}
-                label="To"
-                value={endDate}
-                maxDate={today}
-                style={{ width: '160px', marginTop: 0 }}
-              />
-            </Grid>
-          </MuiPickersUtilsProvider>
-          <Grid item>
-            <Autocomplete
-              id="device-group-selection"
-              autoSelect
-              filterSelectedOptions
-              freeSolo
-              handleHomeEndKeys
-              inputValue={deviceGroup}
-              options={groups}
-              onInputChange={(e, value) => self.refreshPast(1, perPage, startDate, endDate, value)}
-              renderInput={params => (
-                <TextField
-                  {...params}
-                  label="Filter by device group"
-                  placeholder="Select a group"
-                  InputProps={{ ...params.InputProps }}
-                  style={{ marginTop: 0 }}
-                />
-              )}
-            />
-          </Grid>
-        </Grid>
-
+            )}
+          />
+        </div>
         <div className="deploy-table-contain">
           <Loader show={loading} />
           {/* TODO: fix status retrieval for past deployments to decide what to show here - */}

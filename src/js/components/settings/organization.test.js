@@ -33,10 +33,10 @@ describe('MyOrganization Component', () => {
         },
         limit: null
       },
-      users: {
-        ...defaultState.users,
+      organization: {
+        ...defaultState.organization,
         organization: {
-          ...defaultState.users.organization,
+          ...defaultState.organization.organization,
           plan: 'enterprise',
           tenant_token: 'test',
           trial: true,

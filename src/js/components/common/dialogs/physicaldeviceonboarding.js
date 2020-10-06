@@ -157,7 +157,7 @@ const mapStateToProps = state => {
     isEnterprise: getIsEnterprise(state),
     isHosted: state.app.features.isHosted,
     debPackageVersion: state.app.menderDebPackageVersion,
-    token: state.users.organization.tenant_token
+    token: state.organization.organization.tenant_token
   };
 };
 

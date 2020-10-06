@@ -177,7 +177,7 @@ const actionCreators = { getDeploymentsByStatus, getSingleDeploymentStats, setSn
 
 const mapStateToProps = state => {
   const scheduled = state.deployments.byStatus.scheduled.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
-  const { plan = 'os' } = state.users.organization;
+  const { plan = 'os' } = state.organization.organization;
   return {
     // TODO: isEnterprise is misleading here, but is passed down to the DeploymentListItem, this should be renamed
     isEnterprise: getIsEnterprise(state) || plan !== 'os',

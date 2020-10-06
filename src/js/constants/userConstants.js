@@ -19,7 +19,6 @@ module.exports = {
 
   SET_CURRENT_USER: 'SET_CURRENT_USER',
   SET_GLOBAL_SETTINGS: 'SET_GLOBAL_SETTINGS',
-  SET_ORGANIZATION: 'SET_ORGANIZATION',
   SET_SHOW_HELP: 'SET_SHOW_HELP',
   SET_SHOW_ONBOARDING_HELP: 'SET_SHOW_ONBOARDING_HELP',
   SET_SHOW_ONBOARDING_HELP_DIALOG: 'SET_SHOW_ONBOARDING_HELP_DIALOG',
@@ -40,6 +39,5 @@ module.exports = {
     deploymentCreation: { action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: undefined } },
     groupAccess: { action: 'VIEW_DEVICE', object: { type: 'DEVICE_GROUP', value: undefined } }
   },
-  tenantadmUrl: `${apiUrl}/tenantadm`,
   useradmApiUrl
 };

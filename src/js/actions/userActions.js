@@ -10,7 +10,7 @@ import { getToken, logout } from '../auth';
 import { preformatWithRequestID, decodeSessionToken } from '../helpers';
 
 const cookies = new Cookies();
-const { emptyRole, rolesByName, tenantadmUrl, useradmApiUrl } = UserConstants;
+const { emptyRole, rolesByName, useradmApiUrl } = UserConstants;
 
 const handleLoginError = (err, has2FA) => dispatch => {
   const errorText = err.response.data?.error?.message || err.response.data?.error || err.message;
@@ -247,14 +247,11 @@ export const removeRole = roleId => dispatch =>
   GeneralApi.delete(`${useradmApiUrl}/roles/${roleId}`)
     .then(() => Promise.all([dispatch({ type: UserConstants.REMOVED_ROLE, roleId }), dispatch(getRoles())]))
     .catch(err =>
-      Promise.all([Promise.reject(err), dispatch(setSnackbar(preformatWithRequestID(err.response, err.response.data.error), null, 'Copy to clipboard'))])
+      Promise.all([
+        Promise.reject(err),
+        dispatch(setSnackbar(preformatWithRequestID(err.response, err.response.data?.error.message), null, 'Copy to clipboard'))
+      ])
     );
-
-/*
-  Tenant management + Hosted Mender
-*/
-export const getUserOrganization = () => dispatch =>
-  GeneralApi.get(`${tenantadmUrl}/user/tenant`).then(res => Promise.resolve(dispatch({ type: UserConstants.SET_ORGANIZATION, organization: res.data })));
 
 /*
   Global settings

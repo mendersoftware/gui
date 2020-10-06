@@ -4,6 +4,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import appReducer from './appReducer';
 import deploymentReducer from './deploymentReducer';
 import deviceReducer from './deviceReducer';
+import organizationReducer from './organizationReducer';
 import releaseReducer from './releaseReducer';
 import userReducer from './userReducer';
 import { USER_LOGOUT } from '../constants/userConstants';
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   app: appReducer,
   devices: deviceReducer,
   deployments: deploymentReducer,
+  organization: organizationReducer,
   releases: releaseReducer,
   users: userReducer
 });

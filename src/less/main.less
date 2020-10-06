@@ -1800,7 +1800,7 @@ span.day {
 }
 
 .deploy-table-contain {
-  margin-bottom: 60px;
+  margin-bottom: 4 * @defaultGutterWidth;
   margin-top: 2 * @defaultGutterWidth;
 }
 
@@ -2065,7 +2065,38 @@ span.day {
 // Past deployments
 .datepicker-container {
   background-color: @lightestgrey;
+  padding: 4px 25px 5px;
+  display: flex;
+  align-items: flex-end;
+  > div {
+    margin: 0.5 * @defaultGutterWidth;
+  }
+}
+
+.auditlogs-list-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 2fr 2fr 1.75fr;
+  grid-column-gap: 2 * @defaultGutterWidth;
+  border-bottom: 1px solid @bordercolor;
+  margin: 0 @defaultGutterWidth;
+  padding: 10px 0;
+  align-items: center;
+  position: relative;
+  &.auditlogs-list-item-header {
+    border-bottom: transparent;
+  }
+  &:last-of-type {
+    border-bottom: transparent;
+  }
+}
+
+.auditlogs-filters {
+  background-color: @lightestgrey;
   padding: 0px 25px 5px;
+  display: grid;
+  grid-template-columns: 400px 250px 250px 1fr;
+  grid-column-gap: @defaultGutterWidth;
+  grid-row-gap: @defaultGutterWidth;
 }
 
 // Releases & Artifacts

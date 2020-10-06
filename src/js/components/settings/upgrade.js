@@ -4,7 +4,7 @@ import { Elements } from '@stripe/react-stripe-js';
 
 import { InfoOutlined as InfoOutlinedIcon, Mail as MailIcon } from '@material-ui/icons';
 import { getDeviceLimit } from '../../actions/deviceActions';
-import { getUserOrganization } from '../../actions/userActions';
+import { getUserOrganization } from '../../actions/organizationActions';
 
 import CardSection from './cardsection';
 import Loader from '../common/loader';
@@ -165,7 +165,7 @@ const actionCreators = { getDeviceLimit, getUserOrganization };
 
 const mapStateToProps = state => {
   return {
-    org: state.users.organization,
+    org: state.organization.organization,
     stripeAPIKey: state.app.stripeAPIKey
   };
 };
