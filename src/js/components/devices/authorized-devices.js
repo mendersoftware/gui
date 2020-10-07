@@ -233,7 +233,7 @@ export class Authorized extends React.Component {
         title: '',
         attribute: { name: 'status', scope: 'identity' },
         render: device => <DeviceStatus device={device} />,
-        sortable: true
+        sortable: false
       }
     ];
 
