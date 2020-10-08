@@ -88,6 +88,15 @@ export class Filters extends React.Component {
     this.props.onFilterChange(activeFilters);
     if (activeFilters.length === 0) {
       this.setState({ adding: true });
+    } else {
+      const location = window.location.hash.substring(0, window.location.hash.indexOf('?')) || window.location.hash;
+      const search = activeFilters
+        .reduce((accu, item) => {
+          accu.push(`${item.key}=${item.value}`);
+          return accu;
+        }, [])
+        .join('&');
+      window.location.replace(`${location}?${search}`);
     }
   }
 

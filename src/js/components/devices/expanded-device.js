@@ -76,7 +76,7 @@ export class ExpandedDevice extends React.Component {
 
   _copyLinkToClipboard() {
     var location = window.location.href.substring(0, window.location.href.indexOf('/devices') + '/devices'.length);
-    copy(`${location}/id=${this.props.device.id}`);
+    copy(`${location}?id=${this.props.device.id}`);
     this.props.setSnackbar('Link copied to clipboard');
   }
 
