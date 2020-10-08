@@ -100,6 +100,51 @@ export const defaultState = {
     limit: 500,
     selectedDeviceList: []
   },
+  organization: {
+    events: [
+      {
+        actor: {
+          id: 'string',
+          type: 'user',
+          email: 'string@example.com'
+        },
+        time: '2020-09-10T12:10:22.667Z',
+        action: 'create',
+        object: {
+          id: 'string',
+          type: 'user',
+          user: {
+            email: 'user@acme.com'
+          }
+        },
+        change: 'change1'
+      },
+      {
+        actor: {
+          id: 'string',
+          type: 'user',
+          email: 'string',
+          identity_data: 'string'
+        },
+        time: '2020-09-10T12:16:22.667Z',
+        action: 'create',
+        object: {
+          id: 'string',
+          type: 'deployment',
+          deployment: {
+            name: 'production',
+            artifact_name: 'Application 0.0.1'
+          }
+        },
+        change: 'change2'
+      }
+    ],
+    eventsTotal: 2,
+    organization: {
+      id: 1,
+      name: 'test'
+    }
+  },
   releases: {
     artifactProgress: 0,
     byId: {
@@ -122,10 +167,6 @@ export const defaultState = {
       showCreateArtifactDialog: false,
       showConnectDeviceDialog: false,
       showTipsDialog: false
-    },
-    organization: {
-      id: 1,
-      name: 'test'
     },
     rolesById: { RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false } },
     showHelptips: true

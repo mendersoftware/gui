@@ -52,7 +52,7 @@ export class DeviceGroups extends React.Component {
 
   _handleGroupChange(group) {
     this.props.selectGroup(group);
-    this.props.history.push(group ? `/devices/group=${group}` : '/devices');
+    this.props.history.push(group ? `/devices?group=${group}` : '/devices');
     this.setState({ loading: true, pageNo: 1 });
   }
 

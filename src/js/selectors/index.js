@@ -7,7 +7,7 @@ export const getUserSettings = state => state.users.globalSettings[state.users.c
 const getAppDocsVersion = state => state.app.docsVersion;
 const getFeatures = state => state.app.features;
 const getRolesById = state => state.users.rolesById;
-const getOrganization = state => state.users.organization;
+const getOrganization = state => state.organization.organization;
 
 export const getDocsVersion = createSelector([getAppDocsVersion, getFeatures], (appDocsVersion, { isHosted }) => {
   // if hosted, use latest docs version

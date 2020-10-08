@@ -11,7 +11,7 @@ import raspberryPi from '../../../../assets/img/raspberrypi.png';
 import raspberryPi4 from '../../../../assets/img/raspberrypi4.jpg';
 
 import { getReleases } from '../../../actions/releaseActions';
-import { getUserOrganization } from '../../../actions/userActions';
+import { getUserOrganization } from '../../../actions/organizationActions';
 
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
@@ -163,7 +163,7 @@ const mapStateToProps = state => {
     pendingCount: state.devices.byStatus.pending.total,
     onboardingComplete: state.users.onboarding.complete,
     onboardingDeviceType: state.users.onboarding.deviceType,
-    token: state.users.organization.tenant_token
+    token: state.organization.organization.tenant_token
   };
 };
 

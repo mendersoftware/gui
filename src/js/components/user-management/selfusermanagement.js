@@ -186,7 +186,7 @@ export class SelfUserManagement extends React.Component {
 const actionCreators = { editUser, saveGlobalSettings, saveUserSettings, setSnackbar };
 
 const mapStateToProps = state => {
-  const { plan = 'os' } = state.users.organization;
+  const { plan = 'os' } = state.organization.organization;
   const isEnterprise = getIsEnterprise(state);
   return {
     canHave2FA: isEnterprise || (state.app.features.isHosted && plan !== 'os'),

@@ -73,7 +73,7 @@ export default class DistributionReport extends React.Component {
       const { attribute, group, selectGroup } = this.props;
       const filters = [{ key: attribute, value: thing, operator: '$eq', scope: 'inventory' }];
       selectGroup(group, filters);
-      window.location.replace(`#/devices/${group ? `group=${group}&` : ''}${attribute}=${thing}`);
+      window.location.replace(`#/devices?${group ? `group=${group}&` : ''}${attribute}=${thing}`);
     }
   }
 

@@ -14,7 +14,8 @@ export const colors = {
   borderColor: '#e0e0e0',
   expansionBackground: '#f7f7f7',
   disabledColor: 'rgba(0, 0, 0, 0.54)',
-  errorStyleColor: '#ab1000'
+  errorStyleColor: '#ab1000',
+  successStyleColor: '#009e73'
 };
 
 export const chartColorPalette = [colors.mendermaroon, '#a31773', '#00859e', '#14cfda', '#9bfff0', '#d5d5d5'];

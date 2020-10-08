@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TimeframePicker Component renders correctly 1`] = `
+Array [
+  <div
+    className="MuiFormControl-root MuiTextField-root"
+    format="MMMM Do"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    style={
+      Object {
+        "margin": 7.5,
+        "marginTop": 0,
+        "width": 160,
+      }
+    }
+  >
+    <label
+      className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+      data-shrink={true}
+    >
+      From
+    </label>
+    <div
+      className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+      onClick={[Function]}
+    >
+      <input
+        aria-invalid={false}
+        autoFocus={false}
+        className="MuiInputBase-input MuiInput-input"
+        disabled={false}
+        onAnimationStart={[Function]}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        readOnly={true}
+        required={false}
+        type="text"
+        value="January 1st"
+      />
+    </div>
+    
+  </div>,
+  <div
+    className="MuiFormControl-root MuiTextField-root"
+    format="MMMM Do"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    style={
+      Object {
+        "margin": 7.5,
+        "marginTop": 0,
+        "width": 160,
+      }
+    }
+  >
+    <label
+      className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+      data-shrink={true}
+    >
+      To
+    </label>
+    <div
+      className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+      onClick={[Function]}
+    >
+      <input
+        aria-invalid={false}
+        autoFocus={false}
+        className="MuiInputBase-input MuiInput-input"
+        disabled={false}
+        onAnimationStart={[Function]}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        readOnly={true}
+        required={false}
+        type="text"
+        value="January 1st"
+      />
+    </div>
+    
+  </div>,
+]
+`;

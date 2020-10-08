@@ -22,11 +22,14 @@ describe('Settings Component', () => {
           hasMultitenancy: true
         }
       },
+      organization: {
+        ...defaultState.organization,
+        organization: {}
+      },
       users: {
         ...defaultState.users,
         byId: {},
-        currentUser: null,
-        organization: {}
+        currentUser: null
       }
     });
   });

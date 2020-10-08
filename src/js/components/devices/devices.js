@@ -45,6 +45,37 @@ const routes = {
 
 export const refreshLength = 10000;
 
+const convertQueryToFilterAndGroup = (query, filteringAttributes) => {
+  const search = query.startsWith('?') ? query.substring(1) : query;
+  const str = decodeURIComponent(search);
+  const filters = str.split('&').reduce(
+    (accu, filter) => {
+      const filterPair = filter.split('=');
+      let scope = {};
+      if (filterPair[0] === 'group') {
+        accu.groupName = filterPair[1];
+        return accu;
+      } else if (filterPair[0] === 'id') {
+        scope = { scope: 'identity' };
+      } else {
+        scope = Object.entries(filteringAttributes).reduce(
+          (accu, [attributesType, attributes]) => {
+            if (attributes.includes(filterPair[0])) {
+              accu.scope = attributesType.substring(0, attributesType.indexOf('Attr'));
+            }
+            return accu;
+          },
+          { scope: emptyFilter.scope }
+        );
+      }
+      accu.filters.push({ ...emptyFilter, ...scope, key: filterPair[0], value: filterPair[1] });
+      return accu;
+    },
+    { filters: [], groupName: '' }
+  );
+  return filters;
+};
+
 export class Devices extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -54,33 +85,45 @@ export class Devices extends React.Component {
   }
 
   componentDidMount() {
-    clearAllRetryTimers(this.props.setSnackbar);
+    const { filteringAttributes, getAllDeviceCounts, location, match, selectGroup, setDeviceFilters, setSnackbar } = this.props;
+    clearAllRetryTimers(setSnackbar);
     this._restartInterval();
-    this.props.getAllDeviceCounts();
-    if (this.props.match.params.filters) {
-      let groupName = '';
-      const str = decodeURIComponent(this.props.match.params.filters);
-      const filters = str.split('&').reduce((filters, filter) => {
-        const filterPair = filter.split('=');
-        if (filterPair[0] === 'group') {
-          groupName = filterPair[1];
-        } else {
-          const scope = filterPair[0] === 'id' ? { scope: 'identity' } : {};
-          filters.push({ ...emptyFilter, ...scope, key: filterPair[0], value: filterPair[1] });
-        }
-        return filters;
-      }, []);
-      if (groupName) {
-        this.props.selectGroup(groupName, filters);
-      } else {
-        this.props.setDeviceFilters(filters);
-      }
+    getAllDeviceCounts();
+    const query = match.params.filters || location.search;
+    if (query) {
+      const queryResult = convertQueryToFilterAndGroup(query, filteringAttributes);
+      this.updateDeviceSelection(queryResult, selectGroup, setDeviceFilters);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { filteringAttributes, location, selectGroup, setDeviceFilters } = this.props;
+    if (
+      location.search &&
+      !Object.values(prevProps.filteringAttributes)
+        .flat()
+        .some(attribute => attribute) &&
+      Object.values(filteringAttributes)
+        .flat()
+        .some(attribute => attribute)
+    ) {
+      const queryResult = convertQueryToFilterAndGroup(location.search, filteringAttributes);
+      this.updateDeviceSelection(queryResult, selectGroup, setDeviceFilters);
     }
   }
 
   componentWillUnmount() {
     clearAllRetryTimers(this.props.setSnackbar);
     clearInterval(this.interval);
+  }
+
+  updateDeviceSelection(queryResult, selectGroup, setDeviceFilters) {
+    const { filters, groupName } = queryResult;
+    if (groupName) {
+      selectGroup(groupName, filters);
+    } else {
+      setDeviceFilters(filters);
+    }
   }
 
   _restartInterval() {
@@ -137,6 +180,7 @@ const actionCreators = { getAllDeviceCounts, selectDevice, selectGroup, setDevic
 const mapStateToProps = state => {
   const { isGroupRestricted } = getUserRoles(state);
   return {
+    filteringAttributes: state.devices.filteringAttributes,
     isGroupRestricted,
     pendingCount: state.devices.byStatus.pending.total
   };

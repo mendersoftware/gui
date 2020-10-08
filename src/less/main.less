@@ -362,13 +362,6 @@ ul.link-list {
 }
 
 /* Header */
-
-.header .material-icons {
-  color: @grey !important;
-  margin-left: 7px;
-  vertical-align: middle;
-}
-
 #logo {
   display: block;
   position: relative;
@@ -445,14 +438,10 @@ ul.link-list {
   &:hover {
     color: darken(@grey, 10%);
     cursor: pointer;
-    .material-icons {
-      color: darken(@grey, 10%) !important;
-    }
 
     // hover warning
     .warning {
       a,
-      .material-icons,
       span {
         color: lighten(@errorStyleColor, 10%) !important;
       }
@@ -462,7 +451,6 @@ ul.link-list {
   // no hover warngin
   .warning {
     a,
-    .material-icons,
     span {
       color: @errorStyleColor !important;
     }
@@ -471,7 +459,6 @@ ul.link-list {
   // hover warning
   .approaching {
     a,
-    .material-icons,
     span {
       color: lighten(orange, 10%) !important;
     }
@@ -480,7 +467,6 @@ ul.link-list {
   // no hover warngin
   .approaching {
     a,
-    .material-icons,
     span {
       color: orange !important;
     }
@@ -489,10 +475,6 @@ ul.link-list {
   > * > * {
     vertical-align: middle;
   }
-}
-
-.header .header-dropdown:hover .material-icons {
-  color: darken(@grey, 10%) !important;
 }
 
 /* Layout */
@@ -572,17 +554,7 @@ ul.link-list {
   margin-top: 20px;
 }
 
-.tableActions {
-  padding: 20px 0 20px 28px;
-}
-
 .dialog {
-  .transition(width 1s ease-in-out) !important;
-}
-
-.largeDialog {
-  width: inherit !important;
-  max-width: 96% !important;
   .transition(width 1s ease-in-out) !important;
 }
 
@@ -648,22 +620,16 @@ ul.link-list {
   &.info {
     top: 2px;
     right: 0px;
-    .material-icons {
-      .opacity(0.6);
-      color: @grey !important;
-    }
   }
 
   &.help {
     left: 50%;
     margin-left: -16px;
     z-index: 10;
-    .material-icons,
     svg {
       color: @alertpurple !important;
     }
 
-    &.highlight .material-icons,
     &.highlight svg {
       width: 1.3em;
       height: 1.3em;
@@ -978,55 +944,7 @@ ul.link-list {
   }
 }
 
-.help-section {
-  width: 160px;
-  height: 160px;
-  padding: 20px;
-  display: inline-block;
-  text-align: center;
-  margin-right: 40px;
-  margin-top: 40px;
-  cursor: pointer;
-  font-size: @defaultGutterWidth;
-  color: @linkgreen !important;
-  .scale(0.99);
-  &:hover {
-    .scale(1);
-    color: @linkhover !important;
-    svg {
-      color: @linkhover !important;
-    }
-  }
-
-  svg {
-    height: 34px !important;
-    width: 34px !important;
-    margin-top: 20px;
-    color: @linkgreen !important;
-  }
-}
-
-#software-support {
-  margin-top: 10vh;
-  margin-bottom: 5vh;
-  hr {
-    border: none;
-    border-bottom: 1px solid @lightergrey;
-    margin-bottom: 5vh;
-  }
-}
-
 // Icons
-.material-icons {
-  &.green {
-    background: none;
-    color: @green !important;
-  }
-  &.red {
-    background: none;
-    color: @red !important;
-  }
-}
 .rotated {
   .rotate(-45deg);
   &.ninety {
@@ -1095,11 +1013,6 @@ ul.link-list {
   }
 }
 
-.maxTable {
-  max-height: 50vh;
-  overflow: auto;
-}
-
 // custom style for checkbox
 table tbody.clickable tr > td:first-child,
 table thead.clickable tr > th:first-child {
@@ -1136,13 +1049,6 @@ table thead.clickable tr > th:first-child {
 
 .sortIcon.false {
   .rotateX(180deg);
-}
-
-.tableSearch {
-  display: inline-block;
-  margin-left: 3 * @defaultGutterWidth;
-  position: relative;
-  top: -4px;
 }
 
 .search {
@@ -1214,10 +1120,6 @@ table thead.clickable tr > th:first-child {
     margin-right: 2vw;
     flex-basis: 300px;
   }
-}
-
-.expandedButton {
-  margin-top: 12px;
 }
 
 .file-details {
@@ -1312,11 +1214,6 @@ input[required]:-moz-ui-invalid {
   box-shadow: none;
 }
 
-.inputGroup {
-  padding: 12px;
-  background-color: rgba(66, 66, 66, 0.03);
-}
-
 p.info,
 span.info {
   margin: 15px 0;
@@ -1368,18 +1265,6 @@ input[type='text'].fileInput {
     border-bottom-width: 2px;
     border-bottom-color: @errorStyleColor;
   }
-}
-
-textarea#inline-description {
-  height: initial !important;
-  font-size: 12px !important;
-  margin-top: 0 !important;
-}
-
-.inputHeader {
-  color: rgba(0, 0, 0, 0.5);
-  font-size: 12px;
-  display: block;
 }
 
 .dropzone {
@@ -1472,33 +1357,6 @@ div:focus {
     color: rgba(66, 66, 66, 0.6);
     text-align: left;
     font-size: 12px;
-  }
-}
-
-#password-holder {
-  position: relative;
-  display: inline-block;
-  max-width: 100%;
-
-  > div > div > div {
-    max-width: 100%;
-  }
-
-  &.edit-pass {
-    background-color: @lightestgrey;
-    padding: 0 20px 10px;
-
-    .required {
-      margin-right: 60px;
-    }
-  }
-
-  .pass-buttons {
-    display: flex;
-    justify-content: flex-end;
-    button:first-of-type {
-      margin-right: @defaultGutterWidth;
-    }
   }
 }
 
@@ -1793,36 +1651,6 @@ div.waiting-inventory {
   z-index: 100;
 }
 
-.bottom-right-button {
-  position: absolute;
-  bottom: @defaultGutterWidth;
-  right: @defaultGutterWidth;
-}
-
-/* Tags */
-
-.tagContainer {
-  margin-top: 20px;
-}
-
-.ReactTags__tag {
-  margin-right: 10px;
-  margin-bottom: 5px;
-  padding: 5px;
-  background-color: @lightgrey;
-  color: @linkhover;
-  display: inline-block;
-  margin-top: 5px;
-  font-size: 13px;
-}
-
-.ReactTags__remove {
-  cursor: pointer;
-  padding: 10px 0 10px 10px;
-}
-
-.ReactTags__tagInput input,
-.ReactTags__tagInput input:focus,
 input.fileInput {
   outline: none;
   border-top: none;
@@ -1940,150 +1768,6 @@ span.day {
   }
 }
 
-.progress-container {
-  padding-bottom: 3 * @defaultGutterWidth;
-
-  .device-info {
-    position: absolute;
-    width: 33%;
-    right: -16px;
-    background-color: #fff;
-    top: -2 * @defaultGutterWidth;
-    bottom: @defaultGutterWidth;
-    z-index: 300;
-    padding: 0 2 * @defaultGutterWidth;
-    box-sizing: border-box;
-    display: none;
-    border-left: 1px @linkhover solid;
-    font-size: 12px;
-    word-break: break-all;
-
-    &.show {
-      display: block;
-      .animation(fadein 0.2s 1);
-    }
-  }
-
-  .key {
-    color: @grey;
-    font-size: 12px;
-    clear: both;
-    vertical-align: middle;
-    margin-top: 10px;
-    text-align: center;
-    width: 60%;
-
-    .bubble {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      display: inline-block;
-      margin-left: 6px;
-      margin-right: 2px;
-      margin-top: -2px;
-      vertical-align: middle;
-      position: relative;
-      background-size: cover;
-
-      &.success {
-        background-image: url('../assets/img/success_status.png');
-      }
-      &.failure {
-        background-image: url('../assets/img/error_status.png');
-      }
-      &.pending {
-        background-image: url('../assets/img/pending_status.png');
-      }
-      &.inprogress,
-      &.installing {
-        background-image: url('../assets/img/progress_status.png');
-      }
-      &.downloading,
-      &.rebooting {
-        background-image: url('../assets/img/progress_status.png');
-      }
-    }
-  }
-
-  .progressHeader {
-    position: absolute;
-    top: -3 * @defaultGutterWidth;
-    left: 18%;
-    color: #757575;
-    font-size: 14px;
-  }
-
-  .bubbles-contain {
-    height: 100px;
-    min-width: 300px;
-    width: 60%;
-    position: relative;
-    top: -10px;
-    padding-left: 2 * @defaultGutterWidth;
-
-    > div {
-      float: left;
-      margin: 0 10px 4px 0;
-      position: relative;
-      cursor: pointer;
-      max-height: 80px;
-      max-width: 80px;
-
-      &:hover:after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 110%;
-        width: 500px;
-        border-bottom: 1px @linkhover solid;
-        z-index: 200;
-        .animation(fadein 0.6s 1);
-      }
-    }
-
-    .bubble {
-      border-radius: 50%;
-      position: relative;
-      display: block;
-      height: 100%;
-      width: 100%;
-      background-size: 66%;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-color: @lightergrey;
-
-      &:hover {
-        .scale(1.15);
-        .transition(all 0.2s ease);
-        border: 1px solid @linkhover;
-      }
-    }
-
-    .inprogress .bubble,
-    .installing .bubble {
-      .animation(pulse 2.8s infinite);
-      background-image: url('../assets/img/progress_status_large.png');
-    }
-
-    .downloading .bubble,
-    .rebooting .bubble {
-      .animation(pulse 2.8s infinite);
-      background-image: url('../assets/img/progress_status.png');
-    }
-
-    .pending .bubble {
-      background-color: lighten(@lightergrey, 4%);
-      background-image: url('../assets/img/pending_status_large.png');
-    }
-    .failure .bubble {
-      background-image: url('../assets/img/error_status_large.png');
-    }
-    .success .bubble {
-      background-image: url('../assets/img/success_status_large.png');
-    }
-  }
-}
-
 .report-container {
   display: grid;
   grid-template-columns: 2fr 2fr 1fr;
@@ -2116,7 +1800,7 @@ span.day {
 }
 
 .deploy-table-contain {
-  margin-bottom: 60px;
+  margin-bottom: 4 * @defaultGutterWidth;
   margin-top: 2 * @defaultGutterWidth;
 }
 
@@ -2128,10 +1812,6 @@ span.day {
   }
 
   div {
-    color: @red !important;
-  }
-
-  .material-icons {
     color: @red !important;
   }
 }
@@ -2385,7 +2065,38 @@ span.day {
 // Past deployments
 .datepicker-container {
   background-color: @lightestgrey;
+  padding: 4px 25px 5px;
+  display: flex;
+  align-items: flex-end;
+  > div {
+    margin: 0.5 * @defaultGutterWidth;
+  }
+}
+
+.auditlogs-list-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 2fr 2fr 1.75fr;
+  grid-column-gap: 2 * @defaultGutterWidth;
+  border-bottom: 1px solid @bordercolor;
+  margin: 0 @defaultGutterWidth;
+  padding: 10px 0;
+  align-items: center;
+  position: relative;
+  &.auditlogs-list-item-header {
+    border-bottom: transparent;
+  }
+  &:last-of-type {
+    border-bottom: transparent;
+  }
+}
+
+.auditlogs-filters {
+  background-color: @lightestgrey;
   padding: 0px 25px 5px;
+  display: grid;
+  grid-template-columns: 400px 250px 250px 1fr;
+  grid-column-gap: @defaultGutterWidth;
+  grid-row-gap: @defaultGutterWidth;
 }
 
 // Releases & Artifacts
@@ -2583,34 +2294,6 @@ span.day {
   }
   100% {
     right: 0;
-  }
-}
-
-div.shake-alert {
-  animation: shake 0.72s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-  transform: translate3d(0, 0, 0);
-}
-
-@keyframes shake {
-  10%,
-  90% {
-    transform: translate3d(-1px, 0, 0);
-  }
-
-  20%,
-  80% {
-    transform: translate3d(1px, 0, 0);
-  }
-
-  30%,
-  50%,
-  70% {
-    transform: translate3d(-2px, 0, 0);
-  }
-
-  40%,
-  60% {
-    transform: translate3d(2px, 0, 0);
   }
 }
 

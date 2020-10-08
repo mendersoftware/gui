@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 
 // material ui
 import RefreshIcon from '@material-ui/icons/Refresh';
+import { colors } from '../../themes/mender-theme';
 
-const style = { color: '#c7c7c7', margin: '0 7px 0 10px', top: '5px', fontSize: '20px' };
+const style = { color: colors.grey, margin: '0 7px 0 10px', top: '5px', fontSize: '20px' };
 
 const DeploymentNotifications = props => (
   <Link to="/deployments/" className="header-section">

@@ -183,6 +183,7 @@ export class Authorized extends React.Component {
     if (attribute.name !== self.state.sortCol) {
       state.sortDown = true;
     }
+    self.state.sortCol = attribute.name === 'Device ID' ? 'id' : self.state.sortCol;
     self.setState(state, () => self._getDevices(true));
   }
 
@@ -205,11 +206,11 @@ export class Authorized extends React.Component {
     const { loading, selectedRows, showActions, showFilters } = self.state;
     const columnHeaders = [
       {
-        title: idAttribute || 'Device ID',
+        title: idAttribute,
         customize: openSettingsDialog,
         attribute: { name: idAttribute, scope: 'identity' },
         style: { flexGrow: 1 },
-        sortable: !!idAttribute && idAttribute !== 'Device ID'
+        sortable: true
       },
       {
         title: 'Device type',
@@ -233,7 +234,7 @@ export class Authorized extends React.Component {
         title: '',
         attribute: { name: 'status', scope: 'identity' },
         render: device => <DeviceStatus device={device} />,
-        sortable: true
+        sortable: false
       }
     ];
 

@@ -9,9 +9,9 @@ import { Link } from 'react-router-dom';
 import { Button, List, LinearProgress, ListItem, ListItemText } from '@material-ui/core';
 import { FileCopy as CopyPasteIcon, Info as InfoIcon } from '@material-ui/icons';
 
-import { getUserOrganization } from '../../actions/userActions';
-import { cancelRequest } from '../../actions/organizationActions';
+import { getUserOrganization, cancelRequest } from '../../actions/organizationActions';
 import { PLANS as plans } from '../../constants/appConstants';
+import { colors } from '../../themes/mender-theme';
 import CancelRequestDialog from './dialogs/cancelrequest';
 
 import Alert from '../common/alert';
@@ -160,7 +160,7 @@ export class MyOrganization extends React.Component {
                       <div>
                         <LinearProgress
                           variant="determinate"
-                          style={{ backgroundColor: '#c7c7c7', margin: '15px 0' }}
+                          style={{ backgroundColor: colors.grey, margin: '15px 0' }}
                           value={(acceptedDevices * 100) / deviceLimit}
                         />
                         {org.trial && (
@@ -215,7 +215,7 @@ const actionCreators = { getUserOrganization, cancelRequest };
 const mapStateToProps = state => {
   return {
     isHosted: state.app.features.isHosted,
-    org: state.users.organization,
+    org: state.organization.organization,
     acceptedDevices: state.devices.byStatus.accepted.total,
     deviceLimit: state.devices.limit
   };

@@ -13,9 +13,6 @@ export const initialState = {
     retries: 0
   },
   showHelptips: true,
-  organization: {
-    // id, name, status, tenant_token, plan
-  },
   onboarding: {
     approach: null,
     artifactIncluded: null,
@@ -35,9 +32,6 @@ export const initialState = {
     RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false, permissions: [] },
     RBAC_ROLE_OBSERVER: { title: 'Read only', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
     RBAC_ROLE_CI: { title: 'CI', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] }
-  },
-  stripe: {
-    // stripe secret
   }
 };
 
@@ -149,13 +143,6 @@ const userReducer = (state = initialState, action) => {
         globalSettings: {
           ...state.globalSettings,
           ...action.settings
-        }
-      };
-    case UserConstants.SET_ORGANIZATION:
-      return {
-        ...state,
-        organization: {
-          ...action.organization
         }
       };
     case UserConstants.SET_SHOW_HELP:
