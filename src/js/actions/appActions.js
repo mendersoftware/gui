@@ -1,14 +1,56 @@
 import Cookies from 'universal-cookie';
-import AppConstants from '../constants/appConstants';
+
 import { DEVICE_STATES } from '../constants/deviceConstants';
-import { getDevicesByStatus } from './deviceActions';
-import { getReleases } from './releaseActions';
+import AppConstants from '../constants/appConstants';
+import { getUserSettings } from '../selectors';
+import { getOnboardingComponentFor } from '../utils/onboardingmanager';
+import { getDevicesByStatus, getDeviceLimit, getDynamicGroups, getGroups } from './deviceActions';
 import { getDeploymentsByStatus } from './deploymentActions';
-import { getGlobalSettings, setOnboardingState } from './userActions';
-import { getStoredOnboardingState } from '../selectors';
-import { getCurrentOnboardingState, determineProgress, persistOnboardingState, onboardingSteps } from '../utils/onboardingmanager';
+import { getReleases } from './releaseActions';
+import { saveUserSettings, getGlobalSettings, getRoles } from './userActions';
+import { getUserOrganization } from './organizationActions';
 
 const cookies = new Cookies();
+
+export const initializeAppData = () => (dispatch, getState) => {
+  let tasks = [
+    dispatch(getDeploymentsByStatus('finished', undefined, undefined, undefined, undefined, undefined, false)),
+    dispatch(getDeploymentsByStatus('inprogress')),
+    dispatch(getDevicesByStatus(DEVICE_STATES.accepted)),
+    dispatch(getDevicesByStatus(DEVICE_STATES.pending)),
+    dispatch(getDevicesByStatus(DEVICE_STATES.preauth)),
+    dispatch(getDevicesByStatus(DEVICE_STATES.rejected)),
+    dispatch(getDeviceLimit()),
+    dispatch(getDynamicGroups()),
+    dispatch(getGlobalSettings()),
+    dispatch(getGroups()),
+    dispatch(getReleases()),
+    dispatch(getRoles())
+  ];
+  const multitenancy = getState().app.features.hasMultitenancy || getState().app.features.isEnterprise || getState().app.features.isHosted;
+  if (multitenancy) {
+    tasks.push(dispatch(getUserOrganization()));
+  }
+  return Promise.all(tasks).then(() => {
+    const state = getState();
+    if (state.users.showHelptips && state.onboarding.showTips && !state.onboarding.complete) {
+      const welcomeTip = getOnboardingComponentFor('onboarding-starting', {
+        progress: state.onboarding.progress,
+        complete: state.onboarding.complete,
+        showHelptips: state.users.showHelptips,
+        showTips: state.onboarding.showTips
+      });
+      if (welcomeTip) {
+        dispatch(setSnackbar('open', 10000, '', welcomeTip, () => {}, true));
+      }
+    }
+    const hasTrackingEnabled = getUserSettings(state).trackingConsentGiven;
+    if (cookies.get('_ga') && typeof hasTrackingEnabled === 'undefined') {
+      return Promise.resolve(dispatch(saveUserSettings({ trackingConsentGiven: true })));
+    }
+    return Promise.resolve();
+  });
+};
 
 export const sortTable = (table, column, direction) => dispatch =>
   dispatch({

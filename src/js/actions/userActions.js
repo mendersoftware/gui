@@ -124,7 +124,7 @@ export const getUserList = () => dispatch =>
     });
 
 export const getUser = id => dispatch =>
-  GeneralApi.get(`${useradmApiUrl}/users/${id}`).then(({ data: user }) => Promise.resolve(dispatch({ type: UserConstants.RECEIVED_USER, user })));
+  GeneralApi.get(`${useradmApiUrl}/users/${id}`).then(({ data: user }) => Promise.all([dispatch({ type: UserConstants.RECEIVED_USER, user }), user]));
 
 const actions = {
   create: {

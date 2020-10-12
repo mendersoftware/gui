@@ -1,15 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+
+import Loader from '../common/loader';
 import Deployments from './deployments';
 import Devices from './devices';
 import SoftwareDistribution from './software-distribution';
 
 import { styles } from './widgets/baseWidget';
-import { setSnackbar } from '../../actions/appActions';
-
-import { WelcomeSnackTip } from '../helptips/onboardingtips';
-import { getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 const rowBaseStyles = {
   container: {
@@ -19,29 +17,10 @@ const rowBaseStyles = {
 };
 const rowStyles = { ...rowBaseStyles.container, ...styles.rowStyle };
 
-export class Dashboard extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      redirect: null
-    };
-  }
+export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceLimit }) => {
+  const [redirect, setRedirect] = useState(null);
 
-  componentDidMount() {
-    const self = this;
-    setTimeout(() => {
-      if (
-        self.props.currentUser &&
-        self.props.showOnboardingTips &&
-        !self.props.onboardingComplete &&
-        !getOnboardingStepCompleted('devices-pending-accepting-onboarding')
-      ) {
-        self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={1} />, () => {}, true);
-      }
-    }, 1000);
-  }
-
-  _handleClick(params) {
+  const handleClick = params => {
     let redirect;
     switch (params.route) {
       case 'deployments': {
@@ -59,37 +38,33 @@ export class Dashboard extends React.Component {
       default:
         redirect = params.route;
     }
-    this.setState({ redirect });
-  }
+    setRedirect(redirect);
+  };
 
-  render() {
-    if (this.state.redirect) {
-      return <Redirect to={this.state.redirect} />;
-    }
-    const { acceptedDevicesCount, deploymentDeviceLimit } = this.props;
-    return (
-      <div className="dashboard">
-        <Devices styles={rowStyles} clickHandle={this._handleClick.bind(this)} />
-        <div className="two-columns" style={{ gridTemplateColumns: '4fr 5fr' }}>
-          <Deployments styles={rowStyles} clickHandle={this._handleClick.bind(this)} />
-          {acceptedDevicesCount < deploymentDeviceLimit ? <SoftwareDistribution /> : <div />}
-        </div>
+  if (redirect) {
+    return <Redirect to={redirect} />;
+  }
+  return currentUser ? (
+    <div className="dashboard">
+      <Devices styles={rowStyles} clickHandle={handleClick} />
+      <div className="two-columns" style={{ gridTemplateColumns: '4fr 5fr' }}>
+        <Deployments styles={rowStyles} clickHandle={handleClick} />
+        {acceptedDevicesCount < deploymentDeviceLimit ? <SoftwareDistribution /> : <div />}
       </div>
-    );
-  }
-}
-
-const actionCreators = { setSnackbar };
+    </div>
+  ) : (
+    <div className="flexbox centered" style={{ height: '75%' }}>
+      <Loader show={true} />
+    </div>
+  );
+};
 
 const mapStateToProps = state => {
   return {
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
-    currentUser: state.users.byId[state.users.currentUser] || {},
-    deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
-    onboardingComplete: state.users.onboarding.complete,
-    showHelptips: state.users.showHelptips,
-    showOnboardingTips: state.users.onboarding.showTips
+    currentUser: state.users.currentUser,
+    deploymentDeviceLimit: state.deployments.deploymentDeviceLimit
   };
 };
 
-export default connect(mapStateToProps, actionCreators)(Dashboard);
+export default connect(mapStateToProps)(Dashboard);

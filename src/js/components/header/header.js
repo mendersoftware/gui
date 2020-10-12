@@ -12,9 +12,13 @@ import {
   ExitToApp as ExitIcon
 } from '@material-ui/icons';
 
+import { initializeAppData, setFirstLoginAfterSignup, setSnackbar } from '../../actions/appActions';
+import { getOnboardingState } from '../../actions/onboardingActions';
+import { getUser, logoutUser, setShowHelptips, toggleHelptips } from '../../actions/userActions';
 import { getToken } from '../../auth';
 import { decodeSessionToken, hashString, isEmpty } from '../../helpers';
 import { getDocsVersion, getIsEnterprise, getUserRoles, getUserSettings } from '../../selectors';
+import Tracking from '../../tracking';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Announcement from './announcement';
 import DemoNotification from './demonotification';
@@ -22,17 +26,8 @@ import DeviceNotifications from './devicenotifications';
 import DeploymentNotifications from './deploymentnotifications';
 import TrialNotification from './trialnotification';
 
-import { getOnboardingState, setFirstLoginAfterSignup, setSnackbar } from '../../actions/appActions';
-import { getDeploymentsByStatus } from '../../actions/deploymentActions';
-import { getDeviceLimit, getDevicesByStatus, getDynamicGroups, getGroups } from '../../actions/deviceActions';
-import { getUserOrganization } from '../../actions/organizationActions';
-import { getReleases } from '../../actions/releaseActions';
-import { getUser, getGlobalSettings, getRoles, logoutUser, saveUserSettings, setShowHelptips, toggleHelptips } from '../../actions/userActions';
-
-import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { colors } from '../../themes/mender-theme';
 
-import Tracking from '../../tracking';
 const menuButtonColor = colors.grey;
 
 export class Header extends React.Component {
@@ -66,35 +61,9 @@ export class Header extends React.Component {
     this._updateUsername();
   }
 
-  initializeHeaderData() {
-    this._checkHeaderInfo();
-    this._checkShowHelp();
-    this.props.getDevicesByStatus(DEVICE_STATES.accepted);
-    this.props.getDevicesByStatus(DEVICE_STATES.pending);
-    this.props.getDeviceLimit();
-    this.props.getGlobalSettings().then(() => {
-      if (this.cookies.get('_ga') && typeof this.props.hasTrackingEnabled === 'undefined') {
-        this.props.saveUserSettings({ trackingConsentGiven: true });
-      }
-    });
-    this.props.getDynamicGroups();
-    this.props.getGroups();
-    this.props.getReleases();
-    this.props.getRoles();
-    if (this.props.multitenancy) {
-      this.props.getUserOrganization();
-    }
-  }
-
-  _checkHeaderInfo() {
-    // check if deployments in progress
-    this.props.getDeploymentsByStatus('inprogress');
-    this._checkAnnouncement();
-  }
-
-  _checkShowHelp() {
+  _checkShowHelp(userId) {
     //checks if user id is set and if cookie for helptips exists for that user
-    var userCookie = this.cookies.get(this.props.user.id);
+    const userCookie = this.cookies.get(userId);
     // if no user cookie set, do so via togglehelptips
     if (typeof userCookie === 'undefined' || typeof userCookie.help === 'undefined') {
       toggleHelptips();
@@ -104,11 +73,11 @@ export class Header extends React.Component {
     }
   }
 
-  _checkAnnouncement() {
-    var hash = this.props.announcement ? hashString(this.props.announcement) : null;
-    var announceCookie = this.cookies.get(this.props.user.id + hash);
+  _checkAnnouncement(userId) {
+    const hash = this.props.announcement ? hashString(this.props.announcement) : null;
+    const announceCookie = this.cookies.get(userId + hash);
     if (hash && typeof announceCookie === 'undefined') {
-      this.setState({ showAnnouncement: true, hash: hash });
+      this.setState({ showAnnouncement: true, hash });
     } else {
       this.setState({ showAnnouncement: false });
     }
@@ -132,31 +101,28 @@ export class Header extends React.Component {
     return (
       self.props
         .getUser(userId)
-        .then(() => {
-          self.props.getOnboardingState();
-          self.initializeHeaderData();
+        .then(result => {
+          const userId = result[1].id;
+          self._checkAnnouncement(userId);
+          self._checkShowHelp(userId);
+          return this.props.initializeAppData();
         })
         // this is allowed to fail if no user information are available
         .catch(err => console.log(err.response ? err.response.data.error : err))
+        .then(self.props.getOnboardingState)
         .finally(() => self.setState({ gettingUser: false }))
     );
   }
 
-  handleClick = event => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
-  handleClose = () => {
-    this.setState({ anchorEl: null });
-  };
   onLogoutClick() {
     this.setState({ gettingUser: false, loggingOut: true, anchorEl: null });
     clearAllRetryTimers(this.props.setSnackbar);
     this.props.logoutUser();
   }
+
   render() {
     const self = this;
     const { anchorEl, showAnnouncement } = self.state;
-
     const {
       acceptedDevices,
       allowUserManagement,
@@ -169,7 +135,6 @@ export class Header extends React.Component {
       multitenancy,
       organization,
       pendingDevices,
-      plan,
       showHelptips,
       toggleHelptips,
       user
@@ -177,7 +142,7 @@ export class Header extends React.Component {
 
     return (
       <Toolbar id="fixedHeader" className="header" style={{ backgroundColor: '#fff', height: 56, minHeight: 'unset', paddingLeft: 32, paddingRight: 40 }}>
-        <Link to="/" id="logo" className={plan === 'enterprise' || isEnterprise ? 'enterprise' : ''} />
+        <Link to="/" id="logo" className={isEnterprise ? 'enterprise' : ''} />
         {demo && <DemoNotification docsVersion={docsVersion} />}
         {!!announcement && showAnnouncement && (
           <Announcement announcement={announcement} showAnnouncement={showAnnouncement} onHide={() => self._hideAnnouncement()} />
@@ -186,7 +151,11 @@ export class Header extends React.Component {
         <div style={{ flexGrow: '1' }}></div>
         <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
         <DeploymentNotifications inprogress={inProgress} />
-        <Button className="header-dropdown" style={{ fontSize: '14px', fill: 'rgb(0, 0, 0)', textTransform: 'none' }} onClick={self.handleClick}>
+        <Button
+          className="header-dropdown"
+          style={{ fontSize: '14px', fill: 'rgb(0, 0, 0)', textTransform: 'none' }}
+          onClick={e => self.setState({ anchorEl: e.currentTarget })}
+        >
           <AccountCircleIcon style={{ marginRight: '8px', top: '5px', fontSize: '20px', color: menuButtonColor }} />
           {user.email}
           {anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
@@ -194,7 +163,7 @@ export class Header extends React.Component {
         <Menu
           anchorEl={anchorEl}
           getContentAnchorEl={null}
-          onClose={self.handleClose}
+          onClose={() => self.setState({ anchorEl: null })}
           open={Boolean(anchorEl)}
           anchorOrigin={{
             vertical: 'center',
@@ -240,19 +209,10 @@ export class Header extends React.Component {
 }
 
 const actionCreators = {
-  getDeploymentsByStatus,
-  getDeviceLimit,
-  getDynamicGroups,
-  getDevicesByStatus,
-  getGlobalSettings,
-  getGroups,
   getOnboardingState,
-  getReleases,
-  getRoles,
   getUser,
-  getUserOrganization,
+  initializeAppData,
   logoutUser,
-  saveUserSettings,
   setFirstLoginAfterSignup,
   setShowHelptips,
   setSnackbar,
