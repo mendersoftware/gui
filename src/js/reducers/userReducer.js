@@ -1,5 +1,4 @@
 import * as UserConstants from '../constants/userConstants';
-import { stringToBoolean } from '../helpers';
 
 export const initialState = {
   byId: {},
@@ -13,21 +12,6 @@ export const initialState = {
     retries: 0
   },
   showHelptips: true,
-  onboarding: {
-    approach: null,
-    artifactIncluded: null,
-    complete:
-      (mender_environment && stringToBoolean(mender_environment.features.isEnterprise)) ||
-      (mender_environment && stringToBoolean(mender_environment.disableOnboarding)) ||
-      !!JSON.parse(window.localStorage.getItem('onboardingComplete')),
-    deviceType: null,
-    demoArtifactPort: mender_environment && mender_environment.demoArtifactPort ? mender_environment.demoArtifactPort : 85,
-    progress: 0,
-    showTips: false,
-    showTipsDialog: false,
-    showConnectDeviceDialog: false,
-    showCreateArtifactDialog: false
-  },
   rolesById: {
     RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false, permissions: [] },
     RBAC_ROLE_OBSERVER: { title: 'Read only', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
@@ -150,79 +134,11 @@ const userReducer = (state = initialState, action) => {
         ...state,
         showHelptips: action.show
       };
-    case UserConstants.SET_SHOW_ONBOARDING_HELP:
-      return {
-        ...state,
-        onboarding: {
-          ...state.onboarding,
-          showTips: action.show
-        }
-      };
-    case UserConstants.SET_SHOW_ONBOARDING_HELP_DIALOG:
-      return {
-        ...state,
-        onboarding: {
-          ...state.onboarding,
-          showTipsDialog: action.show
-        }
-      };
-    case UserConstants.SET_ONBOARDING_COMPLETE:
-      return {
-        ...state,
-        onboarding: {
-          ...state.onboarding,
-          complete: action.complete
-        }
-      };
     case UserConstants.SET_SHOW_CONNECT_DEVICE:
       return {
         ...state,
-        onboarding: {
-          ...state.onboarding,
-          showConnectDeviceDialog: action.show
-        }
+        showConnectDeviceDialog: action.show
       };
-    case UserConstants.SET_SHOW_CREATE_ARTIFACT:
-      return {
-        ...state,
-        onboarding: {
-          ...state.onboarding,
-          showCreateArtifactDialog: action.show
-        }
-      };
-    case UserConstants.SET_ONBOARDING_PROGRESS:
-      return {
-        ...state,
-        onboarding: {
-          ...state.onboarding,
-          progress: action.value
-        }
-      };
-    case UserConstants.SET_ONBOARDING_DEVICE_TYPE:
-      return {
-        ...state,
-        onboarding: {
-          ...state.onboarding,
-          deviceType: action.value
-        }
-      };
-    case UserConstants.SET_ONBOARDING_APPROACH:
-      return {
-        ...state,
-        onboarding: {
-          ...state.onboarding,
-          approach: action.value
-        }
-      };
-    case UserConstants.SET_ONBOARDING_ARTIFACT_INCLUDED:
-      return {
-        ...state,
-        onboarding: {
-          ...state.onboarding,
-          artifactIncluded: action.value
-        }
-      };
-
     default:
       return state;
   }
