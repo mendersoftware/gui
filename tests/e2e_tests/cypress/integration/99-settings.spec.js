@@ -24,7 +24,16 @@ context('Settings', () => {
     Cypress.Cookies.preserveOnce('JWT', 'noExpiry');
   });
 
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('JWT', 'noExpiry');
+  });
+
   describe('Basic setting features', () => {
+    it('allows access to user management', () => {
+      cy.visit(`${Cypress.config().baseUrl}ui/#/settings`);
+      cy.get('[href="/ui/#/settings/user-management"]').click();
+      cy.contains('button', 'Create new user').should('be.visible');
+    });
     it('allows email changes', () => {
       cy.visit(`${Cypress.config().baseUrl}ui/#/settings/my-account`);
       cy.get('#change_email').click();
