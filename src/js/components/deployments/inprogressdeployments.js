@@ -165,7 +165,7 @@ export class Progress extends React.Component {
           </div>
         )}
         {!(progressCount || progress.length || pendingCount || pending.length) && (
-          <div className={progress.length || !doneLoading ? 'hidden' : 'dashboard-placeholder'}>
+          <div className="dashboard-placeholder">
             <p>Pending and ongoing deployments will appear here. </p>
             <p>
               <a onClick={createClick}>Create a deployment</a> to get started

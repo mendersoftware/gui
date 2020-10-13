@@ -38,7 +38,13 @@ export const getDeployments = (page = default_page, per_page = default_per_page)
     return Promise.all(
       Object.entries(deploymentsByStatus).map(([status, value]) => {
         const { deployments, deploymentIds } = transformDeployments(value, getState().deployments.byId);
-        return dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status });
+        return dispatch({
+          type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`],
+          deployments,
+          deploymentIds,
+          status,
+          total: Number(res.headers[headerNames.total])
+        });
       })
     );
   });
