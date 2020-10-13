@@ -2,7 +2,7 @@
 
 exports[`Auditlogs Component renders correctly 1`] = `
 <div
-  className="fadeIn deploy-table-contain"
+  className="fadeIn deploy-table-contain auditlogs-list"
 >
   <div
     className="auditlogs-list-item auditlogs-list-item-header muted"
@@ -79,6 +79,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
         />
       </svg>
     </div>
+    <div />
   </div>
   <div
     className="loaderContainer shrunk"
@@ -101,90 +102,273 @@ exports[`Auditlogs Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    className="auditlogs-list-item"
+    className="auditlogs-list"
   >
-    <div>
-      <div>
-        string@example.com
-      </div>
-    </div>
-    <div>
+    <div
+      className="MuiPaper-root MuiAccordion-root auditlogs-list-item MuiPaper-elevation1"
+    >
       <div
-        className="uppercased"
-      >
-        create
-      </div>
-    </div>
-    <div>
-      <div
-        className="capitalized"
-      >
-        user
-      </div>
-    </div>
-    <div>
-      <div>
-        user@acme.com
-      </div>
-    </div>
-    <div>
-      <div
-        className="capitalized"
-      >
-        change1
-      </div>
-    </div>
-    <div>
-      <time
-        dateTime="2020-09-10T12:10:22+00:00"
-        title={null}
-      >
-        2020-09-10 12:10
-      </time>
-    </div>
-  </div>
-  <div
-    className="auditlogs-list-item"
-  >
-    <div>
-      <div>
-        string
-      </div>
-    </div>
-    <div>
-      <div
-        className="uppercased"
-      >
-        create
-      </div>
-    </div>
-    <div>
-      <div
-        className="capitalized"
-      >
-        deployment
-      </div>
-    </div>
-    <div>
-      <div>
-        to production
-      </div>
-    </div>
-    <div>
-      <a
-        href="/deployments/finished?open=true&id=string"
+        aria-disabled={false}
+        aria-expanded={false}
+        className="MuiButtonBase-root MuiAccordionSummary-root"
+        onBlur={[Function]}
         onClick={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        role="button"
+        style={
+          Object {
+            "padding": 0,
+          }
+        }
+        tabIndex={0}
       >
-        View deployment
-      </a>
+        <div
+          className="MuiAccordionSummary-content"
+        >
+          <div>
+            <div>
+              string@example.com
+            </div>
+          </div>
+          <div>
+            <div
+              className="uppercased"
+            >
+              create
+            </div>
+          </div>
+          <div>
+            <div
+              className="capitalized"
+            >
+              user
+            </div>
+          </div>
+          <div>
+            <div>
+              user@acme.com
+            </div>
+          </div>
+          <div>
+            <div
+              className="capitalized"
+              style={
+                Object {
+                  "whiteSpace": "pre-line",
+                }
+              }
+            >
+              change1
+            </div>
+          </div>
+          <div>
+            <time
+              dateTime="2020-09-10T12:10:22+00:00"
+              title={null}
+            >
+              2020-09-10 12:10
+            </time>
+          </div>
+          <button
+            className="MuiButtonBase-root MuiIconButton-root expandButton"
+            disabled={false}
+            onBlur={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={0}
+            type="button"
+          >
+            <span
+              className="MuiIconButton-label"
+            >
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M7 10l5 5 5-5z"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        className="MuiCollapse-container MuiCollapse-hidden"
+        style={
+          Object {
+            "minHeight": "0px",
+          }
+        }
+      >
+        <div
+          className="MuiCollapse-wrapper"
+        >
+          <div
+            className="MuiCollapse-wrapperInner"
+          >
+            <div
+              role="region"
+            >
+              <div
+                className="MuiAccordionDetails-root"
+              >
+                <div />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div>
-      <time
-        dateTime="2020-09-10T12:16:22+00:00"
-        title={null}
+    <div
+      className="MuiPaper-root MuiAccordion-root auditlogs-list-item MuiPaper-elevation1"
+    >
+      <div
+        aria-disabled={false}
+        aria-expanded={false}
+        className="MuiButtonBase-root MuiAccordionSummary-root"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        role="button"
+        style={
+          Object {
+            "padding": 0,
+          }
+        }
+        tabIndex={0}
       >
-        2020-09-10 12:16
-      </time>
+        <div
+          className="MuiAccordionSummary-content"
+        >
+          <div>
+            <div>
+              string
+            </div>
+          </div>
+          <div>
+            <div
+              className="uppercased"
+            >
+              create
+            </div>
+          </div>
+          <div>
+            <div
+              className="capitalized"
+            >
+              deployment
+            </div>
+          </div>
+          <div>
+            <div>
+              to production
+            </div>
+          </div>
+          <div>
+            <a
+              href="/deployments/finished?open=true&id=string"
+              onClick={[Function]}
+            >
+              View deployment
+            </a>
+          </div>
+          <div>
+            <time
+              dateTime="2020-09-10T12:16:22+00:00"
+              title={null}
+            >
+              2020-09-10 12:16
+            </time>
+          </div>
+          <button
+            className="MuiButtonBase-root MuiIconButton-root expandButton"
+            disabled={false}
+            onBlur={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={0}
+            type="button"
+          >
+            <span
+              className="MuiIconButton-label"
+            >
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M7 10l5 5 5-5z"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        className="MuiCollapse-container MuiCollapse-hidden"
+        style={
+          Object {
+            "minHeight": "0px",
+          }
+        }
+      >
+        <div
+          className="MuiCollapse-wrapper"
+        >
+          <div
+            className="MuiCollapse-wrapperInner"
+          >
+            <div
+              role="region"
+            >
+              <div
+                className="MuiAccordionDetails-root"
+              >
+                <div />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div
@@ -215,13 +399,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
           role="button"
           tabIndex={0}
         >
-          <span
-            dangerouslySetInnerHTML={
-              Object {
-                "__html": "&#8203;",
-              }
-            }
-          />
+          20
         </div>
         <input
           aria-hidden={true}
@@ -229,6 +407,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
           onAnimationStart={[Function]}
           onChange={[Function]}
           tabIndex={-1}
+          value={20}
         />
         <svg
           aria-hidden={true}
@@ -353,11 +532,11 @@ exports[`Auditlogs Component renders correctly 1`] = `
               />
             </div>
           </div>
-          / NaN
+          / 1
         </div>
         <button
-          className="MuiButtonBase-root MuiIconButton-root"
-          disabled={false}
+          className="MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled"
+          disabled={true}
           onBlur={[Function]}
           onClick={[Function]}
           onDragLeave={[Function]}
@@ -370,7 +549,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
           onTouchEnd={[Function]}
           onTouchMove={[Function]}
           onTouchStart={[Function]}
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <span
@@ -389,8 +568,8 @@ exports[`Auditlogs Component renders correctly 1`] = `
           </span>
         </button>
         <button
-          className="MuiButtonBase-root MuiIconButton-root"
-          disabled={false}
+          className="MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled"
+          disabled={true}
           onBlur={[Function]}
           onClick={[Function]}
           onDragLeave={[Function]}
@@ -403,7 +582,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
           onTouchEnd={[Function]}
           onTouchMove={[Function]}
           onTouchStart={[Function]}
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <span

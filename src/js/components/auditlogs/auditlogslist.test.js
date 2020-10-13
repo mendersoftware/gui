@@ -28,7 +28,7 @@ describe('Auditlogs Component', () => {
               onChangeRowsPerPage={jest.fn}
               onChangePage={jest.fn}
               onChangeSorting={jest.fn}
-              pageSize={20}
+              perPage={20}
               sortDirection={'desc'}
             />
           </Provider>

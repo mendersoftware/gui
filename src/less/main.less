@@ -2073,20 +2073,25 @@ span.day {
   }
 }
 
-.auditlogs-list-item {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 2fr 2fr 1.75fr;
-  grid-column-gap: 2 * @defaultGutterWidth;
+.auditlogs-list .auditlogs-list-item {
   border-bottom: 1px solid @bordercolor;
-  margin: 0 @defaultGutterWidth;
-  padding: 10px 0;
-  align-items: center;
-  position: relative;
-  &.auditlogs-list-item-header {
+  &.auditlogs-list-item-header, &:last-of-type {
     border-bottom: transparent;
   }
-  &:last-of-type {
-    border-bottom: transparent;
+  &.auditlogs-list-item-header, .MuiAccordionSummary-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 2fr 2fr 1.75fr 50px;
+    grid-column-gap: 2 * @defaultGutterWidth;
+    padding: 10px 0;
+    align-items: center;
+    position: relative;
+    >div {
+      max-height: @defaultGutterWidth * 3;
+      overflow: hidden;
+    }
+  }
+  &.auditlogs-list-item-header, .MuiAccordionSummary-content, .MuiAccordionSummary-content.Mui-expanded {
+    margin: 0 @defaultGutterWidth;
   }
 }
 

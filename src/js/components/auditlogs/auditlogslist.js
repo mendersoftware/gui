@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Time from 'react-time';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 
-import { Sort as SortIcon } from '@material-ui/icons';
+import { Accordion, AccordionDetails, AccordionSummary, IconButton } from '@material-ui/core';
+import { ArrowDropDown as ArrowDropDownIcon, ArrowDropUp as ArrowDropUpIcon, Sort as SortIcon } from '@material-ui/icons';
 
 import { formatTime } from '../../helpers';
 import Loader from '../common/loader';
@@ -11,8 +12,25 @@ import Pagination from '../common/pagination';
 
 export const defaultRowsPerPage = 20;
 
-const UserChange = ({ item: { change = '-' } }) => <div className="capitalized">{change}</div>;
+const formatChange = change => {
+  const diff = change.split(/@@.*@@/);
+  return diff.length > 1 ? diff[1].trim() : diff;
+};
+
+const UserChange = ({ item: { change = '-' } }) => (
+  <div className="capitalized" style={{ whiteSpace: 'pre-line' }}>
+    {formatChange(change)}
+  </div>
+);
 const DeploymentLink = ({ item }) => <Link to={`/deployments/finished?open=true&id=${item.object.id}`}>View deployment</Link>;
+
+const changeMap = {
+  user: { component: UserChange, actionFormatter: data => data.user.email },
+  deployment: {
+    component: DeploymentLink,
+    actionFormatter: data => `to ${decodeURIComponent(data.deployment.name)}`
+  }
+};
 
 const ChangeDescriptor = ({ item }) => {
   const Comp = changeMap[item.object.type].component;
@@ -22,14 +40,6 @@ const ChangeDescriptor = ({ item }) => {
 const actorMap = {
   user: 'email',
   device: 'id'
-};
-
-const changeMap = {
-  user: { component: UserChange, actionFormatter: data => data.user.email },
-  deployment: {
-    component: DeploymentLink,
-    actionFormatter: data => `to ${decodeURIComponent(data.deployment.name)}`
-  }
 };
 
 export const auditLogColumns = [
@@ -66,7 +76,7 @@ export const auditLogColumns = [
     sortable: false,
     propConverter: item => ({ item }),
     component: ChangeDescriptor,
-    printFormatter: ({ change = '-' }) => change
+    printFormatter: ({ change = '-' }) => formatChange(change).replaceAll('\n', ' ')
   },
   {
     title: 'Time',
@@ -78,9 +88,15 @@ export const auditLogColumns = [
 ];
 
 export const AuditLogsList = ({ count, items, loading, onChangePage, onChangeRowsPerPage, onChangeSorting, page, perPage, sortDirection }) => {
+  const [expanded, setExpanded] = useState();
+
+  const onExpand = item => {
+    setExpanded(item.time === expanded ? null : item.time);
+  };
+
   return (
     !!items.length && (
-      <div className="fadeIn deploy-table-contain">
+      <div className="fadeIn deploy-table-contain auditlogs-list">
         <div className="auditlogs-list-item auditlogs-list-item-header muted">
           {auditLogColumns.map((item, index) => (
             <div
@@ -93,20 +109,31 @@ export const AuditLogsList = ({ count, items, loading, onChangePage, onChangeRow
               {item.sortable ? <SortIcon className={`sortIcon selected ${(sortDirection === 'desc').toString()}`} /> : null}
             </div>
           ))}
+          <div />
         </div>
         <Loader show={loading} />
-        {items.map(item => (
-          <div className="auditlogs-list-item" key={`event-${item.time}`}>
-            {auditLogColumns.map((header, index) => {
-              const Component = header.component;
-              return (
-                <div key={`column-${index}`} className={header.className}>
-                  <Component {...header.propConverter(item)} />
-                </div>
-              );
-            })}
-          </div>
-        ))}
+        <div className="auditlogs-list">
+          {items.map(item => (
+            <Accordion className="auditlogs-list-item" key={`event-${item.time}`} square expanded={expanded === item.time} onChange={() => onExpand(item)}>
+              <AccordionSummary style={{ padding: 0 }}>
+                {auditLogColumns.map((header, index) => {
+                  const Component = header.component;
+                  return (
+                    <div key={`column-${index}`} className={header.className}>
+                      <Component {...header.propConverter(item)} />
+                    </div>
+                  );
+                })}
+                {item.change ? (
+                  <IconButton className="expandButton">{expanded === item.time ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>
+                ) : (
+                  <div />
+                )}
+              </AccordionSummary>
+              {item.change && <AccordionDetails>{expanded === item.time ? <div className="code">{item.change}</div> : <div />}</AccordionDetails>}
+            </Accordion>
+          ))}
+        </div>
         <Pagination count={count} rowsPerPage={perPage} onChangeRowsPerPage={onChangeRowsPerPage} page={page} onChangePage={onChangePage} />
       </div>
     )
