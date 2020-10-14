@@ -69,10 +69,12 @@ export const defaultState = {
   devices: {
     byId: {
       a1: {
-        auth_sets: []
+        auth_sets: [],
+        attributes: {}
       },
       b1: {
-        auth_sets: []
+        auth_sets: [],
+        attributes: {}
       }
     },
     byStatus: {

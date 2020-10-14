@@ -53,7 +53,15 @@ export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, getUserList, 
     setDetail('');
   };
 
-  const refresh = (currentPage, currentPerPage, currentStartDate = startDate, currentEndDate = endDate, userFilter = user, typeFilter = type, detailFilter) => {
+  const refresh = (
+    currentPage,
+    currentPerPage = perPage,
+    currentStartDate = startDate,
+    currentEndDate = endDate,
+    userFilter = user,
+    typeFilter = type,
+    detailFilter
+  ) => {
     detailFilter = !detailFilter && typeof detailFilter === 'string' ? undefined : detailFilter || detail;
     setPage(currentPage);
     setPerPage(currentPerPage);
@@ -163,7 +171,6 @@ export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, getUserList, 
       {!!events.length && (
         <AuditLogsList
           {...props}
-          componentClass="margin-left-small"
           items={events}
           loading={loading}
           onChangePage={refresh}
