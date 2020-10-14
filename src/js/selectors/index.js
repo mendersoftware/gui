@@ -24,7 +24,7 @@ export const getUserRoles = createSelector(
   [getCurrentUser, getRolesById, getIsEnterprise, getFeatures, getOrganization],
   (currentUser, rolesById, isEnterprise, { isHosted, hasMultitenancy }, { plan = 'os' }) => {
     let isAdmin = false || !(hasMultitenancy || isEnterprise || (isHosted && plan !== 'os'));
-    let allowUserManagement = false;
+    let allowUserManagement = isAdmin;
     let isGroupRestricted = false;
     if (currentUser?.roles) {
       isAdmin = currentUser.roles.some(role => role === rolesByName.admin);

@@ -20,6 +20,7 @@ import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
 import { rolesByName } from '../../constants/userConstants';
 import { colors } from '../../themes/mender-theme';
+import { deepCompare } from '../../helpers';
 
 import { OAuth2Providers } from './oauth2providers';
 
@@ -61,9 +62,15 @@ export default class UserForm extends React.Component {
   onSubmit(data) {
     const { submit, user } = this.props;
     const { isCreation, selectedRoles } = this.state;
-    const submissionData = Object.assign({}, data, selectedRoles.length ? { roles: selectedRoles.map(role => role.id) } : {});
+    let submissionData = Object.assign({}, data, selectedRoles.length ? { roles: selectedRoles.map(role => role.id) } : {});
     delete submissionData['password_new'];
     submissionData['password'] = data.password_new;
+    submissionData = Object.entries(submissionData).reduce((accu, [key, value]) => {
+      if (!deepCompare(user[key], value)) {
+        accu[key] = value;
+      }
+      return accu;
+    }, {});
     return !isCreation ? submit(submissionData, 'edit', user.id) : submit(submissionData, 'create');
   }
 
