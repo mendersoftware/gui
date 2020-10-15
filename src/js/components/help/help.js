@@ -135,6 +135,7 @@ const actionCreators = { getUserOrganization };
 
 const mapStateToProps = state => {
   return {
+    demoArtifactLink: state.app.demoArtifactLink,
     docsVersion: getDocsVersion(state),
     isHosted: state.app.features.isHosted,
     isEnterprise: getIsEnterprise(state),

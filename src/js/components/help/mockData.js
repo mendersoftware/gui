@@ -1,4 +1,5 @@
 export const helpProps = {
+  demoArtifactLink: 'https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender',
   docsVersion: '',
   isHosted: false,
   isEnterprise: false,
