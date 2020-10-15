@@ -5,7 +5,7 @@ import { IconButton, TextField } from '@material-ui/core';
 import { CloudUpload, Delete as DeleteIcon, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import { FileSize } from '../../../helpers';
-import { advanceOnboarding, getOnboardingComponentFor } from '../../../utils/onboardingmanager';
+import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 
 const reFilename = new RegExp(/^[a-z0-9.,_-]+$/i);
 
@@ -19,26 +19,28 @@ export default class ArtifactUpload extends React.Component {
   }
 
   onDrop(acceptedFiles) {
+    const { advanceOnboarding, releases, setSnackbar, updateCreation } = this.props;
     if (acceptedFiles.length === 1) {
-      const self = this;
       if (!reFilename.test(acceptedFiles[0].name)) {
         this.setState({ acceptedFiles: [] });
-        this.props.setSnackbar('Only letters, digits and characters in the set ".,_-" are allowed in the filename.', null);
+        setSnackbar('Only letters, digits and characters in the set ".,_-" are allowed in the filename.', null);
       } else {
-        advanceOnboarding('upload-new-artifact-dialog-upload');
-        self.setState({ acceptedFiles }, () => self.props.updateCreation({ file: acceptedFiles[0] }));
+        if (releases.length) {
+          advanceOnboarding('upload-new-artifact-dialog-upload');
+        }
+        this.setState({ acceptedFiles }, () => updateCreation({ file: acceptedFiles[0] }));
       }
     } else {
       this.setState({ acceptedFiles: [] });
-      this.props.setSnackbar('The selected file is not supported.', null);
+      setSnackbar('The selected file is not supported.', null);
     }
   }
 
   onChange(event) {
     const destination = event.target.value;
-    const self = this;
-    const { acceptedFiles } = self.state;
-    self.setState({ destination }, () => self.props.updateCreation({ destination, file: acceptedFiles.length ? acceptedFiles[0] : null }));
+    const { updateCreation } = this.props;
+    const { acceptedFiles } = this.state;
+    this.setState({ destination }, () => updateCreation({ destination, file: acceptedFiles.length ? acceptedFiles[0] : null }));
   }
 
   onRefSet(refTarget, ref) {
@@ -51,19 +53,24 @@ export default class ArtifactUpload extends React.Component {
   render() {
     const self = this;
     const { acceptedFiles, destination } = self.state;
-    const { onboardingComplete } = self.props;
+    const { onboardingState } = self.props;
     const { filesize, filename, isMenderArtifact } = acceptedFiles.length
       ? { filename: acceptedFiles[0].name, filesize: acceptedFiles[0].size, isMenderArtifact: acceptedFiles[0].name.endsWith('.mender') }
       : { filesize: 0, filename: 0, isMenderArtifact: false };
 
     let onboardingComponent = null;
-    if (!onboardingComplete && self.onboardingAnchor) {
+    if (!onboardingState.complete && self.onboardingAnchor) {
       const anchor = {
         left: self.onboardingAnchor.offsetLeft + self.onboardingAnchor.clientWidth,
         top: self.onboardingAnchor.offsetTop + self.onboardingAnchor.clientHeight / 2
       };
-      onboardingComponent = getOnboardingComponentFor('upload-new-artifact-dialog-upload', { anchor, place: 'right' });
-      onboardingComponent = getOnboardingComponentFor('upload-new-artifact-dialog-destination', { anchor, place: 'right' }, onboardingComponent);
+      onboardingComponent = getOnboardingComponentFor('upload-new-artifact-dialog-upload', onboardingState, { anchor, place: 'right' });
+      onboardingComponent = getOnboardingComponentFor(
+        'upload-new-artifact-dialog-destination',
+        onboardingState,
+        { anchor, place: 'right' },
+        onboardingComponent
+      );
     }
     const isValidDestination = destination.length ? /^(?:\/|[a-z]+:\/\/)/.test(destination) : true;
     return !acceptedFiles.length ? (

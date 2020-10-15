@@ -17,7 +17,7 @@ describe('AddArtifact Component', () => {
   it('renders correctly', () => {
     const tree = createMount()(
       <Provider store={store}>
-        <AddArtifact open={true} />
+        <AddArtifact open={true} onboardingState={{ complete: true }} />
       </Provider>
     ).html();
     expect(tree).toMatchSnapshot();

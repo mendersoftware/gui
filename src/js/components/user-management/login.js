@@ -162,8 +162,8 @@ const mapStateToProps = state => {
     has2FA: state.users.globalSettings.hasOwnProperty('2fa') && state.users.globalSettings['2fa'] === 'enabled',
     isHosted: state.app.features.isHosted,
     showHelptips: state.users.showHelptips,
-    showOnboardingTips: state.users.onboarding.showTips,
-    onboardingComplete: state.users.onboarding.complete
+    showOnboardingTips: state.onboarding.showTips,
+    onboardingComplete: state.onboarding.complete
   };
 };
 

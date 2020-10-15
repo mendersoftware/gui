@@ -9,12 +9,14 @@ import { Button, Tooltip, Typography } from '@material-ui/core';
 import { Help as HelpIcon, Sort as SortIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
+import { advanceOnboarding } from '../../actions/onboardingActions';
 import { editArtifact, uploadArtifact, selectArtifact, selectRelease } from '../../actions/releaseActions';
 import { customSort } from '../../helpers';
+import { getOnboardingState } from '../../selectors';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import { ExpandArtifact } from '../helptips/helptooltips';
 import Loader from '../common/loader';
 import ReleaseRepositoryItem from './releaserepositoryitem';
-import { getOnboardingComponentFor, advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 const columnHeaders = [
   { title: 'Device type compatibility', name: 'device_types', sortable: false },
@@ -58,8 +60,8 @@ export class ReleaseRepository extends React.Component {
     } else {
       this.props.selectArtifact();
     }
-    if (!this.props.onboardingComplete) {
-      advanceOnboarding('artifact-included-onboarding');
+    if (!this.props.onboardingState.complete) {
+      this.props.advanceOnboarding('artifact-included-onboarding');
     }
   }
 
@@ -69,8 +71,11 @@ export class ReleaseRepository extends React.Component {
   }
 
   onCreateDeploymentFrom(release) {
-    if (!this.props.onboardingComplete && getOnboardingStepCompleted('upload-new-artifact-tip')) {
-      advanceOnboarding('artifact-modified-onboarding');
+    if (!this.props.onboardingState.complete) {
+      this.props.advanceOnboarding('scheduling-artifact-selection');
+      if (this.props.pastDeploymentsCount === 1) {
+        this.props.advanceOnboarding('artifact-modified-onboarding');
+      }
     }
     this.props.selectRelease(release);
   }
@@ -85,7 +90,7 @@ export class ReleaseRepository extends React.Component {
 
   render() {
     const self = this;
-    const { loading, onUpload, release, releases, selectedArtifact, showHelptips, uploading } = self.props;
+    const { artifactIncluded, demoArtifactLink, loading, onboardingState, onUpload, release, releases, selectedArtifact, showHelptips, uploading } = self.props;
     const { sortCol, sortDown, wasSelectedRecently } = self.state;
     const artifacts = release ? release.Artifacts : [];
     const items = artifacts.sort(customSort(sortDown, sortCol)).map((pkg, index) => {
@@ -129,18 +134,28 @@ export class ReleaseRepository extends React.Component {
         top: this.creationRef.offsetTop - this.creationRef.offsetHeight / 2
       };
 
-      onboardingComponent = getOnboardingComponentFor('artifact-included-onboarding', { anchor });
+      onboardingComponent = getOnboardingComponentFor('artifact-included-onboarding', { ...onboardingState, artifactIncluded }, { anchor });
       onboardingComponent = getOnboardingComponentFor(
         'artifact-included-deploy-onboarding',
+        onboardingState,
         { place: 'right', anchor: artifactIncludedAnchor },
         onboardingComponent
       );
-      onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor }, onboardingComponent);
-      onboardingComponent = getOnboardingComponentFor('artifact-modified-onboarding', { anchor: artifactUploadedAnchor, place: 'bottom' }, onboardingComponent);
+      onboardingComponent = getOnboardingComponentFor('deployments-past-completed', onboardingState, { anchor }, onboardingComponent);
+      onboardingComponent = getOnboardingComponentFor(
+        'artifact-modified-onboarding',
+        onboardingState,
+        { anchor: artifactUploadedAnchor, place: 'bottom' },
+        onboardingComponent
+      );
     }
     if (this.dropzoneRef) {
       const dropzoneAnchor = { left: this.dropzoneRef.offsetLeft, top: this.dropzoneRef.offsetTop + this.dropzoneRef.offsetHeight };
-      uploadArtifactOnboardingComponent = getOnboardingComponentFor('upload-prepared-artifact-tip', { anchor: dropzoneAnchor, place: 'left' });
+      uploadArtifactOnboardingComponent = getOnboardingComponentFor(
+        'upload-prepared-artifact-tip',
+        { ...onboardingState, demoArtifactLink },
+        { anchor: dropzoneAnchor, place: 'left' }
+      );
     }
 
     return loading || wasSelectedRecently ? (
@@ -194,7 +209,7 @@ export class ReleaseRepository extends React.Component {
               </Button>
             </div>
           ) : null}
-          {showHelptips && onboardingComponent ? onboardingComponent : null}
+          {!!onboardingComponent && onboardingComponent}
 
           {showHelptips && items.length ? (
             <div>
@@ -238,11 +253,14 @@ export class ReleaseRepository extends React.Component {
   }
 }
 
-const actionCreators = { editArtifact, uploadArtifact, selectArtifact, setSnackbar, selectRelease };
+const actionCreators = { advanceOnboarding, editArtifact, selectArtifact, setSnackbar, selectRelease, uploadArtifact };
 
 const mapStateToProps = state => {
   return {
-    onboardingComplete: state.users.onboarding.complete,
+    artifactIncluded: state.onboarding.artifactIncluded,
+    demoArtifactLink: state.app.demoArtifactLink,
+    onboardingState: getOnboardingState(state),
+    pastDeploymentsCount: state.deployments.byStatus.finished.total,
     release: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null,
     releases: Object.values(state.releases.byId),
     selectedArtifact: state.releases.selectedArtifact,

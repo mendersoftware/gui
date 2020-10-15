@@ -4,11 +4,12 @@ import { Link, withRouter } from 'react-router-dom';
 import { Button, Tab, Tabs } from '@material-ui/core';
 
 import { getGroups, getDynamicGroups, initializeGroupsDevices, selectDevice } from '../../actions/deviceActions';
+import { advanceOnboarding } from '../../actions/onboardingActions';
 import { selectRelease } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, createDeployment, selectDeployment } from '../../actions/deploymentActions';
-import { getIsEnterprise } from '../../selectors';
+import { getIsEnterprise, getOnboardingState } from '../../selectors';
 
 import CreateDialog, { allDevices } from './createdeployment';
 import Progress from './inprogressdeployments';
@@ -66,22 +67,20 @@ export class Deployments extends React.Component {
       .catch(err => console.log(err));
     let startDate = self.state.startDate;
     const params = new URLSearchParams(this.props.location.search);
-    if (this.props.match) {
-      if (params) {
-        if (params.get('open')) {
-          if (params.get('id')) {
-            self.showReport(self.state.reportType || self.props.match.params.tab, params.get('id'));
-          } else if (params.get('release')) {
-            self.props.selectRelease(params.get('release'));
-          } else if (params.get('deviceId')) {
-            self.props.selectDevice(params.get('deviceId'));
-          } else {
-            setTimeout(() => self.setState({ createDialog: true }), 400);
-          }
-        } else if (params.get('from')) {
-          startDate = new Date(params.get('from'));
-          startDate.setHours(0, 0, 0);
+    if (this.props.match && params) {
+      if (params.get('open')) {
+        if (params.get('id')) {
+          self.showReport(self.state.reportType || self.props.match.params.tab, params.get('id'));
+        } else if (params.get('release')) {
+          self.props.selectRelease(params.get('release'));
+        } else if (params.get('deviceId')) {
+          self.props.selectDevice(params.get('deviceId'));
+        } else {
+          setTimeout(() => self.setState({ createDialog: true }), 400);
         }
+      } else if (params.get('from')) {
+        startDate = new Date(params.get('from'));
+        startDate.setHours(0, 0, 0);
       }
     }
     self.setState({
@@ -162,13 +161,18 @@ export class Deployments extends React.Component {
   }
 
   _changeTab(tabIndex) {
-    var self = this;
-    self.setState({ tabIndex });
-    self.props.setSnackbar('');
+    this.setState({ tabIndex });
+    this.props.setSnackbar('');
+    if (this.props.pastCount && !this.props.onboardingState.complete) {
+      this.props.advanceOnboarding('deployments-past');
+    }
   }
 
   showReport(reportType, deploymentId) {
     const self = this;
+    if (!self.props.onboardingState.complete) {
+      self.props.advanceOnboarding('deployments-inprogress');
+    }
     self.props.selectDeployment(deploymentId).then(() => self.setState({ createDialog: false, reportType, reportDialog: true }));
   }
 
@@ -179,7 +183,7 @@ export class Deployments extends React.Component {
 
   render() {
     const self = this;
-    const { pastCount } = self.props;
+    const { onboardingState, pastCount } = self.props;
     // tabs
     const { createDialog, deploymentObject, reportDialog, reportType, startDate, tabIndex } = self.state;
     let onboardingComponent = null;
@@ -187,7 +191,7 @@ export class Deployments extends React.Component {
     if (pastCount && self.tabsRef) {
       const tabs = self.tabsRef.getElementsByClassName('MuiTab-root');
       const finishedTab = tabs[tabs.length - 1];
-      onboardingComponent = getOnboardingComponentFor('deployments-past', {
+      onboardingComponent = getOnboardingComponentFor('deployments-past', onboardingState, {
         anchor: {
           left: self.tabsRef.offsetLeft + self.tabsRef.offsetWidth - finishedTab.offsetWidth / 2,
           top: self.tabsRef.offsetHeight + finishedTab.offsetHeight
@@ -239,6 +243,7 @@ export class Deployments extends React.Component {
 
 const actionCreators = {
   abortDeployment,
+  advanceOnboarding,
   createDeployment,
   getGroups,
   getDynamicGroups,
@@ -253,6 +258,7 @@ const actionCreators = {
 const mapStateToProps = state => {
   return {
     isEnterprise: getIsEnterprise(state),
+    onboardingState: getOnboardingState(state),
     pastCount: state.deployments.byStatus.finished.total,
     settings: state.users.globalSettings
   };

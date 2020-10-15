@@ -11,26 +11,30 @@ exports[`DeploymentCompleteTip Component renders correctly 1`] = `
   <div
     className="flexbox centered"
   >
-    <div
-      className="loaderContainer"
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained"
+      disabled={false}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+      type="button"
     >
-      <div
-        className="loader"
+      <span
+        className="MuiButton-label"
       >
-        <span
-          className="dot dot_1"
-        />
-        <span
-          className="dot dot_2"
-        />
-        <span
-          className="dot dot_3"
-        />
-        <span
-          className="dot dot_4"
-        />
-      </div>
-    </div>
+        Go to http://localhost:85
+      </span>
+    </button>
   </div>
   <p>
     and you should see the demo web application actually being run on the device.
@@ -38,25 +42,10 @@ exports[`DeploymentCompleteTip Component renders correctly 1`] = `
   <p>
     NOTE: if you have local network restrictions, you may need to check them if you have difficulty loading the page.
   </p>
-  <div
-    className="loaderContainer"
+  <a
+    onClick={[Function]}
   >
-    <div
-      className="loader"
-    >
-      <span
-        className="dot dot_1"
-      />
-      <span
-        className="dot dot_2"
-      />
-      <span
-        className="dot dot_3"
-      />
-      <span
-        className="dot dot_4"
-      />
-    </div>
-  </div>
+    Visit the web app running your device
+  </a>
 </div>
 `;

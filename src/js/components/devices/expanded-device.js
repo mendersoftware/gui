@@ -276,7 +276,7 @@ const actionCreators = { decommissionDevice, getReleases, setSnackbar };
 const mapStateToProps = state => {
   return {
     docsVersion: getDocsVersion(state),
-    onboardingComplete: state.users.onboarding.complete,
+    onboardingComplete: state.onboarding.complete,
     showHelptips: state.users.showHelptips
   };
 };

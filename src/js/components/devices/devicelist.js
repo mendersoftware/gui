@@ -9,12 +9,12 @@ import SortIcon from '@material-ui/icons/Sort';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
+import { advanceOnboarding } from '../../actions/onboardingActions';
 
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import DeviceListItem from './devicelistitem';
-import { advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 export class DeviceList extends React.Component {
   constructor(props, context) {
@@ -26,10 +26,16 @@ export class DeviceList extends React.Component {
 
   componentDidUpdate(prevProps) {
     var self = this;
-    const { group } = self.props;
+    const { acceptedDevicesCount, advanceOnboarding, devices, group, onboardingComplete } = self.props;
 
     if (prevProps.group !== group) {
       self.setState({ textfield: group ? decodeURIComponent(group) : 'All devices' });
+    }
+    if (!onboardingComplete && acceptedDevicesCount) {
+      advanceOnboarding('devices-accepted-onboarding');
+      if (devices.every(item => Object.values(item.attributes).some(value => value))) {
+        advanceOnboarding('application-update-reminder-tip');
+      }
     }
   }
 
@@ -38,23 +44,19 @@ export class DeviceList extends React.Component {
     if (event.target.closest('input') && event.target.closest('input').hasOwnProperty('checked')) {
       return;
     }
-    self.props.setSnackbar('');
-    let device = self.props.devices[rowNumber];
+    const { advanceOnboarding, devices, getDeviceAuth, getDeviceById, onboardingComplete, setSnackbar } = self.props;
+    setSnackbar('');
+    let device = devices[rowNumber];
     if (self.state.expandedDeviceId === device.id) {
       device = null;
     } else if (device.status === DEVICE_STATES.accepted) {
       // Get full device identity details for single selected device
-      Promise.all([self.props.getDeviceAuth(device.id), self.props.getDeviceById(device.id)]).catch(err => console.log(`Error: ${err}`));
+      Promise.all([getDeviceAuth(device.id), getDeviceById(device.id)]).catch(err => console.log(`Error: ${err}`));
     } else {
-      self.props.getDeviceAuth(device.id);
+      getDeviceAuth(device.id);
     }
-    if (!self.props.onboardingComplete) {
-      if (!getOnboardingStepCompleted('devices-pending-accepting-onboarding')) {
-        advanceOnboarding('devices-pending-accepting-onboarding');
-      }
-      if (getOnboardingStepCompleted('devices-pending-accepting-onboarding') && self.props.acceptedDevicesCount) {
-        advanceOnboarding('devices-accepted-onboarding');
-      }
+    if (!onboardingComplete) {
+      advanceOnboarding('devices-pending-accepting-onboarding');
     }
     self.setState({ expandedDeviceId: device ? device.id : null });
   }
@@ -170,7 +172,8 @@ export class DeviceList extends React.Component {
   }
 }
 
-const actionCreators = { getDeviceAuth, getDeviceById, setSnackbar };
+const actionCreators = { advanceOnboarding, getDeviceAuth, getDeviceById, setSnackbar };
+
 const mapStateToProps = (state, ownProps) => {
   const devices = ownProps.devices.reduce((accu, deviceId) => {
     if (deviceId && state.devices.byId[deviceId]) {
@@ -183,7 +186,7 @@ const mapStateToProps = (state, ownProps) => {
     devices,
     filters: state.devices.filters,
     globalSettings: state.users.globalSettings,
-    onboardingComplete: state.users.onboarding.complete
+    onboardingComplete: state.onboarding.complete
   };
 };
 

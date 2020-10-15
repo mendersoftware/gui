@@ -7,13 +7,14 @@ import { Autocomplete } from '@material-ui/lab';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, selectDeployment } from '../../actions/deploymentActions';
+import { advanceOnboarding } from '../../actions/onboardingActions';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
 import TimeframePicker from '../common/timeframe-picker';
 import TimerangePicker from '../common/timerange-picker';
-import { WelcomeSnackTip } from '../helptips/onboardingtips';
+import { getOnboardingState } from '../../selectors';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
-import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
 import { DeploymentStatus } from './deploymentitem';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
@@ -44,10 +45,26 @@ export class Past extends React.Component {
     clearInterval(self.timer);
     self.timer = setInterval(() => self.refreshPast(), refreshDeploymentsLength);
     self.refreshPast();
-    if (self.props.showHelptips && self.props.showOnboardingTips && !self.props.onboardingComplete && this.props.past.length) {
-      const progress = getOnboardingStepCompleted('artifact-modified-onboarding') && this.props.past.length > 1 ? 4 : 3;
+  }
+
+  componentDidUpdate() {
+    const { advanceOnboarding, onboardingState, past, setSnackbar } = this.props;
+    if (past.length && !onboardingState.complete) {
+      const pastDeploymentsFailed = past.reduce((accu, item) => {
+        if (item.status === 'failed' || (item.stats && item.stats.noartifact + item.stats.failure + item.stats['already-installed'] + item.stats.aborted > 0)) {
+          return false;
+        }
+        return accu;
+      }, true);
+      if (pastDeploymentsFailed) {
+        advanceOnboarding('deployments-past-completed-failure');
+      } else {
+        advanceOnboarding('deployments-past-completed');
+      }
       setTimeout(() => {
-        !self.props.onboardingComplete ? self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={progress} />, () => {}, true) : null;
+        let notification = getOnboardingComponentFor('deployment-past-completed-notification', onboardingState);
+        notification = getOnboardingComponentFor('onboarding-finished-notification', onboardingState, {}, notification);
+        !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
       }, 400);
     }
   }
@@ -90,7 +107,7 @@ export class Past extends React.Component {
 
   render() {
     const self = this;
-    const { count, createClick, groups, loading, past, showHelptips } = self.props;
+    const { count, createClick, groups, loading, onboardingState, past } = self.props;
     const { deviceGroup, page, perPage, endDate, startDate } = self.state;
     let onboardingComponent = null;
     if (this.deploymentsRef) {
@@ -99,9 +116,14 @@ export class Past extends React.Component {
         ? self.deploymentsRef.offsetLeft + detailsButtons[0].offsetLeft + detailsButtons[0].offsetWidth / 2 + 15
         : self.deploymentsRef.offsetWidth;
       let anchor = { left: self.deploymentsRef.offsetWidth / 2, top: self.deploymentsRef.offsetTop };
-      onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor });
-      onboardingComponent = getOnboardingComponentFor('deployments-past-completed-failure', { anchor: { left, top: anchor.top } }, onboardingComponent);
-      onboardingComponent = getOnboardingComponentFor('onboarding-finished', { anchor }, onboardingComponent);
+      onboardingComponent = getOnboardingComponentFor('deployments-past-completed', onboardingState, { anchor });
+      onboardingComponent = getOnboardingComponentFor(
+        'deployments-past-completed-failure',
+        onboardingState,
+        { anchor: { left, top: anchor.top } },
+        onboardingComponent
+      );
+      onboardingComponent = getOnboardingComponentFor('onboarding-finished', onboardingState, { anchor }, onboardingComponent);
     }
 
     return (
@@ -138,7 +160,7 @@ export class Past extends React.Component {
         <div className="deploy-table-contain">
           <Loader show={loading} />
           {/* TODO: fix status retrieval for past deployments to decide what to show here - */}
-          {!loading && showHelptips && !!past.length && !!onboardingComponent && onboardingComponent}
+          {!loading && !!past.length && !!onboardingComponent && onboardingComponent}
           {!!past.length && (
             <RootRef rootRef={ref => (this.deploymentsRef = ref)}>
               <DeploymentsList
@@ -170,7 +192,7 @@ export class Past extends React.Component {
   }
 }
 
-const actionCreators = { getDeploymentsByStatus, setSnackbar, selectDeployment };
+const actionCreators = { advanceOnboarding, getDeploymentsByStatus, setSnackbar, selectDeployment };
 
 const mapStateToProps = state => {
   const past = state.deployments.byStatus.finished.selectedDeploymentIds.map(id => state.deployments.byId[id]);
@@ -179,10 +201,8 @@ const mapStateToProps = state => {
   return {
     count: state.deployments.byStatus.finished.total,
     groups: ['All devices', ...Object.keys(groups)],
-    onboardingComplete: state.users.onboarding.complete,
-    past,
-    showHelptips: state.users.showHelptips,
-    showOnboardingTips: state.users.onboarding.showTips
+    onboardingState: getOnboardingState(state),
+    past
   };
 };
 

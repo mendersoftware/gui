@@ -11,10 +11,18 @@ const getRolesById = state => state.users.rolesById;
 const getOrganization = state => state.organization.organization;
 const getDevicesList = state => Object.values(state.devices.byId);
 const getOnboarding = state => state.onboarding;
+const getShowHelptips = state => state.users.showHelptips;
 
 export const getDemoDeviceAddress = createSelector([getDevicesList, getOnboarding], (devices, { approach, demoArtifactPort }) => {
   return getDemoDeviceAddressHelper(devices, approach, demoArtifactPort);
 });
+
+export const getOnboardingState = createSelector([getOnboarding, getShowHelptips], ({ complete, progress, showTips }, showHelptips) => ({
+  complete,
+  progress,
+  showHelptips,
+  showTips
+}));
 
 export const getDocsVersion = createSelector([getAppDocsVersion, getFeatures], (appDocsVersion, { isHosted }) => {
   // if hosted, use latest docs version

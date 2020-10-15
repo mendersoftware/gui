@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import { getAllDevicesByStatus, getDeviceCount } from '../../actions/deviceActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { getOnboardingState } from '../../selectors';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import AcceptedDevices from './widgets/accepteddevices';
 import PendingDevices from './widgets/pendingdevices';
 import RedirectionWidget from './widgets/redirectionwidget';
-import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
 const refreshDevicesLength = 30000;
 
@@ -79,20 +80,20 @@ export class Devices extends React.Component {
 
   render() {
     const { deltaActivity } = this.state;
-    const { acceptedDevicesCount, inactiveDevicesCount, pendingDevicesCount, setShowConnectingDialog, showHelptips } = this.props;
+    const { acceptedDevicesCount, inactiveDevicesCount, onboardingState, pendingDevicesCount, setShowConnectingDialog, showHelptips } = this.props;
     const noDevicesAvailable = !(acceptedDevicesCount + pendingDevicesCount > 0);
     let onboardingComponent = null;
     if (this.anchor) {
       const element = this.anchor.children[this.anchor.children.length - 1];
       const anchor = { left: element.offsetLeft + element.offsetWidth / 2, top: element.offsetTop + element.offsetHeight - 50 };
-      onboardingComponent = getOnboardingComponentFor('dashboard-onboarding-start', { anchor });
+      onboardingComponent = getOnboardingComponentFor('dashboard-onboarding-start', onboardingState, { anchor });
       if (this.pendingsRef) {
         const element = this.pendingsRef.wrappedElement.lastChild;
         const anchor = {
           left: this.pendingsRef.wrappedElement.offsetLeft + element.offsetWidth / 2,
           top: this.pendingsRef.wrappedElement.offsetTop + element.offsetHeight
         };
-        onboardingComponent = getOnboardingComponentFor('dashboard-onboarding-pendings', { anchor });
+        onboardingComponent = getOnboardingComponentFor('dashboard-onboarding-pendings', onboardingState, { anchor });
       }
     }
     return (
@@ -133,6 +134,7 @@ const mapStateToProps = state => {
     deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
     inactiveDevicesCount: state.devices.byStatus.inactive.total,
+    onboardingState: getOnboardingState(state),
     pendingDevicesCount: state.devices.byStatus.pending.total,
     showHelptips: state.users.showHelptips
   };

@@ -24,7 +24,7 @@ describe('ExpandedDevice Component', () => {
       users: {
         ...defaultState.users,
         onboarding: {
-          ...defaultState.users.onboarding,
+          ...defaultState.onboarding,
           complete: false
         }
       }

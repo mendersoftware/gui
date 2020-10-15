@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
+import { setSnackbar } from '../../actions/appActions';
+import { getOnboardingState } from '../../selectors';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
 import Deployments from './deployments';
 import Devices from './devices';
 import SoftwareDistribution from './software-distribution';
-
 import { styles } from './widgets/baseWidget';
 
 const rowBaseStyles = {
@@ -17,8 +19,18 @@ const rowBaseStyles = {
 };
 const rowStyles = { ...rowBaseStyles.container, ...styles.rowStyle };
 
-export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceLimit }) => {
+export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceLimit, onboardingState, setSnackbar }) => {
   const [redirect, setRedirect] = useState(null);
+
+  useEffect(() => {
+    if (!currentUser || !onboardingState.showTips) {
+      return;
+    }
+    setTimeout(() => {
+      const notification = getOnboardingComponentFor('onboarding-start', onboardingState);
+      !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
+    }, 400);
+  }, [currentUser, onboardingState]);
 
   const handleClick = params => {
     let redirect;
@@ -59,12 +71,15 @@ export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceL
   );
 };
 
+const actionCreators = { setSnackbar };
+
 const mapStateToProps = state => {
   return {
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
     currentUser: state.users.currentUser,
-    deploymentDeviceLimit: state.deployments.deploymentDeviceLimit
+    deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
+    onboardingState: getOnboardingState(state)
   };
 };
 
-export default connect(mapStateToProps)(Dashboard);
+export default connect(mapStateToProps, actionCreators)(Dashboard);

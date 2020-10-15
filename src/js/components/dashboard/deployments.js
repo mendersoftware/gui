@@ -8,6 +8,7 @@ import UpdateIcon from '@material-ui/icons/Update';
 import { setSnackbar } from '../../actions/appActions';
 import { getDeployments } from '../../actions/deploymentActions';
 import { mapAttributesToAggregator } from '../../helpers';
+import { getOnboardingState } from '../../selectors';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
@@ -78,7 +79,7 @@ export class Deployments extends React.Component {
 
   render() {
     const self = this;
-    const { inprogressCount, pendingCount, finished } = self.props;
+    const { inprogressCount, pendingCount, finished, onboardingState } = self.props;
     const { lastDeploymentCheck, loading } = self.state;
 
     const pendingWidgetMain = {
@@ -107,7 +108,7 @@ export class Deployments extends React.Component {
         top: this.deploymentsRef.offsetTop + this.deploymentsRef.offsetHeight,
         left: this.deploymentsRef.offsetLeft + this.deploymentsRef.offsetWidth / 2
       };
-      onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor });
+      onboardingComponent = getOnboardingComponentFor('deployments-past-completed', onboardingState, { anchor });
     }
     return (
       <div>
@@ -163,6 +164,7 @@ const mapStateToProps = state => {
       ? state.deployments.byStatus.finished.deploymentIds.map(id => state.deployments.byId[id])
       : deploymentsByState.finished,
     inprogressCount: state.deployments.byStatus.inprogress.total ? state.deployments.byStatus.inprogress.total : deploymentsByState.inprogress.length,
+    onboardingState: getOnboardingState(state),
     pendingCount: state.deployments.byStatus.pending.total ? state.deployments.byStatus.pending.total : deploymentsByState.pending.length
   };
 };

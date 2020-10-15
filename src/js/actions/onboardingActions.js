@@ -50,13 +50,14 @@ export const getOnboardingState = () => (dispatch, getState) => {
     onboardingState = state;
   }
   onboardingState.address = getDemoDeviceAddress(Object.values(store.devices.byId), onboardingState.approach, store.onboarding.demoArtifactPort);
-  const progress = Object.keys(onboardingSteps).findIndex(step => step === 'deployments-past-completed');
+  const progress = Object.keys(onboardingSteps).findIndex(step => step === 'artifact-creation-dialog');
   const currentProgress = Object.keys(onboardingSteps).findIndex(step => step === onboardingState.progress);
   onboardingState.showArtifactCreation = Math.abs(currentProgress - progress) <= 1;
   if (onboardingState.showArtifactCreation) {
+    dispatch(setShowCreateArtifactDialog(true));
+    onboardingState.progress = 'artifact-creation-dialog';
     // although it would be more appropriate to do this in the app component, this happens here because in the app component we would need to track
     // redirects, if we want to still allow navigation across the UI while the dialog is visible
-    dispatch(setShowCreateArtifactDialog(onboardingSteps.showArtifactCreation));
     window.location.replace('#/releases');
   }
   return Promise.resolve(dispatch(setOnboardingState(onboardingState)));
@@ -76,15 +77,16 @@ export const setShowCreateArtifactDialog = show => dispatch => dispatch({ type: 
 
 export const setShowDismissOnboardingTipsDialog = show => dispatch => dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP_DIALOG, show });
 
-export const setOnboardingComplete = val => dispatch => {
-  if (val) {
-    advanceOnboarding('onboarding-finished');
-  }
-  return Promise.all([
+export const setOnboardingComplete = val => dispatch =>
+  Promise.all([
     dispatch({ type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: val }),
     dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: !val })
-  ]);
-};
+  ]).then(() => {
+    if (val) {
+      return Promise.resolve(dispatch(advanceOnboarding('onboarding-finished')));
+    }
+    return Promise.resolve();
+  });
 
 export const setOnboardingCanceled = () => dispatch =>
   Promise.all([
@@ -115,7 +117,7 @@ export const advanceOnboarding = stepId => (dispatch, getState) => {
   const madeProgress = steps[stepIndex + 1];
   dispatch(setOnboardingProgress(madeProgress));
   const state = { ...getCurrentOnboardingState(getState()), progress: madeProgress };
-  state.complete = stepIndex + 1 >= Object.keys(onboardingSteps).length - 1 ? true : state.complete;
+  state.complete = stepIndex + 1 >= Object.keys(onboardingSteps).findIndex(step => step === 'onboarding-finished') ? true : state.complete;
   dispatch(saveUserSettings({ onboarding: state }));
   Tracking.event({ category: 'onboarding', action: stepId });
 };

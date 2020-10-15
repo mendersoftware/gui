@@ -11,11 +11,11 @@ import raspberryPi from '../../../../assets/img/raspberrypi.png';
 import raspberryPi4 from '../../../../assets/img/raspberrypi4.jpg';
 
 import { getReleases } from '../../../actions/releaseActions';
+import { advanceOnboarding } from '../../../actions/onboardingActions';
 import { getUserOrganization } from '../../../actions/organizationActions';
 
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
-import { advanceOnboarding } from '../../../utils/onboardingmanager';
 
 export class DeviceConnectionDialog extends React.Component {
   constructor(props, context) {
@@ -48,7 +48,7 @@ export class DeviceConnectionDialog extends React.Component {
 
   render() {
     const self = this;
-    const { onboardingDeviceType, open, onboardingComplete, onCancel, pendingCount } = self.props;
+    const { advanceOnboarding, onboardingDeviceType, open, onboardingComplete, onCancel, pendingCount } = self.props;
     const { progress, onDevice, virtualDevice } = self.state;
 
     let content = (
@@ -155,14 +155,14 @@ export class DeviceConnectionDialog extends React.Component {
   }
 }
 
-const actionCreators = { getReleases, getUserOrganization };
+const actionCreators = { advanceOnboarding, getReleases, getUserOrganization };
 
 const mapStateToProps = state => {
   return {
     isEnterprise: state.app.features.hasMultitenancy || state.app.features.isEnterprise || state.app.features.isHosted,
     pendingCount: state.devices.byStatus.pending.total,
-    onboardingComplete: state.users.onboarding.complete,
-    onboardingDeviceType: state.users.onboarding.deviceType,
+    onboardingComplete: state.onboarding.complete,
+    onboardingDeviceType: state.onboarding.deviceType,
     token: state.organization.organization.tenant_token
   };
 };

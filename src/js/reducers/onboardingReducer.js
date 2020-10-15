@@ -13,7 +13,7 @@ export const initialState = {
   demoArtifactPort: mender_environment && mender_environment.demoArtifactPort ? mender_environment.demoArtifactPort : 85,
   progress: Object.keys(onboardingSteps)[0],
   showCreateArtifactDialog: false,
-  showTips: false,
+  showTips: null,
   showTipsDialog: false
 };
 

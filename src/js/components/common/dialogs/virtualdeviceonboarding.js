@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { setOnboardingApproach } from '../../../actions/userActions';
+import { setOnboardingApproach } from '../../../actions/onboardingActions';
 import CopyCode from '../copy-code';
 
 export class VirtualDeviceOnboarding extends React.PureComponent {

@@ -110,6 +110,13 @@ export const defaultState = {
     limit: 500,
     selectedDeviceList: []
   },
+  onboarding: {
+    complete: false,
+    demoArtifactPort: 85,
+    showCreateArtifactDialog: false,
+    showConnectDeviceDialog: false,
+    showTipsDialog: false
+  },
   organization: {
     events: [
       {
@@ -172,12 +179,6 @@ export const defaultState = {
     byId: { a1: { email: 'a@b.com', id: 'a1' } },
     currentUser: 'a1',
     globalSettings: { previousFilters: [] },
-    onboarding: {
-      complete: false,
-      showCreateArtifactDialog: false,
-      showConnectDeviceDialog: false,
-      showTipsDialog: false
-    },
     rolesById: { RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false } },
     showHelptips: true
   }
