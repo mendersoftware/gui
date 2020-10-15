@@ -1,6 +1,12 @@
 import React from 'react';
 import { Tooltip } from '@material-ui/core';
 
+import successImage from '../../../assets/img/success_status.png';
+import errorImage from '../../../assets/img/error_status.png';
+import pendingImage from '../../../assets/img/pending_status.png';
+import inprogressImage from '../../../assets/img/progress_status.png';
+import skippedImage from '../../../assets/img/skipped_status.png';
+
 const defaultStats = {
   success: 0,
   decommissioned: 0,
@@ -14,27 +20,31 @@ const defaultStats = {
   'already-installed': 0
 };
 
+const phases = {
+  skipped: { title: 'Skipped', image: skippedImage },
+  pending: { title: 'Pending', image: pendingImage },
+  inprogress: { title: 'In progress', image: inprogressImage },
+  success: { title: 'Successful', image: successImage },
+  failure: { title: 'Failed', image: errorImage }
+};
+
 export const DeploymentStatus = ({ deployment = {}, vertical }) => {
-  const stats = deployment.stats || defaultStats;
-  const inprogress = stats.downloading + stats.installing + stats.rebooting;
-  const failures = stats.failure;
-  const skipped = stats.aborted + stats.noartifact + stats['already-installed'] + stats.decommissioned;
-  const successes = stats.success;
-  const pending = (deployment.max_devices ? deployment.max_devices - deployment.device_count : 0) + stats.pending;
-  const phases = [
-    { title: 'Skipped', value: skipped, className: 'skipped' },
-    { title: 'Pending', value: pending, className: 'pending' },
-    { title: 'In progress', value: inprogress, className: 'inprogress' },
-    { title: 'Successful', value: successes, className: 'success' },
-    { title: 'Failed', value: failures, className: 'failure' }
-  ];
+  const stats = { ...defaultStats, ...deployment.stats };
+  const phaseStats = {
+    inprogress: stats.downloading + stats.installing + stats.rebooting,
+    failure: stats.failure,
+    skipped: stats.aborted + stats.noartifact + stats['already-installed'] + stats.decommissioned,
+    success: stats.success,
+    pending: (deployment.max_devices ? deployment.max_devices - deployment.device_count : 0) + stats.pending
+  };
   return (
     <div>
       <div className={vertical ? 'flexbox results-status column' : 'flexbox results-status'}>
-        {phases.map(phase => (
-          <Tooltip key={phase.className} title={phase.title}>
-            <div className={phase.value ? '' : 'disabled'}>
-              <span className={`status ${phase.className}`}>{(phase.value || 0).toLocaleString()}</span>
+        {Object.entries(phases).map(([key, phase]) => (
+          <Tooltip key={key} title={phase.title}>
+            <div className={phaseStats[key] ? '' : 'disabled'}>
+              <img src={phase.image} />
+              <span className="status">{phaseStats[key].toLocaleString()}</span>
               {vertical && <span className="label">{phase.title}</span>}
             </div>
           </Tooltip>

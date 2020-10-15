@@ -112,12 +112,6 @@ time {
   white-space: nowrap;
 }
 
-/* icon */
-
-.pending-icon {
-  background-image: url('../assets/img/pending_status.png');
-}
-
 /* Type */
 
 body {
@@ -363,18 +357,9 @@ ul.link-list {
 
 /* Header */
 #logo {
-  display: block;
-  position: relative;
   min-width: 142px;
   height: 48px;
   margin-right: 25px;
-  background-image: url('../assets/img/headerlogo.png');
-  background-repeat: no-repeat;
-  background-size: contain;
-
-  &.enterprise {
-    background-image: url('../assets/img/headerlogo-enterprise.png');
-  }
 }
 
 #demoBox,
@@ -1151,36 +1136,14 @@ table thead.clickable tr > th:first-child {
 
   span.status {
     margin-right: 10px;
-    &::before {
-      content: '';
-      display: inline-block;
-      width: 23px;
-      height: 23px;
-      vertical-align: middle;
-      background-position-y: -2px;
-      background-repeat: no-repeat;
-      margin-right: 8px;
-    }
-
-    &.success::before {
-      background-image: url('../assets/img/success_status.png');
-    }
-
-    &.failure::before {
-      background-image: url('../assets/img/error_status.png');
-    }
-
-    &.pending::before {
-      background-image: url('../assets/img/pending_status.png');
-    }
-
-    &.skipped::before {
-      background-image: url('../assets/img/skipped_status.png');
-    }
-
-    &.inprogress::before {
-      background-image: url('../assets/img/progress_status.png');
-    }
+  }
+  img {
+    display: inline-block;
+    width: 23px;
+    height: 23px;
+    vertical-align: middle;
+    background-position-y: -2px;
+    margin-right: 8px;
   }
 }
 
@@ -1243,25 +1206,6 @@ form .required.file {
   &:after {
     top: -38px;
     position: relative;
-  }
-}
-
-input[type='file'].fileInput,
-input[type='text'].fileInput {
-  width: 400px !important;
-  margin: 32px 0 10px 0;
-  cursor: pointer;
-  z-index: 1 !important;
-  &:first-child {
-    z-index: 2 !important;
-    cursor: pointer !important;
-  }
-
-  .placeholder({background-image: url('../assets/img/file_upload.png') ; background-position: right; background-repeat: no-repeat;});
-
-  &.error {
-    border-bottom-width: 2px;
-    border-bottom-color: @errorStyleColor;
   }
 }
 

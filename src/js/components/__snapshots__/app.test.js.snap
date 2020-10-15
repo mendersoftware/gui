@@ -16,11 +16,14 @@ Array [
     }
   >
     <a
-      className=""
       href="/"
-      id="logo"
       onClick={[Function]}
-    />
+    >
+      <img
+        id="logo"
+        src="headerlogo.png"
+      />
+    </a>
     <div
       style={
         Object {

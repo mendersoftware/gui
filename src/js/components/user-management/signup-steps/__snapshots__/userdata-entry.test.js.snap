@@ -5,7 +5,7 @@ Array [
   <img
     alt="mender-logo"
     id="signupLogo"
-    src="assets/img/headerlogo.png"
+    src="headerlogo.png"
   />,
   <h1>
     Try Mender for Free

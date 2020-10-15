@@ -11,7 +11,7 @@ exports[`Login Component renders correctly 1`] = `
   <img
     alt="mender-logo"
     className="margin-bottom-small"
-    src="assets/img/loginlogo.png"
+    src="loginlogo.png"
   />
   <div
     className="flexbox centered margin-bottom"

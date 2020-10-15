@@ -27,6 +27,8 @@ import DeploymentNotifications from './deploymentnotifications';
 import TrialNotification from './trialnotification';
 
 import { colors } from '../../themes/mender-theme';
+import logo from '../../../assets/img/headerlogo.png';
+import enterpriseLogo from '../../../assets/img/headerlogo-enterprise.png';
 
 const menuButtonColor = colors.grey;
 
@@ -142,7 +144,9 @@ export class Header extends React.Component {
 
     return (
       <Toolbar id="fixedHeader" className="header" style={{ backgroundColor: '#fff', height: 56, minHeight: 'unset', paddingLeft: 32, paddingRight: 40 }}>
-        <Link to="/" id="logo" className={isEnterprise ? 'enterprise' : ''} />
+        <Link to="/">
+          <img id="logo" src={isEnterprise ? enterpriseLogo : logo} />
+        </Link>
         {demo && <DemoNotification docsVersion={docsVersion} />}
         {!!announcement && showAnnouncement && (
           <Announcement announcement={announcement} showAnnouncement={showAnnouncement} onHide={() => self._hideAnnouncement()} />

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 
+import helptooltips from '../../../../assets/img/helptooltips.png';
 import { setOnboardingCanceled, setShowDismissOnboardingTipsDialog } from '../../../actions/onboardingActions';
 
 export const ConfirmDismissHelptips = ({ setOnboardingCanceled, setShowDismissOnboardingTipsDialog }) => (
@@ -12,7 +13,7 @@ export const ConfirmDismissHelptips = ({ setOnboardingCanceled, setShowDismissOn
       <p>Hide the help tips? You haven&apos;t finished your first update yet.</p>
       <p>You can always show the help again later by selecting the option from the top menu:</p>
       <div className="flexbox centered">
-        <img src="assets/img/helptooltips.png" />
+        <img src={helptooltips} />
       </div>
     </DialogContent>
     <DialogActions>

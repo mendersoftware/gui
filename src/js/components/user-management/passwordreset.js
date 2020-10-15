@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+
+import headerLogo from '../../../assets/img/headerlogo.png';
 import { passwordResetComplete } from '../../actions/userActions';
 import { setSnackbar } from '../../actions/appActions';
-
 import Form from '../common/forms/form';
 import PasswordInput from '../common/forms/passwordinput';
 
@@ -31,7 +32,7 @@ export const PasswordReset = props => {
 
   return (
     <div className="flexbox column" id="login-box">
-      <img src="assets/img/headerlogo.png" alt="mender-logo" id="signupLogo" />
+      <img src={headerLogo} alt="mender-logo" id="signupLogo" />
       <h1 className="align-center">Change your password</h1>
       {confirm ? (
         <p className="margin-bottom align-center">You password has been updated.</p>
