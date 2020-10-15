@@ -285,6 +285,9 @@ export const saveGlobalSettings = (settings, beOptimistic = false, notify = fals
 };
 
 export const saveUserSettings = settings => (dispatch, getState) => {
+  if (!getState().users.currentUser) {
+    return Promise.resolve();
+  }
   const userSettings = getUserSettings(getState());
   const updatedSettings = {
     [getState().users.currentUser]: {
