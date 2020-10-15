@@ -49,6 +49,7 @@ export const loginUser = userData => (dispatch, getState) =>
       cookies.set('JWT', token, options);
 
       const userId = decodeSessionToken(token);
+      window.sessionStorage.removeItem('pendings-redirect');
       window.location.replace('#/');
       return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), dispatch(getUser(userId))]);
     })
@@ -63,11 +64,11 @@ export const logoutUser = reason => (dispatch, getState) => {
     return Promise.reject();
   }
   return GeneralApi.post(`${useradmApiUrl}/auth/logout`).finally(() => {
-    logout();
     let tasks = [dispatch({ type: UserConstants.USER_LOGOUT })];
     if (reason) {
       tasks.push(dispatch(setSnackbar(reason)));
     }
+    logout();
     return Promise.all(tasks);
   });
 };
@@ -170,8 +171,6 @@ export const editUser = (userId, userData) => dispatch =>
   GeneralApi.put(`${useradmApiUrl}/users/${userId}`, userData)
     .then(() => Promise.all([dispatch({ type: UserConstants.UPDATED_USER, userId, user: userData }), dispatch(setSnackbar(actions.edit.successMessage))]))
     .catch(err => userActionErrorHandler(err, 'edit', dispatch));
-
-export const setCurrentUser = user => dispatch => dispatch({ type: UserConstants.SET_CURRENT_USER, user });
 
 export const getRoles = () => (dispatch, getState) =>
   GeneralApi.get(`${useradmApiUrl}/roles`).then(({ data: roles }) => {

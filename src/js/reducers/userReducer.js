@@ -78,11 +78,6 @@ const userReducer = (state = initialState, action) => {
           }
         }
       };
-    case UserConstants.SET_CURRENT_USER:
-      return {
-        ...state,
-        currentUser: action.user
-      };
     case UserConstants.RECEIVED_ROLES:
       return {
         ...state,
