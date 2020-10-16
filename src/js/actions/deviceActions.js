@@ -560,20 +560,30 @@ export const getDevicesWithAuth = devices => dispatch =>
       return Promise.all(tasks);
     });
 
-export const updateDeviceAuth = (deviceId, authId, status) => dispatch =>
+const maybeUpdateDevicesByStatus = (devicesState, deviceId, authId, dispatch) => {
+  const device = devicesState.byId[deviceId];
+  const hasMultipleAuthSets = authId ? device.auth_sets.filter(authset => authset.id !== authId).length > 0 : false;
+  if (!hasMultipleAuthSets) {
+    const deviceIds = devicesState.byStatus[device.status].deviceIds.splice(devicesState.byStatus[device.status].deviceIds.indexOf(deviceId), 1);
+    return Promise.resolve(
+      dispatch({
+        type: DeviceConstants[`SET_${device.status.toUpperCase()}_DEVICES`],
+        deviceIds,
+        status: device.status,
+        total: devicesState.byStatus[device.status].total - 1
+      })
+    );
+  }
+  return Promise.resolve();
+};
+
+export const updateDeviceAuth = (deviceId, authId, status) => (dispatch, getState) =>
   GeneralApi.put(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}/status`, { status })
-    .then(() =>
-      Promise.all([
-        dispatch({
-          type: DeviceConstants.UPDATE_DEVICE_AUTHSET,
-          authId,
-          deviceId,
-          status
-        }),
-        dispatch(getDeviceAuth(deviceId)),
-        dispatch(setSnackbar('Device authorization status was updated successfully'))
-      ])
-    )
+    .then(() => {
+      let tasks = [dispatch(getDeviceAuth(deviceId)), dispatch(setSnackbar('Device authorization status was updated successfully'))];
+      tasks.push(maybeUpdateDevicesByStatus(getState().devices, deviceId, authId, dispatch));
+      return Promise.all(tasks);
+    })
     .catch(err => {
       var errMsg = err ? (err.response ? err.response.data.error : err.message) : '';
       console.log(errMsg);
@@ -628,18 +638,13 @@ export const updateDevicesAuth = (deviceIds, status) => (dispatch, getState) => 
   });
 };
 
-export const deleteAuthset = (deviceId, authId) => dispatch =>
+export const deleteAuthset = (deviceId, authId) => (dispatch, getState) =>
   GeneralApi.delete(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}`)
-    .then(() =>
-      Promise.all([
-        dispatch({
-          type: DeviceConstants.REMOVE_DEVICE_AUTHSET,
-          authId,
-          deviceId
-        }),
-        dispatch(setSnackbar('Device authorization status was updated successfully'))
-      ])
-    )
+    .then(() => {
+      let tasks = [dispatch(setSnackbar('Device authorization status was updated successfully'))];
+      tasks.push(maybeUpdateDevicesByStatus(getState().devices, deviceId, authId, dispatch));
+      return Promise.all(tasks);
+    })
     .catch(err => {
       var errMsg = err ? (err.response ? err.response.data.error.message : err.message) : '';
       console.log(errMsg);
@@ -664,17 +669,13 @@ export const preauthDevice = authset => dispatch =>
     })
     .then(() => Promise.resolve(dispatch(setSnackbar('Device was successfully added to the preauthorization list', 5000))));
 
-export const decommissionDevice = deviceId => dispatch =>
+export const decommissionDevice = deviceId => (dispatch, getState) =>
   GeneralApi.delete(`${deviceAuthV2}/devices/${deviceId}`)
-    .then(() =>
-      Promise.all([
-        dispatch({
-          type: DeviceConstants.DECOMMISION_DEVICE,
-          deviceId
-        }),
-        dispatch(setSnackbar('Device was decommissioned successfully'))
-      ])
-    )
+    .then(() => {
+      let tasks = [dispatch(setSnackbar('Device was decommissioned successfully'))];
+      tasks.push(maybeUpdateDevicesByStatus(getState().devices, deviceId, null, dispatch));
+      return Promise.all(tasks);
+    })
     .catch(err => {
       var errMsg = err.response.data.error.message || '';
       console.log(errMsg);
