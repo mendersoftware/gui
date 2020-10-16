@@ -30,8 +30,9 @@ const plans = [
 ];
 
 export const Upgrade = ({ cancelUpgrade, completeUpgrade, getDeviceLimit, getUserOrganization, history, org, setSnackbar, startUpgrade }) => {
+  const plan = plans.find(plan => plan.value === (org.trial ? 'os' : org.plan));
   const [upgraded, setUpgraded] = useState(false);
-  const [updatedFormdata, setUpdatedFormdata] = useState({ plan: 'os', name: 'Starter' });
+  const [updatedFormdata, setUpdatedFormdata] = useState({ plan: plan.value, name: plan.name });
 
   useEffect(() => {
     getUserOrganization();

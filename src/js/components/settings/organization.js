@@ -123,7 +123,15 @@ export const Organization = ({ cancelRequest, getUserOrganization, org, isHosted
                   <div className="flexbox centered text-muted">
                     <ErrorIcon fontSize="small" />
                     <span className="margin-left-small">
-                      To increase your device limit, <Link to="/settings/upgrade">upgrade {org.trial ? 'to a paid' : 'your'} plan</Link>.
+                      To increase your device limit,{' '}
+                      {org.trial ? (
+                        <Link to="/settings/upgrade">upgrade to a paid plan</Link>
+                      ) : (
+                        <a href="mailto:contact@mender.io" target="_blank">
+                          contact our sales team
+                        </a>
+                      )}
+                      .
                     </span>
                   </div>
                 }
