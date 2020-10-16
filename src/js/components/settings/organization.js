@@ -9,37 +9,22 @@ import { Link } from 'react-router-dom';
 import { Button, List, LinearProgress } from '@material-ui/core';
 import { Error as ErrorIcon, FileCopy as CopyPasteIcon, Info as InfoIcon } from '@material-ui/icons';
 
-import { setSnackbar } from '../../actions/appActions';
-import { cancelRequest, confirmCardUpdate, getCurrentCard, getUserOrganization, startCardUpdate } from '../../actions/organizationActions';
+import { cancelRequest, getUserOrganization } from '../../actions/organizationActions';
 import { PLANS as plans } from '../../constants/appConstants';
 import { colors } from '../../themes/mender-theme';
 import Alert from '../common/alert';
 import ExpandableAttribute from '../common/expandable-attribute';
 import CancelRequestDialog from './dialogs/cancelrequest';
 import OrganizationSettingsItem from './organizationsettingsitem';
-import CardSection from './cardsection';
+import OrganizationPaymentSettings from './organizationpaymentsettings';
 
-export const Organization = ({
-  cancelRequest,
-  card,
-  confirmCardUpdate,
-  getUserOrganization,
-  org,
-  hasUnpaid,
-  isHosted,
-  acceptedDevices,
-  deviceLimit,
-  setSnackbar,
-  startCardUpdate
-}) => {
+export const Organization = ({ cancelRequest, getUserOrganization, org, isHosted, acceptedDevices, deviceLimit }) => {
   const [copied, setCopied] = useState(false);
   const [cancelSubscription, setCancelSubscription] = useState(false);
   const [cancelSubscriptionConfirmation, setCancelSubscriptionConfirmation] = useState(false);
-  const [isUpdatingPaymentDetails, setIsUpdatingPaymentDetails] = useState(false);
 
   useEffect(() => {
     getUserOrganization();
-    getCurrentCard();
   }, []);
 
   const onCopied = () => {
@@ -60,8 +45,6 @@ export const Organization = ({
     setCancelSubscription(!cancelSubscription);
   };
 
-  // const invoiceDate = moment();
-  const { last4, expiration, brand } = card;
   const currentPlan = isHosted ? org && org.plan : 'enterprise';
   const orgHeader = (
     <div>
@@ -146,52 +129,7 @@ export const Organization = ({
                 }
               />
             )}
-            {!org.trial && (
-              <>
-                {/* <OrganizationSettingsItem
-                  title="Next payment date"
-                  content={{
-                    action: { title: 'View invoices', internal: true, action: setShowInvoices },
-                    description: invoiceDate.format('MMMM DD, YYYY')
-                  }}
-                  notification={<div className="text-muted">Your subscription will be charged automatically</div>}
-                /> */}
-                <OrganizationSettingsItem
-                  title="Payment card"
-                  content={{
-                    action: { title: 'Update payment card', internal: true, action: () => setIsUpdatingPaymentDetails(true) },
-                    description: (
-                      <div>
-                        <div>
-                          {brand} ending in {last4}
-                        </div>
-                        <div>
-                          Expires {`0${expiration.month}`.slice(-2)}/{`${expiration.year}`.slice(-2)}
-                        </div>
-                      </div>
-                    )
-                  }}
-                  secondary={
-                    isUpdatingPaymentDetails ? (
-                      <CardSection
-                        onCancel={() => setIsUpdatingPaymentDetails(false)}
-                        onComplete={confirmCardUpdate}
-                        onSubmit={startCardUpdate}
-                        setSnackbar={setSnackbar}
-                      />
-                    ) : null
-                  }
-                  notification={
-                    hasUnpaid && (
-                      <div className="red flexbox centered">
-                        <ErrorIcon fontSize="small" />
-                        <span className="margin-left-small">You have an unpaid invoice. Please check your payment card details</span>
-                      </div>
-                    )
-                  }
-                />
-              </>
-            )}
+            {!org.trial && <OrganizationPaymentSettings />}
           </>
         )}
       </List>
@@ -221,12 +159,11 @@ export const Organization = ({
   );
 };
 
-const actionCreators = { cancelRequest, confirmCardUpdate, getCurrentCard, startCardUpdate, getUserOrganization, setSnackbar };
+const actionCreators = { cancelRequest, getUserOrganization };
 
 const mapStateToProps = state => {
   return {
     acceptedDevices: state.devices.byStatus.accepted.total,
-    card: state.organization.card,
     deviceLimit: state.devices.limit,
     isHosted: state.app.features.isHosted,
     org: state.organization.organization
