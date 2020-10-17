@@ -1,4 +1,4 @@
-import * as DeploymentConstants from '../constants/deploymentConstants';
+import DeploymentConstants from '../constants/deploymentConstants';
 
 const initialState = {
   byId: {
@@ -21,7 +21,10 @@ const deploymentReducer = (state = initialState, action) => {
         ...state,
         byId: {
           ...state.byId,
-          [action.deploymentId]: action.deployment
+          [action.deploymentId]: {
+            ...DeploymentConstants.deploymentPrototype,
+            ...action.deployment
+          }
         },
         byStatus: {
           ...state.byStatus,
@@ -46,6 +49,7 @@ const deploymentReducer = (state = initialState, action) => {
         byId: {
           ...state.byId,
           [action.deployment.id]: {
+            ...DeploymentConstants.deploymentPrototype,
             ...state.byId[action.deployment.id],
             ...action.deployment
           }

@@ -1,4 +1,4 @@
-import * as DeploymentConstants from '../constants/deploymentConstants';
+import DeploymentConstants from '../constants/deploymentConstants';
 import GeneralApi, { headerNames } from '../api/general-api';
 import { setSnackbar } from '../actions/appActions';
 import { mapAttributesToAggregator, preformatWithRequestID, startTimeSort } from '../helpers';
@@ -15,7 +15,12 @@ const default_page = 1;
 const transformDeployments = (deployments, deploymentsById) =>
   deployments.sort(startTimeSort).reduce(
     (accu, item) => {
-      accu.deployments[item.id] = { ...deploymentsById[item.id], ...item, name: decodeURIComponent(item.name) };
+      accu.deployments[item.id] = {
+        ...DeploymentConstants.deploymentPrototype,
+        ...deploymentsById[item.id],
+        ...item,
+        name: decodeURIComponent(item.name)
+      };
       accu.deploymentIds.push(item.id);
       return accu;
     },
@@ -91,7 +96,8 @@ export const createDeployment = newDeployment => dispatch => {
       const deploymentId = data.headers.location.substring(lastslashindex + 1);
       const deployment = {
         ...newDeployment,
-        devices: newDeployment.devices ? newDeployment.devices.map(id => ({ id, status: 'pending' })) : []
+        devices: newDeployment.devices ? newDeployment.devices.map(id => ({ id, status: 'pending' })) : [],
+        stats: {}
       };
       return Promise.all([
         dispatch({
