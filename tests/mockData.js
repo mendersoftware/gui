@@ -20,7 +20,11 @@ export const defaultState = {
         created: '2019-01-01T12:30:00.000Z',
         device_count: 1,
         devices: {
-          a1: {}
+          a1: {
+            attributes: {},
+            id: 'a1',
+            status: 'installing'
+          }
         },
         stats: {
           downloading: 0,
@@ -42,7 +46,11 @@ export const defaultState = {
         created: '2019-01-01T12:30:00.000Z',
         device_count: 1,
         devices: {
-          b1: {}
+          b1: {
+            attributes: {},
+            id: 'b1',
+            status: 'pending'
+          }
         },
         stats: {
           downloading: 0,
