@@ -210,9 +210,9 @@ const mapStateToProps = state => {
     acceptedDevices: state.devices.byStatus.accepted.deviceIds,
     device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
     groups,
-    hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
+    hasDevices: state.devices.byStatus.accepted.total,
     hasDynamicGroups: Object.values(groups).some(group => !!group.id),
-    hasPending: state.devices.byStatus.pending.total || state.devices.byStatus.pending.deviceIds.length > 0,
+    hasPending: state.devices.byStatus.pending.total,
     releases: Object.values(state.releases.byId)
   };
 };
