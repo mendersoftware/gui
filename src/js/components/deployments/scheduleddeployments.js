@@ -8,7 +8,7 @@ import { Button } from '@material-ui/core';
 import { CalendarToday as CalendarTodayIcon, List as ListIcon, Refresh as RefreshIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
+import { getDeploymentsByStatus, selectDeployment } from '../../actions/deploymentActions';
 import { tryMapDeployments } from '../../helpers';
 import { getIsEnterprise } from '../../selectors';
 import { colors } from '../../themes/mender-theme';
@@ -173,7 +173,7 @@ export class Scheduled extends React.Component {
   }
 }
 
-const actionCreators = { getDeploymentsByStatus, getSingleDeploymentStats, setSnackbar, selectDeployment };
+const actionCreators = { getDeploymentsByStatus, setSnackbar, selectDeployment };
 
 const mapStateToProps = state => {
   const scheduled = state.deployments.byStatus.scheduled.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
