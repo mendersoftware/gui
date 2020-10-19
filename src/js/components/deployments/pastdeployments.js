@@ -6,7 +6,7 @@ import { RootRef, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getDeploymentsByStatus, getSingleDeploymentStats, selectDeployment } from '../../actions/deploymentActions';
+import { getDeploymentsByStatus, selectDeployment } from '../../actions/deploymentActions';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
 import TimeframePicker from '../common/timeframe-picker';
@@ -170,7 +170,7 @@ export class Past extends React.Component {
   }
 }
 
-const actionCreators = { getDeploymentsByStatus, getSingleDeploymentStats, setSnackbar, selectDeployment };
+const actionCreators = { getDeploymentsByStatus, setSnackbar, selectDeployment };
 
 const mapStateToProps = state => {
   const past = state.deployments.byStatus.finished.selectedDeploymentIds.map(id => state.deployments.byId[id]);
