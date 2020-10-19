@@ -48,11 +48,7 @@ const deploymentReducer = (state = initialState, action) => {
         ...state,
         byId: {
           ...state.byId,
-          [action.deployment.id]: {
-            ...DeploymentConstants.deploymentPrototype,
-            ...state.byId[action.deployment.id],
-            ...action.deployment
-          }
+          [action.deployment.id]: action.deployment
         }
       };
     case DeploymentConstants.RECEIVE_DEPLOYMENT_STATS:
@@ -67,7 +63,6 @@ const deploymentReducer = (state = initialState, action) => {
         }
       };
     case DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICE_LOG:
-    case DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICES:
       return {
         ...state,
         byId: {

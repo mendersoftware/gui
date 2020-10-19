@@ -111,23 +111,17 @@ export const createDeployment = newDeployment => dispatch => {
     });
 };
 
-export const getSingleDeployment = id => dispatch =>
-  GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}`).then(res =>
-    dispatch({
-      type: DeploymentConstants.RECEIVE_DEPLOYMENT,
-      deployment: { ...res.data, name: decodeURIComponent(res.data.name) }
-    })
-  );
-
 export const getSingleDeploymentStats = id => dispatch =>
   GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}/statistics`).then(res =>
     dispatch({ type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS, stats: res.data, deploymentId: id })
   );
 
-export const getSingleDeploymentDevices = id => (dispatch, getState) =>
-  GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}/devices`).then(res => {
-    const deploymentDevices = (getState().deployments.byId[id] || {}).devices || {};
-    const devices = res.data.reduce((accu, item) => {
+export const getSingleDeployment = id => (dispatch, getState) =>
+  Promise.all([GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}`), GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}/devices`)]).then(responses => {
+    const [deploymentRes, deploymentDeviceListRes] = responses;
+    const storedDeployment = getState().deployments.byId[id] || {};
+    const deploymentDevices = storedDeployment.devices || {};
+    const devices = deploymentDeviceListRes.data.reduce((accu, item) => {
       accu[item.id] = item;
       const log = (deploymentDevices[item.id] || {}).log;
       if (log) {
@@ -135,11 +129,19 @@ export const getSingleDeploymentDevices = id => (dispatch, getState) =>
       }
       return accu;
     }, {});
-    return dispatch({
-      type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICES,
-      devices,
-      deploymentId: id
-    });
+    return Promise.all([
+      dispatch({
+        type: DeploymentConstants.RECEIVE_DEPLOYMENT,
+        deployment: {
+          ...DeploymentConstants.deploymentPrototype,
+          ...storedDeployment,
+          ...deploymentRes.data,
+          name: decodeURIComponent(deploymentRes.data.name),
+          devices
+        }
+      }),
+      dispatch(getSingleDeploymentStats(id))
+    ]);
   });
 
 export const getDeviceLog = (deploymentId, deviceId) => (dispatch, getState) =>
