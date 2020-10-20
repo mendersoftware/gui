@@ -237,11 +237,6 @@ const deviceReducer = (state = initialState, action) => {
         }
       };
     }
-    // TODO!!!
-    case DeviceConstants.UPDATE_DEVICE_AUTHSET:
-    case DeviceConstants.REMOVE_DEVICE_AUTHSET:
-    case DeviceConstants.DECOMMISION_DEVICE:
-      return state;
     default:
       return state;
   }

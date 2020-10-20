@@ -57,7 +57,7 @@ export class Pending extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.count !== this.props.count) {
       this.props.setDeviceFilters([]);
-      this._getDevices();
+      this._getDevices(true);
     }
     const self = this;
     if (!self.props.devices.length && self.props.count && self.state.pageNo !== 1) {

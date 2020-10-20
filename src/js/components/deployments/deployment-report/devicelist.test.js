@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
@@ -17,9 +18,11 @@ describe('ProgressDeviceList Component', () => {
   it('renders correctly', () => {
     const tree = renderer
       .create(
-        <Provider store={store}>
-          <ProgressDeviceList devices={[]} />
-        </Provider>
+        <MemoryRouter>
+          <Provider store={store}>
+            <ProgressDeviceList devices={Object.values(defaultState.deployments.byId.d1.devices)} />
+          </Provider>
+        </MemoryRouter>
       )
       .toJSON();
     expect(tree).toMatchSnapshot();

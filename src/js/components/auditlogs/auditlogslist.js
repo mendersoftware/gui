@@ -17,6 +17,15 @@ const formatChange = change => {
   return diff.length > 1 ? diff[1].trim() : diff;
 };
 
+const getDiffLineStyle = line => {
+  if (line.startsWith('+ ')) {
+    return 'green';
+  } else if (line.startsWith('- ')) {
+    return 'red';
+  }
+  return '';
+};
+
 const UserChange = ({ item: { change = '-' } }) => (
   <div className="capitalized" style={{ whiteSpace: 'pre-line' }}>
     {formatChange(change)}
@@ -130,7 +139,17 @@ export const AuditLogsList = ({ count, items, loading, onChangePage, onChangeRow
                   <div />
                 )}
               </AccordionSummary>
-              {item.change && <AccordionDetails>{expanded === item.time ? <div className="code">{item.change}</div> : <div />}</AccordionDetails>}
+              {item.change && (
+                <AccordionDetails>
+                  <div className="code flexbox column">
+                    {item.change.split('\n').map((line, index) => (
+                      <span key={`line-${index}`} className={getDiffLineStyle(line)}>
+                        {line}
+                      </span>
+                    ))}
+                  </div>
+                </AccordionDetails>
+              )}
             </Accordion>
           ))}
         </div>

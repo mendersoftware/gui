@@ -10,7 +10,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, createDeployment, selectDeployment } from '../../actions/deploymentActions';
 import { getIsEnterprise } from '../../selectors';
 
-import CreateDialog from './createdeployment';
+import CreateDialog, { allDevices } from './createdeployment';
 import Progress from './inprogressdeployments';
 import Past from './pastdeployments';
 import Report from './report';
@@ -109,9 +109,9 @@ export class Deployments extends React.Component {
     const { deploymentDeviceIds, filterId, group, phases, release, retries } = deploymentObject;
     const newDeployment = {
       artifact_name: release.Name,
-      devices: filterId ? undefined : deploymentDeviceIds,
+      devices: filterId || (group && group !== allDevices) ? undefined : deploymentDeviceIds,
       filter_id: filterId,
-      group,
+      group: group === allDevices ? undefined : group,
       name: decodeURIComponent(group) || 'All devices',
       phases,
       retries

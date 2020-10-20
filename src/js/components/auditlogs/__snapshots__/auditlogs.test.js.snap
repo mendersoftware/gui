@@ -746,7 +746,15 @@ exports[`Auditlogs Component renders correctly 1`] = `
                 <div
                   className="MuiAccordionDetails-root"
                 >
-                  <div />
+                  <div
+                    className="code flexbox column"
+                  >
+                    <span
+                      className=""
+                    >
+                      change1
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -877,7 +885,15 @@ exports[`Auditlogs Component renders correctly 1`] = `
                 <div
                   className="MuiAccordionDetails-root"
                 >
-                  <div />
+                  <div
+                    className="code flexbox column"
+                  >
+                    <span
+                      className=""
+                    >
+                      change2
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
