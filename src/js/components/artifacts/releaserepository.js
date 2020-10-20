@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
 import ReactTooltip from 'react-tooltip';
 
@@ -12,6 +11,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { editArtifact, uploadArtifact, selectArtifact, selectRelease } from '../../actions/releaseActions';
 import { customSort } from '../../helpers';
 import { ExpandArtifact } from '../helptips/helptooltips';
+import ForwardingLink from '../common/forwardlink';
 import Loader from '../common/loader';
 import ReleaseRepositoryItem from './releaserepositoryitem';
 import { getOnboardingComponentFor, advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
@@ -90,6 +90,7 @@ export class ReleaseRepository extends React.Component {
     const artifacts = release ? release.Artifacts : [];
     const items = artifacts.sort(customSort(sortDown, sortCol)).map((pkg, index) => {
       const expanded = !!(selectedArtifact && selectedArtifact.id === pkg.id);
+      this.repoItemAnchor = this.repoItemAnchor?.current ? this.repoItemAnchor : React.createRef();
       return (
         <ReleaseRepositoryItem
           key={`repository-item-${index}`}
@@ -102,23 +103,17 @@ export class ReleaseRepository extends React.Component {
           // otherwise the measurements are off
           onExpanded={() => setTimeout(() => self.setState({}), 500)}
           release={release}
-          ref={ref => (this.repoItemAnchor = ref)}
+          itemRef={this.repoItemAnchor}
         />
       );
     });
 
     const dropzoneClass = uploading ? 'dropzone disabled muted' : 'dropzone';
 
-    // We need the ref to the <a> element that refers to the deployments tab, in order to align
-    // the helptip with the button - unfortunately this is not forwarded through react-router or mui
-    // thus, use the following component as a workaround:
-    const ForwardingLink = React.forwardRef((props, ref) => <Link {...props} innerRef={ref} />);
-    ForwardingLink.displayName = 'ForwardingLink';
-
     let onboardingComponent = null;
     let uploadArtifactOnboardingComponent = null;
-    if (this.repoItemAnchor && this.creationRef) {
-      const element = this.repoItemAnchor.itemRef;
+    if (this.repoItemAnchor && this.repoItemAnchor.current && this.creationRef) {
+      const element = this.repoItemAnchor.current;
       const anchor = { left: element.offsetLeft + element.offsetWidth / 3, top: element.offsetTop + element.offsetHeight };
       const artifactIncludedAnchor = {
         left: this.creationRef.offsetLeft + this.creationRef.offsetWidth,
