@@ -78,7 +78,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
         style={
           Object {
             "display": "inline-block",
-            "width": "500px",
+            "width": 500,
           }
         }
       >
@@ -307,7 +307,60 @@ exports[`MyOrganization Component renders correctly 1`] = `
     </li>
   </ul>
   <p
+    className="info"
+    style={
+      Object {
+        "marginLeft": 15,
+        "marginRight": 15,
+        "maxWidth": 500,
+      }
+    }
+  >
+    For changes to your plan or any other support questions, contact us at
+     
+    <a
+      href="mailto:support@mender.io?subject=test: Enterprise upgrade&body=
+Organization%20ID%3A%20
+1
+%0AOrganization%20name%3A%20
+test
+%0APlan%20name%3A%20
+Mender Enterprise
+%0A%0AI%20would%20like%20to%20make%20a%20change%20to%20my%20Mender%20plan."
+      target="_blank"
+    >
+      support@mender.io
+    </a>
+  </p>
+  <p
+    className="margin-left-small margin-right-small margin-bottom-none"
+    style={
+      Object {
+        "maxWidth": 500,
+      }
+    }
+  >
+    <a
+      href="mailto:support@mender.io?subject=test: Update billing&body=
+Organization%20ID%3A%20
+1
+%0AOrganization%20name%3A%20
+test
+%0APlan%20name%3A%20
+Mender Enterprise
+%0A%0AI%20would%20like%20to%20make%20a%20change%20to%20my%20billing%20details."
+      target="_blank"
+    >
+      Request to update your billing details
+    </a>
+  </p>
+  <p
     className="margin-left-small margin-right-small"
+    style={
+      Object {
+        "maxWidth": 500,
+      }
+    }
   >
     <a
       href=""

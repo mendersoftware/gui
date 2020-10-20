@@ -11,17 +11,37 @@ import { Error as ErrorIcon, FileCopy as CopyPasteIcon, Info as InfoIcon } from 
 
 import { cancelRequest, getUserOrganization } from '../../actions/organizationActions';
 import { PLANS as plans } from '../../constants/appConstants';
+import { getIsEnterprise } from '../../selectors';
 import { colors } from '../../themes/mender-theme';
 import Alert from '../common/alert';
 import ExpandableAttribute from '../common/expandable-attribute';
 import CancelRequestDialog from './dialogs/cancelrequest';
-import OrganizationSettingsItem from './organizationsettingsitem';
+import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
 import OrganizationPaymentSettings from './organizationpaymentsettings';
 
-export const Organization = ({ cancelRequest, getUserOrganization, org, isHosted, acceptedDevices, deviceLimit }) => {
+export const Organization = ({ cancelRequest, currentPlan, getUserOrganization, org, isEnterprise, isHosted, acceptedDevices, deviceLimit }) => {
   const [copied, setCopied] = useState(false);
   const [cancelSubscription, setCancelSubscription] = useState(false);
   const [cancelSubscriptionConfirmation, setCancelSubscriptionConfirmation] = useState(false);
+
+  const mailBodyTexts = {
+    upgrade: `
+Organization%20ID%3A%20
+${org.id}
+%0AOrganization%20name%3A%20
+${org.name}
+%0APlan%20name%3A%20
+${plans[currentPlan]}
+%0A%0AI%20would%20like%20to%20make%20a%20change%20to%20my%20Mender%20plan.`,
+    billing: `
+Organization%20ID%3A%20
+${org.id}
+%0AOrganization%20name%3A%20
+${org.name}
+%0APlan%20name%3A%20
+${plans[currentPlan]}
+%0A%0AI%20would%20like%20to%20make%20a%20change%20to%20my%20billing%20details.`
+  };
 
   useEffect(() => {
     getUserOrganization();
@@ -45,7 +65,6 @@ export const Organization = ({ cancelRequest, getUserOrganization, org, isHosted
     setCancelSubscription(!cancelSubscription);
   };
 
-  const currentPlan = isHosted ? org && org.plan : 'enterprise';
   const orgHeader = (
     <div>
       <span style={{ paddingRight: 10 }}>Organization token</span>
@@ -74,7 +93,7 @@ export const Organization = ({ cancelRequest, getUserOrganization, org, isHosted
         <OrganizationSettingsItem title="Organization name" content={{ action: { internal: true }, description: org.name }} />
         <div className="flexbox" style={{ alignItems: 'flex-end' }}>
           <ExpandableAttribute
-            style={{ width: '500px', display: 'inline-block' }}
+            style={{ width: maxWidth, display: 'inline-block' }}
             key="org_token"
             primary={orgHeader}
             secondary={org.tenant_token}
@@ -137,14 +156,29 @@ export const Organization = ({ cancelRequest, getUserOrganization, org, isHosted
                 }
               />
             )}
-            {!org.trial && <OrganizationPaymentSettings />}
+            {!org.trial && !isEnterprise && <OrganizationPaymentSettings />}
           </>
         )}
       </List>
+      {isEnterprise && (
+        <>
+          <p className="info" style={{ marginLeft: 15, marginRight: 15, maxWidth }}>
+            For changes to your plan or any other support questions, contact us at{' '}
+            <a href={`mailto:support@mender.io?subject=${org.name}: Enterprise upgrade&body=${mailBodyTexts.upgrade}`} target="_blank">
+              support@mender.io
+            </a>
+          </p>
+          <p className="margin-left-small margin-right-small margin-bottom-none" style={{ maxWidth }}>
+            <a href={`mailto:support@mender.io?subject=${org.name}: Update billing&body=${mailBodyTexts.billing}`} target="_blank">
+              Request to update your billing details
+            </a>
+          </p>
+        </>
+      )}
       {isHosted && (
         <>
           {cancelSubscriptionConfirmation ? (
-            <Alert className="margin-top-large" severity="error" style={{ maxWidth: '500px' }}>
+            <Alert className="margin-top-large" severity="error" style={{ maxWidth }}>
               <p>We&#39;ve started the process to cancel your plan and deactivate your account.</p>
               <p>
                 We&#39;ll send you an email confirming your deactivation. If you have any question at all, contact us at{' '}
@@ -154,7 +188,7 @@ export const Organization = ({ cancelRequest, getUserOrganization, org, isHosted
               </p>
             </Alert>
           ) : (
-            <p className="margin-left-small margin-right-small">
+            <p className="margin-left-small margin-right-small" style={{ maxWidth }}>
               <a href="" onClick={handleCancelSubscription}>
                 {org.trial ? 'End trial' : 'Cancel subscription'} and deactivate account
               </a>
@@ -170,9 +204,12 @@ export const Organization = ({ cancelRequest, getUserOrganization, org, isHosted
 const actionCreators = { cancelRequest, getUserOrganization };
 
 const mapStateToProps = state => {
+  const currentPlan = state.app.features.isHosted ? state.organization.organization && state.organization.organization.plan : 'enterprise';
   return {
     acceptedDevices: state.devices.byStatus.accepted.total,
+    currentPlan,
     deviceLimit: state.devices.limit,
+    isEnterprise: getIsEnterprise(state),
     isHosted: state.app.features.isHosted,
     org: state.organization.organization
   };

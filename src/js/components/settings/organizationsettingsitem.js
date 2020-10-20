@@ -5,7 +5,7 @@ import { Divider, ListItem, ListItemText } from '@material-ui/core';
 import theme from '../../themes/mender-theme';
 
 const defaultItemProps = { alignItems: 'flex-start', disabled: true, divider: false };
-const maxWidth = 500;
+export const maxWidth = 500;
 const padding = theme.spacing(2);
 
 const OrganizationSettingsItem = ({ title, content: { action, description }, secondary, notification }) => {
