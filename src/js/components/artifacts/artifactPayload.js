@@ -1,14 +1,10 @@
 import React from 'react';
 import Time from 'react-time';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
+import { List, ListItem, ListItemText, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import { FileSize, getFormattedSize } from './../../helpers';
+import { colors } from '../../themes/mender-theme';
+
+export const inlineHeadingStyle = { position: 'absolute', background: colors.expansionBackground, top: -35, padding: 10 };
 
 const METADATA_SPACING = 2;
 const style = {
@@ -24,12 +20,7 @@ const style = {
     borderBottom: '1px solid #e0e0e0',
     marginRight: '2vw'
   },
-  payloadHeader: {
-    position: 'absolute',
-    background: 'rgb(233, 233, 233)',
-    top: '-35px',
-    padding: '10px'
-  }
+  payloadHeader: inlineHeadingStyle
 };
 const attributes = ['Name', 'Checksum', 'Build date', 'Size (uncompressed)'];
 

@@ -5,15 +5,22 @@ Array [
   <div
     className="device-inventory bordered report-list"
   >
-    <h4
-      className="margin-bottom-none"
-    >
+    <h4>
       Device inventory
     </h4>
     <div
       className="file-details"
     >
-      <h4>
+      <h4
+        style={
+          Object {
+            "background": "#f7f7f7",
+            "padding": 10,
+            "position": "absolute",
+            "top": -35,
+          }
+        }
+      >
         Installed software
       </h4>
     </div>

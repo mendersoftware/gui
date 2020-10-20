@@ -7,10 +7,10 @@ exports[`ArtifactPayload Component renders correctly 1`] = `
   <h4
     style={
       Object {
-        "background": "rgb(233, 233, 233)",
-        "padding": "10px",
+        "background": "#f7f7f7",
+        "padding": 10,
         "position": "absolute",
-        "top": "-35px",
+        "top": -35,
       }
     }
   >

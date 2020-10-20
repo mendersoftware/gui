@@ -219,9 +219,9 @@ export class Authorized extends React.Component {
         sortable: true
       },
       {
-        title: 'Current software',
-        attribute: { name: 'artifact_name', scope: 'inventory' },
-        render: device => (device.attributes && device.attributes.artifact_name ? device.attributes.artifact_name : '-'),
+        title: 'System software version',
+        attribute: { name: 'rootfs-image.version', scope: 'inventory' },
+        render: device => (device.attributes && device.attributes['rootfs-image.version'] ? device.attributes['rootfs-image.version'] : '-'),
         sortable: true
       },
       {
