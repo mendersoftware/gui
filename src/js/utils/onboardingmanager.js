@@ -129,7 +129,7 @@ export const onboardingSteps = {
     component: compose(setDisplayName('OnboardingTip'))(() => <div>Your deployment has finished, click here to view it</div>),
     progress: 3
   },
-  'deployment-past-completed-notification': {
+  'deployments-past-completed-notification': {
     condition: { min: 'deployment-past' },
     specialComponent: <WelcomeSnackTip progress={3} />
   },

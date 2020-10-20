@@ -50,19 +50,20 @@ export class Past extends React.Component {
   componentDidUpdate() {
     const { advanceOnboarding, onboardingState, past, setSnackbar } = this.props;
     if (past.length && !onboardingState.complete) {
-      const pastDeploymentsFailed = past.reduce((accu, item) => {
-        if (item.status === 'failed' || (item.stats && item.stats.noartifact + item.stats.failure + item.stats['already-installed'] + item.stats.aborted > 0)) {
-          return false;
-        }
-        return accu;
-      }, true);
+      const pastDeploymentsFailed = past.reduce(
+        (accu, item) =>
+          item.status === 'failed' ||
+          (item.stats && item.stats.noartifact + item.stats.failure + item.stats['already-installed'] + item.stats.aborted > 0) ||
+          accu,
+        false
+      );
       if (pastDeploymentsFailed) {
         advanceOnboarding('deployments-past-completed-failure');
       } else {
-        advanceOnboarding('deployments-past-completed');
+        advanceOnboarding('deployments-past-completed-notification');
       }
       setTimeout(() => {
-        let notification = getOnboardingComponentFor('deployment-past-completed-notification', onboardingState);
+        let notification = getOnboardingComponentFor('deployments-past-completed-notification', onboardingState);
         notification = getOnboardingComponentFor('onboarding-finished-notification', onboardingState, {}, notification);
         !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
       }, 400);
