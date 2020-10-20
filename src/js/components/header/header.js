@@ -212,7 +212,7 @@ export class Header extends React.Component {
             My profile
           </MenuItem>
           {multitenancy && (
-            <MenuItem component={Link} to="/settings/my-organization">
+            <MenuItem component={Link} to="/settings/organization-and-billing">
               My organization
             </MenuItem>
           )}

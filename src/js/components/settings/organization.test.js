@@ -35,6 +35,11 @@ describe('MyOrganization Component', () => {
       },
       organization: {
         ...defaultState.organization,
+        card: {
+          last4: '1234',
+          expiration: { month: 8, year: 1230 },
+          brand: 'Visa'
+        },
         organization: {
           ...defaultState.organization.organization,
           plan: 'enterprise',
