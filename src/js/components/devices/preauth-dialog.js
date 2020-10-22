@@ -19,27 +19,26 @@ export default class PreauthDialog extends React.Component {
   }
 
   _updateKey(index, event) {
-    let inputs = this.state.inputs;
+    let inputs = [...this.state.inputs];
     inputs[index].key = event.target.value;
     this.setState({ inputs });
     this._convertIdentityToJSON(inputs);
   }
 
   _updateValue(index, event) {
-    let inputs = this.state.inputs;
+    let inputs = [...this.state.inputs];
     inputs[index].value = event.target.value;
     this.setState({ inputs });
     this._convertIdentityToJSON(inputs);
   }
 
   _addKeyValue() {
-    let inputs = this.state.inputs;
-    inputs.push({ key: '', value: '' });
+    const inputs = [...this.state.inputs, { key: '', value: '' }];
     this.setState({ inputs });
   }
 
   _removeInput(index) {
-    let inputs = this.state.inputs;
+    let inputs = [...this.state.inputs];
     inputs.splice(index, 1);
     this.setState({ inputs });
     this._convertIdentityToJSON(inputs);

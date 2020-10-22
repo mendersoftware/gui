@@ -95,13 +95,7 @@ export class TwoFactorAuthSetup extends React.Component {
                     {validating2fa && (
                       <div className="flexbox" style={{ alignItems: 'flex-end', justifyContent: 'flex-end', height: 'min-content' }}>
                         <Loader show={true} />
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() => this.updateModel()}
-                          disabled={!this.state.isValid}
-                          style={{ marginLeft: 30 }}
-                        >
+                        <Button variant="contained" color="primary" onClick={() => this.updateModel()} disabled={true} style={{ marginLeft: 30 }}>
                           Verifying...
                         </Button>
                       </div>

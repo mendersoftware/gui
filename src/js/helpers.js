@@ -75,12 +75,12 @@ export function decodeSessionToken(token) {
   }
 }
 
-export function isEmpty(obj) {
-  for (var prop in obj) {
+export const isEmpty = obj => {
+  for (const _ in obj) {
     return false;
   }
   return true;
-}
+};
 
 export function preformatWithRequestID(res, failMsg) {
   // ellipsis line

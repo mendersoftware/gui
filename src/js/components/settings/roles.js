@@ -106,7 +106,7 @@ export class RoleManagement extends React.Component {
   }
 
   handleGroupSelection(selected, group) {
-    const { groups } = this.state;
+    let groups = [...this.state.groups];
     const groupIndex = groups.findIndex(currentGroup => currentGroup.name === group.name);
     if (groupIndex > -1) {
       groups[groupIndex].selected = selected;

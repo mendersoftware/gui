@@ -7,9 +7,10 @@ export default class FormCheckbox extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      value: this.props.checked ? this.props.value : '',
       checked: this.props.checked,
-      isValid: true
+      // the following is needed for the form validation to work if the field is not required
+      isValid: true, // lgtm [js/react/unused-or-undefined-state-property]
+      value: this.props.checked ? this.props.value : ''
     };
   }
 
@@ -29,7 +30,7 @@ export default class FormCheckbox extends React.Component {
 
   updateCheck(checked) {
     const value = checked ? this.props.value : '';
-    this.setState({ checked, value: value });
+    this.setState({ checked, value });
     this.props.validate(this, value);
   }
 

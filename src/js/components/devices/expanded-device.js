@@ -52,11 +52,7 @@ export class ExpandedDevice extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    this.state = {
-      authsets: false,
-      schedule: false,
-      showInput: false
-    };
+    this.state = { authsets: false };
   }
 
   componentDidMount() {

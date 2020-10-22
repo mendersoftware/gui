@@ -11,10 +11,7 @@ import { getDocsVersion } from '../../selectors';
 export class Global extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = {
-      disabled: true,
-      updatedSettings: { ...props.settings }
-    };
+    this.state = { updatedSettings: { ...props.settings } };
     if (!props.settings) {
       props.getGlobalSettings();
     }

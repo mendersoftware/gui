@@ -48,7 +48,6 @@ export class Deployments extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      currentRefreshDeploymentLength: defaultRefreshDeploymentsLength,
       deploymentObject: {},
       createDialog: false,
       reportDialog: false,
@@ -116,7 +115,7 @@ export class Deployments extends React.Component {
       phases,
       retries
     };
-    self.setState({ doneLoading: false, createDialog: false, reportDialog: false });
+    self.setState({ createDialog: false, reportDialog: false });
 
     return self.props.createDeployment(newDeployment).then(() => {
       if (phases) {
@@ -128,7 +127,7 @@ export class Deployments extends React.Component {
         }
         self.props.saveGlobalSettings({ previousPhases: previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT) });
       }
-      self.setState({ doneLoading: true, deploymentObject: {} });
+      self.setState({ deploymentObject: {} });
       // track in GA
       Tracking.event({ category: 'deployments', action: 'create' });
       // successfully retrieved new deployment
@@ -142,7 +141,7 @@ export class Deployments extends React.Component {
   _abortDeployment(id) {
     var self = this;
     return self.props.abortDeployment(id).then(() => {
-      self.setState({ createDialog: false, reportDialog: false, doneLoading: false });
+      self.setState({ createDialog: false, reportDialog: false });
       return Promise.resolve();
     });
   }

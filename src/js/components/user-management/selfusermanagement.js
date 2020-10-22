@@ -171,7 +171,7 @@ export class SelfUserManagement extends React.Component {
           <div className="margin-top">
             <div className="clickable flexbox space-between" onClick={() => saveUserSettings({ trackingConsentGiven: !hasTrackingConsent })}>
               <p className="help-content">Help us improve Mender</p>
-              <Switch checked={!!(hasTracking && hasTrackingConsent)} />
+              <Switch checked={!!hasTrackingConsent} />
             </div>
             <p className="info" style={{ width: '75%', margin: 0 }}>
               Enable usage data and errors to be sent to help us improve our service.
