@@ -5,12 +5,17 @@ import copy from 'copy-to-clipboard';
 import { Button, List } from '@material-ui/core';
 import { Link as LinkIcon, Replay as ReplayIcon } from '@material-ui/icons';
 
+import { extractSoftware, extractSoftwareInformation } from '../../../helpers';
 import ExpandableAttribute from '../../common/expandable-attribute';
 import ForwardingLink from '../../common/forwardlink';
 import { inlineHeadingStyle } from '../../artifacts/artifactPayload';
 
-const softwareAttributeNames = ['rootfs-image', 'data-partition', 'artifact_name'];
 const listItemTextClass = { secondary: 'inventory-text' };
+
+const softwareTitleMap = {
+  'rootfs-image.version': { title: 'System software version', priority: 0 },
+  'rootfs-image.checksum': { title: 'checksum', priority: 1 }
+};
 
 export const DeviceInventory = ({ attributes, id, setSnackbar, unauthorized }) => {
   const copyLinkToClipboard = () => {
@@ -19,52 +24,24 @@ export const DeviceInventory = ({ attributes, id, setSnackbar, unauthorized }) =
     setSnackbar('Link copied to clipboard');
   };
 
-  const { softwareAttributes, deviceInventory } = Object.entries(attributes)
+  const softwareInfo = extractSoftware(attributes);
+  const deviceInventory = Object.entries(attributes)
     .sort((a, b) => a[0].localeCompare(b[0]))
-    .reduce(
-      (accu, attribute, i) => {
-        const softwareAttribute = softwareAttributeNames.find(item => attribute[0].startsWith(item));
-        if (softwareAttribute) {
-          if (!accu.softwareAttributes[softwareAttribute]) {
-            accu.softwareAttributes[softwareAttribute] = [];
-          }
-          accu.softwareAttributes[softwareAttribute].push({ key: attribute[0], value: attribute[1] });
-        } else {
-          const secondaryText = Array.isArray(attribute[1]) ? attribute[1].join(',') : attribute[1];
-          accu.deviceInventory.push(<ExpandableAttribute key={`info-${i}`} primary={attribute[0]} secondary={secondaryText} textClasses={listItemTextClass} />);
-        }
-        return accu;
-      },
-      { softwareAttributes: {}, deviceInventory: [] }
-    );
+    .reduce((accu, attribute, i) => {
+      const softwareAttribute = softwareInfo.find(info => attribute[0].startsWith(info));
+      if (!softwareAttribute) {
+        const secondaryText = Array.isArray(attribute[1]) ? attribute[1].join(',') : attribute[1];
+        accu.push(<ExpandableAttribute key={`info-${i}`} primary={attribute[0]} secondary={secondaryText} textClasses={listItemTextClass} />);
+      }
+      return accu;
+    }, []);
 
-  const mapLayerInformation = (layerInfo, i) => {
-    let primary = layerInfo.key;
-    let secondary = layerInfo.value;
-    let priority = i + 2;
-    const infoItems = layerInfo.key.split('.');
-    switch (infoItems.length) {
-      case 2:
-        primary = layerInfo.key === 'rootfs-image.version' ? 'System software version' : primary;
-        priority = i;
-        break;
-      case 3:
-        primary = infoItems[1];
-        break;
-      default:
-        break;
-    }
-    const component = <ExpandableAttribute key={`software-info-${i}`} primary={primary} secondary={secondary} textClasses={listItemTextClass} />;
-    return { priority, component };
-  };
-
-  const layers = Object.entries(softwareAttributes).map(layer => {
-    const items = layer[1]
-      .map(mapLayerInformation)
-      .sort((a, b) => a.priority.localeCompare(b.priority))
-      .map(item => item.component);
-    return { title: layer[0], items };
-  });
+  const softwareInformation = Object.entries(extractSoftwareInformation(attributes, softwareTitleMap)).map(item => ({
+    title: item[0],
+    content: item[1].map((info, index) => (
+      <ExpandableAttribute key={`${item[0]}-info-${index}`} primary={info.primary} secondary={info.secondary} textClasses={listItemTextClass} />
+    ))
+  }));
 
   return (
     <>
@@ -72,10 +49,10 @@ export const DeviceInventory = ({ attributes, id, setSnackbar, unauthorized }) =
         <h4>Device inventory</h4>
         <div className="file-details">
           <h4 style={inlineHeadingStyle}>Installed software</h4>
-          {layers.map((layer, layerIndex) => (
+          {softwareInformation.map((layer, layerIndex) => (
             <div className="flexbox column" key={`layer-${layerIndex}`}>
               <div className="margin-top-small">{layer.title}</div>
-              <List>{layer.items}</List>
+              <List>{layer.content}</List>
             </div>
           ))}
         </div>

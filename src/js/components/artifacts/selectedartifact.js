@@ -16,8 +16,8 @@ import {
 } from '@material-ui/icons';
 
 import { getArtifactUrl, showRemoveArtifactDialog } from '../../actions/releaseActions';
+import { extractSoftwareInformation } from '../../helpers';
 import { colors } from '../../themes/mender-theme';
-import ExpandableAttribute from '../common/expandable-attribute';
 import ArtifactPayload from './artifactPayload';
 
 const styles = {
@@ -32,6 +32,11 @@ const styles = {
     minMidth: 200,
     padding: 0
   }
+};
+
+const softwareTitleMap = {
+  'rootfs-image.version': { title: 'System filesystem', priority: 0 },
+  'rootfs-image.checksum': { title: 'checksum', priority: 1 }
 };
 
 export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExpansion, showRemoveArtifactDialog }) => {
@@ -93,19 +98,9 @@ export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExp
     }, []);
   };
 
-  const extractSoftwareInformation = (capabilities = {}) => {
-    return Object.entries(capabilities).reduce((accu, item) => {
-      const parts = item[0].split('.');
-      if (parts.length > 2 && parts[2].endsWith('.version')) {
-        const content = ['Software filesystem', 'Software name', 'Software version'].map((item, index) => (
-          <ExpandableAttribute key={`${parts[0]}-info-${index}`} primary={item} secondary={parts[index]} />
-        ));
-        accu.push({ title: [parts[0]], content });
-      }
-      return accu;
-    }, []);
-  };
-
+  const softwareInformation = Object.values(
+    extractSoftwareInformation(artifact.artifact_provides, softwareTitleMap, ['Software filesystem', 'Software name', 'Software version'])
+  ).map(content => ({ title: 'Software versioning information', content }))[0];
   const artifactMetaInfo = [
     { title: 'Software versioning information', content: extractSoftwareInformation(artifact.artifact_provides) },
     { title: 'Artifact dependencies', content: transformArtifactCapabilities(artifact.artifact_depends) },
@@ -149,17 +144,7 @@ export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExp
           <ListItemText primary="Signed" secondary={artifact.signed ? <CheckCircleOutlineIcon className="green" /> : <CancelOutlinedIcon className="red" />} />
         </ListItem>
       </List>
-      {artifactMetaInfo.map(
-        (info, index) =>
-          !!info.content.length && (
-            <React.Fragment key={`artifact-info-${index}`}>
-              <p className="margin-bottom-none">{info.title}</p>
-              <List className="list-horizontal-flex" style={{ paddingTop: 0 }}>
-                {info.content}
-              </List>
-            </React.Fragment>
-          )
-      )}
+      <ArtifactMetadataList metaInfo={softwareInformation} />
       <Accordion
         square
         expanded={showPayloads}
