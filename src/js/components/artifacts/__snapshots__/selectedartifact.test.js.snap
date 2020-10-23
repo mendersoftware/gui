@@ -10,7 +10,7 @@ exports[`SelectedArtifact Component renders correctly 1`] = `
       Object {
         "display": "grid",
         "gridColumnGap": "2vw",
-        "gridTemplateColumns": "2fr 1fr",
+        "gridTemplateColumns": "calc(600px + 2vw) 300px",
       }
     }
   >
