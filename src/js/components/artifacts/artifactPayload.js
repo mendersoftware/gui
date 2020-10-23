@@ -24,7 +24,8 @@ const style = {
 };
 const attributes = ['Name', 'Checksum', 'Build date', 'Size (uncompressed)'];
 
-export const ArtifactPayload = ({ index, payload: { files = [], meta_data = {}, type_info } }) => {
+export const ArtifactPayload = ({ index, payload: { files: payloadFiles, meta_data = {}, type_info } }) => {
+  const files = payloadFiles || [];
   const summedSize = files.reduce((accu, item) => accu + item.size, 0);
   const metaDataObject = meta_data;
   const metaData = [
