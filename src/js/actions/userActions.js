@@ -256,9 +256,15 @@ export const removeRole = roleId => dispatch =>
   Global settings
 */
 export const getGlobalSettings = () => dispatch =>
-  GeneralApi.get(`${useradmApiUrl}/settings`).then(({ data: settings }) => dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings }));
+  GeneralApi.get(`${useradmApiUrl}/settings`).then(({ data: settings }) => {
+    window.sessionStorage.setItem('settings-initialized', true);
+    return Promise.resolve(dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings }));
+  });
 
 export const saveGlobalSettings = (settings, beOptimistic = false, notify = false) => (dispatch, getState) => {
+  if (!window.sessionStorage.getItem('settings-initialized')) {
+    return;
+  }
   const updatedSettings = { ...getState().users.globalSettings, ...settings };
   let tasks = [dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: updatedSettings })];
   return GeneralApi.post(`${useradmApiUrl}/settings`, updatedSettings)
