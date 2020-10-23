@@ -12,6 +12,7 @@ import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 
 import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import DeviceListItem from './devicelistitem';
@@ -32,9 +33,9 @@ export class DeviceList extends React.Component {
       self.setState({ textfield: group ? decodeURIComponent(group) : 'All devices' });
     }
     if (!onboardingComplete && acceptedDevicesCount) {
-      advanceOnboarding('devices-accepted-onboarding');
+      advanceOnboarding(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING);
       if (devices.every(item => Object.values(item.attributes).some(value => value))) {
-        advanceOnboarding('application-update-reminder-tip');
+        advanceOnboarding(onboardingSteps.APPLICATION_UPDATE_REMINDER_TIP);
       }
     }
   }
@@ -56,7 +57,7 @@ export class DeviceList extends React.Component {
       getDeviceAuth(device.id);
     }
     if (!onboardingComplete) {
-      advanceOnboarding('devices-pending-accepting-onboarding');
+      advanceOnboarding(onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING);
     }
     self.setState({ expandedDeviceId: device ? device.id : null });
   }

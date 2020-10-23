@@ -1,7 +1,8 @@
 import Cookies from 'universal-cookie';
 
-import OnboardingConstants from '../constants/onboardingConstants';
+import OnboardingConstants, { onboardingSteps as onboardingStepNames } from '../constants/onboardingConstants';
 import { DEVICE_STATES } from '../constants/deviceConstants';
+
 import { onboardingSteps } from '../utils/onboardingmanager';
 import { getDemoDeviceAddress } from '../helpers';
 import { getUserSettings } from '../selectors';
@@ -50,12 +51,12 @@ export const getOnboardingState = () => (dispatch, getState) => {
     onboardingState = state;
   }
   onboardingState.address = getDemoDeviceAddress(Object.values(store.devices.byId), onboardingState.approach, store.onboarding.demoArtifactPort);
-  const progress = Object.keys(onboardingSteps).findIndex(step => step === 'artifact-creation-dialog');
+  const progress = Object.keys(onboardingSteps).findIndex(step => step === onboardingStepNames.ARTIFACT_CREATION_DIALOG);
   const currentProgress = Object.keys(onboardingSteps).findIndex(step => step === onboardingState.progress);
   onboardingState.showArtifactCreation = Math.abs(currentProgress - progress) <= 1;
   if (onboardingState.showArtifactCreation) {
     dispatch(setShowCreateArtifactDialog(true));
-    onboardingState.progress = 'artifact-creation-dialog';
+    onboardingState.progress = onboardingStepNames.ARTIFACT_CREATION_DIALOG;
     // although it would be more appropriate to do this in the app component, this happens here because in the app component we would need to track
     // redirects, if we want to still allow navigation across the UI while the dialog is visible
     window.location.replace('#/releases');
@@ -83,7 +84,7 @@ export const setOnboardingComplete = val => dispatch =>
     dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: !val })
   ]).then(() => {
     if (val) {
-      return Promise.resolve(dispatch(advanceOnboarding('onboarding-finished')));
+      return Promise.resolve(dispatch(advanceOnboarding(onboardingStepNames.ONBOARDING_FINISHED)));
     }
     return Promise.resolve();
   });
@@ -93,7 +94,7 @@ export const setOnboardingCanceled = () => dispatch =>
     dispatch(setShowOnboardingHelp(false)),
     dispatch(setShowDismissOnboardingTipsDialog(false)),
     dispatch({ type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: true })
-  ]).then(() => Promise.resolve(advanceOnboarding('onboarding-canceled')));
+  ]).then(() => Promise.resolve(advanceOnboarding(onboardingStepNames.ONBOARDING_CANCELED)));
 
 const setOnboardingState = state => dispatch =>
   Promise.all([
@@ -117,7 +118,7 @@ export const advanceOnboarding = stepId => (dispatch, getState) => {
   const madeProgress = steps[stepIndex + 1];
   dispatch(setOnboardingProgress(madeProgress));
   const state = { ...getCurrentOnboardingState(getState()), progress: madeProgress };
-  state.complete = stepIndex + 1 >= Object.keys(onboardingSteps).findIndex(step => step === 'onboarding-finished') ? true : state.complete;
+  state.complete = stepIndex + 1 >= Object.keys(onboardingSteps).findIndex(step => step === onboardingStepNames.ONBOARDING_FINISHED) ? true : state.complete;
   dispatch(saveUserSettings({ onboarding: state }));
   Tracking.event({ category: 'onboarding', action: stepId });
 };
@@ -125,16 +126,21 @@ export const advanceOnboarding = stepId => (dispatch, getState) => {
 const determineProgress = (acceptedDevices, pendingDevices, releases, pastDeployments) => {
   const steps = Object.keys(onboardingSteps);
   let progress = -1;
-  progress = pendingDevices.length > 1 ? steps.findIndex(step => step === 'devices-pending-accepting-onboarding') : progress;
-  progress = acceptedDevices.length >= 1 ? steps.findIndex(step => step === 'application-update-reminder-tip') : progress;
-  progress = acceptedDevices.length > 1 && releases.length > 1 ? steps.findIndex(step => step === 'application-update-reminder-tip') : progress;
+  progress = pendingDevices.length > 1 ? steps.findIndex(step => step === onboardingStepNames.DEVICES_PENDING_ACCEPTING_ONBOARDING) : progress;
+  progress = acceptedDevices.length >= 1 ? steps.findIndex(step => step === onboardingStepNames.APPLICATION_UPDATE_REMINDER_TIP) : progress;
   progress =
-    acceptedDevices.length > 1 && releases.length > 1 && pastDeployments.length > 1 ? steps.findIndex(step => step === 'deployments-past-completed') : progress;
+    acceptedDevices.length > 1 && releases.length > 1 ? steps.findIndex(step => step === onboardingStepNames.APPLICATION_UPDATE_REMINDER_TIP) : progress;
   progress =
-    acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length > 1
-      ? steps.findIndex(step => step === 'artifact-modified-onboarding')
+    acceptedDevices.length > 1 && releases.length > 1 && pastDeployments.length > 1
+      ? steps.findIndex(step => step === onboardingStepNames.DEPLOYMENTS_PAST_COMPLETED)
       : progress;
   progress =
-    acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length > 2 ? steps.findIndex(step => step === 'onboarding-finished') : progress;
+    acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length > 1
+      ? steps.findIndex(step => step === onboardingStepNames.ARTIFACT_MODIFIED_ONBOARDING)
+      : progress;
+  progress =
+    acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length > 2
+      ? steps.findIndex(step => step === onboardingStepNames.ONBOARDING_FINISHED)
+      : progress;
   return steps[progress];
 };

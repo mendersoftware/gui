@@ -1,7 +1,8 @@
 import Cookies from 'universal-cookie';
 
-import { DEVICE_STATES } from '../constants/deviceConstants';
 import AppConstants from '../constants/appConstants';
+import { DEVICE_STATES } from '../constants/deviceConstants';
+import { onboardingSteps } from '../constants/onboardingConstants';
 import { getUserSettings } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import { getDevicesByStatus, getDeviceLimit, getDynamicGroups, getGroups } from './deviceActions';
@@ -34,7 +35,7 @@ export const initializeAppData = () => (dispatch, getState) => {
   return Promise.all(tasks).then(() => {
     const state = getState();
     if (state.users.showHelptips && state.onboarding.showTips && !state.onboarding.complete) {
-      const welcomeTip = getOnboardingComponentFor('onboarding-starting', {
+      const welcomeTip = getOnboardingComponentFor(onboardingSteps.ONBOARDING_START, {
         progress: state.onboarding.progress,
         complete: state.onboarding.complete,
         showHelptips: state.users.showHelptips,

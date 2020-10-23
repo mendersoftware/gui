@@ -9,6 +9,7 @@ import { selectRelease } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, createDeployment, selectDeployment } from '../../actions/deploymentActions';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getIsEnterprise, getOnboardingState } from '../../selectors';
 
 import CreateDialog, { allDevices } from './createdeployment';
@@ -164,14 +165,14 @@ export class Deployments extends React.Component {
     this.setState({ tabIndex });
     this.props.setSnackbar('');
     if (this.props.pastCount && !this.props.onboardingState.complete) {
-      this.props.advanceOnboarding('deployments-past');
+      this.props.advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST);
     }
   }
 
   showReport(reportType, deploymentId) {
     const self = this;
     if (!self.props.onboardingState.complete) {
-      self.props.advanceOnboarding('deployments-inprogress');
+      self.props.advanceOnboarding(onboardingSteps.DEPLOYMENTS_INPROGRESS);
     }
     self.props.selectDeployment(deploymentId).then(() => self.setState({ createDialog: false, reportType, reportDialog: true }));
   }
@@ -191,7 +192,7 @@ export class Deployments extends React.Component {
     if (pastCount && self.tabsRef) {
       const tabs = self.tabsRef.getElementsByClassName('MuiTab-root');
       const finishedTab = tabs[tabs.length - 1];
-      onboardingComponent = getOnboardingComponentFor('deployments-past', onboardingState, {
+      onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST, onboardingState, {
         anchor: {
           left: self.tabsRef.offsetLeft + self.tabsRef.offsetWidth - finishedTab.offsetWidth / 2,
           top: self.tabsRef.offsetHeight + finishedTab.offsetHeight

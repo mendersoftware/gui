@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { FormControl, Input, InputLabel, TextField, Tooltip } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { InfoOutlined as InfoIcon } from '@material-ui/icons';
+
+import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { duplicateFilter, unionizeStrings } from '../../../helpers';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 
@@ -54,7 +56,7 @@ export class ArtifactInformation extends React.Component {
     let onboardingComponent = null;
     if (!onboardingState.complete && self.deviceTypeRef && self.releaseNameRef) {
       if (selectedDeviceTypes.length || customDeviceTypes.length > 3) {
-        advanceOnboarding('upload-new-artifact-dialog-device-type');
+        advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE);
       }
       const deviceTypeAnchor = {
         left: self.deviceTypeRef.offsetLeft + self.deviceTypeRef.clientWidth,
@@ -64,9 +66,12 @@ export class ArtifactInformation extends React.Component {
         left: self.releaseNameRef.parentElement.parentElement.offsetLeft + self.releaseNameRef.clientWidth,
         top: self.releaseNameRef.parentElement.parentElement.offsetTop + self.releaseNameRef.clientHeight / 2
       };
-      onboardingComponent = getOnboardingComponentFor('upload-new-artifact-dialog-device-type', onboardingState, { anchor: deviceTypeAnchor, place: 'right' });
+      onboardingComponent = getOnboardingComponentFor(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE, onboardingState, {
+        anchor: deviceTypeAnchor,
+        place: 'right'
+      });
       onboardingComponent = getOnboardingComponentFor(
-        'upload-new-artifact-dialog-release-name',
+        onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_RELEASE_NAME,
         onboardingState,
         { anchor: releaseNameAnchor, place: 'right' },
         onboardingComponent

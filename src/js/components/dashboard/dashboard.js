@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom';
 import { setSnackbar } from '../../actions/appActions';
 import { getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import Loader from '../common/loader';
 import Deployments from './deployments';
 import Devices from './devices';
@@ -27,7 +28,7 @@ export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceL
       return;
     }
     setTimeout(() => {
-      const notification = getOnboardingComponentFor('onboarding-start', onboardingState);
+      const notification = getOnboardingComponentFor(onboardingSteps.ONBOARDING_START, onboardingState);
       !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
     }, 400);
   }, [currentUser, onboardingState]);

@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 
 import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import CopyCode from '../common/copy-code';
 
 const file_modification = `cat >index.html <<EOF
@@ -17,7 +18,7 @@ export const CreateArtifactDialog = ({ advanceOnboarding, history, setShowCreate
   const onClose = () => {
     history.push('/releases');
     setShowCreateArtifactDialog(false);
-    advanceOnboarding('artifact-creation-dialog');
+    advanceOnboarding(onboardingSteps.ARTIFACT_CREATION_DIALOG);
   };
 
   return (

@@ -4,6 +4,7 @@ import Dropzone from 'react-dropzone';
 import { IconButton, TextField } from '@material-ui/core';
 import { CloudUpload, Delete as DeleteIcon, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
+import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { FileSize } from '../../../helpers';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 
@@ -26,7 +27,7 @@ export default class ArtifactUpload extends React.Component {
         setSnackbar('Only letters, digits and characters in the set ".,_-" are allowed in the filename.', null);
       } else {
         if (releases.length) {
-          advanceOnboarding('upload-new-artifact-dialog-upload');
+          advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_UPLOAD);
         }
         this.setState({ acceptedFiles }, () => updateCreation({ file: acceptedFiles[0] }));
       }
@@ -64,9 +65,9 @@ export default class ArtifactUpload extends React.Component {
         left: self.onboardingAnchor.offsetLeft + self.onboardingAnchor.clientWidth,
         top: self.onboardingAnchor.offsetTop + self.onboardingAnchor.clientHeight / 2
       };
-      onboardingComponent = getOnboardingComponentFor('upload-new-artifact-dialog-upload', onboardingState, { anchor, place: 'right' });
+      onboardingComponent = getOnboardingComponentFor(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_UPLOAD, onboardingState, { anchor, place: 'right' });
       onboardingComponent = getOnboardingComponentFor(
-        'upload-new-artifact-dialog-destination',
+        onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DESTINATION,
         onboardingState,
         { anchor, place: 'right' },
         onboardingComponent

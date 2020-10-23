@@ -11,6 +11,7 @@ import { Help as HelpIcon, Sort as SortIcon } from '@material-ui/icons';
 import { setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { editArtifact, uploadArtifact, selectArtifact, selectRelease } from '../../actions/releaseActions';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import { customSort } from '../../helpers';
 import { getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
@@ -61,7 +62,7 @@ export class ReleaseRepository extends React.Component {
       this.props.selectArtifact();
     }
     if (!this.props.onboardingState.complete) {
-      this.props.advanceOnboarding('artifact-included-onboarding');
+      this.props.advanceOnboarding(onboardingSteps.ARTIFACT_INCLUDED_ONBOARDING);
     }
   }
 
@@ -72,9 +73,9 @@ export class ReleaseRepository extends React.Component {
 
   onCreateDeploymentFrom(release) {
     if (!this.props.onboardingState.complete) {
-      this.props.advanceOnboarding('scheduling-artifact-selection');
+      this.props.advanceOnboarding(onboardingSteps.SCHEDULING_ARTIFACT_SELECTION);
       if (this.props.pastDeploymentsCount === 1) {
-        this.props.advanceOnboarding('artifact-modified-onboarding');
+        this.props.advanceOnboarding(onboardingSteps.ARTIFACT_MODIFIED_ONBOARDING);
       }
     }
     this.props.selectRelease(release);
@@ -134,25 +135,25 @@ export class ReleaseRepository extends React.Component {
         top: this.creationRef.offsetTop - this.creationRef.offsetHeight / 2
       };
 
-      onboardingComponent = getOnboardingComponentFor('artifact-included-onboarding', { ...onboardingState, artifactIncluded }, { anchor });
+      onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_INCLUDED_ONBOARDING, { ...onboardingState, artifactIncluded }, { anchor });
       onboardingComponent = getOnboardingComponentFor(
-        'artifact-included-deploy-onboarding',
+        onboardingSteps.ARTIFACT_INCLUDED_DEPLOY_ONBOARDING,
         onboardingState,
         { place: 'right', anchor: artifactIncludedAnchor },
         onboardingComponent
       );
-      onboardingComponent = getOnboardingComponentFor('deployments-past-completed', onboardingState, { anchor }, onboardingComponent);
+      onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor }, onboardingComponent);
       onboardingComponent = getOnboardingComponentFor(
-        'artifact-modified-onboarding',
+        onboardingSteps.ARTIFACT_MODIFIED_ONBOARDING,
         onboardingState,
         { anchor: artifactUploadedAnchor, place: 'bottom' },
         onboardingComponent
       );
     }
-    if (this.dropzoneRef) {
-      const dropzoneAnchor = { left: this.dropzoneRef.offsetLeft, top: this.dropzoneRef.offsetTop + this.dropzoneRef.offsetHeight };
+    if (self.dropzoneRef && !releases.length) {
+      const dropzoneAnchor = { left: 30, top: this.dropzoneRef.offsetTop + this.dropzoneRef.offsetHeight };
       uploadArtifactOnboardingComponent = getOnboardingComponentFor(
-        'upload-prepared-artifact-tip',
+        onboardingSteps.UPLOAD_PREPARED_ARTIFACT_TIP,
         { ...onboardingState, demoArtifactLink },
         { anchor: dropzoneAnchor, place: 'left' }
       );
@@ -223,7 +224,7 @@ export class ReleaseRepository extends React.Component {
           ) : null}
 
           {items.length || loading ? null : (
-            <div className="dashboard-placeholder fadeIn" style={{ fontSize: '16px', margin: '8vh auto' }}>
+            <div className="dashboard-placeholder fadeIn" style={{ fontSize: '16px', margin: '8vh auto' }} ref={ref => (self.dropzoneRef = ref)}>
               {releases.length > 0 ? (
                 <p>Select a Release on the left to view its Artifact details</p>
               ) : (
@@ -236,7 +237,7 @@ export class ReleaseRepository extends React.Component {
                   rejectClassName="active"
                 >
                   {({ getRootProps, getInputProps }) => (
-                    <div {...getRootProps({ className: dropzoneClass })} onClick={() => onUpload()} ref={ref => (self.dropzoneRef = ref)}>
+                    <div {...getRootProps({ className: dropzoneClass })} onClick={() => onUpload()}>
                       <input {...getInputProps()} disabled={uploading} />
                       <p>
                         There are no Releases yet. <a>Upload an Artifact</a> to create a new Release

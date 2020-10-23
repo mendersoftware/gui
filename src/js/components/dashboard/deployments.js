@@ -8,6 +8,7 @@ import UpdateIcon from '@material-ui/icons/Update';
 import { setSnackbar } from '../../actions/appActions';
 import { getDeployments } from '../../actions/deploymentActions';
 import { mapAttributesToAggregator } from '../../helpers';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getOnboardingState } from '../../selectors';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
@@ -108,7 +109,7 @@ export class Deployments extends React.Component {
         top: this.deploymentsRef.offsetTop + this.deploymentsRef.offsetHeight,
         left: this.deploymentsRef.offsetLeft + this.deploymentsRef.offsetWidth / 2
       };
-      onboardingComponent = getOnboardingComponentFor('deployments-past-completed', onboardingState, { anchor });
+      onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor });
     }
     return (
       <div>

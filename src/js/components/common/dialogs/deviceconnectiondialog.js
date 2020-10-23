@@ -13,6 +13,7 @@ import raspberryPi4 from '../../../../assets/img/raspberrypi4.jpg';
 import { getReleases } from '../../../actions/releaseActions';
 import { advanceOnboarding } from '../../../actions/onboardingActions';
 import { getUserOrganization } from '../../../actions/organizationActions';
+import { onboardingSteps } from '../../../constants/onboardingConstants';
 
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
@@ -27,14 +28,11 @@ export class DeviceConnectionDialog extends React.Component {
     };
   }
 
-  componentDidUpdate(prevProps) {
-    const self = this;
-    if (self.props.open && self.props.open !== prevProps.open) {
-      if (self.props.isEnterprise) {
-        self.props.getUserOrganization();
-      }
-      self.props.getReleases();
+  componentDidUpdate() {
+    if (this.props.isEnterprise) {
+      this.props.getUserOrganization();
     }
+    this.props.getReleases();
   }
 
   onBackClick() {
@@ -46,9 +44,16 @@ export class DeviceConnectionDialog extends React.Component {
     self.setState(state);
   }
 
+  onAdvance() {
+    const { progress } = this.state;
+    const { advanceOnboarding } = this.props;
+    advanceOnboarding(onboardingSteps.DASHBOARD_ONBOARDING_START);
+    this.setState({ progress: progress + 1 });
+  }
+
   render() {
     const self = this;
-    const { advanceOnboarding, onboardingDeviceType, open, onboardingComplete, onCancel, pendingCount } = self.props;
+    const { advanceOnboarding, onboardingDeviceType, onboardingComplete, onCancel, pendingCount } = self.props;
     const { progress, onDevice, virtualDevice } = self.state;
 
     let content = (
@@ -119,13 +124,13 @@ export class DeviceConnectionDialog extends React.Component {
     if (pendingCount && !onboardingComplete) {
       setTimeout(() => onCancel(), 2000);
     }
-    if (open && progress >= 2 && pendingCount && !window.location.hash.includes('pending')) {
-      advanceOnboarding('dashboard-onboarding-start');
+    if (progress >= 2 && pendingCount && !window.location.hash.includes('pending')) {
+      advanceOnboarding(onboardingSteps.DASHBOARD_ONBOARDING_START);
       return <Redirect to="/devices/pending" />;
     }
 
     return (
-      <Dialog open={open || false} fullWidth={true} maxWidth="sm">
+      <Dialog open={true} fullWidth={true} maxWidth="sm">
         <DialogTitle>Connecting a device</DialogTitle>
         <DialogContent className="onboard-dialog dialog-content">{content}</DialogContent>
         <DialogActions>
@@ -135,11 +140,7 @@ export class DeviceConnectionDialog extends React.Component {
             <div>
               <Button onClick={() => self.onBackClick()}>Back</Button>
               {progress < 2 ? (
-                <Button
-                  variant="contained"
-                  disabled={!(virtualDevice || (onDevice && onboardingDeviceType))}
-                  onClick={() => self.setState({ progress: progress + 1 })}
-                >
+                <Button variant="contained" disabled={!(virtualDevice || (onDevice && onboardingDeviceType))} onClick={() => self.onAdvance()}>
                   Next
                 </Button>
               ) : (

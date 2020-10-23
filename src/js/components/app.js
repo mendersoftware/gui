@@ -8,6 +8,7 @@ import Cookies from 'universal-cookie';
 import { getToken, updateMaxAge, expirySet } from '../auth';
 import { logoutUser, saveUserSettings, setShowConnectingDialog } from '../actions/userActions';
 import { privateRoutes, publicRoutes } from '../config/routes';
+import { onboardingSteps } from '../constants/onboardingConstants';
 import SharedSnackbar from '../components/common/sharedsnackbar';
 import ErrorBoundary from '../errorboundary';
 import { getOnboardingState } from '../selectors';
@@ -67,14 +68,14 @@ class AppRoot extends React.PureComponent {
     const self = this;
     const { history, onboardingState, setShowConnectingDialog, showDeviceConnectionDialog, showDismissHelptipsDialog } = self.props;
 
-    let onboardingComponent = getOnboardingComponentFor('application-update-reminder-tip', onboardingState, {
+    let onboardingComponent = getOnboardingComponentFor(onboardingSteps.APPLICATION_UPDATE_REMINDER_TIP, onboardingState, {
       anchor: {
         left: 170,
         top: 225
       },
       place: 'right'
     });
-    onboardingComponent = getOnboardingComponentFor('artifact-creation-dialog', onboardingState, {}, onboardingComponent);
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_CREATION_DIALOG, onboardingState, {}, onboardingComponent);
 
     return (
       <>
@@ -88,7 +89,7 @@ class AppRoot extends React.PureComponent {
             </div>
             {onboardingComponent ? onboardingComponent : null}
             {showDismissHelptipsDialog && <ConfirmDismissHelptips />}
-            <DeviceConnectionDialog open={showDeviceConnectionDialog} onCancel={() => setShowConnectingDialog(false)} />
+            {showDeviceConnectionDialog && <DeviceConnectionDialog onCancel={() => setShowConnectingDialog(false)} />}
             <LiveChatBox />
           </>
         ) : (

@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 
 import { getDevicesByStatus } from '../../actions/deviceActions';
 import { advanceOnboarding, setOnboardingComplete, setShowCreateArtifactDialog, setShowOnboardingHelp } from '../../actions/onboardingActions';
-
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getDemoDeviceAddress } from '../../selectors';
 import Loader from '../common/loader';
 
@@ -19,7 +19,7 @@ export const DeploymentCompleteTip = ({ advanceOnboarding, setShowCreateArtifact
   const onClick = () => {
     const parametrizedAddress = `${url}/index.html?source=${encodeURIComponent(window.location)}`;
     window.open(parametrizedAddress, '_blank');
-    advanceOnboarding('deployments-past-completed-failure');
+    advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE);
     setShowCreateArtifactDialog(true);
     window.location.replace('#/releases');
     onClose();

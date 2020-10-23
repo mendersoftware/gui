@@ -17,6 +17,7 @@ import {
 import { getDevicesByStatus, selectGroup, setDeviceFilters, updateDevicesAuth } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
@@ -60,7 +61,7 @@ export class Pending extends React.Component {
       this.props.setDeviceFilters([]);
       this._getDevices(true);
       if (!this.props.onboardingState.complete) {
-        this.props.advanceOnboarding('devices-pending-onboarding-start');
+        this.props.advanceOnboarding(onboardingSteps.DEVICES_PENDING_ONBOARDING_START);
       }
     }
     const self = this;
@@ -110,7 +111,7 @@ export class Pending extends React.Component {
 
   onRowSelection(selection) {
     if (!this.props.onboardingState.complete) {
-      this.props.advanceOnboarding('devices-pending-accepting-onboarding');
+      this.props.advanceOnboarding(onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING);
     }
     this.setState({ selectedRows: selection });
   }
@@ -181,12 +182,12 @@ export class Pending extends React.Component {
         </p>
       ) : null;
 
-    const devicePendingTip = getOnboardingComponentFor('devices-pending-onboarding-start', onboardingState);
+    const devicePendingTip = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING_START, onboardingState);
     let onboardingComponent = null;
     if (showHelptips && !onboardingState.complete) {
       if (this.deviceListRef) {
         const element = this.deviceListRef ? this.deviceListRef.getElementsByClassName('body')[0] : null;
-        onboardingComponent = getOnboardingComponentFor('devices-pending-onboarding', onboardingState, {
+        onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING, onboardingState, {
           anchor: { left: 200, top: element ? element.offsetTop + element.offsetHeight : 170 }
         });
       }
@@ -195,7 +196,7 @@ export class Pending extends React.Component {
           left: this.authorizeRef.offsetParent.offsetLeft - this.authorizeRef.firstElementChild.offsetWidth,
           top: this.authorizeRef.offsetParent.offsetTop + this.authorizeRef.firstElementChild.offsetHeight - 15
         };
-        onboardingComponent = getOnboardingComponentFor('devices-pending-accepting-onboarding', onboardingState, { place: 'left', anchor });
+        onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING, onboardingState, { place: 'left', anchor });
       }
       if (acceptedDevices && !window.sessionStorage.getItem('pendings-redirect')) {
         window.sessionStorage.setItem('pendings-redirect', true);

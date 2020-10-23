@@ -11,6 +11,7 @@ import { ErrorOutline as ErrorOutlineIcon, InfoOutlined as InfoOutlinedIcon } fr
 import { getAllDevicesByStatus, getAllGroupDevices, selectDevices } from '../../../actions/deviceActions';
 import { advanceOnboarding } from '../../../actions/onboardingActions';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../../constants/deviceConstants';
+import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getOnboardingState } from '../../../selectors';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 import { allDevices } from '../createdeployment';
@@ -56,7 +57,7 @@ export class SoftwareDevices extends React.Component {
       } else if (currentState.group !== allDevices) {
         state.deploymentDeviceCount = self.props.groups[currentState.group].total;
       }
-      self.props.advanceOnboarding('scheduling-release-to-devices');
+      self.props.advanceOnboarding(onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES);
     } else {
       state.deploymentDeviceIds = [];
     }
@@ -114,16 +115,20 @@ export class SoftwareDevices extends React.Component {
     let onboardingComponent = null;
     if (this.releaseRef && this.groupRef && deploymentAnchor) {
       const anchor = { top: this.releaseRef.offsetTop + (this.releaseRef.offsetHeight / 3) * 2, left: this.releaseRef.offsetWidth / 2 };
-      onboardingComponent = getOnboardingComponentFor('scheduling-artifact-selection', { ...onboardingState, selectedRelease }, { anchor, place: 'right' });
+      onboardingComponent = getOnboardingComponentFor(
+        onboardingSteps.SCHEDULING_ARTIFACT_SELECTION,
+        { ...onboardingState, selectedRelease },
+        { anchor, place: 'right' }
+      );
       const groupAnchor = { top: this.groupRef.offsetTop + (this.groupRef.offsetHeight / 3) * 2, left: this.groupRef.offsetWidth };
       onboardingComponent = getOnboardingComponentFor(
-        'scheduling-all-devices-selection',
+        onboardingSteps.SCHEDULING_ALL_DEVICES_SELECTION,
         onboardingState,
         { anchor: groupAnchor, place: 'right' },
         onboardingComponent
       );
       onboardingComponent = getOnboardingComponentFor(
-        'scheduling-group-selection',
+        onboardingSteps.SCHEDULING_GROUP_SELECTION,
         { ...onboardingState, createdGroup },
         { anchor: groupAnchor, place: 'right' },
         onboardingComponent
@@ -134,7 +139,7 @@ export class SoftwareDevices extends React.Component {
       };
       if (hasDevices && hasSelectedDevices && selectedRelease) {
         onboardingComponent = getOnboardingComponentFor(
-          'scheduling-release-to-devices',
+          onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES,
           { ...onboardingState, selectedDevice, selectedGroup, selectedRelease },
           { anchor: buttonAnchor, place: 'bottom' },
           onboardingComponent

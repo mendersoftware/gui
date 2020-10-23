@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { getAllDevicesByStatus, getDeviceCount } from '../../actions/deviceActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import AcceptedDevices from './widgets/accepteddevices';
@@ -86,14 +87,14 @@ export class Devices extends React.Component {
     if (this.anchor) {
       const element = this.anchor.children[this.anchor.children.length - 1];
       const anchor = { left: element.offsetLeft + element.offsetWidth / 2, top: element.offsetTop + element.offsetHeight - 50 };
-      onboardingComponent = getOnboardingComponentFor('dashboard-onboarding-start', onboardingState, { anchor });
+      onboardingComponent = getOnboardingComponentFor(onboardingSteps.DASHBOARD_ONBOARDING_START, onboardingState, { anchor });
       if (this.pendingsRef) {
         const element = this.pendingsRef.wrappedElement.lastChild;
         const anchor = {
           left: this.pendingsRef.wrappedElement.offsetLeft + element.offsetWidth / 2,
           top: this.pendingsRef.wrappedElement.offsetTop + element.offsetHeight
         };
-        onboardingComponent = getOnboardingComponentFor('dashboard-onboarding-pendings', onboardingState, { anchor });
+        onboardingComponent = getOnboardingComponentFor(onboardingSteps.DASHBOARD_ONBOARDING_PENDINGS, onboardingState, { anchor });
       }
     }
     return (

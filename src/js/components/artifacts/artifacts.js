@@ -18,6 +18,7 @@ import {
   selectRelease,
   uploadArtifact
 } from '../../actions/releaseActions';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import { colors } from '../../themes/mender-theme';
 import { getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
@@ -94,7 +95,7 @@ export class Artifacts extends React.Component {
 
   onUploadClick() {
     if (this.props.releases.length) {
-      this.props.advanceOnboarding('upload-new-artifact-tip');
+      this.props.advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP);
     }
     this.setState({ showCreateArtifactDialog: true });
   }
@@ -106,9 +107,9 @@ export class Artifacts extends React.Component {
     return self.setState({ showCreateArtifactDialog: false }, () =>
       upload.then(() => {
         if (!onboardingState.complete && deviceTypes.length && pastCount) {
-          advanceOnboarding('upload-new-artifact-tip');
+          advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP);
           if (type === 'create') {
-            advanceOnboarding('upload-new-artifact-dialog-release-name');
+            advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_RELEASE_NAME);
           }
         }
         // track in GA
@@ -145,7 +146,7 @@ export class Artifacts extends React.Component {
     let uploadArtifactOnboardingComponent = null;
     if (!onboardingState.complete && self.uploadButtonRef) {
       uploadArtifactOnboardingComponent = getOnboardingComponentFor(
-        'upload-new-artifact-tip',
+        onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP,
         { ...onboardingState, setShowCreateArtifactDialog },
         {
           place: 'right',

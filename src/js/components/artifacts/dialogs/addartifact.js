@@ -3,6 +3,7 @@ import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 import ArtifactUpload from './artifactupload';
 import ArtifactInformationForm from './artifactinformationform';
+import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { unionizeStrings } from '../../../helpers';
 
 const steps = [
@@ -34,7 +35,7 @@ export class AddArtifactDialog extends React.Component {
       return this.props.onUpload(meta, file);
     }
     if (!this.props.onboardingState.complete && this.props.releases.length) {
-      this.props.advanceOnboarding('upload-new-artifact-dialog-device-type');
+      this.props.advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE);
     }
     const otherDeviceTypes = customDeviceTypes.split(',');
     const deviceTypes = unionizeStrings(selectedDeviceTypes, otherDeviceTypes);

@@ -24,6 +24,7 @@ import { mdiTrashCanOutline as TrashCan } from '@mdi/js';
 import { getDevicesByStatus, getGroupDevices, selectDevices, setDeviceFilters, trySelectDevice, updateDevicesAuth } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import { filtersCompare, isEmpty } from '../../helpers';
 import { getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
@@ -98,7 +99,7 @@ export class Authorized extends React.Component {
       self.setState(newState);
       if (acceptedCount && acceptedCount < 2) {
         setTimeout(() => {
-          const notification = getOnboardingComponentFor('devices-accepted-onboarding-notification', onboardingState);
+          const notification = getOnboardingComponentFor(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION, onboardingState);
           !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
         }, 400);
       }
@@ -272,8 +273,8 @@ export class Authorized extends React.Component {
     }
 
     const anchor = { left: 200, top: 146 };
-    let onboardingComponent = getOnboardingComponentFor('devices-accepted-onboarding', onboardingState, { anchor });
-    onboardingComponent = getOnboardingComponentFor('deployments-past-completed', onboardingState, { anchor }, onboardingComponent);
+    let onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING, onboardingState, { anchor });
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor }, onboardingComponent);
 
     const isUngroupedGroup = selectedGroup && selectedGroup === UNGROUPED_GROUP.id;
     return (

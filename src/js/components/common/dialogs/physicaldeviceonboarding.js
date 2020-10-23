@@ -8,6 +8,7 @@ import HelpIcon from '@material-ui/icons/Help';
 
 import CopyCode from '../copy-code';
 import { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType } from '../../../actions/onboardingActions';
+import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDebConfigurationCode } from '../../../helpers';
 import { getDocsVersion, getIsEnterprise } from '../../../selectors';
 
@@ -134,7 +135,7 @@ export class PhysicalDeviceOnboarding extends React.Component {
           <p>
             Copy & paste and run this command <b>on your device</b>:
           </p>
-          <CopyCode code={codeToCopy} onCopy={() => advanceOnboarding('dashboard-onboarding-start')} withDescription={true} />
+          <CopyCode code={codeToCopy} onCopy={() => advanceOnboarding(onboardingSteps.DASHBOARD_ONBOARDING_START)} withDescription={true} />
           <p>This downloads the Mender client on the device, sets the configuration and starts the client.</p>
           <p>
             Once the client has started, your device will attempt to connect to the server. It will then appear in your Pending devices tab and you can

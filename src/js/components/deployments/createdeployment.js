@@ -12,6 +12,7 @@ import { selectRelease } from '../../actions/releaseActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getIsEnterprise } from '../../selectors';
 import { getRemainderPercent } from '../../helpers';
 
@@ -80,7 +81,7 @@ export class CreateDialog extends React.Component {
       this.props.saveGlobalSettings({ retries: settings.retries });
     }
     if (!this.props.isOnboardingComplete) {
-      this.props.advanceOnboarding('scheduling-release-to-devices');
+      this.props.advanceOnboarding(onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES);
     }
     this.setState({ activeStep: 0, deploymentDeviceIds: [], deploymentDeviceCount: 0, group: null, phases: null, disableSchedule: false });
     this.cleanUpDeploymentsStatus();

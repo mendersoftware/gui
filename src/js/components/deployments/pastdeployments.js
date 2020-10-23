@@ -9,6 +9,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, selectDeployment } from '../../actions/deploymentActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import Loader from '../common/loader';
 import TimeframePicker from '../common/timeframe-picker';
 import TimerangePicker from '../common/timerange-picker';
@@ -58,13 +59,13 @@ export class Past extends React.Component {
         false
       );
       if (pastDeploymentsFailed) {
-        advanceOnboarding('deployments-past-completed-failure');
+        advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE);
       } else {
-        advanceOnboarding('deployments-past-completed-notification');
+        advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION);
       }
       setTimeout(() => {
-        let notification = getOnboardingComponentFor('deployments-past-completed-notification', onboardingState);
-        notification = getOnboardingComponentFor('onboarding-finished-notification', onboardingState, {}, notification);
+        let notification = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION, onboardingState);
+        notification = getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED_NOTIFICATION, onboardingState, {}, notification);
         !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
       }, 400);
     }
@@ -117,14 +118,14 @@ export class Past extends React.Component {
         ? self.deploymentsRef.offsetLeft + detailsButtons[0].offsetLeft + detailsButtons[0].offsetWidth / 2 + 15
         : self.deploymentsRef.offsetWidth;
       let anchor = { left: self.deploymentsRef.offsetWidth / 2, top: self.deploymentsRef.offsetTop };
-      onboardingComponent = getOnboardingComponentFor('deployments-past-completed', onboardingState, { anchor });
+      onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor });
       onboardingComponent = getOnboardingComponentFor(
-        'deployments-past-completed-failure',
+        onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE,
         onboardingState,
         { anchor: { left, top: anchor.top } },
         onboardingComponent
       );
-      onboardingComponent = getOnboardingComponentFor('onboarding-finished', onboardingState, { anchor }, onboardingComponent);
+      onboardingComponent = getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED, onboardingState, { anchor }, onboardingComponent);
     }
 
     return (

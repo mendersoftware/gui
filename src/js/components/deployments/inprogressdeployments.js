@@ -5,6 +5,7 @@ import { Refresh as RefreshIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, selectDeployment } from '../../actions/deploymentActions';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import { tryMapDeployments } from '../../helpers';
 import { getOnboardingState } from '../../selectors';
 import theme from '../../themes/mender-theme';
@@ -113,7 +114,7 @@ export class Progress extends React.Component {
     let onboardingComponent = null;
     if (!self.props.onboardingState.complete && this.inprogressRef) {
       const anchor = { left: this.inprogressRef.offsetWidth - theme.spacing(12), top: this.inprogressRef.offsetTop + this.inprogressRef.offsetHeight };
-      onboardingComponent = getOnboardingComponentFor('deployments-inprogress', onboardingState, { anchor });
+      onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_INPROGRESS, onboardingState, { anchor });
     }
 
     return doneLoading ? (
