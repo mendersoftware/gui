@@ -100,6 +100,8 @@ class DevicePendingTipComponent extends React.PureComponent {
   }
 }
 
-const actionCreators = { setShowConnectingDialog, setShowDismissOnboardingTipsDialog, setSnackbar };
+const mappedActionCreators = dispatch => {
+  return bindActionCreators({ setShowConnectingDialog, setShowDismissOnboardingTipsDialog }, dispatch);
+};
 
-export const DevicePendingTip = connect(null, actionCreators)(DevicePendingTipComponent);
+export const DevicePendingTip = connect(null, mappedActionCreators)(DevicePendingTipComponent);
