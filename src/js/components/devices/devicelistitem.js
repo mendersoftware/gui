@@ -16,14 +16,14 @@ const defaultColumnStyle = {
 };
 
 const DeviceListItem = props => {
-  const { columnHeaders, device, expandable = true, expanded, globalSettings, onClick, onRowSelect, selectable, selected } = props;
-  const id_attribute = globalSettings.id_attribute !== 'Device ID' ? (device.identity_data || {})[globalSettings.id_attribute] : device.id;
+  const { columnHeaders, device, expandable = true, expanded, idAttribute, onClick, onRowSelect, selectable, selected } = props;
+  const idValue = idAttribute !== 'Device ID' ? (device.identity_data || {})[idAttribute] : device.id;
   const columnWidth = `${(selectable ? 90 : 100) / columnHeaders.length}%`;
   return expandable ? (
     <Accordion className="deviceListItem" square expanded={expanded} onChange={onClick}>
       <AccordionSummary style={{ padding: '0 12px' }}>
         {selectable ? <Checkbox checked={selected} onChange={onRowSelect} /> : null}
-        <div style={{ ...defaultColumnStyle, width: columnHeaders[0].width || columnWidth, ...columnHeaders[0].style }}>{id_attribute}</div>
+        <div style={{ ...defaultColumnStyle, width: columnHeaders[0].width || columnWidth, ...columnHeaders[0].style }}>{idValue}</div>
         {/* we'll skip the first column, since this is the id and that gets resolved differently in the lines above */}
         {columnHeaders.slice(1).map((item, index) => (
           <div key={`column-${index}`} style={{ ...defaultColumnStyle, width: item.width || columnWidth, ...item.style }}>
@@ -37,8 +37,8 @@ const DeviceListItem = props => {
           <ExpandedDevice
             {...props}
             className="expandedDevice"
-            id_attribute={(globalSettings || {}).id_attribute}
-            id_value={id_attribute}
+            id_attribute={idAttribute}
+            id_value={idValue}
             device={device}
             attrs={device.attributes}
             unauthorized={device.status !== DEVICE_STATES.accepted}
@@ -52,7 +52,7 @@ const DeviceListItem = props => {
   ) : (
     <div className="deviceListItem flexbox" style={{ padding: '0px 12px', alignItems: 'center' }}>
       {selectable ? <Checkbox checked={selected} onChange={onRowSelect} /> : null}
-      <div style={Object.assign({ width: columnHeaders[0].width || columnWidth, padding: '0 24px' }, columnHeaders[0].style)}>{id_attribute}</div>
+      <div style={Object.assign({ width: columnHeaders[0].width || columnWidth, padding: '0 24px' }, columnHeaders[0].style)}>{idAttribute}</div>
       {/* we'll skip the first column, since this is the id and that gets resolved differently in the lines above */}
       {columnHeaders.slice(1).map((item, index) => (
         <div

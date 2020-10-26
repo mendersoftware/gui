@@ -18,7 +18,7 @@ import { getDevicesByStatus, selectGroup, setDeviceFilters, updateDevicesAuth } 
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getOnboardingState } from '../../selectors';
+import { getIdAttribute, getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
 import RelativeTime from '../common/relative-time';
@@ -72,11 +72,7 @@ export class Pending extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return (
-      !this.props.devices.every((device, index) => device === nextProps.devices[index]) ||
-      this.props.globalSettings.id_attribute !== nextProps.globalSettings.id_attribute ||
-      true
-    );
+    return !this.props.devices.every((device, index) => device === nextProps.devices[index]) || this.props.idAttribute !== nextProps.idAttribute || true;
   }
 
   /*
@@ -122,6 +118,7 @@ export class Pending extends React.Component {
     if (attribute.name !== self.state.sortCol) {
       state.sortDown = true;
     }
+    self.state.sortCol = attribute.name === 'Device ID' ? 'id' : self.state.sortCol;
     self.setState(state, () => self._getDevices(true));
   }
 
@@ -134,8 +131,8 @@ export class Pending extends React.Component {
       deviceLimit,
       disabled,
       filters,
-      globalSettings,
       highlightHelp,
+      idAttribute,
       onboardingState,
       openSettingsDialog,
       showHelptips
@@ -147,11 +144,11 @@ export class Pending extends React.Component {
 
     const columnHeaders = [
       {
-        title: globalSettings.id_attribute || 'Device ID',
+        title: idAttribute,
         customize: openSettingsDialog,
-        attribute: { name: globalSettings.id_attribute, scope: 'identity' },
+        attribute: { name: idAttribute, scope: 'identity' },
         style: { flexGrow: 1 },
-        sortable: !!globalSettings.id_attribute && globalSettings.id_attribute !== 'Device ID'
+        sortable: true
       },
       {
         title: 'First request',
@@ -321,8 +318,8 @@ const mapStateToProps = state => {
     devices: state.devices.selectedDeviceList.slice(0, DEVICE_LIST_MAXIMUM_LENGTH),
     deviceLimit: state.devices.limit,
     filters: state.devices.filters || [],
-    globalSettings: state.users.globalSettings,
     highlightHelp: !state.devices.byStatus.accepted.total,
+    idAttribute: getIdAttribute(state),
     onboardingState: getOnboardingState(state),
     pendingDeviceIds: state.devices.byStatus.pending.deviceIds,
     showHelptips: state.users.showHelptips,

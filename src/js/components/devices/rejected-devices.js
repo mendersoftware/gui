@@ -13,6 +13,7 @@ import RelativeTime from '../common/relative-time';
 import DeviceList from './devicelist';
 import { refreshLength as refreshDeviceLength } from './devices';
 import Filters from './filters';
+import { getIdAttribute } from '../../selectors';
 
 export class Rejected extends React.Component {
   constructor(props, context) {
@@ -76,22 +77,23 @@ export class Rejected extends React.Component {
     if (attribute.name !== self.state.sortCol) {
       state.sortDown = true;
     }
+    self.state.sortCol = attribute.name === 'Device ID' ? 'id' : self.state.sortCol;
     self.setState(state, () => self._getDevices(true));
   }
 
   render() {
     const self = this;
-    const { acceptedDevices, count, deviceLimit, devices, filters, globalSettings, openSettingsDialog } = self.props;
+    const { acceptedDevices, count, deviceLimit, devices, filters, idAttribute, openSettingsDialog } = self.props;
     const { pageLoading, showFilters } = this.state;
     const limitMaxed = deviceLimit ? deviceLimit <= acceptedDevices : false;
     const columnHeaders = [
       {
-        title: globalSettings.id_attribute || 'Device ID',
+        title: idAttribute,
         name: 'device_id',
         customize: openSettingsDialog,
-        attribute: { name: globalSettings.id_attribute, scope: 'identity' },
+        attribute: { name: idAttribute, scope: 'identity' },
         style: { flexGrow: 1 },
-        sortable: !!globalSettings.id_attribute && globalSettings.id_attribute !== 'Device ID'
+        sortable: true
       },
       {
         title: 'First request',
@@ -176,7 +178,7 @@ const mapStateToProps = state => {
     devices: state.devices.selectedDeviceList.slice(0, DEVICE_LIST_MAXIMUM_LENGTH),
     deviceLimit: state.devices.limit,
     filters: state.devices.filters || [],
-    globalSettings: state.users.globalSettings,
+    idAttribute: getIdAttribute(state),
     rejectedDeviceIds: state.devices.byStatus.rejected.deviceIds
   };
 };

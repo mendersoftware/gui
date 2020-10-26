@@ -178,7 +178,7 @@ export const defaultState = {
   users: {
     byId: { a1: { email: 'a@b.com', id: 'a1' } },
     currentUser: 'a1',
-    globalSettings: { previousFilters: [] },
+    globalSettings: { id_attribute: 'Device ID', previousFilters: [] },
     rolesById: { RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false } },
     showHelptips: true
   }

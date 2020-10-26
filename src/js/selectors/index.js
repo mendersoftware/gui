@@ -2,9 +2,6 @@ import { createSelector } from 'reselect';
 import { rolesByName } from '../constants/userConstants';
 import { getDemoDeviceAddress as getDemoDeviceAddressHelper } from '../helpers';
 
-export const getCurrentUser = state => state.users.byId[state.users.currentUser];
-export const getUserSettings = state => state.users.globalSettings[state.users.currentUser] || {};
-
 const getAppDocsVersion = state => state.app.docsVersion;
 const getFeatures = state => state.app.features;
 const getRolesById = state => state.users.rolesById;
@@ -12,10 +9,16 @@ const getOrganization = state => state.organization.organization;
 const getDevicesList = state => Object.values(state.devices.byId);
 const getOnboarding = state => state.onboarding;
 const getShowHelptips = state => state.users.showHelptips;
+const getGlobalSettings = state => state.users.globalSettings;
+
+export const getCurrentUser = state => state.users.byId[state.users.currentUser];
+export const getUserSettings = state => state.users.globalSettings[state.users.currentUser] || {};
 
 export const getDemoDeviceAddress = createSelector([getDevicesList, getOnboarding], (devices, { approach, demoArtifactPort }) => {
   return getDemoDeviceAddressHelper(devices, approach, demoArtifactPort);
 });
+
+export const getIdAttribute = createSelector([getGlobalSettings], ({ id_attribute = 'Device ID' }) => id_attribute);
 
 export const getOnboardingState = createSelector([getOnboarding, getShowHelptips], ({ complete, progress, showTips }, showHelptips) => ({
   complete,
