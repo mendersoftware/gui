@@ -32,19 +32,19 @@ export class Global extends React.Component {
     this.setState({ updatedSettings });
   }
 
-  undoChanges() {
+  undoChanges(e) {
     const self = this;
     self.setState({ updatedSettings: self.props.settings });
     if (self.props.dialog) {
-      self.props.closeDialog();
+      self.props.closeDialog(e);
     }
   }
 
-  saveSettings() {
+  saveSettings(e) {
     const self = this;
     return self.props.saveGlobalSettings(self.state.updatedSettings, false, true).then(() => {
       if (self.props.dialog) {
-        self.props.closeDialog();
+        self.props.closeDialog(e);
       }
     });
   }
@@ -75,7 +75,7 @@ export class Global extends React.Component {
               </MenuItem>
             ))}
           </Select>
-          <FormHelperText className="info">
+          <FormHelperText className="info" component="div">
             <div className="margin-top-small margin-bottom-small">Choose a device identity attribute to use to identify your devices throughout the UI.</div>
             <div className="margin-top-small margin-bottom-small">
               <a href={`https://docs.mender.io/${docsVersion}client-installation/identity`} target="_blank">
@@ -86,10 +86,10 @@ export class Global extends React.Component {
           </FormHelperText>
         </FormControl>
         <div className="margin-top-large float-right">
-          <Button disabled={!changed && !dialog} onClick={() => this.undoChanges()} style={{ marginRight: '10px' }}>
+          <Button disabled={!changed && !dialog} onClick={e => this.undoChanges(e)} style={{ marginRight: '10px' }}>
             Cancel
           </Button>
-          <Button variant="contained" onClick={() => this.saveSettings()} disabled={!changed} color="primary">
+          <Button variant="contained" onClick={e => this.saveSettings(e)} disabled={!changed} color="primary">
             Save
           </Button>
         </div>

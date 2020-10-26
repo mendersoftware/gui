@@ -88,7 +88,6 @@ export class Devices extends React.Component {
     const { filteringAttributes, getDeviceAttributes, location, match, selectGroup, setDeviceFilters, setSnackbar } = this.props;
     clearAllRetryTimers(setSnackbar);
     this._restartInterval();
-    getAllDeviceCounts();
     const query = match.params.filters || location.search;
     if (query) {
       const queryResult = convertQueryToFilterAndGroup(query, filteringAttributes);
@@ -134,7 +133,8 @@ export class Devices extends React.Component {
     self.props.getAllDeviceCounts();
   }
 
-  _openSettingsDialog() {
+  _openSettingsDialog(e) {
+    e.preventDefault();
     this.setState({ openIdDialog: !this.state.openIdDialog });
   }
 
@@ -159,7 +159,7 @@ export class Devices extends React.Component {
         </Tabs>
         <ComponentToShow
           history={history}
-          openSettingsDialog={() => this._openSettingsDialog()}
+          openSettingsDialog={e => this._openSettingsDialog(e)}
           params={match.params}
           restart={() => this._restartInterval()}
         />
@@ -167,7 +167,7 @@ export class Devices extends React.Component {
           <Dialog open={openIdDialog || false}>
             <DialogTitle>Default device identity attribute</DialogTitle>
             <DialogContent style={{ overflow: 'hidden' }}>
-              <Global dialog={true} closeDialog={() => this._openSettingsDialog()} />
+              <Global dialog={true} closeDialog={e => this._openSettingsDialog(e)} />
             </DialogContent>
           </Dialog>
         )}
