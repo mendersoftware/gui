@@ -318,35 +318,6 @@ export const mapDeviceAttributes = (attributes = []) =>
     { inventory: { device_type: '', artifact_name: '' }, identity: {}, system: {} }
   );
 
-const deriveAttributePopularity = (accu, sourceObject = {}) =>
-  Object.keys(sourceObject).reduce((keyAccu, key) => {
-    keyAccu[key] = keyAccu[key] + 1 || 1;
-    return keyAccu;
-  }, accu);
-
-export const deriveAttributesFromDevices = devices => {
-  const availableAttributes = devices.reduce(
-    (accu, item) => {
-      if (!item) {
-        return accu;
-      }
-      // count popularity of attributes to create attribute sort order
-      accu.identity_data = deriveAttributePopularity(accu.identity_data, item.identity_data);
-      accu.attributes = deriveAttributePopularity(accu.attributes, item.attributes);
-      return accu;
-    },
-    { identity_data: [], attributes: [] }
-  );
-  // sort in reverse order, to have most common attribute at the top of the select
-  const inventoryAttributes = Object.entries(availableAttributes.attributes)
-    .sort((a, b) => b[1] - a[1])
-    .map(a => a[0]);
-  const identityAttributes = Object.entries(availableAttributes.identity_data)
-    .sort((a, b) => b[1] - a[1])
-    .map(a => a[0]);
-  return { identityAttributes, inventoryAttributes };
-};
-
 export const getFormattedSize = bytes => {
   const suffixes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(1024));

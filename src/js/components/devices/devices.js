@@ -5,7 +5,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Dialog, DialogContent, DialogTitle, Tab, Tabs } from '@material-ui/core';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getAllDeviceCounts, selectDevice, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
+import { getAllDeviceCounts, getDeviceAttributes, selectDevice, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { getUserRoles } from '../../selectors';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
@@ -85,7 +85,7 @@ export class Devices extends React.Component {
   }
 
   componentDidMount() {
-    const { filteringAttributes, getAllDeviceCounts, location, match, selectGroup, setDeviceFilters, setSnackbar } = this.props;
+    const { filteringAttributes, getDeviceAttributes, location, match, selectGroup, setDeviceFilters, setSnackbar } = this.props;
     clearAllRetryTimers(setSnackbar);
     this._restartInterval();
     getAllDeviceCounts();
@@ -94,6 +94,7 @@ export class Devices extends React.Component {
       const queryResult = convertQueryToFilterAndGroup(query, filteringAttributes);
       this.updateDeviceSelection(queryResult, selectGroup, setDeviceFilters);
     }
+    getDeviceAttributes();
   }
 
   componentDidUpdate(prevProps) {
@@ -175,7 +176,7 @@ export class Devices extends React.Component {
   }
 }
 
-const actionCreators = { getAllDeviceCounts, selectDevice, selectGroup, setDeviceFilters, setSnackbar };
+const actionCreators = { getAllDeviceCounts, getDeviceAttributes, selectDevice, selectGroup, setDeviceFilters, setSnackbar };
 
 const mapStateToProps = state => {
   const { isGroupRestricted } = getUserRoles(state);

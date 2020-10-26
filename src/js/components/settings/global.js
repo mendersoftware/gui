@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Button, FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { InfoOutlined as InfoOutlinedIcon } from '@material-ui/icons';
 
-import { getDevicesByStatus } from '../../actions/deviceActions';
+import { getDeviceAttributes } from '../../actions/deviceActions';
 import { getGlobalSettings, saveGlobalSettings } from '../../actions/userActions';
 import { deepCompare } from '../../helpers';
 import { getDocsVersion } from '../../selectors';
@@ -15,10 +15,10 @@ export class Global extends React.Component {
       disabled: true,
       updatedSettings: { ...props.settings }
     };
-    if (!props.settings || !props.devicesCount > 20) {
+    if (!props.settings) {
       props.getGlobalSettings();
-      props.getDevicesByStatus(null, 1, 500);
     }
+    props.getDeviceAttributes();
   }
 
   componentDidUpdate(prevProps) {
@@ -98,7 +98,7 @@ export class Global extends React.Component {
   }
 }
 
-const actionCreators = { getDevicesByStatus, getGlobalSettings, saveGlobalSettings };
+const actionCreators = { getDeviceAttributes, getGlobalSettings, saveGlobalSettings };
 
 const mapStateToProps = state => {
   const attributes = state.devices.filteringAttributes.identityAttributes.slice(0, state.devices.filteringAttributesLimit);
