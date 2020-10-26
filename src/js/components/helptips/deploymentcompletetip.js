@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 import Button from '@material-ui/core/Button';
 
-import { getDevicesByStatus } from '../../actions/deviceActions';
 import { advanceOnboarding, setOnboardingComplete, setShowCreateArtifactDialog, setShowOnboardingHelp } from '../../actions/onboardingActions';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getDemoDeviceAddress } from '../../selectors';
@@ -39,7 +38,7 @@ export const DeploymentCompleteTip = ({ advanceOnboarding, setShowCreateArtifact
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ advanceOnboarding, getDevicesByStatus, setOnboardingComplete, setShowCreateArtifactDialog, setShowOnboardingHelp }, dispatch);
+  return bindActionCreators({ advanceOnboarding, setOnboardingComplete, setShowCreateArtifactDialog, setShowOnboardingHelp }, dispatch);
 };
 
 const mapStateToProps = (state, ownProps) => {

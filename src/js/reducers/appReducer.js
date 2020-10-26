@@ -68,11 +68,6 @@ const appReducer = (state = initialState, action) => {
         ...state,
         snackbar: action.snackbar
       };
-    case AppConstants.SET_LOCAL_IPADDRESS:
-      return {
-        ...state,
-        hostAddress: action.ipAddress
-      };
     case AppConstants.SET_FIRST_LOGIN_AFTER_SIGNUP:
       return {
         ...state,

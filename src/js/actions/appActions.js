@@ -54,14 +54,6 @@ export const initializeAppData = () => (dispatch, getState) => {
   });
 };
 
-export const sortTable = (table, column, direction) => dispatch =>
-  dispatch({
-    type: AppConstants.SORT_TABLE,
-    table: table,
-    column: column,
-    direction: direction
-  });
-
 /*
   General
 */
