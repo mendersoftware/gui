@@ -7,28 +7,24 @@ import Button from '@material-ui/core/Button';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import { getDevicesByStatus } from '../../actions/deviceActions';
-import { setOnboardingComplete } from '../../actions/userActions';
+import { setOnboardingComplete } from '../../actions/onboardingActions';
 import * as DeviceConstants from '../../constants/deviceConstants';
-import { getDemoDeviceAddress } from '../../helpers';
-import { getDocsVersion } from '../../selectors';
+import { getDemoDeviceAddress, getDocsVersion } from '../../selectors';
 import Loader from '../common/loader';
 
 export class OnboardingCompleteTip extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      loading: true,
-      targetUrl: ''
+      loading: true
     };
   }
 
   componentDidMount() {
-    const self = this;
-    self.props
-      .getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted)
-      .then(() => getDemoDeviceAddress(self.props.acceptedDevices))
-      .catch(e => console.log(e))
-      .then(targetUrl => self.setState({ targetUrl, loading: false }, () => setTimeout(() => self.props.setOnboardingComplete(true), 120000)));
+    const { getDevicesByStatus, setOnboardingComplete } = this.props;
+    getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted).finally(() =>
+      this.setState({ loading: false }, () => setTimeout(() => setOnboardingComplete(true), 120000))
+    );
   }
 
   componentWillUnmount() {
@@ -40,9 +36,8 @@ export class OnboardingCompleteTip extends React.Component {
   }
 
   render() {
-    const { anchor, docsVersion, setOnboardingComplete } = this.props;
-    const { loading, targetUrl } = this.state;
-    const url = targetUrl ? targetUrl : this.props.targetUrl;
+    const { anchor, docsVersion, setOnboardingComplete, url } = this.props;
+    const { loading } = this.state;
 
     return (
       <div className="onboard-tip" style={anchor}>
@@ -108,10 +103,11 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators({ getDevicesByStatus, setOnboardingComplete }, dispatch);
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   return {
     acceptedDevices: state.devices.byStatus.accepted.deviceIds.map(id => state.devices.byId[id]),
-    docsVersion: getDocsVersion(state)
+    docsVersion: getDocsVersion(state),
+    url: getDemoDeviceAddress(state) || ownProps.targetUrl
   };
 };
 

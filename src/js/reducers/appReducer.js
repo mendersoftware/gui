@@ -29,6 +29,7 @@ const menderEnvironment = {
 };
 
 export const initialState = {
+  demoArtifactLink: 'https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender',
   hostAddress: menderEnvironment.hostAddress,
   snackbar: {
     open: false,

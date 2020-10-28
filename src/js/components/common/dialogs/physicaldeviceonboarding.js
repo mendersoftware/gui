@@ -7,10 +7,10 @@ import { Autocomplete, createFilterOptions } from '@material-ui/lab';
 import HelpIcon from '@material-ui/icons/Help';
 
 import CopyCode from '../copy-code';
-import { setOnboardingApproach, setOnboardingDeviceType } from '../../../actions/userActions';
+import { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType } from '../../../actions/onboardingActions';
+import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDebConfigurationCode } from '../../../helpers';
 import { getDocsVersion, getIsEnterprise } from '../../../selectors';
-import { advanceOnboarding } from '../../../utils/onboardingmanager';
 
 const filter = createFilterOptions();
 
@@ -47,7 +47,7 @@ export class PhysicalDeviceOnboarding extends React.Component {
   render() {
     const self = this;
     const { selection } = self.state;
-    const { docsVersion, ipAddress, isHosted, isEnterprise, token, debPackageVersion } = self.props;
+    const { advanceOnboarding, debPackageVersion, docsVersion, ipAddress, isHosted, isEnterprise, progress, token } = self.props;
 
     const codeToCopy = getDebConfigurationCode(ipAddress, isHosted, isEnterprise, token, debPackageVersion, selection);
     const hasConvertedImage = !!selection && selection.length && (selection.startsWith('raspberrypi3') || selection.startsWith('raspberrypi4'));
@@ -135,7 +135,7 @@ export class PhysicalDeviceOnboarding extends React.Component {
           <p>
             Copy & paste and run this command <b>on your device</b>:
           </p>
-          <CopyCode code={codeToCopy} onCopy={() => advanceOnboarding('dashboard-onboarding-start')} withDescription={true} />
+          <CopyCode code={codeToCopy} onCopy={() => advanceOnboarding(onboardingSteps.DASHBOARD_ONBOARDING_START)} withDescription={true} />
           <p>This downloads the Mender client on the device, sets the configuration and starts the client.</p>
           <p>
             Once the client has started, your device will attempt to connect to the server. It will then appear in your Pending devices tab and you can
@@ -144,11 +144,11 @@ export class PhysicalDeviceOnboarding extends React.Component {
         </div>
       )
     };
-    return <div>{steps[self.props.progress]}</div>;
+    return <div>{steps[progress]}</div>;
   }
 }
 
-const actionCreators = { setOnboardingApproach, setOnboardingDeviceType };
+const actionCreators = { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType };
 
 const mapStateToProps = state => {
   return {

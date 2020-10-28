@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 // material ui
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 
+import { getIdAttribute } from '../../../selectors';
 import DeploymentDeviceListItem from './deploymentdevicelistitem';
 
 const headerStyle = { position: 'sticky', top: 0, background: 'white', zIndex: 1 };
@@ -37,7 +38,7 @@ const ProgressDeviceList = ({ created, devices, idAttribute, retries, viewLog })
 const mapStateToProps = (state, ownProps) => {
   return {
     devices: ownProps.devices.map(device => ({ attributes: {}, ...state.devices.byId[device.id], ...device })),
-    idAttribute: state.users.globalSettings.id_attribute || 'Device ID'
+    idAttribute: getIdAttribute(state)
   };
 };
 

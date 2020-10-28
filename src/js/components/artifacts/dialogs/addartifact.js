@@ -3,8 +3,8 @@ import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 import ArtifactUpload from './artifactupload';
 import ArtifactInformationForm from './artifactinformationform';
+import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { unionizeStrings } from '../../../helpers';
-import { advanceOnboarding } from '../../../utils/onboardingmanager';
 
 const steps = [
   { title: 'File Upload', component: ArtifactUpload },
@@ -17,7 +17,7 @@ export class AddArtifactDialog extends React.Component {
     this.state = {
       activeStep: 0,
       customDeviceTypes: '',
-      destination: !props.onboardingComplete ? '/var/www/localhost/htdocs' : '',
+      destination: !props.onboardingState.complete ? '/var/www/localhost/htdocs' : '',
       file: null,
       selectedDeviceTypes: []
     };
@@ -34,8 +34,8 @@ export class AddArtifactDialog extends React.Component {
     if (file && file.name.endsWith('.mender')) {
       return this.props.onUpload(meta, file);
     }
-    if (!this.props.onboardingComplete) {
-      advanceOnboarding('upload-new-artifact-dialog-device-type');
+    if (!this.props.onboardingState.complete && this.props.releases.length) {
+      this.props.advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE);
     }
     const otherDeviceTypes = customDeviceTypes.split(',');
     const deviceTypes = unionizeStrings(selectedDeviceTypes, otherDeviceTypes);
@@ -45,7 +45,7 @@ export class AddArtifactDialog extends React.Component {
 
   render() {
     const self = this;
-    const { deviceTypes = [], onboardingComplete, onCancel, open, setSnackbar } = self.props;
+    const { advanceOnboarding, deviceTypes = [], onboardingState, onCancel, open, releases, setSnackbar } = self.props;
     const { activeStep, destination, file } = self.state;
     const ComponentToShow = steps[activeStep].component;
     const fileSelected = file && (destination.length > 0 || file.name.endsWith('.mender'));
@@ -55,10 +55,12 @@ export class AddArtifactDialog extends React.Component {
         <DialogTitle>Upload an Artifact</DialogTitle>
         <DialogContent className="dialog-content margin-top margin-left margin-right margin-bottom">
           <ComponentToShow
+            advanceOnboarding={advanceOnboarding}
             deviceTypes={deviceTypes}
+            onboardingState={onboardingState}
+            releases={releases}
             setSnackbar={setSnackbar}
             updateCreation={(...args) => self.setState(...args)}
-            onboardingComplete={onboardingComplete}
             {...self.state}
           />
         </DialogContent>

@@ -1,13 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 
 import { Refresh as RefreshIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, selectDeployment } from '../../actions/deploymentActions';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import { tryMapDeployments } from '../../helpers';
-import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
+import { getOnboardingState } from '../../selectors';
+import theme from '../../themes/mender-theme';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
@@ -59,7 +61,7 @@ export class Progress extends React.Component {
       self.refreshDeployments(self.state.progressPage, self.state.progressPerPage, 'inprogress'),
       self.refreshDeployments(self.state.pendingPage, self.state.pendingPerPage, 'pending')
     ];
-    if (!self.props.onboardingComplete && !self.props.pastDeploymentsCount) {
+    if (!self.props.onboardingState.complete && !self.props.pastDeploymentsCount) {
       tasks.push(self.refreshDeployments(1, 1, 'finished'));
     }
     return Promise.all(tasks).then(() => {
@@ -106,18 +108,13 @@ export class Progress extends React.Component {
   render() {
     const self = this;
 
-    const { createClick, pastDeploymentsCount, pending, pendingCount, progress, progressCount } = self.props;
+    const { createClick, onboardingState, pending, pendingCount, progress, progressCount } = self.props;
     const { doneLoading, pendingPage, pendingPerPage, progressPage, progressPerPage } = self.state;
 
     let onboardingComponent = null;
-    if (!self.props.onboardingComplete) {
-      if (this.inprogressRef) {
-        const anchor = { left: this.inprogressRef.offsetWidth, top: this.inprogressRef.offsetTop + this.inprogressRef.offsetHeight };
-        onboardingComponent = getOnboardingComponentFor('deployments-inprogress', { anchor });
-      }
-      if (pastDeploymentsCount && getOnboardingStepCompleted('scheduling-release-to-devices') && !getOnboardingStepCompleted('upload-new-artifact-tip')) {
-        return <Redirect to="/deployments/finished" />;
-      }
+    if (!self.props.onboardingState.complete && this.inprogressRef) {
+      const anchor = { left: this.inprogressRef.offsetWidth - theme.spacing(12), top: this.inprogressRef.offsetTop + this.inprogressRef.offsetHeight };
+      onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_INPROGRESS, onboardingState, { anchor });
     }
 
     return doneLoading ? (
@@ -165,7 +162,7 @@ export class Progress extends React.Component {
           </div>
         )}
         {!(progressCount || progress.length || pendingCount || pending.length) && (
-          <div className={progress.length || !doneLoading ? 'hidden' : 'dashboard-placeholder'}>
+          <div className="dashboard-placeholder">
             <p>Pending and ongoing deployments will appear here. </p>
             <p>
               <a onClick={createClick}>Create a deployment</a> to get started
@@ -186,7 +183,7 @@ const mapStateToProps = state => {
   const progress = state.deployments.byStatus.inprogress.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   const pending = state.deployments.byStatus.pending.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   return {
-    onboardingComplete: state.users.onboarding.complete,
+    onboardingState: getOnboardingState(state),
     pastDeploymentsCount: state.deployments.byStatus.finished.deploymentIds.length || state.deployments.byStatus.finished.total,
     pending,
     pendingCount: state.deployments.byStatus.pending.total,

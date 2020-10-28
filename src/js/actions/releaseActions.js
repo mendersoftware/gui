@@ -2,8 +2,8 @@ import axios from 'axios';
 
 import GeneralApi from '../api/general-api';
 import { setSnackbar } from '../actions/appActions';
-import * as ReleaseConstants from '../constants/releaseConstants';
-import * as UserConstants from '../constants/userConstants';
+import ReleaseConstants from '../constants/releaseConstants';
+import OnboardingConstants from '../constants/onboardingConstants';
 
 import { customSort, preformatWithRequestID } from '../helpers';
 
@@ -190,7 +190,7 @@ export const getReleases = () => dispatch =>
       }, {});
       return Promise.all([
         dispatch({ type: ReleaseConstants.RECEIVE_RELEASES, releases: flatReleases }),
-        dispatch({ type: UserConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: !!releases.length })
+        dispatch({ type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: !!releases.length })
       ]);
     })
     .catch(err => {

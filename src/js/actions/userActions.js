@@ -3,9 +3,9 @@ import Cookies from 'universal-cookie';
 import { setSnackbar } from './appActions';
 import GeneralApi from '../api/general-api';
 import UsersApi from '../api/users-api';
-import * as UserConstants from '../constants/userConstants';
+import OnboardingConstants from '../constants/onboardingConstants';
+import UserConstants from '../constants/userConstants';
 import { getUserSettings } from '../selectors';
-import { advanceOnboarding } from '../utils/onboardingmanager';
 import { getToken, logout } from '../auth';
 import { preformatWithRequestID, decodeSessionToken } from '../helpers';
 
@@ -49,6 +49,7 @@ export const loginUser = userData => (dispatch, getState) =>
       cookies.set('JWT', token, options);
 
       const userId = decodeSessionToken(token);
+      window.sessionStorage.removeItem('pendings-redirect');
       window.location.replace('#/');
       return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), dispatch(getUser(userId))]);
     })
@@ -63,11 +64,11 @@ export const logoutUser = reason => (dispatch, getState) => {
     return Promise.reject();
   }
   return GeneralApi.post(`${useradmApiUrl}/auth/logout`).finally(() => {
-    logout();
     let tasks = [dispatch({ type: UserConstants.USER_LOGOUT })];
     if (reason) {
       tasks.push(dispatch(setSnackbar(reason)));
     }
+    logout();
     return Promise.all(tasks);
   });
 };
@@ -124,7 +125,7 @@ export const getUserList = () => dispatch =>
     });
 
 export const getUser = id => dispatch =>
-  GeneralApi.get(`${useradmApiUrl}/users/${id}`).then(({ data: user }) => Promise.resolve(dispatch({ type: UserConstants.RECEIVED_USER, user })));
+  GeneralApi.get(`${useradmApiUrl}/users/${id}`).then(({ data: user }) => Promise.all([dispatch({ type: UserConstants.RECEIVED_USER, user }), user]));
 
 const actions = {
   create: {
@@ -170,8 +171,6 @@ export const editUser = (userId, userData) => dispatch =>
   GeneralApi.put(`${useradmApiUrl}/users/${userId}`, userData)
     .then(() => Promise.all([dispatch({ type: UserConstants.UPDATED_USER, userId, user: userData }), dispatch(setSnackbar(actions.edit.successMessage))]))
     .catch(err => userActionErrorHandler(err, 'edit', dispatch));
-
-export const setCurrentUser = user => dispatch => dispatch({ type: UserConstants.SET_CURRENT_USER, user });
 
 export const getRoles = () => (dispatch, getState) =>
   GeneralApi.get(`${useradmApiUrl}/roles`).then(({ data: roles }) => {
@@ -257,9 +256,15 @@ export const removeRole = roleId => dispatch =>
   Global settings
 */
 export const getGlobalSettings = () => dispatch =>
-  GeneralApi.get(`${useradmApiUrl}/settings`).then(({ data: settings }) => dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings }));
+  GeneralApi.get(`${useradmApiUrl}/settings`).then(({ data: settings }) => {
+    window.sessionStorage.setItem('settings-initialized', true);
+    return Promise.resolve(dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings }));
+  });
 
 export const saveGlobalSettings = (settings, beOptimistic = false, notify = false) => (dispatch, getState) => {
+  if (!window.sessionStorage.getItem('settings-initialized')) {
+    return;
+  }
   const updatedSettings = { ...getState().users.globalSettings, ...settings };
   let tasks = [dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: updatedSettings })];
   return GeneralApi.post(`${useradmApiUrl}/settings`, updatedSettings)
@@ -286,6 +291,9 @@ export const saveGlobalSettings = (settings, beOptimistic = false, notify = fals
 };
 
 export const saveUserSettings = settings => (dispatch, getState) => {
+  if (!getState().users.currentUser) {
+    return Promise.resolve();
+  }
   const userSettings = getUserSettings(getState());
   const updatedSettings = {
     [getState().users.currentUser]: {
@@ -303,7 +311,7 @@ export const get2FAQRCode = () => dispatch =>
   Onboarding
 */
 export const setShowHelptips = show => dispatch =>
-  Promise.all([dispatch({ type: UserConstants.SET_SHOW_HELP, show }), dispatch({ type: UserConstants.SET_SHOW_ONBOARDING_HELP, show })]);
+  Promise.all([dispatch({ type: UserConstants.SET_SHOW_HELP, show }), dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show })]);
 
 export const toggleHelptips = () => (dispatch, getState) => {
   const state = getState();
@@ -319,53 +327,4 @@ export const toggleHelptips = () => (dispatch, getState) => {
   }
 };
 
-export const setShowOnboardingHelp = show => dispatch => dispatch({ type: UserConstants.SET_SHOW_ONBOARDING_HELP, show });
-
-export const setOnboardingProgress = value => dispatch => dispatch({ type: UserConstants.SET_ONBOARDING_PROGRESS, value });
-
-export const setOnboardingDeviceType = value => dispatch => dispatch({ type: UserConstants.SET_ONBOARDING_DEVICE_TYPE, value });
-
-export const setOnboardingApproach = value => dispatch => dispatch({ type: UserConstants.SET_ONBOARDING_APPROACH, value });
-
-export const setOnboardingArtifactIncluded = value => dispatch => dispatch({ type: UserConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value });
-
-export const setShowDismissOnboardingTipsDialog = show => dispatch => dispatch({ type: UserConstants.SET_SHOW_ONBOARDING_HELP_DIALOG, show });
-
-export const setOnboardingComplete = val => dispatch => {
-  if (val) {
-    advanceOnboarding('onboarding-finished');
-  }
-  return Promise.all([
-    dispatch({ type: UserConstants.SET_ONBOARDING_COMPLETE, complete: val }),
-    dispatch({ type: UserConstants.SET_SHOW_ONBOARDING_HELP, show: !val })
-  ]);
-};
-
-export const setOnboardingCanceled = () => dispatch =>
-  Promise.all([
-    dispatch(setShowOnboardingHelp(false)),
-    dispatch(setShowDismissOnboardingTipsDialog(false)),
-    dispatch({ type: UserConstants.SET_ONBOARDING_COMPLETE, complete: true })
-  ]).then(() => Promise.resolve(advanceOnboarding('onboarding-canceled')));
-
 export const setShowConnectingDialog = show => dispatch => dispatch({ type: UserConstants.SET_SHOW_CONNECT_DEVICE, show });
-
-export const setShowCreateArtifactDialog = show => dispatch => dispatch({ type: UserConstants.SET_SHOW_CREATE_ARTIFACT, show });
-
-export const setConnectingDialogProgressed = val => dispatch => {
-  if (val) {
-    advanceOnboarding('devices-accepted-onboarding');
-  }
-  return dispatch({ type: UserConstants.SET_CONNECT_DEVICE_PROGRESSED, progressed: val });
-};
-
-export const setOnboardingState = state => dispatch =>
-  Promise.all([
-    dispatch(setOnboardingComplete(state.complete)),
-    dispatch(setOnboardingDeviceType(state.deviceType)),
-    dispatch(setOnboardingApproach(state.approach)),
-    dispatch(setOnboardingArtifactIncluded(state.artifactIncluded)),
-    dispatch(setShowOnboardingHelp(state.showTips)),
-    dispatch(setOnboardingProgress(state.progress)),
-    dispatch(setShowCreateArtifactDialog(state.showArtifactCreation))
-  ]);

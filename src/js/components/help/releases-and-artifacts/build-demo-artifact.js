@@ -13,7 +13,7 @@ const downloadFolder = {
 
 export default class BuildDemoArtifact extends React.PureComponent {
   render() {
-    const { menderVersion = 'master', menderArtifactVersion = 'master' } = this.props;
+    const { demoArtifactLink, menderVersion = 'master', menderArtifactVersion = 'master' } = this.props;
     var executable = `
 sudo chmod +x mender-artifact && \\
 sudo mv mender-artifact /usr/local/bin`;
@@ -71,7 +71,7 @@ EOF
         </p>
         <CopyCode code={file_install} />
         <p>
-          3. And <a href="https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender">download the demo application</a>.
+          3. And <a href={demoArtifactLink}>download the demo application</a>.
         </p>
 
         <h3>Edit the contents</h3>

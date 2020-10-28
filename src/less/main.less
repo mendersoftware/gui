@@ -384,6 +384,10 @@ ul.link-list {
   max-height: 56px;
   min-width: 164px;
   overflow: hidden;
+}
+
+#demoBox,
+#announcement {
   svg {
     color: @linkgreen !important;
     &.red {
@@ -886,12 +890,6 @@ ul.link-list {
 
   hr {
     margin-bottom: @defaultGutterWidth;
-  }
-
-  .hidehelp {
-    float: right;
-    margin-top: @defaultGutterWidth;
-    margin-bottom: 5px;
   }
 
   &.place-bottom:after {
@@ -1415,15 +1413,11 @@ div:focus {
 }
 
 /* stripe elements */
-
 #poweredByStripe {
-  display: block;
-  background-image: url(../assets/img/powered_by_stripe.png);
-  height: 30px;
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  min-height: 2* @defaultGutterWidth;
   width: 100%;
-  background-position-x: right;
-  background-repeat: no-repeat;
-  float: right;
   margin-top: 10px;
 }
 
@@ -1431,8 +1425,6 @@ div:focus {
   border-bottom: 1px solid rgba(0,0,0,.26);
   padding-bottom: 10px;
 }
-
-
 
 /* icons */
 

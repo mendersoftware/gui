@@ -9,11 +9,12 @@ import Review from './deployment-wizard/review';
 
 import { selectDevice } from '../../actions/deviceActions';
 import { selectRelease } from '../../actions/releaseActions';
+import { advanceOnboarding } from '../../actions/onboardingActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getIsEnterprise } from '../../selectors';
 import { getRemainderPercent } from '../../helpers';
-import { advanceOnboarding } from '../../utils/onboardingmanager';
 
 export const allDevices = 'All devices';
 
@@ -80,7 +81,7 @@ export class CreateDialog extends React.Component {
       this.props.saveGlobalSettings({ retries: settings.retries });
     }
     if (!this.props.isOnboardingComplete) {
-      advanceOnboarding('scheduling-release-to-devices');
+      this.props.advanceOnboarding(onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES);
     }
     this.setState({ activeStep: 0, deploymentDeviceIds: [], deploymentDeviceCount: 0, group: null, phases: null, disableSchedule: false });
     this.cleanUpDeploymentsStatus();
@@ -170,7 +171,7 @@ export class CreateDialog extends React.Component {
   }
 }
 
-const actionCreators = { saveGlobalSettings, selectDevice, selectRelease };
+const actionCreators = { advanceOnboarding, saveGlobalSettings, selectDevice, selectRelease };
 
 const mapStateToProps = state => {
   const { plan = 'os' } = state.organization.organization;
@@ -182,7 +183,7 @@ const mapStateToProps = state => {
     device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
     groups,
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
-    isOnboardingComplete: state.users.onboarding.complete,
+    isOnboardingComplete: state.onboarding.complete,
     plan,
     release: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null,
     retries: state.users.globalSettings.retries
