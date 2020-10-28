@@ -48,7 +48,7 @@ exports[`GlobalSettings Component renders correctly 1`] = `
     className="MuiFormControl-root"
   >
     <label
-      className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
+      className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
       data-shrink={true}
       id="device-id"
     >
@@ -68,13 +68,7 @@ exports[`GlobalSettings Component renders correctly 1`] = `
         role="button"
         tabIndex={0}
       >
-        <span
-          dangerouslySetInnerHTML={
-            Object {
-              "__html": "&#8203;",
-            }
-          }
-        />
+        Device ID
       </div>
       <input
         aria-hidden={true}
@@ -83,7 +77,7 @@ exports[`GlobalSettings Component renders correctly 1`] = `
         onChange={[Function]}
         required={false}
         tabIndex={-1}
-        value=""
+        value="Device ID"
       />
       <svg
         aria-hidden={true}
@@ -96,8 +90,8 @@ exports[`GlobalSettings Component renders correctly 1`] = `
         />
       </svg>
     </div>
-    <p
-      className="MuiFormHelperText-root info"
+    <div
+      className="MuiFormHelperText-root info MuiFormHelperText-filled"
     >
       <div
         className="margin-top-small margin-bottom-small"
@@ -116,7 +110,7 @@ exports[`GlobalSettings Component renders correctly 1`] = `
          
         to your devices.
       </div>
-    </p>
+    </div>
   </div>
   <div
     className="margin-top-large float-right"

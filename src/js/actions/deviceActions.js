@@ -3,7 +3,7 @@ import pluralize from 'pluralize';
 import { setSnackbar } from '../actions/appActions';
 import GeneralApi, { headerNames } from '../api/general-api';
 import * as DeviceConstants from '../constants/deviceConstants';
-import { deriveAttributesFromDevices, duplicateFilter, getSnackbarMessage, mapDeviceAttributes, preformatWithRequestID } from '../helpers';
+import { getSnackbarMessage, mapDeviceAttributes, preformatWithRequestID } from '../helpers';
 
 // default per page until pagination and counting integrated
 const defaultPerPage = 20;
@@ -373,16 +373,6 @@ export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
   return getAllDevices();
 };
 
-export const setFilterAttributes = attrs => (dispatch, getState) => {
-  const storedFilteringAttributes = getState().devices.filteringAttributes;
-  const identityAttributes = [...storedFilteringAttributes.identityAttributes, ...attrs.identityAttributes].filter(duplicateFilter);
-  const inventoryAttributes = [...storedFilteringAttributes.inventoryAttributes, ...attrs.inventoryAttributes].filter(duplicateFilter);
-  return dispatch({
-    type: DeviceConstants.SET_FILTER_ATTRIBUTES,
-    attributes: { identityAttributes, inventoryAttributes }
-  });
-};
-
 export const setDeviceFilters = filters => dispatch =>
   dispatch({
     type: DeviceConstants.SET_DEVICE_FILTERS,
@@ -498,9 +488,6 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
           devicesById: deviceAccu.devicesById
         })
       ];
-      if (response.data.length < 200) {
-        tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(Object.values(deviceAccu.devicesById)))));
-      }
       // for each device, get device identity info
       tasks.push(dispatch(getDevicesWithAuth(Object.values(deviceAccu.devicesById))));
       if (shouldSelectDevices) {
@@ -548,6 +535,24 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
     });
   return getAllDevices();
 };
+
+export const getDeviceAttributes = () => dispatch =>
+  GeneralApi.get(`${inventoryApiUrlV2}/filters/attributes`).then(({ data = [] }) => {
+    const { inventory: inventoryAttributes, identity: identityAttributes } = data.reduce(
+      (accu, item) => {
+        if (!accu[item.scope]) {
+          accu[item.scope] = [];
+        }
+        accu[item.scope].push(item.name);
+        return accu;
+      },
+      { inventory: [], identity: [] }
+    );
+    return dispatch({
+      type: DeviceConstants.SET_FILTER_ATTRIBUTES,
+      attributes: { identityAttributes, inventoryAttributes }
+    });
+  });
 
 export const getDeviceAuth = id => dispatch => Promise.resolve(dispatch(getDevicesWithAuth([{ id }]))).then(results => Promise.resolve(results[1]));
 

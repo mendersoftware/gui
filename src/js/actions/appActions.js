@@ -5,7 +5,7 @@ import { DEVICE_STATES } from '../constants/deviceConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import { getUserSettings } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
-import { getDevicesByStatus, getDeviceLimit, getDynamicGroups, getGroups } from './deviceActions';
+import { getDeviceAttributes, getDevicesByStatus, getDeviceLimit, getDynamicGroups, getGroups } from './deviceActions';
 import { getDeploymentsByStatus } from './deploymentActions';
 import { getReleases } from './releaseActions';
 import { saveUserSettings, getGlobalSettings, getRoles } from './userActions';
@@ -15,17 +15,18 @@ const cookies = new Cookies();
 
 export const initializeAppData = () => (dispatch, getState) => {
   let tasks = [
+    dispatch(getGlobalSettings()),
+    dispatch(getDeviceAttributes()),
     dispatch(getDeploymentsByStatus('finished', undefined, undefined, undefined, undefined, undefined, false)),
     dispatch(getDeploymentsByStatus('inprogress')),
     dispatch(getDevicesByStatus(DEVICE_STATES.accepted)),
     dispatch(getDevicesByStatus(DEVICE_STATES.pending)),
     dispatch(getDevicesByStatus(DEVICE_STATES.preauth)),
     dispatch(getDevicesByStatus(DEVICE_STATES.rejected)),
-    dispatch(getDeviceLimit()),
     dispatch(getDynamicGroups()),
-    dispatch(getGlobalSettings()),
     dispatch(getGroups()),
     dispatch(getReleases()),
+    dispatch(getDeviceLimit()),
     dispatch(getRoles())
   ];
   const multitenancy = getState().app.features.hasMultitenancy || getState().app.features.isEnterprise || getState().app.features.isHosted;

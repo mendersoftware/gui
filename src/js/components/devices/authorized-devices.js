@@ -26,7 +26,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { filtersCompare, isEmpty } from '../../helpers';
-import { getOnboardingState } from '../../selectors';
+import { getIdAttribute, getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
@@ -430,7 +430,7 @@ const mapStateToProps = state => {
     groupCount,
     groupDevices,
     groupFilters,
-    idAttribute: state.users.globalSettings.id_attribute,
+    idAttribute: getIdAttribute(state),
     onboardingState: getOnboardingState(state),
     selectedGroup,
     showHelptips: state.users.showHelptips

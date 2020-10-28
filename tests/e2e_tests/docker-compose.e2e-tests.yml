@@ -54,3 +54,4 @@ services:
     image: mendersoftware/gui:pr
     environment:
       - GATEWAY_IP=docker.mender.io
+      - DISABLE_ONBOARDING=true
