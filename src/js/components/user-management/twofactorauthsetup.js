@@ -7,7 +7,7 @@ import { CheckCircle as CheckCircleIcon } from '@material-ui/icons';
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 
-import { loginUser, saveGlobalSettings, verify2FA } from '../../actions/userActions';
+import { saveGlobalSettings, verify2FA } from '../../actions/userActions';
 
 import Loader from '../common/loader';
 
@@ -127,7 +127,7 @@ export class TwoFactorAuthSetup extends React.Component {
   }
 }
 
-const actionCreators = { loginUser, saveGlobalSettings, verify2FA };
+const actionCreators = { saveGlobalSettings, verify2FA };
 
 const mapStateToProps = state => {
   return {

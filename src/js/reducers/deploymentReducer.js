@@ -88,7 +88,7 @@ const deploymentReducer = (state = initialState, action) => {
           [action.status]: {
             ...state.byStatus[action.status],
             deploymentIds: action.deploymentIds,
-            total: action.total ? action.total : state.byStatus[action.status].total
+            total: action.total
           }
         }
       };

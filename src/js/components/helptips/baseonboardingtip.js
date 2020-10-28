@@ -10,7 +10,7 @@ import {
   ArrowBack as ArrowBackIcon
 } from '@material-ui/icons';
 
-import { setShowDismissOnboardingTipsDialog } from '../../actions/userActions';
+import { setShowDismissOnboardingTipsDialog } from '../../actions/onboardingActions';
 
 import Tracking from '../../tracking';
 

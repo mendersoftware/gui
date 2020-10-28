@@ -4,8 +4,10 @@ import { Link } from 'react-router-dom';
 import { FormControl, Input, InputLabel, TextField, Tooltip } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { InfoOutlined as InfoIcon } from '@material-ui/icons';
+
+import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { duplicateFilter, unionizeStrings } from '../../../helpers';
-import { advanceOnboarding, getOnboardingComponentFor, getOnboardingStepCompleted } from '../../../utils/onboardingmanager';
+import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 
 const ReleaseTooltip = () => (
   <div style={{ fontSize: 12 }}>
@@ -43,18 +45,18 @@ export class ArtifactInformation extends React.Component {
   onRefSet(refTarget, ref) {
     if ((!this[refTarget] && ref) || (this[refTarget] && ref && this[refTarget].className !== ref.className)) {
       this[refTarget] = ref;
-      this.setState({});
+      this.forceUpdate();
     }
   }
 
   render() {
     const self = this;
-    const { customDeviceTypes, deviceTypes, name, onboardingComplete, selectedDeviceTypes = [], updateCreation } = self.props;
+    const { advanceOnboarding, customDeviceTypes, deviceTypes, name, onboardingState, selectedDeviceTypes = [], updateCreation } = self.props;
 
     let onboardingComponent = null;
-    if (!onboardingComplete && self.deviceTypeRef && self.releaseNameRef) {
-      if ((selectedDeviceTypes.length || customDeviceTypes.length > 3) && !getOnboardingStepCompleted('upload-new-artifact-dialog-device-type')) {
-        advanceOnboarding('upload-new-artifact-dialog-device-type');
+    if (!onboardingState.complete && self.deviceTypeRef && self.releaseNameRef) {
+      if (selectedDeviceTypes.length || customDeviceTypes.length > 3) {
+        advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE);
       }
       const deviceTypeAnchor = {
         left: self.deviceTypeRef.offsetLeft + self.deviceTypeRef.clientWidth,
@@ -64,9 +66,13 @@ export class ArtifactInformation extends React.Component {
         left: self.releaseNameRef.parentElement.parentElement.offsetLeft + self.releaseNameRef.clientWidth,
         top: self.releaseNameRef.parentElement.parentElement.offsetTop + self.releaseNameRef.clientHeight / 2
       };
-      onboardingComponent = getOnboardingComponentFor('upload-new-artifact-dialog-device-type', { anchor: deviceTypeAnchor, place: 'right' });
+      onboardingComponent = getOnboardingComponentFor(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE, onboardingState, {
+        anchor: deviceTypeAnchor,
+        place: 'right'
+      });
       onboardingComponent = getOnboardingComponentFor(
-        'upload-new-artifact-dialog-release-name',
+        onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_RELEASE_NAME,
+        onboardingState,
         { anchor: releaseNameAnchor, place: 'right' },
         onboardingComponent
       );

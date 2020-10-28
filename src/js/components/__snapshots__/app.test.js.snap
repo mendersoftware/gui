@@ -407,156 +407,32 @@ Array [
     className="rightFluid container"
   >
     <div
-      className="dashboard"
-    >
-      <div>
-        <h4
-          className="dashboard-header"
-        >
-          <span>
-            Devices
-          </span>
-        </h4>
-        <div
-          style={
-            Object {
-              "display": "flex",
-              "flexDirection": "row",
-              "flexWrap": "wrap",
-              "marginBottom": 30,
-              "maxWidth": "85vw",
-            }
-          }
-        >
-          <div
-            className="notActive widget "
-            onClick={[Function]}
-          >
-            <div
-              style={
-                Object {
-                  "display": "flex",
-                  "flexDirection": "column",
-                  "height": "100%",
-                  "width": "100%",
-                }
-              }
-            >
-              <div
-                className="widgetMainContent align-right"
-                style={
-                  Object {
-                    "alignItems": "flex-end",
-                    "display": "flex",
-                    "flexDirection": "column",
-                  }
-                }
-              >
-                <div
-                  className="header"
-                >
-                  Accepted devices
-                </div>
-                <div
-                  className="counter"
-                >
-                  0
-                </div>
-              </div>
-              <span
-                className="link"
-              />
-            </div>
-          </div>
-          <div
-            className="onboard widget"
-            onClick={[Function]}
-          >
-            <div>
-              <p
-                className=""
-              >
-                Learn how to connect a device
-              </p>
-            </div>
-            <a
-              aria-disabled={false}
-              className="MuiButtonBase-root MuiButton-root MuiButton-text"
-              href="/devices"
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              role="button"
-              tabIndex={0}
-            >
-              <span
-                className="MuiButton-label"
-              >
-                Connect a device
-              </span>
-              <span
-                className="MuiTouchRipple-root"
-              />
-            </a>
-          </div>
-        </div>
-      </div>
-      <div
-        className="two-columns"
-        style={
-          Object {
-            "gridTemplateColumns": "4fr 5fr",
-          }
+      className="flexbox centered"
+      style={
+        Object {
+          "height": "75%",
         }
+      }
+    >
+      <div
+        className="loaderContainer"
       >
-        <div>
-          <h4
-            className="dashboard-header"
-          >
-            <span>
-              Deployments
-            </span>
-          </h4>
-          <div
-            className="deployments"
-            style={
-              Object {
-                "marginBottom": 50,
-              }
-            }
-          >
-            <div
-              className="loaderContainer"
-            >
-              <div
-                className="loader"
-              >
-                <span
-                  className="dot dot_1"
-                />
-                <span
-                  className="dot dot_2"
-                />
-                <span
-                  className="dot dot_3"
-                />
-                <span
-                  className="dot dot_4"
-                />
-              </div>
-            </div>
-          </div>
+        <div
+          className="loader"
+        >
+          <span
+            className="dot dot_1"
+          />
+          <span
+            className="dot dot_2"
+          />
+          <span
+            className="dot dot_3"
+          />
+          <span
+            className="dot dot_4"
+          />
         </div>
-        <div />
       </div>
     </div>
   </div>,

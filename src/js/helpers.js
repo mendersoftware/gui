@@ -3,7 +3,6 @@ import jwtDecode from 'jwt-decode';
 import md5 from 'md5';
 import pluralize from 'pluralize';
 
-import store from './reducers';
 import { DEVICE_FILTERING_OPTIONS } from './constants/deviceConstants';
 
 export function isEncoded(uri) {
@@ -377,7 +376,7 @@ export const collectAddressesFrom = devices =>
     return collector;
   }, []);
 
-export const getDemoDeviceAddress = devices => {
+export const getDemoDeviceAddress = (devices, onboardingApproach, port) => {
   let targetUrl = '';
   const defaultVitualizedIp = '10.0.2.15';
   const addresses = collectAddressesFrom(devices);
@@ -387,14 +386,11 @@ export const getDemoDeviceAddress = devices => {
     }
     return item;
   }, null);
-  const onboarding = store.getState().users.onboarding;
-  const onboardingApproach = onboarding.approach;
-  const port = onboarding.demoArtifactPort;
   targetUrl = `http://${address}:${port}`;
   if (!address || (onboardingApproach === 'virtual' && (navigator.appVersion.indexOf('Win') != -1 || navigator.appVersion.indexOf('Mac') != -1))) {
     targetUrl = `http://localhost:${port}`;
   }
-  return Promise.resolve(targetUrl);
+  return targetUrl;
 };
 
 export const detectOsIdentifier = () => {

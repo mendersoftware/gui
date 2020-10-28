@@ -24,13 +24,14 @@ import { mdiTrashCanOutline as TrashCan } from '@mdi/js';
 import { getDevicesByStatus, getGroupDevices, selectDevices, setDeviceFilters, trySelectDevice, updateDevicesAuth } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import { filtersCompare, isEmpty } from '../../helpers';
+import { getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
 import RelativeTime from '../common/relative-time';
 import { ExpandDevice } from '../helptips/helptooltips';
-import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import DeviceList from './devicelist';
 import DeviceStatus from './device-status';
 import { refreshLength as refreshDeviceLength } from './devices';
@@ -90,13 +91,17 @@ export class Authorized extends React.Component {
       prevProps.groupCount !== self.props.groupCount ||
       filtersCompare(prevProps.filters, self.props.filters)
     ) {
+      const { acceptedCount, onboardingState, selectedGroup, setSnackbar } = self.props;
       var newState = { selectedRows: [], expandRow: null, allRowsSelected: false };
-      if (prevProps.selectedGroup != self.props.selectedGroup) {
+      if (prevProps.selectedGroup != selectedGroup) {
         newState = { pageNo: 1, showFilters: false, ...newState };
       }
       self.setState(newState);
-      if (self.props.showHelptips && self.props.showTips && !self.props.onboardingComplete && self.props.acceptedCount && self.props.acceptedCount < 2) {
-        setTimeout(() => self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, true), 400);
+      if (acceptedCount && acceptedCount < 2) {
+        setTimeout(() => {
+          const notification = getOnboardingComponentFor(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION, onboardingState);
+          !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
+        }, 400);
       }
       clearInterval(self.deviceTimer);
       self.deviceTimer = setInterval(() => self._getDevices(), refreshDeviceLength);
@@ -197,6 +202,7 @@ export class Authorized extends React.Component {
       groupFilters,
       highlightHelp,
       idAttribute,
+      onboardingState,
       onGroupClick,
       onGroupRemoval,
       openSettingsDialog,
@@ -267,8 +273,8 @@ export class Authorized extends React.Component {
     }
 
     const anchor = { left: 200, top: 146 };
-    let onboardingComponent = getOnboardingComponentFor('devices-accepted-onboarding', { anchor });
-    onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor }, onboardingComponent);
+    let onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING, onboardingState, { anchor });
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor }, onboardingComponent);
 
     const isUngroupedGroup = selectedGroup && selectedGroup === UNGROUPED_GROUP.id;
     return (
@@ -425,10 +431,9 @@ const mapStateToProps = state => {
     groupDevices,
     groupFilters,
     idAttribute: state.users.globalSettings.id_attribute,
-    onboardingComplete: state.users.onboarding.complete,
+    onboardingState: getOnboardingState(state),
     selectedGroup,
-    showHelptips: state.users.showHelptips,
-    showTips: state.users.onboarding.showTips
+    showHelptips: state.users.showHelptips
   };
 };
 
