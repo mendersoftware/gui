@@ -9,7 +9,7 @@ import { confirmCardUpdate, getCurrentCard, startCardUpdate } from '../../action
 import OrganizationSettingsItem from './organizationsettingsitem';
 import CardSection from './cardsection';
 
-export const OrganizationPaymentSettings = ({ card, confirmCardUpdate, hasUnpaid, setSnackbar, startCardUpdate }) => {
+export const OrganizationPaymentSettings = ({ card, confirmCardUpdate, getCurrentCard, hasUnpaid, setSnackbar, startCardUpdate }) => {
   const [isUpdatingPaymentDetails, setIsUpdatingPaymentDetails] = useState(false);
 
   useEffect(() => {
