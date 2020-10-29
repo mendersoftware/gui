@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { setOnboardingApproach } from '../../../actions/onboardingActions';
+import { getDemoDeviceCreationCommand } from '../../../helpers';
 import CopyCode from '../copy-code';
 
 export class VirtualDeviceOnboarding extends React.PureComponent {
@@ -14,11 +15,7 @@ export class VirtualDeviceOnboarding extends React.PureComponent {
     const self = this;
     const { isHosted, token } = self.props;
 
-    let codeToCopy = token
-      ? `
-      TENANT_TOKEN='${token}'\ndocker run -it -e SERVER_URL='https://hosted.mender.io' \\\n-e TENANT_TOKEN=$TENANT_TOKEN mendersoftware/mender-client-qemu:latest
-    `
-      : './demo --client up';
+    const codeToCopy = getDemoDeviceCreationCommand(token);
 
     return (
       <div>
