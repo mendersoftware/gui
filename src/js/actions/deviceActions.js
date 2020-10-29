@@ -545,8 +545,8 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
 };
 
 export const getDeviceAttributes = () => dispatch =>
-  GeneralApi.get(`${inventoryApiUrlV2}/filters/attributes`).then(({ data = [] }) => {
-    const { inventory: inventoryAttributes, identity: identityAttributes } = data.reduce(
+  GeneralApi.get(`${inventoryApiUrlV2}/filters/attributes`).then(({ data }) => {
+    const { inventory: inventoryAttributes, identity: identityAttributes } = (data || []).reduce(
       (accu, item) => {
         if (!accu[item.scope]) {
           accu[item.scope] = [];
