@@ -1,6 +1,5 @@
 import OnboardingConstants from '../constants/onboardingConstants';
 import { stringToBoolean } from '../helpers';
-import { onboardingSteps } from '../utils/onboardingmanager';
 
 export const initialState = {
   approach: null,
@@ -11,7 +10,7 @@ export const initialState = {
     !!JSON.parse(window.localStorage.getItem('onboardingComplete')),
   deviceType: null,
   demoArtifactPort: mender_environment && mender_environment.demoArtifactPort ? mender_environment.demoArtifactPort : 85,
-  progress: Object.keys(onboardingSteps)[0],
+  progress: OnboardingConstants.onboardingSteps.ONBOARDING_START,
   showCreateArtifactDialog: false,
   showTips: null,
   showTipsDialog: false
