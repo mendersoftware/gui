@@ -4,6 +4,7 @@ import md5 from 'md5';
 import pluralize from 'pluralize';
 
 import { DEVICE_FILTERING_OPTIONS } from './constants/deviceConstants';
+import { initialState as onboardingReducerState } from './reducers/onboardingReducer';
 
 export function isEncoded(uri) {
   uri = uri || '';
@@ -477,3 +478,10 @@ export const getSnackbarMessage = (skipped, done) => {
   const doneText = done ? `${done} ${pluralize('device', done)} ${pluralize('was', done)} updated successfully. ` : '';
   return `${doneText}${skipText}`;
 };
+
+export const getDemoDeviceCreationCommand = token =>
+  token
+    ? `TENANT_TOKEN='${token}'\ndocker run -it -p ${onboardingReducerState.demoArtifactPort}:${
+        onboardingReducerState.demoArtifactPort
+      } -e SERVER_URL='https://${window.location.hostname || 'hosted.mender.io'}' \\\n-e TENANT_TOKEN=$TENANT_TOKEN mendersoftware/mender-client-qemu:latest`
+    : './demo --client up';
