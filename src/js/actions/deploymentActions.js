@@ -192,7 +192,9 @@ export const abortDeployment = deploymentId => (dispatch, getState) =>
     .catch(err => {
       console.log(err);
       return Promise.all([
-        dispatch(setSnackbar(preformatWithRequestID(err.response, `There was wan error while aborting the deployment: ${err.response.data.error || ''}`))),
+        dispatch(
+          setSnackbar(preformatWithRequestID(err.response, `There was wan error while aborting the deployment: ${err.response.data.error?.message || ''}`))
+        ),
         Promise.reject(err)
       ]);
     });

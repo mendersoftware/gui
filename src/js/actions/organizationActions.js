@@ -79,11 +79,15 @@ export const getCurrentCard = () => dispatch =>
   });
 
 export const startUpgrade = tenantId => dispatch =>
-  Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/upgrade/start`).catch(err => {
-    dispatch(setSnackbar(preformatWithRequestID(err.response, err.response.data?.error.message), null, 'Copy to clipboard'));
-    return Promise.reject(err);
-  });
+  Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/upgrade/start`)
+    .then(({ data }) => Promise.resolve(data.secret))
+    .catch(err => {
+      dispatch(setSnackbar(preformatWithRequestID(err.response, err.response.data?.error.message), null, 'Copy to clipboard'));
+      return Promise.reject(err);
+    });
+
 export const cancelUpgrade = tenantId => () => Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/upgrade/cancel`);
+
 export const completeUpgrade = (tenantId, plan) => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/upgrade/complete`, { plan: plan }).catch(err => {
     dispatch(setSnackbar(preformatWithRequestID(err.response, `There was an error upgrading your account. ${err.response.data.error}`)));
