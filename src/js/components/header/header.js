@@ -108,7 +108,7 @@ export class Header extends React.Component {
           return this.props.initializeAppData();
         })
         // this is allowed to fail if no user information are available
-        .catch(err => console.log(err.response ? err.response.data.error : err))
+        .catch(err => console.log(err.response ? err.response.data.error?.message : err))
         .then(self.props.getOnboardingState)
         .finally(() => self.setState({ gettingUser: false }))
     );

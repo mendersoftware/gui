@@ -144,7 +144,7 @@ const actions = {
 
 const userActionErrorHandler = (err, type, dispatch) => {
   console.log(err);
-  var errMsg = err.response.data.error || '';
+  var errMsg = err.response.data.error?.message || '';
   dispatch(setSnackbar(preformatWithRequestID(err.response, `There was an error ${actions[type].errorMessage} the user. ${errMsg}`)));
   return Promise.reject(err);
 };

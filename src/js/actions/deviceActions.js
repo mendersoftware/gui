@@ -86,7 +86,9 @@ export const addStaticGroup = (group, deviceIds) => (dispatch, getState) =>
     )
     .catch(err => {
       console.log(err);
-      dispatch(setSnackbar(preformatWithRequestID(err.response, `Group could not be updated: ${err.response.data.error || ''}`), null, 'Copy to clipboard'));
+      dispatch(
+        setSnackbar(preformatWithRequestID(err.response, `Group could not be updated: ${err.response.data.error?.message || ''}`), null, 'Copy to clipboard')
+      );
       return Promise.reject(err);
     });
 
@@ -171,7 +173,9 @@ export const addDynamicGroup = (groupName, filterPredicates) => (dispatch, getSt
     )
     .catch(err => {
       console.log(err);
-      dispatch(setSnackbar(preformatWithRequestID(err.response, `Group could not be updated: ${err.response.data.error || ''}`), null, 'Copy to clipboard'));
+      dispatch(
+        setSnackbar(preformatWithRequestID(err.response, `Group could not be updated: ${err.response.data.error?.message || ''}`), null, 'Copy to clipboard')
+      );
       return Promise.reject(err);
     });
 
@@ -247,7 +251,11 @@ export const selectDevice = (deviceId, status) => dispatch => {
             deviceId: null
           }),
           dispatch(
-            setSnackbar(preformatWithRequestID(err.response, `Error fetching device details. ${err.response.data.error || ''}`), null, 'Copy to clipboard')
+            setSnackbar(
+              preformatWithRequestID(err.response, `Error fetching device details. ${err.response.data.error?.message || ''}`),
+              null,
+              'Copy to clipboard'
+            )
           )
         ]);
       });
@@ -590,7 +598,7 @@ export const updateDeviceAuth = (deviceId, authId, status) => (dispatch, getStat
       return Promise.all(tasks);
     })
     .catch(err => {
-      var errMsg = err ? (err.response ? err.response.data.error : err.message) : '';
+      var errMsg = err ? (err.response ? err.response.data.error?.message : err.message) : '';
       console.log(errMsg);
       dispatch(
         setSnackbar(preformatWithRequestID(err.response, `There was a problem updating the device authorization status: ${errMsg}`), null, 'Copy to clipboard')
