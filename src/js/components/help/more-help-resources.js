@@ -28,7 +28,7 @@ const MoreHelp = ({ docsVersion = '', isHosted }) => {
           <li key={`resource-${index}`}>
             <p>
               {item.pretext}{' '}
-              <a href={item.target} target="_blank">
+              <a href={item.target} target="_blank" rel="noopener noreferrer">
                 {item.linkTitle}
               </a>
             </p>
@@ -40,7 +40,7 @@ const MoreHelp = ({ docsVersion = '', isHosted }) => {
       <ul>
         <li>
           <p>
-            <a href={support} target="_blank">
+            <a href={support} target="_blank" rel="noopener noreferrer">
               Email us
             </a>{' '}
             with a question
@@ -49,7 +49,7 @@ const MoreHelp = ({ docsVersion = '', isHosted }) => {
         <li>
           <p>
             Follow us on Twitter{' '}
-            <a href="https://twitter.com/mender_io" target="_blank">
+            <a href="https://twitter.com/mender_io" target="_blank" rel="noopener noreferrer">
               @mender_io
             </a>
           </p>

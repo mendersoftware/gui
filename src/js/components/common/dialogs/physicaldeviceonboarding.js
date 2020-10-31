@@ -119,7 +119,11 @@ export class PhysicalDeviceOnboarding extends React.Component {
             <div className="margin-top">
               <p>
                 We prepared an image, fully integrated with Mender for you to start with. You can find it in the{' '}
-                <a href={`https://docs.mender.io/${docsVersion}get-started/preparation/prepare-a-raspberry-pi-device`} target="_blank">
+                <a
+                  href={`https://docs.mender.io/${docsVersion}get-started/preparation/prepare-a-raspberry-pi-device`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Prepare a Raspberry Pi device
                 </a>{' '}
                 documentation, which also contains instructions for initial device setup. Once you&apos;re done flashing you can go ahead and proceed to the

@@ -61,11 +61,11 @@ export class TwoFactorAuthSetup extends React.Component {
           <ol className="spaced-list margin-right-large" style={{ paddingInlineStart: 20 }}>
             <li className="margin-top-none">
               To use Two Factor Authentication, first download a third party authentication app such as{' '}
-              <a href="https://authy.com/download/" target="_blank">
+              <a href="https://authy.com/download/" target="_blank" rel="noopener noreferrer">
                 Authy
               </a>{' '}
               or{' '}
-              <a href="https://support.google.com/accounts/answer/1066447" target="_blank">
+              <a href="https://support.google.com/accounts/answer/1066447" target="_blank" rel="noopener noreferrer">
                 Google Authenticator
               </a>
               .

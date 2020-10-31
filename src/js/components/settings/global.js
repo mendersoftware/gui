@@ -75,7 +75,7 @@ export class Global extends React.Component {
           <FormHelperText className="info" component="div">
             <div className="margin-top-small margin-bottom-small">Choose a device identity attribute to use to identify your devices throughout the UI.</div>
             <div className="margin-top-small margin-bottom-small">
-              <a href={`https://docs.mender.io/${docsVersion}client-installation/identity`} target="_blank">
+              <a href={`https://docs.mender.io/${docsVersion}client-installation/identity`} target="_blank" rel="noopener noreferrer">
                 Learn how to add custom identity attributes
               </a>{' '}
               to your devices.

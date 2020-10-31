@@ -114,6 +114,7 @@ Array [
            
           <a
             href="https://northern.tech/legal/Hosted%20Mender%20Agreement%20-%2005-23-2020%20-%20Northern.tech%20AS.pdf"
+            rel="noopener noreferrer"
             target="_blank"
           >
             Terms of service
@@ -123,6 +124,7 @@ Array [
            
           <a
             href="https://northern.tech/legal/privacy-policy"
+            rel="noopener noreferrer"
             target="_blank"
           >
             Privacy Policy

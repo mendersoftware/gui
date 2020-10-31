@@ -256,6 +256,7 @@ exports[`Filters Component renders correctly 1`] = `
           With a more advanced commercial Mender plan you get access to filtering by multiple attributes to improve the device overview and the creation of dynamic groups to ease device management. Get an overview of the Mender plans on the 
           <a
             href="https://mender.io/plans/features"
+            rel="noopener noreferrer"
             target="_blank"
           >
             features page

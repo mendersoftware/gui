@@ -20,7 +20,7 @@ const TrialNotification = () => (
       </p>
       <p>
         Or compare the plans at{' '}
-        <a href={`https://mender.io/plans/pricing`} target="_blank">
+        <a href={`https://mender.io/plans/pricing`} target="_blank" rel="noopener noreferrer">
           mender.io/plans/pricing
         </a>
         .

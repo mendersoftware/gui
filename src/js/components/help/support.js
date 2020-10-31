@@ -7,7 +7,7 @@ const Support = () => (
 
     <p>
       Contact us directly for support with Hosted Mender at:{' '}
-      <a href="mailto:support@mender.io" target="_blank">
+      <a href="mailto:support@mender.io" target="_blank" rel="noopener noreferrer">
         support@mender.io
       </a>
       .

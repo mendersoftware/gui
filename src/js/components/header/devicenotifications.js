@@ -35,7 +35,7 @@ const DeviceNotifications = ({ total, limit, pending }) => {
           </p>
           <p>
             Learn about the different plans available by visiting{' '}
-            <a href="https://mender.io/pricing" target="_blank">
+            <a href="https://mender.io/pricing" target="_blank" rel="noopener noreferrer">
               mender.io/pricing
             </a>
           </p>

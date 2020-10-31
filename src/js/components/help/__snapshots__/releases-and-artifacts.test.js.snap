@@ -33,6 +33,7 @@ exports[`ReleasesArtifacts Component renders correctly 1`] = `
   <p>
     <a
       href="https://docs.mender.io/artifact-creation"
+      rel="noopener noreferrer"
       target="_blank"
     >
       Read the documentation for more on creating Artifacts

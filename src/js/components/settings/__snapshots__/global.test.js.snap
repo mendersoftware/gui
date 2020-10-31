@@ -103,6 +103,7 @@ exports[`GlobalSettings Component renders correctly 1`] = `
       >
         <a
           href="https://docs.mender.io/client-installation/identity"
+          rel="noopener noreferrer"
           target="_blank"
         >
           Learn how to add custom identity attributes

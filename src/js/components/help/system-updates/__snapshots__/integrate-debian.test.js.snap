@@ -18,6 +18,7 @@ exports[`IntegrateDebian Component renders correctly 1`] = `
   <p>
     <a
       href="https://docs.mender.io/system-updates-debian-family"
+      rel="noopener noreferrer"
       target="_blank"
     >
       Read our documentation
@@ -30,6 +31,7 @@ exports[`IntegrateDebian Component renders correctly 1`] = `
      
     <a
       href="https://hub.mender.io/c/board-integrations/debian-family"
+      rel="noopener noreferrer"
       target="_blank"
     >
       Debian family category on Mender Hub

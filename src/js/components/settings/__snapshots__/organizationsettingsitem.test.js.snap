@@ -41,6 +41,7 @@ exports[`OrganizationSettingsItem Component renders correctly 1`] = `
       <a
         className="align-right"
         href="https://mender.io/plans/pricing"
+        rel="noopener noreferrer"
         target="_blank"
       >
         Compare product plans
