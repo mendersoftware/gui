@@ -47,15 +47,17 @@ export const DeviceInventory = ({ attributes, id, setSnackbar, unauthorized }) =
     <>
       <div className={`device-inventory bordered ${unauthorized ? 'hidden' : 'report-list'}`}>
         <h4>Device inventory</h4>
-        <div className="file-details">
-          <h4 style={inlineHeadingStyle}>Installed software</h4>
-          {softwareInformation.map((layer, layerIndex) => (
-            <div className="flexbox column" key={`layer-${layerIndex}`}>
-              <div className="margin-top-small">{layer.title}</div>
-              <List>{layer.content}</List>
-            </div>
-          ))}
-        </div>
+        {!!softwareInformation.length && (
+          <div className="file-details">
+            <h4 style={inlineHeadingStyle}>Installed software</h4>
+            {softwareInformation.map((layer, layerIndex) => (
+              <div className="flexbox column" key={`layer-${layerIndex}`}>
+                <div className="margin-top-small">{layer.title}</div>
+                <List>{layer.content}</List>
+              </div>
+            ))}
+          </div>
+        )}
         <List>{deviceInventory}</List>
       </div>
       <div className="device-actions" style={{ marginTop: '24px' }}>

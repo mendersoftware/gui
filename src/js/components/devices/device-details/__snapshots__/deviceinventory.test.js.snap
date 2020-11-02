@@ -8,22 +8,6 @@ Array [
     <h4>
       Device inventory
     </h4>
-    <div
-      className="file-details"
-    >
-      <h4
-        style={
-          Object {
-            "background": "#f7f7f7",
-            "padding": 10,
-            "position": "absolute",
-            "top": -35,
-          }
-        }
-      >
-        Installed software
-      </h4>
-    </div>
     <ul
       className="MuiList-root MuiList-padding"
     />
