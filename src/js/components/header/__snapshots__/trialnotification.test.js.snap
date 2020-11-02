@@ -56,6 +56,7 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
        
       <a
         href="https://mender.io/plans/pricing"
+        rel="noopener noreferrer"
         target="_blank"
       >
         mender.io/plans/pricing

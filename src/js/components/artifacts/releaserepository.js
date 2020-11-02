@@ -30,11 +30,8 @@ export class ReleaseRepository extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      popupLabel: 'Upload a new artifact',
       sortCol: 'modified',
       sortDown: true,
-      tmpFile: null,
-      upload: false,
       wasSelectedRecently: false
     };
   }
@@ -178,8 +175,6 @@ export class ReleaseRepository extends React.Component {
         )}
 
         {uploadArtifactOnboardingComponent ? uploadArtifactOnboardingComponent : null}
-        <Loader show={loading} />
-
         <div style={{ position: 'relative', marginTop: '10px' }}>
           {items.length ? (
             <div>
@@ -223,7 +218,7 @@ export class ReleaseRepository extends React.Component {
             </div>
           ) : null}
 
-          {items.length || loading ? null : (
+          {!items.length && (
             <div className="dashboard-placeholder fadeIn" style={{ fontSize: '16px', margin: '8vh auto' }} ref={ref => (self.dropzoneRef = ref)}>
               {releases.length > 0 ? (
                 <p>Select a Release on the left to view its Artifact details</p>

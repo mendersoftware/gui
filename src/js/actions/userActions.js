@@ -270,8 +270,7 @@ export const saveGlobalSettings = (settings, beOptimistic = false, notify = fals
   return GeneralApi.post(`${useradmApiUrl}/settings`, updatedSettings)
     .then(() => {
       if (updatedSettings.hasOwnProperty('2fa') && updatedSettings['2fa'] === 'enabled') {
-        const state = getState();
-        tasks.push(dispatch(get2FAQRCode(state.users.byId[state.users.currentUser].email)));
+        tasks.push(dispatch(get2FAQRCode()));
       }
       if (notify) {
         tasks.push(dispatch(setSnackbar('Settings saved successfully')));

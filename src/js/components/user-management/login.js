@@ -53,15 +53,13 @@ export class Login extends React.Component {
   }
 
   _handleLogin(formData) {
-    var self = this;
-
     if (!formData.hasOwnProperty('email')) {
       return;
     }
-    if (self.state.isEnterprise && self.props.has2FA && !formData.hasOwnProperty('token2fa')) {
+    if (this.props.has2FA && !formData.hasOwnProperty('token2fa')) {
       return;
     }
-    return self.props.loginUser(formData).catch(err => console.log(err));
+    return this.props.loginUser(formData).catch(err => console.log(err));
   }
 
   render() {

@@ -17,7 +17,7 @@ export default class BuildYocto extends React.PureComponent {
         <h3>{`Don't yet have a working Yocto environment for your board?`}</h3>
         <p>
           Visit{' '}
-          <a href="https://hub.mender.io/c/board-integrations" target="_blank">
+          <a href="https://hub.mender.io/c/board-integrations" target="_blank" rel="noopener noreferrer">
             Mender Hub
           </a>{' '}
           and look for your board - your device may already have been integrated and tested by the community. If so, you can follow the instructions found there
@@ -33,7 +33,7 @@ export default class BuildYocto extends React.PureComponent {
 
         <p>
           Follow the docs at{' '}
-          <a href={`https://docs.mender.io/${docsVersion}system-updates-yocto-project/build-for-demo`} target="_blank">
+          <a href={`https://docs.mender.io/${docsVersion}system-updates-yocto-project/build-for-demo`} target="_blank" rel="noopener noreferrer">
             {`https://docs.mender.io/${docsVersion}system-updates-yocto-project/build-for-demo`}
           </a>{' '}
           to build your .sdimg and .mender files.
@@ -63,7 +63,7 @@ export default class BuildYocto extends React.PureComponent {
 
             <p>
               You can the use the output .sdimg and .mender files to connect to your Mender server and deploy updates, as outlined{' '}
-              <a href={`https://docs.mender.io/${docsVersion}system-updates-yocto-project/build-for-demo`} target="_blank">
+              <a href={`https://docs.mender.io/${docsVersion}system-updates-yocto-project/build-for-demo`} target="_blank" rel="noopener noreferrer">
                 in the tutorial
               </a>
               .

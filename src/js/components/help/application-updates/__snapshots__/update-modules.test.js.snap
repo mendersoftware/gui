@@ -33,6 +33,7 @@ exports[`UpdateModules Component renders correctly 1`] = `
      
     <a
       href="https://hub.mender.io/c/update-modules"
+      rel="noopener noreferrer"
       target="_blank"
     >
       Mender Hub
@@ -42,6 +43,7 @@ exports[`UpdateModules Component renders correctly 1`] = `
   <p>
     <a
       href="https://docs.mender.io/artifact-creation/create-a-custom-update-module"
+      rel="noopener noreferrer"
       target="_blank"
     >
       Read our documentation

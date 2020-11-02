@@ -221,6 +221,7 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
                
               <a
                 href="https://docs.mender.io/client-installation/configuration-file/polling-intervals"
+                rel="noopener noreferrer"
                 target="_blank"
               >
                 Polling intervals

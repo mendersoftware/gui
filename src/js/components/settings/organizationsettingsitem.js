@@ -19,7 +19,7 @@ const OrganizationSettingsItem = ({ title, content: { action, description }, sec
           {action.title}
         </a>
       ) : (
-        <a className="align-right" href={action.target} target="_blank">
+        <a className="align-right" href={action.target} target="_blank" rel="noopener noreferrer">
           {action.title}
         </a>
       )}

@@ -10,6 +10,7 @@ exports[`Support Component renders correctly 1`] = `
      
     <a
       href="mailto:support@mender.io"
+      rel="noopener noreferrer"
       target="_blank"
     >
       support@mender.io

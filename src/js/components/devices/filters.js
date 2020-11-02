@@ -96,7 +96,7 @@ export class Filters extends React.Component {
           return accu;
         }, [])
         .join('&');
-      window.location.replace(`${location}?${search}`);
+      window.location.replace(`${location}?${search}`); // lgtm [js/client-side-unvalidated-url-redirection]
     }
   }
 

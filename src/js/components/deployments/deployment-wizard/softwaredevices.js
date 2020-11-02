@@ -182,7 +182,7 @@ export class SoftwareDevices extends React.Component {
             </div>
             <div ref={ref => (this.groupRef = ref)} style={{ width: 'min-content' }}>
               {device ? (
-                <TextField value={device ? device.id : ''} label="Device" disabled={true} style={styles.infoStyle} />
+                <TextField value={device.id} label="Device" disabled={true} style={styles.infoStyle} />
               ) : (
                 <div>
                   <Autocomplete

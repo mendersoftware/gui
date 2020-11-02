@@ -261,6 +261,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
           <a
             className="align-right"
             href="https://mender.io/plans/pricing"
+            rel="noopener noreferrer"
             target="_blank"
           >
             Compare product plans
@@ -327,6 +328,7 @@ test
 %0APlan%20name%3A%20
 Mender Enterprise
 %0A%0AI%20would%20like%20to%20make%20a%20change%20to%20my%20Mender%20plan."
+      rel="noopener noreferrer"
       target="_blank"
     >
       support@mender.io
@@ -349,6 +351,7 @@ test
 %0APlan%20name%3A%20
 Mender Enterprise
 %0A%0AI%20would%20like%20to%20make%20a%20change%20to%20my%20billing%20details."
+      rel="noopener noreferrer"
       target="_blank"
     >
       Request to update your billing details

@@ -56,11 +56,15 @@ export class OrgDataEntry extends React.Component {
             label={
               <label htmlFor={tos}>
                 By checking this you agree to our{' '}
-                <a href="https://northern.tech/legal/Hosted%20Mender%20Agreement%20-%2005-23-2020%20-%20Northern.tech%20AS.pdf" target="_blank">
+                <a
+                  href="https://northern.tech/legal/Hosted%20Mender%20Agreement%20-%2005-23-2020%20-%20Northern.tech%20AS.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Terms of service
                 </a>{' '}
                 and{' '}
-                <a href="https://northern.tech/legal/privacy-policy" target="_blank">
+                <a href="https://northern.tech/legal/privacy-policy" target="_blank" rel="noopener noreferrer">
                   Privacy Policy
                 </a>{' '}
                 *

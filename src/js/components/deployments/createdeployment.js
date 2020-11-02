@@ -68,7 +68,7 @@ export class CreateDialog extends React.Component {
     this.props.selectDevice();
     this.props.selectRelease();
     const location = window.location.hash.substring(0, window.location.hash.indexOf('?'));
-    return location.length ? window.location.replace(location) : null;
+    return location.length ? window.location.replace(location) : null; // lgtm [js/client-side-unvalidated-url-redirection]
   }
 
   onSaveRetriesSetting(hasNewRetryDefault) {

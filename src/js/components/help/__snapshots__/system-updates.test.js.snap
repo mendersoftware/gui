@@ -13,6 +13,7 @@ exports[`SystemUpdates Component renders correctly 1`] = `
      
     <a
       href="https://docs.mender.io/downloads#disk-images"
+      rel="noopener noreferrer"
       target="_blank"
     >
       downloads page
@@ -59,6 +60,7 @@ exports[`SystemUpdates Component renders correctly 1`] = `
      
     <a
       href="https://docs.mender.io/overview/introduction"
+      rel="noopener noreferrer"
       target="_blank"
     >
       here

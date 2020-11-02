@@ -24,13 +24,13 @@ const detailsMap = {
 const csvHeader = `data:text/csv;charset=utf-8,${auditLogColumns.map(column => column.title).join(',')}`;
 
 export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, getUserList, groups, users, ...props }) => {
-  const [endDate, setEndDate] = useState(endDate || tonight);
+  const [endDate, setEndDate] = useState(tonight);
   const [csvLoading, setCsvLoading] = useState(false);
   const [detail, setDetail] = useState(undefined);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(defaultRowsPerPage);
-  const [startDate, setStartDate] = useState(startDate || today);
+  const [startDate, setStartDate] = useState(today);
   const [type, setType] = useState('');
   const [user, setUser] = useState(undefined);
   const [sorting, setSorting] = useState('desc');
