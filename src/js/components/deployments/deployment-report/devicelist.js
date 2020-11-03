@@ -24,10 +24,11 @@ const ProgressDeviceList = ({ created, devices, globalSettings, viewLog, retries
       id_attribute = device.identity_data[globalSettings.id_attribute];
     }
 
-    var encodedArtifactName = encodeURIComponent(device.attributes.artifact_name);
-    const currentArtifactLink = device.attributes.artifact_name ? (
+    const softwareName = device.attributes['rootfs-image.version'] || device.attributes.artifact_name;
+    const encodedArtifactName = encodeURIComponent(softwareName);
+    const currentArtifactLink = softwareName ? (
       <Link style={{ fontWeight: '500' }} to={`/releases/${encodedArtifactName}`}>
-        {device.attributes.artifact_name}
+        {softwareName}
       </Link>
     ) : (
       '-'
