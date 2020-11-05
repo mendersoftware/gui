@@ -10,7 +10,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } 
 import { Block as BlockIcon } from '@material-ui/icons';
 
 import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
-import { getDeviceLog, getSingleDeploymentDevices, getSingleDeploymentStats } from '../../actions/deploymentActions';
+import { getDeviceLog, getSingleDeployment } from '../../actions/deploymentActions';
 import { getRelease } from '../../actions/releaseActions';
 import { getIsEnterprise } from '../../selectors';
 import DeploymentLog from './deployment-report/log';
@@ -86,11 +86,10 @@ export class DeploymentReport extends React.Component {
   }
 
   refreshDeploymentDevices() {
-    var self = this;
-    if (!self.props.deployment.id) {
+    if (!this.props.deployment.id) {
       return;
     }
-    return Promise.all([self.props.getSingleDeploymentStats(self.props.deployment.id), self.props.getSingleDeploymentDevices(self.props.deployment.id)]);
+    return this.props.getSingleDeployment(this.props.deployment.id);
   }
 
   viewLog(id) {
@@ -159,7 +158,7 @@ export class DeploymentReport extends React.Component {
   }
 }
 
-const actionCreators = { getDeviceAuth, getDeviceById, getDeviceLog, getRelease, getSingleDeploymentDevices, getSingleDeploymentStats };
+const actionCreators = { getDeviceAuth, getDeviceById, getDeviceLog, getRelease, getSingleDeployment };
 
 const mapStateToProps = state => {
   const devices = state.deployments.byId[state.deployments.selectedDeployment]?.devices || {};

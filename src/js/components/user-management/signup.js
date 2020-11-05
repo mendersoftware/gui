@@ -22,11 +22,11 @@ export class Signup extends React.Component {
       email: '',
       loading: false,
       oauthProvider: undefined,
-      password: '',
-      recaptcha: ''
+      password: ''
     };
 
     const cookies = new Cookies();
+    cookies.remove('noExpiry');
     const oauthProvider = cookies.get('oauth');
     if (oauthProvider) {
       state.oauthProvider = oauthProvider;

@@ -10,6 +10,7 @@ exports[`BoardIntegrations Component renders correctly 1`] = `
      
     <a
       href="https://hub.mender.io/c/board-integrations"
+      rel="noopener noreferrer"
       target="_blank"
     >
       Mender Hub
@@ -25,6 +26,7 @@ exports[`BoardIntegrations Component renders correctly 1`] = `
      
     <a
       href="https://hub.mender.io/c/board-integrations"
+      rel="noopener noreferrer"
       target="_blank"
     >
       Mender Hub

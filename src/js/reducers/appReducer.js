@@ -29,6 +29,7 @@ const menderEnvironment = {
 };
 
 export const initialState = {
+  demoArtifactLink: 'https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender',
   hostAddress: menderEnvironment.hostAddress,
   snackbar: {
     open: false,
@@ -66,11 +67,6 @@ const appReducer = (state = initialState, action) => {
       return {
         ...state,
         snackbar: action.snackbar
-      };
-    case AppConstants.SET_LOCAL_IPADDRESS:
-      return {
-        ...state,
-        hostAddress: action.ipAddress
       };
     case AppConstants.SET_FIRST_LOGIN_AFTER_SIGNUP:
       return {

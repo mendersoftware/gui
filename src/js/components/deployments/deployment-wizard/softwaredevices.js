@@ -9,7 +9,10 @@ import { Autocomplete } from '@material-ui/lab';
 import { ErrorOutline as ErrorOutlineIcon, InfoOutlined as InfoOutlinedIcon } from '@material-ui/icons';
 
 import { getAllDevicesByStatus, getAllGroupDevices, selectDevices } from '../../../actions/deviceActions';
+import { advanceOnboarding } from '../../../actions/onboardingActions';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../../constants/deviceConstants';
+import { onboardingSteps } from '../../../constants/onboardingConstants';
+import { getOnboardingState } from '../../../selectors';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 import { allDevices } from '../createdeployment';
 
@@ -54,6 +57,7 @@ export class SoftwareDevices extends React.Component {
       } else if (currentState.group !== allDevices) {
         state.deploymentDeviceCount = self.props.groups[currentState.group].total;
       }
+      self.props.advanceOnboarding(onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES);
     } else {
       state.deploymentDeviceIds = [];
     }
@@ -64,7 +68,23 @@ export class SoftwareDevices extends React.Component {
 
   render() {
     const self = this;
-    const { device, deploymentAnchor, deploymentObject, group, groups, hasDevices, hasDynamicGroups, hasPending, release, releases } = self.props;
+    const {
+      createdGroup,
+      device,
+      deploymentAnchor,
+      deploymentObject,
+      group,
+      groups,
+      hasDevices,
+      hasDynamicGroups,
+      hasPending,
+      hasSelectedDevices,
+      onboardingState,
+      release,
+      releases,
+      selectedDevice,
+      selectedGroup
+    } = self.props;
     const { deploymentDeviceIds } = self.state;
 
     const selectedRelease = deploymentObject.release ? deploymentObject.release : release;
@@ -95,15 +115,36 @@ export class SoftwareDevices extends React.Component {
     let onboardingComponent = null;
     if (this.releaseRef && this.groupRef && deploymentAnchor) {
       const anchor = { top: this.releaseRef.offsetTop + (this.releaseRef.offsetHeight / 3) * 2, left: this.releaseRef.offsetWidth / 2 };
-      onboardingComponent = getOnboardingComponentFor('scheduling-artifact-selection', { anchor, place: 'right' });
+      onboardingComponent = getOnboardingComponentFor(
+        onboardingSteps.SCHEDULING_ARTIFACT_SELECTION,
+        { ...onboardingState, selectedRelease },
+        { anchor, place: 'right' }
+      );
       const groupAnchor = { top: this.groupRef.offsetTop + (this.groupRef.offsetHeight / 3) * 2, left: this.groupRef.offsetWidth };
-      onboardingComponent = getOnboardingComponentFor('scheduling-all-devices-selection', { anchor: groupAnchor, place: 'right' }, onboardingComponent);
-      onboardingComponent = getOnboardingComponentFor('scheduling-group-selection', { anchor: groupAnchor, place: 'right' }, onboardingComponent);
+      onboardingComponent = getOnboardingComponentFor(
+        onboardingSteps.SCHEDULING_ALL_DEVICES_SELECTION,
+        onboardingState,
+        { anchor: groupAnchor, place: 'right' },
+        onboardingComponent
+      );
+      onboardingComponent = getOnboardingComponentFor(
+        onboardingSteps.SCHEDULING_GROUP_SELECTION,
+        { ...onboardingState, createdGroup },
+        { anchor: groupAnchor, place: 'right' },
+        onboardingComponent
+      );
       const buttonAnchor = {
         top: deploymentAnchor.offsetTop - deploymentAnchor.offsetHeight,
         left: deploymentAnchor.offsetLeft + deploymentAnchor.offsetWidth / 2
       };
-      onboardingComponent = getOnboardingComponentFor('scheduling-release-to-devices', { anchor: buttonAnchor, place: 'bottom' }, onboardingComponent);
+      if (hasDevices && hasSelectedDevices && selectedRelease) {
+        onboardingComponent = getOnboardingComponentFor(
+          onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES,
+          { ...onboardingState, selectedDevice, selectedGroup, selectedRelease },
+          { anchor: buttonAnchor, place: 'bottom' },
+          onboardingComponent
+        );
+      }
     }
 
     return (
@@ -141,7 +182,7 @@ export class SoftwareDevices extends React.Component {
             </div>
             <div ref={ref => (this.groupRef = ref)} style={{ width: 'min-content' }}>
               {device ? (
-                <TextField value={device ? device.id : ''} label="Device" disabled={true} style={styles.infoStyle} />
+                <TextField value={device.id} label="Device" disabled={true} style={styles.infoStyle} />
               ) : (
                 <div>
                   <Autocomplete
@@ -201,19 +242,25 @@ export class SoftwareDevices extends React.Component {
   }
 }
 
-const actionCreators = { getAllDevicesByStatus, getAllGroupDevices, selectDevices };
+const actionCreators = { advanceOnboarding, getAllDevicesByStatus, getAllGroupDevices, selectDevices };
 
 const mapStateToProps = state => {
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
     acceptedDevices: state.devices.byStatus.accepted.deviceIds,
+    createdGroup: Object.values(state.devices.groups.byId)[1],
     device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
     groups,
-    hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
+    hasDevices: state.devices.byStatus.accepted.total,
     hasDynamicGroups: Object.values(groups).some(group => !!group.id),
-    hasPending: state.devices.byStatus.pending.total || state.devices.byStatus.pending.deviceIds.length > 0,
-    releases: Object.values(state.releases.byId)
+    hasPending: state.devices.byStatus.pending.total,
+    hasSelectedDevices: !!(state.devices.groups.selectedGroup || state.devices.selectedDevice || state.devices.selectedDeviceList.length),
+    onboardingState: getOnboardingState(state),
+    releases: Object.values(state.releases.byId),
+    selectedDevice: state.devices.selectedDevice,
+    selectedGroup: state.devices.groups.selectedGroup,
+    selectedRelease: state.releases.selectedRelease
   };
 };
 

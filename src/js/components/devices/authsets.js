@@ -107,7 +107,7 @@ export const AuthsetsDialog = ({
             </p>
             <p>
               In cases such as key rotation, each device may have more than one identity/key combination listed. See the documentation for more on{' '}
-              <a href={`https://docs.mender.io/${docsVersion}overview/device-authentication`} target="_blank">
+              <a href={`https://docs.mender.io/${docsVersion}overview/device-authentication`} target="_blank" rel="noopener noreferrer">
                 Device authentication
               </a>
               .
@@ -120,7 +120,7 @@ export const AuthsetsDialog = ({
           {device.status === DEVICE_STATES.accepted || device.status === DEVICE_STATES.rejected ? decommissionButton : null}
 
           <div className="margin-bottom-small" style={{ fontSize: '15px', padding: '14px 40px 0px 20px', border: '1px solid #f1f2f3', width: 'fit-content' }}>
-            <span className="bold margin-right">{id_attribute || 'Device ID'}</span>
+            <span className="bold margin-right">{id_attribute}</span>
             <span>{id_value}</span>
             <p>
               <span className="bold margin-right">Device status</span>

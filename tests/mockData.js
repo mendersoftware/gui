@@ -20,7 +20,11 @@ export const defaultState = {
         created: '2019-01-01T12:30:00.000Z',
         device_count: 1,
         devices: {
-          a1: {}
+          a1: {
+            attributes: {},
+            id: 'a1',
+            status: 'installing'
+          }
         },
         stats: {
           downloading: 0,
@@ -42,7 +46,11 @@ export const defaultState = {
         created: '2019-01-01T12:30:00.000Z',
         device_count: 1,
         devices: {
-          b1: {}
+          b1: {
+            attributes: {},
+            id: 'b1',
+            status: 'pending'
+          }
         },
         stats: {
           downloading: 0,
@@ -101,6 +109,13 @@ export const defaultState = {
     },
     limit: 500,
     selectedDeviceList: []
+  },
+  onboarding: {
+    complete: false,
+    demoArtifactPort: 85,
+    showCreateArtifactDialog: false,
+    showConnectDeviceDialog: false,
+    showTipsDialog: false
   },
   organization: {
     events: [
@@ -163,13 +178,7 @@ export const defaultState = {
   users: {
     byId: { a1: { email: 'a@b.com', id: 'a1' } },
     currentUser: 'a1',
-    globalSettings: { previousFilters: [] },
-    onboarding: {
-      complete: false,
-      showCreateArtifactDialog: false,
-      showConnectDeviceDialog: false,
-      showTipsDialog: false
-    },
+    globalSettings: { id_attribute: 'Device ID', previousFilters: [] },
     rolesById: { RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false } },
     showHelptips: true
   }

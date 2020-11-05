@@ -3,9 +3,8 @@ import jwtDecode from 'jwt-decode';
 import md5 from 'md5';
 import pluralize from 'pluralize';
 
-import store from './reducers';
-import appConstants from './constants/appConstants';
 import { DEVICE_FILTERING_OPTIONS } from './constants/deviceConstants';
+import { initialState as onboardingReducerState } from './reducers/onboardingReducer';
 
 export function isEncoded(uri) {
   uri = uri || '';
@@ -76,12 +75,12 @@ export function decodeSessionToken(token) {
   }
 }
 
-export function isEmpty(obj) {
-  for (var prop in obj) {
+export const isEmpty = obj => {
+  for (const _ in obj) {
     return false;
   }
   return true;
-}
+};
 
 export function preformatWithRequestID(res, failMsg) {
   // ellipsis line
@@ -320,35 +319,6 @@ export const mapDeviceAttributes = (attributes = []) =>
     { inventory: { device_type: '', artifact_name: '' }, identity: {}, system: {} }
   );
 
-const deriveAttributePopularity = (accu, sourceObject = {}) =>
-  Object.keys(sourceObject).reduce((keyAccu, key) => {
-    keyAccu[key] = keyAccu[key] + 1 || 1;
-    return keyAccu;
-  }, accu);
-
-export const deriveAttributesFromDevices = devices => {
-  const availableAttributes = devices.reduce(
-    (accu, item) => {
-      if (!item) {
-        return accu;
-      }
-      // count popularity of attributes to create attribute sort order
-      accu.identity_data = deriveAttributePopularity(accu.identity_data, item.identity_data);
-      accu.attributes = deriveAttributePopularity(accu.attributes, item.attributes);
-      return accu;
-    },
-    { identity_data: [], attributes: [] }
-  );
-  // sort in reverse order, to have most common attribute at the top of the select
-  const inventoryAttributes = Object.entries(availableAttributes.attributes)
-    .sort((a, b) => b[1] - a[1])
-    .map(a => a[0]);
-  const identityAttributes = Object.entries(availableAttributes.identity_data)
-    .sort((a, b) => b[1] - a[1])
-    .map(a => a[0]);
-  return { identityAttributes, inventoryAttributes };
-};
-
 export const getFormattedSize = bytes => {
   const suffixes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
@@ -359,8 +329,6 @@ export const getFormattedSize = bytes => {
 };
 
 export const FileSize = ({ style, fileSize }) => <div style={style}>{getFormattedSize(fileSize)}</div>;
-
-export const Plan = ({ className, plan }) => <div className={className}>{appConstants.PLANS[plan]}</div>;
 
 export const collectAddressesFrom = devices =>
   devices.reduce((collector, device) => {
@@ -380,7 +348,7 @@ export const collectAddressesFrom = devices =>
     return collector;
   }, []);
 
-export const getDemoDeviceAddress = devices => {
+export const getDemoDeviceAddress = (devices, onboardingApproach, port) => {
   let targetUrl = '';
   const defaultVitualizedIp = '10.0.2.15';
   const addresses = collectAddressesFrom(devices);
@@ -390,14 +358,11 @@ export const getDemoDeviceAddress = devices => {
     }
     return item;
   }, null);
-  const onboarding = store.getState().users.onboarding;
-  const onboardingApproach = onboarding.approach;
-  const port = onboarding.demoArtifactPort;
   targetUrl = `http://${address}:${port}`;
   if (!address || (onboardingApproach === 'virtual' && (navigator.appVersion.indexOf('Win') != -1 || navigator.appVersion.indexOf('Mac') != -1))) {
     targetUrl = `http://localhost:${port}`;
   }
-  return Promise.resolve(targetUrl);
+  return targetUrl;
 };
 
 export const detectOsIdentifier = () => {
@@ -568,3 +533,9 @@ export const extractSoftwareInformation = (capabilities = {}, softwareTitleMap =
     return accu;
   }, {});
 };
+export const getDemoDeviceCreationCommand = token =>
+  token
+    ? `TENANT_TOKEN='${token}'\ndocker run -it -p ${onboardingReducerState.demoArtifactPort}:${
+        onboardingReducerState.demoArtifactPort
+      } -e SERVER_URL='https://${window.location.hostname || 'hosted.mender.io'}' \\\n-e TENANT_TOKEN=$TENANT_TOKEN mendersoftware/mender-client-qemu:latest`
+    : './demo --client up';

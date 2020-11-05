@@ -5,6 +5,7 @@ import appReducer from './appReducer';
 import deploymentReducer from './deploymentReducer';
 import deviceReducer from './deviceReducer';
 import organizationReducer from './organizationReducer';
+import onboardingReducer from './onboardingReducer';
 import releaseReducer from './releaseReducer';
 import userReducer from './userReducer';
 import { USER_LOGOUT } from '../constants/userConstants';
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   app: appReducer,
   devices: deviceReducer,
   deployments: deploymentReducer,
+  onboarding: onboardingReducer,
   organization: organizationReducer,
   releases: releaseReducer,
   users: userReducer

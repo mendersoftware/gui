@@ -6,10 +6,7 @@ import Button from '@material-ui/core/Button';
 export default class Form extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = {
-      isSubmitting: false,
-      isValid: false
-    };
+    this.state = { isValid: false };
     this.model = {};
     this.newChildren = {};
     this.inputs = {}; // We create a map of traversed inputs

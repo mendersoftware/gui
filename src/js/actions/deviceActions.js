@@ -3,7 +3,7 @@ import pluralize from 'pluralize';
 import { setSnackbar } from '../actions/appActions';
 import GeneralApi, { headerNames } from '../api/general-api';
 import * as DeviceConstants from '../constants/deviceConstants';
-import { deriveAttributesFromDevices, duplicateFilter, getSnackbarMessage, mapDeviceAttributes, preformatWithRequestID } from '../helpers';
+import { getSnackbarMessage, mapDeviceAttributes, preformatWithRequestID } from '../helpers';
 
 // default per page until pagination and counting integrated
 const defaultPerPage = 20;
@@ -86,7 +86,9 @@ export const addStaticGroup = (group, deviceIds) => (dispatch, getState) =>
     )
     .catch(err => {
       console.log(err);
-      dispatch(setSnackbar(preformatWithRequestID(err.response, `Group could not be updated: ${err.response.data.error || ''}`), null, 'Copy to clipboard'));
+      dispatch(
+        setSnackbar(preformatWithRequestID(err.response, `Group could not be updated: ${err.response.data.error?.message || ''}`), null, 'Copy to clipboard')
+      );
       return Promise.reject(err);
     });
 
@@ -171,7 +173,9 @@ export const addDynamicGroup = (groupName, filterPredicates) => (dispatch, getSt
     )
     .catch(err => {
       console.log(err);
-      dispatch(setSnackbar(preformatWithRequestID(err.response, `Group could not be updated: ${err.response.data.error || ''}`), null, 'Copy to clipboard'));
+      dispatch(
+        setSnackbar(preformatWithRequestID(err.response, `Group could not be updated: ${err.response.data.error?.message || ''}`), null, 'Copy to clipboard')
+      );
       return Promise.reject(err);
     });
 
@@ -247,7 +251,11 @@ export const selectDevice = (deviceId, status) => dispatch => {
             deviceId: null
           }),
           dispatch(
-            setSnackbar(preformatWithRequestID(err.response, `Error fetching device details. ${err.response.data.error || ''}`), null, 'Copy to clipboard')
+            setSnackbar(
+              preformatWithRequestID(err.response, `Error fetching device details. ${err.response.data.error?.message || ''}`),
+              null,
+              'Copy to clipboard'
+            )
           )
         ]);
       });
@@ -373,16 +381,6 @@ export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
   return getAllDevices();
 };
 
-export const setFilterAttributes = attrs => (dispatch, getState) => {
-  const storedFilteringAttributes = getState().devices.filteringAttributes;
-  const identityAttributes = [...storedFilteringAttributes.identityAttributes, ...attrs.identityAttributes].filter(duplicateFilter);
-  const inventoryAttributes = [...storedFilteringAttributes.inventoryAttributes, ...attrs.inventoryAttributes].filter(duplicateFilter);
-  return dispatch({
-    type: DeviceConstants.SET_FILTER_ATTRIBUTES,
-    attributes: { identityAttributes, inventoryAttributes }
-  });
-};
-
 export const setDeviceFilters = filters => dispatch =>
   dispatch({
     type: DeviceConstants.SET_DEVICE_FILTERS,
@@ -498,9 +496,6 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
           devicesById: deviceAccu.devicesById
         })
       ];
-      if (response.data.length < 200) {
-        tasks.push(dispatch(setFilterAttributes(deriveAttributesFromDevices(Object.values(deviceAccu.devicesById)))));
-      }
       // for each device, get device identity info
       tasks.push(dispatch(getDevicesWithAuth(Object.values(deviceAccu.devicesById))));
       if (shouldSelectDevices) {
@@ -549,6 +544,24 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
   return getAllDevices();
 };
 
+export const getDeviceAttributes = () => dispatch =>
+  GeneralApi.get(`${inventoryApiUrlV2}/filters/attributes`).then(({ data }) => {
+    const { inventory: inventoryAttributes, identity: identityAttributes } = (data || []).reduce(
+      (accu, item) => {
+        if (!accu[item.scope]) {
+          accu[item.scope] = [];
+        }
+        accu[item.scope].push(item.name);
+        return accu;
+      },
+      { inventory: [], identity: [] }
+    );
+    return dispatch({
+      type: DeviceConstants.SET_FILTER_ATTRIBUTES,
+      attributes: { identityAttributes, inventoryAttributes }
+    });
+  });
+
 export const getDeviceAuth = id => dispatch => Promise.resolve(dispatch(getDevicesWithAuth([{ id }]))).then(results => Promise.resolve(results[1]));
 
 export const getDevicesWithAuth = devices => dispatch =>
@@ -560,22 +573,32 @@ export const getDevicesWithAuth = devices => dispatch =>
       return Promise.all(tasks);
     });
 
-export const updateDeviceAuth = (deviceId, authId, status) => dispatch =>
+const maybeUpdateDevicesByStatus = (devicesState, deviceId, authId, dispatch) => {
+  const device = devicesState.byId[deviceId];
+  const hasMultipleAuthSets = authId ? device.auth_sets.filter(authset => authset.id !== authId).length > 0 : false;
+  if (!hasMultipleAuthSets) {
+    const deviceIds = devicesState.byStatus[device.status].deviceIds.splice(devicesState.byStatus[device.status].deviceIds.indexOf(deviceId), 1);
+    return Promise.resolve(
+      dispatch({
+        type: DeviceConstants[`SET_${device.status.toUpperCase()}_DEVICES`],
+        deviceIds,
+        status: device.status,
+        total: devicesState.byStatus[device.status].total - 1
+      })
+    );
+  }
+  return Promise.resolve();
+};
+
+export const updateDeviceAuth = (deviceId, authId, status) => (dispatch, getState) =>
   GeneralApi.put(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}/status`, { status })
-    .then(() =>
-      Promise.all([
-        dispatch({
-          type: DeviceConstants.UPDATE_DEVICE_AUTHSET,
-          authId,
-          deviceId,
-          status
-        }),
-        dispatch(getDeviceAuth(deviceId)),
-        dispatch(setSnackbar('Device authorization status was updated successfully'))
-      ])
-    )
+    .then(() => {
+      let tasks = [dispatch(getDeviceAuth(deviceId)), dispatch(setSnackbar('Device authorization status was updated successfully'))];
+      tasks.push(maybeUpdateDevicesByStatus(getState().devices, deviceId, authId, dispatch));
+      return Promise.all(tasks);
+    })
     .catch(err => {
-      var errMsg = err ? (err.response ? err.response.data.error : err.message) : '';
+      var errMsg = err ? (err.response ? err.response.data.error?.message : err.message) : '';
       console.log(errMsg);
       dispatch(
         setSnackbar(preformatWithRequestID(err.response, `There was a problem updating the device authorization status: ${errMsg}`), null, 'Copy to clipboard')
@@ -628,18 +651,13 @@ export const updateDevicesAuth = (deviceIds, status) => (dispatch, getState) => 
   });
 };
 
-export const deleteAuthset = (deviceId, authId) => dispatch =>
+export const deleteAuthset = (deviceId, authId) => (dispatch, getState) =>
   GeneralApi.delete(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}`)
-    .then(() =>
-      Promise.all([
-        dispatch({
-          type: DeviceConstants.REMOVE_DEVICE_AUTHSET,
-          authId,
-          deviceId
-        }),
-        dispatch(setSnackbar('Device authorization status was updated successfully'))
-      ])
-    )
+    .then(() => {
+      let tasks = [dispatch(setSnackbar('Device authorization status was updated successfully'))];
+      tasks.push(maybeUpdateDevicesByStatus(getState().devices, deviceId, authId, dispatch));
+      return Promise.all(tasks);
+    })
     .catch(err => {
       var errMsg = err ? (err.response ? err.response.data.error.message : err.message) : '';
       console.log(errMsg);
@@ -664,17 +682,13 @@ export const preauthDevice = authset => dispatch =>
     })
     .then(() => Promise.resolve(dispatch(setSnackbar('Device was successfully added to the preauthorization list', 5000))));
 
-export const decommissionDevice = deviceId => dispatch =>
+export const decommissionDevice = deviceId => (dispatch, getState) =>
   GeneralApi.delete(`${deviceAuthV2}/devices/${deviceId}`)
-    .then(() =>
-      Promise.all([
-        dispatch({
-          type: DeviceConstants.DECOMMISION_DEVICE,
-          deviceId
-        }),
-        dispatch(setSnackbar('Device was decommissioned successfully'))
-      ])
-    )
+    .then(() => {
+      let tasks = [dispatch(setSnackbar('Device was decommissioned successfully'))];
+      tasks.push(maybeUpdateDevicesByStatus(getState().devices, deviceId, null, dispatch));
+      return Promise.all(tasks);
+    })
     .catch(err => {
       var errMsg = err.response.data.error.message || '';
       console.log(errMsg);

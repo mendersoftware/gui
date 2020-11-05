@@ -5,18 +5,20 @@ import { withRouter } from 'react-router-dom';
 import IdleTimer from 'react-idle-timer';
 import Cookies from 'universal-cookie';
 
-import Header from './header/header';
-import LeftNav from './leftnav';
-import CreateArtifactDialog from './common/dialogs/createartifactdialog';
-import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
-import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
 import { getToken, updateMaxAge, expirySet } from '../auth';
-import { logoutUser, saveUserSettings, setShowConnectingDialog, setShowCreateArtifactDialog } from '../actions/userActions';
+import { logoutUser, saveUserSettings, setShowConnectingDialog } from '../actions/userActions';
 import { privateRoutes, publicRoutes } from '../config/routes';
+import { onboardingSteps } from '../constants/onboardingConstants';
 import SharedSnackbar from '../components/common/sharedsnackbar';
+import ErrorBoundary from '../errorboundary';
+import { getOnboardingState } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import Tracking from '../tracking';
 import LiveChatBox from './livechatbox';
+import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
+import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
+import Header from './header/header';
+import LeftNav from './leftnav';
 
 const timeout = 900000; // 15 minutes idle time
 
@@ -64,22 +66,16 @@ class AppRoot extends React.PureComponent {
 
   render() {
     const self = this;
-    const {
-      history,
-      setShowConnectingDialog,
-      setShowCreateArtifactDialog,
-      showDismissHelptipsDialog,
-      showDeviceConnectionDialog,
-      showCreateArtifactDialog
-    } = self.props;
+    const { history, onboardingState, setShowConnectingDialog, showDeviceConnectionDialog, showDismissHelptipsDialog } = self.props;
 
-    const onboardingComponent = getOnboardingComponentFor('application-update-reminder-tip', {
+    let onboardingComponent = getOnboardingComponentFor(onboardingSteps.APPLICATION_UPDATE_REMINDER_TIP, onboardingState, {
       anchor: {
         left: 170,
         top: 225
       },
       place: 'right'
     });
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_CREATION_DIALOG, onboardingState, {}, onboardingComponent);
 
     return (
       <>
@@ -88,18 +84,12 @@ class AppRoot extends React.PureComponent {
             <IdleTimer element={document} onAction={updateMaxAge} onIdle={() => self.onIdle()} timeout={timeout} />
             <Header history={history} />
             <LeftNav className="leftFixed leftNav" />
-            <div className="rightFluid container">{privateRoutes}</div>
+            <div className="rightFluid container">
+              <ErrorBoundary>{privateRoutes}</ErrorBoundary>
+            </div>
             {onboardingComponent ? onboardingComponent : null}
             {showDismissHelptipsDialog && <ConfirmDismissHelptips />}
-            <CreateArtifactDialog
-              open={showCreateArtifactDialog}
-              onCancel={() => setShowCreateArtifactDialog(false)}
-              onClose={() => {
-                history.push('/releases');
-                setShowCreateArtifactDialog(false);
-              }}
-            />
-            <DeviceConnectionDialog open={showDeviceConnectionDialog} onCancel={() => setShowConnectingDialog(false)} />
+            {showDeviceConnectionDialog && <DeviceConnectionDialog onCancel={() => setShowConnectingDialog(false)} />}
             <LiveChatBox />
           </>
         ) : (
@@ -111,14 +101,14 @@ class AppRoot extends React.PureComponent {
   }
 }
 
-const actionCreators = { logoutUser, saveUserSettings, setShowConnectingDialog, setShowCreateArtifactDialog };
+const actionCreators = { logoutUser, saveUserSettings, setShowConnectingDialog };
 
 const mapStateToProps = state => {
   return {
+    onboardingState: getOnboardingState(state),
     currentUser: state.users.currentUser,
-    showDismissHelptipsDialog: !state.users.onboarding.complete && state.users.onboarding.showTipsDialog,
-    showCreateArtifactDialog: state.users.onboarding.showCreateArtifactDialog,
-    showDeviceConnectionDialog: state.users.onboarding.showConnectDeviceDialog,
+    showDismissHelptipsDialog: !state.onboarding.complete && state.onboarding.showTipsDialog,
+    showDeviceConnectionDialog: state.users.showConnectDeviceDialog,
     trackingCode: state.app.trackerCode
   };
 };

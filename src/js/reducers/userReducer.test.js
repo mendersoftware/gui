@@ -191,20 +191,4 @@ describe('user reducer', () => {
       ).byId['123'].email
     ).toEqual('test@mender.io');
   });
-
-  it('should handle SET_CURRENT_USER', () => {
-    expect(
-      reducer(undefined, {
-        type: UserConstants.SET_CURRENT_USER,
-        user: '123'
-      }).currentUser
-    ).toEqual('123');
-
-    expect(
-      reducer(initialState, {
-        type: UserConstants.SET_CURRENT_USER,
-        user: '123'
-      }).currentUser
-    ).toEqual('123');
-  });
 });

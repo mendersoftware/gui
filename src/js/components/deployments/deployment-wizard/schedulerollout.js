@@ -23,18 +23,7 @@ const styles = {
 export class ScheduleRollout extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = {
-      disabled: false,
-      isPhasesOpen: false,
-      isPickerOpen: false,
-      pattern: ''
-    };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.start_time !== this.props.start_time) {
-      this.setState({ start_time: this.props.start_time });
-    }
+    this.state = { isPickerOpen: false };
   }
 
   handleStartTimeChange(value) {

@@ -12,6 +12,7 @@ import Loader from '../common/loader';
 import DeviceList from './devicelist';
 import { refreshLength as refreshDeviceLength } from './devices';
 import PreauthDialog from './preauth-dialog';
+import { getIdAttribute } from '../../selectors';
 
 export class Preauthorize extends React.Component {
   constructor(props, context) {
@@ -50,11 +51,7 @@ export class Preauthorize extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return (
-      !this.props.devices.every((device, index) => device === nextProps.devices[index]) ||
-      this.props.globalSettings.id_attribute !== nextProps.globalSettings.id_attribute ||
-      true
-    );
+    return !this.props.devices.every((device, index) => device === nextProps.devices[index]) || this.props.idAttribute !== nextProps.idAttribute || true;
   }
 
   /*
@@ -99,22 +96,23 @@ export class Preauthorize extends React.Component {
     if (attribute.name !== self.state.sortCol) {
       state.sortDown = true;
     }
+    state.sortCol = attribute.name === 'Device ID' ? 'id' : self.state.sortCol;
     self.setState(state, () => self._getDevices(true));
   }
 
   render() {
     const self = this;
-    const { acceptedDevices, count, deviceLimit, devices, globalSettings, openSettingsDialog } = self.props;
+    const { acceptedDevices, count, deviceLimit, devices, idAttribute, openSettingsDialog } = self.props;
     const { errorMessage, openPreauth, pageLoading } = self.state;
     const limitMaxed = deviceLimit && deviceLimit <= acceptedDevices;
 
     const columnHeaders = [
       {
-        title: globalSettings.id_attribute || 'Device ID',
+        title: idAttribute,
         customize: openSettingsDialog,
-        attribute: { name: globalSettings.id_attribute, scope: 'identity' },
+        attribute: { name: idAttribute, scope: 'identity' },
         style: { flexGrow: 1 },
-        sortable: !!globalSettings.id_attribute && globalSettings.id_attribute !== 'Device ID'
+        sortable: true
       },
       {
         title: 'Date added',
@@ -195,7 +193,7 @@ const mapStateToProps = state => {
     count: state.devices.byStatus.preauthorized.total,
     devices: state.devices.selectedDeviceList,
     deviceLimit: state.devices.limit,
-    globalSettings: state.users.globalSettings
+    idAttribute: getIdAttribute(state)
   };
 };
 

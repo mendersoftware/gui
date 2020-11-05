@@ -8,14 +8,12 @@ import { Button } from '@material-ui/core';
 import { Help as HelpIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getUser, loginUser, setCurrentUser } from '../../actions/userActions';
+import { getUser, loginUser, logoutUser } from '../../actions/userActions';
 
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
 import FormCheckbox from '../common/forms/formcheckbox';
-import { WelcomeSnackTip } from '../helptips/onboardingtips';
-import { getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 
 import { OAuth2Providers } from './oauth2providers';
@@ -31,7 +29,7 @@ export class Login extends React.Component {
 
   componentDidMount() {
     clearAllRetryTimers(this.props.setSnackbar);
-    this.props.setCurrentUser(null);
+    this.props.logoutUser();
     const cookies = new Cookies();
     const loginError = cookies.get('error');
     if (loginError) {
@@ -43,16 +41,6 @@ export class Login extends React.Component {
   componentDidUpdate(prevProps) {
     const self = this;
     if (prevProps.currentUser !== this.props.currentUser && !!this.props.currentUser.id) {
-      setTimeout(() => {
-        if (
-          self.props.showHelptips &&
-          self.props.showOnboardingTips &&
-          !self.props.onboardingComplete &&
-          !getOnboardingStepCompleted('devices-pending-accepting-onboarding')
-        ) {
-          self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={1} />, () => {}, true);
-        }
-      }, 1000);
       self.props.setSnackbar('');
     }
     if (prevProps.has2FA !== self.props.has2FA && self.props.has2FA) {
@@ -65,15 +53,13 @@ export class Login extends React.Component {
   }
 
   _handleLogin(formData) {
-    var self = this;
-
     if (!formData.hasOwnProperty('email')) {
       return;
     }
-    if (self.state.isEnterprise && self.props.has2FA && !formData.hasOwnProperty('token2fa')) {
+    if (this.props.has2FA && !formData.hasOwnProperty('token2fa')) {
       return;
     }
-    return self.props.loginUser(formData).catch(err => console.log(err));
+    return this.props.loginUser(formData).catch(err => console.log(err));
   }
 
   render() {
@@ -166,7 +152,7 @@ export class Login extends React.Component {
   }
 }
 
-const actionCreators = { getUser, loginUser, setCurrentUser, setSnackbar };
+const actionCreators = { getUser, loginUser, logoutUser, setSnackbar };
 
 const mapStateToProps = state => {
   return {
@@ -174,8 +160,8 @@ const mapStateToProps = state => {
     has2FA: state.users.globalSettings.hasOwnProperty('2fa') && state.users.globalSettings['2fa'] === 'enabled',
     isHosted: state.app.features.isHosted,
     showHelptips: state.users.showHelptips,
-    showOnboardingTips: state.users.onboarding.showTips,
-    onboardingComplete: state.users.onboarding.complete
+    showOnboardingTips: state.onboarding.showTips,
+    onboardingComplete: state.onboarding.complete
   };
 };
 

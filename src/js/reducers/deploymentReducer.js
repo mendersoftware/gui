@@ -1,4 +1,4 @@
-import * as DeploymentConstants from '../constants/deploymentConstants';
+import DeploymentConstants from '../constants/deploymentConstants';
 
 const initialState = {
   byId: {
@@ -21,7 +21,10 @@ const deploymentReducer = (state = initialState, action) => {
         ...state,
         byId: {
           ...state.byId,
-          [action.deploymentId]: action.deployment
+          [action.deploymentId]: {
+            ...DeploymentConstants.deploymentPrototype,
+            ...action.deployment
+          }
         },
         byStatus: {
           ...state.byStatus,
@@ -45,10 +48,7 @@ const deploymentReducer = (state = initialState, action) => {
         ...state,
         byId: {
           ...state.byId,
-          [action.deployment.id]: {
-            ...state.byId[action.deployment.id],
-            ...action.deployment
-          }
+          [action.deployment.id]: action.deployment
         }
       };
     case DeploymentConstants.RECEIVE_DEPLOYMENT_STATS:
@@ -63,7 +63,6 @@ const deploymentReducer = (state = initialState, action) => {
         }
       };
     case DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICE_LOG:
-    case DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICES:
       return {
         ...state,
         byId: {
@@ -89,7 +88,7 @@ const deploymentReducer = (state = initialState, action) => {
           [action.status]: {
             ...state.byStatus[action.status],
             deploymentIds: action.deploymentIds,
-            total: action.total ? action.total : state.byStatus[action.status].total
+            total: action.total
           }
         }
       };

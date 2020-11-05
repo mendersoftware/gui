@@ -16,7 +16,7 @@ const ReleasesArtifacts = ({ docsVersion = '' }) => (
     </p>
 
     <p>
-      <a href={`https://docs.mender.io/${docsVersion}artifact-creation`} target="_blank">
+      <a href={`https://docs.mender.io/${docsVersion}artifact-creation`} target="_blank" rel="noopener noreferrer">
         Read the documentation for more on creating Artifacts
       </a>
       .

@@ -1,4 +1,5 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
@@ -8,63 +9,64 @@ import IconButton from '@material-ui/core/IconButton';
 import { ArrowUpward as ArrowUpwardIcon, Close as CloseIcon, Schedule as HelpIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
-import { setShowConnectingDialog, setShowDismissOnboardingTipsDialog } from '../../actions/userActions';
+import { setShowDismissOnboardingTipsDialog } from '../../actions/onboardingActions';
+import { setShowConnectingDialog } from '../../actions/userActions';
 
-class WelcomeSnackTipComponent extends React.PureComponent {
-  onClose(_, reason) {
+const WelcomeSnackTipComponent = ({ progress, setSnackbar }) => {
+  const onClose = (_, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-    this.props.setSnackbar('');
-  }
+    setSnackbar('');
+  };
 
-  render() {
-    const { progress } = this.props;
-
-    const messages = {
-      1: (
-        <div>
-          Welcome to Mender! Follow the{' '}
-          <div className="onboard-icon">
-            <ArrowUpwardIcon />
-          </div>{' '}
-          tutorial tips on screen to:
-        </div>
-      ),
-      2: <div>Next up</div>,
-      3: <div>Next up</div>,
-      4: <div>Success!</div>
-    };
-    return (
-      <div className="onboard-snack">
-        <IconButton onClick={() => this.onClose()}>
-          <CloseIcon fontSize="small" />
-        </IconButton>
-        <div className="flexbox">
-          {messages[progress]}
-          <ol>
-            {['Connect a device', 'Deploy an Application Update', 'Create your own Release and deploy it'].map((item, index) => {
-              let classNames = '';
-              if (index < progress) {
-                classNames = 'bold';
-                if (index < progress - 1) {
-                  classNames = 'completed';
-                }
-              }
-              return (
-                <li className={classNames} key={`onboarding-step-${index}`}>
-                  {index + 1}. {item}
-                </li>
-              );
-            })}
-          </ol>
-        </div>
+  const messages = {
+    1: (
+      <div>
+        Welcome to Mender! Follow the{' '}
+        <div className="onboard-icon">
+          <ArrowUpwardIcon />
+        </div>{' '}
+        tutorial tips on screen to:
       </div>
-    );
-  }
-}
+    ),
+    2: <div>Next up</div>,
+    3: <div>Next up</div>,
+    4: <div>Success!</div>
+  };
+  return (
+    <div className="onboard-snack">
+      <IconButton onClick={onClose}>
+        <CloseIcon fontSize="small" />
+      </IconButton>
+      <div className="flexbox">
+        {messages[progress]}
+        <ol>
+          {['Connect a device', 'Deploy an Application Update', 'Create your own Release and deploy it'].map((item, index) => {
+            let classNames = '';
+            if (index < progress) {
+              classNames = 'bold';
+              if (index < progress - 1) {
+                classNames = 'completed';
+              }
+            }
+            return (
+              <li className={classNames} key={`onboarding-step-${index}`}>
+                {index + 1}. {item}
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </div>
+  );
+};
 
-export const WelcomeSnackTip = connect(null, { setSnackbar })(WelcomeSnackTipComponent);
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ setSnackbar }, dispatch);
+};
+
+export const WelcomeSnackTip = connect(null, mapDispatchToProps)(WelcomeSnackTipComponent);
 
 class DevicePendingTipComponent extends React.PureComponent {
   componentDidUpdate() {
@@ -98,6 +100,8 @@ class DevicePendingTipComponent extends React.PureComponent {
   }
 }
 
-const actionCreators = { setShowConnectingDialog, setShowDismissOnboardingTipsDialog, setSnackbar };
+const mappedActionCreators = dispatch => {
+  return bindActionCreators({ setShowConnectingDialog, setShowDismissOnboardingTipsDialog }, dispatch);
+};
 
-export const DevicePendingTip = connect(null, actionCreators)(DevicePendingTipComponent);
+export const DevicePendingTip = connect(null, mappedActionCreators)(DevicePendingTipComponent);

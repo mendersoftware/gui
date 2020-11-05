@@ -29,8 +29,7 @@ export class SoftwareDistribution extends React.Component {
     super(props, state);
     const self = this;
     self.state = {
-      reports: props.reports.length ? props.reports : Object.keys(props.devices).length ? defaultReports : [],
-      selection: ''
+      reports: props.reports.length ? props.reports : Object.keys(props.devices).length ? defaultReports : []
     };
     self.state.reports.map(report => self.initializeReport(report.group));
   }

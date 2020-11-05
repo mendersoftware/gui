@@ -5,7 +5,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Dialog, DialogContent, DialogTitle, Tab, Tabs } from '@material-ui/core';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getAllDeviceCounts, selectDevice, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
+import { getAllDeviceCounts, getDeviceAttributes, selectDevice, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { getUserRoles } from '../../selectors';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
@@ -85,15 +85,15 @@ export class Devices extends React.Component {
   }
 
   componentDidMount() {
-    const { filteringAttributes, getAllDeviceCounts, location, match, selectGroup, setDeviceFilters, setSnackbar } = this.props;
+    const { filteringAttributes, getDeviceAttributes, location, match, selectGroup, setDeviceFilters, setSnackbar } = this.props;
     clearAllRetryTimers(setSnackbar);
     this._restartInterval();
-    getAllDeviceCounts();
     const query = match.params.filters || location.search;
     if (query) {
       const queryResult = convertQueryToFilterAndGroup(query, filteringAttributes);
       this.updateDeviceSelection(queryResult, selectGroup, setDeviceFilters);
     }
+    getDeviceAttributes();
   }
 
   componentDidUpdate(prevProps) {
@@ -133,7 +133,8 @@ export class Devices extends React.Component {
     self.props.getAllDeviceCounts();
   }
 
-  _openSettingsDialog() {
+  _openSettingsDialog(e) {
+    e.preventDefault();
     this.setState({ openIdDialog: !this.state.openIdDialog });
   }
 
@@ -158,15 +159,15 @@ export class Devices extends React.Component {
         </Tabs>
         <ComponentToShow
           history={history}
-          openSettingsDialog={() => this._openSettingsDialog()}
+          openSettingsDialog={e => this._openSettingsDialog(e)}
           params={match.params}
           restart={() => this._restartInterval()}
         />
         {openIdDialog && (
-          <Dialog open={openIdDialog || false}>
+          <Dialog open={true}>
             <DialogTitle>Default device identity attribute</DialogTitle>
             <DialogContent style={{ overflow: 'hidden' }}>
-              <Global dialog={true} closeDialog={() => this._openSettingsDialog()} />
+              <Global dialog={true} closeDialog={e => this._openSettingsDialog(e)} />
             </DialogContent>
           </Dialog>
         )}
@@ -175,7 +176,7 @@ export class Devices extends React.Component {
   }
 }
 
-const actionCreators = { getAllDeviceCounts, selectDevice, selectGroup, setDeviceFilters, setSnackbar };
+const actionCreators = { getAllDeviceCounts, getDeviceAttributes, selectDevice, selectGroup, setDeviceFilters, setSnackbar };
 
 const mapStateToProps = state => {
   const { isGroupRestricted } = getUserRoles(state);

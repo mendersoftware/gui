@@ -7,7 +7,7 @@ import { CheckCircle as CheckCircleIcon } from '@material-ui/icons';
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 
-import { loginUser, saveGlobalSettings, verify2FA } from '../../actions/userActions';
+import { saveGlobalSettings, verify2FA } from '../../actions/userActions';
 
 import Loader from '../common/loader';
 
@@ -61,11 +61,11 @@ export class TwoFactorAuthSetup extends React.Component {
           <ol className="spaced-list margin-right-large" style={{ paddingInlineStart: 20 }}>
             <li className="margin-top-none">
               To use Two Factor Authentication, first download a third party authentication app such as{' '}
-              <a href="https://authy.com/download/" target="_blank">
+              <a href="https://authy.com/download/" target="_blank" rel="noopener noreferrer">
                 Authy
               </a>{' '}
               or{' '}
-              <a href="https://support.google.com/accounts/answer/1066447" target="_blank">
+              <a href="https://support.google.com/accounts/answer/1066447" target="_blank" rel="noopener noreferrer">
                 Google Authenticator
               </a>
               .
@@ -95,13 +95,7 @@ export class TwoFactorAuthSetup extends React.Component {
                     {validating2fa && (
                       <div className="flexbox" style={{ alignItems: 'flex-end', justifyContent: 'flex-end', height: 'min-content' }}>
                         <Loader show={true} />
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() => this.updateModel()}
-                          disabled={!this.state.isValid}
-                          style={{ marginLeft: 30 }}
-                        >
+                        <Button variant="contained" color="primary" onClick={() => this.updateModel()} disabled={true} style={{ marginLeft: 30 }}>
                           Verifying...
                         </Button>
                       </div>
@@ -127,7 +121,7 @@ export class TwoFactorAuthSetup extends React.Component {
   }
 }
 
-const actionCreators = { loginUser, saveGlobalSettings, verify2FA };
+const actionCreators = { saveGlobalSettings, verify2FA };
 
 const mapStateToProps = state => {
   return {

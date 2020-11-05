@@ -58,7 +58,7 @@ const ExpandDeviceComponent = ({ docsVersion, toggleHelptips }) => (
     </p>
     <p>
       Which information is collected about devices is fully configurable;{' '}
-      <a href={`https://docs.mender.io/${docsVersion}client-installation/identity`} target="_blank">
+      <a href={`https://docs.mender.io/${docsVersion}client-installation/identity`} target="_blank" rel="noopener noreferrer">
         see the documentation for how to configure this
       </a>
       .

@@ -1,17 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { getDemoDeviceCreationCommand } from '../../../helpers';
 import CopyCode from '../../common/copy-code';
 
 export default class VirtualDevice extends React.PureComponent {
   render() {
     var token = (this.props.org || {}).tenant_token;
 
-    var codeToCopy = token
-      ? `
-      TENANT_TOKEN='${token}'\ndocker run -it -e SERVER_URL='https://hosted.mender.io' \\\n-e TENANT_TOKEN=$TENANT_TOKEN mendersoftware/mender-client-qemu:latest
-    `
-      : `./demo --client up`;
+    const codeToCopy = getDemoDeviceCreationCommand(token);
     return (
       <div>
         <h2>Virtual device</h2>
@@ -40,7 +37,7 @@ export default class VirtualDevice extends React.PureComponent {
               <p>If you do not have it already, please install docker on the infrastructure where you want to start the virtual Mender client.</p>
               <p>
                 For example, if you are using Ubuntu follow this tutorial:{' '}
-                <a href="https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/" target="_blank">
+                <a href="https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/" target="_blank" rel="noopener noreferrer">
                   https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/
                 </a>
               </p>

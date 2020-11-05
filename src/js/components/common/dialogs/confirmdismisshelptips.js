@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 
-import { setOnboardingCanceled, setShowDismissOnboardingTipsDialog } from '../../../actions/userActions';
+import { setOnboardingCanceled, setShowDismissOnboardingTipsDialog } from '../../../actions/onboardingActions';
 
 export const ConfirmDismissHelptips = ({ setOnboardingCanceled, setShowDismissOnboardingTipsDialog }) => (
   <Dialog open={true}>

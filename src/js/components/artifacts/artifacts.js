@@ -7,18 +7,21 @@ import { Cancel as CancelIcon, CloudUpload, InfoOutlined as InfoIcon } from '@ma
 
 import { setSnackbar } from '../../actions/appActions';
 import { selectDevices } from '../../actions/deviceActions';
+import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
 import {
   cancelArtifactUpload,
   createArtifact,
   getReleases,
   removeArtifact,
+  showRemoveArtifactDialog,
   selectArtifact,
   selectRelease,
-  showRemoveArtifactDialog,
   uploadArtifact
 } from '../../actions/releaseActions';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import { colors } from '../../themes/mender-theme';
-import { advanceOnboarding, getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
+import { getOnboardingState } from '../../selectors';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
 import ReleaseRepository from './releaserepository';
 import ReleasesList from './releaseslist';
@@ -33,7 +36,6 @@ export class Artifacts extends React.Component {
     super(props, context);
     this.state = {
       doneLoading: false,
-      remove: false,
       showCreateArtifactDialog: false
     };
   }
@@ -50,7 +52,7 @@ export class Artifacts extends React.Component {
   componentDidMount() {
     const self = this;
     const { artifactVersion } = self.props.match.params;
-    if (!self.props.onboardingComplete) {
+    if (!self.props.onboardingState.complete) {
       self.props.selectDevices([]);
     }
     if (!self.props.releases.length) {
@@ -90,20 +92,28 @@ export class Artifacts extends React.Component {
     });
   }
 
+  onUploadClick() {
+    if (this.props.releases.length) {
+      this.props.advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP);
+    }
+    this.setState({ showCreateArtifactDialog: true });
+  }
+
   addArtifact(meta, file, type = 'upload') {
     const self = this;
-    const upload = type === 'create' ? this.props.createArtifact(meta, file) : this.props.uploadArtifact(meta, file);
+    const { advanceOnboarding, createArtifact, deviceTypes, onboardingState, pastCount, uploadArtifact } = self.props;
+    const upload = type === 'create' ? createArtifact(meta, file) : uploadArtifact(meta, file);
     return self.setState({ showCreateArtifactDialog: false }, () =>
       upload.then(() => {
-        if (!self.props.onboardingComplete && getOnboardingStepCompleted('artifact-included-deploy-onboarding')) {
-          advanceOnboarding('upload-new-artifact-tip');
-          if (type === 'create' && getOnboardingStepCompleted('upload-new-artifact-dialog-device-type')) {
-            advanceOnboarding('upload-new-artifact-dialog-release-name');
+        if (!onboardingState.complete && deviceTypes.length && pastCount) {
+          advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP);
+          if (type === 'create') {
+            advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_RELEASE_NAME);
           }
         }
         // track in GA
         Tracking.event({ category: 'artifacts', action: 'create' });
-        return setTimeout(() => self._getReleases(), 2000);
+        return setTimeout(() => self._getReleases(), 1000);
       })
     );
   }
@@ -115,30 +125,36 @@ export class Artifacts extends React.Component {
 
   render() {
     const self = this;
-    const { artifact, doneLoading, selectedFile, showCreateArtifactDialog } = self.state;
+    const { doneLoading, selectedFile, showCreateArtifactDialog } = self.state;
     const {
+      advanceOnboarding,
       artifactProgress,
       cancelArtifactUpload,
       deviceTypes,
-      onboardingComplete,
+      onboardingState,
       releases,
       showRemoveDialog,
       selectedArtifact,
       selectedRelease,
+      setShowCreateArtifactDialog,
       setSnackbar,
       showOnboardingDialog,
       showRemoveArtifactDialog
     } = self.props;
 
     let uploadArtifactOnboardingComponent = null;
-    if (!onboardingComplete && self.uploadButtonRef) {
-      uploadArtifactOnboardingComponent = getOnboardingComponentFor('upload-new-artifact-tip', {
-        place: 'right',
-        anchor: {
-          left: self.uploadButtonRef.offsetLeft + self.uploadButtonRef.offsetWidth,
-          top: self.uploadButtonRef.offsetTop + self.uploadButtonRef.offsetHeight / 2
+    if (!onboardingState.complete && self.uploadButtonRef) {
+      uploadArtifactOnboardingComponent = getOnboardingComponentFor(
+        onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP,
+        { ...onboardingState, setShowCreateArtifactDialog },
+        {
+          place: 'right',
+          anchor: {
+            left: self.uploadButtonRef.offsetLeft + self.uploadButtonRef.offsetWidth,
+            top: self.uploadButtonRef.offsetTop + self.uploadButtonRef.offsetHeight / 2
+          }
         }
-      });
+      );
     }
 
     return (
@@ -155,7 +171,7 @@ export class Artifacts extends React.Component {
             <Button
               buttonRef={ref => (this.uploadButtonRef = ref)}
               color="secondary"
-              onClick={() => self.setState({ showCreateArtifactDialog: true })}
+              onClick={() => self.onUploadClick()}
               startIcon={<CloudUpload fontSize="small" />}
               style={{ minWidth: 164 }}
               variant="contained"
@@ -188,22 +204,24 @@ export class Artifacts extends React.Component {
         ) : null}
         {showRemoveDialog && (
           <RemoveArtifactDialog
-            artifact={(artifact || {}).name}
+            artifact={selectedArtifact.name}
             open={showRemoveDialog}
             onCancel={() => showRemoveArtifactDialog(false)}
-            onRemove={() => self._removeArtifact(selectedArtifact || artifact || selectedRelease.Artifacts[0])}
+            onRemove={() => self._removeArtifact(selectedArtifact || selectedRelease.Artifacts[0])}
           />
         )}
         {showCreateArtifactDialog && (
           <AddArtifactDialog
+            advanceOnboarding={advanceOnboarding}
             selectedFile={selectedFile}
             setSnackbar={setSnackbar}
             deviceTypes={deviceTypes}
             open={showCreateArtifactDialog}
-            onboardingComplete={onboardingComplete}
+            onboardingState={onboardingState}
             onCancel={() => self.setState({ showCreateArtifactDialog: false })}
             onCreate={(meta, file) => self.addArtifact(meta, file, 'create')}
             onUpload={(meta, file) => self.addArtifact(meta, file, 'upload')}
+            releases={releases}
           />
         )}
       </div>
@@ -212,6 +230,7 @@ export class Artifacts extends React.Component {
 }
 
 const actionCreators = {
+  advanceOnboarding,
   cancelArtifactUpload,
   createArtifact,
   getReleases,
@@ -219,6 +238,7 @@ const actionCreators = {
   selectArtifact,
   selectDevices,
   selectRelease,
+  setShowCreateArtifactDialog,
   setSnackbar,
   showRemoveArtifactDialog,
   uploadArtifact
@@ -235,8 +255,9 @@ const mapStateToProps = state => {
   return {
     artifactProgress: state.releases.uploadProgress,
     deviceTypes: Object.keys(deviceTypes),
-    onboardingComplete: state.users.onboarding.complete,
-    showOnboardingDialog: state.users.onboarding.showCreateArtifactDialog,
+    onboardingState: getOnboardingState(state),
+    showOnboardingDialog: state.onboarding.showCreateArtifactDialog,
+    pastCount: state.deployments.byStatus.finished.total,
     releases: Object.values(state.releases.byId),
     selectedArtifact: state.releases.selectedArtifact,
     selectedRelease: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null,

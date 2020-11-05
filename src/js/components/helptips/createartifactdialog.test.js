@@ -1,10 +1,11 @@
 import React from 'react';
-import { createMount } from '@material-ui/core/test-utils';
+import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
+import { createMount } from '@material-ui/core/test-utils';
 import CreateArtifactDialog from './createartifactdialog';
-import { defaultState } from '../../../../../tests/mockData';
+import { defaultState } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -16,9 +17,11 @@ describe('CreateArtifactDialog Component', () => {
 
   it('renders correctly', () => {
     const tree = createMount()(
-      <Provider store={store}>
-        <CreateArtifactDialog open={true} />
-      </Provider>
+      <MemoryRouter>
+        <Provider store={store}>
+          <CreateArtifactDialog open={true} />
+        </Provider>
+      </MemoryRouter>
     );
     expect(tree.html()).toMatchSnapshot();
   });

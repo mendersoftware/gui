@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { setOnboardingApproach } from '../../../actions/userActions';
+import { setOnboardingApproach } from '../../../actions/onboardingActions';
+import { getDemoDeviceCreationCommand } from '../../../helpers';
 import CopyCode from '../copy-code';
 
 export class VirtualDeviceOnboarding extends React.PureComponent {
@@ -14,11 +15,7 @@ export class VirtualDeviceOnboarding extends React.PureComponent {
     const self = this;
     const { isHosted, token } = self.props;
 
-    let codeToCopy = token
-      ? `
-      TENANT_TOKEN='${token}'\ndocker run -it -e SERVER_URL='https://hosted.mender.io' \\\n-e TENANT_TOKEN=$TENANT_TOKEN mendersoftware/mender-client-qemu:latest
-    `
-      : './demo --client up';
+    const codeToCopy = getDemoDeviceCreationCommand(token);
 
     return (
       <div>
@@ -28,7 +25,7 @@ export class VirtualDeviceOnboarding extends React.PureComponent {
             <p>If you do not have it already, please install Docker on your local machine.</p>
             <p>
               For example if you are using Ubuntu follow this tutorial:{' '}
-              <a href="https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/" target="_blank">
+              <a href="https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/" target="_blank" rel="noopener noreferrer">
                 https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/
               </a>
             </p>

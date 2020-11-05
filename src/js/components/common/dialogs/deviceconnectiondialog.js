@@ -11,11 +11,13 @@ import raspberryPi from '../../../../assets/img/raspberrypi.png';
 import raspberryPi4 from '../../../../assets/img/raspberrypi4.jpg';
 
 import { getReleases } from '../../../actions/releaseActions';
+import { advanceOnboarding } from '../../../actions/onboardingActions';
 import { getUserOrganization } from '../../../actions/organizationActions';
+import { onboardingSteps } from '../../../constants/onboardingConstants';
+import { getDocsVersion } from '../../../selectors';
 
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
-import { advanceOnboarding } from '../../../utils/onboardingmanager';
 
 export class DeviceConnectionDialog extends React.Component {
   constructor(props, context) {
@@ -27,14 +29,11 @@ export class DeviceConnectionDialog extends React.Component {
     };
   }
 
-  componentDidUpdate(prevProps) {
-    const self = this;
-    if (self.props.open && self.props.open !== prevProps.open) {
-      if (self.props.isEnterprise) {
-        self.props.getUserOrganization();
-      }
-      self.props.getReleases();
+  componentDidUpdate() {
+    if (this.props.isEnterprise) {
+      this.props.getUserOrganization();
     }
+    this.props.getReleases();
   }
 
   onBackClick() {
@@ -46,28 +45,27 @@ export class DeviceConnectionDialog extends React.Component {
     self.setState(state);
   }
 
+  onAdvance() {
+    const { progress } = this.state;
+    const { advanceOnboarding } = this.props;
+    advanceOnboarding(onboardingSteps.DASHBOARD_ONBOARDING_START);
+    this.setState({ progress: progress + 1 });
+  }
+
   render() {
     const self = this;
-    const { onboardingDeviceType, open, onboardingComplete, onCancel, pendingCount } = self.props;
+    const { advanceOnboarding, docsVersion, onboardingDeviceType, onboardingComplete, onCancel, pendingCount } = self.props;
     const { progress, onDevice, virtualDevice } = self.state;
 
     let content = (
       <div>
         <div>
-          During the guided evaluation we will walk you through installing Mender on a device and deploying:
-          <ul>
-            <li>
-              a simple <i>application</i> update
-            </li>
-            <li>
-              a full <i>system</i> update
-            </li>
-            <li>
-              a <i>Docker container</i> update
-            </li>
-          </ul>
-          The evaluation of hosted Mender is optimized for Raspberry Pi 3 & 4 running Raspberry Pi OS. If you have such a device at hand you can proceed to
-          prepare and connect your device.
+          <p>
+            You can connect almost any device and Linux OS with Mender, but to make things simple during evaluation we recommend you use a Raspberry Pi as a
+            test device.
+          </p>
+          <h3>Get started quickly with a Raspberry Pi</h3>
+          <p>We&apos;ll walk you through the steps to connect a Raspberry Pi and deploy your first update.</p>
           <div>
             <div
               id="deb-package-help"
@@ -75,17 +73,14 @@ export class DeviceConnectionDialog extends React.Component {
               data-tip
               data-for="deb-package-tip"
               data-event="click focus"
-              style={{ top: '30%', left: '85%' }}
+              style={{ top: '22%', left: '88%' }}
             >
               <HelpIcon />
             </div>
             <ReactTooltip id="deb-package-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
               <p>
-                The Mender .deb package should work on most operating systems in the debian family (e.g. Debian, Ubuntu, Raspberry Pi OS) and devices based on
+                The steps in the guide should work on most operating systems in the debian family (e.g. Debian, Ubuntu, Raspberry Pi OS) and devices based on
                 ARMv6 or newer (e.g. Raspberry Pi 2/3/4, Beaglebone).
-              </p>
-              <p>
-                Otherwise, use the virtual device or read more about <a href="https://hub.mender.io">Board integrations</a>
               </p>
             </ReactTooltip>
           </div>
@@ -101,11 +96,37 @@ export class DeviceConnectionDialog extends React.Component {
           </div>
         </div>
         <div className="flexbox centered column">
-          If you don&apos;t have your own device you can use a Docker-run virtual device to try out Mender.
+          <span>
+            <b>Don&apos;t have a Raspberry Pi?</b> You can use our Docker-run virtual device to go through the same tutorial.
+          </span>
           <div>
-            <img src="assets/img/docker.png" style={{ height: '40px', verticalAlign: 'middle' }} />
+            <img src="assets/img/docker.png" style={{ height: '40px', verticalAlign: 'middle', marginRight: '8px' }} />
             <a onClick={() => self.setState({ virtualDevice: true })}>Prepare a virtual device for now</a>
           </div>
+        </div>
+
+        <div>
+          <h3>Connecting other devices</h3>
+          <p>For other devices, we provide documentation to integrate with Mender.</p>
+          <ul>
+            <li>
+              Learn how to integrate devices with{' '}
+              <a href={`https://docs.mender.io/${docsVersion}system-updates-debian-family`} target="_blank" rel="noopener noreferrer">
+                Debian family
+              </a>{' '}
+              or{' '}
+              <a href={`https://docs.mender.io/${docsVersion}system-updates-yocto-project`} target="_blank" rel="noopener noreferrer">
+                Yocto OSes
+              </a>
+            </li>
+            <li>
+              Or visit{' '}
+              <a href={`https://hub.mender.io/c/board-integrations`} target="_blank" rel="noopener noreferrer">
+                Board Integrations
+              </a>{' '}
+              on Mender Hub and search for your device and OS.
+            </li>
+          </ul>
         </div>
       </div>
     );
@@ -119,15 +140,17 @@ export class DeviceConnectionDialog extends React.Component {
     if (pendingCount && !onboardingComplete) {
       setTimeout(() => onCancel(), 2000);
     }
-    if (open && progress >= 2 && pendingCount && !window.location.hash.includes('pending')) {
-      advanceOnboarding('dashboard-onboarding-start');
+    if (progress >= 2 && pendingCount && !window.location.hash.includes('pending')) {
+      advanceOnboarding(onboardingSteps.DASHBOARD_ONBOARDING_START);
       return <Redirect to="/devices/pending" />;
     }
 
     return (
-      <Dialog open={open || false} fullWidth={true} maxWidth="sm">
+      <Dialog open={true} fullWidth={true} maxWidth="sm">
         <DialogTitle>Connecting a device</DialogTitle>
-        <DialogContent className="onboard-dialog dialog-content">{content}</DialogContent>
+        <DialogContent className="onboard-dialog" style={{ margin: '0 30px' }}>
+          {content}
+        </DialogContent>
         <DialogActions>
           <Button onClick={onCancel}>Cancel</Button>
           <div style={{ flexGrow: 1 }} />
@@ -135,11 +158,7 @@ export class DeviceConnectionDialog extends React.Component {
             <div>
               <Button onClick={() => self.onBackClick()}>Back</Button>
               {progress < 2 ? (
-                <Button
-                  variant="contained"
-                  disabled={!(virtualDevice || (onDevice && onboardingDeviceType))}
-                  onClick={() => self.setState({ progress: progress + 1 })}
-                >
+                <Button variant="contained" disabled={!(virtualDevice || (onDevice && onboardingDeviceType))} onClick={() => self.onAdvance()}>
                   Next
                 </Button>
               ) : (
@@ -155,14 +174,15 @@ export class DeviceConnectionDialog extends React.Component {
   }
 }
 
-const actionCreators = { getReleases, getUserOrganization };
+const actionCreators = { advanceOnboarding, getReleases, getUserOrganization };
 
 const mapStateToProps = state => {
   return {
+    docsVersion: getDocsVersion(state),
     isEnterprise: state.app.features.hasMultitenancy || state.app.features.isEnterprise || state.app.features.isHosted,
     pendingCount: state.devices.byStatus.pending.total,
-    onboardingComplete: state.users.onboarding.complete,
-    onboardingDeviceType: state.users.onboarding.deviceType,
+    onboardingComplete: state.onboarding.complete,
+    onboardingDeviceType: state.onboarding.deviceType,
     token: state.organization.organization.tenant_token
   };
 };

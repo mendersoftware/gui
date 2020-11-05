@@ -1,4 +1,4 @@
-import * as DeploymentConstants from '../constants/deploymentConstants';
+import DeploymentConstants from '../constants/deploymentConstants';
 import GeneralApi, { headerNames } from '../api/general-api';
 import { setSnackbar } from '../actions/appActions';
 import { mapAttributesToAggregator, preformatWithRequestID, startTimeSort } from '../helpers';
@@ -15,7 +15,12 @@ const default_page = 1;
 const transformDeployments = (deployments, deploymentsById) =>
   deployments.sort(startTimeSort).reduce(
     (accu, item) => {
-      accu.deployments[item.id] = { ...deploymentsById[item.id], ...item, name: decodeURIComponent(item.name) };
+      accu.deployments[item.id] = {
+        ...DeploymentConstants.deploymentPrototype,
+        ...deploymentsById[item.id],
+        ...item,
+        name: decodeURIComponent(item.name)
+      };
       accu.deploymentIds.push(item.id);
       return accu;
     },
@@ -33,7 +38,13 @@ export const getDeployments = (page = default_page, per_page = default_per_page)
     return Promise.all(
       Object.entries(deploymentsByStatus).map(([status, value]) => {
         const { deployments, deploymentIds } = transformDeployments(value, getState().deployments.byId);
-        return dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status });
+        return dispatch({
+          type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`],
+          deployments,
+          deploymentIds,
+          status,
+          total: Number(res.headers[headerNames.total])
+        });
       })
     );
   });
@@ -91,7 +102,8 @@ export const createDeployment = newDeployment => dispatch => {
       const deploymentId = data.headers.location.substring(lastslashindex + 1);
       const deployment = {
         ...newDeployment,
-        devices: newDeployment.devices ? newDeployment.devices.map(id => ({ id, status: 'pending' })) : []
+        devices: newDeployment.devices ? newDeployment.devices.map(id => ({ id, status: 'pending' })) : [],
+        stats: {}
       };
       return Promise.all([
         dispatch({
@@ -105,23 +117,17 @@ export const createDeployment = newDeployment => dispatch => {
     });
 };
 
-export const getSingleDeployment = id => dispatch =>
-  GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}`).then(res =>
-    dispatch({
-      type: DeploymentConstants.RECEIVE_DEPLOYMENT,
-      deployment: { ...res.data, name: decodeURIComponent(res.data.name) }
-    })
-  );
-
 export const getSingleDeploymentStats = id => dispatch =>
   GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}/statistics`).then(res =>
     dispatch({ type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS, stats: res.data, deploymentId: id })
   );
 
-export const getSingleDeploymentDevices = id => (dispatch, getState) =>
-  GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}/devices`).then(res => {
-    const deploymentDevices = (getState().deployments.byId[id] || {}).devices || {};
-    const devices = res.data.reduce((accu, item) => {
+export const getSingleDeployment = id => (dispatch, getState) =>
+  Promise.all([GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}`), GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}/devices`)]).then(responses => {
+    const [deploymentRes, deploymentDeviceListRes] = responses;
+    const storedDeployment = getState().deployments.byId[id] || {};
+    const deploymentDevices = storedDeployment.devices || {};
+    const devices = deploymentDeviceListRes.data.reduce((accu, item) => {
       accu[item.id] = item;
       const log = (deploymentDevices[item.id] || {}).log;
       if (log) {
@@ -129,11 +135,19 @@ export const getSingleDeploymentDevices = id => (dispatch, getState) =>
       }
       return accu;
     }, {});
-    return dispatch({
-      type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICES,
-      devices,
-      deploymentId: id
-    });
+    return Promise.all([
+      dispatch({
+        type: DeploymentConstants.RECEIVE_DEPLOYMENT,
+        deployment: {
+          ...DeploymentConstants.deploymentPrototype,
+          ...storedDeployment,
+          ...deploymentRes.data,
+          name: decodeURIComponent(deploymentRes.data.name),
+          devices
+        }
+      }),
+      dispatch(getSingleDeploymentStats(id))
+    ]);
   });
 
 export const getDeviceLog = (deploymentId, deviceId) => (dispatch, getState) =>
@@ -178,7 +192,9 @@ export const abortDeployment = deploymentId => (dispatch, getState) =>
     .catch(err => {
       console.log(err);
       return Promise.all([
-        dispatch(setSnackbar(preformatWithRequestID(err.response, `There was wan error while aborting the deployment: ${err.response.data.error || ''}`))),
+        dispatch(
+          setSnackbar(preformatWithRequestID(err.response, `There was wan error while aborting the deployment: ${err.response.data.error?.message || ''}`))
+        ),
         Promise.reject(err)
       ]);
     });

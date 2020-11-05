@@ -54,7 +54,7 @@ exports[`Settings Component renders correctly 1`] = `
         aria-current={null}
         className="MuiListItem-root navLink settingsNav MuiListItem-gutters"
         disabled={false}
-        href="/settings/my-organization"
+        href="/settings/organization-and-billing"
         onClick={[Function]}
       >
         <div
@@ -63,7 +63,7 @@ exports[`Settings Component renders correctly 1`] = `
           <span
             className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
-            My organization
+            Organization and billing
           </span>
         </div>
       </a>
@@ -224,6 +224,7 @@ exports[`Settings Component renders correctly 1`] = `
         With a more advanced commercial Mender plan you get access to Two Factor Authentication to add an additional layer of security to accounts. Get an overview of the Mender plans on the 
         <a
           href="https://mender.io/plans/features"
+          rel="noopener noreferrer"
           target="_blank"
         >
           features page
