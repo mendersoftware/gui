@@ -44,10 +44,11 @@ test:acceptance:
   before_script:
     - export DOCKER_TAG=${CI_COMMIT_REF_SLUG:-master}
     - export SERVICE_IMAGE=${DOCKER_REPOSITORY}:${DOCKER_TAG}
+    - apk add --no-cache bash git wget
+    - wget -qP tests/e2e_tests/cypress/fixtures "https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender"
   script:
     - docker load -i image.tar
     - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:pr
-    - apk add --no-cache git bash
     - git clone --single-branch https://github.com/mendersoftware/integration.git
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run
     - docker rmi $DOCKER_REPOSITORY:pr

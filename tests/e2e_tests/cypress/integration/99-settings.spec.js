@@ -27,7 +27,7 @@ context('Settings', () => {
         });
         cy.contains('button', 'Sign up').click();
         cy.contains('Your upgrade was successful!').should('be.visible');
-        cy.waitUntil(() => cy.contains('Organization name'));
+        cy.contains('Organization name', { timeout: 10000 });
         cy.contains('Organization name').should('be.visible');
       });
       it('allows higher device limits once upgraded', () => {
@@ -131,15 +131,11 @@ context('Settings', () => {
       cy.get('[name=password]').invoke('val').should('not.be.empty');
       cy.get('[name=password]').clear().type('mysecretpassword!456');
       cy.get('.rightFluid').last().contains('button', 'Save').click();
-      cy.waitUntil(() => cy.contains('user has been updated'));
+      cy.contains('user has been updated', { timeout: 10000 });
       cy.contains('.header-dropdown', Cypress.env('username')).click();
       // eslint-disable-next-line cypress/no-unnecessary-waiting
-      cy.contains('span', 'Log out').click().wait(1000);
-
-      onlyOn('staging', () => {
-        cy.clearCookies().visit(`${Cypress.config().baseUrl}ui/`);
-      });
-      cy.waitUntil(() => cy.contains('Log in').should('be.visible'));
+      cy.contains('span', 'Log out').click().wait(1000).clearCookies().visit(`${Cypress.config().baseUrl}ui/`);
+      cy.contains('Log in', { timeout: 10000 }).should('be.visible');
     });
 
     it('allows changing the password back', () => {
@@ -155,7 +151,7 @@ context('Settings', () => {
       cy.get('[name=password]').clear().type(Cypress.env('password')).clear().type(Cypress.env('password'));
       cy.get('.rightFluid').last().contains('button', 'Save').click();
       // eslint-disable-next-line cypress/no-unnecessary-waiting
-      cy.contains('user has been updated', { timeout: 10000 }).wait(1000);
+      cy.contains('user has been updated', { timeout: 10000 }).wait(3000);
       cy.waitUntil(() =>
         cy
           .login(Cypress.env('username'), Cypress.env('password'), false)

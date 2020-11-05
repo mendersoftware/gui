@@ -70,7 +70,7 @@ context('Deployments', () => {
     cy.get('.MuiDialog-container button').contains('Create').click();
     cy.get('.deployment-item', { timeout: 10000 });
     cy.get('[role="tab"]').contains('Finished').click();
-    cy.waitUntil(() => cy.get('.deployment-item:not(.deployment-header-item)'));
+    cy.get('.deployment-item:not(.deployment-header-item)', { timeout: 60000 });
     cy.get('.deployment-item:not(.deployment-header-item)')
       .get('time')
       .should($elems => {

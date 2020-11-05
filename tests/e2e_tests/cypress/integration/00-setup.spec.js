@@ -64,7 +64,7 @@ context('Test setup', () => {
           localStorage.setItem(`${userId}-onboarding`, JSON.stringify({ complete: true }));
           cy.saveLocalStorage();
         });
-        cy.waitUntil(() => cy.contains('Devices'), { timeout: 15000 });
+        cy.contains('Devices', { timeout: 15000 });
       });
     });
     describe('tenant setup', () => {

@@ -50,7 +50,7 @@ context('Layout assertions', () => {
       cy.contains('.deviceListItem', 'release', { timeout: 10000 });
       cy.get('.deviceListItem').click().should('contain', 'release').end();
       cy.get('.expandedDevice')
-        .should('contain', `${Cypress.config('demoDeviceName') || 'mender-image-master'}`)
+        .should('contain', `${Cypress.config('demoDeviceName') || 'release-v1'}`)
         .and('contain', 'Linux')
         .and('contain', 'mac')
         .and('contain', 'qemux86-64');
