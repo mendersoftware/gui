@@ -1,14 +1,11 @@
 /// <reference types="Cypress" />
-
+import { onlyOn } from '@cypress/skip-test';
 import 'cypress-file-upload';
 
 context('Files', () => {
   beforeEach(() => {
-    cy.visit(`${Cypress.config().baseUrl}ui/`);
-    // enter valid username and password
-    cy.get('[id=email]').type(Cypress.env('username'));
-    cy.get('[name=password]').type(Cypress.env('password'));
-    cy.contains('button', 'Log in').click().wait(2000);
+    cy.login(Cypress.env('username'), Cypress.env('password'));
+    Cypress.Cookies.preserveOnce('JWT');
     cy.visit('ui/#/releases');
   });
 
@@ -57,24 +54,23 @@ context('Files', () => {
 
 context('Deployments', () => {
   beforeEach(() => {
-    cy.visit(`${Cypress.config().baseUrl}ui/`);
-    // enter valid username and password
-    cy.get('[id=email]').type(Cypress.env('username'));
-    cy.get('[name=password]').type(Cypress.env('password'));
-    cy.contains('button', 'Log in').click().wait(2000);
-    cy.visit('ui/#/devices').wait(3000);
-    cy.visit('ui/#/releases').wait(2000);
+    cy.login(Cypress.env('username'), Cypress.env('password'));
+    cy.visit('ui/#/devices');
+    cy.visit('ui/#/releases');
   });
 
   it('allows shortcut deployments', () => {
     // create an artifact to download first
     cy.get('.repository-list-item').contains('mender-demo-artifact').click().end();
-    cy.get('a').contains('Create deployment').click({ force: true }).wait(5000).end();
-    cy.get('#deployment-device-group-selection').click({ force: true });
+    cy.get('a').contains('Create deployment').click({ force: true });
+    cy.get('#deployment-device-group-selection', { timeout: 5000 }).type('All');
     cy.get('#deployment-device-group-selection-popup').get('li').contains('All devices').click().end();
     cy.get('button').contains('Next').click().end();
-    cy.get('.MuiDialog-container button').contains('Create').click().wait(20000).end();
-    cy.get('[role="tab"]').contains('Finished').click().end();
+    onlyOn('staging', () => cy.get('.MuiDialog-container button').contains('Next').click());
+    cy.get('.MuiDialog-container button').contains('Create').click();
+    cy.get('.deployment-item', { timeout: 10000 });
+    cy.get('[role="tab"]').contains('Finished').click();
+    cy.waitUntil(() => cy.get('.deployment-item:not(.deployment-header-item)'));
     cy.get('.deployment-item:not(.deployment-header-item)')
       .get('time')
       .should($elems => {

@@ -1,6 +1,7 @@
-image: node:14.7.0-alpine
+image: node:15.0.1-alpine
 
 stages:
+  - pre-test
   - test
   - build
   - e2e-test
@@ -23,8 +24,12 @@ test:lint:
   except:
     - master
     - /^saas-[a-zA-Z0-9.]+$/
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .npm/
   script:
-    - npm ci
+    - npm ci --cache .npm --prefer-offline
     - npm run lint
 
 test:acceptance:
@@ -57,8 +62,13 @@ test:unit:
   stage: test
   except:
     - /^saas-[a-zA-Z0-9.]+$/
+  image: node:14-alpine
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .npm/
   script:
-    - npm install
+    - npm ci --cache .npm --prefer-offline
     - npm run test
   artifacts:
     expire_in: 2w
@@ -93,6 +103,57 @@ test:docs-links:hosted:
   except: []
   variables:
     DOCS_VERSION: hosted
+
+test-prep:
+  stage: pre-test
+  image: docker
+  services:
+    - docker:19.03.5-dind
+  script:
+    - docker run --rm --entrypoint "/bin/sh" -v $(pwd):/extract mendersoftware/mender-stress-test-client -c "cp mender-stress-test-client /extract/"
+  only:
+    - staging
+  artifacts:
+    paths:
+      - mender-stress-test-client
+    expire_in: 30 days
+
+test:staging-deployment:
+  image:
+    name: cypress/included:5.4.0
+    # cypress/included images have entrypoint set to "cypress"
+    # which conflicts with GitLab CI wrapper shell script
+    entrypoint: ['']
+  stage: .post
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .npm/
+  dependencies:
+    - test-prep
+  variables:
+    CI: 1
+    CYPRESS_BASE_URL: https://staging.hosted.mender.io/
+    SERVER_URL: https://staging.hosted.mender.io
+    DEVICE_TYPE: qemux86-64
+  before_script:
+    - mv mender-stress-test-client tests/e2e_tests/ && cd tests/e2e_tests
+    - wget -qP cypress/fixtures "https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender"
+    - apt-get install -qy musl-dev
+  script:
+    - npm ci --cache .npm --prefer-offline
+    - npx cypress verify
+    - npm run ciTest
+  only:
+    - staging
+  when: delayed
+  start_in: 30 minutes
+  artifacts:
+    expire_in: 2w
+    paths:
+      - tests/e2e_tests/cypress/screenshots
+      - logs
+    when: on_failure
 
 publish:tests:
   stage: publish
