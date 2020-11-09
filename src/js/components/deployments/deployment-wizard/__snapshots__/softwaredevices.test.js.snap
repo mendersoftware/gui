@@ -64,44 +64,95 @@ exports[`SoftwareDevices Component renders correctly 1`] = `
     >
       <div>
         <div
-          className="MuiFormControl-root"
-          style={
-            Object {
-              "minWidth": "400px",
-            }
-          }
+          aria-expanded={false}
+          aria-owns={null}
+          className="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon"
+          onClick={[Function]}
+          onKeyDown={[Function]}
+          onMouseDown={[Function]}
+          role="combobox"
         >
-          <label
-            className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-            data-shrink={false}
-            htmlFor="adornment-target-select"
-          >
-            Select a device group to deploy to
-          </label>
           <div
-            className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl"
-            onClick={[Function]}
+            className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
             style={
               Object {
-                "minWidth": "250px",
+                "minWidth": "400px",
               }
             }
           >
-            <input
-              aria-invalid={false}
-              autoComplete="off"
-              className="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled"
-              disabled={true}
-              id="adornment-target-select"
-              onAnimationStart={[Function]}
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              placeholder="Select a device group to deploy to"
-              required={false}
-              type="text"
-              value=""
-            />
+            <label
+              className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated Mui-disabled Mui-disabled"
+              data-shrink={false}
+              htmlFor="deployment-device-group-selection"
+              id="deployment-device-group-selection-label"
+            >
+              Select a device group to deploy to
+            </label>
+            <div
+              className="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot Mui-disabled Mui-disabled MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+              onClick={[Function]}
+            >
+              <input
+                aria-activedescendant={null}
+                aria-autocomplete="list"
+                aria-controls={null}
+                aria-invalid={false}
+                autoCapitalize="none"
+                autoComplete="off"
+                autoFocus={false}
+                className="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused Mui-disabled Mui-disabled MuiInputBase-inputAdornedEnd"
+                disabled={true}
+                id="deployment-device-group-selection"
+                onAnimationStart={[Function]}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onMouseDown={[Function]}
+                required={false}
+                spellCheck="false"
+                type="text"
+                value=""
+              />
+              <div
+                className="MuiAutocomplete-endAdornment"
+              >
+                <button
+                  aria-label="Open"
+                  className="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-popupIndicator Mui-disabled Mui-disabled"
+                  disabled={true}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onDragLeave={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  onTouchEnd={[Function]}
+                  onTouchMove={[Function]}
+                  onTouchStart={[Function]}
+                  tabIndex={-1}
+                  title="Open"
+                  type="button"
+                >
+                  <span
+                    className="MuiIconButton-label"
+                  >
+                    <svg
+                      aria-hidden={true}
+                      className="MuiSvgIcon-root"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M7 10l5 5 5-5z"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
         <p

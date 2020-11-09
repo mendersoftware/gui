@@ -1,32 +1,30 @@
 import React from 'react';
-import SearchInput from 'react-search-input';
 import pluralize from 'pluralize';
 
 // material ui
-import { Button, List, ListItem, ListItemText, Typography } from '@material-ui/core';
+import { Button, List, ListItem, ListItemText, TextField, Typography } from '@material-ui/core';
 import { KeyboardArrowRight as KeyboardArrowRightIcon, Sort as SortIcon } from '@material-ui/icons';
+import { createFilterOptions } from '@material-ui/lab';
 
 import Loader from '../common/loader';
 import { customSort } from '../../helpers';
 
 const filters = ['device_types_compatible', 'descriptions', 'Name'];
 
+const filter = createFilterOptions({ stringify: option => filters.map(item => option[item]).join(' ') });
+
 export default class ReleasesList extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      searchTerm: null,
       sortDown: true
     };
   }
 
-  searchUpdated(term) {
-    const self = this;
-    if (self.search) {
-      const filteredReleases = self.props.releases.filter(self.search.filter(filters));
-      self.props.onFilter(filteredReleases);
-      self.setState({ searchTerm: term, filteredReleases });
-    }
+  searchUpdated(searchTerm) {
+    const filteredReleases = filter(this.props.releases, { inputValue: searchTerm });
+    this.props.onFilter(filteredReleases);
+    this.setState({ filteredReleases });
   }
 
   render() {
@@ -40,9 +38,9 @@ export default class ReleasesList extends React.Component {
       <div className="repository-list">
         <div className="flexbox" style={{ alignItems: 'center' }}>
           <h3>Releases</h3>
-          <SearchInput placeholder="Filter" className="search margin-left" ref={search => (self.search = search)} onChange={term => self.searchUpdated(term)} />
+          <TextField placeholder="Filter" className="search" onChange={e => self.searchUpdated(e.target.value)} style={{ marginLeft: 30, marginTop: 0 }} />
         </div>
-        {self.state.searchTerm ? <p className="muted">{`Filtered from ${releases.length} ${pluralize('Release', releases.length)}`}</p> : null}
+        {releases.length !== filteredReleases.length && <p className="muted">{`Filtered from ${releases.length} ${pluralize('Release', releases.length)}`}</p>}
         <Button
           className="muted"
           onClick={() => self.setState({ sortDown: !sortDown })}
