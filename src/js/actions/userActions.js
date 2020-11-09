@@ -1,6 +1,6 @@
 import Cookies from 'universal-cookie';
 
-import { setSnackbar } from './appActions';
+import { commonErrorHandler, setSnackbar } from './appActions';
 import GeneralApi from '../api/general-api';
 import UsersApi from '../api/users-api';
 import OnboardingConstants from '../constants/onboardingConstants';
@@ -74,10 +74,9 @@ export const logoutUser = reason => (dispatch, getState) => {
 };
 
 export const passwordResetStart = email => dispatch =>
-  GeneralApi.post(`${useradmApiUrl}/auth/password-reset/start`, { email: email }).catch(err => {
-    dispatch(setSnackbar('The password reset request cannot be processed: ' + (err || {}).error));
-    return Promise.reject(err);
-  });
+  GeneralApi.post(`${useradmApiUrl}/auth/password-reset/start`, { email: email }).catch(err =>
+    commonErrorHandler(err, `The password reset request cannot be processed:`, dispatch)
+  );
 
 export const passwordResetComplete = (secretHash, newPassword) => dispatch =>
   GeneralApi.post(`${useradmApiUrl}/auth/password-reset/complete`, { secret_hash: secretHash, password: newPassword }).catch(err => {
@@ -97,18 +96,7 @@ export const verify2FA = tfaData => dispatch =>
     .then(() => {
       return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: getToken() })]);
     })
-    .catch(err => {
-      return Promise.all([
-        Promise.reject(err),
-        dispatch(
-          setSnackbar(
-            preformatWithRequestID(err.response, 'An error occured validating the verification code: failed to verify token, please try again.'),
-            null,
-            'Copy to clipboard'
-          )
-        )
-      ]);
-    });
+    .catch(err => commonErrorHandler(err, 'An error occured validating the verification code: failed to verify token, please try again.', dispatch));
 
 export const getUserList = () => dispatch =>
   GeneralApi.get(`${useradmApiUrl}/users`)
@@ -119,10 +107,7 @@ export const getUserList = () => dispatch =>
       }, {});
       return dispatch({ type: UserConstants.RECEIVED_USER_LIST, users });
     })
-    .catch(err => {
-      var errormsg = err.response?.data?.error.message || err.error || 'Please check your connection';
-      dispatch(setSnackbar(preformatWithRequestID(err.response, `Users couldn't be loaded. ${errormsg}`)));
-    });
+    .catch(err => commonErrorHandler(err, `Users couldn't be loaded.`, dispatch, 'Please check your connection'));
 
 export const getUser = id => dispatch =>
   GeneralApi.get(`${useradmApiUrl}/users/${id}`).then(({ data: user }) => Promise.all([dispatch({ type: UserConstants.RECEIVED_USER, user }), user]));
@@ -245,12 +230,7 @@ export const editRole = roleData => dispatch => {
 export const removeRole = roleId => dispatch =>
   GeneralApi.delete(`${useradmApiUrl}/roles/${roleId}`)
     .then(() => Promise.all([dispatch({ type: UserConstants.REMOVED_ROLE, roleId }), dispatch(getRoles())]))
-    .catch(err =>
-      Promise.all([
-        Promise.reject(err),
-        dispatch(setSnackbar(preformatWithRequestID(err.response, err.response.data?.error.message), null, 'Copy to clipboard'))
-      ])
-    );
+    .catch(err => commonErrorHandler(err, `There was an error removing the role:`, dispatch));
 
 /*
   Global settings
@@ -283,7 +263,7 @@ export const saveGlobalSettings = (settings, beOptimistic = false, notify = fals
       }
       console.log(err);
       if (notify) {
-        dispatch(setSnackbar(preformatWithRequestID(err.response, `The settings couldn't be saved. ${err.response.data.error}`)));
+        return commonErrorHandler(err, `The settings couldn't be saved.`, dispatch);
       }
       return Promise.reject();
     });

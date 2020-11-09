@@ -1,7 +1,7 @@
 import DeploymentConstants from '../constants/deploymentConstants';
 import GeneralApi, { headerNames } from '../api/general-api';
-import { setSnackbar } from '../actions/appActions';
-import { mapAttributesToAggregator, preformatWithRequestID, startTimeSort } from '../helpers';
+import { commonErrorHandler, setSnackbar } from '../actions/appActions';
+import { mapAttributesToAggregator, startTimeSort } from '../helpers';
 
 const apiUrl = '/api/management/v1';
 const apiUrlV2 = '/api/management/v2';
@@ -92,11 +92,7 @@ export const createDeployment = newDeployment => dispatch => {
     request = GeneralApi.post(`${deploymentsApiUrl}/deployments`, newDeployment);
   }
   return request
-    .catch(err => {
-      const errMsg = err.response.data?.error?.message || err.response.data?.error || err.error || '';
-      dispatch(setSnackbar(preformatWithRequestID(err.response, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard'));
-      return Promise.reject();
-    })
+    .catch(err => commonErrorHandler(err, 'Error creating deployment.', dispatch))
     .then(data => {
       const lastslashindex = data.headers.location.lastIndexOf('/');
       const deploymentId = data.headers.location.substring(lastslashindex + 1);
@@ -189,15 +185,7 @@ export const abortDeployment = deploymentId => (dispatch, getState) =>
         dispatch(setSnackbar('The deployment was successfully aborted'))
       ]);
     })
-    .catch(err => {
-      console.log(err);
-      return Promise.all([
-        dispatch(
-          setSnackbar(preformatWithRequestID(err.response, `There was wan error while aborting the deployment: ${err.response.data.error?.message || ''}`))
-        ),
-        Promise.reject(err)
-      ]);
-    });
+    .catch(err => commonErrorHandler(err, 'There was wan error while aborting the deployment:', dispatch));
 
 export const selectDeployment = deploymentId => dispatch => {
   let tasks = [

@@ -1,9 +1,8 @@
 import Cookies from 'universal-cookie';
 
-import { setSnackbar } from './appActions';
+import { commonErrorHandler, setSnackbar } from './appActions';
 import Api, { headerNames } from '../api/general-api';
 import OrganizationConstants from '../constants/organizationConstants';
-import { preformatWithRequestID } from '../helpers';
 
 const cookies = new Cookies();
 const apiUrlv1 = '/api/management/v1';
@@ -42,10 +41,7 @@ export const startCardUpdate = () => dispatch =>
       });
       return Promise.resolve(res.data.secret);
     })
-    .catch(err => {
-      dispatch(setSnackbar(preformatWithRequestID(err.response, err.response.data.error), null, 'Copy to clipboard'));
-      return Promise.reject(err);
-    });
+    .catch(err => commonErrorHandler(err, `Updating the card failed:`, dispatch));
 
 export const confirmCardUpdate = () => (dispatch, getState) =>
   Api.post(`${tenantadmApiUrlv2}/billing/${getState().organization.intentId}/confirm`)
@@ -58,10 +54,7 @@ export const confirmCardUpdate = () => (dispatch, getState) =>
         })
       ])
     )
-    .catch(err => {
-      dispatch(setSnackbar(preformatWithRequestID(err.response, err.response.data.error), null, 'Copy to clipboard'));
-      return Promise.reject(err);
-    });
+    .catch(err => commonErrorHandler(err, `Updating the card failed:`, dispatch));
 
 export const getCurrentCard = () => dispatch =>
   Api.get(`${tenantadmApiUrlv2}/billing`).then(res => {
@@ -81,18 +74,14 @@ export const getCurrentCard = () => dispatch =>
 export const startUpgrade = tenantId => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/upgrade/start`)
     .then(({ data }) => Promise.resolve(data.secret))
-    .catch(err => {
-      dispatch(setSnackbar(preformatWithRequestID(err.response, err.response.data?.error.message), null, 'Copy to clipboard'));
-      return Promise.reject(err);
-    });
+    .catch(err => commonErrorHandler(err, `There was an error upgrading your account:`, dispatch));
 
 export const cancelUpgrade = tenantId => () => Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/upgrade/cancel`);
 
 export const completeUpgrade = (tenantId, plan) => dispatch =>
-  Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/upgrade/complete`, { plan: plan }).catch(err => {
-    dispatch(setSnackbar(preformatWithRequestID(err.response, `There was an error upgrading your account. ${err.response.data.error}`)));
-    return Promise.reject(err);
-  });
+  Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/upgrade/complete`, { plan: plan }).catch(err =>
+    commonErrorHandler(err, `There was an error upgrading your account:`, dispatch)
+  );
 
 export const getAuditLogs = (page, perPage, startDate, endDate, userId, type, detail, sort = 'desc') => dispatch => {
   const createdAfter = endDate ? `&created_after=${Math.round(Date.parse(endDate) / 1000)}` : '';
@@ -108,11 +97,7 @@ export const getAuditLogs = (page, perPage, startDate, endDate, userId, type, de
       const total = Number(res.headers[headerNames.total]);
       return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_AUDIT_LOGS, events: res.data, total }));
     })
-    .catch(err => {
-      console.log(err);
-      dispatch(setSnackbar(preformatWithRequestID(err.response, err.response?.data.error.message), null, 'Copy to clipboard'));
-      return Promise.reject(err);
-    });
+    .catch(err => commonErrorHandler(err, `There was an error retrieving audit logs:`, dispatch));
 };
 
 export const getAllAuditLogs = (startDate, endDate, userId, type, detail, sort = 'desc') => dispatch => {
@@ -132,11 +117,7 @@ export const getAllAuditLogs = (startDate, endDate, userId, type, detail, sort =
         }
         return entries;
       })
-      .catch(err => {
-        console.log(err);
-        dispatch(setSnackbar(preformatWithRequestID(err.response, err.response?.data.error.message), null, 'Copy to clipboard'));
-        return Promise.reject(err);
-      });
+      .catch(err => commonErrorHandler(err, `There was an error retrieving audit logs:`, dispatch));
   return getLogs();
 };
 
