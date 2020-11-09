@@ -43,7 +43,7 @@
     "reselect": "^4.0.0",
     "universal-cookie": "^4.0.4",
     "validator": "^13.1.17",
-    "victory": "^35.0.9",
+    "victory": "^35.3.4",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
