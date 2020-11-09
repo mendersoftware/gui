@@ -127,11 +127,7 @@ export class Authorized extends React.Component {
       request = getDevicesByStatus(DEVICE_STATES.accepted, pageNo, pageLength, shouldUpdate || hasFilters, undefined, sortBy);
     }
     request
-      .catch(err => {
-        console.log(err);
-        const errormsg = err.error || 'Please check your connection.';
-        setRetryTimer(err, 'devices', `Devices couldn't be loaded. ${errormsg}`, refreshDeviceLength, setSnackbar);
-      })
+      .catch(err => setRetryTimer(err, 'devices', `Devices couldn't be loaded.`, refreshDeviceLength, setSnackbar))
       // only set state after all devices id data retrieved
       .finally(() => self.setState({ loading: false, pageLoading: false }));
   }
@@ -144,8 +140,7 @@ export class Authorized extends React.Component {
       .trySelectDevice(id, DEVICE_STATES.accepted)
       .catch(err => {
         if (err.response.status === 404) {
-          var errormsg = err.response?.data?.error || 'Please check your connection.';
-          setRetryTimer(err, 'devices', `Device couldn't be loaded. ${errormsg}`, refreshDeviceLength, self.props.setSnackbar);
+          setRetryTimer(err, 'devices', `Device couldn't be loaded.`, refreshDeviceLength, self.props.setSnackbar);
         }
       })
       .finally(() => self.setState({ loading: false, pageLoading: false }));
