@@ -3,7 +3,7 @@ import pluralize from 'pluralize';
 import { commonErrorHandler, setSnackbar } from '../actions/appActions';
 import GeneralApi, { headerNames } from '../api/general-api';
 import * as DeviceConstants from '../constants/deviceConstants';
-import { getSnackbarMessage, mapDeviceAttributes } from '../helpers';
+import { extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
 
 // default per page until pagination and counting integrated
 const defaultPerPage = 20;
@@ -380,7 +380,8 @@ export const getDeviceById = id => dispatch =>
       return Promise.resolve(device);
     })
     .catch(err => {
-      if (err.response?.data?.error.startsWith('Device not found')) {
+      const errMsg = extractErrorMessage(err);
+      if (errMsg.startsWith('Device not found')) {
         console.log(`${id} does not have any inventory information`);
         return;
       }

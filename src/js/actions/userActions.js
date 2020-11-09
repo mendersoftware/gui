@@ -7,13 +7,13 @@ import OnboardingConstants from '../constants/onboardingConstants';
 import UserConstants from '../constants/userConstants';
 import { getUserSettings } from '../selectors';
 import { getToken, logout } from '../auth';
-import { preformatWithRequestID, decodeSessionToken } from '../helpers';
+import { extractErrorMessage, preformatWithRequestID, decodeSessionToken } from '../helpers';
 
 const cookies = new Cookies();
 const { emptyRole, rolesByName, useradmApiUrl } = UserConstants;
 
 const handleLoginError = (err, has2FA) => dispatch => {
-  const errorText = err.response.data?.error?.message || err.response.data?.error || err.message;
+  const errorText = extractErrorMessage(err);
   const is2FABackend = errorText.includes('2fa');
   if (is2FABackend && !has2FA) {
     return dispatch(saveGlobalSettings({ '2fa': 'enabled' }, true));
@@ -127,12 +127,7 @@ const actions = {
   }
 };
 
-const userActionErrorHandler = (err, type, dispatch) => {
-  console.log(err);
-  var errMsg = err.response.data.error?.message || '';
-  dispatch(setSnackbar(preformatWithRequestID(err.response, `There was an error ${actions[type].errorMessage} the user. ${errMsg}`)));
-  return Promise.reject(err);
-};
+const userActionErrorHandler = (err, type, dispatch) => commonErrorHandler(err, `There was an error ${actions[type].errorMessage} the user.`, dispatch);
 
 export const createUser = userData => dispatch =>
   GeneralApi.post(`${useradmApiUrl}/users`, userData)

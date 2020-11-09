@@ -3,7 +3,7 @@ import Cookies from 'universal-cookie';
 import AppConstants from '../constants/appConstants';
 import { DEVICE_STATES } from '../constants/deviceConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
-import { preformatWithRequestID } from '../helpers';
+import { extractErrorMessage, preformatWithRequestID } from '../helpers';
 import { getUserSettings } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import { getDeviceAttributes, getDevicesByStatus, getDeviceLimit, getDynamicGroups, getGroups } from './deviceActions';
@@ -14,8 +14,8 @@ import { getUserOrganization } from './organizationActions';
 
 const cookies = new Cookies();
 
-export const commonErrorHandler = (err, errorContext, dispatch, fallback = '') => {
-  const errMsg = err.response.data?.error?.message || err.response.data?.error || err.error || fallback;
+export const commonErrorHandler = (err, errorContext, dispatch, fallback) => {
+  const errMsg = extractErrorMessage(err, fallback);
   dispatch(setSnackbar(preformatWithRequestID(err.response, `${errorContext} ${errMsg}`), null, 'Copy to clipboard'));
   return Promise.reject(err);
 };
