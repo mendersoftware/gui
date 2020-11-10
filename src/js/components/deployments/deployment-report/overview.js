@@ -8,6 +8,8 @@ import isEqual from 'lodash.isequal';
 import { Button, Tooltip } from '@material-ui/core';
 import { Block as BlockIcon, Timelapse as TimelapseIcon, Refresh as RefreshIcon } from '@material-ui/icons';
 
+import successImage from '../../../../assets/img/largeSuccess.png';
+import failImage from '../../../../assets/img/largeFail.png';
 import { formatTime } from '../../../helpers';
 import Confirm from '../../common/confirm';
 import ExpandableAttribute from '../../common/expandable-attribute';
@@ -111,7 +113,7 @@ export const DeploymentOverview = ({
             (deployment.stats.failure == 0 && deployment.stats.aborted == 0)
           ) && (
             <div className="statusLarge margin-top-large flexbox centered" style={{ alignItems: 'flex-start' }}>
-              <img src={deployment.stats.success ? 'assets/img/largeSuccess.png' : 'assets/img/largeFail.png'} />
+              <img src={deployment.stats.success ? successImage : failImage} />
               <div className="statusWrapper">
                 <div className="statusWrapperMessage">
                   {!!deployment.stats.success && (

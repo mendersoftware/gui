@@ -6,6 +6,7 @@ import ReactTooltip from 'react-tooltip';
 import { Button, Icon, List, Typography } from '@material-ui/core';
 import { Block as BlockIcon, Check as CheckIcon, CheckCircle as CheckCircleIcon, Help as HelpIcon, Warning as WarningIcon } from '@material-ui/icons';
 
+import pendingIcon from '../../../assets/img/pending_status.png';
 import { decommissionDevice } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
 import { setSnackbar } from '../../actions/appActions';
@@ -22,7 +23,7 @@ const iconStyle = { margin: 12 };
 const states = {
   pending: {
     text: 'Accept, reject or dismiss the device?',
-    statusIcon: <Icon className="pending-icon" style={iconStyle} />
+    statusIcon: <Icon style={iconStyle} component="img" src={pendingIcon} />
   },
   accepted: {
     text: 'Reject, dismiss or decommission this device?',

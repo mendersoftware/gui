@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { RootRef, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 
+import historyImage from '../../../assets/img/history.png';
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, selectDeployment } from '../../actions/deploymentActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
@@ -182,7 +183,7 @@ export class Past extends React.Component {
               <p>
                 Try a different date range, or <a onClick={createClick}>Create a new deployment</a> to get started
               </p>
-              <img src="assets/img/history.png" alt="Past" />
+              <img src={historyImage} alt="Past" />
             </div>
           )}
         </div>

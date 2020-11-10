@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { passwordResetStart } from '../../actions/userActions';
 
+import headerLogo from '../../../assets/img/headerlogo.png';
+import { passwordResetStart } from '../../actions/userActions';
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 
@@ -20,7 +21,7 @@ export const Password = props => {
 
   return (
     <div className="flexbox column" id="login-box">
-      <img src="assets/img/headerlogo.png" alt="mender-logo" id="signupLogo" />
+      <img src={headerLogo} alt="mender-logo" id="signupLogo" />
       <h1 className="align-center">Reset your password</h1>
       {confirm ? (
         <p className="margin-bottom align-center">

@@ -7,6 +7,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mate
 
 import { Help as HelpIcon } from '@material-ui/icons';
 
+import docker from '../../../../assets/img/docker.png';
 import raspberryPi from '../../../../assets/img/raspberrypi.png';
 import raspberryPi4 from '../../../../assets/img/raspberrypi4.jpg';
 
@@ -100,7 +101,7 @@ export class DeviceConnectionDialog extends React.Component {
             <b>Don&apos;t have a Raspberry Pi?</b> You can use our Docker-run virtual device to go through the same tutorial.
           </span>
           <div>
-            <img src="assets/img/docker.png" style={{ height: '40px', verticalAlign: 'middle', marginRight: '8px' }} />
+            <img src={docker} style={{ height: '40px', verticalAlign: 'middle', marginRight: '8px' }} />
             <a onClick={() => self.setState({ virtualDevice: true })}>Prepare a virtual device for now</a>
           </div>
         </div>

@@ -2,10 +2,10 @@ import React from 'react';
 
 import { Button } from '@material-ui/core';
 
+import headerLogo from '../../../../assets/img/headerlogo.png';
 import Form from '../../common/forms/form';
 import TextInput from '../../common/forms/textinput';
 import PasswordInput from '../../common/forms/passwordinput';
-
 import { OAuth2Providers } from '../oauth2providers';
 
 export class UserDataEntry extends React.Component {
@@ -32,7 +32,7 @@ export class UserDataEntry extends React.Component {
     const { email, password, password_confirmation } = this.state;
     return (
       <>
-        <img src="assets/img/headerlogo.png" alt="mender-logo" id="signupLogo" />
+        <img src={headerLogo} alt="mender-logo" id="signupLogo" />
         <h1>Try Mender for Free</h1>
         <h2 className="margin-bottom">
           Sign up and connect up to 10 devices

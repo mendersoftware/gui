@@ -7,6 +7,7 @@ import ReactTooltip from 'react-tooltip';
 import { Button } from '@material-ui/core';
 import { Help as HelpIcon } from '@material-ui/icons';
 
+import loginLogo from '../../../assets/img/loginlogo.png';
 import { setSnackbar } from '../../actions/appActions';
 import { getUser, loginUser, logoutUser } from '../../actions/userActions';
 
@@ -75,7 +76,7 @@ export class Login extends React.Component {
     return (
       <div className="flexbox column" id="login-box">
         <h3>Log in</h3>
-        <img src="assets/img/loginlogo.png" alt="mender-logo" className="margin-bottom-small" />
+        <img src={loginLogo} alt="mender-logo" className="margin-bottom-small" />
 
         {isHosted && (
           <>

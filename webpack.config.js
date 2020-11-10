@@ -1,24 +1,53 @@
+const path = require('path');
+const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   devtool: 'source-map',
+  node: {
+    global: true
+  },
   module: {
     rules: [
       {
-        test: /\.js[x]?$/,
+        test: /\.m?js[x]?$/,
         exclude: /node_modules/,
-        use: ['babel-loader', 'eslint-loader']
+        use: ['babel-loader', 'eslint-loader'],
+        resolve: {
+          fullySpecified: false
+        }
       },
+      {
+        test: /\.(less|css)$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              url: false,
+              sourceMap: true
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: { plugins: [require('autoprefixer')({})] },
+              sourceMap: true
+            }
+          },
+          'less-loader'
+        ]
+      },
+
       {
         test: /\.(png|jpe?g|gif)$/i,
         use: [
           {
             loader: 'url-loader',
             options: {
-              name: './assets/img/[name].[ext]',
+              name: 'assets/img/[name].[ext]',
               limit: 10000
             }
           }
@@ -30,39 +59,26 @@ module.exports = {
           {
             loader: 'url-loader',
             options: {
-              name: './assets/fonts/[name].[ext]',
+              name: 'assets/fonts/[name].[ext]',
               limit: 10000
             }
           }
         ]
-      },
-      {
-        test: /\.(less|css)$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true
-            }
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: { plugins: [require('autoprefixer')({})] },
-              sourceMap: true
-            }
-          },
-          'resolve-url-loader',
-          'less-loader'
-        ]
       }
     ]
+  },
+  output: {
+    filename: '[name].[contenthash].min.js',
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: '/ui/'
   },
   plugins: [
     new CleanWebpackPlugin({
       cleanOnceBeforeBuildPatterns: ['**/*', '!env.js'],
       cleanAfterEveryBuildPatterns: ['!assets/fonts/*', '!assets/img/*']
+    }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser'
     }),
     new HtmlWebPackPlugin({
       favicon: './src/favicon.ico',
@@ -72,9 +88,17 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css'
-    }),
-    new CopyPlugin({
-      patterns: [{ from: './src/assets/img', to: 'assets/img' }]
     })
-  ]
+  ],
+  resolve: {
+    alias: {
+      '@babel/runtime/helpers/esm': path.resolve(__dirname, 'node_modules/@babel/runtime/helpers/esm')
+    },
+    fallback: {
+      buffer: require.resolve('buffer/'),
+      crypto: 'crypto-browserify',
+      stream: require.resolve('stream-browserify')
+    }
+  },
+  target: 'web'
 };

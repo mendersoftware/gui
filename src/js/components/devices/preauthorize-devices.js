@@ -6,6 +6,7 @@ import Time from 'react-time';
 import { Button } from '@material-ui/core';
 import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 
+import preauthImage from '../../../assets/img/preauthorize.png';
 import { getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
@@ -167,7 +168,7 @@ export class Preauthorize extends React.Component {
               {limitMaxed ? 'Preauthorize devices' : <a onClick={() => self._togglePreauth(true)}>Preauthorize devices</a>} so that when they come online, they
               will connect to the server immediately
             </p>
-            <img src="assets/img/preauthorize.png" alt="preauthorize" />
+            <img src={preauthImage} alt="preauthorize" />
           </div>
         )}
         {openPreauth && (
