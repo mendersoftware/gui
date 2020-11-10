@@ -16,7 +16,7 @@ import { initializeAppData, setFirstLoginAfterSignup, setSnackbar } from '../../
 import { getOnboardingState } from '../../actions/onboardingActions';
 import { getUser, logoutUser, setShowHelptips, toggleHelptips } from '../../actions/userActions';
 import { getToken } from '../../auth';
-import { decodeSessionToken, hashString, isEmpty } from '../../helpers';
+import { decodeSessionToken, extractErrorMessage, hashString, isEmpty } from '../../helpers';
 import { getDocsVersion, getIsEnterprise, getUserRoles, getUserSettings } from '../../selectors';
 import Tracking from '../../tracking';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
@@ -110,7 +110,7 @@ export class Header extends React.Component {
           return this.props.initializeAppData();
         })
         // this is allowed to fail if no user information are available
-        .catch(err => console.log(err.response ? err.response.data.error?.message : err))
+        .catch(err => console.log(extractErrorMessage(err)))
         .then(self.props.getOnboardingState)
         .finally(() => self.setState({ gettingUser: false }))
     );

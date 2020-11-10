@@ -82,6 +82,9 @@ export const isEmpty = obj => {
   return true;
 };
 
+export const extractErrorMessage = (err, fallback = '') =>
+  err.response?.data?.error?.message || err.response?.data?.error || err.error || err.message || fallback;
+
 export function preformatWithRequestID(res, failMsg) {
   // ellipsis line
   if (failMsg.length > 100) failMsg = `${failMsg.substring(0, 220)}...`;
