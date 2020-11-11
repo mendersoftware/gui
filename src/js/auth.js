@@ -6,14 +6,14 @@ export function getToken() {
 }
 
 export function logout() {
-  cookies.remove('JWT');
+  cookies.remove('JWT', { path: '/' });
   window.location.replace('#/login');
 }
 
 export function updateMaxAge() {
   const userCookie = getToken();
   if (userCookie && expirySet()) {
-    cookies.set('JWT', userCookie, { maxAge: 900, sameSite: 'strict' });
+    cookies.set('JWT', userCookie, { maxAge: 900, sameSite: 'strict', path: '/' });
   }
 }
 
