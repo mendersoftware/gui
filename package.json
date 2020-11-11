@@ -83,6 +83,7 @@
     "husky": "^4.3.0",
     "jest": "~26.6.3",
     "jest-environment-jsdom-fifteen": "1.0.2",
+    "jest-canvas-mock": "^2.3.0",
     "jest-resolve": "~26.6.2",
     "jest-watch-typeahead": "0.6.1",
     "less": "^3.12.2",
@@ -124,8 +125,11 @@
       "/node_modules/",
       "/themes/"
     ],
+    "setupFiles": [
+      "jest-canvas-mock"
+    ],
     "setupFilesAfterEnv": [
-      "./tests/setupTests.js"
+      "<rootDir>/tests/setupTests.js"
     ],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.js",
@@ -133,21 +137,15 @@
     ],
     "testEnvironment": "jest-environment-jsdom-fifteen",
     "transform": {
-      "^.+\\.js$": "babel-jest",
-      "^.+\\.(css|less)$": "<rootDir>/tests/cssTransform.js",
+      "^.+\\.[j|t]sx?$": "babel-jest",
       "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/tests/assetsTransformer.js"
     },
     "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.js$",
-      "^.+\\.module\\.(css|less|sass|scss)$"
+      "<rootDir>/node_modules/(?!xterm-for-react)"
     ],
-    "modulePaths": [],
     "moduleNameMapper": {
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+      "\\.(css|less)$": "<rootDir>/tests/cssTransform.js"
     },
-    "moduleFileExtensions": [
-      "js"
-    ],
     "watchPlugins": [
       "jest-watch-typeahead/filename",
       "jest-watch-typeahead/testname"
