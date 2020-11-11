@@ -96,9 +96,11 @@ module.exports = {
       '@babel/runtime/helpers/esm': path.resolve(__dirname, 'node_modules/@babel/runtime/helpers/esm')
     },
     fallback: {
+      assert: require.resolve('assert/'),
       buffer: require.resolve('buffer/'),
       crypto: 'crypto-browserify',
-      stream: require.resolve('stream-browserify')
+      stream: require.resolve('stream-browserify'),
+      util: require.resolve('util/')
     }
   },
   target: 'web'
