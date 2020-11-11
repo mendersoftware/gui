@@ -28,7 +28,11 @@ export const Terminal = props => {
   React.useEffect(() => {
     const term = xtermRef.current.terminal;
 
-    fitAddon.fit();
+    try {
+      fitAddon.fit();
+    } catch {
+      console.log('fit not possible, terminal not yet visible');
+    }
     term.resize(80, 40);
 
     var socket = new WebSocket('wss://' + window.location.host + '/api/management/v1/deviceconnect/devices/' + deviceId + '/connect');
