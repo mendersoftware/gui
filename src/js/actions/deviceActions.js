@@ -12,6 +12,7 @@ const defaultPage = 1;
 const apiUrl = '/api/management/v1';
 const apiUrlV2 = '/api/management/v2';
 const deviceAuthV2 = `${apiUrlV2}/devauth`;
+const deviceConnect = `${apiUrl}/deviceconnect`;
 const inventoryApiUrl = `${apiUrl}/inventory`;
 const inventoryApiUrlV2 = `${apiUrlV2}/inventory`;
 
@@ -537,6 +538,21 @@ export const getDeviceAttributes = () => dispatch =>
       type: DeviceConstants.SET_FILTER_ATTRIBUTES,
       attributes: { identityAttributes, inventoryAttributes }
     });
+  });
+
+export const getDeviceConnect = (id, isBulkRetrieval = false) => dispatch =>
+  GeneralApi.get(`${deviceConnect}/devices/${id}`).then(({ data }) => {
+    let tasks = [];
+    if (!isBulkRetrieval) {
+      tasks.push(
+        dispatch({
+          type: DeviceConstants.RECEIVE_DEVICE_CONNECT,
+          device: data
+        })
+      );
+    }
+    tasks.push(Promise.resolve(data));
+    return Promise.all(tasks);
   });
 
 export const getDeviceAuth = id => dispatch => Promise.resolve(dispatch(getDevicesWithAuth([{ id }]))).then(results => Promise.resolve(results[1]));

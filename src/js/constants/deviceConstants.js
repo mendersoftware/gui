@@ -14,6 +14,7 @@ module.exports = {
   RECEIVE_DEVICE: 'RECEIVE_DEVICE',
   RECEIVE_DEVICES: 'RECEIVE_DEVICES',
   RECEIVE_DEVICE_AUTH: 'RECEIVE_DEVICE_AUTH',
+  RECEIVE_DEVICE_CONNECT: 'RECEIVE_DEVICE_CONNECT',
   RECEIVE_GROUP_DEVICES: 'RECEIVE_GROUP_DEVICES',
   SET_TOTAL_DEVICES: 'SET_TOTAL_DEVICES',
   SET_ACCEPTED_DEVICES_COUNT: 'SET_ACCEPTED_DEVICES_COUNT',
@@ -93,6 +94,10 @@ module.exports = {
     pending: 'pending',
     preauth: 'preauthorized',
     rejected: 'rejected'
+  },
+  DEVICE_CONNECT_STATES: {
+    connected: 'connected',
+    disconnected: 'disconnected'
   },
   UNGROUPED_GROUP: { id: '*|=ungrouped=|*', name: 'Unassigned' }
 };

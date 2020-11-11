@@ -78,7 +78,8 @@ module.exports = {
       cleanAfterEveryBuildPatterns: ['!assets/fonts/*', '!assets/img/*']
     }),
     new webpack.ProvidePlugin({
-      process: 'process/browser'
+      process: 'process/browser',
+      Buffer: ['buffer', 'Buffer']
     }),
     new HtmlWebPackPlugin({
       favicon: './src/favicon.ico',
