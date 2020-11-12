@@ -5,7 +5,7 @@
     "node": true,
     "jest": true
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:import/errors", "plugin:import/warnings"],
+  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:import/errors", "plugin:import/warnings", "plugin:cypress/recommended"],
   "settings": {
     "react": {
       "pragma": "React",
@@ -19,7 +19,7 @@
   "globals": {
     "mender_environment": "readonly"
   },
-  "plugins": ["react", "prettier"],
+  "plugins": ["react", "prettier", "cypress"],
   "rules": {
     "prettier/prettier": 2,
     "consistent-this": ["error", "self"],

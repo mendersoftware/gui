@@ -1,21 +1,26 @@
 /// <reference types="Cypress" />
+import jwtDecode from 'jwt-decode';
 
 context('Login', () => {
   describe('works as expected', () => {
     beforeEach(() => {
       cy.clearCookies();
-      cy.visit(Cypress.config().baseUrl);
+      cy.visit(`${Cypress.config().baseUrl}ui/`);
     });
 
     it('Logs in using UI', () => {
-      cy.visit(`${Cypress.config().baseUrl}ui`);
+      cy.visit(`${Cypress.config().baseUrl}ui/`);
       // enter valid username and password
-      cy.get('[id=email]').type(Cypress.env('username'));
+      cy.get('[id=email]').clear().type(Cypress.env('username'));
       cy.get('[name=password]').clear().type(Cypress.env('password'));
-      cy.contains('button', 'Log in').click().wait(300);
-
+      cy.contains('button', 'Log in').click();
       // confirm we have logged in successfully
-      cy.getCookie('JWT').should('have.property', 'value');
+      cy.waitUntil(() => cy.getCookie('JWT').then(cookie => Boolean(cookie && cookie.value && cookie.value !== 'undefined')));
+      cy.getCookie('JWT').then(cookie => {
+        const userId = jwtDecode(cookie.value).sub;
+        cy.setLocalStorage(`${userId}-onboarding`, JSON.stringify({ complete: true }));
+        cy.saveLocalStorage();
+      });
 
       // now we can log out
       cy.contains('.header-dropdown', Cypress.env('username')).click({ force: true });
@@ -39,9 +44,9 @@ context('Login', () => {
     it('Does not log in with invalid password', () => {
       cy.clearCookies();
       cy.contains('Log in').should('be.visible');
-      cy.get('[id=email]').type(Cypress.env('username'));
-      cy.get('[name=password]').type('lewrongpassword');
-      cy.contains('button', 'Log in').click().wait(2000).end();
+      cy.get('[id=email]').clear().type(Cypress.env('username'));
+      cy.get('[name=password]').clear().type('lewrongpassword');
+      cy.contains('button', 'Log in').click();
 
       // still on /login page plus an error is displayed
       cy.contains('Log in').should('be.visible');
@@ -52,15 +57,16 @@ context('Login', () => {
   describe('stays logged in across sessions, after browser restart if selected', () => {
     beforeEach(() => {
       cy.visit(`${Cypress.config().baseUrl}ui/`);
-      Cypress.Cookies.preserveOnce('JWT', 'noExpiry');
+      Cypress.Cookies.preserveOnce('JWT');
     });
 
     it('pt1', () => {
       cy.clearCookies();
-      cy.get('[id=email]').type(Cypress.env('username'));
-      cy.get('[name=password]').type(Cypress.env('password'));
+      cy.get('[id=email]').clear().type(Cypress.env('username'));
+      cy.get('[name=password]').clear().type(Cypress.env('password'));
       cy.get('[type=checkbox]').check();
-      cy.contains('button', 'Log in').click().wait(2000).end();
+      cy.contains('button', 'Log in').click();
+      cy.waitUntil(() => cy.getCookie('JWT').then(cookie => Boolean(cookie && cookie.value)));
     });
 
     it('pt2', () => {
