@@ -26,8 +26,8 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              url: false,
-              sourceMap: true
+              sourceMap: true,
+              url: true
             }
           },
           {
@@ -60,7 +60,7 @@ module.exports = {
             loader: 'url-loader',
             options: {
               name: 'assets/fonts/[name].[ext]',
-              limit: 10000
+              limit: 1024
             }
           }
         ]
