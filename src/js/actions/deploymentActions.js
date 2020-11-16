@@ -148,7 +148,7 @@ export const abortDeployment = deploymentId => (dispatch, getState) =>
       }
       const deploymentIds = [
         ...state.deployments.byStatus[status].deploymentIds.slice(0, index),
-        ...state.deployments.byStatus[status].deploymentIds.slice(index)
+        ...state.deployments.byStatus[status].deploymentIds.slice(index + 1)
       ];
       const deployments = deploymentIds.reduce((accu, id) => {
         accu[id] = state.deployments.byId[id];
