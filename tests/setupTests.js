@@ -1,18 +1,9 @@
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
+import { setupServer } from 'msw/node';
+import { deploymentHandlers } from './__mocks__/requestHandlers';
 
 Enzyme.configure({ adapter: new Adapter() });
-
-window.mender_environment = {
-  features: {
-    hasMultitenancy: true
-  },
-  services: {
-    deploymentsVersion: null,
-    deviceauthVersion: null,
-    inventoryVersion: null
-  }
-};
 
 window.RTCPeerConnection = () => {
   return {
@@ -21,3 +12,24 @@ window.RTCPeerConnection = () => {
     createDataChannel: () => {}
   };
 };
+
+let handlers = [...deploymentHandlers];
+
+// Setup requests interception using the given handlers.
+let server;
+
+beforeAll(async () => {
+  // Enable the mocking in tests.
+  server = setupServer(...handlers);
+  await server.listen();
+});
+
+afterEach(async () => {
+  // Reset any runtime handlers tests may use.
+  await server.resetHandlers();
+});
+
+afterAll(async () => {
+  // Clean up once the tests are done.
+  await server.close();
+});

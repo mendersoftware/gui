@@ -1,4 +1,26 @@
 export const undefineds = /undefined|\[object Object\]/;
+window.mender_environment = {
+  features: {
+    hasMultitenancy: true
+  },
+  services: {
+    deploymentsVersion: null,
+    deviceauthVersion: null,
+    inventoryVersion: null
+  }
+};
+
+jest.mock('universal-cookie', () => {
+  const mCookie = {
+    get: jest.fn(name => {
+      if (name === 'JWT') {
+        return 'JWT';
+      }
+    }),
+    remove: jest.fn()
+  };
+  return jest.fn(() => mCookie);
+});
 
 export const defaultState = {
   app: {
@@ -43,7 +65,7 @@ export const defaultState = {
         name: 'test deployment 2',
         artifact_name: 'test',
         artifacts: ['123'],
-        created: '2019-01-01T12:30:00.000Z',
+        created: '2019-01-01T12:25:00.000Z',
         device_count: 1,
         devices: {
           b1: {
