@@ -5,8 +5,8 @@ import { startTimeSort } from '../helpers';
 
 const apiUrl = '/api/management/v1';
 const apiUrlV2 = '/api/management/v2';
-const deploymentsApiUrl = `${apiUrl}/deployments`;
-const deploymentsApiUrlV2 = `${apiUrlV2}/deployments`;
+export const deploymentsApiUrl = `${apiUrl}/deployments`;
+export const deploymentsApiUrlV2 = `${apiUrlV2}/deployments`;
 
 // default per page until pagination and counting integrated
 const default_per_page = 20;
