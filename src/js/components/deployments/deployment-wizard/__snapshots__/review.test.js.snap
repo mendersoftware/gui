@@ -201,14 +201,7 @@ exports[`Review deployment Component renders correctly 1`] = `
               </span>
               <div
                 className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                title={
-                  <Time
-                    Component="time"
-                    format="YYYY-MM-DD HH:mm"
-                    titleFormat="YYYY-MM-DD HH:mm"
-                    value="2019-01-01T13:00:00.000Z"
-                  />
-                }
+                title="2019-01-01T13:00:00.000Z"
               >
                 <div>
                   <span
@@ -250,14 +243,7 @@ exports[`Review deployment Component renders correctly 1`] = `
               </span>
               <div
                 className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                title={
-                  <Time
-                    Component="time"
-                    format="YYYY-MM-DD HH:mm"
-                    titleFormat="YYYY-MM-DD HH:mm"
-                    value="2019-01-01T13:00:00.000Z"
-                  />
-                }
+                title="2019-01-01T13:00:00.000Z"
               >
                 <div>
                   <span
