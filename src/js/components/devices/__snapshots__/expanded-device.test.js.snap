@@ -191,9 +191,10 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
             }
           }
         >
-          <span
+          <img
             aria-hidden={true}
-            className="material-icons MuiIcon-root pending-icon"
+            className="material-icons MuiIcon-root"
+            src="pending_status.png"
             style={
               Object {
                 "margin": 12,

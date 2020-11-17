@@ -540,17 +540,14 @@ export const getDeviceAttributes = () => dispatch =>
     });
   });
 
-export const getDeviceConnect = (id, isBulkRetrieval = false) => dispatch =>
+export const getDeviceConnect = id => dispatch =>
   GeneralApi.get(`${deviceConnect}/devices/${id}`).then(({ data }) => {
-    let tasks = [];
-    if (!isBulkRetrieval) {
-      tasks.push(
-        dispatch({
-          type: DeviceConstants.RECEIVE_DEVICE_CONNECT,
-          device: data
-        })
-      );
-    }
+    let tasks = [
+      dispatch({
+        type: DeviceConstants.RECEIVE_DEVICE_CONNECT,
+        device: data
+      })
+    ];
     tasks.push(Promise.resolve(data));
     return Promise.all(tasks);
   });

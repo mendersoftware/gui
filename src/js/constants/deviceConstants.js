@@ -97,7 +97,8 @@ module.exports = {
   },
   DEVICE_CONNECT_STATES: {
     connected: 'connected',
-    disconnected: 'disconnected'
+    disconnected: 'disconnected',
+    unknown: 'unknown'
   },
   UNGROUPED_GROUP: { id: '*|=ungrouped=|*', name: 'Unassigned' }
 };

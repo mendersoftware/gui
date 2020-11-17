@@ -40,6 +40,21 @@ const states = {
   }
 };
 
+const connectStates = {
+  [DEVICE_CONNECT_STATES.connected]: {
+    icon: <CheckCircleIcon className="green" style={iconStyle} />,
+    title: 'Connected'
+  },
+  [DEVICE_CONNECT_STATES.disconnected]: {
+    icon: <BlockIcon className="red" style={iconStyle} />,
+    title: 'Disconnected'
+  },
+  [DEVICE_CONNECT_STATES.unknown]: {
+    icon: <Icon style={iconStyle} component="img" src={pendingIcon} />,
+    title: 'Unknown'
+  }
+};
+
 export class ExpandedDevice extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -154,19 +169,13 @@ export class ExpandedDevice extends React.Component {
             <h4 className="margin-bottom-small">Device connection</h4>
             <div className="margin-bottom-small flexbox" style={{ flexDirection: 'row' }}>
               <span style={{ display: 'flex', minWidth: 180, alignItems: 'center', marginRight: '2vw' }}>
-                {status_connect === DEVICE_CONNECT_STATES.connected && <CheckCircleIcon className="green" style={iconStyle} />}
-                {status_connect === DEVICE_CONNECT_STATES.disconnected && <BlockIcon className="red" style={iconStyle} />}
-                {status_connect !== DEVICE_CONNECT_STATES.connected && status_connect !== DEVICE_CONNECT_STATES.disconnected && (
-                  <Icon className="pending-icon" style={iconStyle} />
-                )}
+                {connectStates[status_connect || DEVICE_CONNECT_STATES.unknown].icon}
                 <span className="inline-block">
                   <Typography variant="subtitle2" style={Object.assign({}, buttonStyle, { textTransform: 'capitalize' })}>
                     Connection status
                   </Typography>
                   <Typography variant="body1" style={Object.assign({}, buttonStyle, { textTransform: 'capitalize' })}>
-                    {status_connect === DEVICE_CONNECT_STATES.connected && 'Connected'}
-                    {status_connect === DEVICE_CONNECT_STATES.disconnected && 'Disconnected'}
-                    {status_connect !== DEVICE_CONNECT_STATES.connected && status_connect !== DEVICE_CONNECT_STATES.disconnected && 'Unknown'}
+                    {connectStates[status_connect || DEVICE_CONNECT_STATES.unknown].title}
                   </Typography>
                 </span>
               </span>
@@ -177,7 +186,7 @@ export class ExpandedDevice extends React.Component {
                       Launch a new Terminal
                     </Typography>
                     <Typography variant="body1" className="muted" style={buttonStyle}>
-                      Click to launch a terminal connecteed to a shell running on the device
+                      Click to launch a terminal connected to a shell running on the device
                     </Typography>
                   </span>
                 </Button>
