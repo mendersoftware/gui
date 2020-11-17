@@ -27,43 +27,39 @@ const styles = {
 };
 
 export class SoftwareDevices extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-
+  componentDidMount() {
     this.props.getAllDevicesByStatus(DEVICE_STATES.accepted);
-    this.state = {
-      deploymentDeviceIds: []
-    };
   }
 
   deploymentSettingsUpdate(value, property) {
-    const self = this;
-    let state = { [property]: value };
-    self.props.deploymentSettings(value, property);
-
-    if (property === 'group' && value === allDevices) {
-      self.props.selectDevices(self.props.acceptedDevices);
-    }
-    const currentState = { ...self.state, ...state };
-    if (!currentState.release && property !== 'release') {
-      self.props.deploymentSettings(self.props.release, 'release');
-      currentState.release = state.release = self.props.release;
-    }
-    if ((self.props.device || currentState.group) && currentState.release) {
-      state.deploymentDeviceIds = currentState.group === allDevices ? self.props.acceptedDevices : [];
-      state.deploymentDeviceCount = state.deploymentDeviceIds.length;
-      if (self.props.device) {
-        state.deploymentDeviceIds = [self.props.device.id];
-      } else if (currentState.group !== allDevices) {
-        state.deploymentDeviceCount = self.props.groups[currentState.group].total;
+    const {
+      acceptedDevices,
+      advanceOnboarding,
+      deploymentDeviceCount,
+      deploymentDeviceIds = [],
+      setDeploymentSettings,
+      device,
+      group,
+      groups,
+      release
+    } = this.props;
+    setDeploymentSettings(value, property);
+    let state = { group, release, [property]: value };
+    let deviceIds = deploymentDeviceIds;
+    let deviceCount = deploymentDeviceCount;
+    if ((device || state.group) && state.release) {
+      deviceIds = state.group === allDevices ? acceptedDevices : [];
+      deviceCount = deviceIds.length;
+      if (device) {
+        deviceIds = [device.id];
+        deviceCount = deviceIds.length;
+      } else if (state.group !== allDevices) {
+        deviceCount = groups[state.group].total;
       }
-      self.props.advanceOnboarding(onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES);
-    } else {
-      state.deploymentDeviceIds = [];
+      advanceOnboarding(onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES);
     }
-    self.props.deploymentSettings(state.deploymentDeviceIds, 'deploymentDeviceIds');
-    self.props.deploymentSettings(state.deploymentDeviceCount, 'deploymentDeviceCount');
-    self.setState(state);
+    setDeploymentSettings(deviceIds, 'deploymentDeviceIds');
+    setDeploymentSettings(deviceCount, 'deploymentDeviceCount');
   }
 
   render() {
@@ -72,23 +68,24 @@ export class SoftwareDevices extends React.Component {
       createdGroup,
       device,
       deploymentAnchor,
-      deploymentObject,
-      group,
+      deploymentDeviceIds,
+      deploymentObject = {},
+      group = null,
       groups,
       hasDevices,
       hasDynamicGroups,
       hasPending,
       hasSelectedDevices,
       onboardingState,
-      release,
+      release = null,
       releases,
       selectedDevice,
-      selectedGroup
+      selectedGroup,
+      selectedRelease
     } = self.props;
-    const { deploymentDeviceIds } = self.state;
 
-    const selectedRelease = deploymentObject.release ? deploymentObject.release : release;
-    const releaseDeviceTypes = selectedRelease ? selectedRelease.device_types_compatible : [];
+    const deploymentRelease = deploymentObject.release ? deploymentObject.release : release;
+    const releaseDeviceTypes = deploymentRelease ? deploymentRelease.device_types_compatible : [];
     const devicetypesInfo = (
       <Tooltip title={<p>{releaseDeviceTypes.join(', ')}</p>} placement="bottom">
         <span className="link">
@@ -97,30 +94,26 @@ export class SoftwareDevices extends React.Component {
       </Tooltip>
     );
 
-    let releaseItems = releases.map(rel => ({
-      title: rel.Name,
-      value: rel
-    }));
-
-    let groupItems = [];
+    const groupItems = [allDevices, ...Object.keys(groups)];
+    let releaseItems = releases;
+    let groupLink = '/devices';
     if (device && device.attributes) {
-      // If single device, don't show groups
-      releaseItems = releaseItems.filter(rel => rel.value.device_types_compatible.some(type => type === device.attributes.device_type));
+      // If single device, don't show incompatible releases
+      releaseItems = releaseItems.filter(rel => rel.device_types_compatible.some(type => type === device.attributes.device_type));
+      groupLink = `${groupLink}?id=${device.id}`;
     } else {
-      groupItems = [allDevices, ...Object.keys(groups)];
+      groupLink = group && group !== allDevices ? `${groupLink}?group=${group}` : groupLink;
     }
 
-    const groupLink = group ? `/devices?group=${group}` : '/devices/';
-
     let onboardingComponent = null;
-    if (this.releaseRef && this.groupRef && deploymentAnchor) {
-      const anchor = { top: this.releaseRef.offsetTop + (this.releaseRef.offsetHeight / 3) * 2, left: this.releaseRef.offsetWidth / 2 };
+    if (self.releaseRef && self.groupRef && deploymentAnchor) {
+      const anchor = { top: self.releaseRef.offsetTop + (self.releaseRef.offsetHeight / 3) * 2, left: self.releaseRef.offsetWidth / 2 };
       onboardingComponent = getOnboardingComponentFor(
         onboardingSteps.SCHEDULING_ARTIFACT_SELECTION,
-        { ...onboardingState, selectedRelease },
+        { ...onboardingState, selectedRelease: deploymentRelease },
         { anchor, place: 'right' }
       );
-      const groupAnchor = { top: this.groupRef.offsetTop + (this.groupRef.offsetHeight / 3) * 2, left: this.groupRef.offsetWidth };
+      const groupAnchor = { top: self.groupRef.offsetTop + (self.groupRef.offsetHeight / 3) * 2, left: self.groupRef.offsetWidth };
       onboardingComponent = getOnboardingComponentFor(
         onboardingSteps.SCHEDULING_ALL_DEVICES_SELECTION,
         onboardingState,
@@ -137,10 +130,10 @@ export class SoftwareDevices extends React.Component {
         top: deploymentAnchor.offsetTop - deploymentAnchor.offsetHeight,
         left: deploymentAnchor.offsetLeft + deploymentAnchor.offsetWidth / 2
       };
-      if (hasDevices && hasSelectedDevices && selectedRelease) {
+      if (hasDevices && hasSelectedDevices && deploymentRelease) {
         onboardingComponent = getOnboardingComponentFor(
           onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES,
-          { ...onboardingState, selectedDevice, selectedGroup, selectedRelease },
+          { ...onboardingState, selectedDevice, selectedGroup, selectedRelease: deploymentRelease },
           { anchor: buttonAnchor, place: 'bottom' },
           onboardingComponent
         );
@@ -152,26 +145,27 @@ export class SoftwareDevices extends React.Component {
         {!releaseItems.length ? (
           <p className="info" style={{ marginTop: '0' }}>
             <ErrorOutlineIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }} />
-            There are no artifacts available. <Link to="/artifacts">Upload one to the repository</Link> to get started.
+            There are no {releases.length ? 'compatible ' : ''}artifacts available. <Link to="/artifacts">Upload one to the repository</Link> to get started.
           </p>
         ) : (
           <form className="flexbox centered column">
-            <div ref={ref => (this.releaseRef = ref)} style={{ minWidth: 'min-content', minHeight: '105px' }}>
+            <div ref={ref => (self.releaseRef = ref)} style={{ minWidth: 'min-content', minHeight: '105px' }}>
               {selectedRelease ? (
-                <TextField value={selectedRelease.Name} label="Release" disabled={true} style={styles.infoStyle} />
+                <TextField value={selectedRelease} label="Release" disabled={true} style={styles.infoStyle} />
               ) : (
                 <Autocomplete
                   id="deployment-release-selection"
                   autoSelect
                   autoHighlight
                   filterSelectedOptions
-                  getOptionLabel={option => option.title || option}
+                  getOptionLabel={option => option.Name || option}
                   handleHomeEndKeys
                   options={releaseItems}
-                  onChange={(e, item) => self.deploymentSettingsUpdate(item.value, 'release')}
+                  onChange={(e, item) => self.deploymentSettingsUpdate(item, 'release')}
                   renderInput={params => (
                     <TextField {...params} label="Select a Release to deploy" InputProps={{ ...params.InputProps }} style={styles.textField} />
                   )}
+                  value={deploymentRelease}
                 />
               )}
               {releaseDeviceTypes.length ? (
@@ -180,7 +174,7 @@ export class SoftwareDevices extends React.Component {
                 </p>
               ) : null}
             </div>
-            <div ref={ref => (this.groupRef = ref)} style={{ width: 'min-content' }}>
+            <div ref={ref => (self.groupRef = ref)} style={{ width: 'min-content' }}>
               {device ? (
                 <TextField value={device.id} label="Device" disabled={true} style={styles.infoStyle} />
               ) : (
@@ -197,6 +191,7 @@ export class SoftwareDevices extends React.Component {
                     renderInput={params => (
                       <TextField {...params} label="Select a device group to deploy to" InputProps={{ ...params.InputProps }} style={styles.textField} />
                     )}
+                    value={group}
                   />
                   {!(hasDevices || hasDynamicGroups) && (
                     <p className="info" style={{ marginTop: '10px' }}>
@@ -224,7 +219,7 @@ export class SoftwareDevices extends React.Component {
                       {deploymentDeviceIds.length} {pluralize('devices', deploymentDeviceIds.length)}
                     </>
                   )}{' '}
-                  will be targeted. <Link to={groupLink}>View the devices</Link>
+                  will be targeted. <Link to={groupLink}>View the {pluralize('devices', group === allDevices ? 2 : deploymentDeviceIds.length)}</Link>
                 </p>
               )}
               {onboardingComponent}
