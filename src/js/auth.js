@@ -1,22 +1,18 @@
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
-export function getToken() {
-  return cookies.get('JWT');
-}
+export const getToken = () => cookies.get('JWT');
 
-export function logout() {
+export const logout = () => {
   cookies.remove('JWT');
   window.location.replace('#/login');
-}
+};
 
-export function updateMaxAge() {
+export const updateMaxAge = () => {
   const userCookie = getToken();
   if (userCookie && expirySet()) {
     cookies.set('JWT', userCookie, { maxAge: 900, sameSite: 'strict' });
   }
-}
+};
 
-export function expirySet() {
-  return cookies.get('noExpiry') !== 'true';
-}
+export const expirySet = () => cookies.get('noExpiry') !== 'true';
