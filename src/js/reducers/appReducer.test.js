@@ -28,19 +28,19 @@ describe('app reducer', () => {
     });
   });
 
-  it('should handle SET_LOCAL_IPADDRESS', () => {
+  it('should handle SET_FIRST_LOGIN_AFTER_SIGNUP', () => {
     expect(
       reducer(undefined, {
-        type: AppConstants.SET_LOCAL_IPADDRESS,
-        ipAddress: '127.0.0.1'
-      }).hostAddress
-    ).toEqual('127.0.0.1');
+        type: AppConstants.SET_FIRST_LOGIN_AFTER_SIGNUP,
+        firstLoginAfterSignup: true
+      }).firstLoginAfterSignup
+    ).toEqual(true);
 
     expect(
       reducer(initialState, {
-        type: AppConstants.SET_LOCAL_IPADDRESS,
-        ipAddress: '127.0.0.1'
-      }).hostAddress
-    ).toEqual('127.0.0.1');
+        type: AppConstants.SET_FIRST_LOGIN_AFTER_SIGNUP,
+        firstLoginAfterSignup: false
+      }).firstLoginAfterSignup
+    ).toEqual(false);
   });
 });

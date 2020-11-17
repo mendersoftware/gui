@@ -9,9 +9,10 @@ export default class TextInput extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      value: this.props.value || '',
       errortext: null,
-      isValid: true
+      // the following is needed for the form validation to work if the field is not required
+      isValid: true, // lgtm [js/react/unused-or-undefined-state-property]
+      value: this.props.value || ''
     };
   }
 

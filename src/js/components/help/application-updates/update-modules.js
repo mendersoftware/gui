@@ -20,14 +20,14 @@ const UpdateModules = ({ docsVersion = '' }) => (
 
     <p>
       General-purpose Update Modules are available and documented together with community-supported Update Modules at{' '}
-      <a href="https://hub.mender.io/c/update-modules" target="_blank">
+      <a href="https://hub.mender.io/c/update-modules" target="_blank" rel="noopener noreferrer">
         Mender Hub
       </a>
       .
     </p>
 
     <p>
-      <a href={`https://docs.mender.io/${docsVersion}artifact-creation/create-a-custom-update-module`} target="_blank">
+      <a href={`https://docs.mender.io/${docsVersion}artifact-creation/create-a-custom-update-module`} target="_blank" rel="noopener noreferrer">
         Read our documentation
       </a>{' '}
       to learn how to develop your own Update Modules.

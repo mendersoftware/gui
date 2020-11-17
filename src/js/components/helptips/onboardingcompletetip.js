@@ -76,12 +76,12 @@ export class OnboardingCompleteTip extends React.Component {
             Proceed to one of the following tutorials (listed in recommended order):
             <ol>
               <li key="deploy-a-system-update">
-                <a href={`https://docs.mender.io/${docsVersion}get-started/deploy-a-system-update`} target="_blank">
+                <a href={`https://docs.mender.io/${docsVersion}get-started/deploy-a-system-update`} target="_blank" rel="noopener noreferrer">
                   Deploy a system update
                 </a>
               </li>
               <li key="deploy-a-container-update">
-                <a href={`https://docs.mender.io/${docsVersion}get-started/deploy-a-container-update`} target="_blank">
+                <a href={`https://docs.mender.io/${docsVersion}get-started/deploy-a-container-update`} target="_blank" rel="noopener noreferrer">
                   Deploy a container update
                 </a>
               </li>

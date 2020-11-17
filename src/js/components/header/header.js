@@ -16,7 +16,7 @@ import { initializeAppData, setFirstLoginAfterSignup, setSnackbar } from '../../
 import { getOnboardingState } from '../../actions/onboardingActions';
 import { getUser, logoutUser, setShowHelptips, toggleHelptips } from '../../actions/userActions';
 import { getToken } from '../../auth';
-import { decodeSessionToken, hashString, isEmpty } from '../../helpers';
+import { decodeSessionToken, extractErrorMessage, hashString, isEmpty } from '../../helpers';
 import { getDocsVersion, getIsEnterprise, getUserRoles, getUserSettings } from '../../selectors';
 import Tracking from '../../tracking';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
@@ -27,6 +27,8 @@ import DeploymentNotifications from './deploymentnotifications';
 import TrialNotification from './trialnotification';
 
 import { colors } from '../../themes/mender-theme';
+import logo from '../../../assets/img/headerlogo.png';
+import enterpriseLogo from '../../../assets/img/headerlogo-enterprise.png';
 
 const menuButtonColor = colors.grey;
 
@@ -108,7 +110,7 @@ export class Header extends React.Component {
           return this.props.initializeAppData();
         })
         // this is allowed to fail if no user information are available
-        .catch(err => console.log(err.response ? err.response.data.error?.message : err))
+        .catch(err => console.log(extractErrorMessage(err)))
         .then(self.props.getOnboardingState)
         .finally(() => self.setState({ gettingUser: false }))
     );
@@ -142,7 +144,9 @@ export class Header extends React.Component {
 
     return (
       <Toolbar id="fixedHeader" className="header" style={{ backgroundColor: '#fff', height: 56, minHeight: 'unset', paddingLeft: 32, paddingRight: 40 }}>
-        <Link to="/" id="logo" className={isEnterprise ? 'enterprise' : ''} />
+        <Link to="/">
+          <img id="logo" src={isEnterprise ? enterpriseLogo : logo} />
+        </Link>
         {demo && <DemoNotification docsVersion={docsVersion} />}
         {!!announcement && showAnnouncement && (
           <Announcement announcement={announcement} showAnnouncement={showAnnouncement} onHide={() => self._hideAnnouncement()} />

@@ -103,12 +103,7 @@ export class Scheduled extends React.Component {
             return self.refreshDeployments(...arguments);
           }
         })
-        .catch(err => {
-          console.log(err);
-          var errormsg = err.error || 'Please check your connection';
-          setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, self.props.setSnackbar);
-        })
-        .finally(() => self.setState({ doneLoading: true }))
+        .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, self.props.setSnackbar))
     );
   }
 

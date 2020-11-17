@@ -29,26 +29,6 @@ exports[`ReleaseRepository Component renders correctly 1`] = `
     </p>
   </div>
   <div
-    className="loaderContainer shrunk"
-  >
-    <div
-      className="loader"
-    >
-      <span
-        className="dot dot_1"
-      />
-      <span
-        className="dot dot_2"
-      />
-      <span
-        className="dot dot_3"
-      />
-      <span
-        className="dot dot_4"
-      />
-    </div>
-  </div>
-  <div
     style={
       Object {
         "marginTop": "10px",

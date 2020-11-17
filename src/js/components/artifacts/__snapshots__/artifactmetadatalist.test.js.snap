@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ArtifactPayload Component renders correctly 1`] = `
+Array [
+  <p
+    className="margin-bottom-none"
+  >
+    test
+  </p>,
+  <ul
+    className="MuiList-root list-horizontal-flex MuiList-padding"
+    style={
+      Object {
+        "paddingTop": 0,
+      }
+    }
+  >
+    <div
+      onClick={[Function]}
+    >
+      <li
+        className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+        disabled={true}
+      >
+        <div
+          className="MuiListItemText-root MuiListItemText-multiline"
+        >
+          <span
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+          >
+            primary text
+          </span>
+          <div
+            className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+            title="secondary text"
+          >
+            <div>
+              <span
+                className="inventory-text"
+                style={Object {}}
+              >
+                secondary text
+              </span>
+               
+            </div>
+          </div>
+        </div>
+      </li>
+      <hr
+        className="MuiDivider-root"
+      />
+    </div>
+  </ul>,
+]
+`;

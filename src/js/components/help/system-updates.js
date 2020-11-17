@@ -18,7 +18,7 @@ const SystemUpdates = ({ docsVersion = '' }) => (
 
     <p>
       We prepared images, fully integrated with Mender for you to start with. You can find them on our{' '}
-      <a href={`https://docs.mender.io/${docsVersion}downloads#disk-images`} target="_blank">
+      <a href={`https://docs.mender.io/${docsVersion}downloads#disk-images`} target="_blank" rel="noopener noreferrer">
         downloads page
       </a>
       .
@@ -37,7 +37,7 @@ const SystemUpdates = ({ docsVersion = '' }) => (
 
     <p>
       You can learn more about Mender&#39;s A&#47;B partition architecture{' '}
-      <a href={`https://docs.mender.io/${docsVersion}overview/introduction`} target="_blank">
+      <a href={`https://docs.mender.io/${docsVersion}overview/introduction`} target="_blank" rel="noopener noreferrer">
         here
       </a>
       .

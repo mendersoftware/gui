@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
 import ReactTooltip from 'react-tooltip';
 
@@ -16,6 +15,7 @@ import { customSort } from '../../helpers';
 import { getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import { ExpandArtifact } from '../helptips/helptooltips';
+import ForwardingLink from '../common/forwardlink';
 import Loader from '../common/loader';
 import ReleaseRepositoryItem from './releaserepositoryitem';
 
@@ -30,11 +30,8 @@ export class ReleaseRepository extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      popupLabel: 'Upload a new artifact',
       sortCol: 'modified',
       sortDown: true,
-      tmpFile: null,
-      upload: false,
       wasSelectedRecently: false
     };
   }
@@ -96,6 +93,7 @@ export class ReleaseRepository extends React.Component {
     const artifacts = release ? release.Artifacts : [];
     const items = artifacts.sort(customSort(sortDown, sortCol)).map((pkg, index) => {
       const expanded = !!(selectedArtifact && selectedArtifact.id === pkg.id);
+      this.repoItemAnchor = this.repoItemAnchor?.current ? this.repoItemAnchor : React.createRef();
       return (
         <ReleaseRepositoryItem
           key={`repository-item-${index}`}
@@ -108,23 +106,17 @@ export class ReleaseRepository extends React.Component {
           // otherwise the measurements are off
           onExpanded={() => setTimeout(() => self.setState({}), 500)}
           release={release}
-          ref={ref => (this.repoItemAnchor = ref)}
+          itemRef={this.repoItemAnchor}
         />
       );
     });
 
     const dropzoneClass = uploading ? 'dropzone disabled muted' : 'dropzone';
 
-    // We need the ref to the <a> element that refers to the deployments tab, in order to align
-    // the helptip with the button - unfortunately this is not forwarded through react-router or mui
-    // thus, use the following component as a workaround:
-    const ForwardingLink = React.forwardRef((props, ref) => <Link {...props} innerRef={ref} />);
-    ForwardingLink.displayName = 'ForwardingLink';
-
     let onboardingComponent = null;
     let uploadArtifactOnboardingComponent = null;
-    if (this.repoItemAnchor && this.creationRef) {
-      const element = this.repoItemAnchor.itemRef;
+    if (this.repoItemAnchor && this.repoItemAnchor.current && this.creationRef) {
+      const element = this.repoItemAnchor.current;
       const anchor = { left: element.offsetLeft + element.offsetWidth / 3, top: element.offsetTop + element.offsetHeight };
       const artifactIncludedAnchor = {
         left: this.creationRef.offsetLeft + this.creationRef.offsetWidth,
@@ -178,8 +170,6 @@ export class ReleaseRepository extends React.Component {
         )}
 
         {uploadArtifactOnboardingComponent ? uploadArtifactOnboardingComponent : null}
-        <Loader show={loading} />
-
         <div style={{ position: 'relative', marginTop: '10px' }}>
           {items.length ? (
             <div>
@@ -223,7 +213,7 @@ export class ReleaseRepository extends React.Component {
             </div>
           ) : null}
 
-          {items.length || loading ? null : (
+          {!items.length && (
             <div className="dashboard-placeholder fadeIn" style={{ fontSize: '16px', margin: '8vh auto' }} ref={ref => (self.dropzoneRef = ref)}>
               {releases.length > 0 ? (
                 <p>Select a Release on the left to view its Artifact details</p>

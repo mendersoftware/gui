@@ -6,7 +6,7 @@ const BoardIntegrations = () => (
 
     <p>
       Check out the board integrations at{' '}
-      <a href="https://hub.mender.io/c/board-integrations" target="_blank">
+      <a href="https://hub.mender.io/c/board-integrations" target="_blank" rel="noopener noreferrer">
         Mender Hub
       </a>{' '}
       to see if your board has already been integrated. There are over 30 different board and OS combinations, and more being added by the community.
@@ -16,7 +16,7 @@ const BoardIntegrations = () => (
 
     <p>
       Find your board on{' '}
-      <a href="https://hub.mender.io/c/board-integrations" target="_blank">
+      <a href="https://hub.mender.io/c/board-integrations" target="_blank" rel="noopener noreferrer">
         Mender Hub
       </a>
       .

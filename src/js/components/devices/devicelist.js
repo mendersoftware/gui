@@ -25,13 +25,8 @@ export class DeviceList extends React.Component {
     };
   }
 
-  componentDidUpdate(prevProps) {
-    var self = this;
-    const { acceptedDevicesCount, advanceOnboarding, devices, group, onboardingComplete } = self.props;
-
-    if (prevProps.group !== group) {
-      self.setState({ textfield: group ? decodeURIComponent(group) : 'All devices' });
-    }
+  componentDidUpdate() {
+    const { acceptedDevicesCount, advanceOnboarding, devices, onboardingComplete } = this.props;
     if (!onboardingComplete && acceptedDevicesCount) {
       advanceOnboarding(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING);
       if (devices.every(item => Object.values(item.attributes).some(value => value))) {

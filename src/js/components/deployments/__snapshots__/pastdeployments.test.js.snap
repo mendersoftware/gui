@@ -265,7 +265,7 @@ exports[`PastDeployments Component renders correctly 1`] = `
       </p>
       <img
         alt="Past"
-        src="assets/img/history.png"
+        src="history.png"
       />
     </div>
   </div>

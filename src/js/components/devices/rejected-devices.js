@@ -77,7 +77,7 @@ export class Rejected extends React.Component {
     if (attribute.name !== self.state.sortCol) {
       state.sortDown = true;
     }
-    self.state.sortCol = attribute.name === 'Device ID' ? 'id' : self.state.sortCol;
+    state.sortCol = attribute.name === 'Device ID' ? 'id' : self.state.sortCol;
     self.setState(state, () => self._getDevices(true));
   }
 

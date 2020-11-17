@@ -37,6 +37,44 @@ import DeviceStatus from './device-status';
 import { refreshLength as refreshDeviceLength } from './devices';
 import Filters from './filters';
 
+const relativeDeviceTime = device => <RelativeTime updateTime={device.updated_ts} />;
+const deviceStatus = device => <DeviceStatus device={device} />;
+
+const defaultHeaders = [
+  {
+    title: 'Device type',
+    attribute: { name: 'device_type', scope: 'inventory' },
+    render: device => (device.attributes && device.attributes.device_type ? device.attributes.device_type : '-'),
+    sortable: true
+  },
+  {
+    title: 'System software version',
+    attribute: { name: 'rootfs-image.version', scope: 'inventory', alternative: 'artifact_name' },
+    render: ({ attributes = {} }) => attributes['rootfs-image.version'] || attributes.artifact_name || '-',
+    sortable: true
+  },
+  {
+    title: 'Last check-in',
+    attribute: { name: 'updated_ts', scope: 'system' },
+    render: relativeDeviceTime,
+    sortable: true
+  },
+  {
+    title: '',
+    attribute: { name: 'status', scope: 'identity' },
+    render: deviceStatus,
+    sortable: false
+  }
+];
+
+const sortingAlternatives = defaultHeaders.reduce((accu, item) => {
+  if (item.attribute.alternative) {
+    accu[item.attribute.name] = item.attribute.alternative;
+    accu[item.attribute.alternative] = item.attribute.name;
+  }
+  return accu;
+}, {});
+
 export class Authorized extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -117,6 +155,9 @@ export class Authorized extends React.Component {
     const { filters, getDevicesByStatus, getGroupDevices, selectedGroup, setSnackbar } = self.props;
     const { pageLength, pageNo, sortCol, sortDown, sortScope } = self.state;
     const sortBy = sortCol ? [{ attribute: sortCol, order: sortDown ? 'desc' : 'asc', scope: sortScope }] : undefined;
+    if (sortCol && sortingAlternatives[sortCol]) {
+      sortBy.push({ ...sortBy[0], attribute: sortingAlternatives[sortCol] });
+    }
     let request;
     // if a group is selected, use getGroupDevices
     if (selectedGroup) {
@@ -127,11 +168,7 @@ export class Authorized extends React.Component {
       request = getDevicesByStatus(DEVICE_STATES.accepted, pageNo, pageLength, shouldUpdate || hasFilters, undefined, sortBy);
     }
     request
-      .catch(err => {
-        console.log(err);
-        const errormsg = err.error || 'Please check your connection.';
-        setRetryTimer(err, 'devices', `Devices couldn't be loaded. ${errormsg}`, refreshDeviceLength, setSnackbar);
-      })
+      .catch(err => setRetryTimer(err, 'devices', `Devices couldn't be loaded.`, refreshDeviceLength, setSnackbar))
       // only set state after all devices id data retrieved
       .finally(() => self.setState({ loading: false, pageLoading: false }));
   }
@@ -144,8 +181,7 @@ export class Authorized extends React.Component {
       .trySelectDevice(id, DEVICE_STATES.accepted)
       .catch(err => {
         if (err.response.status === 404) {
-          var errormsg = err.response?.data?.error || 'Please check your connection.';
-          setRetryTimer(err, 'devices', `Device couldn't be loaded. ${errormsg}`, refreshDeviceLength, self.props.setSnackbar);
+          setRetryTimer(err, 'devices', `Device couldn't be loaded.`, refreshDeviceLength, self.props.setSnackbar);
         }
       })
       .finally(() => self.setState({ loading: false, pageLoading: false }));
@@ -188,7 +224,7 @@ export class Authorized extends React.Component {
     if (attribute.name !== self.state.sortCol) {
       state.sortDown = true;
     }
-    self.state.sortCol = attribute.name === 'Device ID' ? 'id' : self.state.sortCol;
+    state.sortCol = attribute.name === 'Device ID' ? 'id' : self.state.sortCol;
     self.setState(state, () => self._getDevices(true));
   }
 
@@ -218,30 +254,7 @@ export class Authorized extends React.Component {
         style: { flexGrow: 1 },
         sortable: true
       },
-      {
-        title: 'Device type',
-        attribute: { name: 'device_type', scope: 'inventory' },
-        render: device => (device.attributes && device.attributes.device_type ? device.attributes.device_type : '-'),
-        sortable: true
-      },
-      {
-        title: 'Current software',
-        attribute: { name: 'artifact_name', scope: 'inventory' },
-        render: device => (device.attributes && device.attributes.artifact_name ? device.attributes.artifact_name : '-'),
-        sortable: true
-      },
-      {
-        title: 'Last check-in',
-        attribute: { name: 'updated_ts', scope: 'system' },
-        render: device => <RelativeTime updateTime={device.updated_ts} />,
-        sortable: true
-      },
-      {
-        title: '',
-        attribute: { name: 'status', scope: 'identity' },
-        render: device => <DeviceStatus device={device} />,
-        sortable: false
-      }
+      ...defaultHeaders
     ];
 
     const groupLabel = selectedGroup ? decodeURIComponent(selectedGroup) : 'All devices';

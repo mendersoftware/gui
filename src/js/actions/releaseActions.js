@@ -1,11 +1,11 @@
 import axios from 'axios';
 
 import GeneralApi from '../api/general-api';
-import { setSnackbar } from '../actions/appActions';
+import { commonErrorHandler, setSnackbar } from '../actions/appActions';
 import ReleaseConstants from '../constants/releaseConstants';
 import OnboardingConstants from '../constants/onboardingConstants';
 
-import { customSort, preformatWithRequestID } from '../helpers';
+import { customSort } from '../helpers';
 
 const apiUrl = '/api/management/v1';
 const deploymentsApiUrl = `${apiUrl}/deployments`;
@@ -80,8 +80,7 @@ export const createArtifact = (meta, file) => dispatch => {
       if (axios.isCancel(err)) {
         return dispatch(setSnackbar('The artifact generation has been cancelled', 5000));
       }
-      const errMsg = err.response.data?.error?.message || err.response.data?.error || err.error || '';
-      return dispatch(setSnackbar(preformatWithRequestID(err.response, `Artifact couldn't be generated. ${errMsg}`), null, 'Copy to clipboard'));
+      return commonErrorHandler(err, `Artifact couldn't be generated.`, dispatch);
     })
     .finally(() => {
       cancelSource = undefined;
@@ -105,8 +104,7 @@ export const uploadArtifact = (meta, file) => dispatch => {
       if (axios.isCancel(err)) {
         return dispatch(setSnackbar('The upload has been cancelled', 5000));
       }
-      const errMsg = err.response.data?.error?.message || err.response.data?.error || err.error || '';
-      return dispatch(setSnackbar(preformatWithRequestID(err.response, `Artifact couldn't be uploaded. ${errMsg}`), null, 'Copy to clipboard'));
+      return commonErrorHandler(err, `Artifact couldn't be uploaded.`, dispatch);
     })
     .finally(() => {
       cancelSource = undefined;
@@ -122,11 +120,7 @@ export const cancelArtifactUpload = () => dispatch => {
 
 export const editArtifact = (id, body) => (dispatch, getState) =>
   GeneralApi.put(`${deploymentsApiUrl}/artifacts/${id}`, body)
-    .catch(err => {
-      const errMsg = err.response.data?.error?.message || err.response.data?.error || err.error || '';
-      dispatch(setSnackbar(preformatWithRequestID(err.response, `Artifact details couldn't be updated. ${errMsg}`), null, 'Copy to clipboard'));
-      return Promise.reject();
-    })
+    .catch(err => commonErrorHandler(err, `Artifact details couldn't be updated.`, dispatch))
     .then(() => {
       const state = getState();
       let { release, index } = findArtifactIndexInRelease(state.releases.byId, id);
@@ -151,10 +145,7 @@ export const removeArtifact = id => (dispatch, getState) =>
       }
       return Promise.all([dispatch(setSnackbar('Artifact was removed', 5000, '')), dispatch({ type: ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT, release })]);
     })
-    .catch(err => {
-      const errMsg = err.response.data?.error?.message || err.response.data?.error || err.error || '';
-      dispatch(setSnackbar(preformatWithRequestID(err.response, `Error removing artifact: ${errMsg}`), null, 'Copy to clipboard'));
-    });
+    .catch(err => commonErrorHandler(err, `Error removing artifact:`, dispatch));
 
 export const selectArtifact = artifact => (dispatch, getState) => {
   if (!artifact) {
@@ -193,11 +184,7 @@ export const getReleases = () => dispatch =>
         dispatch({ type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: !!releases.length })
       ]);
     })
-    .catch(err => {
-      var errormsg = err.error || 'Please check your connection';
-      console.log(errormsg);
-      dispatch(setSnackbar(errormsg, 5000, ''));
-    });
+    .catch(err => commonErrorHandler(err, `Please check your connection`, dispatch));
 
 export const getRelease = name => dispatch =>
   GeneralApi.get(`${deploymentsApiUrl}/deployments/releases?name=${name}`).then(({ data: releases }) =>

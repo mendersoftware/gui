@@ -25,7 +25,7 @@ export class VirtualDeviceOnboarding extends React.PureComponent {
             <p>If you do not have it already, please install Docker on your local machine.</p>
             <p>
               For example if you are using Ubuntu follow this tutorial:{' '}
-              <a href="https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/" target="_blank">
+              <a href="https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/" target="_blank" rel="noopener noreferrer">
                 https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/
               </a>
             </p>

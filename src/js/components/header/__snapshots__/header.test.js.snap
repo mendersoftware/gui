@@ -15,11 +15,14 @@ exports[`Header Component renders correctly 1`] = `
   }
 >
   <a
-    className=""
     href="/"
-    id="logo"
     onClick={[Function]}
-  />
+  >
+    <img
+      id="logo"
+      src="headerlogo.png"
+    />
+  </a>
   <div
     style={
       Object {
@@ -64,6 +67,7 @@ exports[`Header Component renders correctly 1`] = `
            
           <a
             href="https://mender.io/pricing"
+            rel="noopener noreferrer"
             target="_blank"
           >
             mender.io/pricing

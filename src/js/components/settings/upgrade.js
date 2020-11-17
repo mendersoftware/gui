@@ -73,7 +73,7 @@ export const Upgrade = ({ cancelUpgrade, completeUpgrade, getDeviceLimit, getUse
           <p>Upgrade to one of our plans to connect more devices, continue using advanced features, and get access to support.</p>
           <p>
             Learn more about the different plans at{' '}
-            <a href="https://mender.io/plans/pricing" target="_blank">
+            <a href="https://mender.io/plans/pricing" target="_blank" rel="noopener noreferrer">
               mender.io/plans/pricing
             </a>
             .
@@ -98,7 +98,7 @@ export const Upgrade = ({ cancelUpgrade, completeUpgrade, getDeviceLimit, getUse
           <p className="info">
             <InfoOutlinedIcon style={{ fontSize: '14px', margin: '0 4px 4px 0', verticalAlign: 'middle' }} /> To ask about extending the device limit of a
             specific plan,{' '}
-            <a href="mailto:contact@mender.io" target="_blank">
+            <a href="mailto:contact@mender.io" target="_blank" rel="noopener noreferrer">
               contact our sales team
             </a>
             .
@@ -129,7 +129,11 @@ export const Upgrade = ({ cancelUpgrade, completeUpgrade, getDeviceLimit, getUse
                 Interested in upgrading to <b>Mender Enterprise</b>? Our sales team can arrange a call with you to discuss your requirements and custom pricing.
               </p>
               <p>
-                <a href={`mailto:support@mender.io?subject=` + org.name + `: Enterprise upgrade&body=` + mailBodyText.toString()} target="_blank">
+                <a
+                  href={`mailto:support@mender.io?subject=` + org.name + `: Enterprise upgrade&body=` + mailBodyText.toString()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <MailIcon style={{ fontSize: '14px', margin: '0 4px 4px 0', verticalAlign: 'middle' }} /> Send a message to our sales team
                 </a>
               </p>

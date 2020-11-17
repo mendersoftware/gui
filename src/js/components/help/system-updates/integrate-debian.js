@@ -10,14 +10,14 @@ const IntegrateDebian = ({ docsVersion = '' }) => (
     </p>
 
     <p>
-      <a href={`https://docs.mender.io/${docsVersion}system-updates-debian-family`} target="_blank">
+      <a href={`https://docs.mender.io/${docsVersion}system-updates-debian-family`} target="_blank" rel="noopener noreferrer">
         Read our documentation
       </a>{' '}
       on building a Mender Debian image.
     </p>
     <p>
       You can also look in the{' '}
-      <a href="https://hub.mender.io/c/board-integrations/debian-family" target="_blank">
+      <a href="https://hub.mender.io/c/board-integrations/debian-family" target="_blank" rel="noopener noreferrer">
         Debian family category on Mender Hub
       </a>{' '}
       to find if your board or a similar board has already been tested with Mender.

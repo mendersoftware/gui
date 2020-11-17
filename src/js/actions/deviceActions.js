@@ -1,9 +1,9 @@
 import pluralize from 'pluralize';
 
-import { setSnackbar } from '../actions/appActions';
+import { commonErrorHandler, setSnackbar } from '../actions/appActions';
 import GeneralApi, { headerNames } from '../api/general-api';
 import * as DeviceConstants from '../constants/deviceConstants';
-import { getSnackbarMessage, mapDeviceAttributes, preformatWithRequestID } from '../helpers';
+import { extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
 
 // default per page until pagination and counting integrated
 const defaultPerPage = 20;
@@ -84,13 +84,7 @@ export const addStaticGroup = (group, deviceIds) => (dispatch, getState) =>
         ])
       )
     )
-    .catch(err => {
-      console.log(err);
-      dispatch(
-        setSnackbar(preformatWithRequestID(err.response, `Group could not be updated: ${err.response.data.error?.message || ''}`), null, 'Copy to clipboard')
-      );
-      return Promise.reject(err);
-    });
+    .catch(err => commonErrorHandler(err, `Group could not be updated:`, dispatch));
 
 export const removeStaticGroup = groupName => (dispatch, getState) => {
   const { deviceIds } = getState().devices.groups.byId[groupName];
@@ -171,13 +165,7 @@ export const addDynamicGroup = (groupName, filterPredicates) => (dispatch, getSt
         })
       ).then(() => Promise.all([dispatch(selectGroup(groupName)), dispatch(setSnackbar('The group was updated successfully', 5000))]))
     )
-    .catch(err => {
-      console.log(err);
-      dispatch(
-        setSnackbar(preformatWithRequestID(err.response, `Group could not be updated: ${err.response.data.error?.message || ''}`), null, 'Copy to clipboard')
-      );
-      return Promise.reject(err);
-    });
+    .catch(err => commonErrorHandler(err, `Group could not be updated:`, dispatch));
 
 export const updateDynamicGroup = (groupName, filterPredicates) => (dispatch, getState) => {
   const filterId = getState().devices.groups.byId[groupName].id;
@@ -243,20 +231,13 @@ export const selectDevice = (deviceId, status) => dispatch => {
         });
       })
       .catch(err => {
-        console.log(err);
+        commonErrorHandler(err, `Error fetching device details.`, dispatch);
         Promise.all([
           dispatch(selectDevices([])),
           dispatch({
             type: DeviceConstants.SELECT_DEVICE,
             deviceId: null
-          }),
-          dispatch(
-            setSnackbar(
-              preformatWithRequestID(err.response, `Error fetching device details. ${err.response.data.error?.message || ''}`),
-              null,
-              'Copy to clipboard'
-            )
-          )
+          })
         ]);
       });
   }
@@ -399,7 +380,8 @@ export const getDeviceById = id => dispatch =>
       return Promise.resolve(device);
     })
     .catch(err => {
-      if (err.response?.data?.error.startsWith('Device not found')) {
+      const errMsg = extractErrorMessage(err);
+      if (errMsg.startsWith('Device not found')) {
         console.log(`${id} does not have any inventory information`);
         return;
       }
@@ -504,12 +486,7 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
       tasks.push(Promise.resolve({ deviceAccu, total: Number(response.headers[headerNames.total]) }));
       return Promise.all(tasks);
     })
-    .catch(error => {
-      const errormsg = error.error || error.response?.data.error.message || 'Please check your connection.';
-      console.log(errormsg);
-      dispatch(setSnackbar(preformatWithRequestID(error.response, `${status} devices couldn't be loaded. ${errormsg}`), null, 'Copy to clipboard'));
-      return Promise.reject(error);
-    });
+    .catch(err => commonErrorHandler(err, `${status} devices couldn't be loaded.`, dispatch, 'Please check your connection.'));
 };
 
 export const getAllDevicesByStatus = status => (dispatch, getState) => {
@@ -597,14 +574,7 @@ export const updateDeviceAuth = (deviceId, authId, status) => (dispatch, getStat
       tasks.push(maybeUpdateDevicesByStatus(getState().devices, deviceId, authId, dispatch));
       return Promise.all(tasks);
     })
-    .catch(err => {
-      var errMsg = err ? (err.response ? err.response.data.error?.message : err.message) : '';
-      console.log(errMsg);
-      dispatch(
-        setSnackbar(preformatWithRequestID(err.response, `There was a problem updating the device authorization status: ${errMsg}`), null, 'Copy to clipboard')
-      );
-      return Promise.reject(err);
-    });
+    .catch(err => commonErrorHandler(err, 'There was a problem updating the device authorization status:', dispatch));
 
 export const updateDevicesAuth = (deviceIds, status) => (dispatch, getState) => {
   let devices = getState().devices.byId;
@@ -619,18 +589,9 @@ export const updateDevicesAuth = (deviceIds, status) => (dispatch, getState) => 
         return Promise.reject();
       }
       // api call device.id and device.authsets[0].id
-      return dispatch(updateDeviceAuth(device.id, device.auth_sets[0].id, status)).catch(err => {
-        const errMsg = err.response.data.error?.message || err.response.statusText || '';
-        // notify if an error occurs
-        dispatch(
-          setSnackbar(
-            preformatWithRequestID(err.response, `The action was stopped as there was a problem updating a device authorization status: ${errMsg}`),
-            null,
-            'Copy to clipboard'
-          )
-        );
-        return Promise.reject();
-      });
+      return dispatch(updateDeviceAuth(device.id, device.auth_sets[0].id, status)).catch(err =>
+        commonErrorHandler(err, 'The action was stopped as there was a problem updating a device authorization status: ', dispatch)
+      );
     });
     return Promise.allSettled(deviceAuthUpdates).then(results => {
       const { skipped, count } = results.reduce(
@@ -658,27 +619,16 @@ export const deleteAuthset = (deviceId, authId) => (dispatch, getState) =>
       tasks.push(maybeUpdateDevicesByStatus(getState().devices, deviceId, authId, dispatch));
       return Promise.all(tasks);
     })
-    .catch(err => {
-      var errMsg = err ? (err.response ? err.response.data.error.message : err.message) : '';
-      console.log(errMsg);
-      dispatch(
-        setSnackbar(preformatWithRequestID(err.response, `There was a problem updating the device authorization status: ${errMsg}`), null, 'Copy to clipboard')
-      );
-      return Promise.reject(err);
-    });
+    .catch(err => commonErrorHandler(err, 'There was a problem updating the device authorization status:', dispatch));
 
 export const preauthDevice = authset => dispatch =>
   GeneralApi.post(`${deviceAuthV2}/devices`, authset)
     .catch(err => {
-      console.log(err);
-      const errMsg = err.response.data?.error?.message || err.response.data?.error || err.error || '';
       if (err.response.status === 409) {
         return Promise.reject('A device with a matching identity data set already exists');
       }
-      return Promise.all([
-        dispatch(setSnackbar(preformatWithRequestID(err.response, `The device could not be added: ${errMsg}`), null, 'Copy to clipboard')),
-        Promise.reject()
-      ]);
+      commonErrorHandler(err, 'The device could not be added:', dispatch);
+      return Promise.reject();
     })
     .then(() => Promise.resolve(dispatch(setSnackbar('Device was successfully added to the preauthorization list', 5000))));
 
@@ -689,9 +639,4 @@ export const decommissionDevice = deviceId => (dispatch, getState) =>
       tasks.push(maybeUpdateDevicesByStatus(getState().devices, deviceId, null, dispatch));
       return Promise.all(tasks);
     })
-    .catch(err => {
-      var errMsg = err.response.data.error.message || '';
-      console.log(errMsg);
-      dispatch(setSnackbar(preformatWithRequestID(err.response, `There was a problem decommissioning the device: ${errMsg}`), null, 'Copy to clipboard'));
-      return Promise.reject(err);
-    });
+    .catch(err => commonErrorHandler(err, 'There was a problem decommissioning the device:', dispatch));

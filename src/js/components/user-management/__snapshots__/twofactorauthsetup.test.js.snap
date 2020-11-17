@@ -23,6 +23,7 @@ exports[`TwoFactorAuthSetup Component renders correctly 1`] = `
          
         <a
           href="https://authy.com/download/"
+          rel="noopener noreferrer"
           target="_blank"
         >
           Authy
@@ -32,6 +33,7 @@ exports[`TwoFactorAuthSetup Component renders correctly 1`] = `
          
         <a
           href="https://support.google.com/accounts/answer/1066447"
+          rel="noopener noreferrer"
           target="_blank"
         >
           Google Authenticator

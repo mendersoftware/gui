@@ -164,7 +164,7 @@ export class Devices extends React.Component {
           restart={() => this._restartInterval()}
         />
         {openIdDialog && (
-          <Dialog open={openIdDialog || false}>
+          <Dialog open={true}>
             <DialogTitle>Default device identity attribute</DialogTitle>
             <DialogContent style={{ overflow: 'hidden' }}>
               <Global dialog={true} closeDialog={e => this._openSettingsDialog(e)} />

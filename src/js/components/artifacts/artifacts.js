@@ -36,7 +36,6 @@ export class Artifacts extends React.Component {
     super(props, context);
     this.state = {
       doneLoading: false,
-      remove: false,
       showCreateArtifactDialog: false
     };
   }
@@ -126,7 +125,7 @@ export class Artifacts extends React.Component {
 
   render() {
     const self = this;
-    const { artifact, doneLoading, selectedFile, showCreateArtifactDialog } = self.state;
+    const { doneLoading, selectedFile, showCreateArtifactDialog } = self.state;
     const {
       advanceOnboarding,
       artifactProgress,
@@ -205,10 +204,10 @@ export class Artifacts extends React.Component {
         ) : null}
         {showRemoveDialog && (
           <RemoveArtifactDialog
-            artifact={(artifact || {}).name}
+            artifact={selectedArtifact.name}
             open={showRemoveDialog}
             onCancel={() => showRemoveArtifactDialog(false)}
-            onRemove={() => self._removeArtifact(selectedArtifact || artifact || selectedRelease.Artifacts[0])}
+            onRemove={() => self._removeArtifact(selectedArtifact || selectedRelease.Artifacts[0])}
           />
         )}
         {showCreateArtifactDialog && (

@@ -25,7 +25,6 @@ export class DeviceGroups extends React.Component {
     super(props, context);
     this.state = {
       createGroupExplanation: false,
-      groupInvalid: true,
       modifyGroupDialog: false,
       removeGroup: false,
       tmpDevices: []
@@ -53,7 +52,6 @@ export class DeviceGroups extends React.Component {
   _handleGroupChange(group) {
     this.props.selectGroup(group);
     this.props.history.push(group ? `/devices?group=${group}` : '/devices');
-    this.setState({ loading: true, pageNo: 1 });
   }
 
   _removeCurrentGroup() {
@@ -61,7 +59,7 @@ export class DeviceGroups extends React.Component {
     const request = self.props.groupFilters.length
       ? self.props.removeDynamicGroup(self.props.selectedGroup)
       : self.props.removeStaticGroup(self.props.selectedGroup);
-    return request.then(() => self.setState({ pageNo: 1, removeGroup: !self.state.removeGroup })).catch(err => console.log(err));
+    return request.then(() => self.setState({ removeGroup: !self.state.removeGroup })).catch(err => console.log(err));
   }
 
   // Edit groups from device selection
@@ -75,9 +73,7 @@ export class DeviceGroups extends React.Component {
     let request = self.state.fromFilters ? self.props.addDynamicGroup(group, this.props.filters) : self.props.addStaticGroup(group, devices);
     return request.then(() => {
       // reached end of list
-      self.setState({ createGroupExplanation: false, modifyGroupDialog: false, fromFilters: false, tmpGroup: '', selectedField: '' }, () =>
-        self._refreshGroups()
-      );
+      self.setState({ createGroupExplanation: false, modifyGroupDialog: false, fromFilters: false }, () => self._refreshGroups());
     });
   }
 

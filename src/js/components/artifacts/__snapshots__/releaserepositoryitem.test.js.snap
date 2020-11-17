@@ -133,9 +133,7 @@ exports[`ReleaseRepositoryItem Component renders correctly 1`] = `
           >
             <div
               className="MuiAccordionDetails-root"
-            >
-              <div />
-            </div>
+            />
           </div>
         </div>
       </div>

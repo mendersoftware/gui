@@ -79,7 +79,7 @@ exports[`PreauthorizeDevices Component renders correctly 1`] = `
     </p>
     <img
       alt="preauthorize"
-      src="assets/img/preauthorize.png"
+      src="preauthorize.png"
     />
   </div>
 </div>

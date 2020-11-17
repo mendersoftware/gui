@@ -3,6 +3,7 @@ import Cookies from 'universal-cookie';
 import AppConstants from '../constants/appConstants';
 import { DEVICE_STATES } from '../constants/deviceConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
+import { extractErrorMessage, preformatWithRequestID } from '../helpers';
 import { getUserSettings } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import { getDeviceAttributes, getDevicesByStatus, getDeviceLimit, getDynamicGroups, getGroups } from './deviceActions';
@@ -12,6 +13,12 @@ import { saveUserSettings, getGlobalSettings, getRoles } from './userActions';
 import { getUserOrganization } from './organizationActions';
 
 const cookies = new Cookies();
+
+export const commonErrorHandler = (err, errorContext, dispatch, fallback) => {
+  const errMsg = extractErrorMessage(err, fallback);
+  dispatch(setSnackbar(preformatWithRequestID(err.response, `${errorContext} ${errMsg}`), null, 'Copy to clipboard'));
+  return Promise.reject(err);
+};
 
 export const initializeAppData = () => (dispatch, getState) => {
   let tasks = [
@@ -53,14 +60,6 @@ export const initializeAppData = () => (dispatch, getState) => {
     return Promise.resolve();
   });
 };
-
-export const sortTable = (table, column, direction) => dispatch =>
-  dispatch({
-    type: AppConstants.SORT_TABLE,
-    table: table,
-    column: column,
-    direction: direction
-  });
 
 /*
   General

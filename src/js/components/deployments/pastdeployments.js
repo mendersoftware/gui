@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { RootRef, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 
+import historyImage from '../../../assets/img/history.png';
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, selectDeployment } from '../../actions/deploymentActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
@@ -32,12 +33,10 @@ export class Past extends React.Component {
     super(props, context);
     this.state = {
       deviceGroup: '',
-      doneLoading: false,
       endDate: props.endDate || tonight,
       startDate: props.startDate || today,
       page: 1,
-      perPage: 20,
-      today: new Date()
+      perPage: 20
     };
   }
 
@@ -98,12 +97,7 @@ export class Past extends React.Component {
             return self.refreshDeployments(...arguments);
           }
         })
-        .catch(err => {
-          console.log(err);
-          let errormsg = err.error || 'Please check your connection';
-          setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, self.props.setSnackbar);
-        })
-        .finally(() => self.setState({ doneLoading: true }));
+        .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, self.props.setSnackbar));
     });
   }
 
@@ -185,7 +179,7 @@ export class Past extends React.Component {
               <p>
                 Try a different date range, or <a onClick={createClick}>Create a new deployment</a> to get started
               </p>
-              <img src="assets/img/history.png" alt="Past" />
+              <img src={historyImage} alt="Past" />
             </div>
           )}
         </div>

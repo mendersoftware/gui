@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { decodeSessionToken } from '../helpers';
+import { decodeSessionToken, extractErrorMessage } from '../helpers';
 import { getUser } from '../actions/userActions';
 import Cookies from 'universal-cookie';
 
@@ -58,7 +58,7 @@ export class LiveChatBox extends React.Component {
     // get current user
     return self.props
       .getUser(userId)
-      .catch(err => console.log(err.res ? err.res.error : err))
+      .catch(err => console.log(extractErrorMessage(err)))
       .finally(() => self.setState({ gettingUser: false }));
   }
 

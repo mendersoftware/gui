@@ -4,117 +4,143 @@ exports[`SelectedArtifact Component renders correctly 1`] = `
 <div
   className="muted"
 >
-  <div
+  <ul
+    className="MuiList-root MuiList-padding"
     style={
       Object {
-        "display": "flex",
-        "fontSize": "12px",
-        "justifyContent": "space-between",
-        "paddingBottom": "10px",
+        "display": "grid",
+        "gridColumnGap": "2vw",
+        "gridTemplateColumns": "calc(600px + 2vw) 300px",
       }
     }
   >
-    <div
-      className="MuiFormControl-root list-item list-item-large"
+    <li
+      className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled opaque"
+      disabled={true}
+      style={
+        Object {
+          "color": "#404041",
+          "fontSize": "13px",
+          "marginRight": "2vw",
+          "minMidth": 200,
+          "padding": 0,
+        }
+      }
     >
-      <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
-        data-shrink={true}
-        htmlFor="artifact-description"
-      >
-        Description
-      </label>
       <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
-        onClick={[Function]}
+        className="MuiListItemText-root MuiListItemText-multiline"
         style={
           Object {
-            "color": "#404041",
-            "fontSize": "13px",
+            "marginBottom": -3,
           }
         }
       >
-        <input
-          aria-invalid={false}
-          className="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled MuiInputBase-inputAdornedEnd"
-          disabled={true}
-          id="artifact-description"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          required={false}
-          type="text"
-          value="text"
-        />
-        <div
-          className="MuiInputAdornment-root MuiInputAdornment-positionEnd"
+        <span
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+          style={
+            Object {
+              "marginBottom": 3,
+            }
+          }
         >
-          <button
-            className="MuiButtonBase-root MuiIconButton-root"
-            disabled={false}
-            onBlur={[Function]}
+          Description
+        </span>
+        <div
+          className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+        >
+          <div
+            className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-adornedEnd"
             onClick={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
             style={
               Object {
-                "color": "rgba(0, 0, 0, 0.54)",
-                "marginBottom": "10px",
+                "width": "100%",
               }
             }
-            tabIndex={0}
-            type="button"
           >
-            <span
-              className="MuiIconButton-label"
+            <input
+              className="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled MuiInputBase-inputAdornedEnd"
+              disabled={true}
+              id="artifact-description"
+              onAnimationStart={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              type="text"
+              value="text"
+            />
+            <div
+              className="MuiInputAdornment-root MuiInputAdornment-positionEnd"
             >
-              <svg
-                aria-hidden={true}
-                className="MuiSvgIcon-root"
-                focusable="false"
-                viewBox="0 0 24 24"
+              <button
+                className="MuiButtonBase-root MuiIconButton-root"
+                disabled={false}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "color": "rgba(0, 0, 0, 0.54)",
+                    "marginBottom": "10px",
+                  }
+                }
+                tabIndex={0}
+                type="button"
               >
-                <path
-                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
-                />
-              </svg>
-            </span>
-          </button>
+                <span
+                  className="MuiIconButton-label"
+                >
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    <div
-      className="MuiFormControl-root list-item"
-    >
-      <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
-        data-shrink={true}
-        htmlFor="artifact-signed"
-      >
-        Signed
-      </label>
-      <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedStart"
-        onClick={[Function]}
-        style={
-          Object {
-            "color": "#404041",
-            "fontSize": "13px",
-          }
+    </li>
+    <li
+      className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled opaque"
+      disabled={true}
+      style={
+        Object {
+          "borderBottom": "1px solid",
+          "borderBottomColor": "#e0e0e0",
+          "color": "#404041",
+          "fontSize": "13px",
+          "marginRight": "2vw",
+          "minMidth": 200,
+          "padding": 0,
         }
+      }
+    >
+      <div
+        className="MuiListItemText-root MuiListItemText-multiline"
       >
-        <div
-          className="MuiInputAdornment-root MuiInputAdornment-positionStart"
+        <span
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+        >
+          Signed
+        </span>
+        <p
+          className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
         >
           <svg
             aria-hidden={true}
@@ -126,22 +152,10 @@ exports[`SelectedArtifact Component renders correctly 1`] = `
               d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.59-13L12 10.59 8.41 7 7 8.41 10.59 12 7 15.59 8.41 17 12 13.41 15.59 17 17 15.59 13.41 12 17 8.41z"
             />
           </svg>
-        </div>
-        <input
-          aria-invalid={false}
-          className="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled MuiInputBase-inputAdornedStart"
-          disabled={true}
-          id="artifact-signed"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          required={false}
-          type="text"
-        />
+        </p>
       </div>
-    </div>
-  </div>
+    </li>
+  </ul>
   <div
     className="MuiPaper-root MuiAccordion-root MuiPaper-elevation1"
     style={
@@ -227,9 +241,7 @@ exports[`SelectedArtifact Component renders correctly 1`] = `
                   "padding": 0,
                 }
               }
-            >
-              <div />
-            </div>
+            />
           </div>
         </div>
       </div>

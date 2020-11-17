@@ -4,6 +4,8 @@ import moment from 'moment';
 import { Button, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 
+import historyImage from '../../../assets/img/history.png';
+
 import { getAllAuditLogs, getAuditLogs } from '../../actions/organizationActions';
 import { getUserList } from '../../actions/userActions';
 import Loader from '../common/loader';
@@ -24,13 +26,13 @@ const detailsMap = {
 const csvHeader = `data:text/csv;charset=utf-8,${auditLogColumns.map(column => column.title).join(',')}`;
 
 export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, getUserList, groups, users, ...props }) => {
-  const [endDate, setEndDate] = useState(endDate || tonight);
+  const [endDate, setEndDate] = useState(tonight);
   const [csvLoading, setCsvLoading] = useState(false);
   const [detail, setDetail] = useState(undefined);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(defaultRowsPerPage);
-  const [startDate, setStartDate] = useState(startDate || today);
+  const [startDate, setStartDate] = useState(today);
   const [type, setType] = useState('');
   const [user, setUser] = useState(undefined);
   const [sorting, setSorting] = useState('desc');
@@ -185,7 +187,7 @@ export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, getUserList, 
         <div className="dashboard-placeholder">
           <p>No log entries were found.</p>
           <p>Try a different date range.</p>
-          <img src="assets/img/history.png" alt="Past" />
+          <img src={historyImage} alt="Past" />
         </div>
       )}
     </div>

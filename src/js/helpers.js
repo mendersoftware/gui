@@ -75,12 +75,15 @@ export function decodeSessionToken(token) {
   }
 }
 
-export function isEmpty(obj) {
-  for (var prop in obj) {
+export const isEmpty = obj => {
+  for (const _ in obj) {
     return false;
   }
   return true;
-}
+};
+
+export const extractErrorMessage = (err, fallback = '') =>
+  err.response?.data?.error?.message || err.response?.data?.error || err.error || err.message || fallback;
 
 export function preformatWithRequestID(res, failMsg) {
   // ellipsis line
@@ -479,6 +482,60 @@ export const getSnackbarMessage = (skipped, done) => {
   return `${doneText}${skipText}`;
 };
 
+export const extractSoftware = (capabilities = {}) =>
+  Object.keys(capabilities).reduce((accu, item) => {
+    if (item.endsWith('.version')) {
+      accu.push(item.substring(0, item.indexOf('.')));
+    }
+    return accu;
+  }, []);
+
+export const extractSoftwareInformation = (capabilities = {}, softwareTitleMap = {}, softwareHeaderList = []) => {
+  const mapLayerInformation = (key, value, i) => {
+    let primary = key;
+    let secondary = value;
+    let priority = i + Object.keys(softwareTitleMap);
+    let result = [];
+    const infoItems = key.split('.');
+    if (infoItems.length === 2) {
+      primary = softwareTitleMap[key] ? softwareTitleMap[key].title : primary;
+      priority = softwareTitleMap[key] ? softwareTitleMap[key].priority : i;
+      result.push({ priority, primary, secondary });
+    } else if (infoItems.length >= 3) {
+      primary = softwareTitleMap[key] ? softwareTitleMap[key].title : infoItems[1];
+      // this is required with the "secondary" assignment in the softwareHeaderList.map to support keys with more than 2 dots
+      const punctuated = infoItems.length > softwareHeaderList.length ? infoItems.slice(1, infoItems.length - 1).join('.') : null;
+      const things = softwareHeaderList.length
+        ? softwareHeaderList.map((item, index) => ({
+            priority: index,
+            primary: item,
+            secondary: infoItems[index] === 'version' && index === infoItems.length - 1 ? value : punctuated ?? infoItems[index]
+          }))
+        : [{ priority, primary, secondary }];
+      result.push(...things);
+    } else {
+      result.push({ priority, primary, secondary });
+    }
+    return result;
+  };
+
+  const softwareInformation = extractSoftware(capabilities);
+  const softwareLayers = Object.entries(capabilities).reduce((accu, item, index) => {
+    const softwareAttribute = softwareInformation.find(info => item[0].startsWith(info));
+    if (softwareAttribute) {
+      if (!accu[softwareAttribute]) {
+        accu[softwareAttribute] = [];
+      }
+      accu[softwareAttribute].push(...mapLayerInformation(item[0], item[1], index));
+    }
+    return accu;
+  }, {});
+
+  return Object.entries(softwareLayers).reduce((accu, item) => {
+    accu[item[0]] = item[1].sort((a, b) => a.priority - b.priority);
+    return accu;
+  }, {});
+};
 export const getDemoDeviceCreationCommand = token =>
   token
     ? `TENANT_TOKEN='${token}'\ndocker run -it -p ${onboardingReducerState.demoArtifactPort}:${

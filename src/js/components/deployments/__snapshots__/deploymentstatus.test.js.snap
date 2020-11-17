@@ -16,8 +16,11 @@ exports[`DeploymentStatus Component renders correctly 1`] = `
       onTouchStart={[Function]}
       title="Skipped"
     >
+      <img
+        src="skipped_status.png"
+      />
       <span
-        className="status skipped"
+        className="status"
       >
         0
       </span>
@@ -33,8 +36,11 @@ exports[`DeploymentStatus Component renders correctly 1`] = `
       onTouchStart={[Function]}
       title="Pending"
     >
+      <img
+        src="pending_status.png"
+      />
       <span
-        className="status pending"
+        className="status"
       >
         0
       </span>
@@ -50,8 +56,11 @@ exports[`DeploymentStatus Component renders correctly 1`] = `
       onTouchStart={[Function]}
       title="In progress"
     >
+      <img
+        src="progress_status.png"
+      />
       <span
-        className="status inprogress"
+        className="status"
       >
         0
       </span>
@@ -67,8 +76,11 @@ exports[`DeploymentStatus Component renders correctly 1`] = `
       onTouchStart={[Function]}
       title="Successful"
     >
+      <img
+        src="success_status.png"
+      />
       <span
-        className="status success"
+        className="status"
       >
         0
       </span>
@@ -84,8 +96,11 @@ exports[`DeploymentStatus Component renders correctly 1`] = `
       onTouchStart={[Function]}
       title="Failed"
     >
+      <img
+        src="error_status.png"
+      />
       <span
-        className="status failure"
+        className="status"
       >
         0
       </span>

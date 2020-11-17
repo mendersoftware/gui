@@ -146,7 +146,7 @@ ${plans[currentPlan]}
                       {org.trial ? (
                         <Link to="/settings/upgrade">upgrade to a paid plan</Link>
                       ) : (
-                        <a href="mailto:contact@mender.io" target="_blank">
+                        <a href="mailto:contact@mender.io" target="_blank" rel="noopener noreferrer">
                           contact our sales team
                         </a>
                       )}
@@ -164,12 +164,16 @@ ${plans[currentPlan]}
         <>
           <p className="info" style={{ marginLeft: 15, marginRight: 15, maxWidth }}>
             For changes to your plan or any other support questions, contact us at{' '}
-            <a href={`mailto:support@mender.io?subject=${org.name}: Enterprise upgrade&body=${mailBodyTexts.upgrade}`} target="_blank">
+            <a
+              href={`mailto:support@mender.io?subject=${org.name}: Enterprise upgrade&body=${mailBodyTexts.upgrade}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               support@mender.io
             </a>
           </p>
           <p className="margin-left-small margin-right-small margin-bottom-none" style={{ maxWidth }}>
-            <a href={`mailto:support@mender.io?subject=${org.name}: Update billing&body=${mailBodyTexts.billing}`} target="_blank">
+            <a href={`mailto:support@mender.io?subject=${org.name}: Update billing&body=${mailBodyTexts.billing}`} target="_blank" rel="noopener noreferrer">
               Request to update your billing details
             </a>
           </p>
