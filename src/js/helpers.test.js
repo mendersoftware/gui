@@ -7,6 +7,7 @@ import {
   getDebInstallationCode,
   getDemoDeviceCreationCommand,
   getFormattedSize,
+  getPhaseDeviceCount,
   hashString,
   isEmpty,
   mapDeviceAttributes,
@@ -232,5 +233,14 @@ describe('mapDeviceAttributes function', () => {
         this1: 'that1'
       }
     });
+  });
+});
+
+describe('getPhaseDeviceCount function', () => {
+  it('works with empty attributes', () => {
+    expect(getPhaseDeviceCount(120, 10, 20, false)).toEqual(12);
+    expect(getPhaseDeviceCount(120, 10, 20, true)).toEqual(12);
+    expect(getPhaseDeviceCount(120, null, 20, true)).toEqual(24);
+    expect(getPhaseDeviceCount(120, null, 20, false)).toEqual(24);
   });
 });
