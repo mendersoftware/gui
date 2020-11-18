@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
+import moment from 'moment';
+
 import { Button, Tab, Tabs } from '@material-ui/core';
 
 import { getGroups, getDynamicGroups, initializeGroupsDevices, selectDevice } from '../../actions/deviceActions';
@@ -43,6 +45,17 @@ const routes = {
 };
 
 export const defaultRefreshDeploymentsLength = 30000;
+
+export const getPhaseStartTime = (phases, index) => {
+  if (index < 1) {
+    return phases[0].start_ts || new Date();
+  }
+  // since we don't want to get stale phase start times when the creation dialog is open for a long time
+  // we have to ensure start times are based on delay from previous phases
+  // since there likely won't be 1000s of phases this should still be fine to recalculate
+  const newStartTime = phases.slice(0, index).reduce((accu, phase) => moment(accu).add(phase.delay, phase.delayUnit), phases[0].start_ts || new Date());
+  return newStartTime.toISOString();
+};
 
 export class Deployments extends React.Component {
   constructor(props, context) {
@@ -112,7 +125,12 @@ export class Deployments extends React.Component {
       filter_id: filterId,
       group: group === allDevices ? undefined : group,
       name: decodeURIComponent(group) || 'All devices',
-      phases,
+      phases: phases
+        ? phases.map((phase, i, origPhases) => {
+            phase.start_ts = getPhaseStartTime(origPhases, i);
+            return phase;
+          })
+        : phases,
       retries
     };
     self.setState({ createDialog: false, reportDialog: false });
@@ -229,10 +247,9 @@ export class Deployments extends React.Component {
         )}
         {createDialog && (
           <CreateDialog
-            open={createDialog}
             onDismiss={() => self.setState({ createDialog: false, deploymentObject: {} })}
-            onScheduleSubmit={deploymentObj => self.onScheduleSubmit(deploymentObj)}
             deploymentObject={deploymentObject}
+            onScheduleSubmit={deploymentObj => self.onScheduleSubmit(deploymentObj)}
           />
         )}
         {onboardingComponent}
