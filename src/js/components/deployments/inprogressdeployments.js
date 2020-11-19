@@ -5,6 +5,7 @@ import { Refresh as RefreshIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, selectDeployment } from '../../actions/deploymentActions';
+import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { tryMapDeployments } from '../../helpers';
 import { getOnboardingState } from '../../selectors';
@@ -58,11 +59,11 @@ export class Progress extends React.Component {
   setupDeploymentsRefresh(refreshLength = this.state.currentRefreshDeploymentLength) {
     const self = this;
     let tasks = [
-      self.refreshDeployments(self.state.progressPage, self.state.progressPerPage, 'inprogress'),
-      self.refreshDeployments(self.state.pendingPage, self.state.pendingPerPage, 'pending')
+      self.refreshDeployments(self.state.progressPage, self.state.progressPerPage, DEPLOYMENT_STATES.inprogress),
+      self.refreshDeployments(self.state.pendingPage, self.state.pendingPerPage, DEPLOYMENT_STATES.pending)
     ];
     if (!self.props.onboardingState.complete && !self.props.pastDeploymentsCount) {
-      tasks.push(self.refreshDeployments(1, 1, 'finished'));
+      tasks.push(self.refreshDeployments(1, 1, DEPLOYMENT_STATES.finished));
     }
     return Promise.all(tasks).then(() => {
       const currentRefreshDeploymentLength = Math.min(refreshDeploymentsLength, refreshLength * 2);
@@ -95,8 +96,8 @@ export class Progress extends React.Component {
       .abort(id)
       .then(() =>
         Promise.all([
-          self.refreshDeployments(self.state.progressPage, self.state.progressPerPage, 'inprogress'),
-          self.refreshDeployments(self.state.pendingPage, self.state.pendingPerPage, 'pending')
+          self.refreshDeployments(self.state.progressPage, self.state.progressPerPage, DEPLOYMENT_STATES.inprogress),
+          self.refreshDeployments(self.state.pendingPage, self.state.pendingPerPage, DEPLOYMENT_STATES.pending)
         ])
       );
   }
@@ -130,8 +131,8 @@ export class Progress extends React.Component {
                 listClass="margin-right-small"
                 page={progressPage}
                 pageSize={progressPerPage}
-                onChangeRowsPerPage={perPage => self.refreshDeployments(1, perPage, 'inprogress')}
-                onChangePage={page => self.refreshDeployments(page, progressPerPage, 'inprogress')}
+                onChangeRowsPerPage={perPage => self.refreshDeployments(1, perPage, DEPLOYMENT_STATES.inprogress)}
+                onChangePage={page => self.refreshDeployments(page, progressPerPage, DEPLOYMENT_STATES.inprogress)}
                 type="progress"
               />
             </div>
@@ -151,8 +152,8 @@ export class Progress extends React.Component {
               items={pending}
               page={pendingPage}
               pageSize={pendingPerPage}
-              onChangeRowsPerPage={perPage => self.refreshDeployments(1, perPage, 'pending')}
-              onChangePage={page => self.refreshDeployments(page, pendingPerPage, 'pending')}
+              onChangeRowsPerPage={perPage => self.refreshDeployments(1, perPage, DEPLOYMENT_STATES.pending)}
+              onChangePage={page => self.refreshDeployments(page, pendingPerPage, DEPLOYMENT_STATES.pending)}
               type="pending"
             />
           </div>

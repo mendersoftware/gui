@@ -9,6 +9,7 @@ import { CalendarToday as CalendarTodayIcon, List as ListIcon, Refresh as Refres
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, selectDeployment } from '../../actions/deploymentActions';
+import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { tryMapDeployments } from '../../helpers';
 import { getIsEnterprise } from '../../selectors';
 import { colors } from '../../themes/mender-theme';
@@ -41,7 +42,7 @@ const tabs = {
   }
 };
 
-const type = 'scheduled';
+const type = DEPLOYMENT_STATES.scheduled;
 
 export class Scheduled extends React.Component {
   constructor(props, context) {
@@ -96,7 +97,7 @@ export class Scheduled extends React.Component {
   refreshDeployments(page = this.state.page, perPage = this.state.perPage) {
     const self = this;
     return self.setState({ page, perPage }, () =>
-      Promise.resolve(self.props.getDeploymentsByStatus('scheduled', page, perPage))
+      Promise.resolve(self.props.getDeploymentsByStatus(DEPLOYMENT_STATES.scheduled, page, perPage))
         .then(deploymentsAction => {
           clearRetryTimer(type, self.props.setSnackbar);
           if (deploymentsAction && deploymentsAction[0].total && !deploymentsAction[0].deploymentIds.length) {

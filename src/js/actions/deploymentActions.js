@@ -161,10 +161,10 @@ export const abortDeployment = deploymentId => (dispatch, getState) =>
   GeneralApi.put(`${deploymentsApiUrl}/deployments/${deploymentId}/status`, { status: 'aborted' })
     .then(() => {
       const state = getState();
-      let status = 'pending';
+      let status = DeploymentConstants.DEPLOYMENT_STATES.pending;
       let index = state.deployments.byStatus.pending.deploymentIds.findIndex(id => id === deploymentId);
       if (index < 0) {
-        status = 'inprogress';
+        status = DeploymentConstants.DEPLOYMENT_STATES.inprogress;
         index = state.deployments.byStatus.inprogress.deploymentIds.findIndex(id => id === deploymentId);
       }
       const deploymentIds = [
