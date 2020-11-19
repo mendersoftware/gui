@@ -38,10 +38,10 @@ export const loginUser = userData => (dispatch, getState) =>
       let options = {};
       if (userData.hasOwnProperty('noExpiry')) {
         // set no expiry as cookie to remember checkbox value, even though this is set, maxAge takes precedent if present
-        options = { expires: new Date('2500-12-31'), sameSite: 'strict' };
+        options = { expires: new Date('2500-12-31'), sameSite: 'strict', path: '/' };
         cookies.set('noExpiry', userData.noExpiry.toString(), options);
       } else {
-        options = { maxAge: 900, sameSite: 'strict' };
+        options = { maxAge: 900, sameSite: 'strict', path: '/' };
       }
 
       // save token as cookie
@@ -54,7 +54,7 @@ export const loginUser = userData => (dispatch, getState) =>
       return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), dispatch(getUser(userId))]);
     })
     .catch(err => {
-      cookies.remove('JWT');
+      cookies.remove('JWT', { path: '/' });
       const has2FA = getState().users.globalSettings.hasOwnProperty('2fa') && getState().users.globalSettings['2fa'] === 'enabled';
       return Promise.all([Promise.reject(err), dispatch(handleLoginError(err, has2FA))]);
     });

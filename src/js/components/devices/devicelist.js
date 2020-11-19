@@ -8,7 +8,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import SortIcon from '@material-ui/icons/Sort';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
+import { getDeviceAuth, getDeviceById, getDeviceConnect } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 
 import { DEVICE_STATES } from '../../constants/deviceConstants';
@@ -40,14 +40,14 @@ export class DeviceList extends React.Component {
     if (event.target.closest('input') && event.target.closest('input').hasOwnProperty('checked')) {
       return;
     }
-    const { advanceOnboarding, devices, getDeviceAuth, getDeviceById, onboardingComplete, setSnackbar } = self.props;
+    const { advanceOnboarding, devices, getDeviceAuth, getDeviceById, getDeviceConnect, onboardingComplete, setSnackbar } = self.props;
     setSnackbar('');
     let device = devices[rowNumber];
     if (self.state.expandedDeviceId === device.id) {
       device = null;
     } else if (device.status === DEVICE_STATES.accepted) {
       // Get full device identity details for single selected device
-      Promise.all([getDeviceAuth(device.id), getDeviceById(device.id)]).catch(err => console.log(`Error: ${err}`));
+      Promise.all([getDeviceAuth(device.id), getDeviceConnect(device.id), getDeviceById(device.id)]).catch(err => console.log(`Error: ${err}`));
     } else {
       getDeviceAuth(device.id);
     }
@@ -168,7 +168,7 @@ export class DeviceList extends React.Component {
   }
 }
 
-const actionCreators = { advanceOnboarding, getDeviceAuth, getDeviceById, setSnackbar };
+const actionCreators = { advanceOnboarding, getDeviceAuth, getDeviceById, getDeviceConnect, setSnackbar };
 
 const mapStateToProps = (state, ownProps) => {
   const devices = ownProps.devices.reduce((accu, deviceId) => {

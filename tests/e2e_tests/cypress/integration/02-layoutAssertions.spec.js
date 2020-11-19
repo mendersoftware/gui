@@ -1,23 +1,14 @@
+import { onlyOn, skipOn } from '@cypress/skip-test';
 /// <reference types="Cypress" />
-
-var jwtDecode = require('jwt-decode');
 
 context('Layout assertions', () => {
   beforeEach(() => {
-    cy.visit(`${Cypress.config().baseUrl}ui/`);
-    // enter valid username and password
-    cy.get('[id=email]').type(Cypress.env('username'));
-    cy.get('[name=password]').type(Cypress.env('password'));
-    cy.contains('button', 'Log in')
-      .click()
-      .wait(2000)
-      .then(() =>
-        cy.getCookie('JWT').then(cookie => {
-          const userId = jwtDecode(cookie.value).sub;
-          localStorage.setItem(`${userId}-onboarding`, JSON.stringify({ complete: true }));
-          cy.visit('/');
-        })
-      );
+    cy.login(Cypress.env('username'), Cypress.env('password'));
+    cy.restoreLocalStorage();
+    onlyOn('staging', () => {
+      cy.tenantTokenRetrieval();
+    });
+    Cypress.Cookies.preserveOnce('JWT');
   });
 
   describe('Overall layout and structure', () => {
@@ -39,22 +30,29 @@ context('Layout assertions', () => {
     });
 
     it('can authorize a device', () => {
+      onlyOn('staging', () => {
+        cy.getCookie('tenantToken').then(({ value: token }) => {
+          cy.task('startClient', { token, backend: Cypress.config().baseUrl, count: 1 });
+        });
+      });
+      skipOn('staging', () => cy.task('startClient', { backend: Cypress.config().baseUrl, count: 1 }));
       cy.get('a').contains('Devices').click().end();
       cy.get('a').contains('Pending').click().end();
+      cy.get('.deviceListItem', { timeout: 60000 });
       cy.get('.deviceListItem input').click().end();
       cy.get('.MuiSpeedDial-fab').click();
       cy.get('#device-actions-actions').get('.MuiSpeedDialAction-staticTooltipLabel').contains('Accept').parent().find('button').click().end();
-      cy.get('a').contains('Device groups').click().wait(8000).end();
-      cy.get('.deviceListItem').should('contain', 'qemux86-64');
+      cy.get('a').contains('Device groups').click();
     });
 
     it('has basic inventory', () => {
       cy.get('a').contains('Devices').click();
-      cy.get('.deviceListItem').click().should('contain', 'qemux86-64').end();
+      cy.contains('.deviceListItem', 'release', { timeout: 10000 });
+      cy.get('.deviceListItem').click().should('contain', 'release').end();
       cy.get('.expandedDevice')
-        .should('contain', `${Cypress.env('demoDeviceName') || 'mender-image-master'}`)
-        .and('contain', 'Linux version')
-        .and('contain', 'mac_enp0')
+        .should('contain', `${Cypress.config('demoDeviceName') || 'release-v1'}`)
+        .and('contain', 'Linux')
+        .and('contain', 'mac')
         .and('contain', 'qemux86-64');
     });
   });
