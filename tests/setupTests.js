@@ -1,7 +1,7 @@
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { setupServer } from 'msw/node';
-import { deploymentHandlers } from './__mocks__/requestHandlers';
+import handlers from './__mocks__/requestHandlers';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -12,8 +12,6 @@ window.RTCPeerConnection = () => {
     createDataChannel: () => {}
   };
 };
-
-let handlers = [...deploymentHandlers];
 
 // Setup requests interception using the given handlers.
 let server;
