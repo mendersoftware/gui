@@ -78,7 +78,7 @@ describe('abortDeployment', () => {
     return store.dispatch(abortDeployment(defaultState.deployments.byId.d1.id)).then(() => {
       const storeActions = store.getActions();
       expect(storeActions.length).toEqual(expectedActions.length);
-      expectedActions.map((action, index) => Object.keys(action).map(key => expect(action[key]).toEqual(storeActions[index][key])));
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
   it(`should reject aborting deployments that don't exist`, async () => {
@@ -106,7 +106,7 @@ describe('createDeployment', () => {
     return store.dispatch(createDeployment({ devices: [Object.keys(defaultState.devices.byId)[0]] })).then(() => {
       const storeActions = store.getActions();
       expect(storeActions.length).toEqual(expectedActions.length);
-      expectedActions.map((action, index) => Object.keys(action).map(key => expect(action[key]).toEqual(storeActions[index][key])));
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
   it('should allow creating deployments with a filter', async () => {
@@ -127,7 +127,7 @@ describe('createDeployment', () => {
     return store.dispatch(createDeployment({ filter_id })).then(() => {
       const storeActions = store.getActions();
       expect(storeActions.length).toEqual(expectedActions.length);
-      expectedActions.map((action, index) => Object.keys(action).map(key => expect(action[key]).toEqual(storeActions[index][key])));
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
   it('should allow creating deployments with a group', async () => {
@@ -148,7 +148,7 @@ describe('createDeployment', () => {
     return store.dispatch(createDeployment({ group })).then(() => {
       const storeActions = store.getActions();
       expect(storeActions.length).toEqual(expectedActions.length);
-      expectedActions.map((action, index) => Object.keys(action).map(key => expect(action[key]).toEqual(storeActions[index][key])));
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
 });
@@ -172,9 +172,7 @@ describe('getDeploymentsByStatus', () => {
       .then(() => {
         const storeActions = store.getActions();
         expect(storeActions.length).toEqual(expectedActions.length);
-        expectedActions.map((action, index) => {
-          Object.keys(action).map(key => expect(action[key]).toEqual(storeActions[index][key]));
-        });
+        expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
       });
   });
 });
@@ -186,7 +184,7 @@ describe('getDeviceLog', () => {
     return store.dispatch(getDeviceLog(Object.keys(defaultState.deployments.byId)[0], defaultState.deployments.byId.d1.devices.a1.id)).then(() => {
       const storeActions = store.getActions();
       expect(storeActions.length).toEqual(expectedActions.length);
-      expectedActions.map((action, index) => Object.keys(action).map(key => expect(action[key]).toEqual(storeActions[index][key])));
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
 });
@@ -198,7 +196,7 @@ describe('selectDeployment', () => {
     return store.dispatch(selectDeployment(createdDeployment.id)).then(() => {
       const storeActions = store.getActions();
       expect(storeActions.length).toEqual(expectedActions.length);
-      expectedActions.map((action, index) => Object.keys(action).map(key => expect(action[key]).toEqual(storeActions[index][key])));
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
 });
