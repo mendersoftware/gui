@@ -16,6 +16,12 @@ export const OrganizationPaymentSettings = ({ card, confirmCardUpdate, getCurren
     getCurrentCard();
   }, []);
 
+  const onCardConfirm = async () => {
+    await confirmCardUpdate();
+    getCurrentCard();
+    setIsUpdatingPaymentDetails(false);
+  };
+
   // const invoiceDate = moment();
   const { last4, expiration, brand } = card;
   return (
@@ -50,12 +56,7 @@ export const OrganizationPaymentSettings = ({ card, confirmCardUpdate, getCurren
         }}
         secondary={
           isUpdatingPaymentDetails && (
-            <CardSection
-              onCancel={() => setIsUpdatingPaymentDetails(false)}
-              onComplete={confirmCardUpdate}
-              onSubmit={startCardUpdate}
-              setSnackbar={setSnackbar}
-            />
+            <CardSection onCancel={() => setIsUpdatingPaymentDetails(false)} onComplete={onCardConfirm} onSubmit={startCardUpdate} setSnackbar={setSnackbar} />
           )
         }
         notification={
