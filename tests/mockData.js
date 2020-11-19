@@ -17,6 +17,7 @@ jest.mock('universal-cookie', () => {
         return 'JWT';
       }
     }),
+    set: jest.fn(),
     remove: jest.fn()
   };
   return jest.fn(() => mCookie);
@@ -140,6 +141,11 @@ export const defaultState = {
     showTipsDialog: false
   },
   organization: {
+    card: {
+      brand: 'testCorp',
+      last4: '7890',
+      expiration: { month: 1, year: 2024 }
+    },
     events: [
       {
         actor: {
@@ -179,6 +185,7 @@ export const defaultState = {
       }
     ],
     eventsTotal: 2,
+    intentId: 'testIntent',
     organization: {
       id: 1,
       name: 'test'

@@ -66,13 +66,13 @@ export const getOnboardingState = () => (dispatch, getState) => {
 
 export const setShowOnboardingHelp = show => dispatch => dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show });
 
-export const setOnboardingProgress = value => dispatch => dispatch({ type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value });
+const setOnboardingProgress = value => dispatch => dispatch({ type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value });
 
 export const setOnboardingDeviceType = value => dispatch => dispatch({ type: OnboardingConstants.SET_ONBOARDING_DEVICE_TYPE, value });
 
 export const setOnboardingApproach = value => dispatch => dispatch({ type: OnboardingConstants.SET_ONBOARDING_APPROACH, value });
 
-export const setOnboardingArtifactIncluded = value => dispatch => dispatch({ type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value });
+const setOnboardingArtifactIncluded = value => dispatch => dispatch({ type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value });
 
 export const setShowCreateArtifactDialog = show => dispatch => dispatch({ type: OnboardingConstants.SET_SHOW_CREATE_ARTIFACT, show });
 

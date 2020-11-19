@@ -7,9 +7,9 @@ import OrganizationConstants from '../constants/organizationConstants';
 const cookies = new Cookies();
 const apiUrlv1 = '/api/management/v1';
 const apiUrlv2 = '/api/management/v2';
-const auditLogsApiUrl = `${apiUrlv1}/auditlogs`;
-const tenantadmApiUrlv1 = `${apiUrlv1}/tenantadm`;
-const tenantadmApiUrlv2 = `${apiUrlv2}/tenantadm`;
+export const auditLogsApiUrl = `${apiUrlv1}/auditlogs`;
+export const tenantadmApiUrlv1 = `${apiUrlv1}/tenantadm`;
+export const tenantadmApiUrlv2 = `${apiUrlv2}/tenantadm`;
 
 export const cancelRequest = (tenantId, reason) => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/cancel`, { reason: reason }).then(() =>
