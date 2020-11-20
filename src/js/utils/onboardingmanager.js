@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { compose, setDisplayName } from 'recompose';
 
+import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { onboardingSteps as stepNames } from '../constants/onboardingConstants';
 import CreateArtifactDialog from '../components/helptips/createartifactdialog';
 import BaseOnboardingTip from '../components/helptips/baseonboardingtip';
@@ -126,7 +127,7 @@ export const onboardingSteps = {
     progress: 2
   },
   [stepNames.DEPLOYMENTS_PAST]: {
-    condition: { extra: () => !window.location.hash.includes('finished') },
+    condition: { extra: () => !window.location.hash.includes(DEPLOYMENT_STATES.finished) },
     component: compose(setDisplayName('OnboardingTip'))(() => <div>Your deployment has finished, click here to view it</div>),
     progress: 3
   },

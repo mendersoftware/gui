@@ -14,6 +14,12 @@ module.exports = {
   SELECT_SCHEDULED_DEPLOYMENTS: 'SELECT_SCHEDULED_DEPLOYMENTS',
   SELECT_FINISHED_DEPLOYMENTS: 'SELECT_FINISHED_DEPLOYMENTS',
   SELECT_DEPLOYMENT: 'SELECT_DEPLOYMENT',
+  DEPLOYMENT_STATES: {
+    finished: 'finished',
+    inprogress: 'inprogress',
+    pending: 'pending',
+    scheduled: 'scheduled'
+  },
   deploymentPrototype: {
     devices: [],
     name: undefined,
