@@ -21,6 +21,10 @@ import DeviceInventoryLoader from './device-details/deviceinventoryloader';
 const iconStyle = { margin: 12 };
 
 const states = {
+  default: {
+    text: 'Please check the device authentication state',
+    statusIcon: <Icon style={iconStyle} component="img" src={pendingIcon} />
+  },
   pending: {
     text: 'Accept, reject or dismiss the device?',
     statusIcon: <Icon style={iconStyle} component="img" src={pendingIcon} />
@@ -90,7 +94,7 @@ export class ExpandedDevice extends React.Component {
       );
     }
 
-    const statusIcon = states[status].statusIcon;
+    const statusIcon = states[status] ? states[status].statusIcon : states.default.statusIcon;
 
     var hasPending = '';
     if (status === DEVICE_STATES.accepted && auth_sets.length > 1) {
