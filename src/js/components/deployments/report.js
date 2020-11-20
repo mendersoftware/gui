@@ -12,6 +12,7 @@ import { Block as BlockIcon } from '@material-ui/icons';
 import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
 import { getDeviceLog, getSingleDeployment } from '../../actions/deploymentActions';
 import { getRelease } from '../../actions/releaseActions';
+import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { getIsEnterprise } from '../../selectors';
 import DeploymentLog from './deployment-report/log';
 import DeploymentOverview from './deployment-report/overview';
@@ -43,11 +44,11 @@ export class DeploymentReport extends React.Component {
     var self = this;
     clearInterval(self.timer);
     clearInterval(self.timer2);
-    if (!(self.props.deployment.finished || self.props.deployment.status === 'finished')) {
+    if (!(self.props.deployment.finished || self.props.deployment.status === DEPLOYMENT_STATES.finished)) {
       self.timer = setInterval(() => self.setState({ elapsed: moment() }), 300);
       self.timer2 = this.props.past ? null : setInterval(() => self.refreshDeploymentDevices(), 5000);
     }
-    if (self.props.type === 'scheduled') {
+    if (self.props.type === DEPLOYMENT_STATES.scheduled) {
       self.setState({ tabIndex: 'details' });
     }
     self.refreshDeploymentDevices();
@@ -106,9 +107,9 @@ export class DeploymentReport extends React.Component {
     const duration = moment.duration(elapsed.diff(moment(created)));
     return (
       <Dialog open={true} fullWidth={true} maxWidth="lg">
-        <DialogTitle>{`Deployment ${type !== 'scheduled' ? 'details' : 'report'}`}</DialogTitle>
+        <DialogTitle>{`Deployment ${type !== DEPLOYMENT_STATES.scheduled ? 'details' : 'report'}`}</DialogTitle>
         <DialogContent className="deployment-report" style={{ overflow: 'hidden' }}>
-          {type !== 'scheduled' && (
+          {type !== DEPLOYMENT_STATES.scheduled && (
             <Tabs value={tabIndex} onChange={(e, tabIndex) => self.setState({ tabIndex })} textColor="primary" TabIndicatorProps={{ className: 'hidden' }}>
               {tabs.map(tab => (
                 <Tab key={tab.value} label={tab.title} value={tab.value} />
@@ -135,7 +136,7 @@ export class DeploymentReport extends React.Component {
               />
             </div>
           )}
-          {type === 'scheduled' && (
+          {type === DEPLOYMENT_STATES.scheduled && (
             <div className="margin-left-large margin-top">
               {aborting ? (
                 <Confirm cancel={() => self.setState({ aborting: !aborting })} action={() => abort(deployment.id)} type="abort" />
