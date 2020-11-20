@@ -11,11 +11,12 @@ import loginLogo from '../../../assets/img/loginlogo.png';
 import { setSnackbar } from '../../actions/appActions';
 import { getUser, loginUser, logoutUser } from '../../actions/userActions';
 
+import { getToken } from '../../auth';
+import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
 import FormCheckbox from '../common/forms/formcheckbox';
-import { clearAllRetryTimers } from '../../utils/retrytimer';
 
 import { OAuth2Providers } from './oauth2providers';
 
@@ -30,7 +31,9 @@ export class Login extends React.Component {
 
   componentDidMount() {
     clearAllRetryTimers(this.props.setSnackbar);
-    this.props.logoutUser();
+    if (getToken()) {
+      this.props.logoutUser();
+    }
     const cookies = new Cookies();
     const loginError = cookies.get('error');
     if (loginError) {
