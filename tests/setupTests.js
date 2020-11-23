@@ -13,11 +13,32 @@ window.RTCPeerConnection = () => {
   };
 };
 
-// Setup requests interception using the given handlers.
+// Setup requests interception
 let server;
+
+const oldWindowLocation = window.location;
+
+jest.mock('universal-cookie', () => {
+  const mockCookie = {
+    get: jest.fn(name => {
+      if (name === 'JWT') {
+        return 'JWT';
+      }
+    }),
+    set: jest.fn(),
+    remove: jest.fn()
+  };
+  return jest.fn(() => mockCookie);
+});
 
 beforeAll(async () => {
   // Enable the mocking in tests.
+  delete window.location;
+  window.location = {
+    ...oldWindowLocation,
+    hostname: 'localhost',
+    replace: jest.fn()
+  };
   server = setupServer(...handlers);
   await server.listen();
 });
@@ -30,4 +51,7 @@ afterEach(async () => {
 afterAll(async () => {
   // Clean up once the tests are done.
   await server.close();
+  // restore `window.location` to the original `jsdom`
+  // `Location` object
+  window.location = oldWindowLocation;
 });

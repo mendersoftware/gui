@@ -10,19 +10,6 @@ window.mender_environment = {
   }
 };
 
-jest.mock('universal-cookie', () => {
-  const mCookie = {
-    get: jest.fn(name => {
-      if (name === 'JWT') {
-        return 'JWT';
-      }
-    }),
-    set: jest.fn(),
-    remove: jest.fn()
-  };
-  return jest.fn(() => mCookie);
-});
-
 export const defaultState = {
   app: {
     hostedAnnouncement: null,
