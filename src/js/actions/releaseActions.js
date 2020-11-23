@@ -8,7 +8,7 @@ import OnboardingConstants from '../constants/onboardingConstants';
 import { customSort } from '../helpers';
 
 const apiUrl = '/api/management/v1';
-const deploymentsApiUrl = `${apiUrl}/deployments`;
+export const deploymentsApiUrl = `${apiUrl}/deployments`;
 
 const flattenRelease = release => {
   const { descriptions, deviceTypes } = release.Artifacts.reduce(

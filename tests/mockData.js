@@ -183,6 +183,7 @@ export const defaultState = {
     byId: {
       a1: {
         Name: 'a1',
+        Artifacts: [{ id: 'art1', description: 'test description', device_types_compatible: [], modified: '2020-09-10T12:16:22.667Z' }],
         device_types_compatible: []
       }
     },

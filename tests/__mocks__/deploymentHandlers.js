@@ -13,6 +13,21 @@ export const deploymentHandlers = [
   rest.get(`${deploymentsApiUrl}/deployments`, (req, res, ctx) => {
     return res(ctx.set(headerNames.total, Object.keys(defaultState.deployments.byId).length), ctx.json(Object.values(defaultState.deployments.byId).reverse()));
   }),
+  rest.get(`${deploymentsApiUrl}/deployments/releases`, (req, res, ctx) => {
+    const releaseName = req.url.searchParams.get('name');
+    const release = defaultState.releases.byId[releaseName] || {};
+    if (releaseName) {
+      // eslint-disable-next-line no-unused-vars
+      const { descriptions, device_types_compatible, ...remainder } = release;
+      return Object.keys(remainder).length ? res(ctx.status(200), ctx.json([remainder])) : res(ctx.status(500));
+    }
+    const releases = Object.values(defaultState.releases.byId).map(stateRelease => {
+      // eslint-disable-next-line no-unused-vars
+      const { descriptions, device_types_compatible, ...remainder } = stateRelease;
+      return remainder;
+    });
+    return res(ctx.json(releases));
+  }),
   rest.get(`${deploymentsApiUrl}/deployments/:deploymentId`, ({ params: { deploymentId } }, res, ctx) => {
     if (deploymentId === createdDeployment.id) {
       return res(ctx.json(createdDeployment));
