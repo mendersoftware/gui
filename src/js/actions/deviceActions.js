@@ -232,14 +232,9 @@ export const selectDevice = (deviceId, status) => dispatch => {
         });
       })
       .catch(err => {
+        dispatch(selectDevices([]));
+        dispatch({ type: DeviceConstants.SELECT_DEVICE, deviceId: null });
         commonErrorHandler(err, `Error fetching device details.`, dispatch);
-        Promise.all([
-          dispatch(selectDevices([])),
-          dispatch({
-            type: DeviceConstants.SELECT_DEVICE,
-            deviceId: null
-          })
-        ]);
       });
   }
   return Promise.resolve(

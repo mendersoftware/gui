@@ -51,10 +51,6 @@ export class Preauthorize extends React.Component {
     }
   }
 
-  shouldComponentUpdate(nextProps) {
-    return !this.props.devices.every((device, index) => device === nextProps.devices[index]) || this.props.idAttribute !== nextProps.idAttribute || true;
-  }
-
   /*
    * Devices to show
    */

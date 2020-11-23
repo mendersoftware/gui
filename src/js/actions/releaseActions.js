@@ -151,10 +151,7 @@ export const selectArtifact = artifact => (dispatch, getState) => {
   if (!artifact) {
     return dispatch({ type: ReleaseConstants.SELECTED_ARTIFACT, artifact });
   }
-  let artifactName = artifact;
-  if (artifact && artifact.hasOwnProperty('id')) {
-    artifactName = artifact.id;
-  }
+  const artifactName = artifact.hasOwnProperty('id') ? artifact.id : artifact;
   const state = getState();
   const release = Object.values(state.releases.byId).find(item => item.Artifacts.find(releaseArtifact => releaseArtifact.id === artifactName));
   if (release) {

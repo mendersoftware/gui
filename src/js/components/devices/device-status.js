@@ -32,11 +32,11 @@ const DeviceStatus = ({ device }) => {
     label = <div className="uppercased">new {pluralize('request', pendingAuthSetsCount)}</div>;
   }
 
-  return label && device ? (
+  return (
     <Tooltip title={status.notification} placement="bottom">
       <Chip variant="outlined" size="small" icon={icon} label={label} className="deviceStatus" />
     </Tooltip>
-  ) : null;
+  );
 };
 
 export default DeviceStatus;

@@ -51,7 +51,7 @@ export class ArtifactInformation extends React.Component {
 
   render() {
     const self = this;
-    const { advanceOnboarding, customDeviceTypes, deviceTypes, name, onboardingState, selectedDeviceTypes = [], updateCreation } = self.props;
+    const { advanceOnboarding, customDeviceTypes, deviceTypes = [], name, onboardingState, selectedDeviceTypes = [], updateCreation } = self.props;
 
     let onboardingComponent = null;
     if (!onboardingState.complete && self.deviceTypeRef && self.releaseNameRef) {

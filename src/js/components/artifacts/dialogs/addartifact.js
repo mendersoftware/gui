@@ -31,7 +31,8 @@ export class AddArtifactDialog extends React.Component {
 
   onUpload({ customDeviceTypes, file, destination, selectedDeviceTypes, name }) {
     let meta = { description: '' };
-    if (file && file.name.endsWith('.mender')) {
+    const filename = file ? file.name : '';
+    if (filename.endsWith('.mender')) {
       return this.props.onUpload(meta, file);
     }
     if (!this.props.onboardingState.complete && this.props.releases.length) {
@@ -39,7 +40,7 @@ export class AddArtifactDialog extends React.Component {
     }
     const otherDeviceTypes = customDeviceTypes.split(',');
     const deviceTypes = unionizeStrings(selectedDeviceTypes, otherDeviceTypes);
-    meta = { ...meta, device_types_compatible: deviceTypes, args: { dest_dir: destination, filename: file.name }, name };
+    meta = { ...meta, device_types_compatible: deviceTypes, args: { dest_dir: destination, filename }, name };
     this.props.onCreate(meta, file);
   }
 

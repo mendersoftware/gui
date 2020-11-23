@@ -350,7 +350,7 @@ export class Authorized extends React.Component {
               refreshDevices={shouldUpdate => self._getDevices(shouldUpdate)}
               selectDeviceById={id => self.getDeviceById(id)}
             />
-            {showHelptips && devices.length && (
+            {showHelptips && (
               <div>
                 <div
                   id="onboard-6"

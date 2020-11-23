@@ -80,7 +80,9 @@ export class Deployments extends React.Component {
       .catch(err => console.log(err));
     let startDate = self.state.startDate;
     const params = new URLSearchParams(this.props.location.search);
-    if (this.props.match && params) {
+    let reportType = 'active';
+    if (self.props.match) {
+      reportType = self.props.match.params.tab;
       if (params.get('open')) {
         if (params.get('id')) {
           self.showReport(self.state.reportType || self.props.match.params.tab, params.get('id'));
@@ -98,9 +100,9 @@ export class Deployments extends React.Component {
     }
     self.setState({
       createDialog: Boolean(params.get('open')),
-      reportType: this.props.match ? this.props.match.params.tab : 'active',
+      reportType,
       startDate,
-      tabIndex: this._updateActive()
+      tabIndex: self._updateActive()
     });
   }
 

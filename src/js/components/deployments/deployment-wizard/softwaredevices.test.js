@@ -30,7 +30,7 @@ describe('SoftwareDevices Component', () => {
       .create(
         <MemoryRouter>
           <Provider store={store}>
-            <SoftwareDevices group={null} deploymentDeviceIds={[]} release={{ device_types_compatible: [] }} />
+            <SoftwareDevices group={null} deploymentDeviceIds={[]} release={{ Name: 'a1', device_types_compatible: [] }} />
           </Provider>
         </MemoryRouter>
       )

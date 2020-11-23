@@ -45,11 +45,11 @@ class AppRoot extends React.PureComponent {
     const trackLocationChange = location => {
       // if we're on page whose path might contain sensitive device/ group/ deployment names etc. we sanitize the sent information before submission
       let page = location.pathname || '';
-      if (location.pathname.includes('=') && (location.pathname.startsWith('/devices') || location.pathname.startsWith('/deployments'))) {
-        const splitter = location.pathname.lastIndexOf('/');
-        const filters = location.pathname.slice(splitter + 1);
+      if (page.includes('=') && (page.startsWith('/devices') || page.startsWith('/deployments'))) {
+        const splitter = page.lastIndexOf('/');
+        const filters = page.slice(splitter + 1);
         const keyOnlyFilters = filters.split('&').reduce((accu, item) => `${accu}:${item.split('=')[0]}&`, ''); // assume the keys to filter by are not as revealing as the values things are filtered by
-        page = `${location.pathname.substring(0, splitter)}?${keyOnlyFilters.substring(0, keyOnlyFilters.length - 1)}`; // cut off the last & of the reduced filters string
+        page = `${page.substring(0, splitter)}?${keyOnlyFilters.substring(0, keyOnlyFilters.length - 1)}`; // cut off the last & of the reduced filters string
       }
       Tracking.pageview(page);
     };

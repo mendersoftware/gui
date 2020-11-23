@@ -8,14 +8,13 @@ import { setSnackbar } from '../../actions/appActions';
 import Form from '../common/forms/form';
 import PasswordInput from '../common/forms/passwordinput';
 
-export const PasswordReset = props => {
-  const {
-    passwordResetComplete,
-    setSnackbar,
-    match: {
-      params: { secretHash }
-    }
-  } = props;
+export const PasswordReset = ({
+  passwordResetComplete,
+  setSnackbar,
+  match: {
+    params: { secretHash }
+  }
+}) => {
   const [confirm, setConfirm] = useState(false);
 
   const _handleSubmit = formData => {
@@ -68,6 +67,4 @@ export const PasswordReset = props => {
 
 const actionCreators = { passwordResetComplete, setSnackbar };
 
-const mapStateToProps = () => {};
-
-export default connect(mapStateToProps, actionCreators)(PasswordReset);
+export default connect(null, actionCreators)(PasswordReset);

@@ -71,10 +71,6 @@ export class Pending extends React.Component {
     }
   }
 
-  shouldComponentUpdate(nextProps) {
-    return !this.props.devices.every((device, index) => device === nextProps.devices[index]) || this.props.idAttribute !== nextProps.idAttribute || true;
-  }
-
   /*
    * Devices to show
    */
@@ -182,16 +178,16 @@ export class Pending extends React.Component {
     const devicePendingTip = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING_START, onboardingState);
     let onboardingComponent = null;
     if (showHelptips && !onboardingState.complete) {
-      if (this.deviceListRef) {
-        const element = this.deviceListRef ? this.deviceListRef.getElementsByClassName('body')[0] : null;
+      if (self.deviceListRef) {
+        const element = self.deviceListRef.getElementsByClassName('body')[0];
         onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING, onboardingState, {
           anchor: { left: 200, top: element ? element.offsetTop + element.offsetHeight : 170 }
         });
       }
-      if (selectedRows && this.authorizeRef) {
+      if (selectedRows && self.authorizeRef) {
         const anchor = {
-          left: this.authorizeRef.offsetParent.offsetLeft - this.authorizeRef.firstElementChild.offsetWidth,
-          top: this.authorizeRef.offsetParent.offsetTop + this.authorizeRef.firstElementChild.offsetHeight - 15
+          left: self.authorizeRef.offsetParent.offsetLeft - self.authorizeRef.firstElementChild.offsetWidth,
+          top: self.authorizeRef.offsetParent.offsetTop + self.authorizeRef.firstElementChild.offsetHeight - 15
         };
         onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING, onboardingState, { place: 'left', anchor });
       }
@@ -243,7 +239,7 @@ export class Pending extends React.Component {
         )}
         <Loader show={authLoading} />
         {devices.length && (!pageLoading || authLoading !== 'all') ? (
-          <div className="padding-bottom" ref={ref => (this.deviceListRef = ref)}>
+          <div className="padding-bottom" ref={ref => (self.deviceListRef = ref)}>
             {deviceLimitWarning}
             <DeviceList
               {...self.props}
@@ -293,7 +289,7 @@ export class Pending extends React.Component {
               disabled={disabled || limitMaxed || selectedOverLimit}
               onClose={() => self.setState({ showActions: false })}
               onOpen={() => self.setState({ showActions: true })}
-              ref={ref => (this.authorizeRef = ref)}
+              ref={ref => (self.authorizeRef = ref)}
               open={showActions}
             >
               {actions.map(action => (
