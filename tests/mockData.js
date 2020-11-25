@@ -90,10 +90,25 @@ export const defaultState = {
   devices: {
     byId: {
       a1: {
-        auth_sets: [],
-        attributes: {}
+        id: 'a1',
+        attributes: {},
+        identity_data: { mac: 'dc:a6:32:12:ad:bf' },
+        status: 'accepted',
+        decommissioning: false,
+        created_ts: '2019-01-01T06:25:00.000Z',
+        updated_ts: '2019-01-01T09:25:00.000Z',
+        auth_sets: [
+          {
+            id: 'auth1',
+            identity_data: { mac: 'dc:a6:32:12:ad:bf' },
+            pubkey: '-----BEGIN PUBLIC KEY-----\nMIIBojWELzgJ62hcXIhAfqfoNiaB1326XZByZwcnHr5BuSPAgMBAAE=\n-----END PUBLIC KEY-----\n',
+            ts: '2019-01-01T06:25:00.000Z',
+            status: 'accepted'
+          }
+        ]
       },
       b1: {
+        id: 'b1',
         auth_sets: [],
         attributes: {}
       }
@@ -115,7 +130,12 @@ export const defaultState = {
     groups: {
       byId: {
         testGroup: {
+          deviceIds: ['a1'],
           filters: []
+        },
+        testGroupDynamic: {
+          id: 'filter1',
+          filters: [{ scope: 'system', key: 'group', operator: '$eq', value: 'things' }]
         }
       },
       selectedGroup: null

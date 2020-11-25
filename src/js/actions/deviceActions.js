@@ -11,10 +11,10 @@ const defaultPage = 1;
 
 const apiUrl = '/api/management/v1';
 const apiUrlV2 = '/api/management/v2';
-const deviceAuthV2 = `${apiUrlV2}/devauth`;
-const deviceConnect = `${apiUrl}/deviceconnect`;
-const inventoryApiUrl = `${apiUrl}/inventory`;
-const inventoryApiUrlV2 = `${apiUrlV2}/inventory`;
+export const deviceAuthV2 = `${apiUrlV2}/devauth`;
+export const deviceConnect = `${apiUrl}/deviceconnect`;
+export const inventoryApiUrl = `${apiUrl}/inventory`;
+export const inventoryApiUrlV2 = `${apiUrlV2}/inventory`;
 
 export const getGroups = () => (dispatch, getState) =>
   GeneralApi.get(`${inventoryApiUrl}/groups?status=${DeviceConstants.DEVICE_STATES.accepted}`).then(res => {
@@ -174,19 +174,19 @@ export const updateDynamicGroup = (groupName, filterPredicates) => (dispatch, ge
 };
 
 export const removeDynamicGroup = groupName => (dispatch, getState) => {
-  const filterId = getState().devices.groups.byId[groupName].id;
+  let groups = { ...getState().devices.groups.byId };
+  const filterId = groups[groupName].id;
   const selectedGroup = getState().devices.groups.selectedGroup === groupName ? undefined : getState().devices.groups.selectedGroup;
-  let groups = getState().devices.groups.byId;
-  delete groups[groupName];
-  return Promise.all([GeneralApi.delete(`${inventoryApiUrlV2}/filters/${filterId}`), dispatch(selectGroup(selectedGroup))]).then(() =>
-    Promise.all([
+  return Promise.all([GeneralApi.delete(`${inventoryApiUrlV2}/filters/${filterId}`), dispatch(selectGroup(selectedGroup))]).then(() => {
+    delete groups[groupName];
+    return Promise.all([
       dispatch({
         type: DeviceConstants.REMOVE_DYNAMIC_GROUP,
         groups
       }),
       dispatch(setSnackbar('Group was removed successfully', 5000))
-    ])
-  );
+    ]);
+  });
 };
 
 /*
@@ -299,7 +299,10 @@ export const getAllGroupDevices = group => (dispatch, getState) => {
     GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
       page,
       per_page: perPage,
-      filters: mapFiltersToTerms([{ key: 'group', value: group, operator: '$eq', scope: 'system' }])
+      filters: mapFiltersToTerms([
+        { key: 'group', value: group, operator: '$eq', scope: 'system' },
+        { key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' }
+      ])
     }).then(res => {
       const deviceAccu = reduceReceivedDevices(res.data, devices, state);
       dispatch({
@@ -547,28 +550,31 @@ export const getDeviceConnect = id => dispatch =>
     return Promise.all(tasks);
   });
 
-export const getDeviceAuth = id => dispatch => Promise.resolve(dispatch(getDevicesWithAuth([{ id }]))).then(results => Promise.resolve(results[1]));
+export const getDeviceAuth = id => dispatch => Promise.resolve(dispatch(getDevicesWithAuth([{ id }]))).then(results => Promise.resolve(results[1][0]));
 
 export const getDevicesWithAuth = devices => dispatch =>
   GeneralApi.get(`${deviceAuthV2}/devices?id=${devices.map(device => device.id).join('&id=')}`)
-    .catch(err => console.log(`Error: ${err}`))
     .then(({ data: receivedDevices }) => {
       let tasks = receivedDevices.map(device => dispatch({ type: DeviceConstants.RECEIVE_DEVICE_AUTH, device }));
       tasks.push(Promise.resolve(receivedDevices));
       return Promise.all(tasks);
-    });
+    })
+    .catch(err => console.log(`Error: ${err}`));
 
 const maybeUpdateDevicesByStatus = (devicesState, deviceId, authId, dispatch) => {
   const device = devicesState.byId[deviceId];
   const hasMultipleAuthSets = authId ? device.auth_sets.filter(authset => authset.id !== authId).length > 0 : false;
   if (!hasMultipleAuthSets) {
-    const deviceIds = devicesState.byStatus[device.status].deviceIds.splice(devicesState.byStatus[device.status].deviceIds.indexOf(deviceId), 1);
+    const deviceIds =
+      devicesState.byStatus[device.status].deviceIds.length > 1
+        ? devicesState.byStatus[device.status].deviceIds.splice(devicesState.byStatus[device.status].deviceIds.indexOf(deviceId), 1)
+        : [];
     return Promise.resolve(
       dispatch({
         type: DeviceConstants[`SET_${device.status.toUpperCase()}_DEVICES`],
         deviceIds,
         status: device.status,
-        total: devicesState.byStatus[device.status].total - 1
+        total: Math.max(0, devicesState.byStatus[device.status].total - 1)
       })
     );
   }
