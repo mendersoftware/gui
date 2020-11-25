@@ -5,6 +5,7 @@ import { compose, setDisplayName } from 'recompose';
 import { Button, IconButton, Tooltip } from '@material-ui/core';
 import { CancelOutlined as CancelOutlinedIcon } from '@material-ui/icons';
 
+import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { groupDeploymentStats } from '../../helpers';
 import Confirm from '../common/confirm';
 import RelativeTime from '../common/relative-time';
@@ -106,7 +107,7 @@ export default class DeploymentItem extends React.Component {
         >
           View details
         </Button>
-        {type !== 'finished' && (
+        {type !== DEPLOYMENT_STATES.finished && (
           <Tooltip className="columnHeader" title="Abort" placement="top-start">
             <IconButton onClick={() => self.toggleConfirm(id)}>
               <CancelOutlinedIcon className="cancelButton muted" />

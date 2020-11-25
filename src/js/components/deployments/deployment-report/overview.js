@@ -10,6 +10,7 @@ import { Block as BlockIcon, Timelapse as TimelapseIcon, Refresh as RefreshIcon 
 
 import successImage from '../../../../assets/img/largeSuccess.png';
 import failImage from '../../../../assets/img/largeFail.png';
+import { DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
 import { formatTime } from '../../../helpers';
 import Confirm from '../../common/confirm';
 import ExpandableAttribute from '../../common/expandable-attribute';
@@ -74,7 +75,7 @@ export const DeploymentOverview = ({
     setPagedDevices(slice);
   };
 
-  const finished = deployment.finished || deployment.status === 'finished';
+  const finished = deployment.finished || deployment.status === DEPLOYMENT_STATES.finished;
   const created = deployment.created || new Date();
 
   const statusDescription = finished ? (

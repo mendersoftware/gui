@@ -24,7 +24,7 @@ export default class ExpandableAttribute extends React.Component {
 
   render() {
     const self = this;
-    const { primary, secondary, classes, textClasses, dividerDisabled, style } = self.props;
+    const { classes, dividerDisabled, primary, secondary, secondaryTypographyProps = {}, style, textClasses } = self.props;
     const defaultClasses = { root: 'attributes' };
     const currentTextClasses = `${textClasses ? textClasses.secondary : 'inventory-text'}${
       self.state.expanded && self.state.overflowActive ? ' expanded-attribute' : ''
@@ -40,7 +40,11 @@ export default class ExpandableAttribute extends React.Component {
     return (
       <div onClick={() => self.setState({ expanded: !self.state.expanded })} style={style}>
         <ListItem classes={classes || defaultClasses} disabled={true}>
-          <ListItemText primary={primary} secondary={secondaryText} secondaryTypographyProps={{ title: secondary, component: 'div' }} />
+          <ListItemText
+            primary={primary}
+            secondary={secondaryText}
+            secondaryTypographyProps={{ title: secondary, component: 'div', ...secondaryTypographyProps }}
+          />
         </ListItem>
         {dividerDisabled ? null : <Divider />}
       </div>

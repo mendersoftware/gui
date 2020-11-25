@@ -57,11 +57,22 @@ export class CreateDialog extends React.Component {
     }
   }
 
-  deploymentSettings(value, property) {
+  setDeploymentSettings(value, property) {
     this.setState({ [property]: value });
-    if (property === 'phases') {
-      this.validatePhases(value);
+  }
+
+  validatePhases(phases, deploymentDeviceCount, hasFilter) {
+    if (!phases) {
+      return true;
     }
+    const remainder = getRemainderPercent(phases);
+    return phases.reduce((accu, phase) => {
+      if (!accu) {
+        return accu;
+      }
+      const deviceCount = Math.floor((deploymentDeviceCount / 100) * (phase.batch_size || remainder));
+      return !(deviceCount < 1) || hasFilter;
+    }, true);
   }
 
   cleanUpDeploymentsStatus() {
@@ -76,49 +87,36 @@ export class CreateDialog extends React.Component {
   }
 
   onScheduleSubmit(settings) {
-    this.props.onScheduleSubmit(settings);
     if (this.state.hasNewRetryDefault) {
       this.props.saveGlobalSettings({ retries: settings.retries });
     }
     if (!this.props.isOnboardingComplete) {
       this.props.advanceOnboarding(onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES);
     }
-    this.setState({ activeStep: 0, deploymentDeviceIds: [], deploymentDeviceCount: 0, group: null, phases: null, disableSchedule: false });
+    this.props.onScheduleSubmit(settings);
     this.cleanUpDeploymentsStatus();
   }
 
   closeWizard() {
-    this.setState({ activeStep: 0, deploymentDeviceIds: [], deploymentDeviceCount: 0, group: null, phases: null, disableSchedule: false });
     this.cleanUpDeploymentsStatus();
     this.props.onDismiss();
   }
-
-  validatePhases(phases) {
-    let valid = true;
-    const remainder = getRemainderPercent(phases);
-    for (var phase of phases) {
-      const deviceCount = Math.floor((this.state.deploymentDeviceCount / 100) * (phase.batch_size || remainder));
-      if (deviceCount < 1) {
-        valid = false;
-      }
-    }
-    this.setState({ disableSchedule: !valid });
-  }
-
   render() {
     const self = this;
-    const { device, deploymentObject, groups, open, release } = self.props;
-    const { activeStep, deploymentDeviceIds, deploymentDeviceCount, disableSchedule, group, phases, retries, steps } = self.state;
+    const { device, deploymentObject, groups, release } = self.props;
+    const { activeStep, deploymentDeviceIds, deploymentDeviceCount, group, phases, retries, steps } = self.state;
     const ComponentToShow = steps[activeStep].component;
     const deploymentSettings = {
       deploymentDeviceIds: deploymentObject.deploymentDeviceIds || deploymentDeviceIds,
       deploymentDeviceCount: deploymentObject.deploymentDeviceCount || deploymentDeviceCount,
       filterId: groups[deploymentObject.group || group] ? groups[deploymentObject.group || group].id : undefined,
-      group: device ? device.id : deploymentObject.group || group,
+      device,
+      group: deploymentObject.group || group,
       phases,
       release: deploymentObject.release || release || self.state.release,
       retries: deploymentObject.retries || retries
     };
+    const disableSchedule = !self.validatePhases(phases, deploymentSettings.deploymentDeviceCount, deploymentSettings.filterId);
     const disabled =
       activeStep === 0
         ? !(
@@ -128,7 +126,7 @@ export class CreateDialog extends React.Component {
         : disableSchedule;
     const finalStep = activeStep === steps.length - 1;
     return (
-      <Dialog open={open || false} fullWidth={false} maxWidth="md">
+      <Dialog open={true} fullWidth={false} maxWidth="md">
         <DialogTitle>Create a deployment</DialogTitle>
         <DialogContent className="dialog">
           <Stepper activeStep={activeStep} alternativeLabel style={{ minWidth: '500px' }}>
@@ -144,7 +142,7 @@ export class CreateDialog extends React.Component {
             {...self.props}
             {...self.state}
             {...deploymentSettings}
-            deploymentSettings={(...args) => self.deploymentSettings(...args)}
+            setDeploymentSettings={(...args) => self.setDeploymentSettings(...args)}
             onSaveRetriesSetting={shouldSave => self.onSaveRetriesSetting(shouldSave)}
           />
         </DialogContent>
