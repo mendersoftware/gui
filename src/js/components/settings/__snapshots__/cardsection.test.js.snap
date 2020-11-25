@@ -1,0 +1,103 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GlobalSettings Component renders correctly 1`] = `
+<form
+  className="margin-top-small"
+  onSubmit={[Function]}
+>
+  <div
+    className="warning"
+  />
+  <div
+    id="poweredByStripe"
+  >
+    <div>
+      All standard credit card fees apply (e.g. foreign transaction fee, if your card has one)
+    </div>
+    <img
+      src="powered_by_stripe.png"
+    />
+  </div>
+  <div
+    className="flexbox margin-top-small"
+    style={
+      Object {
+        "alignItems": "center",
+        "justifyContent": "flex-end",
+      }
+    }
+  >
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-text"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      style={
+        Object {
+          "marginRight": 15,
+        }
+      }
+      tabIndex={0}
+      type="reset"
+    >
+      <span
+        className="MuiButton-label"
+      >
+        Cancel
+      </span>
+    </button>
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary Mui-disabled Mui-disabled"
+      disabled={true}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+      type="submit"
+    >
+      <span
+        className="MuiButton-label"
+      >
+        Save
+      </span>
+    </button>
+  </div>
+  <div
+    className="loaderContainer shrunk"
+  >
+    <div
+      className="loader"
+    >
+      <span
+        className="dot dot_1"
+      />
+      <span
+        className="dot dot_2"
+      />
+      <span
+        className="dot dot_3"
+      />
+      <span
+        className="dot dot_4"
+      />
+    </div>
+  </div>
+</form>
+`;
