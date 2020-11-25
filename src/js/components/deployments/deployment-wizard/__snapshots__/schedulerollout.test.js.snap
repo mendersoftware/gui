@@ -158,6 +158,7 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
               className="MuiIconButton-label"
             >
               <input
+                checked={false}
                 className="PrivateSwitchBase-input-4"
                 data-indeterminate={false}
                 disabled={false}

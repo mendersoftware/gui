@@ -220,11 +220,10 @@ export class Authorized extends React.Component {
 
   onSortChange(attribute) {
     const self = this;
-    let state = { sortCol: attribute.name, sortDown: !self.state.sortDown, sortScope: attribute.scope };
+    let state = { sortCol: attribute.name === 'Device ID' ? 'id' : attribute.name, sortDown: !self.state.sortDown, sortScope: attribute.scope };
     if (attribute.name !== self.state.sortCol) {
       state.sortDown = true;
     }
-    state.sortCol = attribute.name === 'Device ID' ? 'id' : self.state.sortCol;
     self.setState(state, () => self._getDevices(true));
   }
 

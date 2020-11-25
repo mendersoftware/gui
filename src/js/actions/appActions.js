@@ -2,6 +2,7 @@ import Cookies from 'universal-cookie';
 
 import AppConstants from '../constants/appConstants';
 import { DEVICE_STATES } from '../constants/deviceConstants';
+import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import { extractErrorMessage, preformatWithRequestID } from '../helpers';
 import { getUserSettings } from '../selectors';
@@ -24,8 +25,8 @@ export const initializeAppData = () => (dispatch, getState) => {
   let tasks = [
     dispatch(getGlobalSettings()),
     dispatch(getDeviceAttributes()),
-    dispatch(getDeploymentsByStatus('finished', undefined, undefined, undefined, undefined, undefined, false)),
-    dispatch(getDeploymentsByStatus('inprogress')),
+    dispatch(getDeploymentsByStatus(DEPLOYMENT_STATES.finished, undefined, undefined, undefined, undefined, undefined, false)),
+    dispatch(getDeploymentsByStatus(DEPLOYMENT_STATES.inprogress)),
     dispatch(getDevicesByStatus(DEVICE_STATES.accepted)),
     dispatch(getDevicesByStatus(DEVICE_STATES.pending)),
     dispatch(getDevicesByStatus(DEVICE_STATES.preauth)),

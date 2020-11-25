@@ -6,8 +6,8 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import UpdateIcon from '@material-ui/icons/Update';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getDeployments } from '../../actions/deploymentActions';
-import { mapAttributesToAggregator } from '../../helpers';
+import { getDeploymentsByStatus } from '../../actions/deploymentActions';
+import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getOnboardingState } from '../../selectors';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
@@ -55,11 +55,15 @@ export class Deployments extends React.Component {
 
   getDeployments() {
     const self = this;
-    return self.props
-      .getDeployments(1, 20)
+    const roundedStartDate = Math.round(Date.parse(self.state.lastDeploymentCheck) / 1000);
+    const updateRequests = Object.keys(DEPLOYMENT_STATES).map(status =>
+      self.props.getDeploymentsByStatus(status, 1, 1, status === DEPLOYMENT_STATES.finished ? roundedStartDate : undefined)
+    );
+    return Promise.all(updateRequests)
       .then(() => self.setState({ loading: false }))
       .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, self.props.setSnackbar));
   }
+
   updateDeploymentCutoff(today) {
     const jsonContent = window.localStorage.getItem('deploymentChecker');
     let lastCheck = today;
@@ -77,7 +81,7 @@ export class Deployments extends React.Component {
 
   render() {
     const self = this;
-    const { inprogressCount, pendingCount, finished, onboardingState } = self.props;
+    const { inprogressCount, pendingCount, finishedCount, onboardingState } = self.props;
     const { lastDeploymentCheck, loading } = self.state;
 
     const pendingWidgetMain = {
@@ -130,7 +134,7 @@ export class Deployments extends React.Component {
               />
               <CompletedDeployments
                 onClick={deploymentsTimeframe => self.props.clickHandle(deploymentsTimeframe)}
-                deployments={finished}
+                finishedCount={finishedCount}
                 cutoffDate={lastDeploymentCheck}
                 innerRef={ref => (this.deploymentsRef = ref)}
               />
@@ -150,20 +154,14 @@ export class Deployments extends React.Component {
   }
 }
 
-const actionCreators = { getDeployments, setSnackbar };
+const actionCreators = { getDeploymentsByStatus, setSnackbar };
 
 const mapStateToProps = state => {
-  const deploymentsByState = Object.values(state.deployments.byId).reduce((accu, item) => {
-    accu[item.status].push(item);
-    return accu;
-  }, mapAttributesToAggregator(state.deployments.byStatus));
   return {
-    finished: state.deployments.byStatus.finished.total
-      ? state.deployments.byStatus.finished.deploymentIds.map(id => state.deployments.byId[id])
-      : deploymentsByState.finished,
-    inprogressCount: state.deployments.byStatus.inprogress.total ? state.deployments.byStatus.inprogress.total : deploymentsByState.inprogress.length,
+    finishedCount: state.deployments.byStatus.finished.total,
+    inprogressCount: state.deployments.byStatus.inprogress.total,
     onboardingState: getOnboardingState(state),
-    pendingCount: state.deployments.byStatus.pending.total ? state.deployments.byStatus.pending.total : deploymentsByState.pending.length
+    pendingCount: state.deployments.byStatus.pending.total
   };
 };
 

@@ -9,6 +9,7 @@ import historyImage from '../../../assets/img/history.png';
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, selectDeployment } from '../../actions/deploymentActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
+import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import Loader from '../common/loader';
@@ -26,7 +27,7 @@ const tonight = new Date(new Date().setHours(23, 59, 59));
 
 const headers = [...defaultHeaders.slice(0, defaultHeaders.length - 1), { title: 'Status', renderer: DeploymentStatus }];
 
-const type = 'finished';
+const type = DEPLOYMENT_STATES.finished;
 
 export class Past extends React.Component {
   constructor(props, context) {

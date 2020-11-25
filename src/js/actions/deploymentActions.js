@@ -1,7 +1,7 @@
 import DeploymentConstants from '../constants/deploymentConstants';
 import GeneralApi, { headerNames } from '../api/general-api';
 import { commonErrorHandler, setSnackbar } from '../actions/appActions';
-import { mapAttributesToAggregator, startTimeSort } from '../helpers';
+import { startTimeSort } from '../helpers';
 
 const apiUrl = '/api/management/v1';
 const apiUrlV2 = '/api/management/v2';
@@ -28,27 +28,6 @@ const transformDeployments = (deployments, deploymentsById) =>
   );
 
 /*Deployments */
-// all deployments
-export const getDeployments = (page = default_page, per_page = default_per_page) => (dispatch, getState) =>
-  GeneralApi.get(`${deploymentsApiUrl}/deployments?page=${page}&per_page=${per_page}`).then(res => {
-    const deploymentsByStatus = res.data.reduce((accu, item) => {
-      accu[item.status].push(item);
-      return accu;
-    }, mapAttributesToAggregator(getState().deployments.byStatus));
-    return Promise.all(
-      Object.entries(deploymentsByStatus).map(([status, value]) => {
-        const { deployments, deploymentIds } = transformDeployments(value, getState().deployments.byId);
-        return dispatch({
-          type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`],
-          deployments,
-          deploymentIds,
-          status,
-          total: Number(res.headers[headerNames.total])
-        });
-      })
-    );
-  });
-
 export const getDeploymentsByStatus = (status, page = default_page, per_page = default_per_page, startDate, endDate, group, shouldSelect = true) => (
   dispatch,
   getState
@@ -161,10 +140,10 @@ export const abortDeployment = deploymentId => (dispatch, getState) =>
   GeneralApi.put(`${deploymentsApiUrl}/deployments/${deploymentId}/status`, { status: 'aborted' })
     .then(() => {
       const state = getState();
-      let status = 'pending';
+      let status = DeploymentConstants.DEPLOYMENT_STATES.pending;
       let index = state.deployments.byStatus.pending.deploymentIds.findIndex(id => id === deploymentId);
       if (index < 0) {
-        status = 'inprogress';
+        status = DeploymentConstants.DEPLOYMENT_STATES.inprogress;
         index = state.deployments.byStatus.inprogress.deploymentIds.findIndex(id => id === deploymentId);
       }
       const deploymentIds = [

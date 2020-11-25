@@ -4,14 +4,25 @@ import pluralize from 'pluralize';
 
 import { Chip, List } from '@material-ui/core';
 
+import { formatTime, generateDeploymentGroupDetails, getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import ExpandableAttribute from '../../common/expandable-attribute';
-import { formatTime, generateDeploymentGroupDetails, getRemainderPercent } from '../../../helpers';
+import { getPhaseStartTime } from '../deployments';
 
-const Review = ({ deployment = {}, deploymentDeviceCount, device, filters, group, isEnterprise, phases, release, retries = 0 }) => {
-  // Create 'phases' for view only
-  const deploymentPhases = phases || [{ batch_size: 100 }];
-  const start_time = deploymentPhases[0].start_ts || deployment.created || new Date().toISOString();
+const Review = ({
+  deployment = {},
+  deploymentDeviceCount,
+  device,
+  filterId,
+  filters,
+  group,
+  isEnterprise,
+  phases = [{ batch_size: 100 }],
+  release,
+  retries = 0
+}) => {
+  const creationTime = deployment.created || new Date().toISOString();
+  const start_time = phases[0].start_ts || creationTime;
   const end_time = null || formatTime(deployment.finished);
 
   const deploymentInformation = {
@@ -25,9 +36,13 @@ const Review = ({ deployment = {}, deploymentDeviceCount, device, filters, group
       { primary: 'Number of retries', secondary: retries }
     ],
     Schedule: [
-      { primary: 'Created at', secondary: <Time value={deployment.created || new Date().toISOString()} format="YYYY-MM-DD HH:mm" /> },
-      { primary: 'Start time', secondary: <Time value={start_time} format="YYYY-MM-DD HH:mm" /> },
-      { primary: 'End time', secondary: end_time ? <Time value={end_time} format="YYYY-MM-DD HH:mm" /> : '-' }
+      { primary: 'Created at', secondary: <Time value={creationTime} format="YYYY-MM-DD HH:mm" />, secondaryTypographyProps: { title: creationTime } },
+      { primary: 'Start time', secondary: <Time value={start_time} format="YYYY-MM-DD HH:mm" />, secondaryTypographyProps: { title: start_time } },
+      {
+        primary: 'End time',
+        secondary: end_time ? <Time value={end_time} format="YYYY-MM-DD HH:mm" /> : '-',
+        secondaryTypographyProps: { title: end_time || '-' }
+      }
     ]
   };
 
@@ -41,13 +56,7 @@ const Review = ({ deployment = {}, deploymentDeviceCount, device, filters, group
             </h4>
             <List>
               {information.map(item => (
-                <ExpandableAttribute
-                  key={item.primary}
-                  primary={item.primary}
-                  secondary={item.secondary}
-                  dividerDisabled={true}
-                  style={{ marginBottom: -15 }}
-                />
+                <ExpandableAttribute key={item.primary} {...item} dividerDisabled={true} style={{ marginBottom: -15 }} />
               ))}
             </List>
           </div>
@@ -62,19 +71,23 @@ const Review = ({ deployment = {}, deploymentDeviceCount, device, filters, group
             <div>Phase begins</div>
             <div>Batch size</div>
           </div>
-          {deploymentPhases.map((row, index) => {
-            row.batch_size = row.batch_size || getRemainderPercent(deploymentPhases);
-            const deviceCount =
-              (index === deploymentPhases.length - 1
-                ? Math.ceil(((deployment.max_devices || deploymentDeviceCount) / 100) * row.batch_size)
-                : Math.floor(((deployment.max_devices || deploymentDeviceCount) / 100) * row.batch_size)) || 0;
+          {phases.map((row, index) => {
+            row.batch_size = row.batch_size || getRemainderPercent(phases);
+            const deviceCount = getPhaseDeviceCount(
+              deployment.max_devices || deploymentDeviceCount,
+              row.batch_size,
+              row.batch_size,
+              index === phases.length - 1
+            );
+            const deviceCountText = !filterId ? ` (${deviceCount} ${pluralize('device', deviceCount)})` : '';
+            const startTime = getPhaseStartTime(phases, index);
             return (
-              <div className="flexbox column" key={row.start_ts || start_time}>
+              <div className="flexbox column" key={startTime}>
                 <Chip size="small" label={`Phase ${index + 1}`} />
                 <div>
-                  <Time value={row.start_ts || start_time} format="YYYY-MM-DD HH:mm" />
+                  <Time value={startTime} format="YYYY-MM-DD HH:mm" />
                 </div>
-                <div>{`${row.batch_size}% (${deviceCount} ${pluralize('device', deviceCount)})`}</div>
+                <div>{`${row.batch_size}%${deviceCountText}`}</div>
               </div>
             );
           })}

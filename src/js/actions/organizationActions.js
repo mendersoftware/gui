@@ -44,7 +44,7 @@ export const startCardUpdate = () => dispatch =>
     .catch(err => commonErrorHandler(err, `Updating the card failed:`, dispatch));
 
 export const confirmCardUpdate = () => (dispatch, getState) =>
-  Api.post(`${tenantadmApiUrlv2}/billing/${getState().organization.intentId}/confirm`)
+  Api.post(`${tenantadmApiUrlv2}/billing/card/${getState().organization.intentId}/confirm`)
     .then(() =>
       Promise.all([
         dispatch(setSnackbar('Payment card was updated successfully')),
