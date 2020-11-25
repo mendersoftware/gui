@@ -157,9 +157,7 @@ export class Header extends React.Component {
             <img id="logo" src={isEnterprise ? enterpriseLogo : logo} />
           </Link>
           {demo && <DemoNotification docsVersion={docsVersion} />}
-          {!!announcement && showAnnouncement && (
-            <Announcement announcement={announcement} showAnnouncement={showAnnouncement} onHide={() => self._hideAnnouncement()} />
-          )}
+          {!!announcement && <Announcement announcement={announcement} onHide={() => self._hideAnnouncement()} />}
           {organization && organization.trial && <TrialNotification />}
           <div style={{ flexGrow: '1' }}></div>
           <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
