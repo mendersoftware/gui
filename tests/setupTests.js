@@ -2,6 +2,7 @@ import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { setupServer } from 'msw/node';
 import handlers from './__mocks__/requestHandlers';
+import { token as mockToken } from './mockData';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -17,12 +18,13 @@ window.RTCPeerConnection = () => {
 let server;
 
 const oldWindowLocation = window.location;
+const oldWindowSessionStorage = window.sessionStorage;
 
 jest.mock('universal-cookie', () => {
   const mockCookie = {
     get: jest.fn(name => {
       if (name === 'JWT') {
-        return 'JWT';
+        return mockToken;
       }
     }),
     set: jest.fn(),
@@ -39,6 +41,13 @@ beforeAll(async () => {
     hostname: 'localhost',
     replace: jest.fn()
   };
+  delete window.sessionStorage;
+  window.sessionStorage = {
+    ...oldWindowSessionStorage,
+    getItem: jest.fn(() => true),
+    setItem: jest.fn(),
+    removeItem: jest.fn()
+  };
   server = setupServer(...handlers);
   await server.listen();
 });
@@ -54,4 +63,5 @@ afterAll(async () => {
   // restore `window.location` to the original `jsdom`
   // `Location` object
   window.location = oldWindowLocation;
+  window.sessionStorage = oldWindowSessionStorage;
 });

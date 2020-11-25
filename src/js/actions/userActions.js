@@ -96,9 +96,7 @@ export const passwordResetComplete = (secretHash, newPassword) => dispatch =>
 
 export const verify2FA = tfaData => dispatch =>
   UsersApi.putVerifyTFA(`${useradmApiUrl}/2faverify`, tfaData)
-    .then(() => {
-      return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: getToken() })]);
-    })
+    .then(() => Promise.resolve(dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: getToken() })))
     .catch(err => commonErrorHandler(err, 'An error occured validating the verification code: failed to verify token, please try again.', dispatch));
 
 export const getUserList = () => dispatch =>
@@ -212,17 +210,17 @@ const transformRoleDataToRole = roleData => {
 
 export const createRole = roleData => dispatch => {
   const role = transformRoleDataToRole(roleData);
-  return GeneralApi.post(`${useradmApiUrl}/roles`, role).then(() =>
-    Promise.all([dispatch({ type: UserConstants.CREATED_ROLE, role: { ...emptyRole, ...role }, roleId: role.name }), dispatch(getRoles())])
-  );
+  return GeneralApi.post(`${useradmApiUrl}/roles`, role)
+    .then(() => Promise.all([dispatch({ type: UserConstants.CREATED_ROLE, role: { ...emptyRole, ...role }, roleId: role.name }), dispatch(getRoles())]))
+    .catch(err => commonErrorHandler(err, `There was an error creating the role:`, dispatch));
 };
 
 export const editRole = roleData => dispatch => {
   const role = transformRoleDataToRole(roleData);
   const roleId = role.name;
-  return GeneralApi.put(`${useradmApiUrl}/roles/${roleId}`, role).then(() =>
-    Promise.all([dispatch({ type: UserConstants.UPDATED_ROLE, role: { ...emptyRole, ...role }, roleId: roleId }), dispatch(getRoles())])
-  );
+  return GeneralApi.put(`${useradmApiUrl}/roles/${roleId}`, role)
+    .then(() => Promise.all([dispatch({ type: UserConstants.UPDATED_ROLE, role: { ...emptyRole, ...role }, roleId }), dispatch(getRoles())]))
+    .catch(err => commonErrorHandler(err, `There was an error editing the role:`, dispatch));
 };
 
 export const removeRole = roleId => dispatch =>
@@ -260,10 +258,7 @@ export const saveGlobalSettings = (settings, beOptimistic = false, notify = fals
         return Promise.all([tasks]);
       }
       console.log(err);
-      if (notify) {
-        return commonErrorHandler(err, `The settings couldn't be saved.`, dispatch);
-      }
-      return Promise.reject();
+      return commonErrorHandler(err, `The settings couldn't be saved.`, dispatch);
     });
 };
 
@@ -295,12 +290,10 @@ export const toggleHelptips = () => (dispatch, getState) => {
   const user = state.users.byId[state.users.currentUser] || {};
   if (user.id) {
     // if current user id available from store
-    var userCookie = cookies.get(user.id) || {};
-    var updatedValue = !userCookie.help;
-    userCookie.help = updatedValue;
-    userCookie = JSON.stringify(userCookie);
-    cookies.set(user.id, userCookie);
-    return dispatch(setShowHelptips(updatedValue));
+    let userCookie = cookies.get(user.id) || {};
+    userCookie.help = !userCookie.help;
+    cookies.set(user.id, JSON.stringify(userCookie));
+    return dispatch(setShowHelptips(userCookie.help));
   }
 };
 

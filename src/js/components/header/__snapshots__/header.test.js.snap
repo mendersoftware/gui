@@ -196,6 +196,9 @@ exports[`Header Component renders correctly 1`] = `
           />
         </svg>
       </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </button>
   </div>
 </div>

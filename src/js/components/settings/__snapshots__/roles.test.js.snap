@@ -97,6 +97,37 @@ exports[`Roles Component renders correctly 1`] = `
           className="MuiTableCell-root MuiTableCell-body"
         />
       </tr>
+      <tr
+        className="MuiTableRow-root MuiTableRow-hover"
+        role={null}
+      >
+        <td
+          aria-sort={null}
+          className="MuiTableCell-root MuiTableCell-body"
+        />
+        <td
+          aria-sort={null}
+          className="MuiTableCell-root MuiTableCell-body"
+        >
+          No
+        </td>
+        <td
+          aria-sort={null}
+          className="MuiTableCell-root MuiTableCell-body"
+        >
+          testgroup
+        </td>
+        <td
+          aria-sort={null}
+          className="MuiTableCell-root MuiTableCell-body"
+        >
+          test description
+        </td>
+        <td
+          aria-sort={null}
+          className="MuiTableCell-root MuiTableCell-body"
+        />
+      </tr>
     </tbody>
   </table>
   <div
