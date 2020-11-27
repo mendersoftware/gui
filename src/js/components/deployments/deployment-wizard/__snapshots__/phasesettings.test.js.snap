@@ -86,7 +86,7 @@ exports[`PhaseSettings Component renders correctly 1`] = `
               }
             }
           >
-            (NaN devices)
+            (1 device)
           </span>
         </td>
         <td
