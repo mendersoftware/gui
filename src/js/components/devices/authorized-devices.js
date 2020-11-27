@@ -173,20 +173,6 @@ export class Authorized extends React.Component {
       .finally(() => self.setState({ loading: false, pageLoading: false }));
   }
 
-  getDeviceById(id) {
-    // filter the list to show a single device only
-    var self = this;
-    // do this via deviceauth not inventory
-    return self.props
-      .trySelectDevice(id, DEVICE_STATES.accepted)
-      .catch(err => {
-        if (err.response.status === 404) {
-          setRetryTimer(err, 'devices', `Device couldn't be loaded.`, refreshDeviceLength, self.props.setSnackbar);
-        }
-      })
-      .finally(() => self.setState({ loading: false, pageLoading: false }));
-  }
-
   _handlePageChange(pageNo) {
     var self = this;
     self.setState({ pageLoading: true, pageNo: pageNo }, () => self._getDevices(true));
@@ -348,7 +334,6 @@ export class Authorized extends React.Component {
               onSort={attribute => self.onSortChange(attribute)}
               pageTotal={groupCount}
               refreshDevices={shouldUpdate => self._getDevices(shouldUpdate)}
-              selectDeviceById={id => self.getDeviceById(id)}
             />
             {showHelptips && (
               <div>

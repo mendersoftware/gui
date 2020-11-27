@@ -34,7 +34,6 @@ export const AuthsetsDialog = ({
 
   const updateDeviceAuthStatus = (device_id, auth_id, status) => {
     setLoading(auth_id);
-    status = status === 'accept' ? DEVICE_STATES.accepted : status === 'reject' ? DEVICE_STATES.rejected : status;
     let changeRequest;
     if (status === 'dismiss') {
       changeRequest = deleteAuthset(device_id, auth_id);
@@ -42,19 +41,19 @@ export const AuthsetsDialog = ({
       // call API to update authset
       changeRequest = updateDeviceAuth(device_id, auth_id, status);
     }
-    return changeRequest
-      .then(() => {
-        // if only authset, close dialog and refresh!
-        if (device.auth_sets.length <= 1) {
-          dialogToggle('authsets');
-        } else {
+    return (
+      changeRequest
+        .then(() => {
+          // if only authset, close dialog and refresh!
+          if (device.auth_sets.length <= 1) {
+            return Promise.resolve(dialogToggle('authsets'));
+          }
           // refresh authset list
-          getDeviceAuth(device_id)
-            // on finish, change "loading" back to null
-            .finally(() => setLoading(null));
-        }
-      })
-      .catch(() => setLoading(null));
+          return getDeviceAuth(device_id);
+        })
+        // on finish, change "loading" back to null
+        .finally(() => setLoading(null))
+    );
   };
 
   let decommissionButton = (

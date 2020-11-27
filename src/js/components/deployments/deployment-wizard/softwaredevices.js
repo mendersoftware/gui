@@ -8,7 +8,7 @@ import { TextField, Tooltip } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { ErrorOutline as ErrorOutlineIcon, InfoOutlined as InfoOutlinedIcon } from '@material-ui/icons';
 
-import { getAllDevicesByStatus, getAllGroupDevices, selectDevices } from '../../../actions/deviceActions';
+import { getAllDevicesByStatus, selectDevices } from '../../../actions/deviceActions';
 import { advanceOnboarding } from '../../../actions/onboardingActions';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../../constants/deviceConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
@@ -237,7 +237,7 @@ export class SoftwareDevices extends React.Component {
   }
 }
 
-const actionCreators = { advanceOnboarding, getAllDevicesByStatus, getAllGroupDevices, selectDevices };
+const actionCreators = { advanceOnboarding, getAllDevicesByStatus, selectDevices };
 
 const mapStateToProps = state => {
   // eslint-disable-next-line no-unused-vars

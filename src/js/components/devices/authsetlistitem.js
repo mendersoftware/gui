@@ -36,13 +36,13 @@ const AuthsetListItem = ({ authset, confirm, device, isActive, isExpanded, limit
 
   const onConfirm = status => {
     let message = '';
-    if (status === 'accept') {
+    if (status === DEVICE_STATES.accepted) {
       message = 'By accepting, the device with this identity data and public key will be granted authentication by the server.';
       if (device.status === DEVICE_STATES.accepted) {
         // if device already accepted, and you are accepting a different authset:
         message = `${message} The previously accepted public key will be rejected automatically in favor of this new key.`;
       }
-    } else if (status === 'reject') {
+    } else if (status === DEVICE_STATES.rejected) {
       message = 'The device with this identity data and public key will be rejected, and blocked from communicating with the Mender server.';
       if (device.status === DEVICE_STATES.accepted && authset.status !== DEVICE_STATES.accepted) {
         // if device is accepted but you are rejecting an authset that is not accepted, device status is unaffected:
@@ -111,12 +111,12 @@ const AuthsetListItem = ({ authset, confirm, device, isActive, isExpanded, limit
   ) : (
     <div className="action-buttons flexbox">
       {authset.status !== DEVICE_STATES.accepted && authset.status !== DEVICE_STATES.preauth && !limitMaxed ? (
-        <a onClick={() => (total > 1 ? onConfirm('accept') : confirm(device.id, authset.id, 'accept'))}>Accept</a>
+        <a onClick={() => (total > 1 ? onConfirm(DEVICE_STATES.accepted) : confirm(device.id, authset.id, DEVICE_STATES.accepted))}>Accept</a>
       ) : (
         <div>Accept</div>
       )}
       {authset.status !== DEVICE_STATES.rejected && authset.status !== DEVICE_STATES.preauth ? (
-        <a onClick={() => onConfirm('reject')}>Reject</a>
+        <a onClick={() => onConfirm(DEVICE_STATES.rejected)}>Reject</a>
       ) : (
         <div>Reject</div>
       )}
