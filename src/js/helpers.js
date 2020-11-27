@@ -380,7 +380,7 @@ export const getRemainderPercent = phases => {
   return remainder;
 };
 
-export const getPhaseDeviceCount = (numberDevices, batchSize, remainder, isLastPhase) =>
+export const getPhaseDeviceCount = (numberDevices = 1, batchSize, remainder, isLastPhase) =>
   isLastPhase ? Math.ceil((numberDevices / 100) * (batchSize || remainder)) : Math.floor((numberDevices / 100) * (batchSize || remainder));
 
 export const sortDeploymentDevices = devices => {
