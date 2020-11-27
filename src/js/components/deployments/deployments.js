@@ -118,13 +118,13 @@ export class Deployments extends React.Component {
 
   onScheduleSubmit(deploymentObject) {
     const self = this;
-    const { deploymentDeviceIds, filterId, group, phases, release, retries } = deploymentObject;
+    const { deploymentDeviceIds, device, filterId, group, phases, release, retries } = deploymentObject;
     const newDeployment = {
       artifact_name: release.Name,
       devices: filterId || (group && group !== allDevices) ? undefined : deploymentDeviceIds,
       filter_id: filterId,
       group: group === allDevices ? undefined : group,
-      name: decodeURIComponent(group) || 'All devices',
+      name: device?.id || (group ? decodeURIComponent(group) : 'All devices'),
       phases: phases
         ? phases.map((phase, i, origPhases) => {
             phase.start_ts = getPhaseStartTime(origPhases, i);

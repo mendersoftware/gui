@@ -56,9 +56,10 @@ export class Deployments extends React.Component {
   getDeployments() {
     const self = this;
     const roundedStartDate = Math.round(Date.parse(self.state.lastDeploymentCheck) / 1000);
-    const updateRequests = Object.keys(DEPLOYMENT_STATES).map(status =>
-      self.props.getDeploymentsByStatus(status, 1, 1, status === DEPLOYMENT_STATES.finished ? roundedStartDate : undefined)
-    );
+    const updateRequests = Object.keys(DEPLOYMENT_STATES)
+      // we need to exclude the scheduled state here as the os version is not able to process these and will prevent the dashboard from loading
+      .filter(status => status !== DEPLOYMENT_STATES.scheduled)
+      .map(status => self.props.getDeploymentsByStatus(status, 1, 1, status === DEPLOYMENT_STATES.finished ? roundedStartDate : undefined));
     return Promise.all(updateRequests)
       .then(() => self.setState({ loading: false }))
       .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, self.props.setSnackbar));
