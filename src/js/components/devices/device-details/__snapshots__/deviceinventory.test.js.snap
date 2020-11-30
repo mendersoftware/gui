@@ -10,7 +10,43 @@ Array [
     </h4>
     <ul
       className="MuiList-root MuiList-padding"
-    />
+    >
+      <div
+        onClick={[Function]}
+      >
+        <li
+          className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+          disabled={true}
+        >
+          <div
+            className="MuiListItemText-root MuiListItemText-multiline"
+          >
+            <span
+              className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+            >
+              ipv4_wlan0
+            </span>
+            <div
+              className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+              title="192.168.10.141/24"
+            >
+              <div>
+                <span
+                  className="inventory-text"
+                  style={Object {}}
+                >
+                  192.168.10.141/24
+                </span>
+                 
+              </div>
+            </div>
+          </div>
+        </li>
+        <hr
+          className="MuiDivider-root"
+        />
+      </div>
+    </ul>
   </div>,
   <div
     className="device-actions"

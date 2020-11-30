@@ -91,7 +91,9 @@ export const defaultState = {
     byId: {
       a1: {
         id: 'a1',
-        attributes: {},
+        attributes: {
+          ipv4_wlan0: '192.168.10.141/24'
+        },
         identity_data: { mac: 'dc:a6:32:12:ad:bf' },
         status: 'accepted',
         decommissioning: false,

@@ -179,7 +179,7 @@ describe('getOnboardingState', () => {
           ...defaultState.users.globalSettings,
           [defaultState.users.byId.a1.id]: {
             onboarding: {
-              address: 'http://localhost:85',
+              address: 'http://192.168.10.141:85',
               approach: 'physical',
               artifactIncluded: undefined,
               complete: false,

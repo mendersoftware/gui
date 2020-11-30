@@ -1,37 +1,31 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import {
+  customSort,
+  decodeSessionToken,
+  deepCompare,
+  detectOsIdentifier,
   duplicateFilter,
   FileSize,
+  formatPublicKey,
+  formatTime,
+  fullyDecodeURI,
   getDebConfigurationCode,
   getDebInstallationCode,
+  getDemoDeviceAddress,
   getDemoDeviceCreationCommand,
   getFormattedSize,
   getPhaseDeviceCount,
   hashString,
   isEmpty,
   mapDeviceAttributes,
+  preformatWithRequestID,
+  statusToPercentage,
   stringToBoolean,
   unionizeStrings,
   versionCompare
 } from './helpers';
-import { undefineds } from '../../tests/mockData';
-
-// TODO: test ALL of the following!
-// [
-//   fullyDecodeURI,
-//   isEncoded,
-//   statusToPercentage,
-//   decodeSessionToken,
-//   preformatWithRequestID,
-//   deepCompare,
-//   formatTime,
-//   formatPublicKey,
-//   customSort,
-//   collectAddressesFrom,
-//   getDemoDeviceAddress,
-//   detectOsIdentifier,
-// ];
+import { defaultState, token, undefineds } from '../../tests/mockData';
 
 describe('FileSize Component', () => {
   it('renders correctly', () => {
@@ -273,5 +267,155 @@ describe('getPhaseDeviceCount function', () => {
     expect(getPhaseDeviceCount(120, 10, 20, true)).toEqual(12);
     expect(getPhaseDeviceCount(120, null, 20, true)).toEqual(24);
     expect(getPhaseDeviceCount(120, null, 20, false)).toEqual(24);
+    expect(getPhaseDeviceCount(undefined, null, 20, false)).toEqual(0);
+  });
+});
+describe('customSort function', () => {
+  it('works as expected', () => {
+    const creationSortedUp = Object.values(defaultState.deployments.byId).sort(customSort(false, 'created'));
+    expect(creationSortedUp[1].id).toEqual(defaultState.deployments.byId.d1.id);
+    expect(creationSortedUp[0].id).toEqual(defaultState.deployments.byId.d2.id);
+    const creationSortedDown = Object.values(defaultState.deployments.byId).sort(customSort(true, 'created'));
+    expect(creationSortedDown[0].id).toEqual(defaultState.deployments.byId.d1.id);
+    expect(creationSortedDown[1].id).toEqual(defaultState.deployments.byId.d2.id);
+    const idSortedUp = Object.values(defaultState.deployments.byId).sort(customSort(false, 'id'));
+    expect(idSortedUp[0].id).toEqual(defaultState.deployments.byId.d1.id);
+    expect(idSortedUp[1].id).toEqual(defaultState.deployments.byId.d2.id);
+    const idSortedDown = Object.values(defaultState.deployments.byId).sort(customSort(true, 'id'));
+    expect(idSortedDown[1].id).toEqual(defaultState.deployments.byId.d1.id);
+    expect(idSortedDown[0].id).toEqual(defaultState.deployments.byId.d2.id);
+  });
+});
+describe('decodeSessionToken function', () => {
+  it('works as expected', () => {
+    expect(decodeSessionToken(token)).toEqual('a30a780b-b843-5344-80e3-0fd95a4f6fc3');
+  });
+  it('does not crash with faulty input', () => {
+    expect(decodeSessionToken(false)).toEqual(undefined);
+  });
+});
+describe('deepCompare function', () => {
+  it('works as expected', () => {
+    expect(deepCompare(false, 12)).toBeFalsy();
+    expect(deepCompare(defaultState, {})).toBeFalsy();
+    expect(
+      deepCompare(defaultState, {
+        ...defaultState,
+        devices: { ...defaultState.devices, byId: { ...defaultState.devices.byId, a1: { ...defaultState.devices.byId.a1, id: 'test' } } }
+      })
+    ).toBeFalsy();
+    expect(deepCompare({}, {})).toBeTruthy();
+    expect(deepCompare({}, {}, {})).toBeTruthy();
+    expect(deepCompare(defaultState.devices.byId, { ...defaultState.devices.byId }, { ...defaultState.devices.byId })).toBeTruthy();
+    expect(deepCompare(['test', { test: 'test' }, 1], ['test', { test: 'test' }, 1])).toBeTruthy();
+    expect(deepCompare(undefined, null)).toBeFalsy();
+    expect(deepCompare(1, 2)).toBeFalsy();
+    expect(deepCompare(1, 1)).toBeTruthy();
+    const date = new Date();
+    expect(deepCompare(date, date)).toBeTruthy();
+    expect(deepCompare(date, new Date().setDate(date.getDate() - 1))).toBeFalsy();
+    expect(deepCompare(<FileSize />, <FileSize />)).toBeTruthy();
+    expect(deepCompare(defaultState, {})).toBeFalsy();
+  });
+});
+describe('detectOsIdentifier function', () => {
+  it('works as expected', () => {
+    expect(detectOsIdentifier()).toEqual('Linux');
+    navigator.appVersion = '5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36';
+    expect(detectOsIdentifier()).toEqual('MacOs');
+  });
+});
+describe('formatPublicKey function', () => {
+  it('works as expected', () => {
+    const key = `-----BEGIN PUBLIC KEY-----
+MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEA4XP347xOgC0PnBgplast
+GmsSDWZE2nMCAkV9wx2J09hzqlEWK8tOOIS99IpAR4TtwIQi2GssNyGBBNRNMfLi
+8E2JLalm/X2jFdutf4QVIvLOs1vT0FqpYH+B3BnocYC5TfBXAwVUoW8HxK0MuxBo
+UTixFC4o2Wu3fQs+mMiVnV/jcYAV1O0N4+lgszObX8Buq8l817HB3WzUw/XxOyxC
+yahN4skp1D9JFHZB3i6lnfSJNJJvABe/lLf2jnjeFzbBgJOGxzolBa3+UyAWJRLB
+JxsSxbbnXS3vAwODZEBQ1VSs43en1o5IT/Z/79UC6wAKg+Z4VnkdcK0b9EsW9VQU
+oIfVXZjmm5CWPMiV5f9gG2t36j2wydpDryYqEAE+n8N76JzD/ZKlmHo+FJBJNsSx
+Hcoq3VRgR5v53BTLFZLLBaqLIqnQAUwn/RcWlEbS3dEGQDvKglNjwmSVf6Myub5w
+gnr0OSIDwEL31l+12DbAQ9+ANv6TLpWNfLpX0E6IStkZAgMBAAE=
+-----END PUBLIC KEY-----`;
+    expect(formatPublicKey(key)).toHaveLength(35);
+    expect(formatPublicKey(key)).toContain(' ... ');
+  });
+});
+describe('formatTime function', () => {
+  it('works as expected', () => {
+    expect(formatTime(new Date('2020-11-30T18:36:38.258Z'))).toEqual('2020-11-30T18:36:38.258');
+    expect(formatTime('2020-11-30 18 : 36 : 38 . 258 UTC')).toEqual('2020-11-30T18:36:38.258');
+  });
+});
+describe('fullyDecodeURI function', () => {
+  it('works as expected', () => {
+    expect(fullyDecodeURI('http%3A%2F%2Ftest%20encoded%20%2520http%253A%252F%252Ftest%20%2520%20twice%20%C3%B8%C3%A6%C3%A5%C3%9F%2F%60%C2%B4')).toEqual(
+      'http://test encoded  http://test   twice øæåß/`´'
+    );
+  });
+});
+describe('getDemoDeviceAddress function', () => {
+  it('works as expected', () => {
+    expect(getDemoDeviceAddress(Object.values(defaultState.devices.byId), 'virtual', 85)).toEqual('http://localhost:85');
+    expect(getDemoDeviceAddress(Object.values(defaultState.devices.byId), 'physical', 85)).toEqual('http://192.168.10.141:85');
+  });
+});
+describe('preformatWithRequestID function', () => {
+  it('works as expected', () => {
+    expect(preformatWithRequestID({ data: { request_id: 'someUuidLikeLongerText' } }, token)).toEqual(
+      'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjZTNkMGY4Yy1hZWRlLTQwMzAtYjM5MS03ZDUwMjBlYjg3M2UiLCJzdWIiOiJhMzBhNzgwYi1iODQzLTUzNDQtODBlMy0wZmQ5NWE0ZjZmYzMiLCJleHAiOjE2MDY4MTUzNjksImlhdCI6MTYwNjIxMDU2OSwibWVuZGVyLnRlbmF... [Request ID: someUuid]'
+    );
+    expect(preformatWithRequestID({ data: {} }, token)).toEqual(
+      'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjZTNkMGY4Yy1hZWRlLTQwMzAtYjM5MS03ZDUwMjBlYjg3M2UiLCJzdWIiOiJhMzBhNzgwYi1iODQzLTUzNDQtODBlMy0wZmQ5NWE0ZjZmYzMiLCJleHAiOjE2MDY4MTUzNjksImlhdCI6MTYwNjIxMDU2OSwibWVuZGVyLnRlbmF...'
+    );
+    expect(preformatWithRequestID(undefined, token)).toEqual(
+      'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjZTNkMGY4Yy1hZWRlLTQwMzAtYjM5MS03ZDUwMjBlYjg3M2UiLCJzdWIiOiJhMzBhNzgwYi1iODQzLTUzNDQtODBlMy0wZmQ5NWE0ZjZmYzMiLCJleHAiOjE2MDY4MTUzNjksImlhdCI6MTYwNjIxMDU2OSwibWVuZGVyLnRlbmF...'
+    );
+    expect(preformatWithRequestID({ data: { request_id: 'someUuidLikeLongerText' } }, 'short text')).toEqual('short text [Request ID: someUuid]');
+    expect(preformatWithRequestID(undefined, 'short text')).toEqual('short text');
+  });
+});
+describe('statusToPercentage function', () => {
+  it('should not crash for improper values', () => {
+    ['0', 0, null, undefined, this].map(state =>
+      [0, 42, 100, undefined, null].map(returnValue => {
+        const result = statusToPercentage(state, returnValue);
+        return expect(typeof result).toBe('number');
+      })
+    );
+  });
+  it('always results in 100% for finished states', () => {
+    ['aborted', 'already-installed', 'failure', 'success'].map(state => {
+      return [0, 42, 100, undefined, null].map(returnValue => expect(statusToPercentage(state, returnValue)).toEqual(100));
+    });
+  });
+  it('always results in 0% for not started states', () => {
+    ['pending', 'noartifact'].map(state => {
+      return [0, 42, 100, undefined, null].map(returnValue => expect(statusToPercentage(state, returnValue)).toEqual(0));
+    });
+  });
+  it('always results in 70% when installing', () => {
+    ['installing'].map(state => {
+      return [0, 42, 100, undefined, null].map(returnValue => expect(statusToPercentage(state, returnValue)).toEqual(70));
+    });
+  });
+  it('returns slightly increased percentage while downloading', () => {
+    const state = 'downloading';
+    expect(statusToPercentage(state, 0)).toEqual(0);
+    expect(statusToPercentage(state, 1)).toEqual(1);
+    expect(statusToPercentage(state, 42)).toEqual(42);
+    expect(statusToPercentage(state, 100)).toEqual(69);
+    expect(statusToPercentage(state, undefined)).toEqual(69);
+    expect(statusToPercentage(state, null)).toEqual(0);
+  });
+  it('returns slightly increased percentage while rebooting', () => {
+    const state = 'rebooting';
+    expect(statusToPercentage(state, 0)).toEqual(75);
+    expect(statusToPercentage(state, 1)).toEqual(76);
+    expect(statusToPercentage(state, 42)).toEqual(99);
+    expect(statusToPercentage(state, 100)).toEqual(99);
+    expect(statusToPercentage(state, undefined)).toEqual(99);
+    expect(statusToPercentage(state, null)).toEqual(75);
   });
 });

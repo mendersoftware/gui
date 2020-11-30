@@ -50,6 +50,7 @@ beforeAll(async () => {
   };
   server = setupServer(...handlers);
   await server.listen();
+  Object.defineProperty(navigator, 'appVersion', { value: 'Test', writable: true });
 });
 
 afterEach(async () => {

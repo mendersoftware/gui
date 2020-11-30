@@ -6,19 +6,17 @@ import pluralize from 'pluralize';
 import { DEVICE_FILTERING_OPTIONS } from './constants/deviceConstants';
 import { initialState as onboardingReducerState } from './reducers/onboardingReducer';
 
-export function isEncoded(uri) {
+const isEncoded = uri => {
   uri = uri || '';
-
   return uri !== decodeURIComponent(uri);
-}
+};
 
-export function fullyDecodeURI(uri) {
+export const fullyDecodeURI = uri => {
   while (isEncoded(uri)) {
     uri = decodeURIComponent(uri);
   }
-
   return uri;
-}
+};
 
 const statCollector = (items, statistics) => items.reduce((accu, property) => accu + Number(statistics[property] || 0), 0);
 
@@ -62,6 +60,8 @@ export function statusToPercentage(state, intervals) {
     case 'failure':
     case 'success':
       return 100;
+    default:
+      return 0;
   }
 }
 
@@ -343,7 +343,7 @@ export const getFormattedSize = bytes => {
 
 export const FileSize = ({ style, fileSize }) => <div style={style}>{getFormattedSize(fileSize)}</div>;
 
-export const collectAddressesFrom = devices =>
+const collectAddressesFrom = devices =>
   devices.reduce((collector, device) => {
     const ips = Object.entries(device.attributes).reduce((accu, [name, value]) => {
       if (name.startsWith('ipv4')) {

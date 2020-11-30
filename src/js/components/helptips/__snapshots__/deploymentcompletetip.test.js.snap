@@ -32,7 +32,7 @@ exports[`DeploymentCompleteTip Component renders correctly 1`] = `
       <span
         className="MuiButton-label"
       >
-        Go to http://localhost:85
+        Go to http://192.168.10.141:85
       </span>
     </button>
   </div>
