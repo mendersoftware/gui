@@ -21,7 +21,7 @@ import {
 } from '@material-ui/icons';
 import { mdiTrashCanOutline as TrashCan } from '@mdi/js';
 
-import { getDevicesByStatus, getGroupDevices, selectDevices, setDeviceFilters, trySelectDevice, updateDevicesAuth } from '../../actions/deviceActions';
+import { getDevicesByStatus, getGroupDevices, selectDevices, setDeviceFilters, updateDevicesAuth } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
@@ -397,7 +397,6 @@ const actionCreators = {
   selectDevices,
   setDeviceFilters,
   setSnackbar,
-  trySelectDevice,
   updateDevicesAuth
 };
 
