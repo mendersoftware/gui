@@ -1,6 +1,6 @@
 import * as DeviceConstants from '../constants/deviceConstants';
 
-const initialState = {
+export const initialState = {
   byId: {},
   byStatus: {
     [DeviceConstants.DEVICE_STATES.accepted]: { deviceIds: [], total: 0 },

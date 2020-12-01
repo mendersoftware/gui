@@ -132,7 +132,7 @@ export const defaultState = {
     groups: {
       byId: {
         testGroup: {
-          deviceIds: ['a1'],
+          deviceIds: ['a1', 'b1'],
           filters: []
         },
         testGroupDynamic: {
@@ -223,8 +223,20 @@ export const defaultState = {
     byId: { a1: { email: 'a@b.com', id: 'a1' }, 'a30a780b-b843-5344-80e3-0fd95a4f6fc3': { email: 'a2@b.com', id: 'a30a780b-b843-5344-80e3-0fd95a4f6fc3' } },
     currentUser: 'a1',
     globalSettings: { id_attribute: 'Device ID', previousFilters: [] },
+    jwtToken: null,
+    qrCode: null,
     rolesById: {
-      RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false },
+      RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false, permissions: [] },
+      RBAC_ROLE_OBSERVER: {
+        title: 'Read only',
+        allowUserManagement: false,
+        groups: [],
+        description:
+          'Intended for team leaders or limited tech support accounts, this role can see all Devices, Artifacts and Deployment reports but not make any changes.',
+        editable: false,
+        permissions: []
+      },
+      RBAC_ROLE_CI: { title: 'CI', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
       test: { name: 'test', description: 'test description', groups: ['testgroup'] }
     },
     showHelptips: true

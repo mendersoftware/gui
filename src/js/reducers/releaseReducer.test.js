@@ -130,6 +130,32 @@ describe('release reducer', () => {
     ).toEqual([]);
   });
 
+  it('should handle RECEIVE_RELEASE', () => {
+    expect(
+      reducer(undefined, {
+        type: ReleaseConstants.RECEIVE_RELEASE,
+        release: {
+          ...testRelease,
+          Name: 'test2'
+        }
+      }).byId.test2
+    ).toEqual({
+      ...testRelease,
+      Name: 'test2'
+    });
+    expect(
+      reducer(initialState, {
+        type: ReleaseConstants.RECEIVE_RELEASE,
+        release: {
+          ...testRelease,
+          Name: 'test2'
+        }
+      }).byId.test2
+    ).toEqual({
+      ...testRelease,
+      Name: 'test2'
+    });
+  });
   it('should handle RECEIVE_RELEASES', () => {
     expect(
       reducer(undefined, {

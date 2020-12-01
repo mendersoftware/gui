@@ -3,8 +3,9 @@ import { rest } from 'msw';
 import { defaultState, token } from '../mockData';
 import { useradmApiUrl } from '../../src/js/constants/userConstants';
 
-const roles = [
-  { name: 'RBAC_ROLE_PERMIT_ALL', description: '', permissions: [{ action: 'any', object: { type: 'any', value: 'any' } }] },
+export const roles = [
+  { name: 'RBAC_ROLE_PERMIT_ALL', description: 'Full access', permissions: [{ action: 'any', object: { type: 'any', value: 'any' } }] },
+  { name: 'RBAC_ROLE_CI', description: '', permissions: [] },
   { name: 'test', description: 'test description', permissions: [{ action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: 'testgroup' } }] },
   {
     name: 'RBAC_ROLE_OBSERVER',

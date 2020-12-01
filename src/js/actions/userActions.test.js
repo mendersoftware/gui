@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 import Cookies from 'universal-cookie';
 
 import { defaultState, token } from '../../../tests/mockData';
+import { roles as rbacRoles } from '../../../tests/__mocks__/userHandlers';
 import {
   createRole,
   createUser,
@@ -34,6 +35,14 @@ const mockStore = configureMockStore(middlewares);
 
 const defaultRole = { name: 'test', description: 'test description', groups: [] };
 const settings = { test: true };
+
+const receivedRoles = rbacRoles.reduce((accu, role) => {
+  if (role.name.startsWith('RBAC')) {
+    const { name, ...roleRemainder } = role;
+    accu[name] = roleRemainder;
+  }
+  return accu;
+}, {});
 
 describe('setShowConnectingDialog', () => {
   it('should forward connecting dialog visibility', () => {
@@ -219,7 +228,7 @@ describe('user handling', () => {
 describe('role handling', () => {
   it('should allow role list retrieval', async () => {
     jest.clearAllMocks();
-    const expectedActions = [{ type: UserConstants.RECEIVED_ROLES, rolesById: defaultState.users.rolesById }];
+    const expectedActions = [{ type: UserConstants.RECEIVED_ROLES, rolesById: { ...defaultState.users.rolesById, ...receivedRoles } }];
     const store = mockStore({ ...defaultState });
     await store.dispatch(getRoles());
     const storeActions = store.getActions();
@@ -230,7 +239,7 @@ describe('role handling', () => {
     jest.clearAllMocks();
     const expectedActions = [
       { type: UserConstants.CREATED_ROLE, role: defaultRole, roleId: defaultRole.name },
-      { type: UserConstants.RECEIVED_ROLES, rolesById: defaultState.users.rolesById }
+      { type: UserConstants.RECEIVED_ROLES, rolesById: { ...defaultState.users.rolesById, ...receivedRoles } }
     ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(createRole(defaultRole));
@@ -242,7 +251,7 @@ describe('role handling', () => {
     jest.clearAllMocks();
     const expectedActions = [
       { type: UserConstants.UPDATED_ROLE, roleId: 'test', role: { name: 'test', groups: [] } },
-      { type: UserConstants.RECEIVED_ROLES, rolesById: defaultState.users.rolesById }
+      { type: UserConstants.RECEIVED_ROLES, rolesById: { ...defaultState.users.rolesById, ...receivedRoles } }
     ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(editRole({ name: 'test', password: 'mySecretPassword', groups: [] }));
@@ -254,7 +263,7 @@ describe('role handling', () => {
     jest.clearAllMocks();
     const expectedActions = [
       { type: UserConstants.REMOVED_ROLE, roleId: 'test' },
-      { type: UserConstants.RECEIVED_ROLES, rolesById: defaultState.users.rolesById }
+      { type: UserConstants.RECEIVED_ROLES, rolesById: { ...defaultState.users.rolesById, ...receivedRoles } }
     ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(removeRole('test'));
