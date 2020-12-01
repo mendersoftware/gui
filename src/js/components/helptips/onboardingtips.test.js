@@ -4,7 +4,32 @@ import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import { DevicePendingTip, WelcomeSnackTip } from './onboardingtips';
+import {
+  ApplicationUpdateReminderTip,
+  ArtifactIncludedDeployOnboarding,
+  ArtifactIncludedOnboarding,
+  ArtifactModifiedOnboarding,
+  DashboardOnboardingPendings,
+  DashboardOnboardingState,
+  DeploymentsInprogress,
+  DeploymentsPast,
+  DeploymentsPastCompletedFailure,
+  DevicePendingTip,
+  DevicesAcceptedOnboarding,
+  DevicesPendingAcceptingOnboarding,
+  GetStartedTip,
+  SchedulingAllDevicesSelection,
+  SchedulingArtifactSelection,
+  SchedulingGroupSelection,
+  SchedulingReleaseToDevices,
+  UploadNewArtifactDialogDestination,
+  UploadNewArtifactDialogDeviceType,
+  UploadNewArtifactDialogReleaseName,
+  UploadNewArtifactDialogUpload,
+  UploadNewArtifactTip,
+  UploadPreparedArtifactTip,
+  WelcomeSnackTip
+} from './onboardingtips';
 
 const mockStore = configureStore([thunk]);
 
@@ -39,6 +64,50 @@ describe('OnboardingTips Components', () => {
         )
         .toJSON();
       expect(tree).toMatchSnapshot();
+    });
+  });
+
+  describe('tiny onboarding tips', () => {
+    [
+      ApplicationUpdateReminderTip,
+      ArtifactIncludedDeployOnboarding,
+      ArtifactIncludedOnboarding,
+      ArtifactModifiedOnboarding,
+      DashboardOnboardingPendings,
+      DashboardOnboardingState,
+      DeploymentsInprogress,
+      DeploymentsPast,
+      DeploymentsPastCompletedFailure,
+      DevicesAcceptedOnboarding,
+      DevicesPendingAcceptingOnboarding,
+      GetStartedTip,
+      SchedulingAllDevicesSelection,
+      SchedulingArtifactSelection,
+      SchedulingGroupSelection,
+      SchedulingReleaseToDevices,
+      UploadNewArtifactDialogDestination,
+      UploadNewArtifactDialogDeviceType,
+      UploadNewArtifactDialogReleaseName,
+      UploadNewArtifactDialogUpload,
+      UploadNewArtifactTip,
+      UploadPreparedArtifactTip
+    ].forEach(Component => {
+      it(`renders ${Component.displayName || Component.name} correctly`, () => {
+        const tree = renderer
+          .create(
+            <MemoryRouter>
+              <Component
+                createdGroup="testgroup"
+                demoArtifactLink="http://somewhere.com"
+                progress={3}
+                selectedRelease={{ Name: 'test', toString: () => 'test' }}
+                setShowCreateArtifactDialog={jest.fn}
+              />
+            </MemoryRouter>
+          )
+          .toJSON();
+        expect(tree).toMatchSnapshot();
+      });
     });
   });
 });
