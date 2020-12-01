@@ -106,7 +106,7 @@ const releaseReducer = (state = initialState, action) => {
     case ReleaseConstants.UPLOAD_PROGRESS:
       return {
         ...state,
-        uploading: action.inprogress || state.inprogress,
+        uploading: action.inprogress,
         uploadProgress: action.uploadProgress
       };
 

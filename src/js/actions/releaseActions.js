@@ -51,7 +51,11 @@ export const getArtifactUrl = id => (dispatch, getState) =>
 
 const progress = (e, dispatch) => {
   const uploadProgress = (e.loaded / e.total) * 100;
-  return dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, uploadProgress: uploadProgress < 50 ? Math.ceil(uploadProgress) : Math.round(uploadProgress) });
+  return dispatch({
+    type: ReleaseConstants.UPLOAD_PROGRESS,
+    inprogress: uploadProgress !== 100,
+    uploadProgress: uploadProgress < 50 ? Math.ceil(uploadProgress) : Math.round(uploadProgress)
+  });
 };
 
 let cancelSource;
@@ -75,7 +79,7 @@ export const createArtifact = (meta, file) => dispatch => {
     dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 }),
     GeneralApi.upload(`${deploymentsApiUrl}/artifacts/generate`, formData, e => progress(e, dispatch), cancelSource.token)
   ])
-    .then(() => Promise.all([dispatch(selectArtifact(meta.name)), dispatch(setSnackbar('Upload successful', 5000))]))
+    .then(() => Promise.all([dispatch(selectRelease(meta.name)), dispatch(setSnackbar('Upload successful', 5000))]))
     .catch(err => {
       if (axios.isCancel(err)) {
         return dispatch(setSnackbar('The artifact generation has been cancelled', 5000));
@@ -99,7 +103,7 @@ export const uploadArtifact = (meta, file) => dispatch => {
     dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 }),
     GeneralApi.upload(`${deploymentsApiUrl}/artifacts`, formData, e => progress(e, dispatch), cancelSource.token)
   ])
-    .then(() => Promise.all([dispatch(selectArtifact(file)), dispatch(setSnackbar('Upload successful', 5000))]))
+    .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', 5000))))
     .catch(err => {
       if (axios.isCancel(err)) {
         return dispatch(setSnackbar('The upload has been cancelled', 5000));
