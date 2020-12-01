@@ -6,6 +6,7 @@ import IdleTimer from 'react-idle-timer';
 import Cookies from 'universal-cookie';
 
 import { getToken, updateMaxAge, expirySet } from '../auth';
+import { setSnackbar } from '../actions/appActions';
 import { logoutUser, saveUserSettings, setShowConnectingDialog } from '../actions/userActions';
 import { privateRoutes, publicRoutes } from '../config/routes';
 import { onboardingSteps } from '../constants/onboardingConstants';
@@ -66,7 +67,7 @@ class AppRoot extends React.PureComponent {
 
   render() {
     const self = this;
-    const { history, onboardingState, setShowConnectingDialog, showDeviceConnectionDialog, showDismissHelptipsDialog } = self.props;
+    const { history, onboardingState, setShowConnectingDialog, showDeviceConnectionDialog, showDismissHelptipsDialog, setSnackbar, snackbar } = self.props;
 
     let onboardingComponent = getOnboardingComponentFor(onboardingSteps.APPLICATION_UPDATE_REMINDER_TIP, onboardingState, {
       anchor: {
@@ -95,13 +96,13 @@ class AppRoot extends React.PureComponent {
         ) : (
           publicRoutes
         )}
-        <SharedSnackbar />
+        <SharedSnackbar snackbar={snackbar} setSnackbar={setSnackbar} />
       </>
     );
   }
 }
 
-const actionCreators = { logoutUser, saveUserSettings, setShowConnectingDialog };
+const actionCreators = { logoutUser, saveUserSettings, setShowConnectingDialog, setSnackbar };
 
 const mapStateToProps = state => {
   return {
@@ -109,6 +110,7 @@ const mapStateToProps = state => {
     currentUser: state.users.currentUser,
     showDismissHelptipsDialog: !state.onboarding.complete && state.onboarding.showTipsDialog,
     showDeviceConnectionDialog: state.users.showConnectDeviceDialog,
+    snackbar: state.app.snackbar,
     trackingCode: state.app.trackerCode
   };
 };

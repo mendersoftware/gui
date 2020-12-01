@@ -18,7 +18,7 @@ describe('SharedSnackbar Component', () => {
     const tree = renderer
       .create(
         <Provider store={store}>
-          <SharedSnackbar snackbar={{ maxWidth: 200 }} />
+          <SharedSnackbar snackbar={{ maxWidth: 200, message: 'test' }} setSnackbar={jest.fn} />
         </Provider>
       )
       .toJSON();
