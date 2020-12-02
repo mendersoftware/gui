@@ -9,7 +9,7 @@ import { Help as HelpIcon } from '@material-ui/icons';
 
 import loginLogo from '../../../assets/img/loginlogo.png';
 import { setSnackbar } from '../../actions/appActions';
-import { getUser, loginUser, logoutUser } from '../../actions/userActions';
+import { loginUser, logoutUser } from '../../actions/userActions';
 
 import { getToken } from '../../auth';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
@@ -156,7 +156,7 @@ export class Login extends React.Component {
   }
 }
 
-const actionCreators = { getUser, loginUser, logoutUser, setSnackbar };
+const actionCreators = { loginUser, logoutUser, setSnackbar };
 
 const mapStateToProps = state => {
   return {

@@ -21,6 +21,7 @@ import {
   removeUser,
   saveGlobalSettings,
   saveUserSettings,
+  setHideAnnouncement,
   setShowConnectingDialog,
   setShowHelptips,
   toggleHelptips,
@@ -132,7 +133,9 @@ describe('login/ -out functionality', () => {
     jest.clearAllMocks();
     const expectedActions = [
       { type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token },
-      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId['a30a780b-b843-5344-80e3-0fd95a4f6fc3'] }
+      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId['a30a780b-b843-5344-80e3-0fd95a4f6fc3'] },
+      { type: UserConstants.SET_SHOW_HELP, show: true },
+      { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true }
     ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(loginUser({ email: 'test@example.com', password: 'mysecretpassword' }));
@@ -168,9 +171,15 @@ describe('login/ -out functionality', () => {
 describe('user handling', () => {
   it('should allow single user retrieval', async () => {
     jest.clearAllMocks();
-    const expectedActions = [{ type: UserConstants.RECEIVED_USER, user: defaultState.users.byId.a1 }];
+    const cookies = new Cookies();
+    const expectedActions = [
+      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId.a1 },
+      { type: UserConstants.SET_SHOW_HELP, show: true },
+      { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true }
+    ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(getUser('a1'));
+    expect(cookies.set).toHaveBeenCalledTimes(1);
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
@@ -317,6 +326,21 @@ describe('settings persistance functionality', () => {
     const store = mockStore({ ...defaultState });
     await store.dispatch(saveUserSettings(settings));
     const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+});
+
+describe('should allow hiding announcements shown in the header', () => {
+  it('should store the visibility in a cookie on dismissal', () => {
+    jest.clearAllMocks();
+    const cookies = new Cookies();
+    const expectedActions = [{ type: AppConstants.SET_ANNOUNCEMENT, announcement: undefined }];
+    const store = mockStore({ ...defaultState, app: { ...defaultState.app, hostedAnnouncement: 'something' } });
+    store.dispatch(setHideAnnouncement(true));
+    const storeActions = store.getActions();
+    expect(cookies.get).toHaveBeenCalledTimes(1);
+    expect(cookies.set).toHaveBeenCalledTimes(1);
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });

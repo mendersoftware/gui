@@ -74,6 +74,11 @@ const appReducer = (state = initialState, action) => {
         ...state,
         firstLoginAfterSignup: action.firstLoginAfterSignup
       };
+    case AppConstants.SET_ANNOUNCEMENT:
+      return {
+        ...state,
+        hostedAnnouncement: action.announcement
+      };
     default:
       return state;
   }

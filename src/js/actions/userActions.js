@@ -3,11 +3,13 @@ import Cookies from 'universal-cookie';
 import { commonErrorHandler, setSnackbar } from './appActions';
 import GeneralApi from '../api/general-api';
 import UsersApi from '../api/users-api';
+import AppConstants from '../constants/appConstants';
 import OnboardingConstants from '../constants/onboardingConstants';
 import UserConstants from '../constants/userConstants';
-import { getUserSettings } from '../selectors';
+import { getCurrentUser, getUserSettings } from '../selectors';
 import { getToken, logout } from '../auth';
-import { extractErrorMessage, preformatWithRequestID, decodeSessionToken } from '../helpers';
+import { decodeSessionToken, extractErrorMessage, hashString, preformatWithRequestID } from '../helpers';
+import { clearAllRetryTimers } from '../utils/retrytimer';
 
 const cookies = new Cookies();
 const { emptyRole, rolesByName, useradmApiUrl } = UserConstants;
@@ -71,6 +73,7 @@ export const logoutUser = reason => (dispatch, getState) => {
     if (reason) {
       tasks.push(dispatch(setSnackbar(reason)));
     }
+    clearAllRetryTimers(setSnackbar);
     logout();
     return Promise.all(tasks);
   });
@@ -111,7 +114,19 @@ export const getUserList = () => dispatch =>
     .catch(err => commonErrorHandler(err, `Users couldn't be loaded.`, dispatch, 'Please check your connection'));
 
 export const getUser = id => dispatch =>
-  GeneralApi.get(`${useradmApiUrl}/users/${id}`).then(({ data: user }) => Promise.all([dispatch({ type: UserConstants.RECEIVED_USER, user }), user]));
+  GeneralApi.get(`${useradmApiUrl}/users/${id}`).then(({ data: user }) => {
+    let tasks = [dispatch({ type: UserConstants.RECEIVED_USER, user }), dispatch(setHideAnnouncement(false, user.id))];
+    // checks if user id is set and if cookie for helptips exists for that user
+    const userCookie = cookies.get(user.id);
+    if (typeof userCookie === 'undefined' || typeof userCookie.help === 'undefined') {
+      // if no user cookie set, do so via togglehelptips
+      tasks.push(dispatch(toggleHelptips()));
+    } else {
+      // got user cookie but help value not set
+      tasks.push(dispatch(setShowHelptips(userCookie.help)));
+    }
+    return Promise.all([...tasks, user]);
+  });
 
 const actions = {
   create: {
@@ -298,3 +313,14 @@ export const toggleHelptips = () => (dispatch, getState) => {
 };
 
 export const setShowConnectingDialog = show => dispatch => dispatch({ type: UserConstants.SET_SHOW_CONNECT_DEVICE, show });
+
+export const setHideAnnouncement = (shouldHide, userId) => (dispatch, getState) => {
+  const currentUserId = userId || getCurrentUser(getState()).id;
+  const hash = getState().app.hostedAnnouncement ? hashString(getState().app.hostedAnnouncement) : '';
+  const announceCookie = cookies.get(`${currentUserId}${hash}`);
+  if (shouldHide || (hash.length && typeof announceCookie !== 'undefined')) {
+    cookies.set(`${currentUserId}${hash}`, true, { maxAge: 604800 });
+    return Promise.resolve(dispatch({ type: AppConstants.SET_ANNOUNCEMENT, announcement: undefined }));
+  }
+  return Promise.resolve();
+};

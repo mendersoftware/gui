@@ -43,4 +43,8 @@ describe('app reducer', () => {
       }).firstLoginAfterSignup
     ).toEqual(false);
   });
+  it('should handle SET_ANNOUNCEMENT', () => {
+    expect(reducer(undefined, { type: AppConstants.SET_ANNOUNCEMENT, announcement: 'something' }).hostedAnnouncement).toEqual('something');
+    expect(reducer(initialState, { type: AppConstants.SET_ANNOUNCEMENT, announcement: undefined }).hostedAnnouncement).toEqual(undefined);
+  });
 });
