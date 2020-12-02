@@ -13,6 +13,10 @@ import { setSnackbar } from '../../actions/appActions';
 
 import { decodeSessionToken } from '../../helpers';
 
+// see https://github.com/mendersoftware/go-lib-micro/tree/master/ws
+//     for the description of proto_header and the consts
+// *Note*: this needs to be aligned with mender-shell and deviceconnect.
+const MessageProtocolShell = 1;
 const MessageTypeShell = 'shell';
 const MessageTypeNew = 'new';
 const MessageTypeStop = 'stop';
@@ -26,7 +30,9 @@ export const Terminal = props => {
   const userId = decodeSessionToken(cookies.get('JWT'));
 
   const onData = data => {
-    const msg = { type: MessageTypeShell, status: 0, session_id: sessionId, data: data };
+    const proto_header = { proto: MessageProtocolShell, typ: MessageTypeShell, sid: sessionId, props: null };
+    const msg = { hdr: proto_header, body: data };
+
     const encodedData = MessagePack.encode(msg);
     socket.send(encodedData);
   };
@@ -45,7 +51,8 @@ export const Terminal = props => {
     socket.onopen = () => {
       setSnackbar('Connection with the device established.', 5000);
       //
-      const msg = { type: MessageTypeNew, status: 0, session_id: null, data: userId };
+      const proto_header = { proto: MessageProtocolShell, typ: MessageTypeNew, sid: null, props: null };
+      const msg = { hdr: proto_header, body: userId };
       const encodedData = MessagePack.encode(msg);
       socket.send(encodedData);
     };
@@ -65,12 +72,12 @@ export const Terminal = props => {
     socket.onmessage = event => {
       event.data.arrayBuffer().then(function (data) {
         const obj = MessagePack.decode(data);
-        if (obj.type === MessageTypeNew) {
-          setSessionId(obj.session_id);
-        } else if (obj.type === MessageTypeShell) {
+        if (obj.hdr.typ === MessageTypeNew) {
+          setSessionId(obj.hdr.sid);
+        } else if (obj.hdr.typ === MessageTypeShell) {
           var myString = '';
-          for (var i = 0; i < obj.data.byteLength; i++) {
-            myString += String.fromCharCode(obj.data[i]);
+          for (var i = 0; i < obj.body.byteLength; i++) {
+            myString += String.fromCharCode(obj.body[i]);
           }
           term.write(myString);
         }
@@ -104,10 +111,10 @@ export const TerminalDialog = props => {
   const { open, onCancel, deviceId, setSnackbar } = props;
 
   const onClose = () => {
-    const msg = { type: MessageTypeStop, status: 0, session_id: sessionId };
+    const proto_header = { proto: 1, typ: MessageTypeStop, sid: sessionId, props: null };
+    const msg = { hdr: proto_header, body: null };
     const encodedData = MessagePack.encode(msg);
     socket.send(encodedData);
-    //
     setSocket(null);
     onCancel();
   };
