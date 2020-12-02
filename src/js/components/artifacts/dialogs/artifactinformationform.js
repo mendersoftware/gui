@@ -9,7 +9,7 @@ import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { duplicateFilter, unionizeStrings } from '../../../helpers';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 
-const ReleaseTooltip = () => (
+export const ReleaseTooltip = () => (
   <div style={{ fontSize: 12 }}>
     <p>
       If a Release with this name already exists, this new Artifact may be grouped into a Release with other Artifacts of the same name - so long as they are
@@ -94,6 +94,7 @@ export class ArtifactInformation extends React.Component {
           options={deviceTypes}
           renderInput={params => (
             <TextField
+              className="device-types-input"
               {...params}
               defaultValue={customDeviceTypes}
               fullWidth
@@ -119,6 +120,7 @@ export class ArtifactInformation extends React.Component {
           </InputLabel>
           <Input
             defaultValue={name}
+            className="release-name-input"
             id="release-name"
             placeholder="A descriptive name for the software"
             onChange={e => updateCreation({ name: e.target.value })}

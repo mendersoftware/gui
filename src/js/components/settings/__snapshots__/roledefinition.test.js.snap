@@ -1,0 +1,338 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Roles Component renders correctly 1`] = `
+<div
+  className="MuiCollapse-container margin-right-small filter-wrapper MuiCollapse-entered"
+  style={
+    Object {
+      "minHeight": "0px",
+    }
+  }
+>
+  <div
+    className="MuiCollapse-wrapper"
+  >
+    <div
+      className="MuiCollapse-wrapperInner margin-bottom-small margin-right"
+    >
+      <h4
+        style={
+          Object {
+            "marginTop": 5,
+          }
+        }
+      >
+        Add a
+         role
+      </h4>
+      <div
+        className="MuiFormControl-root"
+        style={
+          Object {
+            "marginTop": "0",
+          }
+        }
+      >
+        <div
+          className="MuiFormControl-root MuiTextField-root"
+          style={
+            Object {
+              "marginRight": 30,
+              "marginTop": 0,
+            }
+          }
+        >
+          <label
+            className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+            data-shrink={false}
+            htmlFor="role-name"
+            id="role-name-label"
+          >
+            Role name
+          </label>
+          <div
+            className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+            onClick={[Function]}
+          >
+            <input
+              aria-invalid={false}
+              autoFocus={false}
+              className="MuiInputBase-input MuiInput-input"
+              disabled={false}
+              id="role-name"
+              onAnimationStart={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        className="MuiFormControl-root MuiTextField-root"
+        style={
+          Object {
+            "marginRight": 30,
+            "marginTop": 0,
+          }
+        }
+      >
+        <label
+          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+          data-shrink={false}
+          htmlFor="role-description"
+          id="role-description-label"
+        >
+          Description
+        </label>
+        <div
+          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+          onClick={[Function]}
+        >
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiInput-input"
+            disabled={false}
+            id="role-description"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder="-"
+            required={false}
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <div>
+        <label
+          className="MuiFormControlLabel-root"
+        >
+          <span
+            aria-disabled={false}
+            className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
+            onBlur={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={null}
+          >
+            <span
+              className="MuiIconButton-label"
+            >
+              <input
+                className="PrivateSwitchBase-input-4"
+                data-indeterminate={false}
+                onChange={[Function]}
+                type="checkbox"
+              />
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                />
+              </svg>
+            </span>
+          </span>
+          <span
+            className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+          >
+            Allow to manage other users
+          </span>
+        </label>
+      </div>
+      <div
+        className="flexbox column margin-top-small"
+      >
+        <div>
+          Device group permission
+        </div>
+        <label
+          className="MuiFormControlLabel-root"
+          style={
+            Object {
+              "marginLeft": 0,
+              "marginTop": 0,
+            }
+          }
+        >
+          <span
+            aria-disabled={false}
+            className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
+            onBlur={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={null}
+          >
+            <span
+              className="MuiIconButton-label"
+            >
+              <input
+                checked={false}
+                className="PrivateSwitchBase-input-4"
+                data-indeterminate={false}
+                onChange={[Function]}
+                type="checkbox"
+              />
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                />
+              </svg>
+            </span>
+          </span>
+          <span
+            className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+          >
+            testGroup
+          </span>
+        </label>
+        <label
+          className="MuiFormControlLabel-root"
+          style={
+            Object {
+              "marginLeft": 0,
+              "marginTop": 0,
+            }
+          }
+        >
+          <span
+            aria-disabled={false}
+            className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
+            onBlur={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={null}
+          >
+            <span
+              className="MuiIconButton-label"
+            >
+              <input
+                checked={false}
+                className="PrivateSwitchBase-input-4"
+                data-indeterminate={false}
+                onChange={[Function]}
+                type="checkbox"
+              />
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                />
+              </svg>
+            </span>
+          </span>
+          <span
+            className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+          >
+            testGroupDynamic
+          </span>
+        </label>
+      </div>
+      <div
+        className="flexbox centered"
+        style={
+          Object {
+            "justifyContent": "flex-end",
+          }
+        }
+      >
+        <button
+          className="MuiButtonBase-root MuiButton-root MuiButton-text"
+          disabled={false}
+          onBlur={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          style={
+            Object {
+              "marginRight": 15,
+            }
+          }
+          tabIndex={0}
+          type="button"
+        >
+          <span
+            className="MuiButton-label"
+          >
+            Cancel
+          </span>
+        </button>
+        <button
+          className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary Mui-disabled Mui-disabled"
+          disabled={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex={-1}
+          target="_blank"
+          type="button"
+        >
+          <span
+            className="MuiButton-label"
+          >
+            Submit
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
