@@ -10,6 +10,47 @@ import Loader from '../common/loader';
 
 const padder = <div key="padder" style={{ flexGrow: 1 }}></div>;
 
+export const getConfirmationMessage = (status, device, authset) => {
+  let message = '';
+  if (status === DEVICE_STATES.accepted) {
+    message = 'By accepting, the device with this identity data and public key will be granted authentication by the server.';
+    if (device.status === DEVICE_STATES.accepted) {
+      // if device already accepted, and you are accepting a different authset:
+      message = `${message} The previously accepted public key will be rejected automatically in favor of this new key.`;
+    }
+  } else if (status === DEVICE_STATES.rejected) {
+    message = 'The device with this identity data and public key will be rejected, and blocked from communicating with the Mender server.';
+    if (device.status === DEVICE_STATES.accepted && authset.status !== DEVICE_STATES.accepted) {
+      // if device is accepted but you are rejecting an authset that is not accepted, device status is unaffected:
+      message = `${message} Rejecting this request will not affect the device status as it is using a different key. `;
+    }
+  } else if (status === 'dismiss') {
+    if (authset.status === DEVICE_STATES.preauth) {
+      message = 'The device authentication set will be removed from the preauthorization list.';
+    } else if (authset.status === DEVICE_STATES.accepted) {
+      if (device.auth_sets.length > 1) {
+        // if there are other authsets, device will still be in UI
+        message = 'The device with this public key will no longer be accepted, and this authorization request will be removed from the UI.';
+      } else {
+        message =
+          'The device with this public key will no longer be accepted, and will be removed from the UI. If it makes another request in the future, it will show again as pending for you to accept or reject at that time.';
+      }
+    } else if (authset.status === DEVICE_STATES.pending) {
+      message = 'You can dismiss this authentication request for now.';
+      if (device.auth_sets.length > 1) {
+        // it has other authsets
+        message = `${message} This will remove this request from the UI, but won’t affect the device.`;
+      } else {
+        message = `${message} The device will be removed from the UI, but if the same device asks for authentication again in the future, it will show again as pending.`;
+      }
+    } else if (authset.status === DEVICE_STATES.rejected) {
+      message =
+        'This request will be removed from the UI, but if the device asks for authentication again in the future, it will show as pending for you to accept or reject it at that time.';
+    }
+  }
+  return message;
+};
+
 const AuthsetListItem = ({ authset, confirm, device, isActive, isExpanded, limitMaxed, loading, onExpand, total }) => {
   const [showKey, setShowKey] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState('');
@@ -35,43 +76,7 @@ const AuthsetListItem = ({ authset, confirm, device, isActive, isExpanded, limit
   };
 
   const onConfirm = status => {
-    let message = '';
-    if (status === DEVICE_STATES.accepted) {
-      message = 'By accepting, the device with this identity data and public key will be granted authentication by the server.';
-      if (device.status === DEVICE_STATES.accepted) {
-        // if device already accepted, and you are accepting a different authset:
-        message = `${message} The previously accepted public key will be rejected automatically in favor of this new key.`;
-      }
-    } else if (status === DEVICE_STATES.rejected) {
-      message = 'The device with this identity data and public key will be rejected, and blocked from communicating with the Mender server.';
-      if (device.status === DEVICE_STATES.accepted && authset.status !== DEVICE_STATES.accepted) {
-        // if device is accepted but you are rejecting an authset that is not accepted, device status is unaffected:
-        message = `${message} Rejecting this request will not affect the device status as it is using a different key. `;
-      }
-    } else if (status === 'dismiss') {
-      if (authset.status === DEVICE_STATES.preauth) {
-        message = 'The device authentication set will be removed from the preauthorization list.';
-      } else if (authset.status === DEVICE_STATES.accepted) {
-        if (device.auth_sets.length > 1) {
-          // if there are other authsets, device will still be in UI
-          message = 'The device with this public key will no longer be accepted, and this authorization request will be removed from the UI.';
-        } else {
-          message =
-            'The device with this public key will no longer be accepted, and will be removed from the UI. If it makes another request in the future, it will show again as pending for you to accept or reject at that time.';
-        }
-      } else if (authset.status === DEVICE_STATES.pending) {
-        message = 'You can dismiss this authentication request for now.';
-        if (device.auth_sets.length > 1) {
-          // it has other authsets
-          message = `${message} This will remove this request from the UI, but won’t affect the device.`;
-        } else {
-          message = `${message} The device will be removed from the UI, but if the same device asks for authentication again in the future, it will show again as pending.`;
-        }
-      } else if (authset.status === DEVICE_STATES.rejected) {
-        message =
-          'This request will be removed from the UI, but if the device asks for authentication again in the future, it will show as pending for you to accept or reject it at that time.';
-      }
-    }
+    let message = getConfirmationMessage(status, device, authset);
     setConfirmMessage(message);
     setNewStatus(status);
     setShowKey(false);

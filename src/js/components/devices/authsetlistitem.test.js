@@ -1,7 +1,8 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import AuthsetListItem from './authsetlistitem';
+import AuthsetListItem, { getConfirmationMessage } from './authsetlistitem';
 import { undefineds } from '../../../../tests/mockData';
+import { DEVICE_STATES } from '../../constants/deviceConstants';
 
 describe('AuthsetList Component', () => {
   it('renders correctly', () => {
@@ -50,5 +51,42 @@ gnr0OSIDwEL31l+12DbAQ9+ANv6TLpWNfLpX0E6IStkZAgMBAAE=
       .toJSON();
     expect(tree).toMatchSnapshot();
     expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+  });
+  it('shows proper confirmation messages depending on device auth status', () => {
+    expect(
+      getConfirmationMessage(DEVICE_STATES.accepted, { status: DEVICE_STATES.accepted, auth_sets: [1, 2, 3] }, { status: DEVICE_STATES.accepted })
+    ).toEqual(
+      'By accepting, the device with this identity data and public key will be granted authentication by the server. The previously accepted public key will be rejected automatically in favor of this new key.'
+    );
+    expect(getConfirmationMessage(DEVICE_STATES.accepted, { status: DEVICE_STATES.pending, auth_sets: [1] }, { status: DEVICE_STATES.pending })).toEqual(
+      'By accepting, the device with this identity data and public key will be granted authentication by the server.'
+    );
+    expect(getConfirmationMessage(DEVICE_STATES.accepted, { status: DEVICE_STATES.accepted, auth_sets: [1] }, { status: DEVICE_STATES.rejected })).toEqual(
+      'By accepting, the device with this identity data and public key will be granted authentication by the server. The previously accepted public key will be rejected automatically in favor of this new key.'
+    );
+    expect(getConfirmationMessage(DEVICE_STATES.rejected, { status: DEVICE_STATES.accepted, auth_sets: [1] }, { status: DEVICE_STATES.accepted })).toEqual(
+      'The device with this identity data and public key will be rejected, and blocked from communicating with the Mender server.'
+    );
+    expect(getConfirmationMessage(DEVICE_STATES.rejected, { status: DEVICE_STATES.accepted, auth_sets: [1] }, { status: DEVICE_STATES.pending })).toEqual(
+      'The device with this identity data and public key will be rejected, and blocked from communicating with the Mender server. Rejecting this request will not affect the device status as it is using a different key. '
+    );
+    expect(getConfirmationMessage('dismiss', { status: DEVICE_STATES.accepted, auth_sets: [1] }, { status: DEVICE_STATES.preauth })).toEqual(
+      'The device authentication set will be removed from the preauthorization list.'
+    );
+    expect(getConfirmationMessage('dismiss', { status: DEVICE_STATES.accepted, auth_sets: [1] }, { status: DEVICE_STATES.accepted })).toEqual(
+      'The device with this public key will no longer be accepted, and will be removed from the UI. If it makes another request in the future, it will show again as pending for you to accept or reject at that time.'
+    );
+    expect(getConfirmationMessage('dismiss', { status: DEVICE_STATES.accepted, auth_sets: [1, 2] }, { status: DEVICE_STATES.accepted })).toEqual(
+      'The device with this public key will no longer be accepted, and this authorization request will be removed from the UI.'
+    );
+    expect(getConfirmationMessage('dismiss', { status: DEVICE_STATES.accepted, auth_sets: [1] }, { status: DEVICE_STATES.pending })).toEqual(
+      'You can dismiss this authentication request for now. The device will be removed from the UI, but if the same device asks for authentication again in the future, it will show again as pending.'
+    );
+    expect(getConfirmationMessage('dismiss', { status: DEVICE_STATES.accepted, auth_sets: [1, 2] }, { status: DEVICE_STATES.pending })).toEqual(
+      'You can dismiss this authentication request for now. This will remove this request from the UI, but won’t affect the device.'
+    );
+    expect(getConfirmationMessage('dismiss', { status: DEVICE_STATES.accepted, auth_sets: [1, 2] }, { status: DEVICE_STATES.rejected })).toEqual(
+      'This request will be removed from the UI, but if the device asks for authentication again in the future, it will show as pending for you to accept or reject it at that time.'
+    );
   });
 });
