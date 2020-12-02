@@ -24,15 +24,18 @@ export const DeploymentCompleteTip = ({ advanceOnboarding, setShowCreateArtifact
     onClose();
   };
 
-  const loading = !url;
-  return (
+  return !url ? (
+    <Loader show={true} />
+  ) : (
     <div>
       <p>Fantastic! You completed your first deployment!</p>
       <p>Your deployment is finished and your device is now running the updated software!</p>
-      <div className="flexbox centered">{loading ? <Loader show={true} /> : <Button variant="contained" onClick={onClick}>{`Go to ${url}`}</Button>}</div>
+      <div className="flexbox centered">
+        <Button variant="contained" onClick={onClick}>{`Go to ${url}`}</Button>
+      </div>
       <p>and you should see the demo web application actually being run on the device.</p>
       <p>NOTE: if you have local network restrictions, you may need to check them if you have difficulty loading the page.</p>
-      {loading ? <Loader show={true} /> : <a onClick={onClick}>Visit the web app running your device</a>}
+      <a onClick={onClick}>Visit the web app running your device</a>
     </div>
   );
 };
@@ -43,8 +46,6 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    acceptedDevices: state.devices.byStatus.accepted.deviceIds.map(id => state.devices.byId[id]),
-    currentUser: state.users.currentUser,
     url: getDemoDeviceAddress(state) || ownProps.targetUrl
   };
 };
