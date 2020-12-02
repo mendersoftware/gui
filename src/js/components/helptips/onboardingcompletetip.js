@@ -105,7 +105,6 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    acceptedDevices: state.devices.byStatus.accepted.deviceIds.map(id => state.devices.byId[id]),
     docsVersion: getDocsVersion(state),
     url: getDemoDeviceAddress(state) || ownProps.targetUrl
   };

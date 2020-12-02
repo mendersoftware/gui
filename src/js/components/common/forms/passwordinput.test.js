@@ -5,7 +5,7 @@ import { undefineds } from '../../../../../tests/mockData';
 
 describe('PasswordInput Component', () => {
   it('renders correctly', () => {
-    const tree = renderer.create(<PasswordInput attachToForm={() => {}} id="test" />).toJSON();
+    const tree = renderer.create(<PasswordInput attachToForm={() => {}} id="test" create={true} />).toJSON();
     expect(tree).toMatchSnapshot();
     expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });

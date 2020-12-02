@@ -11,15 +11,17 @@ import App from './components/app';
 import store from './reducers';
 import ErrorBoundary from './errorboundary';
 
-render(
-  <Provider store={store}>
-    <MuiThemeProvider theme={theme}>
-      <ErrorBoundary>
-        <Router basename="/ui/#">
-          <App />
-        </Router>
-      </ErrorBoundary>
-    </MuiThemeProvider>
-  </Provider>,
-  document.getElementById('main')
-);
+export const Main = () =>
+  render(
+    <Provider store={store}>
+      <MuiThemeProvider theme={theme}>
+        <ErrorBoundary>
+          <Router basename="/ui/#">
+            <App />
+          </Router>
+        </ErrorBoundary>
+      </MuiThemeProvider>
+    </Provider>,
+    document.getElementById('main') || document.createElement('div')
+  );
+Main();

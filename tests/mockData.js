@@ -124,8 +124,8 @@ export const defaultState = {
       rejected: { deviceIds: [], total: 0 }
     },
     filteringAttributes: {
-      identityAttributes: ['id_attribute'],
-      inventoryAttributes: []
+      identityAttributes: ['mac'],
+      inventoryAttributes: ['artifact_name']
     },
     filteringAttributesLimit: 10,
     filters: [],
@@ -211,7 +211,17 @@ export const defaultState = {
       a1: {
         Name: 'a1',
         Artifacts: [{ id: 'art1', description: 'test description', device_types_compatible: [], modified: '2020-09-10T12:16:22.667Z' }],
-        device_types_compatible: []
+        device_types_compatible: [],
+        artifact_depends: {
+          device_type: ['qemux86-64']
+        },
+        artifact_provides: {
+          artifact_name: 'myapp',
+          'data-partition.myapp.version': 'v2020.10',
+          list_of_fancy: ['qemux86-64', 'x172']
+        },
+        clears_artifact_provides: ['data-partition.myapp.*'],
+        metaData: {}
       }
     },
     selectedArtifact: null,

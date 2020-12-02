@@ -12,14 +12,20 @@ const mockStore = configureStore([thunk]);
 describe('CreateArtifactDialog Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({ ...defaultState });
+    store = mockStore({
+      ...defaultState,
+      onboarding: {
+        ...defaultState.onboarding,
+        showCreateArtifactDialog: undefined
+      }
+    });
   });
 
   it('renders correctly', () => {
     const tree = createMount()(
       <MemoryRouter>
         <Provider store={store}>
-          <CreateArtifactDialog open={true} />
+          <CreateArtifactDialog />
         </Provider>
       </MemoryRouter>
     );

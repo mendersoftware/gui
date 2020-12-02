@@ -18,7 +18,7 @@ describe('DeploymentCompleteTip Component', () => {
     const tree = renderer
       .create(
         <Provider store={store}>
-          <DeploymentCompleteTip />
+          <DeploymentCompleteTip targetUrl="https://test.com" />
         </Provider>
       )
       .toJSON();

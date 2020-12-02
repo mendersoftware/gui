@@ -14,7 +14,7 @@ exports[`BaseOnboardingTip Component renders correctly 1`] = `
     className="tooltip onboard-icon bottom"
     data-event="click focus"
     data-event-off="dblclick"
-    data-for="onboard-tip-1"
+    data-for="onboard-tip-test"
     data-tip={true}
   >
     <svg
@@ -31,7 +31,7 @@ exports[`BaseOnboardingTip Component renders correctly 1`] = `
   <div
     className="__react_component_tooltip place-bottom type-dark allow_click"
     data-id="tooltip"
-    id="onboard-tip-1"
+    id="onboard-tip-test"
   >
     <div />
     <div
