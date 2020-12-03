@@ -6,23 +6,30 @@ import {
   deepCompare,
   detectOsIdentifier,
   duplicateFilter,
+  extractSoftware,
+  extractSoftwareInformation,
   FileSize,
   formatPublicKey,
   formatTime,
   fullyDecodeURI,
+  generateDeploymentGroupDetails,
   getDebConfigurationCode,
   getDebInstallationCode,
   getDemoDeviceAddress,
   getDemoDeviceCreationCommand,
   getFormattedSize,
   getPhaseDeviceCount,
+  getRemainderPercent,
   hashString,
   isEmpty,
   mapDeviceAttributes,
   preformatWithRequestID,
+  standardizePhases,
   statusToPercentage,
   stringToBoolean,
+  tryMapDeployments,
   unionizeStrings,
+  validatePhases,
   versionCompare
 } from './helpers';
 import { defaultState, token, undefineds } from '../../tests/mockData';
@@ -67,6 +74,7 @@ describe('stringToBoolean function', () => {
     expect(stringToBoolean(true)).toEqual(true);
     expect(stringToBoolean('yes')).toEqual(true);
     expect(stringToBoolean('TRUE')).toEqual(true);
+    expect(stringToBoolean('something')).toEqual(true);
   });
   it('should convert truthy objects', () => {
     expect(stringToBoolean(0)).toEqual(false);
@@ -417,5 +425,171 @@ describe('statusToPercentage function', () => {
     expect(statusToPercentage(state, 100)).toEqual(99);
     expect(statusToPercentage(state, undefined)).toEqual(99);
     expect(statusToPercentage(state, null)).toEqual(75);
+  });
+});
+
+describe('extractSoftware function', () => {
+  it('works as expected', () => {
+    expect(
+      extractSoftware({
+        artifact_name: 'myapp',
+        'rootfs-image.version': 'stablev1-beta-final-v0',
+        'rootfs-image.checksum': '12341143',
+        'test.version': 'test-2',
+        'a.whole.lot.of.dots.version': 'test-3'
+      })
+    ).toEqual(['rootfs-image', 'test', 'a']);
+  });
+});
+
+describe('extractSoftwareInformation function', () => {
+  it('works as expected', () => {
+    expect(
+      extractSoftwareInformation(defaultState.releases.byId.a1.artifact_provides, undefined, ['Software filesystem', 'Software name', 'Software version'])
+    ).toEqual({
+      'data-partition': [
+        { primary: 'Software filesystem', priority: 0, secondary: 'data-partition' },
+        { primary: 'Software name', priority: 1, secondary: 'myapp' },
+        { primary: 'Software version', priority: 2, secondary: 'v2020.10' }
+      ]
+    });
+    expect(extractSoftwareInformation(defaultState.devices.byId.a1.attributes)).toEqual({});
+    expect(
+      extractSoftwareInformation({
+        artifact_name: 'myapp',
+        'rootfs-image.version': 'stablev1-beta-final-v0',
+        'rootfs-image.checksum': '12341143',
+        'test.version': 'test-2',
+        'a.whole.lot.of.dots.version': 'test-3',
+        'a.whole.lot.of.dots.more': 'test-4',
+        'even.more.dots.than.before.version': 'test-5',
+        'even.more.dots.than.before.more': 'test-6'
+      })
+    ).toEqual({
+      a: [
+        { primary: 'artifact_name', priority: 2, secondary: 'myapp' },
+        { primary: 'whole', priority: 6, secondary: 'test-3' },
+        { primary: 'whole', priority: 7, secondary: 'test-4' }
+      ],
+      even: [
+        { primary: 'more', priority: 8, secondary: 'test-5' },
+        { primary: 'more', priority: 9, secondary: 'test-6' }
+      ],
+      'rootfs-image': [
+        { primary: 'System filesystem', priority: 0, secondary: 'stablev1-beta-final-v0' },
+        { primary: 'checksum', priority: 1, secondary: '12341143' }
+      ],
+      test: [{ primary: 'test.version', priority: 3, secondary: 'test-2' }]
+    });
+  });
+});
+
+describe('generateDeploymentGroupDetails function', () => {
+  it('works as expected', () => {
+    expect(generateDeploymentGroupDetails({ terms: defaultState.devices.groups.byId.testGroupDynamic.filters }, 'testGroupDynamic')).toEqual(
+      'testGroupDynamic (group = things)'
+    );
+    expect(
+      generateDeploymentGroupDetails(
+        {
+          terms: [
+            { scope: 'system', key: 'group', operator: '$eq', value: 'things' },
+            { scope: 'system', key: 'group', operator: '$nexists', value: 'otherThings' },
+            { scope: 'system', key: 'group', operator: '$nin', value: 'a,small,list' }
+          ]
+        },
+        'testGroupDynamic'
+      )
+    ).toEqual(`testGroupDynamic (group = things, group doesn't exist otherThings, group not in a,small,list)`);
+    expect(generateDeploymentGroupDetails({ terms: undefined }, 'testGroupDynamic')).toEqual('testGroupDynamic');
+  });
+});
+
+describe('standardizePhases function', () => {
+  it('works as expected', () => {
+    const phases = [
+      { batch_size: 10, delay: 2, delayUnit: 'hours', start_ts: '2019-01-01T12:30:00.000Z' },
+      { batch_size: 10, delay: 2, start_ts: '2019-01-01T12:30:00.000Z' },
+      { batch_size: 10, start_ts: '2019-01-01T12:30:00.000Z' }
+    ];
+    expect(standardizePhases(phases)).toEqual([
+      { batch_size: 10, delay: 2, delayUnit: 'hours' },
+      { batch_size: 10, delay: 2, delayUnit: 'hours', start_ts: 1 },
+      { batch_size: 10, start_ts: 2 }
+    ]);
+  });
+});
+
+describe('getRemainderPercent function', () => {
+  const phases = [
+    { batch_size: 10, not: 'interested' },
+    { batch_size: 10, not: 'interested' },
+    { batch_size: 10, not: 'interested' }
+  ];
+  expect(getRemainderPercent(phases)).toEqual(80);
+  expect(
+    getRemainderPercent([
+      { batch_size: 10, not: 'interested' },
+      { batch_size: 90, not: 'interested' }
+    ])
+  ).toEqual(90);
+  expect(
+    getRemainderPercent([
+      { batch_size: 10, not: 'interested' },
+      { batch_size: 95, not: 'interested' }
+    ])
+  ).toEqual(90);
+  // this will be caught in the phase validation - should still be good to be fixed in the future
+  expect(
+    getRemainderPercent([
+      { batch_size: 50, not: 'interested' },
+      { batch_size: 55, not: 'interested' },
+      { batch_size: 95, not: 'interested' }
+    ])
+  ).toEqual(-5);
+});
+
+describe('validatePhases function', () => {
+  it('works as expected', () => {
+    const phases = [
+      { batch_size: 10, delay: 2, delayUnit: 'hours', start_ts: '2019-01-01T12:30:00.000Z' },
+      { batch_size: 10, delay: 2, start_ts: '2019-01-01T12:30:00.000Z' },
+      { batch_size: 10, start_ts: '2019-01-01T12:30:00.000Z' }
+    ];
+    expect(validatePhases(undefined, 10000, false)).toEqual(true);
+    expect(validatePhases(undefined, 10000, true)).toEqual(true);
+    expect(validatePhases(phases, 10, true)).toEqual(true);
+    expect(validatePhases(phases, 10, true)).toEqual(true);
+    expect(
+      validatePhases(
+        [
+          { batch_size: 50, not: 'interested' },
+          { batch_size: 55, not: 'interested' },
+          { batch_size: 95, not: 'interested' }
+        ],
+        10,
+        false
+      )
+    ).toEqual(false);
+    expect(
+      validatePhases(
+        [
+          { batch_size: 50, not: 'interested' },
+          { batch_size: 55, not: 'interested' },
+          { batch_size: 95, not: 'interested' }
+        ],
+        100,
+        true
+      )
+    ).toEqual(true);
+  });
+});
+
+describe('tryMapDeployments function', () => {
+  it('works as expected', () => {
+    expect(Object.keys(defaultState.deployments.byId).reduce(tryMapDeployments, { state: { ...defaultState }, deployments: [] }).deployments).toEqual(
+      Object.values(defaultState.deployments.byId)
+    );
+    expect(['unknownDeploymentId'].reduce(tryMapDeployments, { state: { ...defaultState }, deployments: [] }).deployments).toEqual([]);
   });
 });

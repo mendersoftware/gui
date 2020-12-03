@@ -14,7 +14,7 @@ import { saveGlobalSettings } from '../../actions/userActions';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getIsEnterprise } from '../../selectors';
-import { getRemainderPercent } from '../../helpers';
+import { validatePhases } from '../../helpers';
 
 export const allDevices = 'All devices';
 
@@ -61,20 +61,6 @@ export class CreateDialog extends React.Component {
     this.setState({ [property]: value });
   }
 
-  validatePhases(phases, deploymentDeviceCount, hasFilter) {
-    if (!phases) {
-      return true;
-    }
-    const remainder = getRemainderPercent(phases);
-    return phases.reduce((accu, phase) => {
-      if (!accu) {
-        return accu;
-      }
-      const deviceCount = Math.floor((deploymentDeviceCount / 100) * (phase.batch_size || remainder));
-      return !(deviceCount < 1) || hasFilter;
-    }, true);
-  }
-
   cleanUpDeploymentsStatus() {
     this.props.selectDevice();
     this.props.selectRelease();
@@ -101,6 +87,7 @@ export class CreateDialog extends React.Component {
     this.cleanUpDeploymentsStatus();
     this.props.onDismiss();
   }
+
   render() {
     const self = this;
     const { device, deploymentObject, groups, release } = self.props;
@@ -116,7 +103,7 @@ export class CreateDialog extends React.Component {
       release: deploymentObject.release || release || self.state.release,
       retries: deploymentObject.retries || retries
     };
-    const disableSchedule = !self.validatePhases(phases, deploymentSettings.deploymentDeviceCount, deploymentSettings.filterId);
+    const disableSchedule = !validatePhases(phases, deploymentSettings.deploymentDeviceCount, deploymentSettings.filterId);
     const disabled =
       activeStep === 0
         ? !(
