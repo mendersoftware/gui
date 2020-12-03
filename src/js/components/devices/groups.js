@@ -1,9 +1,8 @@
 import React from 'react';
-import ReactTooltip from 'react-tooltip';
 
 // material ui
 import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@material-ui/core';
-import { Help as HelpIcon, InfoOutlined as InfoIcon } from '@material-ui/icons';
+import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import { AddGroup } from '../helptips/helptooltips';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
@@ -74,16 +73,7 @@ export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, se
         </ListItem>
       </List>
 
-      {showHelptips && acceptedCount && groups.length <= 1 ? (
-        <div>
-          <div id="onboard-5" className="tooltip help" data-tip data-for="groups-tip" data-event="click focus" style={{ bottom: '-10px' }}>
-            <HelpIcon />
-          </div>
-          <ReactTooltip id="groups-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-            <AddGroup />
-          </ReactTooltip>
-        </div>
-      ) : null}
+      {showHelptips && acceptedCount && groups.length <= 1 ? <AddGroup /> : null}
     </div>
   );
 };

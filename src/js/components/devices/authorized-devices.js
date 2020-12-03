@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import ReactTooltip from 'react-tooltip';
 
 import pluralize from 'pluralize';
 
@@ -14,7 +13,6 @@ import {
   Autorenew as AutorenewIcon,
   Delete as DeleteIcon,
   FilterList as FilterListIcon,
-  Help as HelpIcon,
   HeightOutlined as HeightOutlinedIcon,
   HighlightOffOutlined as HighlightOffOutlinedIcon,
   LockOutlined
@@ -221,7 +219,6 @@ export class Authorized extends React.Component {
       filters,
       groupCount,
       groupFilters,
-      highlightHelp,
       idAttribute,
       onboardingState,
       onGroupClick,
@@ -335,33 +332,19 @@ export class Authorized extends React.Component {
               pageTotal={groupCount}
               refreshDevices={shouldUpdate => self._getDevices(shouldUpdate)}
             />
-            {showHelptips && (
-              <div>
-                <div
-                  id="onboard-6"
-                  className="tooltip help"
-                  data-tip
-                  data-for="expand-device-tip"
-                  data-event="click focus"
-                  style={{ left: 'inherit', right: '45px' }}
-                >
-                  <HelpIcon />
-                </div>
-                <ReactTooltip id="expand-device-tip" globalEventOff="click" place="left" type="light" effect="solid" className="react-tooltip">
-                  <ExpandDevice />
-                </ReactTooltip>
-              </div>
-            )}
+            {showHelptips && <ExpandDevice />}
           </div>
         ) : (
           !loading && (
             <div className="dashboard-placeholder">
               <p>No devices found</p>
-              {!allCount ? <p>No devices have been authorized to connect to the Mender server yet.</p> : null}
-              {highlightHelp && (
-                <p>
-                  Visit the <Link to="/help/getting-started">Help section</Link> to learn how to connect devices to the Mender server.
-                </p>
+              {!allCount && (
+                <>
+                  <p>No devices have been authorized to connect to the Mender server yet.</p>
+                  <p>
+                    Visit the <Link to="/help/getting-started">Help section</Link> to learn how to connect devices to the Mender server.
+                  </p>
+                </>
               )}
             </div>
           )

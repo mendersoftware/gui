@@ -1,10 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Time from 'react-time';
-import ReactTooltip from 'react-tooltip';
 
 import { Button, Icon, List, Typography, SvgIcon } from '@material-ui/core';
-import { Block as BlockIcon, Check as CheckIcon, CheckCircle as CheckCircleIcon, Help as HelpIcon, Warning as WarningIcon } from '@material-ui/icons';
+import { Block as BlockIcon, Check as CheckIcon, CheckCircle as CheckCircleIcon, Warning as WarningIcon } from '@material-ui/icons';
 import { mdiConsole as ConsoleIcon } from '@mdi/js';
 
 import pendingIcon from '../../../assets/img/pending_status.png';
@@ -221,23 +220,7 @@ export class ExpandedDevice extends React.Component {
     return (
       <div className={className}>
         {deviceInfo}
-        {showHelptips && status === DEVICE_STATES.pending ? (
-          <div>
-            <div
-              id="onboard-4"
-              className={highlightHelp ? 'tooltip help highlight' : 'tooltip help'}
-              data-tip
-              data-for="auth-button-tip"
-              data-event="click focus"
-              style={{ left: '580px', top: '178px' }}
-            >
-              <HelpIcon />
-            </div>
-            <ReactTooltip id="auth-button-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-              <AuthButton devices={[device]} />
-            </ReactTooltip>
-          </div>
-        ) : null}
+        {showHelptips && status === DEVICE_STATES.pending ? <AuthButton highlightHelp={highlightHelp} /> : null}
 
         <AuthsetsDialog
           dialogToggle={shouldUpdate => this.toggleAuthsets(false, shouldUpdate)}

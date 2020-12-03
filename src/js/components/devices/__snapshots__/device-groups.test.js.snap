@@ -32,6 +32,98 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           onTouchMove={[Function]}
           onTouchStart={[Function]}
           role="button"
+          style={Object {}}
+          tabIndex={0}
+        >
+          <div
+            className="MuiListItemText-root"
+          >
+            <span
+              className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+            >
+              All devices
+            </span>
+          </div>
+          <span
+            className="MuiTouchRipple-root"
+          />
+        </div>
+        <li
+          className="MuiListSubheader-root heading-lined"
+          style={
+            Object {
+              "color": "#aaaaaa",
+              "height": 48,
+            }
+          }
+        >
+          <span>
+            Dynamic
+          </span>
+          <div />
+        </li>
+        <div
+          aria-disabled={false}
+          className="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-button"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          role="button"
+          style={Object {}}
+          tabIndex={0}
+        >
+          <div
+            className="MuiListItemText-root"
+          >
+            <span
+              className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+            >
+              testGroupDynamic
+            </span>
+          </div>
+          <span
+            className="MuiTouchRipple-root"
+          />
+        </div>
+        <li
+          className="MuiListSubheader-root heading-lined"
+          style={
+            Object {
+              "color": "#aaaaaa",
+              "height": 48,
+            }
+          }
+        >
+          <span>
+            Static
+          </span>
+          <div />
+        </li>
+        <div
+          aria-disabled={false}
+          className="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-button"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          role="button"
           style={
             Object {
               "backgroundColor": "#e7e7e7",
@@ -45,7 +137,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             <span
               className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
             >
-              All devices
+              testGroup
             </span>
           </div>
           <span
@@ -138,60 +230,75 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             <h2
               className="margin-right"
             >
-              All devices
+              testGroup
             </h2>
-            <div
-              className="flexbox centered "
+            <p
+              className="info flexbox centered"
             >
-              <button
-                className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
-                disabled={false}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "backgroundColor": "transparent",
-                  }
-                }
-                tabIndex={0}
-                type="button"
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"
+                />
+              </svg>
+              <span>
+                Static
+              </span>
+            </p>
+          </div>
+          <div
+            className="flexbox centered"
+          >
+            <button
+              className="MuiButtonBase-root MuiButton-root MuiButton-text"
+              disabled={false}
+              onBlur={[Function]}
+              onClick={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              tabIndex={0}
+              type="button"
+            >
+              <span
+                className="MuiButton-label"
               >
                 <span
-                  className="MuiButton-label"
+                  className="MuiButton-startIcon MuiButton-iconSizeMedium"
                 >
-                  <span
-                    className="MuiButton-startIcon MuiButton-iconSizeMedium"
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
                   >
-                    <svg
-                      aria-hidden={true}
-                      className="MuiSvgIcon-root"
-                      focusable="false"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
-                      />
-                    </svg>
-                  </span>
-                  Filters
+                    <path
+                      d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+                    />
+                  </svg>
                 </span>
-              </button>
-            </div>
+                Remove group
+              </span>
+              <span
+                className="MuiTouchRipple-root"
+              />
+            </button>
           </div>
         </div>
       </div>
       <div
-        className="loaderContainer"
+        className="loaderContainer shrunk"
       >
         <div
           className="loader"
@@ -209,6 +316,26 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             className="dot dot_4"
           />
         </div>
+      </div>
+      <div
+        className="dashboard-placeholder"
+      >
+        <p>
+          No devices found
+        </p>
+        <p>
+          No devices have been authorized to connect to the Mender server yet.
+        </p>
+        <p>
+          Visit the 
+          <a
+            href="/help/getting-started"
+            onClick={[Function]}
+          >
+            Help section
+          </a>
+           to learn how to connect devices to the Mender server.
+        </p>
       </div>
     </div>
   </div>

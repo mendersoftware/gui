@@ -1,11 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
-import ReactTooltip from 'react-tooltip';
 
 // material ui
 import { Button, Tooltip, Typography } from '@material-ui/core';
-import { Help as HelpIcon, Sort as SortIcon } from '@material-ui/icons';
+import { Sort as SortIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
@@ -202,16 +201,7 @@ export class ReleaseRepository extends React.Component {
           ) : null}
           {!!onboardingComponent && onboardingComponent}
 
-          {showHelptips && items.length ? (
-            <div>
-              <div id="onboard-10" className="tooltip help" data-tip data-for="artifact-expand-tip" data-event="click focus">
-                <HelpIcon />
-              </div>
-              <ReactTooltip id="artifact-expand-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-                <ExpandArtifact />
-              </ReactTooltip>
-            </div>
-          ) : null}
+          {showHelptips && items.length ? <ExpandArtifact /> : null}
 
           {!items.length && (
             <div className="dashboard-placeholder fadeIn" style={{ fontSize: '16px', margin: '8vh auto' }} ref={ref => (self.dropzoneRef = ref)}>

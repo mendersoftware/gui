@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
@@ -17,7 +18,7 @@ describe('DeviceGroups Component', () => {
         ...defaultState.devices,
         groups: {
           ...defaultState.devices.groups,
-          byId: {}
+          selectedGroup: 'testGroup'
         }
       }
     });
@@ -26,9 +27,11 @@ describe('DeviceGroups Component', () => {
   it('renders correctly', () => {
     const tree = renderer
       .create(
-        <Provider store={store}>
-          <DeviceGroups />
-        </Provider>
+        <MemoryRouter>
+          <Provider store={store}>
+            <DeviceGroups />
+          </Provider>
+        </MemoryRouter>
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
