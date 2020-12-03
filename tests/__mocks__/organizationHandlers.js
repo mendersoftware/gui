@@ -37,5 +37,20 @@ export const organizationHandlers = [
   }),
   rest.get(`${auditLogsApiUrl}/logs`, (req, res, ctx) => {
     return res(ctx.set(headerNames.total, defaultState.organization.events.length), ctx.json(defaultState.organization.events));
+  }),
+  rest.get(`${auditLogsApiUrl}/logs/export`, (req, res, ctx) => {
+    return res(
+      ctx.text(`action,actor.id,actor.type,actor.email,actor.identity_data,object.id,object.type,object.user.email,object.deployment.name,object.deployment.artifact_name,change
+    update,5c56c2ed-2a9a-5de9-bb86-cf38b3d4a5e1,user,test@example.coim,,067f23a9-76a5-5585-b119-32402a120978,user,test@example.com,,,"Update user 067f23a9-76a5-5585-b119-32402a120978 (test@example.com).
+    Diff:
+    --- Original
+    +++ Current
+    @@ -9 +9,2 @@
+    -    ""RBAC_ROLE_OBSERVER""
+    +    ""RBAC_ROLE_OBSERVER"",
+    +    ""RBAC_ROLE_PERMIT_ALL""
+    "
+    `)
+    );
   })
 ];

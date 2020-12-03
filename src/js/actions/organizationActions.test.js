@@ -10,8 +10,8 @@ import {
   confirmCardUpdate,
   completeUpgrade,
   createOrganizationTrial,
-  getAllAuditLogs,
   getAuditLogs,
+  getAuditLogsCsv,
   getCurrentCard,
   getUserOrganization,
   startCardUpdate,
@@ -21,7 +21,7 @@ import {
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-describe('cancelRequest', () => {
+describe('organization actions', () => {
   it('should handle different error message formats', () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
@@ -38,10 +38,8 @@ describe('cancelRequest', () => {
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
-});
 
-describe('createOrganizationTrial', () => {
-  it('should handle different error message formats', () => {
+  it('should handle trial creation', () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [];
@@ -61,10 +59,8 @@ describe('createOrganizationTrial', () => {
         expect(store.getActions()).toHaveLength(expectedActions.length);
       });
   });
-});
 
-describe('getCurrentCard', () => {
-  it('should handle different error message formats', () => {
+  it('should handle credit card details retrieval', () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
@@ -79,10 +75,8 @@ describe('getCurrentCard', () => {
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
-});
 
-describe('getUserOrganization', () => {
-  it('should handle different error message formats', () => {
+  it('should handle organization retrieval', () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
@@ -97,34 +91,26 @@ describe('getUserOrganization', () => {
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
-});
 
-describe('startUpgrade', () => {
-  it('should handle different error message formats', () => {
+  it('should handle account upgrade init', () => {
     const store = mockStore({ ...defaultState });
     store.dispatch(startUpgrade(defaultState.organization.organization.id)).then(secret => {
       expect(store.getActions()).toHaveLength(0);
       expect(secret).toEqual('testSecret');
     });
   });
-});
 
-describe('cancelUpgrade', () => {
-  it('should handle different error message formats', () => {
+  it('should handle account upgrade cancelling', () => {
     const store = mockStore({ ...defaultState });
     store.dispatch(cancelUpgrade(defaultState.organization.organization.id)).then(() => expect(store.getActions()).toHaveLength(0));
   });
-});
 
-describe('completeUpgrade', () => {
-  it('should handle different error message formats', () => {
+  it('should handle account upgrade completion', () => {
     const store = mockStore({ ...defaultState });
     store.dispatch(completeUpgrade(defaultState.organization.organization.id, 'enterprise')).then(() => expect(store.getActions()).toHaveLength(0));
   });
-});
 
-describe('startCardUpdate', () => {
-  it('should handle different error message formats', () => {
+  it('should handle confirm card update initialization', () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
@@ -140,10 +126,8 @@ describe('startCardUpdate', () => {
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
-});
 
-describe('confirmCardUpdate', () => {
-  it('should handle different error message formats', () => {
+  it('should handle confirm card update confirmation', () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
@@ -167,10 +151,8 @@ describe('confirmCardUpdate', () => {
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
-});
 
-describe('getAuditLogs', () => {
-  it('should handle different error message formats', () => {
+  it('should handle auditlog retrieval', () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
@@ -188,13 +170,11 @@ describe('getAuditLogs', () => {
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
-});
 
-describe('getAllAuditLogs', () => {
-  it('should handle different error message formats', () => {
+  it('should handle csv information download', () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
-    const request = store.dispatch(getAllAuditLogs());
+    const request = store.dispatch(getAuditLogsCsv());
     expect(request).resolves.toBeTruthy();
     request.then(events => {
       const storeActions = store.getActions();
