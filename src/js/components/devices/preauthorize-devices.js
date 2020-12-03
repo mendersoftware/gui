@@ -7,6 +7,7 @@ import { Button } from '@material-ui/core';
 import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import preauthImage from '../../../assets/img/preauthorize.png';
+import { setSnackbar } from '../../actions/appActions';
 import { getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
@@ -72,19 +73,9 @@ export class Preauthorize extends React.Component {
     this.setState({ openPreauth });
   }
 
-  _savePreauth(authset, close) {
-    var self = this;
-    self.props
-      .preauthDevice(authset)
-      .then(() => {
-        self._getDevices(true);
-        self.setState({ openPreauth: !close });
-      })
-      .catch(errortext => {
-        if (errortext) {
-          self.setState({ errortext });
-        }
-      });
+  onPreauthSaved(addMore) {
+    this._getDevices(true);
+    this.setState({ openPreauth: !addMore });
   }
 
   onSortChange(attribute) {
@@ -99,8 +90,8 @@ export class Preauthorize extends React.Component {
 
   render() {
     const self = this;
-    const { acceptedDevices, count, deviceLimit, devices, idAttribute, openSettingsDialog } = self.props;
-    const { errorMessage, openPreauth, pageLoading } = self.state;
+    const { acceptedDevices, count, deviceLimit, devices, idAttribute, openSettingsDialog, preauthDevice, setSnackbar } = self.props;
+    const { openPreauth, pageLoading } = self.state;
     const limitMaxed = deviceLimit && deviceLimit <= acceptedDevices;
 
     const columnHeaders = [
@@ -170,11 +161,11 @@ export class Preauthorize extends React.Component {
         {openPreauth && (
           <PreauthDialog
             deviceLimitWarning={deviceLimitWarning}
-            errortext={errorMessage}
             limitMaxed={limitMaxed}
-            onSubmit={(data, addMore) => self._savePreauth(data, addMore)}
+            preauthDevice={preauthDevice}
+            onSubmit={addMore => self.onPreauthSaved(addMore)}
             onCancel={() => self._togglePreauth(false)}
-            onChange={() => self.setState({ errorMessage: null })}
+            setSnackbar={setSnackbar}
           />
         )}
       </div>
@@ -182,7 +173,7 @@ export class Preauthorize extends React.Component {
   }
 }
 
-const actionCreators = { getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters };
+const actionCreators = { getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters, setSnackbar };
 
 const mapStateToProps = state => {
   return {
