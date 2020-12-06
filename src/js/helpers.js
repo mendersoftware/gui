@@ -427,11 +427,7 @@ export const standardizePhases = phases =>
     return standardizedPhase;
   });
 
-export const getDebInstallationCode = (
-  packageVersion,
-  noninteractive = false
-) => `wget https://d1b0l86ne08fsf.cloudfront.net/${packageVersion}/dist-packages/debian/armhf/mender-client_${packageVersion}-1_armhf.deb && \\
-${noninteractive ? 'DEBIAN_FRONTEND=noninteractive' : 'sudo'} dpkg -i --force-confdef --force-confold mender-client_${packageVersion}-1_armhf.deb`;
+export const getDebInstallationCode = () => `wget -q -O- https://get.mender.io/ | sudo bash`;
 
 export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token, packageVersion, deviceType = 'generic-armv6') => {
   let connectionInstructions = ``;
@@ -451,9 +447,9 @@ ${enterpriseSettings}`;
   } else {
     connectionInstructions = `${demoSettings}`;
   }
-  const debInstallationCode = getDebInstallationCode(packageVersion, true);
-  let codeToCopy = `sudo bash -c '${debInstallationCode} && \\
-DEVICE_TYPE="${deviceType}" && \\${
+  const debInstallationCode = getDebInstallationCode();
+  let codeToCopy = `${debInstallationCode} && \\
+sudo bash -c 'DEVICE_TYPE="${deviceType}" && \\${
     token
       ? `
 TENANT_TOKEN="${token}" && \\`
