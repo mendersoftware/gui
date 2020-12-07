@@ -70,6 +70,10 @@ body {
   color: @textmuted;
 }
 
+.link-color {
+  color: @linkgreen;
+}
+
 .warning {
   color: @errorStyleColor !important;
   font-size: 14px !important;
@@ -127,6 +131,10 @@ body {
 
 .bold {
   font-weight: bold;
+}
+
+.pre-line {
+  white-space: pre-line;
 }
 
 a,
@@ -1340,10 +1348,14 @@ div:focus {
   vertical-align: top;
   margin-right: 2%;
   margin-bottom: 10px;
-  width: 30%;
-  height: 150px;
+  width: 32%;
+  height: 190px;
   .transition(all 0.2s ease);
   cursor: pointer;
+
+  &:last-child {
+    margin-right: 0;
+  }
 
   &.active,
   &:hover {
@@ -1354,7 +1366,34 @@ div:focus {
   &.active {
     background-color: @lightestgrey;
   }
+
+  
+
 }
+
+.offerTag {
+  color: @linkgreen;
+  font-size: 12px;
+  svg {
+    width: .7em;
+    height: .7em;
+    vertical-align: middle;
+    margin-left: 4px;
+    margin-right: 2px;
+  }
+}
+
+.offerBox {
+  background-color: #337a87;
+  border-radius: 4px;
+  padding: 8px 12px;
+  color: #ffffff;
+  * {
+    color: inherit;
+    font-size: inherit;
+  }
+}
+
 
 /* stripe elements */
 #poweredByStripe {

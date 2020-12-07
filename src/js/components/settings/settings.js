@@ -50,12 +50,12 @@ export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, hi
     'user-management': { admin: false, enterprise: false, multitenancy: false, userManagement: true, component: <UserManagement />, text: 'User management' },
     'role-management': { admin: true, enterprise: true, multitenancy: false, userManagement: false, component: <Roles />, text: 'Roles' },
     upgrade: {
-      admin: false,
-      enterprise: false,
+      admin: true,
+      enterprise: true,
       multitenancy: true,
       trial: true,
-      userManagement: false,
-      component: <Upgrade history={history} />,
+      userManagement: true,
+      component: <Upgrade history={history} trial={trial} />,
       text: 'Upgrade to a plan'
     }
   };
@@ -106,7 +106,8 @@ export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, hi
 
 const mapStateToProps = state => {
   const currentUser = state.users.byId[state.users.currentUser];
-  const { plan = 'os', trial = false } = state.organization.organization;
+  const plan = 'os';
+  const trial = true;
   const { allowUserManagement, isAdmin } = getUserRoles(state);
   return {
     allowUserManagement,
