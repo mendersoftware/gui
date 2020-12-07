@@ -46,7 +46,7 @@
     "stream-browserify": "^3.0.0",
     "universal-cookie": "^4.0.4",
     "validator": "^13.5.1",
-    "victory": "^35.0.9",
+    "victory": "^35.4.2",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
