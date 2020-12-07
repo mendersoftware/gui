@@ -7,7 +7,7 @@ import { InfoOutlined as InfoIcon, Payment } from '@material-ui/icons';
 
 const TrialNotification = () => (
   <div id="trialVersion" className="flexbox centered">
-    <div className="muted" data-tip data-for="trial-version" data-event="click focus" data-offset="{'bottom': 15, 'right': 60}">
+    <div className="muted margin-right-small" data-tip data-for="trial-version" data-event="click focus" data-offset="{'bottom': 15, 'right': 60}">
       <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
       Trial plan
     </div>

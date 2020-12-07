@@ -21,7 +21,7 @@ body {
   display: grid;
   height: 100%;
   grid-template-columns: 200px 1fr;
-  grid-template-rows: 57px 1fr;
+  grid-template-rows: min-content 1fr;
   grid-template-areas:
     'head head'
     'nav main';
@@ -30,7 +30,12 @@ body {
     z-index: 1300;
     width: 100%;
     border-bottom: 1px solid @bordercolor;
-    height: 57px;
+    display: grid;
+    grid-template-rows: 1fr;
+
+    &.banner {
+      grid-template-rows: 1fr 1fr;
+    }
   }
   .leftFixed.leftNav {
     grid-area: nav;
@@ -50,6 +55,11 @@ body {
     margin-left: 0;
     border-left: none;
     background-color: #ffffff;
+  }
+  #offerHeader {
+    justify-content: center;
+    display: flex;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 3px, rgba(0, 0, 0, 0.1) 0px 1px 3px;
   }
 }
 
