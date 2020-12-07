@@ -51,11 +51,11 @@ const connectStates = {
   },
   [DEVICE_CONNECT_STATES.disconnected]: {
     icon: <BlockIcon className="red" style={iconStyle} />,
-    title: 'Disconnected'
+    title: 'Not connected'
   },
   [DEVICE_CONNECT_STATES.unknown]: {
-    icon: <Icon style={iconStyle} component="img" src={pendingIcon} />,
-    title: 'Unknown'
+    icon: <BlockIcon className="red" style={iconStyle} />,
+    title: 'Not connected'
   }
 };
 
