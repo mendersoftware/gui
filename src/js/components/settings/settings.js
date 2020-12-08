@@ -106,6 +106,7 @@ export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, hi
 
 const mapStateToProps = state => {
   const currentUser = state.users.byId[state.users.currentUser];
+  const { plan = 'os', trial = false } = state.organization.organization;
   const { allowUserManagement, isAdmin } = getUserRoles(state);
   return {
     allowUserManagement,
