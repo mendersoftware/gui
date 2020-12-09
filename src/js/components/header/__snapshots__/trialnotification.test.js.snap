@@ -6,7 +6,7 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
   id="trialVersion"
 >
   <div
-    className="muted"
+    className="muted margin-right-small"
     data-event="click focus"
     data-for="trial-version"
     data-offset="{'bottom': 15, 'right': 60}"
