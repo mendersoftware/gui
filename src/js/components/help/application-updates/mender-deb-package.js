@@ -5,7 +5,7 @@ import CopyCode from '../../common/copy-code';
 
 const DebPackage = ({ menderDebPackageVersion, ipAddress, isHosted, isEnterprise, org }) => {
   const token = (org || {}).tenant_token;
-  const dpkgCode = getDebInstallationCode(menderDebPackageVersion);
+  const dpkgCode = getDebInstallationCode();
   const codeToCopy = getDebConfigurationCode(ipAddress, isHosted, isEnterprise, token, menderDebPackageVersion);
   let title = 'Connecting to a demo server with demo settings';
   if (isEnterprise) {
