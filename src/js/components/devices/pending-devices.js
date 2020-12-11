@@ -40,9 +40,6 @@ export class Pending extends React.Component {
       sortDown: true,
       sortScope: null
     };
-    if (!props.pendingDeviceIds.length) {
-      props.getDevicesByStatus(DEVICE_STATES.pending);
-    }
   }
 
   componentDidMount() {
@@ -85,7 +82,7 @@ export class Pending extends React.Component {
 
   _handlePageChange(pageNo) {
     var self = this;
-    self.setState({ selectedRows: [], currentPage: pageNo, pageLoading: true, expandRow: null, pageNo: pageNo }, () => self._getDevices(true));
+    self.setState({ selectedRows: [], pageLoading: true, expandRow: null, pageNo }, () => self._getDevices(true));
   }
 
   onAuthorizationChange(rows, status) {
