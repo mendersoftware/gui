@@ -168,12 +168,12 @@ export class Authorized extends React.Component {
     request
       .catch(err => setRetryTimer(err, 'devices', `Devices couldn't be loaded.`, refreshDeviceLength, setSnackbar))
       // only set state after all devices id data retrieved
-      .finally(() => self.setState({ loading: false, pageLoading: false }));
+      .finally(() => self.setState({ loading: false }));
   }
 
   _handlePageChange(pageNo) {
     var self = this;
-    self.setState({ pageLoading: true, pageNo: pageNo }, () => self._getDevices(true));
+    self.setState({ loading: true, pageNo: pageNo }, () => self._getDevices(true));
   }
 
   onRowSelection(selection) {
@@ -191,7 +191,7 @@ export class Authorized extends React.Component {
     // if devices.length = number on page but < groupCount
     // move page back to pageNO 1
     if (this.props.devices.length === devices.length) {
-      this.setState({ pageNo: 1, pageLoading: true }, () => this._getDevices());
+      this.setState({ pageNo: 1, loading: true }, () => this._getDevices());
     }
   }
 
@@ -211,6 +211,13 @@ export class Authorized extends React.Component {
     self.setState(state, () => self._getDevices(true));
   }
 
+  onCreateGroupClick() {
+    if (this.props.selectedGroup) {
+      this.setState({ showFilters: !this.state.showFilters });
+    }
+    return this.props.onGroupClick();
+  }
+
   render() {
     const self = this;
     const {
@@ -221,7 +228,6 @@ export class Authorized extends React.Component {
       groupFilters,
       idAttribute,
       onboardingState,
-      onGroupClick,
       onGroupRemoval,
       openSettingsDialog,
       selectedGroup,
@@ -308,12 +314,7 @@ export class Authorized extends React.Component {
           </div>
           <Filters
             onFilterChange={() => self.setState({ pageNo: 1 }, () => self._getDevices(true))}
-            onGroupClick={() => {
-              if (selectedGroup) {
-                this.setState({ showFilters: !showFilters });
-              }
-              return onGroupClick();
-            }}
+            onGroupClick={() => self.onCreateGroupClick()}
             isModification={!!groupFilters.length}
             open={showFilters}
           />

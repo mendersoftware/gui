@@ -5,7 +5,7 @@ import { Box, Chip, Tooltip } from '@material-ui/core';
 import { Error as ErrorIcon } from '@material-ui/icons';
 
 const statusTypes = {
-  default: { severity: 'none', notification: null, label: null },
+  default: { severity: 'none', notification: '', label: '' },
   authRequests: {
     severity: 'default',
     notification: `This device has a new auth request. This can happen if the device's public key changes. Expand the row to see more details`
