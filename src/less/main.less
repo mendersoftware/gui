@@ -21,7 +21,7 @@ body {
   display: grid;
   height: 100%;
   grid-template-columns: 200px 1fr;
-  grid-template-rows: 57px 1fr;
+  grid-template-rows: min-content 1fr;
   grid-template-areas:
     'head head'
     'nav main';
@@ -30,7 +30,12 @@ body {
     z-index: 1300;
     width: 100%;
     border-bottom: 1px solid @bordercolor;
-    height: 57px;
+    display: grid;
+    grid-template-rows: 1fr;
+
+    &.banner {
+      grid-template-rows: 1fr 1fr;
+    }
   }
   .leftFixed.leftNav {
     grid-area: nav;
@@ -51,6 +56,11 @@ body {
     border-left: none;
     background-color: #ffffff;
   }
+  #offerHeader {
+    justify-content: center;
+    display: flex;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 3px, rgba(0, 0, 0, 0.1) 0px 1px 3px;
+  }
 }
 
 /* General */
@@ -68,6 +78,10 @@ body {
 }
 .text-muted {
   color: @textmuted;
+}
+
+.link-color {
+  color: @linkgreen;
 }
 
 .warning {
@@ -127,6 +141,10 @@ body {
 
 .bold {
   font-weight: bold;
+}
+
+.pre-line {
+  white-space: pre-line;
 }
 
 a,
@@ -1340,10 +1358,14 @@ div:focus {
   vertical-align: top;
   margin-right: 2%;
   margin-bottom: 10px;
-  width: 30%;
-  height: 150px;
+  width: 32%;
+  height: 190px;
   .transition(all 0.2s ease);
   cursor: pointer;
+
+  &:last-child {
+    margin-right: 0;
+  }
 
   &.active,
   &:hover {
@@ -1354,7 +1376,34 @@ div:focus {
   &.active {
     background-color: @lightestgrey;
   }
+
+  
+
 }
+
+.offerTag {
+  color: @linkgreen;
+  font-size: 12px;
+  svg {
+    width: .7em;
+    height: .7em;
+    vertical-align: middle;
+    margin-left: 4px;
+    margin-right: 2px;
+  }
+}
+
+.offerBox {
+  background-color: #337a87;
+  border-radius: 4px;
+  padding: 8px 12px;
+  color: #ffffff;
+  * {
+    color: inherit;
+    font-size: inherit;
+  }
+}
+
 
 /* stripe elements */
 #poweredByStripe {

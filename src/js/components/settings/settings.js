@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
 
@@ -19,12 +19,19 @@ import Upgrade from './upgrade';
 let stripePromise = null;
 
 export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, history, isAdmin, isEnterprise, match, stripeAPIKey, trial }) => {
+  const [loadingFinished, setLoadingFinished] = useState(!stripeAPIKey);
+
   useEffect(() => {
     // Make sure to call `loadStripe` outside of a component’s render to avoid recreating
     // the `Stripe` object on every render - but don't initialize twice.
     if (!stripePromise) {
       import(/* webpackChunkName: "stripe" */ '@stripe/stripe-js').then(({ loadStripe }) => {
-        stripePromise = stripeAPIKey ? loadStripe(stripeAPIKey) : null;
+        if (stripeAPIKey) {
+          stripePromise = loadStripe(stripeAPIKey).then(args => {
+            setLoadingFinished(true);
+            return Promise.resolve(args);
+          });
+        }
       });
     }
   }, []);
@@ -48,7 +55,7 @@ export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, hi
       multitenancy: true,
       trial: true,
       userManagement: false,
-      component: <Upgrade history={history} />,
+      component: <Upgrade history={history} trial={trial} />,
       text: 'Upgrade to a plan'
     }
   };
@@ -91,7 +98,7 @@ export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, hi
         </List>
       </div>
       <div className="rightFluid padding-right">
-        <Elements stripe={stripePromise}>{getCurrentSection(sectionMap, match.params.section).component}</Elements>
+        {loadingFinished && <Elements stripe={stripePromise}>{getCurrentSection(sectionMap, match.params.section).component}</Elements>}
       </div>
     </div>
   );
