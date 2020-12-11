@@ -1,11 +1,11 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
+import { render } from '@testing-library/react';
 import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 
-import { mount } from 'enzyme';
 import Dashboard from './dashboard';
 import { defaultState, undefineds } from '../../../../tests/mockData';
 
@@ -24,7 +24,7 @@ describe('Dashboard Component', () => {
   });
 
   it('renders without crashing', () => {
-    mount(
+    render(
       <MemoryRouter>
         <Provider store={store}>
           <Dashboard />
@@ -34,16 +34,14 @@ describe('Dashboard Component', () => {
   });
 
   it('renders correctly', () => {
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <Provider store={store}>
-            <Dashboard />
-          </Provider>
-        </MemoryRouter>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { container } = render(
+      <MemoryRouter>
+        <Provider store={store}>
+          <Dashboard />
+        </Provider>
+      </MemoryRouter>
+    );
+    expect(container.firstChild).toMatchSnapshot();
+    expect(container).toEqual(expect.not.stringMatching(undefineds));
   });
 });

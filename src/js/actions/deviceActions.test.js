@@ -142,7 +142,7 @@ describe('overall device information retrieval', () => {
     const expectedActions = [
       ...Object.values(DeviceConstants.DEVICE_STATES).map(status => ({
         type: DeviceConstants[`SET_${status.toUpperCase()}_DEVICES_COUNT`],
-        count: status === DeviceConstants.DEVICE_STATES.accepted ? 1 : 0,
+        count: status === DeviceConstants.DEVICE_STATES.accepted ? defaultState.devices.byStatus.accepted.total : 0,
         status
       }))
     ];
@@ -157,7 +157,7 @@ describe('overall device information retrieval', () => {
     const expectedActions = [
       ...Object.values(DeviceConstants.DEVICE_STATES).map(status => ({
         type: DeviceConstants[`SET_${status.toUpperCase()}_DEVICES_COUNT`],
-        count: status === DeviceConstants.DEVICE_STATES.accepted ? 1 : 0,
+        count: status === DeviceConstants.DEVICE_STATES.accepted ? defaultState.devices.byStatus.accepted.total : 0,
         status
       }))
     ];
@@ -213,7 +213,12 @@ describe('device auth handling', () => {
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Device authorization status was updated successfully' } },
-      { type: DeviceConstants.SET_ACCEPTED_DEVICES, deviceIds: [], status: DeviceConstants.DEVICE_STATES.accepted, total: 0 },
+      {
+        type: DeviceConstants.SET_ACCEPTED_DEVICES,
+        deviceIds: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id),
+        status: DeviceConstants.DEVICE_STATES.accepted,
+        total: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id).length
+      },
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice }
     ];
     await store.dispatch(
@@ -229,7 +234,12 @@ describe('device auth handling', () => {
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Device authorization status was updated successfully' } },
-      { type: DeviceConstants.SET_ACCEPTED_DEVICES, deviceIds: [], status: DeviceConstants.DEVICE_STATES.accepted, total: 0 },
+      {
+        type: DeviceConstants.SET_ACCEPTED_DEVICES,
+        deviceIds: [defaultState.devices.byId.b1.id],
+        status: DeviceConstants.DEVICE_STATES.accepted,
+        total: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id).length
+      },
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice },
       {
         type: AppConstants.SET_SNACKBAR,
@@ -239,7 +249,7 @@ describe('device auth handling', () => {
         }
       }
     ];
-    await store.dispatch(updateDevicesAuth([defaultState.devices.byId.a1.id, defaultState.devices.byId.b1.id], DeviceConstants.DEVICE_STATES.pending));
+    await store.dispatch(updateDevicesAuth([defaultState.devices.byId.a1.id, defaultState.devices.byId.c1.id], DeviceConstants.DEVICE_STATES.pending));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
@@ -271,7 +281,12 @@ describe('device auth handling', () => {
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Device authorization status was updated successfully' } },
-      { type: DeviceConstants.SET_ACCEPTED_DEVICES, deviceIds: [], status: DeviceConstants.DEVICE_STATES.accepted, total: 0 }
+      {
+        type: DeviceConstants.SET_ACCEPTED_DEVICES,
+        deviceIds: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id),
+        status: DeviceConstants.DEVICE_STATES.accepted,
+        total: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id).length
+      }
     ];
     await store.dispatch(deleteAuthset(defaultState.devices.byId.a1.id, defaultState.devices.byId.a1.auth_sets[0].id));
     const storeActions = store.getActions();
@@ -284,7 +299,12 @@ describe('device auth handling', () => {
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Device was decommissioned successfully' } },
-      { type: DeviceConstants.SET_ACCEPTED_DEVICES, deviceIds: [], status: DeviceConstants.DEVICE_STATES.accepted, total: 0 }
+      {
+        type: DeviceConstants.SET_ACCEPTED_DEVICES,
+        deviceIds: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id),
+        status: DeviceConstants.DEVICE_STATES.accepted,
+        total: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id).length
+      }
     ];
     await store.dispatch(decommissionDevice(defaultState.devices.byId.a1.id));
     const storeActions = store.getActions();
@@ -389,7 +409,11 @@ describe('static grouping related actions', () => {
       },
       { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: { ...expectedDevice, attributes } } },
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: { ...expectedDevice, updated_ts } },
-      { type: DeviceConstants.RECEIVE_GROUP_DEVICES, group: { filters: [], deviceIds: [defaultState.devices.byId.a1.id], total: 1 }, groupName }
+      {
+        type: DeviceConstants.RECEIVE_GROUP_DEVICES,
+        group: { filters: [], deviceIds: defaultState.devices.groups.byId[groupName].deviceIds, total: defaultState.devices.groups.byId[groupName].total },
+        groupName
+      }
     ];
     await store.dispatch(getGroupDevices(groupName));
     const storeActions = store.getActions();
@@ -434,7 +458,11 @@ describe('static grouping related actions', () => {
       },
       { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: { ...expectedDevice, attributes } } },
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: { ...expectedDevice, updated_ts } },
-      { type: DeviceConstants.RECEIVE_GROUP_DEVICES, group: { filters: [], deviceIds: [defaultState.devices.byId.a1.id], total: 1 }, groupName },
+      {
+        type: DeviceConstants.RECEIVE_GROUP_DEVICES,
+        group: { filters: [], deviceIds: defaultState.devices.groups.byId[groupName].deviceIds, total: defaultState.devices.groups.byId[groupName].total },
+        groupName
+      },
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: { ...expectedDevice, updated_ts } },
       { type: DeviceConstants.RECEIVE_GROUP_DEVICES, group: defaultState.devices.groups.byId.testGroupDynamic, groupName: 'testGroupDynamic' }
     ];
@@ -546,7 +574,12 @@ describe('device retrieval ', () => {
     // eslint-disable-next-line no-unused-vars
     const { attributes, updated_ts, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
-      { type: DeviceConstants.SET_ACCEPTED_DEVICES, deviceIds: [defaultState.devices.byId.a1.id], status: DeviceConstants.DEVICE_STATES.accepted, total: 1 },
+      {
+        type: DeviceConstants.SET_ACCEPTED_DEVICES,
+        deviceIds: [defaultState.devices.byId.a1.id],
+        status: DeviceConstants.DEVICE_STATES.accepted,
+        total: defaultState.devices.byStatus.accepted.total
+      },
       { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: expectedDevice } },
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice }
     ];
@@ -560,7 +593,12 @@ describe('device retrieval ', () => {
     // eslint-disable-next-line no-unused-vars
     const { attributes, updated_ts, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
-      { type: DeviceConstants.SET_ACCEPTED_DEVICES, deviceIds: [defaultState.devices.byId.a1.id], status: DeviceConstants.DEVICE_STATES.accepted, total: 1 },
+      {
+        type: DeviceConstants.SET_ACCEPTED_DEVICES,
+        deviceIds: [defaultState.devices.byId.a1.id],
+        status: DeviceConstants.DEVICE_STATES.accepted,
+        total: defaultState.devices.byStatus.accepted.total
+      },
       { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: expectedDevice } },
       { type: DeviceConstants.SELECT_DEVICES, deviceIds: [defaultState.devices.byId.a1.id] },
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice }
@@ -576,8 +614,7 @@ describe('device retrieval ', () => {
     const { updated_ts, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
       { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: expectedDevice } },
-      { type: DeviceConstants.SET_ACCEPTED_DEVICES, deviceIds: [defaultState.devices.byId.a1.id], status: DeviceConstants.DEVICE_STATES.accepted, total: 1 },
-      { type: DeviceConstants.SET_INACTIVE_DEVICES, inactiveDeviceIds: [defaultState.devices.byId.a1.id], activeDeviceIds: [] }
+      { type: DeviceConstants.SET_ACCEPTED_DEVICES, deviceIds: [defaultState.devices.byId.a1.id], status: DeviceConstants.DEVICE_STATES.accepted, total: 1 }
     ];
     await store.dispatch(getAllDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted));
     const storeActions = store.getActions();

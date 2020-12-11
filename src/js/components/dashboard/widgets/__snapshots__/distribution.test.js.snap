@@ -1,3 +1,63 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PendingDevices Component renders correctly 1`] = `"<div class=\\"margin-right margin-bottom widget chart-widget\\"><div class=\\"flexbox space-between margin-left-small\\"><h4>test</h4><button class=\\"MuiButtonBase-root MuiIconButton-root widgetRemover\\" tabindex=\\"0\\" type=\\"button\\" style=\\"align-self: flex-end;\\"><span class=\\"MuiIconButton-label\\"><svg class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeSmall\\" focusable=\\"false\\" viewBox=\\"0 0 24 24\\" aria-hidden=\\"true\\"><path d=\\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\\"></path></svg></span><span class=\\"MuiTouchRipple-root\\"></span></button></div><div class=\\"loaderContainer\\"><div class=\\"loader\\"><span class=\\"dot dot_1\\"></span><span class=\\"dot dot_2\\"></span><span class=\\"dot dot_3\\"></span><span class=\\"dot dot_4\\"></span></div></div></div>"`;
+exports[`PendingDevices Component renders correctly 1`] = `
+<body>
+  <div>
+    <div
+      class="margin-right margin-bottom widget chart-widget"
+    >
+      <div
+        class="flexbox space-between margin-left-small"
+      >
+        <h4>
+          test
+        </h4>
+        <button
+          class="MuiButtonBase-root MuiIconButton-root widgetRemover"
+          style="align-self: flex-end;"
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiIconButton-label"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+      <div
+        class="loaderContainer"
+      >
+        <div
+          class="loader"
+        >
+          <span
+            class="dot dot_1"
+          />
+          <span
+            class="dot dot_2"
+          />
+          <span
+            class="dot dot_3"
+          />
+          <span
+            class="dot dot_4"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;

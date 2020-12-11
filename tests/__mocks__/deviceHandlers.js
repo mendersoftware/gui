@@ -164,7 +164,7 @@ export const deviceHandlers = [
     if (status !== DeviceConstants.DEVICE_STATES.accepted) {
       return res(ctx.set(headerNames.total, 0), ctx.json([]));
     }
-    return res(ctx.set(headerNames.total, 1), ctx.json([inventoryDevice]));
+    return res(ctx.set(headerNames.total, defaultState.devices.byStatus.accepted.total), ctx.json([inventoryDevice]));
   }),
   rest.post(`${inventoryApiUrlV2}/filters`, ({ body: { name, terms } }, res, ctx) => {
     if (
