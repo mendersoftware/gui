@@ -556,10 +556,7 @@ const maybeUpdateDevicesByStatus = (devicesState, deviceId, authId, dispatch) =>
   const device = devicesState.byId[deviceId];
   const hasMultipleAuthSets = authId ? device.auth_sets.filter(authset => authset.id !== authId).length > 0 : false;
   if (!hasMultipleAuthSets) {
-    const deviceIds =
-      devicesState.byStatus[device.status].deviceIds.length > 1
-        ? devicesState.byStatus[device.status].deviceIds.splice(devicesState.byStatus[device.status].deviceIds.indexOf(deviceId), 1)
-        : [];
+    const deviceIds = devicesState.byStatus[device.status].deviceIds.filter(id => id !== deviceId);
     return Promise.resolve(
       dispatch({
         type: DeviceConstants[`SET_${device.status.toUpperCase()}_DEVICES`],
