@@ -108,7 +108,7 @@ Array [
         className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
       >
         <label
-          htmlFor=""
+          htmlFor="tos"
         >
           By checking this you agree to our
            

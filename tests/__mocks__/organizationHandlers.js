@@ -9,7 +9,7 @@ export const organizationHandlers = [
   rest.get(`${tenantadmApiUrlv1}/user/tenant`, (req, res, ctx) => res(ctx.json(defaultState.organization.organization))),
   rest.post(`${tenantadmApiUrlv2}/tenants/:tenantId/cancel`, (req, res, ctx) => res(ctx.status(200))),
   rest.post(`${tenantadmApiUrlv2}/tenants/trial`, ({ body: signup }, res, ctx) => {
-    if (['email', 'organization', 'plan', 'tos', 'marketing', 'g-recaptcha-response'].every(item => !!signup[item])) {
+    if (['email', 'organization', 'plan', 'tos'].every(item => !!signup[item])) {
       return res(ctx.text('test'));
     }
     return res(ctx.status(400));
