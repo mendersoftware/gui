@@ -1,6 +1,7 @@
 import React from 'react';
+import { prettyDOM } from '@testing-library/dom';
+import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
@@ -19,22 +20,26 @@ describe('DeviceGroups Component', () => {
         groups: {
           ...defaultState.devices.groups,
           selectedGroup: 'testGroup'
-        }
+        },
+        selectedDeviceList: defaultState.devices.byStatus.accepted.deviceIds
       }
     });
   });
 
   it('renders correctly', () => {
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <Provider store={store}>
-            <DeviceGroups />
-          </Provider>
-        </MemoryRouter>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { baseElement } = render(
+      <MemoryRouter>
+        <Provider store={store}>
+          <DeviceGroups />
+        </Provider>
+      </MemoryRouter>
+    );
+    // special snapshot handling here to work around unstable ids in mui code...
+    const view = prettyDOM(baseElement.firstChild, 100000, { highlight: false })
+      .replace(/id="mui-[0-9]*"/g, '')
+      .replace(/aria-labelledby="(mui-[0-9]* *)*"/g, '')
+      .replace(/\\/g, '');
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });
