@@ -1,10 +1,13 @@
 import React from 'react';
-import { createMount } from '@material-ui/core/test-utils';
+import { render } from '@testing-library/react';
 import ChartAdditionWidget from './chart-addition';
+import { undefineds } from '../../../../../tests/mockData';
 
 describe('ChartAdditionWidget Component', () => {
   it('renders correctly', () => {
-    const tree = createMount()(<ChartAdditionWidget />);
-    expect(tree.html()).toMatchSnapshot();
+    const { baseElement } = render(<ChartAdditionWidget />);
+    const view = baseElement;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { createMount } from '@material-ui/core/test-utils';
+import { render } from '@testing-library/react';
 import CancelRequestDialog from './cancelrequest';
 import { undefineds } from '../../../../../tests/mockData';
 
@@ -8,8 +8,9 @@ describe('CancelRequestDialog Component', () => {
     Math.random = jest.fn(() => 0);
   });
   it('renders correctly', () => {
-    const tree = createMount()(<CancelRequestDialog open={true} />).html();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { baseElement } = render(<CancelRequestDialog open={true} />);
+    const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

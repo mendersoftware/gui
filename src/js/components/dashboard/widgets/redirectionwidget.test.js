@@ -1,15 +1,18 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { createMount } from '@material-ui/core/test-utils';
+import { render } from '@testing-library/react';
 import RedirectionWidget from './redirectionwidget';
+import { undefineds } from '../../../../../tests/mockData';
 
 describe('RedirectionWidget Component', () => {
   it('renders correctly', () => {
-    const tree = createMount()(
+    const { baseElement } = render(
       <MemoryRouter>
         <RedirectionWidget target="testlocation" buttonContent={<div />} />
       </MemoryRouter>
     );
-    expect(tree.html()).toMatchSnapshot();
+    const view = baseElement;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });
