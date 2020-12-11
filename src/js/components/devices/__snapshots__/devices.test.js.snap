@@ -2,359 +2,295 @@
 
 exports[`Devices Component renders correctly 1`] = `
 <div>
-  <div
-    className="MuiTabs-root"
-  >
+  <div>
     <div
-      className="MuiTabs-scroller MuiTabs-fixed"
-      onScroll={[Function]}
-      style={
-        Object {
-          "marginBottom": null,
-          "overflow": "hidden",
-        }
-      }
+      class="MuiTabs-root"
     >
       <div
-        className="MuiTabs-flexContainer"
-        onKeyDown={[Function]}
-        role="tablist"
+        class="MuiTabs-scroller MuiTabs-fixed"
+        style="overflow: hidden;"
       >
-        <a
-          aria-disabled={false}
-          aria-selected={true}
-          className="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit Mui-selected"
-          href="/devices"
-          onBlur={[Function]}
-          onClick={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          role="tab"
-          tabIndex={0}
-        >
-          <span
-            className="MuiTab-wrapper"
-          >
-            Device groups
-          </span>
-          <span
-            className="MuiTouchRipple-root"
-          />
-        </a>
-        <a
-          aria-disabled={false}
-          aria-selected={false}
-          className="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit"
-          href="/devices/pending"
-          onBlur={[Function]}
-          onClick={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          role="tab"
-          tabIndex={-1}
-        >
-          <span
-            className="MuiTab-wrapper"
-          >
-            Pending
-          </span>
-          <span
-            className="MuiTouchRipple-root"
-          />
-        </a>
-        <a
-          aria-disabled={false}
-          aria-selected={false}
-          className="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit"
-          href="/devices/preauthorized"
-          onBlur={[Function]}
-          onClick={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          role="tab"
-          tabIndex={-1}
-        >
-          <span
-            className="MuiTab-wrapper"
-          >
-            Preauthorized
-          </span>
-          <span
-            className="MuiTouchRipple-root"
-          />
-        </a>
-        <a
-          aria-disabled={false}
-          aria-selected={false}
-          className="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit"
-          href="/devices/rejected"
-          onBlur={[Function]}
-          onClick={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          role="tab"
-          tabIndex={-1}
-        >
-          <span
-            className="MuiTab-wrapper"
-          >
-            Rejected
-          </span>
-          <span
-            className="MuiTouchRipple-root"
-          />
-        </a>
-      </div>
-      <span
-        className="PrivateTabIndicator-root-1 PrivateTabIndicator-colorSecondary-3 MuiTabs-indicator"
-        style={
-          Object {
-            "left": 0,
-            "width": 0,
-          }
-        }
-      />
-    </div>
-  </div>
-  <div
-    className="tab-container"
-  >
-    <div
-      className="leftFixed"
-    >
-      <div>
         <div
-          className="muted margin-bottom-small"
+          class="MuiTabs-flexContainer"
+          role="tablist"
         >
-          Groups
+          <a
+            aria-disabled="false"
+            aria-selected="true"
+            class="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit Mui-selected"
+            href="/devices"
+            role="tab"
+            tabindex="0"
+          >
+            <span
+              class="MuiTab-wrapper"
+            >
+              Device groups
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </a>
+          <a
+            aria-disabled="false"
+            aria-selected="false"
+            class="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit"
+            href="/devices/pending"
+            role="tab"
+            tabindex="-1"
+          >
+            <span
+              class="MuiTab-wrapper"
+            >
+              Pending (1)
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </a>
+          <a
+            aria-disabled="false"
+            aria-selected="false"
+            class="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit"
+            href="/devices/preauthorized"
+            role="tab"
+            tabindex="-1"
+          >
+            <span
+              class="MuiTab-wrapper"
+            >
+              Preauthorized
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </a>
+          <a
+            aria-disabled="false"
+            aria-selected="false"
+            class="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit"
+            href="/devices/rejected"
+            role="tab"
+            tabindex="-1"
+          >
+            <span
+              class="MuiTab-wrapper"
+            >
+              Rejected
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </a>
         </div>
-        <ul
-          className="MuiList-root MuiList-padding"
-        >
-          <div
-            aria-disabled={false}
-            className="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-button"
-            onBlur={[Function]}
-            onClick={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            role="button"
-            style={
-              Object {
-                "backgroundColor": "#e7e7e7",
-              }
-            }
-            tabIndex={0}
-          >
-            <div
-              className="MuiListItemText-root"
-            >
-              <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-              >
-                All devices
-              </span>
-            </div>
-            <span
-              className="MuiTouchRipple-root"
-            />
-          </div>
-          <div
-            aria-disabled={false}
-            className="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-button"
-            onBlur={[Function]}
-            onClick={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            role="button"
-            style={
-              Object {
-                "marginTop": 30,
-              }
-            }
-            tabIndex={0}
-          >
-            <div
-              className="MuiListItemIcon-root"
-            >
-              <svg
-                aria-hidden={true}
-                className="MuiSvgIcon-root"
-                focusable="false"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-                />
-              </svg>
-            </div>
-            <div
-              className="MuiListItemText-root"
-            >
-              <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-              >
-                Create a group
-              </span>
-            </div>
-            <span
-              className="MuiTouchRipple-root"
-            />
-          </div>
-        </ul>
+        <span
+          class="PrivateTabIndicator-root-1 PrivateTabIndicator-colorSecondary-3 MuiTabs-indicator"
+          style="left: 0px; width: 0px;"
+        />
       </div>
     </div>
     <div
-      className="rightFluid"
-      style={
-        Object {
-          "paddingTop": "0",
-        }
-      }
+      class="tab-container"
     >
       <div
-        className="relative"
+        class="leftFixed"
       >
-        <div
-          style={
-            Object {
-              "marginLeft": "20px",
-            }
-          }
-        >
+        <div>
           <div
-            className="flexbox space-between"
-            style={
-              Object {
-                "marginBottom": -1,
-                "zIndex": 2,
-              }
-            }
+            class="muted margin-bottom-small"
+          >
+            Groups
+          </div>
+          <ul
+            class="MuiList-root MuiList-padding"
           >
             <div
-              className="flexbox"
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-button"
+              role="button"
+              style="background-color: rgb(231, 231, 231);"
+              tabindex="0"
             >
-              <h2
-                className="margin-right"
-              >
-                All devices
-              </h2>
               <div
-                className="flexbox centered "
+                class="MuiListItemText-root"
               >
-                <button
-                  className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
-                  disabled={false}
-                  onBlur={[Function]}
-                  onClick={[Function]}
-                  onDragLeave={[Function]}
-                  onFocus={[Function]}
-                  onKeyDown={[Function]}
-                  onKeyUp={[Function]}
-                  onMouseDown={[Function]}
-                  onMouseLeave={[Function]}
-                  onMouseUp={[Function]}
-                  onTouchEnd={[Function]}
-                  onTouchMove={[Function]}
-                  onTouchStart={[Function]}
-                  style={
-                    Object {
-                      "backgroundColor": "transparent",
-                    }
-                  }
-                  tabIndex={0}
-                  type="button"
+                <span
+                  class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
                 >
-                  <span
-                    className="MuiButton-label"
+                  All devices
+                </span>
+              </div>
+              <span
+                class="MuiTouchRipple-root"
+              />
+            </div>
+            <li
+              class="MuiListSubheader-root heading-lined"
+              style="color: rgb(170, 170, 170); height: 48px;"
+            >
+              <span>
+                Dynamic
+              </span>
+              <div />
+            </li>
+            <div
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-button"
+              role="button"
+              tabindex="0"
+            >
+              <div
+                class="MuiListItemText-root"
+              >
+                <span
+                  class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  testGroupDynamic
+                </span>
+              </div>
+              <span
+                class="MuiTouchRipple-root"
+              />
+            </div>
+            <li
+              class="MuiListSubheader-root heading-lined"
+              style="color: rgb(170, 170, 170); height: 48px;"
+            >
+              <span>
+                Static
+              </span>
+              <div />
+            </li>
+            <div
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-button"
+              role="button"
+              tabindex="0"
+            >
+              <div
+                class="MuiListItemText-root"
+              >
+                <span
+                  class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  testGroup
+                </span>
+              </div>
+              <span
+                class="MuiTouchRipple-root"
+              />
+            </div>
+            <div
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-button"
+              role="button"
+              style="margin-top: 30px;"
+              tabindex="0"
+            >
+              <div
+                class="MuiListItemIcon-root"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                  />
+                </svg>
+              </div>
+              <div
+                class="MuiListItemText-root"
+              >
+                <span
+                  class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  Create a group
+                </span>
+              </div>
+              <span
+                class="MuiTouchRipple-root"
+              />
+            </div>
+          </ul>
+        </div>
+      </div>
+      <div
+        class="rightFluid"
+        style="padding-top: 0px;"
+      >
+        <div
+          class="relative"
+        >
+          <div
+            style="margin-left: 20px;"
+          >
+            <div
+              class="flexbox space-between"
+              style="z-index: 2; margin-bottom: -1px;"
+            >
+              <div
+                class="flexbox"
+              >
+                <h2
+                  class="margin-right"
+                >
+                  All devices
+                </h2>
+                <div
+                  class="flexbox centered "
+                >
+                  <button
+                    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
+                    style="background-color: transparent;"
+                    tabindex="0"
+                    type="button"
                   >
                     <span
-                      className="MuiButton-startIcon MuiButton-iconSizeMedium"
+                      class="MuiButton-label"
                     >
-                      <svg
-                        aria-hidden={true}
-                        className="MuiSvgIcon-root"
-                        focusable="false"
-                        viewBox="0 0 24 24"
+                      <span
+                        class="MuiButton-startIcon MuiButton-iconSizeMedium"
                       >
-                        <path
-                          d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
-                        />
-                      </svg>
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
+                          />
+                        </svg>
+                      </span>
+                      Filters
                     </span>
-                    Filters
-                  </span>
-                </button>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          className="loaderContainer"
-        >
           <div
-            className="loader"
+            class="loaderContainer"
           >
-            <span
-              className="dot dot_1"
-            />
-            <span
-              className="dot dot_2"
-            />
-            <span
-              className="dot dot_3"
-            />
-            <span
-              className="dot dot_4"
-            />
+            <div
+              class="loader"
+            >
+              <span
+                class="dot dot_1"
+              />
+              <span
+                class="dot dot_2"
+              />
+              <span
+                class="dot dot_3"
+              />
+              <span
+                class="dot dot_4"
+              />
+            </div>
           </div>
         </div>
       </div>
