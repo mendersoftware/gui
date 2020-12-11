@@ -14,22 +14,16 @@ export const PhaseSettings = ({ classNames, disabled, filterId, numberDevices, s
   const updateDelay = (value, index) => {
     let newPhases = phases;
     // value must be at least 1
-    value = value > 0 ? value : 1;
+    value = Math.max(1, value);
     newPhases[index].delay = value;
     setDeploymentSettings(newPhases, 'phases');
     // logic for updating time stamps should be in parent - only change delays here
   };
 
   const updateBatchSize = (value, index) => {
-    let newPhases = phases;
-
-    if (value < 1) {
-      value = 1;
-    } else if (value > 100) {
-      value = 100;
-    }
-
-    newPhases[index].batch_size = Number(value);
+    let newPhases = [...phases];
+    value = Math.min(100, Math.max(1, value));
+    newPhases[index].batch_size = value;
     // When phase's batch size changes, check for new 'remainder'
     const remainder = getRemainderPercent(newPhases);
     // if new remainder will be 0 or negative remove phase leave last phase to get remainder
@@ -41,7 +35,7 @@ export const PhaseSettings = ({ classNames, disabled, filterId, numberDevices, s
   };
 
   const addPhase = () => {
-    let newPhases = phases;
+    let newPhases = [...phases];
     let newPhase = {};
 
     // assign new batch size to *previous* last batch
