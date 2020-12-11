@@ -111,15 +111,38 @@ export const defaultState = {
       },
       b1: {
         id: 'b1',
+        attributes: {
+          ipv4_wlan0: '192.168.10.141/24',
+          device_type: 'qemux86-64'
+        },
+        identity_data: { mac: 'dc:a6:32:12:ad:bf' },
+        status: 'accepted',
+        decommissioning: false,
+        created_ts: '2019-01-01T06:25:00.000Z',
+        updated_ts: '2019-01-01T09:25:00.000Z',
+        auth_sets: [
+          {
+            id: 'auth1',
+            identity_data: { mac: 'dc:a6:32:12:ad:bf' },
+            pubkey: '-----BEGIN PUBLIC KEY-----\nMIIBojWELzgJ62hcXIhAfqfoNiaB1326XZByZwcnHr5BuSPAgMBAAE=\n-----END PUBLIC KEY-----\n',
+            ts: '2019-01-01T06:25:00.000Z',
+            status: 'accepted'
+          }
+        ]
+      },
+      c1: {
+        id: 'c1',
         auth_sets: [],
-        attributes: {}
+        attributes: {
+          device_type: 'qemux86-128'
+        }
       }
     },
     byStatus: {
-      accepted: { deviceIds: ['a1'], total: 0 },
+      accepted: { deviceIds: ['a1', 'b1'], total: 2 },
       active: { deviceIds: [], total: 0 },
       inactive: { deviceIds: [], total: 0 },
-      pending: { deviceIds: ['b1'], total: 0 },
+      pending: { deviceIds: ['c1'], total: 1 },
       preauthorized: { deviceIds: [], total: 0 },
       rejected: { deviceIds: [], total: 0 }
     },
@@ -133,7 +156,8 @@ export const defaultState = {
       byId: {
         testGroup: {
           deviceIds: ['a1', 'b1'],
-          filters: []
+          filters: [],
+          total: 2
         },
         testGroupDynamic: {
           id: 'filter1',

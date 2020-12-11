@@ -8,7 +8,7 @@ import { TextField, Tooltip } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { ErrorOutline as ErrorOutlineIcon, InfoOutlined as InfoOutlinedIcon } from '@material-ui/icons';
 
-import { getAllDevicesByStatus, selectDevices } from '../../../actions/deviceActions';
+import { getAllDevicesByStatus } from '../../../actions/deviceActions';
 import { advanceOnboarding } from '../../../actions/onboardingActions';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../../constants/deviceConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
@@ -83,7 +83,6 @@ export class SoftwareDevices extends React.Component {
       selectedGroup,
       selectedRelease
     } = self.props;
-
     const deploymentRelease = deploymentObject.release ? deploymentObject.release : release;
     const releaseDeviceTypes = deploymentRelease ? deploymentRelease.device_types_compatible : [];
     const devicetypesInfo = (
@@ -139,7 +138,6 @@ export class SoftwareDevices extends React.Component {
         );
       }
     }
-
     return (
       <div style={{ overflow: 'visible', minHeight: '300px', marginTop: '15px' }}>
         {!releaseItems.length ? (
@@ -158,7 +156,7 @@ export class SoftwareDevices extends React.Component {
                   autoSelect
                   autoHighlight
                   filterSelectedOptions
-                  getOptionLabel={option => option.Name || option}
+                  getOptionLabel={option => (typeof option === 'string' ? option : option.Name)}
                   handleHomeEndKeys
                   options={releaseItems}
                   onChange={(e, item) => self.deploymentSettingsUpdate(item, 'release')}
@@ -237,7 +235,7 @@ export class SoftwareDevices extends React.Component {
   }
 }
 
-const actionCreators = { advanceOnboarding, getAllDevicesByStatus, selectDevices };
+const actionCreators = { advanceOnboarding, getAllDevicesByStatus };
 
 const mapStateToProps = state => {
   // eslint-disable-next-line no-unused-vars

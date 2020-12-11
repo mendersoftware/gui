@@ -1,11 +1,11 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { createMount } from '@material-ui/core/test-utils';
+import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import DeploymentReport from './report';
-import { defaultState } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 let dateMock;
@@ -43,15 +43,15 @@ describe('DeploymentReport Component', () => {
   });
 
   it('renders correctly', () => {
-    const tree = createMount()(
+    const { baseElement } = render(
       <MemoryRouter>
         <Provider store={store}>
           <DeploymentReport deployment={{ id: 'a1' }} type="finished" />
         </Provider>
       </MemoryRouter>
-    ).html();
-    expect(tree).toMatchSnapshot();
-    // due to the rendering of dialogs with the mui testutils, the following does not succeed, the sub views are handled independently though
-    // expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    );
+    const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

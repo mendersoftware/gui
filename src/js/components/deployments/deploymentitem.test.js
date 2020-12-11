@@ -1,6 +1,6 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import DeploymentItem from './deploymentitem';
+import { render } from '@testing-library/react';
 import { defaultHeaders as columnHeaders } from './deploymentslist';
 import { undefineds } from '../../../../tests/mockData';
 
@@ -42,8 +42,8 @@ describe('DeploymentItem Component', () => {
         'already-installed': 0
       }
     };
-    const tree = renderer.create(<DeploymentItem columnHeaders={columnHeaders} deployment={deployment} type="progress" />).toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { container } = render(<DeploymentItem columnHeaders={columnHeaders} deployment={deployment} type="progress" />);
+    expect(container.firstChild.firstChild).toMatchSnapshot();
+    expect(container).toEqual(expect.not.stringMatching(undefineds));
   });
 });
