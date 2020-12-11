@@ -210,17 +210,25 @@ export const defaultState = {
     byId: {
       a1: {
         Name: 'a1',
-        Artifacts: [{ id: 'art1', description: 'test description', device_types_compatible: [], modified: '2020-09-10T12:16:22.667Z' }],
-        device_types_compatible: [],
-        artifact_depends: {
-          device_type: ['qemux86-64']
-        },
-        artifact_provides: {
-          artifact_name: 'myapp',
-          'data-partition.myapp.version': 'v2020.10',
-          list_of_fancy: ['qemux86-64', 'x172']
-        },
-        clears_artifact_provides: ['data-partition.myapp.*'],
+        Artifacts: [
+          {
+            id: 'art1',
+            description: 'test description',
+            device_types_compatible: ['qemux86-64'],
+            modified: '2020-09-10T12:16:22.667Z',
+            updates: [{ type_info: 'testtype' }],
+            artifact_depends: {
+              device_type: ['qemux86-64']
+            },
+            artifact_provides: {
+              artifact_name: 'myapp',
+              'data-partition.myapp.version': 'v2020.10',
+              list_of_fancy: ['qemux86-64', 'x172']
+            },
+            clears_artifact_provides: ['data-partition.myapp.*']
+          }
+        ],
+        device_types_compatible: ['qemux86-64'],
         metaData: {}
       }
     },

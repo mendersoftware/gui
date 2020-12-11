@@ -445,7 +445,11 @@ describe('extractSoftware function', () => {
 describe('extractSoftwareInformation function', () => {
   it('works as expected', () => {
     expect(
-      extractSoftwareInformation(defaultState.releases.byId.a1.artifact_provides, undefined, ['Software filesystem', 'Software name', 'Software version'])
+      extractSoftwareInformation(defaultState.releases.byId.a1.Artifacts[0].artifact_provides, undefined, [
+        'Software filesystem',
+        'Software name',
+        'Software version'
+      ])
     ).toEqual({
       'data-partition': [
         { primary: 'Software filesystem', priority: 0, secondary: 'data-partition' },
