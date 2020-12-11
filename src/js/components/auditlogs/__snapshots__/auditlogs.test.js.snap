@@ -1,1138 +1,812 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Auditlogs Component renders correctly 1`] = `
-<div
-  className="fadeIn margin-left flexbox column"
-  style={
-    Object {
-      "marginRight": "5%",
-    }
-  }
->
-  <h3>
-    Audit log
-  </h3>
+"<div>
   <div
-    className="auditlogs-filters margin-bottom margin-top-small"
+    class=\\"fadeIn margin-left flexbox column\\"
+    style=\\"margin-right: 5%;\\"
   >
+    <h3>
+      Audit log
+    </h3>
     <div
-      aria-expanded={false}
-      aria-owns={null}
-      className="MuiAutocomplete-root MuiAutocomplete-hasClearIcon"
-      onClick={[Function]}
-      onKeyDown={[Function]}
-      onMouseDown={[Function]}
-      role="combobox"
-      style={
-        Object {
-          "maxWidth": 250,
-        }
-      }
+      class=\\"auditlogs-filters margin-bottom margin-top-small\\"
     >
       <div
-        className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+        aria-expanded=\\"false\\"
+        class=\\"MuiAutocomplete-root MuiAutocomplete-hasClearIcon\\"
+        role=\\"combobox\\"
+        style=\\"max-width: 250px;\\"
       >
-        <label
-          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
-          data-shrink={true}
-          htmlFor="audit-log-user-selection"
-          id="audit-log-user-selection-label"
-        >
-          Filter by user
-        </label>
         <div
-          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
-          onClick={[Function]}
+          class=\\"MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth\\"
         >
-          <input
-            aria-activedescendant={null}
-            aria-autocomplete="list"
-            aria-controls={null}
-            aria-invalid={false}
-            autoCapitalize="none"
-            autoComplete="off"
-            autoFocus={false}
-            className="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
-            disabled={false}
-            id="audit-log-user-selection"
-            onAnimationStart={[Function]}
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseDown={[Function]}
-            placeholder="Select a user"
-            required={false}
-            spellCheck="false"
-            type="text"
-            value=""
-          />
-          <div
-            className="MuiAutocomplete-endAdornment"
+          <label
+            class=\\"MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink\\"
+            data-shrink=\\"true\\"
+            for=\\"audit-log-user-selection\\"
+            id=\\"audit-log-user-selection-label\\"
           >
-            <button
-              aria-label="Clear"
-              className="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator"
-              disabled={false}
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              tabIndex={-1}
-              title="Clear"
-              type="button"
+            Filter by user
+          </label>
+          <div
+            class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd\\"
+          >
+            <input
+              aria-autocomplete=\\"list\\"
+              aria-invalid=\\"false\\"
+              autocapitalize=\\"none\\"
+              autocomplete=\\"off\\"
+              class=\\"MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd\\"
+              id=\\"audit-log-user-selection\\"
+              placeholder=\\"Select a user\\"
+              spellcheck=\\"false\\"
+              type=\\"text\\"
+              value=\\"\\"
+            />
+            <div
+              class=\\"MuiAutocomplete-endAdornment\\"
             >
-              <span
-                className="MuiIconButton-label"
+              <button
+                aria-label=\\"Clear\\"
+                class=\\"MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator\\"
+                tabindex=\\"-1\\"
+                title=\\"Clear\\"
+                type=\\"button\\"
               >
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                  focusable="false"
-                  viewBox="0 0 24 24"
+                <span
+                  class=\\"MuiIconButton-label\\"
                 >
-                  <path
-                    d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-                  />
-                </svg>
-              </span>
-            </button>
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeSmall\\"
+                    focusable=\\"false\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\\"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class=\\"MuiTouchRipple-root\\"
+                />
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      aria-expanded={false}
-      aria-owns={null}
-      className="MuiAutocomplete-root MuiAutocomplete-hasClearIcon MuiAutocomplete-hasPopupIcon"
-      onClick={[Function]}
-      onKeyDown={[Function]}
-      onMouseDown={[Function]}
-      role="combobox"
-      style={
-        Object {
-          "marginLeft": 7.5,
-        }
-      }
-    >
       <div
-        className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+        aria-expanded=\\"false\\"
+        class=\\"MuiAutocomplete-root MuiAutocomplete-hasClearIcon MuiAutocomplete-hasPopupIcon\\"
+        role=\\"combobox\\"
+        style=\\"margin-left: 7.5px;\\"
       >
-        <label
-          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
-          data-shrink={true}
-          htmlFor="audit-log-type-selection"
-          id="audit-log-type-selection-label"
-        >
-          Filter by change
-        </label>
         <div
-          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
-          onClick={[Function]}
+          class=\\"MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth\\"
         >
-          <input
-            aria-activedescendant={null}
-            aria-autocomplete="list"
-            aria-controls={null}
-            aria-invalid={false}
-            autoCapitalize="none"
-            autoComplete="off"
-            autoFocus={false}
-            className="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
-            disabled={false}
-            id="audit-log-type-selection"
-            onAnimationStart={[Function]}
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseDown={[Function]}
-            placeholder="Type"
-            required={false}
-            spellCheck="false"
-            type="text"
-            value=""
-          />
-          <div
-            className="MuiAutocomplete-endAdornment"
+          <label
+            class=\\"MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink\\"
+            data-shrink=\\"true\\"
+            for=\\"audit-log-type-selection\\"
+            id=\\"audit-log-type-selection-label\\"
           >
-            <button
-              aria-label="Clear"
-              className="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator"
-              disabled={false}
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              tabIndex={-1}
-              title="Clear"
-              type="button"
+            Filter by change
+          </label>
+          <div
+            class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd\\"
+          >
+            <input
+              aria-autocomplete=\\"list\\"
+              aria-invalid=\\"false\\"
+              autocapitalize=\\"none\\"
+              autocomplete=\\"off\\"
+              class=\\"MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd\\"
+              id=\\"audit-log-type-selection\\"
+              placeholder=\\"Type\\"
+              spellcheck=\\"false\\"
+              type=\\"text\\"
+              value=\\"\\"
+            />
+            <div
+              class=\\"MuiAutocomplete-endAdornment\\"
             >
-              <span
-                className="MuiIconButton-label"
+              <button
+                aria-label=\\"Clear\\"
+                class=\\"MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator\\"
+                tabindex=\\"-1\\"
+                title=\\"Clear\\"
+                type=\\"button\\"
               >
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                  focusable="false"
-                  viewBox="0 0 24 24"
+                <span
+                  class=\\"MuiIconButton-label\\"
                 >
-                  <path
-                    d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-                  />
-                </svg>
-              </span>
-            </button>
-            <button
-              aria-label="Open"
-              className="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-popupIndicator"
-              disabled={false}
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              tabIndex={-1}
-              title="Open"
-              type="button"
-            >
-              <span
-                className="MuiIconButton-label"
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeSmall\\"
+                    focusable=\\"false\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\\"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class=\\"MuiTouchRipple-root\\"
+                />
+              </button>
+              <button
+                aria-label=\\"Open\\"
+                class=\\"MuiButtonBase-root MuiIconButton-root MuiAutocomplete-popupIndicator\\"
+                tabindex=\\"-1\\"
+                title=\\"Open\\"
+                type=\\"button\\"
               >
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root"
-                  focusable="false"
-                  viewBox="0 0 24 24"
+                <span
+                  class=\\"MuiIconButton-label\\"
                 >
-                  <path
-                    d="M7 10l5 5 5-5z"
-                  />
-                </svg>
-              </span>
-            </button>
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root\\"
+                    focusable=\\"false\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M7 10l5 5 5-5z\\"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class=\\"MuiTouchRipple-root\\"
+                />
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      aria-expanded={false}
-      aria-owns={null}
-      className="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon"
-      onClick={[Function]}
-      onKeyDown={[Function]}
-      onMouseDown={[Function]}
-      role="combobox"
-      style={
-        Object {
-          "marginRight": 15,
-          "marginTop": 16,
-        }
-      }
-    >
       <div
-        className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+        aria-expanded=\\"false\\"
+        class=\\"MuiAutocomplete-root MuiAutocomplete-hasPopupIcon\\"
+        role=\\"combobox\\"
+        style=\\"margin-right: 15px; margin-top: 16px;\\"
       >
         <div
-          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot Mui-disabled Mui-disabled MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
-          onClick={[Function]}
+          class=\\"MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth\\"
         >
-          <input
-            aria-activedescendant={null}
-            aria-autocomplete="list"
-            aria-controls={null}
-            aria-invalid={false}
-            autoCapitalize="none"
-            autoComplete="off"
-            autoFocus={false}
-            className="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused Mui-disabled Mui-disabled MuiInputBase-inputAdornedEnd"
-            disabled={true}
-            id="audit-log-type-details-selection"
-            onAnimationStart={[Function]}
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseDown={[Function]}
-            placeholder="-"
-            required={false}
-            spellCheck="false"
-            type="text"
-            value=""
-          />
           <div
-            className="MuiAutocomplete-endAdornment"
+            class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot Mui-disabled Mui-disabled MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd\\"
           >
-            <button
-              aria-label="Open"
-              className="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-popupIndicator Mui-disabled Mui-disabled"
-              disabled={true}
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              tabIndex={-1}
-              title="Open"
-              type="button"
+            <input
+              aria-autocomplete=\\"list\\"
+              aria-invalid=\\"false\\"
+              autocapitalize=\\"none\\"
+              autocomplete=\\"off\\"
+              class=\\"MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused Mui-disabled Mui-disabled MuiInputBase-inputAdornedEnd\\"
+              disabled=\\"\\"
+              id=\\"audit-log-type-details-selection\\"
+              placeholder=\\"-\\"
+              spellcheck=\\"false\\"
+              type=\\"text\\"
+              value=\\"\\"
+            />
+            <div
+              class=\\"MuiAutocomplete-endAdornment\\"
             >
-              <span
-                className="MuiIconButton-label"
+              <button
+                aria-label=\\"Open\\"
+                class=\\"MuiButtonBase-root MuiIconButton-root MuiAutocomplete-popupIndicator Mui-disabled Mui-disabled\\"
+                disabled=\\"\\"
+                tabindex=\\"-1\\"
+                title=\\"Open\\"
+                type=\\"button\\"
               >
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root"
-                  focusable="false"
-                  viewBox="0 0 24 24"
+                <span
+                  class=\\"MuiIconButton-label\\"
                 >
-                  <path
-                    d="M7 10l5 5 5-5z"
-                  />
-                </svg>
-              </span>
-            </button>
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root\\"
+                    focusable=\\"false\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M7 10l5 5 5-5z\\"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div />
-    <div
-      className=""
-    >
-      <span>
-        Filter by date
-      </span>
-      <ul
-        className="unstyled link-list horizontal"
-      >
-        <li>
-          <a
-            className="active"
-            onClick={[Function]}
-          >
-            Today
-          </a>
-        </li>
-        <li>
-          <a
-            className=""
-            onClick={[Function]}
-          >
-            Yesterday
-          </a>
-        </li>
-        <li>
-          <a
-            className=""
-            onClick={[Function]}
-          >
-            Last 7 days
-          </a>
-        </li>
-        <li>
-          <a
-            className=""
-            onClick={[Function]}
-          >
-            Last 30 days
-          </a>
-        </li>
-      </ul>
-    </div>
-    <div
-      style={
-        Object {
-          "gridColumnEnd": 4,
-          "gridColumnStart": 2,
-        }
-      }
-    >
-      <div
-        className="MuiFormControl-root MuiTextField-root"
-        format="MMMM Do"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        style={
-          Object {
-            "margin": 7.5,
-            "marginTop": 0,
-            "width": 160,
-          }
-        }
-      >
-        <label
-          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
-          data-shrink={true}
-        >
-          From
-        </label>
-        <div
-          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-          onClick={[Function]}
-        >
-          <input
-            aria-invalid={false}
-            autoFocus={false}
-            className="MuiInputBase-input MuiInput-input"
-            disabled={false}
-            onAnimationStart={[Function]}
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            readOnly={true}
-            required={false}
-            type="text"
-            value="January 1st"
-          />
-        </div>
-        
-      </div>
-      <div
-        className="MuiFormControl-root MuiTextField-root"
-        format="MMMM Do"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        style={
-          Object {
-            "margin": 7.5,
-            "marginTop": 0,
-            "width": 160,
-          }
-        }
-      >
-        <label
-          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
-          data-shrink={true}
-        >
-          To
-        </label>
-        <div
-          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-          onClick={[Function]}
-        >
-          <input
-            aria-invalid={false}
-            autoFocus={false}
-            className="MuiInputBase-input MuiInput-input"
-            disabled={false}
-            onAnimationStart={[Function]}
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            readOnly={true}
-            required={false}
-            type="text"
-            value="January 1st"
-          />
-        </div>
-        
-      </div>
-    </div>
-  </div>
-  <div
-    className="flexbox"
-    style={
-      Object {
-        "alignItems": "center",
-        "justifyContent": "flex-end",
-      }
-    }
-  >
-    <div
-      className="loaderContainer shrunk"
-    >
-      <div
-        className="loader"
-      >
-        <span
-          className="dot dot_1"
-        />
-        <span
-          className="dot dot_2"
-        />
-        <span
-          className="dot dot_3"
-        />
-        <span
-          className="dot dot_4"
-        />
-      </div>
-    </div>
-    <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
-      disabled={false}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      style={
-        Object {
-          "marginLeft": 15,
-        }
-      }
-      tabIndex={0}
-      type="button"
-    >
-      <span
-        className="MuiButton-label"
-      >
-        Download results as csv
-      </span>
-    </button>
-  </div>
-  <div
-    className="fadeIn deploy-table-contain auditlogs-list"
-  >
-    <div
-      className="auditlogs-list-item auditlogs-list-item-header muted"
-    >
-      <div
-        className="columnHeader"
-        onClick={[Function]}
-        style={
-          Object {
-            "cursor": "initial",
-          }
-        }
-      >
-        User
-      </div>
-      <div
-        className="columnHeader"
-        onClick={[Function]}
-        style={
-          Object {
-            "cursor": "initial",
-          }
-        }
-      >
-        Action
-      </div>
-      <div
-        className="columnHeader"
-        onClick={[Function]}
-        style={
-          Object {
-            "cursor": "initial",
-          }
-        }
-      >
-        Type
-      </div>
-      <div
-        className="columnHeader"
-        onClick={[Function]}
-        style={
-          Object {
-            "cursor": "initial",
-          }
-        }
-      >
-        Change
-      </div>
-      <div
-        className="columnHeader"
-        onClick={[Function]}
-        style={
-          Object {
-            "cursor": "initial",
-          }
-        }
-      >
-        More details
-      </div>
-      <div
-        className="columnHeader"
-        onClick={[Function]}
-        style={Object {}}
-      >
-        Time
-        <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root sortIcon selected true"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"
-          />
-        </svg>
       </div>
       <div />
-    </div>
-    <div
-      className="loaderContainer"
-    >
       <div
-        className="loader"
+        class=\\"\\"
       >
-        <span
-          className="dot dot_1"
-        />
-        <span
-          className="dot dot_2"
-        />
-        <span
-          className="dot dot_3"
-        />
-        <span
-          className="dot dot_4"
-        />
-      </div>
-    </div>
-    <div
-      className="auditlogs-list"
-    >
-      <div
-        className="MuiPaper-root MuiAccordion-root auditlogs-list-item MuiPaper-elevation1"
-      >
-        <div
-          aria-disabled={false}
-          aria-expanded={false}
-          className="MuiButtonBase-root MuiAccordionSummary-root"
-          onBlur={[Function]}
-          onClick={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          role="button"
-          style={
-            Object {
-              "padding": 0,
-            }
-          }
-          tabIndex={0}
+        <span>
+          Filter by date
+        </span>
+        <ul
+          class=\\"unstyled link-list horizontal\\"
         >
-          <div
-            className="MuiAccordionSummary-content"
-          >
-            <div>
-              <div>
-                string@example.com
-              </div>
-            </div>
-            <div>
-              <div
-                className="uppercased"
-              >
-                create
-              </div>
-            </div>
-            <div>
-              <div
-                className="capitalized"
-              >
-                user
-              </div>
-            </div>
-            <div>
-              <div>
-                user@acme.com
-              </div>
-            </div>
-            <div>
-              <div
-                className="capitalized"
-                style={
-                  Object {
-                    "whiteSpace": "pre-line",
-                  }
-                }
-              >
-                change1
-              </div>
-            </div>
-            <div>
-              <time
-                dateTime="2019-01-01T12:59:59+00:00"
-                title={null}
-              >
-                2019-01-01 12:59
-              </time>
-            </div>
-            <button
-              className="MuiButtonBase-root MuiIconButton-root expandButton"
-              disabled={false}
-              onBlur={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              tabIndex={0}
-              type="button"
+          <li>
+            <a
+              class=\\"active\\"
             >
-              <span
-                className="MuiIconButton-label"
-              >
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M7 10l5 5 5-5z"
-                  />
-                </svg>
-              </span>
-            </button>
-          </div>
-        </div>
-        <div
-          className="MuiCollapse-container MuiCollapse-hidden"
-          style={
-            Object {
-              "minHeight": "0px",
-            }
-          }
-        >
-          <div
-            className="MuiCollapse-wrapper"
-          >
-            <div
-              className="MuiCollapse-wrapperInner"
+              Today
+            </a>
+          </li>
+          <li>
+            <a
+              class=\\"\\"
             >
-              <div
-                role="region"
-              >
-                <div
-                  className="MuiAccordionDetails-root"
-                >
-                  <div
-                    className="code flexbox column"
-                  >
-                    <span
-                      className=""
-                    >
-                      change1
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+              Yesterday
+            </a>
+          </li>
+          <li>
+            <a
+              class=\\"\\"
+            >
+              Last 7 days
+            </a>
+          </li>
+          <li>
+            <a
+              class=\\"\\"
+            >
+              Last 30 days
+            </a>
+          </li>
+        </ul>
       </div>
       <div
-        className="MuiPaper-root MuiAccordion-root auditlogs-list-item MuiPaper-elevation1"
+        style=\\"grid-column-start: 2; grid-column-end: 4;\\"
       >
         <div
-          aria-disabled={false}
-          aria-expanded={false}
-          className="MuiButtonBase-root MuiAccordionSummary-root"
-          onBlur={[Function]}
-          onClick={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          role="button"
-          style={
-            Object {
-              "padding": 0,
-            }
-          }
-          tabIndex={0}
+          class=\\"MuiFormControl-root MuiTextField-root\\"
+          format=\\"MMMM Do\\"
+          style=\\"width: 160px; margin: 0px 7.5px 7.5px 7.5px;\\"
         >
-          <div
-            className="MuiAccordionSummary-content"
+          <label
+            class=\\"MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled\\"
+            data-shrink=\\"true\\"
           >
-            <div>
-              <div>
-                string
-              </div>
-            </div>
-            <div>
-              <div
-                className="uppercased"
-              >
-                create
-              </div>
-            </div>
-            <div>
-              <div
-                className="capitalized"
-              >
-                deployment
-              </div>
-            </div>
-            <div>
-              <div>
-                to production
-              </div>
-            </div>
-            <div>
-              <a
-                href="/deployments/finished?open=true&id=string"
-                onClick={[Function]}
-              >
-                View deployment
-              </a>
-            </div>
-            <div>
-              <time
-                dateTime="2019-01-01T12:59:59+00:00"
-                title={null}
-              >
-                2019-01-01 12:59
-              </time>
-            </div>
-            <button
-              className="MuiButtonBase-root MuiIconButton-root expandButton"
-              disabled={false}
-              onBlur={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              tabIndex={0}
-              type="button"
-            >
-              <span
-                className="MuiIconButton-label"
-              >
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M7 10l5 5 5-5z"
-                  />
-                </svg>
-              </span>
-            </button>
+            From
+          </label>
+          <div
+            class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl\\"
+          >
+            <input
+              aria-invalid=\\"false\\"
+              class=\\"MuiInputBase-input MuiInput-input\\"
+              readonly=\\"\\"
+              type=\\"text\\"
+              value=\\"January 1st\\"
+            />
           </div>
+          
         </div>
         <div
-          className="MuiCollapse-container MuiCollapse-hidden"
-          style={
-            Object {
-              "minHeight": "0px",
-            }
-          }
+          class=\\"MuiFormControl-root MuiTextField-root\\"
+          format=\\"MMMM Do\\"
+          style=\\"width: 160px; margin: 0px 7.5px 7.5px 7.5px;\\"
         >
-          <div
-            className="MuiCollapse-wrapper"
+          <label
+            class=\\"MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled\\"
+            data-shrink=\\"true\\"
           >
-            <div
-              className="MuiCollapse-wrapperInner"
-            >
-              <div
-                role="region"
-              >
-                <div
-                  className="MuiAccordionDetails-root"
-                >
-                  <div
-                    className="code flexbox column"
-                  >
-                    <span
-                      className=""
-                    >
-                      change2
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            To
+          </label>
+          <div
+            class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl\\"
+          >
+            <input
+              aria-invalid=\\"false\\"
+              class=\\"MuiInputBase-input MuiInput-input\\"
+              readonly=\\"\\"
+              type=\\"text\\"
+              value=\\"January 1st\\"
+            />
           </div>
+          
         </div>
       </div>
     </div>
     <div
-      className="MuiTablePagination-root flexbox margin-top "
+      class=\\"flexbox\\"
+      style=\\"align-items: center; justify-content: flex-end;\\"
     >
       <div
-        className="MuiToolbar-root MuiToolbar-regular MuiTablePagination-toolbar MuiToolbar-gutters"
+        class=\\"loaderContainer shrunk\\"
       >
         <div
-          className="MuiTablePagination-spacer flexbox no-basis"
-        />
-        <p
-          className="MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit"
+          class=\\"loader\\"
         >
-          Rows
-        </p>
-        <div
-          className="MuiInputBase-root MuiTablePagination-input MuiTablePagination-selectRoot"
-          onClick={[Function]}
-        >
-          <div
-            aria-haspopup="listbox"
-            className="MuiSelect-root MuiSelect-select MuiTablePagination-select MuiSelect-selectMenu MuiInputBase-input"
-            onBlur={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onMouseDown={[Function]}
-            role="button"
-            tabIndex={0}
-          >
-            20
-          </div>
-          <input
-            aria-hidden={true}
-            className="MuiSelect-nativeInput"
-            onAnimationStart={[Function]}
-            onChange={[Function]}
-            tabIndex={-1}
-            value={20}
+          <span
+            class=\\"dot dot_1\\"
           />
+          <span
+            class=\\"dot dot_2\\"
+          />
+          <span
+            class=\\"dot dot_3\\"
+          />
+          <span
+            class=\\"dot dot_4\\"
+          />
+        </div>
+      </div>
+      <button
+        class=\\"MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary\\"
+        style=\\"margin-left: 15px;\\"
+        tabindex=\\"0\\"
+        type=\\"button\\"
+      >
+        <span
+          class=\\"MuiButton-label\\"
+        >
+          Download results as csv
+        </span>
+        <span
+          class=\\"MuiTouchRipple-root\\"
+        />
+      </button>
+    </div>
+    <div
+      class=\\"fadeIn deploy-table-contain auditlogs-list\\"
+    >
+      <div
+        class=\\"auditlogs-list-item auditlogs-list-item-header muted\\"
+      >
+        <div
+          class=\\"columnHeader\\"
+          style=\\"cursor: initial;\\"
+        >
+          User
+        </div>
+        <div
+          class=\\"columnHeader\\"
+          style=\\"cursor: initial;\\"
+        >
+          Action
+        </div>
+        <div
+          class=\\"columnHeader\\"
+          style=\\"cursor: initial;\\"
+        >
+          Type
+        </div>
+        <div
+          class=\\"columnHeader\\"
+          style=\\"cursor: initial;\\"
+        >
+          Change
+        </div>
+        <div
+          class=\\"columnHeader\\"
+          style=\\"cursor: initial;\\"
+        >
+          More details
+        </div>
+        <div
+          class=\\"columnHeader\\"
+        >
+          Time
           <svg
-            aria-hidden={true}
-            className="MuiSvgIcon-root MuiSelect-icon MuiTablePagination-selectIcon"
-            focusable="false"
-            viewBox="0 0 24 24"
+            aria-hidden=\\"true\\"
+            class=\\"MuiSvgIcon-root sortIcon selected true\\"
+            focusable=\\"false\\"
+            viewBox=\\"0 0 24 24\\"
           >
             <path
-              d="M7 10l5 5 5-5z"
+              d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
             />
           </svg>
         </div>
-        <p
-          className="MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit"
-        >
-          
-        </p>
+        <div />
+      </div>
+      <div
+        class=\\"loaderContainer\\"
+      >
         <div
-          className="flexbox"
+          class=\\"loader\\"
         >
-          <button
-            className="MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled"
-            disabled={true}
-            onBlur={[Function]}
-            onClick={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            tabIndex={-1}
-            type="button"
-          >
-            <span
-              className="MuiIconButton-label"
-            >
-              <svg
-                aria-hidden={true}
-                className="MuiSvgIcon-root"
-                focusable="false"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z"
-                />
-              </svg>
-            </span>
-          </button>
-          <button
-            className="MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled"
-            disabled={true}
-            onBlur={[Function]}
-            onClick={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            tabIndex={-1}
-            type="button"
-          >
-            <span
-              className="MuiIconButton-label"
-            >
-              <svg
-                aria-hidden={true}
-                className="MuiSvgIcon-root"
-                focusable="false"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"
-                />
-              </svg>
-            </span>
-          </button>
+          <span
+            class=\\"dot dot_1\\"
+          />
+          <span
+            class=\\"dot dot_2\\"
+          />
+          <span
+            class=\\"dot dot_3\\"
+          />
+          <span
+            class=\\"dot dot_4\\"
+          />
+        </div>
+      </div>
+      <div
+        class=\\"auditlogs-list\\"
+      >
+        <div
+          class=\\"MuiPaper-root MuiAccordion-root auditlogs-list-item MuiPaper-elevation1\\"
+        >
           <div
-            className="flexbox"
-            style={
-              Object {
-                "alignItems": "baseline",
-              }
-            }
+            aria-disabled=\\"false\\"
+            aria-expanded=\\"false\\"
+            class=\\"MuiButtonBase-root MuiAccordionSummary-root\\"
+            role=\\"button\\"
+            style=\\"padding: 0px;\\"
+            tabindex=\\"0\\"
           >
             <div
-              className="MuiFormControl-root MuiTextField-root MuiFormControl-marginDense"
-              onKeyUp={[Function]}
-              style={
-                Object {
-                  "marginRight": "10px",
-                  "maxWidth": "30px",
-                  "minWidth": "30px",
-                }
-              }
+              class=\\"MuiAccordionSummary-content\\"
+            >
+              <div>
+                <div>
+                  string@example.com
+                </div>
+              </div>
+              <div>
+                <div
+                  class=\\"uppercased\\"
+                >
+                  create
+                </div>
+              </div>
+              <div>
+                <div
+                  class=\\"capitalized\\"
+                >
+                  user
+                </div>
+              </div>
+              <div>
+                <div>
+                  user@acme.com
+                </div>
+              </div>
+              <div>
+                <div
+                  class=\\"capitalized\\"
+                  style=\\"white-space: pre-line;\\"
+                >
+                  change1
+                </div>
+              </div>
+              <div>
+                <time
+                  datetime=\\"2019-01-01T12:59:59+00:00\\"
+                >
+                  2019-01-01 12:59
+                </time>
+              </div>
+              <button
+                class=\\"MuiButtonBase-root MuiIconButton-root expandButton\\"
+                tabindex=\\"0\\"
+                type=\\"button\\"
+              >
+                <span
+                  class=\\"MuiIconButton-label\\"
+                >
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root\\"
+                    focusable=\\"false\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M7 10l5 5 5-5z\\"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class=\\"MuiTouchRipple-root\\"
+                />
+              </button>
+            </div>
+          </div>
+          <div
+            class=\\"MuiCollapse-container MuiCollapse-hidden\\"
+            style=\\"min-height: 0px;\\"
+          >
+            <div
+              class=\\"MuiCollapse-wrapper\\"
             >
               <div
-                className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-marginDense MuiInput-marginDense"
-                onClick={[Function]}
+                class=\\"MuiCollapse-wrapperInner\\"
               >
-                <input
-                  aria-invalid={false}
-                  autoFocus={false}
-                  className="MuiInputBase-input MuiInput-input MuiInputBase-inputMarginDense MuiInput-inputMarginDense"
-                  disabled={false}
-                  onAnimationStart={[Function]}
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  required={false}
-                  type="text"
-                  value={1}
-                />
+                <div
+                  role=\\"region\\"
+                >
+                  <div
+                    class=\\"MuiAccordionDetails-root\\"
+                  >
+                    <div
+                      class=\\"code flexbox column\\"
+                    >
+                      <span
+                        class=\\"\\"
+                      >
+                        change1
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            / 1
           </div>
-          <button
-            className="MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled"
-            disabled={true}
-            onBlur={[Function]}
-            onClick={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            tabIndex={-1}
-            type="button"
+        </div>
+        <div
+          class=\\"MuiPaper-root MuiAccordion-root auditlogs-list-item MuiPaper-elevation1\\"
+        >
+          <div
+            aria-disabled=\\"false\\"
+            aria-expanded=\\"false\\"
+            class=\\"MuiButtonBase-root MuiAccordionSummary-root\\"
+            role=\\"button\\"
+            style=\\"padding: 0px;\\"
+            tabindex=\\"0\\"
           >
-            <span
-              className="MuiIconButton-label"
+            <div
+              class=\\"MuiAccordionSummary-content\\"
             >
-              <svg
-                aria-hidden={true}
-                className="MuiSvgIcon-root"
-                focusable="false"
-                viewBox="0 0 24 24"
+              <div>
+                <div>
+                  string
+                </div>
+              </div>
+              <div>
+                <div
+                  class=\\"uppercased\\"
+                >
+                  create
+                </div>
+              </div>
+              <div>
+                <div
+                  class=\\"capitalized\\"
+                >
+                  deployment
+                </div>
+              </div>
+              <div>
+                <div>
+                  to production
+                </div>
+              </div>
+              <div>
+                <a
+                  href=\\"/deployments/finished?open=true&id=string\\"
+                >
+                  View deployment
+                </a>
+              </div>
+              <div>
+                <time
+                  datetime=\\"2019-01-01T12:59:59+00:00\\"
+                >
+                  2019-01-01 12:59
+                </time>
+              </div>
+              <button
+                class=\\"MuiButtonBase-root MuiIconButton-root expandButton\\"
+                tabindex=\\"0\\"
+                type=\\"button\\"
               >
-                <path
-                  d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
+                <span
+                  class=\\"MuiIconButton-label\\"
+                >
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root\\"
+                    focusable=\\"false\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M7 10l5 5 5-5z\\"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class=\\"MuiTouchRipple-root\\"
                 />
-              </svg>
-            </span>
-          </button>
-          <button
-            className="MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled"
-            disabled={true}
-            onBlur={[Function]}
-            onClick={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            tabIndex={-1}
-            type="button"
+              </button>
+            </div>
+          </div>
+          <div
+            class=\\"MuiCollapse-container MuiCollapse-hidden\\"
+            style=\\"min-height: 0px;\\"
           >
-            <span
-              className="MuiIconButton-label"
+            <div
+              class=\\"MuiCollapse-wrapper\\"
             >
-              <svg
-                aria-hidden={true}
-                className="MuiSvgIcon-root"
-                focusable="false"
-                viewBox="0 0 24 24"
+              <div
+                class=\\"MuiCollapse-wrapperInner\\"
               >
-                <path
-                  d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z"
-                />
-              </svg>
-            </span>
-          </button>
+                <div
+                  role=\\"region\\"
+                >
+                  <div
+                    class=\\"MuiAccordionDetails-root\\"
+                  >
+                    <div
+                      class=\\"code flexbox column\\"
+                    >
+                      <span
+                        class=\\"\\"
+                      >
+                        change2
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class=\\"MuiTablePagination-root flexbox margin-top \\"
+      >
+        <div
+          class=\\"MuiToolbar-root MuiToolbar-regular MuiTablePagination-toolbar MuiToolbar-gutters\\"
+        >
+          <div
+            class=\\"MuiTablePagination-spacer flexbox no-basis\\"
+          />
+          <p
+            class=\\"MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit\\"
+            
+          >
+            Rows
+          </p>
+          <div
+            class=\\"MuiInputBase-root MuiTablePagination-input MuiTablePagination-selectRoot\\"
+          >
+            <div
+              aria-haspopup=\\"listbox\\"
+              
+              class=\\"MuiSelect-root MuiSelect-select MuiTablePagination-select MuiSelect-selectMenu MuiInputBase-input\\"
+              
+              role=\\"button\\"
+              tabindex=\\"0\\"
+            >
+              20
+            </div>
+            <input
+              aria-hidden=\\"true\\"
+              class=\\"MuiSelect-nativeInput\\"
+              tabindex=\\"-1\\"
+              value=\\"20\\"
+            />
+            <svg
+              aria-hidden=\\"true\\"
+              class=\\"MuiSvgIcon-root MuiSelect-icon MuiTablePagination-selectIcon\\"
+              focusable=\\"false\\"
+              viewBox=\\"0 0 24 24\\"
+            >
+              <path
+                d=\\"M7 10l5 5 5-5z\\"
+              />
+            </svg>
+          </div>
+          <p
+            class=\\"MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit\\"
+          />
+          <div
+            class=\\"flexbox\\"
+          >
+            <button
+              class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+              disabled=\\"\\"
+              tabindex=\\"-1\\"
+              type=\\"button\\"
+            >
+              <span
+                class=\\"MuiIconButton-label\\"
+              >
+                <svg
+                  aria-hidden=\\"true\\"
+                  class=\\"MuiSvgIcon-root\\"
+                  focusable=\\"false\\"
+                  viewBox=\\"0 0 24 24\\"
+                >
+                  <path
+                    d=\\"M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z\\"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+              disabled=\\"\\"
+              tabindex=\\"-1\\"
+              type=\\"button\\"
+            >
+              <span
+                class=\\"MuiIconButton-label\\"
+              >
+                <svg
+                  aria-hidden=\\"true\\"
+                  class=\\"MuiSvgIcon-root\\"
+                  focusable=\\"false\\"
+                  viewBox=\\"0 0 24 24\\"
+                >
+                  <path
+                    d=\\"M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z\\"
+                  />
+                </svg>
+              </span>
+            </button>
+            <div
+              class=\\"flexbox\\"
+              style=\\"align-items: baseline;\\"
+            >
+              <div
+                class=\\"MuiFormControl-root MuiTextField-root MuiFormControl-marginDense\\"
+                style=\\"min-width: 30px; max-width: 30px; margin-right: 10px;\\"
+              >
+                <div
+                  class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-marginDense MuiInput-marginDense\\"
+                >
+                  <input
+                    aria-invalid=\\"false\\"
+                    class=\\"MuiInputBase-input MuiInput-input MuiInputBase-inputMarginDense MuiInput-inputMarginDense\\"
+                    type=\\"text\\"
+                    value=\\"1\\"
+                  />
+                </div>
+              </div>
+              / 1
+            </div>
+            <button
+              class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+              disabled=\\"\\"
+              tabindex=\\"-1\\"
+              type=\\"button\\"
+            >
+              <span
+                class=\\"MuiIconButton-label\\"
+              >
+                <svg
+                  aria-hidden=\\"true\\"
+                  class=\\"MuiSvgIcon-root\\"
+                  focusable=\\"false\\"
+                  viewBox=\\"0 0 24 24\\"
+                >
+                  <path
+                    d=\\"M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z\\"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+              disabled=\\"\\"
+              tabindex=\\"-1\\"
+              type=\\"button\\"
+            >
+              <span
+                class=\\"MuiIconButton-label\\"
+              >
+                <svg
+                  aria-hidden=\\"true\\"
+                  class=\\"MuiSvgIcon-root\\"
+                  focusable=\\"false\\"
+                  viewBox=\\"0 0 24 24\\"
+                >
+                  <path
+                    d=\\"M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z\\"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</div>"
 `;
