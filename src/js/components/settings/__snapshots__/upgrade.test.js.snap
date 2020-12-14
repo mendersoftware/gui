@@ -46,9 +46,12 @@ exports[`GlobalSettings Component renders correctly 1`] = `
       >
         <h4>
           Starter
+           
         </h4>
         <p>
-          $29/month for first 50 devices
+          <span>
+            $29/month for first 50 devices
+          </span>
         </p>
         <span
           className="info"
@@ -62,9 +65,12 @@ exports[`GlobalSettings Component renders correctly 1`] = `
       >
         <h4>
           Professional
+           
         </h4>
         <p>
-          $249/month for first 250 devices
+          <span>
+            $249/month for first 250 devices
+          </span>
         </p>
         <span
           className="info"
@@ -78,9 +84,12 @@ exports[`GlobalSettings Component renders correctly 1`] = `
       >
         <h4>
           Enterprise
+           
         </h4>
         <p>
-          Custom pricing, unlimited devices
+          <span>
+            Custom pricing, unlimited devices
+          </span>
         </p>
         <span
           className="info"
@@ -109,14 +118,14 @@ exports[`GlobalSettings Component renders correctly 1`] = `
           d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
         />
       </svg>
-       To ask about extending the device limit of a specific plan,
+      If you have any questions about the plan pricing or device limits,
        
       <a
         href="mailto:contact@mender.io"
         rel="noopener noreferrer"
         target="_blank"
       >
-        contact our sales team
+        contact our team
       </a>
       .
     </p>

@@ -1,6 +1,6 @@
 import React from 'react';
-import { createMount } from '@material-ui/core/test-utils';
 import { Provider } from 'react-redux';
+import { render } from '@testing-library/react';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import TerminalDialog from './terminal';
@@ -15,12 +15,13 @@ describe('TerminalDialog Component', () => {
   });
 
   it('renders correctly', () => {
-    const tree = createMount()(
+    const { baseElement } = render(
       <Provider store={store}>
         <TerminalDialog onCancel={jest.fn} open={true} />
       </Provider>
-    ).html();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    );
+    const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });
