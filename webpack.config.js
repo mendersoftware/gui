@@ -78,7 +78,8 @@ module.exports = {
       cleanAfterEveryBuildPatterns: ['!assets/fonts/*', '!assets/img/*']
     }),
     new webpack.ProvidePlugin({
-      process: 'process/browser'
+      process: 'process/browser',
+      Buffer: ['buffer', 'Buffer']
     }),
     new HtmlWebPackPlugin({
       favicon: './src/favicon.ico',
@@ -95,9 +96,11 @@ module.exports = {
       '@babel/runtime/helpers/esm': path.resolve(__dirname, 'node_modules/@babel/runtime/helpers/esm')
     },
     fallback: {
+      assert: require.resolve('assert/'),
       buffer: require.resolve('buffer/'),
       crypto: 'crypto-browserify',
-      stream: require.resolve('stream-browserify')
+      stream: require.resolve('stream-browserify'),
+      util: require.resolve('util/')
     }
   },
   target: 'web'

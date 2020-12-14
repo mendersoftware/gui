@@ -4,14 +4,14 @@ const cookies = new Cookies();
 export const getToken = () => cookies.get('JWT');
 
 export const logout = () => {
-  cookies.remove('JWT');
+  cookies.remove('JWT', { path: '/' });
   window.location.replace('#/login');
 };
 
 export const updateMaxAge = () => {
   const userCookie = getToken();
   if (userCookie && expirySet()) {
-    cookies.set('JWT', userCookie, { maxAge: 900, sameSite: 'strict' });
+    cookies.set('JWT', userCookie, { maxAge: 900, sameSite: 'strict', path: '/' });
   }
 };
 
