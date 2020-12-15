@@ -1,7 +1,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import ScheduleRollout from './schedulerollout';
-import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { undefineds } from '../../../../../tests/mockData';
 
 describe('ScheduleRollout Component', () => {
   it('renders correctly', () => {

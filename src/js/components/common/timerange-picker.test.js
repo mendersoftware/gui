@@ -12,8 +12,10 @@ describe('TimerangePicker Component', () => {
     global.Date = class extends Date {
       constructor(date) {
         if (date) {
+          // eslint-disable-next-line constructor-super
           return super(date);
         }
+        // eslint-disable-next-line constructor-super
         return super(mockDate.getTime());
       }
     };

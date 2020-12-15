@@ -107,17 +107,14 @@ export class Artifacts extends React.Component {
     const self = this;
     const { doneLoading, selectedFile, showCreateArtifactDialog } = self.state;
     const {
-      advanceOnboarding,
       artifactProgress,
       cancelArtifactUpload,
-      deviceTypes,
       onboardingState,
       releases,
       showRemoveDialog,
       selectedArtifact,
       selectedRelease,
       setShowCreateArtifactDialog,
-      setSnackbar,
       showOnboardingDialog,
       showRemoveArtifactDialog
     } = self.props;

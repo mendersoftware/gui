@@ -1,6 +1,5 @@
 import reducer, { initialState } from './onboardingReducer';
 import OnboardingConstants from '../constants/onboardingConstants';
-import { defaultState } from '../../../tests/mockData';
 
 describe('organization reducer', () => {
   it('should return the initial state', () => {

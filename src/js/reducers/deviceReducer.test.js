@@ -87,6 +87,7 @@ describe('device reducer', () => {
 
   it('should handle REMOVE_DYNAMIC_GROUP', () => {
     let state = reducer(undefined, { type: DeviceConstants.RECEIVE_GROUPS, groups: defaultState.devices.groups.byId });
+    // eslint-disable-next-line no-unused-vars
     const { testGroupDynamic, ...remainder } = defaultState.devices.groups.byId;
     expect(Object.keys(reducer(state, { type: DeviceConstants.REMOVE_DYNAMIC_GROUP, groups: remainder }).groups.byId)).toHaveLength(
       Object.keys(defaultState.devices.groups.byId).length - 1
@@ -97,6 +98,7 @@ describe('device reducer', () => {
   });
   it('should handle REMOVE_STATIC_GROUP', () => {
     let state = reducer(undefined, { type: DeviceConstants.RECEIVE_GROUPS, groups: defaultState.devices.groups.byId });
+    // eslint-disable-next-line no-unused-vars
     const { testGroup, ...remainder } = defaultState.devices.groups.byId;
     expect(Object.keys(reducer(state, { type: DeviceConstants.REMOVE_STATIC_GROUP, groups: remainder }).groups.byId)).toHaveLength(
       Object.keys(defaultState.devices.groups.byId).length - 1
