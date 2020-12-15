@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import Time from 'react-time';
 import ReactTooltip from 'react-tooltip';
 
-import { Button, Icon, List, Typography } from '@material-ui/core';
+import { Button, Icon, List, Typography, SvgIcon } from '@material-ui/core';
 import { Block as BlockIcon, Check as CheckIcon, CheckCircle as CheckCircleIcon, Help as HelpIcon, Warning as WarningIcon } from '@material-ui/icons';
+import { mdiConsole as ConsoleIcon } from '@mdi/js';
 
 import pendingIcon from '../../../assets/img/pending_status.png';
 import { decommissionDevice } from '../../actions/deviceActions';
@@ -179,7 +180,14 @@ export class ExpandedDevice extends React.Component {
                 </Typography>
               )}
               {connect_status === DEVICE_CONNECT_STATES.connected && (
-                <Button onClick={() => self._launchTerminal()}>
+                <Button
+                  onClick={() => self._launchTerminal()}
+                  startIcon={
+                    <SvgIcon fontSize="inherit">
+                      <path d={ConsoleIcon} />
+                    </SvgIcon>
+                  }
+                >
                   <span className="inline-block">
                     <Typography variant="subtitle2" style={buttonStyle}>
                       Launch a new Remote Terminal session
