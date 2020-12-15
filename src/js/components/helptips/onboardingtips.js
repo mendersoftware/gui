@@ -12,13 +12,7 @@ import { setShowDismissOnboardingTipsDialog } from '../../actions/onboardingActi
 import { setShowConnectingDialog } from '../../actions/userActions';
 
 const WelcomeSnackTipComponent = ({ progress, setSnackbar }) => {
-  const onClose = (_, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnackbar('');
-  };
-
+  const onClose = () => setSnackbar('');
   const messages = {
     1: (
       <div>
