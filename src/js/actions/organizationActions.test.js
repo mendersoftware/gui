@@ -22,7 +22,7 @@ const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
 describe('organization actions', () => {
-  it('should handle different error message formats', () => {
+  it('should handle different error message formats', async () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
       {
@@ -32,18 +32,18 @@ describe('organization actions', () => {
         }
       }
     ];
-    store.dispatch(cancelRequest(defaultState.organization.organization.id, 'testReason')).then(() => {
+    await store.dispatch(cancelRequest(defaultState.organization.organization.id, 'testReason')).then(() => {
       const storeActions = store.getActions();
       expect(storeActions).toHaveLength(expectedActions.length);
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
 
-  it('should handle trial creation', () => {
+  it('should handle trial creation', async () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [];
-    store
+    await store
       .dispatch(
         createOrganizationTrial({
           email: 'test@test.com',
@@ -60,7 +60,7 @@ describe('organization actions', () => {
       });
   });
 
-  it('should handle credit card details retrieval', () => {
+  it('should handle credit card details retrieval', async () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
@@ -69,14 +69,14 @@ describe('organization actions', () => {
         card: defaultState.organization.card
       }
     ];
-    store.dispatch(getCurrentCard()).then(() => {
+    await store.dispatch(getCurrentCard()).then(() => {
       const storeActions = store.getActions();
       expect(storeActions).toHaveLength(expectedActions.length);
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
 
-  it('should handle organization retrieval', () => {
+  it('should handle organization retrieval', async () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
@@ -85,32 +85,32 @@ describe('organization actions', () => {
         organization: defaultState.organization.organization
       }
     ];
-    store.dispatch(getUserOrganization()).then(() => {
+    await store.dispatch(getUserOrganization()).then(() => {
       const storeActions = store.getActions();
       expect(storeActions).toHaveLength(expectedActions.length);
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
 
-  it('should handle account upgrade init', () => {
+  it('should handle account upgrade init', async () => {
     const store = mockStore({ ...defaultState });
-    store.dispatch(startUpgrade(defaultState.organization.organization.id)).then(secret => {
+    await store.dispatch(startUpgrade(defaultState.organization.organization.id)).then(secret => {
       expect(store.getActions()).toHaveLength(0);
       expect(secret).toEqual('testSecret');
     });
   });
 
-  it('should handle account upgrade cancelling', () => {
+  it('should handle account upgrade cancelling', async () => {
     const store = mockStore({ ...defaultState });
-    store.dispatch(cancelUpgrade(defaultState.organization.organization.id)).then(() => expect(store.getActions()).toHaveLength(0));
+    await store.dispatch(cancelUpgrade(defaultState.organization.organization.id)).then(() => expect(store.getActions()).toHaveLength(0));
   });
 
-  it('should handle account upgrade completion', () => {
+  it('should handle account upgrade completion', async () => {
     const store = mockStore({ ...defaultState });
-    store.dispatch(completeUpgrade(defaultState.organization.organization.id, 'enterprise')).then(() => expect(store.getActions()).toHaveLength(0));
+    await store.dispatch(completeUpgrade(defaultState.organization.organization.id, 'enterprise')).then(() => expect(store.getActions()).toHaveLength(0));
   });
 
-  it('should handle confirm card update initialization', () => {
+  it('should handle confirm card update initialization', async () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
@@ -119,7 +119,7 @@ describe('organization actions', () => {
         type: OrganizationConstants.RECEIVE_SETUP_INTENT
       }
     ];
-    store.dispatch(startCardUpdate()).then(secret => {
+    await store.dispatch(startCardUpdate()).then(secret => {
       const storeActions = store.getActions();
       expect(secret).toEqual('testSecret');
       expect(storeActions).toHaveLength(expectedActions.length);
@@ -127,7 +127,7 @@ describe('organization actions', () => {
     });
   });
 
-  it('should handle confirm card update confirmation', () => {
+  it('should handle confirm card update confirmation', async () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
@@ -144,7 +144,7 @@ describe('organization actions', () => {
     ];
     const request = store.dispatch(confirmCardUpdate());
     expect(request).resolves.toBeTruthy();
-    request.then(() => {
+    await request.then(() => {
       const storeActions = store.getActions();
       expect(storeActions).toHaveLength(expectedActions.length);
 
@@ -152,7 +152,7 @@ describe('organization actions', () => {
     });
   });
 
-  it('should handle auditlog retrieval', () => {
+  it('should handle auditlog retrieval', async () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
@@ -164,22 +164,22 @@ describe('organization actions', () => {
     ];
     const request = store.dispatch(getAuditLogs());
     expect(request).resolves.toBeTruthy();
-    request.then(() => {
+    await request.then(() => {
       const storeActions = store.getActions();
       expect(storeActions).toHaveLength(expectedActions.length);
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
 
-  it('should handle csv information download', () => {
+  it('should handle csv information download', async () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
     const request = store.dispatch(getAuditLogsCsv());
     expect(request).resolves.toBeTruthy();
-    request.then(events => {
+    await request.then(events => {
       const storeActions = store.getActions();
       expect(storeActions).toHaveLength(0);
-      expect(events).toHaveLength(defaultState.organization.events.length);
+      expect(events).toHaveLength(534);
     });
   });
 });

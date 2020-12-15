@@ -61,7 +61,7 @@ const defaultResponseActions = {
   }
 };
 
-describe('abortDeployment', () => {
+describe('deployment actions', () => {
   const store = mockStore({ ...defaultState });
   it('should allow aborting deployments', async () => {
     const expectedActions = [
@@ -81,14 +81,11 @@ describe('abortDeployment', () => {
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
-  it(`should reject aborting deployments that don't exist`, async () => {
+  it(`should reject aborting deployments that don't exist`, () => {
     const abortedDeployment = store.dispatch(abortDeployment(`${defaultState.deployments.byId.d1.id}-invalid`));
     expect(typeof abortedDeployment === Promise);
     expect(abortedDeployment).rejects.toBeTruthy();
   });
-});
-
-describe('createDeployment', () => {
   it('should allow creating deployments without filter or group', async () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
@@ -151,11 +148,8 @@ describe('createDeployment', () => {
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
-});
-
-describe('getDeploymentsByStatus', () => {
-  const store = mockStore({ ...defaultState });
   it('should allow deployments retrieval', async () => {
+    const store = mockStore({ ...defaultState });
     const expectedActions = [
       {
         ...defaultResponseActions.receiveInprogress,
@@ -175,9 +169,6 @@ describe('getDeploymentsByStatus', () => {
         expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
       });
   });
-});
-
-describe('getDeviceLog', () => {
   it('should allow deployment device log retrieval', async () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [defaultResponseActions.log];
@@ -187,9 +178,6 @@ describe('getDeviceLog', () => {
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
-});
-
-describe('selectDeployment', () => {
   it('should allow selecting a deployment', async () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [defaultResponseActions.select, defaultResponseActions.receive, defaultResponseActions.stats];

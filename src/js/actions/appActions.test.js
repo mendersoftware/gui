@@ -8,11 +8,11 @@ import AppConstants from '../constants/appConstants';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-describe('commonErrorHandler', () => {
-  it('should handle different error message formats', () => {
+describe('app actions', () => {
+  it('should handle different error message formats', async () => {
     const store = mockStore({ ...defaultState });
     const err = { response: { data: { error: { message: 'test' } } }, id: '123' };
-    expect(commonErrorHandler(err, 'testContext', store.dispatch)).rejects.toEqual(err);
+    await expect(commonErrorHandler(err, 'testContext', store.dispatch)).rejects.toEqual(err);
     const expectedActions = [
       {
         type: AppConstants.SET_SNACKBAR,
@@ -32,10 +32,8 @@ describe('commonErrorHandler', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
-});
 
-// TODO: this causes jsdom based exceptions
-describe('initializeAppData', () => {
+  // TODO: this causes jsdom based exceptions
   it('should try to get all required app information', async () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [];
@@ -47,10 +45,7 @@ describe('initializeAppData', () => {
       expectedActions.map((action, index) => Object.keys(action).map(key => expect(storeActions[index][key]).toEqual(action[key])));
     });
   });
-});
-
-describe('setFirstLoginAfterSignup', () => {
-  it('should pass snackbar information', () => {
+  it('should pass snackbar information', async () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
       {
@@ -67,15 +62,12 @@ describe('setFirstLoginAfterSignup', () => {
         }
       }
     ];
-    store.dispatch(setSnackbar('test', 20));
+    await store.dispatch(setSnackbar('test', 20));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
-});
-
-describe('setFirstLoginAfterSignup', () => {
-  it('should store first login after Signup', () => {
+  it('should store first login after Signup', async () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
       {
@@ -83,7 +75,7 @@ describe('setFirstLoginAfterSignup', () => {
         firstLoginAfterSignup: true
       }
     ];
-    store.dispatch(setFirstLoginAfterSignup(true));
+    await store.dispatch(setFirstLoginAfterSignup(true));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

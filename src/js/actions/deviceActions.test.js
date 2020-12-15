@@ -41,9 +41,9 @@ const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
 describe('selecting things', () => {
-  it('should allow device list selections', () => {
+  it('should allow device list selections', async () => {
     const store = mockStore({ ...defaultState });
-    store.dispatch(selectDevices(['a1']));
+    await store.dispatch(selectDevices(['a1']));
     const expectedActions = [{ type: DeviceConstants.SELECT_DEVICES, deviceIds: ['a1'] }];
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);

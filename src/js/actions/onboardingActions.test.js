@@ -20,30 +20,37 @@ import UserConstants from '../constants/userConstants';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-describe('setOnboardingComplete', () => {
-  it('should pass on onboarding artifact creation dialog', () => {
+describe('onboarding actions', () => {
+  it('should pass on onboarding artifact creation dialog', async () => {
     const store = mockStore({ ...defaultState });
-    store.dispatch(setOnboardingComplete(true));
+    await store.dispatch(setOnboardingComplete(true));
     const expectedActions = [
+      { type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: true },
+      { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: false },
+      { type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value: 'onboarding-finished-notification' },
       {
-        type: OnboardingConstants.SET_ONBOARDING_COMPLETE,
-        complete: true
-      },
-      {
-        type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP,
-        show: false
+        type: UserConstants.SET_GLOBAL_SETTINGS,
+        settings: {
+          ...defaultState.users.globalSettings,
+          [defaultState.users.currentUser]: {
+            ...defaultState.users.globalSettings[defaultState.users.currentUser],
+            onboarding: {
+              complete: true,
+              demoArtifactPort: 85,
+              progress: 'onboarding-finished-notification',
+              showConnectDeviceDialog: false
+            }
+          }
+        }
       }
     ];
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => Object.keys(action).map(key => expect(storeActions[index][key]).toEqual(action[key])));
   });
-});
-
-describe('setOnboardingApproach', () => {
-  it('should pass on onboarding artifact creation dialog', () => {
+  it('should pass on onboarding artifact creation dialog', async () => {
     const store = mockStore({ ...defaultState });
-    store.dispatch(setOnboardingApproach('test'));
+    await store.dispatch(setOnboardingApproach('test'));
     const expectedActions = [
       {
         type: OnboardingConstants.SET_ONBOARDING_APPROACH,
@@ -54,12 +61,9 @@ describe('setOnboardingApproach', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => Object.keys(action).map(key => expect(storeActions[index][key]).toEqual(action[key])));
   });
-});
-
-describe('setOnboardingDeviceType', () => {
-  it('should pass on onboarding artifact creation dialog', () => {
+  it('should pass on onboarding artifact creation dialog', async () => {
     const store = mockStore({ ...defaultState });
-    store.dispatch(setOnboardingDeviceType('testtype'));
+    await store.dispatch(setOnboardingDeviceType('testtype'));
     const expectedActions = [
       {
         type: OnboardingConstants.SET_ONBOARDING_DEVICE_TYPE,
@@ -70,12 +74,9 @@ describe('setOnboardingDeviceType', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => Object.keys(action).map(key => expect(storeActions[index][key]).toEqual(action[key])));
   });
-});
-
-describe('setShowCreateArtifactDialog', () => {
-  it('should pass on onboarding artifact creation dialog', () => {
+  it('should pass on onboarding artifact creation dialog', async () => {
     const store = mockStore({ ...defaultState });
-    store.dispatch(setShowCreateArtifactDialog(true));
+    await store.dispatch(setShowCreateArtifactDialog(true));
     const expectedActions = [
       {
         type: OnboardingConstants.SET_SHOW_CREATE_ARTIFACT,
@@ -86,12 +87,9 @@ describe('setShowCreateArtifactDialog', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => Object.keys(action).map(key => expect(storeActions[index][key]).toEqual(action[key])));
   });
-});
-
-describe('setShowDismissOnboardingTipsDialog', () => {
-  it('should pass on onboarding tips visibility confirmation', () => {
+  it('should pass on onboarding tips visibility confirmation', async () => {
     const store = mockStore({ ...defaultState });
-    store.dispatch(setShowDismissOnboardingTipsDialog(true));
+    await store.dispatch(setShowDismissOnboardingTipsDialog(true));
     const expectedActions = [
       {
         type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP_DIALOG,
@@ -102,24 +100,18 @@ describe('setShowDismissOnboardingTipsDialog', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => Object.keys(action).map(key => expect(storeActions[index][key]).toEqual(action[key])));
   });
-});
-
-describe('setShowOnboardingHelp', () => {
-  it('should pass on onboarding tips visibility', () => {
+  it('should pass on onboarding tips visibility', async () => {
     const store = mockStore({ ...defaultState });
-    store.dispatch(setShowOnboardingHelp(true));
+    await store.dispatch(setShowOnboardingHelp(true));
     const expectedActions = [{ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true }];
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => Object.keys(action).map(key => expect(storeActions[index][key]).toEqual(action[key])));
   });
-});
-
-describe('advanceOnboarding', () => {
-  it('should advance onboarding by one step', () => {
+  it('should advance onboarding by one step', async () => {
     const store = mockStore({ ...defaultState });
     const stepNames = Object.keys(onboardingSteps);
-    store.dispatch(advanceOnboarding(stepNames[0]));
+    await store.dispatch(advanceOnboarding(stepNames[0]));
     const expectedActions = [
       { type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value: stepNames[1] },
       {
@@ -141,13 +133,10 @@ describe('advanceOnboarding', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => Object.keys(action).map(key => expect(storeActions[index][key]).toEqual(action[key])));
   });
-});
-
-describe('setOnboardingCanceled', () => {
-  it('should disable helptips and store a canceled state', () => {
+  it('should disable helptips and store a canceled state', async () => {
     const store = mockStore({ ...defaultState });
     const stepNames = Object.keys(onboardingSteps);
-    store.dispatch(setOnboardingCanceled(stepNames[0]));
+    await store.dispatch(setOnboardingCanceled(stepNames[0]));
     const expectedActions = [
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: false },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP_DIALOG, show: false },
@@ -157,13 +146,10 @@ describe('setOnboardingCanceled', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => Object.keys(action).map(key => expect(storeActions[index][key]).toEqual(action[key])));
   });
-});
-
-describe('getOnboardingState', () => {
-  it('should try to derive the onboarding state based on the stored state of the environment', () => {
+  it('should try to derive the onboarding state based on the stored state of the environment', async () => {
     const store = mockStore({ ...defaultState });
     const stepNames = Object.keys(onboardingSteps);
-    store.dispatch(getOnboardingState(stepNames[0]));
+    await store.dispatch(getOnboardingState(stepNames[0]));
     const expectedActions = [
       { type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: false },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true },

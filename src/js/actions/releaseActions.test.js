@@ -42,7 +42,7 @@ describe('release actions', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
-  it('should retrieve the download url for an artifact', () => {
+  it('should retrieve the download url for an artifact', async () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
       {
@@ -58,7 +58,7 @@ describe('release actions', () => {
         }
       }
     ];
-    store.dispatch(getArtifactUrl('art1')).then(() => {
+    await store.dispatch(getArtifactUrl('art1')).then(() => {
       const storeActions = store.getActions();
       expect(storeActions.length).toEqual(expectedActions.length);
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
@@ -75,17 +75,17 @@ describe('release actions', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
-  it('should select a release by name', () => {
+  it('should select a release by name', async () => {
     const store = mockStore({ ...defaultState });
-    store.dispatch(selectRelease('test'));
+    await store.dispatch(selectRelease('test'));
     const expectedActions = [{ type: ReleaseConstants.SELECTED_RELEASE, release: 'test' }];
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
-  it('should pass on artifact removal dialog visibility', () => {
+  it('should pass on artifact removal dialog visibility', async () => {
     const store = mockStore({ ...defaultState });
-    store.dispatch(showRemoveArtifactDialog(true));
+    await store.dispatch(showRemoveArtifactDialog(true));
     const expectedActions = [
       {
         type: ReleaseConstants.SHOW_REMOVE_DIALOG,

@@ -45,8 +45,8 @@ const receivedRoles = rbacRoles.reduce((accu, role) => {
   return accu;
 }, {});
 
-describe('setShowConnectingDialog', () => {
-  it('should forward connecting dialog visibility', () => {
+describe('user actions', () => {
+  it('should forward connecting dialog visibility', async () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
       {
@@ -54,22 +54,19 @@ describe('setShowConnectingDialog', () => {
         show: true
       }
     ];
-    store.dispatch(setShowConnectingDialog(true));
+    await store.dispatch(setShowConnectingDialog(true));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
-});
-
-describe('helptips handling', () => {
-  it('should forward helptips visibility', () => {
+  it('should forward helptips visibility', async () => {
     jest.clearAllMocks();
     const expectedActions = [
       { type: UserConstants.SET_SHOW_HELP, show: true },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true }
     ];
     const store = mockStore({ ...defaultState });
-    store.dispatch(setShowHelptips(true));
+    await store.dispatch(setShowHelptips(true));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
@@ -105,9 +102,6 @@ describe('helptips handling', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
-});
-
-describe('2fa functionality', () => {
   it('should allow retrieving 2fa qr codes', async () => {
     jest.clearAllMocks();
     const expectedActions = [{ type: UserConstants.RECEIVED_QR_CODE, value: btoa('test') }];
@@ -126,9 +120,7 @@ describe('2fa functionality', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
-});
 
-describe('login/ -out functionality', () => {
   it('should allow logging in', async () => {
     jest.clearAllMocks();
     const expectedActions = [
@@ -152,10 +144,10 @@ describe('login/ -out functionality', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
-  it('should not allow logging out with an active upload', () => {
+  it('should not allow logging out with an active upload', async () => {
     jest.clearAllMocks();
     const store = mockStore({ ...defaultState, releases: { ...defaultState.releases, uploadProgress: 42 } });
-    store.dispatch(logoutUser()).catch(() => expect(true).toEqual(true));
+    await store.dispatch(logoutUser()).catch(() => expect(true).toEqual(true));
   });
   it('should notify on log out if a reason is given', async () => {
     jest.clearAllMocks();
@@ -166,9 +158,6 @@ describe('login/ -out functionality', () => {
     // expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
-});
-
-describe('user handling', () => {
   it('should allow single user retrieval', async () => {
     jest.clearAllMocks();
     const cookies = new Cookies();
@@ -232,9 +221,6 @@ describe('user handling', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
-});
-
-describe('role handling', () => {
   it('should allow role list retrieval', async () => {
     jest.clearAllMocks();
     const expectedActions = [{ type: UserConstants.RECEIVED_ROLES, rolesById: { ...defaultState.users.rolesById, ...receivedRoles } }];
@@ -280,9 +266,6 @@ describe('role handling', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
-});
-
-describe('password reset functionality', () => {
   it('should allow password reset - pt. 1', async () => {
     const store = mockStore({ ...defaultState });
     store.dispatch(passwordResetStart(defaultState.users.byId.a1.email)).then(() => expect(true).toEqual(true));
@@ -291,9 +274,6 @@ describe('password reset functionality', () => {
     const store = mockStore({ ...defaultState });
     store.dispatch(passwordResetComplete('secretHash', 'newPassword')).then(() => expect(true).toEqual(true));
   });
-});
-
-describe('settings persistance functionality', () => {
   it('should allow storing global settings without deletion', async () => {
     jest.clearAllMocks();
     const expectedActions = [{ type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings, ...settings } }];
@@ -329,15 +309,12 @@ describe('settings persistance functionality', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
-});
-
-describe('should allow hiding announcements shown in the header', () => {
-  it('should store the visibility in a cookie on dismissal', () => {
+  it('should store the visibility of the announcement shown in the header in a cookie on dismissal', async () => {
     jest.clearAllMocks();
     const cookies = new Cookies();
     const expectedActions = [{ type: AppConstants.SET_ANNOUNCEMENT, announcement: undefined }];
     const store = mockStore({ ...defaultState, app: { ...defaultState.app, hostedAnnouncement: 'something' } });
-    store.dispatch(setHideAnnouncement(true));
+    await store.dispatch(setHideAnnouncement(true));
     const storeActions = store.getActions();
     expect(cookies.get).toHaveBeenCalledTimes(1);
     expect(cookies.set).toHaveBeenCalledTimes(1);
