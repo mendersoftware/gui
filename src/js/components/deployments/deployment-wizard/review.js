@@ -7,7 +7,7 @@ import { Chip, List } from '@material-ui/core';
 import { formatTime, generateDeploymentGroupDetails, getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import ExpandableAttribute from '../../common/expandable-attribute';
-import { getPhaseStartTime } from '../deployments';
+import { getPhaseStartTime } from '../createdeployment';
 
 const Review = ({
   deployment = {},

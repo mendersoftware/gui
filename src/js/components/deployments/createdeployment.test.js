@@ -3,10 +3,10 @@ import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { MemoryRouter } from 'react-router-dom';
-import { render, fireEvent, screen, within } from '@testing-library/react';
+import { render, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import CreateDeployment from './createdeployment';
+import CreateDeployment, { CreateDialog, mapStateToProps } from './createdeployment';
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { selectMaterialUiSelectOption } from '../../../../tests/setupTests';
 
@@ -14,26 +14,37 @@ const mockStore = configureStore([thunk]);
 
 describe('CreateDeployment Component', () => {
   let store;
+  let mockState = {
+    ...defaultState,
+    app: {
+      ...defaultState.app,
+      features: {
+        ...defaultState.features,
+        isEnterprise: false,
+        isHosted: false
+      }
+    }
+  };
 
   beforeEach(() => {
-    store = mockStore({
-      ...defaultState,
-      app: {
-        ...defaultState.app,
-        features: {
-          ...defaultState.features,
-          isEnterprise: false,
-          isHosted: false
-        }
-      }
-    });
+    store = mockStore(mockState);
+    const mockDate = new Date('2019-01-01T13:00:00.000Z');
+    const _Date = Date;
+    global.Date = jest.fn(() => mockDate);
+    global.Date.parse = _Date.parse;
+    global.Date.now = _Date.now;
+    global.Date.toISOString = _Date.toISOString;
+    global.Date.UTC = _Date.UTC;
+    global.Date.getUTCFullYear = _Date.getUTCFullYear;
+    global.Date.getUTCMonth = _Date.getUTCMonth;
+    global.Date.getUTCDate = _Date.getUTCDate;
   });
 
   it('renders correctly', () => {
     const { baseElement } = render(
       <MemoryRouter>
         <Provider store={store}>
-          <CreateDeployment open={true} deploymentObject={{}} />
+          <CreateDeployment deploymentObject={{}} />
         </Provider>
       </MemoryRouter>
     );
@@ -42,12 +53,26 @@ describe('CreateDeployment Component', () => {
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 
-  it('allows navigating the dialog', () => {
+  it('allows navigating the dialog', async () => {
+    const props = mapStateToProps(mockState);
     const submitCheck = jest.fn();
+    const advanceOnboarding = jest.fn();
+    const createDeployment = jest.fn().mockResolvedValue();
+    const saveGlobalSettings = jest.fn();
     render(
       <MemoryRouter>
         <Provider store={store}>
-          <CreateDeployment open={true} deploymentObject={{}} onScheduleSubmit={submitCheck} />
+          <CreateDialog
+            {...props}
+            deploymentObject={{}}
+            advanceOnboarding={advanceOnboarding}
+            createDeployment={createDeployment}
+            getAllDevicesByStatus={jest.fn}
+            onScheduleSubmit={submitCheck}
+            saveGlobalSettings={saveGlobalSettings}
+            selectDevice={jest.fn}
+            selectRelease={jest.fn}
+          />
         </Provider>
       </MemoryRouter>
     );
@@ -64,36 +89,18 @@ describe('CreateDeployment Component', () => {
     expect(groupSelect).toHaveValue('All devices');
     userEvent.click(screen.getAllByText('Next')[0]);
     userEvent.click(screen.getByText('Create'));
-    expect(submitCheck).toHaveBeenCalledWith({
-      deploymentDeviceCount: defaultState.devices.byStatus.accepted.total,
-      deploymentDeviceIds: defaultState.devices.byStatus.accepted.deviceIds,
-      device: null,
-      filterId: undefined,
-      group: 'All devices',
-      phases: undefined,
-      release: {
-        Artifacts: [
-          {
-            description: 'test description',
-            device_types_compatible: ['qemux86-64'],
-            id: 'art1',
-            modified: '2020-09-10T12:16:22.667Z',
-            artifact_depends: { device_type: ['qemux86-64'] },
-            artifact_provides: { artifact_name: 'myapp', 'data-partition.myapp.version': 'v2020.10', list_of_fancy: ['qemux86-64', 'x172'] },
-            clears_artifact_provides: ['data-partition.myapp.*'],
-            updates: [{ type_info: 'testtype' }]
-          }
-        ],
-        device_types_compatible: ['qemux86-64'],
-        Name: 'a1',
-        metaData: {}
-      },
-      retries: undefined
+    expect(createDeployment).toHaveBeenCalledWith({
+      artifact_name: defaultState.releases.byId.a1.Name,
+      devices: defaultState.devices.byStatus.accepted.deviceIds,
+      filter_id: undefined,
+      group: undefined,
+      name: 'All devices'
     });
+    await waitFor(() => expect(submitCheck).toHaveBeenCalled());
   });
 
   it('allows navigating the enterprise dialog', async () => {
-    store = mockStore({
+    const mockState = {
       ...defaultState,
       app: {
         ...defaultState.app,
@@ -128,14 +135,28 @@ describe('CreateDeployment Component', () => {
           previousPhases: [[{ batch_size: 30, delay: 5, delayUnit: 'days' }, { batch_size: 70 }]]
         }
       }
-    });
+    };
 
     const submitCheck = jest.fn();
+    const advanceOnboarding = jest.fn();
+    const createDeployment = jest.fn().mockResolvedValue();
+    const saveGlobalSettings = jest.fn();
+
+    const props = mapStateToProps(mockState);
+
     render(
       <MemoryRouter>
-        <Provider store={store}>
-          <CreateDeployment open={true} deploymentObject={{}} onScheduleSubmit={submitCheck} />
-        </Provider>
+        <CreateDialog
+          {...props}
+          deploymentObject={{}}
+          getAllDevicesByStatus={jest.fn}
+          advanceOnboarding={advanceOnboarding}
+          createDeployment={createDeployment}
+          onScheduleSubmit={submitCheck}
+          saveGlobalSettings={saveGlobalSettings}
+          selectDevice={jest.fn}
+          selectRelease={jest.fn}
+        />
       </MemoryRouter>
     );
     const releaseId = Object.keys(defaultState.releases.byId)[0];
@@ -167,31 +188,22 @@ describe('CreateDeployment Component', () => {
 
     userEvent.click(screen.getAllByText('Next')[0]);
     userEvent.click(screen.getByText('Create'));
-    expect(submitCheck).toHaveBeenCalledWith({
-      deploymentDeviceCount: Object.keys(defaultState.devices.byId).length + 2,
-      deploymentDeviceIds: [...Object.keys(defaultState.devices.byId), 'test1', 'test2'],
-      device: null,
-      filterId: undefined,
-      group: 'All devices',
-      phases: [{ batch_size: 50, delay: 30, delayUnit: 'minutes' }, { batch_size: 25, delay: 25, delayUnit: 'days' }, { batch_size: 25 }],
-      release: {
-        Artifacts: [
-          {
-            description: 'test description',
-            device_types_compatible: ['qemux86-64'],
-            id: 'art1',
-            modified: '2020-09-10T12:16:22.667Z',
-            artifact_depends: { device_type: ['qemux86-64'] },
-            artifact_provides: { artifact_name: 'myapp', 'data-partition.myapp.version': 'v2020.10', list_of_fancy: ['qemux86-64', 'x172'] },
-            updates: [{ type_info: 'testtype' }],
-            clears_artifact_provides: ['data-partition.myapp.*']
-          }
-        ],
-        Name: 'a1',
-        device_types_compatible: ['qemux86-64'],
-        metaData: {}
-      },
+
+    expect(createDeployment).toHaveBeenCalledWith({
+      artifact_name: defaultState.releases.byId.a1.Name,
+      devices: [...Object.keys(defaultState.devices.byId), 'test1', 'test2'],
+      filter_id: undefined,
+      group: undefined,
+      name: 'All devices',
+      phases: [
+        { batch_size: 50, delay: 30, delayUnit: 'minutes', start_ts: new Date('2019-03-21T23:34:00.000Z') },
+        { batch_size: 25, delay: 25, delayUnit: 'days', start_ts: '2019-02-24T23:04:00.000Z' },
+        { batch_size: 25, start_ts: '2019-03-21T23:34:00.000Z' }
+      ],
       retries: 1
     });
+    expect(advanceOnboarding).toHaveBeenCalled();
+    await waitFor(() => expect(submitCheck).toHaveBeenCalled());
+    expect(saveGlobalSettings).toHaveBeenCalled();
   });
 });

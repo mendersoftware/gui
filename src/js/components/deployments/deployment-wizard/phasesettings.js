@@ -7,7 +7,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 import { Table, TableBody, TableCell, TableHead, TableRow, Select, MenuItem, Input, InputAdornment, IconButton } from '@material-ui/core';
 import CancelIcon from '@material-ui/icons/Cancel';
-import { getPhaseStartTime } from '../deployments';
+import { getPhaseStartTime } from '../createdeployment';
 import { getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
 
 export const PhaseSettings = ({ classNames, disabled, filterId, numberDevices, setDeploymentSettings, phases = [] }) => {
