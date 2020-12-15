@@ -28,14 +28,13 @@ import { getIdAttribute, getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
-import RelativeTime from '../common/relative-time';
 import { ExpandDevice } from '../helptips/helptooltips';
 import DeviceList from './devicelist';
 import DeviceStatus from './device-status';
 import { refreshLength as refreshDeviceLength } from './devices';
 import Filters from './filters';
+import BaseDevices, { RelativeDeviceTime } from './base-devices';
 
-const relativeDeviceTime = device => <RelativeTime updateTime={device.updated_ts} />;
 const deviceStatus = device => <DeviceStatus device={device} />;
 
 const defaultHeaders = [
@@ -54,7 +53,7 @@ const defaultHeaders = [
   {
     title: 'Last check-in',
     attribute: { name: 'updated_ts', scope: 'system' },
-    render: relativeDeviceTime,
+    render: RelativeDeviceTime,
     sortable: true
   },
   {
@@ -73,7 +72,7 @@ const sortingAlternatives = defaultHeaders.reduce((accu, item) => {
   return accu;
 }, {});
 
-export class Authorized extends React.Component {
+export class Authorized extends BaseDevices {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -171,11 +170,6 @@ export class Authorized extends React.Component {
       .finally(() => self.setState({ loading: false }));
   }
 
-  _handlePageChange(pageNo) {
-    var self = this;
-    self.setState({ loading: true, pageNo: pageNo }, () => self._getDevices(true));
-  }
-
   onRowSelection(selection) {
     this.setState({ selectedRows: selection });
   }
@@ -200,15 +194,6 @@ export class Authorized extends React.Component {
     self.setState({ loading: true });
     const deviceIds = rows.map(row => self.props.devices[row]);
     return self.props.updateDevicesAuth(deviceIds, DEVICE_STATES.rejected).then(() => self.setState({ selectedRows: [], loading: false }));
-  }
-
-  onSortChange(attribute) {
-    const self = this;
-    let state = { sortCol: attribute.name === 'Device ID' ? 'id' : attribute.name, sortDown: !self.state.sortDown, sortScope: attribute.scope };
-    if (attribute.name !== self.state.sortCol) {
-      state.sortDown = true;
-    }
-    self.setState(state, () => self._getDevices(true));
   }
 
   onCreateGroupClick() {

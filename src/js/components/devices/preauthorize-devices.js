@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Time from 'react-time';
 
 // material ui
 import { Button } from '@material-ui/core';
@@ -15,8 +14,24 @@ import DeviceList from './devicelist';
 import { refreshLength as refreshDeviceLength } from './devices';
 import PreauthDialog from './preauth-dialog';
 import { getIdAttribute } from '../../selectors';
+import BaseDevices, { DeviceCreationTime, DeviceStatusHeading } from './base-devices';
 
-export class Preauthorize extends React.Component {
+const defaultHeaders = [
+  {
+    title: 'Date added',
+    attribute: { name: 'created_ts', scope: 'system' },
+    render: DeviceCreationTime,
+    sortable: true
+  },
+  {
+    title: 'Status',
+    attribute: { name: 'status', scope: 'identity' },
+    render: DeviceStatusHeading,
+    sortable: true
+  }
+];
+
+export class Preauthorize extends BaseDevices {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -64,11 +79,6 @@ export class Preauthorize extends React.Component {
       .finally(() => self.setState({ pageLoading: false }));
   }
 
-  _handlePageChange(pageNo) {
-    var self = this;
-    self.setState({ pageLoading: true, expandRow: null, pageNo: pageNo }, () => self._getDevices(true));
-  }
-
   _togglePreauth(openPreauth = !this.state.openPreauth) {
     this.setState({ openPreauth });
   }
@@ -76,16 +86,6 @@ export class Preauthorize extends React.Component {
   onPreauthSaved(addMore) {
     this._getDevices(true);
     this.setState({ openPreauth: !addMore });
-  }
-
-  onSortChange(attribute) {
-    const self = this;
-    let state = { sortCol: attribute.name, sortDown: !self.state.sortDown, sortScope: attribute.scope };
-    if (attribute.name !== self.state.sortCol) {
-      state.sortDown = true;
-    }
-    state.sortCol = attribute.name === 'Device ID' ? 'id' : self.state.sortCol;
-    self.setState(state, () => self._getDevices(true));
   }
 
   render() {
@@ -102,18 +102,7 @@ export class Preauthorize extends React.Component {
         style: { flexGrow: 1 },
         sortable: true
       },
-      {
-        title: 'Date added',
-        attribute: { name: 'created_ts', scope: 'system' },
-        render: device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-'),
-        sortable: true
-      },
-      {
-        title: 'Status',
-        attribute: { name: 'status', scope: 'identity' },
-        render: device => (device.status ? <div className="capitalized">{device.status}</div> : '-'),
-        sortable: true
-      }
+      ...defaultHeaders
     ];
 
     const deviceLimitWarning = limitMaxed ? (

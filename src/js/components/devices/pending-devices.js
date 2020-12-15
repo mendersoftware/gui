@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
-import Time from 'react-time';
 import pluralize from 'pluralize';
 
 // material ui
@@ -21,12 +20,33 @@ import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getIdAttribute, getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
-import RelativeTime from '../common/relative-time';
 import DeviceList from './devicelist';
 import { refreshLength as refreshDeviceLength } from './devices';
 import Filters from './filters';
+import BaseDevices, { DeviceCreationTime, DeviceStatusHeading, RelativeDeviceTime } from './base-devices';
 
-export class Pending extends React.Component {
+const defaultHeaders = [
+  {
+    title: 'First request',
+    attribute: { name: 'created_ts', scope: 'system' },
+    render: DeviceCreationTime,
+    sortable: true
+  },
+  {
+    title: 'Last check-in',
+    attribute: { name: 'updated_ts', scope: 'system' },
+    render: RelativeDeviceTime,
+    sortable: true
+  },
+  {
+    title: 'Status',
+    attribute: { name: 'status', scope: 'identity' },
+    render: DeviceStatusHeading,
+    sortable: true
+  }
+];
+
+export class Pending extends BaseDevices {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -80,11 +100,6 @@ export class Pending extends React.Component {
       .finally(() => self.setState({ pageLoading: false, authLoading: null }));
   }
 
-  _handlePageChange(pageNo) {
-    var self = this;
-    self.setState({ selectedRows: [], pageLoading: true, expandRow: null, pageNo }, () => self._getDevices(true));
-  }
-
   onAuthorizationChange(rows, status) {
     var self = this;
     self.setState({ authLoading: true });
@@ -103,16 +118,6 @@ export class Pending extends React.Component {
       this.props.advanceOnboarding(onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING);
     }
     this.setState({ selectedRows: selection });
-  }
-
-  onSortChange(attribute) {
-    const self = this;
-    let state = { sortCol: attribute.name, sortDown: !self.state.sortDown, sortScope: attribute.scope };
-    if (attribute.name !== self.state.sortCol) {
-      state.sortDown = true;
-    }
-    state.sortCol = attribute.name === 'Device ID' ? 'id' : self.state.sortCol;
-    self.setState(state, () => self._getDevices(true));
   }
 
   render() {
@@ -143,24 +148,7 @@ export class Pending extends React.Component {
         style: { flexGrow: 1 },
         sortable: true
       },
-      {
-        title: 'First request',
-        attribute: { name: 'created_ts', scope: 'system' },
-        render: device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-'),
-        sortable: true
-      },
-      {
-        title: 'Last check-in',
-        attribute: { name: 'updated_ts', scope: 'system' },
-        render: device => <RelativeTime updateTime={device.updated_ts} />,
-        sortable: true
-      },
-      {
-        title: 'Status',
-        attribute: { name: 'status', scope: 'identity' },
-        render: device => (device.status ? <div className="capitalized">{device.status}</div> : '-'),
-        sortable: true
-      }
+      ...defaultHeaders
     ];
 
     var deviceLimitWarning =
