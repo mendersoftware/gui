@@ -65,6 +65,7 @@ export const PreauthDialog = ({ deviceLimitWarning, limitMaxed, onCancel, onSubm
       .catch(setErrortext);
   };
 
+  const isSubmitDisabled = !publicKey || isEmpty(jsonIdentity) || !!limitMaxed;
   return (
     <Dialog open={true}>
       <DialogTitle>Preauthorize devices</DialogTitle>
@@ -138,22 +139,10 @@ export const PreauthDialog = ({ deviceLimitWarning, limitMaxed, onCancel, onSubm
       </DialogContent>
       <DialogActions>
         <Button onClick={onCancel}>Cancel</Button>
-        <Button
-          variant="contained"
-          disabled={!publicKey || isEmpty(jsonIdentity) || !!limitMaxed}
-          onClick={() => onHandleSubmit(false)}
-          color="primary"
-          style={{ marginLeft: 10 }}
-        >
+        <Button variant="contained" disabled={isSubmitDisabled} onClick={() => onHandleSubmit(false)} color="primary" style={{ marginLeft: 10 }}>
           Save and add another
         </Button>
-        <Button
-          variant="contained"
-          disabled={!publicKey || isEmpty(jsonIdentity) || !!limitMaxed}
-          onClick={() => onHandleSubmit(true)}
-          color="secondary"
-          style={{ marginLeft: 10 }}
-        >
+        <Button variant="contained" disabled={isSubmitDisabled} onClick={() => onHandleSubmit(true)} color="secondary" style={{ marginLeft: 10 }}>
           Save
         </Button>
       </DialogActions>
