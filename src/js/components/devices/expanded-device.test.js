@@ -17,6 +17,7 @@ describe('ExpandedDevice Component', () => {
         ...defaultState.app,
         features: {
           ...defaultState.app.features,
+          hasDeviceConnect: true,
           hasMultitenancy: true,
           isHosted: true
         }

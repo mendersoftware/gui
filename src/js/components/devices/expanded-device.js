@@ -82,7 +82,19 @@ export class ExpandedDevice extends React.Component {
 
   render() {
     const self = this;
-    const { className, device, docsVersion, highlightHelp, id_attribute, id_value, limitMaxed, setSnackbar, showHelptips, unauthorized } = self.props;
+    const {
+      className,
+      device,
+      docsVersion,
+      hasDeviceConnect,
+      highlightHelp,
+      id_attribute,
+      id_value,
+      limitMaxed,
+      setSnackbar,
+      showHelptips,
+      unauthorized
+    } = self.props;
     const { auth_sets, attributes, created_ts, id, identity_data, status = DEVICE_STATES.accepted, connect_status, connect_updated_ts } = device;
 
     let deviceIdentity = [<ExpandableAttribute key="id_checksum" primary="Device ID" secondary={id || '-'} />];
@@ -153,7 +165,7 @@ export class ExpandedDevice extends React.Component {
           </div>
         </div>
 
-        {status === DEVICE_STATES.accepted && (
+        {hasDeviceConnect && status === DEVICE_STATES.accepted && (
           <div className="device-connect bordered report-list">
             <h4 className="margin-bottom-small">Remote Terminal</h4>
             <div className="flexbox" style={{ flexDirection: 'row' }}>
@@ -248,6 +260,7 @@ const actionCreators = { decommissionDevice, getReleases, setSnackbar };
 const mapStateToProps = state => {
   return {
     docsVersion: getDocsVersion(state),
+    hasDeviceConnect: state.app.features.hasDeviceConnect,
     onboardingComplete: state.onboarding.complete,
     showHelptips: state.users.showHelptips
   };
