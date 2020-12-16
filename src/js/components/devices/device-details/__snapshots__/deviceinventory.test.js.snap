@@ -8,6 +8,354 @@ Array [
     <h4>
       Device inventory
     </h4>
+    <div
+      className="file-details"
+    >
+      <h4
+        style={
+          Object {
+            "background": "#f7f7f7",
+            "padding": 10,
+            "position": "absolute",
+            "top": -35,
+          }
+        }
+      >
+        Installed software
+      </h4>
+      <div
+        className="flexbox column"
+      >
+        <div
+          className="margin-top-small"
+        >
+          a
+        </div>
+        <ul
+          className="MuiList-root MuiList-padding"
+        >
+          <div
+            onClick={[Function]}
+          >
+            <li
+              className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+              disabled={true}
+            >
+              <div
+                className="MuiListItemText-root MuiListItemText-multiline"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  artifact_name
+                </span>
+                <div
+                  className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                  title="myapp"
+                >
+                  <div>
+                    <span
+                      className="inventory-text"
+                      style={Object {}}
+                    >
+                      myapp
+                    </span>
+                     
+                  </div>
+                </div>
+              </div>
+            </li>
+            <hr
+              className="MuiDivider-root"
+            />
+          </div>
+          <div
+            onClick={[Function]}
+          >
+            <li
+              className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+              disabled={true}
+            >
+              <div
+                className="MuiListItemText-root MuiListItemText-multiline"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  whole
+                </span>
+                <div
+                  className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                  title="test-3"
+                >
+                  <div>
+                    <span
+                      className="inventory-text"
+                      style={Object {}}
+                    >
+                      test-3
+                    </span>
+                     
+                  </div>
+                </div>
+              </div>
+            </li>
+            <hr
+              className="MuiDivider-root"
+            />
+          </div>
+          <div
+            onClick={[Function]}
+          >
+            <li
+              className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+              disabled={true}
+            >
+              <div
+                className="MuiListItemText-root MuiListItemText-multiline"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  whole
+                </span>
+                <div
+                  className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                  title="test-4"
+                >
+                  <div>
+                    <span
+                      className="inventory-text"
+                      style={Object {}}
+                    >
+                      test-4
+                    </span>
+                     
+                  </div>
+                </div>
+              </div>
+            </li>
+            <hr
+              className="MuiDivider-root"
+            />
+          </div>
+        </ul>
+      </div>
+      <div
+        className="flexbox column"
+      >
+        <div
+          className="margin-top-small"
+        >
+          rootfs-image
+        </div>
+        <ul
+          className="MuiList-root MuiList-padding"
+        >
+          <div
+            onClick={[Function]}
+          >
+            <li
+              className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+              disabled={true}
+            >
+              <div
+                className="MuiListItemText-root MuiListItemText-multiline"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  System software version
+                </span>
+                <div
+                  className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                  title="stablev1-beta-final-v0"
+                >
+                  <div>
+                    <span
+                      className="inventory-text"
+                      style={Object {}}
+                    >
+                      stablev1-beta-final-v0
+                    </span>
+                     
+                  </div>
+                </div>
+              </div>
+            </li>
+            <hr
+              className="MuiDivider-root"
+            />
+          </div>
+          <div
+            onClick={[Function]}
+          >
+            <li
+              className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+              disabled={true}
+            >
+              <div
+                className="MuiListItemText-root MuiListItemText-multiline"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  checksum
+                </span>
+                <div
+                  className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                  title="12341143"
+                >
+                  <div>
+                    <span
+                      className="inventory-text"
+                      style={Object {}}
+                    >
+                      12341143
+                    </span>
+                     
+                  </div>
+                </div>
+              </div>
+            </li>
+            <hr
+              className="MuiDivider-root"
+            />
+          </div>
+        </ul>
+      </div>
+      <div
+        className="flexbox column"
+      >
+        <div
+          className="margin-top-small"
+        >
+          test
+        </div>
+        <ul
+          className="MuiList-root MuiList-padding"
+        >
+          <div
+            onClick={[Function]}
+          >
+            <li
+              className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+              disabled={true}
+            >
+              <div
+                className="MuiListItemText-root MuiListItemText-multiline"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  test.version
+                </span>
+                <div
+                  className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                  title="test-2"
+                >
+                  <div>
+                    <span
+                      className="inventory-text"
+                      style={Object {}}
+                    >
+                      test-2
+                    </span>
+                     
+                  </div>
+                </div>
+              </div>
+            </li>
+            <hr
+              className="MuiDivider-root"
+            />
+          </div>
+        </ul>
+      </div>
+      <div
+        className="flexbox column"
+      >
+        <div
+          className="margin-top-small"
+        >
+          even
+        </div>
+        <ul
+          className="MuiList-root MuiList-padding"
+        >
+          <div
+            onClick={[Function]}
+          >
+            <li
+              className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+              disabled={true}
+            >
+              <div
+                className="MuiListItemText-root MuiListItemText-multiline"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  more
+                </span>
+                <div
+                  className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                  title="test-5"
+                >
+                  <div>
+                    <span
+                      className="inventory-text"
+                      style={Object {}}
+                    >
+                      test-5
+                    </span>
+                     
+                  </div>
+                </div>
+              </div>
+            </li>
+            <hr
+              className="MuiDivider-root"
+            />
+          </div>
+          <div
+            onClick={[Function]}
+          >
+            <li
+              className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+              disabled={true}
+            >
+              <div
+                className="MuiListItemText-root MuiListItemText-multiline"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  more
+                </span>
+                <div
+                  className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                  title="test-6"
+                >
+                  <div>
+                    <span
+                      className="inventory-text"
+                      style={Object {}}
+                    >
+                      test-6
+                    </span>
+                     
+                  </div>
+                </div>
+              </div>
+            </li>
+            <hr
+              className="MuiDivider-root"
+            />
+          </div>
+        </ul>
+      </div>
+    </div>
     <ul
       className="MuiList-root MuiList-padding"
     >
