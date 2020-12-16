@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/extend-expect';
-import { screen, within, waitForElementToBeRemoved } from '@testing-library/react';
+import { within, waitForElementToBeRemoved } from '@testing-library/react';
 import UserEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
 
