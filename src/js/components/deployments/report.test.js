@@ -1,45 +1,32 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { prettyDOM } from '@testing-library/dom';
 import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import DeploymentReport from './report';
 import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
-let dateMock;
 
 describe('DeploymentReport Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      ...defaultState,
-      deployments: {
-        ...defaultState.deployments,
-        byId: {
-          ...defaultState.deployments.byId,
-          d1: {
-            ...defaultState.deployments.byId.d1,
-            name: null,
-            created: '2019-01-01',
-            devices: {},
-            finished: '2019-01-01',
-            stats: {}
-          }
-        }
-      }
-    });
+    store = mockStore({ ...defaultState });
     const mockDate = new Date('2019-01-01T13:00:00.000Z');
     const _Date = Date;
     global.Date = jest.fn(() => mockDate);
     global.Date.parse = _Date.parse;
     global.Date.now = _Date.now;
-    dateMock = jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
-  });
-
-  afterEach(() => {
-    dateMock.mockRestore();
+    global.Date.toISOString = _Date.toISOString;
+    global.Date.UTC = _Date.UTC;
+    global.Date.getUTCFullYear = _Date.getUTCFullYear;
+    global.Date.getUTCMonth = _Date.getUTCMonth;
+    global.Date.getUTCDate = _Date.getUTCDate;
+    jest.mock('moment', () => {
+      return () => jest.requireActual('moment')('2019-01-01T00:00:00.000Z');
+    });
   });
 
   it('renders correctly', () => {
@@ -50,8 +37,11 @@ describe('DeploymentReport Component', () => {
         </Provider>
       </MemoryRouter>
     );
-    const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
+    const dialog = baseElement.getElementsByClassName('MuiDialog-root')[0];
+    const view = prettyDOM(dialog, 100000, { highlight: false })
+      .replace(/id="mui-[0-9]*"/g, '')
+      .replace(/aria-labelledby="(mui-[0-9]* *)*"/g, '')
+      .replace(/\\/g, '');
     expect(view).toMatchSnapshot();
-    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

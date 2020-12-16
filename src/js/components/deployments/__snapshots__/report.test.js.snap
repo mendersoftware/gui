@@ -1,127 +1,127 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DeploymentReport Component renders correctly 1`] = `
-<div
-  class="MuiDialog-root"
-  role="presentation"
-  style="position: fixed; z-index: 1300; right: 0px; bottom: 0px; top: 0px; left: 0px;"
+"<div
+  class=\\"MuiDialog-root\\"
+  role=\\"presentation\\"
+  style=\\"position: fixed; z-index: 1300; right: 0px; bottom: 0px; top: 0px; left: 0px;\\"
 >
   <div
-    aria-hidden="true"
-    class="MuiBackdrop-root"
-    style="opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
+    aria-hidden=\\"true\\"
+    class=\\"MuiBackdrop-root\\"
+    style=\\"opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;\\"
   />
   <div
-    data-test="sentinelStart"
-    tabindex="0"
+    data-test=\\"sentinelStart\\"
+    tabindex=\\"0\\"
   />
   <div
-    class="MuiDialog-container MuiDialog-scrollPaper"
-    role="none presentation"
-    style="opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
-    tabindex="-1"
+    class=\\"MuiDialog-container MuiDialog-scrollPaper\\"
+    role=\\"none presentation\\"
+    style=\\"opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;\\"
+    tabindex=\\"-1\\"
   >
     <div
-      class="MuiPaper-root MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthLg MuiDialog-paperFullWidth MuiPaper-elevation24 MuiPaper-rounded"
-      role="dialog"
+      class=\\"MuiPaper-root MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthLg MuiDialog-paperFullWidth MuiPaper-elevation24 MuiPaper-rounded\\"
+      role=\\"dialog\\"
     >
       <div
-        class="MuiDialogTitle-root"
+        class=\\"MuiDialogTitle-root\\"
       >
         <h2
-          class="MuiTypography-root MuiTypography-h6"
+          class=\\"MuiTypography-root MuiTypography-h6\\"
         >
           Deployment details
         </h2>
       </div>
       <div
-        class="MuiDialogContent-root deployment-report"
-        style="overflow: hidden;"
+        class=\\"MuiDialogContent-root deployment-report\\"
+        style=\\"overflow: hidden;\\"
       >
         <div
-          class="MuiTabs-root"
+          class=\\"MuiTabs-root\\"
         >
           <div
-            class="MuiTabs-scroller MuiTabs-fixed"
-            style="overflow: hidden;"
+            class=\\"MuiTabs-scroller MuiTabs-fixed\\"
+            style=\\"overflow: hidden;\\"
           >
             <div
-              class="MuiTabs-flexContainer"
-              role="tablist"
+              class=\\"MuiTabs-flexContainer\\"
+              role=\\"tablist\\"
             >
               <button
-                aria-selected="true"
-                class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected"
-                role="tab"
-                tabindex="0"
-                type="button"
+                aria-selected=\\"true\\"
+                class=\\"MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected\\"
+                role=\\"tab\\"
+                tabindex=\\"0\\"
+                type=\\"button\\"
               >
                 <span
-                  class="MuiTab-wrapper"
+                  class=\\"MuiTab-wrapper\\"
                 >
                   Devices overview
                 </span>
                 <span
-                  class="MuiTouchRipple-root"
+                  class=\\"MuiTouchRipple-root\\"
                 />
               </button>
               <button
-                aria-selected="false"
-                class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary"
-                role="tab"
-                tabindex="-1"
-                type="button"
+                aria-selected=\\"false\\"
+                class=\\"MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary\\"
+                role=\\"tab\\"
+                tabindex=\\"-1\\"
+                type=\\"button\\"
               >
                 <span
-                  class="MuiTab-wrapper"
+                  class=\\"MuiTab-wrapper\\"
                 >
                   Deployment details
                 </span>
                 <span
-                  class="MuiTouchRipple-root"
+                  class=\\"MuiTouchRipple-root\\"
                 />
               </button>
             </div>
             <span
-              class="PrivateTabIndicator-root-1 PrivateTabIndicator-colorSecondary-3 hidden"
-              style="left: 0px; width: 0px;"
+              class=\\"PrivateTabIndicator-root-1 PrivateTabIndicator-colorSecondary-3 hidden\\"
+              style=\\"left: 0px; width: 0px;\\"
             />
           </div>
         </div>
         <div>
           <div
-            class="report-container"
+            class=\\"report-container\\"
           >
             <div
-              class="deploymentInfo two-columns"
+              class=\\"deploymentInfo two-columns\\"
             >
               <div>
                 <div
-                  style="margin-bottom: -15px;"
+                  style=\\"margin-bottom: -15px;\\"
                 >
                   <li
-                    class="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
-                    disabled=""
+                    class=\\"MuiListItem-root attributes MuiListItem-gutters Mui-disabled\\"
+                    disabled=\\"\\"
                   >
                     <div
-                      class="MuiListItemText-root MuiListItemText-multiline"
+                      class=\\"MuiListItemText-root MuiListItemText-multiline\\"
                     >
                       <span
-                        class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                        class=\\"MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock\\"
                       >
                         Release:
                       </span>
                       <div
-                        class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                        title="[object Object]"
+                        class=\\"MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock\\"
+                        title=\\"[object Object]\\"
                       >
                         <div>
                           <span
-                            class="inventory-text"
+                            class=\\"inventory-text\\"
                           >
                             <a
-                              href="/releases/test"
-                              style="font-weight: 500;"
+                              href=\\"/releases/test\\"
+                              style=\\"font-weight: 500;\\"
                             >
                               test
                             </a>
@@ -133,27 +133,30 @@ exports[`DeploymentReport Component renders correctly 1`] = `
                   </li>
                 </div>
                 <div
-                  style="margin-bottom: -15px;"
+                  style=\\"margin-bottom: -15px;\\"
                 >
                   <li
-                    class="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
-                    disabled=""
+                    class=\\"MuiListItem-root attributes MuiListItem-gutters Mui-disabled\\"
+                    disabled=\\"\\"
                   >
                     <div
-                      class="MuiListItemText-root MuiListItemText-multiline"
+                      class=\\"MuiListItemText-root MuiListItemText-multiline\\"
                     >
                       <span
-                        class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                        class=\\"MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock\\"
                       >
                         Device group:
                       </span>
                       <div
-                        class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                        class=\\"MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock\\"
+                        title=\\"test deployment\\"
                       >
                         <div>
                           <span
-                            class="inventory-text"
-                          />
+                            class=\\"inventory-text\\"
+                          >
+                            test deployment
+                          </span>
                            
                         </div>
                       </div>
@@ -162,30 +165,32 @@ exports[`DeploymentReport Component renders correctly 1`] = `
                 </div>
               </div>
               <div
-                style="margin-bottom: -15px;"
+                style=\\"margin-bottom: -15px;\\"
               >
                 <li
-                  class="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
-                  disabled=""
+                  class=\\"MuiListItem-root attributes MuiListItem-gutters Mui-disabled\\"
+                  disabled=\\"\\"
                 >
                   <div
-                    class="MuiListItemText-root MuiListItemText-multiline"
+                    class=\\"MuiListItemText-root MuiListItemText-multiline\\"
                   >
                     <span
-                      class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                      class=\\"MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock\\"
                     >
                       Status:
                     </span>
                     <div
-                      class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                      title="[object Object]"
+                      class=\\"MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock\\"
+                      title=\\"[object Object]\\"
                     >
                       <div>
                         <span
-                          class="inventory-text"
+                          class=\\"inventory-text\\"
                         >
-                          <div>
-                            Finished 
+                          <div
+                            class=\\"capitalized-start\\"
+                          >
+                            
                           </div>
                         </span>
                          
@@ -195,32 +200,501 @@ exports[`DeploymentReport Component renders correctly 1`] = `
                 </li>
               </div>
             </div>
+            <div
+              class=\\"progressStatus flexbox centered space-between\\"
+            >
+              <div
+                id=\\"progressStatus\\"
+              >
+                <h3
+                  style=\\"margin-top: 0px;\\"
+                >
+                  In progress
+                </h3>
+                <h2>
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root\\"
+                    focusable=\\"false\\"
+                    style=\\"margin: 0px 10px 0px -10px; color: rgb(172, 212, 208); vertical-align: text-top;\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M16.24 7.76C15.07 6.59 13.54 6 12 6v6l-4.24 4.24c2.34 2.34 6.14 2.34 8.49 0 2.34-2.34 2.34-6.14-.01-8.48zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z\\"
+                    />
+                  </svg>
+                  <span>
+                    0 h 00 m 00 s
+                  </span>
+                </h2>
+                <div>
+                  <div>
+                    Started: 
+                  </div>
+                  <time
+                    datetime=\\"2019-01-01T13:00:00+00:00\\"
+                  >
+                    2019-01-01 13:00
+                  </time>
+                </div>
+              </div>
+              <div>
+                <div
+                  class=\\"flexbox results-status column\\"
+                >
+                  <div
+                    class=\\"disabled\\"
+                    title=\\"Skipped\\"
+                  >
+                    <img
+                      src=\\"skipped_status.png\\"
+                    />
+                    <span
+                      class=\\"status\\"
+                    >
+                      0
+                    </span>
+                    <span
+                      class=\\"label\\"
+                    >
+                      Skipped
+                    </span>
+                  </div>
+                  <div
+                    class=\\"disabled\\"
+                    title=\\"Pending\\"
+                  >
+                    <img
+                      src=\\"pending_status.png\\"
+                    />
+                    <span
+                      class=\\"status\\"
+                    >
+                      0
+                    </span>
+                    <span
+                      class=\\"label\\"
+                    >
+                      Pending
+                    </span>
+                  </div>
+                  <div
+                    class=\\"\\"
+                    title=\\"In progress\\"
+                  >
+                    <img
+                      src=\\"progress_status.png\\"
+                    />
+                    <span
+                      class=\\"status\\"
+                    >
+                      1
+                    </span>
+                    <span
+                      class=\\"label\\"
+                    >
+                      In progress
+                    </span>
+                  </div>
+                  <div
+                    class=\\"disabled\\"
+                    title=\\"Successful\\"
+                  >
+                    <img
+                      src=\\"success_status.png\\"
+                    />
+                    <span
+                      class=\\"status\\"
+                    >
+                      0
+                    </span>
+                    <span
+                      class=\\"label\\"
+                    >
+                      Successful
+                    </span>
+                  </div>
+                  <div
+                    class=\\"disabled\\"
+                    title=\\"Failed\\"
+                  >
+                    <img
+                      src=\\"error_status.png\\"
+                    />
+                    <span
+                      class=\\"status\\"
+                    >
+                      0
+                    </span>
+                    <span
+                      class=\\"label\\"
+                    >
+                      Failed
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button
+              class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary\\"
+              style=\\"align-self: baseline; margin-top: 45px;\\"
+              tabindex=\\"0\\"
+              title=\\"Devices that have not yet started the deployment will not start the deployment.
+Devices that have already completed the deployment are not affected by the abort.
+Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback.\\"
+              type=\\"button\\"
+            >
+              <span
+                class=\\"MuiButton-label\\"
+              >
+                <span
+                  class=\\"MuiButton-startIcon MuiButton-iconSizeMedium\\"
+                >
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeSmall\\"
+                    focusable=\\"false\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-4.42 3.58-8 8-8 1.85 0 3.55.63 4.9 1.69L5.69 16.9C4.63 15.55 4 13.85 4 12zm8 8c-1.85 0-3.55-.63-4.9-1.69L18.31 7.1C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z\\"
+                    />
+                  </svg>
+                </span>
+                Abort
+                 deployment
+              </span>
+              <span
+                class=\\"MuiTouchRipple-root\\"
+              />
+            </button>
+          </div>
+          <div
+            style=\\"min-height: 20vh;\\"
+          >
+            <div
+              style=\\"max-height: 40vh; overflow-x: auto;\\"
+            >
+              <table
+                class=\\"MuiTable-root\\"
+              >
+                <thead
+                  class=\\"MuiTableHead-root\\"
+                >
+                  <tr
+                    class=\\"MuiTableRow-root MuiTableRow-head\\"
+                  >
+                    <th
+                      class=\\"MuiTableCell-root MuiTableCell-head\\"
+                      scope=\\"col\\"
+                      style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+                      tooltip=\\"Device ID\\"
+                    >
+                      Device ID
+                    </th>
+                    <th
+                      class=\\"MuiTableCell-root MuiTableCell-head\\"
+                      scope=\\"col\\"
+                      style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+                      tooltip=\\"Device type\\"
+                    >
+                      Device type
+                    </th>
+                    <th
+                      class=\\"MuiTableCell-root MuiTableCell-head\\"
+                      scope=\\"col\\"
+                      style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+                      tooltip=\\"Current software\\"
+                    >
+                      Current software
+                    </th>
+                    <th
+                      class=\\"MuiTableCell-root MuiTableCell-head\\"
+                      scope=\\"col\\"
+                      style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+                      tooltip=\\"Started\\"
+                    >
+                      Started
+                    </th>
+                    <th
+                      class=\\"MuiTableCell-root MuiTableCell-head\\"
+                      scope=\\"col\\"
+                      style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+                      tooltip=\\"Finished\\"
+                    >
+                      Finished
+                    </th>
+                    <th
+                      class=\\"MuiTableCell-root MuiTableCell-head\\"
+                      scope=\\"col\\"
+                      style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+                      tooltip=\\"Deployment status\\"
+                    >
+                      Deployment status
+                    </th>
+                    <th
+                      class=\\"MuiTableCell-root MuiTableCell-head\\"
+                      scope=\\"col\\"
+                      style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+                      tooltip=\\"\\"
+                    />
+                  </tr>
+                </thead>
+                <tbody
+                  class=\\"MuiTableBody-root\\"
+                >
+                  <tr
+                    class=\\"MuiTableRow-root\\"
+                  >
+                    <td
+                      class=\\"MuiTableCell-root MuiTableCell-body\\"
+                    >
+                      <a
+                        href=\\"/devices/id=a1\\"
+                        style=\\"font-weight: 500;\\"
+                      >
+                        a1
+                      </a>
+                    </td>
+                    <td
+                      class=\\"MuiTableCell-root MuiTableCell-body\\"
+                    >
+                      -
+                    </td>
+                    <td
+                      class=\\"MuiTableCell-root MuiTableCell-body\\"
+                    >
+                      -
+                    </td>
+                    <td
+                      class=\\"MuiTableCell-root MuiTableCell-body\\"
+                    >
+                      -
+                    </td>
+                    <td
+                      class=\\"MuiTableCell-root MuiTableCell-body\\"
+                    >
+                      -
+                    </td>
+                    <td
+                      class=\\"MuiTableCell-root MuiTableCell-body\\"
+                      style=\\"padding-right: 0px; position: relative; min-width: 200px;\\"
+                    >
+                      installing
+                      <div
+                        style=\\"position: absolute; bottom: 0px; width: 100%;\\"
+                      >
+                        <div
+                          style=\\"text-align: end; color: rgb(170, 170, 170);\\"
+                        >
+                          70%
+                        </div>
+                        <div
+                          aria-valuemax=\\"100\\"
+                          aria-valuemin=\\"0\\"
+                          aria-valuenow=\\"70\\"
+                          class=\\"MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate\\"
+                          role=\\"progressbar\\"
+                        >
+                          <div
+                            class=\\"MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate\\"
+                            style=\\"transform: translateX(-30%);\\"
+                          />
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class=\\"MuiTableCell-root MuiTableCell-body\\"
+                    />
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div
+              class=\\"MuiTablePagination-root flexbox margin-top \\"
+            >
+              <div
+                class=\\"MuiToolbar-root MuiToolbar-regular MuiTablePagination-toolbar MuiToolbar-gutters\\"
+              >
+                <div
+                  class=\\"MuiTablePagination-spacer flexbox no-basis\\"
+                />
+                <p
+                  class=\\"MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit\\"
+                  
+                >
+                  Rows
+                </p>
+                <div
+                  class=\\"MuiInputBase-root MuiTablePagination-input MuiTablePagination-selectRoot\\"
+                >
+                  <div
+                    aria-haspopup=\\"listbox\\"
+                    
+                    class=\\"MuiSelect-root MuiSelect-select MuiTablePagination-select MuiSelect-selectMenu MuiInputBase-input\\"
+                    
+                    role=\\"button\\"
+                    tabindex=\\"0\\"
+                  >
+                    20
+                  </div>
+                  <input
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSelect-nativeInput\\"
+                    tabindex=\\"-1\\"
+                    value=\\"20\\"
+                  />
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root MuiSelect-icon MuiTablePagination-selectIcon\\"
+                    focusable=\\"false\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M7 10l5 5 5-5z\\"
+                    />
+                  </svg>
+                </div>
+                <p
+                  class=\\"MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit\\"
+                />
+                <div
+                  class=\\"flexbox\\"
+                >
+                  <button
+                    class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+                    disabled=\\"\\"
+                    tabindex=\\"-1\\"
+                    type=\\"button\\"
+                  >
+                    <span
+                      class=\\"MuiIconButton-label\\"
+                    >
+                      <svg
+                        aria-hidden=\\"true\\"
+                        class=\\"MuiSvgIcon-root\\"
+                        focusable=\\"false\\"
+                        viewBox=\\"0 0 24 24\\"
+                      >
+                        <path
+                          d=\\"M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z\\"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                  <button
+                    class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+                    disabled=\\"\\"
+                    tabindex=\\"-1\\"
+                    type=\\"button\\"
+                  >
+                    <span
+                      class=\\"MuiIconButton-label\\"
+                    >
+                      <svg
+                        aria-hidden=\\"true\\"
+                        class=\\"MuiSvgIcon-root\\"
+                        focusable=\\"false\\"
+                        viewBox=\\"0 0 24 24\\"
+                      >
+                        <path
+                          d=\\"M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z\\"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                  <div
+                    class=\\"flexbox\\"
+                    style=\\"align-items: baseline;\\"
+                  >
+                    <div
+                      class=\\"MuiFormControl-root MuiTextField-root MuiFormControl-marginDense\\"
+                      style=\\"min-width: 30px; max-width: 30px; margin-right: 10px;\\"
+                    >
+                      <div
+                        class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-marginDense MuiInput-marginDense\\"
+                      >
+                        <input
+                          aria-invalid=\\"false\\"
+                          class=\\"MuiInputBase-input MuiInput-input MuiInputBase-inputMarginDense MuiInput-inputMarginDense\\"
+                          type=\\"text\\"
+                          value=\\"1\\"
+                        />
+                      </div>
+                    </div>
+                    / 1
+                  </div>
+                  <button
+                    class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+                    disabled=\\"\\"
+                    tabindex=\\"-1\\"
+                    type=\\"button\\"
+                  >
+                    <span
+                      class=\\"MuiIconButton-label\\"
+                    >
+                      <svg
+                        aria-hidden=\\"true\\"
+                        class=\\"MuiSvgIcon-root\\"
+                        focusable=\\"false\\"
+                        viewBox=\\"0 0 24 24\\"
+                      >
+                        <path
+                          d=\\"M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z\\"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                  <button
+                    class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+                    disabled=\\"\\"
+                    tabindex=\\"-1\\"
+                    type=\\"button\\"
+                  >
+                    <span
+                      class=\\"MuiIconButton-label\\"
+                    >
+                      <svg
+                        aria-hidden=\\"true\\"
+                        class=\\"MuiSvgIcon-root\\"
+                        focusable=\\"false\\"
+                        viewBox=\\"0 0 24 24\\"
+                      >
+                        <path
+                          d=\\"M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z\\"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
       <div
-        class="MuiDialogActions-root MuiDialogActions-spacing"
+        class=\\"MuiDialogActions-root MuiDialogActions-spacing\\"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text"
-          tabindex="0"
-          type="button"
+          class=\\"MuiButtonBase-root MuiButton-root MuiButton-text\\"
+          tabindex=\\"0\\"
+          type=\\"button\\"
         >
           <span
-            class="MuiButton-label"
+            class=\\"MuiButton-label\\"
           >
             Close
           </span>
           <span
-            class="MuiTouchRipple-root"
+            class=\\"MuiTouchRipple-root\\"
           />
         </button>
       </div>
     </div>
   </div>
   <div
-    data-test="sentinelEnd"
-    tabindex="0"
+    data-test=\\"sentinelEnd\\"
+    tabindex=\\"0\\"
   />
-</div>
+</div>"
 `;
