@@ -34,7 +34,7 @@ export const PasswordReset = ({
       <img src={headerLogo} alt="mender-logo" id="signupLogo" />
       <h1 className="align-center">Change your password</h1>
       {confirm ? (
-        <p className="margin-bottom align-center">You password has been updated.</p>
+        <p className="margin-bottom align-center">Your password has been updated.</p>
       ) : (
         <>
           <p className="margin-bottom align-center">

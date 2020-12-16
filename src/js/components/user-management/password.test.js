@@ -1,10 +1,11 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
+import { act, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import Password from './password';
+import Password, { Password as PasswordComponent } from './password';
 import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
@@ -16,16 +17,30 @@ describe('Password Component', () => {
   });
 
   it('renders correctly', () => {
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <Provider store={store}>
-            <Password location={{ state: { from: '' } }} />
-          </Provider>
-        </MemoryRouter>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { baseElement } = render(
+      <MemoryRouter>
+        <Provider store={store}>
+          <Password />
+        </Provider>
+      </MemoryRouter>
+    );
+    const view = baseElement.firstChild.firstChild;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
+  });
+
+  it('works as intended', async () => {
+    const submitCheck = jest.fn().mockResolvedValue();
+    const ui = (
+      <MemoryRouter>
+        <PasswordComponent passwordResetStart={submitCheck} />
+      </MemoryRouter>
+    );
+    const { rerender } = render(ui);
+
+    userEvent.type(screen.queryByLabelText(/your email/i), 'something@example.com');
+    userEvent.click(screen.getByRole('button', { name: /Send/i }));
+    await act(() => waitFor(() => rerender(ui)));
+    expect(screen.queryByText(/Thanks - we're sending you an email now!/i)).toBeInTheDocument();
   });
 });
