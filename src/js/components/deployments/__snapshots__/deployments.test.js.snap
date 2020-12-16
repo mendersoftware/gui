@@ -2,183 +2,114 @@
 
 exports[`Deployments Component renders correctly 1`] = `
 <div
-  className="margin-left-small margin-top"
-  style={
-    Object {
-      "maxWidth": "80vw",
-    }
-  }
+  class="margin-left-small margin-top"
+  style="max-width: 80vw;"
 >
   <div
-    className="flexbox space-between"
+    class="flexbox space-between"
   >
     <div
-      className="MuiTabs-root"
+      class="MuiTabs-root"
     >
       <div
-        className="MuiTabs-scroller MuiTabs-fixed"
-        onScroll={[Function]}
-        style={
-          Object {
-            "marginBottom": null,
-            "overflow": "hidden",
-          }
-        }
+        class="MuiTabs-scroller MuiTabs-fixed"
+        style="overflow: hidden;"
       >
         <div
-          className="MuiTabs-flexContainer"
-          onKeyDown={[Function]}
+          class="MuiTabs-flexContainer"
           role="tablist"
         >
           <a
-            aria-disabled={false}
-            aria-selected={true}
-            className="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit Mui-selected"
+            aria-disabled="false"
+            aria-selected="true"
+            class="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit Mui-selected"
             href="/deployments/active"
-            onBlur={[Function]}
-            onClick={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
             role="tab"
-            tabIndex={0}
+            tabindex="0"
           >
             <span
-              className="MuiTab-wrapper"
+              class="MuiTab-wrapper"
             >
               Active
             </span>
             <span
-              className="MuiTouchRipple-root"
+              class="MuiTouchRipple-root"
             />
           </a>
           <a
-            aria-disabled={false}
-            aria-selected={false}
-            className="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit"
+            aria-disabled="false"
+            aria-selected="false"
+            class="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit"
             href="/deployments/scheduled"
-            onBlur={[Function]}
-            onClick={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
             role="tab"
-            tabIndex={-1}
+            tabindex="-1"
           >
             <span
-              className="MuiTab-wrapper"
+              class="MuiTab-wrapper"
             >
               Scheduled
             </span>
             <span
-              className="MuiTouchRipple-root"
+              class="MuiTouchRipple-root"
             />
           </a>
           <a
-            aria-disabled={false}
-            aria-selected={false}
-            className="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit"
+            aria-disabled="false"
+            aria-selected="false"
+            class="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit"
             href="/deployments/finished"
-            onBlur={[Function]}
-            onClick={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
             role="tab"
-            tabIndex={-1}
+            tabindex="-1"
           >
             <span
-              className="MuiTab-wrapper"
+              class="MuiTab-wrapper"
             >
               Finished
             </span>
             <span
-              className="MuiTouchRipple-root"
+              class="MuiTouchRipple-root"
             />
           </a>
         </div>
         <span
-          className="PrivateTabIndicator-root-1 PrivateTabIndicator-colorSecondary-3 MuiTabs-indicator"
-          style={
-            Object {
-              "left": 0,
-              "width": 0,
-            }
-          }
+          class="PrivateTabIndicator-root-1 PrivateTabIndicator-colorSecondary-3 MuiTabs-indicator"
+          style="left: 0px; width: 0px;"
         />
       </div>
     </div>
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
-      disabled={false}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      style={
-        Object {
-          "height": "100%",
-        }
-      }
-      tabIndex={0}
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
+      style="height: 100%;"
+      tabindex="0"
       type="button"
     >
       <span
-        className="MuiButton-label"
+        class="MuiButton-label"
       >
         Create a deployment
       </span>
       <span
-        className="MuiTouchRipple-root"
+        class="MuiTouchRipple-root"
       />
     </button>
   </div>
   <div
-    className="loaderContainer shrunk"
+    class="loaderContainer shrunk"
   >
     <div
-      className="loader"
+      class="loader"
     >
       <span
-        className="dot dot_1"
+        class="dot dot_1"
       />
       <span
-        className="dot dot_2"
+        class="dot dot_2"
       />
       <span
-        className="dot dot_3"
+        class="dot dot_3"
       />
       <span
-        className="dot dot_4"
+        class="dot dot_4"
       />
     </div>
   </div>

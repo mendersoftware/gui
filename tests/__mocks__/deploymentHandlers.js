@@ -75,6 +75,14 @@ export const deploymentHandlers = [
     return res(ctx.set('location', `find/me/here/${createdDeployment.id}`), ctx.json({}));
   }),
   rest.put(`${deploymentsApiUrl}/deployments/:deploymentId/status`, ({ params: { deploymentId }, body: { status } }, res, ctx) =>
-    res(ctx.status(status === 'aborted' && deploymentId === defaultState.deployments.byId.d1.id ? 200 : 500), ctx.json({}))
+    res(
+      ctx.status(
+        status === 'aborted' &&
+          [...defaultState.deployments.byStatus.pending.deploymentIds, ...defaultState.deployments.byStatus.inprogress.deploymentIds].includes(deploymentId)
+          ? 200
+          : 500
+      ),
+      ctx.json({})
+    )
   )
 ];
