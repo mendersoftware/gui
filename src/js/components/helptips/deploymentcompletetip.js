@@ -4,24 +4,19 @@ import { connect } from 'react-redux';
 
 import Button from '@material-ui/core/Button';
 
-import { advanceOnboarding, setOnboardingComplete, setShowCreateArtifactDialog, setShowOnboardingHelp } from '../../actions/onboardingActions';
+import { advanceOnboarding, setOnboardingComplete, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getDemoDeviceAddress } from '../../selectors';
 import Loader from '../common/loader';
 
-export const DeploymentCompleteTip = ({ advanceOnboarding, setShowCreateArtifactDialog, setOnboardingComplete, setShowOnboardingHelp, url }) => {
-  const onClose = () => {
-    setShowOnboardingHelp(false);
-    setOnboardingComplete(false);
-  };
-
+export const DeploymentCompleteTip = ({ advanceOnboarding, setShowCreateArtifactDialog, setOnboardingComplete, url }) => {
   const onClick = () => {
     const parametrizedAddress = `${url}/index.html?source=${encodeURIComponent(window.location)}`;
     window.open(parametrizedAddress, '_blank');
     advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE);
+    setOnboardingComplete(false);
     setShowCreateArtifactDialog(true);
     window.location.replace('#/releases');
-    onClose();
   };
 
   return !url ? (
@@ -41,7 +36,7 @@ export const DeploymentCompleteTip = ({ advanceOnboarding, setShowCreateArtifact
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ advanceOnboarding, setOnboardingComplete, setShowCreateArtifactDialog, setShowOnboardingHelp }, dispatch);
+  return bindActionCreators({ advanceOnboarding, setOnboardingComplete, setShowCreateArtifactDialog }, dispatch);
 };
 
 const mapStateToProps = (state, ownProps) => {
