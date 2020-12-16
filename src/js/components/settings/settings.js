@@ -33,6 +33,9 @@ export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, hi
           });
         }
       });
+    } else {
+      const notStripePromise = {};
+      Promise.race([stripePromise, notStripePromise]).then(result => setLoadingFinished(result !== notStripePromise));
     }
   }, []);
 

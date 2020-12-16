@@ -23,6 +23,7 @@
     "md5": "^2.3.0",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
+    "msgpack5": "^4.2.1",
     "pluralize": "^8.0.0",
     "process": "^0.11.10",
     "react": "~16.14.0",
@@ -47,6 +48,9 @@
     "universal-cookie": "^4.0.4",
     "validator": "^13.5.1",
     "victory": "^35.0.9",
+    "xterm-addon-fit": "^0.4.0",
+    "xterm-addon-search": "^0.7.0",
+    "xterm-for-react": "^1.0.4",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
@@ -54,8 +58,9 @@
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/plugin-transform-runtime": "^7.12.1",
-    "@babel/preset-env": "^7.12.7",
+    "@babel/preset-env": "^7.12.10",
     "@babel/preset-react": "^7.12.7",
+    "assert": "^2.0.0",
     "autoprefixer": "^10.0.4",
     "axios-mock-adapter": "^1.19.0",
     "babel-eslint": "^10.1.0",
@@ -78,6 +83,7 @@
     "html-webpack-plugin": "^4.5.0",
     "husky": "^4.3.0",
     "jest": "~26.6.3",
+    "jest-canvas-mock": "^2.3.0",
     "jest-environment-jsdom-fifteen": "1.0.2",
     "jest-resolve": "~26.6.2",
     "jest-watch-typeahead": "0.6.1",
@@ -91,7 +97,8 @@
     "react-test-renderer": "~16.14.0",
     "redux-mock-store": "^1.5.4",
     "url-loader": "^4.1.1",
-    "webpack": "^5.10.0",
+    "util": "^0.12.3",
+    "webpack": "^5.10.1",
     "webpack-cli": "^4.2.0",
     "yarn": "^1.22.10"
   },
@@ -120,8 +127,11 @@
       "/node_modules/",
       "/themes/"
     ],
+    "setupFiles": [
+      "jest-canvas-mock"
+    ],
     "setupFilesAfterEnv": [
-      "./tests/setupTests.js"
+      "<rootDir>/tests/setupTests.js"
     ],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.js",
@@ -129,21 +139,15 @@
     ],
     "testEnvironment": "jest-environment-jsdom-fifteen",
     "transform": {
-      "^.+\\.js$": "babel-jest",
-      "^.+\\.(css|less)$": "<rootDir>/tests/cssTransform.js",
+      "^.+\\.[j|t]sx?$": "babel-jest",
       "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/tests/assetsTransformer.js"
     },
     "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.js$",
-      "^.+\\.module\\.(css|less|sass|scss)$"
+      "<rootDir>/node_modules/(?!xterm-for-react)"
     ],
-    "modulePaths": [],
     "moduleNameMapper": {
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+      "\\.(css|less)$": "<rootDir>/tests/cssTransform.js"
     },
-    "moduleFileExtensions": [
-      "js"
-    ],
     "watchPlugins": [
       "jest-watch-typeahead/filename",
       "jest-watch-typeahead/testname"

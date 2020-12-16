@@ -74,8 +74,7 @@ exports[`DebPackage Component renders correctly 1`] = `
         }
       }
     >
-      wget https://d1b0l86ne08fsf.cloudfront.net/master/dist-packages/debian/armhf/mender-client_master-1_armhf.deb && \\
-sudo dpkg -i --force-confdef --force-confold mender-client_master-1_armhf.deb
+      wget -q -O- https://get.mender.io/ | sudo bash -s -- -c experimental
     </span>
   </div>
   <p />
@@ -144,9 +143,8 @@ sudo dpkg -i --force-confdef --force-confold mender-client_master-1_armhf.deb
         }
       }
     >
-      sudo bash -c 'wget https://d1b0l86ne08fsf.cloudfront.net/master/dist-packages/debian/armhf/mender-client_master-1_armhf.deb && \\
-DEBIAN_FRONTEND=noninteractive dpkg -i --force-confdef --force-confold mender-client_master-1_armhf.deb && \\
-DEVICE_TYPE="generic-armv6" && \\
+      wget -q -O- https://get.mender.io/ | sudo bash -s -- -c experimental && \\
+sudo bash -c 'DEVICE_TYPE="generic-armv6" && \\
 mender setup \\
   --device-type $DEVICE_TYPE \\
   --quiet --demo  && \\

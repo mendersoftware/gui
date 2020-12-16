@@ -14,6 +14,8 @@ import { getIsEnterprise, getUserSettings } from '../../selectors';
 import { OAuth2Providers } from './oauth2providers';
 import TwoFactorAuthSetup from './twofactorauthsetup';
 
+const me = 'me';
+
 export class SelfUserManagement extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -80,7 +82,7 @@ export class SelfUserManagement extends React.Component {
         ) : (
           <Form
             className="flexbox space-between"
-            onSubmit={userdata => self._editSubmit(currentUser.id, userdata)}
+            onSubmit={userdata => self._editSubmit(me, userdata)}
             handleCancel={() => self.handleEmail()}
             submitLabel="Save"
             showButtons={editEmail}
@@ -117,7 +119,7 @@ export class SelfUserManagement extends React.Component {
             </form>
           ) : (
             <Form
-              onSubmit={userdata => self._editSubmit(currentUser.id, userdata)}
+              onSubmit={userdata => self._editSubmit(me, userdata)}
               handleCancel={() => self.handlePass()}
               submitLabel="Save"
               submitButtonId="submit_pass"

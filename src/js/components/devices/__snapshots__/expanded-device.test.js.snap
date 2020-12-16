@@ -67,7 +67,6 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
             Object {
               "alignItems": "center",
               "display": "flex",
-              "justifyContent": "space-evenly",
               "marginRight": "2vw",
               "minWidth": 180,
             }
@@ -165,6 +164,23 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
           </span>
         </button>
       </div>
+    </div>
+    <div
+      className="device-connect bordered report-list"
+    >
+      <h4
+        className="margin-bottom-small"
+      >
+        Remote Terminal
+      </h4>
+      <div
+        className="flexbox"
+        style={
+          Object {
+            "flexDirection": "row",
+          }
+        }
+      />
     </div>
     <div
       className="device-inventory bordered report-list"

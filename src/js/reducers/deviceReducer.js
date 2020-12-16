@@ -237,6 +237,20 @@ const deviceReducer = (state = initialState, action) => {
         }
       };
     }
+    case DeviceConstants.RECEIVE_DEVICE_CONNECT: {
+      const { status: connect_status, updated_ts: connect_updated_ts } = action.device;
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.device.device_id]: {
+            ...state.byId[action.device.device_id],
+            connect_status,
+            connect_updated_ts
+          }
+        }
+      };
+    }
     default:
       return state;
   }
