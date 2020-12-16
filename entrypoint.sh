@@ -25,6 +25,7 @@ cat >/var/www/mender-gui/dist/env.js <<EOF
     hostedAnnouncement: "$ANNOUNCEMENT",
     isDemoMode: "$DEMO",
     features: {
+      hasDeviceConnect: "$HAVE_DEVICECONNECT",
       hasMultitenancy: "$HAVE_MULTITENANT",
       isEnterprise: "$HAVE_ENTERPRISE",
       isHosted: "$MENDER_HOSTED"
