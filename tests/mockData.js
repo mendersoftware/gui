@@ -1,3 +1,5 @@
+import { rolesByName } from '../src/js/constants/userConstants';
+
 export const undefineds = /undefined|\[object Object\]/;
 window.mender_environment = {
   features: {
@@ -262,7 +264,10 @@ export const defaultState = {
     uploading: false
   },
   users: {
-    byId: { a1: { email: 'a@b.com', id: 'a1' }, 'a30a780b-b843-5344-80e3-0fd95a4f6fc3': { email: 'a2@b.com', id: 'a30a780b-b843-5344-80e3-0fd95a4f6fc3' } },
+    byId: {
+      a1: { email: 'a@b.com', id: 'a1', created_ts: '2019-01-01T10:30:00.000Z', roles: [rolesByName.admin] },
+      'a30a780b-b843-5344-80e3-0fd95a4f6fc3': { email: 'a2@b.com', id: 'a30a780b-b843-5344-80e3-0fd95a4f6fc3', created_ts: '2019-01-01T12:30:00.000Z' }
+    },
     currentUser: 'a1',
     globalSettings: { id_attribute: 'Device ID', previousFilters: [] },
     jwtToken: null,
