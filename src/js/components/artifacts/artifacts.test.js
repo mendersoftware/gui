@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
@@ -52,5 +52,16 @@ describe('Artifacts Component', () => {
 
     waitFor(() => expect(screen.getByText(defaultState.releases.byId.a1.Artifacts[0].description)).toBeInTheDocument());
     userEvent.click(screen.getByRole('button', { name: /Remove this artifact/i }));
+    const releaseRepoItem = document.body.querySelector('.release-repo');
+    userEvent.click(within(releaseRepoItem).getByText(defaultState.releases.byId.a1.Name));
+    userEvent.click(screen.getByText(/Last modified/i));
+
+    expect(screen.queryByText(/Filtered from/i)).not.toBeInTheDocument();
+    userEvent.type(screen.getByPlaceholderText(/Filter/i), 'b1');
+    expect(screen.queryByText(/Filtered from/i)).toBeInTheDocument();
+    expect(document.body.querySelector('.repository-list > ul > div')).toBeFalsy();
+    userEvent.clear(screen.getByPlaceholderText(/Filter/i));
+    userEvent.type(screen.getByPlaceholderText(/Filter/i), defaultState.releases.byId.a1.Name);
+    expect(document.body.querySelector('.repository-list > ul > div')).toBeTruthy();
   });
 });
