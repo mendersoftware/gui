@@ -1,5 +1,4 @@
 import React from 'react';
-import { compose, setDisplayName } from 'recompose';
 
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { onboardingSteps as stepNames } from '../constants/onboardingConstants';
@@ -127,7 +126,7 @@ export const onboardingSteps = {
   },
   [stepNames.DEPLOYMENTS_PAST_COMPLETED]: {
     condition: { min: stepNames.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION, max: stepNames.DEPLOYMENTS_PAST_COMPLETED_FAILURE },
-    component: compose(setDisplayName('OnboardingTip'))(() => <DeploymentCompleteTip targetUrl="destination-unreachable" />)
+    specialComponent: <DeploymentCompleteTip targetUrl="destination-unreachable" />
   },
   [stepNames.DEPLOYMENTS_PAST_COMPLETED_FAILURE]: {
     condition: { max: stepNames.ARTIFACT_CREATION_DIALOG },
@@ -177,7 +176,7 @@ export const onboardingSteps = {
   },
   [stepNames.ONBOARDING_CANCELED]: {
     condition: () => true,
-    component: compose(setDisplayName('OnboardingTip'))(() => <div />),
+    specialComponent: <div />,
     progress: 3
   }
 };
