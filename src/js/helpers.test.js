@@ -87,7 +87,7 @@ describe('getDebInstallationCode function', () => {
     expect(getDebInstallationCode()).not.toMatch(/\{([^}]+)\}/);
   });
   it('should return a sane result', () => {
-    expect(getDebInstallationCode()).toMatch(`wget -q -O- https://get.mender.io/ | sudo bash -s -- -c experimental`);
+    expect(getDebInstallationCode()).toMatch(`wget -q -O- https://get.mender.io/ | sudo bash`);
   });
 });
 
@@ -101,7 +101,7 @@ describe('getDebConfigurationCode function', () => {
   });
   it('should return a sane result', () => {
     expect(code).toMatch(
-      `wget -q -O- https://get.mender.io/ | sudo bash -s -- -c experimental && \\
+      `wget -q -O- https://get.mender.io/ | sudo bash && \\
 sudo bash -c 'DEVICE_TYPE="raspberrypi3" && \\
 TENANT_TOKEN="token" && \\
 mender setup \\
