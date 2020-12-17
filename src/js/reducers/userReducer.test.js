@@ -74,11 +74,11 @@ describe('user reducer', () => {
     ).toBeTruthy();
   });
   it('should handle REMOVED_ROLE', () => {
-    expect(reducer(undefined, { type: UserConstants.REMOVED_ROLE, roleId: defaultState.users.rolesById.test.name }).rolesById.test).toBeFalsy();
+    expect(reducer(undefined, { type: UserConstants.REMOVED_ROLE, roleId: defaultState.users.rolesById.test.title }).rolesById.test).toBeFalsy();
     expect(
       reducer(
         { ...initialState, rolesById: { ...defaultState.users.rolesById } },
-        { type: UserConstants.REMOVED_ROLE, roleId: defaultState.users.rolesById.test.name }
+        { type: UserConstants.REMOVED_ROLE, roleId: defaultState.users.rolesById.test.title }
       ).rolesById.test
     ).toBeFalsy();
   });

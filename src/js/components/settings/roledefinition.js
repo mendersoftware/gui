@@ -1,15 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import validator from 'validator';
 
 // material ui
 import { Button, Checkbox, Collapse, FormControl, FormControlLabel, FormHelperText, TextField } from '@material-ui/core';
 
-export const RoleDefinition = ({ adding, editing, allowUserManagement, stateGroups, onAllowUserManagementChange, onCancel, onSubmit, selectedRole }) => {
-  const { id = '', description: roleDescription = '', groups: selectedRoleGroups = [] } = selectedRole || {};
-  const [groups, setGroups] = useState(stateGroups.map(group => ({ name: group, selected: selectedRoleGroups.includes(group) })));
-  const [description, setDescription] = useState(roleDescription);
-  const [name, setName] = useState(id);
-  const [nameInput, setNameInput] = useState(id);
+export const emptyRole = { allowUserManagement: false, id: '', description: '', groups: [] };
+
+export const RoleDefinition = ({ adding, editing, stateGroups, onCancel, onSubmit, selectedRole = emptyRole }) => {
+  const [allowUserManagement, setAllowUserManagement] = useState(selectedRole.allowUserManagement);
+  const [description, setDescription] = useState(selectedRole.description);
+  const [groups, setGroups] = useState(stateGroups.map(group => ({ name: group, selected: selectedRole.groups.includes(group) })));
+  const [id, setId] = useState(selectedRole.id);
+  const [nameError, setNameError] = useState(false);
+
+  useEffect(() => {
+    const { allowUserManagement: roleAllowUserManagement = false, id = '', description: roleDescription = '', groups: selectedRoleGroups = [] } = selectedRole;
+    setAllowUserManagement(roleAllowUserManagement);
+    setDescription(roleDescription);
+    setGroups(stateGroups.map(group => ({ name: group, selected: selectedRoleGroups.includes(group) })));
+    setId(id);
+  }, [stateGroups, selectedRole]);
 
   const handleGroupSelection = (selected, group) => {
     let groupsCopy = [...groups];
@@ -23,41 +33,37 @@ export const RoleDefinition = ({ adding, editing, allowUserManagement, stateGrou
   };
 
   const validateNameChange = ({ target: { value } }) => {
-    if (value && validator.isWhitelisted(value, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-')) {
-      setName(value);
-    } else {
-      setName('');
-    }
-    setNameInput(value);
+    setNameError(!(value && validator.isWhitelisted(value, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-')));
+    setId(value);
   };
 
   const onSubmitClick = () => {
     const role = {
-      name,
+      allowUserManagement,
       description,
       groups: groups.reduce((accu, group) => {
         if (group.selected) {
           accu.push(group.name);
         }
         return accu;
-      }, [])
+      }, []),
+      name: id
     };
     onSubmit(role);
   };
+
+  const filteredGroups = groups.filter(group => group.selected);
+  const isSubmitDisabled =
+    !(!nameError && (allowUserManagement || groups.some(group => group.selected))) ||
+    Object.entries({ allowUserManagement, description, id }).every(([key, value]) => selectedRole[key] === value) ||
+    (filteredGroups.length === selectedRole.groups.length && filteredGroups.every(group => selectedRole.groups.includes(group)));
 
   return (
     <Collapse in={adding || editing} className="margin-right-small filter-wrapper" classes={{ wrapperInner: 'margin-bottom-small margin-right' }}>
       <h4 style={{ marginTop: 5 }}>{adding ? 'Add a' : 'Edit the'} role</h4>
       <FormControl style={{ marginTop: '0' }}>
-        <TextField
-          label="Role name"
-          id="role-name"
-          value={nameInput}
-          disabled={editing}
-          onChange={validateNameChange}
-          style={{ marginTop: 0, marginRight: 30 }}
-        />
-        {name != nameInput && <FormHelperText>Valid characters are a-z, A-Z, 0-9, _ and -</FormHelperText>}
+        <TextField label="Role name" id="role-name" value={id} disabled={editing} onChange={validateNameChange} style={{ marginTop: 0, marginRight: 30 }} />
+        {nameError && <FormHelperText>Valid characters are a-z, A-Z, 0-9, _ and -</FormHelperText>}
       </FormControl>
       <TextField
         label="Description"
@@ -69,8 +75,7 @@ export const RoleDefinition = ({ adding, editing, allowUserManagement, stateGrou
       />
       <div>
         <FormControlLabel
-          control={<Checkbox color="primary" onChange={(e, checked) => onAllowUserManagementChange(checked)} />}
-          checked={allowUserManagement}
+          control={<Checkbox color="primary" checked={allowUserManagement} onChange={(e, checked) => setAllowUserManagement(checked)} />}
           label="Allow to manage other users"
         />
       </div>
@@ -91,13 +96,7 @@ export const RoleDefinition = ({ adding, editing, allowUserManagement, stateGrou
         <Button onClick={onCancel} style={{ marginRight: 15 }}>
           Cancel
         </Button>
-        <Button
-          color="secondary"
-          variant="contained"
-          target="_blank"
-          disabled={!(name && (allowUserManagement || groups.some(group => group.selected)))}
-          onClick={onSubmitClick}
-        >
+        <Button color="secondary" variant="contained" target="_blank" disabled={isSubmitDisabled} onClick={onSubmitClick}>
           Submit
         </Button>
       </div>

@@ -284,7 +284,7 @@ export const defaultState = {
         permissions: []
       },
       RBAC_ROLE_CI: { title: 'CI', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
-      test: { name: 'test', description: 'test description', groups: ['testgroup'] }
+      test: { title: 'test', description: 'test description', groups: ['testgroup'], editable: true }
     },
     showHelptips: true
   }
