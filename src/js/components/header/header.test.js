@@ -1,6 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
+import { screen, render, waitForElementToBeRemoved, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
@@ -23,21 +24,47 @@ describe('Header Component', () => {
             total: 0
           }
         }
+      },
+      users: {
+        ...defaultState.users,
+        globalSettings: {
+          ...defaultState.users.globalSettings,
+          [defaultState.users.currentUser]: {
+            ...defaultState.users.globalSettings[defaultState.users.currentUser],
+            trackingConsentGiven: true
+          }
+        }
       }
     });
   });
 
   it('renders correctly', () => {
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <Provider store={store}>
-            <Header />
-          </Provider>
-        </MemoryRouter>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { baseElement } = render(
+      <MemoryRouter>
+        <Provider store={store}>
+          <Header />
+        </Provider>
+      </MemoryRouter>
+    );
+    const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
+  });
+
+  it('works as intended', async () => {
+    render(
+      <MemoryRouter>
+        <Provider store={store}>
+          <Header />
+        </Provider>
+      </MemoryRouter>
+    );
+
+    const selectButton = screen.getByRole('button', { name: defaultState.users.byId[defaultState.users.currentUser].email });
+    userEvent.click(selectButton);
+    const listbox = document.body.querySelector('ul[role=menu]');
+    const listItem = within(listbox).getByText(/log out/i);
+    userEvent.click(listItem);
+    await waitForElementToBeRemoved(() => document.body.querySelector('ul[role=menu]'));
   });
 });

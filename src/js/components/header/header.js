@@ -47,8 +47,8 @@ export class Header extends React.Component {
   componentDidUpdate() {
     const sessionId = getToken();
     const { firstLoginAfterSignup, hasTrackingEnabled, organization, setFirstLoginAfterSignup, user } = this.props;
-    if ((!sessionId || !user || !user.id || !user.email.length) && !this.state.gettingUser && !this.state.loggingOut) {
-      this._updateUsername();
+    if ((!sessionId || !user?.id || !user.email.length) && !this.state.gettingUser && !this.state.loggingOut) {
+      return this._updateUsername();
     }
     Tracking.setTrackingEnabled(hasTrackingEnabled);
     if (hasTrackingEnabled && user.id && organization.id) {
