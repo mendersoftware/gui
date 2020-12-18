@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { FirstPage as FirstPageIcon, LastPage as LastPageIcon, KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons';
 import { IconButton, TablePagination, TextField } from '@material-ui/core';
@@ -8,86 +8,63 @@ import { DEVICE_LIST_MAXIMUM_LENGTH } from '../../constants/deviceConstants';
 const defaultRowsPerPageOptions = [10, 20, DEVICE_LIST_MAXIMUM_LENGTH];
 const paginationIndex = 1;
 
-class TablePaginationActions extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    const pageNo = props.page ? props.page + paginationIndex : 1;
-    this.state = { pageNo };
-  }
+export const TablePaginationActions = ({ count, page = 0, onChangePage, rowsPerPage = 20 }) => {
+  const [pageNo, setPageNo] = useState(page ? page + paginationIndex : 1);
 
-  componentDidUpdate(prevProps, prevState) {
-    const currentPage = this.props.page + paginationIndex;
-    if ((currentPage !== this.state.pageNo && !(prevState.pageNo !== this.state.pageNo)) || prevProps.rowsPerPage !== this.props.rowsPerPage) {
-      this.setState({ pageNo: currentPage });
+  useEffect(() => {
+    const currentPage = page + paginationIndex;
+    if (currentPage !== pageNo) {
+      setPageNo(currentPage);
     }
-  }
+  }, [page, rowsPerPage]);
 
-  onChange = event => {
-    const self = this;
-    const { pageNo } = self.state;
+  useEffect(() => {
+    const newPage = Math.min(Math.max(paginationIndex, pageNo), Math.ceil(count / rowsPerPage));
+    onChangePage(newPage);
+  }, [pageNo]);
+
+  const onChange = event => {
     const input = event.target.value;
-    let value = Number(event.target.value);
-    if (input === '') {
-      value = input;
-    } else if (isNaN(Number(input))) {
+    let value = Number(input);
+    if (isNaN(value)) {
       value = pageNo;
     }
     if (value !== pageNo) {
-      self.setState({ pageNo: value });
+      return setPageNo(value);
     }
   };
 
-  onKeyPress = event => {
-    const self = this;
-    const { count, rowsPerPage } = self.props;
+  const onKeyPress = event => {
     if (event.key == 'Enter') {
       event.preventDefault();
       const newPage = Math.min(Math.max(paginationIndex, event.target.value), Math.ceil(count / rowsPerPage));
-      return self.onPaging(newPage);
+      return setPageNo(newPage);
     }
   };
 
-  onPaging = newPage => {
-    return this.setState({ pageNo: newPage }, () => this.props.onChangePage(newPage));
-  };
-
-  render() {
-    const self = this;
-    const { count, page, rowsPerPage } = self.props;
-    const currentPage = page + paginationIndex;
-    const pages = Math.ceil(count / rowsPerPage);
-
-    return (
-      <div className="flexbox">
-        <IconButton onClick={() => self.onPaging(paginationIndex)} disabled={currentPage === paginationIndex}>
-          <FirstPageIcon />
-        </IconButton>
-        <IconButton onClick={() => self.onPaging(currentPage - 1)} disabled={currentPage === paginationIndex}>
-          <KeyboardArrowLeft />
-        </IconButton>
-        <div className="flexbox" style={{ alignItems: 'baseline' }}>
-          <TextField
-            value={self.state.pageNo}
-            onChange={self.onChange}
-            onKeyUp={self.onKeyPress}
-            margin="dense"
-            style={{ minWidth: '30px', maxWidth: '30px', marginRight: '10px' }}
-          />
-          {`/ ${pages}`}
-        </div>
-        <IconButton onClick={() => self.onPaging(currentPage + 1)} disabled={currentPage >= Math.ceil(count / rowsPerPage)}>
-          <KeyboardArrowRight />
-        </IconButton>
-        <IconButton
-          onClick={() => self.onPaging(Math.max(paginationIndex, Math.ceil(count / rowsPerPage)))}
-          disabled={currentPage >= Math.ceil(count / rowsPerPage)}
-        >
-          <LastPageIcon />
-        </IconButton>
+  const currentPage = page + paginationIndex;
+  const pages = Math.ceil(count / rowsPerPage);
+  return (
+    <div className="flexbox">
+      <IconButton onClick={() => setPageNo(paginationIndex)} disabled={currentPage === paginationIndex}>
+        <FirstPageIcon />
+      </IconButton>
+      <IconButton onClick={() => setPageNo(currentPage - 1)} disabled={currentPage === paginationIndex}>
+        <KeyboardArrowLeft />
+      </IconButton>
+      <div className="flexbox" style={{ alignItems: 'baseline' }}>
+        <TextField value={pageNo} onChange={onChange} onKeyUp={onKeyPress} margin="dense" style={{ minWidth: 30, maxWidth: 30, marginRight: 10 }} />
+        {`/ ${pages}`}
       </div>
-    );
-  }
-}
+      <IconButton onClick={() => setPageNo(currentPage + 1)} disabled={currentPage >= Math.ceil(count / rowsPerPage)}>
+        <KeyboardArrowRight />
+      </IconButton>
+      <IconButton onClick={() => setPageNo(Math.max(paginationIndex, Math.ceil(count / rowsPerPage)))} disabled={currentPage >= Math.ceil(count / rowsPerPage)}>
+        <LastPageIcon />
+      </IconButton>
+    </div>
+  );
+};
 
 const Pagination = props => {
   const { className, page, onChangeRowsPerPage, onChangePage, ...remainingProps } = props;

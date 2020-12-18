@@ -523,9 +523,9 @@ exports[`Auditlogs Component renders correctly 1`] = `
             onKeyUp={[Function]}
             style={
               Object {
-                "marginRight": "10px",
-                "maxWidth": "30px",
-                "minWidth": "30px",
+                "marginRight": 10,
+                "maxWidth": 30,
+                "minWidth": 30,
               }
             }
           >
