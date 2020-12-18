@@ -458,7 +458,14 @@ TENANT_TOKEN="${token}" && \\`
 mender setup \\
   --device-type $DEVICE_TYPE \\
 ${connectionInstructions} && \\
-systemctl restart mender-client'
+systemctl restart mender-client && \\
+(cat > /etc/mender/mender-shell.conf << EOF
+{
+  "ServerURL": "${document.location.origin}",
+  "User": "pi"
+}
+EOF
+) && systemctl restart mender-shell'
 `;
   return codeToCopy;
 };
