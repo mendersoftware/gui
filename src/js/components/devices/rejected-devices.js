@@ -55,10 +55,6 @@ export class Rejected extends BaseDevices {
     this._getDevices(true);
   }
 
-  componentWillUnmount() {
-    clearInterval(this.timer);
-  }
-
   componentDidUpdate(prevProps) {
     if (prevProps.count !== this.props.count) {
       this.props.setDeviceFilters([]);

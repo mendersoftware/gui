@@ -105,15 +105,15 @@ export class Authorized extends BaseDevices {
     if (self.props.filters && self.props.groupDevices.length) {
       self.setState({ loading: false }, () => self.props.selectDevices(self.props.groupDevices.slice(0, self.state.pageLength)));
     } else {
-      clearInterval(self.deviceTimer);
+      clearInterval(self.timer);
       // no group, no filters, all devices
-      self.deviceTimer = setInterval(() => self._getDevices(), refreshDeviceLength);
+      self.timer = setInterval(() => self._getDevices(), refreshDeviceLength);
       self._getDevices();
     }
   }
 
   componentWillUnmount() {
-    clearInterval(this.deviceTimer);
+    clearInterval(this.timer);
     clearAllRetryTimers(this.props.setSnackbar);
   }
 
@@ -138,8 +138,8 @@ export class Authorized extends BaseDevices {
           !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
         }, 400);
       }
-      clearInterval(self.deviceTimer);
-      self.deviceTimer = setInterval(() => self._getDevices(), refreshDeviceLength);
+      clearInterval(self.timer);
+      self.timer = setInterval(() => self._getDevices(), refreshDeviceLength);
       self._getDevices(true);
     }
   }

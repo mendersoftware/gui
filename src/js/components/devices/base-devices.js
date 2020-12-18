@@ -8,6 +8,10 @@ export const DeviceStatusHeading = device => (device.status ? <div className="ca
 export const DeviceCreationTime = device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-');
 
 export default class BaseDevices extends React.Component {
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
   /*
    * Devices to show
    */
