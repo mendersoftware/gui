@@ -1,63 +1,41 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`PendingDevices Component renders correctly 1`] = `
-<div
-  className="tab-container"
+"<div
+  class=\\"tab-container\\"
 >
   <div
-    className="flexbox"
-    style={
-      Object {
-        "marginBottom": -1,
-        "zIndex": 2,
-      }
-    }
+    class=\\"flexbox\\"
+    style=\\"z-index: 2; margin-bottom: -1px;\\"
   >
     <h2
-      className="margin-right"
+      class=\\"margin-right\\"
     >
       Pending devices
     </h2>
     <div
-      className="flexbox centered "
+      class=\\"flexbox centered \\"
     >
       <button
-        className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
-        disabled={false}
-        onBlur={[Function]}
-        onClick={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        style={
-          Object {
-            "backgroundColor": "transparent",
-          }
-        }
-        tabIndex={0}
-        type="button"
+        class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary\\"
+        style=\\"background-color: transparent;\\"
+        tabindex=\\"0\\"
+        type=\\"button\\"
       >
         <span
-          className="MuiButton-label"
+          class=\\"MuiButton-label\\"
         >
           <span
-            className="MuiButton-startIcon MuiButton-iconSizeMedium"
+            class=\\"MuiButton-startIcon MuiButton-iconSizeMedium\\"
           >
             <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root"
-              focusable="false"
-              viewBox="0 0 24 24"
+              aria-hidden=\\"true\\"
+              class=\\"MuiSvgIcon-root\\"
+              focusable=\\"false\\"
+              viewBox=\\"0 0 24 24\\"
             >
               <path
-                d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
+                d=\\"M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z\\"
               />
             </svg>
           </span>
@@ -66,34 +44,422 @@ exports[`PendingDevices Component renders correctly 1`] = `
       </button>
     </div>
   </div>
+  <p
+    class=\\"info\\"
+  >
+    Showing 
+    1
+     of 
+    1
+     
+    device
+     pending authorization
+  </p>
   <div
-    className="loaderContainer"
+    class=\\"loaderContainer shrunk\\"
   >
     <div
-      className="loader"
+      class=\\"loader\\"
     >
       <span
-        className="dot dot_1"
+        class=\\"dot dot_1\\"
       />
       <span
-        className="dot dot_2"
+        class=\\"dot dot_2\\"
       />
       <span
-        className="dot dot_3"
+        class=\\"dot dot_3\\"
       />
       <span
-        className="dot dot_4"
+        class=\\"dot dot_4\\"
       />
     </div>
   </div>
-  <div>
+  <div
+    class=\\"padding-bottom\\"
+  >
     <div
-      className="hidden"
+      class=\\"deviceList pending\\"
     >
-      <p>
-        There are no devices pending authorization
-      </p>
+      <div
+        class=\\"flexbox header\\"
+        style=\\"padding: 0px 12px;\\"
+      >
+        <span
+          aria-disabled=\\"false\\"
+          class=\\"MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary\\"
+        >
+          <span
+            class=\\"MuiIconButton-label\\"
+          >
+            <input
+              class=\\"PrivateSwitchBase-input-4\\"
+              data-indeterminate=\\"false\\"
+              type=\\"checkbox\\"
+              value=\\"\\"
+            />
+            <svg
+              aria-hidden=\\"true\\"
+              class=\\"MuiSvgIcon-root\\"
+              focusable=\\"false\\"
+              viewBox=\\"0 0 24 24\\"
+            >
+              <path
+                d=\\"M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z\\"
+              />
+            </svg>
+          </span>
+          <span
+            class=\\"MuiTouchRipple-root\\"
+          />
+        </span>
+        <div
+          class=\\"columnHeader\\"
+          style=\\"width: 22.5%; flex-grow: 1;\\"
+        >
+          Device ID
+          <svg
+            aria-hidden=\\"true\\"
+            class=\\"MuiSvgIcon-root sortIcon  true\\"
+            focusable=\\"false\\"
+            viewBox=\\"0 0 24 24\\"
+          >
+            <path
+              d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
+            />
+          </svg>
+        </div>
+        <div
+          class=\\"columnHeader\\"
+          style=\\"width: 22.5%;\\"
+        >
+          First request
+          <svg
+            aria-hidden=\\"true\\"
+            class=\\"MuiSvgIcon-root sortIcon  true\\"
+            focusable=\\"false\\"
+            viewBox=\\"0 0 24 24\\"
+          >
+            <path
+              d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
+            />
+          </svg>
+        </div>
+        <div
+          class=\\"columnHeader\\"
+          style=\\"width: 22.5%;\\"
+        >
+          Last check-in
+          <svg
+            aria-hidden=\\"true\\"
+            class=\\"MuiSvgIcon-root sortIcon  true\\"
+            focusable=\\"false\\"
+            viewBox=\\"0 0 24 24\\"
+          >
+            <path
+              d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
+            />
+          </svg>
+        </div>
+        <div
+          class=\\"columnHeader\\"
+          style=\\"width: 22.5%;\\"
+        >
+          Status
+          <svg
+            aria-hidden=\\"true\\"
+            class=\\"MuiSvgIcon-root sortIcon  true\\"
+            focusable=\\"false\\"
+            viewBox=\\"0 0 24 24\\"
+          >
+            <path
+              d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
+            />
+          </svg>
+        </div>
+        <div
+          style=\\"width: 48px;\\"
+        />
+      </div>
+      <div
+        class=\\"body\\"
+      >
+        <div
+          class=\\"MuiPaper-root MuiAccordion-root deviceListItem MuiPaper-elevation1\\"
+        >
+          <div
+            aria-disabled=\\"false\\"
+            aria-expanded=\\"false\\"
+            class=\\"MuiButtonBase-root MuiAccordionSummary-root\\"
+            role=\\"button\\"
+            style=\\"padding: 0px 12px;\\"
+            tabindex=\\"0\\"
+          >
+            <div
+              class=\\"MuiAccordionSummary-content\\"
+            >
+              <span
+                aria-disabled=\\"false\\"
+                class=\\"MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary\\"
+              >
+                <span
+                  class=\\"MuiIconButton-label\\"
+                >
+                  <input
+                    class=\\"PrivateSwitchBase-input-4\\"
+                    data-indeterminate=\\"false\\"
+                    type=\\"checkbox\\"
+                    value=\\"\\"
+                  />
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root\\"
+                    focusable=\\"false\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z\\"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class=\\"MuiTouchRipple-root\\"
+                />
+              </span>
+              <div
+                style=\\"padding: 0px 24px; overflow: hidden; word-break: break-all; max-height: 48px; text-overflow: ellipsis; width: 22.5%; flex-grow: 1;\\"
+              >
+                c1
+              </div>
+              <div
+                style=\\"padding: 0px 24px; overflow: hidden; word-break: break-all; max-height: 48px; text-overflow: ellipsis; width: 22.5%;\\"
+              >
+                -
+              </div>
+              <div
+                style=\\"padding: 0px 24px; overflow: hidden; word-break: break-all; max-height: 48px; text-overflow: ellipsis; width: 22.5%;\\"
+              >
+                <div
+                  class=\\"\\"
+                  title=\\"\\"
+                >
+                  -
+                </div>
+              </div>
+              <div
+                style=\\"padding: 0px 24px; overflow: hidden; word-break: break-all; max-height: 48px; text-overflow: ellipsis; width: 22.5%;\\"
+              >
+                -
+              </div>
+              <button
+                class=\\"MuiButtonBase-root MuiIconButton-root expandButton\\"
+                tabindex=\\"0\\"
+                type=\\"button\\"
+              >
+                <span
+                  class=\\"MuiIconButton-label\\"
+                >
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root\\"
+                    focusable=\\"false\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M7 10l5 5 5-5z\\"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class=\\"MuiTouchRipple-root\\"
+                />
+              </button>
+            </div>
+          </div>
+          <div
+            class=\\"MuiCollapse-container MuiCollapse-hidden\\"
+            style=\\"min-height: 0px;\\"
+          >
+            <div
+              class=\\"MuiCollapse-wrapper\\"
+            >
+              <div
+                class=\\"MuiCollapse-wrapperInner\\"
+              >
+                <div
+                  role=\\"region\\"
+                >
+                  <div
+                    class=\\"MuiAccordionDetails-root\\"
+                  >
+                    <div />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class=\\"MuiTablePagination-root flexbox margin-top \\"
+      >
+        <div
+          class=\\"MuiToolbar-root MuiToolbar-regular MuiTablePagination-toolbar MuiToolbar-gutters\\"
+        >
+          <div
+            class=\\"MuiTablePagination-spacer flexbox no-basis\\"
+          />
+          <p
+            class=\\"MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit\\"
+            
+          >
+            Rows
+          </p>
+          <div
+            class=\\"MuiInputBase-root MuiTablePagination-input MuiTablePagination-selectRoot\\"
+          >
+            <div
+              aria-haspopup=\\"listbox\\"
+              
+              class=\\"MuiSelect-root MuiSelect-select MuiTablePagination-select MuiSelect-selectMenu MuiInputBase-input\\"
+              
+              role=\\"button\\"
+              tabindex=\\"0\\"
+            >
+              20
+            </div>
+            <input
+              aria-hidden=\\"true\\"
+              class=\\"MuiSelect-nativeInput\\"
+              tabindex=\\"-1\\"
+              value=\\"20\\"
+            />
+            <svg
+              aria-hidden=\\"true\\"
+              class=\\"MuiSvgIcon-root MuiSelect-icon MuiTablePagination-selectIcon\\"
+              focusable=\\"false\\"
+              viewBox=\\"0 0 24 24\\"
+            >
+              <path
+                d=\\"M7 10l5 5 5-5z\\"
+              />
+            </svg>
+          </div>
+          <p
+            class=\\"MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit\\"
+          />
+          <div
+            class=\\"flexbox\\"
+          >
+            <button
+              class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+              disabled=\\"\\"
+              tabindex=\\"-1\\"
+              type=\\"button\\"
+            >
+              <span
+                class=\\"MuiIconButton-label\\"
+              >
+                <svg
+                  aria-hidden=\\"true\\"
+                  class=\\"MuiSvgIcon-root\\"
+                  focusable=\\"false\\"
+                  viewBox=\\"0 0 24 24\\"
+                >
+                  <path
+                    d=\\"M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z\\"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+              disabled=\\"\\"
+              tabindex=\\"-1\\"
+              type=\\"button\\"
+            >
+              <span
+                class=\\"MuiIconButton-label\\"
+              >
+                <svg
+                  aria-hidden=\\"true\\"
+                  class=\\"MuiSvgIcon-root\\"
+                  focusable=\\"false\\"
+                  viewBox=\\"0 0 24 24\\"
+                >
+                  <path
+                    d=\\"M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z\\"
+                  />
+                </svg>
+              </span>
+            </button>
+            <div
+              class=\\"flexbox\\"
+              style=\\"align-items: baseline;\\"
+            >
+              <div
+                class=\\"MuiFormControl-root MuiTextField-root MuiFormControl-marginDense\\"
+                style=\\"min-width: 30px; max-width: 30px; margin-right: 10px;\\"
+              >
+                <div
+                  class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-marginDense MuiInput-marginDense\\"
+                >
+                  <input
+                    aria-invalid=\\"false\\"
+                    class=\\"MuiInputBase-input MuiInput-input MuiInputBase-inputMarginDense MuiInput-inputMarginDense\\"
+                    type=\\"text\\"
+                    value=\\"1\\"
+                  />
+                </div>
+              </div>
+              / 1
+            </div>
+            <button
+              class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+              disabled=\\"\\"
+              tabindex=\\"-1\\"
+              type=\\"button\\"
+            >
+              <span
+                class=\\"MuiIconButton-label\\"
+              >
+                <svg
+                  aria-hidden=\\"true\\"
+                  class=\\"MuiSvgIcon-root\\"
+                  focusable=\\"false\\"
+                  viewBox=\\"0 0 24 24\\"
+                >
+                  <path
+                    d=\\"M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z\\"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+              disabled=\\"\\"
+              tabindex=\\"-1\\"
+              type=\\"button\\"
+            >
+              <span
+                class=\\"MuiIconButton-label\\"
+              >
+                <svg
+                  aria-hidden=\\"true\\"
+                  class=\\"MuiSvgIcon-root\\"
+                  focusable=\\"false\\"
+                  viewBox=\\"0 0 24 24\\"
+                >
+                  <path
+                    d=\\"M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z\\"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</div>"
 `;
