@@ -148,7 +148,14 @@ sudo bash -c 'DEVICE_TYPE="generic-armv6" && \\
 mender setup \\
   --device-type $DEVICE_TYPE \\
   --quiet --demo  && \\
-systemctl restart mender-client'
+systemctl restart mender-client && \\
+(cat &gt; /etc/mender/mender-shell.conf &lt;&lt; EOF
+{
+  "ServerURL": "http://localhost",
+  "User": "pi"
+}
+EOF
+) && systemctl restart mender-shell'
 
     </span>
   </div>

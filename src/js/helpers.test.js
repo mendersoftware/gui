@@ -84,7 +84,7 @@ describe('stringToBoolean function', () => {
 
 describe('getDebInstallationCode function', () => {
   it('should not contain any template string leftovers', () => {
-    expect(getDebInstallationCode()).not.toMatch(/\{([^}]+)\}/);
+    expect(getDebInstallationCode()).not.toMatch(/\$\{([^}]+)\}/);
   });
   it('should return a sane result', () => {
     expect(getDebInstallationCode()).toMatch(`wget -q -O- https://get.mender.io/ | sudo bash -s -- -c experimental`);
@@ -97,7 +97,7 @@ describe('getDebConfigurationCode function', () => {
     code = getDebConfigurationCode('192.168.7.41', false, true, 'token', 'master', 'raspberrypi3');
   });
   it('should not contain any template string leftovers', () => {
-    expect(code).not.toMatch(/\{([^}]+)\}/);
+    expect(code).not.toMatch(/\$\{([^}]+)\}/);
   });
   it('should return a sane result', () => {
     expect(code).toMatch(
@@ -108,7 +108,14 @@ mender setup \\
   --device-type $DEVICE_TYPE \\
   --quiet --demo --server-ip 192.168.7.41 \\
   --tenant-token $TENANT_TOKEN && \\
-systemctl restart mender-client'`
+systemctl restart mender-client && \\
+(cat > /etc/mender/mender-shell.conf << EOF
+{
+  "ServerURL": "http://localhost",
+  "User": "pi"
+}
+EOF
+) && systemctl restart mender-shell'`
     );
   });
   it('should not contain tenant information for OS calls', () => {
@@ -122,9 +129,9 @@ describe('getDemoDeviceCreationCommand function', () => {
   const token = `eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZW5kZXIudGVuYW50IjoiNWY5YWI0ZWQ4ZjhhMzc0NmYwYTIxNjU1IiwiaXNzIjoiTWVuZGVyIiwic3`;
   it('should not contain any template string leftovers', () => {
     let code = getDemoDeviceCreationCommand();
-    expect(code).not.toMatch(/\{([^}]+)\}/);
+    expect(code).not.toMatch(/\$\{([^}]+)\}/);
     code = getDemoDeviceCreationCommand(token);
-    expect(code).not.toMatch(/\{([^}]+)\}/);
+    expect(code).not.toMatch(/\$\{([^}]+)\}/);
   });
   it('should return a sane result', () => {
     let code = getDemoDeviceCreationCommand();
