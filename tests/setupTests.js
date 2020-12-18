@@ -1,3 +1,4 @@
+import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { within, waitForElementToBeRemoved } from '@testing-library/react';
 import UserEvent from '@testing-library/user-event';
@@ -51,6 +52,7 @@ beforeAll(async () => {
   server = setupServer(...handlers);
   await server.listen();
   Object.defineProperty(navigator, 'appVersion', { value: 'Test', writable: true });
+  jest.spyOn(React, 'useEffect').mockImplementation(React.useLayoutEffect);
 });
 
 afterEach(async () => {
@@ -65,6 +67,7 @@ afterAll(async () => {
   // `Location` object
   window.location = oldWindowLocation;
   window.sessionStorage = oldWindowSessionStorage;
+  React.useEffect.mockRestore();
 });
 
 export const selectMaterialUiSelectOption = async (element, optionText) =>

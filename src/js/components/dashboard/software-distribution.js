@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import { BarChart as BarChartIcon } from '@material-ui/icons';
@@ -24,96 +24,91 @@ const defaultChartStyle = {
   padding: 0
 };
 
-export class SoftwareDistribution extends React.Component {
-  constructor(props, state) {
-    super(props, state);
-    const self = this;
-    self.state = {
-      reports: props.reports.length ? props.reports : Object.keys(props.devices).length ? defaultReports : []
-    };
-    self.state.reports.map(report => self.initializeReport(report.group));
-  }
+export const SoftwareDistribution = ({
+  devices,
+  getAllDynamicGroupDevices,
+  getAllGroupDevices,
+  groups,
+  hasDevices,
+  isEnterprise,
+  reports,
+  saveUserSettings,
+  selectGroup
+}) => {
+  useEffect(() => {
+    reports.map(report => initializeReport(report.group));
+  }, []);
 
-  componentDidUpdate(prevProps) {
-    const self = this;
-    if (prevProps.reports.length !== self.props.reports.length) {
-      self.props.reports.map(report => self.initializeReport(report.group));
-      self.setState({ reports: self.props.reports });
-    }
-  }
+  useEffect(() => {
+    reports.map(report => initializeReport(report.group));
+  }, [reports]);
 
-  initializeReport(group) {
+  const initializeReport = group => {
     if (!group) {
       return Promise.resolve();
     }
-    const storedGroup = this.props.groups[group];
+    const storedGroup = groups[group];
     if (storedGroup && storedGroup.filters.length) {
-      return this.props.getAllDynamicGroupDevices(group);
+      return getAllDynamicGroupDevices(group);
     }
-    return this.props.getAllGroupDevices(group);
-  }
+    return getAllGroupDevices(group);
+  };
 
-  addCurrentSelection(selection) {
-    const reports = [...this.state.reports, selection];
-    this.setState({ reports });
-    this.initializeReport(selection.group);
-    this.props.saveUserSettings({ reports });
-  }
+  const addCurrentSelection = selection => {
+    const newReports = [...reports, selection];
+    initializeReport(selection.group);
+    saveUserSettings({ reports: newReports });
+  };
 
-  removeReport(index) {
-    const reports = this.state.reports;
-    reports.splice(index, 1);
-    this.setState({ reports });
-    this.props.saveUserSettings({ reports });
-  }
+  const removeReport = removedReport => {
+    saveUserSettings({ reports: reports.filter(report => report !== removedReport) });
+  };
 
-  render() {
-    const self = this;
-    const { devices, groups, hasDevices, isEnterprise, selectGroup } = self.props;
-    const { reports } = self.state;
-    return !isEnterprise ? (
-      <div className="flexbox centered">
-        <EnterpriseNotification isEnterprise={isEnterprise} benefit="actionable insights into the devices you are updating with Mender" />
-      </div>
-    ) : (
-      <div>
-        <h4 className="dashboard-header">
-          <span>Software distribution</span>
-        </h4>
-        {hasDevices ? (
-          <div className="flexbox" style={{ flexWrap: 'wrap' }}>
-            {reports.map((report, index) => {
-              const Component = reportTypes[report.type];
-              return (
-                <Component
-                  attribute={report.attribute}
-                  devices={devices}
-                  groups={groups}
-                  group={report.group}
-                  key={`report-${report.group}-${index}`}
-                  onClick={() => self.removeReport(index)}
-                  selectGroup={selectGroup}
-                  style={defaultChartStyle}
-                />
-              );
-            })}
-            <ChartAdditionWidget groups={groups} onAdditionClick={selection => self.addCurrentSelection(selection)} style={defaultChartStyle} />
-          </div>
-        ) : (
-          <div className="dashboard-placeholder">
-            <BarChartIcon style={{ transform: 'scale(5)' }} />
-            <p className="margin-top-large">Software distribution charts will appear here once you connected a device. </p>
-          </div>
-        )}
-      </div>
-    );
-  }
-}
+  return !isEnterprise ? (
+    <div className="flexbox centered">
+      <EnterpriseNotification isEnterprise={isEnterprise} benefit="actionable insights into the devices you are updating with Mender" />
+    </div>
+  ) : (
+    <div>
+      <h4 className="dashboard-header">
+        <span>Software distribution</span>
+      </h4>
+      {hasDevices ? (
+        <div className="flexbox" style={{ flexWrap: 'wrap' }}>
+          {reports.map((report, index) => {
+            const Component = reportTypes[report.type];
+            return (
+              <Component
+                attribute={report.attribute}
+                devices={devices}
+                groups={groups}
+                group={report.group}
+                key={`report-${report.group}-${index}`}
+                onClick={() => removeReport(report)}
+                selectGroup={selectGroup}
+                style={defaultChartStyle}
+              />
+            );
+          })}
+          <ChartAdditionWidget groups={groups} onAdditionClick={addCurrentSelection} style={defaultChartStyle} />
+        </div>
+      ) : (
+        <div className="dashboard-placeholder">
+          <BarChartIcon style={{ transform: 'scale(5)' }} />
+          <p className="margin-top-large">Software distribution charts will appear here once you connected a device. </p>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const actionCreators = { getAllDynamicGroupDevices, getAllGroupDevices, saveUserSettings, selectGroup };
 
 const mapStateToProps = state => {
-  const reports = getUserSettings(state).reports || state.users.globalSettings[`${state.users.currentUser}-reports`] || [];
+  const reports =
+    getUserSettings(state).reports ||
+    state.users.globalSettings[`${state.users.currentUser}-reports`] ||
+    (Object.keys(state.devices.byId).length ? defaultReports : []);
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
