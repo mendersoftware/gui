@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -22,17 +22,23 @@ import Header from './header/header';
 import LeftNav from './leftnav';
 
 const timeout = 900000; // 15 minutes idle time
+const cookies = new Cookies();
 
-class AppRoot extends React.PureComponent {
-  constructor(props, context) {
-    super(props, context);
-    this.cookies = new Cookies();
-  }
-
-  componentDidMount() {
-    const { trackingCode } = this.props;
+export const AppRoot = ({
+  currentUser,
+  history,
+  logoutUser,
+  trackingCode,
+  onboardingState,
+  setShowConnectingDialog,
+  showDeviceConnectionDialog,
+  showDismissHelptipsDialog,
+  setSnackbar,
+  snackbar
+}) => {
+  useEffect(() => {
     if (trackingCode) {
-      if (!this.cookies.get('_ga')) {
+      if (!cookies.get('_ga')) {
         Tracking.cookieconsent().then(({ trackingConsentGiven }) => {
           if (trackingConsentGiven) {
             Tracking.initialize(trackingCode);
@@ -43,64 +49,60 @@ class AppRoot extends React.PureComponent {
         Tracking.initialize(trackingCode);
       }
     }
-    const trackLocationChange = location => {
-      // if we're on page whose path might contain sensitive device/ group/ deployment names etc. we sanitize the sent information before submission
-      let page = location.pathname || '';
-      if (page.includes('=') && (page.startsWith('/devices') || page.startsWith('/deployments'))) {
-        const splitter = page.lastIndexOf('/');
-        const filters = page.slice(splitter + 1);
-        const keyOnlyFilters = filters.split('&').reduce((accu, item) => `${accu}:${item.split('=')[0]}&`, ''); // assume the keys to filter by are not as revealing as the values things are filtered by
-        page = `${page.substring(0, splitter)}?${keyOnlyFilters.substring(0, keyOnlyFilters.length - 1)}`; // cut off the last & of the reduced filters string
-      }
-      Tracking.pageview(page);
-    };
-    this.props.history.listen(location => trackLocationChange(location));
-    trackLocationChange(this.props.history.location);
-  }
+    history.listen(trackLocationChange);
+    trackLocationChange(history.location);
+  }, []);
 
-  onIdle() {
-    if (expirySet() && this.props.currentUser) {
-      // logout user and warn
-      return this.props.logoutUser('Your session has expired. You have been automatically logged out due to inactivity.').catch(() => updateMaxAge());
+  const trackLocationChange = location => {
+    // if we're on page whose path might contain sensitive device/ group/ deployment names etc. we sanitize the sent information before submission
+    let page = location.pathname || '';
+    if (page.includes('=') && (page.startsWith('/devices') || page.startsWith('/deployments'))) {
+      const splitter = page.lastIndexOf('/');
+      const filters = page.slice(splitter + 1);
+      const keyOnlyFilters = filters.split('&').reduce((accu, item) => `${accu}:${item.split('=')[0]}&`, ''); // assume the keys to filter by are not as revealing as the values things are filtered by
+      page = `${page.substring(0, splitter)}?${keyOnlyFilters.substring(0, keyOnlyFilters.length - 1)}`; // cut off the last & of the reduced filters string
     }
-  }
+    Tracking.pageview(page);
+  };
 
-  render() {
-    const self = this;
-    const { history, onboardingState, setShowConnectingDialog, showDeviceConnectionDialog, showDismissHelptipsDialog, setSnackbar, snackbar } = self.props;
+  const onIdle = () => {
+    if (expirySet() && currentUser) {
+      // logout user and warn
+      return logoutUser('Your session has expired. You have been automatically logged out due to inactivity.').catch(() => updateMaxAge());
+    }
+  };
 
-    let onboardingComponent = getOnboardingComponentFor(onboardingSteps.APPLICATION_UPDATE_REMINDER_TIP, onboardingState, {
-      anchor: {
-        left: 170,
-        top: 225
-      },
-      place: 'right'
-    });
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_CREATION_DIALOG, onboardingState, {}, onboardingComponent);
+  let onboardingComponent = getOnboardingComponentFor(onboardingSteps.APPLICATION_UPDATE_REMINDER_TIP, onboardingState, {
+    anchor: {
+      left: 170,
+      top: 225
+    },
+    place: 'right'
+  });
+  onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_CREATION_DIALOG, onboardingState, {}, onboardingComponent);
 
-    return (
-      <>
-        {getToken() ? (
-          <>
-            <IdleTimer element={document} onAction={updateMaxAge} onIdle={() => self.onIdle()} timeout={timeout} />
-            <Header history={history} />
-            <LeftNav className="leftFixed leftNav" />
-            <div className="rightFluid container">
-              <ErrorBoundary>{privateRoutes}</ErrorBoundary>
-            </div>
-            {onboardingComponent ? onboardingComponent : null}
-            {showDismissHelptipsDialog && <ConfirmDismissHelptips />}
-            {showDeviceConnectionDialog && <DeviceConnectionDialog onCancel={() => setShowConnectingDialog(false)} />}
-            <LiveChatBox />
-          </>
-        ) : (
-          publicRoutes
-        )}
-        <SharedSnackbar snackbar={snackbar} setSnackbar={setSnackbar} />
-      </>
-    );
-  }
-}
+  return (
+    <>
+      {getToken() ? (
+        <>
+          <IdleTimer element={document} onAction={updateMaxAge} onIdle={onIdle} timeout={timeout} />
+          <Header history={history} />
+          <LeftNav className="leftFixed leftNav" />
+          <div className="rightFluid container">
+            <ErrorBoundary>{privateRoutes}</ErrorBoundary>
+          </div>
+          {onboardingComponent ? onboardingComponent : null}
+          {showDismissHelptipsDialog && <ConfirmDismissHelptips />}
+          {showDeviceConnectionDialog && <DeviceConnectionDialog onCancel={() => setShowConnectingDialog(false)} />}
+          <LiveChatBox />
+        </>
+      ) : (
+        publicRoutes
+      )}
+      <SharedSnackbar snackbar={snackbar} setSnackbar={setSnackbar} />
+    </>
+  );
+};
 
 const actionCreators = { logoutUser, saveUserSettings, setShowConnectingDialog, setSnackbar };
 
