@@ -18,6 +18,73 @@ import { getDocsVersion } from '../../../selectors';
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
 
+const DeviceConnectionExplainer = ({ setOnDevice, setVirtualDevice, docsVersion }) => (
+  <div>
+    <div>
+      <p>
+        You can connect almost any device and Linux OS with Mender, but to make things simple during evaluation we recommend you use a Raspberry Pi as a test
+        device.
+      </p>
+      <h3>Get started quickly with a Raspberry Pi</h3>
+      <p>We&apos;ll walk you through the steps to connect a Raspberry Pi and deploy your first update.</p>
+      <div>
+        <div id="deb-package-help" className="tooltip help" data-tip data-for="deb-package-tip" data-event="click focus" style={{ top: '22%', left: '88%' }}>
+          <HelpIcon />
+        </div>
+        <ReactTooltip id="deb-package-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+          <p>
+            The steps in the guide should work on most operating systems in the debian family (e.g. Debian, Ubuntu, Raspberry Pi OS) and devices based on ARMv6
+            or newer (e.g. Raspberry Pi 2/3/4, Beaglebone).
+          </p>
+        </ReactTooltip>
+      </div>
+      <div className="flexbox centered column os-list">
+        <div>
+          {[raspberryPi, raspberryPi4].map((tile, index) => (
+            <img key={`tile-${index}`} src={tile} />
+          ))}
+        </div>
+        <Button variant="contained" onClick={() => setOnDevice(true)}>
+          Prepare and connect my Raspberry Pi
+        </Button>
+      </div>
+    </div>
+    <div className="flexbox centered column">
+      <span>
+        <b>Don&apos;t have a Raspberry Pi?</b> You can use our Docker-run virtual device to go through the same tutorial.
+      </span>
+      <div>
+        <img src={docker} style={{ height: '40px', verticalAlign: 'middle', marginRight: '8px' }} />
+        <a onClick={() => setVirtualDevice(true)}>Prepare a virtual device for now</a>
+      </div>
+    </div>
+
+    <div>
+      <h3>Connecting other devices</h3>
+      <p>For other devices, we provide documentation to integrate with Mender.</p>
+      <ul>
+        <li>
+          Learn how to integrate devices with{' '}
+          <a href={`https://docs.mender.io/${docsVersion}system-updates-debian-family`} target="_blank" rel="noopener noreferrer">
+            Debian family
+          </a>{' '}
+          or{' '}
+          <a href={`https://docs.mender.io/${docsVersion}system-updates-yocto-project`} target="_blank" rel="noopener noreferrer">
+            Yocto OSes
+          </a>
+        </li>
+        <li>
+          Or visit{' '}
+          <a href={`https://hub.mender.io/c/board-integrations`} target="_blank" rel="noopener noreferrer">
+            Board Integrations
+          </a>{' '}
+          on Mender Hub and search for your device and OS.
+        </li>
+      </ul>
+    </div>
+  </div>
+);
+
 export const DeviceConnectionDialog = ({ advanceOnboarding, docsVersion, onboardingDeviceType, onboardingComplete, onCancel, pendingCount }) => {
   const [onDevice, setOnDevice] = useState(false);
   const [progress, setProgress] = useState(1);
@@ -38,73 +105,7 @@ export const DeviceConnectionDialog = ({ advanceOnboarding, docsVersion, onboard
     setProgress(progress + 1);
   };
 
-  let content = (
-    <div>
-      <div>
-        <p>
-          You can connect almost any device and Linux OS with Mender, but to make things simple during evaluation we recommend you use a Raspberry Pi as a test
-          device.
-        </p>
-        <h3>Get started quickly with a Raspberry Pi</h3>
-        <p>We&apos;ll walk you through the steps to connect a Raspberry Pi and deploy your first update.</p>
-        <div>
-          <div id="deb-package-help" className="tooltip help" data-tip data-for="deb-package-tip" data-event="click focus" style={{ top: '22%', left: '88%' }}>
-            <HelpIcon />
-          </div>
-          <ReactTooltip id="deb-package-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-            <p>
-              The steps in the guide should work on most operating systems in the debian family (e.g. Debian, Ubuntu, Raspberry Pi OS) and devices based on
-              ARMv6 or newer (e.g. Raspberry Pi 2/3/4, Beaglebone).
-            </p>
-          </ReactTooltip>
-        </div>
-        <div className="flexbox centered column os-list">
-          <div>
-            {[raspberryPi, raspberryPi4].map((tile, index) => (
-              <img key={`tile-${index}`} src={tile} />
-            ))}
-          </div>
-          <Button variant="contained" onClick={() => setOnDevice(true)}>
-            Prepare and connect my Raspberry Pi
-          </Button>
-        </div>
-      </div>
-      <div className="flexbox centered column">
-        <span>
-          <b>Don&apos;t have a Raspberry Pi?</b> You can use our Docker-run virtual device to go through the same tutorial.
-        </span>
-        <div>
-          <img src={docker} style={{ height: '40px', verticalAlign: 'middle', marginRight: '8px' }} />
-          <a onClick={() => setVirtualDevice(true)}>Prepare a virtual device for now</a>
-        </div>
-      </div>
-
-      <div>
-        <h3>Connecting other devices</h3>
-        <p>For other devices, we provide documentation to integrate with Mender.</p>
-        <ul>
-          <li>
-            Learn how to integrate devices with{' '}
-            <a href={`https://docs.mender.io/${docsVersion}system-updates-debian-family`} target="_blank" rel="noopener noreferrer">
-              Debian family
-            </a>{' '}
-            or{' '}
-            <a href={`https://docs.mender.io/${docsVersion}system-updates-yocto-project`} target="_blank" rel="noopener noreferrer">
-              Yocto OSes
-            </a>
-          </li>
-          <li>
-            Or visit{' '}
-            <a href={`https://hub.mender.io/c/board-integrations`} target="_blank" rel="noopener noreferrer">
-              Board Integrations
-            </a>{' '}
-            on Mender Hub and search for your device and OS.
-          </li>
-        </ul>
-      </div>
-    </div>
-  );
-
+  let content = <DeviceConnectionExplainer docsVersion={docsVersion} setOnDevice={setOnDevice} setVirtualDevice={setVirtualDevice} />;
   if (onDevice) {
     content = <PhysicalDeviceOnboarding progress={progress} />;
   } else if (virtualDevice) {
