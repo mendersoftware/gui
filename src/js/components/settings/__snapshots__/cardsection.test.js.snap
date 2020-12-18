@@ -2,11 +2,10 @@
 
 exports[`GlobalSettings Component renders correctly 1`] = `
 <form
-  className="margin-top-small"
-  onSubmit={[Function]}
+  class="margin-top-small"
 >
   <div
-    className="warning"
+    class="warning"
   />
   <div
     id="poweredByStripe"
@@ -18,84 +17,45 @@ exports[`GlobalSettings Component renders correctly 1`] = `
       src="powered_by_stripe.png"
     />
   </div>
+  <p
+    class="info"
+  >
+    Billing will be scheduled monthly, starting from today. You can cancel at any time.
+  </p>
   <div
-    className="flexbox margin-top-small"
-    style={
-      Object {
-        "alignItems": "center",
-        "justifyContent": "flex-end",
-      }
-    }
+    class="flexbox margin-top-small"
+    style="align-items: center; justify-content: flex-end;"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-text"
-      disabled={false}
-      onBlur={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      style={
-        Object {
-          "marginRight": 15,
-        }
-      }
-      tabIndex={0}
-      type="reset"
-    >
-      <span
-        className="MuiButton-label"
-      >
-        Cancel
-      </span>
-    </button>
-    <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary Mui-disabled Mui-disabled"
-      disabled={true}
-      onBlur={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={-1}
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary Mui-disabled Mui-disabled"
+      disabled=""
+      tabindex="-1"
       type="submit"
     >
       <span
-        className="MuiButton-label"
+        class="MuiButton-label"
       >
-        Save
+        Sign up
       </span>
     </button>
   </div>
   <div
-    className="loaderContainer shrunk"
+    class="loaderContainer shrunk"
   >
     <div
-      className="loader"
+      class="loader"
     >
       <span
-        className="dot dot_1"
+        class="dot dot_1"
       />
       <span
-        className="dot dot_2"
+        class="dot dot_2"
       />
       <span
-        className="dot dot_3"
+        class="dot dot_3"
       />
       <span
-        className="dot dot_4"
+        class="dot dot_4"
       />
     </div>
   </div>

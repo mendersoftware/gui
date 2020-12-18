@@ -6,7 +6,7 @@ import { MemoryRouter } from 'react-router-dom';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import DeploymentReport from './report';
-import { defaultState, undefineds } from '../../../../tests/mockData';
+import { defaultState } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
