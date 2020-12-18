@@ -136,9 +136,9 @@ export const PhaseSettings = ({ classNames, disabled, filterId, numberDevices, s
               />
 
               <Select onChange={event => handleDelayToggle(event.target.value, index)} value={phase.delayUnit || 'hours'} style={{ marginLeft: '5px' }}>
-                <MenuItem value={'minutes'}>Minutes</MenuItem>
-                <MenuItem value={'hours'}>Hours</MenuItem>
-                <MenuItem value={'days'}>Days</MenuItem>
+                <MenuItem value="minutes">Minutes</MenuItem>
+                <MenuItem value="hours">Hours</MenuItem>
+                <MenuItem value="days">Days</MenuItem>
               </Select>
             </div>
           ) : (

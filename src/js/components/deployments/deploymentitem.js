@@ -95,7 +95,7 @@ export default class DeploymentItem extends React.Component {
       <div className={`deployment-item ${deploymentTypeClasses[type]}`}>
         {!!confirmation && confirmation}
         {columnHeaders.map((column, i) => (
-          <div className={column.class} key={'deploy-item-' + i}>
+          <div className={column.class} key={`deploy-item-${i}`}>
             {column.title && <span className="deployment-item-title text-muted">{column.title}</span>}
             {column.renderer({
               ...self.props,

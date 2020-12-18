@@ -29,7 +29,7 @@ describe('Auditlogs Component', () => {
               onChangePage={jest.fn}
               onChangeSorting={jest.fn}
               perPage={20}
-              sortDirection={'desc'}
+              sortDirection="desc"
             />
           </Provider>
         </MemoryRouter>

@@ -52,13 +52,13 @@ export const OrgDataEntry = ({ data: { name, tos, marketing }, onSubmit, recaptc
             </label>
           }
           required={true}
-          value={'true'}
+          value="true"
           checked={tos === 'true'}
         />
         <FormCheckbox
           id="marketing"
           label="By checking this you agree that we can send you occasional email updates about Mender. You can unsubscribe from these emails at any time"
-          value={'true'}
+          value="true"
           checked={marketing === 'true'}
         />
         {recaptchaSiteKey && (

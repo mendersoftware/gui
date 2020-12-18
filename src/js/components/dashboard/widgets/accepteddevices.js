@@ -24,7 +24,7 @@ export default class AcceptedDevices extends React.Component {
     let activityNotificationText = 'All devices online';
     let notificationSymbol = <CheckIcon style={Object.assign({}, notificationStyles.base, notificationStyles.green)} />;
     if (this.props.inactiveCount) {
-      notificationSymbol = <ReportProblemIcon style={notificationStyles.base} className={'warning'} />;
+      notificationSymbol = <ReportProblemIcon style={notificationStyles.base} className="warning" />;
       timeframeNote = 'Inactive for';
       activityNotificationText = `${this.props.inactiveCount} ${pluralize('devices', this.props.inactiveCount)} may be offline`;
     }
