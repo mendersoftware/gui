@@ -84,13 +84,10 @@ describe('stringToBoolean function', () => {
 
 describe('getDebInstallationCode function', () => {
   it('should not contain any template string leftovers', () => {
-    expect(getDebInstallationCode('master')).not.toMatch(/\{([^}]+)\}/);
+    expect(getDebInstallationCode()).not.toMatch(/\{([^}]+)\}/);
   });
   it('should return a sane result', () => {
-    expect(getDebInstallationCode('master')).toMatch(
-      `wget https://d1b0l86ne08fsf.cloudfront.net/master/dist-packages/debian/armhf/mender-client_master-1_armhf.deb && \\
-sudo dpkg -i --force-confdef --force-confold mender-client_master-1_armhf.deb`
-    );
+    expect(getDebInstallationCode()).toMatch(`wget -q -O- https://get.mender.io/ | sudo bash`);
   });
 });
 
@@ -104,9 +101,8 @@ describe('getDebConfigurationCode function', () => {
   });
   it('should return a sane result', () => {
     expect(code).toMatch(
-      `sudo bash -c 'wget https://d1b0l86ne08fsf.cloudfront.net/master/dist-packages/debian/armhf/mender-client_master-1_armhf.deb && \\
-DEBIAN_FRONTEND=noninteractive dpkg -i --force-confdef --force-confold mender-client_master-1_armhf.deb && \\
-DEVICE_TYPE="raspberrypi3" && \\
+      `wget -q -O- https://get.mender.io/ | sudo bash && \\
+sudo bash -c 'DEVICE_TYPE="raspberrypi3" && \\
 TENANT_TOKEN="token" && \\
 mender setup \\
   --device-type $DEVICE_TYPE \\
