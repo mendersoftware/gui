@@ -427,7 +427,7 @@ export const standardizePhases = phases =>
     return standardizedPhase;
   });
 
-export const getDebInstallationCode = () => `wget -q -O- https://get.mender.io/ | sudo bash`;
+export const getDebInstallationCode = () => `wget -q -O- https://get.mender.io/ | sudo bash -s -- -c experimental`;
 
 export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token, packageVersion, deviceType = 'generic-armv6') => {
   let connectionInstructions = ``;
