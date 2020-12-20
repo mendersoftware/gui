@@ -29,14 +29,14 @@ const deploymentSteps = [
   { title: 'Review and create', closed: false, component: Review }
 ];
 
-export const getPhaseStartTime = (phases, index) => {
+export const getPhaseStartTime = (phases, index, startDate) => {
   if (index < 1) {
-    return phases[0].start_ts || new Date();
+    return startDate;
   }
   // since we don't want to get stale phase start times when the creation dialog is open for a long time
   // we have to ensure start times are based on delay from previous phases
   // since there likely won't be 1000s of phases this should still be fine to recalculate
-  const newStartTime = phases.slice(0, index).reduce((accu, phase) => moment(accu).add(phase.delay, phase.delayUnit), phases[0].start_ts || new Date());
+  const newStartTime = phases.slice(0, index).reduce((accu, phase) => moment(accu).add(phase.delay, phase.delayUnit), startDate);
   return newStartTime.toISOString();
 };
 
@@ -99,7 +99,7 @@ export class CreateDialog extends React.Component {
     const { hasNewRetryDefault } = self.state;
     const { advanceOnboarding, createDeployment, globalSettings, isOnboardingComplete, onScheduleSubmit, saveGlobalSettings } = self.props;
     const { deploymentDeviceIds, device, filterId, group, phases, release, retries } = settings;
-
+    const startTime = phases?.length ? phases[0].start_ts || new Date() : new Date();
     const newDeployment = {
       artifact_name: release.Name,
       devices: filterId || (group && group !== allDevices) ? undefined : deploymentDeviceIds,
@@ -108,7 +108,7 @@ export class CreateDialog extends React.Component {
       name: device?.id || (group ? decodeURIComponent(group) : 'All devices'),
       phases: phases
         ? phases.map((phase, i, origPhases) => {
-            phase.start_ts = getPhaseStartTime(origPhases, i);
+            phase.start_ts = getPhaseStartTime(origPhases, i, startTime);
             return phase;
           })
         : phases,

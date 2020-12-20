@@ -80,7 +80,7 @@ const Review = ({
               index === phases.length - 1
             );
             const deviceCountText = !filterId ? ` (${deviceCount} ${pluralize('device', deviceCount)})` : '';
-            const startTime = getPhaseStartTime(phases, index);
+            const startTime = getPhaseStartTime(phases, index, start_time);
             return (
               <div className="flexbox column" key={startTime}>
                 <Chip size="small" label={`Phase ${index + 1}`} />

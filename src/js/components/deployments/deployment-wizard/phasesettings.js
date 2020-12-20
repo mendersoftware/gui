@@ -78,6 +78,7 @@ export const PhaseSettings = ({ classNames, disabled, filterId, numberDevices, s
 
   // disable 'add phase' button if last phase/remainder has only 1 device left
   const disableAdd = !filterId && (remainder / 100) * numberDevices <= 1;
+  const startTime = phases.length ? phases[0].start_ts || new Date() : new Date();
   const mappedPhases = phases.map((phase, index) => {
     let max = index > 0 ? 100 - phases[index - 1].batch_size : 100;
     const deviceCount = getPhaseDeviceCount(numberDevices, phase.batch_size, remainder, index === phases.length - 1);
@@ -118,7 +119,7 @@ export const PhaseSettings = ({ classNames, disabled, filterId, numberDevices, s
           {!filterId && deviceCount < 1 && <div className="warning">Phases must have at least 1 device</div>}
         </TableCell>
         <TableCell>
-          <Time value={getPhaseStartTime(phases, index)} format="YYYY-MM-DD HH:mm" />
+          <Time value={getPhaseStartTime(phases, index, startTime)} format="YYYY-MM-DD HH:mm" />
         </TableCell>
         <TableCell>
           {phase.delay && index !== phases.length - 1 ? (
