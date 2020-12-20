@@ -58,8 +58,6 @@ describe('Signup Component', () => {
     userEvent.click(screen.getByRole('checkbox', { name: /by checking this you agree to our/i }));
     expect(screen.getByRole('button', { name: /complete signup/i })).toBeEnabled();
 
-    jest.clearAllMocks();
-    jest.useFakeTimers();
     const cookies = new Cookies();
     cookies.set.mockReturnValue();
     await userEvent.click(screen.getByRole('button', { name: /complete signup/i }));

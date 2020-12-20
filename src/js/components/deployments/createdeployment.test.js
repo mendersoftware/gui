@@ -28,16 +28,6 @@ describe('CreateDeployment Component', () => {
 
   beforeEach(() => {
     store = mockStore(mockState);
-    const mockDate = new Date('2019-01-01T13:00:00.000Z');
-    const _Date = Date;
-    global.Date = jest.fn(() => mockDate);
-    global.Date.parse = _Date.parse;
-    global.Date.now = _Date.now;
-    global.Date.toISOString = _Date.toISOString;
-    global.Date.UTC = _Date.UTC;
-    global.Date.getUTCFullYear = _Date.getUTCFullYear;
-    global.Date.getUTCMonth = _Date.getUTCMonth;
-    global.Date.getUTCDate = _Date.getUTCDate;
   });
 
   it('renders correctly', () => {
@@ -196,9 +186,9 @@ describe('CreateDeployment Component', () => {
       group: undefined,
       name: 'All devices',
       phases: [
-        { batch_size: 50, delay: 30, delayUnit: 'minutes', start_ts: new Date('2019-03-21T23:34:00.000Z') },
-        { batch_size: 25, delay: 25, delayUnit: 'days', start_ts: '2019-02-24T23:04:00.000Z' },
-        { batch_size: 25, start_ts: '2019-03-21T23:34:00.000Z' }
+        { batch_size: 50, delay: 30, delayUnit: 'minutes', start_ts: new Date('2019-01-01T13:00:00.300Z') },
+        { batch_size: 25, delay: 25, delayUnit: 'days', start_ts: '2019-01-01T13:30:00.300Z' },
+        { batch_size: 25, start_ts: '2019-01-26T13:30:00.300Z' }
       ],
       retries: 1
     });

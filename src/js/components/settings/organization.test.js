@@ -74,11 +74,6 @@ describe('MyOrganization Component', () => {
 });
 
 describe('smaller components', () => {
-  beforeEach(() => {
-    jest.mock('moment', () => {
-      return () => jest.requireActual('moment')('2019-01-01T00:00:00.000Z');
-    });
-  });
   [OrgHeader, TrialExpirationNote, DeviceLimitExpansionNotification, EnterpriseModificationsNote, CancelSubscriptionAlert, CancelSubscriptionButton].forEach(
     Component => {
       it(`renders ${Component.displayName || Component.name} correctly`, () => {

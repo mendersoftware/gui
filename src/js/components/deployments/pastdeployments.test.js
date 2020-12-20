@@ -7,7 +7,7 @@ import Past from './pastdeployments';
 import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
-let dateMock;
+const mockDate = new Date('2019-01-01T13:00:00.000Z');
 
 describe('PastDeployments Component', () => {
   let store;
@@ -25,16 +25,15 @@ describe('PastDeployments Component', () => {
         }
       }
     });
-    const mockDate = new Date('2019-01-01T13:00:00.000Z');
     const _Date = Date;
     global.Date = jest.fn(() => mockDate);
     global.Date.parse = _Date.parse;
     global.Date.now = _Date.now;
-    dateMock = jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
-  });
-
-  afterEach(() => {
-    dateMock.mockRestore();
+    global.Date.toISOString = _Date.toISOString;
+    global.Date.UTC = _Date.UTC;
+    global.Date.getUTCFullYear = _Date.getUTCFullYear;
+    global.Date.getUTCMonth = _Date.getUTCMonth;
+    global.Date.getUTCDate = _Date.getUTCDate;
   });
 
   it('renders correctly', () => {

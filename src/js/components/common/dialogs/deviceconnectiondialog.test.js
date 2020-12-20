@@ -19,7 +19,7 @@ describe('DeviceConnectionDialog Component', () => {
   it('renders correctly', () => {
     const { baseElement } = render(
       <Provider store={store}>
-        <DeviceConnectionDialog />
+        <DeviceConnectionDialog onCancel={jest.fn} />
       </Provider>
     );
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
@@ -31,7 +31,7 @@ describe('DeviceConnectionDialog Component', () => {
     render(
       <MemoryRouter>
         <Provider store={store}>
-          <DeviceConnectionDialog />
+          <DeviceConnectionDialog onCancel={jest.fn} />
         </Provider>
       </MemoryRouter>
     );

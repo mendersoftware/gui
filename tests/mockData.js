@@ -191,7 +191,7 @@ export const defaultState = {
           type: 'user',
           email: 'string@example.com'
         },
-        time: '2020-09-10T12:10:22.667Z',
+        time: '2019-01-01T12:10:22.667Z',
         action: 'create',
         object: {
           id: 'string',
@@ -209,7 +209,7 @@ export const defaultState = {
           email: 'string',
           identity_data: 'string'
         },
-        time: '2020-09-10T12:16:22.667Z',
+        time: '2019-01-01T12:16:22.667Z',
         action: 'create',
         object: {
           id: 'string',

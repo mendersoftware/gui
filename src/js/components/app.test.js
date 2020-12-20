@@ -60,7 +60,6 @@ describe('App Component', () => {
       writable: true,
       value: 'JWT=omnomnom'
     });
-    jest.useFakeTimers('modern');
     render(
       <MemoryRouter>
         <Provider store={store}>

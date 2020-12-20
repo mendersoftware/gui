@@ -14,19 +14,6 @@ describe('DeploymentReport Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({ ...defaultState });
-    const mockDate = new Date('2019-01-01T13:00:00.000Z');
-    const _Date = Date;
-    global.Date = jest.fn(() => mockDate);
-    global.Date.parse = _Date.parse;
-    global.Date.now = _Date.now;
-    global.Date.toISOString = _Date.toISOString;
-    global.Date.UTC = _Date.UTC;
-    global.Date.getUTCFullYear = _Date.getUTCFullYear;
-    global.Date.getUTCMonth = _Date.getUTCMonth;
-    global.Date.getUTCDate = _Date.getUTCDate;
-    jest.mock('moment', () => {
-      return () => jest.requireActual('moment')('2019-01-01T00:00:00.000Z');
-    });
   });
 
   it('renders correctly', () => {

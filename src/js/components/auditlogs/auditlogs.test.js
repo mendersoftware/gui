@@ -10,12 +10,12 @@ import AuditLogs from './auditlogs';
 import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
+const mockDate = new Date('2019-01-01T13:00:00.000Z');
 
 describe('Auditlogs Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({ ...defaultState });
-    const mockDate = new Date('2019-01-01T13:00:00.000Z');
     const _Date = Date;
     global.Date = jest.fn(() => mockDate);
     global.Date.parse = _Date.parse;
@@ -25,9 +25,6 @@ describe('Auditlogs Component', () => {
     global.Date.getUTCFullYear = _Date.getUTCFullYear;
     global.Date.getUTCMonth = _Date.getUTCMonth;
     global.Date.getUTCDate = _Date.getUTCDate;
-    jest.mock('moment', () => {
-      return () => jest.requireActual('moment')('2019-01-01T13:00:00.000Z');
-    });
   });
 
   it('renders correctly', () => {

@@ -224,7 +224,7 @@ exports[`DeploymentReport Component renders correctly 1`] = `
                     />
                   </svg>
                   <span>
-                    0 h 00 m 00 s
+                    0 h 30 m 00 s
                   </span>
                 </h2>
                 <div>
@@ -232,9 +232,9 @@ exports[`DeploymentReport Component renders correctly 1`] = `
                     Started: 
                   </div>
                   <time
-                    datetime=\\"2019-01-01T13:00:00+00:00\\"
+                    datetime=\\"2019-01-01T12:30:00+00:00\\"
                   >
-                    2019-01-01 13:00
+                    2019-01-01 12:30
                   </time>
                 </div>
               </div>

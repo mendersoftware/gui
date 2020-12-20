@@ -18,7 +18,6 @@ describe('CopyCode Component', () => {
     const ui = <CopyCode code="sudo it all!" onCopy={submitCheck} withDescription={true} />;
     const { rerender } = render(ui);
 
-    jest.useFakeTimers('modern');
     expect(screen.queryByText(/Copied to clipboard/i)).not.toBeInTheDocument();
     userEvent.click(screen.getByRole('button', { name: /Copy to clipboard/i }));
     expect(submitCheck).toHaveBeenCalledTimes(1);
