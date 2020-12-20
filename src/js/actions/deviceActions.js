@@ -325,7 +325,10 @@ export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
   if (!!group && (!state.devices.groups.byId[group] || !state.devices.groups.byId[group].filters.length)) {
     return Promise.resolve();
   }
-  const filters = mapFiltersToTerms(state.devices.groups.byId[group].filters);
+  const filters = mapFiltersToTerms([
+    ...state.devices.groups.byId[group].filters,
+    { key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' }
+  ]);
   const getAllDevices = (perPage = 500, page = defaultPage, devices = []) =>
     GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, { page, per_page: perPage, filters }).then(res => {
       const deviceAccu = reduceReceivedDevices(res.data, devices, state);
@@ -469,7 +472,10 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
         })
       ];
       // for each device, get device identity info
-      tasks.push(dispatch(getDevicesWithAuth(Object.values(deviceAccu.devicesById))));
+      const receivedDevices = Object.values(deviceAccu.devicesById);
+      if (receivedDevices.length) {
+        tasks.push(dispatch(getDevicesWithAuth(receivedDevices)));
+      }
       if (shouldSelectDevices) {
         tasks.push(dispatch(selectDevices(deviceAccu.ids)));
       }
@@ -544,13 +550,15 @@ export const getDeviceConnect = id => dispatch =>
 export const getDeviceAuth = id => dispatch => Promise.resolve(dispatch(getDevicesWithAuth([{ id }]))).then(results => Promise.resolve(results[1][0]));
 
 export const getDevicesWithAuth = devices => dispatch =>
-  GeneralApi.get(`${deviceAuthV2}/devices?id=${devices.map(device => device.id).join('&id=')}`)
-    .then(({ data: receivedDevices }) => {
-      let tasks = receivedDevices.map(device => dispatch({ type: DeviceConstants.RECEIVE_DEVICE_AUTH, device }));
-      tasks.push(Promise.resolve(receivedDevices));
-      return Promise.all(tasks);
-    })
-    .catch(err => console.log(`Error: ${err}`));
+  devices.length
+    ? GeneralApi.get(`${deviceAuthV2}/devices?id=${devices.map(device => device.id).join('&id=')}`)
+        .then(({ data: receivedDevices }) => {
+          let tasks = receivedDevices.map(device => dispatch({ type: DeviceConstants.RECEIVE_DEVICE_AUTH, device }));
+          tasks.push(Promise.resolve(receivedDevices));
+          return Promise.all(tasks);
+        })
+        .catch(err => console.log(`Error: ${err}`))
+    : Promise.resolve([[], []]);
 
 const maybeUpdateDevicesByStatus = (devicesState, deviceId, authId, dispatch) => {
   const device = devicesState.byId[deviceId];

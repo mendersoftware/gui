@@ -84,33 +84,33 @@ export const deviceHandlers = [
     if (defaultState.devices.byId[deviceId]) {
       return res(ctx.status(200));
     }
-    return res(ctx.status(500));
+    return res(ctx.status(501));
   }),
   rest.delete(`${inventoryApiUrl}/groups/:group/devices`, ({ params: { group }, body: deviceIds }, res, ctx) => {
     if (defaultState.devices.groups.byId[group] && deviceIds.every(id => !!defaultState.devices.byId[id])) {
       return res(ctx.status(200));
     }
-    return res(ctx.status(500));
+    return res(ctx.status(502));
   }),
   rest.delete(`${inventoryApiUrlV2}/filters/:filterId`, ({ params: { filterId } }, res, ctx) => {
     if (Object.values(defaultState.devices.groups.byId).find(group => group.id === filterId)) {
       return res(ctx.status(200));
     }
-    return res(ctx.status(500));
+    return res(ctx.status(503));
   }),
   rest.get(`${deviceAuthV2}/devices`, (req, res, ctx) => {
     const deviceIds = req.url.searchParams.getAll('id');
     if (deviceIds.every(id => !!defaultState.devices.byId[id])) {
       return res(ctx.json(deviceIds.map(id => ({ ...deviceAuthDevice, id }))));
     }
-    return res(ctx.status(500));
+    return res(ctx.status(504));
   }),
   rest.get(`${deviceAuthV2}/limits/max_devices`, (req, res, ctx) => res(ctx.json({ limit: defaultState.devices.limit }))),
   rest.get(`${inventoryApiUrl}/devices/:deviceId`, ({ params: { deviceId } }, res, ctx) => {
     if (defaultState.devices.byId[deviceId]) {
       return res(ctx.json(inventoryDevice));
     }
-    return res(ctx.status(500));
+    return res(ctx.status(505));
   }),
   rest.get(`${inventoryApiUrl}/groups`, (req, res, ctx) => {
     const status = req.url.searchParams.get('status');
@@ -123,7 +123,7 @@ export const deviceHandlers = [
       }, []);
       return res(ctx.json(groups));
     }
-    return res(ctx.status(500));
+    return res(ctx.status(506));
   }),
   rest.get(`${inventoryApiUrlV2}/filters/attributes`, (req, res, ctx) => res(ctx.json(deviceAttributes))),
   rest.get(`${inventoryApiUrlV2}/filters`, (req, res, ctx) =>
@@ -141,7 +141,7 @@ export const deviceHandlers = [
     if (!!group && deviceIds.every(id => !!defaultState.devices.byId[id])) {
       return res(ctx.status(200));
     }
-    return res(ctx.status(500));
+    return res(ctx.status(507));
   }),
   rest.post(`${deviceAuthV2}/devices`, ({ body: authset }, res, ctx) => {
     if (
@@ -155,16 +155,24 @@ export const deviceHandlers = [
   }),
   rest.post(`${inventoryApiUrlV2}/filters/search`, ({ body: { page, per_page, filters } }, res, ctx) => {
     if ([page, per_page, filters].some(item => !item)) {
-      return res(ctx.status(500));
+      return res(ctx.status(508));
     }
     const filter = filters.find(
-      filter => filter.scope === 'identity' && filter.attribute === 'status' && Object.keys(DeviceConstants.DEVICE_STATES).includes(filter.value)
+      filter => filter.scope === 'identity' && filter.attribute === 'status' && Object.values(DeviceConstants.DEVICE_STATES).includes(filter.value)
     );
     const status = filter?.value || '';
-    if (status !== DeviceConstants.DEVICE_STATES.accepted) {
+    if (filters.length > 1) {
+      if (filters.find(filter => filter.attribute === 'group' && filter.value === Object.keys(defaultState.devices.groups.byId)[0])) {
+        return res(ctx.set(headerNames.total, 2), ctx.json([inventoryDevice]));
+      }
       return res(ctx.set(headerNames.total, 0), ctx.json([]));
     }
-    return res(ctx.set(headerNames.total, defaultState.devices.byStatus.accepted.total), ctx.json([inventoryDevice]));
+    let deviceList = Array.from({ length: defaultState.devices.byStatus[status].total }, (_, index) => ({
+      ...inventoryDevice,
+      attributes: [...inventoryDevice.attributes, { name: 'test-count', value: index, scope: 'system' }]
+    }));
+    deviceList = deviceList.slice((page - 1) * per_page, page * per_page);
+    return res(ctx.set(headerNames.total, defaultState.devices.byStatus[status].total), ctx.json(deviceList));
   }),
   rest.post(`${inventoryApiUrlV2}/filters`, ({ body: { name, terms } }, res, ctx) => {
     if (

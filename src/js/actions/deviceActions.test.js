@@ -142,7 +142,7 @@ describe('overall device information retrieval', () => {
     const expectedActions = [
       ...Object.values(DeviceConstants.DEVICE_STATES).map(status => ({
         type: DeviceConstants[`SET_${status.toUpperCase()}_DEVICES_COUNT`],
-        count: status === DeviceConstants.DEVICE_STATES.accepted ? defaultState.devices.byStatus.accepted.total : 0,
+        count: defaultState.devices.byStatus[status].total,
         status
       }))
     ];
@@ -157,7 +157,7 @@ describe('overall device information retrieval', () => {
     const expectedActions = [
       ...Object.values(DeviceConstants.DEVICE_STATES).map(status => ({
         type: DeviceConstants[`SET_${status.toUpperCase()}_DEVICES_COUNT`],
-        count: status === DeviceConstants.DEVICE_STATES.accepted ? defaultState.devices.byStatus.accepted.total : 0,
+        count: defaultState.devices.byStatus[status].total,
         status
       }))
     ];
@@ -450,21 +450,21 @@ describe('static grouping related actions', () => {
         total: null
       },
       { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: { ...expectedDevice, attributes } } },
+      // these are the devices retrieved for the dynamic test group -> the mock backend won't serve them, thus an empty array...
       {
         type: DeviceConstants.SET_ACCEPTED_DEVICES,
-        deviceIds: [defaultState.devices.byId.a1.id],
+        deviceIds: [],
         status: DeviceConstants.DEVICE_STATES.accepted,
         total: null
       },
-      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: { ...expectedDevice, attributes } } },
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: {} },
+      { type: DeviceConstants.RECEIVE_GROUP_DEVICES, group: defaultState.devices.groups.byId.testGroupDynamic, groupName: 'testGroupDynamic' },
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: { ...expectedDevice, updated_ts } },
       {
         type: DeviceConstants.RECEIVE_GROUP_DEVICES,
         group: { filters: [], deviceIds: defaultState.devices.groups.byId[groupName].deviceIds, total: defaultState.devices.groups.byId[groupName].total },
         groupName
-      },
-      { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: { ...expectedDevice, updated_ts } },
-      { type: DeviceConstants.RECEIVE_GROUP_DEVICES, group: defaultState.devices.groups.byId.testGroupDynamic, groupName: 'testGroupDynamic' }
+      }
     ];
     await store.dispatch(initializeGroupsDevices());
     const storeActions = store.getActions();
@@ -576,7 +576,7 @@ describe('device retrieval ', () => {
     const expectedActions = [
       {
         type: DeviceConstants.SET_ACCEPTED_DEVICES,
-        deviceIds: [defaultState.devices.byId.a1.id],
+        deviceIds: Array.from({ length: defaultState.devices.byStatus.accepted.total }, () => defaultState.devices.byId.a1.id),
         status: DeviceConstants.DEVICE_STATES.accepted,
         total: defaultState.devices.byStatus.accepted.total
       },
@@ -614,7 +614,13 @@ describe('device retrieval ', () => {
     const { updated_ts, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
       { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: expectedDevice } },
-      { type: DeviceConstants.SET_ACCEPTED_DEVICES, deviceIds: [defaultState.devices.byId.a1.id], status: DeviceConstants.DEVICE_STATES.accepted, total: 1 }
+      {
+        type: DeviceConstants.SET_ACCEPTED_DEVICES,
+        deviceIds: Array.from({ length: defaultState.devices.byStatus.accepted.total }, () => defaultState.devices.byId.a1.id),
+        status: DeviceConstants.DEVICE_STATES.accepted,
+        total: defaultState.devices.byStatus.accepted.total
+      },
+      { type: DeviceConstants.SET_INACTIVE_DEVICES, activeDeviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.a1.id], inactiveDeviceIds: [] }
     ];
     await store.dispatch(getAllDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted));
     const storeActions = store.getActions();
