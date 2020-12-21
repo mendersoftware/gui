@@ -14,7 +14,7 @@ describe('SelectedArtifact Component', () => {
     store = mockStore({ ...defaultState });
   });
 
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer
       .create(
         <Provider store={store}>
@@ -28,7 +28,7 @@ describe('SelectedArtifact Component', () => {
 });
 
 describe('transformArtifactCapabilities', () => {
-  it('works as expected', () => {
+  it('works as expected', async () => {
     expect(transformArtifactCapabilities(defaultState.releases.byId.a1.Artifacts[0].artifact_provides)).toEqual([
       { key: 'artifact_name', primary: 'artifact_name', secondary: 'myapp' },
       { key: 'data-partition.myapp.version', primary: 'data-partition.myapp.version', secondary: 'v2020.10' },
@@ -42,7 +42,7 @@ describe('transformArtifactCapabilities', () => {
   });
 });
 describe('transformArtifactMetadata', () => {
-  it('works as expected', () => {
+  it('works as expected', async () => {
     expect(transformArtifactMetadata({ thing: 'thang', more: ['like', 'a', 'list'], or: { anObject: true }, less: undefined })).toEqual([
       { key: 'thing', primary: 'thing', secondary: 'thang', secondaryTypographyProps: { component: 'div' } },
       { key: 'more', primary: 'more', secondary: 'like,a,list', secondaryTypographyProps: { component: 'div' } },

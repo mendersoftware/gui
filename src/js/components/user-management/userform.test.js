@@ -4,7 +4,7 @@ import UserForm from './userform';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('UserForm Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(<UserForm currentUser={{}} roles={[]} user={{}} />);
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();

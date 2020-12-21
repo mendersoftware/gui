@@ -4,7 +4,7 @@ import CreateGroupExplainer from './create-group-explainer';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('CreateGroupExplainer Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(<CreateGroupExplainer isEnterprise={false} onClose={jest.fn} />);
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();

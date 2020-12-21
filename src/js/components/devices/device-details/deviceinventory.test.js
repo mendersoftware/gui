@@ -5,7 +5,7 @@ import DeviceInventory from './deviceinventory';
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 
 describe('CreateGroup Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const attributes = {
       ...defaultState.devices.byId.a1.attributes,
       artifact_name: 'myapp',

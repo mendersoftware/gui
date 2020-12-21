@@ -5,7 +5,7 @@ import GroupDefinition, { validateGroupName } from './group-definition';
 import { undefineds } from '../../../../../tests/mockData';
 
 describe('GroupDefinition Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer
       .create(
         <MemoryRouter>
@@ -17,7 +17,7 @@ describe('GroupDefinition Component', () => {
     expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });
 
-  it('validates group names correctly', () => {
+  it('validates group names correctly', async () => {
     expect(validateGroupName('test', undefined, 'test').invalid).toBeTruthy();
     expect(validateGroupName('test', undefined, 'test').errortext).toEqual('test is the same group the selected devices are already in');
     expect(validateGroupName('tæst', undefined, 'test').invalid).toBeTruthy();

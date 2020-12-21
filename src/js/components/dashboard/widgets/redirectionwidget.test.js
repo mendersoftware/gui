@@ -6,7 +6,7 @@ import RedirectionWidget from './redirectionwidget';
 import { undefineds } from '../../../../../tests/mockData';
 
 describe('RedirectionWidget Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(
       <MemoryRouter>
         <RedirectionWidget target="testlocation" buttonContent={<div />} />

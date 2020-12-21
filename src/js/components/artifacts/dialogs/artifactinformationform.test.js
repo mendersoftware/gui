@@ -5,7 +5,7 @@ import ArtifactInformationForm, { ReleaseTooltip } from './artifactinformationfo
 import { undefineds } from '../../../../../tests/mockData';
 
 describe('ArtifactInformationForm Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer.create(<ArtifactInformationForm onboardingState={{ complete: false }} />).toJSON();
     expect(tree).toMatchSnapshot();
     expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
@@ -13,7 +13,7 @@ describe('ArtifactInformationForm Component', () => {
 });
 
 describe('ReleaseTooltip Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer
       .create(
         <MemoryRouter>

@@ -36,7 +36,7 @@ describe('PastDeployments Component', () => {
     global.Date.getUTCDate = _Date.getUTCDate;
   });
 
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer
       .create(
         <Provider store={store}>

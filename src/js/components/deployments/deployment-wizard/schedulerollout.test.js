@@ -4,7 +4,7 @@ import ScheduleRollout from './schedulerollout';
 import { undefineds } from '../../../../../tests/mockData';
 
 describe('ScheduleRollout Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer.create(<ScheduleRollout previousRetries={0} />).toJSON();
     expect(tree).toMatchSnapshot();
     expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));

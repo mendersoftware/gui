@@ -8,7 +8,7 @@ import DeploymentOverview from './overview';
 momentDurationFormatSetup(moment);
 
 describe('DeploymentOverview Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const deployment = {
       name: 'test deployment',
       artifact_name: 'test',

@@ -17,7 +17,7 @@ describe('GlobalSettings Component', () => {
       ...defaultState
     });
   });
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     jest.mock('@stripe/stripe-js', () => ({
       loadStripe: () => ({ createPaymentMethod: jest.fn() })
     }));

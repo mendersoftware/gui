@@ -24,7 +24,7 @@ describe('Router', () => {
     });
   });
 
-  test('invalid path should redirect to Dashboard', () => {
+  test('invalid path should redirect to Dashboard', async () => {
     render(
       <MemoryRouter initialEntries={['/random']}>
         <Provider store={store}>{publicRoutes}</Provider>
@@ -34,7 +34,7 @@ describe('Router', () => {
     expect(screen.queryByText('Settings')).toBeFalsy();
   });
 
-  test('valid path should not redirect to 404', () => {
+  test('valid path should not redirect to 404', async () => {
     render(
       <MemoryRouter initialEntries={['/']}>
         <Provider store={store}>{publicRoutes}</Provider>

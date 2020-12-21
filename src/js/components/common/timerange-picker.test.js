@@ -25,14 +25,14 @@ describe('TimerangePicker Component', () => {
     global.Date = realDate;
   });
 
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(<TimerangePicker />);
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 
-  it('works as expected', () => {
+  it('works as expected', async () => {
     const changeListener = jest.fn();
     render(<TimerangePicker onChange={changeListener} />);
     userEvent.click(screen.getByText(/last 7 days/i));

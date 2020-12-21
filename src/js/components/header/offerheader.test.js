@@ -5,7 +5,7 @@ import OfferHeader from './offerheader';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('DeviceNotifications Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(
       <MemoryRouter>
         <OfferHeader />

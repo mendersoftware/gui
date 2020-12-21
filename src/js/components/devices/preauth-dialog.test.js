@@ -5,7 +5,7 @@ import PreauthDialog from './preauth-dialog';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('PreauthDialog Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(
       <PreauthDialog deviceLimitWarning={<div>I should not be rendered/ undefined</div>} limitMaxed={false} onSubmit={jest.fn} onCancel={jest.fn} />
     );

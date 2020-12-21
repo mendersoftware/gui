@@ -13,7 +13,7 @@ describe('GlobalSettings Component', () => {
     }));
     stripe = loadStripe();
   });
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(
       <Elements stripe={stripe}>
         <CardSection isSignUp={true} />

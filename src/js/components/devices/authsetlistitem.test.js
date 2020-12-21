@@ -5,7 +5,7 @@ import { undefineds } from '../../../../tests/mockData';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 
 describe('AuthsetList Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const authset = {
       id: '123',
       identity_data: { mac: '24:7d:30:90:21:a8' },
@@ -52,7 +52,7 @@ gnr0OSIDwEL31l+12DbAQ9+ANv6TLpWNfLpX0E6IStkZAgMBAAE=
     expect(tree).toMatchSnapshot();
     expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });
-  it('shows proper confirmation messages depending on device auth status', () => {
+  it('shows proper confirmation messages depending on device auth status', async () => {
     expect(
       getConfirmationMessage(DEVICE_STATES.accepted, { status: DEVICE_STATES.accepted, auth_sets: [1, 2, 3] }, { status: DEVICE_STATES.accepted })
     ).toEqual(

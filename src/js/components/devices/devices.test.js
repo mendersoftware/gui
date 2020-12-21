@@ -13,7 +13,7 @@ const mockStore = configureStore([thunk]);
 
 describe('Devices Component', () => {
   let store;
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     store = mockStore({ ...defaultState });
     const { baseElement } = render(
       <MemoryRouter>
@@ -27,7 +27,7 @@ describe('Devices Component', () => {
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 
-  it('converts url queries properly to filters and groups', () => {
+  it('converts url queries properly to filters and groups', async () => {
     const { filters, groupName } = convertQueryToFilterAndGroup(
       '?group=test&thing=thang&mac%3D12%3A12%3A34%3A56&id=1234&artifact_name=testrelease',
       defaultState.devices.filteringAttributes
@@ -38,7 +38,7 @@ describe('Devices Component', () => {
     expect(inventoryFilters).toHaveLength(2);
     expect(groupName).toEqual('test');
   });
-  it('converts url queries properly to filters and groups without a query indicator', () => {
+  it('converts url queries properly to filters and groups without a query indicator', async () => {
     const { filters, groupName } = convertQueryToFilterAndGroup(
       'group=test&thing=thang&mac%3D12%3A12%3A34%3A56&id=1234&artifact_name=testrelease',
       defaultState.devices.filteringAttributes

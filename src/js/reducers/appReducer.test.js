@@ -2,11 +2,11 @@ import reducer, { initialState } from './appReducer';
 import * as AppConstants from '../constants/appConstants';
 
 describe('app reducer', () => {
-  it('should return the initial state', () => {
+  it('should return the initial state', async () => {
     expect(reducer(undefined, {})).toEqual(initialState);
   });
 
-  it('should handle SET_SNACKBAR', () => {
+  it('should handle SET_SNACKBAR', async () => {
     expect(
       reducer(undefined, {
         type: AppConstants.SET_SNACKBAR,
@@ -28,7 +28,7 @@ describe('app reducer', () => {
     });
   });
 
-  it('should handle SET_FIRST_LOGIN_AFTER_SIGNUP', () => {
+  it('should handle SET_FIRST_LOGIN_AFTER_SIGNUP', async () => {
     expect(
       reducer(undefined, {
         type: AppConstants.SET_FIRST_LOGIN_AFTER_SIGNUP,
@@ -43,7 +43,7 @@ describe('app reducer', () => {
       }).firstLoginAfterSignup
     ).toEqual(false);
   });
-  it('should handle SET_ANNOUNCEMENT', () => {
+  it('should handle SET_ANNOUNCEMENT', async () => {
     expect(reducer(undefined, { type: AppConstants.SET_ANNOUNCEMENT, announcement: 'something' }).hostedAnnouncement).toEqual('something');
     expect(reducer(initialState, { type: AppConstants.SET_ANNOUNCEMENT, announcement: undefined }).hostedAnnouncement).toEqual(undefined);
   });

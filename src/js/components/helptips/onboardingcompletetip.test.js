@@ -24,7 +24,7 @@ describe('OnboardingCompleteTip Component', () => {
     });
   });
 
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer
       .create(
         <Provider store={store}>

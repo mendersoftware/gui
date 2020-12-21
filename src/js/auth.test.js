@@ -3,14 +3,14 @@ import Cookies from 'universal-cookie';
 import { getToken, logout, updateMaxAge, expirySet } from './auth';
 
 describe('getToken function', () => {
-  it('returns the jwt token if set in a cookie', () => {
+  it('returns the jwt token if set in a cookie', async () => {
     jest.clearAllMocks();
     expect(getToken()).toBeTruthy();
   });
 });
 
 describe('logout function', () => {
-  it('redirects and removes the JWT token', () => {
+  it('redirects and removes the JWT token', async () => {
     jest.clearAllMocks();
     const cookies = new Cookies();
     cookies.remove.mockReturnValueOnce();
@@ -21,7 +21,7 @@ describe('logout function', () => {
 });
 
 describe('updateMaxAge function', () => {
-  it('extends the expiration date of the jwt token', () => {
+  it('extends the expiration date of the jwt token', async () => {
     jest.clearAllMocks();
     const cookies = new Cookies();
     cookies.get.mockReturnValue('false');
@@ -30,7 +30,7 @@ describe('updateMaxAge function', () => {
     expect(cookies.get).toHaveBeenCalledTimes(2);
     expect(cookies.set).toHaveBeenCalledTimes(1);
   });
-  it('should not extend when the staying logged in cookie is not set', () => {
+  it('should not extend when the staying logged in cookie is not set', async () => {
     jest.clearAllMocks();
     const cookies = new Cookies();
     cookies.get.mockReturnValue('true');
@@ -42,7 +42,7 @@ describe('updateMaxAge function', () => {
 });
 
 describe('expirySet function', () => {
-  it('decide if the jwt token should expire based on cookie value', () => {
+  it('decide if the jwt token should expire based on cookie value', async () => {
     jest.clearAllMocks();
     const cookies = new Cookies();
     cookies.get.mockReturnValueOnce('true');

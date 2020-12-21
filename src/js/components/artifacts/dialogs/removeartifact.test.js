@@ -4,7 +4,7 @@ import RemoveArtifact from './removeartifact';
 import { undefineds } from '../../../../../tests/mockData';
 
 describe('RemoveArtifact Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(<RemoveArtifact open={true} />);
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();

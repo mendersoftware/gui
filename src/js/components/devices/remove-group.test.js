@@ -4,7 +4,7 @@ import RemoveGroup from './remove-group';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('RemoveGroup Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(<RemoveGroup onClose={jest.fn} onRemove={jest.fn} />);
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();

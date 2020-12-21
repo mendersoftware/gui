@@ -6,7 +6,7 @@ import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { selectMaterialUiSelectOption } from '../../../../../tests/setupTests';
 
 describe('ChartAdditionWidget Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(<ChartAdditionWidget />);
     const view = baseElement;
     expect(view).toMatchSnapshot();

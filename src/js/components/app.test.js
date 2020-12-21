@@ -38,7 +38,7 @@ describe('App Component', () => {
     });
   });
 
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     Object.defineProperty(window.document, 'cookie', {
       writable: true,
       value: 'JWT=omnomnom'
@@ -55,7 +55,7 @@ describe('App Component', () => {
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 
-  it('works as intended', () => {
+  it('works as intended', async () => {
     Object.defineProperty(window.document, 'cookie', {
       writable: true,
       value: 'JWT=omnomnom'

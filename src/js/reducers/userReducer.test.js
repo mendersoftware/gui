@@ -12,33 +12,33 @@ const testUser = {
 };
 
 describe('user reducer', () => {
-  it('should return the initial state', () => {
+  it('should return the initial state', async () => {
     expect(reducer(undefined, {})).toEqual(initialState);
   });
 
-  it('should handle RECEIVED_QR_CODE', () => {
+  it('should handle RECEIVED_QR_CODE', async () => {
     expect(reducer(undefined, { type: UserConstants.RECEIVED_QR_CODE, value: '123' }).qrCode).toEqual('123');
     expect(reducer(initialState, { type: UserConstants.RECEIVED_QR_CODE, value: '123' }).qrCode).toEqual('123');
   });
 
-  it('should handle SUCCESSFULLY_LOGGED_IN', () => {
+  it('should handle SUCCESSFULLY_LOGGED_IN', async () => {
     expect(reducer(undefined, { type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: '123' }).jwtToken).toEqual('123');
     expect(reducer(initialState, { type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: '123' }).jwtToken).toEqual('123');
   });
 
-  it('should handle RECEIVED_USER_LIST', () => {
+  it('should handle RECEIVED_USER_LIST', async () => {
     expect(reducer(undefined, { type: UserConstants.RECEIVED_USER_LIST, users: { '123': testUser } }).byId).toEqual({ '123': testUser });
     expect(reducer({ ...initialState, byId: { '123': testUser } }, { type: UserConstants.RECEIVED_USER_LIST, users: { '456': testUser } }).byId).toEqual({
       '456': testUser
     });
   });
 
-  it('should handle RECEIVED_USER', () => {
+  it('should handle RECEIVED_USER', async () => {
     expect(reducer(undefined, { type: UserConstants.RECEIVED_USER, user: testUser }).byId).toEqual({ '123': testUser });
     expect(reducer({ ...initialState, byId: { '123': testUser } }, { type: UserConstants.RECEIVED_USER, user: testUser }).byId).toEqual({ '123': testUser });
   });
 
-  it('should handle CREATED_USER', () => {
+  it('should handle CREATED_USER', async () => {
     expect(reducer(undefined, { type: UserConstants.CREATED_USER, user: testUser }).byId).toEqual({ 0: testUser });
     expect(reducer({ ...initialState, byId: { '123': testUser } }, { type: UserConstants.CREATED_USER, user: testUser }).byId).toEqual({
       '123': testUser,
@@ -46,14 +46,14 @@ describe('user reducer', () => {
     });
   });
 
-  it('should handle REMOVED_USER', () => {
+  it('should handle REMOVED_USER', async () => {
     expect(reducer(undefined, { type: UserConstants.REMOVED_USER, userId: '123' }).byId).toEqual({});
     expect(reducer({ ...initialState, byId: { '123': testUser, '456': testUser } }, { type: UserConstants.REMOVED_USER, userId: '123' }).byId).toEqual({
       '456': testUser
     });
   });
 
-  it('should handle UPDATED_USER', () => {
+  it('should handle UPDATED_USER', async () => {
     expect(reducer(undefined, { type: UserConstants.UPDATED_USER, userId: '123', user: testUser }).byId).toEqual({ '123': testUser });
 
     expect(
@@ -63,7 +63,7 @@ describe('user reducer', () => {
       ).byId['123'].email
     ).toEqual('test@mender.io');
   });
-  it('should handle RECEIVED_ROLES', () => {
+  it('should handle RECEIVED_ROLES', async () => {
     const roles = reducer(undefined, { type: UserConstants.RECEIVED_ROLES, rolesById: { ...defaultState.users.rolesById } }).rolesById;
     Object.entries(defaultState.users.rolesById).forEach(([key, role]) => expect(roles[key]).toEqual(role));
     expect(
@@ -73,7 +73,7 @@ describe('user reducer', () => {
       ).rolesById.thingsRole
     ).toBeTruthy();
   });
-  it('should handle REMOVED_ROLE', () => {
+  it('should handle REMOVED_ROLE', async () => {
     expect(reducer(undefined, { type: UserConstants.REMOVED_ROLE, roleId: defaultState.users.rolesById.test.title }).rolesById.test).toBeFalsy();
     expect(
       reducer(
@@ -82,7 +82,7 @@ describe('user reducer', () => {
       ).rolesById.test
     ).toBeFalsy();
   });
-  it('should handle CREATED_ROLE', () => {
+  it('should handle CREATED_ROLE', async () => {
     expect(
       reducer(undefined, {
         type: UserConstants.CREATED_ROLE,
@@ -101,7 +101,7 @@ describe('user reducer', () => {
       ).rolesById.newRole.description
     ).toEqual('new description');
   });
-  it('should handle UPDATED_ROLE', () => {
+  it('should handle UPDATED_ROLE', async () => {
     expect(
       reducer(undefined, { type: UserConstants.UPDATED_ROLE, roleId: 'RBAC_ROLE_CI', role: { description: 'new description' } }).rolesById.RBAC_ROLE_CI.title
     ).toEqual('CI');
@@ -111,7 +111,7 @@ describe('user reducer', () => {
     ).toEqual('CI');
   });
 
-  it('should handle SET_GLOBAL_SETTINGS', () => {
+  it('should handle SET_GLOBAL_SETTINGS', async () => {
     expect(reducer(undefined, { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { newSetting: 'test' } }).globalSettings).toEqual({
       ...initialState.globalSettings,
       newSetting: 'test'
@@ -121,11 +121,11 @@ describe('user reducer', () => {
       newSetting: 'test'
     });
   });
-  it('should handle SET_SHOW_HELP', () => {
+  it('should handle SET_SHOW_HELP', async () => {
     expect(reducer(undefined, { type: UserConstants.SET_SHOW_HELP, show: false }).showHelptips).toEqual(false);
     expect(reducer({ ...initialState }, { type: UserConstants.SET_SHOW_HELP, show: true }).showHelptips).toEqual(true);
   });
-  it('should handle SET_SHOW_CONNECT_DEVICE', () => {
+  it('should handle SET_SHOW_CONNECT_DEVICE', async () => {
     expect(reducer(undefined, { type: UserConstants.SET_SHOW_CONNECT_DEVICE, show: false }).showConnectDeviceDialog).toEqual(false);
     expect(reducer({ ...initialState }, { type: UserConstants.SET_SHOW_CONNECT_DEVICE, show: true }).showConnectDeviceDialog).toEqual(true);
   });

@@ -5,7 +5,7 @@ import Confirm from './confirm';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('Confirm Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(<Confirm type="abort" />);
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();

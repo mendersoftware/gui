@@ -71,7 +71,7 @@ describe('user actions', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
-  it('should toggle helptips visibility based on cookie value', () => {
+  it('should toggle helptips visibility based on cookie value', async () => {
     jest.clearAllMocks();
     const cookies = new Cookies();
     const expectedActions = [
@@ -86,7 +86,7 @@ describe('user actions', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
-  it('should toggle helptips visibility based on cookie value - pt 2', () => {
+  it('should toggle helptips visibility based on cookie value - pt 2', async () => {
     jest.clearAllMocks();
     const cookies = new Cookies();
     const expectedActions = [

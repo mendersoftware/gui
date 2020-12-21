@@ -15,7 +15,7 @@ describe('InProgressDeployments Component', () => {
     store = mockStore({ ...defaultState });
   });
 
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { container } = render(
       <MemoryRouter>
         <Provider store={store}>

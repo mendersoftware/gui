@@ -15,7 +15,7 @@ describe('Roles Component', () => {
     store = mockStore({ ...defaultState });
   });
 
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
         <Roles />

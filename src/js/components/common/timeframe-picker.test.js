@@ -4,7 +4,7 @@ import TimeframePicker from './timeframe-picker';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('TimeframePicker Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(<TimeframePicker />);
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();

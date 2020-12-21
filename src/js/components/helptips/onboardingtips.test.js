@@ -40,7 +40,7 @@ describe('OnboardingTips Components', () => {
   });
 
   describe('DevicePendingTip', () => {
-    it('renders correctly', () => {
+    it('renders correctly', async () => {
       const tree = renderer
         .create(
           <MemoryRouter>
@@ -55,7 +55,7 @@ describe('OnboardingTips Components', () => {
   });
 
   describe('WelcomeSnackTip', () => {
-    it('renders correctly', () => {
+    it('renders correctly', async () => {
       const tree = renderer
         .create(
           <Provider store={store}>
@@ -91,7 +91,7 @@ describe('OnboardingTips Components', () => {
       UploadNewArtifactDialogUpload,
       UploadNewArtifactTip,
       UploadPreparedArtifactTip
-    ].forEach(Component => {
+    ].forEach(async Component => {
       it(`renders ${Component.displayName || Component.name} correctly`, () => {
         const tree = renderer
           .create(

@@ -5,7 +5,7 @@ import DeviceNotifications from './devicenotifications';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('DeviceNotifications Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer
       .create(
         <MemoryRouter>

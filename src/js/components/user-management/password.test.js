@@ -16,7 +16,7 @@ describe('Password Component', () => {
     store = mockStore({ ...defaultState });
   });
 
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(
       <MemoryRouter>
         <Provider store={store}>

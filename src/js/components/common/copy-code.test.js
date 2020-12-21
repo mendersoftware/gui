@@ -5,7 +5,7 @@ import CopyCode from './copy-code';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('CopyCode Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(<CopyCode code="sudo it all!" />);
     const view = baseElement;
     expect(view).toMatchSnapshot();

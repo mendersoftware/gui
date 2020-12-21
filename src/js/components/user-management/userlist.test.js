@@ -4,7 +4,7 @@ import UserList from './userlist';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('UserList Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer.create(<UserList users={[]} />).toJSON();
     expect(tree).toMatchSnapshot();
     expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));

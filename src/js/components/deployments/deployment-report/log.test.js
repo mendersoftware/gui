@@ -4,7 +4,7 @@ import DeploymentLog from './log';
 import { undefineds } from '../../../../../tests/mockData';
 
 describe('DeploymentLog Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(<DeploymentLog onClose={jest.fn} logData="things" />);
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();

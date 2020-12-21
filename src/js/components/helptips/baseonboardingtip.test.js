@@ -14,7 +14,7 @@ describe('BaseOnboardingTip Component', () => {
     store = mockStore({ ...defaultState });
   });
 
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer
       .create(
         <Provider store={store}>
@@ -26,7 +26,7 @@ describe('BaseOnboardingTip Component', () => {
     expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });
 
-  it('calculates offsets depending on icon width', () => {
+  it('calculates offsets depending on icon width', async () => {
     const expectedOrientation = {
       top: { top: 0, left: -15 },
       right: { top: -15, left: 15 },

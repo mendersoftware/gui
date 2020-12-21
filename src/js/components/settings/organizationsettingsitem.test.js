@@ -4,7 +4,7 @@ import OrganizationSettingsItem from './organizationsettingsitem';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('OrganizationSettingsItem Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer
       .create(
         <OrganizationSettingsItem

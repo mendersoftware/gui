@@ -24,7 +24,7 @@ describe('UserManagement Component', () => {
     });
   });
 
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
         <UserManagement />

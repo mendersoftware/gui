@@ -27,7 +27,7 @@ describe('Devices Component', () => {
     });
   });
 
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(
       <MemoryRouter>
         <Provider store={store}>

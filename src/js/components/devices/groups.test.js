@@ -4,7 +4,7 @@ import Groups, { GroupItem, GroupsSubheader } from './groups';
 import { defaultState, undefineds } from '../../../../tests/mockData';
 
 describe('Groups Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer.create(<Groups groups={defaultState.devices.groups.byId} openGroupDialog={jest.fn} />).toJSON();
     expect(tree).toMatchSnapshot();
     expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
@@ -12,7 +12,7 @@ describe('Groups Component', () => {
 });
 
 describe('Groups sub components', () => {
-  [GroupItem, GroupsSubheader].forEach(Component => {
+  [GroupItem, GroupsSubheader].forEach(async Component => {
     it(`renders ${Component.displayName || Component.name} correctly`, () => {
       const tree = renderer.create(<Component heading="test" name="test" />).toJSON();
       expect(tree).toMatchSnapshot();

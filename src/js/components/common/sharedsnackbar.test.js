@@ -15,7 +15,7 @@ describe('SharedSnackbar Component', () => {
     store = mockStore({ ...defaultState });
   });
 
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
         <SharedSnackbar snackbar={{ maxWidth: 200, message: 'test' }} setSnackbar={jest.fn} />

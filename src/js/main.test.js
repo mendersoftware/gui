@@ -5,7 +5,7 @@ import { Main } from './main';
 import { undefineds } from '../../tests/mockData';
 
 describe('Main Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { MemoryRouter } = router;
     const MockBrowserRouter = ({ children }) => <MemoryRouter initialEntries={['/']}>{children}</MemoryRouter>;
     router.BrowserRouter = MockBrowserRouter;

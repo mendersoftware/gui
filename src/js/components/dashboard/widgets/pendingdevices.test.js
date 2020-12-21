@@ -5,7 +5,7 @@ import PendingDevices from './pendingdevices';
 import { undefineds } from '../../../../../tests/mockData';
 
 describe('PendingDevices Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(
       <MemoryRouter>
         <PendingDevices />

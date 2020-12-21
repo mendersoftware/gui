@@ -8,7 +8,7 @@ describe('CancelRequestDialog Component', () => {
   beforeEach(() => {
     Math.random = jest.fn(() => 0);
   });
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(<CancelRequestDialog />);
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();

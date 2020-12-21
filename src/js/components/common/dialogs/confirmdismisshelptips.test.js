@@ -14,7 +14,7 @@ describe('ConfirmDismissHelptips Component', () => {
     store = mockStore({});
   });
 
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
         <ConfirmDismissHelptips open={true} />

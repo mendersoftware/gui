@@ -5,7 +5,7 @@ import { defaultHeaders as columnHeaders } from './deploymentslist';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('DeploymentItem Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const deployment = {
       id: 'd1',
       name: 'test deployment',
