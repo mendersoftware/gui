@@ -4,7 +4,9 @@ const cookies = new Cookies();
 export const getToken = () => cookies.get('JWT');
 
 export const logout = () => {
+  cookies.remove('noExpiry', { path: '/' });
   cookies.remove('JWT', { path: '/' });
+  cookies.remove('JWT', { path: '/ui' });
   window.location.replace('#/login');
 };
 

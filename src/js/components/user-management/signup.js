@@ -26,7 +26,7 @@ export class Signup extends React.Component {
     };
 
     const cookies = new Cookies();
-    cookies.remove('noExpiry');
+    cookies.remove('noExpiry', { path: '/' });
     const oauthProvider = cookies.get('oauth');
     if (oauthProvider) {
       state.oauthProvider = oauthProvider;
