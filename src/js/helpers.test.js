@@ -12,7 +12,8 @@ import {
   isEmpty,
   mapDeviceAttributes,
   stringToBoolean,
-  unionizeStrings
+  unionizeStrings,
+  versionCompare
 } from './helpers';
 import { undefineds } from '../../tests/mockData';
 
@@ -79,6 +80,16 @@ describe('stringToBoolean function', () => {
     expect(stringToBoolean(false)).toEqual(false);
     expect(stringToBoolean('no')).toEqual(false);
     expect(stringToBoolean('FALSE')).toEqual(false);
+  });
+});
+
+describe('versionCompare function', () => {
+  it('should works as intended', () => {
+    expect(versionCompare('2.5.1', '2.6.0').toString()).toEqual('-1');
+    expect(versionCompare('2.6.0', '2.6.0').toString()).toEqual('0');
+    expect(versionCompare('2.6.x', '2.6.0').toString()).toEqual('1');
+    expect(versionCompare('next', '2.6').toString()).toEqual('1');
+    expect(versionCompare('', '2.6.0').toString()).toEqual('-1');
   });
 });
 
