@@ -98,14 +98,19 @@ describe('getDebInstallationCode function', () => {
     expect(getDebInstallationCode()).not.toMatch(/\$\{([^}]+)\}/);
   });
   it('should return a sane result', () => {
-    expect(getDebInstallationCode()).toMatch(`wget -q -O- https://get.mender.io/ | sudo bash -s -- -c experimental`);
+    expect(getDebInstallationCode(undefined, undefined, true)).toMatch(`wget -q -O- https://get.mender.io/ | sudo bash -s -- -c experimental`);
+  });
+  it('should return a sane result for old installations', () => {
+    expect(getDebInstallationCode('master'))
+      .toMatch(`wget https://d1b0l86ne08fsf.cloudfront.net/master/dist-packages/debian/armhf/mender-client_master-1_armhf.deb && \\
+sudo dpkg -i --force-confdef --force-confold mender-client_master-1_armhf.deb`);
   });
 });
 
 describe('getDebConfigurationCode function', () => {
   let code;
   beforeEach(() => {
-    code = getDebConfigurationCode('192.168.7.41', false, true, 'token', 'master', 'raspberrypi3');
+    code = getDebConfigurationCode('192.168.7.41', false, true, 'token', 'master', 'raspberrypi3', true);
   });
   it('should not contain any template string leftovers', () => {
     expect(code).not.toMatch(/\$\{([^}]+)\}/);
@@ -128,6 +133,18 @@ systemctl restart mender-client && \\
 EOF
 ) && systemctl restart mender-shell'`
     );
+  });
+  it('should return a sane result for old installations', () => {
+    code = getDebConfigurationCode('192.168.7.41', false, true, 'token', 'master', 'raspberrypi3');
+    expect(code).toMatch(`sudo bash -c 'wget https://d1b0l86ne08fsf.cloudfront.net/master/dist-packages/debian/armhf/mender-client_master-1_armhf.deb && \\
+DEBIAN_FRONTEND=noninteractive dpkg -i --force-confdef --force-confold mender-client_master-1_armhf.deb && \\
+DEVICE_TYPE="raspberrypi3" && \\
+TENANT_TOKEN="token" && \\
+mender setup \\
+  --device-type $DEVICE_TYPE \\
+  --quiet --demo --server-ip 192.168.7.41 \\
+  --tenant-token $TENANT_TOKEN && \\
+systemctl restart mender-client'`);
   });
   it('should not contain tenant information for OS calls', () => {
     code = getDebConfigurationCode('192.168.7.41', false, false, null, 'master', 'raspberrypi3');

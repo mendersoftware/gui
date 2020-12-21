@@ -19,6 +19,7 @@ import MoreHelp from './more-help-resources';
 
 import { getUserOrganization } from '../../actions/organizationActions';
 import { getDocsVersion, getIsEnterprise } from '../../selectors';
+import { versionCompare } from '../../helpers';
 
 var components = {
   'getting-started': {
@@ -117,6 +118,7 @@ export class Help extends React.PureComponent {
           <div style={{ position: 'relative', top: '12px', maxWidth: contentWidth }} className="help-content">
             <ComponentToShow
               docsVersion={this.props.docsVersion}
+              hasMenderShellSupport={this.props.hasMenderShellSupport}
               isHosted={this.props.isHosted}
               isEnterprise={this.props.isEnterprise}
               menderDebPackageVersion={this.props.menderDebPackageVersion}
@@ -139,6 +141,7 @@ const mapStateToProps = state => {
     docsVersion: getDocsVersion(state),
     isHosted: state.app.features.isHosted,
     isEnterprise: getIsEnterprise(state),
+    hasMenderShellSupport: versionCompare(state.app.integrationVersion, '2.6.0') > -1,
     menderVersion: state.app.versionInformation['Mender-Client'],
     menderDebPackageVersion: state.app.menderDebPackageVersion,
     menderArtifactVersion: state.app.versionInformation['Mender-Artifact'],

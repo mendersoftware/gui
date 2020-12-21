@@ -443,9 +443,15 @@ export const standardizePhases = phases =>
     return standardizedPhase;
   });
 
-export const getDebInstallationCode = () => `wget -q -O- https://get.mender.io/ | sudo bash -s -- -c experimental`;
+export const getDebInstallationCode = (packageVersion, noninteractive = false, hasMenderShellSupport) =>
+  hasMenderShellSupport
+    ? `wget -q -O- https://get.mender.io/ | sudo bash -s -- -c experimental`
+    : `${
+        noninteractive ? `sudo bash -c '` : ''
+      }wget https://d1b0l86ne08fsf.cloudfront.net/${packageVersion}/dist-packages/debian/armhf/mender-client_${packageVersion}-1_armhf.deb && \\
+${noninteractive ? 'DEBIAN_FRONTEND=noninteractive' : 'sudo'} dpkg -i --force-confdef --force-confold mender-client_${packageVersion}-1_armhf.deb`;
 
-export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token, packageVersion, deviceType = 'generic-armv6') => {
+export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token, packageVersion, deviceType = 'generic-armv6', hasMenderShellSupport) => {
   let connectionInstructions = ``;
   let demoSettings = `  --quiet --demo ${ipAddress ? `--server-ip ${ipAddress}` : ''}`;
   if (isEnterprise || isHosted) {
@@ -463,9 +469,9 @@ ${enterpriseSettings}`;
   } else {
     connectionInstructions = `${demoSettings}`;
   }
-  const debInstallationCode = getDebInstallationCode();
+  const debInstallationCode = getDebInstallationCode(packageVersion, true, hasMenderShellSupport);
   let codeToCopy = `${debInstallationCode} && \\
-sudo bash -c 'DEVICE_TYPE="${deviceType}" && \\${
+${hasMenderShellSupport ? `sudo bash -c '` : ''}DEVICE_TYPE="${deviceType}" && \\${
     token
       ? `
 TENANT_TOKEN="${token}" && \\`
@@ -474,14 +480,18 @@ TENANT_TOKEN="${token}" && \\`
 mender setup \\
   --device-type $DEVICE_TYPE \\
 ${connectionInstructions} && \\
-systemctl restart mender-client && \\
+${
+  hasMenderShellSupport
+    ? `systemctl restart mender-client && \\
 (cat > /etc/mender/mender-shell.conf << EOF
 {
   "ServerURL": "${document.location.origin}",
   "User": "pi"
 }
 EOF
-) && systemctl restart mender-shell'
+) && systemctl restart mender-shell'`
+    : `systemctl restart mender-client'`
+}
 `;
   return codeToCopy;
 };
