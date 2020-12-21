@@ -79,5 +79,5 @@ describe('Deployments Component', () => {
     // TODO: investigate why this flakes out ~80% of the time...
     // await waitFor(() => expect(screen.getByRole('button', { name: /Close/i })).toBeInTheDocument(), { timeout: 2500 });
     // userEvent.click(screen.getByRole('button', { name: /Close/i }));
-  });
+  }, 30000);
 });

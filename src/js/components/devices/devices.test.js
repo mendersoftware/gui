@@ -95,5 +95,5 @@ describe('Devices Component', () => {
     expect(screen.getByText(defaultState.devices.byId.a1.attributes.ipv4_wlan0)).toBeInTheDocument();
     userEvent.click(deviceListItem);
     expect(screen.queryByText(defaultState.devices.byId.a1.attributes.ipv4_wlan0)).toBeFalsy();
-  });
+  }, 30000);
 });
