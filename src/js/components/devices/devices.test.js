@@ -1,5 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
+import { prettyDOM } from '@testing-library/dom';
 import { render, screen, waitFor, waitForElementToBeRemoved, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
@@ -22,7 +23,11 @@ describe('Devices Component', () => {
         </Provider>
       </MemoryRouter>
     );
-    const view = baseElement.firstChild;
+    // special snapshot handling here to work around unstable ids in mui code...
+    const view = prettyDOM(baseElement.firstChild, 100000, { highlight: false })
+      .replace(/id="mui-[0-9]*"/g, '')
+      .replace(/aria-labelledby="(mui-[0-9]* *)*"/g, '')
+      .replace(/\\/g, '');
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });

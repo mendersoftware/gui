@@ -8,19 +8,14 @@ import { DEVICE_LIST_MAXIMUM_LENGTH } from '../../constants/deviceConstants';
 const defaultRowsPerPageOptions = [10, 20, DEVICE_LIST_MAXIMUM_LENGTH];
 const paginationIndex = 1;
 
-export const TablePaginationActions = ({ count, page = 0, onChangePage, rowsPerPage = 20 }) => {
-  const [pageNo, setPageNo] = useState(page ? page + paginationIndex : 1);
-
-  useEffect(() => {
-    const currentPage = page + paginationIndex;
-    if (currentPage !== pageNo) {
-      setPageNo(currentPage);
-    }
-  }, [page, rowsPerPage]);
+export const TablePaginationActions = ({ count, page, onChangePage, rowsPerPage = 20 }) => {
+  const [pageNo, setPageNo] = useState(paginationIndex);
 
   useEffect(() => {
     const newPage = Math.min(Math.max(paginationIndex, pageNo), Math.ceil(count / rowsPerPage));
-    onChangePage(newPage);
+    if (newPage !== page + paginationIndex) {
+      onChangePage(newPage);
+    }
   }, [pageNo]);
 
   const onChange = event => {

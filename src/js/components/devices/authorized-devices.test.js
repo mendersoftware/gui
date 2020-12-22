@@ -11,14 +11,26 @@ const mockStore = configureStore([thunk]);
 describe('AuthorizedDevices Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({ ...defaultState });
+    store = mockStore({
+      ...defaultState,
+      devices: {
+        ...defaultState.devices,
+        byStatus: {
+          ...defaultState.devices.byStatus,
+          accepted: {
+            deviceIds: [],
+            total: 0
+          }
+        }
+      }
+    });
   });
 
   it('renders correctly', async () => {
     const tree = renderer
       .create(
         <Provider store={store}>
-          <Authorized devices={[]} onFilterChange={jest.fn} />
+          <Authorized onFilterChange={jest.fn} />
         </Provider>
       )
       .toJSON();

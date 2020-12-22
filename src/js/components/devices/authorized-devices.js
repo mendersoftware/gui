@@ -76,6 +76,7 @@ export class Authorized extends BaseDevices {
   constructor(props, context) {
     super(props, context);
     this.state = {
+      isInitialized: !!props.devices.length,
       pageLoading: true,
       pageNo: 1,
       pageLength: 20,
@@ -167,7 +168,7 @@ export class Authorized extends BaseDevices {
     request
       .catch(err => setRetryTimer(err, 'devices', `Devices couldn't be loaded.`, refreshDeviceLength, setSnackbar))
       // only set state after all devices id data retrieved
-      .finally(() => self.setState({ pageLoading: false }));
+      .finally(() => self.setState({ isInitialized: true, pageLoading: false }));
   }
 
   onRowSelection(selection) {
@@ -218,7 +219,7 @@ export class Authorized extends BaseDevices {
       selectedGroup,
       showHelptips
     } = self.props;
-    const { pageLoading, selectedRows, showActions, showFilters } = self.state;
+    const { isInitialized, selectedRows, showActions, showFilters } = self.state;
     const columnHeaders = [
       {
         title: idAttribute,
@@ -304,24 +305,24 @@ export class Authorized extends BaseDevices {
             open={showFilters}
           />
         </div>
-        <Loader show={pageLoading} />
-        {devices.length > 0 && !pageLoading ? (
-          <div className="padding-bottom">
-            <DeviceList
-              {...self.props}
-              {...self.state}
-              columnHeaders={columnHeaders}
-              onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}
-              onPageChange={e => self._handlePageChange(e)}
-              onSelect={selection => self.onRowSelection(selection)}
-              onSort={attribute => self.onSortChange(attribute)}
-              pageTotal={groupCount}
-              refreshDevices={shouldUpdate => self._getDevices(shouldUpdate)}
-            />
-            {showHelptips && <ExpandDevice />}
-          </div>
-        ) : (
-          !pageLoading && (
+        <Loader show={!isInitialized} />
+        {isInitialized ? (
+          devices.length > 0 ? (
+            <div className="padding-bottom">
+              <DeviceList
+                {...self.props}
+                {...self.state}
+                columnHeaders={columnHeaders}
+                onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}
+                onPageChange={e => self._handlePageChange(e)}
+                onSelect={selection => self.onRowSelection(selection)}
+                onSort={attribute => self.onSortChange(attribute)}
+                pageTotal={groupCount}
+                refreshDevices={shouldUpdate => self._getDevices(shouldUpdate)}
+              />
+              {showHelptips && <ExpandDevice />}
+            </div>
+          ) : (
             <div className="dashboard-placeholder">
               <p>No devices found</p>
               {!allCount && (
@@ -334,6 +335,8 @@ export class Authorized extends BaseDevices {
               )}
             </div>
           )
+        ) : (
+          <div />
         )}
         {onboardingComponent ? onboardingComponent : null}
         {!!selectedRows.length && (

@@ -13,7 +13,7 @@ describe('Loader Component', () => {
     expect(screen.getAllByRole('button')[0]).toBeDisabled();
     expect(screen.getAllByRole('button')[1]).toBeDisabled();
     userEvent.click(screen.getAllByRole('button')[2]);
-    expect(changeListener).toHaveBeenCalledTimes(2);
+    expect(changeListener).toHaveBeenCalledTimes(1);
     expect(screen.getByDisplayValue(2)).toBeInTheDocument();
     rerender(<TablePaginationActions count={42} page={1} onChangePage={changeListener} />);
     expect(screen.getAllByRole('button')[0]).not.toBeDisabled();
@@ -21,13 +21,13 @@ describe('Loader Component', () => {
     expect(screen.getAllByRole('button')[2]).not.toBeDisabled();
     expect(screen.getAllByRole('button')[3]).not.toBeDisabled();
     userEvent.click(screen.getAllByRole('button')[3]);
-    expect(changeListener).toHaveBeenCalledTimes(3);
+    expect(changeListener).toHaveBeenCalledTimes(2);
     rerender(<TablePaginationActions count={42} page={2} onChangePage={changeListener} />);
     expect(screen.getByDisplayValue(3)).toBeInTheDocument();
     expect(screen.getAllByRole('button')[2]).toBeDisabled();
     expect(screen.getAllByRole('button')[3]).toBeDisabled();
     userEvent.click(screen.getAllByRole('button')[0]);
-    expect(changeListener).toHaveBeenCalledTimes(4);
+    expect(changeListener).toHaveBeenCalledTimes(3);
     rerender(<TablePaginationActions count={42} page={0} onChangePage={changeListener} />);
     expect(screen.getByDisplayValue(1)).toBeInTheDocument();
     const input = screen.getByDisplayValue(1);
