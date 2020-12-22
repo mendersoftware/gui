@@ -16,7 +16,7 @@ describe('logout function', () => {
     cookies.remove.mockReturnValueOnce();
     logout();
     expect(window.location.replace).toHaveBeenCalledTimes(1);
-    expect(cookies.remove).toHaveBeenCalledTimes(2);
+    expect(cookies.remove).toHaveBeenCalledTimes(4);
   });
 });
 
