@@ -477,9 +477,9 @@ exports[`Auditlogs Component renders correctly 1`] = `
               </div>
               <div>
                 <time
-                  datetime=\\"2019-01-01T12:59:59+00:00\\"
+                  datetime=\\"2019-01-01T13:00:00+00:00\\"
                 >
-                  2019-01-01 12:59
+                  2019-01-01 13:00
                 </time>
               </div>
               <button
@@ -585,9 +585,9 @@ exports[`Auditlogs Component renders correctly 1`] = `
               </div>
               <div>
                 <time
-                  datetime=\\"2019-01-01T12:59:59+00:00\\"
+                  datetime=\\"2019-01-01T13:00:00+00:00\\"
                 >
-                  2019-01-01 12:59
+                  2019-01-01 13:00
                 </time>
               </div>
               <button

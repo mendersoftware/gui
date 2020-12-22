@@ -7,10 +7,9 @@ import { MemoryRouter } from 'react-router-dom';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import AuditLogs from './auditlogs';
-import { defaultState, undefineds } from '../../../../tests/mockData';
+import { defaultState, mockDate, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
-const mockDate = new Date('2019-01-01T13:00:00.000Z');
 
 describe('Auditlogs Component', () => {
   let store;

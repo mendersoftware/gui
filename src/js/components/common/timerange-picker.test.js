@@ -2,13 +2,12 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import TimerangePicker from './timerange-picker';
-import { undefineds } from '../../../../tests/mockData';
+import { mockDate, undefineds } from '../../../../tests/mockData';
 
 const realDate = Date;
 
 describe('TimerangePicker Component', () => {
   beforeEach(() => {
-    const mockDate = new Date('2019-01-01T13:00:00.000Z');
     global.Date = class extends Date {
       constructor(date) {
         if (date) {

@@ -4,10 +4,9 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Past from './pastdeployments';
-import { defaultState, undefineds } from '../../../../tests/mockData';
+import { defaultState, mockDate, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
-const mockDate = new Date('2019-01-01T13:00:00.000Z');
 
 describe('PastDeployments Component', () => {
   let store;

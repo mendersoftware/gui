@@ -7,7 +7,7 @@ import { render, fireEvent, screen, waitFor, within } from '@testing-library/rea
 import userEvent from '@testing-library/user-event';
 
 import CreateDeployment, { CreateDialog, mapStateToProps } from './createdeployment';
-import { defaultState, undefineds } from '../../../../tests/mockData';
+import { defaultState, mockDate, undefineds } from '../../../../tests/mockData';
 import { selectMaterialUiSelectOption } from '../../../../tests/setupTests';
 
 const mockStore = configureStore([thunk]);
@@ -186,7 +186,7 @@ describe('CreateDeployment Component', () => {
       group: undefined,
       name: 'All devices',
       phases: [
-        { batch_size: 50, delay: 30, delayUnit: 'minutes', start_ts: new Date('2019-01-01T13:00:00.300Z') },
+        { batch_size: 50, delay: 30, delayUnit: 'minutes', start_ts: mockDate },
         { batch_size: 25, delay: 25, delayUnit: 'days', start_ts: '2019-01-01T13:30:00.300Z' },
         { batch_size: 25, start_ts: '2019-01-26T13:30:00.300Z' }
       ],
