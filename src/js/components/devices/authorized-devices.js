@@ -76,7 +76,7 @@ export class Authorized extends BaseDevices {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      loading: true,
+      pageLoading: true,
       pageNo: 1,
       pageLength: 20,
       selectedRows: [],
@@ -103,7 +103,7 @@ export class Authorized extends BaseDevices {
     }
     clearAllRetryTimers(self.props.setSnackbar);
     if (self.props.filters && self.props.groupDevices.length) {
-      self.setState({ loading: false }, () => self.props.selectDevices(self.props.groupDevices.slice(0, self.state.pageLength)));
+      self.setState({ pageLoading: false }, () => self.props.selectDevices(self.props.groupDevices.slice(0, self.state.pageLength)));
     } else {
       clearInterval(self.timer);
       // no group, no filters, all devices
@@ -167,7 +167,7 @@ export class Authorized extends BaseDevices {
     request
       .catch(err => setRetryTimer(err, 'devices', `Devices couldn't be loaded.`, refreshDeviceLength, setSnackbar))
       // only set state after all devices id data retrieved
-      .finally(() => self.setState({ loading: false }));
+      .finally(() => self.setState({ pageLoading: false }));
   }
 
   onRowSelection(selection) {
@@ -185,15 +185,15 @@ export class Authorized extends BaseDevices {
     // if devices.length = number on page but < groupCount
     // move page back to pageNO 1
     if (this.props.devices.length === devices.length) {
-      this.setState({ pageNo: 1, loading: true }, () => this._getDevices());
+      this.setState({ pageNo: 1, pageLoading: true }, () => this._getDevices());
     }
   }
 
   onRejectDevices(rows) {
     var self = this;
-    self.setState({ loading: true });
+    self.setState({ pageLoading: true });
     const deviceIds = rows.map(row => self.props.devices[row]);
-    return self.props.updateDevicesAuth(deviceIds, DEVICE_STATES.rejected).then(() => self.setState({ selectedRows: [], loading: false }));
+    return self.props.updateDevicesAuth(deviceIds, DEVICE_STATES.rejected).then(() => self.setState({ selectedRows: [], pageLoading: false }));
   }
 
   onCreateGroupClick() {
@@ -218,7 +218,7 @@ export class Authorized extends BaseDevices {
       selectedGroup,
       showHelptips
     } = self.props;
-    const { loading, selectedRows, showActions, showFilters } = self.state;
+    const { pageLoading, selectedRows, showActions, showFilters } = self.state;
     const columnHeaders = [
       {
         title: idAttribute,
@@ -304,8 +304,8 @@ export class Authorized extends BaseDevices {
             open={showFilters}
           />
         </div>
-        <Loader show={loading} />
-        {devices.length > 0 && !loading ? (
+        <Loader show={pageLoading} />
+        {devices.length > 0 && !pageLoading ? (
           <div className="padding-bottom">
             <DeviceList
               {...self.props}
@@ -321,7 +321,7 @@ export class Authorized extends BaseDevices {
             {showHelptips && <ExpandDevice />}
           </div>
         ) : (
-          !loading && (
+          !pageLoading && (
             <div className="dashboard-placeholder">
               <p>No devices found</p>
               {!allCount && (
