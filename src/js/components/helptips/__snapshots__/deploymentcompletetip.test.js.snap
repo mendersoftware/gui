@@ -1,51 +1,66 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DeploymentCompleteTip Component renders correctly 1`] = `
-<div>
-  <p>
-    Fantastic! You completed your first deployment!
-  </p>
-  <p>
-    Your deployment is finished and your device is now running the updated software!
-  </p>
-  <div
-    className="flexbox centered"
-  >
-    <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained"
-      disabled={false}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
-      type="button"
-    >
-      <span
-        className="MuiButton-label"
-      >
-        Go to http://192.168.10.141:85
-      </span>
-    </button>
-  </div>
-  <p>
-    and you should see the demo web application actually being run on the device.
-  </p>
-  <p>
-    NOTE: if you have local network restrictions, you may need to check them if you have difficulty loading the page.
-  </p>
+<div
+  class="onboard-tip"
+>
   <a
-    onClick={[Function]}
+    class="tooltip onboard-icon"
+    currentitem="false"
+    data-event="click focus"
+    data-event-off="dblclick"
+    data-for="deployment-complete-tip"
+    data-tip="true"
   >
-    Visit the web app running your device
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
+      focusable="false"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+      />
+    </svg>
   </a>
+  <div
+    class="__react_component_tooltip place-bottom type-dark allow_click"
+    data-id="tooltip"
+    id="deployment-complete-tip"
+  >
+    <p>
+      Fantastic! You completed your first deployment!
+    </p>
+    <p>
+      Your deployment is finished and your device is now running the updated software!
+    </p>
+    <div
+      class="flexbox centered"
+    >
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiButton-label"
+        >
+          Go to http://192.168.10.141:85
+        </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
+      </button>
+    </div>
+    <p>
+      and you should see the demo web application actually being run on the device.
+    </p>
+    <p>
+      NOTE: if you have local network restrictions, you may need to check them if you have difficulty loading the page.
+    </p>
+    <a>
+      Visit the web app running your device
+    </a>
+  </div>
 </div>
 `;

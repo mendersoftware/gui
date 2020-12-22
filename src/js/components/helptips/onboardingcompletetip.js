@@ -12,19 +12,10 @@ import * as DeviceConstants from '../../constants/deviceConstants';
 import { getDemoDeviceAddress, getDocsVersion } from '../../selectors';
 import Loader from '../common/loader';
 
-export class OnboardingCompleteTip extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      loading: true
-    };
-  }
-
+export class OnboardingCompleteTip extends React.PureComponent {
   componentDidMount() {
     const { getDevicesByStatus, setOnboardingComplete } = this.props;
-    getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted).finally(() =>
-      this.setState({ loading: false }, () => setTimeout(() => setOnboardingComplete(true), 120000))
-    );
+    getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted).finally(() => setTimeout(() => setOnboardingComplete(true), 120000));
   }
 
   componentWillUnmount() {
@@ -37,8 +28,6 @@ export class OnboardingCompleteTip extends React.Component {
 
   render() {
     const { anchor, docsVersion, setOnboardingComplete, url } = this.props;
-    const { loading } = this.state;
-
     return (
       <div className="onboard-tip" style={anchor}>
         <a
@@ -56,8 +45,8 @@ export class OnboardingCompleteTip extends React.Component {
           <p>
             Your device is now running the updated version of the software. At
             <div className="flexbox centered" style={{ margin: '5px 0' }}>
-              {loading ? (
-                <Loader show={loading} />
+              {!url ? (
+                <Loader show={true} />
               ) : (
                 <Button
                   className="button"
