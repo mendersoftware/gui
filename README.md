@@ -1,6 +1,7 @@
 [![Build Status](https://gitlab.com/Northern.tech/Mender/gui/badges/master/pipeline.svg)](https://gitlab.com/Northern.tech/Mender/gui/pipelines)
 [![Docker pulls](https://img.shields.io/docker/pulls/mendersoftware/gui.svg?maxAge=3600)](https://hub.docker.com/r/mendersoftware/gui/)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![Coverage Status](https://coveralls.io/repos/github/mendersoftware/gui/badge.svg?branch=master)](https://coveralls.io/github/mendersoftware/gui?branch=master)
 
 # Mender: GUI
 
