@@ -109,6 +109,22 @@ export const filtersCompare = (filters, otherFilters) =>
     )
   );
 
+export const versionCompare = (v1, v2) => {
+  const partsV1 = `${v1}`.split('.');
+  const partsV2 = `${v2}`.split('.');
+  for (let index = 0; index < partsV1.length; index++) {
+    const numberV1 = partsV1[index];
+    const numberV2 = partsV2[index];
+    if (numberV1 > numberV2) {
+      return 1;
+    }
+    if (numberV2 > numberV1) {
+      return -1;
+    }
+  }
+  return 0;
+};
+
 /*
  *
  * Deep compare
@@ -427,13 +443,15 @@ export const standardizePhases = phases =>
     return standardizedPhase;
   });
 
-export const getDebInstallationCode = (
-  packageVersion,
-  noninteractive = false
-) => `wget https://d1b0l86ne08fsf.cloudfront.net/${packageVersion}/dist-packages/debian/armhf/mender-client_${packageVersion}-1_armhf.deb && \\
+export const getDebInstallationCode = (packageVersion, noninteractive = false, hasMenderShellSupport) =>
+  hasMenderShellSupport
+    ? `wget -q -O- https://get.mender.io/ | sudo bash -s -- -c experimental`
+    : `${
+        noninteractive ? `sudo bash -c '` : ''
+      }wget https://d1b0l86ne08fsf.cloudfront.net/${packageVersion}/dist-packages/debian/armhf/mender-client_${packageVersion}-1_armhf.deb && \\
 ${noninteractive ? 'DEBIAN_FRONTEND=noninteractive' : 'sudo'} dpkg -i --force-confdef --force-confold mender-client_${packageVersion}-1_armhf.deb`;
 
-export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token, packageVersion, deviceType = 'generic-armv6') => {
+export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token, packageVersion, deviceType = 'generic-armv6', hasMenderShellSupport) => {
   let connectionInstructions = ``;
   let demoSettings = `  --quiet --demo ${ipAddress ? `--server-ip ${ipAddress}` : ''}`;
   if (isEnterprise || isHosted) {
@@ -451,9 +469,9 @@ ${enterpriseSettings}`;
   } else {
     connectionInstructions = `${demoSettings}`;
   }
-  const debInstallationCode = getDebInstallationCode(packageVersion, true);
-  let codeToCopy = `sudo bash -c '${debInstallationCode} && \\
-DEVICE_TYPE="${deviceType}" && \\${
+  const debInstallationCode = getDebInstallationCode(packageVersion, true, hasMenderShellSupport);
+  let codeToCopy = `${debInstallationCode} && \\
+${hasMenderShellSupport ? `sudo bash -c '` : ''}DEVICE_TYPE="${deviceType}" && \\${
     token
       ? `
 TENANT_TOKEN="${token}" && \\`
@@ -462,7 +480,18 @@ TENANT_TOKEN="${token}" && \\`
 mender setup \\
   --device-type $DEVICE_TYPE \\
 ${connectionInstructions} && \\
-systemctl restart mender-client'
+${
+  hasMenderShellSupport
+    ? `systemctl restart mender-client && \\
+(cat > /etc/mender/mender-shell.conf << EOF
+{
+  "ServerURL": "${document.location.origin}",
+  "User": "pi"
+}
+EOF
+) && systemctl restart mender-shell'`
+    : `systemctl restart mender-client'`
+}
 `;
   return codeToCopy;
 };

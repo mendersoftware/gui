@@ -9,7 +9,7 @@ import HelpIcon from '@material-ui/icons/Help';
 import CopyCode from '../copy-code';
 import { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType } from '../../../actions/onboardingActions';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
-import { getDebConfigurationCode } from '../../../helpers';
+import { getDebConfigurationCode, versionCompare } from '../../../helpers';
 import { getDocsVersion, getIsEnterprise } from '../../../selectors';
 
 const filter = createFilterOptions();
@@ -159,6 +159,7 @@ const mapStateToProps = state => {
     docsVersion: getDocsVersion(state),
     ipAddress: state.app.hostAddress,
     isEnterprise: getIsEnterprise(state),
+    hasMenderShellSupport: versionCompare(state.app.integrationVersion, '2.6.0') > -1,
     isHosted: state.app.features.isHosted,
     debPackageVersion: state.app.menderDebPackageVersion,
     token: state.organization.organization.tenant_token
