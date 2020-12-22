@@ -12,7 +12,8 @@ import {
   isEmpty,
   mapDeviceAttributes,
   stringToBoolean,
-  unionizeStrings
+  unionizeStrings,
+  versionCompare
 } from './helpers';
 import { undefineds } from '../../tests/mockData';
 
@@ -82,29 +83,60 @@ describe('stringToBoolean function', () => {
   });
 });
 
+describe('versionCompare function', () => {
+  it('should works as intended', () => {
+    expect(versionCompare('2.5.1', '2.6.0').toString()).toEqual('-1');
+    expect(versionCompare('2.6.0', '2.6.0').toString()).toEqual('0');
+    expect(versionCompare('2.6.x', '2.6.0').toString()).toEqual('1');
+    expect(versionCompare('next', '2.6').toString()).toEqual('1');
+    expect(versionCompare('', '2.6.0').toString()).toEqual('-1');
+  });
+});
+
 describe('getDebInstallationCode function', () => {
   it('should not contain any template string leftovers', () => {
-    expect(getDebInstallationCode('master')).not.toMatch(/\{([^}]+)\}/);
+    expect(getDebInstallationCode()).not.toMatch(/\$\{([^}]+)\}/);
   });
   it('should return a sane result', () => {
-    expect(getDebInstallationCode('master')).toMatch(
-      `wget https://d1b0l86ne08fsf.cloudfront.net/master/dist-packages/debian/armhf/mender-client_master-1_armhf.deb && \\
-sudo dpkg -i --force-confdef --force-confold mender-client_master-1_armhf.deb`
-    );
+    expect(getDebInstallationCode(undefined, undefined, true)).toMatch(`wget -q -O- https://get.mender.io/ | sudo bash -s -- -c experimental`);
+  });
+  it('should return a sane result for old installations', () => {
+    expect(getDebInstallationCode('master'))
+      .toMatch(`wget https://d1b0l86ne08fsf.cloudfront.net/master/dist-packages/debian/armhf/mender-client_master-1_armhf.deb && \\
+sudo dpkg -i --force-confdef --force-confold mender-client_master-1_armhf.deb`);
   });
 });
 
 describe('getDebConfigurationCode function', () => {
   let code;
   beforeEach(() => {
-    code = getDebConfigurationCode('192.168.7.41', false, true, 'token', 'master', 'raspberrypi3');
+    code = getDebConfigurationCode('192.168.7.41', false, true, 'token', 'master', 'raspberrypi3', true);
   });
   it('should not contain any template string leftovers', () => {
-    expect(code).not.toMatch(/\{([^}]+)\}/);
+    expect(code).not.toMatch(/\$\{([^}]+)\}/);
   });
   it('should return a sane result', () => {
     expect(code).toMatch(
-      `sudo bash -c 'wget https://d1b0l86ne08fsf.cloudfront.net/master/dist-packages/debian/armhf/mender-client_master-1_armhf.deb && \\
+      `wget -q -O- https://get.mender.io/ | sudo bash -s -- -c experimental && \\
+sudo bash -c 'DEVICE_TYPE="raspberrypi3" && \\
+TENANT_TOKEN="token" && \\
+mender setup \\
+  --device-type $DEVICE_TYPE \\
+  --quiet --demo --server-ip 192.168.7.41 \\
+  --tenant-token $TENANT_TOKEN && \\
+systemctl restart mender-client && \\
+(cat > /etc/mender/mender-shell.conf << EOF
+{
+  "ServerURL": "http://localhost",
+  "User": "pi"
+}
+EOF
+) && systemctl restart mender-shell'`
+    );
+  });
+  it('should return a sane result for old installations', () => {
+    code = getDebConfigurationCode('192.168.7.41', false, true, 'token', 'master', 'raspberrypi3');
+    expect(code).toMatch(`sudo bash -c 'wget https://d1b0l86ne08fsf.cloudfront.net/master/dist-packages/debian/armhf/mender-client_master-1_armhf.deb && \\
 DEBIAN_FRONTEND=noninteractive dpkg -i --force-confdef --force-confold mender-client_master-1_armhf.deb && \\
 DEVICE_TYPE="raspberrypi3" && \\
 TENANT_TOKEN="token" && \\
@@ -112,8 +144,7 @@ mender setup \\
   --device-type $DEVICE_TYPE \\
   --quiet --demo --server-ip 192.168.7.41 \\
   --tenant-token $TENANT_TOKEN && \\
-systemctl restart mender-client'`
-    );
+systemctl restart mender-client'`);
   });
   it('should not contain tenant information for OS calls', () => {
     code = getDebConfigurationCode('192.168.7.41', false, false, null, 'master', 'raspberrypi3');
@@ -126,9 +157,9 @@ describe('getDemoDeviceCreationCommand function', () => {
   const token = `eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZW5kZXIudGVuYW50IjoiNWY5YWI0ZWQ4ZjhhMzc0NmYwYTIxNjU1IiwiaXNzIjoiTWVuZGVyIiwic3`;
   it('should not contain any template string leftovers', () => {
     let code = getDemoDeviceCreationCommand();
-    expect(code).not.toMatch(/\{([^}]+)\}/);
+    expect(code).not.toMatch(/\$\{([^}]+)\}/);
     code = getDemoDeviceCreationCommand(token);
-    expect(code).not.toMatch(/\{([^}]+)\}/);
+    expect(code).not.toMatch(/\$\{([^}]+)\}/);
   });
   it('should return a sane result', () => {
     let code = getDemoDeviceCreationCommand();

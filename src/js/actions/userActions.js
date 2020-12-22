@@ -55,6 +55,7 @@ export const loginUser = userData => (dispatch, getState) =>
     })
     .catch(err => {
       cookies.remove('noExpiry', { path: '/' });
+      cookies.remove('noExpiry', { path: '/ui' });
       cookies.remove('JWT', { path: '/' });
       cookies.remove('JWT', { path: '/ui' });
       const has2FA = getState().users.globalSettings.hasOwnProperty('2fa') && getState().users.globalSettings['2fa'] === 'enabled';

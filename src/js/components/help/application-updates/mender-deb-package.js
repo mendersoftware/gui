@@ -3,10 +3,10 @@ import React from 'react';
 import { getDebConfigurationCode, getDebInstallationCode } from '../../../helpers';
 import CopyCode from '../../common/copy-code';
 
-const DebPackage = ({ menderDebPackageVersion, ipAddress, isHosted, isEnterprise, org }) => {
+const DebPackage = ({ menderDebPackageVersion, hasMenderShellSupport, ipAddress, isHosted, isEnterprise, org }) => {
   const token = (org || {}).tenant_token;
-  const dpkgCode = getDebInstallationCode(menderDebPackageVersion);
-  const codeToCopy = getDebConfigurationCode(ipAddress, isHosted, isEnterprise, token, menderDebPackageVersion);
+  const dpkgCode = getDebInstallationCode(menderDebPackageVersion, undefined, hasMenderShellSupport);
+  const codeToCopy = getDebConfigurationCode(ipAddress, isHosted, isEnterprise, token, menderDebPackageVersion, undefined, hasMenderShellSupport);
   let title = 'Connecting to a demo server with demo settings';
   if (isEnterprise) {
     title = 'Connecting to an Enterprise server';
