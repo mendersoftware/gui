@@ -18,7 +18,7 @@ const Review = ({
   group,
   isEnterprise,
   phases = [{ batch_size: 100 }],
-  release,
+  release = { device_types_compatible: [] },
   retries = 0
 }) => {
   const creationTime = deployment.created || new Date().toISOString();
