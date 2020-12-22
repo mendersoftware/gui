@@ -80,8 +80,8 @@ export const setShowDismissOnboardingTipsDialog = show => dispatch => dispatch({
 
 export const setOnboardingComplete = val => dispatch =>
   Promise.all([
-    dispatch({ type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: val }),
-    dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: !val })
+    Promise.resolve(dispatch({ type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: val })),
+    Promise.resolve(dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: !val }))
   ]).then(() => {
     if (val) {
       return Promise.resolve(dispatch(advanceOnboarding(onboardingStepNames.ONBOARDING_FINISHED)));
@@ -91,13 +91,13 @@ export const setOnboardingComplete = val => dispatch =>
 
 export const setOnboardingCanceled = () => dispatch =>
   Promise.all([
-    dispatch(setShowOnboardingHelp(false)),
-    dispatch(setShowDismissOnboardingTipsDialog(false)),
-    dispatch({ type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: true })
+    Promise.resolve(dispatch(setShowOnboardingHelp(false))),
+    Promise.resolve(dispatch(setShowDismissOnboardingTipsDialog(false))),
+    Promise.resolve(dispatch({ type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: true }))
   ]).then(() => Promise.resolve(advanceOnboarding(onboardingStepNames.ONBOARDING_CANCELED)));
 
 const setOnboardingState = state => dispatch =>
-  Promise.all([
+  Promise.resolve([
     dispatch(setOnboardingComplete(state.complete)),
     dispatch(setOnboardingDeviceType(state.deviceType)),
     dispatch(setOnboardingApproach(state.approach)),
