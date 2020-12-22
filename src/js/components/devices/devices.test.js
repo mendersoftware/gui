@@ -86,7 +86,7 @@ describe('Devices Component', () => {
     expect(idDialog).toBeInTheDocument();
     await selectMaterialUiSelectOption(idDialog, 'mac');
     userEvent.click(within(idDialog).getByText(/Save/i));
-    await waitForElementToBeRemoved(() => screen.getByText('Default device identity attribute'));
+    await waitForElementToBeRemoved(() => screen.getByText('Default device identity attribute'), { timeout: 2500 });
     userEvent.click(screen.getByRole('button', { name: 'testGroupDynamic' }));
     userEvent.click(screen.getByRole('button', { name: /Remove group/i }));
 
@@ -100,5 +100,5 @@ describe('Devices Component', () => {
     expect(screen.getByText(defaultState.devices.byId.a1.attributes.ipv4_wlan0)).toBeInTheDocument();
     userEvent.click(deviceListItem);
     expect(screen.queryByText(defaultState.devices.byId.a1.attributes.ipv4_wlan0)).toBeFalsy();
-  }, 30000);
+  }, 40000);
 });
