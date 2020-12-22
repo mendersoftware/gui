@@ -30,7 +30,7 @@ export const AuthsetsDialog = ({
 }) => {
   const [confirmDecommission, setConfirmDecomission] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { auth_sets, status = DEVICE_STATES.accepted } = device;
+  const { auth_sets = [], status = DEVICE_STATES.accepted } = device;
 
   const updateDeviceAuthStatus = (device_id, auth_id, status) => {
     setLoading(auth_id);

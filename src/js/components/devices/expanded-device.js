@@ -94,7 +94,7 @@ export class ExpandedDevice extends React.Component {
       showHelptips,
       unauthorized
     } = self.props;
-    const { auth_sets, attributes, created_ts, id, identity_data, status = DEVICE_STATES.accepted, connect_status, connect_updated_ts } = device;
+    const { auth_sets = [], attributes, created_ts, id, identity_data, status = DEVICE_STATES.accepted, connect_status, connect_updated_ts } = device;
 
     let deviceIdentity = [<ExpandableAttribute key="id_checksum" primary="Device ID" secondary={id || '-'} />];
     if (identity_data) {

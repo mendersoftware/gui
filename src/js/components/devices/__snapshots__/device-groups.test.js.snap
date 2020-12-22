@@ -410,24 +410,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                     <div
                       style=\\"padding: 0px 24px; overflow: hidden; word-break: break-all; max-height: 48px; text-overflow: ellipsis; width: 18%;\\"
                     >
-                      <div
-                        class=\\"MuiChip-root deviceStatus MuiChip-outlined MuiChip-sizeSmall\\"
-                        title=\\"\\"
-                      >
-                        <svg
-                          aria-hidden=\\"true\\"
-                          class=\\"MuiSvgIcon-root MuiChip-icon MuiChip-iconSmall\\"
-                          focusable=\\"false\\"
-                          viewBox=\\"0 0 24 24\\"
-                        >
-                          <path
-                            d=\\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\\"
-                          />
-                        </svg>
-                        <span
-                          class=\\"MuiChip-label MuiChip-labelSmall\\"
-                        />
-                      </div>
+                      <div />
                     </div>
                     <button
                       class=\\"MuiButtonBase-root MuiIconButton-root expandButton\\"
@@ -548,24 +531,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                     <div
                       style=\\"padding: 0px 24px; overflow: hidden; word-break: break-all; max-height: 48px; text-overflow: ellipsis; width: 18%;\\"
                     >
-                      <div
-                        class=\\"MuiChip-root deviceStatus MuiChip-outlined MuiChip-sizeSmall\\"
-                        title=\\"\\"
-                      >
-                        <svg
-                          aria-hidden=\\"true\\"
-                          class=\\"MuiSvgIcon-root MuiChip-icon MuiChip-iconSmall\\"
-                          focusable=\\"false\\"
-                          viewBox=\\"0 0 24 24\\"
-                        >
-                          <path
-                            d=\\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\\"
-                          />
-                        </svg>
-                        <span
-                          class=\\"MuiChip-label MuiChip-labelSmall\\"
-                        />
-                      </div>
+                      <div />
                     </div>
                     <button
                       class=\\"MuiButtonBase-root MuiIconButton-root expandButton\\"

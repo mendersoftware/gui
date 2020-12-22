@@ -20,22 +20,24 @@ const NumberIcon = props => (
   </Box>
 );
 
-const DeviceStatus = ({ device }) => {
+const DeviceStatus = ({ device: { auth_sets = [] } }) => {
   let status = statusTypes.default;
   let label = status.label;
   let icon = <ErrorIcon />;
 
-  const pendingAuthSetsCount = device.auth_sets.filter(item => item.status === 'pending').length;
+  const pendingAuthSetsCount = auth_sets.filter(item => item.status === 'pending').length;
   if (pendingAuthSetsCount) {
     icon = <NumberIcon value={pendingAuthSetsCount} />;
     status = statusTypes.authRequests;
     label = <div className="uppercased">new {pluralize('request', pendingAuthSetsCount)}</div>;
   }
 
-  return (
+  return label !== statusTypes.default.label ? (
     <Tooltip title={status.notification} placement="bottom">
       <Chip variant="outlined" size="small" icon={icon} label={label} className="deviceStatus" />
     </Tooltip>
+  ) : (
+    <div />
   );
 };
 
