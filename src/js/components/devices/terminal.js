@@ -7,11 +7,8 @@ import { XTerm } from 'xterm-for-react';
 import { FitAddon } from 'xterm-addon-fit';
 import { SearchAddon } from 'xterm-addon-search';
 import msgpack5 from 'msgpack5';
-import Cookies from 'universal-cookie';
 
 import { setSnackbar } from '../../actions/appActions';
-
-import { decodeSessionToken } from '../../helpers';
 
 // see https://github.com/mendersoftware/go-lib-micro/tree/master/ws
 //     for the description of proto_header and the consts
@@ -21,13 +18,11 @@ const MessageTypeShell = 'shell';
 const MessageTypeNew = 'new';
 const MessageTypeStop = 'stop';
 
-const cookies = new Cookies();
 const MessagePack = msgpack5();
 
 export const Terminal = props => {
-  const { deviceId, sessionId, socket, setSessionId, setSocket, setSnackbar } = props;
+  const { deviceId, sessionId, socket, setSessionId, setSocket, setSnackbar, onCancel } = props;
   const xtermRef = React.useRef(null);
-  const userId = decodeSessionToken(cookies.get('JWT'));
 
   const onData = data => {
     const proto_header = { proto: MessageProtocolShell, typ: MessageTypeShell, sid: sessionId, props: null };
@@ -52,7 +47,7 @@ export const Terminal = props => {
       setSnackbar('Connection with the device established.', 5000);
       //
       const proto_header = { proto: MessageProtocolShell, typ: MessageTypeNew, sid: null, props: null };
-      const msg = { hdr: proto_header, body: userId };
+      const msg = { hdr: proto_header };
       const encodedData = MessagePack.encode(msg);
       socket.send(encodedData);
     };
@@ -62,11 +57,13 @@ export const Terminal = props => {
         setSnackbar(`Connection with the device closed.`, 5000);
       } else {
         setSnackbar('Connection with the device died.', 5000);
+        onCancel();
       }
     };
 
     socket.onerror = error => {
       setSnackbar('WebSocket error: ' + error.message, 5000);
+      onCancel();
     };
 
     socket.onmessage = event => {
@@ -123,7 +120,15 @@ export const TerminalDialog = props => {
     <Dialog open={open} fullWidth={true} maxWidth="lg">
       <DialogTitle>Terminal</DialogTitle>
       <DialogContent className="dialog-content" style={{ padding: 0 }}>
-        <Terminal deviceId={deviceId} sessionId={sessionId} socket={socket} setSessionId={setSessionId} setSocket={setSocket} setSnackbar={setSnackbar} />
+        <Terminal
+          deviceId={deviceId}
+          sessionId={sessionId}
+          socket={socket}
+          setSessionId={setSessionId}
+          setSocket={setSocket}
+          setSnackbar={setSnackbar}
+          onCancel={onCancel}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Close</Button>
