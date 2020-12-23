@@ -47,16 +47,19 @@ context('Settings', () => {
     });
     describe('2FA setup', () => {
       it('supports regular 2fa setup', () => {
+        cy.visit(`${Cypress.config().baseUrl}ui/`);
+        cy.login(Cypress.env('username'), Cypress.env('password'));
         cy.visit(`${Cypress.config().baseUrl}ui/#/settings/my-account`);
         cy.contains('Enable Two Factor').click();
-        cy.get('.flexbox img').then(qrImg => {
+        cy.waitUntil(() => cy.get('.margin-top img'));
+        cy.get('.margin-top img').then(qrImg => {
           const qrcode = new Decoder();
           cy.wrap(qrcode.scan(qrImg.prop('src'))).then(decodedQr => {
             const qrData = new URLSearchParams(decodedQr.data);
             cy.task('generateOtp', qrData.get('secret')).then(token => {
               console.log('Generated otp:', token);
-              cy.get('#token2fa').type(token);
-              cy.contains('button', 'Verify').click();
+              cy.get('#token2fa').type(token, { force: true });
+              cy.contains('button', 'Verify').click({ force: true });
               cy.get('ol').should('contain', 'Verified');
               cy.contains('button', 'Save').click();
               cy.contains('.header-dropdown', Cypress.env('username')).click();
