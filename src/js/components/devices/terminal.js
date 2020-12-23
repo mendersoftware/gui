@@ -21,7 +21,7 @@ const MessageTypeStop = 'stop';
 const MessagePack = msgpack5();
 
 export const Terminal = props => {
-  const { deviceId, sessionId, socket, setSessionId, setSocket, setSnackbar } = props;
+  const { deviceId, sessionId, socket, setSessionId, setSocket, setSnackbar, onCancel } = props;
   const xtermRef = React.useRef(null);
 
   const onData = data => {
@@ -57,11 +57,13 @@ export const Terminal = props => {
         setSnackbar(`Connection with the device closed.`, 5000);
       } else {
         setSnackbar('Connection with the device died.', 5000);
+        onCancel();
       }
     };
 
     socket.onerror = error => {
       setSnackbar('WebSocket error: ' + error.message, 5000);
+      onCancel();
     };
 
     socket.onmessage = event => {
@@ -118,7 +120,15 @@ export const TerminalDialog = props => {
     <Dialog open={open} fullWidth={true} maxWidth="lg">
       <DialogTitle>Terminal</DialogTitle>
       <DialogContent className="dialog-content" style={{ padding: 0 }}>
-        <Terminal deviceId={deviceId} sessionId={sessionId} socket={socket} setSessionId={setSessionId} setSocket={setSocket} setSnackbar={setSnackbar} />
+        <Terminal
+          deviceId={deviceId}
+          sessionId={sessionId}
+          socket={socket}
+          setSessionId={setSessionId}
+          setSocket={setSocket}
+          setSnackbar={setSnackbar}
+          onCancel={onCancel}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Close</Button>
