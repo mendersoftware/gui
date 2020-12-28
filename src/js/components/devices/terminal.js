@@ -17,6 +17,7 @@ const MessageProtocolShell = 1;
 const MessageTypeShell = 'shell';
 const MessageTypeNew = 'new';
 const MessageTypeStop = 'stop';
+const MessageTypeResize = 'resize';
 
 const MessagePack = msgpack5();
 
@@ -40,16 +41,42 @@ export const Terminal = props => {
     } catch {
       setSnackbar('Fit not possible, terminal not yet visible', 5000);
     }
-    term.resize(80, 40);
 
+    var resizeInterval = null;
     var socket = new WebSocket('wss://' + window.location.host + '/api/management/v1/deviceconnect/devices/' + deviceId + '/connect');
     socket.onopen = () => {
       setSnackbar('Connection with the device established.', 5000);
       //
-      const proto_header = { proto: MessageProtocolShell, typ: MessageTypeNew, sid: null, props: null };
+      fitAddon.fit();
+      var dimensions = fitAddon.proposeDimensions();
+      //
+      const proto_header = {
+        proto: MessageProtocolShell,
+        typ: MessageTypeNew,
+        sid: null,
+        props: { 'terminal_height': dimensions.rows, 'terminal_width': dimensions.cols }
+      };
       const msg = { hdr: proto_header };
       const encodedData = MessagePack.encode(msg);
       socket.send(encodedData);
+      //
+      resizeInterval = setInterval(function () {
+        fitAddon.fit();
+        const newDimensions = fitAddon.proposeDimensions();
+        if (newDimensions.rows != dimensions.rows || newDimensions.cols != dimensions.cols) {
+          dimensions = newDimensions;
+          //
+          const proto_header = {
+            proto: MessageProtocolShell,
+            typ: MessageTypeResize,
+            sid: sessionId,
+            props: { 'terminal_height': dimensions.rows, 'terminal_width': dimensions.cols }
+          };
+          const msg = { hdr: proto_header };
+          const encodedData = MessagePack.encode(msg);
+          socket.send(encodedData);
+        }
+      }, 1000);
     };
 
     socket.onclose = event => {
@@ -58,6 +85,10 @@ export const Terminal = props => {
       } else {
         setSnackbar('Connection with the device died.', 5000);
         onCancel();
+      }
+      //
+      if (resizeInterval) {
+        clearInterval(resizeInterval);
       }
     };
 
@@ -93,7 +124,7 @@ export const Terminal = props => {
   const fitAddon = new FitAddon();
   const searchAddon = new SearchAddon();
 
-  return <XTerm ref={xtermRef} addons={[fitAddon, searchAddon]} options={options} onData={onData} />;
+  return <XTerm ref={xtermRef} addons={[fitAddon, searchAddon]} options={options} onData={onData} className="xterm-fullscreen" />;
 };
 
 const actionCreators = { setSnackbar };
@@ -119,7 +150,7 @@ export const TerminalDialog = props => {
   return (
     <Dialog open={open} fullWidth={true} maxWidth="lg">
       <DialogTitle>Terminal</DialogTitle>
-      <DialogContent className="dialog-content" style={{ padding: 0 }}>
+      <DialogContent className="dialog-content" style={{ padding: 0, margin: '0 24px', height: '75vh' }}>
         <Terminal
           deviceId={deviceId}
           sessionId={sessionId}
