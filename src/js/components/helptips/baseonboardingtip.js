@@ -16,7 +16,7 @@ import Tracking from '../../tracking';
 
 const iconWidth = 30;
 
-const orientations = {
+export const orientations = {
   top: {
     arrow: <ArrowUpwardIcon />,
     placement: 'bottom',
@@ -67,10 +67,10 @@ class BaseOnboardingTipComponent extends React.PureComponent {
     ReactTooltip.hide(this.tipRef);
   }
   render() {
-    const { anchor, component, place, progress, progressTotal, id, setShowDismissOnboardingTipsDialog, ...others } = this.props;
-    const orientation = orientations[place || 'top'];
+    const { anchor, component, place = 'top', progress, progressTotal = 3, id = 1, setShowDismissOnboardingTipsDialog, ...others } = this.props;
+    const orientation = orientations[place];
     const style = orientation.offsetStyle({ left: anchor.left, top: anchor.top });
-    const tipId = `onboard-tip-${id ? id : 1}`;
+    const tipId = `onboard-tip-${id}`;
     return (
       <div className="onboard-tip" style={style}>
         <a
@@ -94,7 +94,7 @@ class BaseOnboardingTipComponent extends React.PureComponent {
         >
           {React.cloneElement(component, others)}
           <div className="flexbox">
-            {progress ? <div>{`Progress: step ${progress} of ${progressTotal || 3}`}</div> : null}
+            {progress ? <div>{`Progress: step ${progress} of ${progressTotal}`}</div> : null}
             <div style={{ flexGrow: 1 }} />
             <a onClick={() => setShowDismissOnboardingTipsDialog(true)}>Dismiss</a>
           </div>

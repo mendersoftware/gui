@@ -7,29 +7,23 @@ import AddIcon from '@material-ui/icons/Add';
 
 import { Table, TableBody, TableCell, TableHead, TableRow, Select, MenuItem, Input, InputAdornment, IconButton } from '@material-ui/core';
 import CancelIcon from '@material-ui/icons/Cancel';
-import { getPhaseStartTime } from '../deployments';
+import { getPhaseStartTime } from '../createdeployment';
 import { getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
 
 export const PhaseSettings = ({ classNames, disabled, filterId, numberDevices, setDeploymentSettings, phases = [] }) => {
   const updateDelay = (value, index) => {
     let newPhases = phases;
     // value must be at least 1
-    value = value > 0 ? value : 1;
+    value = Math.max(1, value);
     newPhases[index].delay = value;
     setDeploymentSettings(newPhases, 'phases');
     // logic for updating time stamps should be in parent - only change delays here
   };
 
   const updateBatchSize = (value, index) => {
-    let newPhases = phases;
-
-    if (value < 1) {
-      value = 1;
-    } else if (value > 100) {
-      value = 100;
-    }
-
-    newPhases[index].batch_size = Number(value);
+    let newPhases = [...phases];
+    value = Math.min(100, Math.max(1, value));
+    newPhases[index].batch_size = value;
     // When phase's batch size changes, check for new 'remainder'
     const remainder = getRemainderPercent(newPhases);
     // if new remainder will be 0 or negative remove phase leave last phase to get remainder
@@ -41,7 +35,7 @@ export const PhaseSettings = ({ classNames, disabled, filterId, numberDevices, s
   };
 
   const addPhase = () => {
-    let newPhases = phases;
+    let newPhases = [...phases];
     let newPhase = {};
 
     // assign new batch size to *previous* last batch
@@ -84,6 +78,7 @@ export const PhaseSettings = ({ classNames, disabled, filterId, numberDevices, s
 
   // disable 'add phase' button if last phase/remainder has only 1 device left
   const disableAdd = !filterId && (remainder / 100) * numberDevices <= 1;
+  const startTime = phases.length ? phases[0].start_ts || new Date() : new Date();
   const mappedPhases = phases.map((phase, index) => {
     let max = index > 0 ? 100 - phases[index - 1].batch_size : 100;
     const deviceCount = getPhaseDeviceCount(numberDevices, phase.batch_size, remainder, index === phases.length - 1);
@@ -124,7 +119,7 @@ export const PhaseSettings = ({ classNames, disabled, filterId, numberDevices, s
           {!filterId && deviceCount < 1 && <div className="warning">Phases must have at least 1 device</div>}
         </TableCell>
         <TableCell>
-          <Time value={getPhaseStartTime(phases, index)} format="YYYY-MM-DD HH:mm" />
+          <Time value={getPhaseStartTime(phases, index, startTime)} format="YYYY-MM-DD HH:mm" />
         </TableCell>
         <TableCell>
           {phase.delay && index !== phases.length - 1 ? (
@@ -142,9 +137,9 @@ export const PhaseSettings = ({ classNames, disabled, filterId, numberDevices, s
               />
 
               <Select onChange={event => handleDelayToggle(event.target.value, index)} value={phase.delayUnit || 'hours'} style={{ marginLeft: '5px' }}>
-                <MenuItem value={'minutes'}>Minutes</MenuItem>
-                <MenuItem value={'hours'}>Hours</MenuItem>
-                <MenuItem value={'days'}>Days</MenuItem>
+                <MenuItem value="minutes">Minutes</MenuItem>
+                <MenuItem value="hours">Hours</MenuItem>
+                <MenuItem value="days">Days</MenuItem>
               </Select>
             </div>
           ) : (

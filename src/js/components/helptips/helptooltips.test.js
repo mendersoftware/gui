@@ -26,7 +26,7 @@ describe('Helptooltips Components', () => {
   });
 
   describe('AuthButton', () => {
-    it('renders correctly', () => {
+    it('renders correctly', async () => {
       const tree = renderer
         .create(
           <MemoryRouter>
@@ -41,7 +41,7 @@ describe('Helptooltips Components', () => {
   });
 
   describe('ExpandArtifact', () => {
-    it('renders correctly', () => {
+    it('renders correctly', async () => {
       const tree = renderer
         .create(
           <Provider store={store}>
@@ -54,7 +54,7 @@ describe('Helptooltips Components', () => {
   });
 
   describe('ExpandDevice', () => {
-    it('renders correctly', () => {
+    it('renders correctly', async () => {
       const tree = renderer
         .create(
           <Provider store={store}>
@@ -67,7 +67,7 @@ describe('Helptooltips Components', () => {
   });
 
   describe('AddGroup', () => {
-    it('renders correctly', () => {
+    it('renders correctly', async () => {
       const tree = renderer
         .create(
           <Provider store={store}>

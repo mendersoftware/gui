@@ -1,49 +1,44 @@
-import React from 'react';
-import IconButton from '@material-ui/core/IconButton';
+import React, { useState } from 'react';
+import { IconButton } from '@material-ui/core';
+import { Cancel as CancelIcon, CheckCircle as CheckCircleIcon } from '@material-ui/icons';
+
 import Loader from '../common/loader';
 
-import CancelIcon from '@material-ui/icons/Cancel';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+export const ConfirmDecommission = ({ cancel, decommission }) => {
+  const [className, setClassName] = useState('fadeIn');
+  const [loading, setLoading] = useState(false);
 
-export default class ConfirmDecommission extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      class: 'fadeIn'
-    };
-  }
-  _handleCancel() {
-    this.setState({ class: 'fadeOut' });
-    this.props.cancel();
-  }
-  _handleDecommission() {
-    this.setState({ loading: true });
-    this.props.decommission();
-  }
-  render() {
-    return (
-      <div className={this.state.class} style={{ marginRight: '12px' }}>
-        <div className="float-right">
-          <span className="bold">
-            {this.state.loading
-              ? 'Decommissioning '
-              : 'Decommission this device and remove all of its data from the server. This cannot be undone. Are you sure?'}
-          </span>
+  const handleCancel = () => {
+    setClassName('fadeOut');
+    cancel();
+  };
+  const handleDecommission = () => {
+    setLoading(true);
+    decommission();
+  };
 
-          {this.state.loading ? (
-            <Loader table={true} waiting={true} show={true} style={{ height: '4px', marginLeft: '20px' }} />
-          ) : (
-            <div className="inline-block">
-              <IconButton id="ConfirmDecommission" onClick={() => this._handleDecommission()}>
-                <CheckCircleIcon className="green" />
-              </IconButton>
-              <IconButton id="cancelDecommission" onClick={() => this._handleCancel()}>
-                <CancelIcon className="red" />
-              </IconButton>
-            </div>
-          )}
-        </div>
+  return (
+    <div className={className} style={{ marginRight: '12px' }}>
+      <div className="float-right">
+        <span className="bold">
+          {loading ? 'Decommissioning ' : 'Decommission this device and remove all of its data from the server. This cannot be undone. Are you sure?'}
+        </span>
+
+        {loading ? (
+          <Loader table={true} waiting={true} show={true} style={{ height: '4px', marginLeft: '20px' }} />
+        ) : (
+          <div className="inline-block">
+            <IconButton id="ConfirmDecommission" onClick={handleDecommission}>
+              <CheckCircleIcon className="green" />
+            </IconButton>
+            <IconButton id="cancelDecommission" onClick={handleCancel}>
+              <CancelIcon className="red" />
+            </IconButton>
+          </div>
+        )}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+export default ConfirmDecommission;

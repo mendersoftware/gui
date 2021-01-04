@@ -40,6 +40,37 @@ const softwareTitleMap = {
   'rootfs-image.checksum': { title: 'checksum', priority: 1 }
 };
 
+export const transformArtifactCapabilities = (capabilities = {}) => {
+  return Object.entries(capabilities).reduce((accu, [key, value]) => {
+    if (!Array.isArray(value)) {
+      accu.push({ key, primary: key, secondary: value });
+    } else if (!key.startsWith('device_type')) {
+      // we can expect this to be an array of artifacts or artifact groups this artifact depends on
+      const dependencies = value.reduce((dependencies, dependency, index) => {
+        const dependencyKey = value.length > 1 ? `${key}-${index + 1}` : key;
+        dependencies.push({ key: dependencyKey, primary: dependencyKey, secondary: dependency });
+        return dependencies;
+      }, []);
+      accu.push(...dependencies);
+    }
+    return accu;
+  }, []);
+};
+
+export const transformArtifactMetadata = (metadata = {}) => {
+  return Object.entries(metadata).reduce((accu, [key, value]) => {
+    const commonProps = { key, primary: key, secondaryTypographyProps: { component: 'div' } };
+    if (Array.isArray(value)) {
+      accu.push({ ...commonProps, secondary: value.length ? value.join(',') : '-' });
+    } else if (value instanceof Object) {
+      accu.push({ ...commonProps, secondary: JSON.stringify(value) || '-' });
+    } else {
+      accu.push({ ...commonProps, secondary: value || '-' });
+    }
+    return accu;
+  }, []);
+};
+
 export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExpansion, showRemoveArtifactDialog }) => {
   const [descEdit, setDescEdit] = useState(false);
   const [description, setDescription] = useState(artifact.description || '-');
@@ -67,37 +98,6 @@ export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExp
       }
       setDescEdit(!descEdit);
     }
-  };
-
-  const transformArtifactCapabilities = (capabilities = {}) => {
-    return Object.entries(capabilities).reduce((accu, [key, value]) => {
-      if (!Array.isArray(value)) {
-        accu.push({ key, primary: key, secondary: value });
-      } else if (!key.startsWith('device_type')) {
-        // we can expect this to be an array of artifacts or artifact groups this artifact depends on
-        const dependencies = value.reduce((dependencies, dependency, index) => {
-          const dependencyKey = value.length > 1 ? `${key}-${index + 1}` : key;
-          dependencies.push({ key: dependencyKey, primary: dependencyKey, secondary: dependency });
-          return dependencies;
-        }, []);
-        accu.push(...dependencies);
-      }
-      return accu;
-    }, []);
-  };
-
-  const transformArtifactMetadata = (metadata = {}) => {
-    return Object.entries(metadata).reduce((accu, [key, value]) => {
-      const commonProps = { key, primary: key, secondaryTypographyProps: { component: 'div' } };
-      if (Array.isArray(value)) {
-        accu.push({ ...commonProps, secondary: value.length ? value.join(',') : '-' });
-      } else if (value instanceof Object) {
-        accu.push({ ...commonProps, secondary: JSON.stringify(value) || '-' });
-      } else {
-        accu.push({ ...commonProps, secondary: value || '-' });
-      }
-      return accu;
-    }, []);
   };
 
   const softwareInformation = Object.values(

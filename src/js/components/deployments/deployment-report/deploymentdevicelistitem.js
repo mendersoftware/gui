@@ -35,7 +35,7 @@ const DeploymentDeviceListItem = ({ created, device, idAttribute, viewLog, retri
   const status = stateTitleMap[device.status] || device.status;
 
   const intervalsSinceStart = Math.floor((Date.now() - Date.parse(created)) / (1000 * 20));
-  const devicePercentage = statusToPercentage(device.status, intervalsSinceStart) || 0;
+  const devicePercentage = statusToPercentage(device.status, intervalsSinceStart);
   const progressColor = status && (status.toLowerCase() === 'failure' || status.toLowerCase() === 'aborted') ? 'secondary' : 'primary';
 
   return (

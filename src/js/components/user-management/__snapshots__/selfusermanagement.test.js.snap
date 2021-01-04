@@ -2,145 +2,106 @@
 
 exports[`SelfUserManagement Component renders correctly 1`] = `
 <div
-  className="margin-top-small"
-  style={
-    Object {
-      "maxWidth": "750px",
-    }
-  }
+  class="margin-top-small"
+  style="max-width: 750px;"
 >
   <h2
-    className="margin-top-small"
+    class="margin-top-small"
   >
     My profile
   </h2>
-  <form
-    className="flexbox space-between"
+  <div
+    class="flexbox space-between"
   >
     <div
-      className="MuiFormControl-root"
+      class="MuiFormControl-root MuiTextField-root"
+      style="width: 400px; max-width: 100%;"
     >
       <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-        data-shrink={false}
-        htmlFor="email"
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink Mui-disabled Mui-disabled MuiFormLabel-filled"
+        data-shrink="true"
       >
         Email
       </label>
       <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-        onClick={[Function]}
-        onKeyPress={[Function]}
-        style={
-          Object {
-            "maxWidth": "100%",
-            "width": "400px",
-          }
-        }
+        class="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl"
       >
         <input
-          aria-invalid={false}
-          className="MuiInputBase-input MuiInput-input"
-          disabled={false}
-          id="email"
-          name="email"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder="Email"
-          required={false}
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled"
+          disabled=""
           type="text"
-          value=""
-        />
-      </div>
-      <p
-        className="MuiFormHelperText-root"
-        id="component-error-text"
-      />
-    </div>
-  </form>
-  <form
-    className="flexbox space-between"
-  >
-    <div
-      className="MuiFormControl-root MuiTextField-root"
-      style={
-        Object {
-          "maxWidth": "100%",
-          "width": "400px",
-        }
-      }
-    >
-      <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink Mui-disabled Mui-disabled MuiFormLabel-filled"
-        data-shrink={true}
-      >
-        Password
-      </label>
-      <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl"
-        onClick={[Function]}
-      >
-        <input
-          aria-invalid={false}
-          autoFocus={false}
-          className="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled"
-          defaultValue="********"
-          disabled={true}
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          required={false}
-          type="password"
+          value="a@b.com"
         />
       </div>
     </div>
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary"
-      disabled={false}
-      id="change_password"
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      style={
-        Object {
-          "margin": "30px 0 0 15px",
-        }
-      }
-      tabIndex={0}
+      class="MuiButtonBase-root MuiButton-root MuiButton-text inline-block MuiButton-textPrimary"
+      id="change_email"
+      style="margin: 30px 0px 0px 15px;"
+      tabindex="0"
       type="button"
     >
       <span
-        className="MuiButton-label"
+        class="MuiButton-label"
+      >
+        Change email
+      </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
+    </button>
+  </div>
+  <form
+    class="flexbox space-between"
+  >
+    <div
+      class="MuiFormControl-root MuiTextField-root"
+      style="width: 400px; max-width: 100%;"
+    >
+      <label
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink Mui-disabled Mui-disabled MuiFormLabel-filled"
+        data-shrink="true"
+      >
+        Password
+      </label>
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl"
+      >
+        <input
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled"
+          disabled=""
+          type="password"
+          value="********"
+        />
+      </div>
+    </div>
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary"
+      id="change_password"
+      style="margin: 30px 0px 0px 15px;"
+      tabindex="0"
+      type="button"
+    >
+      <span
+        class="MuiButton-label"
       >
         Change password
       </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
     </button>
   </form>
   <p
-    className="info icon"
+    class="info icon"
   >
     <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
       focusable="false"
-      style={
-        Object {
-          "margin": "0 6px 4px 0",
-          "verticalAlign": "middle",
-        }
-      }
+      style="vertical-align: middle; margin: 0px 6px 4px 0px;"
       viewBox="0 0 24 24"
     >
       <path

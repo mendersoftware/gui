@@ -2,46 +2,29 @@
 
 exports[`Confirm Component renders correctly 1`] = `
 <div
-  className="fadeIn "
-  style={
-    Object {
-      "marginRight": "12px",
-    }
-  }
+  class="fadeIn "
+  style="margin-right: 12px;"
 >
   <div
-    className="float-right"
+    class="float-right"
   >
     <span
-      className="bold"
+      class="bold"
     >
       Confirm abort?
     </span>
     <button
-      className="MuiButtonBase-root MuiIconButton-root"
-      disabled={false}
+      class="MuiButtonBase-root MuiIconButton-root"
       id="confirmAbort"
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
+      tabindex="0"
       type="button"
     >
       <span
-        className="MuiIconButton-label"
+        class="MuiIconButton-label"
       >
         <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root green"
+          aria-hidden="true"
+          class="MuiSvgIcon-root green"
           focusable="false"
           viewBox="0 0 24 24"
         >
@@ -50,31 +33,21 @@ exports[`Confirm Component renders correctly 1`] = `
           />
         </svg>
       </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
     </button>
     <button
-      className="MuiButtonBase-root MuiIconButton-root"
-      disabled={false}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
+      class="MuiButtonBase-root MuiIconButton-root"
+      tabindex="0"
       type="button"
     >
       <span
-        className="MuiIconButton-label"
+        class="MuiIconButton-label"
       >
         <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root red"
+          aria-hidden="true"
+          class="MuiSvgIcon-root red"
           focusable="false"
           viewBox="0 0 24 24"
         >
@@ -83,6 +56,9 @@ exports[`Confirm Component renders correctly 1`] = `
           />
         </svg>
       </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
     </button>
   </div>
 </div>

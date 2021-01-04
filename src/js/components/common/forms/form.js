@@ -31,7 +31,7 @@ export default class Form extends React.Component {
     // If we use the required prop we add a validation rule
     // that ensures there is a value. The input
     // should not be valid with empty value
-    if (typeof child.type === 'undefined') {
+    if (typeof child?.type === 'undefined') {
       return child;
     }
     var props = child.props || {};

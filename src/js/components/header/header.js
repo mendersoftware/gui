@@ -15,12 +15,11 @@ import {
 
 import { initializeAppData, setFirstLoginAfterSignup, setSnackbar } from '../../actions/appActions';
 import { getOnboardingState } from '../../actions/onboardingActions';
-import { getUser, logoutUser, setShowHelptips, toggleHelptips } from '../../actions/userActions';
+import { getUser, setHideAnnouncement, logoutUser, toggleHelptips } from '../../actions/userActions';
 import { getToken } from '../../auth';
-import { decodeSessionToken, extractErrorMessage, hashString, isEmpty } from '../../helpers';
+import { decodeSessionToken, extractErrorMessage, isEmpty } from '../../helpers';
 import { getDocsVersion, getIsEnterprise, getUserRoles, getUserSettings } from '../../selectors';
 import Tracking from '../../tracking';
-import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Announcement from './announcement';
 import DemoNotification from './demonotification';
 import DeviceNotifications from './devicenotifications';
@@ -48,8 +47,8 @@ export class Header extends React.Component {
   componentDidUpdate() {
     const sessionId = getToken();
     const { firstLoginAfterSignup, hasTrackingEnabled, organization, setFirstLoginAfterSignup, user } = this.props;
-    if ((!sessionId || !user || !user.id || !user.email.length) && !this.state.gettingUser && !this.state.loggingOut) {
-      this._updateUsername();
+    if ((!sessionId || !user?.id || !user.email.length) && !this.state.gettingUser && !this.state.loggingOut) {
+      return this._updateUsername();
     }
     Tracking.setTrackingEnabled(hasTrackingEnabled);
     if (hasTrackingEnabled && user.id && organization.id) {
@@ -65,35 +64,6 @@ export class Header extends React.Component {
     this._updateUsername();
   }
 
-  _checkShowHelp(userId) {
-    //checks if user id is set and if cookie for helptips exists for that user
-    const userCookie = this.cookies.get(userId);
-    // if no user cookie set, do so via togglehelptips
-    if (typeof userCookie === 'undefined' || typeof userCookie.help === 'undefined') {
-      toggleHelptips();
-    } else {
-      // got user cookie but help value not set
-      this.props.setShowHelptips(userCookie.help);
-    }
-  }
-
-  _checkAnnouncement(userId) {
-    const hash = this.props.announcement ? hashString(this.props.announcement) : null;
-    const announceCookie = this.cookies.get(userId + hash);
-    if (hash && typeof announceCookie === 'undefined') {
-      this.setState({ showAnnouncement: true, hash });
-    } else {
-      this.setState({ showAnnouncement: false });
-    }
-  }
-
-  _hideAnnouncement() {
-    if (this.props.user.id) {
-      this.cookies.set(this.props.user.id + this.state.hash, true, { maxAge: 604800 });
-    }
-    this.setState({ showAnnouncement: false });
-  }
-
   _updateUsername() {
     const userId = decodeSessionToken(getToken());
     if (this.state.gettingUser || !userId) {
@@ -105,12 +75,7 @@ export class Header extends React.Component {
     return (
       self.props
         .getUser(userId)
-        .then(result => {
-          const userId = result[1].id;
-          self._checkAnnouncement(userId);
-          self._checkShowHelp(userId);
-          return this.props.initializeAppData();
-        })
+        .then(self.props.initializeAppData)
         // this is allowed to fail if no user information are available
         .catch(err => console.log(extractErrorMessage(err)))
         .then(self.props.getOnboardingState)
@@ -120,13 +85,12 @@ export class Header extends React.Component {
 
   onLogoutClick() {
     this.setState({ gettingUser: false, loggingOut: true, anchorEl: null });
-    clearAllRetryTimers(this.props.setSnackbar);
     this.props.logoutUser();
   }
 
   render() {
     const self = this;
-    const { anchorEl, showAnnouncement } = self.state;
+    const { anchorEl } = self.state;
     const {
       acceptedDevices,
       allowUserManagement,
@@ -134,6 +98,7 @@ export class Header extends React.Component {
       demo,
       deviceLimit,
       docsVersion,
+      setHideAnnouncement,
       inProgress,
       isEnterprise,
       multitenancy,
@@ -157,9 +122,7 @@ export class Header extends React.Component {
             <img id="logo" src={isEnterprise ? enterpriseLogo : logo} />
           </Link>
           {demo && <DemoNotification docsVersion={docsVersion} />}
-          {!!announcement && showAnnouncement && (
-            <Announcement announcement={announcement} showAnnouncement={showAnnouncement} onHide={() => self._hideAnnouncement()} />
-          )}
+          {!!announcement && <Announcement announcement={announcement} onHide={setHideAnnouncement} />}
           {organization && organization.trial && <TrialNotification />}
           <div style={{ flexGrow: '1' }}></div>
           <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
@@ -225,10 +188,10 @@ export class Header extends React.Component {
 const actionCreators = {
   getOnboardingState,
   getUser,
+  setHideAnnouncement,
   initializeAppData,
   logoutUser,
   setFirstLoginAfterSignup,
-  setShowHelptips,
   setSnackbar,
   toggleHelptips
 };

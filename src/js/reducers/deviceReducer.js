@@ -1,6 +1,6 @@
 import * as DeviceConstants from '../constants/deviceConstants';
 
-const initialState = {
+export const initialState = {
   byId: {},
   byStatus: {
     [DeviceConstants.DEVICE_STATES.accepted]: { deviceIds: [], total: 0 },
@@ -64,10 +64,11 @@ const deviceReducer = (state = initialState, action) => {
       };
     }
     case DeviceConstants.REMOVE_FROM_GROUP: {
+      const { deviceIds = [], total = 0, ...maybeExistingGroup } = state.groups.byId[action.group] || {};
       const group = {
-        ...state.groups.byId[action.group],
-        deviceIds: state.groups.byId[action.group].deviceIds.filter(id => !action.deviceIds.includes(id)),
-        total: Math.max(state.groups.byId[action.group].total - 1, 0)
+        ...maybeExistingGroup,
+        deviceIds: deviceIds.filter(id => !action.deviceIds.includes(id)),
+        total: Math.max(total - 1, 0)
       };
       let byId = state.groups.byId;
       let selectedGroup = state.groups.selectedGroup;
@@ -220,15 +221,16 @@ const deviceReducer = (state = initialState, action) => {
     case DeviceConstants.SET_DEVICE_LIMIT:
       return { ...state, limit: action.limit };
     case DeviceConstants.RECEIVE_DEVICE_AUTH: {
+      const existingDevice = state.byId[action.device.id] || {};
       const { auth_sets, identity_data, status } = action.device;
       return {
         ...state,
         byId: {
           ...state.byId,
           [action.device.id]: {
-            ...state.byId[action.device.id],
+            ...existingDevice,
             identity_data: {
-              ...state.byId[action.device.id].identity_data,
+              ...existingDevice.identity_data,
               ...identity_data
             },
             auth_sets,

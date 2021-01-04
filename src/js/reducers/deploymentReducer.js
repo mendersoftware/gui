@@ -1,8 +1,8 @@
 import DeploymentConstants from '../constants/deploymentConstants';
 
-const initialState = {
+export const initialState = {
   byId: {
-    // [id]: { stats, devices: [ { id, log } ] }
+    // [id]: { stats, devices: { [deploymentId]: { id, log } } }
   },
   byStatus: {
     finished: { deploymentIds: [], selectedDeploymentIds: [], total: 0 },

@@ -20,7 +20,7 @@ export const CreateGroup = ({ addListOfDevices, groups, isCreation, isCreationDy
   };
 
   return (
-    <Dialog disableBackdropClick disableEscapeKeyDown open={true} scroll={'paper'} fullWidth={true} maxWidth="sm">
+    <Dialog disableBackdropClick disableEscapeKeyDown open={true} scroll="paper" fullWidth={true} maxWidth="sm">
       <DialogTitle style={{ paddingBottom: '15px', marginBottom: 0 }}>{title}</DialogTitle>
       <DialogContent className="dialog">
         <GroupDefinition

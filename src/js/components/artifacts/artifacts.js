@@ -27,7 +27,6 @@ import ReleaseRepository from './releaserepository';
 import ReleasesList from './releaseslist';
 import RemoveArtifactDialog from './dialogs/removeartifact';
 import AddArtifactDialog from './dialogs/addartifact';
-import Tracking from '../../tracking';
 
 const refreshArtifactsLength = 30000; //60000
 
@@ -99,25 +98,6 @@ export class Artifacts extends React.Component {
     this.setState({ showCreateArtifactDialog: true });
   }
 
-  addArtifact(meta, file, type = 'upload') {
-    const self = this;
-    const { advanceOnboarding, createArtifact, deviceTypes, onboardingState, pastCount, uploadArtifact } = self.props;
-    const upload = type === 'create' ? createArtifact(meta, file) : uploadArtifact(meta, file);
-    return self.setState({ showCreateArtifactDialog: false }, () =>
-      upload.then(() => {
-        if (!onboardingState.complete && deviceTypes.length && pastCount) {
-          advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP);
-          if (type === 'create') {
-            advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_RELEASE_NAME);
-          }
-        }
-        // track in GA
-        Tracking.event({ category: 'artifacts', action: 'create' });
-        return setTimeout(() => self._getReleases(), 1000);
-      })
-    );
-  }
-
   _removeArtifact(artifact) {
     const self = this;
     return self.props.removeArtifact(artifact.id).finally(() => self.props.showRemoveArtifactDialog(false));
@@ -127,17 +107,14 @@ export class Artifacts extends React.Component {
     const self = this;
     const { doneLoading, selectedFile, showCreateArtifactDialog } = self.state;
     const {
-      advanceOnboarding,
       artifactProgress,
       cancelArtifactUpload,
-      deviceTypes,
       onboardingState,
       releases,
       showRemoveDialog,
       selectedArtifact,
       selectedRelease,
       setShowCreateArtifactDialog,
-      setSnackbar,
       showOnboardingDialog,
       showRemoveArtifactDialog
     } = self.props;
@@ -212,16 +189,11 @@ export class Artifacts extends React.Component {
         )}
         {showCreateArtifactDialog && (
           <AddArtifactDialog
-            advanceOnboarding={advanceOnboarding}
-            selectedFile={selectedFile}
-            setSnackbar={setSnackbar}
-            deviceTypes={deviceTypes}
-            open={showCreateArtifactDialog}
-            onboardingState={onboardingState}
+            {...self.props}
             onCancel={() => self.setState({ showCreateArtifactDialog: false })}
-            onCreate={(meta, file) => self.addArtifact(meta, file, 'create')}
-            onUpload={(meta, file) => self.addArtifact(meta, file, 'upload')}
-            releases={releases}
+            onUploadStarted={() => self.setState({ showCreateArtifactDialog: false })}
+            onUploadFinished={() => self._getReleases()}
+            selectedFile={selectedFile}
           />
         )}
       </div>
@@ -246,7 +218,7 @@ const actionCreators = {
 
 const mapStateToProps = state => {
   const deviceTypes = state.devices.byStatus.accepted.deviceIds.slice(0, 200).reduce((accu, item) => {
-    const deviceType = state.devices.byId[item] ? state.devices.byId[item].attributes.device_type : '';
+    const { device_type: deviceType = '' } = state.devices.byId[item] ? state.devices.byId[item].attributes : {};
     if (deviceType.length > 0) {
       accu[deviceType] = accu[deviceType] ? accu[deviceType] + 1 : 1;
     }

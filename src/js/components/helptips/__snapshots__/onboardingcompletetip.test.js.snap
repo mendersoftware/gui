@@ -2,18 +2,19 @@
 
 exports[`OnboardingCompleteTip Component renders correctly 1`] = `
 <div
-  className="onboard-tip"
+  class="onboard-tip"
 >
   <a
-    className="tooltip onboard-icon"
+    class="tooltip onboard-icon"
+    currentitem="false"
     data-event="click focus"
     data-event-off="dblclick"
     data-for="onboarding-complete-tip"
-    data-tip={true}
+    data-tip="true"
   >
     <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root"
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
       focusable="false"
       viewBox="0 0 24 24"
     >
@@ -23,7 +24,7 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
     </svg>
   </a>
   <div
-    className="__react_component_tooltip place-bottom type-dark allow_click"
+    class="__react_component_tooltip place-bottom type-dark allow_click"
     data-id="tooltip"
     id="onboarding-complete-tip"
   >
@@ -33,33 +34,25 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
     <p>
       Your device is now running the updated version of the software. At
       <div
-        className="flexbox centered"
-        style={
-          Object {
-            "margin": "5px 0",
-          }
-        }
+        class="flexbox centered"
+        style="margin: 5px 0px;"
       >
-        <div
-          className="loaderContainer"
+        <a
+          aria-disabled="false"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained button"
+          href="http://192.168.10.141:85/index.html?source=http%3A%2F%2Ftest.com"
+          tabindex="0"
+          target="_blank"
         >
-          <div
-            className="loader"
+          <span
+            class="MuiButton-label"
           >
-            <span
-              className="dot dot_1"
-            />
-            <span
-              className="dot dot_2"
-            />
-            <span
-              className="dot dot_3"
-            />
-            <span
-              className="dot dot_4"
-            />
-          </div>
-        </div>
+            Go to http://192.168.10.141:85
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </a>
       </div>
       you should now see "Hello world" in place of the webpage you saw previously. If you continue to see the webpage you saw previously you might have to refresh the page.
     </p>
@@ -91,38 +84,24 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
       </ol>
     </div>
     <div
-      className="flexbox"
+      class="flexbox"
     >
       <div
-        style={
-          Object {
-            "flexGrow": 1,
-          }
-        }
+        style="flex-grow: 1;"
       />
       <button
-        className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
-        disabled={false}
-        onBlur={[Function]}
-        onClick={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        tabIndex={0}
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
+        tabindex="0"
         type="button"
       >
         <span
-          className="MuiButton-label"
+          class="MuiButton-label"
         >
           Close
         </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
       </button>
     </div>
   </div>

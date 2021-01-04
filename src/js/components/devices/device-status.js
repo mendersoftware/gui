@@ -5,7 +5,7 @@ import { Box, Chip, Tooltip } from '@material-ui/core';
 import { Error as ErrorIcon } from '@material-ui/icons';
 
 const statusTypes = {
-  default: { severity: 'none', notification: null, label: null },
+  default: { severity: 'none', notification: '', label: '' },
   authRequests: {
     severity: 'default',
     notification: `This device has a new auth request. This can happen if the device's public key changes. Expand the row to see more details`
@@ -20,23 +20,25 @@ const NumberIcon = props => (
   </Box>
 );
 
-const DeviceStatus = ({ device }) => {
+const DeviceStatus = ({ device: { auth_sets = [] } }) => {
   let status = statusTypes.default;
   let label = status.label;
   let icon = <ErrorIcon />;
 
-  const pendingAuthSetsCount = device.auth_sets.filter(item => item.status === 'pending').length;
+  const pendingAuthSetsCount = auth_sets.filter(item => item.status === 'pending').length;
   if (pendingAuthSetsCount) {
     icon = <NumberIcon value={pendingAuthSetsCount} />;
     status = statusTypes.authRequests;
     label = <div className="uppercased">new {pluralize('request', pendingAuthSetsCount)}</div>;
   }
 
-  return label && device ? (
+  return label !== statusTypes.default.label ? (
     <Tooltip title={status.notification} placement="bottom">
       <Chip variant="outlined" size="small" icon={icon} label={label} className="deviceStatus" />
     </Tooltip>
-  ) : null;
+  ) : (
+    <div />
+  );
 };
 
 export default DeviceStatus;

@@ -2,25 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 // material ui
-import Button from '@material-ui/core/Button';
+import { Button } from '@material-ui/core';
 
-export default class RedirectionWidget extends React.PureComponent {
-  filteredClick(event) {
-    if (!(event.target.closest('button') && event.target.closest('button').contains(event.target))) {
-      this.props.onClick();
-    }
-  }
+export const RedirectionWidget = ({ buttonContent, content, isActive, onClick, target }) => (
+  <div className="onboard widget" onClick={onClick}>
+    <div>
+      <p className={isActive ? '' : 'muted'}>{content}</p>
+    </div>
+    <Button component={Link} to={target}>
+      {buttonContent}
+    </Button>
+  </div>
+);
 
-  render() {
-    return (
-      <div className="onboard widget" onClick={event => this.filteredClick(event)}>
-        <div>
-          <p className={this.props.isActive ? '' : 'muted'}>{this.props.content}</p>
-        </div>
-        <Button component={Link} to={this.props.target}>
-          {this.props.buttonContent}
-        </Button>
-      </div>
-    );
-  }
-}
+export default RedirectionWidget;

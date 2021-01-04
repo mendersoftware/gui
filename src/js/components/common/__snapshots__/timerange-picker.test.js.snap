@@ -2,42 +2,38 @@
 
 exports[`TimerangePicker Component renders correctly 1`] = `
 <div
-  className=""
+  class=""
 >
   <span>
     Filter by date
   </span>
   <ul
-    className="unstyled link-list horizontal"
+    class="unstyled link-list horizontal"
   >
     <li>
       <a
-        className="active"
-        onClick={[Function]}
+        class="active"
       >
         Today
       </a>
     </li>
     <li>
       <a
-        className=""
-        onClick={[Function]}
+        class=""
       >
         Yesterday
       </a>
     </li>
     <li>
       <a
-        className=""
-        onClick={[Function]}
+        class=""
       >
         Last 7 days
       </a>
     </li>
     <li>
       <a
-        className=""
-        onClick={[Function]}
+        class=""
       >
         Last 30 days
       </a>

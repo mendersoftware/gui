@@ -4,7 +4,7 @@ import { Button, Dialog, DialogActions, DialogTitle, DialogContent } from '@mate
 import CreateGroupExplainerContent from './create-group-explainer-content';
 
 export const CreateGroupExplainer = ({ isEnterprise, onClose }) => (
-  <Dialog className="dialog" disableBackdropClick disableEscapeKeyDown open={true} scroll={'paper'} fullWidth={true} maxWidth="md">
+  <Dialog className="dialog" disableBackdropClick disableEscapeKeyDown open={true} scroll="paper" fullWidth={true} maxWidth="md">
     <DialogTitle style={{ marginLeft: 15 }}>Creating a group</DialogTitle>
     <DialogContent>
       <CreateGroupExplainerContent isEnterprise={isEnterprise} />

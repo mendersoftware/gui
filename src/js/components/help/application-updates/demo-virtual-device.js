@@ -86,7 +86,7 @@ export default class VirtualDevice extends React.PureComponent {
             {this.props.isHosted
               ? 'When complete, you will see the virtual device login screen in your terminal. At this point it will take a couple of more minutes before the '
               : 'The '}
-            device will appear in your <Link to={'/devices/pending'}>Pending devices tab</Link>. Authorizing the device will enable you to deploy updates to it.
+            device will appear in your <Link to="/devices/pending">Pending devices tab</Link>. Authorizing the device will enable you to deploy updates to it.
           </p>
 
           <h3>Deploying updates</h3>

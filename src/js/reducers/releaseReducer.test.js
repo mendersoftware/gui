@@ -18,11 +18,11 @@ const testRelease = {
 };
 
 describe('release reducer', () => {
-  it('should return the initial state', () => {
+  it('should return the initial state', async () => {
     expect(reducer(undefined, {})).toEqual(initialState);
   });
 
-  it('should handle UPLOAD_PROGRESS', () => {
+  it('should handle UPLOAD_PROGRESS', async () => {
     const { uploading, uploadProgress } = reducer(undefined, {
       type: ReleaseConstants.UPLOAD_PROGRESS,
       inprogress: true,
@@ -44,7 +44,7 @@ describe('release reducer', () => {
     });
   });
 
-  it('should handle UPDATED_ARTIFACT', () => {
+  it('should handle UPDATED_ARTIFACT', async () => {
     expect(
       reducer(undefined, {
         type: ReleaseConstants.UPDATED_ARTIFACT,
@@ -76,7 +76,7 @@ describe('release reducer', () => {
     ).toEqual([{ ...testRelease.Artifacts[0], name: 'testUpdated' }]);
   });
 
-  it('should handle ARTIFACTS_SET_ARTIFACT_URL', () => {
+  it('should handle ARTIFACTS_SET_ARTIFACT_URL', async () => {
     expect(
       reducer(undefined, {
         type: ReleaseConstants.ARTIFACTS_SET_ARTIFACT_URL,
@@ -108,7 +108,7 @@ describe('release reducer', () => {
     ).toEqual([{ ...testRelease.Artifacts[0], url: 'testUpdated' }]);
   });
 
-  it('should handle ARTIFACTS_REMOVED_ARTIFACT', () => {
+  it('should handle ARTIFACTS_REMOVED_ARTIFACT', async () => {
     expect(
       reducer(undefined, {
         type: ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT,
@@ -130,7 +130,33 @@ describe('release reducer', () => {
     ).toEqual([]);
   });
 
-  it('should handle RECEIVE_RELEASES', () => {
+  it('should handle RECEIVE_RELEASE', async () => {
+    expect(
+      reducer(undefined, {
+        type: ReleaseConstants.RECEIVE_RELEASE,
+        release: {
+          ...testRelease,
+          Name: 'test2'
+        }
+      }).byId.test2
+    ).toEqual({
+      ...testRelease,
+      Name: 'test2'
+    });
+    expect(
+      reducer(initialState, {
+        type: ReleaseConstants.RECEIVE_RELEASE,
+        release: {
+          ...testRelease,
+          Name: 'test2'
+        }
+      }).byId.test2
+    ).toEqual({
+      ...testRelease,
+      Name: 'test2'
+    });
+  });
+  it('should handle RECEIVE_RELEASES', async () => {
     expect(
       reducer(undefined, {
         type: ReleaseConstants.RECEIVE_RELEASES,
@@ -170,7 +196,7 @@ describe('release reducer', () => {
     });
   });
 
-  it('should handle RELEASE_REMOVED', () => {
+  it('should handle RELEASE_REMOVED', async () => {
     expect(
       reducer(undefined, {
         type: ReleaseConstants.RELEASE_REMOVED,
@@ -209,7 +235,7 @@ describe('release reducer', () => {
     ).toEqual('test2');
   });
 
-  it('should handle SHOW_REMOVE_DIALOG', () => {
+  it('should handle SHOW_REMOVE_DIALOG', async () => {
     expect(
       reducer(undefined, {
         type: ReleaseConstants.SHOW_REMOVE_DIALOG,
@@ -225,7 +251,7 @@ describe('release reducer', () => {
     ).toEqual(true);
   });
 
-  it('should handle SELECTED_ARTIFACT', () => {
+  it('should handle SELECTED_ARTIFACT', async () => {
     expect(
       reducer(undefined, {
         type: ReleaseConstants.SELECTED_ARTIFACT,
@@ -241,7 +267,7 @@ describe('release reducer', () => {
     ).toEqual('test');
   });
 
-  it('should handle SELECTED_RELEASE', () => {
+  it('should handle SELECTED_RELEASE', async () => {
     expect(
       reducer(undefined, {
         type: ReleaseConstants.SELECTED_RELEASE,

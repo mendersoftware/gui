@@ -4,7 +4,7 @@ import AcceptedDevices from './accepteddevices';
 import { undefineds } from '../../../../../tests/mockData';
 
 describe('AcceptedDevices Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer.create(<AcceptedDevices />).toJSON();
     expect(tree).toMatchSnapshot();
     expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));

@@ -70,11 +70,15 @@ test:unit:
       - .npm/
   script:
     - npm ci --cache .npm --prefer-offline
-    - npm run test
+    - npm run test -- --ci --maxWorkers=2
+  after_script:
+    - mkdir logs && cp /root/.npm/_logs/* logs/
   artifacts:
     expire_in: 2w
     paths:
       - coverage
+      - logs
+    when: always
 
 test:docs-links:
   stage: test
@@ -86,15 +90,15 @@ test:docs-links:
     - links=$(grep -r docs.mender.io src/ | grep -v snapshots | sed -e 's,\${docsVersion},'${DOCS_VERSION}'/,g' | egrep -o 'https?://[^ `]+' | sort | uniq)
     - error=0
     - for url in $links; do
-    -   if ! curl --output /dev/null --silent --head --fail $url; then
-    -     error=1
-    -     echo "[ko] $url"
-    -   else
-    -     echo "[ok] $url"
-    -   fi
+    - if ! curl --output /dev/null --silent --head --fail $url; then
+    - error=1
+    - echo "[ko] $url"
+    - else
+    - echo "[ok] $url"
+    - fi
     - done
     - if [ $error -gt 0 ]; then
-    -   exit 1
+    - exit 1
     - fi
 
 test:docs-links:hosted:

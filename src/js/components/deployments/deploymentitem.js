@@ -19,8 +19,8 @@ export const deploymentTypeClasses = {
   scheduled: 'scheduled-item'
 };
 
-export const DeploymentDeviceCount = compose(setDisplayName('DeploymentDeviceCount'))(({ deployment }) => (
-  <div className="align-right column-defined" key="DeploymentDeviceCount">
+export const DeploymentDeviceCount = compose(setDisplayName('DeploymentDeviceCount'))(({ className, deployment }) => (
+  <div className={className} key="DeploymentDeviceCount">
     {Math.max(deployment.device_count, deployment.max_devices || 0)}
   </div>
 ));
@@ -50,7 +50,7 @@ export const DeploymentProgress = compose(setDisplayName('DeploymentProgress'))(
 export const DeploymentRelease = compose(setDisplayName('DeploymentRelease'))(({ deployment }) => (
   <div key="DeploymentRelease">{deployment.artifact_name}</div>
 ));
-export const DeploymentStartTime = compose(setDisplayName('DeploymentStartTime'))(({ started, direction = 'both' }) => (
+export const DeploymentStartTime = compose(setDisplayName('DeploymentStartTime'))(({ direction = 'both', started }) => (
   <RelativeTime key="DeploymentStartTime" updateTime={started} shouldCount={direction} />
 ));
 
@@ -95,9 +95,16 @@ export default class DeploymentItem extends React.Component {
       <div className={`deployment-item ${deploymentTypeClasses[type]}`}>
         {!!confirmation && confirmation}
         {columnHeaders.map((column, i) => (
-          <div className={column.class} key={'deploy-item-' + i}>
+          <div className={column.class} key={`deploy-item-${i}`}>
             {column.title && <span className="deployment-item-title text-muted">{column.title}</span>}
-            {column.renderer({ ...self.props, deployment, started, groupedStats: { ...groupedStats, current: groupedStats.inprogress }, ...column.props })}
+            {column.renderer({
+              ...self.props,
+              className: column.class || '',
+              deployment,
+              started,
+              groupedStats: { ...groupedStats, current: groupedStats.inprogress },
+              ...column.props
+            })}
           </div>
         ))}
         <Button

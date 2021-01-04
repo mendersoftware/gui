@@ -21,7 +21,7 @@ module.exports = {
     scheduled: 'scheduled'
   },
   deploymentPrototype: {
-    devices: [],
+    devices: {},
     name: undefined,
     stats: {}
   }

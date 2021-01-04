@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { createMount } from '@material-ui/core/test-utils';
+import { render } from '@testing-library/react';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Authsets from './authsets';
@@ -14,8 +14,8 @@ describe('Authsets Component', () => {
     store = mockStore({ ...defaultState });
   });
 
-  it('renders correctly', () => {
-    const tree = createMount()(
+  it('renders correctly', async () => {
+    const { baseElement } = render(
       <Provider store={store}>
         <Authsets
           device={{ id: 'a1', status: 'accepted', attributes: [], auth_sets: [] }}
@@ -24,7 +24,8 @@ describe('Authsets Component', () => {
         />
       </Provider>
     );
-    expect(tree.html()).toMatchSnapshot();
-    expect(JSON.stringify(tree.html())).toEqual(expect.not.stringMatching(undefineds));
+    const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

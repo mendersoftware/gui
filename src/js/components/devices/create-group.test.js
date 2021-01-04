@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { createMount } from '@material-ui/core/test-utils';
+import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
@@ -15,15 +15,16 @@ describe('CreateGroup Component', () => {
     store = mockStore({ ...defaultState });
   });
 
-  it('renders correctly', () => {
-    const tree = createMount()(
+  it('renders correctly', async () => {
+    const { baseElement } = render(
       <MemoryRouter>
         <Provider store={store}>
           <CreateGroup selectedDevices={[]} />
         </Provider>
       </MemoryRouter>
     );
-    expect(tree.html()).toMatchSnapshot();
-    expect(JSON.stringify(tree.html())).toEqual(expect.not.stringMatching(undefineds));
+    const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

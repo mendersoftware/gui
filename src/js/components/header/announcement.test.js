@@ -4,7 +4,7 @@ import Announcement from './announcement';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('Announcement Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer.create(<Announcement />).toJSON();
     expect(tree).toMatchSnapshot();
     expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));

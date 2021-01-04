@@ -4,7 +4,7 @@ import LeftNav from './left-nav';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('LeftNav Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer.create(<LeftNav />).toJSON();
     expect(tree).toMatchSnapshot();
     expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));

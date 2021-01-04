@@ -24,7 +24,7 @@ export default class ErrorBoundary extends React.Component {
             <h2>An error occured.</h2>
             <p>Try refreshing the page, or look below for more information on the error that occured.</p>
             <details style={{ whiteSpace: 'pre-wrap' }}>
-              {this.state.error && this.state.error.toString()}
+              {this.state.error.toString()}
               <br />
               {this.state.info.componentStack}
             </details>

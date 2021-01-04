@@ -1,3 +1,380 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CreateDeployment Component renders correctly 1`] = `"<div role=\\"presentation\\" class=\\"MuiDialog-root\\" style=\\"position: fixed; z-index: 1300; right: 0px; bottom: 0px; top: 0px; left: 0px;\\"><div class=\\"MuiBackdrop-root\\" aria-hidden=\\"true\\" style=\\"opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;\\"></div><div tabindex=\\"0\\" data-test=\\"sentinelStart\\"></div><div class=\\"MuiDialog-container MuiDialog-scrollPaper\\" style=\\"opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;\\" role=\\"none presentation\\" tabindex=\\"-1\\"><div class=\\"MuiPaper-root MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthMd MuiPaper-elevation24 MuiPaper-rounded\\" role=\\"dialog\\"><div class=\\"MuiDialogTitle-root\\"><h2 class=\\"MuiTypography-root MuiTypography-h6\\">Create a deployment</h2></div><div class=\\"MuiDialogContent-root dialog\\"><div class=\\"MuiPaper-root MuiStepper-root MuiStepper-horizontal MuiStepper-alternativeLabel MuiPaper-elevation0\\" style=\\"min-width: 500px;\\"><div class=\\"MuiStep-root MuiStep-horizontal MuiStep-alternativeLabel\\"><span class=\\"MuiStepLabel-root MuiStepLabel-horizontal MuiStepLabel-alternativeLabel\\"><span class=\\"MuiStepLabel-iconContainer MuiStepLabel-alternativeLabel\\"><svg class=\\"MuiSvgIcon-root MuiStepIcon-root MuiStepIcon-active\\" focusable=\\"false\\" viewBox=\\"0 0 24 24\\" aria-hidden=\\"true\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"12\\"></circle><text class=\\"MuiStepIcon-text\\" x=\\"12\\" y=\\"16\\" text-anchor=\\"middle\\">1</text></svg></span><span class=\\"MuiStepLabel-labelContainer\\"><span class=\\"MuiTypography-root MuiStepLabel-label MuiStepLabel-alternativeLabel MuiStepLabel-active MuiTypography-body2 MuiTypography-displayBlock\\">Select target software and devices</span></span></span></div><div class=\\"MuiStep-root MuiStep-horizontal MuiStep-alternativeLabel\\"><div class=\\"MuiStepConnector-root MuiStepConnector-horizontal MuiStepConnector-alternativeLabel Mui-disabled\\"><span class=\\"MuiStepConnector-line MuiStepConnector-lineHorizontal\\"></span></div><span class=\\"MuiStepLabel-root MuiStepLabel-horizontal Mui-disabled MuiStepLabel-alternativeLabel\\"><span class=\\"MuiStepLabel-iconContainer MuiStepLabel-alternativeLabel\\"><svg class=\\"MuiSvgIcon-root MuiStepIcon-root\\" focusable=\\"false\\" viewBox=\\"0 0 24 24\\" aria-hidden=\\"true\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"12\\"></circle><text class=\\"MuiStepIcon-text\\" x=\\"12\\" y=\\"16\\" text-anchor=\\"middle\\">2</text></svg></span><span class=\\"MuiStepLabel-labelContainer\\"><span class=\\"MuiTypography-root MuiStepLabel-label MuiStepLabel-alternativeLabel MuiTypography-body2 MuiTypography-displayBlock\\">Set a rollout schedule</span></span></span></div><div class=\\"MuiStep-root MuiStep-horizontal MuiStep-alternativeLabel\\"><div class=\\"MuiStepConnector-root MuiStepConnector-horizontal MuiStepConnector-alternativeLabel Mui-disabled\\"><span class=\\"MuiStepConnector-line MuiStepConnector-lineHorizontal\\"></span></div><span class=\\"MuiStepLabel-root MuiStepLabel-horizontal Mui-disabled MuiStepLabel-alternativeLabel\\"><span class=\\"MuiStepLabel-iconContainer MuiStepLabel-alternativeLabel\\"><svg class=\\"MuiSvgIcon-root MuiStepIcon-root\\" focusable=\\"false\\" viewBox=\\"0 0 24 24\\" aria-hidden=\\"true\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"12\\"></circle><text class=\\"MuiStepIcon-text\\" x=\\"12\\" y=\\"16\\" text-anchor=\\"middle\\">3</text></svg></span><span class=\\"MuiStepLabel-labelContainer\\"><span class=\\"MuiTypography-root MuiStepLabel-label MuiStepLabel-alternativeLabel MuiTypography-body2 MuiTypography-displayBlock\\">Review and create</span></span></span></div></div><div style=\\"overflow: visible; min-height: 300px; margin-top: 15px;\\"><p class=\\"info\\" style=\\"margin-top: 0px;\\"><svg class=\\"MuiSvgIcon-root\\" focusable=\\"false\\" viewBox=\\"0 0 24 24\\" aria-hidden=\\"true\\" style=\\"margin-right: 4px; font-size: 18px; top: 4px; color: rgb(171, 16, 0);\\"><path d=\\"M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z\\"></path></svg>There are no artifacts available. <a href=\\"/artifacts\\">Upload one to the repository</a> to get started.</p></div></div><div class=\\"MuiDialogActions-root margin-left margin-right MuiDialogActions-spacing\\"><button class=\\"MuiButtonBase-root MuiButton-root MuiButton-text\\" tabindex=\\"0\\" type=\\"button\\" style=\\"margin-right: 10px; display: inline-block;\\"><span class=\\"MuiButton-label\\">Cancel</span><span class=\\"MuiTouchRipple-root\\"></span></button><button class=\\"MuiButtonBase-root MuiButton-root MuiButton-text Mui-disabled Mui-disabled\\" tabindex=\\"-1\\" type=\\"button\\" disabled=\\"\\"><span class=\\"MuiButton-label\\">Back</span></button><div style=\\"flex-grow: 1;\\"></div><button class=\\"MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled\\" tabindex=\\"-1\\" type=\\"button\\" disabled=\\"\\"><span class=\\"MuiButton-label\\">Next</span></button></div></div></div><div tabindex=\\"0\\" data-test=\\"sentinelEnd\\"></div></div>"`;
+exports[`CreateDeployment Component renders correctly 1`] = `
+<div
+  class="MuiDialog-root"
+  role="presentation"
+  style="position: fixed; z-index: 1300; right: 0px; bottom: 0px; top: 0px; left: 0px;"
+>
+  <div
+    aria-hidden="true"
+    class="MuiBackdrop-root"
+    style="opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
+  />
+  <div
+    data-test="sentinelStart"
+    tabindex="0"
+  />
+  <div
+    class="MuiDialog-container MuiDialog-scrollPaper"
+    role="none presentation"
+    style="opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
+    tabindex="-1"
+  >
+    <div
+      class="MuiPaper-root MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthMd MuiPaper-elevation24 MuiPaper-rounded"
+      role="dialog"
+    >
+      <div
+        class="MuiDialogTitle-root"
+      >
+        <h2
+          class="MuiTypography-root MuiTypography-h6"
+        >
+          Create a deployment
+        </h2>
+      </div>
+      <div
+        class="MuiDialogContent-root dialog"
+      >
+        <div
+          class="MuiPaper-root MuiStepper-root MuiStepper-horizontal MuiStepper-alternativeLabel MuiPaper-elevation0"
+          style="min-width: 500px;"
+        >
+          <div
+            class="MuiStep-root MuiStep-horizontal MuiStep-alternativeLabel"
+          >
+            <span
+              class="MuiStepLabel-root MuiStepLabel-horizontal MuiStepLabel-alternativeLabel"
+            >
+              <span
+                class="MuiStepLabel-iconContainer MuiStepLabel-alternativeLabel"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiStepIcon-root MuiStepIcon-active"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="12"
+                  />
+                  <text
+                    class="MuiStepIcon-text"
+                    text-anchor="middle"
+                    x="12"
+                    y="16"
+                  >
+                    1
+                  </text>
+                </svg>
+              </span>
+              <span
+                class="MuiStepLabel-labelContainer"
+              >
+                <span
+                  class="MuiTypography-root MuiStepLabel-label MuiStepLabel-alternativeLabel MuiStepLabel-active MuiTypography-body2 MuiTypography-displayBlock"
+                >
+                  Select target software and devices
+                </span>
+              </span>
+            </span>
+          </div>
+          <div
+            class="MuiStep-root MuiStep-horizontal MuiStep-alternativeLabel"
+          >
+            <div
+              class="MuiStepConnector-root MuiStepConnector-horizontal MuiStepConnector-alternativeLabel Mui-disabled"
+            >
+              <span
+                class="MuiStepConnector-line MuiStepConnector-lineHorizontal"
+              />
+            </div>
+            <span
+              class="MuiStepLabel-root MuiStepLabel-horizontal Mui-disabled MuiStepLabel-alternativeLabel"
+            >
+              <span
+                class="MuiStepLabel-iconContainer MuiStepLabel-alternativeLabel"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiStepIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="12"
+                  />
+                  <text
+                    class="MuiStepIcon-text"
+                    text-anchor="middle"
+                    x="12"
+                    y="16"
+                  >
+                    2
+                  </text>
+                </svg>
+              </span>
+              <span
+                class="MuiStepLabel-labelContainer"
+              >
+                <span
+                  class="MuiTypography-root MuiStepLabel-label MuiStepLabel-alternativeLabel MuiTypography-body2 MuiTypography-displayBlock"
+                >
+                  Review and create
+                </span>
+              </span>
+            </span>
+          </div>
+        </div>
+        <div
+          style="overflow: visible; min-height: 300px; margin-top: 15px;"
+        >
+          <form
+            class="flexbox centered column"
+          >
+            <div
+              style="min-width: min-content; min-height: 105px;"
+            >
+              <div
+                aria-expanded="false"
+                class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon MuiAutocomplete-hasPopupIcon"
+                role="combobox"
+              >
+                <div
+                  class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+                  style="min-width: 400px;"
+                >
+                  <label
+                    class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+                    data-shrink="false"
+                    for="deployment-release-selection"
+                    id="deployment-release-selection-label"
+                  >
+                    Select a Release to deploy
+                  </label>
+                  <div
+                    class="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-invalid="false"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
+                      id="deployment-release-selection"
+                      spellcheck="false"
+                      type="text"
+                      value=""
+                    />
+                    <div
+                      class="MuiAutocomplete-endAdornment"
+                    >
+                      <button
+                        aria-label="Clear"
+                        class="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator"
+                        tabindex="-1"
+                        title="Clear"
+                        type="button"
+                      >
+                        <span
+                          class="MuiIconButton-label"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                            />
+                          </svg>
+                        </span>
+                        <span
+                          class="MuiTouchRipple-root"
+                        />
+                      </button>
+                      <button
+                        aria-label="Open"
+                        class="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-popupIndicator"
+                        tabindex="-1"
+                        title="Open"
+                        type="button"
+                      >
+                        <span
+                          class="MuiIconButton-label"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M7 10l5 5 5-5z"
+                            />
+                          </svg>
+                        </span>
+                        <span
+                          class="MuiTouchRipple-root"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div>
+                <div
+                  aria-expanded="false"
+                  class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon MuiAutocomplete-hasPopupIcon"
+                  role="combobox"
+                >
+                  <div
+                    class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+                    style="min-width: 400px;"
+                  >
+                    <label
+                      class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+                      data-shrink="false"
+                      for="deployment-device-group-selection"
+                      id="deployment-device-group-selection-label"
+                    >
+                      Select a device group to deploy to
+                    </label>
+                    <div
+                      class="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+                    >
+                      <input
+                        aria-autocomplete="list"
+                        aria-invalid="false"
+                        autocapitalize="none"
+                        autocomplete="off"
+                        class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
+                        id="deployment-device-group-selection"
+                        spellcheck="false"
+                        type="text"
+                        value=""
+                      />
+                      <div
+                        class="MuiAutocomplete-endAdornment"
+                      >
+                        <button
+                          aria-label="Clear"
+                          class="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator"
+                          tabindex="-1"
+                          title="Clear"
+                          type="button"
+                        >
+                          <span
+                            class="MuiIconButton-label"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                              focusable="false"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                              />
+                            </svg>
+                          </span>
+                          <span
+                            class="MuiTouchRipple-root"
+                          />
+                        </button>
+                        <button
+                          aria-label="Open"
+                          class="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-popupIndicator"
+                          tabindex="-1"
+                          title="Open"
+                          type="button"
+                        >
+                          <span
+                            class="MuiIconButton-label"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              class="MuiSvgIcon-root"
+                              focusable="false"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M7 10l5 5 5-5z"
+                              />
+                            </svg>
+                          </span>
+                          <span
+                            class="MuiTouchRipple-root"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div
+        class="MuiDialogActions-root margin-left margin-right MuiDialogActions-spacing"
+      >
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-text"
+          style="margin-right: 10px; display: inline-block;"
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            Cancel
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-text Mui-disabled Mui-disabled"
+          disabled=""
+          tabindex="-1"
+          type="button"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            Back
+          </span>
+        </button>
+        <div
+          style="flex-grow: 1;"
+        />
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled"
+          disabled=""
+          tabindex="-1"
+          type="button"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            Next
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    data-test="sentinelEnd"
+    tabindex="0"
+  />
+</div>
+`;

@@ -3,8 +3,8 @@ import Linkify from 'react-linkify';
 
 import { Announcement as AnnounceIcon, Close as CloseIcon } from '@material-ui/icons';
 
-const Announcement = ({ announcement, onHide, showAnnouncement }) => (
-  <div id="announcement" className={`flexbox centered ${showAnnouncement ? 'fadeInSlow' : 'fadeOutSlow'}`}>
+const Announcement = ({ announcement, onHide }) => (
+  <div id="announcement" className="flexbox centered fadeInSlow">
     <AnnounceIcon className="red" style={{ marginRight: '4px', height: '18px', minWidth: '24px' }} />
     <p>
       <Linkify properties={{ target: '_blank' }}>{announcement}</Linkify>

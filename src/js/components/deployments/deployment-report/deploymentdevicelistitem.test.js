@@ -5,7 +5,7 @@ import DeploymentDeviceListItem from './deploymentdevicelistitem';
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 
 describe('DeploymentDeviceListItem Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer
       .create(
         <MemoryRouter>

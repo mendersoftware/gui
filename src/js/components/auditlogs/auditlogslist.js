@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Time from 'react-time';
 import { Link } from 'react-router-dom';
-import moment from 'moment';
 
 import { Accordion, AccordionDetails, AccordionSummary, IconButton } from '@material-ui/core';
 import { ArrowDropDown as ArrowDropDownIcon, ArrowDropUp as ArrowDropUpIcon, Sort as SortIcon } from '@material-ui/icons';
@@ -51,48 +50,42 @@ const actorMap = {
   device: 'id'
 };
 
-export const auditLogColumns = [
+const auditLogColumns = [
   {
     title: 'User',
     sortable: false,
     propConverter: item => ({ children: item.actor[actorMap[item.actor.type]] }),
-    component: 'div',
-    printFormatter: item => item.actor[actorMap[item.actor.type]]
+    component: 'div'
   },
   {
     title: 'Action',
     sortable: false,
     propConverter: item => ({ className: 'uppercased', children: item.action }),
-    component: 'div',
-    printFormatter: item => item.action.toUpperCase()
+    component: 'div'
   },
   {
     title: 'Type',
     sortable: false,
     propConverter: item => ({ className: 'capitalized', children: item.object.type }),
-    component: 'div',
-    printFormatter: item => item.object.type.charAt(0).toUpperCase() + item.object.type.slice(1)
+    component: 'div'
   },
   {
     title: 'Change',
     sortable: false,
     propConverter: item => ({ children: changeMap[item.object.type].actionFormatter(item.object) }),
-    component: 'div',
-    printFormatter: item => changeMap[item.object.type].actionFormatter(item.object)
+    component: 'div'
   },
   {
     title: 'More details',
     sortable: false,
     propConverter: item => ({ item }),
-    component: ChangeDescriptor,
-    printFormatter: ({ change = '-' }) => formatChange(change).replaceAll('\n', ' ')
+    component: ChangeDescriptor
   },
   {
     title: 'Time',
     sortable: true,
     propConverter: item => ({ value: formatTime(item.time), format: 'YYYY-MM-DD HH:mm' }),
-    component: Time,
-    printFormatter: item => moment(item.time).format('YYYY-MM-DD HH:mm')
+    component: Time
   }
 ];
 

@@ -21,7 +21,7 @@ describe('Deployments Component', () => {
     });
   });
 
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer
       .create(
         <MemoryRouter>

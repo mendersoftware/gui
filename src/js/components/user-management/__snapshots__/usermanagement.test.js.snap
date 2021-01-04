@@ -3,77 +3,62 @@
 exports[`UserManagement Component renders correctly 1`] = `
 <div>
   <div
-    className="flexbox centered space-between"
-    style={
-      Object {
-        "marginLeft": "20px",
-      }
-    }
+    class="flexbox centered space-between"
+    style="margin-left: 20px;"
   >
     <h2>
       Users
     </h2>
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
-      disabled={false}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      tabindex="0"
       type="button"
     >
       <span
-        className="MuiButton-label"
+        class="MuiButton-label"
       >
         Create new user
       </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
     </button>
   </div>
   <table
-    className="MuiTable-root"
-    role={null}
+    class="MuiTable-root"
   >
     <thead
-      className="MuiTableHead-root"
-      role={null}
+      class="MuiTableHead-root"
     >
       <tr
-        className="MuiTableRow-root MuiTableRow-head"
-        role={null}
+        class="MuiTableRow-root MuiTableRow-head"
       >
         <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head"
+          class="MuiTableCell-root MuiTableCell-head"
           scope="col"
         >
           Email
         </th>
         <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head"
+          class="MuiTableCell-root MuiTableCell-head"
           scope="col"
         >
           Date created
         </th>
         <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head"
+          class="MuiTableCell-root MuiTableCell-head"
           scope="col"
         >
           Last updated
         </th>
         <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head"
+          class="MuiTableCell-root MuiTableCell-head"
+          scope="col"
+        >
+          Role
+        </th>
+        <th
+          class="MuiTableCell-root MuiTableCell-head"
           scope="col"
         >
           Manage
@@ -81,9 +66,125 @@ exports[`UserManagement Component renders correctly 1`] = `
       </tr>
     </thead>
     <tbody
-      className="MuiTableBody-root"
-      role={null}
-    />
+      class="MuiTableBody-root"
+    >
+      <tr
+        class="MuiTableRow-root MuiTableRow-hover"
+      >
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          a@b.com
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          <time
+            datetime="2019-01-01T10:30:00+00:00"
+          >
+            2019-01-01 10:30
+          </time>
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          <div
+            class=""
+            title=""
+          >
+            -
+          </div>
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          Admin
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text"
+            style="margin-left: -10px;"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              Edit
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+        </td>
+      </tr>
+      <tr
+        class="MuiTableRow-root MuiTableRow-hover"
+      >
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          a2@b.com
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          <time
+            datetime="2019-01-01T12:30:00+00:00"
+          >
+            2019-01-01 12:30
+          </time>
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          <div
+            class=""
+            title=""
+          >
+            -
+          </div>
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        />
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text"
+            style="margin-left: -10px;"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              Edit
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              Remove
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+        </td>
+      </tr>
+    </tbody>
   </table>
 </div>
 `;

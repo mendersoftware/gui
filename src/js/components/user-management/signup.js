@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import Cookies from 'universal-cookie';
@@ -14,47 +14,47 @@ import UserDataEntry from './signup-steps/userdata-entry';
 import OrgDataEntry from './signup-steps/orgdata-entry';
 import { OAuth2Providers } from './oauth2providers';
 
-export class Signup extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    let state = {
-      step: 1,
-      email: '',
-      loading: false,
-      oauthProvider: undefined,
-      password: ''
-    };
+const cookies = new Cookies();
 
-    const cookies = new Cookies();
+export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setFirstLoginAfterSignup, recaptchaSiteKey, setSnackbar }) => {
+  const [step, setStep] = useState(1);
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [oauthProvider, setOauthProvider] = useState(undefined);
+  const [oauthId, setOauthId] = useState(undefined);
+  const [password, setPassword] = useState('');
+  const [marketing, setMarketing] = useState(false);
+  const [organization, setOrganization] = useState('');
+  const [tos, setTos] = useState(false);
+  const [redirectOnLogin, setRedirectOnLogin] = useState(false);
+
+  useEffect(() => {
     cookies.remove('noExpiry', { path: '/' });
     cookies.remove('noExpiry', { path: '/ui' });
-    const oauthProvider = cookies.get('oauth');
-    if (oauthProvider) {
-      state.oauthProvider = oauthProvider;
-      state.oauthId = cookies.get('externalID');
-      state.email = cookies.get('email');
-      state.step = 2;
+    const usedOauthProvider = cookies.get('oauth');
+    if (usedOauthProvider) {
+      setOauthProvider(usedOauthProvider);
+      setOauthId(cookies.get('externalID'));
+      setEmail(cookies.get('email'));
+      setStep(2);
     }
-    this.state = state;
-  }
+  }, []);
 
-  _handleStep1(formData) {
-    this.setState({
-      email: formData.email,
-      password: formData.password_new,
-      step: 2
-    });
-  }
+  useEffect(() => {
+    if (currentUserId) {
+      setSnackbar('');
+      setRedirectOnLogin(true);
+    }
+  }, [currentUserId]);
 
-  _handleSignup(formData, recaptcha) {
-    const self = this;
-    self.setState({
-      organization: formData.name,
-      tos: formData.tos,
-      marketing: formData.marketing,
-      loading: true
-    });
-    const { email, password, oauthProvider, oauthId } = self.state;
+  const handleStep1 = formData => {
+    setEmail(formData.email);
+    setPassword(formData.password_new);
+    setStep(2);
+  };
+
+  const handleSignup = (formData, recaptcha) => {
+    setLoading(true);
     const credentials = oauthProvider ? { email, login: { [oauthProvider]: oauthId } } : { email, password };
     const signup = {
       ...credentials,
@@ -64,88 +64,73 @@ export class Signup extends React.Component {
       marketing: formData.marketing == 'true',
       'g-recaptcha-response': recaptcha || 'empty'
     };
-    return self.props
-      .createOrganizationTrial(signup)
+    return createOrganizationTrial(signup)
       .catch(() => {
-        self.setState({ step: 1 });
+        setStep(1);
         return Promise.reject();
       })
       .then(() => {
-        self.props.setFirstLoginAfterSignup(true);
+        setFirstLoginAfterSignup(true);
         if (!oauthProvider) {
           return new Promise((resolve, reject) => {
-            setTimeout(() => self.props.loginUser({ email, password }).catch(reject).then(resolve), 3000);
+            setTimeout(() => loginUser({ email, password }).catch(reject).then(resolve), 3000);
           });
         }
         return Promise.resolve();
       })
-      .then(() => self.setState({ step: 3, redirectOnLogin: !oauthProvider }))
-      .finally(() => self.setState({ loading: false }));
-  }
+      .then(() => {
+        setStep(3);
+        setRedirectOnLogin(!oauthProvider);
+      })
+      .finally(() => {
+        setOrganization(formData.name);
+        setTos(formData.tos);
+        setMarketing(formData.marketing);
+        setLoading(false);
+      });
+  };
 
-  componentDidUpdate() {
-    if (this.props.currentUserId) {
-      this.props.setSnackbar('');
-      this.setState({ redirectOnLogin: true });
-    }
+  if (redirectOnLogin) {
+    return <Redirect to="/" />;
   }
-
-  render() {
-    const self = this;
-    const { step, loading, oauthProvider, redirectOnLogin } = this.state;
-    const { recaptchaSiteKey, setSnackbar } = this.props;
-    if (redirectOnLogin) {
-      return <Redirect to="/" />;
-    }
-    const provider = OAuth2Providers.find(item => item.id === oauthProvider);
-    return (
-      <div className="flexbox column" id="signup-box">
-        {loading ? (
-          <Loader show={true} style={{ display: 'flex' }} />
-        ) : (
-          <>
-            {step == 1 && (
-              <UserDataEntry
-                setSnackbar={setSnackbar}
-                data={{ email: self.state.email, password: self.state.password, password_confirmation: self.state.password }}
-                onSubmit={formdata => self._handleStep1(formdata)}
-              />
-            )}
-            {step == 2 && (
-              <OrgDataEntry
-                setSnackbar={setSnackbar}
-                data={{ name: self.state.organization, tos: self.state.tos, marketing: self.state.marketing }}
-                onSubmit={(formdata, recaptcha) => self._handleSignup(formdata, recaptcha)}
-                recaptchaSiteKey={recaptchaSiteKey}
-              />
-            )}
-            {step == 3 && (
-              <div className="align-center" style={{ minHeight: '50vh' }}>
-                <h1>Sign up completed</h1>
-                <h2 className="margin-bottom-large">
-                  Your account has been created,
-                  <br />
-                  you can now log in.
-                </h2>
-                <Button variant="contained" color="secondary" href={`/api/management/v1/useradm/oauth2/${provider.id.toLowerCase()}`} startIcon={provider.icon}>
-                  {provider.name}
-                </Button>
-              </div>
-            )}
-            {step !== 3 && (
-              <div className="flexbox margin-top" style={{ color: 'rgba(0, 0, 0, 0.3)', justifyContent: 'center' }}>
-                Already have an account?{' '}
-                <Link style={{ marginLeft: '4px' }} to="/login">
-                  Log in
-                </Link>
-              </div>
-            )}
-          </>
-        )}
+  const provider = OAuth2Providers.find(item => item.id === oauthProvider) || { id: '' };
+  const steps = {
+    1: <UserDataEntry setSnackbar={setSnackbar} data={{ email, password, password_confirmation: password }} onSubmit={handleStep1} />,
+    2: <OrgDataEntry setSnackbar={setSnackbar} data={{ name: organization, tos, marketing }} onSubmit={handleSignup} recaptchaSiteKey={recaptchaSiteKey} />,
+    3: (
+      <div className="align-center" style={{ minHeight: '50vh' }}>
+        <h1>Sign up completed</h1>
+        <h2 className="margin-bottom-large">
+          Your account has been created,
+          <br />
+          you can now log in.
+        </h2>
+        <Button variant="contained" color="secondary" href={`/api/management/v1/useradm/oauth2/${provider.id.toLowerCase()}`} startIcon={provider.icon}>
+          {provider.name}
+        </Button>
       </div>
-    );
-  }
-}
+    )
+  };
+  return (
+    <div className="flexbox column" id="signup-box">
+      {loading ? (
+        <Loader show={true} style={{ display: 'flex' }} />
+      ) : (
+        <>
+          {steps[step]}
+          {step !== 3 && (
+            <div className="flexbox margin-top" style={{ color: 'rgba(0, 0, 0, 0.3)', justifyContent: 'center' }}>
+              Already have an account?{' '}
+              <Link style={{ marginLeft: '4px' }} to="/login">
+                Log in
+              </Link>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+};
 
 const actionCreators = { createOrganizationTrial, loginUser, setFirstLoginAfterSignup, setSnackbar };
 

@@ -1,4 +1,21 @@
+import { rolesByName } from '../src/js/constants/userConstants';
+
 export const undefineds = /undefined|\[object Object\]/;
+window.mender_environment = {
+  features: {
+    hasMultitenancy: true
+  },
+  services: {
+    deploymentsVersion: null,
+    deviceauthVersion: null,
+    inventoryVersion: null
+  }
+};
+
+export const mockDate = new Date('2019-01-01T13:00:00.300Z');
+
+export const token =
+  'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjZTNkMGY4Yy1hZWRlLTQwMzAtYjM5MS03ZDUwMjBlYjg3M2UiLCJzdWIiOiJhMzBhNzgwYi1iODQzLTUzNDQtODBlMy0wZmQ5NWE0ZjZmYzMiLCJleHAiOjE2MDY4MTUzNjksImlhdCI6MTYwNjIxMDU2OSwibWVuZGVyLnRlbmFudCI6IjVmODVjMTdiY2U2MmI3ZmE3ZjVmNzA0MCIsIm1lbmRlci51c2VyIjp0cnVlLCJpc3MiOiJNZW5kZXIgVXNlcnMiLCJzY3AiOiJtZW5kZXIuKiIsIm1lbmRlci5wbGFuIjoicHJvZmVzc2lvbmFsIiwibmJmIjoxNjA2MjEwNTY5fQ.qVgYdCzLTf8OdK9uUctqqaY_HWkIiwpekuGvuGQAXCEgOv4bRNDlZRN_ZRSbxQoARG3pquhScbQrjBV9tcF4irTUPlTn3yrsXNO17DpcbTVeKRkb88RDtIKiRw3orVZ_GlIb-ckTQ5dS-Nqlyyf3Fmrhca-gwt6m_xv2UrmJK6eYYTMfggdRRWb-4u7mEkBI_pHPMTQrT8kJ2BeX-vHgazH9AoH0k85LHtFZQXD7pXHlDZRnLxJXukncwMGDmF17374gavYAIyDIzcC8sEBMDnVXgpikeA1sauzirqix6mAVs6XmxdQO7aF0wfXO1_PTYUA3Nk1oQfMYNlEI3U9uLRJRZIq2L8fmrrBryhstKd4y0KlBbGAQrx8NtRkgajjd1ljMfPBUEZrb7uSerVjneiO-aIBO76CuH0zdklphIjpGJeogkBhe8pAYNggp1XsZHgpZfl7IE5faKaDkMGnutaea--Czor6bhqUNCuY4tR0cpQJbNwy6LS9o1CFy4Log';
 
 export const defaultState = {
   app: {
@@ -43,7 +60,7 @@ export const defaultState = {
         name: 'test deployment 2',
         artifact_name: 'test',
         artifacts: ['123'],
-        created: '2019-01-01T12:30:00.000Z',
+        created: '2019-01-01T12:25:00.000Z',
         device_count: 1,
         devices: {
           b1: {
@@ -77,32 +94,78 @@ export const defaultState = {
   devices: {
     byId: {
       a1: {
-        auth_sets: [],
-        attributes: {}
+        id: 'a1',
+        attributes: {
+          ipv4_wlan0: '192.168.10.141/24'
+        },
+        identity_data: { mac: 'dc:a6:32:12:ad:bf' },
+        status: 'accepted',
+        decommissioning: false,
+        created_ts: '2019-01-01T06:25:00.000Z',
+        updated_ts: '2019-01-01T09:25:00.000Z',
+        auth_sets: [
+          {
+            id: 'auth1',
+            identity_data: { mac: 'dc:a6:32:12:ad:bf' },
+            pubkey: '-----BEGIN PUBLIC KEY-----\nMIIBojWELzgJ62hcXIhAfqfoNiaB1326XZByZwcnHr5BuSPAgMBAAE=\n-----END PUBLIC KEY-----\n',
+            ts: '2019-01-01T06:25:00.000Z',
+            status: 'accepted'
+          }
+        ]
       },
       b1: {
+        id: 'b1',
+        attributes: {
+          ipv4_wlan0: '192.168.10.141/24',
+          device_type: 'qemux86-64'
+        },
+        identity_data: { mac: 'dc:a6:32:12:ad:bf' },
+        status: 'accepted',
+        decommissioning: false,
+        created_ts: '2019-01-01T06:25:00.000Z',
+        updated_ts: '2019-01-01T09:25:00.000Z',
+        auth_sets: [
+          {
+            id: 'auth1',
+            identity_data: { mac: 'dc:a6:32:12:ad:bf' },
+            pubkey: '-----BEGIN PUBLIC KEY-----\nMIIBojWELzgJ62hcXIhAfqfoNiaB1326XZByZwcnHr5BuSPAgMBAAE=\n-----END PUBLIC KEY-----\n',
+            ts: '2019-01-01T06:25:00.000Z',
+            status: 'accepted'
+          }
+        ]
+      },
+      c1: {
+        id: 'c1',
         auth_sets: [],
-        attributes: {}
+        attributes: {
+          device_type: 'qemux86-128'
+        }
       }
     },
     byStatus: {
-      accepted: { deviceIds: ['a1'], total: 0 },
+      accepted: { deviceIds: ['a1', 'b1'], total: 2 },
       active: { deviceIds: [], total: 0 },
       inactive: { deviceIds: [], total: 0 },
-      pending: { deviceIds: ['b1'], total: 0 },
+      pending: { deviceIds: ['c1'], total: 1 },
       preauthorized: { deviceIds: [], total: 0 },
       rejected: { deviceIds: [], total: 0 }
     },
     filteringAttributes: {
-      identityAttributes: ['id_attribute'],
-      inventoryAttributes: []
+      identityAttributes: ['mac'],
+      inventoryAttributes: ['artifact_name']
     },
     filteringAttributesLimit: 10,
     filters: [],
     groups: {
       byId: {
         testGroup: {
-          filters: []
+          deviceIds: ['a1', 'b1'],
+          filters: [],
+          total: 2
+        },
+        testGroupDynamic: {
+          id: 'filter1',
+          filters: [{ scope: 'system', key: 'group', operator: '$eq', value: 'things' }]
         }
       },
       selectedGroup: null
@@ -118,6 +181,11 @@ export const defaultState = {
     showTipsDialog: false
   },
   organization: {
+    card: {
+      brand: 'testCorp',
+      last4: '7890',
+      expiration: { month: 1, year: 2024 }
+    },
     events: [
       {
         actor: {
@@ -125,7 +193,7 @@ export const defaultState = {
           type: 'user',
           email: 'string@example.com'
         },
-        time: '2020-09-10T12:10:22.667Z',
+        time: '2019-01-01T12:10:22.667Z',
         action: 'create',
         object: {
           id: 'string',
@@ -143,7 +211,7 @@ export const defaultState = {
           email: 'string',
           identity_data: 'string'
         },
-        time: '2020-09-10T12:16:22.667Z',
+        time: '2019-01-01T12:16:22.667Z',
         action: 'create',
         object: {
           id: 'string',
@@ -157,9 +225,12 @@ export const defaultState = {
       }
     ],
     eventsTotal: 2,
+    intentId: 'testIntent',
     organization: {
       id: 1,
-      name: 'test'
+      name: 'test',
+      plan: 'os',
+      trial: false
     }
   },
   releases: {
@@ -167,7 +238,26 @@ export const defaultState = {
     byId: {
       a1: {
         Name: 'a1',
-        device_types_compatible: []
+        Artifacts: [
+          {
+            id: 'art1',
+            description: 'test description',
+            device_types_compatible: ['qemux86-64'],
+            modified: '2020-09-10T12:16:22.667Z',
+            updates: [{ type_info: 'testtype' }],
+            artifact_depends: {
+              device_type: ['qemux86-64']
+            },
+            artifact_provides: {
+              artifact_name: 'myapp',
+              'data-partition.myapp.version': 'v2020.10',
+              list_of_fancy: ['qemux86-64', 'x172']
+            },
+            clears_artifact_provides: ['data-partition.myapp.*']
+          }
+        ],
+        device_types_compatible: ['qemux86-64'],
+        metaData: {}
       }
     },
     selectedArtifact: null,
@@ -176,10 +266,28 @@ export const defaultState = {
     uploading: false
   },
   users: {
-    byId: { a1: { email: 'a@b.com', id: 'a1' } },
+    byId: {
+      a1: { email: 'a@b.com', id: 'a1', created_ts: '2019-01-01T10:30:00.000Z', roles: [rolesByName.admin] },
+      'a30a780b-b843-5344-80e3-0fd95a4f6fc3': { email: 'a2@b.com', id: 'a30a780b-b843-5344-80e3-0fd95a4f6fc3', created_ts: '2019-01-01T12:30:00.000Z' }
+    },
     currentUser: 'a1',
     globalSettings: { id_attribute: 'Device ID', previousFilters: [] },
-    rolesById: { RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false } },
+    jwtToken: null,
+    qrCode: null,
+    rolesById: {
+      RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false, permissions: [] },
+      RBAC_ROLE_OBSERVER: {
+        title: 'Read only',
+        allowUserManagement: false,
+        groups: [],
+        description:
+          'Intended for team leaders or limited tech support accounts, this role can see all Devices, Artifacts and Deployment reports but not make any changes.',
+        editable: false,
+        permissions: []
+      },
+      RBAC_ROLE_CI: { title: 'CI', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
+      test: { title: 'test', description: 'test description', groups: ['testgroup'], editable: true }
+    },
     showHelptips: true
   }
 };

@@ -9,7 +9,7 @@ import { Help as HelpIcon } from '@material-ui/icons';
 
 import loginLogo from '../../../assets/img/loginlogo.png';
 import { setSnackbar } from '../../actions/appActions';
-import { getUser, loginUser, logoutUser } from '../../actions/userActions';
+import { loginUser, logoutUser } from '../../actions/userActions';
 
 import { getToken } from '../../auth';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
@@ -56,19 +56,9 @@ export class Login extends React.Component {
     this.props.setSnackbar('');
   }
 
-  _handleLogin(formData) {
-    if (!formData.hasOwnProperty('email')) {
-      return;
-    }
-    if (this.props.has2FA && !formData.hasOwnProperty('token2fa')) {
-      return;
-    }
-    return this.props.loginUser(formData).catch(err => console.log(err));
-  }
-
   render() {
     const { noExpiry } = this.state;
-    const { has2FA, isHosted } = this.props;
+    const { has2FA, isHosted, loginUser } = this.props;
     let twoFAAnchor = {};
     if (this.twoFARef) {
       twoFAAnchor = {
@@ -103,7 +93,7 @@ export class Login extends React.Component {
           </>
         )}
 
-        <Form showButtons={true} buttonColor="primary" onSubmit={formdata => this._handleLogin(formdata)} submitLabel="Log in" submitButtonId="login_button">
+        <Form showButtons={true} buttonColor="primary" onSubmit={loginUser} submitLabel="Log in" submitButtonId="login_button">
           <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
           <PasswordInput className="margin-bottom-small" id="password" label="Password" required={true} />
           {isHosted ? (
@@ -156,16 +146,13 @@ export class Login extends React.Component {
   }
 }
 
-const actionCreators = { getUser, loginUser, logoutUser, setSnackbar };
+const actionCreators = { loginUser, logoutUser, setSnackbar };
 
 const mapStateToProps = state => {
   return {
     currentUser: state.users.byId[state.users.currentUser] || {},
     has2FA: state.users.globalSettings.hasOwnProperty('2fa') && state.users.globalSettings['2fa'] === 'enabled',
-    isHosted: state.app.features.isHosted,
-    showHelptips: state.users.showHelptips,
-    showOnboardingTips: state.onboarding.showTips,
-    onboardingComplete: state.onboarding.complete
+    isHosted: state.app.features.isHosted
   };
 };
 

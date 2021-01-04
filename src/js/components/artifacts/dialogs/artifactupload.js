@@ -20,13 +20,13 @@ export default class ArtifactUpload extends React.Component {
   }
 
   onDrop(acceptedFiles) {
-    const { advanceOnboarding, releases, setSnackbar, updateCreation } = this.props;
+    const { advanceOnboarding, onboardingState, releases, setSnackbar, updateCreation } = this.props;
     if (acceptedFiles.length === 1) {
       if (!reFilename.test(acceptedFiles[0].name)) {
         this.setState({ acceptedFiles: [] });
         setSnackbar('Only letters, digits and characters in the set ".,_-" are allowed in the filename.', null);
       } else {
-        if (releases.length) {
+        if (releases.length && !onboardingState.complete) {
           advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_UPLOAD);
         }
         this.setState({ acceptedFiles }, () => updateCreation({ file: acceptedFiles[0] }));

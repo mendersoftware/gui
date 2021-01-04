@@ -3,57 +3,45 @@
 exports[`Roles Component renders correctly 1`] = `
 <div>
   <h2
-    style={
-      Object {
-        "marginLeft": 20,
-      }
-    }
+    style="margin-left: 20px;"
   >
     Roles
   </h2>
   <table
-    className="MuiTable-root margin-bottom"
-    role={null}
+    class="MuiTable-root margin-bottom"
   >
     <thead
-      className="MuiTableHead-root"
-      role={null}
+      class="MuiTableHead-root"
     >
       <tr
-        className="MuiTableRow-root MuiTableRow-head"
-        role={null}
+        class="MuiTableRow-root MuiTableRow-head"
       >
         <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head"
+          class="MuiTableCell-root MuiTableCell-head"
           scope="col"
         >
           Role
         </th>
         <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head"
+          class="MuiTableCell-root MuiTableCell-head"
           scope="col"
         >
           Manage users
         </th>
         <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head"
+          class="MuiTableCell-root MuiTableCell-head"
           scope="col"
         >
           Device group permission
         </th>
         <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head"
+          class="MuiTableCell-root MuiTableCell-head"
           scope="col"
         >
           Description
         </th>
         <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head"
+          class="MuiTableCell-root MuiTableCell-head"
           scope="col"
         >
           Manage
@@ -61,64 +49,155 @@ exports[`Roles Component renders correctly 1`] = `
       </tr>
     </thead>
     <tbody
-      className="MuiTableBody-root"
-      role={null}
+      class="MuiTableBody-root"
     >
       <tr
-        className="MuiTableRow-root MuiTableRow-hover"
-        role={null}
+        class="MuiTableRow-root MuiTableRow-hover"
       >
         <td
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-body"
+          class="MuiTableCell-root MuiTableCell-body"
         >
           Admin
         </td>
         <td
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-body"
+          class="MuiTableCell-root MuiTableCell-body"
         >
           Yes
         </td>
         <td
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-body"
+          class="MuiTableCell-root MuiTableCell-body"
         >
           All devices
         </td>
         <td
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-body"
+          class="MuiTableCell-root MuiTableCell-body"
         >
           Full access
         </td>
         <td
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-body"
+          class="MuiTableCell-root MuiTableCell-body"
         />
+      </tr>
+      <tr
+        class="MuiTableRow-root MuiTableRow-hover"
+      >
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          Read only
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          No
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          All devices
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          Intended for team leaders or limited tech support accounts, this role can see all Devices, Artifacts and Deployment reports but not make any changes.
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        />
+      </tr>
+      <tr
+        class="MuiTableRow-root MuiTableRow-hover"
+      >
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          CI
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          No
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          All devices
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          -
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        />
+      </tr>
+      <tr
+        class="MuiTableRow-root MuiTableRow-hover"
+      >
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          test
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          No
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          testgroup
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          test description
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              Edit
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              Remove
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+        </td>
       </tr>
     </tbody>
   </table>
   <div
-    className="MuiButtonBase-root MuiChip-root margin-top-small MuiChip-colorPrimary MuiChip-clickableColorPrimary MuiChip-clickable"
-    onBlur={[Function]}
-    onClick={[Function]}
-    onDragLeave={[Function]}
-    onFocus={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseDown={[Function]}
-    onMouseLeave={[Function]}
-    onMouseUp={[Function]}
-    onTouchEnd={[Function]}
-    onTouchMove={[Function]}
-    onTouchStart={[Function]}
+    class="MuiButtonBase-root MuiChip-root margin-top-small MuiChip-colorPrimary MuiChip-clickableColorPrimary MuiChip-clickable"
     role="button"
-    tabIndex={0}
+    tabindex="0"
   >
     <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root MuiChip-icon MuiChip-iconColorPrimary"
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiChip-icon MuiChip-iconColorPrimary"
       focusable="false"
       viewBox="0 0 24 24"
     >
@@ -127,75 +206,53 @@ exports[`Roles Component renders correctly 1`] = `
       />
     </svg>
     <span
-      className="MuiChip-label"
+      class="MuiChip-label"
     >
       Add a role
     </span>
+    <span
+      class="MuiTouchRipple-root"
+    />
   </div>
   <div
-    className="MuiCollapse-container margin-right-small filter-wrapper MuiCollapse-hidden"
-    style={
-      Object {
-        "minHeight": "0px",
-      }
-    }
+    class="MuiCollapse-container margin-right-small filter-wrapper MuiCollapse-hidden"
+    style="min-height: 0px;"
   >
     <div
-      className="MuiCollapse-wrapper"
+      class="MuiCollapse-wrapper"
     >
       <div
-        className="MuiCollapse-wrapperInner margin-bottom-small margin-right"
+        class="MuiCollapse-wrapperInner margin-bottom-small margin-right"
       >
         <h4
-          style={
-            Object {
-              "marginTop": 5,
-            }
-          }
+          style="margin-top: 5px;"
         >
           Edit the
            role
         </h4>
         <div
-          className="MuiFormControl-root"
-          style={
-            Object {
-              "marginTop": "0",
-            }
-          }
+          class="MuiFormControl-root"
+          style="margin-top: 0px;"
         >
           <div
-            className="MuiFormControl-root MuiTextField-root"
-            style={
-              Object {
-                "marginRight": 30,
-                "marginTop": 0,
-              }
-            }
+            class="MuiFormControl-root MuiTextField-root"
+            style="margin-top: 0px; margin-right: 30px;"
           >
             <label
-              className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-              data-shrink={false}
-              htmlFor="role-name"
+              class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+              data-shrink="false"
+              for="role-name"
               id="role-name-label"
             >
               Role name
             </label>
             <div
-              className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-              onClick={[Function]}
+              class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
             >
               <input
-                aria-invalid={false}
-                autoFocus={false}
-                className="MuiInputBase-input MuiInput-input"
-                disabled={false}
+                aria-invalid="false"
+                class="MuiInputBase-input MuiInput-input"
                 id="role-name"
-                onAnimationStart={[Function]}
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                required={false}
                 type="text"
                 value=""
               />
@@ -203,38 +260,25 @@ exports[`Roles Component renders correctly 1`] = `
           </div>
         </div>
         <div
-          className="MuiFormControl-root MuiTextField-root"
-          style={
-            Object {
-              "marginRight": 30,
-              "marginTop": 0,
-            }
-          }
+          class="MuiFormControl-root MuiTextField-root"
+          style="margin-top: 0px; margin-right: 30px;"
         >
           <label
-            className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-            data-shrink={false}
-            htmlFor="role-description"
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+            data-shrink="false"
+            for="role-description"
             id="role-description-label"
           >
             Description
           </label>
           <div
-            className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-            onClick={[Function]}
+            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
           >
             <input
-              aria-invalid={false}
-              autoFocus={false}
-              className="MuiInputBase-input MuiInput-input"
-              disabled={false}
+              aria-invalid="false"
+              class="MuiInputBase-input MuiInput-input"
               id="role-description"
-              onAnimationStart={[Function]}
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
               placeholder="-"
-              required={false}
               type="text"
               value=""
             />
@@ -242,37 +286,24 @@ exports[`Roles Component renders correctly 1`] = `
         </div>
         <div>
           <label
-            className="MuiFormControlLabel-root"
+            class="MuiFormControlLabel-root"
           >
             <span
-              aria-disabled={false}
-              className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
-              onBlur={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              tabIndex={null}
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
             >
               <span
-                className="MuiIconButton-label"
+                class="MuiIconButton-label"
               >
                 <input
-                  checked={false}
-                  className="PrivateSwitchBase-input-4"
-                  data-indeterminate={false}
-                  onChange={[Function]}
+                  class="PrivateSwitchBase-input-4"
+                  data-indeterminate="false"
                   type="checkbox"
+                  value=""
                 />
                 <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root"
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
                   focusable="false"
                   viewBox="0 0 24 24"
                 >
@@ -281,58 +312,43 @@ exports[`Roles Component renders correctly 1`] = `
                   />
                 </svg>
               </span>
+              <span
+                class="MuiTouchRipple-root"
+              />
             </span>
             <span
-              className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+              class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
             >
               Allow to manage other users
             </span>
           </label>
         </div>
         <div
-          className="flexbox column margin-top-small"
+          class="flexbox column margin-top-small"
         >
           <div>
             Device group permission
           </div>
           <label
-            className="MuiFormControlLabel-root"
-            style={
-              Object {
-                "marginLeft": 0,
-                "marginTop": 0,
-              }
-            }
+            class="MuiFormControlLabel-root"
+            style="margin-top: 0px; margin-left: 0px;"
           >
             <span
-              aria-disabled={false}
-              className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
-              onBlur={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              tabIndex={null}
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
             >
               <span
-                className="MuiIconButton-label"
+                class="MuiIconButton-label"
               >
                 <input
-                  checked={false}
-                  className="PrivateSwitchBase-input-4"
-                  data-indeterminate={false}
-                  onChange={[Function]}
+                  class="PrivateSwitchBase-input-4"
+                  data-indeterminate="false"
                   type="checkbox"
+                  value=""
                 />
                 <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root"
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
                   focusable="false"
                   viewBox="0 0 24 24"
                 >
@@ -341,72 +357,83 @@ exports[`Roles Component renders correctly 1`] = `
                   />
                 </svg>
               </span>
+              <span
+                class="MuiTouchRipple-root"
+              />
             </span>
             <span
-              className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+              class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
             >
               testGroup
             </span>
           </label>
+          <label
+            class="MuiFormControlLabel-root"
+            style="margin-top: 0px; margin-left: 0px;"
+          >
+            <span
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
+            >
+              <span
+                class="MuiIconButton-label"
+              >
+                <input
+                  class="PrivateSwitchBase-input-4"
+                  data-indeterminate="false"
+                  type="checkbox"
+                  value=""
+                />
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                  />
+                </svg>
+              </span>
+              <span
+                class="MuiTouchRipple-root"
+              />
+            </span>
+            <span
+              class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+            >
+              testGroupDynamic
+            </span>
+          </label>
         </div>
         <div
-          className="flexbox centered"
-          style={
-            Object {
-              "justifyContent": "flex-end",
-            }
-          }
+          class="flexbox centered"
+          style="justify-content: flex-end;"
         >
           <button
-            className="MuiButtonBase-root MuiButton-root MuiButton-text"
-            disabled={false}
-            onBlur={[Function]}
-            onClick={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            style={
-              Object {
-                "marginRight": 15,
-              }
-            }
-            tabIndex={0}
+            class="MuiButtonBase-root MuiButton-root MuiButton-text"
+            style="margin-right: 15px;"
+            tabindex="0"
             type="button"
           >
             <span
-              className="MuiButton-label"
+              class="MuiButton-label"
             >
               Cancel
             </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
           </button>
           <button
-            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary Mui-disabled Mui-disabled"
-            disabled={true}
-            onBlur={[Function]}
-            onClick={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            tabIndex={-1}
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary Mui-disabled Mui-disabled"
+            disabled=""
+            tabindex="-1"
             target="_blank"
             type="button"
           >
             <span
-              className="MuiButton-label"
+              class="MuiButton-label"
             >
               Submit
             </span>

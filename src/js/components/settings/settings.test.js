@@ -34,7 +34,7 @@ describe('Settings Component', () => {
     });
   });
 
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer
       .create(
         <MemoryRouter initialEntries={['/settings']}>

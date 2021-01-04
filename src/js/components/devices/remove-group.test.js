@@ -1,12 +1,13 @@
 import React from 'react';
-import { createMount } from '@material-ui/core/test-utils';
+import { render } from '@testing-library/react';
 import RemoveGroup from './remove-group';
 import { undefineds } from '../../../../tests/mockData';
 
-describe('RejectedDevices Component', () => {
-  it('renders correctly', () => {
-    const tree = createMount()(<RemoveGroup onClose={jest.fn} onRemove={jest.fn} />);
-    expect(tree.html()).toMatchSnapshot();
-    expect(JSON.stringify(tree.html())).toEqual(expect.not.stringMatching(undefineds));
+describe('RemoveGroup Component', () => {
+  it('renders correctly', async () => {
+    const { baseElement } = render(<RemoveGroup onClose={jest.fn} onRemove={jest.fn} />);
+    const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

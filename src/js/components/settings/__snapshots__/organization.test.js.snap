@@ -375,3 +375,207 @@ Mender Enterprise
   </p>
 </div>
 `;
+
+exports[`smaller components renders CancelSubscriptionAlert correctly 1`] = `
+<div
+  className="margin-top-large alert alert-error"
+  style={
+    Object {
+      "maxWidth": 500,
+    }
+  }
+>
+  <p>
+    We've started the process to cancel your plan and deactivate your account.
+  </p>
+  <p>
+    We'll send you an email confirming your deactivation. If you have any question at all, contact us at
+     
+    <strong>
+      <a
+        href="mailto:support@mender.io"
+      >
+        support@mender.io
+      </a>
+    </strong>
+  </p>
+</div>
+`;
+
+exports[`smaller components renders CancelSubscriptionButton correctly 1`] = `
+<p
+  className="margin-left-small margin-right-small"
+  style={
+    Object {
+      "maxWidth": 500,
+    }
+  }
+>
+  <a
+    href=""
+    onClick={[Function]}
+  >
+    End trial
+     and deactivate account
+  </a>
+</p>
+`;
+
+exports[`smaller components renders DeviceLimitExpansionNotification correctly 1`] = `
+<div
+  className="flexbox centered text-muted"
+>
+  <svg
+    aria-hidden={true}
+    className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+    focusable="false"
+    viewBox="0 0 24 24"
+  >
+    <path
+      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+    />
+  </svg>
+  <span
+    className="margin-left-small"
+  >
+    To increase your device limit,
+     
+    <a
+      href="/settings/upgrade"
+      onClick={[Function]}
+    >
+      upgrade to a paid plan
+    </a>
+    .
+  </span>
+</div>
+`;
+
+exports[`smaller components renders EnterpriseModificationsNote correctly 1`] = `
+Array [
+  <p
+    className="info"
+    style={
+      Object {
+        "marginLeft": 15,
+        "marginRight": 15,
+        "maxWidth": 500,
+      }
+    }
+  >
+    For changes to your plan or any other support questions, contact us at
+     
+    <a
+      href="mailto:support@mender.io?subject=test: Enterprise upgrade&body=upgrade here"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      support@mender.io
+    </a>
+  </p>,
+  <p
+    className="margin-left-small margin-right-small margin-bottom-none"
+    style={
+      Object {
+        "maxWidth": 500,
+      }
+    }
+  >
+    <a
+      href="mailto:support@mender.io?subject=test: Update billing&body=bill this"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      Request to update your billing details
+    </a>
+  </p>,
+]
+`;
+
+exports[`smaller components renders OrgHeader correctly 1`] = `
+<div>
+  <span
+    style={
+      Object {
+        "paddingRight": 10,
+      }
+    }
+  >
+    Organization token
+  </span>
+  <div
+    className="tooltip info"
+    data-event="click focus"
+    data-for="token-help"
+    data-tip={true}
+    id="token-info"
+    style={
+      Object {
+        "display": "inline",
+        "position": "relative",
+        "top": "6px",
+      }
+    }
+  >
+    <svg
+      aria-hidden={true}
+      className="MuiSvgIcon-root"
+      focusable="false"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+      />
+    </svg>
+  </div>
+  <div
+    className="__react_component_tooltip place-top type-dark"
+    data-id="tooltip"
+    id="token-help"
+  >
+    <h3>
+      Organization token
+    </h3>
+    <p
+      style={
+        Object {
+          "color": "#DECFD9",
+          "margin": "1em 0",
+        }
+      }
+    >
+      This token is unique for your organization and ensures that only devices that you own are able to connect to your account.
+    </p>
+  </div>
+</div>
+`;
+
+exports[`smaller components renders TrialExpirationNote correctly 1`] = `
+<div
+  className="flexbox centered text-muted"
+>
+  <svg
+    aria-hidden={true}
+    className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+    focusable="false"
+    viewBox="0 0 24 24"
+  >
+    <path
+      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+    />
+  </svg>
+  <span
+    className="margin-left-small"
+  >
+    Your trial expires in 
+    9 months
+    . 
+    <a
+      href="/settings/upgrade"
+      onClick={[Function]}
+    >
+      Upgrade to a paid plan
+    </a>
+  </span>
+</div>
+`;

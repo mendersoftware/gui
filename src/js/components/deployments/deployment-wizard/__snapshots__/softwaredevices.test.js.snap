@@ -160,7 +160,7 @@ exports[`SoftwareDevices Component renders correctly 1`] = `
         <div
           aria-expanded={false}
           aria-owns={null}
-          className="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon"
+          className="MuiAutocomplete-root MuiAutocomplete-hasClearIcon MuiAutocomplete-hasPopupIcon"
           onClick={[Function]}
           onKeyDown={[Function]}
           onMouseDown={[Function]}
@@ -175,7 +175,7 @@ exports[`SoftwareDevices Component renders correctly 1`] = `
             }
           >
             <label
-              className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated Mui-disabled Mui-disabled"
+              className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
               data-shrink={false}
               htmlFor="deployment-device-group-selection"
               id="deployment-device-group-selection-label"
@@ -183,7 +183,7 @@ exports[`SoftwareDevices Component renders correctly 1`] = `
               Select a device group to deploy to
             </label>
             <div
-              className="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot Mui-disabled Mui-disabled MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+              className="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
               onClick={[Function]}
             >
               <input
@@ -194,8 +194,8 @@ exports[`SoftwareDevices Component renders correctly 1`] = `
                 autoCapitalize="none"
                 autoComplete="off"
                 autoFocus={false}
-                className="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused Mui-disabled Mui-disabled MuiInputBase-inputAdornedEnd"
-                disabled={true}
+                className="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
+                disabled={false}
                 id="deployment-device-group-selection"
                 onAnimationStart={[Function]}
                 onBlur={[Function]}
@@ -211,9 +211,44 @@ exports[`SoftwareDevices Component renders correctly 1`] = `
                 className="MuiAutocomplete-endAdornment"
               >
                 <button
+                  aria-label="Clear"
+                  className="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator"
+                  disabled={false}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onDragLeave={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  onTouchEnd={[Function]}
+                  onTouchMove={[Function]}
+                  onTouchStart={[Function]}
+                  tabIndex={-1}
+                  title="Clear"
+                  type="button"
+                >
+                  <span
+                    className="MuiIconButton-label"
+                  >
+                    <svg
+                      aria-hidden={true}
+                      className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                      />
+                    </svg>
+                  </span>
+                </button>
+                <button
                   aria-label="Open"
-                  className="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-popupIndicator Mui-disabled Mui-disabled"
-                  disabled={true}
+                  className="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-popupIndicator"
+                  disabled={false}
                   onBlur={[Function]}
                   onClick={[Function]}
                   onDragLeave={[Function]}
@@ -249,45 +284,6 @@ exports[`SoftwareDevices Component renders correctly 1`] = `
             </div>
           </div>
         </div>
-        <p
-          className="info"
-          style={
-            Object {
-              "marginTop": "10px",
-            }
-          }
-        >
-          <svg
-            aria-hidden={true}
-            className="MuiSvgIcon-root"
-            focusable="false"
-            style={
-              Object {
-                "color": "rgb(171, 16, 0)",
-                "fontSize": "18px",
-                "marginRight": "4px",
-                "position": "relative",
-                "top": "4px",
-              }
-            }
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-            />
-          </svg>
-          There are no connected devices.
-           
-          <span>
-            <a
-              href="/help/getting-started"
-              onClick={[Function]}
-            >
-              Read the help pages
-            </a>
-             for help with connecting devices.
-          </span>
-        </p>
       </div>
     </div>
   </form>

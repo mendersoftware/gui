@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Time from 'react-time';
 
 // material ui
 import { Button } from '@material-ui/core';
 import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import preauthImage from '../../../assets/img/preauthorize.png';
+import { setSnackbar } from '../../actions/appActions';
 import { getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
@@ -14,8 +14,24 @@ import DeviceList from './devicelist';
 import { refreshLength as refreshDeviceLength } from './devices';
 import PreauthDialog from './preauth-dialog';
 import { getIdAttribute } from '../../selectors';
+import BaseDevices, { DeviceCreationTime, DeviceStatusHeading } from './base-devices';
 
-export class Preauthorize extends React.Component {
+const defaultHeaders = [
+  {
+    title: 'Date added',
+    attribute: { name: 'created_ts', scope: 'system' },
+    render: DeviceCreationTime,
+    sortable: true
+  },
+  {
+    title: 'Status',
+    attribute: { name: 'status', scope: 'identity' },
+    render: DeviceStatusHeading,
+    sortable: true
+  }
+];
+
+export class Preauthorize extends BaseDevices {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -36,10 +52,6 @@ export class Preauthorize extends React.Component {
     this._getDevices(true);
   }
 
-  componentWillUnmount() {
-    clearInterval(this.timer);
-  }
-
   componentDidUpdate(prevProps) {
     if (prevProps.count !== this.props.count) {
       this._getDevices();
@@ -49,10 +61,6 @@ export class Preauthorize extends React.Component {
       //if devices empty but count not, put back to first page
       self._handlePageChange(1);
     }
-  }
-
-  shouldComponentUpdate(nextProps) {
-    return !this.props.devices.every((device, index) => device === nextProps.devices[index]) || this.props.idAttribute !== nextProps.idAttribute || true;
   }
 
   /*
@@ -67,44 +75,19 @@ export class Preauthorize extends React.Component {
       .finally(() => self.setState({ pageLoading: false }));
   }
 
-  _handlePageChange(pageNo) {
-    var self = this;
-    self.setState({ pageLoading: true, expandRow: null, pageNo: pageNo }, () => self._getDevices(true));
-  }
-
   _togglePreauth(openPreauth = !this.state.openPreauth) {
     this.setState({ openPreauth });
   }
 
-  _savePreauth(authset, close) {
-    var self = this;
-    self.props
-      .preauthDevice(authset)
-      .then(() => {
-        self._getDevices(true);
-        self.setState({ openPreauth: !close });
-      })
-      .catch(errortext => {
-        if (errortext) {
-          self.setState({ errortext });
-        }
-      });
-  }
-
-  onSortChange(attribute) {
-    const self = this;
-    let state = { sortCol: attribute.name, sortDown: !self.state.sortDown, sortScope: attribute.scope };
-    if (attribute.name !== self.state.sortCol) {
-      state.sortDown = true;
-    }
-    state.sortCol = attribute.name === 'Device ID' ? 'id' : self.state.sortCol;
-    self.setState(state, () => self._getDevices(true));
+  onPreauthSaved(addMore) {
+    this._getDevices(true);
+    this.setState({ openPreauth: !addMore });
   }
 
   render() {
     const self = this;
-    const { acceptedDevices, count, deviceLimit, devices, idAttribute, openSettingsDialog } = self.props;
-    const { errorMessage, openPreauth, pageLoading } = self.state;
+    const { acceptedDevices, count, deviceLimit, devices, idAttribute, openSettingsDialog, preauthDevice, setSnackbar } = self.props;
+    const { openPreauth, pageLoading } = self.state;
     const limitMaxed = deviceLimit && deviceLimit <= acceptedDevices;
 
     const columnHeaders = [
@@ -115,18 +98,7 @@ export class Preauthorize extends React.Component {
         style: { flexGrow: 1 },
         sortable: true
       },
-      {
-        title: 'Date added',
-        attribute: { name: 'created_ts', scope: 'system' },
-        render: device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-'),
-        sortable: true
-      },
-      {
-        title: 'Status',
-        attribute: { name: 'status', scope: 'identity' },
-        render: device => (device.status ? <div className="capitalized">{device.status}</div> : '-'),
-        sortable: true
-      }
+      ...defaultHeaders
     ];
 
     const deviceLimitWarning = limitMaxed ? (
@@ -174,11 +146,11 @@ export class Preauthorize extends React.Component {
         {openPreauth && (
           <PreauthDialog
             deviceLimitWarning={deviceLimitWarning}
-            errortext={errorMessage}
             limitMaxed={limitMaxed}
-            onSubmit={(data, addMore) => self._savePreauth(data, addMore)}
+            preauthDevice={preauthDevice}
+            onSubmit={addMore => self.onPreauthSaved(addMore)}
             onCancel={() => self._togglePreauth(false)}
-            onChange={() => self.setState({ errorMessage: null })}
+            setSnackbar={setSnackbar}
           />
         )}
       </div>
@@ -186,7 +158,7 @@ export class Preauthorize extends React.Component {
   }
 }
 
-const actionCreators = { getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters };
+const actionCreators = { getDevicesByStatus, preauthDevice, selectGroup, setDeviceFilters, setSnackbar };
 
 const mapStateToProps = state => {
   return {

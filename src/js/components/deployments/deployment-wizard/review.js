@@ -7,7 +7,7 @@ import { Chip, List } from '@material-ui/core';
 import { formatTime, generateDeploymentGroupDetails, getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import ExpandableAttribute from '../../common/expandable-attribute';
-import { getPhaseStartTime } from '../deployments';
+import { getPhaseStartTime } from '../createdeployment';
 
 const Review = ({
   deployment = {},
@@ -18,7 +18,7 @@ const Review = ({
   group,
   isEnterprise,
   phases = [{ batch_size: 100 }],
-  release,
+  release = { device_types_compatible: [] },
   retries = 0
 }) => {
   const creationTime = deployment.created || new Date().toISOString();
@@ -80,7 +80,7 @@ const Review = ({
               index === phases.length - 1
             );
             const deviceCountText = !filterId ? ` (${deviceCount} ${pluralize('device', deviceCount)})` : '';
-            const startTime = getPhaseStartTime(phases, index);
+            const startTime = getPhaseStartTime(phases, index, start_time);
             return (
               <div className="flexbox column" key={startTime}>
                 <Chip size="small" label={`Phase ${index + 1}`} />

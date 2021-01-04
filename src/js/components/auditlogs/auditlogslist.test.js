@@ -15,7 +15,7 @@ describe('Auditlogs Component', () => {
     store = mockStore({ ...defaultState });
   });
 
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer
       .create(
         <MemoryRouter>
@@ -29,7 +29,7 @@ describe('Auditlogs Component', () => {
               onChangePage={jest.fn}
               onChangeSorting={jest.fn}
               perPage={20}
-              sortDirection={'desc'}
+              sortDirection="desc"
             />
           </Provider>
         </MemoryRouter>

@@ -4,7 +4,7 @@ import FilterItem from './filteritem';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('FilterItem Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer
       .create(
         <FilterItem
