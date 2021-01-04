@@ -89,6 +89,7 @@ export const Terminal = props => {
       //
       if (resizeInterval) {
         clearInterval(resizeInterval);
+        resizeInterval = null;
       }
     };
 
@@ -113,6 +114,13 @@ export const Terminal = props => {
     };
 
     setSocket(socket);
+
+    return () => {
+      if (resizeInterval) {
+        clearInterval(resizeInterval);
+        resizeInterval = null;
+      }
+    };
   }, []);
 
   const options = {
