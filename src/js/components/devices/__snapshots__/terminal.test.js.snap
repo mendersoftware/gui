@@ -36,9 +36,11 @@ exports[`TerminalDialog Component renders correctly 1`] = `
       </div>
       <div
         class="MuiDialogContent-root dialog-content"
-        style="padding: 0px;"
+        style="padding: 0px; margin: 0px 24px; height: 75vh;"
       >
-        <div>
+        <div
+          class="xterm-fullscreen"
+        >
           <div
             class="terminal xterm"
             dir="ltr"
@@ -54,7 +56,6 @@ exports[`TerminalDialog Component renders correctly 1`] = `
             </div>
             <div
               class="xterm-screen"
-              style="width: 0px; height: 0px;"
             >
               <div
                 class="xterm-helpers"
@@ -81,27 +82,19 @@ exports[`TerminalDialog Component renders correctly 1`] = `
               </div>
               <canvas
                 class="xterm-text-layer"
-                height="0"
-                style="z-index: 0; width: 0px; height: 0px;"
-                width="0"
+                style="z-index: 0;"
               />
               <canvas
                 class="xterm-selection-layer"
-                height="0"
-                style="z-index: 1; width: 0px; height: 0px;"
-                width="0"
+                style="z-index: 1;"
               />
               <canvas
                 class="xterm-link-layer"
-                height="0"
-                style="z-index: 2; width: 0px; height: 0px;"
-                width="0"
+                style="z-index: 2;"
               />
               <canvas
                 class="xterm-cursor-layer"
-                height="0"
-                style="z-index: 3; width: 0px; height: 0px;"
-                width="0"
+                style="z-index: 3;"
               />
             </div>
           </div>

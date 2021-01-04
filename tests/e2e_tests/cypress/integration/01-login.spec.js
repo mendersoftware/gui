@@ -71,7 +71,7 @@ context('Login', () => {
 
     it('pt2', () => {
       cy.contains('Log in')
-        .should('not.be.visible')
+        .should('not.exist')
         .then(() => cy.getCookie('JWT').should('have.property', 'value'));
     });
   });
