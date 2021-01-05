@@ -3,7 +3,7 @@ import Cookies from 'universal-cookie';
 import OnboardingConstants, { onboardingSteps as onboardingStepNames } from '../constants/onboardingConstants';
 import { DEVICE_STATES } from '../constants/deviceConstants';
 
-import { onboardingSteps } from '../utils/onboardingmanager';
+import { applyOnboardingFallbacks, onboardingSteps } from '../utils/onboardingmanager';
 import { getDemoDeviceAddress } from '../helpers';
 import { getUserSettings } from '../selectors';
 import Tracking from '../tracking';
@@ -31,7 +31,7 @@ export const getOnboardingState = () => (dispatch, getState) => {
       acceptedDevices.length && store.devices.byId[acceptedDevices[0]].hasOwnProperty('attributes')
         ? store.devices.byId[acceptedDevices[0]].attributes.device_type
         : null;
-    const progress = onboardingState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments);
+    const progress = applyOnboardingFallbacks(onboardingState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments));
     const state = {
       complete: !!(
         Boolean(userCookie) ||

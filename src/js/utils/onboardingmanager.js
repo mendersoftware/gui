@@ -45,7 +45,8 @@ export const onboardingSteps = {
   },
   [stepNames.DEVICES_PENDING_ONBOARDING_START]: {
     condition: { min: stepNames.DASHBOARD_ONBOARDING_START, max: stepNames.DEVICES_PENDING_ONBOARDING },
-    specialComponent: <DevicePendingTip />
+    specialComponent: <DevicePendingTip />,
+    fallbackStep: stepNames.DASHBOARD_ONBOARDING_START
   },
   [stepNames.DEVICES_PENDING_ONBOARDING]: {
     condition: { min: stepNames.DASHBOARD_ONBOARDING_START },
@@ -214,4 +215,12 @@ export const getOnboardingComponentFor = (id, componentProps, params = {}, previ
   }
   const component = step.component(componentProps);
   return <BaseOnboardingTip id={id} component={component} progress={step.progress || params.progress || null} {...params} />;
+};
+
+export const applyOnboardingFallbacks = progress => {
+  const step = onboardingSteps[progress];
+  if (step && step.fallbackStep) {
+    return step.fallbackStep;
+  }
+  return progress;
 };
