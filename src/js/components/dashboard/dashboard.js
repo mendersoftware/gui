@@ -31,7 +31,7 @@ export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceL
       const notification = getOnboardingComponentFor(onboardingSteps.ONBOARDING_START, onboardingState);
       !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
     }, 400);
-  }, [currentUser, onboardingState]);
+  }, [currentUser, JSON.stringify(onboardingState)]);
 
   const handleClick = params => {
     let redirect;
