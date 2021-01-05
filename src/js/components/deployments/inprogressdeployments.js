@@ -38,10 +38,17 @@ export class Progress extends React.Component {
     };
   }
 
+  handleResize() {
+    setTimeout(() => {
+      this.setState({ height: window.innerHeight, width: window.innerWidth });
+    }, 500);
+  }
+
   componentDidMount() {
     const self = this;
     clearTimeout(self.dynamicTimer);
     self.setupDeploymentsRefresh(minimalRefreshDeploymentsLength);
+    window.addEventListener('resize', this.handleResize.bind(this));
   }
 
   componentDidUpdate(prevProps) {
@@ -54,6 +61,7 @@ export class Progress extends React.Component {
   componentWillUnmount() {
     clearTimeout(this.dynamicTimer);
     clearAllRetryTimers(this.props.setSnackbar);
+    window.removeEventListener('resize', this.handleResize.bind(this));
   }
 
   setupDeploymentsRefresh(refreshLength = this.state.currentRefreshDeploymentLength) {

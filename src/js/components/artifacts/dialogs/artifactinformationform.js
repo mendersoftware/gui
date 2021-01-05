@@ -49,6 +49,20 @@ export class ArtifactInformation extends React.Component {
     }
   }
 
+  handleResize() {
+    setTimeout(() => {
+      this.setState({ height: window.innerHeight, width: window.innerWidth });
+    }, 500);
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize.bind(this));
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize.bind(this));
+  }
+
   render() {
     const self = this;
     const { advanceOnboarding, customDeviceTypes, deviceTypes = [], name, onboardingState, selectedDeviceTypes = [], updateCreation } = self.props;

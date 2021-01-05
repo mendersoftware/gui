@@ -53,6 +53,20 @@ export class SoftwareDevices extends React.PureComponent {
     setDeploymentSettings(deviceCount, 'deploymentDeviceCount');
   }
 
+  handleResize() {
+    setTimeout(() => {
+      this.setState({ height: window.innerHeight, width: window.innerWidth });
+    }, 500);
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize.bind(this));
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize.bind(this));
+  }
+
   render() {
     const self = this;
     const {

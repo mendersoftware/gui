@@ -51,6 +51,20 @@ export default class ArtifactUpload extends React.Component {
     }
   }
 
+  handleResize() {
+    setTimeout(() => {
+      this.setState({ height: window.innerHeight, width: window.innerWidth });
+    }, 500);
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize.bind(this));
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize.bind(this));
+  }
+
   render() {
     const self = this;
     const { acceptedFiles, destination } = self.state;

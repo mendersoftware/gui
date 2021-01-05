@@ -42,15 +42,25 @@ export class Deployments extends React.Component {
       loading: true
     };
   }
+
+  handleResize() {
+    setTimeout(() => {
+      this.setState({ height: window.innerHeight, width: window.innerWidth });
+    }, 500);
+  }
+
   componentWillUnmount() {
     clearInterval(this.timer);
     clearAllRetryTimers(this.props.setSnackbar);
+    window.removeEventListener('resize', this.handleResize.bind(this));
   }
+
   componentDidMount() {
     var self = this;
     clearAllRetryTimers(self.props.setSnackbar);
     self.timer = setInterval(() => self.getDeployments(), refreshDeploymentsLength);
     self.getDeployments();
+    window.addEventListener('resize', this.handleResize.bind(this));
   }
 
   getDeployments() {
