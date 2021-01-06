@@ -21,6 +21,14 @@ const MessageTypeResize = 'resize';
 
 const MessagePack = msgpack5();
 
+const byteArrayToString = body => {
+  var myString = '';
+  for (var i = 0; i < body.byteLength; i++) {
+    myString += String.fromCharCode(body[i]);
+  }
+  return myString;
+};
+
 export const Terminal = props => {
   const { deviceId, sessionId, socket, setSessionId, setSocket, setSnackbar, onCancel } = props;
   const xtermRef = React.useRef(null);
@@ -102,13 +110,14 @@ export const Terminal = props => {
       event.data.arrayBuffer().then(function (data) {
         const obj = MessagePack.decode(data);
         if (obj.hdr.typ === MessageTypeNew) {
-          setSessionId(obj.hdr.sid);
-        } else if (obj.hdr.typ === MessageTypeShell) {
-          var myString = '';
-          for (var i = 0; i < obj.body.byteLength; i++) {
-            myString += String.fromCharCode(obj.body[i]);
+          if ((obj.hdr.props || {}).status == 2) {
+            setSnackbar('Error: ' + byteArrayToString(obj.body), 5000);
+            onCancel();
+          } else {
+            setSessionId(obj.hdr.sid);
           }
-          term.write(myString);
+        } else if (obj.hdr.typ === MessageTypeShell) {
+          term.write(byteArrayToString(obj.body));
         }
       });
     };
