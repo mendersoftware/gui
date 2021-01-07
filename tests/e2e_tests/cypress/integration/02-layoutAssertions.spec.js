@@ -44,16 +44,5 @@ context('Layout assertions', () => {
       cy.get('#device-actions-actions').get('.MuiSpeedDialAction-staticTooltipLabel').contains('Accept').parent().find('button').click().end();
       cy.get('a').contains('Device groups').click();
     });
-
-    it('has basic inventory', () => {
-      cy.get('a').contains('Devices').click();
-      cy.contains('.deviceListItem', 'release', { timeout: 10000 });
-      cy.get('.deviceListItem').click().should('contain', 'release').end();
-      cy.get('.expandedDevice')
-        .should('contain', `${Cypress.config('demoDeviceName') || 'release-v1'}`)
-        .and('contain', 'Linux')
-        .and('contain', 'mac')
-        .and('contain', 'qemux86-64');
-    });
   });
 });

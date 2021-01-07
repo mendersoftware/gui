@@ -128,7 +128,7 @@ test-prep:
 
 test:staging-deployment:
   image:
-    name: cypress/included:5.4.0
+    name: cypress/included:6.2.1
     # cypress/included images have entrypoint set to "cypress"
     # which conflicts with GitLab CI wrapper shell script
     entrypoint: ['']

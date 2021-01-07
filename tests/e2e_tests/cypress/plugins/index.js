@@ -3,7 +3,10 @@ const { spawn } = require('child_process');
 const generateOtp = require('cypress-otp');
 const fs = require('fs');
 
+const { addMatchImageSnapshotPlugin } = require('cypress-image-snapshot/plugin');
+
 module.exports = (on, config) => {
+  addMatchImageSnapshotPlugin(on, config);
   on('task', {
     startClient({ token, count }) {
       let args = [

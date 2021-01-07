@@ -1,6 +1,7 @@
 {
   "baseUrl": "https://docker.mender.io/",
   "env": {
+    "failOnSnapshotDiff": false,
     "username": "mender-demo@example.com",
     "password": "mysecretpassword!123"
   },
