@@ -149,13 +149,13 @@ mender setup \\
   --device-type $DEVICE_TYPE \\
   --quiet --demo  && \\
 systemctl restart mender-client && \\
-(cat &gt; /etc/mender/mender-shell.conf &lt;&lt; EOF
+(cat &gt; /etc/mender/mender-connect.conf &lt;&lt; EOF
 {
   "ServerURL": "http://localhost",
   "User": "pi"
 }
 EOF
-) && systemctl restart mender-shell'
+) && systemctl restart mender-connect'
 
     </span>
   </div>

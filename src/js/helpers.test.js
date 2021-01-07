@@ -127,13 +127,13 @@ mender setup \\
   --quiet --demo --server-ip 192.168.7.41 \\
   --tenant-token $TENANT_TOKEN && \\
 systemctl restart mender-client && \\
-(cat > /etc/mender/mender-shell.conf << EOF
+(cat > /etc/mender/mender-connect.conf << EOF
 {
   "ServerURL": "http://localhost",
   "User": "pi"
 }
 EOF
-) && systemctl restart mender-shell'`
+) && systemctl restart mender-connect'`
     );
   });
   it('should return a sane result for old installations', async () => {
