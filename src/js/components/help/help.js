@@ -141,7 +141,7 @@ const mapStateToProps = state => {
     docsVersion: getDocsVersion(state),
     isHosted: state.app.features.isHosted,
     isEnterprise: getIsEnterprise(state),
-    hasMenderShellSupport: versionCompare(state.app.integrationVersion, '2.6.0') > -1,
+    hasMenderShellSupport: versionCompare(state.app.versionInformation.Integration, '2.6.0') > -1,
     menderVersion: state.app.versionInformation['Mender-Client'],
     menderDebPackageVersion: state.app.menderDebPackageVersion,
     menderArtifactVersion: state.app.versionInformation['Mender-Artifact'],
