@@ -4,7 +4,7 @@ import AuthsetList from './authsetlist';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('AuthsetList Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer.create(<AuthsetList authsets={[]} />).toJSON();
     expect(tree).toMatchSnapshot();
     expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));

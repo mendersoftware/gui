@@ -2,7 +2,7 @@
 
 exports[`Announcement Component renders correctly 1`] = `
 <div
-  className="flexbox centered fadeOutSlow"
+  className="flexbox centered fadeInSlow"
   id="announcement"
 >
   <svg

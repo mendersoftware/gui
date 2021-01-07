@@ -4,7 +4,7 @@ import Alert from './alert';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('Alert Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer
       .create(
         <Alert className="margin-top-small" severity="error">

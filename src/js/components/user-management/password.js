@@ -7,9 +7,7 @@ import { passwordResetStart } from '../../actions/userActions';
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 
-export const Password = props => {
-  const { passwordResetStart } = props;
-
+export const Password = ({ passwordResetStart }) => {
   const [confirm, setConfirm] = useState(false);
 
   const _handleSubmit = formData => {
@@ -60,6 +58,4 @@ export const Password = props => {
 
 const actionCreators = { passwordResetStart };
 
-const mapStateToProps = () => {};
-
-export default connect(mapStateToProps, actionCreators)(Password);
+export default connect(null, actionCreators)(Password);

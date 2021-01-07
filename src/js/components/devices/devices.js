@@ -45,7 +45,7 @@ const routes = {
 
 export const refreshLength = 10000;
 
-const convertQueryToFilterAndGroup = (query, filteringAttributes) => {
+export const convertQueryToFilterAndGroup = (query, filteringAttributes) => {
   const search = query.startsWith('?') ? query.substring(1) : query;
   const str = decodeURIComponent(search);
   const filters = str.split('&').reduce(

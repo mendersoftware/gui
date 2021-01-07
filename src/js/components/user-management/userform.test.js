@@ -1,12 +1,13 @@
 import React from 'react';
-import { createMount } from '@material-ui/core/test-utils';
+import { render } from '@testing-library/react';
 import UserForm from './userform';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('UserForm Component', () => {
-  it('renders correctly', () => {
-    const tree = createMount()(<UserForm currentUser={{}} roles={[]} user={{}} />).html();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+  it('renders correctly', async () => {
+    const { baseElement } = render(<UserForm currentUser={{}} roles={[]} user={{}} />);
+    const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

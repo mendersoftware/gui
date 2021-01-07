@@ -1,0 +1,230 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GlobalSettings Component renders correctly 1`] = `
+<div
+  className="margin-top-small"
+  style={
+    Object {
+      "maxWidth": "750px",
+    }
+  }
+>
+  <h2
+    style={
+      Object {
+        "marginTop": "15px",
+      }
+    }
+  >
+    Upgrade now
+  </h2>
+  <div>
+    <p>
+      Upgrade to one of our plans to connect more devices, continue using advanced features, and get access to support.
+    </p>
+    <p>
+      Learn more about the different plans at
+       
+      <a
+        href="https://mender.io/plans/pricing"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        mender.io/plans/pricing
+      </a>
+      .
+    </p>
+    <h3
+      className="margin-top"
+    >
+      1. Choose a plan
+    </h3>
+    <div>
+      <div
+        className="planPanel active"
+        onClick={[Function]}
+      >
+        <h4>
+          Starter
+           
+        </h4>
+        <p>
+          <span>
+            $29/month for first 50 devices
+          </span>
+        </p>
+        <span
+          className="info"
+        >
+          Basic features
+        </span>
+      </div>
+      <div
+        className="planPanel "
+        onClick={[Function]}
+      >
+        <h4>
+          Professional
+           
+        </h4>
+        <p>
+          <span>
+            $249/month for first 250 devices
+          </span>
+        </p>
+        <span
+          className="info"
+        >
+          + Extra features
+        </span>
+      </div>
+      <div
+        className="planPanel "
+        onClick={[Function]}
+      >
+        <h4>
+          Enterprise
+           
+        </h4>
+        <p>
+          <span>
+            Custom pricing, unlimited devices
+          </span>
+        </p>
+        <span
+          className="info"
+        >
+          + Full features + SLA support
+        </span>
+      </div>
+    </div>
+    <p
+      className="info"
+    >
+      <svg
+        aria-hidden={true}
+        className="MuiSvgIcon-root"
+        focusable="false"
+        style={
+          Object {
+            "fontSize": "14px",
+            "margin": "0 4px 4px 0",
+            "verticalAlign": "middle",
+          }
+        }
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+        />
+      </svg>
+      If you have any questions about the plan pricing or device limits,
+       
+      <a
+        href="mailto:contact@mender.io"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        contact our team
+      </a>
+      .
+    </p>
+    <div>
+      <h3
+        className="margin-top-large"
+      >
+        2. Enter your payment details
+      </h3>
+      <p>
+        You are upgrading to
+         
+        <b>
+          Mender 
+          <span
+            className="capitalized-start"
+          >
+            Starter
+          </span>
+        </b>
+      </p>
+      <form
+        className="margin-top-small"
+        onReset={[Function]}
+        onSubmit={[Function]}
+      >
+        <div
+          className="warning"
+        />
+        <div
+          id="poweredByStripe"
+        >
+          <div>
+            All standard credit card fees apply (e.g. foreign transaction fee, if your card has one)
+          </div>
+          <img
+            src="powered_by_stripe.png"
+          />
+        </div>
+        <p
+          className="info"
+        >
+          Billing will be scheduled monthly, starting from today. You can cancel at any time.
+        </p>
+        <div
+          className="flexbox margin-top-small"
+          style={
+            Object {
+              "alignItems": "center",
+              "justifyContent": "flex-end",
+            }
+          }
+        >
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary Mui-disabled Mui-disabled"
+            disabled={true}
+            onBlur={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={-1}
+            type="submit"
+          >
+            <span
+              className="MuiButton-label"
+            >
+              Sign up
+            </span>
+          </button>
+        </div>
+        <div
+          className="loaderContainer shrunk"
+        >
+          <div
+            className="loader"
+          >
+            <span
+              className="dot dot_1"
+            />
+            <span
+              className="dot dot_2"
+            />
+            <span
+              className="dot dot_3"
+            />
+            <span
+              className="dot dot_4"
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+`;

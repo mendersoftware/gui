@@ -1,8 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
-
-import { setSnackbar } from '../../actions/appActions';
-import Snackbar from '@material-ui/core/Snackbar';
+import { Snackbar } from '@material-ui/core';
 import copy from 'copy-to-clipboard';
 
 export const SharedSnackbar = ({ setSnackbar, snackbar }) => {
@@ -30,12 +27,4 @@ export const SharedSnackbar = ({ setSnackbar, snackbar }) => {
   );
 };
 
-const actionCreators = { setSnackbar };
-
-const mapStateToProps = state => {
-  return {
-    snackbar: state.app.snackbar
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(SharedSnackbar);
+export default SharedSnackbar;

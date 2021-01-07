@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
@@ -15,6 +15,10 @@ describe('App Component', () => {
   beforeEach(() => {
     store = mockStore({
       ...defaultState,
+      app: {
+        ...defaultState.app,
+        trackerCode: 'testtracker'
+      },
       deployments: {
         ...defaultState.deployments,
         byId: {},
@@ -34,21 +38,35 @@ describe('App Component', () => {
     });
   });
 
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     Object.defineProperty(window.document, 'cookie', {
       writable: true,
       value: 'JWT=omnomnom'
     });
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <Provider store={store}>
-            <App />
-          </Provider>
-        </MemoryRouter>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { baseElement } = render(
+      <MemoryRouter>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </MemoryRouter>
+    );
+    const view = baseElement;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
+  });
+
+  it('works as intended', async () => {
+    Object.defineProperty(window.document, 'cookie', {
+      writable: true,
+      value: 'JWT=omnomnom'
+    });
+    render(
+      <MemoryRouter>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </MemoryRouter>
+    );
+    jest.advanceTimersByTime(900500);
   });
 });

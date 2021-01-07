@@ -309,7 +309,7 @@ exports[`Help Component renders correctly 1`] = `
       }
     >
       Help 
-      
+        &gt;  Getting started
     </p>
     <div
       className="help-content"

@@ -6,14 +6,14 @@ import { Autocomplete } from '@material-ui/lab';
 
 import historyImage from '../../../assets/img/history.png';
 
-import { getAllAuditLogs, getAuditLogs } from '../../actions/organizationActions';
+import { getAuditLogs, getAuditLogsCsv } from '../../actions/organizationActions';
 import { getUserList } from '../../actions/userActions';
 import Loader from '../common/loader';
 import TimeframePicker from '../common/timeframe-picker';
 import TimerangePicker from '../common/timerange-picker';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
-import AuditLogsList, { auditLogColumns, defaultRowsPerPage } from './auditlogslist';
+import AuditLogsList, { defaultRowsPerPage } from './auditlogslist';
 
 const today = new Date(new Date().setHours(0, 0, 0));
 const tonight = new Date(new Date().setHours(23, 59, 59));
@@ -23,9 +23,7 @@ const detailsMap = {
   User: 'email'
 };
 
-const csvHeader = `data:text/csv;charset=utf-8,${auditLogColumns.map(column => column.title).join(',')}`;
-
-export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, getUserList, groups, users, ...props }) => {
+export const AuditLogs = ({ events, getAuditLogsCsv, getAuditLogs, getUserList, groups, users, ...props }) => {
   const [endDate, setEndDate] = useState(tonight);
   const [csvLoading, setCsvLoading] = useState(false);
   const [detail, setDetail] = useState(undefined);
@@ -74,17 +72,11 @@ export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, getUserList, 
     setDetail(detailFilter);
   };
 
-  const applyFormatting = (entries, columns) => entries.map(entry => columns.map(column => column.printFormatter(entry)).join(','));
-
   const createCsvDownload = () => {
     setCsvLoading(true);
-    getAllAuditLogs().then(entries => {
-      const rows = applyFormatting(entries, auditLogColumns);
-      const csvContent = rows.join('\n');
-      const encodedUri = encodeURI(`${csvHeader}\n${csvContent}`);
-      // window.open(encodedUri);
+    getAuditLogsCsv().then(csvContent => {
       const link = document.createElement('a');
-      link.setAttribute('href', encodedUri);
+      link.setAttribute('href', encodeURI(csvContent));
       link.setAttribute('download', `Mender-AuditLog-${moment(startDate).format(moment.HTML5_FMT.DATE)}-${moment(endDate).format(moment.HTML5_FMT.DATE)}.csv`);
       document.body.appendChild(link);
       link.click();
@@ -166,7 +158,7 @@ export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, getUserList, 
       </div>
       <div className="flexbox" style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
         <Loader show={csvLoading} />
-        <Button variant="contained" color="secondary" disabled={csvLoading} onClick={createCsvDownload} style={{ marginLeft: 15 }}>
+        <Button variant="contained" color="secondary" disabled={csvLoading || !events.length} onClick={createCsvDownload} style={{ marginLeft: 15 }}>
           Download results as csv
         </Button>
       </div>
@@ -194,7 +186,7 @@ export const AuditLogs = ({ events, getAllAuditLogs, getAuditLogs, getUserList, 
   );
 };
 
-const actionCreators = { getAllAuditLogs, getAuditLogs, getUserList };
+const actionCreators = { getAuditLogs, getAuditLogsCsv, getUserList };
 
 const mapStateToProps = state => {
   // eslint-disable-next-line no-unused-vars

@@ -172,10 +172,10 @@ exports[`Auditlogs Component renders correctly 1`] = `
           </div>
           <div>
             <time
-              dateTime="2020-09-10T12:10:22+00:00"
+              dateTime="2019-01-01T12:10:22+00:00"
               title={null}
             >
-              2020-09-10 12:10
+              2019-01-01 12:10
             </time>
           </div>
           <button
@@ -311,10 +311,10 @@ exports[`Auditlogs Component renders correctly 1`] = `
           </div>
           <div>
             <time
-              dateTime="2020-09-10T12:16:22+00:00"
+              dateTime="2019-01-01T12:16:22+00:00"
               title={null}
             >
-              2020-09-10 12:16
+              2019-01-01 12:16
             </time>
           </div>
           <button
@@ -523,9 +523,9 @@ exports[`Auditlogs Component renders correctly 1`] = `
             onKeyUp={[Function]}
             style={
               Object {
-                "marginRight": "10px",
-                "maxWidth": "30px",
-                "minWidth": "30px",
+                "marginRight": 10,
+                "maxWidth": 30,
+                "minWidth": 30,
               }
             }
           >

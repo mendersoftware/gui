@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
 
 import { Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, InputLabel, ListSubheader, MenuItem, Select, Tooltip } from '@material-ui/core';
 import { InfoOutlined as InfoIcon } from '@material-ui/icons';
@@ -185,11 +184,4 @@ export const ScheduleRollout = props => {
   );
 };
 
-const mapStateToProps = state => {
-  return {
-    previousPhases: state.users.globalSettings.previousPhases,
-    previousRetries: state.users.globalSettings.previousRetries || 0
-  };
-};
-
-export default connect(mapStateToProps)(ScheduleRollout);
+export default ScheduleRollout;

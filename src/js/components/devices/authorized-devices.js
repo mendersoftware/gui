@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import ReactTooltip from 'react-tooltip';
 
 import pluralize from 'pluralize';
 
@@ -14,14 +13,13 @@ import {
   Autorenew as AutorenewIcon,
   Delete as DeleteIcon,
   FilterList as FilterListIcon,
-  Help as HelpIcon,
   HeightOutlined as HeightOutlinedIcon,
   HighlightOffOutlined as HighlightOffOutlinedIcon,
   LockOutlined
 } from '@material-ui/icons';
 import { mdiTrashCanOutline as TrashCan } from '@mdi/js';
 
-import { getDevicesByStatus, getGroupDevices, selectDevices, setDeviceFilters, trySelectDevice, updateDevicesAuth } from '../../actions/deviceActions';
+import { getDevicesByStatus, getGroupDevices, selectDevices, setDeviceFilters, updateDevicesAuth } from '../../actions/deviceActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
@@ -30,14 +28,13 @@ import { getIdAttribute, getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
-import RelativeTime from '../common/relative-time';
 import { ExpandDevice } from '../helptips/helptooltips';
 import DeviceList from './devicelist';
 import DeviceStatus from './device-status';
 import { refreshLength as refreshDeviceLength } from './devices';
 import Filters from './filters';
+import BaseDevices, { RelativeDeviceTime } from './base-devices';
 
-const relativeDeviceTime = device => <RelativeTime updateTime={device.updated_ts} />;
 const deviceStatus = device => <DeviceStatus device={device} />;
 
 const defaultHeaders = [
@@ -56,7 +53,7 @@ const defaultHeaders = [
   {
     title: 'Last check-in',
     attribute: { name: 'updated_ts', scope: 'system' },
-    render: relativeDeviceTime,
+    render: RelativeDeviceTime,
     sortable: true
   },
   {
@@ -75,11 +72,12 @@ const sortingAlternatives = defaultHeaders.reduce((accu, item) => {
   return accu;
 }, {});
 
-export class Authorized extends React.Component {
+export class Authorized extends BaseDevices {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      loading: true,
+      isInitialized: !!props.devices.length,
+      pageLoading: true,
       pageNo: 1,
       pageLength: 20,
       selectedRows: [],
@@ -106,17 +104,17 @@ export class Authorized extends React.Component {
     }
     clearAllRetryTimers(self.props.setSnackbar);
     if (self.props.filters && self.props.groupDevices.length) {
-      self.setState({ loading: false }, () => self.props.selectDevices(self.props.groupDevices.slice(0, self.state.pageLength)));
+      self.setState({ pageLoading: false }, () => self.props.selectDevices(self.props.groupDevices.slice(0, self.state.pageLength)));
     } else {
-      clearInterval(self.deviceTimer);
+      clearInterval(self.timer);
       // no group, no filters, all devices
-      self.deviceTimer = setInterval(() => self._getDevices(), refreshDeviceLength);
+      self.timer = setInterval(() => self._getDevices(), refreshDeviceLength);
       self._getDevices();
     }
   }
 
   componentWillUnmount() {
-    clearInterval(this.deviceTimer);
+    clearInterval(this.timer);
     clearAllRetryTimers(this.props.setSnackbar);
   }
 
@@ -141,8 +139,8 @@ export class Authorized extends React.Component {
           !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
         }, 400);
       }
-      clearInterval(self.deviceTimer);
-      self.deviceTimer = setInterval(() => self._getDevices(), refreshDeviceLength);
+      clearInterval(self.timer);
+      self.timer = setInterval(() => self._getDevices(), refreshDeviceLength);
       self._getDevices(true);
     }
   }
@@ -170,26 +168,7 @@ export class Authorized extends React.Component {
     request
       .catch(err => setRetryTimer(err, 'devices', `Devices couldn't be loaded.`, refreshDeviceLength, setSnackbar))
       // only set state after all devices id data retrieved
-      .finally(() => self.setState({ loading: false, pageLoading: false }));
-  }
-
-  getDeviceById(id) {
-    // filter the list to show a single device only
-    var self = this;
-    // do this via deviceauth not inventory
-    return self.props
-      .trySelectDevice(id, DEVICE_STATES.accepted)
-      .catch(err => {
-        if (err.response.status === 404) {
-          setRetryTimer(err, 'devices', `Device couldn't be loaded.`, refreshDeviceLength, self.props.setSnackbar);
-        }
-      })
-      .finally(() => self.setState({ loading: false, pageLoading: false }));
-  }
-
-  _handlePageChange(pageNo) {
-    var self = this;
-    self.setState({ pageLoading: true, pageNo: pageNo }, () => self._getDevices(true));
+      .finally(() => self.setState({ isInitialized: true, pageLoading: false }));
   }
 
   onRowSelection(selection) {
@@ -213,18 +192,16 @@ export class Authorized extends React.Component {
 
   onRejectDevices(rows) {
     var self = this;
-    self.setState({ loading: true });
+    self.setState({ pageLoading: true });
     const deviceIds = rows.map(row => self.props.devices[row]);
-    return self.props.updateDevicesAuth(deviceIds, DEVICE_STATES.rejected).then(() => self.setState({ selectedRows: [], loading: false }));
+    return self.props.updateDevicesAuth(deviceIds, DEVICE_STATES.rejected).then(() => self.setState({ selectedRows: [], pageLoading: false }));
   }
 
-  onSortChange(attribute) {
-    const self = this;
-    let state = { sortCol: attribute.name === 'Device ID' ? 'id' : attribute.name, sortDown: !self.state.sortDown, sortScope: attribute.scope };
-    if (attribute.name !== self.state.sortCol) {
-      state.sortDown = true;
+  onCreateGroupClick() {
+    if (this.props.selectedGroup) {
+      this.setState({ showFilters: !this.state.showFilters });
     }
-    self.setState(state, () => self._getDevices(true));
+    return this.props.onGroupClick();
   }
 
   render() {
@@ -235,16 +212,14 @@ export class Authorized extends React.Component {
       filters,
       groupCount,
       groupFilters,
-      highlightHelp,
       idAttribute,
       onboardingState,
-      onGroupClick,
       onGroupRemoval,
       openSettingsDialog,
       selectedGroup,
       showHelptips
     } = self.props;
-    const { loading, selectedRows, showActions, showFilters } = self.state;
+    const { isInitialized, selectedRows, showActions, showFilters } = self.state;
     const columnHeaders = [
       {
         title: idAttribute,
@@ -325,61 +300,43 @@ export class Authorized extends React.Component {
           </div>
           <Filters
             onFilterChange={() => self.setState({ pageNo: 1 }, () => self._getDevices(true))}
-            onGroupClick={() => {
-              if (selectedGroup) {
-                this.setState({ showFilters: !showFilters });
-              }
-              return onGroupClick();
-            }}
+            onGroupClick={() => self.onCreateGroupClick()}
             isModification={!!groupFilters.length}
             open={showFilters}
           />
         </div>
-        <Loader show={loading} />
-        {devices.length > 0 && !loading ? (
-          <div className="padding-bottom">
-            <DeviceList
-              {...self.props}
-              {...self.state}
-              columnHeaders={columnHeaders}
-              onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}
-              onPageChange={e => self._handlePageChange(e)}
-              onSelect={selection => self.onRowSelection(selection)}
-              onSort={attribute => self.onSortChange(attribute)}
-              pageTotal={groupCount}
-              refreshDevices={shouldUpdate => self._getDevices(shouldUpdate)}
-              selectDeviceById={id => self.getDeviceById(id)}
-            />
-            {showHelptips && devices.length && (
-              <div>
-                <div
-                  id="onboard-6"
-                  className="tooltip help"
-                  data-tip
-                  data-for="expand-device-tip"
-                  data-event="click focus"
-                  style={{ left: 'inherit', right: '45px' }}
-                >
-                  <HelpIcon />
-                </div>
-                <ReactTooltip id="expand-device-tip" globalEventOff="click" place="left" type="light" effect="solid" className="react-tooltip">
-                  <ExpandDevice />
-                </ReactTooltip>
-              </div>
-            )}
-          </div>
-        ) : (
-          !loading && (
+        <Loader show={!isInitialized} />
+        {isInitialized ? (
+          devices.length > 0 ? (
+            <div className="padding-bottom">
+              <DeviceList
+                {...self.props}
+                {...self.state}
+                columnHeaders={columnHeaders}
+                onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength }, () => self._handlePageChange(1))}
+                onPageChange={e => self._handlePageChange(e)}
+                onSelect={selection => self.onRowSelection(selection)}
+                onSort={attribute => self.onSortChange(attribute)}
+                pageTotal={groupCount}
+                refreshDevices={shouldUpdate => self._getDevices(shouldUpdate)}
+              />
+              {showHelptips && <ExpandDevice />}
+            </div>
+          ) : (
             <div className="dashboard-placeholder">
               <p>No devices found</p>
-              {!allCount ? <p>No devices have been authorized to connect to the Mender server yet.</p> : null}
-              {highlightHelp && (
-                <p>
-                  Visit the <Link to="/help/getting-started">Help section</Link> to learn how to connect devices to the Mender server.
-                </p>
+              {!allCount && (
+                <>
+                  <p>No devices have been authorized to connect to the Mender server yet.</p>
+                  <p>
+                    Visit the <Link to="/help/getting-started">Help section</Link> to learn how to connect devices to the Mender server.
+                  </p>
+                </>
               )}
             </div>
           )
+        ) : (
+          <div />
         )}
         {onboardingComponent ? onboardingComponent : null}
         {!!selectedRows.length && (
@@ -412,7 +369,6 @@ const actionCreators = {
   selectDevices,
   setDeviceFilters,
   setSnackbar,
-  trySelectDevice,
   updateDevicesAuth
 };
 

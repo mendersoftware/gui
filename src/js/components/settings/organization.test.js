@@ -4,7 +4,14 @@ import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import MyOrganization from './organization';
+import MyOrganization, {
+  OrgHeader,
+  TrialExpirationNote,
+  DeviceLimitExpansionNotification,
+  EnterpriseModificationsNote,
+  CancelSubscriptionAlert,
+  CancelSubscriptionButton
+} from './organization';
 import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
@@ -51,7 +58,7 @@ describe('MyOrganization Component', () => {
     });
   });
 
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer
       .create(
         <MemoryRouter>
@@ -64,4 +71,29 @@ describe('MyOrganization Component', () => {
     expect(tree).toMatchSnapshot();
     expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });
+});
+
+describe('smaller components', () => {
+  [OrgHeader, TrialExpirationNote, DeviceLimitExpansionNotification, EnterpriseModificationsNote, CancelSubscriptionAlert, CancelSubscriptionButton].forEach(
+    Component => {
+      it(`renders ${Component.displayName || Component.name} correctly`, () => {
+        const tree = renderer
+          .create(
+            <MemoryRouter>
+              <Component
+                trial_expiration="2019-10-05T13:00:00.000Z"
+                isTrial={true}
+                handleCancelSubscription={jest.fn}
+                orgName="test"
+                mailBodyTexts={{ billing: 'bill this', upgrade: 'upgrade here' }}
+              />
+            </MemoryRouter>
+          )
+          .toJSON();
+
+        expect(tree).toMatchSnapshot();
+        expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+      });
+    }
+  );
 });

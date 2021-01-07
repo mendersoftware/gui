@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import moment from 'moment';
 
 import { Button, Tab, Tabs } from '@material-ui/core';
 
@@ -10,21 +9,17 @@ import { advanceOnboarding } from '../../actions/onboardingActions';
 import { selectRelease } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { setSnackbar } from '../../actions/appActions';
-import { abortDeployment, createDeployment, selectDeployment } from '../../actions/deploymentActions';
+import { abortDeployment, selectDeployment } from '../../actions/deploymentActions';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getIsEnterprise, getOnboardingState } from '../../selectors';
 
-import CreateDialog, { allDevices } from './createdeployment';
+import CreateDialog from './createdeployment';
 import Progress from './inprogressdeployments';
 import Past from './pastdeployments';
 import Report from './report';
 import Scheduled from './scheduleddeployments';
 
-import { deepCompare, standardizePhases } from '../../helpers';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
-import Tracking from '../../tracking';
-
-const MAX_PREVIOUS_PHASES_COUNT = 5;
 
 const routes = {
   active: {
@@ -45,17 +40,6 @@ const routes = {
 };
 
 export const defaultRefreshDeploymentsLength = 30000;
-
-export const getPhaseStartTime = (phases, index) => {
-  if (index < 1) {
-    return phases[0].start_ts || new Date();
-  }
-  // since we don't want to get stale phase start times when the creation dialog is open for a long time
-  // we have to ensure start times are based on delay from previous phases
-  // since there likely won't be 1000s of phases this should still be fine to recalculate
-  const newStartTime = phases.slice(0, index).reduce((accu, phase) => moment(accu).add(phase.delay, phase.delayUnit), phases[0].start_ts || new Date());
-  return newStartTime.toISOString();
-};
 
 export class Deployments extends React.Component {
   constructor(props, context) {
@@ -80,7 +64,9 @@ export class Deployments extends React.Component {
       .catch(err => console.log(err));
     let startDate = self.state.startDate;
     const params = new URLSearchParams(this.props.location.search);
-    if (this.props.match && params) {
+    let reportType = 'active';
+    if (self.props.match) {
+      reportType = self.props.match.params.tab;
       if (params.get('open')) {
         if (params.get('id')) {
           self.showReport(self.state.reportType || self.props.match.params.tab, params.get('id'));
@@ -98,9 +84,9 @@ export class Deployments extends React.Component {
     }
     self.setState({
       createDialog: Boolean(params.get('open')),
-      reportType: this.props.match ? this.props.match.params.tab : 'active',
+      reportType,
       startDate,
-      tabIndex: this._updateActive()
+      tabIndex: self._updateActive()
     });
   }
 
@@ -116,44 +102,14 @@ export class Deployments extends React.Component {
     self.setState({ deploymentObject, createDialog: true, reportDialog: false });
   }
 
-  onScheduleSubmit(deploymentObject) {
+  onScheduleSubmit() {
     const self = this;
-    const { deploymentDeviceIds, device, filterId, group, phases, release, retries } = deploymentObject;
-    const newDeployment = {
-      artifact_name: release.Name,
-      devices: filterId || (group && group !== allDevices) ? undefined : deploymentDeviceIds,
-      filter_id: filterId,
-      group: group === allDevices ? undefined : group,
-      name: device?.id || (group ? decodeURIComponent(group) : 'All devices'),
-      phases: phases
-        ? phases.map((phase, i, origPhases) => {
-            phase.start_ts = getPhaseStartTime(origPhases, i);
-            return phase;
-          })
-        : phases,
-      retries
-    };
-    self.setState({ createDialog: false, reportDialog: false });
-
-    return self.props.createDeployment(newDeployment).then(() => {
-      if (phases) {
-        const standardPhases = standardizePhases(phases);
-        let previousPhases = self.props.settings.previousPhases || [];
-        previousPhases = previousPhases.map(standardizePhases);
-        if (!previousPhases.find(previousPhaseList => previousPhaseList.every(oldPhase => standardPhases.find(phase => deepCompare(phase, oldPhase))))) {
-          previousPhases.push(standardPhases);
-        }
-        self.props.saveGlobalSettings({ previousPhases: previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT) });
-      }
-      self.setState({ deploymentObject: {} });
-      // track in GA
-      Tracking.event({ category: 'deployments', action: 'create' });
-      // successfully retrieved new deployment
-      if (self._getCurrentRoute().title !== routes.active.title) {
-        self.props.history.push(routes.active.route);
-        self._changeTab(routes.active.route);
-      }
-    });
+    self.setState({ createDialog: false, reportDialog: false, deploymentObject: {} });
+    // successfully retrieved new deployment
+    if (self._getCurrentRoute().title !== routes.active.title) {
+      self.props.history.push(routes.active.route);
+      self._changeTab(routes.active.route);
+    }
   }
 
   _abortDeployment(id) {
@@ -249,7 +205,7 @@ export class Deployments extends React.Component {
           <CreateDialog
             onDismiss={() => self.setState({ createDialog: false, deploymentObject: {} })}
             deploymentObject={deploymentObject}
-            onScheduleSubmit={deploymentObj => self.onScheduleSubmit(deploymentObj)}
+            onScheduleSubmit={() => self.onScheduleSubmit()}
           />
         )}
         {onboardingComponent}
@@ -261,7 +217,6 @@ export class Deployments extends React.Component {
 const actionCreators = {
   abortDeployment,
   advanceOnboarding,
-  createDeployment,
   getGroups,
   getDynamicGroups,
   initializeGroupsDevices,

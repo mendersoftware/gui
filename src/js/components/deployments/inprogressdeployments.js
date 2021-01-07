@@ -13,7 +13,7 @@ import theme from '../../themes/mender-theme';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
-import DeploymentsList, { defaultHeaders } from './deploymentslist';
+import DeploymentsList from './deploymentslist';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
 
 const DEFAULT_PENDING_INPROGRESS_COUNT = 10;
@@ -126,7 +126,6 @@ export class Progress extends React.Component {
                 {...self.props}
                 abort={id => self.abortDeployment(id)}
                 count={progressCount || progress.length}
-                headers={defaultHeaders}
                 items={progress}
                 listClass="margin-right-small"
                 page={progressPage}

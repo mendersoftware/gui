@@ -17,6 +17,101 @@ exports[`Devices Component renders correctly 1`] = `
     }
   >
     <div
+      style={
+        Object {
+          "position": "relative",
+        }
+      }
+    >
+      <a
+        aria-disabled={false}
+        className="MuiButtonBase-root MuiFab-root MuiFab-primary"
+        href="/devices/pending"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        role="button"
+        style={
+          Object {
+            "left": "15px",
+            "position": "absolute",
+            "top": "-28px",
+            "zIndex": "1",
+          }
+        }
+        tabIndex={0}
+      >
+        <span
+          className="MuiFab-label"
+        >
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+            />
+          </svg>
+        </span>
+        <span
+          className="MuiTouchRipple-root"
+        />
+      </a>
+      <div
+        className="MuiPaper-root widget  MuiPaper-elevation2 MuiPaper-rounded"
+        onClick={[Function]}
+      >
+        <div
+          style={
+            Object {
+              "display": "flex",
+              "flexDirection": "column",
+              "height": "100%",
+              "width": "100%",
+            }
+          }
+        >
+          <div
+            className="widgetMainContent align-right"
+            style={
+              Object {
+                "alignItems": "flex-end",
+                "display": "flex",
+                "flexDirection": "column",
+              }
+            }
+          >
+            <div
+              className="header"
+            >
+              Pending devices
+            </div>
+            <div
+              className="counter"
+            >
+              1
+            </div>
+          </div>
+          <span
+            className="link"
+          >
+            View details
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
       className="notActive widget "
       onClick={[Function]}
     >
@@ -30,6 +125,63 @@ exports[`Devices Component renders correctly 1`] = `
           }
         }
       >
+        <div
+          className="widgetHeader"
+          style={
+            Object {
+              "borderBottomStyle": "solid",
+              "display": "flex",
+              "flexDirection": "row",
+            }
+          }
+        >
+          <div
+            style={
+              Object {
+                "display": "flex",
+                "flexDirection": "row",
+              }
+            }
+          >
+            <svg
+              aria-hidden={true}
+              className="MuiSvgIcon-root"
+              focusable="false"
+              style={
+                Object {
+                  "color": "#009e73",
+                  "height": "14px",
+                  "marginRight": "10px",
+                  "width": "14px",
+                }
+              }
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+              />
+            </svg>
+            <div
+              style={
+                Object {
+                  "display": "flex",
+                  "flexDirection": "column",
+                }
+              }
+            >
+              <div
+                className="hint"
+              >
+                All devices online
+              </div>
+              <div
+                className="tiny"
+              >
+                Active in past 24h
+              </div>
+            </div>
+          </div>
+        </div>
         <div
           className="widgetMainContent align-right"
           style={
@@ -48,7 +200,7 @@ exports[`Devices Component renders correctly 1`] = `
           <div
             className="counter"
           >
-            0
+            2
           </div>
         </div>
         <span
@@ -62,7 +214,7 @@ exports[`Devices Component renders correctly 1`] = `
     >
       <div>
         <p
-          className=""
+          className="muted"
         >
           Learn how to connect a device
         </p>

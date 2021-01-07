@@ -8,7 +8,7 @@ import OnboardingConstants from '../constants/onboardingConstants';
 import { customSort } from '../helpers';
 
 const apiUrl = '/api/management/v1';
-const deploymentsApiUrl = `${apiUrl}/deployments`;
+export const deploymentsApiUrl = `${apiUrl}/deployments`;
 
 const flattenRelease = release => {
   const { descriptions, deviceTypes } = release.Artifacts.reduce(
@@ -51,7 +51,11 @@ export const getArtifactUrl = id => (dispatch, getState) =>
 
 const progress = (e, dispatch) => {
   const uploadProgress = (e.loaded / e.total) * 100;
-  return dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, uploadProgress: uploadProgress < 50 ? Math.ceil(uploadProgress) : Math.round(uploadProgress) });
+  return dispatch({
+    type: ReleaseConstants.UPLOAD_PROGRESS,
+    inprogress: uploadProgress !== 100,
+    uploadProgress: uploadProgress < 50 ? Math.ceil(uploadProgress) : Math.round(uploadProgress)
+  });
 };
 
 let cancelSource;
@@ -75,7 +79,7 @@ export const createArtifact = (meta, file) => dispatch => {
     dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 }),
     GeneralApi.upload(`${deploymentsApiUrl}/artifacts/generate`, formData, e => progress(e, dispatch), cancelSource.token)
   ])
-    .then(() => Promise.all([dispatch(selectArtifact(meta.name)), dispatch(setSnackbar('Upload successful', 5000))]))
+    .then(() => Promise.all([dispatch(selectRelease(meta.name)), dispatch(setSnackbar('Upload successful', 5000))]))
     .catch(err => {
       if (axios.isCancel(err)) {
         return dispatch(setSnackbar('The artifact generation has been cancelled', 5000));
@@ -99,7 +103,7 @@ export const uploadArtifact = (meta, file) => dispatch => {
     dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 }),
     GeneralApi.upload(`${deploymentsApiUrl}/artifacts`, formData, e => progress(e, dispatch), cancelSource.token)
   ])
-    .then(() => Promise.all([dispatch(selectArtifact(file)), dispatch(setSnackbar('Upload successful', 5000))]))
+    .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', 5000))))
     .catch(err => {
       if (axios.isCancel(err)) {
         return dispatch(setSnackbar('The upload has been cancelled', 5000));
@@ -151,10 +155,7 @@ export const selectArtifact = artifact => (dispatch, getState) => {
   if (!artifact) {
     return dispatch({ type: ReleaseConstants.SELECTED_ARTIFACT, artifact });
   }
-  let artifactName = artifact;
-  if (artifact && artifact.hasOwnProperty('id')) {
-    artifactName = artifact.id;
-  }
+  const artifactName = artifact.hasOwnProperty('id') ? artifact.id : artifact;
   const state = getState();
   const release = Object.values(state.releases.byId).find(item => item.Artifacts.find(releaseArtifact => releaseArtifact.id === artifactName));
   if (release) {

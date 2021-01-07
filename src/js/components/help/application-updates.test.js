@@ -6,7 +6,7 @@ import { helpProps } from './mockData';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('ApplicationUpdates Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer
       .create(
         <MemoryRouter>

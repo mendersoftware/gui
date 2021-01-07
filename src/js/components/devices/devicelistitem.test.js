@@ -4,7 +4,7 @@ import DeviceListItem from './devicelistitem';
 import { defaultState, undefineds } from '../../../../tests/mockData';
 
 describe('DeviceListItem Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer
       .create(<DeviceListItem device={{ id: 1 }} columnHeaders={[{ render: item => item }]} idAttribute={defaultState.users.globalSettings.id_attribute} />)
       .toJSON();

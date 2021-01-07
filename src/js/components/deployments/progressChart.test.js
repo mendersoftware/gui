@@ -4,7 +4,7 @@ import ProgressChart from './progressChart';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('ProgressChart Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const created = new Date('2019-01-01');
     const tree = renderer
       .create(

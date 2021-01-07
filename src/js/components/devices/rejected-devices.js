@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Time from 'react-time';
 import pluralize from 'pluralize';
 
 import { Button } from '@material-ui/core';
@@ -9,13 +8,34 @@ import { FilterList as FilterListIcon } from '@material-ui/icons';
 import { getDevicesByStatus, selectGroup, setDeviceFilters } from '../../actions/deviceActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
-import RelativeTime from '../common/relative-time';
 import DeviceList from './devicelist';
 import { refreshLength as refreshDeviceLength } from './devices';
 import Filters from './filters';
 import { getIdAttribute } from '../../selectors';
+import BaseDevices, { DeviceCreationTime, DeviceStatusHeading, RelativeDeviceTime } from './base-devices';
 
-export class Rejected extends React.Component {
+const defaultHeaders = [
+  {
+    title: 'First request',
+    attribute: { name: 'created_ts', scope: 'system' },
+    render: DeviceCreationTime,
+    sortable: true
+  },
+  {
+    title: 'Last check-in',
+    attribute: { name: 'updated_ts', scope: 'system' },
+    render: RelativeDeviceTime,
+    sortable: true
+  },
+  {
+    title: 'Status',
+    attribute: { name: 'status', scope: 'identity' },
+    render: DeviceStatusHeading,
+    sortable: true
+  }
+];
+
+export class Rejected extends BaseDevices {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -33,10 +53,6 @@ export class Rejected extends React.Component {
     this.props.setDeviceFilters([]);
     this.timer = setInterval(() => this._getDevices(), refreshDeviceLength);
     this._getDevices(true);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timer);
   }
 
   componentDidUpdate(prevProps) {
@@ -66,21 +82,6 @@ export class Rejected extends React.Component {
       .finally(() => self.setState({ pageLoading: false }));
   }
 
-  _handlePageChange(pageNo) {
-    var self = this;
-    self.setState({ pageLoading: true, expandRow: null, pageNo: pageNo }, () => self._getDevices(true));
-  }
-
-  onSortChange(attribute) {
-    const self = this;
-    let state = { sortCol: attribute.name, sortDown: !self.state.sortDown, sortScope: attribute.scope };
-    if (attribute.name !== self.state.sortCol) {
-      state.sortDown = true;
-    }
-    state.sortCol = attribute.name === 'Device ID' ? 'id' : self.state.sortCol;
-    self.setState(state, () => self._getDevices(true));
-  }
-
   render() {
     const self = this;
     const { acceptedDevices, count, deviceLimit, devices, filters, idAttribute, openSettingsDialog } = self.props;
@@ -95,24 +96,7 @@ export class Rejected extends React.Component {
         style: { flexGrow: 1 },
         sortable: true
       },
-      {
-        title: 'First request',
-        attribute: { name: 'created_ts', scope: 'system' },
-        render: device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-'),
-        sortable: true
-      },
-      {
-        title: 'Last check-in',
-        attribute: { name: 'updated_ts', scope: 'system' },
-        render: device => <RelativeTime updateTime={device.updated_ts} />,
-        sortable: true
-      },
-      {
-        title: 'Status',
-        attribute: { name: 'status', scope: 'identity' },
-        render: device => (device.status ? <div className="capitalized">{device.status}</div> : '-'),
-        sortable: true
-      }
+      ...defaultHeaders
     ];
     return (
       <div className="tab-container">

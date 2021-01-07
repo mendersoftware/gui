@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Step, StepLabel, Stepper } from '@material-ui/core';
 
@@ -7,22 +8,37 @@ import SoftwareDevices from './deployment-wizard/softwaredevices';
 import ScheduleRollout from './deployment-wizard/schedulerollout';
 import Review from './deployment-wizard/review';
 
-import { selectDevice } from '../../actions/deviceActions';
+import { createDeployment } from '../../actions/deploymentActions';
+import { getAllDevicesByStatus, selectDevice } from '../../actions/deviceActions';
 import { selectRelease } from '../../actions/releaseActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { saveGlobalSettings } from '../../actions/userActions';
-import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getIsEnterprise } from '../../selectors';
-import { getRemainderPercent } from '../../helpers';
+import { getIsEnterprise, getOnboardingState } from '../../selectors';
+
+import Tracking from '../../tracking';
+import { deepCompare, standardizePhases, validatePhases } from '../../helpers';
 
 export const allDevices = 'All devices';
+const MAX_PREVIOUS_PHASES_COUNT = 5;
 
 const deploymentSteps = [
   { title: 'Select target software and devices', closed: false, component: SoftwareDevices },
   { title: 'Set a rollout schedule', closed: true, component: ScheduleRollout },
   { title: 'Review and create', closed: false, component: Review }
 ];
+
+export const getPhaseStartTime = (phases, index, startDate) => {
+  if (index < 1) {
+    return startDate;
+  }
+  // since we don't want to get stale phase start times when the creation dialog is open for a long time
+  // we have to ensure start times are based on delay from previous phases
+  // since there likely won't be 1000s of phases this should still be fine to recalculate
+  const newStartTime = phases.slice(0, index).reduce((accu, phase) => moment(accu).add(phase.delay, phase.delayUnit), startDate);
+  return newStartTime.toISOString();
+};
 
 export class CreateDialog extends React.Component {
   constructor(props, context) {
@@ -48,6 +64,7 @@ export class CreateDialog extends React.Component {
       return accu;
     }, []);
     self.setState({ steps });
+    self.props.getAllDevicesByStatus(DEVICE_STATES.accepted);
   }
 
   componentDidUpdate(prevProps) {
@@ -61,20 +78,6 @@ export class CreateDialog extends React.Component {
     this.setState({ [property]: value });
   }
 
-  validatePhases(phases, deploymentDeviceCount, hasFilter) {
-    if (!phases) {
-      return true;
-    }
-    const remainder = getRemainderPercent(phases);
-    return phases.reduce((accu, phase) => {
-      if (!accu) {
-        return accu;
-      }
-      const deviceCount = Math.floor((deploymentDeviceCount / 100) * (phase.batch_size || remainder));
-      return !(deviceCount < 1) || hasFilter;
-    }, true);
-  }
-
   cleanUpDeploymentsStatus() {
     this.props.selectDevice();
     this.props.selectRelease();
@@ -86,21 +89,54 @@ export class CreateDialog extends React.Component {
     this.setState({ hasNewRetryDefault });
   }
 
-  onScheduleSubmit(settings) {
-    if (this.state.hasNewRetryDefault) {
-      this.props.saveGlobalSettings({ retries: settings.retries });
-    }
-    if (!this.props.isOnboardingComplete) {
-      this.props.advanceOnboarding(onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES);
-    }
-    this.props.onScheduleSubmit(settings);
-    this.cleanUpDeploymentsStatus();
-  }
-
   closeWizard() {
     this.cleanUpDeploymentsStatus();
     this.props.onDismiss();
   }
+
+  onScheduleSubmit(settings) {
+    const self = this;
+    const { hasNewRetryDefault } = self.state;
+    const { advanceOnboarding, createDeployment, globalSettings, isOnboardingComplete, onScheduleSubmit, saveGlobalSettings } = self.props;
+    const { deploymentDeviceIds, device, filterId, group, phases, release, retries } = settings;
+    const startTime = phases?.length ? phases[0].start_ts || new Date() : new Date();
+    const newDeployment = {
+      artifact_name: release.Name,
+      devices: filterId || (group && group !== allDevices) ? undefined : deploymentDeviceIds,
+      filter_id: filterId,
+      group: group === allDevices ? undefined : group,
+      name: device?.id || (group ? decodeURIComponent(group) : 'All devices'),
+      phases: phases
+        ? phases.map((phase, i, origPhases) => {
+            phase.start_ts = getPhaseStartTime(origPhases, i, startTime);
+            return phase;
+          })
+        : phases,
+      retries
+    };
+    if (!isOnboardingComplete) {
+      advanceOnboarding(onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES);
+    }
+    return createDeployment(newDeployment).then(() => {
+      let newSettings = { retries: hasNewRetryDefault ? retries : globalSettings.retries };
+      if (phases) {
+        const standardPhases = standardizePhases(phases);
+        let previousPhases = globalSettings.previousPhases || [];
+        previousPhases = previousPhases.map(standardizePhases);
+        if (!previousPhases.find(previousPhaseList => previousPhaseList.every(oldPhase => standardPhases.find(phase => deepCompare(phase, oldPhase))))) {
+          previousPhases.push(standardPhases);
+        }
+        newSettings.previousPhases = previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT);
+      }
+      saveGlobalSettings(newSettings);
+      // track in GA
+      Tracking.event({ category: 'deployments', action: 'create' });
+      // successfully retrieved new deployment
+      self.cleanUpDeploymentsStatus();
+      onScheduleSubmit();
+    });
+  }
+
   render() {
     const self = this;
     const { device, deploymentObject, groups, release } = self.props;
@@ -116,7 +152,7 @@ export class CreateDialog extends React.Component {
       release: deploymentObject.release || release || self.state.release,
       retries: deploymentObject.retries || retries
     };
-    const disableSchedule = !self.validatePhases(phases, deploymentSettings.deploymentDeviceCount, deploymentSettings.filterId);
+    const disableSchedule = !validatePhases(phases, deploymentSettings.deploymentDeviceCount, deploymentSettings.filterId);
     const disabled =
       activeStep === 0
         ? !(
@@ -169,22 +205,35 @@ export class CreateDialog extends React.Component {
   }
 }
 
-const actionCreators = { advanceOnboarding, saveGlobalSettings, selectDevice, selectRelease };
+const actionCreators = { advanceOnboarding, createDeployment, getAllDevicesByStatus, saveGlobalSettings, selectDevice, selectRelease };
 
-const mapStateToProps = state => {
+export const mapStateToProps = state => {
   const { plan = 'os' } = state.organization.organization;
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
-    isEnterprise: getIsEnterprise(state),
-    isHosted: state.app.features.isHosted,
+    acceptedDevices: state.devices.byStatus.accepted.deviceIds,
+    createdGroup: Object.values(state.devices.groups.byId)[1],
     device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
+    globalSettings: state.users.globalSettings,
     groups,
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
+    hasDynamicGroups: Object.values(groups).some(group => !!group.id),
+    hasPending: state.devices.byStatus.pending.total,
+    hasSelectedDevices: !!(state.devices.groups.selectedGroup || state.devices.selectedDevice || state.devices.selectedDeviceList.length),
+    isEnterprise: getIsEnterprise(state),
+    isHosted: state.app.features.isHosted,
     isOnboardingComplete: state.onboarding.complete,
+    onboardingState: getOnboardingState(state),
     plan,
+    previousPhases: state.users.globalSettings.previousPhases,
+    previousRetries: state.users.globalSettings.previousRetries || 0,
     release: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null,
-    retries: state.users.globalSettings.retries
+    releases: Object.values(state.releases.byId),
+    retries: state.users.globalSettings.retries,
+    selectedDevice: state.devices.selectedDevice,
+    selectedGroup: state.devices.groups.selectedGroup,
+    selectedRelease: state.releases.selectedRelease
   };
 };
 

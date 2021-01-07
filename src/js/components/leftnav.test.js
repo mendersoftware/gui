@@ -15,7 +15,7 @@ describe('LeftNav Component', () => {
     store = mockStore({ ...defaultState });
   });
 
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer
       .create(
         <Provider store={store}>

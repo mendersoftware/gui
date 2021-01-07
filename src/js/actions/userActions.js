@@ -3,11 +3,13 @@ import Cookies from 'universal-cookie';
 import { commonErrorHandler, setSnackbar } from './appActions';
 import GeneralApi from '../api/general-api';
 import UsersApi from '../api/users-api';
+import AppConstants from '../constants/appConstants';
 import OnboardingConstants from '../constants/onboardingConstants';
 import UserConstants from '../constants/userConstants';
-import { getUserSettings } from '../selectors';
+import { getCurrentUser, getUserSettings } from '../selectors';
 import { getToken, logout } from '../auth';
-import { extractErrorMessage, preformatWithRequestID, decodeSessionToken } from '../helpers';
+import { decodeSessionToken, extractErrorMessage, hashString, preformatWithRequestID } from '../helpers';
+import { clearAllRetryTimers } from '../utils/retrytimer';
 
 const cookies = new Cookies();
 const { emptyRole, rolesByName, useradmApiUrl } = UserConstants;
@@ -71,6 +73,7 @@ export const logoutUser = reason => (dispatch, getState) => {
     if (reason) {
       tasks.push(dispatch(setSnackbar(reason)));
     }
+    clearAllRetryTimers(setSnackbar);
     logout();
     return Promise.all(tasks);
   });
@@ -96,9 +99,7 @@ export const passwordResetComplete = (secretHash, newPassword) => dispatch =>
 
 export const verify2FA = tfaData => dispatch =>
   UsersApi.putVerifyTFA(`${useradmApiUrl}/2faverify`, tfaData)
-    .then(() => {
-      return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: getToken() })]);
-    })
+    .then(() => Promise.resolve(dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: getToken() })))
     .catch(err => commonErrorHandler(err, 'An error occured validating the verification code: failed to verify token, please try again.', dispatch));
 
 export const getUserList = () => dispatch =>
@@ -113,7 +114,19 @@ export const getUserList = () => dispatch =>
     .catch(err => commonErrorHandler(err, `Users couldn't be loaded.`, dispatch, 'Please check your connection'));
 
 export const getUser = id => dispatch =>
-  GeneralApi.get(`${useradmApiUrl}/users/${id}`).then(({ data: user }) => Promise.all([dispatch({ type: UserConstants.RECEIVED_USER, user }), user]));
+  GeneralApi.get(`${useradmApiUrl}/users/${id}`).then(({ data: user }) => {
+    let tasks = [dispatch({ type: UserConstants.RECEIVED_USER, user }), dispatch(setHideAnnouncement(false, user.id))];
+    // checks if user id is set and if cookie for helptips exists for that user
+    const userCookie = cookies.get(user.id);
+    if (typeof userCookie === 'undefined' || typeof userCookie.help === 'undefined') {
+      // if no user cookie set, do so via togglehelptips
+      tasks.push(dispatch(toggleHelptips()));
+    } else {
+      // got user cookie but help value not set
+      tasks.push(dispatch(setShowHelptips(userCookie.help)));
+    }
+    return Promise.all([...tasks, user]);
+  });
 
 const actions = {
   create: {
@@ -212,17 +225,17 @@ const transformRoleDataToRole = roleData => {
 
 export const createRole = roleData => dispatch => {
   const role = transformRoleDataToRole(roleData);
-  return GeneralApi.post(`${useradmApiUrl}/roles`, role).then(() =>
-    Promise.all([dispatch({ type: UserConstants.CREATED_ROLE, role: { ...emptyRole, ...role }, roleId: role.name }), dispatch(getRoles())])
-  );
+  return GeneralApi.post(`${useradmApiUrl}/roles`, role)
+    .then(() => Promise.all([dispatch({ type: UserConstants.CREATED_ROLE, role: { ...emptyRole, ...role }, roleId: role.name }), dispatch(getRoles())]))
+    .catch(err => commonErrorHandler(err, `There was an error creating the role:`, dispatch));
 };
 
 export const editRole = roleData => dispatch => {
   const role = transformRoleDataToRole(roleData);
   const roleId = role.name;
-  return GeneralApi.put(`${useradmApiUrl}/roles/${roleId}`, role).then(() =>
-    Promise.all([dispatch({ type: UserConstants.UPDATED_ROLE, role: { ...emptyRole, ...role }, roleId: roleId }), dispatch(getRoles())])
-  );
+  return GeneralApi.put(`${useradmApiUrl}/roles/${roleId}`, role)
+    .then(() => Promise.all([dispatch({ type: UserConstants.UPDATED_ROLE, role: { ...emptyRole, ...role }, roleId }), dispatch(getRoles())]))
+    .catch(err => commonErrorHandler(err, `There was an error editing the role:`, dispatch));
 };
 
 export const removeRole = roleId => dispatch =>
@@ -260,10 +273,7 @@ export const saveGlobalSettings = (settings, beOptimistic = false, notify = fals
         return Promise.all([tasks]);
       }
       console.log(err);
-      if (notify) {
-        return commonErrorHandler(err, `The settings couldn't be saved.`, dispatch);
-      }
-      return Promise.reject();
+      return commonErrorHandler(err, `The settings couldn't be saved.`, dispatch);
     });
 };
 
@@ -295,13 +305,22 @@ export const toggleHelptips = () => (dispatch, getState) => {
   const user = state.users.byId[state.users.currentUser] || {};
   if (user.id) {
     // if current user id available from store
-    var userCookie = cookies.get(user.id) || {};
-    var updatedValue = !userCookie.help;
-    userCookie.help = updatedValue;
-    userCookie = JSON.stringify(userCookie);
-    cookies.set(user.id, userCookie);
-    return dispatch(setShowHelptips(updatedValue));
+    let userCookie = cookies.get(user.id) || {};
+    userCookie.help = !userCookie.help;
+    cookies.set(user.id, JSON.stringify(userCookie));
+    return dispatch(setShowHelptips(userCookie.help));
   }
 };
 
 export const setShowConnectingDialog = show => dispatch => dispatch({ type: UserConstants.SET_SHOW_CONNECT_DEVICE, show });
+
+export const setHideAnnouncement = (shouldHide, userId) => (dispatch, getState) => {
+  const currentUserId = userId || getCurrentUser(getState()).id;
+  const hash = getState().app.hostedAnnouncement ? hashString(getState().app.hostedAnnouncement) : '';
+  const announceCookie = cookies.get(`${currentUserId}${hash}`);
+  if (shouldHide || (hash.length && typeof announceCookie !== 'undefined')) {
+    cookies.set(`${currentUserId}${hash}`, true, { maxAge: 604800 });
+    return Promise.resolve(dispatch({ type: AppConstants.SET_ANNOUNCEMENT, announcement: undefined }));
+  }
+  return Promise.resolve();
+};

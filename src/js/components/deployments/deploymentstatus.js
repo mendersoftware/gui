@@ -28,7 +28,7 @@ const phases = {
   failure: { title: 'Failed', image: errorImage }
 };
 
-export const DeploymentStatus = ({ deployment = {}, vertical }) => {
+export const DeploymentStatus = ({ className, deployment = {}, vertical }) => {
   const stats = { ...defaultStats, ...deployment.stats };
   const phaseStats = {
     inprogress: stats.downloading + stats.installing + stats.rebooting,
@@ -38,7 +38,7 @@ export const DeploymentStatus = ({ deployment = {}, vertical }) => {
     pending: (deployment.max_devices ? deployment.max_devices - deployment.device_count : 0) + stats.pending
   };
   return (
-    <div>
+    <div className={className}>
       <div className={vertical ? 'flexbox results-status column' : 'flexbox results-status'}>
         {Object.entries(phases).map(([key, phase]) => (
           <Tooltip key={key} title={phase.title}>

@@ -140,9 +140,9 @@ export class Deployments extends React.Component {
                 innerRef={ref => (this.deploymentsRef = ref)}
               />
               <RedirectionWidget
-                target={'/deployments/active?open=true'}
-                content={'Create a new deployment to update a group of devices'}
-                buttonContent={'Create a deployment'}
+                target="/deployments/active?open=true"
+                content="Create a new deployment to update a group of devices"
+                buttonContent="Create a deployment"
                 onClick={() => this.props.clickHandle({ route: '/deployments/active?open=true' })}
                 isActive={false}
               />

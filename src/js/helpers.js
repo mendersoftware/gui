@@ -6,19 +6,17 @@ import pluralize from 'pluralize';
 import { DEVICE_FILTERING_OPTIONS } from './constants/deviceConstants';
 import { initialState as onboardingReducerState } from './reducers/onboardingReducer';
 
-export function isEncoded(uri) {
+const isEncoded = uri => {
   uri = uri || '';
-
   return uri !== decodeURIComponent(uri);
-}
+};
 
-export function fullyDecodeURI(uri) {
+export const fullyDecodeURI = uri => {
   while (isEncoded(uri)) {
     uri = decodeURIComponent(uri);
   }
-
   return uri;
-}
+};
 
 const statCollector = (items, statistics) => items.reduce((accu, property) => accu + Number(statistics[property] || 0), 0);
 
@@ -62,6 +60,8 @@ export function statusToPercentage(state, intervals) {
     case 'failure':
     case 'success':
       return 100;
+    default:
+      return 0;
   }
 }
 
@@ -90,7 +90,7 @@ export function preformatWithRequestID(res, failMsg) {
   if (failMsg.length > 100) failMsg = `${failMsg.substring(0, 220)}...`;
 
   try {
-    if (res.data && Object.keys(res.data).includes('request_id')) {
+    if (res?.data && Object.keys(res.data).includes('request_id')) {
       let shortRequestUUID = res.data['request_id'].substring(0, 8);
       let finalMessage = `${failMsg} [Request ID: ${shortRequestUUID}]`;
       return finalMessage;
@@ -304,7 +304,7 @@ export const unionizeStrings = (someStrings, someOtherStrings) => {
 };
 
 export const generateDeploymentGroupDetails = (filter, groupName) =>
-  filter && filter.terms
+  filter && filter.terms?.length
     ? `${groupName} (${filter.terms
         .map(filter => `${filter.attribute || filter.key} ${DEVICE_FILTERING_OPTIONS[filter.type || filter.operator].shortform} ${filter.value}`)
         .join(', ')})`
@@ -343,7 +343,7 @@ export const getFormattedSize = bytes => {
 
 export const FileSize = ({ style, fileSize }) => <div style={style}>{getFormattedSize(fileSize)}</div>;
 
-export const collectAddressesFrom = devices =>
+const collectAddressesFrom = devices =>
   devices.reduce((collector, device) => {
     const ips = Object.entries(device.attributes).reduce((accu, [name, value]) => {
       if (name.startsWith('ipv4')) {
@@ -394,6 +394,20 @@ export const getRemainderPercent = phases => {
     remainder = phase.batch_size ? remainder - phase.batch_size : remainder;
   }
   return remainder;
+};
+
+export const validatePhases = (phases, deploymentDeviceCount, hasFilter) => {
+  if (!phases) {
+    return true;
+  }
+  const remainder = getRemainderPercent(phases);
+  return phases.reduce((accu, phase) => {
+    if (!accu) {
+      return accu;
+    }
+    const deviceCount = Math.floor((deploymentDeviceCount / 100) * (phase.batch_size || remainder));
+    return !(deviceCount < 1) || hasFilter;
+  }, true);
 };
 
 export const getPhaseDeviceCount = (numberDevices = 1, batchSize, remainder, isLastPhase) =>
@@ -516,11 +530,16 @@ export const extractSoftware = (capabilities = {}) =>
     return accu;
   }, []);
 
-export const extractSoftwareInformation = (capabilities = {}, softwareTitleMap = {}, softwareHeaderList = []) => {
+const defaultSoftwareTitleMap = {
+  'rootfs-image.version': { title: 'System filesystem', priority: 0 },
+  'rootfs-image.checksum': { title: 'checksum', priority: 1 }
+};
+
+export const extractSoftwareInformation = (capabilities = {}, softwareTitleMap = defaultSoftwareTitleMap, softwareHeaderList = []) => {
   const mapLayerInformation = (key, value, i) => {
     let primary = key;
     let secondary = value;
-    let priority = i + Object.keys(softwareTitleMap);
+    let priority = i + Object.keys(softwareTitleMap).length;
     let result = [];
     const infoItems = key.split('.');
     if (infoItems.length === 2) {
@@ -564,7 +583,5 @@ export const extractSoftwareInformation = (capabilities = {}, softwareTitleMap =
 };
 export const getDemoDeviceCreationCommand = token =>
   token
-    ? `TENANT_TOKEN='${token}'\ndocker run -it -p ${onboardingReducerState.demoArtifactPort}:${
-        onboardingReducerState.demoArtifactPort
-      } -e SERVER_URL='https://${window.location.hostname || 'hosted.mender.io'}' \\\n-e TENANT_TOKEN=$TENANT_TOKEN mendersoftware/mender-client-qemu:latest`
+    ? `TENANT_TOKEN='${token}'\ndocker run -it -p ${onboardingReducerState.demoArtifactPort}:${onboardingReducerState.demoArtifactPort} -e SERVER_URL='https://${window.location.hostname}' \\\n-e TENANT_TOKEN=$TENANT_TOKEN mendersoftware/mender-client-qemu:latest`
     : './demo --client up';

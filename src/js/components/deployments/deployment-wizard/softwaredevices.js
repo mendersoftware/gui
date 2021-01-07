@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import pluralize from 'pluralize';
@@ -8,11 +7,7 @@ import { TextField, Tooltip } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { ErrorOutline as ErrorOutlineIcon, InfoOutlined as InfoOutlinedIcon } from '@material-ui/icons';
 
-import { getAllDevicesByStatus, getAllGroupDevices, selectDevices } from '../../../actions/deviceActions';
-import { advanceOnboarding } from '../../../actions/onboardingActions';
-import { DEVICE_STATES, UNGROUPED_GROUP } from '../../../constants/deviceConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
-import { getOnboardingState } from '../../../selectors';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 import { allDevices } from '../createdeployment';
 
@@ -26,11 +21,7 @@ const styles = {
   }
 };
 
-export class SoftwareDevices extends React.Component {
-  componentDidMount() {
-    this.props.getAllDevicesByStatus(DEVICE_STATES.accepted);
-  }
-
+export class SoftwareDevices extends React.PureComponent {
   deploymentSettingsUpdate(value, property) {
     const {
       acceptedDevices,
@@ -83,7 +74,6 @@ export class SoftwareDevices extends React.Component {
       selectedGroup,
       selectedRelease
     } = self.props;
-
     const deploymentRelease = deploymentObject.release ? deploymentObject.release : release;
     const releaseDeviceTypes = deploymentRelease ? deploymentRelease.device_types_compatible : [];
     const devicetypesInfo = (
@@ -139,7 +129,6 @@ export class SoftwareDevices extends React.Component {
         );
       }
     }
-
     return (
       <div style={{ overflow: 'visible', minHeight: '300px', marginTop: '15px' }}>
         {!releaseItems.length ? (
@@ -158,7 +147,7 @@ export class SoftwareDevices extends React.Component {
                   autoSelect
                   autoHighlight
                   filterSelectedOptions
-                  getOptionLabel={option => option.Name || option}
+                  getOptionLabel={option => (typeof option === 'string' ? option : option.Name)}
                   handleHomeEndKeys
                   options={releaseItems}
                   onChange={(e, item) => self.deploymentSettingsUpdate(item, 'release')}
@@ -237,26 +226,4 @@ export class SoftwareDevices extends React.Component {
   }
 }
 
-const actionCreators = { advanceOnboarding, getAllDevicesByStatus, getAllGroupDevices, selectDevices };
-
-const mapStateToProps = state => {
-  // eslint-disable-next-line no-unused-vars
-  const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
-  return {
-    acceptedDevices: state.devices.byStatus.accepted.deviceIds,
-    createdGroup: Object.values(state.devices.groups.byId)[1],
-    device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
-    groups,
-    hasDevices: state.devices.byStatus.accepted.total,
-    hasDynamicGroups: Object.values(groups).some(group => !!group.id),
-    hasPending: state.devices.byStatus.pending.total,
-    hasSelectedDevices: !!(state.devices.groups.selectedGroup || state.devices.selectedDevice || state.devices.selectedDeviceList.length),
-    onboardingState: getOnboardingState(state),
-    releases: Object.values(state.releases.byId),
-    selectedDevice: state.devices.selectedDevice,
-    selectedGroup: state.devices.groups.selectedGroup,
-    selectedRelease: state.releases.selectedRelease
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(SoftwareDevices);
+export default SoftwareDevices;

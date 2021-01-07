@@ -91,7 +91,8 @@ export class Past extends React.Component {
     self.setState({ page, perPage, endDate, startDate, deviceGroup }, () => {
       const roundedStartDate = Math.round(Date.parse(startDate) / 1000);
       const roundedEndDate = Math.round(Date.parse(endDate) / 1000);
-      return Promise.resolve(self.props.getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, deviceGroup))
+      self.props
+        .getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, deviceGroup)
         .then(deploymentsAction => {
           clearRetryTimer(type, self.props.setSnackbar);
           if (deploymentsAction && deploymentsAction[0].total && !deploymentsAction[0].deploymentIds.length) {

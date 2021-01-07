@@ -1,12 +1,13 @@
 import React from 'react';
-import { createMount } from '@material-ui/core/test-utils';
+import { render } from '@testing-library/react';
 import RemoveArtifact from './removeartifact';
 import { undefineds } from '../../../../../tests/mockData';
 
 describe('RemoveArtifact Component', () => {
-  it('renders correctly', () => {
-    const tree = createMount()(<RemoveArtifact open={true} />).html();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+  it('renders correctly', async () => {
+    const { baseElement } = render(<RemoveArtifact open={true} />);
+    const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

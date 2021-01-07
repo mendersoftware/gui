@@ -22,7 +22,7 @@ exports[`ArtifactInformationForm Component renders correctly 1`] = `
     role="combobox"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+      className="MuiFormControl-root MuiTextField-root device-types-input MuiFormControl-fullWidth"
     >
       <label
         className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
@@ -137,7 +137,7 @@ exports[`ArtifactInformationForm Component renders correctly 1`] = `
       </svg>
     </label>
     <div
-      className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+      className="MuiInputBase-root MuiInput-root MuiInput-underline release-name-input MuiInputBase-formControl MuiInput-formControl"
       onClick={[Function]}
     >
       <input
@@ -155,5 +155,30 @@ exports[`ArtifactInformationForm Component renders correctly 1`] = `
       />
     </div>
   </div>
+</div>
+`;
+
+exports[`ReleaseTooltip Component renders correctly 1`] = `
+<div
+  style={
+    Object {
+      "fontSize": 12,
+    }
+  }
+>
+  <p>
+    If a Release with this name already exists, this new Artifact may be grouped into a Release with other Artifacts of the same name - so long as they are compatible with different device types
+  </p>
+  <a
+    href="/help/releases-artifacts"
+    onClick={[Function]}
+    style={
+      Object {
+        "color": "#679ba5",
+      }
+    }
+  >
+    Learn more about releases
+  </a>
 </div>
 `;

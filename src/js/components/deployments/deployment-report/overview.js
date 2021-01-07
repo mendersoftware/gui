@@ -158,25 +158,23 @@ export const DeploymentOverview = ({
           </div>
         )}
         {!finished ? (
-          <>
-            {aborting ? (
-              <Confirm cancel={() => setAborting(!aborting)} action={onAbortClick} type="abort" classes="margin-top" />
-            ) : (
-              <Tooltip
-                title="Devices that have not yet started the deployment will not start the deployment.&#10;Devices that have already completed the deployment are not affected by the abort.&#10;Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback."
-                placement="bottom"
+          aborting ? (
+            <Confirm cancel={() => setAborting(!aborting)} action={onAbortClick} type="abort" classes="margin-top" />
+          ) : (
+            <Tooltip
+              title="Devices that have not yet started the deployment will not start the deployment.&#10;Devices that have already completed the deployment are not affected by the abort.&#10;Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback."
+              placement="bottom"
+            >
+              <Button
+                color="secondary"
+                onClick={() => setAborting(!aborting)}
+                startIcon={<BlockIcon fontSize="small" />}
+                style={{ alignSelf: 'baseline', marginTop: 45 }}
               >
-                <Button
-                  color="secondary"
-                  onClick={() => setAborting(!aborting)}
-                  startIcon={<BlockIcon fontSize="small" />}
-                  style={{ alignSelf: 'baseline', marginTop: 45 }}
-                >
-                  {deployment.filters?.length ? 'Stop' : 'Abort'} deployment
-                </Button>
-              </Tooltip>
-            )}
-          </>
+                {deployment.filters?.length ? 'Stop' : 'Abort'} deployment
+              </Button>
+            </Tooltip>
+          )
         ) : (
           !!(deployment.stats.failure || deployment.stats.aborted) && (
             <Tooltip

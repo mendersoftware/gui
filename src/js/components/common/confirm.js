@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -19,34 +19,32 @@ const confirmationType = {
   }
 };
 
-export default class Confirm extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      class: 'fadeIn'
-    };
-  }
-  _handleCancel() {
-    this.setState({ class: 'fadeOut' });
-    this.props.cancel();
-  }
-  _handleConfirm() {
-    this.setState({ loading: true });
-    this.props.action();
-  }
-  render() {
-    return (
-      <div className={`${this.state.class} ${this.props.classes || ''}`} style={{ marginRight: '12px', ...this.props.style }}>
-        <div className="float-right">
-          <span className="bold">{this.state.loading ? confirmationType[this.props.type].loading : confirmationType[this.props.type].message}</span>
-          <IconButton id="confirmAbort" onClick={() => this._handleConfirm()}>
-            <CheckCircleIcon className="green" />
-          </IconButton>
-          <IconButton onClick={() => this._handleCancel()}>
-            <CancelIcon className="red" />
-          </IconButton>
-        </div>
+export const Confirm = ({ action, cancel, classes = '', style, type }) => {
+  const [className, setClassName] = useState('fadeIn');
+  const [loading, setLoading] = useState(false);
+
+  const handleCancel = () => {
+    setClassName('fadeOut');
+    cancel();
+  };
+  const handleConfirm = () => {
+    setLoading(true);
+    action();
+  };
+
+  return (
+    <div className={`${className} ${classes}`} style={{ marginRight: '12px', ...style }}>
+      <div className="float-right">
+        <span className="bold">{loading ? confirmationType[type].loading : confirmationType[type].message}</span>
+        <IconButton id="confirmAbort" onClick={handleConfirm}>
+          <CheckCircleIcon className="green" />
+        </IconButton>
+        <IconButton onClick={handleCancel}>
+          <CancelIcon className="red" />
+        </IconButton>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+export default Confirm;

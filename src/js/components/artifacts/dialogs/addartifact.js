@@ -5,6 +5,7 @@ import ArtifactUpload from './artifactupload';
 import ArtifactInformationForm from './artifactinformationform';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { unionizeStrings } from '../../../helpers';
+import Tracking from '../../../tracking';
 
 const steps = [
   { title: 'File Upload', component: ArtifactUpload },
@@ -31,27 +32,46 @@ export class AddArtifactDialog extends React.Component {
 
   onUpload({ customDeviceTypes, file, destination, selectedDeviceTypes, name }) {
     let meta = { description: '' };
-    if (file && file.name.endsWith('.mender')) {
-      return this.props.onUpload(meta, file);
+    const filename = file ? file.name : '';
+    if (filename.endsWith('.mender')) {
+      return this.addArtifact(meta, file, 'upload');
     }
     if (!this.props.onboardingState.complete && this.props.releases.length) {
       this.props.advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE);
     }
     const otherDeviceTypes = customDeviceTypes.split(',');
     const deviceTypes = unionizeStrings(selectedDeviceTypes, otherDeviceTypes);
-    meta = { ...meta, device_types_compatible: deviceTypes, args: { dest_dir: destination, filename: file.name }, name };
-    this.props.onCreate(meta, file);
+    meta = { ...meta, device_types_compatible: deviceTypes, args: { dest_dir: destination, filename }, name };
+    return this.addArtifact(meta, file, 'create');
+  }
+
+  addArtifact(meta, file, type = 'upload') {
+    const self = this;
+    const { advanceOnboarding, createArtifact, deviceTypes, onboardingState, pastCount, uploadArtifact, onUploadStarted, onUploadFinished } = self.props;
+    const upload = type === 'create' ? createArtifact(meta, file) : uploadArtifact(meta, file);
+    onUploadStarted();
+    return upload.then(() => {
+      if (!onboardingState.complete && deviceTypes.length && pastCount) {
+        advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP);
+        if (type === 'create') {
+          advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_RELEASE_NAME);
+        }
+      }
+      // track in GA
+      Tracking.event({ category: 'artifacts', action: 'create' });
+      return setTimeout(onUploadFinished, 1000);
+    });
   }
 
   render() {
     const self = this;
-    const { advanceOnboarding, deviceTypes = [], onboardingState, onCancel, open, releases, setSnackbar } = self.props;
+    const { advanceOnboarding, deviceTypes = [], onboardingState, onCancel, releases, setSnackbar } = self.props;
     const { activeStep, destination, file } = self.state;
     const ComponentToShow = steps[activeStep].component;
     const fileSelected = file && (destination.length > 0 || file.name.endsWith('.mender'));
     const finalStep = activeStep === steps.length - 1 || (file && file.name.endsWith('.mender'));
     return (
-      <Dialog open={open} fullWidth={true} maxWidth="sm">
+      <Dialog open={true} fullWidth={true} maxWidth="sm">
         <DialogTitle>Upload an Artifact</DialogTitle>
         <DialogContent className="dialog-content margin-top margin-left margin-right margin-bottom">
           <ComponentToShow

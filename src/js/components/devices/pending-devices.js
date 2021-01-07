@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
-import Time from 'react-time';
 import pluralize from 'pluralize';
 
 // material ui
@@ -21,12 +20,33 @@ import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getIdAttribute, getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
-import RelativeTime from '../common/relative-time';
 import DeviceList from './devicelist';
 import { refreshLength as refreshDeviceLength } from './devices';
 import Filters from './filters';
+import BaseDevices, { DeviceCreationTime, DeviceStatusHeading, RelativeDeviceTime } from './base-devices';
 
-export class Pending extends React.Component {
+const defaultHeaders = [
+  {
+    title: 'First request',
+    attribute: { name: 'created_ts', scope: 'system' },
+    render: DeviceCreationTime,
+    sortable: true
+  },
+  {
+    title: 'Last check-in',
+    attribute: { name: 'updated_ts', scope: 'system' },
+    render: RelativeDeviceTime,
+    sortable: true
+  },
+  {
+    title: 'Status',
+    attribute: { name: 'status', scope: 'identity' },
+    render: DeviceStatusHeading,
+    sortable: true
+  }
+];
+
+export class Pending extends BaseDevices {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -40,9 +60,6 @@ export class Pending extends React.Component {
       sortDown: true,
       sortScope: null
     };
-    if (!props.pendingDeviceIds.length) {
-      props.getDevicesByStatus(DEVICE_STATES.pending);
-    }
   }
 
   componentDidMount() {
@@ -50,10 +67,6 @@ export class Pending extends React.Component {
     this.props.setDeviceFilters([]);
     this.timer = setInterval(() => this._getDevices(), refreshDeviceLength);
     this._getDevices(true);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timer);
   }
 
   componentDidUpdate(prevProps) {
@@ -71,10 +84,6 @@ export class Pending extends React.Component {
     }
   }
 
-  shouldComponentUpdate(nextProps) {
-    return !this.props.devices.every((device, index) => device === nextProps.devices[index]) || this.props.idAttribute !== nextProps.idAttribute || true;
-  }
-
   /*
    * Devices to show
    */
@@ -85,11 +94,6 @@ export class Pending extends React.Component {
     self.props
       .getDevicesByStatus(DEVICE_STATES.pending, pageNo, pageLength, shouldUpdate, undefined, sortBy)
       .finally(() => self.setState({ pageLoading: false, authLoading: null }));
-  }
-
-  _handlePageChange(pageNo) {
-    var self = this;
-    self.setState({ selectedRows: [], currentPage: pageNo, pageLoading: true, expandRow: null, pageNo: pageNo }, () => self._getDevices(true));
   }
 
   onAuthorizationChange(rows, status) {
@@ -110,16 +114,6 @@ export class Pending extends React.Component {
       this.props.advanceOnboarding(onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING);
     }
     this.setState({ selectedRows: selection });
-  }
-
-  onSortChange(attribute) {
-    const self = this;
-    let state = { sortCol: attribute.name, sortDown: !self.state.sortDown, sortScope: attribute.scope };
-    if (attribute.name !== self.state.sortCol) {
-      state.sortDown = true;
-    }
-    state.sortCol = attribute.name === 'Device ID' ? 'id' : self.state.sortCol;
-    self.setState(state, () => self._getDevices(true));
   }
 
   render() {
@@ -150,24 +144,7 @@ export class Pending extends React.Component {
         style: { flexGrow: 1 },
         sortable: true
       },
-      {
-        title: 'First request',
-        attribute: { name: 'created_ts', scope: 'system' },
-        render: device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-'),
-        sortable: true
-      },
-      {
-        title: 'Last check-in',
-        attribute: { name: 'updated_ts', scope: 'system' },
-        render: device => <RelativeTime updateTime={device.updated_ts} />,
-        sortable: true
-      },
-      {
-        title: 'Status',
-        attribute: { name: 'status', scope: 'identity' },
-        render: device => (device.status ? <div className="capitalized">{device.status}</div> : '-'),
-        sortable: true
-      }
+      ...defaultHeaders
     ];
 
     var deviceLimitWarning =
@@ -182,16 +159,16 @@ export class Pending extends React.Component {
     const devicePendingTip = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING_START, onboardingState);
     let onboardingComponent = null;
     if (showHelptips && !onboardingState.complete) {
-      if (this.deviceListRef) {
-        const element = this.deviceListRef ? this.deviceListRef.getElementsByClassName('body')[0] : null;
+      if (self.deviceListRef) {
+        const element = self.deviceListRef.getElementsByClassName('body')[0];
         onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING, onboardingState, {
           anchor: { left: 200, top: element ? element.offsetTop + element.offsetHeight : 170 }
         });
       }
-      if (selectedRows && this.authorizeRef) {
+      if (selectedRows && self.authorizeRef) {
         const anchor = {
-          left: this.authorizeRef.offsetParent.offsetLeft - this.authorizeRef.firstElementChild.offsetWidth,
-          top: this.authorizeRef.offsetParent.offsetTop + this.authorizeRef.firstElementChild.offsetHeight - 15
+          left: self.authorizeRef.offsetParent.offsetLeft - self.authorizeRef.firstElementChild.offsetWidth,
+          top: self.authorizeRef.offsetParent.offsetTop + self.authorizeRef.firstElementChild.offsetHeight - 15
         };
         onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING, onboardingState, { place: 'left', anchor });
       }
@@ -243,7 +220,7 @@ export class Pending extends React.Component {
         )}
         <Loader show={authLoading} />
         {devices.length && (!pageLoading || authLoading !== 'all') ? (
-          <div className="padding-bottom" ref={ref => (this.deviceListRef = ref)}>
+          <div className="padding-bottom" ref={ref => (self.deviceListRef = ref)}>
             {deviceLimitWarning}
             <DeviceList
               {...self.props}
@@ -293,7 +270,7 @@ export class Pending extends React.Component {
               disabled={disabled || limitMaxed || selectedOverLimit}
               onClose={() => self.setState({ showActions: false })}
               onOpen={() => self.setState({ showActions: true })}
-              ref={ref => (this.authorizeRef = ref)}
+              ref={ref => (self.authorizeRef = ref)}
               open={showActions}
             >
               {actions.map(action => (
