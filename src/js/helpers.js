@@ -497,13 +497,13 @@ ${connectionInstructions} && \\
 ${
   hasMenderShellSupport
     ? `systemctl restart mender-client && \\
-(cat > /etc/mender/mender-shell.conf << EOF
+(cat > /etc/mender/mender-connect.conf << EOF
 {
   "ServerURL": "${document.location.origin}",
   "User": "pi"
 }
 EOF
-) && systemctl restart mender-shell'`
+) && systemctl restart mender-connect'`
     : `systemctl restart mender-client'`
 }
 `;
