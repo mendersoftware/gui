@@ -12,7 +12,7 @@ import { setSnackbar } from '../../actions/appActions';
 
 // see https://github.com/mendersoftware/go-lib-micro/tree/master/ws
 //     for the description of proto_header and the consts
-// *Note*: this needs to be aligned with mender-shell and deviceconnect.
+// *Note*: this needs to be aligned with mender-connect and deviceconnect.
 const MessageProtocolShell = 1;
 const MessageTypeShell = 'shell';
 const MessageTypeNew = 'new';
