@@ -1,0 +1,21 @@
+{
+  "ClientProtocol": "https",
+  "HttpsClient": {
+    "Certificate": "/certs/cert.pem",
+    "Key": "/keys/key.pem"
+  },
+  "ServerCertificate": "/certs/hosted.pem",
+  "ShellCommand": "/bin/bash",
+  "ServerURL": "https://docker.mender.io",
+  "User": "root",
+  "Terminal": {
+    "Height": 24,
+    "Width": 128
+  },
+  "Sessions": {
+    "StopExpired": false,
+    "ExpireAfter": 255,
+    "ExpireAfterIdle": 16,
+    "MaxPerUser": 4
+  }
+}
