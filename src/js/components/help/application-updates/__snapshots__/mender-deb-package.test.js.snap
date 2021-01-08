@@ -152,7 +152,8 @@ systemctl restart mender-client && \\
 (cat &gt; /etc/mender/mender-connect.conf &lt;&lt; EOF
 {
   "ServerURL": "http://localhost",
-  "User": "pi"
+  "User": "pi",
+  "ShellCommand": "/bin/bash"
 }
 EOF
 ) && systemctl restart mender-connect'
