@@ -47,7 +47,7 @@ export class SoftwareDevices extends React.PureComponent {
       } else if (state.group !== allDevices) {
         deviceCount = groups[state.group].total;
       }
-      advanceOnboarding(onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES);
+      advanceOnboarding(onboardingSteps.SCHEDULING_GROUP_SELECTION);
     }
     setDeploymentSettings(deviceIds, 'deploymentDeviceIds');
     setDeploymentSettings(deviceCount, 'deploymentDeviceCount');
@@ -73,6 +73,7 @@ export class SoftwareDevices extends React.PureComponent {
       createdGroup,
       device,
       deploymentAnchor,
+      deploymentDeviceCount,
       deploymentDeviceIds,
       deploymentObject = {},
       group = null,
@@ -80,7 +81,6 @@ export class SoftwareDevices extends React.PureComponent {
       hasDevices,
       hasDynamicGroups,
       hasPending,
-      hasSelectedDevices,
       onboardingState,
       release = null,
       releases,
@@ -130,11 +130,11 @@ export class SoftwareDevices extends React.PureComponent {
         { anchor: groupAnchor, place: 'right' },
         onboardingComponent
       );
-      const buttonAnchor = {
-        top: deploymentAnchor.offsetTop - deploymentAnchor.offsetHeight,
-        left: deploymentAnchor.offsetLeft + deploymentAnchor.offsetWidth / 2
-      };
-      if (hasDevices && hasSelectedDevices && deploymentRelease) {
+      if (hasDevices && deploymentDeviceCount && deploymentRelease) {
+        const buttonAnchor = {
+          top: deploymentAnchor.offsetTop - deploymentAnchor.offsetHeight,
+          left: deploymentAnchor.offsetLeft + deploymentAnchor.offsetWidth / 2
+        };
         onboardingComponent = getOnboardingComponentFor(
           onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES,
           { ...onboardingState, selectedDevice, selectedGroup, selectedRelease: deploymentRelease },
