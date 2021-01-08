@@ -32,10 +32,10 @@ context('Layout assertions', () => {
     it('can authorize a device', () => {
       onlyOn('staging', () => {
         cy.getCookie('tenantToken').then(({ value: token }) => {
-          cy.task('startClient', { token, backend: Cypress.config().baseUrl, count: 1 });
+          cy.task('startDockerClient', { token, backend: Cypress.config().baseUrl, count: 1 });
         });
       });
-      skipOn('staging', () => cy.task('startClient', { backend: Cypress.config().baseUrl, count: 1 }));
+      skipOn('staging', () => cy.task('startDockerClient', { backend: Cypress.config().baseUrl, count: 1 }));
       cy.get('a').contains('Devices').click().end();
       cy.get('a').contains('Pending').click().end();
       cy.get('.deviceListItem', { timeout: 60000 });
