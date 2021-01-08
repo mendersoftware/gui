@@ -67,6 +67,7 @@ export const Terminal = props => {
       const msg = { hdr: proto_header };
       const encodedData = MessagePack.encode(msg);
       socket.send(encodedData);
+      term.focus();
       //
       resizeInterval = setInterval(function () {
         fitAddon.fit();
