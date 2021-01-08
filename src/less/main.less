@@ -1380,9 +1380,6 @@ div:focus {
   &.active {
     background-color: @lightestgrey;
   }
-
-  
-
 }
 
 .offerTag {
@@ -1484,19 +1481,69 @@ tr.expand {
 }
 
 .deviceList {
-  min-width: 800px;
+  min-width: 1000px;
   .header {
-    padding: 0 24px;
-    align-items: center;
     height: 56px;
-    font-size: 12px;
+    font-size: 9pt;
     color: @textmuted;
-  }
-  .columnHeader {
-    padding: 0 24px;
   }
   .body > div:last-of-type {
     border-bottom: 1px solid @bordercolor;
+  }
+  .deviceListRow {
+    @row-selector-width: 42px;
+    @row-expander-width: 50px;
+    display: grid;
+    grid-column-gap: 1.5 * @defaultGutterWidth;
+    padding-left: @defaultGutterWidth;
+    &.selectable {
+      padding-left: 5px;
+    }
+    &.columns-3 {
+      @columns-3: 1fr 1fr 1fr;
+      grid-template-columns: @columns-3;
+      &.selectable {
+        grid-template-columns: @row-selector-width @columns-3;
+      }
+      &.expandable {
+        grid-template-columns: @columns-3 @row-expander-width;
+      }
+      &.selectable.expandable {
+        grid-template-columns: @row-selector-width @columns-3 @row-expander-width;
+      }
+    }
+    &.columns-4 {
+      @columns-4: 1fr 1fr 1fr 1fr;
+      grid-template-columns: @columns-4;
+      &.selectable {
+        grid-template-columns: @row-selector-width @columns-4;
+      }
+      &.expandable {
+        grid-template-columns: @columns-4 @row-expander-width;
+      }
+      &.selectable.expandable {
+        grid-template-columns: @row-selector-width @columns-4 @row-expander-width;
+      }
+    }
+    &.columns-5 {
+      @columns-5: 1.5fr 1fr minmax(350px, 1.5fr) 1fr 1fr;
+      grid-template-columns: @columns-5;
+      &.selectable {
+        grid-template-columns: @row-selector-width @columns-5;
+      }
+      &.expandable {
+        grid-template-columns: @columns-5 @row-expander-width;
+      }
+      &.selectable.expandable {
+        grid-template-columns: @row-selector-width @columns-5 @row-expander-width;
+      }
+    }
+    > div {
+      overflow: hidden;
+      word-break: break-all;
+      max-height: 48px;
+      text-overflow: ellipsis;
+    }
   }
   .deviceListItem {
     border-top: 1px solid @bordercolor;
