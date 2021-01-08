@@ -29,6 +29,16 @@ const byteArrayToString = body => {
   return myString;
 };
 
+const blobToString = blob => {
+  return new Promise(resolve => {
+    let fr = new FileReader();
+    fr.onload = () => {
+      resolve(fr.result);
+    };
+    fr.readAsArrayBuffer(blob);
+  });
+};
+
 export const Terminal = props => {
   const { deviceId, sessionId, socket, setSessionId, setSocket, setSnackbar, onCancel } = props;
   const xtermRef = React.useRef(null);
@@ -67,6 +77,7 @@ export const Terminal = props => {
       const msg = { hdr: proto_header };
       const encodedData = MessagePack.encode(msg);
       socket.send(encodedData);
+      term.focus();
       //
       resizeInterval = setInterval(function () {
         fitAddon.fit();
@@ -107,7 +118,7 @@ export const Terminal = props => {
     };
 
     socket.onmessage = event => {
-      event.data.arrayBuffer().then(function (data) {
+      blobToString(event.data).then(function (data) {
         const obj = MessagePack.decode(data);
         if (obj.hdr.typ === MessageTypeNew) {
           if ((obj.hdr.props || {}).status == 2) {
