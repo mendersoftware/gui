@@ -14,10 +14,13 @@ import { setSnackbar } from '../../actions/appActions';
 //     for the description of proto_header and the consts
 // *Note*: this needs to be aligned with mender-connect and deviceconnect.
 const MessageProtocolShell = 1;
-const MessageTypeShell = 'shell';
+
 const MessageTypeNew = 'new';
-const MessageTypeStop = 'stop';
+const MessageTypePing = 'ping';
+const MessageTypePong = 'pong';
 const MessageTypeResize = 'resize';
+const MessageTypeShell = 'shell';
+const MessageTypeStop = 'stop';
 
 const MessagePack = msgpack5();
 
@@ -87,8 +90,11 @@ export const Terminal = props => {
       }, 1000);
     };
 
+    var healthcheckHasFailed = false;
     socket.onclose = event => {
-      if (event.wasClean) {
+      if (healthcheckHasFailed) {
+        setSnackbar('Health check failed: connection with the device lost.', 5000);
+      } else if (event.wasClean) {
         setSnackbar(`Connection with the device closed.`, 5000);
       } else {
         setSnackbar('Connection with the device died.', 5000);
@@ -106,6 +112,13 @@ export const Terminal = props => {
       onCancel();
     };
 
+    const healthcheckFailed = () => {
+      healthcheckHasFailed = true;
+      socket.close();
+      onCancel();
+    };
+
+    var healthcheckTimeout = null;
     socket.onmessage = event => {
       event.data.arrayBuffer().then(function (data) {
         const obj = MessagePack.decode(data);
@@ -118,6 +131,19 @@ export const Terminal = props => {
           }
         } else if (obj.hdr.typ === MessageTypeShell) {
           term.write(byteArrayToString(obj.body));
+        } else if (obj.hdr.typ == MessageTypePing) {
+          if (healthcheckTimeout) {
+            clearTimeout(healthcheckTimeout);
+          }
+          const proto_header = { proto: 1, typ: MessageTypePong, sid: sessionId, props: null };
+          const msg = { hdr: proto_header, body: null };
+          const encodedData = MessagePack.encode(msg);
+          socket.send(encodedData);
+          //
+          var timeout = parseInt((obj.hdr.props || {}).timeout);
+          if (timeout > 0) {
+            healthcheckTimeout = setTimeout(healthcheckFailed, timeout * 1000);
+          }
         }
       });
     };
