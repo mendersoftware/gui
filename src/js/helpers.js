@@ -500,7 +500,8 @@ ${
 (cat > /etc/mender/mender-connect.conf << EOF
 {
   "ServerURL": "${document.location.origin}",
-  "User": "pi"
+  "User": "pi",
+  "ShellCommand": "/bin/bash"
 }
 EOF
 ) && systemctl restart mender-connect'`
