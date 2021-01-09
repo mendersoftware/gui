@@ -3,6 +3,9 @@ import 'cypress-file-upload';
 import 'cypress-iframe';
 import 'cypress-localstorage-commands';
 import 'cypress-wait-until';
+import { addMatchImageSnapshotCommand } from 'cypress-image-snapshot/command';
+
+addMatchImageSnapshotCommand({ allowSizeMismatch: true });
 
 Cypress.Commands.add('login', (user, pass, failOnStatusCode = true) => {
   cy.request({

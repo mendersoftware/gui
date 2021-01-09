@@ -32,10 +32,10 @@ context('Layout assertions', () => {
     it('can authorize a device', () => {
       onlyOn('staging', () => {
         cy.getCookie('tenantToken').then(({ value: token }) => {
-          cy.task('startClient', { token, backend: Cypress.config().baseUrl, count: 1 });
+          cy.task('startDockerClient', { token, backend: Cypress.config().baseUrl, count: 1 });
         });
       });
-      skipOn('staging', () => cy.task('startClient', { backend: Cypress.config().baseUrl, count: 1 }));
+      skipOn('staging', () => cy.task('startDockerClient', { backend: Cypress.config().baseUrl, count: 1 }));
       cy.get('a').contains('Devices').click().end();
       cy.get('a').contains('Pending').click().end();
       cy.get('.deviceListItem', { timeout: 60000 });
@@ -43,17 +43,6 @@ context('Layout assertions', () => {
       cy.get('.MuiSpeedDial-fab').click();
       cy.get('#device-actions-actions').get('.MuiSpeedDialAction-staticTooltipLabel').contains('Accept').parent().find('button').click().end();
       cy.get('a').contains('Device groups').click();
-    });
-
-    it('has basic inventory', () => {
-      cy.get('a').contains('Devices').click();
-      cy.contains('.deviceListItem', 'release', { timeout: 10000 });
-      cy.get('.deviceListItem').click().should('contain', 'release').end();
-      cy.get('.expandedDevice')
-        .should('contain', `${Cypress.config('demoDeviceName') || 'release-v1'}`)
-        .and('contain', 'Linux')
-        .and('contain', 'mac')
-        .and('contain', 'qemux86-64');
     });
   });
 });
