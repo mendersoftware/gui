@@ -8,7 +8,7 @@ import OnboardingConstants from '../constants/onboardingConstants';
 import UserConstants from '../constants/userConstants';
 import { getCurrentUser, getUserSettings } from '../selectors';
 import { getToken, logout } from '../auth';
-import { decodeSessionToken, extractErrorMessage, hashString, preformatWithRequestID } from '../helpers';
+import { extractErrorMessage, hashString, preformatWithRequestID } from '../helpers';
 import { clearAllRetryTimers } from '../utils/retrytimer';
 
 const cookies = new Cookies();
@@ -50,10 +50,9 @@ export const loginUser = userData => (dispatch, getState) =>
       // set maxAge if noexpiry checkbox not checked
       cookies.set('JWT', token, options);
 
-      const userId = decodeSessionToken(token);
       window.sessionStorage.removeItem('pendings-redirect');
       window.location.replace('#/');
-      return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), dispatch(getUser(userId))]);
+      return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), dispatch(getUser('me'))]);
     })
     .catch(err => {
       cookies.remove('noExpiry', { path: '/' });
