@@ -100,15 +100,13 @@ export const getAuditLogs = (page, perPage, startDate, endDate, userId, type, de
     .catch(err => commonErrorHandler(err, `There was an error retrieving audit logs:`, dispatch));
 };
 
-export const getAuditLogsCsv = (startDate, endDate, userId, type, detail, sort = 'desc') => dispatch => {
+export const getAuditLogsCsvLink = (startDate, endDate, userId, type, detail, sort = 'desc') => () => {
   const createdAfter = endDate ? `&created_after=${Math.round(Date.parse(endDate) / 1000)}` : '';
   const createdBefore = startDate ? `&created_before=${Math.round(Date.parse(startDate) / 1000)}` : '';
   const typeSearch = type ? `&object_type=${type}` : '';
   const userSearch = userId ? `&actor_id=${userId}` : '';
   const objectSearch = detail ? `&object_id=${encodeURIComponent(detail)}` : '';
-  return Api.get(`${auditLogsApiUrl}/logs/export?limit=20000${createdAfter}${createdBefore}${userSearch}${typeSearch}${objectSearch}&sort=${sort}`)
-    .then(res => res.data)
-    .catch(err => commonErrorHandler(err, `There was an error retrieving audit logs:`, dispatch));
+  return Promise.resolve(`${auditLogsApiUrl}/logs/export?limit=20000${createdAfter}${createdBefore}${userSearch}${typeSearch}${objectSearch}&sort=${sort}`);
 };
 
 /*
