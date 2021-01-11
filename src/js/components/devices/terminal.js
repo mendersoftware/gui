@@ -136,32 +136,34 @@ export const Terminal = props => {
     socket.onmessage = event => {
       blobToString(event.data).then(function (data) {
         const obj = MessagePack.decode(data);
-        if (obj.hdr.typ === MessageTypeNew) {
-          if ((obj.hdr.props || {}).status == 2) {
-            setSnackbar('Error: ' + byteArrayToString(obj.body), 5000);
-            snackbarAlreadySet = true;
+        if (obj.hdr.proto === MessageProtocolShell) {
+          if (obj.hdr.typ === MessageTypeNew) {
+            if ((obj.hdr.props || {}).status == 2) {
+              setSnackbar('Error: ' + byteArrayToString(obj.body), 5000);
+              snackbarAlreadySet = true;
+              socket.close();
+              onCancel();
+            } else {
+              setSessionId(obj.hdr.sid);
+            }
+          } else if (obj.hdr.typ === MessageTypeShell) {
+            term.write(byteArrayToString(obj.body));
+          } else if (obj.hdr.typ === MessageTypeStop) {
             socket.close();
             onCancel();
-          } else {
-            setSessionId(obj.hdr.sid);
-          }
-        } else if (obj.hdr.typ === MessageTypeShell) {
-          term.write(byteArrayToString(obj.body));
-        } else if (obj.hdr.typ === MessageTypeStop) {
-          socket.close();
-          onCancel();
-        } else if (obj.hdr.typ == MessageTypePing) {
-          if (healthcheckTimeout) {
-            clearTimeout(healthcheckTimeout);
-          }
-          const proto_header = { proto: 1, typ: MessageTypePong, sid: sessionId, props: null };
-          const msg = { hdr: proto_header, body: null };
-          const encodedData = MessagePack.encode(msg);
-          socket.send(encodedData);
-          //
-          var timeout = parseInt((obj.hdr.props || {}).timeout);
-          if (timeout > 0) {
-            healthcheckTimeout = setTimeout(healthcheckFailed, timeout * 1000);
+          } else if (obj.hdr.typ == MessageTypePing) {
+            if (healthcheckTimeout) {
+              clearTimeout(healthcheckTimeout);
+            }
+            const proto_header = { proto: 1, typ: MessageTypePong, sid: sessionId, props: null };
+            const msg = { hdr: proto_header, body: null };
+            const encodedData = MessagePack.encode(msg);
+            socket.send(encodedData);
+            //
+            var timeout = parseInt((obj.hdr.props || {}).timeout);
+            if (timeout > 0) {
+              healthcheckTimeout = setTimeout(healthcheckFailed, timeout * 1000);
+            }
           }
         }
       });
