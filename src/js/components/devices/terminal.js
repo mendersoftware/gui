@@ -101,14 +101,17 @@ export const Terminal = props => {
       }, 1000);
     };
 
+    var snackbarAlreadySet = false;
     var healthcheckHasFailed = false;
     socket.onclose = event => {
-      if (healthcheckHasFailed) {
+      if (!snackbarAlreadySet && healthcheckHasFailed) {
         setSnackbar('Health check failed: connection with the device lost.', 5000);
-      } else if (event.wasClean) {
+      } else if (!snackbarAlreadySet && event.wasClean) {
         setSnackbar(`Connection with the device closed.`, 5000);
       } else {
-        setSnackbar('Connection with the device died.', 5000);
+        if (!snackbarAlreadySet) {
+          setSnackbar('Connection with the device died.', 5000);
+        }
         onCancel();
       }
       //
@@ -136,6 +139,8 @@ export const Terminal = props => {
         if (obj.hdr.typ === MessageTypeNew) {
           if ((obj.hdr.props || {}).status == 2) {
             setSnackbar('Error: ' + byteArrayToString(obj.body), 5000);
+            snackbarAlreadySet = true;
+            socket.close();
             onCancel();
           } else {
             setSessionId(obj.hdr.sid);
