@@ -147,6 +147,9 @@ export const Terminal = props => {
           }
         } else if (obj.hdr.typ === MessageTypeShell) {
           term.write(byteArrayToString(obj.body));
+        } else if (obj.hdr.typ === MessageTypeStop) {
+          socket.close();
+          onCancel();
         } else if (obj.hdr.typ == MessageTypePing) {
           if (healthcheckTimeout) {
             clearTimeout(healthcheckTimeout);
