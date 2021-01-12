@@ -43,10 +43,14 @@ const blobToString = blob => {
 };
 
 export const Terminal = props => {
-  const { deviceId, sessionId, socket, setSessionId, setSocket, setSnackbar, onCancel } = props;
+  const { deviceId, inputAllowed, onCancel, sessionId, socket, setInputAllowed, setSessionId, setSocket, setSnackbar } = props;
   const xtermRef = React.useRef(null);
 
   const onData = data => {
+    if (!inputAllowed) {
+      return;
+    }
+
     const proto_header = { proto: MessageProtocolShell, typ: MessageTypeShell, sid: sessionId, props: null };
     const msg = { hdr: proto_header, body: data };
 
@@ -82,7 +86,13 @@ export const Terminal = props => {
       socket.send(encodedData);
       term.focus();
       //
+      setInputAllowed(true);
+      //
       resizeInterval = setInterval(function () {
+        if (!inputAllowed) {
+          return;
+        }
+
         fitAddon.fit();
         const newDimensions = fitAddon.proposeDimensions();
         if (newDimensions.rows != dimensions.rows || newDimensions.cols != dimensions.cols) {
@@ -119,6 +129,7 @@ export const Terminal = props => {
         clearInterval(resizeInterval);
         resizeInterval = null;
       }
+      setSocket(null);
     };
 
     socket.onerror = error => {
@@ -200,15 +211,15 @@ const mapStateToProps = () => {
 export const TerminalDialog = props => {
   const [socket, setSocket] = useState(null);
   const [sessionId, setSessionId] = useState(null);
+  const [inputAllowed, setInputAllowed] = useState(false);
   const { open, onCancel, deviceId, setSnackbar } = props;
 
   const onClose = () => {
+    setInputAllowed(false);
     const proto_header = { proto: 1, typ: MessageTypeStop, sid: sessionId, props: null };
     const msg = { hdr: proto_header, body: null };
     const encodedData = MessagePack.encode(msg);
     socket.send(encodedData);
-    setSocket(null);
-    onCancel();
   };
 
   return (
@@ -217,8 +228,10 @@ export const TerminalDialog = props => {
       <DialogContent className="dialog-content" style={{ padding: 0, margin: '0 24px', height: '75vh' }}>
         <Terminal
           deviceId={deviceId}
+          inputAllowed={inputAllowed}
           sessionId={sessionId}
           socket={socket}
+          setInputAllowed={setInputAllowed}
           setSessionId={setSessionId}
           setSocket={setSocket}
           setSnackbar={setSnackbar}
