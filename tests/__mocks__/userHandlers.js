@@ -41,8 +41,9 @@ export const userHandlers = [
   }),
   rest.get(`${useradmApiUrl}/users`, (req, res, ctx) => res(ctx.status(200), ctx.json(Object.values(defaultState.users.byId)))),
   rest.get(`${useradmApiUrl}/users/:userId`, ({ params: { userId } }, res, ctx) => {
-    if (defaultState.users.byId[userId]) {
-      return res(ctx.status(200), ctx.json(defaultState.users.byId[userId]));
+    if (userId === 'me' || defaultState.users.byId[userId]) {
+      const user = userId === 'me' ? 'a30a780b-b843-5344-80e3-0fd95a4f6fc3' : userId;
+      return res(ctx.status(200), ctx.json(defaultState.users.byId[user]));
     }
     return res(ctx.status(500));
   }),

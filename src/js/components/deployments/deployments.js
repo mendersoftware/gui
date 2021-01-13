@@ -53,6 +53,12 @@ export class Deployments extends React.Component {
     };
   }
 
+  handleResize() {
+    setTimeout(() => {
+      this.setState({ height: window.innerHeight, width: window.innerWidth });
+    }, 500);
+  }
+
   componentDidMount() {
     const self = this;
     let tasks = [self.props.getGroups(), self.props.selectRelease(), self.props.selectDevice()];
@@ -88,6 +94,11 @@ export class Deployments extends React.Component {
       startDate,
       tabIndex: self._updateActive()
     });
+    window.addEventListener('resize', this.handleResize.bind(this));
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize.bind(this));
   }
 
   retryDeployment(deployment, devices) {

@@ -299,8 +299,7 @@ exports[`Devices Component renders correctly 1`] = `
               class=\\"deviceList \\"
             >
               <div
-                class=\\"flexbox header\\"
-                style=\\"padding: 0px 12px;\\"
+                class=\\"header deviceListRow columns-5 selectable expandable\\"
               >
                 <span
                   aria-disabled=\\"false\\"
@@ -332,7 +331,6 @@ exports[`Devices Component renders correctly 1`] = `
                 </span>
                 <div
                   class=\\"columnHeader\\"
-                  style=\\"width: 18%; flex-grow: 1;\\"
                 >
                   Device ID
                   <svg
@@ -359,7 +357,6 @@ exports[`Devices Component renders correctly 1`] = `
                 </div>
                 <div
                   class=\\"columnHeader\\"
-                  style=\\"width: 18%;\\"
                 >
                   Device type
                   <svg
@@ -375,7 +372,6 @@ exports[`Devices Component renders correctly 1`] = `
                 </div>
                 <div
                   class=\\"columnHeader\\"
-                  style=\\"width: 18%;\\"
                 >
                   System software version
                   <svg
@@ -391,7 +387,6 @@ exports[`Devices Component renders correctly 1`] = `
                 </div>
                 <div
                   class=\\"columnHeader\\"
-                  style=\\"width: 18%;\\"
                 >
                   Last check-in
                   <svg
@@ -407,7 +402,6 @@ exports[`Devices Component renders correctly 1`] = `
                 </div>
                 <div
                   class=\\"columnHeader\\"
-                  style=\\"width: 18%;\\"
                 >
                   
                 </div>
@@ -426,11 +420,11 @@ exports[`Devices Component renders correctly 1`] = `
                     aria-expanded=\\"false\\"
                     class=\\"MuiButtonBase-root MuiAccordionSummary-root\\"
                     role=\\"button\\"
-                    style=\\"padding: 0px 12px;\\"
+                    style=\\"padding: 0px;\\"
                     tabindex=\\"0\\"
                   >
                     <div
-                      class=\\"MuiAccordionSummary-content\\"
+                      class=\\"MuiAccordionSummary-content deviceListRow columns-5 selectable expandable\\"
                     >
                       <span
                         aria-disabled=\\"false\\"
@@ -460,24 +454,16 @@ exports[`Devices Component renders correctly 1`] = `
                           class=\\"MuiTouchRipple-root\\"
                         />
                       </span>
-                      <div
-                        style=\\"padding: 0px 24px; overflow: hidden; word-break: break-all; max-height: 48px; text-overflow: ellipsis; width: 18%; flex-grow: 1;\\"
-                      >
+                      <div>
                         a1
                       </div>
-                      <div
-                        style=\\"padding: 0px 24px; overflow: hidden; word-break: break-all; max-height: 48px; text-overflow: ellipsis; width: 18%;\\"
-                      >
+                      <div>
                         -
                       </div>
-                      <div
-                        style=\\"padding: 0px 24px; overflow: hidden; word-break: break-all; max-height: 48px; text-overflow: ellipsis; width: 18%;\\"
-                      >
+                      <div>
                         -
                       </div>
-                      <div
-                        style=\\"padding: 0px 24px; overflow: hidden; word-break: break-all; max-height: 48px; text-overflow: ellipsis; width: 18%;\\"
-                      >
+                      <div>
                         <time
                           class=\\"\\"
                           datetime=\\"2019-01-01T09:25:00+00:00\\"
@@ -486,9 +472,7 @@ exports[`Devices Component renders correctly 1`] = `
                           2019-01-01 09:25
                         </time>
                       </div>
-                      <div
-                        style=\\"padding: 0px 24px; overflow: hidden; word-break: break-all; max-height: 48px; text-overflow: ellipsis; width: 18%;\\"
-                      >
+                      <div>
                         <div />
                       </div>
                       <button
@@ -547,11 +531,11 @@ exports[`Devices Component renders correctly 1`] = `
                     aria-expanded=\\"false\\"
                     class=\\"MuiButtonBase-root MuiAccordionSummary-root\\"
                     role=\\"button\\"
-                    style=\\"padding: 0px 12px;\\"
+                    style=\\"padding: 0px;\\"
                     tabindex=\\"0\\"
                   >
                     <div
-                      class=\\"MuiAccordionSummary-content\\"
+                      class=\\"MuiAccordionSummary-content deviceListRow columns-5 selectable expandable\\"
                     >
                       <span
                         aria-disabled=\\"false\\"
@@ -581,24 +565,16 @@ exports[`Devices Component renders correctly 1`] = `
                           class=\\"MuiTouchRipple-root\\"
                         />
                       </span>
-                      <div
-                        style=\\"padding: 0px 24px; overflow: hidden; word-break: break-all; max-height: 48px; text-overflow: ellipsis; width: 18%; flex-grow: 1;\\"
-                      >
+                      <div>
                         b1
                       </div>
-                      <div
-                        style=\\"padding: 0px 24px; overflow: hidden; word-break: break-all; max-height: 48px; text-overflow: ellipsis; width: 18%;\\"
-                      >
+                      <div>
                         qemux86-64
                       </div>
-                      <div
-                        style=\\"padding: 0px 24px; overflow: hidden; word-break: break-all; max-height: 48px; text-overflow: ellipsis; width: 18%;\\"
-                      >
+                      <div>
                         -
                       </div>
-                      <div
-                        style=\\"padding: 0px 24px; overflow: hidden; word-break: break-all; max-height: 48px; text-overflow: ellipsis; width: 18%;\\"
-                      >
+                      <div>
                         <time
                           class=\\"\\"
                           datetime=\\"2019-01-01T09:25:00+00:00\\"
@@ -607,9 +583,7 @@ exports[`Devices Component renders correctly 1`] = `
                           2019-01-01 09:25
                         </time>
                       </div>
-                      <div
-                        style=\\"padding: 0px 24px; overflow: hidden; word-break: break-all; max-height: 48px; text-overflow: ellipsis; width: 18%;\\"
-                      >
+                      <div>
                         <div />
                       </div>
                       <button

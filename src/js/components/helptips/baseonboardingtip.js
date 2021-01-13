@@ -90,6 +90,7 @@ class BaseOnboardingTipComponent extends React.PureComponent {
           effect="solid"
           className={`content ${orientation.placement}`}
           clickable={true}
+          resizeHide={false}
           style={orientation.contentStyle}
         >
           {React.cloneElement(component, others)}

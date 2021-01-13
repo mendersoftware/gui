@@ -5,48 +5,23 @@ exports[`DeviceList Component renders correctly 1`] = `
   className="deviceList "
 >
   <div
-    className="flexbox header"
-    style={
-      Object {
-        "padding": "0 12px",
-      }
-    }
+    className="header deviceListRow columns-4  expandable"
   >
     <div
       className="columnHeader"
       onClick={[Function]}
-      style={
-        Object {
-          "width": "25%",
-        }
-      }
     />
     <div
       className="columnHeader"
       onClick={[Function]}
-      style={
-        Object {
-          "width": "25%",
-        }
-      }
     />
     <div
       className="columnHeader"
       onClick={[Function]}
-      style={
-        Object {
-          "width": "25%",
-        }
-      }
     />
     <div
       className="columnHeader"
       onClick={[Function]}
-      style={
-        Object {
-          "width": "25%",
-        }
-      }
     />
     <div
       style={

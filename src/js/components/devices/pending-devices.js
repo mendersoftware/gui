@@ -62,11 +62,22 @@ export class Pending extends BaseDevices {
     };
   }
 
+  handleResize() {
+    setTimeout(() => {
+      this.setState({ height: window.innerHeight, width: window.innerWidth });
+    }, 500);
+  }
+
   componentDidMount() {
     this.props.selectGroup();
     this.props.setDeviceFilters([]);
     this.timer = setInterval(() => this._getDevices(), refreshDeviceLength);
     this._getDevices(true);
+    window.addEventListener('resize', this.handleResize.bind(this));
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize.bind(this));
   }
 
   componentDidUpdate(prevProps) {
@@ -141,7 +152,6 @@ export class Pending extends BaseDevices {
         title: idAttribute,
         customize: openSettingsDialog,
         attribute: { name: idAttribute, scope: 'identity' },
-        style: { flexGrow: 1 },
         sortable: true
       },
       ...defaultHeaders

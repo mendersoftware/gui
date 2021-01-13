@@ -6,7 +6,7 @@ import { Autocomplete } from '@material-ui/lab';
 
 import historyImage from '../../../assets/img/history.png';
 
-import { getAuditLogs, getAuditLogsCsv } from '../../actions/organizationActions';
+import { getAuditLogs, getAuditLogsCsvLink } from '../../actions/organizationActions';
 import { getUserList } from '../../actions/userActions';
 import Loader from '../common/loader';
 import TimeframePicker from '../common/timeframe-picker';
@@ -23,7 +23,7 @@ const detailsMap = {
   User: 'email'
 };
 
-export const AuditLogs = ({ events, getAuditLogsCsv, getAuditLogs, getUserList, groups, users, ...props }) => {
+export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserList, groups, users, ...props }) => {
   const [endDate, setEndDate] = useState(tonight);
   const [csvLoading, setCsvLoading] = useState(false);
   const [detail, setDetail] = useState(undefined);
@@ -74,9 +74,9 @@ export const AuditLogs = ({ events, getAuditLogsCsv, getAuditLogs, getUserList, 
 
   const createCsvDownload = () => {
     setCsvLoading(true);
-    getAuditLogsCsv().then(csvContent => {
+    getAuditLogsCsvLink().then(address => {
       const link = document.createElement('a');
-      link.setAttribute('href', encodeURI(csvContent));
+      link.setAttribute('href', encodeURI(address));
       link.setAttribute('download', `Mender-AuditLog-${moment(startDate).format(moment.HTML5_FMT.DATE)}-${moment(endDate).format(moment.HTML5_FMT.DATE)}.csv`);
       document.body.appendChild(link);
       link.click();
@@ -186,7 +186,7 @@ export const AuditLogs = ({ events, getAuditLogsCsv, getAuditLogs, getUserList, 
   );
 };
 
-const actionCreators = { getAuditLogs, getAuditLogsCsv, getUserList };
+const actionCreators = { getAuditLogs, getAuditLogsCsvLink, getUserList };
 
 const mapStateToProps = state => {
   // eslint-disable-next-line no-unused-vars

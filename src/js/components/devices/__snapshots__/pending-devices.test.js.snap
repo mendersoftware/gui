@@ -82,8 +82,7 @@ exports[`PendingDevices Component renders correctly 1`] = `
       class=\\"deviceList pending\\"
     >
       <div
-        class=\\"flexbox header\\"
-        style=\\"padding: 0px 12px;\\"
+        class=\\"header deviceListRow columns-4 selectable expandable\\"
       >
         <span
           aria-disabled=\\"false\\"
@@ -115,7 +114,6 @@ exports[`PendingDevices Component renders correctly 1`] = `
         </span>
         <div
           class=\\"columnHeader\\"
-          style=\\"width: 22.5%; flex-grow: 1;\\"
         >
           Device ID
           <svg
@@ -131,7 +129,6 @@ exports[`PendingDevices Component renders correctly 1`] = `
         </div>
         <div
           class=\\"columnHeader\\"
-          style=\\"width: 22.5%;\\"
         >
           First request
           <svg
@@ -147,7 +144,6 @@ exports[`PendingDevices Component renders correctly 1`] = `
         </div>
         <div
           class=\\"columnHeader\\"
-          style=\\"width: 22.5%;\\"
         >
           Last check-in
           <svg
@@ -163,7 +159,6 @@ exports[`PendingDevices Component renders correctly 1`] = `
         </div>
         <div
           class=\\"columnHeader\\"
-          style=\\"width: 22.5%;\\"
         >
           Status
           <svg
@@ -192,11 +187,11 @@ exports[`PendingDevices Component renders correctly 1`] = `
             aria-expanded=\\"false\\"
             class=\\"MuiButtonBase-root MuiAccordionSummary-root\\"
             role=\\"button\\"
-            style=\\"padding: 0px 12px;\\"
+            style=\\"padding: 0px;\\"
             tabindex=\\"0\\"
           >
             <div
-              class=\\"MuiAccordionSummary-content\\"
+              class=\\"MuiAccordionSummary-content deviceListRow columns-4 selectable expandable\\"
             >
               <span
                 aria-disabled=\\"false\\"
@@ -226,19 +221,13 @@ exports[`PendingDevices Component renders correctly 1`] = `
                   class=\\"MuiTouchRipple-root\\"
                 />
               </span>
-              <div
-                style=\\"padding: 0px 24px; overflow: hidden; word-break: break-all; max-height: 48px; text-overflow: ellipsis; width: 22.5%; flex-grow: 1;\\"
-              >
+              <div>
                 c1
               </div>
-              <div
-                style=\\"padding: 0px 24px; overflow: hidden; word-break: break-all; max-height: 48px; text-overflow: ellipsis; width: 22.5%;\\"
-              >
+              <div>
                 -
               </div>
-              <div
-                style=\\"padding: 0px 24px; overflow: hidden; word-break: break-all; max-height: 48px; text-overflow: ellipsis; width: 22.5%;\\"
-              >
+              <div>
                 <div
                   class=\\"\\"
                   title=\\"\\"
@@ -246,9 +235,7 @@ exports[`PendingDevices Component renders correctly 1`] = `
                   -
                 </div>
               </div>
-              <div
-                style=\\"padding: 0px 24px; overflow: hidden; word-break: break-all; max-height: 48px; text-overflow: ellipsis; width: 22.5%;\\"
-              >
+              <div>
                 -
               </div>
               <button

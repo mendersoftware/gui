@@ -11,7 +11,7 @@ import {
   completeUpgrade,
   createOrganizationTrial,
   getAuditLogs,
-  getAuditLogsCsv,
+  getAuditLogsCsvLink,
   getCurrentCard,
   getUserOrganization,
   startCardUpdate,
@@ -174,12 +174,12 @@ describe('organization actions', () => {
   it('should handle csv information download', async () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
-    const request = store.dispatch(getAuditLogsCsv());
+    const request = store.dispatch(getAuditLogsCsvLink());
     expect(request).resolves.toBeTruthy();
-    await request.then(events => {
+    await request.then(link => {
       const storeActions = store.getActions();
       expect(storeActions).toHaveLength(0);
-      expect(events).toHaveLength(534);
+      expect(link).toEqual('/api/management/v1/auditlogs/logs/export?limit=20000&sort=desc');
     });
   });
 });

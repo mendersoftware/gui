@@ -74,7 +74,7 @@ export class Header extends React.Component {
     // get current user
     return (
       self.props
-        .getUser(userId)
+        .getUser('me')
         .then(self.props.initializeAppData)
         // this is allowed to fail if no user information are available
         .catch(err => console.log(extractErrorMessage(err)))
