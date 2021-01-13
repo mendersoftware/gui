@@ -35,7 +35,7 @@ import {
 
 export const onboardingSteps = {
   [stepNames.ONBOARDING_START]: {
-    condition: { min: stepNames.ONBOARDING_START, max: stepNames.DEVICES_PENDING_ACCEPTING_ONBOARDING },
+    condition: { min: stepNames.ONBOARDING_START, max: stepNames.DEVICES_PENDING_ONBOARDING },
     specialComponent: <WelcomeSnackTip progress={1} />
   },
   [stepNames.DASHBOARD_ONBOARDING_START]: {
@@ -57,12 +57,12 @@ export const onboardingSteps = {
   [stepNames.DEVICES_PENDING_ACCEPTING_ONBOARDING]: {
     condition: { min: stepNames.DEVICES_PENDING_ONBOARDING, max: stepNames.DEVICES_ACCEPTED_ONBOARDING },
     component: DevicesPendingAcceptingOnboarding,
-    progress: 2
+    progress: 1
   },
   [stepNames.DASHBOARD_ONBOARDING_PENDINGS]: {
     condition: { min: stepNames.DEVICES_PENDING_ONBOARDING },
     component: DashboardOnboardingPendings,
-    progress: 2
+    progress: 1
   },
   [stepNames.DEVICES_ACCEPTED_ONBOARDING]: {
     condition: { max: stepNames.APPLICATION_UPDATE_REMINDER_TIP },
