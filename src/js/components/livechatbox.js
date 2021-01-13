@@ -1,23 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { decodeSessionToken, extractErrorMessage } from '../helpers';
-import { getUser } from '../actions/userActions';
-import Cookies from 'universal-cookie';
 
-export class LiveChatBox extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      gettingUser: false
-    };
-    this.cookies = new Cookies();
-  }
-
-  componentDidMount() {
-    const self = this;
-    self._updateUsername();
-    // if hosted, load livechat widget
-    if (self.props.isHosted) {
+export class LiveChatBox extends React.PureComponent {
+  componentDidUpdate(prevProps) {
+    const { isHosted, user } = this.props;
+    if (prevProps.user?.email !== user?.email && isHosted && user.email) {
+      // if hosted, load livechat widget
       // load script created by entrypoint
       const script = document.createElement('script');
       script.setAttribute('id', 'livechat');
@@ -32,7 +20,7 @@ export class LiveChatBox extends React.Component {
             window.HFCHAT_CONFIG.onload = function () {
               this.setVisitorInfo(
                 {
-                  email: self.props.user.email
+                  email: user.email
                 },
                 function (err) {
                   if (err) {
@@ -48,28 +36,10 @@ export class LiveChatBox extends React.Component {
     }
   }
 
-  _updateUsername() {
-    const userId = decodeSessionToken(this.cookies.get('JWT'));
-    if (this.state.gettingUser || !userId) {
-      return;
-    }
-    const self = this;
-    self.setState({ gettingUser: true });
-    // get current user
-    return self.props
-      .getUser(userId)
-      .catch(err => console.log(extractErrorMessage(err)))
-      .finally(() => self.setState({ gettingUser: false }));
-  }
-
   render() {
     return null;
   }
 }
-
-const actionCreators = {
-  getUser
-};
 
 const mapStateToProps = state => {
   return {
@@ -78,4 +48,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, actionCreators)(LiveChatBox);
+export default connect(mapStateToProps)(LiveChatBox);
