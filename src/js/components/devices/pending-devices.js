@@ -141,7 +141,6 @@ export class Pending extends BaseDevices {
         title: idAttribute,
         customize: openSettingsDialog,
         attribute: { name: idAttribute, scope: 'identity' },
-        style: { flexGrow: 1 },
         sortable: true
       },
       ...defaultHeaders

@@ -109,11 +109,11 @@ export class DeviceList extends React.Component {
       sortDown
     } = self.props;
     const { expandedDeviceId } = self.state;
-    const columnWidth = `${(onSelect ? 90 : 100) / columnHeaders.length}%`;
     const numSelected = (selectedRows || []).length;
+    const itemClassName = `deviceListRow columns-${columnHeaders.length} ${onSelect ? 'selectable' : ''} ${expandable ? 'expandable' : ''}`;
     return (
       <div className={`deviceList ${className || ''}`}>
-        <div className="flexbox header" style={{ padding: '0 12px' }}>
+        <div className={`header ${itemClassName}`}>
           {onSelect ? (
             <Checkbox
               indeterminate={numSelected > 0 && numSelected < devices.length}
@@ -122,12 +122,7 @@ export class DeviceList extends React.Component {
             />
           ) : null}
           {columnHeaders.map((item, index) => (
-            <div
-              className="columnHeader"
-              key={`columnHeader-${index}`}
-              style={Object.assign({ width: item.width || columnWidth }, item.style)}
-              onClick={() => onSort(item.attribute ? item.attribute : {})}
-            >
+            <div className="columnHeader" key={`columnHeader-${index}`} style={item.style} onClick={() => onSort(item.attribute ? item.attribute : {})}>
               {item.title}
               {item.sortable ? <SortIcon className={`sortIcon ${sortCol === item.attribute.name ? 'selected' : ''} ${sortDown.toString()}`} /> : null}
               {item.customize ? <SettingsIcon onClick={item.customize} style={{ fontSize: 16, marginLeft: 'auto' }} /> : null}
@@ -141,6 +136,7 @@ export class DeviceList extends React.Component {
               {...self.props}
               device={device}
               expanded={expandedDeviceId === device.id}
+              itemClassName={itemClassName}
               key={`device-${device.id}`}
               selectable={!!onSelect}
               selected={self._isSelected(index)}
