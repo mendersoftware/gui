@@ -20,6 +20,8 @@ const rowBaseStyles = {
 };
 const rowStyles = { ...rowBaseStyles.container, ...styles.rowStyle };
 
+var timeoutID = null;
+
 export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceLimit, onboardingState, setSnackbar }) => {
   const [redirect, setRedirect] = useState(null);
 
@@ -27,11 +29,14 @@ export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceL
     if (!currentUser || !onboardingState.showTips) {
       return;
     }
-    setTimeout(() => {
+    if (timeoutID !== null) {
+      clearTimeout(timeoutID);
+    }
+    timeoutID = setTimeout(() => {
       const notification = getOnboardingComponentFor(onboardingSteps.ONBOARDING_START, onboardingState);
       !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
     }, 400);
-  }, [currentUser, onboardingState]);
+  }, [currentUser, JSON.stringify(onboardingState)]);
 
   const handleClick = params => {
     let redirect;

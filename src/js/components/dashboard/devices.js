@@ -24,15 +24,24 @@ export class Devices extends React.Component {
     self.timer = null;
   }
 
+  handleResize() {
+    setTimeout(() => {
+      this.setState({ height: window.innerHeight, width: window.innerWidth });
+    }, 500);
+  }
+
   componentDidMount() {
     var self = this;
     self.timer = setInterval(() => self._refreshDevices(), refreshDevicesLength);
     // on render the store might not be updated so we resort to the API and let all later request go through the store
     // to be in sync with the rest of the UI
     self._refreshDevices();
+    window.addEventListener('resize', this.handleResize.bind(this));
   }
+
   componentWillUnmount() {
     clearInterval(this.timer);
+    window.removeEventListener('resize', this.handleResize.bind(this));
   }
 
   _refreshDevices() {

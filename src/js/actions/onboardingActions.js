@@ -3,7 +3,7 @@ import Cookies from 'universal-cookie';
 import OnboardingConstants, { onboardingSteps as onboardingStepNames } from '../constants/onboardingConstants';
 import { DEVICE_STATES } from '../constants/deviceConstants';
 
-import { onboardingSteps } from '../utils/onboardingmanager';
+import { applyOnboardingFallbacks, onboardingSteps } from '../utils/onboardingmanager';
 import { getDemoDeviceAddress } from '../helpers';
 import { getUserSettings } from '../selectors';
 import Tracking from '../tracking';
@@ -31,7 +31,7 @@ export const getOnboardingState = () => (dispatch, getState) => {
       acceptedDevices.length && store.devices.byId[acceptedDevices[0]].hasOwnProperty('attributes')
         ? store.devices.byId[acceptedDevices[0]].attributes.device_type
         : null;
-    const progress = onboardingState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments);
+    const progress = applyOnboardingFallbacks(onboardingState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments));
     const state = {
       complete: !!(
         Boolean(userCookie) ||
@@ -50,6 +50,7 @@ export const getOnboardingState = () => (dispatch, getState) => {
     };
     onboardingState = state;
   }
+  onboardingState.progress = onboardingState.progress || OnboardingConstants.onboardingSteps.ONBOARDING_START;
   onboardingState.address = getDemoDeviceAddress(Object.values(store.devices.byId), onboardingState.approach, store.onboarding.demoArtifactPort);
   const progress = Object.keys(onboardingSteps).findIndex(step => step === onboardingStepNames.ARTIFACT_CREATION_DIALOG);
   const currentProgress = Object.keys(onboardingSteps).findIndex(step => step === onboardingState.progress);

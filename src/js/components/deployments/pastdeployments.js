@@ -41,11 +41,18 @@ export class Past extends React.Component {
     };
   }
 
+  handleResize() {
+    setTimeout(() => {
+      this.setState({ height: window.innerHeight, width: window.innerWidth });
+    }, 500);
+  }
+
   componentDidMount() {
     const self = this;
     clearInterval(self.timer);
     self.timer = setInterval(() => self.refreshPast(), refreshDeploymentsLength);
     self.refreshPast();
+    window.addEventListener('resize', this.handleResize.bind(this));
   }
 
   componentDidUpdate() {
@@ -69,6 +76,7 @@ export class Past extends React.Component {
         !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
       }, 400);
     }
+    window.removeEventListener('resize', this.handleResize.bind(this));
   }
 
   componentWillUnmount() {

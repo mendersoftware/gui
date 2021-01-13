@@ -35,6 +35,20 @@ export class ReleaseRepository extends React.Component {
     };
   }
 
+  handleResize() {
+    setTimeout(() => {
+      this.setState({ height: window.innerHeight, width: window.innerWidth });
+    }, 500);
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize.bind(this));
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize.bind(this));
+  }
+
   componentDidUpdate(prevProps) {
     if (prevProps.release && this.props.release && prevProps.release.Name !== this.props.release.Name) {
       const self = this;

@@ -10,7 +10,7 @@ export const initialState = {
     !!JSON.parse(window.localStorage.getItem('onboardingComplete')),
   deviceType: null,
   demoArtifactPort: mender_environment && mender_environment.demoArtifactPort ? mender_environment.demoArtifactPort : 85,
-  progress: OnboardingConstants.onboardingSteps.ONBOARDING_START,
+  progress: null,
   showCreateArtifactDialog: false,
   showTips: null,
   showTipsDialog: false

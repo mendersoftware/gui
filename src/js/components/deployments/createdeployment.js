@@ -220,7 +220,6 @@ export const mapStateToProps = state => {
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
     hasDynamicGroups: Object.values(groups).some(group => !!group.id),
     hasPending: state.devices.byStatus.pending.total,
-    hasSelectedDevices: !!(state.devices.groups.selectedGroup || state.devices.selectedDevice || state.devices.selectedDeviceList.length),
     isEnterprise: getIsEnterprise(state),
     isHosted: state.app.features.isHosted,
     isOnboardingComplete: state.onboarding.complete,

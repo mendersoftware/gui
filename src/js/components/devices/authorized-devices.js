@@ -90,6 +90,12 @@ export class Authorized extends BaseDevices {
     };
   }
 
+  handleResize() {
+    setTimeout(() => {
+      this.setState({ height: window.innerHeight, width: window.innerWidth });
+    }, 500);
+  }
+
   componentDidMount() {
     const self = this;
     self.props.setDeviceFilters([]);
@@ -111,11 +117,13 @@ export class Authorized extends BaseDevices {
       self.timer = setInterval(() => self._getDevices(), refreshDeviceLength);
       self._getDevices();
     }
+    window.addEventListener('resize', this.handleResize.bind(this));
   }
 
   componentWillUnmount() {
     clearInterval(this.timer);
     clearAllRetryTimers(this.props.setSnackbar);
+    window.removeEventListener('resize', this.handleResize.bind(this));
   }
 
   componentDidUpdate(prevProps) {
