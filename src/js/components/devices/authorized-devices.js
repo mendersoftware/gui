@@ -121,7 +121,7 @@ export class Authorized extends BaseDevices {
   }
 
   componentWillUnmount() {
-    clearInterval(this.timer);
+    super.componentWillUnmount();
     clearAllRetryTimers(this.props.setSnackbar);
     window.removeEventListener('resize', this.handleResize.bind(this));
   }
