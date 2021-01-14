@@ -25,16 +25,22 @@ context('Layout assertions', () => {
 
     it('can open a terminal', () => {
       cy.get('a').contains('Devices').click();
-      cy.waitUntil(() => {
-        cy.get('.deviceListItem')
-          .click()
-          // the deviceconnect connection might not be established right away,
-          // due to polling intervals the fastest way to refresh is collapsing & expanding again...
-          .click()
-          .click();
-        return cy.get('.expandedDevice').contains('Launch a new Remote Terminal');
-      });
-      cy.get('.expandedDevice').contains('Launch a new Remote Terminal').click().end();
+      cy.waitUntil(
+        () =>
+          cy
+            .get('.deviceListItem')
+            .click()
+            // the deviceconnect connection might not be established right away,
+            // due to polling intervals the fastest way to refresh is collapsing & expanding again...
+            .click()
+            .click()
+            .then(() => Boolean(Cypress.$('.expandedDevice .device-connect button').length)),
+        { timeout: 10000 }
+      )
+        .get('.expandedDevice')
+        .contains('Launch a new Remote Terminal')
+        .click()
+        .end();
       cy.get('.MuiDialog-paper .terminal.xterm canvas').should('be.visible');
       // the terminal content might take a bit to get painted - thus the waiting
       // eslint-disable-next-line cypress/no-unnecessary-waiting

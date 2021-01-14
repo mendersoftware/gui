@@ -33,7 +33,7 @@ context('Settings', () => {
       it('allows higher device limits once upgraded', () => {
         cy.get('#limit a.inline span').contains('250').should('be.visible');
         cy.getCookie('tenantToken').then(({ value: token }) => {
-          cy.task('startClient', { token, backend: Cypress.config().baseUrl, count: 100 });
+          cy.task('startClient', { token, count: 100 });
           // eslint-disable-next-line cypress/no-unnecessary-waiting
           cy.visit(`${Cypress.config().baseUrl}ui/#/devices`).wait(60000);
           cy.get('.header-section [href="/ui/#/devices/pending"]').contains('pending').should('be.visible');
@@ -63,15 +63,11 @@ context('Settings', () => {
               cy.get('ol').should('contain', 'Verified');
               cy.contains('button', 'Save').click();
               cy.contains('.header-dropdown', Cypress.env('username')).click();
+              // eslint-disable-next-line cypress/no-unnecessary-waiting
+              cy.contains('span', 'Log out').click().wait(1000).clearCookies().visit(`${Cypress.config().baseUrl}ui/`).contains('Log in').should('be.visible');
             });
           });
         });
-      });
-      it('logs out successfully afterwards', () => {
-        cy.visit(`${Cypress.config().baseUrl}ui/#/settings/my-account`);
-        cy.contains('.header-dropdown', Cypress.env('username')).click();
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.contains('span', 'Log out').click().wait(1000).clearCookies().visit(`${Cypress.config().baseUrl}ui/`).contains('Log in').should('be.visible');
       });
       it(`prevents from logging in without 2fa code`, () => {
         cy.visit(`${Cypress.config().baseUrl}ui/`);
