@@ -182,7 +182,7 @@ export const DeploymentOverview = ({
               placement="bottom"
             >
               <Button color="secondary" startIcon={<RefreshIcon fontSize="small" />} onClick={onRetryClick} style={{ alignSelf: 'baseline', marginTop: 45 }}>
-                Retry deployment?
+                Recreate deployment?
               </Button>
             </Tooltip>
           )
