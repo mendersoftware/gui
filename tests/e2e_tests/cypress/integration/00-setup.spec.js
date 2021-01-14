@@ -26,6 +26,7 @@ context('Test setup', () => {
         cy.visit(`${Cypress.config().baseUrl}ui/`);
         cy.contains('Sign up').should('be.visible');
         cy.contains('Sign up').click();
+        cy.task('log', `creating user with username: ${Cypress.env('username')} and password: ${Cypress.env('password')}`);
         cy.log(`creating user with username: ${Cypress.env('username')} and password: ${Cypress.env('password')}`);
         cy.get('[id=email]').type(Cypress.env('username'));
         cy.waitUntil(() => {
@@ -63,6 +64,7 @@ context('Test setup', () => {
           const userId = jwtDecode(cookie.value).sub;
           localStorage.setItem(`${userId}-onboarding`, JSON.stringify({ complete: true }));
           cy.saveLocalStorage();
+          cy.setCookie(`${userId}-onboarded`, 'true');
         });
         cy.contains('Devices', { timeout: 15000 });
       });
