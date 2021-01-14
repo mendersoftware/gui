@@ -77,6 +77,7 @@ export class Pending extends BaseDevices {
   }
 
   componentWillUnmount() {
+    super.componentWillUnmount();
     window.removeEventListener('resize', this.handleResize.bind(this));
   }
 
