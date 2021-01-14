@@ -43,6 +43,7 @@ context('Layout assertions', () => {
       cy.get('.MuiSpeedDial-fab').click();
       cy.get('#device-actions-actions').get('.MuiSpeedDialAction-staticTooltipLabel').contains('Accept').parent().find('button').click().end();
       cy.get('a').contains('Device groups').click();
+      cy.get('.deviceListItem').click();
     });
   });
 });
