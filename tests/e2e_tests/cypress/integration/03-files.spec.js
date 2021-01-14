@@ -1,6 +1,10 @@
 /// <reference types="Cypress" />
 import { onlyOn } from '@cypress/skip-test';
 import 'cypress-file-upload';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween.js';
+
+dayjs.extend(isBetween);
 
 context('Files', () => {
   beforeEach(() => {
@@ -74,9 +78,9 @@ context('Deployments', () => {
     cy.get('.deployment-item:not(.deployment-header-item)')
       .get('time')
       .should($elems => {
-        const time = Cypress.moment($elems[0].getAttribute('datetime'));
-        let earlier = Cypress.moment().subtract(5, 'minutes');
-        const now = Cypress.moment();
+        const time = dayjs($elems[0].getAttribute('datetime'));
+        let earlier = dayjs().subtract(5, 'minutes');
+        const now = dayjs();
         expect(time.isBetween(earlier, now));
       });
   });
