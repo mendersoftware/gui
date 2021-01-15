@@ -74,7 +74,7 @@ exports[`DebPackage Component renders correctly 1`] = `
         }
       }
     >
-      wget -q -O- https://get.mender.io/ | sudo bash -s -- -c experimental
+      wget -q -O- https://get.mender.io/ | sudo bash -s
     </span>
   </div>
   <p />
@@ -143,7 +143,7 @@ exports[`DebPackage Component renders correctly 1`] = `
         }
       }
     >
-      wget -q -O- https://get.mender.io/ | sudo bash -s -- -c experimental && \\
+      wget -q -O- https://get.mender.io/ | sudo bash -s && \\
 sudo bash -c 'DEVICE_TYPE="generic-armv6" && \\
 mender setup \\
   --device-type $DEVICE_TYPE \\
