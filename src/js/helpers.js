@@ -459,7 +459,7 @@ export const standardizePhases = phases =>
 
 export const getDebInstallationCode = (packageVersion, noninteractive = false, hasMenderShellSupport) =>
   hasMenderShellSupport
-    ? `wget -q -O- https://get.mender.io/ | sudo bash -s -- -c experimental`
+    ? `wget -q -O- https://get.mender.io/ | sudo bash -s`
     : `${
         noninteractive ? `sudo bash -c '` : ''
       }wget https://d1b0l86ne08fsf.cloudfront.net/${packageVersion}/dist-packages/debian/armhf/mender-client_${packageVersion}-1_armhf.deb && \\
