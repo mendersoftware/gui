@@ -16,6 +16,7 @@ import { onboardingSteps } from '../../constants/onboardingConstants';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import DeviceListItem from './devicelistitem';
+import { refreshLength as refreshDeviceLength } from './devices';
 
 export class DeviceList extends React.Component {
   constructor(props, context) {
@@ -35,21 +36,36 @@ export class DeviceList extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
+  getDeviceInfo(device) {
+    const { getDeviceAuth, getDeviceById, getDeviceConnect } = this.props;
+    if (device.status === DEVICE_STATES.accepted) {
+      // Get full device identity details for single selected device
+      getDeviceAuth(device.id);
+      getDeviceById(device.id);
+      getDeviceConnect(device.id);
+    } else {
+      getDeviceAuth(device.id);
+    }
+  }
+
   _expandRow(event, rowNumber) {
     const self = this;
     if (event.target.closest('input') && event.target.closest('input').hasOwnProperty('checked')) {
       return;
     }
-    const { advanceOnboarding, devices, getDeviceAuth, getDeviceById, getDeviceConnect, onboardingComplete, setSnackbar } = self.props;
+    const { advanceOnboarding, devices, onboardingComplete, setSnackbar } = self.props;
     setSnackbar('');
     let device = devices[rowNumber];
     if (self.state.expandedDeviceId === device.id) {
       device = null;
-    } else if (device.status === DEVICE_STATES.accepted) {
-      // Get full device identity details for single selected device
-      Promise.all([getDeviceAuth(device.id), getDeviceConnect(device.id), getDeviceById(device.id)]).catch(err => console.log(`Error: ${err}`));
+      clearInterval(self.timer);
     } else {
-      getDeviceAuth(device.id);
+      self.timer = setInterval(() => self.getDeviceInfo(device), refreshDeviceLength);
+      self.getDeviceInfo(device);
     }
     if (!onboardingComplete) {
       advanceOnboarding(onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING);
