@@ -62,8 +62,8 @@ exports[`Helptooltips Components AuthButton renders correctly 1`] = `
     id="onboard-4"
     style={
       Object {
-        "left": "580px",
-        "top": "178px",
+        "left": "625px",
+        "top": "308px",
       }
     }
   >
