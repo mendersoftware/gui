@@ -3,6 +3,8 @@
 exports[`ExpandableAttribute Component renders correctly 1`] = `
 <div
   onClick={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
 >
   <li
     className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"

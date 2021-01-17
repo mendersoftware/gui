@@ -96,10 +96,10 @@ export class ExpandedDevice extends React.Component {
     } = self.props;
     const { auth_sets = [], attributes, created_ts, id, identity_data, status = DEVICE_STATES.accepted, connect_status, connect_updated_ts } = device;
     const { socketClosed, terminal } = self.state;
-    let deviceIdentity = [<ExpandableAttribute key="id_checksum" primary="Device ID" secondary={id || '-'} />];
+    let deviceIdentity = [<ExpandableAttribute key="id_checksum" primary="Device ID" secondary={id || '-'} copyToClipboard={true} setSnackbar={setSnackbar} />];
     if (identity_data) {
       deviceIdentity = Object.entries(identity_data).reduce((accu, item) => {
-        accu.push(<ExpandableAttribute key={item[0]} primary={item[0]} secondary={item[1]} />);
+        accu.push(<ExpandableAttribute key={item[0]} primary={item[0]} secondary={item[1]} copyToClipboard={true} setSnackbar={setSnackbar} />);
         return accu;
       }, deviceIdentity);
     }
@@ -107,7 +107,13 @@ export class ExpandedDevice extends React.Component {
     if (created_ts) {
       var createdTime = <Time value={created_ts} format="YYYY-MM-DD HH:mm" />;
       deviceIdentity.push(
-        <ExpandableAttribute key="connectionTime" primary={status === DEVICE_STATES.preauth ? 'Date added' : 'First request'} secondary={createdTime} />
+        <ExpandableAttribute
+          key="connectionTime"
+          primary={status === DEVICE_STATES.preauth ? 'Date added' : 'First request'}
+          secondary={createdTime}
+          copyToClipboard={true}
+          setSnackbar={setSnackbar}
+        />
       );
     }
 

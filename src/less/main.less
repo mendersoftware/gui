@@ -148,7 +148,8 @@ body {
 }
 
 a,
-span.link {
+span.link,
+.copy-to-clipboard svg {
   font-weight: bold;
   text-decoration: none;
   color: @linkgreen;
@@ -161,6 +162,19 @@ span.link {
   &.small {
     font-size: 13px;
   }
+}
+
+.copy-to-clipboard {
+  cursor: pointer;
+}
+
+.copy-to-clipboard svg {
+  opacity: 0;
+  .transition(opacity 0.2s ease-in-out);
+}
+
+.copy-to-clipboard:hover svg {
+  opacity: 1;
 }
 
 ul.link-list {

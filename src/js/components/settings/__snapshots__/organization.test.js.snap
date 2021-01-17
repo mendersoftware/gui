@@ -75,6 +75,8 @@ exports[`MyOrganization Component renders correctly 1`] = `
     >
       <div
         onClick={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
         style={
           Object {
             "display": "inline-block",
