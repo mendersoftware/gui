@@ -12,6 +12,10 @@ export const TablePaginationActions = ({ count, page, onChangePage, rowsPerPage 
   const [pageNo, setPageNo] = useState(paginationIndex);
 
   useEffect(() => {
+    setPageNo(page + paginationIndex);
+  }, [page]);
+
+  useEffect(() => {
     const newPage = Math.min(Math.max(paginationIndex, pageNo), Math.ceil(count / rowsPerPage));
     if (newPage !== page + paginationIndex) {
       onChangePage(newPage);
