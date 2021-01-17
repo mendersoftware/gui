@@ -31,7 +31,16 @@ export const DeviceInventory = ({ attributes, id, setSnackbar, unauthorized }) =
       const softwareAttribute = softwareInfo.find(info => attribute[0].startsWith(info));
       if (!softwareAttribute) {
         const secondaryText = Array.isArray(attribute[1]) ? attribute[1].join(',') : attribute[1];
-        accu.push(<ExpandableAttribute key={`info-${i}`} primary={attribute[0]} secondary={secondaryText} textClasses={listItemTextClass} />);
+        accu.push(
+          <ExpandableAttribute
+            key={`info-${i}`}
+            primary={attribute[0]}
+            secondary={secondaryText}
+            textClasses={listItemTextClass}
+            copyToClipboard={true}
+            setSnackbar={setSnackbar}
+          />
+        );
       }
       return accu;
     }, []);
@@ -39,7 +48,14 @@ export const DeviceInventory = ({ attributes, id, setSnackbar, unauthorized }) =
   const softwareInformation = Object.entries(extractSoftwareInformation(attributes, softwareTitleMap)).map(item => ({
     title: item[0],
     content: item[1].map((info, index) => (
-      <ExpandableAttribute key={`${item[0]}-info-${index}`} primary={info.primary} secondary={info.secondary} textClasses={listItemTextClass} />
+      <ExpandableAttribute
+        key={`${item[0]}-info-${index}`}
+        primary={info.primary}
+        secondary={info.secondary}
+        textClasses={listItemTextClass}
+        copyToClipboard={true}
+        setSnackbar={setSnackbar}
+      />
     ))
   }));
 
