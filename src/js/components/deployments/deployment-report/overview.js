@@ -102,7 +102,7 @@ export const DeploymentOverview = ({
               dividerDisabled={true}
               style={{ marginBottom: -15 }}
             />
-            <ExpandableAttribute primary="Device group:" secondary={deployment.name} dividerDisabled={true} style={{ marginBottom: -15 }} />
+            <ExpandableAttribute primary="Target device(s):" secondary={deployment.name} dividerDisabled={true} style={{ marginBottom: -15 }} />
           </div>
           <ExpandableAttribute primary="Status:" secondary={statusDescription} dividerDisabled={true} style={{ marginBottom: -15 }} />
         </div>

@@ -85,7 +85,7 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
               <span
                 className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
-                Device group:
+                Target device(s):
               </span>
               <div
                 className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
