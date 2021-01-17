@@ -151,12 +151,13 @@ mender setup \\
 systemctl restart mender-client && \\
 (cat &gt; /etc/mender/mender-connect.conf &lt;&lt; EOF
 {
-  "ServerURL": "http://localhost",
+  "ServerCertificate": "/usr/share/doc/mender-client/examples/demo.crt",
   "User": "pi",
   "ShellCommand": "/bin/bash"
 }
 EOF
-) && systemctl restart mender-connect'
+) && chmod 0600 /etc/mender/mender-connect.conf && \\
+systemctl restart mender-connect'
 
     </span>
   </div>
