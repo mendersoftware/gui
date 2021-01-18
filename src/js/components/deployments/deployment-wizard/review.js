@@ -30,7 +30,7 @@ const Review = ({
       { primary: 'Release', secondary: release.Name },
       { primary: 'Device types compatible', secondary: release.device_types_compatible.join(', ') },
       {
-        primary: `Device${device ? '' : ' group'}`,
+        primary: `Target device(s)`,
         secondary: device ? device.id : generateDeploymentGroupDetails(deployment.filter || { terms: filters }, group)
       },
       { primary: 'Number of retries', secondary: retries }

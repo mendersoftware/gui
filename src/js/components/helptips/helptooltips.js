@@ -31,7 +31,7 @@ const AuthButtonComponent = ({ highlightHelp, toggleHelptips }) => (
       data-tip
       data-for="auth-button-tip"
       data-event="click focus"
-      style={{ left: '580px', top: '178px' }}
+      style={{ left: '625px', top: '308px' }}
     >
       <HelpIcon />
     </div>

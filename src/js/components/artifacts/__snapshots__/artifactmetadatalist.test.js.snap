@@ -17,6 +17,8 @@ Array [
   >
     <div
       onClick={[Function]}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
     >
       <li
         className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"

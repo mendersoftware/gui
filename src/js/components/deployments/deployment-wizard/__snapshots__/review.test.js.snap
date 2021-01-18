@@ -20,6 +20,8 @@ exports[`Review deployment Component renders correctly 1`] = `
       >
         <div
           onClick={[Function]}
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
           style={
             Object {
               "marginBottom": -15,
@@ -57,6 +59,8 @@ exports[`Review deployment Component renders correctly 1`] = `
         </div>
         <div
           onClick={[Function]}
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
           style={
             Object {
               "marginBottom": -15,
@@ -94,6 +98,8 @@ exports[`Review deployment Component renders correctly 1`] = `
         </div>
         <div
           onClick={[Function]}
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
           style={
             Object {
               "marginBottom": -15,
@@ -110,7 +116,7 @@ exports[`Review deployment Component renders correctly 1`] = `
               <span
                 className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
-                Device group
+                Target device(s)
               </span>
               <div
                 className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
@@ -131,6 +137,8 @@ exports[`Review deployment Component renders correctly 1`] = `
         </div>
         <div
           onClick={[Function]}
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
           style={
             Object {
               "marginBottom": -15,
@@ -181,6 +189,8 @@ exports[`Review deployment Component renders correctly 1`] = `
       >
         <div
           onClick={[Function]}
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
           style={
             Object {
               "marginBottom": -15,
@@ -223,6 +233,8 @@ exports[`Review deployment Component renders correctly 1`] = `
         </div>
         <div
           onClick={[Function]}
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
           style={
             Object {
               "marginBottom": -15,
@@ -265,6 +277,8 @@ exports[`Review deployment Component renders correctly 1`] = `
         </div>
         <div
           onClick={[Function]}
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
           style={
             Object {
               "marginBottom": -15,
