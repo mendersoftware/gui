@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { FormControl, Input, InputLabel, TextField, Tooltip } from '@material-ui/core';
+import { FormControl, FormHelperText, Input, InputLabel, TextField, Tooltip } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 
@@ -65,7 +65,7 @@ export class ArtifactInformation extends React.Component {
 
   render() {
     const self = this;
-    const { advanceOnboarding, customDeviceTypes, deviceTypes = [], name, onboardingState, selectedDeviceTypes = [], updateCreation } = self.props;
+    const { advanceOnboarding, customDeviceTypes, deviceTypes = [], name = '', onboardingState, selectedDeviceTypes = [], updateCreation } = self.props;
 
     let onboardingComponent = null;
     if (!onboardingState.complete && self.deviceTypeRef && self.releaseNameRef) {
@@ -92,6 +92,7 @@ export class ArtifactInformation extends React.Component {
       );
     }
 
+    const showReleaseNameWarning = name.includes(' ');
     return (
       <div className="flexbox column" style={{ maxWidth: 400 }}>
         <h4>Artifact information</h4>
@@ -140,6 +141,7 @@ export class ArtifactInformation extends React.Component {
             onChange={e => updateCreation({ name: e.target.value })}
             inputRef={ref => self.onRefSet('releaseNameRef', ref)}
           />
+          {showReleaseNameWarning && <FormHelperText classes={{ root: 'warning' }}>Release names can not contain spaces</FormHelperText>}
         </FormControl>
         {!!onboardingComponent && onboardingComponent}
       </div>

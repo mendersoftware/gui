@@ -143,6 +143,7 @@ exports[`ArtifactInformationForm Component renders correctly 1`] = `
       <input
         aria-invalid={false}
         className="MuiInputBase-input MuiInput-input"
+        defaultValue=""
         disabled={false}
         id="release-name"
         onAnimationStart={[Function]}
