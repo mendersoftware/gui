@@ -10,7 +10,7 @@
     "@material-ui/lab": "4.0.0-alpha.57",
     "@material-ui/pickers": "^3.2.10",
     "@mdi/js": "^5.8.55",
-    "@stripe/react-stripe-js": "^1.1.2",
+    "@stripe/react-stripe-js": "^1.2.0",
     "@stripe/stripe-js": "^1.11.0",
     "axios": "^0.21.1",
     "buffer": "^6.0.3",
