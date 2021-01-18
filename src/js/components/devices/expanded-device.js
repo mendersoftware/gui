@@ -48,7 +48,7 @@ export class ExpandedDevice extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    this.state = { authsets: false, terminal: false };
+    this.state = { authsets: false, socketClosed: true, terminal: false };
   }
 
   componentDidMount() {
@@ -76,7 +76,7 @@ export class ExpandedDevice extends React.Component {
   }
 
   _launchTerminal() {
-    this.setState({ terminal: true });
+    this.setState({ socketClosed: false, terminal: true });
   }
 
   render() {
@@ -95,11 +95,11 @@ export class ExpandedDevice extends React.Component {
       unauthorized
     } = self.props;
     const { auth_sets = [], attributes, created_ts, id, identity_data, status = DEVICE_STATES.accepted, connect_status, connect_updated_ts } = device;
-
-    let deviceIdentity = [<ExpandableAttribute key="id_checksum" primary="Device ID" secondary={id || '-'} />];
+    const { socketClosed, terminal } = self.state;
+    let deviceIdentity = [<ExpandableAttribute key="id_checksum" primary="Device ID" secondary={id || '-'} copyToClipboard={true} setSnackbar={setSnackbar} />];
     if (identity_data) {
       deviceIdentity = Object.entries(identity_data).reduce((accu, item) => {
-        accu.push(<ExpandableAttribute key={item[0]} primary={item[0]} secondary={item[1]} />);
+        accu.push(<ExpandableAttribute key={item[0]} primary={item[0]} secondary={item[1]} copyToClipboard={true} setSnackbar={setSnackbar} />);
         return accu;
       }, deviceIdentity);
     }
@@ -107,7 +107,13 @@ export class ExpandedDevice extends React.Component {
     if (created_ts) {
       var createdTime = <Time value={created_ts} format="YYYY-MM-DD HH:mm" />;
       deviceIdentity.push(
-        <ExpandableAttribute key="connectionTime" primary={status === DEVICE_STATES.preauth ? 'Date added' : 'First request'} secondary={createdTime} />
+        <ExpandableAttribute
+          key="connectionTime"
+          primary={status === DEVICE_STATES.preauth ? 'Date added' : 'First request'}
+          secondary={createdTime}
+          copyToClipboard={true}
+          setSnackbar={setSnackbar}
+        />
       );
     }
 
@@ -193,6 +199,7 @@ export class ExpandedDevice extends React.Component {
               {connect_status === DEVICE_CONNECT_STATES.connected && (
                 <Button
                   onClick={() => self._launchTerminal()}
+                  disabled={!socketClosed}
                   startIcon={
                     <SvgIcon fontSize="inherit">
                       <path d={ConsoleIcon} />
@@ -232,7 +239,12 @@ export class ExpandedDevice extends React.Component {
           open={this.state.authsets}
         />
 
-        <TerminalDialog open={this.state.terminal} onCancel={() => this.setState({ terminal: false })} deviceId={device.id} />
+        <TerminalDialog
+          open={terminal}
+          onCancel={() => this.setState({ terminal: false })}
+          onSocketClose={() => setTimeout(() => self.setState({ socketClosed: true }), 5000)}
+          deviceId={device.id}
+        />
       </div>
     );
   }

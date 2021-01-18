@@ -252,7 +252,7 @@ export const getGlobalSettings = () => dispatch =>
   });
 
 export const saveGlobalSettings = (settings, beOptimistic = false, notify = false) => (dispatch, getState) => {
-  if (!window.sessionStorage.getItem('settings-initialized')) {
+  if (!window.sessionStorage.getItem('settings-initialized') && !beOptimistic) {
     return;
   }
   const updatedSettings = { ...getState().users.globalSettings, ...settings };

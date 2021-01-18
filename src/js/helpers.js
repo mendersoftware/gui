@@ -499,12 +499,13 @@ ${
     ? `systemctl restart mender-client && \\
 (cat > /etc/mender/mender-connect.conf << EOF
 {
-  "ServerURL": "${document.location.origin}",
+  "ServerCertificate": "/usr/share/doc/mender-client/examples/demo.crt",
   "User": "pi",
   "ShellCommand": "/bin/bash"
 }
 EOF
-) && systemctl restart mender-connect'`
+) && chmod 0600 /etc/mender/mender-connect.conf && \\
+systemctl restart mender-connect'`
     : `systemctl restart mender-client'`
 }
 `;

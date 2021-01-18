@@ -8,8 +8,12 @@ import { DEVICE_LIST_MAXIMUM_LENGTH } from '../../constants/deviceConstants';
 const defaultRowsPerPageOptions = [10, 20, DEVICE_LIST_MAXIMUM_LENGTH];
 const paginationIndex = 1;
 
-export const TablePaginationActions = ({ count, page, onChangePage, rowsPerPage = 20 }) => {
-  const [pageNo, setPageNo] = useState(paginationIndex);
+export const TablePaginationActions = ({ count, page = 0, onChangePage, rowsPerPage = 20 }) => {
+  const [pageNo, setPageNo] = useState(page + paginationIndex);
+
+  useEffect(() => {
+    setPageNo(page + paginationIndex);
+  }, [page, rowsPerPage, count]);
 
   useEffect(() => {
     const newPage = Math.min(Math.max(paginationIndex, pageNo), Math.ceil(count / rowsPerPage));
@@ -37,24 +41,23 @@ export const TablePaginationActions = ({ count, page, onChangePage, rowsPerPage 
     }
   };
 
-  const currentPage = page + paginationIndex;
   const pages = Math.ceil(count / rowsPerPage);
   return (
     <div className="flexbox">
-      <IconButton onClick={() => setPageNo(paginationIndex)} disabled={currentPage === paginationIndex}>
+      <IconButton onClick={() => setPageNo(paginationIndex)} disabled={pageNo === paginationIndex}>
         <FirstPageIcon />
       </IconButton>
-      <IconButton onClick={() => setPageNo(currentPage - 1)} disabled={currentPage === paginationIndex}>
+      <IconButton onClick={() => setPageNo(pageNo - 1)} disabled={pageNo === paginationIndex}>
         <KeyboardArrowLeft />
       </IconButton>
       <div className="flexbox" style={{ alignItems: 'baseline' }}>
         <TextField value={pageNo} onChange={onChange} onKeyUp={onKeyPress} margin="dense" style={{ minWidth: 30, maxWidth: 30, marginRight: 10 }} />
         {`/ ${pages}`}
       </div>
-      <IconButton onClick={() => setPageNo(currentPage + 1)} disabled={currentPage >= Math.ceil(count / rowsPerPage)}>
+      <IconButton onClick={() => setPageNo(pageNo + 1)} disabled={pageNo >= Math.ceil(count / rowsPerPage)}>
         <KeyboardArrowRight />
       </IconButton>
-      <IconButton onClick={() => setPageNo(Math.max(paginationIndex, Math.ceil(count / rowsPerPage)))} disabled={currentPage >= Math.ceil(count / rowsPerPage)}>
+      <IconButton onClick={() => setPageNo(Math.max(paginationIndex, Math.ceil(count / rowsPerPage)))} disabled={pageNo >= Math.ceil(count / rowsPerPage)}>
         <LastPageIcon />
       </IconButton>
     </div>
@@ -62,7 +65,10 @@ export const TablePaginationActions = ({ count, page, onChangePage, rowsPerPage 
 };
 
 const Pagination = props => {
-  const { className, page, onChangeRowsPerPage, onChangePage, ...remainingProps } = props;
+  const { className, onChangeRowsPerPage, onChangePage, page = 0, ...remainingProps } = props;
+  // this is required due to the MUI tablepagination being 0-indexed, whereas we work with 1-indexed apis
+  // running it without adjustment will lead to warnings from MUI
+  const propsPage = Math.max(page - paginationIndex, 0);
   return (
     <TablePagination
       className={`flexbox margin-top ${className || ''}`}
@@ -72,7 +78,7 @@ const Pagination = props => {
       labelRowsPerPage="Rows"
       rowsPerPageOptions={defaultRowsPerPageOptions}
       onChangeRowsPerPage={e => onChangeRowsPerPage(e.target.value)}
-      page={page - paginationIndex}
+      page={propsPage}
       onChangePage={onChangePage}
       ActionsComponent={TablePaginationActions}
       {...remainingProps}
