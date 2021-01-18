@@ -48,7 +48,7 @@ export class ExpandedDevice extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    this.state = { authsets: false, terminal: false };
+    this.state = { authsets: false, socketClosed: true, terminal: false };
   }
 
   componentDidMount() {
@@ -76,7 +76,7 @@ export class ExpandedDevice extends React.Component {
   }
 
   _launchTerminal() {
-    this.setState({ terminal: true });
+    this.setState({ socketClosed: false, terminal: true });
   }
 
   render() {
@@ -95,7 +95,7 @@ export class ExpandedDevice extends React.Component {
       unauthorized
     } = self.props;
     const { auth_sets = [], attributes, created_ts, id, identity_data, status = DEVICE_STATES.accepted, connect_status, connect_updated_ts } = device;
-
+    const { socketClosed, terminal } = self.state;
     let deviceIdentity = [<ExpandableAttribute key="id_checksum" primary="Device ID" secondary={id || '-'} />];
     if (identity_data) {
       deviceIdentity = Object.entries(identity_data).reduce((accu, item) => {
@@ -193,6 +193,7 @@ export class ExpandedDevice extends React.Component {
               {connect_status === DEVICE_CONNECT_STATES.connected && (
                 <Button
                   onClick={() => self._launchTerminal()}
+                  disabled={!socketClosed}
                   startIcon={
                     <SvgIcon fontSize="inherit">
                       <path d={ConsoleIcon} />
@@ -232,7 +233,12 @@ export class ExpandedDevice extends React.Component {
           open={this.state.authsets}
         />
 
-        <TerminalDialog open={this.state.terminal} onCancel={() => this.setState({ terminal: false })} deviceId={device.id} />
+        <TerminalDialog
+          open={terminal}
+          onCancel={() => this.setState({ terminal: false })}
+          onSocketClose={() => setTimeout(() => self.setState({ socketClosed: true }), 5000)}
+          deviceId={device.id}
+        />
       </div>
     );
   }

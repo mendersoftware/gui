@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
@@ -24,13 +24,10 @@ const MessageTypeStop = 'stop';
 
 const MessagePack = msgpack5();
 
-const byteArrayToString = body => {
-  var myString = '';
-  for (var i = 0; i < body.byteLength; i++) {
-    myString += String.fromCharCode(body[i]);
-  }
-  return myString;
-};
+const fitAddon = new FitAddon();
+const searchAddon = new SearchAddon();
+
+const byteArrayToString = body => String.fromCharCode(...body);
 
 const blobToString = blob => {
   return new Promise(resolve => {
@@ -42,173 +39,192 @@ const blobToString = blob => {
   });
 };
 
-export const Terminal = props => {
-  const { deviceId, sessionId, socket, setSessionId, setSocket, setSnackbar, onCancel } = props;
-  const xtermRef = React.useRef(null);
+const options = {
+  cursorBlink: 'block',
+  macOptionIsMeta: true,
+  scrollback: 100
+};
 
-  const onData = data => {
-    const proto_header = { proto: MessageProtocolShell, typ: MessageTypeShell, sid: sessionId, props: null };
-    const msg = { hdr: proto_header, body: data };
+let socket = null;
+let healthcheckTimeout = null;
 
-    const encodedData = MessagePack.encode(msg);
-    socket.send(encodedData);
+export const Terminal = ({ onCancel, sendMessage, setSnackbar, setSessionId, setSocketInitialized, socketInitialized }) => {
+  const xtermRef = useRef(null);
+  const [dimensions, setDimensions] = useState({});
+  const [healthcheckHasFailed, setHealthcheckHasFailed] = useState(false);
+  const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
+  const [snackbarAlreadySet, setSnackbarAlreadySet] = useState(false);
+  const [term, setTerminal] = useState(null);
+
+  const healthcheckFailed = () => {
+    setHealthcheckHasFailed(true);
+    cleanupSocket();
   };
 
-  React.useEffect(() => {
-    const term = xtermRef.current.terminal;
-
+  useEffect(() => {
+    // if (!socket) {
+    //   return;
+    // }
+    setTerminal(xtermRef.current.terminal);
     try {
       fitAddon.fit();
     } catch {
       setSnackbar('Fit not possible, terminal not yet visible', 5000);
     }
 
-    var resizeInterval = null;
-    var socket = new WebSocket('wss://' + window.location.host + '/api/management/v1/deviceconnect/devices/' + deviceId + '/connect');
     socket.onopen = () => {
       setSnackbar('Connection with the device established.', 5000);
-      //
-      fitAddon.fit();
-      var dimensions = fitAddon.proposeDimensions();
-      //
-      const proto_header = {
-        proto: MessageProtocolShell,
-        typ: MessageTypeNew,
-        sid: null,
-        props: { 'terminal_height': dimensions.rows, 'terminal_width': dimensions.cols }
-      };
-      const msg = { hdr: proto_header };
-      const encodedData = MessagePack.encode(msg);
-      socket.send(encodedData);
-      term.focus();
-      //
-      resizeInterval = setInterval(function () {
-        fitAddon.fit();
-        const newDimensions = fitAddon.proposeDimensions();
-        if (newDimensions.rows != dimensions.rows || newDimensions.cols != dimensions.cols) {
-          dimensions = newDimensions;
-          //
-          const proto_header = {
-            proto: MessageProtocolShell,
-            typ: MessageTypeResize,
-            sid: sessionId,
-            props: { 'terminal_height': dimensions.rows, 'terminal_width': dimensions.cols }
-          };
-          const msg = { hdr: proto_header };
-          const encodedData = MessagePack.encode(msg);
-          socket.send(encodedData);
-        }
-      }, 1000);
+      setSocketInitialized(true);
     };
 
-    var snackbarAlreadySet = false;
-    var healthcheckHasFailed = false;
     socket.onclose = event => {
       if (!snackbarAlreadySet && healthcheckHasFailed) {
         setSnackbar('Health check failed: connection with the device lost.', 5000);
       } else if (!snackbarAlreadySet && event.wasClean) {
         setSnackbar(`Connection with the device closed.`, 5000);
-      } else {
-        if (!snackbarAlreadySet) {
-          setSnackbar('Connection with the device died.', 5000);
-        }
-        onCancel();
+      } else if (!snackbarAlreadySet) {
+        setSnackbar('Connection with the device died.', 5000);
       }
-      //
-      if (resizeInterval) {
-        clearInterval(resizeInterval);
-        resizeInterval = null;
+      if (xtermRef.current) {
+        onCancel();
       }
     };
 
     socket.onerror = error => {
-      setSnackbar('WebSocket error: ' + error.message, 5000);
-      onCancel();
+      setSnackbar(`WebSocket error: ${error.message}`, 5000);
+      cleanupSocket();
     };
+    // xtermRef.current = null;
+  }, []);
 
-    const healthcheckFailed = () => {
-      healthcheckHasFailed = true;
-      socket.close();
-      onCancel();
+  useEffect(() => {
+    if (!socketInitialized) {
+      return;
+    }
+    fitAddon.fit();
+    let newDimensions = fitAddon.proposeDimensions();
+    //
+    const message = {
+      typ: MessageTypeNew,
+      props: { terminal_height: newDimensions.rows, terminal_width: newDimensions.cols }
     };
-
-    var healthcheckTimeout = null;
-    socket.onmessage = event => {
-      blobToString(event.data).then(function (data) {
-        const obj = MessagePack.decode(data);
-        if (obj.hdr.proto === MessageProtocolShell) {
-          if (obj.hdr.typ === MessageTypeNew) {
-            if ((obj.hdr.props || {}).status == 2) {
-              setSnackbar('Error: ' + byteArrayToString(obj.body), 5000);
-              snackbarAlreadySet = true;
-              socket.close();
-              onCancel();
+    sendMessage(message);
+    setDimensions(newDimensions);
+    term.focus();
+    socket.onmessage = event =>
+      blobToString(event.data).then(data => {
+        const {
+          hdr: { props = {}, proto, sid, typ },
+          body
+        } = MessagePack.decode(data);
+        if (proto !== MessageProtocolShell) {
+          return;
+        }
+        switch (typ) {
+          case MessageTypeNew: {
+            if (props.status == 2) {
+              setSnackbar(`Error: ${byteArrayToString(body)}`, 5000);
+              setSnackbarAlreadySet(true);
+              return cleanupSocket();
             } else {
-              setSessionId(obj.hdr.sid);
+              return setSessionId(sid);
             }
-          } else if (obj.hdr.typ === MessageTypeShell) {
-            term.write(byteArrayToString(obj.body));
-          } else if (obj.hdr.typ === MessageTypeStop) {
-            socket.close();
-            onCancel();
-          } else if (obj.hdr.typ == MessageTypePing) {
+          }
+          case MessageTypeShell:
+            return term.write(byteArrayToString(body));
+          case MessageTypeStop: {
+            console.log('stopped properly');
+            return cleanupSocket();
+          }
+          case MessageTypePing: {
             if (healthcheckTimeout) {
               clearTimeout(healthcheckTimeout);
             }
-            const proto_header = { proto: 1, typ: MessageTypePong, sid: sessionId, props: null };
-            const msg = { hdr: proto_header, body: null };
-            const encodedData = MessagePack.encode(msg);
-            socket.send(encodedData);
+            sendMessage({ typ: MessageTypePong });
             //
-            var timeout = parseInt((obj.hdr.props || {}).timeout);
+            var timeout = parseInt(props.timeout);
             if (timeout > 0) {
               healthcheckTimeout = setTimeout(healthcheckFailed, timeout * 1000);
             }
+            return;
           }
+          default:
+            break;
         }
       });
-    };
+  }, [socketInitialized]);
 
-    setSocket(socket);
+  useEffect(() => {
+    if (!socketInitialized || !term) {
+      return;
+    }
+    fitAddon.fit();
+    const newDimensions = fitAddon.proposeDimensions();
+    if (newDimensions.rows != dimensions.rows || newDimensions.cols != dimensions.cols) {
+      //
+      const message = {
+        typ: MessageTypeResize,
+        props: { terminal_height: newDimensions.rows, terminal_width: newDimensions.cols }
+      };
+      sendMessage(message);
+      setDimensions(newDimensions);
+    }
+  }, [size]);
 
-    return () => {
-      if (resizeInterval) {
-        clearInterval(resizeInterval);
-        resizeInterval = null;
-      }
+  useLayoutEffect(() => {
+    const updateSize = () => {
+      setSize({ height: window.innerHeight, width: window.innerWidth });
     };
+    window.addEventListener('resize', updateSize);
+    updateSize();
+    return () => window.removeEventListener('resize', updateSize);
   }, []);
 
-  const options = {
-    cursorBlink: 'block',
-    macOptionIsMeta: true,
-    scrollback: 100
+  const cleanupSocket = () => {
+    socket.close();
+    socket = null;
+    if (xtermRef.current) {
+      setSocketInitialized(false);
+      onCancel();
+    }
   };
 
-  const fitAddon = new FitAddon();
-  const searchAddon = new SearchAddon();
+  const onData = data => sendMessage({ typ: MessageTypeShell, body: data });
 
   return <XTerm ref={xtermRef} addons={[fitAddon, searchAddon]} options={options} onData={onData} className="xterm-fullscreen" />;
 };
 
-const actionCreators = { setSnackbar };
-
-const mapStateToProps = () => {
-  return {};
-};
-
-export const TerminalDialog = props => {
-  const [socket, setSocket] = useState(null);
+export const TerminalDialog = ({ deviceId, onCancel, onSocketClose, open, setSnackbar }) => {
   const [sessionId, setSessionId] = useState(null);
-  const { open, onCancel, deviceId, setSnackbar } = props;
+  const [socketInitialized, setSocketInitialized] = useState(false);
 
-  const onClose = () => {
-    const proto_header = { proto: 1, typ: MessageTypeStop, sid: sessionId, props: null };
-    const msg = { hdr: proto_header, body: null };
-    const encodedData = MessagePack.encode(msg);
+  useEffect(() => {
+    if (!socketInitialized) {
+      onSocketClose();
+    }
+  }, [socketInitialized]);
+
+  useEffect(() => {
+    if (!(open || socketInitialized) || socketInitialized) {
+      return;
+    }
+    socket = new WebSocket(`wss://${window.location.host}/api/management/v1/deviceconnect/devices/${deviceId}/connect`);
+
+    return () => {
+      console.log('terminaldialog closing');
+      onSendMessage({ typ: MessageTypeStop });
+      setSessionId(null);
+      setSocketInitialized(false);
+    };
+  }, [deviceId, open]);
+
+  const onSendMessage = ({ typ, body, props }) => {
+    if (!socket) {
+      return;
+    }
+    const proto_header = { proto: MessageProtocolShell, typ, sid: sessionId, props };
+    const encodedData = MessagePack.encode({ hdr: proto_header, body });
     socket.send(encodedData);
-    setSocket(null);
-    onCancel();
   };
 
   return (
@@ -216,20 +232,25 @@ export const TerminalDialog = props => {
       <DialogTitle>Terminal</DialogTitle>
       <DialogContent className="dialog-content" style={{ padding: 0, margin: '0 24px', height: '75vh' }}>
         <Terminal
-          deviceId={deviceId}
-          sessionId={sessionId}
-          socket={socket}
-          setSessionId={setSessionId}
-          setSocket={setSocket}
-          setSnackbar={setSnackbar}
           onCancel={onCancel}
+          sendMessage={onSendMessage}
+          setSessionId={setSessionId}
+          setSnackbar={setSnackbar}
+          setSocketInitialized={setSocketInitialized}
+          socketInitialized={socketInitialized}
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Close</Button>
+        <Button onClick={onCancel}>Close</Button>
       </DialogActions>
     </Dialog>
   );
+};
+
+const actionCreators = { setSnackbar };
+
+const mapStateToProps = () => {
+  return {};
 };
 
 export default connect(mapStateToProps, actionCreators)(TerminalDialog);
