@@ -92,8 +92,8 @@ exports[`DeviceList Component renders correctly 1`] = `
         className="flexbox"
       >
         <button
-          className="MuiButtonBase-root MuiIconButton-root"
-          disabled={false}
+          className="MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled"
+          disabled={true}
           onBlur={[Function]}
           onClick={[Function]}
           onDragLeave={[Function]}
@@ -106,7 +106,7 @@ exports[`DeviceList Component renders correctly 1`] = `
           onTouchEnd={[Function]}
           onTouchMove={[Function]}
           onTouchStart={[Function]}
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <span
@@ -125,8 +125,8 @@ exports[`DeviceList Component renders correctly 1`] = `
           </span>
         </button>
         <button
-          className="MuiButtonBase-root MuiIconButton-root"
-          disabled={false}
+          className="MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled"
+          disabled={true}
           onBlur={[Function]}
           onClick={[Function]}
           onDragLeave={[Function]}
@@ -139,7 +139,7 @@ exports[`DeviceList Component renders correctly 1`] = `
           onTouchEnd={[Function]}
           onTouchMove={[Function]}
           onTouchStart={[Function]}
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <span
