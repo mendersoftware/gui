@@ -30,6 +30,7 @@ export default class UserForm extends React.Component {
     const isCreation = !Object.keys(props.user).length;
     this.state = {
       editPass: isCreation,
+      hadRoleChanges: false,
       isCreation,
       selectedRoles: (props.user.roles || []).reduce((accu, role) => {
         const foundRole = props.roles.find(currentRole => currentRole.id === role);
@@ -48,21 +49,27 @@ export default class UserForm extends React.Component {
     }
   }
 
-  handleCheckboxClick(isSelected, role) {
-    const foundIndex = this.state.selectedRoles.findIndex(currentRole => role.id === currentRole.id);
-    let newlySelectedRoles = [...this.state.selectedRoles];
-    if (isSelected) {
-      newlySelectedRoles.push(role);
-    } else if (foundIndex > -1) {
-      newlySelectedRoles.splice(foundIndex, 1);
+  onSelect(role) {
+    const { selectedRoles } = this.state;
+    const {
+      user: { roles = [] }
+    } = this.props;
+    const isSelectedAlready = selectedRoles.some(currentRole => role.id === currentRole.id);
+    let newlySelectedRoles;
+    if (isSelectedAlready) {
+      newlySelectedRoles = selectedRoles.filter(currentRole => role.id !== currentRole.id);
+    } else {
+      newlySelectedRoles = [...selectedRoles, role];
     }
-    this.setState({ selectedRoles: newlySelectedRoles });
+    const hadRoleChanges =
+      roles.length !== newlySelectedRoles.length || roles.some(currentRoleId => !newlySelectedRoles.some(role => currentRoleId === role.id));
+    this.setState({ selectedRoles: newlySelectedRoles, hadRoleChanges });
   }
 
   onSubmit(data) {
     const { submit, user } = this.props;
-    const { isCreation, selectedRoles } = this.state;
-    let submissionData = Object.assign({}, data, selectedRoles.length ? { roles: selectedRoles.map(role => role.id) } : {});
+    const { hadRoleChanges, isCreation, selectedRoles } = this.state;
+    let submissionData = Object.assign({}, data, hadRoleChanges ? { roles: selectedRoles.map(role => role.id) } : {});
     delete submissionData['password_new'];
     submissionData['password'] = data.password_new;
     submissionData = Object.entries(submissionData).reduce((accu, [key, value]) => {
@@ -154,17 +161,12 @@ export default class UserForm extends React.Component {
                     id={`roles-selector-${selectedRoles.length}`}
                     multiple
                     value={selectedRoles}
-                    onChange={e => self.setState({ selectedRoles: e.target.value })}
                     required={true}
                     renderValue={selected => selected.map(role => role.title).join(', ')}
                   >
                     {roles.map(role => (
-                      <MenuItem key={role.id} value={role} id={role.id}>
-                        <Checkbox
-                          id={`${role.id}-checkbox`}
-                          checked={selectedRoles.some(item => role.id === item.id)}
-                          onChange={e => self.handleCheckboxClick(e.target.checked, role)}
-                        />
+                      <MenuItem key={role.id} value={role} id={role.id} onClick={() => self.onSelect(role)}>
+                        <Checkbox id={`${role.id}-checkbox`} checked={selectedRoles.some(item => role.id === item.id)} />
                         <ListItemText id={`${role}-text`} primary={role.title} />
                       </MenuItem>
                     ))}
