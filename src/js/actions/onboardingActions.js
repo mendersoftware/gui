@@ -7,7 +7,7 @@ import { applyOnboardingFallbacks, onboardingSteps } from '../utils/onboardingma
 import { getDemoDeviceAddress } from '../helpers';
 import { getUserSettings } from '../selectors';
 import Tracking from '../tracking';
-import { saveUserSettings } from './userActions';
+import { saveUserSettings, toggleHelptips } from './userActions';
 
 const cookies = new Cookies();
 
@@ -66,7 +66,7 @@ export const getOnboardingState = () => (dispatch, getState) => {
 };
 
 export const setShowOnboardingHelp = (show, update = true) => (dispatch, getState) => {
-  let tasks = [dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show })];
+  let tasks = [dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show }), dispatch(toggleHelptips())];
   if (update) {
     const { onboarding = {} } = getUserSettings(getState());
     onboarding.showTips = show;

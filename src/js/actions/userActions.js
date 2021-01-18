@@ -296,7 +296,7 @@ export const get2FAQRCode = () => dispatch =>
 /*
   Onboarding
 */
-export const setShowHelptips = show => dispatch =>
+const setShowHelptips = show => dispatch =>
   Promise.all([dispatch({ type: UserConstants.SET_SHOW_HELP, show }), dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show })]);
 
 export const toggleHelptips = () => (dispatch, getState) => {

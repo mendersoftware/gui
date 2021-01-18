@@ -125,6 +125,8 @@ describe('onboarding actions', () => {
     await store.dispatch(setShowOnboardingHelp(true));
     const expectedActions = [
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true },
+      { type: UserConstants.SET_SHOW_HELP, show: true },
+      { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true },
       {
         type: UserConstants.SET_GLOBAL_SETTINGS,
         settings: {
@@ -171,6 +173,8 @@ describe('onboarding actions', () => {
     await store.dispatch(setOnboardingCanceled(stepNames[0]));
     const expectedActions = [
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: false },
+      { type: UserConstants.SET_SHOW_HELP, show: true },
+      { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true },
       {
         type: UserConstants.SET_GLOBAL_SETTINGS,
         settings: {
@@ -197,6 +201,8 @@ describe('onboarding actions', () => {
       { type: OnboardingConstants.SET_ONBOARDING_DEVICE_TYPE, value: undefined },
       { type: OnboardingConstants.SET_ONBOARDING_APPROACH, value: 'physical' },
       { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: undefined },
+      { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true },
+      { type: UserConstants.SET_SHOW_HELP, show: true },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true },
       { type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value: 'application-update-reminder-tip' },
       { type: OnboardingConstants.SET_SHOW_CREATE_ARTIFACT, show: false },
