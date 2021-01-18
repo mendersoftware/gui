@@ -4,7 +4,7 @@
   "description": "Test mender e2e - with focus on the GUI",
   "main": "login.spec.js",
   "dependencies": {
-    "@cypress/skip-test": "^2.5.1",
+    "@cypress/skip-test": "^2.6.0",
     "@nuintun/qrcode": "^3.0.1",
     "cypress": "^6.2.1",
     "cypress-file-upload": "^4.1.1",
