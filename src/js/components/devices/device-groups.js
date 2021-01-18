@@ -29,7 +29,7 @@ export class DeviceGroups extends React.Component {
       removeGroup: false,
       tmpDevices: []
     };
-    this._refreshGroups().then(() => props.initializeGroupsDevices());
+    this._refreshGroups();
   }
 
   componentDidUpdate(prevProps) {

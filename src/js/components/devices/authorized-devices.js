@@ -98,25 +98,35 @@ export class Authorized extends BaseDevices {
 
   componentDidMount() {
     const self = this;
-    self.props.setDeviceFilters([]);
+    const {
+      acceptedCount,
+      acceptedDevicesList,
+      deploymentDeviceLimit,
+      getDevicesByStatus,
+      groupDevices,
+      groupFilters,
+      selectDevices,
+      selectedGroup,
+      setDeviceFilters
+    } = self.props;
+    const { pageLength } = self.state;
+    setDeviceFilters([]);
     self.setState({ selectedRows: [], expandRow: null });
-    if (!this.props.acceptedDevicesList.length && this.props.acceptedCount < this.props.deploymentDeviceLimit) {
-      this.props.getDevicesByStatus(DEVICE_STATES.accepted);
+    if (!acceptedDevicesList.length && acceptedCount < deploymentDeviceLimit) {
+      getDevicesByStatus(DEVICE_STATES.accepted);
     }
-    if (self.props.acceptedDevicesList.length < 20) {
-      self._getDevices(true);
-    } else {
-      self.props.selectDevices(self.props.acceptedDevicesList);
+    clearAllRetryTimers(setSnackbar);
+    if (selectedGroup) {
+      if (!groupFilters.length) {
+        self.setState({ pageLoading: false }, () => selectDevices(groupDevices.slice(0, pageLength)));
+      } else {
+        setDeviceFilters(groupFilters);
+      }
     }
-    clearAllRetryTimers(self.props.setSnackbar);
-    if (self.props.filters && self.props.groupDevices.length) {
-      self.setState({ pageLoading: false }, () => self.props.selectDevices(self.props.groupDevices.slice(0, self.state.pageLength)));
-    } else {
-      clearInterval(self.timer);
-      // no group, no filters, all devices
-      self.timer = setInterval(() => self._getDevices(), refreshDeviceLength);
-      self._getDevices();
-    }
+    clearInterval(self.timer);
+    // no group, no filters, all devices
+    self.timer = setInterval(() => self._getDevices(), refreshDeviceLength);
+    self._getDevices(true);
     window.addEventListener('resize', this.handleResize.bind(this));
   }
 
