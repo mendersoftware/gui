@@ -13,7 +13,7 @@ import DeploymentItem, {
 
 export const defaultHeaders = [
   { title: 'Release', renderer: DeploymentRelease },
-  { title: 'Device group', renderer: DeploymentDeviceGroup },
+  { title: 'Target device(s)', renderer: DeploymentDeviceGroup },
   { title: 'Start time', renderer: DeploymentStartTime },
   { title: `End time`, renderer: DeploymentEndTime },
   { title: '# devices', class: 'align-right column-defined', renderer: DeploymentDeviceCount },

@@ -29,7 +29,7 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
           <div
             class=""
           >
-            Device group
+            Target device(s)
           </div>
           <div
             class=""
@@ -72,7 +72,7 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
               <span
                 class="deployment-item-title text-muted"
               >
-                Device group
+                Target device(s)
               </span>
               <div>
                 test deployment
@@ -244,7 +244,7 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
         <div
           class=""
         >
-          Device group
+          Target device(s)
         </div>
         <div
           class=""
@@ -287,7 +287,7 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
             <span
               class="deployment-item-title text-muted"
             >
-              Device group
+              Target device(s)
             </span>
             <div>
               test deployment 2
