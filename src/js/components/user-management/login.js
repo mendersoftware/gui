@@ -62,8 +62,8 @@ export class Login extends React.Component {
     let twoFAAnchor = {};
     if (this.twoFARef) {
       twoFAAnchor = {
-        left: this.twoFARef.offsetLeft + this.twoFARef.offsetWidth + 120,
-        top: this.twoFARef.parentElement.parentElement.offsetTop + this.twoFARef.offsetHeight / 2
+        right: -120,
+        top: this.twoFARef.parentElement.parentElement.offsetTop + this.twoFARef.parentElement.offsetHeight / 2
       };
     }
     return (
@@ -93,7 +93,7 @@ export class Login extends React.Component {
           </>
         )}
 
-        <Form showButtons={true} buttonColor="primary" onSubmit={loginUser} submitLabel="Log in" submitButtonId="login_button">
+        <Form showButtons={true} buttonColor="primary" onSubmit={loginUser} submitLabel="Log in" submitButtonId="login_button" style={{ maxWidth: 400 }}>
           <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
           <PasswordInput className="margin-bottom-small" id="password" label="Password" required={true} />
           {isHosted ? (
@@ -119,28 +119,29 @@ export class Login extends React.Component {
           )}
           <FormCheckbox id="noExpiry" label="Stay logged in" checked={noExpiry === 'true'} />
         </Form>
-
-        {isHosted ? (
-          <div className="margin-top text-muted">
-            <div className="flexbox centered">
-              Don&#39;t have an account?{' '}
-              <Link style={{ marginLeft: '4px' }} to="/signup">
-                Sign up here
-              </Link>
-            </div>
+        {isHosted && (
+          <>
             {this.twoFARef && (
               <div>
                 <div id="onboard-6" className="tooltip info" data-tip data-for="2fa-tip" data-event="click focus" style={twoFAAnchor}>
                   <HelpIcon />
                 </div>
-                <ReactTooltip id="2fa-tip" globalEventOff="click" place="top" effect="solid" className="react-tooltip info" style={{ maxWidth: 300 }}>
+                <ReactTooltip id="2fa-tip" globalEventOff="click" place="right" effect="solid" className="react-tooltip info" style={{ maxWidth: 300 }}>
                   Two Factor Authentication is enabled for your account. If you haven&apos;t set up a 3rd party authentication app with a verification code,
                   please contact an administrator.
                 </ReactTooltip>
               </div>
             )}
-          </div>
-        ) : null}
+            <div className="margin-top text-muted">
+              <div className="flexbox centered">
+                Don&#39;t have an account?{' '}
+                <Link style={{ marginLeft: '4px' }} to="/signup">
+                  Sign up here
+                </Link>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     );
   }
