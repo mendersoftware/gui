@@ -13,7 +13,7 @@ export const TablePaginationActions = ({ count, page = 0, onChangePage, rowsPerP
 
   useEffect(() => {
     setPageNo(page + paginationIndex);
-  }, [rowsPerPage]);
+  }, [page, rowsPerPage, count]);
 
   useEffect(() => {
     const newPage = Math.min(Math.max(paginationIndex, pageNo), Math.ceil(count / rowsPerPage));
