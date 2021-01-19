@@ -1,14 +1,22 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import LocalOfferIcon from '@material-ui/icons/LocalOffer';
+import { LocalOffer as LocalOfferIcon, Close as CloseIcon } from '@material-ui/icons';
 
-const OfferHeader = () => (
+const OfferHeader = ({ organization, onHide }) => (
   <div id="offerHeader" className="offerBox">
     <LocalOfferIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
-    <span>
-      End of year offer – receive 20% discount for 6 months when you upgrade to a paid Mender plan before Dec 31.{' '}
-      <Link to="/settings/upgrade">Learn more and upgrade now</Link>
-    </span>
+    {organization && organization.trial ? (
+      <span>
+        Try out the new <b>Remote terminal</b> feature for free with your current trial.&nbsp;
+      </span>
+    ) : (
+      <span>
+        Try out the new <b>Remote terminal</b> feature for free on your current plan until March 31st.&nbsp;
+      </span>
+    )}
+    <a href="https://docs.mender.io/add-ons/remote-terminal" target="_blank" rel="noreferrer">
+      Read the documentation to learn how to enable it
+    </a>
+    <CloseIcon style={{ marginLeft: '4px', height: '16px', cursor: 'pointer' }} onClick={onHide} />
   </div>
 );
 
