@@ -66,6 +66,7 @@ exports[`SelectedArtifact Component renders correctly 1`] = `
               onChange={[Function]}
               onFocus={[Function]}
               onKeyDown={[Function]}
+              placeholder="-"
               type="text"
               value="text"
             />

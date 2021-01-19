@@ -73,7 +73,7 @@ export const transformArtifactMetadata = (metadata = {}) => {
 
 export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExpansion, showRemoveArtifactDialog }) => {
   const [descEdit, setDescEdit] = useState(false);
-  const [description, setDescription] = useState(artifact.description || '-');
+  const [description, setDescription] = useState(artifact.description);
   const [gettingUrl, setGettingUrl] = useState(false);
   const [showPayloads, setShowPayloads] = useState(false);
   const [showProvidesDepends, setShowProvidesDepends] = useState(false);
@@ -124,6 +124,7 @@ export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExp
                 type="text"
                 disabled={!descEdit}
                 value={description}
+                placeholder="-"
                 onKeyDown={onToggleEditing}
                 style={{ width: '100%' }}
                 onChange={e => setDescription(e.target.value)}
