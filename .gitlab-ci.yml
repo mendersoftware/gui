@@ -72,7 +72,7 @@ test:unit:
       - .npm/
   script:
     - npm ci --cache .npm --prefer-offline
-    - npm run test -- --ci --maxWorkers=2
+    - npm run test -- --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
   after_script:
     - mkdir logs && cp /root/.npm/_logs/* logs/
   artifacts:
@@ -80,6 +80,9 @@ test:unit:
     paths:
       - coverage
       - logs
+    reports:
+      junit:
+        - junit.xml
     when: always
 
 test:docs-links:
