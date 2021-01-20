@@ -1,16 +1,16 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
-import VirtualDevice from './demo-virtual-device';
-import { helpProps } from '../mockData';
-import { undefineds } from '../../../../../tests/mockData';
+import DeviceSupport from './device-support';
+import { helpProps } from './mockData';
+import { undefineds } from '../../../../tests/mockData';
 
-describe('VirtualDevice Component', () => {
+describe('DeviceSupport Component', () => {
   it('renders correctly', async () => {
     const tree = renderer
       .create(
         <MemoryRouter>
-          <VirtualDevice {...helpProps} />
+          <DeviceSupport {...helpProps} />
         </MemoryRouter>
       )
       .toJSON();

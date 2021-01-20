@@ -20,7 +20,7 @@ describe('Help Component', () => {
       .create(
         <MemoryRouter>
           <Provider store={store}>
-            <Help location={{ pathname: '/help/getting-started' }} />
+            <Help location={{ pathname: '/help/get-started' }} />
           </Provider>
         </MemoryRouter>
       )
