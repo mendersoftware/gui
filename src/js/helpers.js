@@ -457,15 +457,7 @@ export const standardizePhases = phases =>
     return standardizedPhase;
   });
 
-export const getDebInstallationCode = (packageVersion, noninteractive = false, hasMenderShellSupport) =>
-  hasMenderShellSupport
-    ? `wget -q -O- https://get.mender.io/ | sudo bash -s`
-    : `${
-        noninteractive ? `sudo bash -c '` : ''
-      }wget https://d1b0l86ne08fsf.cloudfront.net/${packageVersion}/dist-packages/debian/armhf/mender-client_${packageVersion}-1_armhf.deb && \\
-${noninteractive ? 'DEBIAN_FRONTEND=noninteractive' : 'sudo'} dpkg -i --force-confdef --force-confold mender-client_${packageVersion}-1_armhf.deb`;
-
-export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token, packageVersion, deviceType = 'generic-armv6', hasMenderShellSupport) => {
+export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token, deviceType = 'generic-armv6') => {
   let connectionInstructions = ``;
   let demoSettings = `  --quiet --demo ${ipAddress ? `--server-ip ${ipAddress}` : ''}`;
   if (isEnterprise || isHosted) {
@@ -483,9 +475,9 @@ ${enterpriseSettings}`;
   } else {
     connectionInstructions = `${demoSettings}`;
   }
-  const debInstallationCode = getDebInstallationCode(packageVersion, true, hasMenderShellSupport);
+  const debInstallationCode = `wget -q -O- https://get.mender.io/ | sudo bash -s`;
   let codeToCopy = `${debInstallationCode} && \\
-${hasMenderShellSupport ? `sudo bash -c '` : ''}DEVICE_TYPE="${deviceType}" && \\${
+sudo bash -c 'DEVICE_TYPE="${deviceType}" && \\${
     token
       ? `
 TENANT_TOKEN="${token}" && \\`
@@ -494,9 +486,7 @@ TENANT_TOKEN="${token}" && \\`
 mender setup \\
   --device-type $DEVICE_TYPE \\
 ${connectionInstructions} && \\
-${
-  hasMenderShellSupport
-    ? `systemctl restart mender-client && \\
+systemctl restart mender-client && \\
 (cat > /etc/mender/mender-connect.conf << EOF
 {
   "ServerCertificate": "/usr/share/doc/mender-client/examples/demo.crt",
@@ -504,10 +494,7 @@ ${
   "ShellCommand": "/bin/bash"
 }
 EOF
-) && chmod 0600 /etc/mender/mender-connect.conf && \\
-systemctl restart mender-connect'`
-    : `systemctl restart mender-client'`
-}
+) && systemctl restart mender-connect'
 `;
   return codeToCopy;
 };
