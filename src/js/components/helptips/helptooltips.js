@@ -125,3 +125,23 @@ const ExpandArtifactComponent = ({ docsVersion, toggleHelptips }) => (
   </div>
 );
 export const ExpandArtifact = connect(mapStateToProps, actionCreators)(ExpandArtifactComponent);
+
+const DeviceSupportTipComponent = ({ docsVersion }) => (
+  <div>
+    <div id="deb-package-help" className="tooltip help" data-tip data-for="deb-package-tip" data-event="click focus" style={{ top: '22%', left: '88%' }}>
+      <HelpIcon />
+    </div>
+    <ReactTooltip id="deb-package-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+      <p>
+        The steps in the guide should work on most operating systems in the debian family (e.g. Debian, Ubuntu, Raspberry Pi OS) and devices based on ARMv6 or
+        newer (e.g. Raspberry Pi 2/3/4, Beaglebone). Visit{' '}
+        <a href={`https://docs.mender.io/${docsVersion}overview/device-support`} target="_blank" rel="noopener noreferrer">
+          our documentation
+        </a>
+        for more information about device support.
+      </p>
+    </ReactTooltip>
+  </div>
+);
+
+export const DeviceSupportTip = connect(mapStateToProps, actionCreators)(DeviceSupportTipComponent);
