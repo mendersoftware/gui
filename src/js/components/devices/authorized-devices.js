@@ -346,7 +346,7 @@ export class Authorized extends BaseDevices {
                 <>
                   <p>No devices have been authorized to connect to the Mender server yet.</p>
                   <p>
-                    Visit the <Link to="/help/getting-started">Help section</Link> to learn how to connect devices to the Mender server.
+                    Visit the <Link to="/help/get-started">Help section</Link> to learn how to connect devices to the Mender server.
                   </p>
                 </>
               )}

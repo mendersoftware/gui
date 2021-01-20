@@ -206,7 +206,7 @@ export class SoftwareDevices extends React.PureComponent {
                         </span>
                       ) : (
                         <span>
-                          <Link to="/help/getting-started">Read the help pages</Link> for help with connecting devices.
+                          <Link to="/help/get-started">Read the help pages</Link> for help with connecting devices.
                         </span>
                       )}
                     </p>
