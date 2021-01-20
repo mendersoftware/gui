@@ -44,10 +44,9 @@ exports[`OnboardingTips Components DevicePendingTip renders correctly 1`] = `
     >
       Open the tutorial
     </a>
-     again or
-     
+     again or 
     <a
-      href="/help/application-updates/mender-deb-package"
+      href="/help/get-started"
       onClick={[Function]}
     >
       go to the help pages
