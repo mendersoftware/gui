@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import { render } from '@testing-library/react';
 import CreateArtifactDialog from './createartifactdialog';
-import { defaultState, undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 

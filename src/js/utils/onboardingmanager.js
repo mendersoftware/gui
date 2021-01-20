@@ -2,7 +2,7 @@ import React from 'react';
 
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { onboardingSteps as stepNames } from '../constants/onboardingConstants';
-import CreateArtifactDialog from '../components/helptips/createartifactdialog';
+import CreateArtifactDialog from '../components/common/dialogs/createartifactdialog';
 import BaseOnboardingTip from '../components/helptips/baseonboardingtip';
 import DeploymentCompleteTip from '../components/helptips/deploymentcompletetip';
 import OnboardingCompleteTip from '../components/helptips/onboardingcompletetip';
