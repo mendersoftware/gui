@@ -174,7 +174,7 @@ export class ExpandedDevice extends React.Component {
           <div className="device-connect bordered report-list">
             <h4 className="margin-bottom-small">Remote Terminal</h4>
             <div className="flexbox" style={{ flexDirection: 'row' }}>
-              {connect_status === DEVICE_CONNECT_STATES.unknown && (
+              {(connect_status === undefined || connect_status === DEVICE_CONNECT_STATES.unknown) && (
                 <Typography variant="body1" style={buttonStyle}>
                   The Remote terminal add-on does not seem to be enabled on this device.
                   <br />
