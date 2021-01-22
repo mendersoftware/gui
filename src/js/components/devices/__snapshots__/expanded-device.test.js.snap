@@ -4,44 +4,39 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
 <div>
   <div>
     <div
-      className="device-identity bordered"
+      class="device-identity bordered"
     >
       <div
-        className="margin-bottom-small"
+        class="margin-bottom-small"
       >
         <h4
-          className="margin-bottom-none"
+          class="margin-bottom-none"
         >
           Device identity
         </h4>
         <ul
-          className="MuiList-root list-horizontal-flex MuiList-padding"
+          class="MuiList-root list-horizontal-flex MuiList-padding"
         >
-          <div
-            onClick={[Function]}
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
+          <div>
             <li
-              className="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-              disabled={true}
+              class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
+              disabled=""
             >
               <div
-                className="MuiListItemText-root MuiListItemText-multiline"
+                class="MuiListItemText-root MuiListItemText-multiline"
               >
                 <span
-                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                  class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
                 >
                   Device ID
                 </span>
                 <div
-                  className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                  class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
                   title="a1"
                 >
                   <div>
                     <span
-                      className="inventory-text"
-                      style={Object {}}
+                      class="inventory-text"
                     >
                       a1
                     </span>
@@ -50,16 +45,9 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
                 </div>
               </div>
               <svg
-                aria-describedby={null}
-                aria-hidden={true}
-                className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
                 focusable="false"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseLeave={[Function]}
-                onMouseOver={[Function]}
-                onTouchEnd={[Function]}
-                onTouchStart={[Function]}
                 title="Copy to clipboard"
                 viewBox="0 0 24 24"
               >
@@ -69,38 +57,23 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
               </svg>
             </li>
             <hr
-              className="MuiDivider-root"
+              class="MuiDivider-root"
             />
           </div>
         </ul>
       </div>
       <div
-        className="margin-bottom-small flexbox"
-        style={
-          Object {
-            "flexDirection": "row",
-          }
-        }
+        class="margin-bottom-small flexbox"
+        style="flex-direction: row;"
       >
         <span
-          style={
-            Object {
-              "alignItems": "center",
-              "display": "flex",
-              "marginRight": "2vw",
-              "minWidth": 180,
-            }
-          }
+          style="display: flex; min-width: 180px; align-items: center; margin-right: 2vw;"
         >
           <svg
-            aria-hidden={true}
-            className="MuiSvgIcon-root green"
+            aria-hidden="true"
+            class="MuiSvgIcon-root green"
             focusable="false"
-            style={
-              Object {
-                "margin": 12,
-              }
-            }
+            style="margin: 12px;"
             viewBox="0 0 24 24"
           >
             <path
@@ -108,110 +81,186 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
             />
           </svg>
           <span
-            className="inline-block"
+            class="inline-block"
           >
             <h6
-              className="MuiTypography-root MuiTypography-subtitle2"
-              style={
-                Object {
-                  "textAlign": "left",
-                  "textTransform": "capitalize",
-                }
-              }
+              class="MuiTypography-root MuiTypography-subtitle2"
+              style="text-transform: capitalize; text-align: left;"
             >
               Device status
             </h6>
             <p
-              className="MuiTypography-root MuiTypography-body1"
-              style={
-                Object {
-                  "textAlign": "left",
-                  "textTransform": "capitalize",
-                }
-              }
+              class="MuiTypography-root MuiTypography-body1"
+              style="text-transform: capitalize; text-align: left;"
             >
               accepted
             </p>
           </span>
         </span>
         <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-text"
-          disabled={false}
-          onBlur={[Function]}
-          onClick={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={0}
+          class="MuiButtonBase-root MuiButton-root MuiButton-text"
+          tabindex="0"
           type="button"
         >
           <span
-            className="MuiButton-label"
+            class="MuiButton-label"
           >
             <span
-              className="inline-block"
+              class="inline-block"
             >
               <h6
-                className="MuiTypography-root MuiTypography-subtitle2"
-                style={
-                  Object {
-                    "textAlign": "left",
-                    "textTransform": "none",
-                  }
-                }
+                class="MuiTypography-root MuiTypography-subtitle2"
+                style="text-transform: none; text-align: left;"
               >
                 Reject, dismiss or decommission this device?
               </h6>
               <p
-                className="MuiTypography-root muted MuiTypography-body1"
-                style={
-                  Object {
-                    "textAlign": "left",
-                    "textTransform": "none",
-                  }
-                }
+                class="MuiTypography-root muted MuiTypography-body1"
+                style="text-transform: none; text-align: left;"
               >
                 Click to adjust authorization status for this device
               </p>
             </span>
           </span>
           <span
-            className="MuiTouchRipple-root"
+            class="MuiTouchRipple-root"
           />
         </button>
       </div>
     </div>
     <div
-      className="device-connect bordered report-list"
+      class="bordered margin-bottom-small"
+    >
+      <div
+        class="two-columns"
+      >
+        <div
+          class="flexbox"
+          style="align-items: baseline;"
+        >
+          <h4
+            class="margin-bottom-none margin-right"
+          >
+            Device configuration
+          </h4>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSizeSmall MuiButton-sizeSmall"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              <span
+                class="MuiButton-startIcon MuiButton-iconSizeSmall"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                  />
+                </svg>
+              </span>
+              Edit
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        class="margin-top text-muted two-columns"
+        style="max-width: 280px; row-gap: 15px;"
+      >
+        <div
+          class="align-right"
+        >
+          <b>
+            uiPasswordRequired
+          </b>
+        </div>
+        <div>
+          true
+        </div>
+        <div
+          class="align-right"
+        >
+          <b>
+            foo
+          </b>
+        </div>
+        <div>
+          bar
+        </div>
+        <div
+          class="align-right"
+        >
+          <b>
+            timezone
+          </b>
+        </div>
+        <div>
+          GMT+2
+        </div>
+      </div>
+      <div
+        class="flexbox margin-bottom margin-top"
+        style="align-items: center;"
+      >
+        <div
+          class="flexbox margin-small"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root green"
+            focusable="false"
+            style="margin: 12px;"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+            />
+          </svg>
+          <div>
+            <h6
+              class="MuiTypography-root MuiTypography-subtitle2"
+              style="text-transform: capitalize; text-align: left;"
+            >
+              Configuration up-to-date on the device
+            </h6>
+            <span
+              class="MuiTypography-root text-muted MuiTypography-caption"
+              style="text-transform: capitalize; text-align: left;"
+            >
+              Updated: 
+              <span>
+                Invalid date
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="device-connect bordered report-list"
     >
       <h4
-        className="margin-bottom-small"
+        class="margin-bottom-small"
       >
         Remote Terminal
       </h4>
       <div
-        className="flexbox"
-        style={
-          Object {
-            "flexDirection": "row",
-          }
-        }
+        class="flexbox"
+        style="flex-direction: row;"
       >
         <p
-          className="MuiTypography-root MuiTypography-body1"
-          style={
-            Object {
-              "textAlign": "left",
-              "textTransform": "none",
-            }
-          }
+          class="MuiTypography-root MuiTypography-body1"
+          style="text-transform: none; text-align: left;"
         >
           The Remote terminal add-on does not seem to be enabled on this device.
           <br />
@@ -230,36 +279,31 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
       </div>
     </div>
     <div
-      className="device-inventory bordered report-list"
+      class="device-inventory bordered report-list"
     >
       <h4
-        className="margin-bottom-none"
+        class="margin-bottom-none"
       >
         Device inventory
       </h4>
       <ul
-        className="MuiList-root MuiList-padding"
+        class="MuiList-root MuiList-padding"
       >
         <div
-          className="waiting-inventory"
+          class="waiting-inventory"
         >
           <div
-            className="tooltip info"
+            class="tooltip info"
+            currentitem="false"
             data-event="click focus"
             data-for="inventory-wait"
-            data-tip={true}
+            data-tip="true"
             id="inventory-info"
-            onClick={[Function]}
-            style={
-              Object {
-                "right": "8px",
-                "top": "8px",
-              }
-            }
+            style="top: 8px; right: 8px;"
           >
             <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root"
+              aria-hidden="true"
+              class="MuiSvgIcon-root"
               focusable="false"
               viewBox="0 0 24 24"
             >
@@ -269,7 +313,7 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
             </svg>
           </div>
           <div
-            className="__react_component_tooltip place-top type-dark"
+            class="__react_component_tooltip place-top type-dark"
             data-id="tooltip"
             id="inventory-wait"
           >
@@ -296,22 +340,22 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
             Waiting for inventory data from the device
           </p>
           <div
-            className="loaderContainer"
+            class="loaderContainer"
           >
             <div
-              className="waiting-loader loader"
+              class="waiting-loader loader"
             >
               <span
-                className="dot dot_1"
+                class="dot dot_1"
               />
               <span
-                className="dot dot_2"
+                class="dot dot_2"
               />
               <span
-                className="dot dot_3"
+                class="dot dot_3"
               />
               <span
-                className="dot dot_4"
+                class="dot dot_4"
               />
             </div>
           </div>

@@ -17,7 +17,9 @@ const softwareTitleMap = {
   'rootfs-image.checksum': { title: 'checksum', priority: 1 }
 };
 
-export const DeviceInventory = ({ attributes, id, setSnackbar, unauthorized }) => {
+export const DeviceInventory = ({ device, setSnackbar, unauthorized }) => {
+  const { attributes, id } = device;
+
   const copyLinkToClipboard = () => {
     const location = window.location.href.substring(0, window.location.href.indexOf('/devices') + '/devices'.length);
     copy(`${location}?id=${id}`);

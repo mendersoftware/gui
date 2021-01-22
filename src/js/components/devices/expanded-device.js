@@ -1,263 +1,114 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import Time from 'react-time';
 
-import { Button, Icon, List, Typography, SvgIcon } from '@material-ui/core';
-import { Block as BlockIcon, Check as CheckIcon, CheckCircle as CheckCircleIcon, Warning as WarningIcon } from '@material-ui/icons';
-import { mdiConsole as ConsoleIcon } from '@mdi/js';
-
-import pendingIcon from '../../../assets/img/pending_status.png';
 import { decommissionDevice } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
 import { setSnackbar } from '../../actions/appActions';
-import { DEVICE_STATES, DEVICE_CONNECT_STATES } from '../../constants/deviceConstants';
+import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { getDocsVersion } from '../../selectors';
 import { AuthButton } from '../helptips/helptooltips';
-import ExpandableAttribute from '../common/expandable-attribute';
 import AuthsetsDialog from './authsets';
 import TerminalDialog from './terminal';
+import AuthStatus from './device-details/authstatus';
+import DeviceConfiguration from './device-details/configuration';
 import DeviceInventory from './device-details/deviceinventory';
+import DeviceIdentity from './device-details/identity';
 import DeviceInventoryLoader from './device-details/deviceinventoryloader';
+import DeviceConnection from './device-details/connection';
 
-const iconStyle = { margin: 12 };
+export const ExpandedDevice = ({
+  className,
+  decommissionDevice,
+  device,
+  docsVersion,
+  getReleases,
+  hasDeviceConnect,
+  highlightHelp,
+  id_attribute,
+  id_value,
+  limitMaxed,
+  refreshDevices,
+  setSnackbar,
+  showHelptips,
+  unauthorized
+}) => {
+  const { attributes, status = DEVICE_STATES.accepted } = device;
 
-const states = {
-  default: {
-    text: 'Please check the device authentication state',
-    statusIcon: <Icon style={iconStyle} component="img" src={pendingIcon} />
-  },
-  pending: {
-    text: 'Accept, reject or dismiss the device?',
-    statusIcon: <Icon style={iconStyle} component="img" src={pendingIcon} />
-  },
-  accepted: {
-    text: 'Reject, dismiss or decommission this device?',
-    statusIcon: <CheckCircleIcon className="green" style={iconStyle} />
-  },
-  rejected: {
-    text: 'Accept, dismiss or decommission this device',
-    statusIcon: <BlockIcon className="red" style={iconStyle} />
-  },
-  preauthorized: {
-    text: 'Remove this device from preauthorization?',
-    statusIcon: <CheckIcon style={iconStyle} />
-  }
-};
+  const [showAuthsetsDialog, setShowAuthsetsDialog] = useState(false);
+  const [socketClosed, setSocketClosed] = useState(true);
+  const [terminal, setTerminal] = useState(false);
 
-export class ExpandedDevice extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-
-    this.state = { authsets: false, socketClosed: true, terminal: false };
-  }
-
-  componentDidMount() {
-    if (this.props.device.status === DEVICE_STATES.accepted) {
-      this.props.getReleases();
+  useEffect(() => {
+    if (status === DEVICE_STATES.accepted) {
+      getReleases();
     }
-  }
+  }, []);
 
-  toggleAuthsets(authsets = !this.state.authsets, shouldUpdate = false) {
-    this.setState({ authsets });
-    this.props.refreshDevices(shouldUpdate);
-  }
+  const toggleAuthsets = (authsets = !showAuthsetsDialog, shouldUpdate = false) => {
+    setShowAuthsetsDialog(authsets);
+    refreshDevices(shouldUpdate);
+  };
 
-  _decommissionDevice(device_id) {
-    var self = this;
-    return self.props
-      .decommissionDevice(device_id)
-      .then(() => {
-        // close dialog!
-        // close expanded device
-        // trigger reset of list!
-        self.toggleAuthsets(false);
-      })
-      .finally(() => self.props.refreshDevices(true));
-  }
+  const onDecommissionDevice = device_id => {
+    // close dialog!
+    // close expanded device
+    // trigger reset of list!
+    return decommissionDevice(device_id)
+      .then(() => toggleAuthsets(false))
+      .finally(() => refreshDevices(true));
+  };
 
-  _launchTerminal() {
-    this.setState({ socketClosed: false, terminal: true });
-  }
+  const launchTerminal = () => {
+    setSocketClosed(false);
+    setTerminal(true);
+  };
 
-  render() {
-    const self = this;
-    const {
-      className,
-      device,
-      docsVersion,
-      hasDeviceConnect,
-      highlightHelp,
-      id_attribute,
-      id_value,
-      limitMaxed,
-      setSnackbar,
-      showHelptips,
-      unauthorized
-    } = self.props;
-    const {
-      auth_sets = [],
-      attributes,
-      created_ts,
-      id,
-      identity_data,
-      status = DEVICE_STATES.accepted,
-      connect_status = DEVICE_CONNECT_STATES.unknown,
-      connect_updated_ts
-    } = device;
-    const { socketClosed, terminal } = self.state;
-    let deviceIdentity = [<ExpandableAttribute key="id_checksum" primary="Device ID" secondary={id || '-'} copyToClipboard={true} setSnackbar={setSnackbar} />];
-    if (identity_data) {
-      deviceIdentity = Object.entries(identity_data).reduce((accu, item) => {
-        accu.push(<ExpandableAttribute key={item[0]} primary={item[0]} secondary={item[1]} copyToClipboard={true} setSnackbar={setSnackbar} />);
-        return accu;
-      }, deviceIdentity);
-    }
+  const onConfigSubmit = () => {
+    return new Promise((resolve, reject) => setTimeout(() => reject(), 10000));
+  };
 
-    if (created_ts) {
-      var createdTime = <Time value={created_ts} format="YYYY-MM-DD HH:mm" />;
-      deviceIdentity.push(
-        <ExpandableAttribute
-          key="connectionTime"
-          primary={status === DEVICE_STATES.preauth ? 'Date added' : 'First request'}
-          secondary={createdTime}
-          copyToClipboard={true}
-          setSnackbar={setSnackbar}
-        />
-      );
-    }
-
-    var hasPending = '';
-    if (status === DEVICE_STATES.accepted && auth_sets.length > 1) {
-      hasPending = auth_sets.reduce((accu, set) => {
-        return set.status === DEVICE_STATES.pending ? 'This device has a pending authentication set' : accu;
-      }, '');
-    }
-
-    const { statusIcon, text } = states[status] ? states[status] : states.default;
-    const authLabelText = hasPending.length ? hasPending : text;
-
-    const buttonStyle = { textTransform: 'none', textAlign: 'left' };
-
-    const waiting = !(attributes && Object.values(attributes).some(i => i));
-    var deviceInfo = (
+  const waiting = !(attributes && Object.values(attributes).some(i => i));
+  return (
+    <div className={className}>
       <div key="deviceinfo">
         <div className="device-identity bordered">
-          <div className="margin-bottom-small">
-            <h4 className="margin-bottom-none">Device identity</h4>
-            <List className="list-horizontal-flex">{deviceIdentity}</List>
-          </div>
-
-          <div className="margin-bottom-small flexbox" style={{ flexDirection: 'row' }}>
-            <span style={{ display: 'flex', minWidth: 180, alignItems: 'center', marginRight: '2vw' }}>
-              {statusIcon}
-              <span className="inline-block">
-                <Typography variant="subtitle2" style={Object.assign({}, buttonStyle, { textTransform: 'capitalize' })}>
-                  Device status
-                </Typography>
-                <Typography variant="body1" style={Object.assign({}, buttonStyle, { textTransform: 'capitalize' })}>
-                  {status}
-                </Typography>
-              </span>
-            </span>
-
-            <Button
-              onClick={() => {
-                self.toggleAuthsets(true);
-                setSnackbar('');
-              }}
-            >
-              {hasPending ? <WarningIcon className="auth" style={iconStyle} /> : null}
-              <span className="inline-block">
-                <Typography variant="subtitle2" style={buttonStyle}>
-                  {authLabelText}
-                </Typography>
-                <Typography variant="body1" className="muted" style={buttonStyle}>
-                  Click to adjust authorization status for this device
-                </Typography>
-              </span>
-            </Button>
-          </div>
+          <DeviceIdentity device={device} setSnackbar={setSnackbar} />
+          <AuthStatus
+            device={device}
+            toggleAuthsets={() => {
+              toggleAuthsets(true);
+              setSnackbar('');
+            }}
+          />
         </div>
-
+        <DeviceConfiguration device={device} submitConfig={onConfigSubmit} />
         {hasDeviceConnect && status === DEVICE_STATES.accepted && (
-          <div className="device-connect bordered report-list">
-            <h4 className="margin-bottom-small">Remote Terminal</h4>
-            <div className="flexbox" style={{ flexDirection: 'row' }}>
-              {connect_status === DEVICE_CONNECT_STATES.unknown && (
-                <Typography variant="body1" style={buttonStyle}>
-                  The Remote terminal add-on does not seem to be enabled on this device.
-                  <br />
-                  Please see{' '}
-                  <a target="_blank" rel="noopener noreferrer" href={`https://docs.mender.io/${docsVersion}add-ons/remote-terminal`}>
-                    the documentation
-                  </a>{' '}
-                  for a description on how it works and how to enable it.
-                </Typography>
-              )}
-              {connect_status === DEVICE_CONNECT_STATES.disconnected && (
-                <Typography variant="body1" style={buttonStyle}>
-                  The Remote terminal add-on is not currently connected on this device, it was last connected on{' '}
-                  <Time value={connect_updated_ts} format="YYYY-MM-DD HH:mm" />.<br />
-                  Please see{' '}
-                  <a target="_blank" rel="noopener noreferrer" href={`https://docs.mender.io/${docsVersion}add-ons/remote-terminal`}>
-                    the documentation
-                  </a>{' '}
-                  for more information.
-                </Typography>
-              )}
-              {connect_status === DEVICE_CONNECT_STATES.connected && (
-                <Button
-                  onClick={() => self._launchTerminal()}
-                  disabled={!socketClosed}
-                  startIcon={
-                    <SvgIcon fontSize="inherit">
-                      <path d={ConsoleIcon} />
-                    </SvgIcon>
-                  }
-                >
-                  <span className="inline-block">
-                    <Typography variant="subtitle2" style={buttonStyle}>
-                      Launch a new Remote Terminal session
-                    </Typography>
-                  </span>
-                </Button>
-              )}
-            </div>
-          </div>
+          <DeviceConnection device={device} docsVersion={docsVersion} launchTerminal={launchTerminal} socketClosed={socketClosed} />
         )}
-
         {status === DEVICE_STATES.accepted && waiting && <DeviceInventoryLoader docsVersion={docsVersion} unauthorized={unauthorized} />}
-        {status === DEVICE_STATES.accepted && !waiting && (
-          <DeviceInventory attributes={attributes} id={id} setSnackbar={setSnackbar} unauthorized={unauthorized} />
-        )}
+        {status === DEVICE_STATES.accepted && !waiting && <DeviceInventory device={device} setSnackbar={setSnackbar} unauthorized={unauthorized} />}
       </div>
-    );
+      {showHelptips && status === DEVICE_STATES.pending ? <AuthButton highlightHelp={highlightHelp} /> : null}
 
-    return (
-      <div className={className}>
-        {deviceInfo}
-        {showHelptips && status === DEVICE_STATES.pending ? <AuthButton highlightHelp={highlightHelp} /> : null}
+      <AuthsetsDialog
+        dialogToggle={shouldUpdate => toggleAuthsets(false, shouldUpdate)}
+        decommission={onDecommissionDevice}
+        device={device}
+        id_attribute={id_attribute}
+        id_value={id_value}
+        limitMaxed={limitMaxed}
+        open={showAuthsetsDialog}
+      />
 
-        <AuthsetsDialog
-          dialogToggle={shouldUpdate => this.toggleAuthsets(false, shouldUpdate)}
-          decommission={id => this._decommissionDevice(id)}
-          device={device}
-          id_attribute={id_attribute}
-          id_value={id_value}
-          limitMaxed={limitMaxed}
-          open={this.state.authsets}
-        />
-
-        <TerminalDialog
-          open={terminal}
-          onCancel={() => this.setState({ terminal: false })}
-          onSocketClose={() => setTimeout(() => self.setState({ socketClosed: true }), 5000)}
-          deviceId={device.id}
-        />
-      </div>
-    );
-  }
-}
+      <TerminalDialog
+        open={terminal}
+        onCancel={() => setTerminal(false)}
+        onSocketClose={() => setTimeout(() => setSocketClosed(true), 5000)}
+        deviceId={device.id}
+      />
+    </div>
+  );
+};
 
 const actionCreators = { decommissionDevice, getReleases, setSnackbar };
 
