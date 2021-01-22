@@ -88,7 +88,7 @@ export const AuthsetsDialog = ({
             ? `Authorization ${pluralize('request', auth_sets.length)} for this device`
             : 'Authorization status for this device'}
           <div
-            onClick={e => this._handleStopProp(e)}
+            onClick={e => e.stopPropagation()}
             id="inventory-info"
             className="tooltip info"
             style={{ top: '5px', right: '-35px' }}
