@@ -94,7 +94,16 @@ export class ExpandedDevice extends React.Component {
       showHelptips,
       unauthorized
     } = self.props;
-    const { auth_sets = [], attributes, created_ts, id, identity_data, status = DEVICE_STATES.accepted, connect_status, connect_updated_ts } = device;
+    const {
+      auth_sets = [],
+      attributes,
+      created_ts,
+      id,
+      identity_data,
+      status = DEVICE_STATES.accepted,
+      connect_status = DEVICE_CONNECT_STATES.unknown,
+      connect_updated_ts
+    } = device;
     const { socketClosed, terminal } = self.state;
     let deviceIdentity = [<ExpandableAttribute key="id_checksum" primary="Device ID" secondary={id || '-'} copyToClipboard={true} setSnackbar={setSnackbar} />];
     if (identity_data) {
@@ -174,7 +183,7 @@ export class ExpandedDevice extends React.Component {
           <div className="device-connect bordered report-list">
             <h4 className="margin-bottom-small">Remote Terminal</h4>
             <div className="flexbox" style={{ flexDirection: 'row' }}>
-              {(connect_status === undefined || connect_status === DEVICE_CONNECT_STATES.unknown) && (
+              {connect_status === DEVICE_CONNECT_STATES.unknown && (
                 <Typography variant="body1" style={buttonStyle}>
                   The Remote terminal add-on does not seem to be enabled on this device.
                   <br />
