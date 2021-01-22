@@ -38,7 +38,8 @@ context('Login', () => {
         failOnStatusCode: false
       })
         .its('status')
-        .should('equal', 404);
+        .should('equal', 200);
+      cy.contains('Log in').should('be.visible');
     });
 
     it('Does not log in with invalid password', () => {
