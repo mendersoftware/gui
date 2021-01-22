@@ -203,7 +203,31 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
             "flexDirection": "row",
           }
         }
-      />
+      >
+        <p
+          className="MuiTypography-root MuiTypography-body1"
+          style={
+            Object {
+              "textAlign": "left",
+              "textTransform": "none",
+            }
+          }
+        >
+          The Remote terminal add-on does not seem to be enabled on this device.
+          <br />
+          Please see
+           
+          <a
+            href="https://docs.mender.io/add-ons/remote-terminal"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            the documentation
+          </a>
+           
+          for a description on how it works and how to enable it.
+        </p>
+      </div>
     </div>
     <div
       className="device-inventory bordered report-list"
