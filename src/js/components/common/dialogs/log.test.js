@@ -1,11 +1,11 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import DeploymentLog from './log';
+import LogDialog from './log';
 import { undefineds } from '../../../../../tests/mockData';
 
-describe('DeploymentLog Component', () => {
+describe('LogDialog Component', () => {
   it('renders correctly', async () => {
-    const { baseElement } = render(<DeploymentLog onClose={jest.fn} logData="things" />);
+    const { baseElement } = render(<LogDialog onClose={jest.fn} logData="things" />);
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

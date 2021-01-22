@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`DeploymentLog Component renders correctly 1`] = `
+exports[`LogDialog Component renders correctly 1`] = `
 <div
   class="MuiDialog-root"
   role="presentation"
