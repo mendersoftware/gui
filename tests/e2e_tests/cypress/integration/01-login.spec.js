@@ -1,4 +1,5 @@
 /// <reference types="Cypress" />
+import { onlyOn, skipOn } from '@cypress/skip-test';
 import jwtDecode from 'jwt-decode';
 
 context('Login', () => {
@@ -33,13 +34,15 @@ context('Login', () => {
     });
 
     it('fails to access unknown resource', () => {
-      cy.request({
+      const request = {
         url: Cypress.config().baseUrl + '/users',
         failOnStatusCode: false
-      })
-        .its('status')
-        .should('equal', 200);
-      cy.contains('Log in').should('be.visible');
+      };
+      onlyOn('staging', () => cy.request(request).its('status').should('equal', 404));
+      skipOn('staging', () => {
+        cy.request(request).its('status').should('equal', 200);
+        return cy.contains('Log in').should('be.visible');
+      });
     });
 
     it('Does not log in with invalid password', () => {
