@@ -28,7 +28,7 @@ const ProgressDeviceList = ({ created, devices, idAttribute, retries, viewLog })
       </TableHead>
       <TableBody>
         {devices.map(device => (
-          <DeploymentDeviceListItem key={device.id} created={created} device={device} idAttribute={idAttribute} viewLog={viewLog} />
+          <DeploymentDeviceListItem key={device.id} created={created} device={device} idAttribute={idAttribute} viewLog={viewLog} retries={retries} />
         ))}
       </TableBody>
     </Table>

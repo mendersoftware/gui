@@ -20,7 +20,11 @@ describe('ProgressDeviceList Component', () => {
       .create(
         <MemoryRouter>
           <Provider store={store}>
-            <ProgressDeviceList devices={Object.values(defaultState.deployments.byId.d1.devices)} />
+            <ProgressDeviceList
+              devices={Object.values(defaultState.deployments.byId.d1.devices)}
+              created={defaultState.deployments.byId.d1.created}
+              retries={3}
+            />
           </Provider>
         </MemoryRouter>
       )

@@ -51,7 +51,7 @@ const DeploymentDeviceListItem = ({ created, device, idAttribute, viewLog, retri
       <TableCell>{device.finished ? <Time value={formatTime(device.finished)} format="YYYY-MM-DD HH:mm" /> : '-'}</TableCell>
       {retries ? (
         <TableCell>
-          {device.attempts}/{device.retries + 1}
+          {device.attempts || 1}/{(device.retries || retries) + 1}
         </TableCell>
       ) : null}
       <TableCell style={{ paddingRight: '0px', position: 'relative', minWidth: 200 }}>
