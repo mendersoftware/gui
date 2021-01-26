@@ -186,7 +186,18 @@ describe('onboarding actions', () => {
         }
       },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP_DIALOG, show: false },
-      { type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: true }
+      { type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: true },
+      { type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value: 'onboarding-canceled' },
+      {
+        type: UserConstants.SET_GLOBAL_SETTINGS,
+        settings: {
+          ...defaultState.users.globalSettings,
+          [defaultState.users.currentUser]: {
+            ...defaultState.users.globalSettings[defaultState.users.currentUser],
+            onboarding: { complete: true, demoArtifactPort: 85, progress: 'onboarding-canceled', showConnectDeviceDialog: false }
+          }
+        }
+      }
     ];
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);

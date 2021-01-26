@@ -119,7 +119,11 @@ export const setOnboardingCanceled = () => dispatch =>
     Promise.resolve(dispatch(setShowOnboardingHelp(false))),
     Promise.resolve(dispatch(setShowDismissOnboardingTipsDialog(false))),
     Promise.resolve(dispatch({ type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: true }))
-  ]).then(() => Promise.resolve(advanceOnboarding(onboardingStepNames.ONBOARDING_CANCELED)));
+  ]).then(() =>
+    // using ONBOARDING_FINISHED_NOTIFICATION to ensure we get the intended onboarding state set after
+    // _advancing_ the onboarding progress
+    Promise.resolve(dispatch(advanceOnboarding(onboardingStepNames.ONBOARDING_FINISHED_NOTIFICATION)))
+  );
 
 const setOnboardingState = state => dispatch =>
   Promise.resolve([
