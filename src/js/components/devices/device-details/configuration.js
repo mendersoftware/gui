@@ -79,8 +79,8 @@ export const ConfigUpdateFailureActions = ({ setShowLog, onSubmit, onCancel }) =
   </>
 );
 
-export const DeviceConfiguration = ({ device, defaultConfig, submitConfig }) => {
-  const { config = { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' }, updated_ts } = device;
+export const DeviceConfiguration = ({ device, defaultConfig = {}, submitConfig }) => {
+  const { config = {}, updated_ts } = device;
 
   const [changedConfig, setChangedConfig] = useState(config);
   const [isEditDisabled, setIsEditDisabled] = useState(false);
@@ -121,15 +121,15 @@ export const DeviceConfiguration = ({ device, defaultConfig, submitConfig }) => 
     setIsEditDisabled(true);
     setIsUpdatingConfig(true);
     setUpdateFailed(false);
-    submitConfig(changedConfig)
+    submitConfig({ config: changedConfig, isDefault: isSetAsDefault })
       .then(() => {
         setIsEditingConfig(false);
         setUpdateFailed(false);
       })
-      .catch(() => {
+      .catch(({ log = 'something something loggy' }) => {
         setIsEditingConfig(true);
         setUpdateFailed(true);
-        setUpdateLog('something something loggy');
+        setUpdateLog(log);
       })
       .finally(() => {
         setIsUpdatingConfig(false);
