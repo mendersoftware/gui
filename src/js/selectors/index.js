@@ -63,3 +63,8 @@ export const getUserRoles = createSelector(
     return { allowUserManagement, isAdmin, isGroupRestricted };
   }
 );
+
+export const getTenantCapabilities = createSelector([getOrganization], ({ addons = [] }) => {
+  const hasDeviceConfig = addons.some(addon => addon.Name === 'configure' && Boolean(addon.Enabled));
+  return { hasDeviceConfig };
+});

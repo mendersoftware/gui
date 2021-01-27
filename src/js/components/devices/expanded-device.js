@@ -5,7 +5,7 @@ import { decommissionDevice } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
 import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
-import { getDocsVersion } from '../../selectors';
+import { getDocsVersion, getTenantCapabilities } from '../../selectors';
 import { AuthButton } from '../helptips/helptooltips';
 import AuthsetsDialog from './authsets';
 import TerminalDialog from './terminal';
@@ -22,6 +22,7 @@ export const ExpandedDevice = ({
   device,
   docsVersion,
   getReleases,
+  hasDeviceConfig,
   hasDeviceConnect,
   highlightHelp,
   id_attribute,
@@ -81,12 +82,17 @@ export const ExpandedDevice = ({
             }}
           />
         </div>
-        <DeviceConfiguration device={device} submitConfig={onConfigSubmit} />
-        {hasDeviceConnect && status === DEVICE_STATES.accepted && (
-          <DeviceConnection device={device} docsVersion={docsVersion} launchTerminal={launchTerminal} socketClosed={socketClosed} />
+        {status === DEVICE_STATES.accepted && (
+          <>
+            {hasDeviceConfig && <DeviceConfiguration device={device} submitConfig={onConfigSubmit} />}
+            {hasDeviceConnect && <DeviceConnection device={device} docsVersion={docsVersion} launchTerminal={launchTerminal} socketClosed={socketClosed} />}
+            {waiting ? (
+              <DeviceInventoryLoader docsVersion={docsVersion} unauthorized={unauthorized} />
+            ) : (
+              <DeviceInventory device={device} setSnackbar={setSnackbar} unauthorized={unauthorized} />
+            )}
+          </>
         )}
-        {status === DEVICE_STATES.accepted && waiting && <DeviceInventoryLoader docsVersion={docsVersion} unauthorized={unauthorized} />}
-        {status === DEVICE_STATES.accepted && !waiting && <DeviceInventory device={device} setSnackbar={setSnackbar} unauthorized={unauthorized} />}
       </div>
       {showHelptips && status === DEVICE_STATES.pending ? <AuthButton highlightHelp={highlightHelp} /> : null}
 
@@ -113,9 +119,11 @@ export const ExpandedDevice = ({
 const actionCreators = { decommissionDevice, getReleases, setSnackbar };
 
 const mapStateToProps = state => {
+  const { hasDeviceConfig } = getTenantCapabilities(state);
   return {
     docsVersion: getDocsVersion(state),
     hasDeviceConnect: state.app.features.hasDeviceConnect,
+    hasDeviceConfig,
     onboardingComplete: state.onboarding.complete,
     showHelptips: state.users.showHelptips
   };
