@@ -82,6 +82,9 @@ export const Terminal = ({ onCancel, sendMessage, setSnackbar, setSessionId, set
         setSnackbar('Health check failed: connection with the device lost.', 5000);
       } else if (!snackbarAlreadySet && event.wasClean) {
         setSnackbar(`Connection with the device closed.`, 5000);
+      } else if (!snackbarAlreadySet && event.code == 1006) {
+        // 1006: abnormal closure
+        setSnackbar('Connection to the remote terminal is forbidden.', 5000);
       } else if (!snackbarAlreadySet) {
         setSnackbar('Connection with the device died.', 5000);
       }
