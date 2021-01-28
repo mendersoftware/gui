@@ -113,6 +113,22 @@ exports[`ProgressDeviceList Component renders correctly 1`] = `
               "zIndex": 1,
             }
           }
+          tooltip="Attempts"
+        >
+          Attempts
+        </th>
+        <th
+          aria-sort={null}
+          className="MuiTableCell-root MuiTableCell-head"
+          scope="col"
+          style={
+            Object {
+              "background": "white",
+              "position": "sticky",
+              "top": 0,
+              "zIndex": 1,
+            }
+          }
           tooltip="Deployment status"
         >
           Deployment status
@@ -182,6 +198,14 @@ exports[`ProgressDeviceList Component renders correctly 1`] = `
           className="MuiTableCell-root MuiTableCell-body"
         >
           -
+        </td>
+        <td
+          aria-sort={null}
+          className="MuiTableCell-root MuiTableCell-body"
+        >
+          1
+          /
+          4
         </td>
         <td
           aria-sort={null}
