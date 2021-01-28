@@ -133,7 +133,6 @@ export const Terminal = ({ onCancel, sendMessage, setSnackbar, setSessionId, set
           case MessageTypeShell:
             return term.write(byteArrayToString(body));
           case MessageTypeStop: {
-            console.log('stopped properly');
             return cleanupSocket();
           }
           case MessageTypePing: {
@@ -211,7 +210,6 @@ export const TerminalDialog = ({ deviceId, onCancel, onSocketClose, open, setSna
     socket = new WebSocket(`wss://${window.location.host}/api/management/v1/deviceconnect/devices/${deviceId}/connect`);
 
     return () => {
-      console.log('terminaldialog closing');
       onSendMessage({ typ: MessageTypeStop });
       setSessionId(null);
       setSocketInitialized(false);
