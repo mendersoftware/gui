@@ -133,7 +133,7 @@ const DeviceSupportTipComponent = ({ docsVersion }) => (
     </div>
     <ReactTooltip id="deb-package-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
       <p>
-        The steps in the guide should work on most operating systems in the debian family (e.g. Debian, Ubuntu, Raspberry Pi OS) and devices based on ARMv6 or
+        The steps in the guide should work on most operating systems in the Debian family (e.g. Debian, Ubuntu, Raspberry Pi OS) and devices based on ARMv6 or
         newer (e.g. Raspberry Pi 2/3/4, Beaglebone). Visit{' '}
         <a href={`https://docs.mender.io/${docsVersion}overview/device-support`} target="_blank" rel="noopener noreferrer">
           our documentation

@@ -162,7 +162,7 @@ exports[`Helptooltips Components renders Connect(DeviceSupportTipComponent) corr
     id="deb-package-tip"
   >
     <p>
-      The steps in the guide should work on most operating systems in the debian family (e.g. Debian, Ubuntu, Raspberry Pi OS) and devices based on ARMv6 or newer (e.g. Raspberry Pi 2/3/4, Beaglebone). Visit
+      The steps in the guide should work on most operating systems in the Debian family (e.g. Debian, Ubuntu, Raspberry Pi OS) and devices based on ARMv6 or newer (e.g. Raspberry Pi 2/3/4, Beaglebone). Visit
        
       <a
         href="https://docs.mender.io/overview/device-support"

@@ -42,8 +42,11 @@ export const VirtualDeviceOnboarding = ({ docsVersion, isHosted, setOnboardingAp
       <CopyCode code={codeToCopy} withDescription={true} />
       <p>The device should appear in the Pending devices view in a couple of minutes.</p>
       <p>
-        Visit the <a href={`https://docs.mender.io/${docsVersion}get-started/preparation/prepare-a-virtual-device`}>our documentation</a> for more information
-        on managing the virtual device.
+        Visit{' '}
+        <a href={`https://docs.mender.io/${docsVersion}get-started/preparation/prepare-a-virtual-device`} target="_blank" rel="noopener noreferrer">
+          our documentation
+        </a>{' '}
+        for more information on managing the virtual device.
       </p>
     </div>
   );
