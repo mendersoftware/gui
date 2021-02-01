@@ -3,7 +3,7 @@
 exports[`DeviceGroups Component renders correctly 1`] = `
 "<div>
   <div
-    class=\\"tab-container\\"
+    class=\\"tab-container with-sub-panels\\"
   >
     <div
       class=\\"leftFixed\\"

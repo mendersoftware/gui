@@ -99,10 +99,10 @@ export class Rejected extends BaseDevices {
       ...defaultHeaders
     ];
     return (
-      <div className="tab-container">
+      <div className="tab-container flexbox column">
         {!!count && (
           <>
-            <div className="flexbox" style={{ zIndex: 2, marginBottom: -1 }}>
+            <div className="flexbox allow-overflow" style={{ zIndex: 2, marginBottom: -1 }}>
               <h2 className="inline-block margin-right">Rejected devices</h2>
               {!pageLoading && (
                 <div className={`flexbox centered ${showFilters ? 'filter-toggle' : ''}`}>

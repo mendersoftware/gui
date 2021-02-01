@@ -2,73 +2,74 @@
 
 exports[`Settings Component renders correctly 1`] = `
 <div
-  className="margin-top"
+  className="tab-container with-sub-panels"
+  style={
+    Object {
+      "minHeight": "95%",
+    }
+  }
 >
-  <div
-    className="leftFixed"
+  <ul
+    className="MuiList-root leftFixed MuiList-padding"
   >
-    <ul
-      className="MuiList-root MuiList-padding"
+    <li
+      className="MuiListSubheader-root MuiListSubheader-sticky MuiListSubheader-gutters"
     >
-      <li
-        className="MuiListSubheader-root MuiListSubheader-sticky MuiListSubheader-gutters"
+      Settings
+    </li>
+    <a
+      aria-current={null}
+      className="MuiListItem-root navLink settingsNav MuiListItem-gutters"
+      disabled={false}
+      href="/settings/global-settings"
+      onClick={[Function]}
+    >
+      <div
+        className="MuiListItemText-root"
       >
-        Settings
-      </li>
-      <a
-        aria-current={null}
-        className="MuiListItem-root navLink settingsNav MuiListItem-gutters"
-        disabled={false}
-        href="/settings/global-settings"
-        onClick={[Function]}
-      >
-        <div
-          className="MuiListItemText-root"
+        <span
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
-          <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-          >
-            Global settings
-          </span>
-        </div>
-      </a>
-      <a
-        aria-current="page"
-        className="MuiListItem-root navLink settingsNav MuiListItem-gutters active"
-        disabled={false}
-        href="/settings/my-profile"
-        onClick={[Function]}
-        style={Object {}}
+          Global settings
+        </span>
+      </div>
+    </a>
+    <a
+      aria-current="page"
+      className="MuiListItem-root navLink settingsNav MuiListItem-gutters active"
+      disabled={false}
+      href="/settings/my-profile"
+      onClick={[Function]}
+      style={Object {}}
+    >
+      <div
+        className="MuiListItemText-root"
       >
-        <div
-          className="MuiListItemText-root"
+        <span
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
-          <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-          >
-            My profile
-          </span>
-        </div>
-      </a>
-      <a
-        aria-current={null}
-        className="MuiListItem-root navLink settingsNav MuiListItem-gutters"
-        disabled={false}
-        href="/settings/organization-and-billing"
-        onClick={[Function]}
+          My profile
+        </span>
+      </div>
+    </a>
+    <a
+      aria-current={null}
+      className="MuiListItem-root navLink settingsNav MuiListItem-gutters"
+      disabled={false}
+      href="/settings/organization-and-billing"
+      onClick={[Function]}
+    >
+      <div
+        className="MuiListItemText-root"
       >
-        <div
-          className="MuiListItemText-root"
+        <span
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
-          <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-          >
-            Organization and billing
-          </span>
-        </div>
-      </a>
-    </ul>
-  </div>
+          Organization and billing
+        </span>
+      </div>
+    </a>
+  </ul>
   <div
     className="rightFluid padding-right"
   >

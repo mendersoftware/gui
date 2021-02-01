@@ -2,7 +2,12 @@
 
 exports[`ReleasesList Component renders correctly 1`] = `
 <div
-  className="repository-list"
+  className="repository-list flexbox column"
+  style={
+    Object {
+      "alignItems": "flex-start",
+    }
+  }
 >
   <div
     className="flexbox"

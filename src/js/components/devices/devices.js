@@ -148,7 +148,7 @@ export class Devices extends React.Component {
     }
     const ComponentToShow = routes[tabIndex].component;
     return (
-      <div>
+      <>
         <Tabs value={tabIndex} onChange={() => setSnackbar('')}>
           {Object.entries(routes).reduce((accu, [key, route]) => {
             if (!isGroupRestricted || !route.groupRestricted) {
@@ -171,7 +171,7 @@ export class Devices extends React.Component {
             </DialogContent>
           </Dialog>
         )}
-      </div>
+      </>
     );
   }
 }
