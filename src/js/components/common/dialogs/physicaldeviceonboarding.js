@@ -9,7 +9,7 @@ import HelpIcon from '@material-ui/icons/Help';
 import CopyCode from '../copy-code';
 import { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType } from '../../../actions/onboardingActions';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
-import { getDebConfigurationCode, versionCompare } from '../../../helpers';
+import { getDebConfigurationCode } from '../../../helpers';
 import { getDocsVersion, getIsEnterprise } from '../../../selectors';
 
 const filter = createFilterOptions();
@@ -47,9 +47,9 @@ export class PhysicalDeviceOnboarding extends React.Component {
   render() {
     const self = this;
     const { selection } = self.state;
-    const { advanceOnboarding, debPackageVersion, docsVersion, hasMenderShellSupport, ipAddress, isHosted, isEnterprise, progress, token } = self.props;
+    const { advanceOnboarding, docsVersion, ipAddress, isHosted, isEnterprise, progress, token } = self.props;
 
-    const codeToCopy = getDebConfigurationCode(ipAddress, isHosted, isEnterprise, token, debPackageVersion, selection, hasMenderShellSupport);
+    const codeToCopy = getDebConfigurationCode(ipAddress, isHosted, isEnterprise, token, selection);
     const hasConvertedImage = !!selection && selection.length && (selection.startsWith('raspberrypi3') || selection.startsWith('raspberrypi4'));
     const steps = {
       1: (
@@ -159,9 +159,7 @@ const mapStateToProps = state => {
     docsVersion: getDocsVersion(state),
     ipAddress: state.app.hostAddress,
     isEnterprise: getIsEnterprise(state),
-    hasMenderShellSupport: versionCompare(state.app.versionInformation.Integration, '2.6.0') > -1,
     isHosted: state.app.features.isHosted,
-    debPackageVersion: state.app.menderDebPackageVersion,
     token: state.organization.organization.tenant_token
   };
 };

@@ -44,7 +44,7 @@ const AuthButtonComponent = ({ highlightHelp, toggleHelptips }) => (
           now.
         </p>
         <p>
-          You can find out more about connecting different types of devices in <Link to="/help/getting-started">the help section</Link>.
+          You can find out more about connecting different types of devices in <Link to="/help/get-started">the help section</Link>.
         </p>
         <HideHelptipsButton toggleHelptips={toggleHelptips} />
       </div>
@@ -66,6 +66,9 @@ const AddGroupComponent = ({ toggleHelptips }) => (
         group only.
       </p>
       <p>To avoid accidents, Mender only allows a device to be in one group at the time.</p>
+      <p>
+        You can find out additional information about device groups in <Link to="/help/devices">the help section</Link>.
+      </p>
       <HideHelptipsButton toggleHelptips={toggleHelptips} />
     </ReactTooltip>
   </div>
@@ -97,7 +100,7 @@ const ExpandDeviceComponent = ({ docsVersion, toggleHelptips }) => (
 );
 export const ExpandDevice = connect(mapStateToProps, actionCreators)(ExpandDeviceComponent);
 
-const ExpandArtifactComponent = ({ toggleHelptips }) => (
+const ExpandArtifactComponent = ({ docsVersion, toggleHelptips }) => (
   <div>
     <div id="onboard-10" className="tooltip help" data-tip data-for="artifact-expand-tip" data-event="click focus">
       <HelpIcon />
@@ -110,8 +113,35 @@ const ExpandArtifactComponent = ({ toggleHelptips }) => (
         inventory information. During a deployment, Mender makes sure that a device will only download and install an Artifact it is compatible with.
       </p>
       <p>You can click on each Artifact in the Release to expand the row and view more information about it.</p>
+      <p>
+        For more information on how to specify the device type compatibility and other artifact metadata,{' '}
+        <a href={`https://docs.mender.io/${docsVersion}artifact-creation/create-an-artifact`} target="_blank" rel="noopener noreferrer">
+          see the documentation
+        </a>
+        .
+      </p>
       <HideHelptipsButton toggleHelptips={toggleHelptips} />
     </ReactTooltip>
   </div>
 );
 export const ExpandArtifact = connect(mapStateToProps, actionCreators)(ExpandArtifactComponent);
+
+const DeviceSupportTipComponent = ({ docsVersion }) => (
+  <div>
+    <div id="deb-package-help" className="tooltip help" data-tip data-for="deb-package-tip" data-event="click focus" style={{ top: '22%', left: '88%' }}>
+      <HelpIcon />
+    </div>
+    <ReactTooltip id="deb-package-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+      <p>
+        The steps in the guide should work on most operating systems in the Debian family (e.g. Debian, Ubuntu, Raspberry Pi OS) and devices based on ARMv6 or
+        newer (e.g. Raspberry Pi 2/3/4, Beaglebone). Visit{' '}
+        <a href={`https://docs.mender.io/${docsVersion}overview/device-support`} target="_blank" rel="noopener noreferrer">
+          our documentation
+        </a>
+        for more information about device support.
+      </p>
+    </ReactTooltip>
+  </div>
+);
+
+export const DeviceSupportTip = connect(mapStateToProps, actionCreators)(DeviceSupportTipComponent);

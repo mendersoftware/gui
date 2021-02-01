@@ -14,7 +14,6 @@ import {
   fullyDecodeURI,
   generateDeploymentGroupDetails,
   getDebConfigurationCode,
-  getDebInstallationCode,
   getDemoDeviceAddress,
   getDemoDeviceCreationCommand,
   getFormattedSize,
@@ -95,24 +94,10 @@ describe('versionCompare function', () => {
   });
 });
 
-describe('getDebInstallationCode function', () => {
-  it('should not contain any template string leftovers', async () => {
-    expect(getDebInstallationCode()).not.toMatch(/\$\{([^}]+)\}/);
-  });
-  it('should return a sane result', () => {
-    expect(getDebInstallationCode(undefined, undefined, true)).toMatch(`wget -q -O- https://get.mender.io/ | sudo bash -s`);
-  });
-  it('should return a sane result for old installations', async () => {
-    expect(getDebInstallationCode('master'))
-      .toMatch(`wget https://d1b0l86ne08fsf.cloudfront.net/master/dist-packages/debian/armhf/mender-client_master-1_armhf.deb && \\
-sudo dpkg -i --force-confdef --force-confold mender-client_master-1_armhf.deb`);
-  });
-});
-
 describe('getDebConfigurationCode function', () => {
   let code;
   beforeEach(() => {
-    code = getDebConfigurationCode('192.168.7.41', false, true, 'token', 'master', 'raspberrypi3', true);
+    code = getDebConfigurationCode('192.168.7.41', false, true, 'token', 'raspberrypi3');
   });
   it('should not contain any template string leftovers', async () => {
     expect(code).not.toMatch(/\$\{([^}]+)\}/);
@@ -134,26 +119,39 @@ systemctl restart mender-client && \\
   "ShellCommand": "/bin/bash"
 }
 EOF
-) && chmod 0600 /etc/mender/mender-connect.conf && \\
-systemctl restart mender-connect'`
+) && systemctl restart mender-connect'`
     );
   });
-  it('should return a sane result for old installations', async () => {
-    code = getDebConfigurationCode('192.168.7.41', false, true, 'token', 'master', 'raspberrypi3');
-    expect(code).toMatch(`sudo bash -c 'wget https://d1b0l86ne08fsf.cloudfront.net/master/dist-packages/debian/armhf/mender-client_master-1_armhf.deb && \\
-DEBIAN_FRONTEND=noninteractive dpkg -i --force-confdef --force-confold mender-client_master-1_armhf.deb && \\
-DEVICE_TYPE="raspberrypi3" && \\
+  it('should not contain tenant information for OS calls', async () => {
+    code = getDebConfigurationCode('192.168.7.41', false, false, null, 'raspberrypi3');
+    expect(code).not.toMatch(/tenant/);
+    expect(code).not.toMatch(/token/);
+  });
+  it('should contain sane information for hosted calls', async () => {
+    code = getDebConfigurationCode(undefined, true, false, 'token', 'raspberrypi3');
+    // the localhost url is due to jest running the test with document.location.hostname as localhost
+    expect(code).toMatch(
+      `wget -q -O- https://get.mender.io/ | sudo bash -s && \\
+sudo bash -c 'DEVICE_TYPE="raspberrypi3" && \\
 TENANT_TOKEN="token" && \\
 mender setup \\
   --device-type $DEVICE_TYPE \\
-  --quiet --demo --server-ip 192.168.7.41 \\
-  --tenant-token $TENANT_TOKEN && \\
-systemctl restart mender-client'`);
-  });
-  it('should not contain tenant information for OS calls', async () => {
-    code = getDebConfigurationCode('192.168.7.41', false, false, null, 'master', 'raspberrypi3');
-    expect(code).not.toMatch(/tenant/);
-    expect(code).not.toMatch(/token/);
+  --quiet --hosted-mender \\
+  --tenant-token $TENANT_TOKEN \\
+  --retry-poll 30 \\
+  --update-poll 5 \\
+  --inventory-poll 5 && \\
+systemctl restart mender-client && \\
+(cat > /etc/mender/mender-connect.conf << EOF
+{
+  "ServerCertificate": "/usr/share/doc/mender-client/examples/demo.crt",
+  "User": "pi",
+  "ShellCommand": "/bin/bash"
+}
+EOF
+) && systemctl restart mender-connect'
+`
+    );
   });
 });
 

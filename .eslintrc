@@ -28,7 +28,6 @@
     "no-multiple-empty-lines": 2,
     "no-prototype-builtins": 0,
     "quotes": [2, "single", { "allowTemplateLiterals": true }],
-    "react/jsx-no-target-blank": 0,
     "react/prop-types": 0
   }
 }

@@ -24,9 +24,10 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
     </svg>
   </a>
   <div
-    class="__react_component_tooltip place-bottom type-dark allow_click"
+    class="__react_component_tooltip show place-bottom type-light allow_click content"
     data-id="tooltip"
     id="onboarding-complete-tip"
+    style="left: 0px; top: 0px;"
   >
     <p>
       Great work! You updated your device with the new Release!

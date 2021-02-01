@@ -260,7 +260,7 @@ export class Pending extends BaseDevices {
                 </p>
                 {highlightHelp ? (
                   <p>
-                    Visit the <Link to="/help/getting-started">Help section</Link> to learn how to connect devices to the Mender server.
+                    Visit the <Link to="/help/get-started">Help section</Link> to learn how to connect devices to the Mender server.
                   </p>
                 ) : null}
               </div>

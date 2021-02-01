@@ -16,7 +16,7 @@ exports[`Help Component renders correctly 1`] = `
       aria-current={null}
       className="MuiListItem-root navLink helpNav MuiListItem-gutters"
       disabled={false}
-      href="/help/getting-started"
+      href="/help/get-started"
       onClick={[Function]}
       style={
         Object {
@@ -30,183 +30,7 @@ exports[`Help Component renders correctly 1`] = `
         <span
           className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
-          Getting started
-        </span>
-      </div>
-    </a>
-    <a
-      aria-current={null}
-      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
-      disabled={false}
-      href="/help/application-updates"
-      onClick={[Function]}
-      style={
-        Object {
-          "paddingLeft": 16,
-        }
-      }
-    >
-      <div
-        className="MuiListItemText-root"
-      >
-        <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-        >
-          Application updates
-        </span>
-      </div>
-    </a>
-    <a
-      aria-current={null}
-      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
-      disabled={false}
-      href="/help/application-updates/mender-deb-package"
-      onClick={[Function]}
-      style={
-        Object {
-          "paddingLeft": 32,
-        }
-      }
-    >
-      <div
-        className="MuiListItemText-root"
-      >
-        <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-        >
-          Connecting your device using Mender .deb package
-        </span>
-      </div>
-    </a>
-    <a
-      aria-current={null}
-      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
-      disabled={false}
-      href="/help/application-updates/demo-virtual-device"
-      onClick={[Function]}
-      style={
-        Object {
-          "paddingLeft": 32,
-        }
-      }
-    >
-      <div
-        className="MuiListItemText-root"
-      >
-        <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-        >
-          Connecting a demo virtual device
-        </span>
-      </div>
-    </a>
-    <a
-      aria-current={null}
-      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
-      disabled={false}
-      href="/help/application-updates/update-modules"
-      onClick={[Function]}
-      style={
-        Object {
-          "paddingLeft": 32,
-        }
-      }
-    >
-      <div
-        className="MuiListItemText-root"
-      >
-        <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-        >
-          Enabling different kinds of updates with Update Modules
-        </span>
-      </div>
-    </a>
-    <a
-      aria-current={null}
-      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
-      disabled={false}
-      href="/help/system-updates"
-      onClick={[Function]}
-      style={
-        Object {
-          "paddingLeft": 16,
-        }
-      }
-    >
-      <div
-        className="MuiListItemText-root"
-      >
-        <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-        >
-          System updates
-        </span>
-      </div>
-    </a>
-    <a
-      aria-current={null}
-      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
-      disabled={false}
-      href="/help/system-updates/board-integrations"
-      onClick={[Function]}
-      style={
-        Object {
-          "paddingLeft": 32,
-        }
-      }
-    >
-      <div
-        className="MuiListItemText-root"
-      >
-        <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-        >
-          Supported board integrations on Mender Hub
-        </span>
-      </div>
-    </a>
-    <a
-      aria-current={null}
-      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
-      disabled={false}
-      href="/help/system-updates/build-with-yocto"
-      onClick={[Function]}
-      style={
-        Object {
-          "paddingLeft": 32,
-        }
-      }
-    >
-      <div
-        className="MuiListItemText-root"
-      >
-        <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-        >
-          Building a Mender-enabled Yocto image
-        </span>
-      </div>
-    </a>
-    <a
-      aria-current={null}
-      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
-      disabled={false}
-      href="/help/system-updates/integrate-debian"
-      onClick={[Function]}
-      style={
-        Object {
-          "paddingLeft": 32,
-        }
-      }
-    >
-      <div
-        className="MuiListItemText-root"
-      >
-        <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-        >
-          Devices running Debian family
+          Get started
         </span>
       </div>
     </a>
@@ -229,6 +53,28 @@ exports[`Help Component renders correctly 1`] = `
           className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Devices and device groups
+        </span>
+      </div>
+    </a>
+    <a
+      aria-current={null}
+      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
+      disabled={false}
+      href="/help/device-and-os-support"
+      onClick={[Function]}
+      style={
+        Object {
+          "paddingLeft": 16,
+        }
+      }
+    >
+      <div
+        className="MuiListItemText-root"
+      >
+        <span
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+        >
+          Device and Operating System support
         </span>
       </div>
     </a>
@@ -309,7 +155,7 @@ exports[`Help Component renders correctly 1`] = `
       }
     >
       Help 
-        &gt;  Getting started
+        &gt;  Get started
     </p>
     <div
       className="help-content"
@@ -323,46 +169,22 @@ exports[`Help Component renders correctly 1`] = `
     >
       <div>
         <h2>
-          Getting Started
+          Get Started
         </h2>
         <p>
-          Your devices first need to have the Mender client running on them in order to connect to the server.
-          <br />
-          There are two approaches to this, depending on what kind of updates you want to do.
-        </p>
-        <h3>
-          Application updates
-        </h3>
-        <h4>
-          (Recommended for new users)
-        </h4>
-        <p>
-          For partial updates such as application updates, you can install Mender on your device as a .deb package. This is the quickest and easiest way to get started with Mender.
+          Your devices first need to have the Mender client running on them in order to connect to the server. We support several ways of integrating your device with Mender and connecting it to the Mender server.
         </p>
         <p>
-          Get started here: 
+          For a detailed introduction to the different approaches to do this, please refer to our
+           
           <a
-            href="/help/application-updates/mender-deb-package"
-            onClick={[Function]}
+            href="https://docs.mender.io/development/get-started"
+            rel="noopener noreferrer"
+            target="_blank"
           >
-            How to connect your device using .deb package
+            documentation
           </a>
-        </p>
-        <h3>
-          System updates
-        </h3>
-        <p>
-          The most robust and reliable approach is full rootfs system updates. For this, the Mender client needs to be integrated as part of the disk image, which can be done by building with Yocto or converting an existing Debian disk image. This approach also enables support for partial updates, but there are some device partition layout requirements.
-        </p>
-        <p>
-          The 
-          <a
-            href="/help/system-updates"
-            onClick={[Function]}
-          >
-            System updates section
-          </a>
-           has several help pages to get you started enabling and connecting your devices for system updates.
+          .
         </p>
       </div>
     </div>

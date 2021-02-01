@@ -4,7 +4,7 @@ import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import { AuthButton, ExpandArtifact, ExpandDevice, AddGroup } from './helptooltips';
+import { AddGroup, AuthButton, DeviceSupportTip, ExpandArtifact, ExpandDevice } from './helptooltips';
 import { defaultState } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
@@ -25,54 +25,15 @@ describe('Helptooltips Components', () => {
     });
   });
 
-  describe('AuthButton', () => {
-    it('renders correctly', async () => {
+  [AddGroup, AuthButton, DeviceSupportTip, ExpandArtifact, ExpandDevice].forEach(async Component => {
+    it(`renders ${Component.displayName || Component.name} correctly`, () => {
       const tree = renderer
         .create(
           <MemoryRouter>
             <Provider store={store}>
-              <AuthButton />
+              <Component />
             </Provider>
           </MemoryRouter>
-        )
-        .toJSON();
-      expect(tree).toMatchSnapshot();
-    });
-  });
-
-  describe('ExpandArtifact', () => {
-    it('renders correctly', async () => {
-      const tree = renderer
-        .create(
-          <Provider store={store}>
-            <ExpandArtifact />
-          </Provider>
-        )
-        .toJSON();
-      expect(tree).toMatchSnapshot();
-    });
-  });
-
-  describe('ExpandDevice', () => {
-    it('renders correctly', async () => {
-      const tree = renderer
-        .create(
-          <Provider store={store}>
-            <ExpandDevice />
-          </Provider>
-        )
-        .toJSON();
-      expect(tree).toMatchSnapshot();
-    });
-  });
-
-  describe('AddGroup', () => {
-    it('renders correctly', async () => {
-      const tree = renderer
-        .create(
-          <Provider store={store}>
-            <AddGroup />
-          </Provider>
         )
         .toJSON();
       expect(tree).toMatchSnapshot();

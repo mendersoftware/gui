@@ -5,9 +5,9 @@ import { withRouter } from 'react-router-dom';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 
-import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
-import { onboardingSteps } from '../../constants/onboardingConstants';
-import CopyCode from '../common/copy-code';
+import { advanceOnboarding, setShowCreateArtifactDialog } from '../../../actions/onboardingActions';
+import { onboardingSteps } from '../../../constants/onboardingConstants';
+import CopyCode from '../copy-code';
 
 const file_modification = `cat >index.html <<EOF
 Hello World!

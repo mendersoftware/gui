@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import ReactTooltip from 'react-tooltip';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
-
-import { Help as HelpIcon } from '@material-ui/icons';
 
 import docker from '../../../../assets/img/docker.png';
 import raspberryPi from '../../../../assets/img/raspberrypi.png';
@@ -14,11 +11,12 @@ import raspberryPi4 from '../../../../assets/img/raspberrypi4.jpg';
 import { advanceOnboarding } from '../../../actions/onboardingActions';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDocsVersion } from '../../../selectors';
+import { DeviceSupportTip } from '../../helptips/helptooltips';
 
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
 
-const DeviceConnectionExplainer = ({ setOnDevice, setVirtualDevice, docsVersion }) => (
+const DeviceConnectionExplainer = ({ docsVersion, setOnDevice, setVirtualDevice }) => (
   <div>
     <div>
       <p>
@@ -27,17 +25,7 @@ const DeviceConnectionExplainer = ({ setOnDevice, setVirtualDevice, docsVersion 
       </p>
       <h3>Get started quickly with a Raspberry Pi</h3>
       <p>We&apos;ll walk you through the steps to connect a Raspberry Pi and deploy your first update.</p>
-      <div>
-        <div id="deb-package-help" className="tooltip help" data-tip data-for="deb-package-tip" data-event="click focus" style={{ top: '22%', left: '88%' }}>
-          <HelpIcon />
-        </div>
-        <ReactTooltip id="deb-package-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-          <p>
-            The steps in the guide should work on most operating systems in the debian family (e.g. Debian, Ubuntu, Raspberry Pi OS) and devices based on ARMv6
-            or newer (e.g. Raspberry Pi 2/3/4, Beaglebone).
-          </p>
-        </ReactTooltip>
-      </div>
+      <DeviceSupportTip />
       <div className="flexbox centered column os-list">
         <div>
           {[raspberryPi, raspberryPi4].map((tile, index) => (
@@ -75,7 +63,7 @@ const DeviceConnectionExplainer = ({ setOnDevice, setVirtualDevice, docsVersion 
         </li>
         <li>
           Or visit{' '}
-          <a href={`https://hub.mender.io/c/board-integrations`} target="_blank" rel="noopener noreferrer">
+          <a href="https://hub.mender.io/c/board-integrations" target="_blank" rel="noopener noreferrer">
             Board Integrations
           </a>{' '}
           on Mender Hub and search for your device and OS.
