@@ -49,7 +49,7 @@
     "validator": "^13.5.2",
     "victory": "^35.4.6",
     "xterm-addon-fit": "^0.4.0",
-    "xterm-addon-search": "^0.7.0",
+    "xterm-addon-search": "^0.8.0",
     "xterm-for-react": "^1.0.4",
     "zxcvbn": "^4.4.2"
   },
