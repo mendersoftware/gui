@@ -109,8 +109,8 @@ export class Preauthorize extends BaseDevices {
     ) : null;
 
     return (
-      <div className="tab-container">
-        <div className="flexbox space-between" style={{ zIndex: 2, marginBottom: -1 }}>
+      <div className="tab-container flexbox column">
+        <div className="flexbox allow-overflow space-between" style={{ zIndex: 2, marginBottom: -1 }}>
           {count ? <h2 className="margin-right">Preauthorized devices</h2> : <div />}
           <div className="flexbox centered">
             <Button color="secondary" variant="contained" disabled={!!limitMaxed} onClick={() => this._togglePreauth(true)}>

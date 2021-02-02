@@ -26,7 +26,7 @@ export const ReleasesList = ({ loading, onFilter, onSelect, releases, selectedRe
   const sortedReleases = (filteredReleases || releases).sort(customSort(sortDown, 'Name'));
 
   return (
-    <div className="repository-list">
+    <div className="repository-list flexbox column" style={{ alignItems: 'flex-start' }}>
       <div className="flexbox" style={{ alignItems: 'center' }}>
         <h3>Releases</h3>
         <TextField placeholder="Filter" className="search" onChange={e => searchUpdated(e.target.value)} style={{ marginLeft: 30, marginTop: 0 }} />

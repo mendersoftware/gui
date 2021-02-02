@@ -2,10 +2,10 @@
 
 exports[`PreauthorizeDevices Component renders correctly 1`] = `
 <div
-  className="tab-container"
+  className="tab-container flexbox column"
 >
   <div
-    className="flexbox space-between"
+    className="flexbox allow-overflow space-between"
     style={
       Object {
         "marginBottom": -1,

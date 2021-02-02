@@ -135,9 +135,9 @@ export class Artifacts extends React.Component {
     }
 
     return (
-      <div style={{ height: '100%' }}>
+      <>
         <div className="repository">
-          <div>
+          <div className="flexbox column leftFixed" style={{ alignItems: 'flex-start' }}>
             <ReleasesList
               releases={releases}
               selectedRelease={selectedRelease}
@@ -150,7 +150,7 @@ export class Artifacts extends React.Component {
               color="secondary"
               onClick={() => self.onUploadClick()}
               startIcon={<CloudUpload fontSize="small" />}
-              style={{ minWidth: 164 }}
+              style={{ marginTop: 30, minWidth: 164 }}
               variant="contained"
             >
               Upload
@@ -196,7 +196,7 @@ export class Artifacts extends React.Component {
             selectedFile={selectedFile}
           />
         )}
-      </div>
+      </>
     );
   }
 }

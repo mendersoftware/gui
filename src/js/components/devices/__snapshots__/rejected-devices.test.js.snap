@@ -2,7 +2,7 @@
 
 exports[`RejectedDevices Component renders correctly 1`] = `
 <div
-  className="tab-container"
+  className="tab-container flexbox column"
 >
   <div
     className="loaderContainer"

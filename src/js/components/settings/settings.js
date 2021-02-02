@@ -79,27 +79,25 @@ export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, hi
   };
 
   return (
-    <div className="margin-top">
-      <div className="leftFixed">
-        <List>
-          <ListSubheader>Settings</ListSubheader>
-          {Object.entries(sectionMap).reduce((accu, [key, item]) => {
-            if (!checkDenyAccess(item)) {
-              accu.push(
-                <ListItem component={NavLink} className="navLink settingsNav" to={`/settings/${key}`} key={key}>
-                  <ListItemText>{item.text}</ListItemText>
-                  {key === 'upgrade' ? (
-                    <ListItemIcon>
-                      <PaymentIcon />
-                    </ListItemIcon>
-                  ) : null}
-                </ListItem>
-              );
-            }
-            return accu;
-          }, [])}
-        </List>
-      </div>
+    <div className="tab-container with-sub-panels" style={{ minHeight: '95%' }}>
+      <List className="leftFixed">
+        <ListSubheader>Settings</ListSubheader>
+        {Object.entries(sectionMap).reduce((accu, [key, item]) => {
+          if (!checkDenyAccess(item)) {
+            accu.push(
+              <ListItem component={NavLink} className="navLink settingsNav" to={`/settings/${key}`} key={key}>
+                <ListItemText>{item.text}</ListItemText>
+                {key === 'upgrade' ? (
+                  <ListItemIcon>
+                    <PaymentIcon />
+                  </ListItemIcon>
+                ) : null}
+              </ListItem>
+            );
+          }
+          return accu;
+        }, [])}
+      </List>
       <div className="rightFluid padding-right">
         {loadingFinished && <Elements stripe={stripePromise}>{getCurrentSection(sectionMap, match.params.section).component}</Elements>}
       </div>

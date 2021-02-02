@@ -102,7 +102,7 @@ export class DeviceGroups extends React.Component {
     const { acceptedCount, groups, groupsById, isEnterprise, openSettingsDialog, selectedGroup, showHelptips } = self.props;
     const { createGroupExplanation, fromFilters, modifyGroupDialog, removeGroup, tmpDevices } = self.state;
     return (
-      <div className="tab-container">
+      <div className="tab-container with-sub-panels">
         <div className="leftFixed">
           <Groups
             acceptedCount={acceptedCount}

@@ -54,7 +54,9 @@ body {
     overflow: auto;
     margin-left: 0;
     border-left: none;
-    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 0;
   }
   #offerHeader {
     justify-content: center;
@@ -504,6 +506,14 @@ ul.link-list {
   position: relative;
   padding-top: 2 * @defaultGutterWidth;
   min-height: 60vh;
+  overflow: hidden;
+  > div, ul {
+    overflow: auto;
+  }
+  &.with-sub-panels {
+    display: grid;
+    grid-template-columns: @defaultLeftBarWidth 1fr;
+  }
 }
 
 .flexbox {
@@ -552,10 +562,7 @@ ul.link-list {
 }
 
 .leftFixed {
-  width: @defaultLeftBarWidth;
-  float: left;
   position: relative;
-
   .innerBlock {
     width: 100%;
     margin-right: -1 * @defaultLeftBarWidth;
@@ -564,11 +571,8 @@ ul.link-list {
 }
 
 .rightFluid {
-  margin-left: @defaultLeftBarWidth;
   padding: 2 * @defaultGutterWidth;
-  position: relative;
   border-left: 1px solid @lightergrey;
-  min-height: 80vh;
 }
 
 .spaced-list > li {
@@ -1017,9 +1021,9 @@ ul.link-list {
   border-width: 1px;
   border-radius: 5px;
   border-color: @lightgrey;
+  background: white;
 }
 .filter-toggle {
-  border-bottom: white solid 1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
@@ -2163,17 +2167,18 @@ span.day {
   min-height: 400px;
   height: 100%;
   display: flex;
+  .leftFixed {
+    max-width: 3 * @defaultLeftBarWidth;
+    min-width: 1.5 * @defaultLeftBarWidth;
+  }
   .repository-list {
     border-right: 1px solid @lightergrey;
-    min-width: 1.5 * @defaultLeftBarWidth;
-    width: 100%;
-    max-width: 3 * @defaultLeftBarWidth;
+    flex-grow: 1;
     > div.margin-bottom-small {
       height: 85px;
     }
     > ul {
       overflow: auto;
-      height: 70vh;
     }
   }
   .release-repo {

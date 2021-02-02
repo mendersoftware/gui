@@ -2,11 +2,11 @@
 
 exports[`PendingDevices Component renders correctly 1`] = `
 "<div
-  class=\\"tab-container\\"
+  class=\\"tab-container flexbox column\\"
 >
   <div
-    class=\\"flexbox\\"
-    style=\\"z-index: 2; margin-bottom: -1px;\\"
+    class=\\"flexbox allow-overflow\\"
+    style=\\"align-items: center; margin-bottom: -1px; z-index: 2; padding-top: 5px;\\"
   >
     <h2
       class=\\"margin-right\\"
@@ -14,7 +14,7 @@ exports[`PendingDevices Component renders correctly 1`] = `
       Pending devices
     </h2>
     <div
-      class=\\"flexbox centered \\"
+      class=\\"\\"
     >
       <button
         class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary\\"
