@@ -63,7 +63,7 @@ export const RoleDefinition = ({ adding, editing, stateGroups, onCancel, onSubmi
       <h4 style={{ marginTop: 5 }}>{adding ? 'Add a' : 'Edit the'} role</h4>
       <FormControl style={{ marginTop: '0' }}>
         <TextField label="Role name" id="role-name" value={id} disabled={editing} onChange={validateNameChange} style={{ marginTop: 0, marginRight: 30 }} />
-        {nameError && <FormHelperText>Valid characters are a-z, A-Z, 0-9, _ and -</FormHelperText>}
+        {nameError && <FormHelperText className="warning">Invalid character in role name. Valid characters are a-z, A-Z, 0-9, _ and -</FormHelperText>}
       </FormControl>
       <TextField
         label="Description"
