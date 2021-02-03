@@ -253,6 +253,19 @@ const deviceReducer = (state = initialState, action) => {
         }
       };
     }
+    case DeviceConstants.RECEIVE_DEVICE_CONFIG: {
+      const { device } = action;
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [device.id]: {
+            ...state.byId[device.id],
+            ...device
+          }
+        }
+      };
+    }
     default:
       return state;
   }

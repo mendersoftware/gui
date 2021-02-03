@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
-import { decommissionDevice } from '../../actions/deviceActions';
-import { getReleases } from '../../actions/releaseActions';
 import { setSnackbar } from '../../actions/appActions';
+import { decommissionDevice, setDeviceConfig } from '../../actions/deviceActions';
+import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { getDocsVersion, getTenantCapabilities } from '../../selectors';
 import { AuthButton } from '../helptips/helptooltips';
@@ -19,9 +19,10 @@ import DeviceConnection from './device-details/connection';
 export const ExpandedDevice = ({
   className,
   decommissionDevice,
+  defaultConfig,
   device,
   docsVersion,
-  getReleases,
+  getDeviceConfig,
   hasDeviceConfig,
   hasDeviceConnect,
   highlightHelp,
@@ -29,6 +30,8 @@ export const ExpandedDevice = ({
   id_value,
   limitMaxed,
   refreshDevices,
+  saveGlobalSettings,
+  setDeviceConfig,
   setSnackbar,
   showHelptips,
   unauthorized
@@ -38,12 +41,6 @@ export const ExpandedDevice = ({
   const [showAuthsetsDialog, setShowAuthsetsDialog] = useState(false);
   const [socketClosed, setSocketClosed] = useState(true);
   const [terminal, setTerminal] = useState(false);
-
-  useEffect(() => {
-    if (status === DEVICE_STATES.accepted) {
-      getReleases();
-    }
-  }, []);
 
   const toggleAuthsets = (authsets = !showAuthsetsDialog, shouldUpdate = false) => {
     setShowAuthsetsDialog(authsets);
@@ -64,8 +61,12 @@ export const ExpandedDevice = ({
     setTerminal(true);
   };
 
-  const onConfigSubmit = () => {
-    return new Promise((resolve, reject) => setTimeout(() => reject(), 10000));
+  const onConfigSubmit = ({ config, isDefault }) => {
+    let tasks = [setDeviceConfig(device.id, config)];
+    if (isDefault) {
+      tasks.push(saveGlobalSettings({ defaultDeviceConfig: config }));
+    }
+    return Promise.all(tasks).then(() => getDeviceConfig(device.id));
   };
 
   const waiting = !(attributes && Object.values(attributes).some(i => i));
@@ -84,7 +85,7 @@ export const ExpandedDevice = ({
         </div>
         {status === DEVICE_STATES.accepted && (
           <>
-            {hasDeviceConfig && <DeviceConfiguration device={device} submitConfig={onConfigSubmit} />}
+            {hasDeviceConfig && <DeviceConfiguration device={device} defaultConfig={defaultConfig} submitConfig={onConfigSubmit} />}
             {hasDeviceConnect && <DeviceConnection device={device} docsVersion={docsVersion} launchTerminal={launchTerminal} socketClosed={socketClosed} />}
             {waiting ? (
               <DeviceInventoryLoader docsVersion={docsVersion} unauthorized={unauthorized} />
@@ -116,11 +117,12 @@ export const ExpandedDevice = ({
   );
 };
 
-const actionCreators = { decommissionDevice, getReleases, setSnackbar };
+const actionCreators = { decommissionDevice, saveGlobalSettings, setDeviceConfig, setSnackbar };
 
 const mapStateToProps = state => {
   const { hasDeviceConfig } = getTenantCapabilities(state);
   return {
+    defaultConfig: state.users.globalSettings.defaultDeviceConfig,
     docsVersion: getDocsVersion(state),
     hasDeviceConnect: state.app.features.hasDeviceConnect,
     hasDeviceConfig,

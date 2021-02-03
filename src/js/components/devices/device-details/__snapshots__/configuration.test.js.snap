@@ -112,7 +112,7 @@ exports[`Configuration Component renders correctly 1`] = `
         >
           Updated: 
           <time
-            datetime="2019-01-01T09:25:00+00:00"
+            datetime="2019-01-01T09:25:01+00:00"
           >
             2019-01-01 09:25
           </time>
@@ -188,21 +188,31 @@ exports[`tiny components renders ConfigEditingActions correctly 1`] = `
       class="MuiTouchRipple-root"
     />
   </button>
-  <button
-    class="MuiButtonBase-root MuiButton-root MuiButton-text"
-    style="margin-left: 30px;"
-    tabindex="0"
-    type="button"
+</div>
+`;
+
+exports[`tiny components renders ConfigEmptyNote correctly 1`] = `
+<div>
+  <div
+    class="flexbox column margin-small"
   >
-    <span
-      class="MuiButton-label"
+    <h6
+      class="MuiTypography-root MuiTypography-subtitle2"
     >
-      Cancel changes
-    </span>
+      The device appears to either have an empty configuration or not to have reported a configuration yet.
+    </h6>
     <span
-      class="MuiTouchRipple-root"
-    />
-  </button>
+      class="MuiTypography-root text-muted MuiTypography-caption"
+      style="text-transform: capitalize; text-align: left;"
+    >
+      Updated: 
+      <time
+        datetime="Invalid date"
+      >
+        Invalid date
+      </time>
+    </span>
+  </div>
 </div>
 `;
 
@@ -247,21 +257,6 @@ exports[`tiny components renders ConfigUpToDateNote correctly 1`] = `
 
 exports[`tiny components renders ConfigUpdateFailureActions correctly 1`] = `
 <div>
-  <button
-    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
-    style="margin-left: 30px;"
-    tabindex="0"
-    type="button"
-  >
-    <span
-      class="MuiButton-label"
-    >
-      View log
-    </span>
-    <span
-      class="MuiTouchRipple-root"
-    />
-  </button>
   <button
     class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
     style="margin-left: 30px;"

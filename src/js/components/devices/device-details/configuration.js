@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import Time from 'react-time';
 
 import { Button, Checkbox, FormControlLabel, Typography } from '@material-ui/core';
@@ -11,6 +11,7 @@ import {
   SaveAlt as SaveAltIcon
 } from '@material-ui/icons';
 
+import { deepCompare, isEmpty } from '../../../helpers';
 import Confirm from '../../common/confirm';
 import LogDialog from '../../common/dialogs/log';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
@@ -21,7 +22,9 @@ const buttonStyle = { marginLeft: 30 };
 const iconStyle = { margin: 12 };
 const textStyle = { textTransform: 'capitalize', textAlign: 'left' };
 
-export const ConfigUpToDateNote = ({ updated_ts }) => (
+const defaultReportTimeStamp = '0001-01-01T00:00:00Z';
+
+export const ConfigUpToDateNote = ({ updated_ts = defaultReportTimeStamp }) => (
   <div className="flexbox margin-small">
     <CheckCircleIcon className="green" style={iconStyle} />
     <div>
@@ -35,7 +38,16 @@ export const ConfigUpToDateNote = ({ updated_ts }) => (
   </div>
 );
 
-export const ConfigEditingActions = ({ isSetAsDefault, onSetAsDefaultChange, onSubmit, onCancel }) => (
+export const ConfigEmptyNote = ({ updated_ts = '' }) => (
+  <div className="flexbox column margin-small">
+    <Typography variant="subtitle2">The device appears to either have an empty configuration or not to have reported a configuration yet.</Typography>
+    <Typography variant="caption" className="text-muted" style={textStyle}>
+      Updated: {<Time value={updated_ts} format="YYYY-MM-DD HH:mm" />}
+    </Typography>
+  </div>
+);
+
+export const ConfigEditingActions = ({ hasDeviceConfig, isSetAsDefault, onSetAsDefaultChange, onSubmit, onCancel }) => (
   <>
     <div style={{ maxWidth: 275 }}>
       <FormControlLabel
@@ -48,9 +60,11 @@ export const ConfigEditingActions = ({ isSetAsDefault, onSetAsDefaultChange, onS
     <Button variant="contained" color="primary" onClick={onSubmit} style={buttonStyle}>
       Save and apply to device
     </Button>
-    <Button onClick={onCancel} style={buttonStyle}>
-      Cancel changes
-    </Button>
+    {hasDeviceConfig && (
+      <Button onClick={onCancel} style={buttonStyle}>
+        Cancel changes
+      </Button>
+    )}
   </>
 );
 
@@ -65,11 +79,14 @@ export const ConfigUpdateNote = ({ isUpdatingConfig }) => (
   </div>
 );
 
-export const ConfigUpdateFailureActions = ({ setShowLog, onSubmit, onCancel }) => (
+export const ConfigUpdateFailureActions = ({ onSubmit, onCancel }) => (
   <>
+    {/*
+    TODO: reintroduce log viewer functionality once backend support to retrieve config deployment exists
     <Button color="secondary" onClick={setShowLog} style={buttonStyle}>
       View log
     </Button>
+    */}
     <Button color="secondary" onClick={onSubmit} startIcon={<RefreshIcon fontSize="small" />} style={buttonStyle}>
       Retry
     </Button>
@@ -80,9 +97,10 @@ export const ConfigUpdateFailureActions = ({ setShowLog, onSubmit, onCancel }) =
 );
 
 export const DeviceConfiguration = ({ device, defaultConfig = {}, submitConfig }) => {
-  const { config = {}, updated_ts } = device;
+  const { config = {} } = device;
+  const { reported = {}, reported_ts } = config;
 
-  const [changedConfig, setChangedConfig] = useState(config);
+  const [changedConfig, setChangedConfig] = useState();
   const [isEditDisabled, setIsEditDisabled] = useState(false);
   const [isAborting, setIsAborting] = useState(false);
   const [isEditingConfig, setIsEditingConfig] = useState(false);
@@ -93,6 +111,35 @@ export const DeviceConfiguration = ({ device, defaultConfig = {}, submitConfig }
   const [showLog, setShowLog] = useState(false);
   const [updateFailed, setUpdateFailed] = useState();
   const [updateLog, setUpdateLog] = useState();
+
+  useEffect(() => {
+    setShouldUpdateEditor(!shouldUpdateEditor);
+  }, [isEditingConfig, isUpdatingConfig]);
+
+  useEffect(() => {
+    if (device.config || changedConfig) {
+      setIsEditDisabled(isUpdatingConfig);
+      setIsEditingConfig(isUpdatingConfig || updateFailed);
+    }
+  }, [isUpdatingConfig, updateFailed]);
+
+  useEffect(() => {
+    const { config = {} } = device;
+    const { configured = {}, reported = {}, updated_ts, reported_ts = defaultReportTimeStamp } = config;
+    const hasConfig = device.config && (reported_ts !== defaultReportTimeStamp || !isEmpty(configured));
+    const updateRunning = hasConfig && !deepCompare(configured, reported) && updated_ts > reported_ts;
+    const newConfig = updateRunning ? configured : reported;
+    if (!changedConfig) {
+      setIsEditingConfig(!device.config);
+      if (device.config) {
+        setChangedConfig(newConfig);
+        setIsUpdatingConfig(Boolean(updateRunning));
+      }
+    } else if ((!isEditingConfig && !deepCompare(newConfig, changedConfig)) || (isUpdatingConfig && !updateRunning)) {
+      setChangedConfig(newConfig);
+      setIsUpdatingConfig(Boolean(updateRunning));
+    }
+  }, [device.config]);
 
   const onConfigImport = ({ config, importType }) => {
     let updatedConfig = config;
@@ -109,37 +156,44 @@ export const DeviceConfiguration = ({ device, defaultConfig = {}, submitConfig }
   };
 
   const onCancel = () => {
-    setIsAborting(false);
-    setIsEditingConfig(false);
-    setIsUpdatingConfig(false);
-    setUpdateFailed(false);
-    setIsEditDisabled(false);
-    setChangedConfig(config);
+    setIsEditingConfig(isEmpty(reported));
+    setChangedConfig(reported);
+    const request = deepCompare(reported, changedConfig) ? Promise.resolve() : submitConfig({ config: reported });
+    request.then(() => {
+      setIsUpdatingConfig(false);
+      setUpdateFailed(false);
+      setIsAborting(false);
+    });
   };
 
   const onSubmit = () => {
-    setIsEditDisabled(true);
     setIsUpdatingConfig(true);
     setUpdateFailed(false);
     submitConfig({ config: changedConfig, isDefault: isSetAsDefault })
       .then(() => {
-        setIsEditingConfig(false);
         setUpdateFailed(false);
       })
       .catch(({ log = 'something something loggy' }) => {
+        setIsEditDisabled(false);
         setIsEditingConfig(true);
         setUpdateFailed(true);
-        setUpdateLog(log);
-      })
-      .finally(() => {
         setIsUpdatingConfig(false);
-        setIsEditDisabled(false);
+        setUpdateLog(log);
       });
   };
 
-  let footer = <ConfigUpToDateNote updated_ts={updated_ts} />;
+  const hasDeviceConfig = !isEmpty(reported);
+  let footer = hasDeviceConfig ? <ConfigUpToDateNote updated_ts={reported_ts} /> : <ConfigEmptyNote updated_ts={device.updated_ts} />;
   if (isEditingConfig) {
-    footer = <ConfigEditingActions isSetAsDefault={isSetAsDefault} onSetAsDefaultChange={onSetAsDefaultChange} onSubmit={onSubmit} onCancel={onCancel} />;
+    footer = (
+      <ConfigEditingActions
+        hasDeviceConfig={hasDeviceConfig}
+        isSetAsDefault={isSetAsDefault}
+        onSetAsDefaultChange={onSetAsDefaultChange}
+        onSubmit={onSubmit}
+        onCancel={onCancel}
+      />
+    );
   }
   if (isUpdatingConfig || updateFailed) {
     footer = (
@@ -167,7 +221,7 @@ export const DeviceConfiguration = ({ device, defaultConfig = {}, submitConfig }
       <div className="two-columns">
         <div className="flexbox" style={{ alignItems: 'baseline' }}>
           <h4 className="margin-bottom-none margin-right">Device configuration</h4>
-          {!isEditingConfig && (
+          {!(isEditingConfig || isUpdatingConfig) && (
             <Button onClick={setIsEditingConfig} startIcon={<EditIcon />} size="small">
               Edit
             </Button>
@@ -182,16 +236,18 @@ export const DeviceConfiguration = ({ device, defaultConfig = {}, submitConfig }
       {isEditingConfig ? (
         <KeyValueEditor disabled={isEditDisabled} errortext={''} input={changedConfig} onInputChange={setChangedConfig} reset={shouldUpdateEditor} />
       ) : (
-        <div className="margin-top text-muted two-columns" style={{ maxWidth: 280, rowGap: 15 }}>
-          {Object.entries(config).map(([key, value]) => (
-            <Fragment key={key}>
-              <div className="align-right">
-                <b>{key}</b>
-              </div>
-              <div>{`${value}`}</div>
-            </Fragment>
-          ))}
-        </div>
+        hasDeviceConfig && (
+          <div className="margin-top text-muted two-columns" style={{ maxWidth: 280, rowGap: 15 }}>
+            {Object.entries(reported).map(([key, value]) => (
+              <Fragment key={key}>
+                <div className="align-right">
+                  <b>{key}</b>
+                </div>
+                <div>{`${value}`}</div>
+              </Fragment>
+            ))}
+          </div>
+        )
       )}
       <div className="flexbox margin-bottom margin-top" style={{ alignItems: 'center' }}>
         {footer}
