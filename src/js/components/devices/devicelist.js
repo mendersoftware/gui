@@ -60,9 +60,9 @@ export class DeviceList extends React.Component {
     const { advanceOnboarding, devices, onboardingComplete, setSnackbar } = self.props;
     setSnackbar('');
     let device = devices[rowNumber];
+    clearInterval(self.timer);
     if (self.state.expandedDeviceId === device.id) {
       device = null;
-      clearInterval(self.timer);
     } else {
       self.timer = setInterval(() => self.getDeviceInfo(device), refreshDeviceLength);
       self.getDeviceInfo(device);
