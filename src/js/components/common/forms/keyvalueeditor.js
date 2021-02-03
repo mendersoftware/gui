@@ -17,7 +17,7 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, onInputChange,
     let changedInputs = [...inputs];
     changedInputs[index][key] = event.target.value;
     setInputs(changedInputs);
-    const inputObject = changedInputs.reduce((accu, item) => ({ ...accu, ...(item.value ? { [item.key]: item.value } : {}) }), {});
+    const inputObject = reducePairs(changedInputs);
     if (changedInputs.every(item => item.key && item.value) && changedInputs.length !== Object.keys(inputObject).length) {
       setError('Duplicate keys exist, only the last set value will be submitted');
     } else {
@@ -25,6 +25,8 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, onInputChange,
     }
     onInputChange(inputObject);
   };
+
+  const reducePairs = listOfPairs => listOfPairs.reduce((accu, item) => ({ ...accu, ...(item.value ? { [item.key]: item.value } : {}) }), {});
 
   const addKeyValue = () => {
     const changedInputs = [...inputs, { ...emptyInput }];
@@ -36,7 +38,8 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, onInputChange,
     let changedInputs = [...inputs];
     changedInputs.splice(index, 1);
     setInputs(changedInputs);
-    onInputChange(changedInputs);
+    const inputObject = reducePairs(changedInputs);
+    onInputChange(inputObject);
     setError('');
   };
 
