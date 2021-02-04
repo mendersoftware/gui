@@ -107,7 +107,7 @@ export class Header extends React.Component {
 
   setHideOffer() {
     const self = this;
-    this.cookies.set('offer', 'remote', { path: '/', maxAge: 2629746 });
+    this.cookies.set('offer', currentOffer.name, { path: '/', maxAge: 2629746 });
     self._offerBannerCookie();
   }
 
