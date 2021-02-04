@@ -107,6 +107,7 @@ describe('getDebConfigurationCode function', () => {
       `wget -q -O- https://get.mender.io/ | sudo bash -s && \\
 sudo bash -c 'DEVICE_TYPE="raspberrypi3" && \\
 TENANT_TOKEN="token" && \\
+echo "Running mender setup for localhost" && \\
 mender setup \\
   --device-type $DEVICE_TYPE \\
   --quiet --demo --server-ip 192.168.7.41 \\
@@ -119,7 +120,9 @@ systemctl restart mender-client && \\
   "ShellCommand": "/bin/bash"
 }
 EOF
-) && systemctl restart mender-connect'`
+) && systemctl restart mender-connect && \\
+echo "Done!"'
+`
     );
   });
   it('should not contain tenant information for OS calls', async () => {
@@ -127,13 +130,29 @@ EOF
     expect(code).not.toMatch(/tenant/);
     expect(code).not.toMatch(/token/);
   });
-  it('should contain sane information for hosted calls', async () => {
-    code = getDebConfigurationCode(undefined, true, false, 'token', 'raspberrypi3');
-    // the localhost url is due to jest running the test with document.location.hostname as localhost
-    expect(code).toMatch(
-      `wget -q -O- https://get.mender.io/ | sudo bash -s && \\
+  describe('configuring devices for hosted mender', () => {
+    const oldHostname = window.location.hostname;
+    beforeEach(() => {
+      window.location = {
+        ...window.location,
+        hostname: 'hosted.mender.io'
+      };
+    });
+    afterEach(() => {
+      window.location = {
+        ...window.location,
+        hostname: oldHostname
+      };
+    });
+
+    it('should contain sane information for hosted calls', async () => {
+      code = getDebConfigurationCode(undefined, true, false, 'token', 'raspberrypi3');
+      // the localhost url is due to jest running the test with document.location.hostname as localhost
+      expect(code).toMatch(
+        `wget -q -O- https://get.mender.io/ | sudo bash -s && \\
 sudo bash -c 'DEVICE_TYPE="raspberrypi3" && \\
 TENANT_TOKEN="token" && \\
+echo "Running mender setup for hosted.mender.io" && \\
 mender setup \\
   --device-type $DEVICE_TYPE \\
   --quiet --hosted-mender \\
@@ -149,9 +168,11 @@ systemctl restart mender-client && \\
   "ShellCommand": "/bin/bash"
 }
 EOF
-) && systemctl restart mender-connect'
+) && systemctl restart mender-connect && \\
+echo "Done!"'
 `
-    );
+      );
+    });
   });
 });
 
