@@ -11,17 +11,19 @@ const apiUrl = '/api/management/v1';
 export const deploymentsApiUrl = `${apiUrl}/deployments`;
 
 const flattenRelease = release => {
-  const { descriptions, deviceTypes } = release.Artifacts.reduce(
+  release.Artifacts.sort(customSort(1, 'modified'));
+  const { descriptions, deviceTypes, latestModified = '' } = release.Artifacts.reduce(
     (accu, item) => {
       item.description ? accu.descriptions.push(item.description) : null;
       accu.deviceTypes.push(...item.device_types_compatible);
+      accu.latestModified = accu.latestModified ? accu.latestModified : item.modified;
       return accu;
     },
-    { descriptions: [], deviceTypes: [] }
+    { descriptions: [], deviceTypes: [], latestModified: undefined }
   );
-  release.Artifacts.sort(customSort(1, 'modified'));
   release.descriptions = descriptions;
   release.device_types_compatible = deviceTypes;
+  release.latestModified = latestModified;
   return release;
 };
 

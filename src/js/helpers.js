@@ -283,6 +283,10 @@ export function formatPublicKey(key) {
 }
 
 export const customSort = (direction, field) => (a, b) => {
+  if (typeof a[field] === 'string') {
+    const result = a[field].localeCompare(b[field], { sensitivity: 'case' });
+    return direction ? result * -1 : result;
+  }
   if (a[field] > b[field]) return direction ? -1 : 1;
   if (a[field] < b[field]) return direction ? 1 : -1;
   return 0;

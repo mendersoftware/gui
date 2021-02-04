@@ -2,103 +2,98 @@
 
 exports[`ReleasesList Component renders correctly 1`] = `
 <div
-  className="repository-list flexbox column"
-  style={
-    Object {
-      "alignItems": "flex-start",
-    }
-  }
+  class="repository-list flexbox column"
+  style="align-items: flex-start;"
 >
   <div
-    className="flexbox"
-    style={
-      Object {
-        "alignItems": "center",
-      }
-    }
+    class="flexbox"
+    style="align-items: center;"
   >
     <h3>
       Releases
     </h3>
     <div
-      className="MuiFormControl-root MuiTextField-root search"
-      style={
-        Object {
-          "marginLeft": 30,
-          "marginTop": 0,
-        }
-      }
+      class="MuiFormControl-root MuiTextField-root search"
+      style="margin-left: 30px; margin-top: 0px;"
     >
       <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-        onClick={[Function]}
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
       >
         <input
-          aria-invalid={false}
-          autoFocus={false}
-          className="MuiInputBase-input MuiInput-input"
-          disabled={false}
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input"
           placeholder="Filter"
-          required={false}
           type="text"
+          value=""
         />
       </div>
     </div>
   </div>
-  <button
-    className="MuiButtonBase-root MuiButton-root MuiButton-text muted"
-    disabled={false}
-    onBlur={[Function]}
-    onClick={[Function]}
-    onDragLeave={[Function]}
-    onFocus={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseDown={[Function]}
-    onMouseLeave={[Function]}
-    onMouseUp={[Function]}
-    onTouchEnd={[Function]}
-    onTouchMove={[Function]}
-    onTouchStart={[Function]}
-    style={
-      Object {
-        "textTransform": "none",
-      }
-    }
-    tabIndex={0}
-    type="button"
+  <div
+    class="MuiButtonGroup-root muted"
+    role="group"
   >
-    <span
-      className="MuiButton-label"
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlined MuiButton-outlinedSizeSmall MuiButton-sizeSmall"
+      style="text-transform: none;"
+      tabindex="0"
+      type="button"
     >
-      Name
       <span
-        className="MuiButton-endIcon MuiButton-iconSizeMedium"
+        class="MuiButton-label"
+      >
+        Name
+        <span
+          class="MuiButton-endIcon MuiButton-iconSizeSmall"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root sortIcon true"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"
+            />
+          </svg>
+        </span>
+      </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
+    </button>
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlined MuiButton-outlinedSizeSmall MuiButton-sizeSmall"
+      style="text-transform: none;"
+      tabindex="0"
+      type="button"
+    >
+      <span
+        class="MuiButton-label"
       >
         <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root sortIcon true"
+          aria-hidden="true"
+          class="MuiSvgIcon-root"
           focusable="false"
           viewBox="0 0 24 24"
         >
           <path
-            d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"
+            d="M7 10l5 5 5-5z"
           />
         </svg>
       </span>
-    </span>
-  </button>
+      <span
+        class="MuiTouchRipple-root"
+      />
+    </button>
+  </div>
   <p
-    className="margin-top muted align-center margin-right"
+    class="margin-top muted align-center margin-right"
   >
     There are no Releases yet
   </p>
   <ul
-    className="MuiList-root MuiList-padding"
+    class="MuiList-root MuiList-padding"
   />
 </div>
 `;
