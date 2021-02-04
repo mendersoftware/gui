@@ -10,13 +10,14 @@ describe('tiny components', () => {
     it(`renders ${Component.displayName || Component.name} correctly`, () => {
       const { baseElement } = render(
         <Component
-          updated_ts="testgroup"
-          isUpdatingConfig={true}
+          isAccepted={true}
           isSetAsDefault={true}
-          onSetAsDefaultChange={jest.fn}
-          setShowLog={jest.fn}
-          onSubmit={jest.fn}
+          isUpdatingConfig={true}
           onCancel={jest.fn}
+          onSetAsDefaultChange={jest.fn}
+          onSubmit={jest.fn}
+          setShowLog={jest.fn}
+          updated_ts="testgroup"
         />
       );
       const view = baseElement.firstChild;

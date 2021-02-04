@@ -11,6 +11,7 @@ import {
   SaveAlt as SaveAltIcon
 } from '@material-ui/icons';
 
+import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { deepCompare, isEmpty } from '../../../helpers';
 import Confirm from '../../common/confirm';
 import LogDialog from '../../common/dialogs/log';
@@ -68,13 +69,17 @@ export const ConfigEditingActions = ({ hasDeviceConfig, isSetAsDefault, onSetAsD
   </>
 );
 
-export const ConfigUpdateNote = ({ isUpdatingConfig }) => (
+export const ConfigUpdateNote = ({ isUpdatingConfig, isAccepted }) => (
   <div>
     <Typography variant="subtitle2" style={textStyle}>
-      {isUpdatingConfig ? 'Updating configuration on device...' : 'Configuration could not be updated on device'}
+      {!isAccepted
+        ? 'Configuration will be applied once the device is connected'
+        : isUpdatingConfig
+        ? 'Updating configuration on device...'
+        : 'Configuration could not be updated on device'}
     </Typography>
     <Typography variant="caption" className="text-muted" style={textStyle}>
-      Status: {isUpdatingConfig ? 'pending' : 'failed'}
+      Status: {isUpdatingConfig || !isAccepted ? 'pending' : 'failed'}
     </Typography>
   </div>
 );
@@ -97,7 +102,7 @@ export const ConfigUpdateFailureActions = ({ onSubmit, onCancel }) => (
 );
 
 export const DeviceConfiguration = ({ device, defaultConfig = {}, submitConfig }) => {
-  const { config = {} } = device;
+  const { config = {}, status } = device;
   const { reported = {}, reported_ts } = config;
 
   const [changedConfig, setChangedConfig] = useState();
@@ -201,7 +206,7 @@ export const DeviceConfiguration = ({ device, defaultConfig = {}, submitConfig }
         <div className="flexbox">
           {isUpdatingConfig && <Loader show={true} style={{ marginRight: 15, marginTop: -15 }} />}
           {updateFailed && <ErrorIcon className="red" style={iconStyle} />}
-          <ConfigUpdateNote isUpdatingConfig={isUpdatingConfig} />
+          <ConfigUpdateNote isUpdatingConfig={isUpdatingConfig} isAccepted={status === DEVICE_STATES.accepted} />
         </div>
         {updateFailed ? (
           <ConfigUpdateFailureActions setShowLog={setShowLog} onSubmit={onSubmit} onCancel={onCancel} />

@@ -83,9 +83,9 @@ export const ExpandedDevice = ({
             }}
           />
         </div>
+        {hasDeviceConfig && <DeviceConfiguration device={device} defaultConfig={defaultConfig} submitConfig={onConfigSubmit} />}
         {status === DEVICE_STATES.accepted && (
           <>
-            {hasDeviceConfig && <DeviceConfiguration device={device} defaultConfig={defaultConfig} submitConfig={onConfigSubmit} />}
             {hasDeviceConnect && <DeviceConnection device={device} docsVersion={docsVersion} launchTerminal={launchTerminal} socketClosed={socketClosed} />}
             {waiting ? (
               <DeviceInventoryLoader docsVersion={docsVersion} unauthorized={unauthorized} />
