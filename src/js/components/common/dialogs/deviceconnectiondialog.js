@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 
@@ -105,7 +104,7 @@ export const DeviceConnectionDialog = ({ advanceOnboarding, docsVersion, onboard
   }
   if (progress >= 2 && pendingCount && !window.location.hash.includes('pending')) {
     advanceOnboarding(onboardingSteps.DASHBOARD_ONBOARDING_START);
-    return <Redirect to="/devices/pending" />;
+    window.location.replace('#/devices/pending');
   }
 
   return (
