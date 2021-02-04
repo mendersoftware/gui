@@ -11,8 +11,6 @@ import AcceptedDevices from './widgets/accepteddevices';
 import PendingDevices from './widgets/pendingdevices';
 import RedirectionWidget from './widgets/redirectionwidget';
 
-const refreshDevicesLength = 30000;
-
 export class Devices extends React.Component {
   constructor(props, state) {
     super(props, state);
@@ -21,7 +19,6 @@ export class Devices extends React.Component {
       deltaActivity: 0,
       loading: null
     };
-    self.timer = null;
   }
 
   handleResize() {
@@ -32,7 +29,6 @@ export class Devices extends React.Component {
 
   componentDidMount() {
     var self = this;
-    self.timer = setInterval(() => self._refreshDevices(), refreshDevicesLength);
     // on render the store might not be updated so we resort to the API and let all later request go through the store
     // to be in sync with the rest of the UI
     self._refreshDevices();
@@ -40,7 +36,6 @@ export class Devices extends React.Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.timer);
     window.removeEventListener('resize', this.handleResize.bind(this));
   }
 
