@@ -8,7 +8,6 @@ import Loader from '../../common/loader';
 import Confirm from '../../common/confirm';
 import { chartColorPalette } from '../../../themes/mender-theme';
 
-const refreshDistributionData = 30000;
 const seriesOther = '__OTHER__';
 
 export default class DistributionReport extends React.Component {
@@ -18,17 +17,10 @@ export default class DistributionReport extends React.Component {
       distribution: [],
       removing: false
     };
-    this.timer = null;
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timer);
   }
 
   componentDidMount() {
-    var self = this;
     this.initializeDistributionData();
-    self.timer = setInterval(() => self.initializeDistributionData(), refreshDistributionData);
   }
 
   componentDidUpdate(prevProps) {

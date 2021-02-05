@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import pluralize from 'pluralize';
 
 // material ui
-import { Button, List, ListItem, ListItemText, TextField, Typography } from '@material-ui/core';
-import { KeyboardArrowRight as KeyboardArrowRightIcon, Sort as SortIcon } from '@material-ui/icons';
+import { Button, ButtonGroup, List, ListItem, ListItemText, Menu, MenuItem, TextField, Typography } from '@material-ui/core';
+import { ArrowDropDown as ArrowDropDownIcon, KeyboardArrowRight as KeyboardArrowRightIcon, Sort as SortIcon } from '@material-ui/icons';
 import { createFilterOptions } from '@material-ui/lab';
 
 import Loader from '../common/loader';
@@ -13,9 +13,18 @@ const filters = ['device_types_compatible', 'descriptions', 'Name'];
 
 const filter = createFilterOptions({ stringify: option => filters.map(item => option[item]).join(' ') });
 
+const sortingOptions = [
+  { title: 'Name', value: 'Name' },
+  { title: 'Date modified', value: 'latestModified' }
+];
+
+const buttonStyle = { border: 'none', textTransform: 'none' };
+
 export const ReleasesList = ({ loading, onFilter, onSelect, releases, selectedRelease }) => {
-  const [sortDown, setSortDown] = useState(true);
+  const [anchorEl, setAnchorEl] = useState();
   const [filteredReleases, setFilteredReleases] = useState();
+  const [sortDown, setSortDown] = useState(true);
+  const [selectedSortOption, setSelectedSortOption] = useState(0);
 
   const searchUpdated = searchTerm => {
     const filteredReleases = filter(releases, { inputValue: searchTerm });
@@ -23,7 +32,17 @@ export const ReleasesList = ({ loading, onFilter, onSelect, releases, selectedRe
     setFilteredReleases(filteredReleases);
   };
 
-  const sortedReleases = (filteredReleases || releases).sort(customSort(sortDown, 'Name'));
+  const handleToggle = event => {
+    const anchor = anchorEl ? null : event?.currentTarget.parentElement;
+    setAnchorEl(anchor);
+  };
+
+  const handleSelection = index => {
+    setSelectedSortOption(index);
+    handleToggle();
+  };
+
+  const sortedReleases = (filteredReleases || releases).sort(customSort(sortDown, sortingOptions[selectedSortOption].value));
 
   return (
     <div className="repository-list flexbox column" style={{ alignItems: 'flex-start' }}>
@@ -32,14 +51,22 @@ export const ReleasesList = ({ loading, onFilter, onSelect, releases, selectedRe
         <TextField placeholder="Filter" className="search" onChange={e => searchUpdated(e.target.value)} style={{ marginLeft: 30, marginTop: 0 }} />
       </div>
       {releases.length !== sortedReleases.length && <p className="muted">{`Filtered from ${releases.length} ${pluralize('Release', releases.length)}`}</p>}
-      <Button
-        className="muted"
-        onClick={() => setSortDown(!sortDown)}
-        endIcon={<SortIcon className={`sortIcon ${sortDown.toString()}`} />}
-        style={{ textTransform: 'none' }}
-      >
-        Name
-      </Button>
+      <ButtonGroup className="muted" size="small">
+        <Button onClick={() => setSortDown(!sortDown)} endIcon={<SortIcon className={`sortIcon ${sortDown.toString()}`} />} style={buttonStyle}>
+          {sortingOptions[selectedSortOption].title}
+        </Button>
+        <Button size="small" onClick={handleToggle} style={buttonStyle}>
+          <ArrowDropDownIcon />
+        </Button>
+      </ButtonGroup>
+      <Menu id="sorting-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleToggle} variant="menu">
+        {sortingOptions.map((option, index) => (
+          <MenuItem key={`sorting-option-${option.value}`} onClick={() => handleSelection(index)} style={buttonStyle}>
+            {option.title}
+          </MenuItem>
+        ))}
+      </Menu>
+
       {!releases.length ? <p className="margin-top muted align-center margin-right">There are no Releases yet</p> : null}
       {loading ? (
         <Loader show={loading} />
