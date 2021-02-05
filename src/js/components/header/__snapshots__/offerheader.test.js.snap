@@ -24,7 +24,7 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
      feature for free on your current plan until March 31st. 
   </span>
   <a
-    href="https://docs.mender.io/add-ons/remote-terminal"
+    href="https://docs.mender.io/undefinedadd-ons/remote-terminal"
     rel="noreferrer"
     target="_blank"
   >

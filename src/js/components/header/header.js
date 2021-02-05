@@ -142,7 +142,7 @@ export class Header extends React.Component {
         className={showOffer ? 'header banner' : 'header'}
         style={{ backgroundColor: '#fff', minHeight: 'unset', paddingLeft: 32, paddingRight: 40 }}
       >
-        {showOffer && <OfferHeader organization={organization} onHide={() => self.setHideOffer()} />}
+        {showOffer && <OfferHeader docsVersion={docsVersion} organization={organization} onHide={() => self.setHideOffer()} />}
         <div className="flexbox">
           <Link to="/">
             <img id="logo" src={isEnterprise ? enterpriseLogo : logo} />
