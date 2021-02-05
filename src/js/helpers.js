@@ -460,6 +460,7 @@ export const standardizePhases = phases =>
 export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token, deviceType = 'generic-armv6') => {
   let connectionInstructions = ``;
   let demoSettings = `  --quiet --demo ${ipAddress ? `--server-ip ${ipAddress}` : ''}`;
+  const setupConfirmation = `echo "Running mender setup for ${window.location.hostname}" && \\`;
   if (isEnterprise || isHosted) {
     const enterpriseSettings = `  --tenant-token $TENANT_TOKEN`;
     if (isHosted) {
@@ -483,6 +484,7 @@ sudo bash -c 'DEVICE_TYPE="${deviceType}" && \\${
 TENANT_TOKEN="${token}" && \\`
       : ''
   }
+${setupConfirmation}
 mender setup \\
   --device-type $DEVICE_TYPE \\
 ${connectionInstructions} && \\
@@ -494,7 +496,8 @@ systemctl restart mender-client && \\
   "ShellCommand": "/bin/bash"
 }
 EOF
-) && systemctl restart mender-connect'
+) && systemctl restart mender-connect && \\
+echo "Done!"'
 `;
   return codeToCopy;
 };
