@@ -33,6 +33,16 @@ import enterpriseLogo from '../../../assets/img/headerlogo-enterprise.png';
 
 const menuButtonColor = colors.grey;
 
+// Change this when a new feature/offer is introduced
+const currentOffer = {
+  name: 'remote',
+  expires: '2021-04-01',
+  trial: true,
+  os: true,
+  professional: true,
+  enterprise: true
+};
+
 export class Header extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -62,6 +72,7 @@ export class Header extends React.Component {
 
   componentDidMount() {
     this._updateUsername();
+    this._offerBannerCookie();
   }
 
   _updateUsername() {
@@ -83,9 +94,21 @@ export class Header extends React.Component {
     );
   }
 
+  _offerBannerCookie() {
+    const self = this;
+    const offerCookie = this.cookies.get('offer') === currentOffer.name;
+    self.setState({ offerCookie: offerCookie });
+  }
+
   onLogoutClick() {
     this.setState({ gettingUser: false, loggingOut: true, anchorEl: null });
     this.props.logoutUser();
+  }
+
+  setHideOffer() {
+    const self = this;
+    this.cookies.set('offer', currentOffer.name, { path: '/', maxAge: 2629746 });
+    self._offerBannerCookie();
   }
 
   render() {
@@ -108,15 +131,18 @@ export class Header extends React.Component {
       toggleHelptips,
       user
     } = self.props;
-    const offerValid = moment().isBefore('2021-01-01');
 
+    const showOffer =
+      moment().isBefore(currentOffer.expires) &&
+      (organization && organization.trial ? currentOffer.trial : currentOffer[organization.plan]) &&
+      !self.state.offerCookie;
     return (
       <Toolbar
         id="fixedHeader"
-        className={organization && organization.trial && offerValid ? 'header banner' : 'header'}
+        className={showOffer ? 'header banner' : 'header'}
         style={{ backgroundColor: '#fff', minHeight: 'unset', paddingLeft: 32, paddingRight: 40 }}
       >
-        {organization && organization.trial && offerValid && <OfferHeader />}
+        {showOffer && <OfferHeader docsVersion={docsVersion} organization={organization} onHide={() => self.setHideOffer()} />}
         <div className="flexbox">
           <Link to="/">
             <img id="logo" src={isEnterprise ? enterpriseLogo : logo} />
