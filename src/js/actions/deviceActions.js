@@ -16,6 +16,15 @@ export const deviceConnect = `${apiUrl}/deviceconnect`;
 export const inventoryApiUrl = `${apiUrl}/inventory`;
 export const inventoryApiUrlV2 = `${apiUrlV2}/inventory`;
 
+const defaultAttributes = [
+  { scope: 'identity', attribute: 'status' },
+  { scope: 'inventory', attribute: 'artifact_name' },
+  { scope: 'inventory', attribute: 'device_type' },
+  { scope: 'inventory', attribute: 'rootfs-image.version' },
+  { scope: 'system', attribute: 'created_ts' },
+  { scope: 'system', attribute: 'updated_ts' }
+];
+
 export const getGroups = () => (dispatch, getState) =>
   GeneralApi.get(`${inventoryApiUrl}/groups?status=${DeviceConstants.DEVICE_STATES.accepted}`).then(res => {
     const state = getState().devices.groups.byId;
@@ -286,6 +295,7 @@ export const getAllGroupDevices = group => (dispatch, getState) => {
   if (!!group && (!state.devices.groups.byId[group] || state.devices.groups.byId[group].filters.length)) {
     return Promise.resolve();
   }
+  const attributes = [...defaultAttributes, { scope: 'identity', attribute: state.users.globalSettings.id_attribute || 'id' }];
   const getAllDevices = (perPage = 500, page = defaultPage, devices = []) =>
     GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
       page,
@@ -293,7 +303,8 @@ export const getAllGroupDevices = group => (dispatch, getState) => {
       filters: mapFiltersToTerms([
         { key: 'group', value: group, operator: '$eq', scope: 'system' },
         { key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' }
-      ])
+      ]),
+      attributes
     }).then(res => {
       const deviceAccu = reduceReceivedDevices(res.data, devices, state);
       dispatch({
@@ -329,8 +340,9 @@ export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
     ...state.devices.groups.byId[group].filters,
     { key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' }
   ]);
+  const attributes = [...defaultAttributes, { scope: 'identity', attribute: state.users.globalSettings.id_attribute || 'id' }];
   const getAllDevices = (perPage = 500, page = defaultPage, devices = []) =>
-    GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, { page, per_page: perPage, filters }).then(res => {
+    GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, { page, per_page: perPage, filters, attributes }).then(res => {
       const deviceAccu = reduceReceivedDevices(res.data, devices, state);
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICES,
@@ -413,7 +425,8 @@ export const getDeviceCount = status => dispatch =>
   GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
     page: 1,
     per_page: 1,
-    filters: mapFiltersToTerms([{ key: 'status', value: status, operator: '$eq', scope: 'identity' }])
+    filters: mapFiltersToTerms([{ key: 'status', value: status, operator: '$eq', scope: 'identity' }]),
+    attributes: defaultAttributes
   }).then(response => {
     const count = Number(response.headers[headerNames.total]);
     switch (status) {
@@ -447,11 +460,13 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
   if (typeof group === 'string' && !applicableFilters.length) {
     applicableFilters = [{ key: 'group', value: group, operator: '$eq', scope: 'system' }];
   }
+  const attributes = [...defaultAttributes, { scope: 'identity', attribute: state.users.globalSettings.id_attribute || 'id' }];
   return GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
     page,
     per_page: perPage,
     filters: mapFiltersToTerms([...applicableFilters, { key: 'status', value: status, operator: '$eq', scope: 'identity' }]),
-    sort: sortOptions
+    sort: sortOptions,
+    attributes
   })
     .then(response => {
       const deviceAccu = reduceReceivedDevices(response.data, [], state, status);
@@ -486,11 +501,13 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
 };
 
 export const getAllDevicesByStatus = status => (dispatch, getState) => {
+  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getState().users.globalSettings.id_attribute || 'id' }];
   const getAllDevices = (perPage = 500, page = 1, devices = []) =>
     GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
       page,
       per_page: perPage,
-      filters: mapFiltersToTerms([{ key: 'status', value: status, operator: '$eq', scope: 'identity' }])
+      filters: mapFiltersToTerms([{ key: 'status', value: status, operator: '$eq', scope: 'identity' }]),
+      attributes
     }).then(res => {
       const deviceAccu = reduceReceivedDevices(res.data, devices, getState(), status);
       dispatch({
