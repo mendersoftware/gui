@@ -214,5 +214,11 @@ export const deviceHandlers = [
       return res(ctx.status(201));
     }
     return res(ctx.status(539));
+  }),
+  rest.post(`${deviceConfig}/:deviceId/deploy`, ({ params: { deviceId } }, res, ctx) => {
+    if (defaultState.devices.byId[deviceId]) {
+      return res(ctx.status(200), ctx.json({ deployment_id: defaultState.deployments.byId.d1.id }));
+    }
+    return res(ctx.status(539));
   })
 ];

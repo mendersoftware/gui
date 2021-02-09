@@ -1,8 +1,10 @@
 import pluralize from 'pluralize';
 
 import { commonErrorHandler, setSnackbar } from '../actions/appActions';
+import { getSingleDeployment } from '../actions/deploymentActions';
 import GeneralApi, { headerNames } from '../api/general-api';
-import * as DeviceConstants from '../constants/deviceConstants';
+import DeviceConstants from '../constants/deviceConstants';
+
 import { extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
 
 // default per page until pagination and counting integrated
@@ -694,5 +696,10 @@ export const getDeviceConfig = deviceId => (dispatch, getState) =>
 
 export const setDeviceConfig = (deviceId, config) => dispatch =>
   GeneralApi.put(`${deviceConfig}/${deviceId}`, config)
-    .then(() => dispatch(getDeviceConfig(deviceId)))
-    .catch(err => commonErrorHandler(err, `There was an error setting the configuration for device ${deviceId}.`, dispatch, 'Please check your connection.'));
+    .catch(err => commonErrorHandler(err, `There was an error setting the configuration for device ${deviceId}.`, dispatch, 'Please check your connection.'))
+    .then(() => Promise.all([dispatch(applyDeviceConfig(deviceId, config)), dispatch(getDeviceConfig(deviceId))]));
+
+export const applyDeviceConfig = (deviceId, config) => dispatch =>
+  GeneralApi.post(`${deviceConfig}/${deviceId}/deploy`, config)
+    .catch(err => commonErrorHandler(err, `There was an error deploying the configuration to device ${deviceId}.`, dispatch, 'Please check your connection.'))
+    .then(({ data }) => Promise.resolve(dispatch(getSingleDeployment(data.deployment_id))));
