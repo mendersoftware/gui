@@ -21,6 +21,7 @@ let server;
 const oldWindowLocation = window.location;
 const oldWindowSessionStorage = window.sessionStorage;
 
+jest.retryTimes(3);
 jest.mock('universal-cookie', () => {
   const mockCookie = {
     get: jest.fn(name => {
