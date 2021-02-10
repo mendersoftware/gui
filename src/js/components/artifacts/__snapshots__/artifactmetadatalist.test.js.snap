@@ -21,7 +21,7 @@ Array [
       onMouseLeave={[Function]}
     >
       <li
-        className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+        className="MuiListItem-root attributes MuiListItem-gutters MuiListItem-divider Mui-disabled"
         disabled={true}
       >
         <div
@@ -48,9 +48,6 @@ Array [
           </div>
         </div>
       </li>
-      <hr
-        className="MuiDivider-root"
-      />
     </div>
   </ul>,
 ]

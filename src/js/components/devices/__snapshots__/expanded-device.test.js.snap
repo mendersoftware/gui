@@ -19,7 +19,7 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
         >
           <div>
             <li
-              class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
+              class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters MuiListItem-divider Mui-disabled"
               disabled=""
             >
               <div
@@ -56,9 +56,6 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
                 />
               </svg>
             </li>
-            <hr
-              class="MuiDivider-root"
-            />
           </div>
         </ul>
       </div>
