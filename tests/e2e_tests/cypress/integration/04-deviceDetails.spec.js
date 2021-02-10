@@ -29,10 +29,8 @@ context('Layout assertions', () => {
         () =>
           cy
             .get('.deviceListItem')
-            .click()
             // the deviceconnect connection might not be established right away,
             // due to polling intervals the fastest way to refresh is collapsing & expanding again...
-            .click()
             .click()
             .then(() => Boolean(Cypress.$('.expandedDevice .device-connect button').length)),
         { timeout: 10000 }
