@@ -1,32 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`OrganizationPaymentSettings Component renders correctly 1`] = `
-<li
-  className="MuiListItem-root flexbox column margin-top-small MuiListItem-gutters Mui-disabled MuiListItem-alignItemsFlexStart"
-  disabled={true}
-  style={
-    Object {
-      "maxWidth": 500,
-    }
-  }
+<div
+  className="margin-top-small org-settings-item"
 >
-  <div
-    className="MuiListItemText-root MuiListItemText-multiline"
-    style={
-      Object {
-        "display": "grid",
-        "marginBottom": 8,
-        "width": "100%",
-      }
-    }
+  <li
+    className="MuiListItem-root flexbox column MuiListItem-gutters Mui-disabled MuiListItem-alignItemsFlexStart"
+    disabled={true}
   >
-    <span
-      className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-    >
-      Payment card
-    </span>
     <div
-      className="MuiTypography-root MuiListItemText-secondary two-columns MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+      className="MuiListItemText-root MuiListItemText-multiline"
       style={
         Object {
           "display": "grid",
@@ -35,38 +18,54 @@ exports[`OrganizationPaymentSettings Component renders correctly 1`] = `
         }
       }
     >
-      <div>
+      <span
+        className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+      >
+        Payment card
+      </span>
+      <div
+        className="MuiTypography-root MuiListItemText-secondary two-columns MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+        style={
+          Object {
+            "display": "grid",
+            "marginBottom": 8,
+            "width": "100%",
+          }
+        }
+      >
         <div>
           <div>
-            Visa
-             ending in 
-            1234
-          </div>
-          <div>
-            Expires 
-            08
-            /
-            30
+            <div>
+              Visa
+               ending in 
+              1234
+            </div>
+            <div>
+              Expires 
+              08
+              /
+              30
+            </div>
           </div>
         </div>
+        <a
+          className="align-right"
+          onClick={[Function]}
+        >
+          Update payment card
+        </a>
       </div>
-      <a
-        className="align-right"
-        onClick={[Function]}
-      >
-        Update payment card
-      </a>
     </div>
-  </div>
-  <hr
-    className="MuiDivider-root"
-    style={
-      Object {
-        "marginBottom": 8,
-        "marginLeft": -16,
-        "width": 500,
+    <hr
+      className="MuiDivider-root"
+      style={
+        Object {
+          "marginBottom": 8,
+          "marginLeft": -16,
+          "width": 500,
+        }
       }
-    }
-  />
-</li>
+    />
+  </li>
+</div>
 `;

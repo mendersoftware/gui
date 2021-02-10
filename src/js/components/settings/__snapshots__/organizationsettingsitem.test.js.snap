@@ -1,32 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`OrganizationSettingsItem Component renders correctly 1`] = `
-<li
-  className="MuiListItem-root flexbox column margin-top-small MuiListItem-gutters Mui-disabled MuiListItem-alignItemsFlexStart"
-  disabled={true}
-  style={
-    Object {
-      "maxWidth": 500,
-    }
-  }
+<div
+  className="margin-top-small org-settings-item"
 >
-  <div
-    className="MuiListItemText-root MuiListItemText-multiline"
-    style={
-      Object {
-        "display": "grid",
-        "marginBottom": 8,
-        "width": "100%",
-      }
-    }
+  <li
+    className="MuiListItem-root flexbox column MuiListItem-gutters Mui-disabled MuiListItem-alignItemsFlexStart"
+    disabled={true}
   >
-    <span
-      className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-    >
-      Current plan
-    </span>
     <div
-      className="MuiTypography-root MuiListItemText-secondary two-columns MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+      className="MuiListItemText-root MuiListItemText-multiline"
       style={
         Object {
           "display": "grid",
@@ -35,29 +18,45 @@ exports[`OrganizationSettingsItem Component renders correctly 1`] = `
         }
       }
     >
-      <div>
-        Trial
-      </div>
-      <a
-        className="align-right"
-        href="https://mender.io/plans/pricing"
-        rel="noopener noreferrer"
-        target="_blank"
+      <span
+        className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
       >
-        Compare product plans
-      </a>
+        Current plan
+      </span>
+      <div
+        className="MuiTypography-root MuiListItemText-secondary two-columns MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+        style={
+          Object {
+            "display": "grid",
+            "marginBottom": 8,
+            "width": "100%",
+          }
+        }
+      >
+        <div>
+          Trial
+        </div>
+        <a
+          className="align-right"
+          href="https://mender.io/plans/pricing"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Compare product plans
+        </a>
+      </div>
     </div>
-  </div>
-  <hr
-    className="MuiDivider-root"
-    style={
-      Object {
-        "marginBottom": 8,
-        "marginLeft": -16,
-        "width": 500,
+    <hr
+      className="MuiDivider-root"
+      style={
+        Object {
+          "marginBottom": 8,
+          "marginLeft": -16,
+          "width": 500,
+        }
       }
-    }
-  />
-  upgrade now!
-</li>
+    />
+    upgrade now!
+  </li>
+</div>
 `;

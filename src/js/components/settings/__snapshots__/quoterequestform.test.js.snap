@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`QuoteRequestForm component renders correctly 1`] = `
+<div
+  class="flexbox column"
+>
+  <p>
+    Plan: 
+    Enterprise
+  </p>
+  <div
+    class="MuiFormControl-root"
+    style="margin-top: 0px;"
+  >
+    <p
+      class="MuiFormHelperText-root"
+    >
+      Your message
+    </p>
+    <p
+      class="MuiFormHelperText-root"
+    >
+      something notify
+    </p>
+    <div
+      class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+    >
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-multiline MuiInput-multiline"
+      >
+        <textarea
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input MuiInputBase-inputMultiline MuiInput-inputMultiline"
+          rows="1"
+          style="height: 0px; overflow: hidden;"
+        />
+        <textarea
+          aria-hidden="true"
+          class="MuiInputBase-input MuiInput-input MuiInputBase-inputMultiline MuiInput-inputMultiline"
+          readonly=""
+          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); width: 100%;"
+          tabindex="-1"
+        />
+      </div>
+    </div>
+  </div>
+  <button
+    class="MuiButtonBase-root MuiButton-root MuiButton-contained margin-top margin-bottom MuiButton-containedSecondary Mui-disabled Mui-disabled"
+    disabled=""
+    style="align-self: flex-end; margin: 30px 0px;"
+    tabindex="-1"
+    type="button"
+  >
+    <span
+      class="MuiButton-label"
+    >
+      Send message
+    </span>
+  </button>
+</div>
+`;

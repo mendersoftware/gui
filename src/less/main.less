@@ -518,9 +518,11 @@ ul.link-list {
 
 .flexbox {
   display: flex;
+  &.center-aligned, &.centered {
+    align-items: center;
+  }
   &.centered {
     justify-content: center;
-    align-items: center;
   }
   &.column {
     flex-direction: column;
@@ -1399,18 +1401,11 @@ div:focus {
   padding: 10px 20px;
   border-radius: 5px;
   border: 1px solid @lightergrey;
-  display: inline-block;
   vertical-align: top;
-  margin-right: 2%;
-  margin-bottom: 10px;
   width: 32%;
   height: 190px;
   .transition(all 0.2s ease);
   cursor: pointer;
-
-  &:last-child {
-    margin-right: 0;
-  }
 
   &.active,
   &:hover {
