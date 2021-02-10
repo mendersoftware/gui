@@ -6,7 +6,7 @@ import { InfoOutlined as InfoOutlinedIcon, LocalOffer as LocalOfferIcon } from '
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeviceLimit } from '../../actions/deviceActions';
-import { getUserOrganization, startUpgrade, cancelUpgrade, completeUpgrade } from '../../actions/organizationActions';
+import { cancelUpgrade, completeUpgrade, getUserOrganization, sendSupportMessage, startUpgrade } from '../../actions/organizationActions';
 import Loader from '../common/loader';
 import { PLANS } from '../../constants/appConstants';
 import AddOnSelection from './addonselection';
@@ -66,7 +66,17 @@ const quoteRequest = {
   }
 };
 
-export const Upgrade = ({ cancelUpgrade, completeUpgrade, getDeviceLimit, getUserOrganization, history, org, sendMessage, setSnackbar, startUpgrade }) => {
+export const Upgrade = ({
+  cancelUpgrade,
+  completeUpgrade,
+  getDeviceLimit,
+  getUserOrganization,
+  history,
+  org,
+  sendSupportMessage,
+  setSnackbar,
+  startUpgrade
+}) => {
   const offerValid = moment().isBefore('2021-01-01');
 
   const [addOns, setAddOns] = useState([]);
@@ -97,8 +107,28 @@ export const Upgrade = ({ cancelUpgrade, completeUpgrade, getDeviceLimit, getUse
       }, 3000);
     });
 
+  const addOnsToString = (addons = []) =>
+    addons
+      .reduce((accu, item) => {
+        if (item.enabled) {
+          accu.push(item);
+        }
+        return accu;
+      }, [])
+      .join(', ');
+
   const onSendMessage = (message, addons = addOns) => {
-    sendMessage(message, updatedPlan, addons);
+    const content = {
+      subject: 'Subscription change request',
+      body: `
+      Current plan: ${PLANS[org.plan || 'os'].name}
+      Requested plan: ${PLANS[updatedPlan].name}
+      Current addons: ${addOnsToString(org.addons)}
+      Requested addons: ${addOnsToString(addons)}
+      User Message: ${message}
+      `
+    };
+    sendSupportMessage(content);
   };
 
   const { description, title } = org.trial ? upgradeNotes.trial : upgradeNotes.default;
@@ -167,7 +197,7 @@ export const Upgrade = ({ cancelUpgrade, completeUpgrade, getDeviceLimit, getUse
   );
 };
 
-const actionCreators = { cancelUpgrade, completeUpgrade, getDeviceLimit, getUserOrganization, setSnackbar, startUpgrade };
+const actionCreators = { cancelUpgrade, completeUpgrade, getDeviceLimit, getUserOrganization, sendSupportMessage, setSnackbar, startUpgrade };
 
 const mapStateToProps = state => {
   return {

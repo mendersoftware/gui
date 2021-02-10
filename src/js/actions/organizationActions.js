@@ -79,9 +79,9 @@ export const startUpgrade = tenantId => dispatch =>
 export const cancelUpgrade = tenantId => () => Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/upgrade/cancel`);
 
 export const completeUpgrade = (tenantId, plan) => dispatch =>
-  Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/upgrade/complete`, { plan: plan }).catch(err =>
-    commonErrorHandler(err, `There was an error upgrading your account:`, dispatch)
-  );
+  Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/upgrade/complete`, { plan })
+    .catch(err => commonErrorHandler(err, `There was an error upgrading your account:`, dispatch))
+    .then(() => Promise.resolve(dispatch(getUserOrganization())));
 
 export const getAuditLogs = (page, perPage, startDate, endDate, userId, type, detail, sort = 'desc') => dispatch => {
   const createdAfter = startDate ? `&created_after=${Math.round(Date.parse(startDate) / 1000)}` : '';
@@ -114,3 +114,8 @@ export const getAuditLogsCsvLink = (startDate, endDate, userId, type, detail, so
 */
 export const getUserOrganization = () => dispatch =>
   Api.get(`${tenantadmApiUrlv1}/user/tenant`).then(res => Promise.resolve(dispatch({ type: OrganizationConstants.SET_ORGANIZATION, organization: res.data })));
+
+export const sendSupportMessage = content => dispatch =>
+  Api.post(`${tenantadmApiUrlv2}/contact/support`, content)
+    .catch(err => commonErrorHandler(err, 'There was an error sending your request', dispatch, 'Please check your connection'))
+    .then(() => Promise.resolve(dispatch(setSnackbar('Your request was sent successfully', 5000, ''))));

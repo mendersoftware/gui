@@ -35,6 +35,13 @@ export const organizationHandlers = [
     }
     return res(ctx.status(200));
   }),
+  rest.post(`${tenantadmApiUrlv2}/contact/support`, ({ body: { subject, body } }, res, ctx) => {
+    console.log('subject');
+    if (!(subject && body)) {
+      return res(ctx.status(500));
+    }
+    return res(ctx.status(200));
+  }),
   rest.get(`${auditLogsApiUrl}/logs`, (req, res, ctx) => {
     return res(ctx.set(headerNames.total, defaultState.organization.events.length), ctx.json(defaultState.organization.events));
   }),

@@ -14,6 +14,7 @@ import {
   getAuditLogsCsvLink,
   getCurrentCard,
   getUserOrganization,
+  sendSupportMessage,
   startCardUpdate,
   startUpgrade
 } from './organizationActions';
@@ -92,6 +93,24 @@ describe('organization actions', () => {
     });
   });
 
+  it('should handle support request sending', async () => {
+    const store = mockStore({ ...defaultState });
+    expect(store.getActions()).toHaveLength(0);
+    const expectedActions = [
+      {
+        type: AppConstants.SET_SNACKBAR,
+        snackbar: {
+          message: 'Your request was sent successfully'
+        }
+      }
+    ];
+    await store.dispatch(sendSupportMessage({ body: 'test', subject: 'testsubject' })).then(() => {
+      const storeActions = store.getActions();
+      expect(storeActions).toHaveLength(expectedActions.length);
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    });
+  });
+
   it('should handle account upgrade init', async () => {
     const store = mockStore({ ...defaultState });
     await store.dispatch(startUpgrade(defaultState.organization.organization.id)).then(secret => {
@@ -107,7 +126,18 @@ describe('organization actions', () => {
 
   it('should handle account upgrade completion', async () => {
     const store = mockStore({ ...defaultState });
-    await store.dispatch(completeUpgrade(defaultState.organization.organization.id, 'enterprise')).then(() => expect(store.getActions()).toHaveLength(0));
+    expect(store.getActions()).toHaveLength(0);
+    const expectedActions = [
+      {
+        organization: defaultState.organization.organization,
+        type: OrganizationConstants.SET_ORGANIZATION
+      }
+    ];
+    await store.dispatch(completeUpgrade(defaultState.organization.organization.id, 'enterprise')).then(() => {
+      const storeActions = store.getActions();
+      expect(storeActions).toHaveLength(expectedActions.length);
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    });
   });
 
   it('should handle confirm card update initialization', async () => {
