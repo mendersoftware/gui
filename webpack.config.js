@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { ESBuildPlugin, ESBuildMinifyPlugin } = require('esbuild-loader');
 
 module.exports = {
   devtool: 'source-map',
@@ -14,10 +15,16 @@ module.exports = {
       {
         test: /\.m?js[x]?$/,
         exclude: /node_modules/,
-        use: ['babel-loader', 'eslint-loader'],
-        resolve: {
-          fullySpecified: false
+        loader: 'esbuild-loader',
+        options: {
+          loader: 'jsx',
+          target: 'es2015'
         }
+      },
+      {
+        test: /\.m?js[x]?$/,
+        exclude: /node_modules/,
+        loader: 'eslint-loader'
       },
       {
         test: /\.(less|css)$/,
@@ -67,6 +74,14 @@ module.exports = {
       }
     ]
   },
+  optimization: {
+    minimize: process.env.NODE_ENV === 'production',
+    minimizer: [
+      new ESBuildMinifyPlugin({
+        target: 'es2015'
+      })
+    ]
+  },
   output: {
     filename: '[name].[contenthash].min.js',
     path: path.resolve(__dirname, 'dist'),
@@ -81,6 +96,7 @@ module.exports = {
       process: 'process/browser',
       Buffer: ['buffer', 'Buffer']
     }),
+    new ESBuildPlugin(),
     new HtmlWebPackPlugin({
       favicon: './src/favicon.ico',
       hash: true,
