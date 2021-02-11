@@ -1,7 +1,7 @@
 import { rest } from 'msw';
 
 import { defaultState } from '../mockData';
-import { deviceAuthV2, inventoryApiUrl, inventoryApiUrlV2 } from '../../src/js/actions/deviceActions';
+import { deviceAuthV2, deviceConfig, inventoryApiUrl, inventoryApiUrlV2 } from '../../src/js/actions/deviceActions';
 import { headerNames } from '../../src/js/api/general-api';
 import DeviceConstants from '../../src/js/constants/deviceConstants';
 
@@ -192,5 +192,33 @@ export const deviceHandlers = [
       return res(ctx.status(200));
     }
     return res(ctx.status(500));
+  }),
+  rest.get(`${deviceConfig}/:deviceId`, ({ params: { deviceId } }, res, ctx) => {
+    if (deviceId === 'testId') {
+      return res(ctx.status(404), ctx.json({ error: { status_code: 404 } }));
+    }
+    if (defaultState.devices.byId[deviceId]) {
+      return res(
+        ctx.json({
+          configured: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
+          reported: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
+          updated_ts: '2019-01-01T09:25:00.000Z',
+          reported_ts: '2019-01-01T09:25:01.000Z'
+        })
+      );
+    }
+    return res(ctx.status(538));
+  }),
+  rest.put(`${deviceConfig}/:deviceId`, ({ params: { deviceId } }, res, ctx) => {
+    if (defaultState.devices.byId[deviceId]) {
+      return res(ctx.status(201));
+    }
+    return res(ctx.status(539));
+  }),
+  rest.post(`${deviceConfig}/:deviceId/deploy`, ({ params: { deviceId } }, res, ctx) => {
+    if (defaultState.devices.byId[deviceId]) {
+      return res(ctx.status(200), ctx.json({ deployment_id: defaultState.deployments.byId.d1.id }));
+    }
+    return res(ctx.status(539));
   })
 ];

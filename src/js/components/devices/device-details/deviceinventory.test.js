@@ -1,10 +1,10 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import DeviceInventory from './deviceinventory';
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 
-describe('CreateGroup Component', () => {
+describe('DeviceInventory Component', () => {
   it('renders correctly', async () => {
     const attributes = {
       ...defaultState.devices.byId.a1.attributes,
@@ -17,14 +17,13 @@ describe('CreateGroup Component', () => {
       'even.more.dots.than.before.version': 'test-5',
       'even.more.dots.than.before.more': 'test-6'
     };
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <DeviceInventory attributes={attributes} id="a1" setSnackbar={jest.fn} />
-        </MemoryRouter>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { baseElement } = render(
+      <MemoryRouter>
+        <DeviceInventory device={{ attributes, id: 'a1' }} setSnackbar={jest.fn} />
+      </MemoryRouter>
+    );
+    const view = baseElement.firstChild.firstChild;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

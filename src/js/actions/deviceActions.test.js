@@ -2,6 +2,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { defaultState } from '../../../tests/mockData';
 import AppConstants from '../constants/appConstants';
+import DeploymentConstants from '../constants/deploymentConstants';
 import DeviceConstants from '../constants/deviceConstants';
 import {
   addDevicesToGroup,
@@ -16,6 +17,7 @@ import {
   getDeviceAttributes,
   getDeviceAuth,
   getDeviceById,
+  getDeviceConfig,
   getDeviceCount,
   getDeviceLimit,
   getDevicesByStatus,
@@ -31,6 +33,7 @@ import {
   selectDevice,
   selectDevices,
   selectGroup,
+  setDeviceConfig,
   setDeviceFilters,
   updateDeviceAuth,
   updateDevicesAuth,
@@ -638,6 +641,54 @@ describe('device retrieval ', () => {
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice2 }
     ];
     await store.dispatch(getDevicesWithAuth([defaultState.devices.byId.a1, defaultState.devices.byId.b1]));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+});
+
+describe('device config ', () => {
+  it('should allow single device config retrieval', async () => {
+    const store = mockStore({ ...defaultState });
+    const { attributes, id } = defaultState.devices.byId.a1;
+    const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE_CONFIG, device: { attributes, id } }];
+    await store.dispatch(getDeviceConfig(defaultState.devices.byId.a1.id));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should not have a problem with unknown devices on config retrieval', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [];
+    await store.dispatch(getDeviceConfig('testId'));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+
+  it('should allow single device config update', async () => {
+    const store = mockStore({ ...defaultState });
+    const { attributes, id } = defaultState.devices.byId.a1;
+    const expectedActions = [
+      { type: DeviceConstants.RECEIVE_DEVICE_CONFIG, device: { attributes, id } },
+      { type: DeploymentConstants.RECEIVE_DEPLOYMENT, deployment: { id: defaultState.deployments.byId.d1.id } },
+      {
+        type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS,
+        stats: {
+          'already-installed': 0,
+          decommissioned: 0,
+          downloading: 0,
+          failure: 0,
+          installing: 1,
+          noartifact: 0,
+          pending: 0,
+          rebooting: 0,
+          success: 0
+        },
+        deploymentId: defaultState.deployments.byId.d1.id
+      }
+    ];
+    await store.dispatch(setDeviceConfig(defaultState.devices.byId.a1.id), { something: 'asdl' });
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

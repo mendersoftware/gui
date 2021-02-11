@@ -8,7 +8,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import SortIcon from '@material-ui/icons/Sort';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getDeviceAuth, getDeviceById, getDeviceConnect } from '../../actions/deviceActions';
+import { getDeviceAuth, getDeviceById, getDeviceConfig, getDeviceConnect } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 
 import { DEVICE_STATES } from '../../constants/deviceConstants';
@@ -41,14 +41,13 @@ export class DeviceList extends React.Component {
   }
 
   getDeviceInfo(device) {
-    const { getDeviceAuth, getDeviceById, getDeviceConnect } = this.props;
+    const { getDeviceAuth, getDeviceById, getDeviceConfig, getDeviceConnect } = this.props;
+    getDeviceAuth(device.id);
+    getDeviceConfig(device.id);
     if (device.status === DEVICE_STATES.accepted) {
       // Get full device identity details for single selected device
-      getDeviceAuth(device.id);
       getDeviceById(device.id);
       getDeviceConnect(device.id);
-    } else {
-      getDeviceAuth(device.id);
     }
   }
 
@@ -60,9 +59,9 @@ export class DeviceList extends React.Component {
     const { advanceOnboarding, devices, onboardingComplete, setSnackbar } = self.props;
     setSnackbar('');
     let device = devices[rowNumber];
+    clearInterval(self.timer);
     if (self.state.expandedDeviceId === device.id) {
       device = null;
-      clearInterval(self.timer);
     } else {
       self.timer = setInterval(() => self.getDeviceInfo(device), refreshDeviceLength);
       self.getDeviceInfo(device);
@@ -180,7 +179,7 @@ export class DeviceList extends React.Component {
   }
 }
 
-const actionCreators = { advanceOnboarding, getDeviceAuth, getDeviceById, getDeviceConnect, setSnackbar };
+const actionCreators = { advanceOnboarding, getDeviceAuth, getDeviceById, getDeviceConfig, getDeviceConnect, setSnackbar };
 
 const mapStateToProps = (state, ownProps) => {
   const devices = ownProps.devices.reduce((accu, deviceId) => {

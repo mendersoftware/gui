@@ -14,7 +14,7 @@ import { getDeviceLog, getSingleDeployment } from '../../actions/deploymentActio
 import { getRelease } from '../../actions/releaseActions';
 import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { getIsEnterprise } from '../../selectors';
-import DeploymentLog from './deployment-report/log';
+import LogDialog from '../common/dialogs/log';
 import DeploymentOverview from './deployment-report/overview';
 import Review from './deployment-wizard/review';
 import { sortDeploymentDevices } from '../../helpers';
@@ -147,7 +147,7 @@ export class DeploymentReport extends React.Component {
               )}
             </div>
           )}
-          {showDialog && <DeploymentLog logData={logData} onClose={() => self.setState({ showDialog: false })} />}
+          {showDialog && <LogDialog logData={logData} onClose={() => self.setState({ showDialog: false })} />}
         </DialogContent>
         <DialogActions>
           <Button key="report-action-button-1" onClick={onClose}>

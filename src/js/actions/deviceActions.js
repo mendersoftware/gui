@@ -1,8 +1,10 @@
 import pluralize from 'pluralize';
 
 import { commonErrorHandler, setSnackbar } from '../actions/appActions';
+import { getSingleDeployment } from '../actions/deploymentActions';
 import GeneralApi, { headerNames } from '../api/general-api';
-import * as DeviceConstants from '../constants/deviceConstants';
+import DeviceConstants from '../constants/deviceConstants';
+
 import { extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
 
 // default per page until pagination and counting integrated
@@ -15,6 +17,7 @@ export const deviceAuthV2 = `${apiUrlV2}/devauth`;
 export const deviceConnect = `${apiUrl}/deviceconnect`;
 export const inventoryApiUrl = `${apiUrl}/inventory`;
 export const inventoryApiUrlV2 = `${apiUrlV2}/inventory`;
+export const deviceConfig = `${apiUrl}/deviceconfig/configurations/device`;
 
 const defaultAttributes = [
   { scope: 'identity', attribute: 'status' },
@@ -291,11 +294,10 @@ export const getGroupDevices = (group, page = defaultPage, perPage = defaultPerP
   );
 
 export const getAllGroupDevices = group => (dispatch, getState) => {
-  const state = getState();
-  if (!!group && (!state.devices.groups.byId[group] || state.devices.groups.byId[group].filters.length)) {
+  if (!!group && (!getState().devices.groups.byId[group] || getState().devices.groups.byId[group].filters.length)) {
     return Promise.resolve();
   }
-  const attributes = [...defaultAttributes, { scope: 'identity', attribute: state.users.globalSettings.id_attribute || 'id' }];
+  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getState().users.globalSettings.id_attribute || 'id' }];
   const getAllDevices = (perPage = 500, page = defaultPage, devices = []) =>
     GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
       page,
@@ -306,6 +308,7 @@ export const getAllGroupDevices = group => (dispatch, getState) => {
       ]),
       attributes
     }).then(res => {
+      const state = getState();
       const deviceAccu = reduceReceivedDevices(res.data, devices, state);
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICES,
@@ -332,17 +335,17 @@ export const getAllGroupDevices = group => (dispatch, getState) => {
 };
 
 export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
-  const state = getState();
-  if (!!group && (!state.devices.groups.byId[group] || !state.devices.groups.byId[group].filters.length)) {
+  if (!!group && (!getState().devices.groups.byId[group] || !getState().devices.groups.byId[group].filters.length)) {
     return Promise.resolve();
   }
   const filters = mapFiltersToTerms([
-    ...state.devices.groups.byId[group].filters,
+    ...getState().devices.groups.byId[group].filters,
     { key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' }
   ]);
-  const attributes = [...defaultAttributes, { scope: 'identity', attribute: state.users.globalSettings.id_attribute || 'id' }];
+  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getState().users.globalSettings.id_attribute || 'id' }];
   const getAllDevices = (perPage = 500, page = defaultPage, devices = []) =>
     GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, { page, per_page: perPage, filters, attributes }).then(res => {
+      const state = getState();
       const deviceAccu = reduceReceivedDevices(res.data, devices, state);
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICES,
@@ -455,12 +458,11 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
   dispatch,
   getState
 ) => {
-  const state = getState();
-  let applicableFilters = state.devices.filters || [];
+  let applicableFilters = getState().devices.filters || [];
   if (typeof group === 'string' && !applicableFilters.length) {
     applicableFilters = [{ key: 'group', value: group, operator: '$eq', scope: 'system' }];
   }
-  const attributes = [...defaultAttributes, { scope: 'identity', attribute: state.users.globalSettings.id_attribute || 'id' }];
+  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getState().users.globalSettings.id_attribute || 'id' }];
   return GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
     page,
     per_page: perPage,
@@ -469,6 +471,7 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
     attributes
   })
     .then(response => {
+      const state = getState();
       const deviceAccu = reduceReceivedDevices(response.data, [], state, status);
       let total = !applicableFilters.length ? Number(response.headers[headerNames.total]) : null;
       if (state.devices.byStatus[status].total === deviceAccu.ids.length) {
@@ -667,3 +670,36 @@ export const decommissionDevice = deviceId => (dispatch, getState) =>
       return Promise.all(tasks);
     })
     .catch(err => commonErrorHandler(err, 'There was a problem decommissioning the device:', dispatch));
+
+export const getDeviceConfig = deviceId => (dispatch, getState) =>
+  GeneralApi.get(`${deviceConfig}/${deviceId}`)
+    .then(({ data }) => {
+      const device = {
+        ...getState().devices.byId[deviceId],
+        config: data
+      };
+      let tasks = [
+        dispatch({
+          type: DeviceConstants.RECEIVE_DEVICE_CONFIG,
+          device
+        })
+      ];
+      tasks.push(Promise.resolve(data));
+      return Promise.all(tasks);
+    })
+    .catch(err => {
+      // if we get a proper error response we most likely queried a device without an existing config check-in and we can just ignore the call
+      if (err.response?.data?.error.status_code !== 404) {
+        return commonErrorHandler(err, `There was an error retrieving the configuration for device ${deviceId}.`, dispatch, 'Please check your connection.');
+      }
+    });
+
+export const setDeviceConfig = (deviceId, config) => dispatch =>
+  GeneralApi.put(`${deviceConfig}/${deviceId}`, config)
+    .catch(err => commonErrorHandler(err, `There was an error setting the configuration for device ${deviceId}.`, dispatch, 'Please check your connection.'))
+    .then(() => Promise.all([dispatch(applyDeviceConfig(deviceId, config)), dispatch(getDeviceConfig(deviceId))]));
+
+export const applyDeviceConfig = (deviceId, config) => dispatch =>
+  GeneralApi.post(`${deviceConfig}/${deviceId}/deploy`, config)
+    .catch(err => commonErrorHandler(err, `There was an error deploying the configuration to device ${deviceId}.`, dispatch, 'Please check your connection.'))
+    .then(({ data }) => Promise.resolve(dispatch(getSingleDeployment(data.deployment_id))));

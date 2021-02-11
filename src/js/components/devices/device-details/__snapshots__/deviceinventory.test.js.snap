@@ -1,676 +1,463 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CreateGroup Component renders correctly 1`] = `
-Array [
+exports[`DeviceInventory Component renders correctly 1`] = `
+<div
+  class="device-inventory bordered report-list"
+>
+  <h4>
+    Device inventory
+  </h4>
   <div
-    className="device-inventory bordered report-list"
+    class="file-details"
   >
-    <h4>
-      Device inventory
+    <h4
+      style="position: absolute; background: rgb(247, 247, 247); top: -35px; padding: 10px;"
+    >
+      Installed software
     </h4>
     <div
-      className="file-details"
-    >
-      <h4
-        style={
-          Object {
-            "background": "#f7f7f7",
-            "padding": 10,
-            "position": "absolute",
-            "top": -35,
-          }
-        }
-      >
-        Installed software
-      </h4>
-      <div
-        className="flexbox column"
-      >
-        <div
-          className="margin-top-small"
-        >
-          a
-        </div>
-        <ul
-          className="MuiList-root MuiList-padding"
-        >
-          <div
-            onClick={[Function]}
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            <li
-              className="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-              disabled={true}
-            >
-              <div
-                className="MuiListItemText-root MuiListItemText-multiline"
-              >
-                <span
-                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-                >
-                  artifact_name
-                </span>
-                <div
-                  className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                  title="myapp"
-                >
-                  <div>
-                    <span
-                      className="inventory-text"
-                      style={Object {}}
-                    >
-                      myapp
-                    </span>
-                     
-                  </div>
-                </div>
-              </div>
-              <svg
-                aria-describedby={null}
-                aria-hidden={true}
-                className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                focusable="false"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseLeave={[Function]}
-                onMouseOver={[Function]}
-                onTouchEnd={[Function]}
-                onTouchStart={[Function]}
-                title="Copy to clipboard"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-                />
-              </svg>
-            </li>
-            <hr
-              className="MuiDivider-root"
-            />
-          </div>
-          <div
-            onClick={[Function]}
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            <li
-              className="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-              disabled={true}
-            >
-              <div
-                className="MuiListItemText-root MuiListItemText-multiline"
-              >
-                <span
-                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-                >
-                  whole
-                </span>
-                <div
-                  className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                  title="test-3"
-                >
-                  <div>
-                    <span
-                      className="inventory-text"
-                      style={Object {}}
-                    >
-                      test-3
-                    </span>
-                     
-                  </div>
-                </div>
-              </div>
-              <svg
-                aria-describedby={null}
-                aria-hidden={true}
-                className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                focusable="false"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseLeave={[Function]}
-                onMouseOver={[Function]}
-                onTouchEnd={[Function]}
-                onTouchStart={[Function]}
-                title="Copy to clipboard"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-                />
-              </svg>
-            </li>
-            <hr
-              className="MuiDivider-root"
-            />
-          </div>
-          <div
-            onClick={[Function]}
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            <li
-              className="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-              disabled={true}
-            >
-              <div
-                className="MuiListItemText-root MuiListItemText-multiline"
-              >
-                <span
-                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-                >
-                  whole
-                </span>
-                <div
-                  className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                  title="test-4"
-                >
-                  <div>
-                    <span
-                      className="inventory-text"
-                      style={Object {}}
-                    >
-                      test-4
-                    </span>
-                     
-                  </div>
-                </div>
-              </div>
-              <svg
-                aria-describedby={null}
-                aria-hidden={true}
-                className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                focusable="false"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseLeave={[Function]}
-                onMouseOver={[Function]}
-                onTouchEnd={[Function]}
-                onTouchStart={[Function]}
-                title="Copy to clipboard"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-                />
-              </svg>
-            </li>
-            <hr
-              className="MuiDivider-root"
-            />
-          </div>
-        </ul>
-      </div>
-      <div
-        className="flexbox column"
-      >
-        <div
-          className="margin-top-small"
-        >
-          rootfs-image
-        </div>
-        <ul
-          className="MuiList-root MuiList-padding"
-        >
-          <div
-            onClick={[Function]}
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            <li
-              className="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-              disabled={true}
-            >
-              <div
-                className="MuiListItemText-root MuiListItemText-multiline"
-              >
-                <span
-                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-                >
-                  System software version
-                </span>
-                <div
-                  className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                  title="stablev1-beta-final-v0"
-                >
-                  <div>
-                    <span
-                      className="inventory-text"
-                      style={Object {}}
-                    >
-                      stablev1-beta-final-v0
-                    </span>
-                     
-                  </div>
-                </div>
-              </div>
-              <svg
-                aria-describedby={null}
-                aria-hidden={true}
-                className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                focusable="false"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseLeave={[Function]}
-                onMouseOver={[Function]}
-                onTouchEnd={[Function]}
-                onTouchStart={[Function]}
-                title="Copy to clipboard"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-                />
-              </svg>
-            </li>
-            <hr
-              className="MuiDivider-root"
-            />
-          </div>
-          <div
-            onClick={[Function]}
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            <li
-              className="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-              disabled={true}
-            >
-              <div
-                className="MuiListItemText-root MuiListItemText-multiline"
-              >
-                <span
-                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-                >
-                  checksum
-                </span>
-                <div
-                  className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                  title="12341143"
-                >
-                  <div>
-                    <span
-                      className="inventory-text"
-                      style={Object {}}
-                    >
-                      12341143
-                    </span>
-                     
-                  </div>
-                </div>
-              </div>
-              <svg
-                aria-describedby={null}
-                aria-hidden={true}
-                className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                focusable="false"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseLeave={[Function]}
-                onMouseOver={[Function]}
-                onTouchEnd={[Function]}
-                onTouchStart={[Function]}
-                title="Copy to clipboard"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-                />
-              </svg>
-            </li>
-            <hr
-              className="MuiDivider-root"
-            />
-          </div>
-        </ul>
-      </div>
-      <div
-        className="flexbox column"
-      >
-        <div
-          className="margin-top-small"
-        >
-          test
-        </div>
-        <ul
-          className="MuiList-root MuiList-padding"
-        >
-          <div
-            onClick={[Function]}
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            <li
-              className="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-              disabled={true}
-            >
-              <div
-                className="MuiListItemText-root MuiListItemText-multiline"
-              >
-                <span
-                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-                >
-                  test.version
-                </span>
-                <div
-                  className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                  title="test-2"
-                >
-                  <div>
-                    <span
-                      className="inventory-text"
-                      style={Object {}}
-                    >
-                      test-2
-                    </span>
-                     
-                  </div>
-                </div>
-              </div>
-              <svg
-                aria-describedby={null}
-                aria-hidden={true}
-                className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                focusable="false"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseLeave={[Function]}
-                onMouseOver={[Function]}
-                onTouchEnd={[Function]}
-                onTouchStart={[Function]}
-                title="Copy to clipboard"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-                />
-              </svg>
-            </li>
-            <hr
-              className="MuiDivider-root"
-            />
-          </div>
-        </ul>
-      </div>
-      <div
-        className="flexbox column"
-      >
-        <div
-          className="margin-top-small"
-        >
-          even
-        </div>
-        <ul
-          className="MuiList-root MuiList-padding"
-        >
-          <div
-            onClick={[Function]}
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            <li
-              className="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-              disabled={true}
-            >
-              <div
-                className="MuiListItemText-root MuiListItemText-multiline"
-              >
-                <span
-                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-                >
-                  more
-                </span>
-                <div
-                  className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                  title="test-5"
-                >
-                  <div>
-                    <span
-                      className="inventory-text"
-                      style={Object {}}
-                    >
-                      test-5
-                    </span>
-                     
-                  </div>
-                </div>
-              </div>
-              <svg
-                aria-describedby={null}
-                aria-hidden={true}
-                className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                focusable="false"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseLeave={[Function]}
-                onMouseOver={[Function]}
-                onTouchEnd={[Function]}
-                onTouchStart={[Function]}
-                title="Copy to clipboard"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-                />
-              </svg>
-            </li>
-            <hr
-              className="MuiDivider-root"
-            />
-          </div>
-          <div
-            onClick={[Function]}
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            <li
-              className="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-              disabled={true}
-            >
-              <div
-                className="MuiListItemText-root MuiListItemText-multiline"
-              >
-                <span
-                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-                >
-                  more
-                </span>
-                <div
-                  className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                  title="test-6"
-                >
-                  <div>
-                    <span
-                      className="inventory-text"
-                      style={Object {}}
-                    >
-                      test-6
-                    </span>
-                     
-                  </div>
-                </div>
-              </div>
-              <svg
-                aria-describedby={null}
-                aria-hidden={true}
-                className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                focusable="false"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseLeave={[Function]}
-                onMouseOver={[Function]}
-                onTouchEnd={[Function]}
-                onTouchStart={[Function]}
-                title="Copy to clipboard"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-                />
-              </svg>
-            </li>
-            <hr
-              className="MuiDivider-root"
-            />
-          </div>
-        </ul>
-      </div>
-    </div>
-    <ul
-      className="MuiList-root MuiList-padding"
+      class="flexbox column"
     >
       <div
-        onClick={[Function]}
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
+        class="margin-top-small"
       >
-        <li
-          className="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-          disabled={true}
-        >
-          <div
-            className="MuiListItemText-root MuiListItemText-multiline"
+        a
+      </div>
+      <ul
+        class="MuiList-root MuiList-padding"
+      >
+        <div>
+          <li
+            class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
+            disabled=""
           >
-            <span
-              className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-            >
-              ipv4_wlan0
-            </span>
             <div
-              className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-              title="192.168.10.141/24"
+              class="MuiListItemText-root MuiListItemText-multiline"
             >
-              <div>
-                <span
-                  className="inventory-text"
-                  style={Object {}}
-                >
-                  192.168.10.141/24
-                </span>
-                 
+              <span
+                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                artifact_name
+              </span>
+              <div
+                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                title="myapp"
+              >
+                <div>
+                  <span
+                    class="inventory-text"
+                  >
+                    myapp
+                  </span>
+                   
+                </div>
               </div>
             </div>
-          </div>
-          <svg
-            aria-describedby={null}
-            aria-hidden={true}
-            className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-            focusable="false"
-            onBlur={[Function]}
-            onFocus={[Function]}
-            onMouseLeave={[Function]}
-            onMouseOver={[Function]}
-            onTouchEnd={[Function]}
-            onTouchStart={[Function]}
-            title="Copy to clipboard"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-            />
-          </svg>
-        </li>
-        <hr
-          className="MuiDivider-root"
-        />
-      </div>
-    </ul>
-  </div>,
-  <div
-    className="device-actions"
-    style={
-      Object {
-        "marginTop": "24px",
-      }
-    }
-  >
-    <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-text"
-      disabled={false}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
-      type="button"
-    >
-      <span
-        className="MuiButton-label"
-      >
-        <span
-          className="MuiButton-startIcon MuiButton-iconSizeMedium"
-        >
-          <svg
-            aria-hidden={true}
-            className="MuiSvgIcon-root"
-            focusable="false"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"
-            />
-          </svg>
-        </span>
-        Copy link to this device
-      </span>
-      <span
-        className="MuiTouchRipple-root"
-      />
-    </button>
-    <span
-      className="margin-left"
-    >
-      <a
-        aria-disabled={false}
-        className="MuiButtonBase-root MuiButton-root MuiButton-text"
-        href="/deployments?open=true&deviceId=a1"
-        onBlur={[Function]}
-        onClick={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        role="button"
-        tabIndex={0}
-      >
-        <span
-          className="MuiButton-label"
-        >
-          <span
-            className="MuiButton-startIcon MuiButton-iconSizeMedium"
-          >
             <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root"
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
               focusable="false"
+              title="Copy to clipboard"
               viewBox="0 0 24 24"
             >
               <path
-                d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"
+                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
               />
             </svg>
+          </li>
+          <hr
+            class="MuiDivider-root"
+          />
+        </div>
+        <div>
+          <li
+            class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
+            disabled=""
+          >
+            <div
+              class="MuiListItemText-root MuiListItemText-multiline"
+            >
+              <span
+                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                whole
+              </span>
+              <div
+                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                title="test-3"
+              >
+                <div>
+                  <span
+                    class="inventory-text"
+                  >
+                    test-3
+                  </span>
+                   
+                </div>
+              </div>
+            </div>
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              focusable="false"
+              title="Copy to clipboard"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+              />
+            </svg>
+          </li>
+          <hr
+            class="MuiDivider-root"
+          />
+        </div>
+        <div>
+          <li
+            class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
+            disabled=""
+          >
+            <div
+              class="MuiListItemText-root MuiListItemText-multiline"
+            >
+              <span
+                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                whole
+              </span>
+              <div
+                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                title="test-4"
+              >
+                <div>
+                  <span
+                    class="inventory-text"
+                  >
+                    test-4
+                  </span>
+                   
+                </div>
+              </div>
+            </div>
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              focusable="false"
+              title="Copy to clipboard"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+              />
+            </svg>
+          </li>
+          <hr
+            class="MuiDivider-root"
+          />
+        </div>
+      </ul>
+    </div>
+    <div
+      class="flexbox column"
+    >
+      <div
+        class="margin-top-small"
+      >
+        rootfs-image
+      </div>
+      <ul
+        class="MuiList-root MuiList-padding"
+      >
+        <div>
+          <li
+            class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
+            disabled=""
+          >
+            <div
+              class="MuiListItemText-root MuiListItemText-multiline"
+            >
+              <span
+                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                System software version
+              </span>
+              <div
+                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                title="stablev1-beta-final-v0"
+              >
+                <div>
+                  <span
+                    class="inventory-text"
+                  >
+                    stablev1-beta-final-v0
+                  </span>
+                   
+                </div>
+              </div>
+            </div>
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              focusable="false"
+              title="Copy to clipboard"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+              />
+            </svg>
+          </li>
+          <hr
+            class="MuiDivider-root"
+          />
+        </div>
+        <div>
+          <li
+            class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
+            disabled=""
+          >
+            <div
+              class="MuiListItemText-root MuiListItemText-multiline"
+            >
+              <span
+                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                checksum
+              </span>
+              <div
+                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                title="12341143"
+              >
+                <div>
+                  <span
+                    class="inventory-text"
+                  >
+                    12341143
+                  </span>
+                   
+                </div>
+              </div>
+            </div>
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              focusable="false"
+              title="Copy to clipboard"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+              />
+            </svg>
+          </li>
+          <hr
+            class="MuiDivider-root"
+          />
+        </div>
+      </ul>
+    </div>
+    <div
+      class="flexbox column"
+    >
+      <div
+        class="margin-top-small"
+      >
+        test
+      </div>
+      <ul
+        class="MuiList-root MuiList-padding"
+      >
+        <div>
+          <li
+            class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
+            disabled=""
+          >
+            <div
+              class="MuiListItemText-root MuiListItemText-multiline"
+            >
+              <span
+                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                test.version
+              </span>
+              <div
+                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                title="test-2"
+              >
+                <div>
+                  <span
+                    class="inventory-text"
+                  >
+                    test-2
+                  </span>
+                   
+                </div>
+              </div>
+            </div>
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              focusable="false"
+              title="Copy to clipboard"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+              />
+            </svg>
+          </li>
+          <hr
+            class="MuiDivider-root"
+          />
+        </div>
+      </ul>
+    </div>
+    <div
+      class="flexbox column"
+    >
+      <div
+        class="margin-top-small"
+      >
+        even
+      </div>
+      <ul
+        class="MuiList-root MuiList-padding"
+      >
+        <div>
+          <li
+            class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
+            disabled=""
+          >
+            <div
+              class="MuiListItemText-root MuiListItemText-multiline"
+            >
+              <span
+                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                more
+              </span>
+              <div
+                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                title="test-5"
+              >
+                <div>
+                  <span
+                    class="inventory-text"
+                  >
+                    test-5
+                  </span>
+                   
+                </div>
+              </div>
+            </div>
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              focusable="false"
+              title="Copy to clipboard"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+              />
+            </svg>
+          </li>
+          <hr
+            class="MuiDivider-root"
+          />
+        </div>
+        <div>
+          <li
+            class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
+            disabled=""
+          >
+            <div
+              class="MuiListItemText-root MuiListItemText-multiline"
+            >
+              <span
+                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                more
+              </span>
+              <div
+                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                title="test-6"
+              >
+                <div>
+                  <span
+                    class="inventory-text"
+                  >
+                    test-6
+                  </span>
+                   
+                </div>
+              </div>
+            </div>
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              focusable="false"
+              title="Copy to clipboard"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+              />
+            </svg>
+          </li>
+          <hr
+            class="MuiDivider-root"
+          />
+        </div>
+      </ul>
+    </div>
+  </div>
+  <ul
+    class="MuiList-root MuiList-padding"
+  >
+    <div>
+      <li
+        class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
+        disabled=""
+      >
+        <div
+          class="MuiListItemText-root MuiListItemText-multiline"
+        >
+          <span
+            class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+          >
+            ipv4_wlan0
           </span>
-          Create a deployment for this device
-        </span>
-        <span
-          className="MuiTouchRipple-root"
-        />
-      </a>
-    </span>
-  </div>,
-]
+          <div
+            class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+            title="192.168.10.141/24"
+          >
+            <div>
+              <span
+                class="inventory-text"
+              >
+                192.168.10.141/24
+              </span>
+               
+            </div>
+          </div>
+        </div>
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+          focusable="false"
+          title="Copy to clipboard"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+          />
+        </svg>
+      </li>
+      <hr
+        class="MuiDivider-root"
+      />
+    </div>
+  </ul>
+</div>
 `;
