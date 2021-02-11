@@ -121,6 +121,9 @@ context('Settings', () => {
       cy.visit(`${Cypress.config().baseUrl}ui/#/settings/my-account`);
       cy.get('#change_password').click();
       cy.get('[name=password]').should('be.empty');
+      cy.window().then(win => {
+        cy.stub(win, 'prompt').returns('DISABLED WINDOW PROMPT');
+      });
       cy.contains('button', 'Generate').click();
       cy.get('[name=password]').invoke('val').should('not.be.empty');
       cy.get('[name=password]').clear().type('mysecretpassword!456');
