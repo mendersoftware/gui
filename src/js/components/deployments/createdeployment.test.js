@@ -179,6 +179,8 @@ describe('CreateDeployment Component', () => {
     userEvent.click(screen.getAllByText('Next')[0]);
     userEvent.click(screen.getByText('Create'));
 
+    const secondBatchDate = new Date(new Date(mockDate).setMinutes(mockDate.getMinutes() + 30));
+    const thirdBatchDate = new Date(new Date(secondBatchDate).setDate(secondBatchDate.getDate() + 25));
     expect(createDeployment).toHaveBeenCalledWith({
       artifact_name: defaultState.releases.byId.a1.Name,
       devices: [...Object.keys(defaultState.devices.byId), 'test1', 'test2'],
@@ -187,8 +189,8 @@ describe('CreateDeployment Component', () => {
       name: 'All devices',
       phases: [
         { batch_size: 50, delay: 30, delayUnit: 'minutes', start_ts: mockDate },
-        { batch_size: 25, delay: 25, delayUnit: 'days', start_ts: '2019-01-01T13:30:00.300Z' },
-        { batch_size: 25, start_ts: '2019-01-26T13:30:00.300Z' }
+        { batch_size: 25, delay: 25, delayUnit: 'days', start_ts: secondBatchDate.toISOString() },
+        { batch_size: 25, start_ts: thirdBatchDate.toISOString() }
       ],
       retries: 1
     });

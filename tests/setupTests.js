@@ -5,9 +5,8 @@ import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
 
 import handlers from './__mocks__/requestHandlers';
-import { token as mockToken } from './mockData';
+import { token as mockToken, TEST_SESSION_DATETIME } from './mockData';
 
-export const TEST_SESSION_DATETIME = '2019-01-01T13:00:00.000Z';
 export const RETRY_TIMES = 3;
 export const TEST_LOCATION = 'localhost';
 
@@ -58,7 +57,7 @@ beforeAll(async () => {
   await server.listen();
   Object.defineProperty(navigator, 'appVersion', { value: 'Test', writable: true });
   jest.spyOn(React, 'useEffect').mockImplementation(React.useLayoutEffect);
-  jest.setSystemTime(Date.parse(TEST_SESSION_DATETIME));
+  jest.setSystemTime(new Date(TEST_SESSION_DATETIME));
 });
 
 afterEach(async () => {
