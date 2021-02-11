@@ -5,7 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { ESBuildPlugin, ESBuildMinifyPlugin } = require('esbuild-loader');
 
-module.exports = {
+module.exports = (env, argv) => ({
   devtool: 'source-map',
   node: {
     global: true
@@ -75,7 +75,7 @@ module.exports = {
     ]
   },
   optimization: {
-    minimize: process.env.NODE_ENV === 'production',
+    minimize: argv.mode === 'production',
     minimizer: [
       new ESBuildMinifyPlugin({
         target: 'es2015'
@@ -120,4 +120,4 @@ module.exports = {
     }
   },
   target: 'web'
-};
+});
