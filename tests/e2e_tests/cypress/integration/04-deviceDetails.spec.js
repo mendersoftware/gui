@@ -14,8 +14,8 @@ context('Layout assertions', () => {
   describe('device details', () => {
     it('has basic inventory', () => {
       cy.get('a').contains('Devices').click();
-      cy.contains('.deviceListItem', 'release', { timeout: 10000 });
-      cy.get('.deviceListItem').click().should('contain', 'release').end();
+      cy.contains('.deviceListItem', 'release', { timeout: 15000 });
+      cy.get('.deviceListItem').click();
       cy.get('.expandedDevice')
         .should('contain', `${Cypress.config('demoDeviceName') || 'release-v1'}`)
         .and('contain', 'Linux')
@@ -25,18 +25,9 @@ context('Layout assertions', () => {
 
     it('can open a terminal', () => {
       cy.get('a').contains('Devices').click();
-      cy.waitUntil(
-        () =>
-          cy
-            .get('.deviceListItem')
-            .click()
-            // the deviceconnect connection might not be established right away,
-            // due to polling intervals the fastest way to refresh is collapsing & expanding again...
-            .click()
-            .click()
-            .then(() => Boolean(Cypress.$('.expandedDevice .device-connect button').length)),
-        { timeout: 10000 }
-      )
+      cy.get('.deviceListItem').click();
+      // the deviceconnect connection might not be established right away
+      cy.waitUntil(() => Boolean(Cypress.$('.expandedDevice .device-connect button').length), { timeout: 10000 })
         .get('.expandedDevice')
         .contains('Launch a new Remote Terminal')
         .click()
