@@ -197,5 +197,5 @@ describe('CreateDeployment Component', () => {
     expect(advanceOnboarding).toHaveBeenCalled();
     await waitFor(() => expect(submitCheck).toHaveBeenCalled());
     expect(saveGlobalSettings).toHaveBeenCalled();
-  });
+  }, 10000);
 });
