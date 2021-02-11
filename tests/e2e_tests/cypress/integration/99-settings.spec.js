@@ -6,7 +6,6 @@ import { Decoder } from '@nuintun/qrcode';
 context('Settings', () => {
   onlyOn('staging', () => {
     before(() => {
-      cy.visit(`${Cypress.config().baseUrl}ui/`);
       cy.login(Cypress.env('username'), Cypress.env('password'));
       cy.restoreLocalStorage();
       cy.tenantTokenRetrieval();
@@ -47,7 +46,6 @@ context('Settings', () => {
     });
     describe('2FA setup', () => {
       it('supports regular 2fa setup', () => {
-        cy.visit(`${Cypress.config().baseUrl}ui/`);
         cy.login(Cypress.env('username'), Cypress.env('password'));
         cy.visit(`${Cypress.config().baseUrl}ui/#/settings/my-account`);
         cy.contains('Enable Two Factor').click();
@@ -105,22 +103,19 @@ context('Settings', () => {
 
   describe('Basic setting features', () => {
     it('allows access to user management', () => {
-      cy.visit(`${Cypress.config().baseUrl}ui/`);
       cy.login(Cypress.env('username'), Cypress.env('password'));
       cy.restoreLocalStorage();
-      cy.visit(`${Cypress.config().baseUrl}ui/#/settings`);
-      cy.get('[href="/ui/#/settings/user-management"]').click();
+      cy.waitUntil(() => cy.visit(`${Cypress.config().baseUrl}ui/#/settings`).contains(/Global settings/i));
+      cy.contains(/user management/i).click();
       cy.contains('button', 'Create new user').should('be.visible');
     });
     it('allows email changes', () => {
-      cy.visit(`${Cypress.config().baseUrl}ui/`);
       cy.login(Cypress.env('username'), Cypress.env('password'));
       cy.restoreLocalStorage();
       cy.visit(`${Cypress.config().baseUrl}ui/#/settings/my-account`);
       cy.get('#change_email').click();
     });
     it('allows changing the password', () => {
-      cy.visit(`${Cypress.config().baseUrl}ui/`);
       cy.login(Cypress.env('username'), Cypress.env('password'));
       cy.restoreLocalStorage();
       cy.visit(`${Cypress.config().baseUrl}ui/#/settings/my-account`);

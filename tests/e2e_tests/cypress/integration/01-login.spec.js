@@ -16,7 +16,7 @@ context('Login', () => {
       cy.get('[name=password]').clear().type(Cypress.env('password'));
       cy.contains('button', 'Log in').click();
       // confirm we have logged in successfully
-      cy.waitUntil(() => cy.getCookie('JWT').then(cookie => Boolean(cookie && cookie.value && cookie.value !== 'undefined')));
+      cy.waitUntil(() => cy.getCookie('JWT').then(cookie => Boolean(cookie && cookie.value)));
       cy.getCookie('JWT').then(cookie => {
         const userId = jwtDecode(cookie.value).sub;
         cy.setLocalStorage(`${userId}-onboarding`, JSON.stringify({ complete: true }));
