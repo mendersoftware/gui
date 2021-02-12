@@ -53,10 +53,12 @@ export const RoleDefinition = ({ adding, editing, stateGroups, onCancel, onSubmi
   };
 
   const filteredGroups = groups.filter(group => group.selected);
-  const isSubmitDisabled =
-    !(!nameError && (allowUserManagement || groups.some(group => group.selected))) ||
-    Object.entries({ allowUserManagement, description, id }).every(([key, value]) => selectedRole[key] === value) ||
-    (filteredGroups.length === selectedRole.groups.length && filteredGroups.every(group => selectedRole.groups.includes(group)));
+  const isSubmitDisabled = Boolean(
+    nameError ||
+      !(allowUserManagement || groups.some(group => group.selected)) ||
+      Object.entries({ allowUserManagement, description, id }).every(([key, value]) => selectedRole[key] === value) ||
+      (groups.length && filteredGroups.length === selectedRole.groups.length && filteredGroups.every(group => selectedRole.groups.includes(group)))
+  );
 
   return (
     <Collapse in={adding || editing} className="margin-right-small filter-wrapper" classes={{ wrapperInner: 'margin-bottom-small margin-right' }}>
