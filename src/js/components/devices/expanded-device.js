@@ -83,7 +83,9 @@ export const ExpandedDevice = ({
             }}
           />
         </div>
-        {hasDeviceConfig && <DeviceConfiguration device={device} defaultConfig={defaultConfig} submitConfig={onConfigSubmit} />}
+        {hasDeviceConfig && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(status) && (
+          <DeviceConfiguration device={device} defaultConfig={defaultConfig} submitConfig={onConfigSubmit} />
+        )}
         {status === DEVICE_STATES.accepted && (
           <>
             {hasDeviceConnect && <DeviceConnection device={device} docsVersion={docsVersion} launchTerminal={launchTerminal} socketClosed={socketClosed} />}
