@@ -65,6 +65,6 @@ export const getUserRoles = createSelector(
 );
 
 export const getTenantCapabilities = createSelector([getOrganization], ({ addons = [] }) => {
-  const hasDeviceConfig = addons.some(addon => addon.Name === 'configure' && Boolean(addon.Enabled));
+  const hasDeviceConfig = addons.some(addon => addon.name === 'configure' && Boolean(addon.enabled));
   return { hasDeviceConfig };
 });
