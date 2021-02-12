@@ -14,7 +14,6 @@ context('Layout assertions', () => {
   describe('device details', () => {
     it('has basic inventory', () => {
       cy.get('a').contains('Devices').click();
-      cy.contains('.deviceListItem', 'release', { timeout: 15000 });
       cy.get('.deviceListItem').click();
       cy.get('.expandedDevice')
         .should('contain', `${Cypress.config('demoDeviceName') || 'release-v1'}`)
