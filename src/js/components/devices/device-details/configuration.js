@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Time from 'react-time';
 
 import { Button, Checkbox, FormControlLabel, Typography } from '@material-ui/core';
@@ -13,6 +13,7 @@ import {
 
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { deepCompare, isEmpty } from '../../../helpers';
+import ConfigurationObject from '../../common/configurationobject';
 import Confirm from '../../common/confirm';
 import LogDialog from '../../common/dialogs/log';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
@@ -241,18 +242,7 @@ export const DeviceConfiguration = ({ device, defaultConfig = {}, submitConfig }
       {isEditingConfig ? (
         <KeyValueEditor disabled={isEditDisabled} errortext={''} input={changedConfig} onInputChange={setChangedConfig} reset={shouldUpdateEditor} />
       ) : (
-        hasDeviceConfig && (
-          <div className="margin-top text-muted two-columns" style={{ maxWidth: 280, rowGap: 15 }}>
-            {Object.entries(reported).map(([key, value]) => (
-              <Fragment key={key}>
-                <div className="align-right">
-                  <b>{key}</b>
-                </div>
-                <div>{`${value}`}</div>
-              </Fragment>
-            ))}
-          </div>
-        )
+        hasDeviceConfig && <ConfigurationObject className="margin-top" config={reported} />
       )}
       <div className="flexbox margin-bottom margin-top" style={{ alignItems: 'center' }}>
         {footer}
