@@ -5,7 +5,7 @@ import { commonErrorHandler, setSnackbar } from '../actions/appActions';
 import ReleaseConstants from '../constants/releaseConstants';
 import OnboardingConstants from '../constants/onboardingConstants';
 
-import { customSort } from '../helpers';
+import { customSort, duplicateFilter } from '../helpers';
 
 const apiUrl = '/api/management/v1';
 export const deploymentsApiUrl = `${apiUrl}/deployments`;
@@ -22,7 +22,7 @@ const flattenRelease = release => {
     { descriptions: [], deviceTypes: [], latestModified: undefined }
   );
   release.descriptions = descriptions;
-  release.device_types_compatible = deviceTypes;
+  release.device_types_compatible = deviceTypes.filter(duplicateFilter);
   release.latestModified = latestModified;
   return release;
 };
