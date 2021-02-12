@@ -24,16 +24,17 @@ const detailsMap = {
 };
 
 export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserList, groups, users, ...props }) => {
-  const [endDate, setEndDate] = useState(tonight);
   const [csvLoading, setCsvLoading] = useState(false);
-  const [detail, setDetail] = useState(undefined);
+  const [detail, setDetail] = useState('');
+  const [endDate, setEndDate] = useState(tonight);
+  const [filterReset, setFilterReset] = useState(false);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(defaultRowsPerPage);
+  const [sorting, setSorting] = useState('desc');
   const [startDate, setStartDate] = useState(today);
   const [type, setType] = useState('');
-  const [user, setUser] = useState(undefined);
-  const [sorting, setSorting] = useState('desc');
+  const [user, setUser] = useState('');
 
   useEffect(() => {
     getUserList();
@@ -51,6 +52,7 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
     setUser('');
     setType('');
     setDetail('');
+    setFilterReset(!filterReset);
   };
 
   const refresh = (
@@ -62,7 +64,7 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
     typeFilter = type,
     detailFilter
   ) => {
-    detailFilter = !detailFilter && typeof detailFilter === 'string' ? undefined : detailFilter || detail;
+    detailFilter = !detailFilter && typeof detailFilter === 'string' ? '' : detailFilter || detail;
     setPage(currentPage);
     setPerPage(currentPerPage);
     setStartDate(currentStartDate);
@@ -85,8 +87,6 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
     });
   };
 
-  const availableChangeTypes = AUDIT_LOGS_TYPES.filter(type => events.some(e => e.object.type === type.value));
-
   return (
     <div className="fadeIn margin-left flexbox column" style={{ marginRight: '5%' }}>
       <h3>Audit log</h3>
@@ -100,6 +100,7 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
           handleHomeEndKeys
           options={Object.values(users)}
           onChange={(e, value, reason) => (reason !== 'blur' ? refresh(1, perPage, startDate, endDate, value) : null)}
+          value={user}
           renderInput={params => (
             <TextField
               {...params}
@@ -114,12 +115,14 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
         />
         <Autocomplete
           id="audit-log-type-selection"
+          key={`audit-log-type-selection-${filterReset}`}
           autoSelect
           filterSelectedOptions
           getOptionLabel={option => option.title || option}
           handleHomeEndKeys
+          inputValue={type}
           onInputChange={(e, value) => refresh(1, perPage, startDate, endDate, user, value, '')}
-          options={availableChangeTypes}
+          options={AUDIT_LOGS_TYPES}
           renderInput={params => (
             <TextField {...params} label="Filter by change" placeholder="Type" InputLabelProps={{ shrink: true }} InputProps={{ ...params.InputProps }} />
           )}
@@ -133,14 +136,15 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
           filterSelectedOptions
           getOptionLabel={option => option.email || option}
           handleHomeEndKeys
-          onChange={(e, value) => refresh(1, perPage, startDate, endDate, user, type, value)}
+          inputValue={detail}
+          onInputChange={(e, value) => refresh(1, perPage, startDate, endDate, user, type, value)}
           options={type === 'Deployment' ? groups : Object.values(users)}
           renderInput={params => <TextField {...params} placeholder={detailsMap[type] || '-'} InputProps={{ ...params.InputProps }} />}
           renderOption={option => option.email || option}
           style={{ marginRight: 15, marginTop: 16 }}
         />
         <div />
-        <TimerangePicker onChange={(start, end) => refresh(1, perPage, start, end)} />
+        <TimerangePicker onChange={(start, end) => refresh(1, perPage, start, end)} reset={filterReset} />
         <div style={{ gridColumnStart: 2, gridColumnEnd: 4 }}>
           <TimeframePicker
             classNames="margin-left margin-right inline-block"

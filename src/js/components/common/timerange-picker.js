@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const timeranges = {
   today: { start: 0, end: 0, title: 'Today' },
@@ -7,8 +7,12 @@ const timeranges = {
   month: { start: 29, end: 0, title: 'Last 30 days' }
 };
 
-export const TimerangePicker = ({ classNames = '', onChange }) => {
+export const TimerangePicker = ({ classNames = '', onChange, reset }) => {
   const [active, setActive] = useState(Object.keys(timeranges)[0]);
+
+  useEffect(() => {
+    setActive(Object.keys(timeranges)[0]);
+  }, [reset]);
 
   const setRange = (after, before, key) => {
     let newStartDate = new Date();
