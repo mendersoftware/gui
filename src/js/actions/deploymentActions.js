@@ -41,6 +41,9 @@ export const getDeploymentsByStatus = (status, page = default_page, per_page = d
       let tasks = deploymentIds.reduce(
         (accu, deploymentId) => {
           accu.push(dispatch(getSingleDeploymentStats(deploymentId)));
+          if (deployments[deploymentId].type === DeploymentConstants.DEPLOYMENT_TYPES.configuration) {
+            accu.push(dispatch(getSingleDeployment(deploymentId)));
+          }
           return accu;
         },
         [
