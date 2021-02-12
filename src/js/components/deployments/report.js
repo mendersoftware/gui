@@ -12,7 +12,7 @@ import { Block as BlockIcon } from '@material-ui/icons';
 import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
 import { getDeviceLog, getSingleDeployment } from '../../actions/deploymentActions';
 import { getRelease } from '../../actions/releaseActions';
-import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
+import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
 import { getIsEnterprise } from '../../selectors';
 import LogDialog from '../common/dialogs/log';
 import DeploymentOverview from './deployment-report/overview';
@@ -67,22 +67,19 @@ export class DeploymentReport extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    var self = this;
-    if (
-      prevProps.deployment.stats !== self.props.deployment.stats &&
-      self.props.deployment.stats &&
-      self.props.deployment.stats.downloading +
-        self.props.deployment.stats.installing +
-        self.props.deployment.stats.rebooting +
-        self.props.deployment.stats.pending <=
-        0
-    ) {
+    const {
+      deployment: { artifact_name, id, stats, type = DEPLOYMENT_TYPES.software },
+      getRelease,
+      release: { device_types_compatible = [] }
+    } = this.props;
+
+    if (prevProps.deployment.stats !== stats && stats && stats.downloading + stats.installing + stats.rebooting + stats.pending <= 0) {
       // if no more devices in "progress" statuses, deployment has finished, stop counter
-      clearInterval(self.timer);
-      clearInterval(self.timer2);
+      clearInterval(this.timer);
+      clearInterval(this.timer2);
     }
-    if (prevProps.deployment.id !== self.props.deployment.id || !self.props.release.device_types_compatible.length) {
-      self.props.getRelease(self.props.deployment.artifact_name);
+    if (type === DEPLOYMENT_TYPES.software && (prevProps.deployment.id !== id || !device_types_compatible.length)) {
+      getRelease(artifact_name);
     }
   }
 

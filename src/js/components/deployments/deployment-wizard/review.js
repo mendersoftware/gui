@@ -4,6 +4,7 @@ import pluralize from 'pluralize';
 
 import { Chip, List } from '@material-ui/core';
 
+import { DEPLOYMENT_TYPES } from '../../../constants/deploymentConstants';
 import { formatTime, generateDeploymentGroupDetails, getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import ExpandableAttribute from '../../common/expandable-attribute';
@@ -21,18 +22,20 @@ const Review = ({
   release = { device_types_compatible: [] },
   retries = 0
 }) => {
+  const { type = DEPLOYMENT_TYPES.software, devices = {} } = deployment;
+  let releaseName = release.Name;
+  let targetDevices = device ? device.id : generateDeploymentGroupDetails(deployment.filter || { terms: filters }, group);
+  if (type === DEPLOYMENT_TYPES.configuration) {
+    releaseName = type;
+    targetDevices = Object.keys(devices).join(', ');
+  }
   const creationTime = deployment.created || new Date().toISOString();
   const start_time = phases[0].start_ts || creationTime;
   const end_time = null || formatTime(deployment.finished);
-
   const deploymentInformation = {
     General: [
-      { primary: 'Release', secondary: release.Name },
-      { primary: 'Device types compatible', secondary: release.device_types_compatible.join(', ') },
-      {
-        primary: `Target device(s)`,
-        secondary: device ? device.id : generateDeploymentGroupDetails(deployment.filter || { terms: filters }, group)
-      },
+      { primary: 'Release', secondary: releaseName },
+      { primary: `Target device(s)`, secondary: targetDevices },
       { primary: 'Number of retries', secondary: retries }
     ],
     Schedule: [
@@ -45,6 +48,9 @@ const Review = ({
       }
     ]
   };
+  if (type === DEPLOYMENT_TYPES.software) {
+    deploymentInformation.General.splice(1, 0, { primary: 'Device types compatible', secondary: release.device_types_compatible.join(', ') });
+  }
 
   return (
     <div className="margin-small">

@@ -20,6 +20,10 @@ module.exports = {
     pending: 'pending',
     scheduled: 'scheduled'
   },
+  DEPLOYMENT_TYPES: {
+    software: 'software',
+    configuration: 'configuration'
+  },
   deploymentPrototype: {
     devices: {},
     name: undefined,
