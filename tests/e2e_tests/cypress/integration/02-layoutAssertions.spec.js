@@ -43,7 +43,24 @@ context('Layout assertions', () => {
       cy.get('.MuiSpeedDial-fab').click();
       cy.get('#device-actions-actions').get('.MuiSpeedDialAction-staticTooltipLabel').contains('Accept').parent().find('button').click().end();
       cy.get('a').contains('Device groups').click();
+      cy.contains('.deviceListItem', 'release', { timeout: 30000 });
       cy.get('.deviceListItem').click();
+    });
+
+    it('can group a device', () => {
+      cy.contains('a', 'Devices').click().end();
+      cy.get('.deviceListItem input').click().end();
+      cy.get('.MuiSpeedDial-fab').click();
+      cy.get('#device-actions-actions')
+        .contains('.MuiSpeedDialAction-staticTooltipLabel', /Add selected/i)
+        .parent()
+        .find('button')
+        .click()
+        .end();
+      cy.get('#group-creation-selection', { timeout: 5000 }).type('testgroup');
+      cy.get('.MuiDialogTitle-root').click();
+      cy.contains('button', /create group/i).click();
+      cy.contains('.grouplist', 'testgroup').should('be.be.visible');
     });
   });
 });

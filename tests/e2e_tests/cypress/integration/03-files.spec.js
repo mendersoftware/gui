@@ -84,4 +84,28 @@ context('Deployments', () => {
         expect(time.isBetween(earlier, now));
       });
   });
+
+  it('allows group deployments', () => {
+    cy.get('a')
+      .contains(/Deployments/i)
+      .click()
+      .end();
+    cy.get('button')
+      .contains(/Create a deployment/)
+      .click({ force: true });
+    cy.get('#deployment-release-selection', { timeout: 5000 }).type('mender-demo');
+    cy.get('#deployment-release-selection-popup')
+      .get('li')
+      .contains(/mender-demo/i)
+      .click()
+      .end();
+    cy.get('#deployment-device-group-selection', { timeout: 5000 }).type('testgroup');
+    cy.get('#deployment-device-group-selection-popup').get('li').contains('testgroup').click().end();
+    cy.get('button').contains('Next').click().end();
+    onlyOn('staging', () => cy.get('.MuiDialog-container button').contains('Next').click());
+    cy.get('.MuiDialog-container button').contains('Create').click();
+    cy.get('.deployment-item', { timeout: 10000 });
+    cy.get('[role="tab"]').contains('Finished').click();
+    cy.get('.deployment-item:not(.deployment-header-item)', { timeout: 60000 });
+  });
 });
