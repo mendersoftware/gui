@@ -38,6 +38,7 @@ export const initialState = {
   // return boolean rather than organization details
   features: {
     hasMultitenancy: stringToBoolean(menderEnvironment.features.hasMultitenancy),
+    hasDeviceConfig: stringToBoolean(menderEnvironment.features.hasDeviceConfig),
     hasDeviceConnect: stringToBoolean(menderEnvironment.features.hasDeviceConnect),
     isHosted: stringToBoolean(menderEnvironment.features.isHosted) || window.location.hostname === 'hosted.mender.io',
     isEnterprise: stringToBoolean(menderEnvironment.features.isEnterprise),
