@@ -82,7 +82,7 @@
     "eslint-plugin-react": "^7.22.0",
     "file-loader": "^6.2.0",
     "gulp": "^4.0.2",
-    "html-webpack-plugin": "^5.0.0",
+    "html-webpack-plugin": "^5.1.0",
     "husky": "^5.0.9",
     "jest": "next",
     "jest-canvas-mock": "^2.3.1",
