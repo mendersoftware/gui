@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Time from 'react-time';
 
 import { Button, Checkbox, FormControlLabel, Typography } from '@material-ui/core';
@@ -12,7 +13,7 @@ import {
 } from '@material-ui/icons';
 
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
-import { deepCompare, isEmpty } from '../../../helpers';
+import { deepCompare, groupDeploymentStats, isEmpty } from '../../../helpers';
 import ConfigurationObject from '../../common/configurationobject';
 import Confirm from '../../common/confirm';
 import LogDialog from '../../common/dialogs/log';
@@ -85,14 +86,13 @@ export const ConfigUpdateNote = ({ isUpdatingConfig, isAccepted }) => (
   </div>
 );
 
-export const ConfigUpdateFailureActions = ({ onSubmit, onCancel }) => (
+export const ConfigUpdateFailureActions = ({ hasLog, onSubmit, onCancel, setShowLog }) => (
   <>
-    {/*
-    TODO: reintroduce log viewer functionality once backend support to retrieve config deployment exists
-    <Button color="secondary" onClick={setShowLog} style={buttonStyle}>
-      View log
-    </Button>
-    */}
+    {hasLog && (
+      <Button color="secondary" onClick={setShowLog} style={buttonStyle}>
+        View log
+      </Button>
+    )}
     <Button color="secondary" onClick={onSubmit} startIcon={<RefreshIcon fontSize="small" />} style={buttonStyle}>
       Retry
     </Button>
@@ -102,9 +102,19 @@ export const ConfigUpdateFailureActions = ({ onSubmit, onCancel }) => (
   </>
 );
 
-export const DeviceConfiguration = ({ device, defaultConfig = {}, submitConfig }) => {
+export const DeviceConfiguration = ({
+  abortDeployment,
+  applyDeviceConfig,
+  defaultConfig = {},
+  device,
+  deployment = {},
+  getDeviceLog,
+  getSingleDeployment,
+  saveGlobalSettings,
+  setDeviceConfig
+}) => {
   const { config = {}, status } = device;
-  const { reported = {}, reported_ts } = config;
+  const { configured, reported = {}, reported_ts, deployment_id } = config;
 
   const [changedConfig, setChangedConfig] = useState();
   const [isEditDisabled, setIsEditDisabled] = useState(false);
@@ -130,27 +140,39 @@ export const DeviceConfiguration = ({ device, defaultConfig = {}, submitConfig }
   }, [isUpdatingConfig, updateFailed]);
 
   useEffect(() => {
-    const { config = {} } = device;
-    const { configured = {}, reported = {}, updated_ts, reported_ts = defaultReportTimeStamp } = config;
-    const hasConfig = device.config && (reported_ts !== defaultReportTimeStamp || !isEmpty(configured));
-    const updateRunning = hasConfig && !deepCompare(configured, reported) && updated_ts > reported_ts;
-    const newConfig = updateRunning ? configured : reported;
-    if (!changedConfig) {
-      setIsEditingConfig(!device.config);
-      if (device.config) {
-        setChangedConfig(newConfig);
-        setIsUpdatingConfig(Boolean(updateRunning));
-      }
-    } else if ((!isEditingConfig && !deepCompare(newConfig, changedConfig)) || (isUpdatingConfig && !updateRunning)) {
-      setChangedConfig(newConfig);
-      setIsUpdatingConfig(Boolean(updateRunning));
+    if (deployment.devices && deployment.devices[device.id]?.log) {
+      setUpdateLog(deployment.devices[device.id].log);
     }
-  }, [device.config]);
+  }, [deployment.devices]);
+
+  useEffect(() => {
+    if (deployment.status === 'finished') {
+      const stats = groupDeploymentStats(deployment);
+      setUpdateFailed(Boolean(deployment.finished > reported_ts && stats.failures));
+    } else if (deployment.status) {
+      setIsUpdatingConfig(true);
+      setChangedConfig(configured);
+    }
+  }, [deployment.status]);
+
+  useEffect(() => {
+    if (isEmpty(deployment) && deployment_id && deployment_id !== '00000000-0000-0000-0000-000000000000') {
+      getSingleDeployment(deployment_id);
+    }
+  }, [deployment_id]);
+
+  useEffect(() => {
+    const { config = {} } = device;
+    const { reported = {} } = config;
+    if (!changedConfig && device.config) {
+      setChangedConfig(reported);
+    }
+  }, [device.config, deployment]);
 
   const onConfigImport = ({ config, importType }) => {
     let updatedConfig = config;
     if (importType === 'default') {
-      updatedConfig = defaultConfig;
+      updatedConfig = defaultConfig.current;
     }
     setShouldUpdateEditor(!shouldUpdateEditor);
     setChangedConfig(updatedConfig);
@@ -161,11 +183,29 @@ export const DeviceConfiguration = ({ device, defaultConfig = {}, submitConfig }
     setIsSetAsDefault(!isSetAsDefault);
   };
 
+  const onShowLog = () => {
+    getDeviceLog(deployment_id, device.id).then(result => {
+      setShowLog(true);
+      setUpdateLog(result[1]);
+    });
+  };
+
   const onCancel = () => {
     setIsEditingConfig(isEmpty(reported));
     setChangedConfig(reported);
-    const request = deepCompare(reported, changedConfig) ? Promise.resolve() : submitConfig({ config: reported });
-    request.then(() => {
+    let requests = [];
+    if (deployment_id && !(deployment.status === 'finished')) {
+      requests.push(abortDeployment(deployment_id));
+    }
+    if (deepCompare(reported, changedConfig)) {
+      requests.push(Promise.resolve());
+    } else {
+      requests.push(setDeviceConfig(device.id, reported));
+      if (isSetAsDefault) {
+        requests.push(saveGlobalSettings({ defaultDeviceConfig: { current: defaultConfig.previous } }));
+      }
+    }
+    return Promise.all(requests).then(() => {
       setIsUpdatingConfig(false);
       setUpdateFailed(false);
       setIsAborting(false);
@@ -175,16 +215,15 @@ export const DeviceConfiguration = ({ device, defaultConfig = {}, submitConfig }
   const onSubmit = () => {
     setIsUpdatingConfig(true);
     setUpdateFailed(false);
-    submitConfig({ config: changedConfig, isDefault: isSetAsDefault })
+    return Promise.all([setDeviceConfig(device.id, changedConfig), applyDeviceConfig(device.id, changedConfig, isSetAsDefault)])
       .then(() => {
         setUpdateFailed(false);
       })
-      .catch(({ log = 'something something loggy' }) => {
+      .catch(() => {
         setIsEditDisabled(false);
         setIsEditingConfig(true);
         setUpdateFailed(true);
         setIsUpdatingConfig(false);
-        setUpdateLog(log);
       });
   };
 
@@ -202,6 +241,7 @@ export const DeviceConfiguration = ({ device, defaultConfig = {}, submitConfig }
     );
   }
   if (isUpdatingConfig || updateFailed) {
+    const hasLog = deployment.devices && deployment.devices[device.id]?.log;
     footer = (
       <>
         <div className="flexbox">
@@ -210,13 +250,18 @@ export const DeviceConfiguration = ({ device, defaultConfig = {}, submitConfig }
           <ConfigUpdateNote isUpdatingConfig={isUpdatingConfig} isAccepted={status === DEVICE_STATES.accepted} />
         </div>
         {updateFailed ? (
-          <ConfigUpdateFailureActions setShowLog={setShowLog} onSubmit={onSubmit} onCancel={onCancel} />
+          <ConfigUpdateFailureActions hasLog={hasLog} setShowLog={onShowLog} onSubmit={onSubmit} onCancel={onCancel} />
         ) : isAborting ? (
           <Confirm cancel={() => setIsAborting(!isAborting)} action={onCancel} type="abort" classes="margin-left-large" />
         ) : (
-          <Button color="secondary" onClick={() => setIsAborting(!isAborting)} startIcon={<BlockIcon fontSize="small" />} style={buttonStyle}>
-            Abort update
-          </Button>
+          <>
+            <Button color="secondary" onClick={() => setIsAborting(!isAborting)} startIcon={<BlockIcon fontSize="small" />} style={buttonStyle}>
+              Abort update
+            </Button>
+            <Button color="secondary" component={Link} to={`/deployments/${deployment.status || 'active'}?open=true&id=${deployment_id}`} style={buttonStyle}>
+              View deployment
+            </Button>
+          </>
         )}
       </>
     );
@@ -234,7 +279,7 @@ export const DeviceConfiguration = ({ device, defaultConfig = {}, submitConfig }
           )}
         </div>
         {isEditingConfig && (
-          <Button onClick={setShowConfigImport} startIcon={<SaveAltIcon />} style={{ justifySelf: 'left' }}>
+          <Button onClick={setShowConfigImport} disabled={isUpdatingConfig} startIcon={<SaveAltIcon />} style={{ justifySelf: 'left' }}>
             Import configuration
           </Button>
         )}

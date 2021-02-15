@@ -8,6 +8,7 @@ import {
   addDevicesToGroup,
   addDynamicGroup,
   addStaticGroup,
+  applyDeviceConfig,
   decommissionDevice,
   deleteAuthset,
   getAllDeviceCounts,
@@ -669,8 +670,15 @@ describe('device config ', () => {
   it('should allow single device config update', async () => {
     const store = mockStore({ ...defaultState });
     const { attributes, id } = defaultState.devices.byId.a1;
+    const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE_CONFIG, device: { attributes, id } }];
+    await store.dispatch(setDeviceConfig(defaultState.devices.byId.a1.id), { something: 'asdl' });
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should allow single device config deployment', async () => {
+    const store = mockStore({ ...defaultState });
     const expectedActions = [
-      { type: DeviceConstants.RECEIVE_DEVICE_CONFIG, device: { attributes, id } },
       { type: DeploymentConstants.RECEIVE_DEPLOYMENT, deployment: { id: defaultState.deployments.byId.d1.id } },
       {
         type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS,
@@ -688,7 +696,7 @@ describe('device config ', () => {
         deploymentId: defaultState.deployments.byId.d1.id
       }
     ];
-    await store.dispatch(setDeviceConfig(defaultState.devices.byId.a1.id), { something: 'asdl' });
+    await store.dispatch(applyDeviceConfig(defaultState.devices.byId.a1.id), { something: 'asdl' });
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

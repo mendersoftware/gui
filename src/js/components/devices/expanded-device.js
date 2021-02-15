@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import { setSnackbar } from '../../actions/appActions';
-import { decommissionDevice, setDeviceConfig } from '../../actions/deviceActions';
+import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../actions/deploymentActions';
+import { applyDeviceConfig, decommissionDevice, setDeviceConfig } from '../../actions/deviceActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { getDocsVersion, getTenantCapabilities } from '../../selectors';
@@ -17,12 +18,16 @@ import DeviceInventoryLoader from './device-details/deviceinventoryloader';
 import DeviceConnection from './device-details/connection';
 
 export const ExpandedDevice = ({
+  abortDeployment,
+  applyDeviceConfig,
   className,
   decommissionDevice,
   defaultConfig,
   device,
+  deviceConfigDeployment,
   docsVersion,
-  getDeviceConfig,
+  getDeviceLog,
+  getSingleDeployment,
   hasDeviceConfig,
   hasDeviceConnect,
   highlightHelp,
@@ -58,14 +63,6 @@ export const ExpandedDevice = ({
     setTerminal(true);
   };
 
-  const onConfigSubmit = ({ config, isDefault }) => {
-    let tasks = [setDeviceConfig(device.id, config)];
-    if (isDefault) {
-      tasks.push(saveGlobalSettings({ defaultDeviceConfig: config }));
-    }
-    return Promise.all(tasks).then(() => getDeviceConfig(device.id));
-  };
-
   const waiting = !(attributes && Object.values(attributes).some(i => i));
   return (
     <div className={className}>
@@ -81,7 +78,17 @@ export const ExpandedDevice = ({
           />
         </div>
         {hasDeviceConfig && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(status) && (
-          <DeviceConfiguration device={device} defaultConfig={defaultConfig} submitConfig={onConfigSubmit} />
+          <DeviceConfiguration
+            abortDeployment={abortDeployment}
+            applyDeviceConfig={applyDeviceConfig}
+            defaultConfig={defaultConfig}
+            device={device}
+            getDeviceLog={getDeviceLog}
+            getSingleDeployment={getSingleDeployment}
+            saveGlobalSettings={saveGlobalSettings}
+            setDeviceConfig={setDeviceConfig}
+            deployment={deviceConfigDeployment}
+          />
         )}
         {status === DEVICE_STATES.accepted && (
           <>
@@ -110,12 +117,23 @@ export const ExpandedDevice = ({
   );
 };
 
-const actionCreators = { decommissionDevice, saveGlobalSettings, setDeviceConfig, setSnackbar };
+const actionCreators = {
+  abortDeployment,
+  applyDeviceConfig,
+  decommissionDevice,
+  getDeviceLog,
+  getSingleDeployment,
+  saveGlobalSettings,
+  setDeviceConfig,
+  setSnackbar
+};
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   const { hasDeviceConfig } = getTenantCapabilities(state);
+  const { deployment_id: configDeploymentId } = ownProps.device.config || {};
   return {
     defaultConfig: state.users.globalSettings.defaultDeviceConfig,
+    deviceConfigDeployment: state.deployments.byId[configDeploymentId] || {},
     docsVersion: getDocsVersion(state),
     hasDeviceConnect: state.app.features.hasDeviceConnect,
     hasDeviceConfig,
