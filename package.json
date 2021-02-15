@@ -27,7 +27,7 @@
     "pluralize": "^8.0.0",
     "process": "^0.11.10",
     "react": "~16.14.0",
-    "react-big-calendar": "^0.31.0",
+    "react-big-calendar": "^0.32.0",
     "react-copy-to-clipboard": "^5.0.3",
     "react-dom": "~16.14.0",
     "react-dropzone": "^11.3.1",
