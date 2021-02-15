@@ -17,7 +17,7 @@ const softwareTitleMap = {
   'rootfs-image.checksum': { title: 'checksum', priority: 1 }
 };
 
-export const DeviceInventory = ({ device, setSnackbar, unauthorized }) => {
+export const DeviceInventory = ({ device, setSnackbar }) => {
   const { attributes, id } = device;
 
   const copyLinkToClipboard = () => {
@@ -63,7 +63,7 @@ export const DeviceInventory = ({ device, setSnackbar, unauthorized }) => {
 
   return (
     <>
-      <div className={`device-inventory bordered ${unauthorized ? 'hidden' : 'report-list'}`}>
+      <div className="device-inventory bordered report-list">
         <h4>Device inventory</h4>
         {!!softwareInformation.length && (
           <div className="file-details">

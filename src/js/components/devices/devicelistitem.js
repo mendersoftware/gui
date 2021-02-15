@@ -4,7 +4,6 @@ import React from 'react';
 import { Checkbox, Accordion, AccordionDetails, AccordionSummary, IconButton } from '@material-ui/core';
 import { ArrowDropDown as ArrowDropDownIcon, ArrowDropUp as ArrowDropUpIcon } from '@material-ui/icons';
 
-import { DEVICE_STATES } from '../../constants/deviceConstants';
 import ExpandedDevice from './expanded-device';
 
 const DeviceListItem = props => {
@@ -23,22 +22,7 @@ const DeviceListItem = props => {
         ))}
         <IconButton className="expandButton">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>
       </AccordionSummary>
-      <AccordionDetails>
-        {expanded ? (
-          <ExpandedDevice
-            {...props}
-            className="expandedDevice"
-            id_attribute={idAttribute}
-            id_value={idValue}
-            device={device}
-            attrs={device.attributes}
-            unauthorized={device.status !== DEVICE_STATES.accepted}
-            device_type={device.attributes ? device.attributes.device_type : null}
-          />
-        ) : (
-          <div />
-        )}
-      </AccordionDetails>
+      <AccordionDetails>{expanded ? <ExpandedDevice {...props} className="expandedDevice" device={device} /> : <div />}</AccordionDetails>
     </Accordion>
   ) : (
     <div className={`${itemClassName} deviceListItem `} style={{ padding: '0px 12px', alignItems: 'center' }}>

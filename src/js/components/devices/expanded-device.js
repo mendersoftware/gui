@@ -26,15 +26,12 @@ export const ExpandedDevice = ({
   hasDeviceConfig,
   hasDeviceConnect,
   highlightHelp,
-  id_attribute,
-  id_value,
   limitMaxed,
   refreshDevices,
   saveGlobalSettings,
   setDeviceConfig,
   setSnackbar,
-  showHelptips,
-  unauthorized
+  showHelptips
 }) => {
   const { attributes, status = DEVICE_STATES.accepted } = device;
 
@@ -89,11 +86,7 @@ export const ExpandedDevice = ({
         {status === DEVICE_STATES.accepted && (
           <>
             {hasDeviceConnect && <DeviceConnection device={device} docsVersion={docsVersion} launchTerminal={launchTerminal} socketClosed={socketClosed} />}
-            {waiting ? (
-              <DeviceInventoryLoader docsVersion={docsVersion} unauthorized={unauthorized} />
-            ) : (
-              <DeviceInventory device={device} setSnackbar={setSnackbar} unauthorized={unauthorized} />
-            )}
+            {waiting ? <DeviceInventoryLoader docsVersion={docsVersion} /> : <DeviceInventory device={device} setSnackbar={setSnackbar} />}
           </>
         )}
       </div>
@@ -103,8 +96,6 @@ export const ExpandedDevice = ({
         dialogToggle={shouldUpdate => toggleAuthsets(false, shouldUpdate)}
         decommission={onDecommissionDevice}
         device={device}
-        id_attribute={id_attribute}
-        id_value={id_value}
         limitMaxed={limitMaxed}
         open={showAuthsetsDialog}
       />

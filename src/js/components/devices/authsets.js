@@ -9,7 +9,7 @@ import { InfoOutlined as InfoIcon, Delete as TrashIcon } from '@material-ui/icon
 
 import { deleteAuthset, getDeviceAuth, updateDeviceAuth } from '../../actions/deviceActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
-import { getDocsVersion } from '../../selectors';
+import { getDocsVersion, getIdAttribute } from '../../selectors';
 import Authsetlist from './authsetlist';
 import ConfirmDecommission from './confirmdecommission';
 
@@ -21,8 +21,7 @@ export const AuthsetsDialog = ({
   dialogToggle,
   docsVersion,
   getDeviceAuth,
-  id_attribute,
-  id_value,
+  idAttribute,
   inactive,
   limitMaxed,
   open,
@@ -31,6 +30,7 @@ export const AuthsetsDialog = ({
   const [confirmDecommission, setConfirmDecomission] = useState(false);
   const [loading, setLoading] = useState(false);
   const { auth_sets = [], status = DEVICE_STATES.accepted } = device;
+  const idValue = idAttribute !== 'Device ID' ? (device.identity_data || {})[idAttribute] : device.id;
 
   const updateDeviceAuthStatus = (device_id, auth_id, status) => {
     setLoading(auth_id);
@@ -119,8 +119,8 @@ export const AuthsetsDialog = ({
           {device.status === DEVICE_STATES.accepted || device.status === DEVICE_STATES.rejected ? decommissionButton : null}
 
           <div className="margin-bottom-small" style={{ fontSize: '15px', padding: '14px 40px 0px 20px', border: '1px solid #f1f2f3', width: 'fit-content' }}>
-            <span className="bold margin-right">{id_attribute}</span>
-            <span>{id_value}</span>
+            <span className="bold margin-right">{idAttribute}</span>
+            <span>{idValue}</span>
             <p>
               <span className="bold margin-right">Device status</span>
               <span className="capitalized inline-block">{device.status}</span>
@@ -196,6 +196,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     device,
     docsVersion: getDocsVersion(state),
+    idAttribute: getIdAttribute(state),
     ...authsets
   };
 };
