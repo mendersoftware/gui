@@ -163,18 +163,20 @@ export const DeviceConfiguration = ({
   }, [deployment.status]);
 
   useEffect(() => {
-    if (isEmpty(deployment) && deployment_id && deployment_id !== '00000000-0000-0000-0000-000000000000') {
+    const { config = {} } = device;
+    if (!changedConfig && device.config && (!config.deployment_id || deployment.status)) {
+      const { configured = {}, reported = {}, reported_ts } = config;
+      let currentConfig = reported;
+      const stats = groupDeploymentStats(deployment);
+      if (deployment.status !== 'finished' || (deployment.finished > reported_ts && stats.failures)) {
+        currentConfig = configured;
+      }
+      setChangedConfig(currentConfig);
+    }
+    if (deployment.status !== 'finished' && deployment_id && deployment_id !== '00000000-0000-0000-0000-000000000000') {
       getSingleDeployment(deployment_id);
     }
-  }, [deployment_id]);
-
-  useEffect(() => {
-    const { config = {} } = device;
-    const { reported = {} } = config;
-    if (!changedConfig && device.config) {
-      setChangedConfig(reported);
-    }
-  }, [device.config, deployment]);
+  }, [device.config, deployment.status]);
 
   const onConfigImport = ({ config, importType }) => {
     let updatedConfig = config;
