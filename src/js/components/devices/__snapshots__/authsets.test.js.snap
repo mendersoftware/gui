@@ -116,7 +116,9 @@ exports[`Authsets Component renders correctly 1`] = `
             >
               Device ID
             </span>
-            <span />
+            <span>
+              a1
+            </span>
             <p>
               <span
                 class="bold margin-right"

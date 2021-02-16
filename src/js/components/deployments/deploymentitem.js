@@ -5,7 +5,7 @@ import { compose, setDisplayName } from 'recompose';
 import { Button, IconButton, Tooltip } from '@material-ui/core';
 import { CancelOutlined as CancelOutlinedIcon } from '@material-ui/icons';
 
-import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
+import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
 import { groupDeploymentStats } from '../../helpers';
 import Confirm from '../common/confirm';
 import RelativeTime from '../common/relative-time';
@@ -24,9 +24,13 @@ export const DeploymentDeviceCount = compose(setDisplayName('DeploymentDeviceCou
     {Math.max(deployment.device_count, deployment.max_devices || 0)}
   </div>
 ));
-export const DeploymentDeviceGroup = compose(setDisplayName('DeploymentDeviceGroup'))(({ deployment }) => (
-  <div key="DeploymentDeviceGroup">{deployment.name}</div>
-));
+export const DeploymentDeviceGroup = compose(setDisplayName('DeploymentDeviceGroup'))(props => {
+  const {
+    deployment: { name, type = DEPLOYMENT_TYPES.software, devices = {} }
+  } = props;
+  const deploymentName = type === DEPLOYMENT_TYPES.configuration ? Object.keys(devices).join(', ') : name;
+  return <div key="DeploymentDeviceGroup">{deploymentName || name}</div>;
+});
 export const DeploymentEndTime = compose(setDisplayName('DeploymentEndTime'))(({ deployment }) => (
   <RelativeTime key="DeploymentEndTime" updateTime={deployment.finished} shouldCount="none" />
 ));
@@ -47,9 +51,13 @@ export const DeploymentProgress = compose(setDisplayName('DeploymentProgress'))(
     totalFailureCount={groupedStats.failures}
   />
 ));
-export const DeploymentRelease = compose(setDisplayName('DeploymentRelease'))(({ deployment }) => (
-  <div key="DeploymentRelease">{deployment.artifact_name}</div>
-));
+export const DeploymentRelease = compose(setDisplayName('DeploymentRelease'))(props => {
+  const {
+    deployment: { artifact_name, type = DEPLOYMENT_TYPES.software }
+  } = props;
+  const deploymentRelease = type === DEPLOYMENT_TYPES.configuration ? type : artifact_name;
+  return <div key="DeploymentRelease">{deploymentRelease}</div>;
+});
 export const DeploymentStartTime = compose(setDisplayName('DeploymentStartTime'))(({ direction = 'both', started }) => (
   <RelativeTime key="DeploymentStartTime" updateTime={started} shouldCount={direction} />
 ));

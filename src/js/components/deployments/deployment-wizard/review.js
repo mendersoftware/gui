@@ -2,12 +2,14 @@ import React from 'react';
 import Time from 'react-time';
 import pluralize from 'pluralize';
 
-import { Chip, List } from '@material-ui/core';
+import { Chip, List, ListItem, ListItemText } from '@material-ui/core';
 
+import { DEPLOYMENT_TYPES } from '../../../constants/deploymentConstants';
 import { formatTime, generateDeploymentGroupDetails, getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import ExpandableAttribute from '../../common/expandable-attribute';
 import { getPhaseStartTime } from '../createdeployment';
+import ConfigurationObject from '../../common/configurationobject';
 
 const Review = ({
   deployment = {},
@@ -24,15 +26,11 @@ const Review = ({
   const creationTime = deployment.created || new Date().toISOString();
   const start_time = phases[0].start_ts || creationTime;
   const end_time = null || formatTime(deployment.finished);
-
   const deploymentInformation = {
     General: [
       { primary: 'Release', secondary: release.Name },
       { primary: 'Device types compatible', secondary: release.device_types_compatible.join(', ') },
-      {
-        primary: `Target device(s)`,
-        secondary: device ? device.id : generateDeploymentGroupDetails(deployment.filter || { terms: filters }, group)
-      },
+      { primary: `Target device(s)`, secondary: device ? device.id : generateDeploymentGroupDetails(deployment.filter || { terms: filters }, group) },
       { primary: 'Number of retries', secondary: retries }
     ],
     Schedule: [
@@ -45,6 +43,26 @@ const Review = ({
       }
     ]
   };
+  const { type = DEPLOYMENT_TYPES.software, devices = {} } = deployment;
+  if (type === DEPLOYMENT_TYPES.configuration) {
+    const generalItems = [
+      { primary: 'Release', secondary: type },
+      { primary: `Target device(s)`, secondary: Object.keys(devices).join(', ') }
+    ];
+    deploymentInformation.General.splice(0, 3, ...generalItems);
+    const config = JSON.parse(atob(deployment.configuration));
+    deploymentInformation.General.push({
+      component: (
+        <ListItem disabled key="Configuration">
+          <ListItemText
+            primary="Configuration"
+            secondary={<ConfigurationObject className="margin-top-small" compact config={config} />}
+            secondaryTypographyProps={{ title: atob(deployment.configuration), component: 'div' }}
+          />
+        </ListItem>
+      )
+    });
+  }
 
   return (
     <div className="margin-small">
@@ -55,9 +73,9 @@ const Review = ({
               <span>{title}</span>
             </h4>
             <List>
-              {information.map(item => (
-                <ExpandableAttribute key={item.primary} {...item} dividerDisabled={true} style={{ marginBottom: -15 }} />
-              ))}
+              {information.map(item =>
+                item.component ? item.component : <ExpandableAttribute key={item.primary} {...item} dividerDisabled style={{ marginBottom: -15 }} />
+              )}
             </List>
           </div>
         ))}

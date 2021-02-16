@@ -3,7 +3,6 @@
 exports[`ReleasesList Component renders correctly 1`] = `
 <div
   class="repository-list flexbox column"
-  style="align-items: flex-start;"
 >
   <div
     class="flexbox"

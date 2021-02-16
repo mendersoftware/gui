@@ -41,6 +41,9 @@ export const getDeploymentsByStatus = (status, page = default_page, per_page = d
       let tasks = deploymentIds.reduce(
         (accu, deploymentId) => {
           accu.push(dispatch(getSingleDeploymentStats(deploymentId)));
+          if (deployments[deploymentId].type === DeploymentConstants.DEPLOYMENT_TYPES.configuration) {
+            accu.push(dispatch(getSingleDeployment(deploymentId)));
+          }
           return accu;
         },
         [
@@ -126,15 +129,26 @@ export const getSingleDeployment = id => (dispatch, getState) =>
   });
 
 export const getDeviceLog = (deploymentId, deviceId) => (dispatch, getState) =>
-  GeneralApi.get(`${deploymentsApiUrl}/deployments/${deploymentId}/devices/${deviceId}/log`).then(({ data: log }) => {
-    const devices = getState().deployments.byId[deploymentId].devices;
-    devices[deviceId].log = log;
-    return dispatch({
-      type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICE_LOG,
-      devices,
-      deploymentId
+  GeneralApi.get(`${deploymentsApiUrl}/deployments/${deploymentId}/devices/${deviceId}/log`)
+    .catch(e => {
+      console.log('no log here');
+      console.log(e);
+      return Promise.reject();
+    })
+    .then(({ data: log }) => {
+      const devices = getState().deployments.byId[deploymentId].devices;
+      devices[deviceId].log = log;
+      return Promise.all([
+        Promise.resolve(
+          dispatch({
+            type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICE_LOG,
+            devices,
+            deploymentId
+          })
+        ),
+        Promise.resolve(log)
+      ]);
     });
-  });
 
 export const abortDeployment = deploymentId => (dispatch, getState) =>
   GeneralApi.put(`${deploymentsApiUrl}/deployments/${deploymentId}/status`, { status: 'aborted' })

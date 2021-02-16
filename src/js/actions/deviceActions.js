@@ -2,6 +2,7 @@ import pluralize from 'pluralize';
 
 import { commonErrorHandler, setSnackbar } from '../actions/appActions';
 import { getSingleDeployment } from '../actions/deploymentActions';
+import { saveGlobalSettings } from '../actions/userActions';
 import GeneralApi, { headerNames } from '../api/general-api';
 import DeviceConstants from '../constants/deviceConstants';
 
@@ -697,9 +698,16 @@ export const getDeviceConfig = deviceId => (dispatch, getState) =>
 export const setDeviceConfig = (deviceId, config) => dispatch =>
   GeneralApi.put(`${deviceConfig}/${deviceId}`, config)
     .catch(err => commonErrorHandler(err, `There was an error setting the configuration for device ${deviceId}.`, dispatch, 'Please check your connection.'))
-    .then(() => Promise.all([dispatch(applyDeviceConfig(deviceId, config)), dispatch(getDeviceConfig(deviceId))]));
+    .then(() => Promise.resolve(dispatch(getDeviceConfig(deviceId))));
 
-export const applyDeviceConfig = (deviceId, config) => dispatch =>
+export const applyDeviceConfig = (deviceId, config, isDefault) => (dispatch, getState) =>
   GeneralApi.post(`${deviceConfig}/${deviceId}/deploy`, config)
     .catch(err => commonErrorHandler(err, `There was an error deploying the configuration to device ${deviceId}.`, dispatch, 'Please check your connection.'))
-    .then(({ data }) => Promise.resolve(dispatch(getSingleDeployment(data.deployment_id))));
+    .then(({ data }) => {
+      let tasks = [dispatch(getSingleDeployment(data.deployment_id))];
+      if (isDefault) {
+        const { previous } = getState().users.globalSettings.defaultDeviceConfig;
+        tasks.push(dispatch(saveGlobalSettings({ defaultDeviceConfig: { current: config, previous } })));
+      }
+      return Promise.all(tasks);
+    });

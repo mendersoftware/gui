@@ -10,7 +10,7 @@ import { Block as BlockIcon, Timelapse as TimelapseIcon, Refresh as RefreshIcon 
 
 import successImage from '../../../../assets/img/largeSuccess.png';
 import failImage from '../../../../assets/img/largeFail.png';
-import { DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
+import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../../constants/deploymentConstants';
 import { formatTime } from '../../../helpers';
 import Confirm from '../../common/confirm';
 import ExpandableAttribute from '../../common/expandable-attribute';
@@ -87,22 +87,26 @@ export const DeploymentOverview = ({
     </div>
   );
 
+  const { name, type = DEPLOYMENT_TYPES.software } = deployment;
+  const isSoftwareDeployment = type === DEPLOYMENT_TYPES.software;
+  let deploymentRelease = (
+    <Link style={{ fontWeight: '500' }} to={`/releases/${encodeURIComponent(deployment.artifact_name)}`}>
+      {deployment.artifact_name}
+    </Link>
+  );
+  let targetDevices = name;
+  if (!isSoftwareDeployment) {
+    deploymentRelease = type;
+    targetDevices = Object.keys(deployment.devices).join(', ') || name;
+  }
+
   return (
     <div>
       <div className="report-container">
         <div className="deploymentInfo two-columns">
           <div>
-            <ExpandableAttribute
-              primary="Release:"
-              secondary={
-                <Link style={{ fontWeight: '500' }} to={`/releases/${encodeURIComponent(deployment.artifact_name)}`}>
-                  {deployment.artifact_name}
-                </Link>
-              }
-              dividerDisabled={true}
-              style={{ marginBottom: -15 }}
-            />
-            <ExpandableAttribute primary="Target device(s):" secondary={deployment.name} dividerDisabled={true} style={{ marginBottom: -15 }} />
+            <ExpandableAttribute primary="Release:" secondary={deploymentRelease} dividerDisabled={true} style={{ marginBottom: -15 }} />
+            <ExpandableAttribute primary="Target device(s):" secondary={targetDevices} dividerDisabled={true} style={{ marginBottom: -15 }} />
           </div>
           <ExpandableAttribute primary="Status:" secondary={statusDescription} dividerDisabled={true} style={{ marginBottom: -15 }} />
         </div>

@@ -6,8 +6,8 @@ import { Info as InfoIcon } from '@material-ui/icons';
 
 import Loader from '../../common/loader';
 
-export const DeviceInventoryLoader = ({ docsVersion = '', unauthorized }) => (
-  <div className={`device-inventory bordered ${unauthorized ? 'hidden' : 'report-list'}`}>
+export const DeviceInventoryLoader = ({ docsVersion = '' }) => (
+  <div className="device-inventory bordered report-list">
     <h4 className="margin-bottom-none">Device inventory</h4>
     <List>
       <div className="waiting-inventory" key="waiting-inventory">

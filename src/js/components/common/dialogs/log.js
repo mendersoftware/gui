@@ -16,7 +16,7 @@ const dialogTypes = {
   }
 };
 
-export const LogDialog = ({ logData, onClose, type = 'deviceLog' }) => {
+export const LogDialog = ({ logData = '', onClose, type = 'deviceLog' }) => {
   const [copied, setCopied] = useState(false);
 
   const exportLog = () => {

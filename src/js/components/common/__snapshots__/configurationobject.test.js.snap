@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConfigurationObject Component renders correctly 1`] = `
+<div
+  class=" text-muted two-columns"
+  style="max-width: 280px; row-gap: 15px;"
+>
+  <div
+    class="align-right"
+  >
+    <b>
+      uiPasswordRequired
+    </b>
+  </div>
+  <div>
+    true
+  </div>
+  <div
+    class="align-right"
+  >
+    <b>
+      foo
+    </b>
+  </div>
+  <div>
+    bar
+  </div>
+  <div
+    class="align-right"
+  >
+    <b>
+      timezone
+    </b>
+  </div>
+  <div>
+    GMT+2
+  </div>
+</div>
+`;
