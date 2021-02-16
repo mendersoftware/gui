@@ -19,6 +19,8 @@ import {
   getFormattedSize,
   getPhaseDeviceCount,
   getRemainderPercent,
+  groupDeploymentDevicesStats,
+  groupDeploymentStats,
   hashString,
   isEmpty,
   mapDeviceAttributes,
@@ -616,5 +618,44 @@ describe('tryMapDeployments function', () => {
       Object.values(defaultState.deployments.byId)
     );
     expect(['unknownDeploymentId'].reduce(tryMapDeployments, { state: { ...defaultState }, deployments: [] }).deployments).toEqual([]);
+  });
+});
+
+describe('deployment stats grouping functions', () => {
+  it('groups correctly based on deployment stats', async () => {
+    let deployment = {
+      stats: {
+        aborted: 2,
+        'already-installed': 1,
+        decommissioned: 1,
+        downloading: 3,
+        failure: 1,
+        installing: 1,
+        noartifact: 1,
+        pending: 2,
+        rebooting: 1,
+        success: 1
+      }
+    };
+    expect(groupDeploymentStats(deployment)).toEqual({ inprogress: 5, pending: 2, successes: 3, failures: 4 });
+    deployment = { ...deployment, max_devices: 100, device_count: 10 };
+    expect(groupDeploymentStats(deployment)).toEqual({ inprogress: 5, pending: 92, successes: 3, failures: 4 });
+  });
+  it('groups correctly based on deployment devices states', async () => {
+    const deployment = {
+      devices: {
+        a: { status: 'aborted' },
+        b: { status: 'already-installed' },
+        c: { status: 'decommissioned' },
+        d: { status: 'downloading' },
+        e: { status: 'failure' },
+        f: { status: 'installing' },
+        g: { status: 'noartifact' },
+        h: { status: 'pending' },
+        i: { status: 'rebooting' },
+        j: { status: 'success' }
+      }
+    };
+    expect(groupDeploymentDevicesStats(deployment)).toEqual({ inprogress: 3, pending: 1, successes: 3, failures: 3 });
   });
 });

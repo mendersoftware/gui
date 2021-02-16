@@ -13,7 +13,7 @@ import {
 } from '@material-ui/icons';
 
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
-import { deepCompare, groupDeploymentStats, isEmpty } from '../../../helpers';
+import { deepCompare, groupDeploymentStats, groupDeploymentDevicesStats, isEmpty } from '../../../helpers';
 import ConfigurationObject from '../../common/configurationobject';
 import Confirm from '../../common/confirm';
 import LogDialog from '../../common/dialogs/log';
@@ -114,7 +114,7 @@ export const DeviceConfiguration = ({
   setDeviceConfig
 }) => {
   const { config = {}, status } = device;
-  const { configured, reported = {}, reported_ts, deployment_id } = config;
+  const { configured, deployment_id, reported = {}, reported_ts, updated_ts } = config;
 
   const [changedConfig, setChangedConfig] = useState();
   const [isEditDisabled, setIsEditDisabled] = useState(false);
@@ -147,11 +147,18 @@ export const DeviceConfiguration = ({
 
   useEffect(() => {
     if (deployment.status === 'finished') {
+      // we have to rely on the device stats here as the state change might not have propagated to the deployment status
+      // leaving all stats at 0 and giving a false impression of deployment success
       const stats = groupDeploymentStats(deployment);
-      setUpdateFailed(Boolean(deployment.finished > reported_ts && stats.failures));
+      const deviceStats = groupDeploymentDevicesStats(deployment);
+
+      setUpdateFailed(deployment.created > updated_ts && deployment.finished > reported_ts && (stats.failures || deviceStats.failures));
+      setIsUpdatingConfig(false);
     } else if (deployment.status) {
-      setIsUpdatingConfig(true);
       setChangedConfig(configured);
+      // we can't rely on the deployment.status to be !== 'finished' since `deployment` is initialized as an empty object
+      // and thus the undefined status would also point to an ongoing update
+      setIsUpdatingConfig(true);
     }
   }, [deployment.status]);
 

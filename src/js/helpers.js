@@ -18,21 +18,33 @@ export const fullyDecodeURI = uri => {
   return uri;
 };
 
-const statCollector = (items, statistics) => items.reduce((accu, property) => accu + Number(statistics[property] || 0), 0);
+const deploymentStatesToSubstates = {
+  failures: ['failure', 'aborted', 'decommissioned'],
+  inprogress: ['downloading', 'installing', 'rebooting'],
+  pending: ['pending'],
+  successes: ['success', 'already-installed', 'noartifact']
+};
 
+export const groupDeploymentDevicesStats = deployment => {
+  const deviceStatCollector = (deploymentStates, devices) =>
+    Object.values(devices).reduce((accu, device) => (deploymentStates.includes(device.status) ? accu + 1 : accu), 0);
+
+  const inprogress = deviceStatCollector(deploymentStatesToSubstates.inprogress, deployment.devices);
+  const pending = deviceStatCollector(deploymentStatesToSubstates.pending, deployment.devices);
+  const successes = deviceStatCollector(deploymentStatesToSubstates.successes, deployment.devices);
+  const failures = deviceStatCollector(deploymentStatesToSubstates.failures, deployment.devices);
+  return { inprogress, pending, successes, failures };
+};
+
+const statCollector = (items, statistics) => items.reduce((accu, property) => accu + Number(statistics[property] || 0), 0);
 export const groupDeploymentStats = deployment => {
   const stats = deployment.stats || {};
   // don't include 'pending' as inprogress, as all remaining devices will be pending - we don't discriminate based on phase membership
-  const inprogress = statCollector(['downloading', 'installing', 'rebooting'], stats);
+  const inprogress = statCollector(deploymentStatesToSubstates.inprogress, stats);
   const pending = (deployment.max_devices ? deployment.max_devices - deployment.device_count : 0) + (stats['pending'] || 0);
-  const successes = statCollector(['success', 'already-installed', 'noartifact'], stats);
-  const failures = statCollector(['failure', 'aborted', 'decommissioned'], stats);
-  return {
-    inprogress: inprogress,
-    pending: pending,
-    successes: successes,
-    failures: failures
-  };
+  const successes = statCollector(deploymentStatesToSubstates.successes, stats);
+  const failures = statCollector(deploymentStatesToSubstates.failures, stats);
+  return { inprogress, pending, successes, failures };
 };
 
 export function statusToPercentage(state, intervals) {
