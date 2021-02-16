@@ -287,7 +287,7 @@ export const DeviceConfiguration = ({
             </Button>
           )}
         </div>
-        {isEditingConfig && (
+        {!!isEditingConfig && (
           <Button onClick={setShowConfigImport} disabled={isUpdatingConfig} startIcon={<SaveAltIcon />} style={{ justifySelf: 'left' }}>
             Import configuration
           </Button>
