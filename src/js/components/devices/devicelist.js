@@ -43,7 +43,9 @@ export class DeviceList extends React.Component {
   getDeviceInfo(device) {
     const { getDeviceAuth, getDeviceById, getDeviceConfig, getDeviceConnect } = this.props;
     getDeviceAuth(device.id);
-    getDeviceConfig(device.id);
+    if ([DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(device.status)) {
+      getDeviceConfig(device.id);
+    }
     if (device.status === DEVICE_STATES.accepted) {
       // Get full device identity details for single selected device
       getDeviceById(device.id);
