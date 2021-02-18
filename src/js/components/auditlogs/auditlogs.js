@@ -42,7 +42,7 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
 
   useEffect(() => {
     setLoading(true);
-    getAuditLogs(page, perPage, endDate, startDate, user?.id || user, `${type}`.toLowerCase(), detail?.id || detail, sorting).then(() => setLoading(false));
+    getAuditLogs(page, perPage, startDate, endDate, user?.id || user, `${type}`.toLowerCase(), detail?.id || detail, sorting).then(() => setLoading(false));
   }, [page, perPage, endDate, startDate, user, type, detail, sorting]);
 
   const reset = () => {
