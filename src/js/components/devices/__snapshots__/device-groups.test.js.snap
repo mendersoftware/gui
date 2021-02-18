@@ -141,8 +141,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           style=\\"margin-left: 20px;\\"
         >
           <div
-            class=\\"flexbox space-between\\"
-            style=\\"z-index: 2; margin-bottom: -1px;\\"
+            class=\\"flexbox space-between filter-header\\"
           >
             <div
               class=\\"flexbox\\"
