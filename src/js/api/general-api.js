@@ -8,6 +8,8 @@ export const headerNames = {
   total: 'x-total-count'
 };
 
+export const MAX_PAGE_SIZE = 500;
+
 const unauthorizedRedirect = error => {
   if (!axios.isCancel(error) && error.response?.status === 401) {
     logout();
