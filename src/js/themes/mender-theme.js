@@ -185,9 +185,10 @@ export default createMuiTheme({
       }
     },
     MuiDrawer: {
-      paperAnchorRight: {
-        padding: '15px 30px 5%',
-        display: 'inherit'
+      paper: {
+        minWidth: '60vw',
+        maxWidth: '70vw',
+        padding: '30px 75px 5%'
       }
     }
   }

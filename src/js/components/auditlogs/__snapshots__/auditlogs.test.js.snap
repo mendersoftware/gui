@@ -381,7 +381,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
           class=\\"columnHeader\\"
           style=\\"cursor: initial;\\"
         >
-          Change
+          Changed
         </div>
         <div
           class=\\"columnHeader\\"
@@ -407,6 +407,144 @@ exports[`Auditlogs Component renders correctly 1`] = `
         <div />
       </div>
       <div
+        class=\\"auditlogs-list\\"
+      >
+        <div
+          class=\\"auditlogs-list-item clickable\\"
+        >
+          <div>
+            string@example.com
+          </div>
+          <div
+            class=\\"uppercased\\"
+          >
+            create
+          </div>
+          <div
+            class=\\"capitalized\\"
+          >
+            user
+          </div>
+          <div>
+            user@acme.com
+          </div>
+          <div
+            class=\\"capitalized\\"
+            style=\\"align-items: flex-start; white-space: pre-line;\\"
+          >
+            change1
+          </div>
+          <time
+            datetime=\\"2019-01-01T13:00:00+00:00\\"
+          >
+            2019-01-01 13:00
+          </time>
+          <div
+            class=\\"uppercased link-color bold\\"
+          >
+            view details 
+            <svg
+              aria-hidden=\\"true\\"
+              class=\\"MuiSvgIcon-root\\"
+              focusable=\\"false\\"
+              viewBox=\\"0 0 24 24\\"
+            >
+              <path
+                d=\\"M16.01 11H4v2h12.01v3L20 12l-3.99-4z\\"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class=\\"auditlogs-list-item clickable\\"
+        >
+          <div>
+            string
+          </div>
+          <div
+            class=\\"uppercased\\"
+          >
+            create
+          </div>
+          <div
+            class=\\"capitalized\\"
+          >
+            deployment
+          </div>
+          <div>
+            to production
+          </div>
+          <a
+            href=\\"/deployments/finished?open=true&id=string\\"
+          >
+            View deployment
+          </a>
+          <time
+            datetime=\\"2019-01-01T13:00:00+00:00\\"
+          >
+            2019-01-01 13:00
+          </time>
+          <div
+            class=\\"uppercased link-color bold\\"
+          >
+            view details 
+            <svg
+              aria-hidden=\\"true\\"
+              class=\\"MuiSvgIcon-root\\"
+              focusable=\\"false\\"
+              viewBox=\\"0 0 24 24\\"
+            >
+              <path
+                d=\\"M16.01 11H4v2h12.01v3L20 12l-3.99-4z\\"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class=\\"auditlogs-list-item clickable\\"
+        >
+          <div>
+            string@example.com
+          </div>
+          <div
+            class=\\"uppercased\\"
+          >
+            open_terminal
+          </div>
+          <div
+            class=\\"capitalized\\"
+          >
+            device
+          </div>
+          <div>
+            a1
+          </div>
+          <a>
+            View session log
+          </a>
+          <time
+            datetime=\\"2019-01-01T13:00:00+00:00\\"
+          >
+            2019-01-01 13:00
+          </time>
+          <div
+            class=\\"uppercased link-color bold\\"
+          >
+            view details 
+            <svg
+              aria-hidden=\\"true\\"
+              class=\\"MuiSvgIcon-root\\"
+              focusable=\\"false\\"
+              viewBox=\\"0 0 24 24\\"
+            >
+              <path
+                d=\\"M16.01 11H4v2h12.01v3L20 12l-3.99-4z\\"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div
         class=\\"loaderContainer\\"
       >
         <div
@@ -424,227 +562,6 @@ exports[`Auditlogs Component renders correctly 1`] = `
           <span
             class=\\"dot dot_4\\"
           />
-        </div>
-      </div>
-      <div
-        class=\\"auditlogs-list\\"
-      >
-        <div
-          class=\\"MuiPaper-root MuiAccordion-root auditlogs-list-item MuiPaper-elevation1\\"
-        >
-          <div
-            aria-disabled=\\"false\\"
-            aria-expanded=\\"false\\"
-            class=\\"MuiButtonBase-root MuiAccordionSummary-root\\"
-            role=\\"button\\"
-            style=\\"padding: 0px;\\"
-            tabindex=\\"0\\"
-          >
-            <div
-              class=\\"MuiAccordionSummary-content\\"
-            >
-              <div>
-                <div>
-                  string@example.com
-                </div>
-              </div>
-              <div>
-                <div
-                  class=\\"uppercased\\"
-                >
-                  create
-                </div>
-              </div>
-              <div>
-                <div
-                  class=\\"capitalized\\"
-                >
-                  user
-                </div>
-              </div>
-              <div>
-                <div>
-                  user@acme.com
-                </div>
-              </div>
-              <div>
-                <div
-                  class=\\"capitalized\\"
-                  style=\\"white-space: pre-line;\\"
-                >
-                  change1
-                </div>
-              </div>
-              <div>
-                <time
-                  datetime=\\"2019-01-01T13:00:00+00:00\\"
-                >
-                  2019-01-01 13:00
-                </time>
-              </div>
-              <button
-                class=\\"MuiButtonBase-root MuiIconButton-root expandButton\\"
-                tabindex=\\"0\\"
-                type=\\"button\\"
-              >
-                <span
-                  class=\\"MuiIconButton-label\\"
-                >
-                  <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root\\"
-                    focusable=\\"false\\"
-                    viewBox=\\"0 0 24 24\\"
-                  >
-                    <path
-                      d=\\"M7 10l5 5 5-5z\\"
-                    />
-                  </svg>
-                </span>
-                <span
-                  class=\\"MuiTouchRipple-root\\"
-                />
-              </button>
-            </div>
-          </div>
-          <div
-            class=\\"MuiCollapse-container MuiCollapse-hidden\\"
-            style=\\"min-height: 0px;\\"
-          >
-            <div
-              class=\\"MuiCollapse-wrapper\\"
-            >
-              <div
-                class=\\"MuiCollapse-wrapperInner\\"
-              >
-                <div
-                  role=\\"region\\"
-                >
-                  <div
-                    class=\\"MuiAccordionDetails-root\\"
-                  >
-                    <div
-                      class=\\"code flexbox column\\"
-                    >
-                      <span
-                        class=\\"\\"
-                      >
-                        change1
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class=\\"MuiPaper-root MuiAccordion-root auditlogs-list-item MuiPaper-elevation1\\"
-        >
-          <div
-            aria-disabled=\\"false\\"
-            aria-expanded=\\"false\\"
-            class=\\"MuiButtonBase-root MuiAccordionSummary-root\\"
-            role=\\"button\\"
-            style=\\"padding: 0px;\\"
-            tabindex=\\"0\\"
-          >
-            <div
-              class=\\"MuiAccordionSummary-content\\"
-            >
-              <div>
-                <div>
-                  string
-                </div>
-              </div>
-              <div>
-                <div
-                  class=\\"uppercased\\"
-                >
-                  create
-                </div>
-              </div>
-              <div>
-                <div
-                  class=\\"capitalized\\"
-                >
-                  deployment
-                </div>
-              </div>
-              <div>
-                <div>
-                  to production
-                </div>
-              </div>
-              <div>
-                <a
-                  href=\\"/deployments/finished?open=true&id=string\\"
-                >
-                  View deployment
-                </a>
-              </div>
-              <div>
-                <time
-                  datetime=\\"2019-01-01T13:00:00+00:00\\"
-                >
-                  2019-01-01 13:00
-                </time>
-              </div>
-              <button
-                class=\\"MuiButtonBase-root MuiIconButton-root expandButton\\"
-                tabindex=\\"0\\"
-                type=\\"button\\"
-              >
-                <span
-                  class=\\"MuiIconButton-label\\"
-                >
-                  <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root\\"
-                    focusable=\\"false\\"
-                    viewBox=\\"0 0 24 24\\"
-                  >
-                    <path
-                      d=\\"M7 10l5 5 5-5z\\"
-                    />
-                  </svg>
-                </span>
-                <span
-                  class=\\"MuiTouchRipple-root\\"
-                />
-              </button>
-            </div>
-          </div>
-          <div
-            class=\\"MuiCollapse-container MuiCollapse-hidden\\"
-            style=\\"min-height: 0px;\\"
-          >
-            <div
-              class=\\"MuiCollapse-wrapper\\"
-            >
-              <div
-                class=\\"MuiCollapse-wrapperInner\\"
-              >
-                <div
-                  role=\\"region\\"
-                >
-                  <div
-                    class=\\"MuiAccordionDetails-root\\"
-                  >
-                    <div
-                      class=\\"code flexbox column\\"
-                    >
-                      <span
-                        class=\\"\\"
-                      >
-                        change2
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
       <div

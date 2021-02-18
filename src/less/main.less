@@ -2095,21 +2095,6 @@ span.day {
   }
 }
 
-.material-list-item {
-  padding: 20px 16px 16px;
-  overflow: hidden;
-
-  h4 {
-    margin: 0;
-    font-size: 16px;
-    font-weight: normal;
-  }
-  p {
-    margin: 4px 0px 0px;
-    color: rgba(0, 0, 0, 0.54);
-  }
-}
-
 .substate {
   width: 64%;
   min-width: 200px;
@@ -2138,23 +2123,26 @@ span.day {
 
 .auditlogs-list .auditlogs-list-item {
   border-bottom: 1px solid @bordercolor;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 2fr 2fr 1.75fr 120px;
+  grid-column-gap: 2 * @defaultGutterWidth;
+  height: 3 * @defaultGutterWidth;
+  min-height: 3 * @defaultGutterWidth;
+  max-height: 3 * @defaultGutterWidth;
+  padding: 5px @defaultGutterWidth;
+  > * {
+    display: flex;
+    align-items: center;
+    max-height: @defaultGutterWidth * 3;
+    overflow: hidden;
+  }
   &.auditlogs-list-item-header, &:last-of-type {
     border-bottom: transparent;
   }
-  &.auditlogs-list-item-header, .MuiAccordionSummary-content {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 2fr 2fr 1.75fr 50px;
-    grid-column-gap: 2 * @defaultGutterWidth;
-    padding: 10px 0;
-    align-items: center;
+  &.auditlogs-list-item-header {
+    cursor: initial;
+    padding: 10px @defaultGutterWidth;
     position: relative;
-    >div {
-      max-height: @defaultGutterWidth * 3;
-      overflow: hidden;
-    }
-  }
-  &.auditlogs-list-item-header, .MuiAccordionSummary-content, .MuiAccordionSummary-content.Mui-expanded {
-    margin: 0 @defaultGutterWidth;
   }
 }
 

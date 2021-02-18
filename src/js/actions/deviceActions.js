@@ -3,6 +3,7 @@ import pluralize from 'pluralize';
 import { commonErrorHandler, setSnackbar } from '../actions/appActions';
 import { getSingleDeployment } from '../actions/deploymentActions';
 import { saveGlobalSettings } from '../actions/userActions';
+import { auditLogsApiUrl } from '../actions/organizationActions';
 import GeneralApi, { headerNames, MAX_PAGE_SIZE } from '../api/general-api';
 import DeviceConstants from '../constants/deviceConstants';
 
@@ -567,6 +568,27 @@ export const getDeviceConnect = id => dispatch =>
     tasks.push(Promise.resolve(data));
     return Promise.all(tasks);
   });
+
+export const getSessionDetails = (sessionId, deviceId, userId, startDate, endDate) => () => {
+  const createdAfter = startDate ? `&created_after=${Math.round(Date.parse(startDate) / 1000)}` : '';
+  const createdBefore = endDate ? `&created_before=${Math.round(Date.parse(endDate) / 1000)}` : '';
+  const objectSearch = `&object_id=${deviceId}`;
+  return GeneralApi.get(`${auditLogsApiUrl}/logs?per_page=500${createdAfter}${createdBefore}&actor_id=${userId}${objectSearch}`).then(
+    ({ data: auditLogEntries }) => {
+      const { start, end } = auditLogEntries.reduce(
+        (accu, item) => {
+          if (item.meta.session_id.includes(sessionId)) {
+            accu.start = new Date(item.action.startsWith('open') ? item.time : accu.start);
+            accu.end = new Date(item.action.startsWith('close') ? item.time : accu.end);
+          }
+          return accu;
+        },
+        { start: startDate, end: endDate }
+      );
+      return Promise.resolve({ start, end });
+    }
+  );
+};
 
 export const getDeviceAuth = id => dispatch => Promise.resolve(dispatch(getDevicesWithAuth([{ id }]))).then(results => Promise.resolve(results[1][0]));
 

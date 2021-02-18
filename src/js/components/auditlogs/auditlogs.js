@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import { Button, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
@@ -24,11 +25,13 @@ const detailsMap = {
 };
 
 export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserList, groups, users, ...props }) => {
+  const history = useHistory();
   const [csvLoading, setCsvLoading] = useState(false);
   const [detail, setDetail] = useState('');
   const [endDate, setEndDate] = useState(tonight);
   const [filterReset, setFilterReset] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [locationChange, setLocationChange] = useState(true);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(defaultRowsPerPage);
   const [sorting, setSorting] = useState('desc');
@@ -38,12 +41,29 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
 
   useEffect(() => {
     getUserList();
+    return history.listen(trackLocationChange);
   }, []);
 
   useEffect(() => {
     setLoading(true);
     getAuditLogs(page, perPage, startDate, endDate, user?.id || user, `${type}`.toLowerCase(), detail?.id || detail, sorting).then(() => setLoading(false));
   }, [page, perPage, endDate, startDate, user, type, detail, sorting]);
+
+  const trackLocationChange = location => {
+    if (!location.search) {
+      return;
+    }
+    const params = new URLSearchParams(location.search);
+    setPage(params.get('page') ?? 1);
+    setPerPage(params.get('per_page') ?? defaultRowsPerPage);
+    setType(params.get('object_type') ?? '');
+    setDetail(params.get('object_id') ?? '');
+    setUser(params.get('user_id') ?? '');
+    setSorting(params.get('sort') ?? 'desc');
+    setStartDate(params.get('start_date') ?? today);
+    setEndDate(params.get('end_date') ?? tonight);
+    setLocationChange(!locationChange);
+  };
 
   const reset = () => {
     setPage(1);
@@ -53,6 +73,7 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
     setType('');
     setDetail('');
     setFilterReset(!filterReset);
+    history.push('/auditlog');
   };
 
   const refresh = (
@@ -171,6 +192,7 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
           {...props}
           items={events}
           loading={loading}
+          locationChange={locationChange}
           onChangePage={refresh}
           onChangeRowsPerPage={newPerPage => refresh(1, newPerPage)}
           onChangeSorting={() => setSorting(sorting === 'desc' ? 'asc' : 'desc')}
