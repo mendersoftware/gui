@@ -1015,7 +1015,8 @@ ul.link-list {
   }
 }
 
-.filter-toggle,
+
+.filter-header .filter-toggle,
 .filter-wrapper {
   border-style: solid;
   border-width: 1px;
@@ -1023,9 +1024,14 @@ ul.link-list {
   border-color: @lightgrey;
   background: white;
 }
-.filter-toggle {
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
+.filter-header {
+  margin-bottom: -1px;
+  overflow: hidden !important;
+  z-index: 2;
+  .filter-toggle {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 }
 .filter-wrapper {
   padding: 20px;

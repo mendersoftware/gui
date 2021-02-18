@@ -12,13 +12,7 @@ exports[`AuthorizedDevices Component renders correctly 1`] = `
     }
   >
     <div
-      className="flexbox space-between"
-      style={
-        Object {
-          "marginBottom": -1,
-          "zIndex": 2,
-        }
-      }
+      className="flexbox space-between filter-header"
     >
       <div
         className="flexbox"
@@ -30,6 +24,11 @@ exports[`AuthorizedDevices Component renders correctly 1`] = `
         </h2>
         <div
           className="flexbox centered "
+          style={
+            Object {
+              "marginBottom": -1,
+            }
+          }
         >
           <button
             className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"

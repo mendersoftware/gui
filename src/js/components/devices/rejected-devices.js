@@ -102,21 +102,19 @@ export class Rejected extends BaseDevices {
       <div className="tab-container flexbox column">
         {!!count && (
           <>
-            <div className="flexbox allow-overflow" style={{ zIndex: 2, marginBottom: -1 }}>
-              <h2 className="inline-block margin-right">Rejected devices</h2>
-              {!pageLoading && (
-                <div className={`flexbox centered ${showFilters ? 'filter-toggle' : ''}`}>
-                  <Button
-                    color="secondary"
-                    disableRipple
-                    onClick={() => self.setState({ showFilters: !showFilters })}
-                    startIcon={<FilterListIcon />}
-                    style={{ backgroundColor: 'transparent' }}
-                  >
-                    {filters.length > 0 ? `Filters (${filters.length})` : 'Filters'}
-                  </Button>
-                </div>
-              )}
+            <div className="flexbox filter-header">
+              <h2 className="margin-right">Rejected devices</h2>
+              <div className={`flexbox centered ${showFilters ? 'filter-toggle' : ''}`} style={{ marginBottom: -1 }}>
+                <Button
+                  color="secondary"
+                  disableRipple
+                  onClick={() => self.setState({ showFilters: !showFilters })}
+                  startIcon={<FilterListIcon />}
+                  style={{ backgroundColor: 'transparent' }}
+                >
+                  {filters.length > 0 ? `Filters (${filters.length})` : 'Filters'}
+                </Button>
+              </div>
             </div>
             <Filters identityOnly={true} onFilterChange={() => self.setState({ pageNo: 1 }, () => self._getDevices(true))} open={showFilters} />
             {!pageLoading && (

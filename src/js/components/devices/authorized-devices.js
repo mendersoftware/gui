@@ -284,11 +284,11 @@ export class Authorized extends BaseDevices {
     return (
       <div className="relative">
         <div style={{ marginLeft: '20px' }}>
-          <div className="flexbox space-between" style={{ zIndex: 2, marginBottom: -1 }}>
+          <div className="flexbox space-between filter-header">
             <div className="flexbox">
               <h2 className="margin-right">{isUngroupedGroup ? UNGROUPED_GROUP.name : groupLabel}</h2>
               {(!selectedGroup || !!groupFilters.length) && !isUngroupedGroup && (
-                <div className={`flexbox centered ${showFilters ? 'filter-toggle' : ''}`}>
+                <div className={`flexbox centered ${showFilters ? 'filter-toggle' : ''}`} style={{ marginBottom: -1 }}>
                   <Button
                     color="secondary"
                     disableRipple

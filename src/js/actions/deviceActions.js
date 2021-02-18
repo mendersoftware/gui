@@ -3,7 +3,7 @@ import pluralize from 'pluralize';
 import { commonErrorHandler, setSnackbar } from '../actions/appActions';
 import { getSingleDeployment } from '../actions/deploymentActions';
 import { saveGlobalSettings } from '../actions/userActions';
-import GeneralApi, { headerNames } from '../api/general-api';
+import GeneralApi, { headerNames, MAX_PAGE_SIZE } from '../api/general-api';
 import DeviceConstants from '../constants/deviceConstants';
 
 import { extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
@@ -142,7 +142,7 @@ const mapFiltersToTerms = filters =>
 const mapTermsToFilters = terms => terms.map(term => ({ scope: term.scope, key: term.attribute, operator: term.type, value: term.value }));
 
 export const getDynamicGroups = () => (dispatch, getState) =>
-  GeneralApi.get(`${inventoryApiUrlV2}/filters`).then(({ data: filters }) => {
+  GeneralApi.get(`${inventoryApiUrlV2}/filters?per_page=${MAX_PAGE_SIZE}`).then(({ data: filters }) => {
     const state = getState().devices.groups.byId;
     const groups = (filters || []).reduce((accu, filter) => {
       accu[filter.name] = {
@@ -299,7 +299,7 @@ export const getAllGroupDevices = group => (dispatch, getState) => {
     return Promise.resolve();
   }
   const attributes = [...defaultAttributes, { scope: 'identity', attribute: getState().users.globalSettings.id_attribute || 'id' }];
-  const getAllDevices = (perPage = 500, page = defaultPage, devices = []) =>
+  const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
     GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
       page,
       per_page: perPage,
@@ -344,7 +344,7 @@ export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
     { key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' }
   ]);
   const attributes = [...defaultAttributes, { scope: 'identity', attribute: getState().users.globalSettings.id_attribute || 'id' }];
-  const getAllDevices = (perPage = 500, page = defaultPage, devices = []) =>
+  const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
     GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, { page, per_page: perPage, filters, attributes }).then(res => {
       const state = getState();
       const deviceAccu = reduceReceivedDevices(res.data, devices, state);
@@ -506,7 +506,7 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
 
 export const getAllDevicesByStatus = status => (dispatch, getState) => {
   const attributes = [...defaultAttributes, { scope: 'identity', attribute: getState().users.globalSettings.id_attribute || 'id' }];
-  const getAllDevices = (perPage = 500, page = 1, devices = []) =>
+  const getAllDevices = (perPage = MAX_PAGE_SIZE, page = 1, devices = []) =>
     GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
       page,
       per_page: perPage,

@@ -207,9 +207,9 @@ export class Pending extends BaseDevices {
       <div className="tab-container flexbox column">
         {!!count && (
           <>
-            <div className="flexbox allow-overflow" style={{ alignItems: 'center', marginBottom: -1, zIndex: 2, paddingTop: 5 }}>
+            <div className="flexbox filter-header">
               <h2 className="margin-right">Pending devices</h2>
-              <div className={showFilters ? 'filter-toggle' : ''}>
+              <div className={`flexbox centered ${showFilters ? 'filter-toggle' : ''}`} style={{ marginBottom: -1 }}>
                 <Button
                   color="secondary"
                   disableRipple
