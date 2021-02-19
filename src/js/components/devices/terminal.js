@@ -9,27 +9,32 @@ import { SearchAddon } from 'xterm-addon-search';
 import msgpack5 from 'msgpack5';
 
 import { setSnackbar } from '../../actions/appActions';
+import { deviceConnect } from '../../actions/deviceActions';
 
 // see https://github.com/mendersoftware/go-lib-micro/tree/master/ws
 //     for the description of proto_header and the consts
 // *Note*: this needs to be aligned with mender-connect and deviceconnect.
-const MessageProtocolShell = 1;
+export const MessageProtocol = {
+  Shell: 1
+};
 
-const MessageTypeNew = 'new';
-const MessageTypePing = 'ping';
-const MessageTypePong = 'pong';
-const MessageTypeResize = 'resize';
-const MessageTypeShell = 'shell';
-const MessageTypeStop = 'stop';
+export const MessageTypes = {
+  New: 'new',
+  Ping: 'ping',
+  Pong: 'pong',
+  Resize: 'resize',
+  Shell: 'shell',
+  Stop: 'stop'
+};
 
 const MessagePack = msgpack5();
 
 const fitAddon = new FitAddon();
 const searchAddon = new SearchAddon();
 
-const byteArrayToString = body => String.fromCharCode(...body);
+export const byteArrayToString = body => String.fromCharCode(...body);
 
-const blobToString = blob => {
+export const blobToString = blob => {
   return new Promise(resolve => {
     let fr = new FileReader();
     fr.onload = () => {
@@ -39,10 +44,10 @@ const blobToString = blob => {
   });
 };
 
-const options = {
+export const options = {
   cursorBlink: 'block',
   macOptionIsMeta: true,
-  scrollback: 100
+  scrollback: 5000
 };
 
 let socket = null;
@@ -108,7 +113,7 @@ export const Terminal = ({ onCancel, sendMessage, setSnackbar, setSessionId, set
     let newDimensions = fitAddon.proposeDimensions();
     //
     const message = {
-      typ: MessageTypeNew,
+      typ: MessageTypes.New,
       props: { terminal_height: newDimensions.rows, terminal_width: newDimensions.cols }
     };
     sendMessage(message);
@@ -120,11 +125,11 @@ export const Terminal = ({ onCancel, sendMessage, setSnackbar, setSessionId, set
           hdr: { props = {}, proto, sid, typ },
           body
         } = MessagePack.decode(data);
-        if (proto !== MessageProtocolShell) {
+        if (proto !== MessageProtocol.Shell) {
           return;
         }
         switch (typ) {
-          case MessageTypeNew: {
+          case MessageTypes.New: {
             if (props.status == 2) {
               setSnackbar(`Error: ${byteArrayToString(body)}`, 5000);
               setSnackbarAlreadySet(true);
@@ -133,16 +138,16 @@ export const Terminal = ({ onCancel, sendMessage, setSnackbar, setSessionId, set
               return setSessionId(sid);
             }
           }
-          case MessageTypeShell:
+          case MessageTypes.Shell:
             return term.write(byteArrayToString(body));
-          case MessageTypeStop: {
+          case MessageTypes.Stop: {
             return cleanupSocket();
           }
-          case MessageTypePing: {
+          case MessageTypes.Ping: {
             if (healthcheckTimeout) {
               clearTimeout(healthcheckTimeout);
             }
-            sendMessage({ typ: MessageTypePong });
+            sendMessage({ typ: MessageTypes.Pong });
             //
             var timeout = parseInt(props.timeout);
             if (timeout > 0) {
@@ -165,7 +170,7 @@ export const Terminal = ({ onCancel, sendMessage, setSnackbar, setSessionId, set
     if (newDimensions.rows != dimensions.rows || newDimensions.cols != dimensions.cols) {
       //
       const message = {
-        typ: MessageTypeResize,
+        typ: MessageTypes.Resize,
         props: { terminal_height: newDimensions.rows, terminal_width: newDimensions.cols }
       };
       sendMessage(message);
@@ -191,7 +196,7 @@ export const Terminal = ({ onCancel, sendMessage, setSnackbar, setSessionId, set
     }
   };
 
-  const onData = data => sendMessage({ typ: MessageTypeShell, body: data });
+  const onData = data => sendMessage({ typ: MessageTypes.Shell, body: data });
 
   return <XTerm ref={xtermRef} addons={[fitAddon, searchAddon]} options={options} onData={onData} className="xterm-fullscreen" />;
 };
@@ -210,10 +215,10 @@ export const TerminalDialog = ({ deviceId, onCancel, onSocketClose, open, setSna
     if (!(open || socketInitialized) || socketInitialized) {
       return;
     }
-    socket = new WebSocket(`wss://${window.location.host}/api/management/v1/deviceconnect/devices/${deviceId}/connect`);
+    socket = new WebSocket(`wss://${window.location.host}${deviceConnect}/devices/${deviceId}/connect`);
 
     return () => {
-      onSendMessage({ typ: MessageTypeStop });
+      onSendMessage({ typ: MessageTypes.Stop });
       setSessionId(null);
       setSocketInitialized(false);
     };
@@ -223,7 +228,7 @@ export const TerminalDialog = ({ deviceId, onCancel, onSocketClose, open, setSna
     if (!socket) {
       return;
     }
-    const proto_header = { proto: MessageProtocolShell, typ, sid: sessionId, props };
+    const proto_header = { proto: MessageProtocol.Shell, typ, sid: sessionId, props };
     const encodedData = MessagePack.encode({ hdr: proto_header, body });
     socket.send(encodedData);
   };
