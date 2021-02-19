@@ -186,8 +186,8 @@ export default createMuiTheme({
     },
     MuiDrawer: {
       paper: {
-        minWidth: '60vw',
-        maxWidth: '70vw',
+        minWidth: '40vw',
+        maxWidth: '80vw',
         padding: '30px 75px 5%'
       }
     }

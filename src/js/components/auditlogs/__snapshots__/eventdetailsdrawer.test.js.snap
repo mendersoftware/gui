@@ -25,8 +25,7 @@ exports[`EventDetailsDrawer Component renders correctly 1`] = `
     </svg>
   </div>
   <hr
-    class="MuiDivider-root MuiDivider-light"
-    style="margin-bottom: 24px;"
+    class="MuiDivider-root"
   />
   <div
     class="code flexbox column"

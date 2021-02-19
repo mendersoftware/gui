@@ -11,8 +11,8 @@ import { getDeviceById, getSessionDetails } from '../../../actions/deviceActions
 import { getIdAttribute } from '../../../selectors';
 import theme from '../../../themes/mender-theme';
 import Loader from '../../common/loader';
-import { Terminal } from '../../devices/terminal';
 import { formatTime } from '../../../helpers';
+import TerminalPlayer from './terminalplayer';
 
 momentDurationFormatSetup(moment);
 
@@ -69,13 +69,12 @@ export const TerminalSession = ({ device, idAttribute, item, getDeviceById, getS
   };
 
   return (
-    <div className="two-columns">
-      {/* <Terminal /> */}
-      <div style={{ background: 'black', height: 300, minWidth: 400 }}></div>
-      <div className="flexbox column">
+    <div className="flexbox" style={{ flexWrap: 'wrap' }}>
+      <TerminalPlayer className="flexbox column margin-top" item={item} sessionInitialized={!!sessionDetails} />
+      <div className="flexbox column" style={{ margin: theme.spacing(3), minWidth: 'min-content' }}>
         {Object.entries(sessionInformation).map(([title, details]) => (
           <div key={`${title}-details`} className="flexbox column margin-top-small">
-            <b className="margin-bottom capitalized-start">{title} details</b>
+            <b className="margin-bottom-small capitalized-start">{title} details</b>
             <div className="text-muted two-columns" style={{ gridTemplateColumns: 'minmax(max-content, 150px) max-content', rowGap: theme.spacing(2.5) }}>
               {Object.entries(details).map(([key, value]) => (
                 <Fragment key={key}>

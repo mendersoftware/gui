@@ -31,7 +31,7 @@ export const EventDetailsDrawer = ({ eventItem = {}, onClose, open }) => {
         <b className="capitalized">{title}</b>
         <HelpOutlineIcon />
       </div>
-      <Divider light style={{ marginBottom: theme.spacing(3) }} />
+      <Divider />
       <Component item={eventItem} />
       <Divider light style={{ marginTop: theme.spacing(2) }} />
     </Drawer>
