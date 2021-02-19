@@ -4,7 +4,7 @@
     "Certificate": "/certs/cert.pem",
     "Key": "/keys/key.pem"
   },
-  "ServerCertificate": "/certs/hosted.pem",
+  "ServerCertificate": "/usr/share/doc/mender-client/examples/demo.crt",
   "ShellCommand": "/bin/bash",
   "ServerURL": "https://docker.mender.io",
   "User": "root",

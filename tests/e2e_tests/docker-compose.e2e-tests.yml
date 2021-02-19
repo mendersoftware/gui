@@ -27,9 +27,12 @@ services:
       - ${GUI_REPOSITORY}/logs:/root/.npm/_logs
 
   mender-client:
-    image: mendersoftware/mender-client-docker:connect
+    image: mendersoftware/mender-client-docker-addons:master
     volumes:
-      - ${INTEGRATION_PATH}/certs/api-gateway/cert.crt:/certs/hosted.pem
+      - ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/artifact_info:/etc/mender/artifact_info
+      - ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/device_type:/var/lib/mender/device_type
+      - ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender.json:/etc/mender/mender.conf
+      - ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender-connect.json:/etc/mender/mender-connect.conf
 
     ##
     ## to execute or edit the tests locally:
