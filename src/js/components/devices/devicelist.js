@@ -2,10 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // material ui
-import Checkbox from '@material-ui/core/Checkbox';
+import { Checkbox } from '@material-ui/core';
 
-import SettingsIcon from '@material-ui/icons/Settings';
-import SortIcon from '@material-ui/icons/Sort';
+import { Settings as SettingsIcon, Sort as SortIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeviceAuth, getDeviceById, getDeviceConfig, getDeviceConnect } from '../../actions/deviceActions';
@@ -15,6 +14,7 @@ import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
+import ExpandedDevice from './expanded-device';
 import DeviceListItem from './devicelistitem';
 import { refreshLength as refreshDeviceLength } from './devices';
 
@@ -22,7 +22,7 @@ export class DeviceList extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      expandedDeviceId: null
+      expandedDeviceId: undefined
     };
   }
 
@@ -59,10 +59,11 @@ export class DeviceList extends React.Component {
       return;
     }
     const { advanceOnboarding, devices, onboardingComplete, setSnackbar } = self.props;
+    const { expandedDeviceId } = self.state;
     setSnackbar('');
     let device = devices[rowNumber];
     clearInterval(self.timer);
-    if (self.state.expandedDeviceId === device.id) {
+    if (expandedDeviceId === device.id) {
       device = null;
     } else {
       self.timer = setInterval(() => self.getDeviceInfo(device), refreshDeviceLength);
@@ -127,22 +128,22 @@ export class DeviceList extends React.Component {
     } = self.props;
     const { expandedDeviceId } = self.state;
     const numSelected = (selectedRows || []).length;
-    const itemClassName = `deviceListRow columns-${columnHeaders.length} ${onSelect ? 'selectable' : ''} ${expandable ? 'expandable' : ''}`;
+    const itemClassName = `deviceListRow columns-${columnHeaders.length} ${onSelect ? 'selectable' : ''}`;
     return (
       <div className={`deviceList ${className || ''}`}>
         <div className={`header ${itemClassName}`}>
-          {onSelect ? (
+          {onSelect && (
             <Checkbox
               indeterminate={numSelected > 0 && numSelected < devices.length}
               checked={numSelected === devices.length}
               onChange={() => self.onSelectAllClick()}
             />
-          ) : null}
+          )}
           {columnHeaders.map((item, index) => (
             <div className="columnHeader" key={`columnHeader-${index}`} style={item.style} onClick={() => onSort(item.attribute ? item.attribute : {})}>
               {item.title}
-              {item.sortable ? <SortIcon className={`sortIcon ${sortCol === item.attribute.name ? 'selected' : ''} ${sortDown.toString()}`} /> : null}
-              {item.customize ? <SettingsIcon onClick={item.customize} style={{ fontSize: 16, marginLeft: 'auto' }} /> : null}
+              {item.sortable && <SortIcon className={`sortIcon ${sortCol === item.attribute.name ? 'selected' : ''} ${sortDown.toString()}`} />}
+              {item.customize && <SettingsIcon onClick={item.customize} style={{ fontSize: 16, marginLeft: 'auto' }} />}
             </div>
           ))}
           {expandable && <div style={{ width: 48 }} />}
@@ -152,12 +153,11 @@ export class DeviceList extends React.Component {
             <DeviceListItem
               {...self.props}
               device={device}
-              expanded={expandedDeviceId === device.id}
               itemClassName={itemClassName}
               key={`device-${device.id}`}
               selectable={!!onSelect}
               selected={self._isSelected(index)}
-              onClick={event => (expandable ? self._expandRow(event, index) : self._onRowSelection(index))}
+              onClick={event => (expandable ? self._expandRow(event, device) : self._onRowSelection(index))}
               onRowSelect={() => self._onRowSelection(index)}
             />
           ))}
@@ -171,11 +171,18 @@ export class DeviceList extends React.Component {
             onChangePage={page => self.onPageChange(page)}
           />
         )}
-        {pageLoading ? (
+        {pageLoading && (
           <div className="smallLoaderContainer">
             <Loader show={true} />
           </div>
-        ) : null}
+        )}
+        <ExpandedDevice
+          {...self.props}
+          className="expandedDevice"
+          deviceId={expandedDeviceId}
+          open={Boolean(expandedDeviceId)}
+          onClose={e => self._expandRow(e, expandedDeviceId)}
+        />
       </div>
     );
   }
