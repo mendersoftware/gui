@@ -11,7 +11,7 @@ import Loader from '../common/loader';
 import DeviceList from './devicelist';
 import { refreshLength as refreshDeviceLength } from './devices';
 import Filters from './filters';
-import { getIdAttribute } from '../../selectors';
+import { getIdAttribute, getLimitMaxed } from '../../selectors';
 import BaseDevices, { DeviceCreationTime, DeviceStatusHeading, RelativeDeviceTime } from './base-devices';
 
 const defaultHeaders = [
@@ -84,9 +84,8 @@ export class Rejected extends BaseDevices {
 
   render() {
     const self = this;
-    const { acceptedDevices, count, deviceLimit, devices, filters, idAttribute, openSettingsDialog } = self.props;
+    const { count, devices, filters, idAttribute, limitMaxed, openSettingsDialog } = self.props;
     const { pageLoading, showFilters } = this.state;
-    const limitMaxed = deviceLimit ? deviceLimit <= acceptedDevices : false;
     const columnHeaders = [
       {
         title: idAttribute,
@@ -155,12 +154,11 @@ const actionCreators = { getDevicesByStatus, selectGroup, setDeviceFilters };
 
 const mapStateToProps = state => {
   return {
-    acceptedDevices: state.devices.byStatus.accepted.total || 0,
     count: state.devices.byStatus.rejected.total,
     devices: state.devices.selectedDeviceList.slice(0, DEVICE_LIST_MAXIMUM_LENGTH),
-    deviceLimit: state.devices.limit,
     filters: state.devices.filters || [],
     idAttribute: getIdAttribute(state),
+    limitMaxed: getLimitMaxed(state),
     rejectedDeviceIds: state.devices.byStatus.rejected.deviceIds
   };
 };
