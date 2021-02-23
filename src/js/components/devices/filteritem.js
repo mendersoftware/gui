@@ -62,13 +62,13 @@ export default class FilterItem extends React.Component {
     return !(nextState.key === this.state.key && nextState.value === this.state.value && nextState.operator === this.state.operator);
   }
 
-  updateFilterKey(value) {
+  updateFilterKey(value, selectedScope) {
     const self = this;
     if (!value) {
       return self._removeFilter();
     }
-    const { key, scope } = self.props.filters.find(filter => filter.key === value);
-    self.setState({ key, scope }, () => self.notifyFilterUpdate());
+    const { key, scope: fallbackScope } = self.props.filters.find(filter => filter.key === value);
+    self.setState({ key, scope: selectedScope || fallbackScope }, () => self.notifyFilterUpdate());
   }
 
   updateFilterOperator(value) {
@@ -139,11 +139,12 @@ export default class FilterItem extends React.Component {
             id="filter-selection"
             includeInputInList={true}
             onChange={(e, changedValue) => {
-              if (changedValue && changedValue.inputValue) {
+              const { inputValue, key = changedValue, scope } = changedValue || {};
+              if (inputValue) {
                 // only circumvent updateFilterKey if we deal with a custom attribute - those will be treated as inventory attributes
-                return self.setState({ key: changedValue.inputValue, scope: defaultScope }, () => self.notifyFilterUpdate());
+                return self.setState({ key: inputValue, scope: defaultScope }, () => self.notifyFilterUpdate());
               }
-              self.updateFilterKey(changedValue && changedValue.key ? changedValue.key : changedValue);
+              self.updateFilterKey(key, scope);
             }}
             options={filters.sort((a, b) => a.priority - b.priority)}
             renderInput={params => <TextField {...params} label="Attribute" style={textFieldStyle} />}
