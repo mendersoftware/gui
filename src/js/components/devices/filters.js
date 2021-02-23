@@ -214,7 +214,7 @@ const mapStateToProps = (state, ownProps) => {
     ];
   }
   return {
-    attributes: attributes.filter((item, index, array) => array.findIndex(filter => filter.key === item.key) == index),
+    attributes: attributes.filter((item, index, array) => array.findIndex(filter => filter.key === item.key && filter.scope === item.scope) == index),
     canFilterMultiple: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
     filters: ownProps.filters || state.devices.filters || [],
     isHosted: state.app.features.isHosted,
