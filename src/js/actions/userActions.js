@@ -6,7 +6,7 @@ import UsersApi from '../api/users-api';
 import AppConstants from '../constants/appConstants';
 import OnboardingConstants from '../constants/onboardingConstants';
 import UserConstants from '../constants/userConstants';
-import { getCurrentUser, getUserSettings } from '../selectors';
+import { getCurrentUser, getOnboardingState, getUserSettings } from '../selectors';
 import { getToken, logout } from '../auth';
 import { extractErrorMessage, hashString, preformatWithRequestID } from '../helpers';
 import { clearAllRetryTimers } from '../utils/retrytimer';
@@ -296,8 +296,13 @@ export const get2FAQRCode = () => dispatch =>
 /*
   Onboarding
 */
-const setShowHelptips = show => dispatch =>
-  Promise.all([dispatch({ type: UserConstants.SET_SHOW_HELP, show }), dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show })]);
+export const setShowHelptips = show => (dispatch, getState) => {
+  let tasks = [dispatch({ type: UserConstants.SET_SHOW_HELP, show })];
+  if (!getOnboardingState(getState()).complete) {
+    tasks.push(dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show }));
+  }
+  return Promise.all(tasks);
+};
 
 export const toggleHelptips = () => (dispatch, getState) => {
   const state = getState();

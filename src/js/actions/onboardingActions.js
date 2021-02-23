@@ -66,11 +66,12 @@ export const getOnboardingState = () => (dispatch, getState) => {
 };
 
 export const setShowOnboardingHelp = (show, update = true) => (dispatch, getState) => {
-  let tasks = [dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show }), dispatch(toggleHelptips())];
+  let tasks = [dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show })];
   if (update) {
     const { onboarding = {} } = getUserSettings(getState());
     onboarding.showTips = show;
     tasks.push(dispatch(saveUserSettings({ onboarding })));
+    tasks.push(dispatch(toggleHelptips()));
   }
   return Promise.all(tasks);
 };
