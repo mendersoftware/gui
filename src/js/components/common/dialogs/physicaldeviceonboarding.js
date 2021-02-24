@@ -9,7 +9,7 @@ import HelpIcon from '@material-ui/icons/Help';
 import CopyCode from '../copy-code';
 import { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType } from '../../../actions/onboardingActions';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
-import { getDebConfigurationCode } from '../../../helpers';
+import { getDebConfigurationCode, versionCompare } from '../../../helpers';
 import { getDocsVersion, getIsEnterprise } from '../../../selectors';
 
 const filter = createFilterOptions();
@@ -105,8 +105,8 @@ export const DeviceTypeSelectionStep = ({ selection = '', onSelect, hasConverted
   );
 };
 
-export const InstallationStep = ({ advanceOnboarding, ipAddress, isHosted, isEnterprise, token, selection }) => {
-  const codeToCopy = getDebConfigurationCode(ipAddress, isHosted, isEnterprise, token, selection);
+export const InstallationStep = ({ advanceOnboarding, ipAddress, isHosted, isEnterprise, token, selection, isPreRelease }) => {
+  const codeToCopy = getDebConfigurationCode(ipAddress, isHosted, isEnterprise, token, selection, isPreRelease);
   return (
     <div>
       <b>2. Log into your device and install the Mender client</b>
@@ -133,6 +133,7 @@ export const PhysicalDeviceOnboarding = ({
   ipAddress,
   isHosted,
   isEnterprise,
+  isPreRelease,
   progress,
   setOnboardingApproach,
   setOnboardingDeviceType,
@@ -162,6 +163,7 @@ export const PhysicalDeviceOnboarding = ({
       ipAddress={ipAddress}
       isEnterprise={isEnterprise}
       isHosted={isHosted}
+      isPreRelease={isPreRelease}
       onSelect={onSelect}
       selection={selection}
       token={token}
@@ -177,6 +179,7 @@ const mapStateToProps = state => {
     ipAddress: state.app.hostAddress,
     isEnterprise: getIsEnterprise(state),
     isHosted: state.app.features.isHosted,
+    isPreRelease: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
     token: state.organization.organization.tenant_token
   };
 };

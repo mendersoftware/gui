@@ -69,7 +69,7 @@ class BaseOnboardingTipComponent extends React.PureComponent {
   render() {
     const { anchor, component, place = 'top', progress, progressTotal = 3, id = 1, setShowDismissOnboardingTipsDialog, ...others } = this.props;
     const orientation = orientations[place];
-    const style = orientation.offsetStyle({ left: anchor.left, top: anchor.top });
+    const style = orientation.offsetStyle({ left: anchor.left, top: anchor.top, overflow: 'initial' });
     const tipId = `onboard-tip-${id}`;
     return (
       <div className="onboard-tip" style={style}>
