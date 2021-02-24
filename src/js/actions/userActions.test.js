@@ -23,7 +23,6 @@ import {
   saveUserSettings,
   setHideAnnouncement,
   setShowConnectingDialog,
-  setShowHelptips,
   toggleHelptips,
   verify2FA
 } from './userActions';
@@ -55,18 +54,6 @@ describe('user actions', () => {
       }
     ];
     await store.dispatch(setShowConnectingDialog(true));
-    const storeActions = store.getActions();
-    expect(storeActions.length).toEqual(expectedActions.length);
-    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
-  });
-  it('should forward helptips visibility', async () => {
-    jest.clearAllMocks();
-    const expectedActions = [
-      { type: UserConstants.SET_SHOW_HELP, show: true },
-      { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true }
-    ];
-    const store = mockStore({ ...defaultState });
-    await store.dispatch(setShowHelptips(true));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

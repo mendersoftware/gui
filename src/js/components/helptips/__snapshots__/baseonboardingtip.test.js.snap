@@ -6,6 +6,7 @@ exports[`BaseOnboardingTip Component renders correctly 1`] = `
   style={
     Object {
       "left": -14,
+      "overflow": "initial",
       "top": 1,
     }
   }

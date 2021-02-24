@@ -473,7 +473,7 @@ export const standardizePhases = phases =>
     return standardizedPhase;
   });
 
-export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token, deviceType = 'generic-armv6') => {
+export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token, deviceType = 'generic-armv6', isPreRelease) => {
   let connectionInstructions = ``;
   let demoSettings = `  --quiet --demo ${ipAddress ? `--server-ip ${ipAddress}` : ''}`;
   const setupConfirmation = `echo "Running mender setup for ${window.location.hostname}" && \\`;
@@ -492,7 +492,9 @@ ${enterpriseSettings}`;
   } else {
     connectionInstructions = `${demoSettings}`;
   }
-  const debInstallationCode = `wget -q -O- https://get.mender.io/ | sudo bash -s`;
+  const debInstallationCode = `wget -q -O- https://get.mender.io/${
+    isPreRelease && window.location.hostname.includes('staging') ? 'staging' : ''
+  } | sudo bash -s`;
   let codeToCopy = `${debInstallationCode} && \\
 sudo bash -c 'DEVICE_TYPE="${deviceType}" && \\${
     token

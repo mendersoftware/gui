@@ -179,7 +179,7 @@ export class Deployments extends React.Component {
       onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST, onboardingState, {
         anchor: {
           left: self.tabsRef.offsetLeft + self.tabsRef.offsetWidth - finishedTab.offsetWidth / 2,
-          top: self.tabsRef.offsetHeight + finishedTab.offsetHeight
+          top: self.tabsRef.parentElement.offsetTop + finishedTab.offsetHeight
         }
       });
     }
