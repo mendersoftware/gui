@@ -18,6 +18,128 @@ const searchAddon = new SearchAddon();
 let socket = null;
 let buffer = [];
 
+const generateHtml = (versions, content) => {
+  const { fit, search, xterm } = Object.entries(versions).reduce((accu, [key, version]) => {
+    accu[key] = version.match(/(?<version>\d.*)/).groups.version;
+    return accu;
+  }, {});
+  return `
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <link rel="stylesheet" href="https://unpkg.com/xterm@${xterm}/css/xterm.css" />
+      <script src="https://unpkg.com/xterm@${xterm}/lib/xterm.js"></script>
+      <script src="https://unpkg.com/xterm-addon-search@${search}/lib/xterm-addon-search.js"></script>
+      <script src="https://unpkg.com/xterm-addon-fit@${fit}/lib/xterm-addon-fit.js"></script>
+      <style type="text/css">
+        body {
+          display: grid;
+          justify-items: center;
+          max-width: 80vw;
+          margin: 10vh auto;
+          row-gap: 5vh;
+          font-family: 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        h2 {
+          color: #24444a;
+        }
+        button {
+          background-color: #921267;
+          padding: 1.3em 3.4em;
+          color: #fff;
+          font-weight: 700;
+          text-transform: uppercase;
+          border: 0;
+          border-radius: 3px;
+          cursor: pointer;
+        }
+        .disabled {
+          background-color: lightgrey;
+          opacity: 0.4;
+        }
+      </style>
+    </head>
+    <body>
+      <img src="https://vgy.me/0tXIM6.png" alt="mender-logo" />
+      <h2>Terminal playback</h2>
+      <div id="terminal"></div>
+      <div>
+        <button id="start" onclick="handleStart()">Start</button>
+        <button id="pause" class="disabled" disabled onclick="handlePause()">Pause</button>
+        <button id="stop" class="disabled" disabled onclick="handleStop()">Stop</button>
+      </div>
+      <script>
+        const byteArrayToString = body => String.fromCharCode(...body);
+        const transfer = '${JSON.stringify(content.map(item => ({ time: item.time, content: btoa(JSON.stringify(item.content)) })))}';
+        const content = JSON.parse(transfer);
+        let contentIndex = 0;
+        let timer;
+        const term = new Terminal();
+        const fitAddon = new FitAddon.FitAddon();
+        const searchAddon = new SearchAddon.SearchAddon();
+        term.loadAddon(searchAddon);
+        term.loadAddon(fitAddon);
+        term.open(document.getElementById('terminal'));
+        fitAddon.fit();
+        const startButton = document.getElementById('start');
+        const pauseButton = document.getElementById('pause');
+        const stopButton = document.getElementById('stop');
+
+        const resetPlayer = () => {
+          contentIndex = 0;
+          term.reset()
+          startButton.toggleAttribute('disabled');
+          pauseButton.toggleAttribute('disabled');
+          stopButton.toggleAttribute('disabled');
+          pauseButton.classList.toggle('disabled');
+          stopButton.classList.toggle('disabled');
+          startButton.classList.toggle('disabled');
+        }
+
+        const processContent = () => {
+          if (contentIndex === content.length) {
+            return resetPlayer();
+          }
+          const item = content[contentIndex];
+          contentIndex += 1;
+          let delay = 1;
+          if (item.content) {
+            const buffer = JSON.parse(atob(item.content));
+            term.write(byteArrayToString(buffer.data || []))
+          } else if (item.delay) {
+            delay = item.delay;
+          }
+          timer = setTimeout(processContent, delay)
+        };
+
+        const handleStart = () => {
+          contentIndex = 0;
+          startButton.toggleAttribute('disabled');
+          pauseButton.toggleAttribute('disabled');
+          stopButton.toggleAttribute('disabled');
+          startButton.classList.toggle('disabled');
+          pauseButton.classList.toggle('disabled');
+          stopButton.classList.toggle('disabled');
+          timer = setTimeout(processContent, 1);
+        };
+
+        const handlePause = () => {
+          startButton.toggleAttribute('disabled');
+          pauseButton.toggleAttribute('disabled');
+          startButton.classList.toggle('disabled');
+          pauseButton.classList.toggle('disabled');
+          clearTimeout(timer);
+        };
+
+        const handleStop = () => {
+          clearTimeout(timer);
+          resetPlayer();
+        };
+      </script>
+    </body>
+  </html>`;
+};
+
 export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
   const xtermRef = useRef(null);
   const [term, setTerminal] = useState(null);
@@ -107,7 +229,15 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
   };
 
   const onDownloadClick = () => {
-    console.log('meh');
+    // eslint-disable-next-line no-undef
+    const text = generateHtml({ fit: XTERM_FIT_VERSION, search: XTERM_SEARCH_VERSION, xterm: XTERM_VERSION }, buffer);
+    let link = document.createElement('a');
+    link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    link.setAttribute('download', 'terminalsession.html');
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
