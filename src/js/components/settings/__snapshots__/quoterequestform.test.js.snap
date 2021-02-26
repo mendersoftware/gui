@@ -2,25 +2,31 @@
 
 exports[`QuoteRequestForm component renders correctly 1`] = `
 <div
-  class="flexbox column"
+  class="flexbox column margin-bottom-large"
 >
+  <h3
+    class="margin-top-large"
+  >
+    Request a quote from our team
+  </h3>
+  You are requesting a quote for the following subscription:
   <p>
-    Plan: 
-    Enterprise
+    <div>
+      Plan: 
+      Upgrade to 
+      <b>
+        Enterprise
+      </b>
+    </div>
   </p>
   <div
     class="MuiFormControl-root"
-    style="margin-top: 0px;"
+    style="margin-bottom: 30px; margin-top: 0px;"
   >
     <p
       class="MuiFormHelperText-root"
     >
       Your message
-    </p>
-    <p
-      class="MuiFormHelperText-root"
-    >
-      something notify
     </p>
     <div
       class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
@@ -31,6 +37,7 @@ exports[`QuoteRequestForm component renders correctly 1`] = `
         <textarea
           aria-invalid="false"
           class="MuiInputBase-input MuiInput-input MuiInputBase-inputMultiline MuiInput-inputMultiline"
+          placeholder="If you have any notes about your requirements or device fleet size, leave a message and we'll respond as soon as we can"
           rows="1"
           style="height: 0px; overflow: hidden;"
         />
@@ -44,17 +51,20 @@ exports[`QuoteRequestForm component renders correctly 1`] = `
       </div>
     </div>
   </div>
+  <p>
+    After we receive your request, we'll be in touch to discuss your needs and provide a quote.
+  </p>
   <button
     class="MuiButtonBase-root MuiButton-root MuiButton-contained margin-top margin-bottom MuiButton-containedSecondary Mui-disabled Mui-disabled"
     disabled=""
-    style="align-self: flex-end; margin: 30px 0px;"
+    style="align-self: flex-start;"
     tabindex="-1"
     type="button"
   >
     <span
       class="MuiButton-label"
     >
-      Send message
+      Submit request
     </span>
   </button>
 </div>

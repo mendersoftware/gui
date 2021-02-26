@@ -4,30 +4,57 @@ import { Button, FormControl, FormHelperText, TextField } from '@material-ui/cor
 
 import { ADDONS, PLANS } from '../../constants/appConstants';
 
-export const QuoteRequestForm = ({ addOns, onSendMessage, style, updatedPlan, notification }) => {
+const quoteRequest = {
+  default: {
+    title: 'Request a change to your plan',
+    note: `If you have any questions regarding plan pricing or device limits, leave us a message and we'll respond as soon as we can.`
+  },
+  trial: {
+    title: '2. Request a quote from our team',
+    note: `If you have any notes about your requirements or device fleet size, leave a message and we'll respond as soon as we can`
+  },
+  enterprise: {
+    title: 'Request a quote from our team',
+    note: `If you have any notes about your requirements or device fleet size, leave a message and we'll respond as soon as we can`
+  }
+};
+
+export const QuoteRequestForm = ({ addOns, currentPlan, isTrial, onSendMessage, updatedPlan }) => {
   const [message, setMessage] = useState('');
+
+  const isEnterpriseUpgrade = updatedPlan === 'enterprise';
+  const isUpgrade = Object.keys(PLANS).indexOf(updatedPlan) > Object.keys(PLANS).indexOf(currentPlan);
+  let { note, title } = isEnterpriseUpgrade ? quoteRequest.enterprise : quoteRequest.default;
+  title = isTrial ? `2. ${title}` : title;
   return (
-    <div className="flexbox column" style={style}>
-      {updatedPlan === 'enterprise' && (
-        <>
-          <p>Plan: {PLANS[updatedPlan].name}</p>
-          {!!addOns.length && <p>Add-ons: {addOns.map(addon => ADDONS[addon.name].title).join(', ')}</p>}
-        </>
-      )}
-      <FormControl style={{ marginTop: 0 }}>
+    <div className="flexbox column margin-bottom-large">
+      <h3 className="margin-top-large">{title}</h3>
+      {isEnterpriseUpgrade ? 'You are requesting a quote for the following subscription:' : 'You are requesting the following changes:'}
+      <p>
+        <div>
+          Plan: {isUpgrade ? 'Upgrade to ' : ''}
+          <b>{PLANS[updatedPlan].name}</b>
+        </div>
+        {!isTrial && !!addOns.length && <div>Add-ons: {addOns.map(addon => ADDONS[addon.name].title).join(', ')}</div>}
+      </p>
+      <FormControl style={{ marginBottom: 30, marginTop: 0 }}>
         <FormHelperText>Your message</FormHelperText>
-        <FormHelperText>{notification}</FormHelperText>
-        <TextField fullWidth multiline value={message} onChange={e => setMessage(e.target.value)} />
+        <TextField fullWidth multiline placeholder={note} value={message} onChange={e => setMessage(e.target.value)} />
       </FormControl>
+      <p>
+        {isTrial || isEnterpriseUpgrade
+          ? `After we receive your request, we'll be in touch to discuss your needs and provide a quote.`
+          : `We'll send you a confirmation of any changes to your subscription.`}
+      </p>
       <Button
         className="margin-top margin-bottom"
         color="secondary"
-        disabled={!(message || addOns.length)}
+        disabled={!(message || (!isTrial && addOns.length))}
         onClick={() => onSendMessage(message)}
-        style={{ alignSelf: 'flex-end', margin: '30px 0' }}
+        style={{ alignSelf: 'flex-start' }}
         variant="contained"
       >
-        Send message
+        Submit request
       </Button>
     </div>
   );

@@ -28,14 +28,14 @@ exports[`Upgrade Component renders correctly 1`] = `
   <h3
     class="margin-top"
   >
-    1. Choose a plan
+    Plans
   </h3>
   <div
     class="flexbox space-between"
     style="padding-bottom: 15px;"
   >
     <div
-      class="planPanel active"
+      class="planPanel active "
     >
       <div
         class="uppercased align-center muted"
@@ -71,7 +71,7 @@ exports[`Upgrade Component renders correctly 1`] = `
       </ul>
     </div>
     <div
-      class="planPanel "
+      class="planPanel  "
     >
       <div
         class="uppercased align-center muted"
@@ -114,7 +114,7 @@ exports[`Upgrade Component renders correctly 1`] = `
       </ul>
     </div>
     <div
-      class="planPanel "
+      class="planPanel  "
     >
       <div
         class="uppercased align-center muted"
@@ -157,31 +157,11 @@ exports[`Upgrade Component renders correctly 1`] = `
       </ul>
     </div>
   </div>
-  <p
-    class="info"
+  <h3
+    class="margin-top-large"
   >
-    <svg
-      aria-hidden="true"
-      class="MuiSvgIcon-root"
-      focusable="false"
-      style="font-size: 14px; margin: 0px 4px 4px 0px; vertical-align: middle;"
-      viewBox="0 0 24 24"
-    >
-      <path
-        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-      />
-    </svg>
-    If you have any questions about the plan pricing or device limits,
-     
-    <a
-      href="mailto:contact@mender.io"
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      contact our team
-    </a>
-    .
-  </p>
+    Get more features with add-ons
+  </h3>
   <div
     class="flexbox column"
   >
@@ -320,43 +300,33 @@ exports[`Upgrade Component renders correctly 1`] = `
         Learn more
       </a>
     </div>
-    <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained margin-top margin-bottom MuiButton-containedSecondary"
-      style="align-self: flex-end; margin: 30px 0px;"
-      tabindex="0"
-      type="button"
-    >
-      <span
-        class="MuiButton-label"
-      >
-        Submit
-      </span>
-      <span
-        class="MuiTouchRipple-root"
-      />
-    </button>
   </div>
-  <h3
-    class="margin-top-large"
-  >
-    Request a change to your plan
-  </h3>
   <div
-    class="flexbox column"
+    class="flexbox column margin-bottom-large"
   >
+    <h3
+      class="margin-top-large"
+    >
+      Request a change to your plan
+    </h3>
+    You are requesting the following changes:
+    <p>
+      <div>
+        Plan: 
+        
+        <b>
+          Starter
+        </b>
+      </div>
+    </p>
     <div
       class="MuiFormControl-root"
-      style="margin-top: 0px;"
+      style="margin-bottom: 30px; margin-top: 0px;"
     >
       <p
         class="MuiFormHelperText-root"
       >
         Your message
-      </p>
-      <p
-        class="MuiFormHelperText-root"
-      >
-        Leave us a message, and we'll respond as soon as we can.
       </p>
       <div
         class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
@@ -367,6 +337,7 @@ exports[`Upgrade Component renders correctly 1`] = `
           <textarea
             aria-invalid="false"
             class="MuiInputBase-input MuiInput-input MuiInputBase-inputMultiline MuiInput-inputMultiline"
+            placeholder="If you have any questions regarding plan pricing or device limits, leave us a message and we'll respond as soon as we can."
             rows="1"
             style="height: 0px; overflow: hidden;"
           />
@@ -380,17 +351,20 @@ exports[`Upgrade Component renders correctly 1`] = `
         </div>
       </div>
     </div>
+    <p>
+      We'll send you a confirmation of any changes to your subscription.
+    </p>
     <button
       class="MuiButtonBase-root MuiButton-root MuiButton-contained margin-top margin-bottom MuiButton-containedSecondary Mui-disabled Mui-disabled"
       disabled=""
-      style="align-self: flex-end; margin: 30px 0px;"
+      style="align-self: flex-start;"
       tabindex="-1"
       type="button"
     >
       <span
         class="MuiButton-label"
       >
-        Send message
+        Submit request
       </span>
     </button>
   </div>

@@ -55,17 +55,6 @@ const upgradeNotes = {
   }
 };
 
-const quoteRequest = {
-  default: {
-    title: 'Request a change to your plan',
-    note: `Leave us a message, and we'll respond as soon as we can.`
-  },
-  enterprise: {
-    title: 'Request a quote from our team',
-    note: `Let us know here if you have any questions or requirements. We'll respond to you shortly.`
-  }
-};
-
 export const Upgrade = ({
   cancelUpgrade,
   completeUpgrade,
@@ -89,8 +78,14 @@ export const Upgrade = ({
 
   useEffect(() => {
     const { addons: orgAddOns = [], plan: orgPlan = 'os', trial = false } = org;
+    const currentAddOns = orgAddOns.reduce((accu, addon) => {
+      if (addon.enabled) {
+        accu.push(addon);
+      }
+      return accu;
+    }, []);
     const plan = Object.values(PLANS).find(plan => plan.value === (trial ? 'os' : orgPlan));
-    setAddOns(orgAddOns);
+    setAddOns(currentAddOns);
     setUpdatedPlan(plan.value);
   }, [org]);
 
@@ -131,8 +126,8 @@ export const Upgrade = ({
     sendSupportMessage(content);
   };
 
-  const { description, title } = org.trial ? upgradeNotes.trial : upgradeNotes.default;
-  const { note: quoteRequestNote, title: quoteRequestTitle } = updatedPlan !== 'enterprise' ? quoteRequest.default : quoteRequest.enterprise;
+  const { plan: currentPlan = 'os', trial: isTrial = true } = org;
+  const { description, title } = isTrial ? upgradeNotes.trial : upgradeNotes.default;
   return (
     <div style={{ maxWidth: 750 }} className="margin-top-small">
       <h2 style={{ marginTop: 15 }}>{title}</h2>
@@ -144,54 +139,42 @@ export const Upgrade = ({
         </a>
         .
       </p>
-      <h3 className="margin-top">1. Choose a plan</h3>
       <PlanSelection
-        currentPlan={org.plan}
-        isUpgrade={!org.trial && org.plan !== 'enterprise'}
-        updatedPlan={updatedPlan}
-        setUpdatedPlan={setUpdatedPlan}
-        trial={org.trial}
+        currentPlan={currentPlan}
+        isTrial={isTrial}
         offerValid={offerValid}
         offerTag={offerTag}
+        setUpdatedPlan={setUpdatedPlan}
+        updatedPlan={updatedPlan}
       />
-      {updatedPlan !== 'enterprise' && <PricingContactNote />}
-
-      {org.trial && offerValid && (
+      {isTrial && offerValid && (
         <p className="offerBox">
           {offerTag} – upgrade before December 31st to get a 20% discount for 6 months on Mender Starter and Mender Professional plans. The discount will be
           automatically applied to your account.
         </p>
       )}
-
-      {updatedPlan === 'enterprise' && <h3 className="margin-top-large">2. Select add-ons</h3>}
-      <AddOnSelection addons={addOns} isUpgrade={updatedPlan !== 'enterprise'} onChange={setAddOns} onSubmit={addons => onSendMessage('', addons)} />
-      {updatedPlan === 'enterprise' && <PricingContactNote />}
-
-      {org.trial ? (
-        updatedPlan !== 'enterprise' && (
-          <>
-            <h3 className="margin-top-large">2. Enter your payment details</h3>
-            <p>
-              You are upgrading to{' '}
-              <b>
-                Mender <span className="capitalized-start">{PLANS[updatedPlan].name}</span>
-              </b>
-            </p>
-
-            <CardSection
-              onCancel={() => Promise.resolve(cancelUpgrade(org.id))}
-              onComplete={handleUpgrade}
-              onSubmit={() => Promise.resolve(startUpgrade(org.id))}
-              setSnackbar={setSnackbar}
-              isSignUp={true}
-            />
-          </>
-        )
-      ) : (
+      {isTrial ? <PricingContactNote /> : <AddOnSelection addons={addOns} updatedPlan={updatedPlan} onChange={setAddOns} />}
+      {isTrial && updatedPlan !== PLANS.enterprise.value && (
         <>
-          <h3 className="margin-top-large">{quoteRequestTitle}</h3>
-          <QuoteRequestForm addOns={addOns} updatedPlan={updatedPlan} onSendMessage={onSendMessage} notification={quoteRequestNote} />
+          <h3 className="margin-top-large">2. Enter your payment details</h3>
+          <p>
+            You are upgrading to{' '}
+            <b>
+              Mender <span className="capitalized-start">{PLANS[updatedPlan].name}</span>
+            </b>{' '}
+            for <b>{PLANS[updatedPlan].price}</b>
+          </p>
+          <CardSection
+            onCancel={() => Promise.resolve(cancelUpgrade(org.id))}
+            onComplete={handleUpgrade}
+            onSubmit={() => Promise.resolve(startUpgrade(org.id))}
+            setSnackbar={setSnackbar}
+            isSignUp={true}
+          />
         </>
+      )}
+      {(!isTrial || updatedPlan === PLANS.enterprise.value) && (
+        <QuoteRequestForm addOns={addOns} currentPlan={currentPlan} isTrial={isTrial} updatedPlan={updatedPlan} onSendMessage={onSendMessage} />
       )}
     </div>
   );

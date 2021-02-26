@@ -1,139 +1,138 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`PlanSelection component renders correctly 1`] = `
-<div
-  class="flexbox space-between"
-  style="padding-bottom: 15px;"
->
+<div>
+  <h3
+    class="margin-top"
+  >
+    Plans
+  </h3>
   <div
-    class="planPanel "
+    class="flexbox space-between"
+    style="padding-bottom: 15px;"
   >
     <div
-      class="uppercased align-center muted"
-      style="margin-bottom: -11px; font-size: smaller;"
+      class="planPanel  "
     >
-      current plan
-    </div>
-    <h4>
-      Starter
-       
-      very now
-    </h4>
-    <div>
       <div
-        class="link-color bold"
-        style="font-size: 1rem;"
+        class="uppercased align-center muted"
+        style="margin-bottom: -11px; font-size: smaller;"
       >
-        $23/month for first 50 devices
+        current plan
       </div>
-      <div
-        class="pre-line"
-      >
-        for first 6 months;
-$29/month thereafter
-      </div>
-    </div>
-    <ul
-      class="unstyled"
-    >
-      <li>
-        <span
-          class="info"
-        >
-          Basic OTA features
-        </span>
-      </li>
-    </ul>
-  </div>
-  <div
-    class="planPanel "
-  >
-    <div
-      class="uppercased align-center muted"
-      style="margin-bottom: -11px; font-size: smaller;"
-    >
-      upgrade
-    </div>
-    <h4>
-      Professional
-       
-      very now
-    </h4>
-    <div>
-      <div
-        class="link-color bold"
-        style="font-size: 1rem;"
-      >
-        $200/month for first 50 devices
-      </div>
-      <div
-        class="pre-line"
-      >
-        for first 6 months;
-$249/month thereafter
-      </div>
-    </div>
-    <ul
-      class="unstyled"
-    >
-      <li>
-        <span
-          class="info"
-        >
-          + Advanced OTA features
-        </span>
-      </li>
-      <li>
-        <span
-          class="info"
-        >
-          + Standard support
-        </span>
-      </li>
-    </ul>
-  </div>
-  <div
-    class="planPanel active"
-  >
-    <div
-      class="uppercased align-center muted"
-      style="margin-bottom: -11px; font-size: smaller;"
-    >
-      upgrade
-    </div>
-    <h4>
-      Enterprise
-       
-    </h4>
-    <div>
-      <div
-        class="link-color bold"
-        style="font-size: 1rem;"
-      >
-        Custom pricing
-      </div>
+      <h4>
+        Starter
+         
+      </h4>
       <div>
-        unlimited devices
+        <div
+          class="link-color bold"
+          style="font-size: 1rem;"
+        >
+          $29/month
+        </div>
+        <div>
+          for first 50 devices
+        </div>
       </div>
+      <ul
+        class="unstyled"
+      >
+        <li>
+          <span
+            class="info"
+          >
+            Basic OTA features
+          </span>
+        </li>
+      </ul>
     </div>
-    <ul
-      class="unstyled"
+    <div
+      class="planPanel  "
     >
-      <li>
-        <span
-          class="info"
+      <div
+        class="uppercased align-center muted"
+        style="margin-bottom: -11px; font-size: smaller;"
+      >
+        upgrade
+      </div>
+      <h4>
+        Professional
+         
+      </h4>
+      <div>
+        <div
+          class="link-color bold"
+          style="font-size: 1rem;"
         >
-          + Enterprise-grade OTA features
-        </span>
-      </li>
-      <li>
-        <span
-          class="info"
+          $249/month
+        </div>
+        <div>
+          for first 250 devices
+        </div>
+      </div>
+      <ul
+        class="unstyled"
+      >
+        <li>
+          <span
+            class="info"
+          >
+            + Advanced OTA features
+          </span>
+        </li>
+        <li>
+          <span
+            class="info"
+          >
+            + Standard support
+          </span>
+        </li>
+      </ul>
+    </div>
+    <div
+      class="planPanel active "
+    >
+      <div
+        class="uppercased align-center muted"
+        style="margin-bottom: -11px; font-size: smaller;"
+      >
+        upgrade
+      </div>
+      <h4>
+        Enterprise
+         
+      </h4>
+      <div>
+        <div
+          class="link-color bold"
+          style="font-size: 1rem;"
         >
-          + Premium support
-        </span>
-      </li>
-    </ul>
+          Custom pricing
+        </div>
+        <div>
+          unlimited devices
+        </div>
+      </div>
+      <ul
+        class="unstyled"
+      >
+        <li>
+          <span
+            class="info"
+          >
+            + Enterprise-grade OTA features
+          </span>
+        </li>
+        <li>
+          <span
+            class="info"
+          >
+            + Premium support
+          </span>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
 `;
