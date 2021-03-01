@@ -19,6 +19,7 @@ export const MessageProtocol = {
 };
 
 export const MessageTypes = {
+  Delay: 'delay',
   New: 'new',
   Ping: 'ping',
   Pong: 'pong',

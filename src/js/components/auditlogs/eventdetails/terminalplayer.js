@@ -169,7 +169,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
     socket.onmessage = event =>
       blobToString(event.data).then(data => {
         const {
-          hdr: { proto, typ },
+          hdr: { proto, typ, props = {} },
           body
         } = MessagePack.decode(data);
         if (proto !== MessageProtocol.Shell) {
@@ -179,7 +179,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
           case MessageTypes.Shell:
             return buffer.push({ content: body });
           case MessageTypes.Delay:
-            return buffer.push({ delay: body });
+            return buffer.push({ delay: props.delay_value });
           default:
             break;
         }
@@ -193,12 +193,12 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
       }
       if (buffer[bufferIndex].content) {
         term.write(byteArrayToString(buffer[bufferIndex].content));
+        setTimeout(() => setBufferIndex(bufferIndex + 1), 20);
       }
-      setTimeout(() => setBufferIndex(bufferIndex + 1), 500);
       if (buffer[bufferIndex].delay) {
         setTimeout(() => {
           setBufferIndex(bufferIndex + 1);
-        }, Math.max(buffer[bufferIndex].delay, 300));
+        }, buffer[bufferIndex].delay);
       }
     } else if (!isPaused) {
       resetPlayer();
