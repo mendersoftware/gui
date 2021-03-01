@@ -42,9 +42,7 @@ export const initialState = {
    */
   selectedRelease: null,
   selectedArtifact: null,
-  showRemoveDialog: false,
-  uploading: false,
-  uploadProgress: 0
+  showRemoveDialog: false
 };
 
 const releaseReducer = (state = initialState, action) => {
@@ -102,12 +100,6 @@ const releaseReducer = (state = initialState, action) => {
       return {
         ...state,
         selectedRelease: action.release
-      };
-    case ReleaseConstants.UPLOAD_PROGRESS:
-      return {
-        ...state,
-        uploading: action.inprogress,
-        uploadProgress: action.uploadProgress
       };
 
     default:

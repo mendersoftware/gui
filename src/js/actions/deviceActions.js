@@ -1,10 +1,12 @@
+import axios from 'axios';
 import pluralize from 'pluralize';
 
-import { commonErrorHandler, setSnackbar } from '../actions/appActions';
+import { commonErrorHandler, progress, setSnackbar } from '../actions/appActions';
 import { getSingleDeployment } from '../actions/deploymentActions';
 import { saveGlobalSettings } from '../actions/userActions';
 import { auditLogsApiUrl } from '../actions/organizationActions';
 import GeneralApi, { headerNames, MAX_PAGE_SIZE } from '../api/general-api';
+import AppConstants from '../constants/appConstants';
 import DeviceConstants from '../constants/deviceConstants';
 
 import { extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
@@ -588,6 +590,28 @@ export const getSessionDetails = (sessionId, deviceId, userId, startDate, endDat
       return Promise.resolve({ start, end });
     }
   );
+};
+
+export const deviceFileDownload = (deviceId, path) => () => GeneralApi.post(`${deviceConnect}/devices/${deviceId}/download`, { path });
+
+export const deviceFileUpload = (deviceId, path, file) => dispatch => {
+  var formData = new FormData();
+  formData.append('file', file);
+  formData.append('path', path);
+  const cancelSource = axios.CancelToken.source();
+  return Promise.all([
+    dispatch(setSnackbar('Uploading file')),
+    dispatch({ type: AppConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0, cancelSource }),
+    GeneralApi.upload(`${deviceConnect}/devices/${deviceId}/upload`, formData, e => progress(e, dispatch), cancelSource.token)
+  ])
+    .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', 5000))))
+    .catch(err => {
+      if (axios.isCancel(err)) {
+        return dispatch(setSnackbar('The upload has been cancelled', 5000));
+      }
+      return commonErrorHandler(err, `Error uploading file to device.`, dispatch);
+    })
+    .finally(() => Promise.resolve(dispatch({ type: AppConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 })));
 };
 
 export const getDeviceAuth = id => dispatch => Promise.resolve(dispatch(getDevicesWithAuth([{ id }]))).then(results => Promise.resolve(results[1][0]));

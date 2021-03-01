@@ -22,28 +22,6 @@ describe('release reducer', () => {
     expect(reducer(undefined, {})).toEqual(initialState);
   });
 
-  it('should handle UPLOAD_PROGRESS', async () => {
-    const { uploading, uploadProgress } = reducer(undefined, {
-      type: ReleaseConstants.UPLOAD_PROGRESS,
-      inprogress: true,
-      uploadProgress: 40
-    });
-    expect({ uploading, uploadProgress }).toEqual({
-      uploading: true,
-      uploadProgress: 40
-    });
-
-    const { uploading: uploading2, uploadProgress: uploadProgress2 } = reducer(initialState, {
-      type: ReleaseConstants.UPLOAD_PROGRESS,
-      inprogress: true,
-      uploadProgress: 40
-    });
-    expect({ uploading: uploading2, uploadProgress: uploadProgress2 }).toEqual({
-      uploading: true,
-      uploadProgress: 40
-    });
-  });
-
   it('should handle UPDATED_ARTIFACT', async () => {
     expect(
       reducer(undefined, {
