@@ -17,6 +17,7 @@ const searchAddon = new SearchAddon();
 
 let socket = null;
 let buffer = [];
+let timer;
 
 const generateHtml = (versions, content) => {
   const { fit, search, xterm } = Object.entries(versions).reduce((accu, [key, version]) => {
@@ -148,6 +149,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [wasStarted, setWasStarted] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [isLoadingSession, setIsLoadingSession] = useState(true);
 
   useEffect(() => {
     if (!sessionInitialized) {
@@ -175,6 +177,8 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
         if (proto !== MessageProtocol.Shell) {
           return;
         }
+        clearTimeout(timer);
+        timer = setTimeout(() => setIsLoadingSession(false), 1000);
         switch (typ) {
           case MessageTypes.Shell:
             return buffer.push({ content: body });
@@ -261,7 +265,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
         <Button color="primary" onClick={onReplayClick} disabled={isPlaying} startIcon={<Refresh />}>
           Replay
         </Button>
-        <Button color="primary" onClick={onDownloadClick} startIcon={<CloudDownload />}>
+        <Button color="primary" onClick={onDownloadClick} startIcon={<CloudDownload />} disabled={isLoadingSession}>
           Download
         </Button>
       </div>
