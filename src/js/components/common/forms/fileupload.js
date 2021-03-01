@@ -5,41 +5,47 @@ import Dropzone from 'react-dropzone';
 import { IconButton, TextField } from '@material-ui/core';
 import { Clear as ClearIcon, CloudUpload as FileIcon } from '@material-ui/icons';
 
-export const FileUpload = ({ onFileChange, placeholder, setSnackbar }) => {
-  const [filename, setFilename] = useState(null);
+export const FileUpload = ({ enableContentReading = true, onFileChange, onFileSelect = () => undefined, placeholder, setSnackbar, style = {} }) => {
+  const [filename, setFilename] = useState();
 
   const onDrop = (acceptedFiles, rejectedFiles) => {
     if (acceptedFiles.length) {
-      let reader = new FileReader();
-      reader.readAsBinaryString(acceptedFiles[0]);
-      reader.fileName = acceptedFiles[0].name;
-      reader.onload = () => {
-        setFilename(reader.fileName);
-        const str = reader.result.replace(/\n|\r/g, '\n');
-        onFileChange(str);
-      };
-      reader.onerror = error => console.log('Error: ', error);
+      if (enableContentReading) {
+        let reader = new FileReader();
+        reader.readAsBinaryString(acceptedFiles[0]);
+        reader.fileName = acceptedFiles[0].name;
+        reader.onload = () => {
+          const str = reader.result.replace(/\n|\r/g, '\n');
+          onFileChange(str);
+        };
+        reader.onerror = error => {
+          console.log('Error: ', error);
+          setFilename();
+        };
+      }
+      setFilename(acceptedFiles[0].name);
+      onFileSelect(acceptedFiles[0]);
     }
     if (rejectedFiles.length) {
       setSnackbar(`File '${rejectedFiles[0].name}' was rejected.`);
     }
   };
 
+  const onClear = () => {
+    onFileChange();
+    onFileSelect();
+    setFilename();
+  };
+
   return filename ? (
-    <div>
+    <div style={style}>
       <TextField id="keyfile" value={filename} disabled={true} style={{ color: 'rgba(0, 0, 0, 0.8)', borderBottom: '1px solid rgb(224, 224, 224)' }} />
-      <IconButton
-        style={{ top: '6px' }}
-        onClick={() => {
-          onFileChange();
-          setFilename();
-        }}
-      >
+      <IconButton style={{ top: '6px' }} onClick={onClear}>
         <ClearIcon />
       </IconButton>
     </div>
   ) : (
-    <div>
+    <div style={style}>
       <Dropzone activeClassName="active" rejectClassName="active" multiple={false} onDrop={onDrop}>
         {({ getRootProps, getInputProps }) => (
           <div {...getRootProps()} style={{ padding: 15 }} className="dropzone onboard dashboard-placeholder flexbox centered">
