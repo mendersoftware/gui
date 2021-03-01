@@ -71,7 +71,7 @@ const generateHtml = (versions, content) => {
       </div>
       <script>
         const byteArrayToString = body => String.fromCharCode(...body);
-        const transfer = '${JSON.stringify(content.map(item => ({ time: item.time, content: btoa(JSON.stringify(item.content)) })))}';
+        const transfer = '${JSON.stringify(content.map(item => ({ delay: item.delay, content: btoa(JSON.stringify(item.content)) })))}';
         const content = JSON.parse(transfer);
         let contentIndex = 0;
         let timer;
@@ -99,16 +99,16 @@ const generateHtml = (versions, content) => {
 
         const processContent = () => {
           if (contentIndex === content.length) {
-            return resetPlayer();
+            return handlePause();
           }
           const item = content[contentIndex];
           contentIndex += 1;
           let delay = 1;
-          if (item.content) {
+          if (item.delay) {
+            delay = item.delay;
+          } else if (item.content) {
             const buffer = JSON.parse(atob(item.content));
             term.write(byteArrayToString(buffer.data || []))
-          } else if (item.delay) {
-            delay = item.delay;
           }
           timer = setTimeout(processContent, delay)
         };
