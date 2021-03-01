@@ -583,7 +583,7 @@ export const getSessionDetails = (sessionId, deviceId, userId, startDate, endDat
           }
           return accu;
         },
-        { start: startDate, end: endDate }
+        { start: startDate || endDate, end: endDate || startDate }
       );
       return Promise.resolve({ start, end });
     }
