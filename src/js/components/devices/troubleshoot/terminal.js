@@ -1,37 +1,20 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
-
-import { XTerm } from 'xterm-for-react';
 import { FitAddon } from 'xterm-addon-fit';
 import { SearchAddon } from 'xterm-addon-search';
+import { WebLinksAddon } from 'xterm-addon-web-links';
+import { WebLinkProvider } from 'xterm-addon-web-links/out/WebLinkProvider';
 import msgpack5 from 'msgpack5';
 
-import { setSnackbar } from '../../actions/appActions';
-import { deviceConnect } from '../../actions/deviceActions';
+import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as MessageProtocols } from '../../../constants/deviceConstants';
 
-// see https://github.com/mendersoftware/go-lib-micro/tree/master/ws
-//     for the description of proto_header and the consts
-// *Note*: this needs to be aligned with mender-connect and deviceconnect.
-export const MessageProtocol = {
-  Shell: 1
-};
-
-export const MessageTypes = {
-  Delay: 'delay',
-  New: 'new',
-  Ping: 'ping',
-  Pong: 'pong',
-  Resize: 'resize',
-  Shell: 'shell',
-  Stop: 'stop'
-};
+import XTerm from '../../common/xterm';
 
 const MessagePack = msgpack5();
 
 const fitAddon = new FitAddon();
 const searchAddon = new SearchAddon();
+const webLinksAddon = new WebLinksAddon();
 
 export const byteArrayToString = body => String.fromCharCode(...body);
 
@@ -51,10 +34,9 @@ export const options = {
   scrollback: 5000
 };
 
-let socket = null;
 let healthcheckTimeout = null;
 
-export const Terminal = ({ onCancel, sendMessage, setSnackbar, setSessionId, setSocketInitialized, socketInitialized }) => {
+export const Terminal = ({ onDownloadClick, sendMessage, setSnackbar, setSessionId, setSocketClosed, setSocketInitialized, socket, socketInitialized }) => {
   const xtermRef = useRef(null);
   const [dimensions, setDimensions] = useState({});
   const [healthcheckHasFailed, setHealthcheckHasFailed] = useState(false);
@@ -68,9 +50,9 @@ export const Terminal = ({ onCancel, sendMessage, setSnackbar, setSessionId, set
   };
 
   useEffect(() => {
-    // if (!socket) {
-    //   return;
-    // }
+    if (!socket) {
+      return;
+    }
     setTerminal(xtermRef.current.terminal);
     try {
       fitAddon.fit();
@@ -95,7 +77,7 @@ export const Terminal = ({ onCancel, sendMessage, setSnackbar, setSessionId, set
         setSnackbar('Connection with the device died.', 5000);
       }
       if (xtermRef.current) {
-        onCancel();
+        cleanupSocket();
       }
     };
 
@@ -104,12 +86,13 @@ export const Terminal = ({ onCancel, sendMessage, setSnackbar, setSessionId, set
       cleanupSocket();
     };
     // xtermRef.current = null;
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     if (!socketInitialized) {
       return;
     }
+    term.reset();
     fitAddon.fit();
     let newDimensions = fitAddon.proposeDimensions();
     //
@@ -120,13 +103,18 @@ export const Terminal = ({ onCancel, sendMessage, setSnackbar, setSessionId, set
     sendMessage(message);
     setDimensions(newDimensions);
     term.focus();
+    term.registerLinkProvider(
+      new WebLinkProvider(term, /^\s*(\/.+)\b/, (e, link) => {
+        onDownloadClick(link);
+      })
+    );
     socket.onmessage = event =>
       blobToString(event.data).then(data => {
         const {
           hdr: { props = {}, proto, sid, typ },
           body
         } = MessagePack.decode(data);
-        if (proto !== MessageProtocol.Shell) {
+        if (proto !== MessageProtocols.Shell) {
           return;
         }
         switch (typ) {
@@ -141,9 +129,8 @@ export const Terminal = ({ onCancel, sendMessage, setSnackbar, setSessionId, set
           }
           case MessageTypes.Shell:
             return term.write(byteArrayToString(body));
-          case MessageTypes.Stop: {
+          case MessageTypes.Stop:
             return cleanupSocket();
-          }
           case MessageTypes.Ping: {
             if (healthcheckTimeout) {
               clearTimeout(healthcheckTimeout);
@@ -190,74 +177,16 @@ export const Terminal = ({ onCancel, sendMessage, setSnackbar, setSessionId, set
 
   const cleanupSocket = () => {
     socket.close();
-    socket = null;
     if (xtermRef.current) {
       setSocketInitialized(false);
-      onCancel();
+      setSessionId(null);
+      setSocketClosed();
     }
   };
 
   const onData = data => sendMessage({ typ: MessageTypes.Shell, body: data });
 
-  return <XTerm ref={xtermRef} addons={[fitAddon, searchAddon]} options={options} onData={onData} className="xterm-fullscreen" />;
+  return <XTerm ref={xtermRef} addons={[fitAddon, searchAddon, webLinksAddon]} options={options} onData={onData} className="xterm-fullscreen" />;
 };
 
-export const TerminalDialog = ({ deviceId, onCancel, onSocketClose, open, setSnackbar }) => {
-  const [sessionId, setSessionId] = useState(null);
-  const [socketInitialized, setSocketInitialized] = useState(false);
-
-  useEffect(() => {
-    if (!socketInitialized) {
-      onSocketClose();
-    }
-  }, [socketInitialized]);
-
-  useEffect(() => {
-    if (!(open || socketInitialized) || socketInitialized) {
-      return;
-    }
-    socket = new WebSocket(`wss://${window.location.host}${deviceConnect}/devices/${deviceId}/connect`);
-
-    return () => {
-      onSendMessage({ typ: MessageTypes.Stop });
-      setSessionId(null);
-      setSocketInitialized(false);
-    };
-  }, [deviceId, open]);
-
-  const onSendMessage = ({ typ, body, props }) => {
-    if (!socket) {
-      return;
-    }
-    const proto_header = { proto: MessageProtocol.Shell, typ, sid: sessionId, props };
-    const encodedData = MessagePack.encode({ hdr: proto_header, body });
-    socket.send(encodedData);
-  };
-
-  return (
-    <Dialog open={open} fullWidth={true} maxWidth="lg">
-      <DialogTitle>Terminal</DialogTitle>
-      <DialogContent className="dialog-content" style={{ padding: 0, margin: '0 24px', height: '75vh' }}>
-        <Terminal
-          onCancel={onCancel}
-          sendMessage={onSendMessage}
-          setSessionId={setSessionId}
-          setSnackbar={setSnackbar}
-          setSocketInitialized={setSocketInitialized}
-          socketInitialized={socketInitialized}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onCancel}>Close</Button>
-      </DialogActions>
-    </Dialog>
-  );
-};
-
-const actionCreators = { setSnackbar };
-
-const mapStateToProps = () => {
-  return {};
-};
-
-export default connect(mapStateToProps, actionCreators)(TerminalDialog);
+export default Terminal;

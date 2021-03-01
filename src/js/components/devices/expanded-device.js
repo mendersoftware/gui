@@ -10,7 +10,7 @@ import { getDocsVersion, getTenantCapabilities } from '../../selectors';
 import Tracking from '../../tracking';
 import { AuthButton } from '../helptips/helptooltips';
 import AuthsetsDialog from './authsets';
-import TerminalDialog from './terminal';
+import TroubleshootDialog from './troubleshootdialog';
 import AuthStatus from './device-details/authstatus';
 import DeviceConfiguration from './device-details/configuration';
 import DeviceInventory from './device-details/deviceinventory';
@@ -110,11 +110,12 @@ export const ExpandedDevice = ({
         open={showAuthsetsDialog}
       />
 
-      <TerminalDialog
-        open={terminal}
+      <TroubleshootDialog
+        deviceId={device.id}
         onCancel={() => setTerminal(false)}
         onSocketClose={() => setTimeout(() => setSocketClosed(true), 5000)}
-        deviceId={device.id}
+        open={terminal}
+        setSocketClosed={setSocketClosed}
       />
     </div>
   );

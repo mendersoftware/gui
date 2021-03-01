@@ -1,5 +1,7 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
+const green = '#009e73';
+
 export const colors = {
   linkgreen: '#347A87',
   mendergreen: '#337a87', //
@@ -15,7 +17,9 @@ export const colors = {
   expansionBackground: '#f7f7f7',
   disabledColor: 'rgba(0, 0, 0, 0.54)',
   errorStyleColor: '#ab1000',
-  successStyleColor: '#009e73'
+  successStyleColor: green,
+  red: '#8f0d0d',
+  green
 };
 
 export const chartColorPalette = [colors.mendermaroon, '#a31773', '#00859e', '#14cfda', '#9bfff0', '#d5d5d5'];
