@@ -56,7 +56,7 @@ export const TerminalSession = ({ device, idAttribute, item, getDeviceById, getS
   };
 
   const sessionMeta = {
-    'Session ID': item.object.id,
+    'Session ID': item.meta.session_id[0],
     'Start time': <Time value={formatTime(sessionDetails.start)} format="YYYY-MM-DD HH:mm" />,
     'End time': <Time value={formatTime(sessionDetails.end)} format="YYYY-MM-DD HH:mm" />,
     'Duration': moment.duration(moment(sessionDetails.end).diff(sessionDetails.start)).format('*hh:*mm:ss:SSS'),
