@@ -96,6 +96,11 @@ module.exports = (env, argv) => ({
       process: 'process/browser',
       Buffer: ['buffer', 'Buffer']
     }),
+    new webpack.DefinePlugin({
+      XTERM_VERSION: JSON.stringify(require('./package.json').dependencies.xterm),
+      XTERM_FIT_VERSION: JSON.stringify(require('./package.json').dependencies['xterm-addon-fit']),
+      XTERM_SEARCH_VERSION: JSON.stringify(require('./package.json').dependencies['xterm-addon-search'])
+    }),
     new ESBuildPlugin(),
     new HtmlWebPackPlugin({
       favicon: './src/favicon.ico',

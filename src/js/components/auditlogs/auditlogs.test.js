@@ -1,6 +1,6 @@
 import React from 'react';
 import { prettyDOM } from '@testing-library/dom';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
@@ -53,5 +53,19 @@ describe('Auditlogs Component', () => {
     userEvent.click(screen.getByText(/last 7 days/i));
     userEvent.click(screen.getByText(/clear filter/i));
     userEvent.click(screen.getByRole('button', { name: /Download results as csv/i }));
+    userEvent.click(screen.getByText(/open_terminal/i));
+  });
+
+  it('allows navigating by url as expected', async () => {
+    const ui = (
+      <MemoryRouter initialEntries={['/auditlog?start_date=2020-01-01T00:00:00.000Z']}>
+        <Provider store={store}>
+          <AuditLogs />
+        </Provider>
+      </MemoryRouter>
+    );
+    const { rerender } = render(ui);
+    await act(() => waitFor(() => rerender(ui)));
+    userEvent.click(screen.getByText(/clear filter/i));
   });
 });

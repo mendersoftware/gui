@@ -1,623 +1,377 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Auditlogs Component renders correctly 1`] = `
-<div
-  className="fadeIn deploy-table-contain auditlogs-list"
->
+"<div>
   <div
-    className="auditlogs-list-item auditlogs-list-item-header muted"
+    class=\\"fadeIn deploy-table-contain auditlogs-list\\"
   >
     <div
-      className="columnHeader"
-      onClick={[Function]}
-      style={
-        Object {
-          "cursor": "initial",
-        }
-      }
-    >
-      User
-    </div>
-    <div
-      className="columnHeader"
-      onClick={[Function]}
-      style={
-        Object {
-          "cursor": "initial",
-        }
-      }
-    >
-      Action
-    </div>
-    <div
-      className="columnHeader"
-      onClick={[Function]}
-      style={
-        Object {
-          "cursor": "initial",
-        }
-      }
-    >
-      Type
-    </div>
-    <div
-      className="columnHeader"
-      onClick={[Function]}
-      style={
-        Object {
-          "cursor": "initial",
-        }
-      }
-    >
-      Change
-    </div>
-    <div
-      className="columnHeader"
-      onClick={[Function]}
-      style={
-        Object {
-          "cursor": "initial",
-        }
-      }
-    >
-      More details
-    </div>
-    <div
-      className="columnHeader"
-      onClick={[Function]}
-      style={Object {}}
-    >
-      Time
-      <svg
-        aria-hidden={true}
-        className="MuiSvgIcon-root sortIcon selected true"
-        focusable="false"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"
-        />
-      </svg>
-    </div>
-    <div />
-  </div>
-  <div
-    className="loaderContainer shrunk"
-  >
-    <div
-      className="loader"
-    >
-      <span
-        className="dot dot_1"
-      />
-      <span
-        className="dot dot_2"
-      />
-      <span
-        className="dot dot_3"
-      />
-      <span
-        className="dot dot_4"
-      />
-    </div>
-  </div>
-  <div
-    className="auditlogs-list"
-  >
-    <div
-      className="MuiPaper-root MuiAccordion-root auditlogs-list-item MuiPaper-elevation1"
+      class=\\"auditlogs-list-item auditlogs-list-item-header muted\\"
     >
       <div
-        aria-disabled={false}
-        aria-expanded={false}
-        className="MuiButtonBase-root MuiAccordionSummary-root"
-        onBlur={[Function]}
-        onClick={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        role="button"
-        style={
-          Object {
-            "padding": 0,
-          }
-        }
-        tabIndex={0}
+        class=\\"columnHeader\\"
+        style=\\"cursor: initial;\\"
       >
-        <div
-          className="MuiAccordionSummary-content"
-        >
-          <div>
-            <div>
-              string@example.com
-            </div>
-          </div>
-          <div>
-            <div
-              className="uppercased"
-            >
-              create
-            </div>
-          </div>
-          <div>
-            <div
-              className="capitalized"
-            >
-              user
-            </div>
-          </div>
-          <div>
-            <div>
-              user@acme.com
-            </div>
-          </div>
-          <div>
-            <div
-              className="capitalized"
-              style={
-                Object {
-                  "whiteSpace": "pre-line",
-                }
-              }
-            >
-              change1
-            </div>
-          </div>
-          <div>
-            <time
-              dateTime="2019-01-01T12:10:22+00:00"
-              title={null}
-            >
-              2019-01-01 12:10
-            </time>
-          </div>
-          <button
-            className="MuiButtonBase-root MuiIconButton-root expandButton"
-            disabled={false}
-            onBlur={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            tabIndex={0}
-            type="button"
-          >
-            <span
-              className="MuiIconButton-label"
-            >
-              <svg
-                aria-hidden={true}
-                className="MuiSvgIcon-root"
-                focusable="false"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M7 10l5 5 5-5z"
-                />
-              </svg>
-            </span>
-          </button>
-        </div>
+        User
       </div>
       <div
-        className="MuiCollapse-container MuiCollapse-hidden"
-        style={
-          Object {
-            "minHeight": "0px",
-          }
-        }
+        class=\\"columnHeader\\"
+        style=\\"cursor: initial;\\"
       >
-        <div
-          className="MuiCollapse-wrapper"
-        >
-          <div
-            className="MuiCollapse-wrapperInner"
-          >
-            <div
-              role="region"
-            >
-              <div
-                className="MuiAccordionDetails-root"
-              >
-                <div
-                  className="code flexbox column"
-                >
-                  <span
-                    className=""
-                  >
-                    change1
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      className="MuiPaper-root MuiAccordion-root auditlogs-list-item MuiPaper-elevation1"
-    >
-      <div
-        aria-disabled={false}
-        aria-expanded={false}
-        className="MuiButtonBase-root MuiAccordionSummary-root"
-        onBlur={[Function]}
-        onClick={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        role="button"
-        style={
-          Object {
-            "padding": 0,
-          }
-        }
-        tabIndex={0}
-      >
-        <div
-          className="MuiAccordionSummary-content"
-        >
-          <div>
-            <div>
-              string
-            </div>
-          </div>
-          <div>
-            <div
-              className="uppercased"
-            >
-              create
-            </div>
-          </div>
-          <div>
-            <div
-              className="capitalized"
-            >
-              deployment
-            </div>
-          </div>
-          <div>
-            <div>
-              to production
-            </div>
-          </div>
-          <div>
-            <a
-              href="/deployments/finished?open=true&id=string"
-              onClick={[Function]}
-            >
-              View deployment
-            </a>
-          </div>
-          <div>
-            <time
-              dateTime="2019-01-01T12:16:22+00:00"
-              title={null}
-            >
-              2019-01-01 12:16
-            </time>
-          </div>
-          <button
-            className="MuiButtonBase-root MuiIconButton-root expandButton"
-            disabled={false}
-            onBlur={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            tabIndex={0}
-            type="button"
-          >
-            <span
-              className="MuiIconButton-label"
-            >
-              <svg
-                aria-hidden={true}
-                className="MuiSvgIcon-root"
-                focusable="false"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M7 10l5 5 5-5z"
-                />
-              </svg>
-            </span>
-          </button>
-        </div>
+        Action
       </div>
       <div
-        className="MuiCollapse-container MuiCollapse-hidden"
-        style={
-          Object {
-            "minHeight": "0px",
-          }
-        }
+        class=\\"columnHeader\\"
+        style=\\"cursor: initial;\\"
       >
-        <div
-          className="MuiCollapse-wrapper"
-        >
-          <div
-            className="MuiCollapse-wrapperInner"
-          >
-            <div
-              role="region"
-            >
-              <div
-                className="MuiAccordionDetails-root"
-              >
-                <div
-                  className="code flexbox column"
-                >
-                  <span
-                    className=""
-                  >
-                    change2
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        Type
       </div>
-    </div>
-  </div>
-  <div
-    className="MuiTablePagination-root flexbox margin-top "
-  >
-    <div
-      className="MuiToolbar-root MuiToolbar-regular MuiTablePagination-toolbar MuiToolbar-gutters"
-    >
       <div
-        className="MuiTablePagination-spacer flexbox no-basis"
-      />
-      <p
-        className="MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit"
+        class=\\"columnHeader\\"
+        style=\\"cursor: initial;\\"
       >
-        Rows
-      </p>
+        Changed
+      </div>
       <div
-        className="MuiInputBase-root MuiTablePagination-input MuiTablePagination-selectRoot"
-        onClick={[Function]}
+        class=\\"columnHeader\\"
+        style=\\"cursor: initial;\\"
       >
-        <div
-          aria-haspopup="listbox"
-          className="MuiSelect-root MuiSelect-select MuiTablePagination-select MuiSelect-selectMenu MuiInputBase-input"
-          onBlur={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onMouseDown={[Function]}
-          role="button"
-          tabIndex={0}
-        >
-          20
-        </div>
-        <input
-          aria-hidden={true}
-          className="MuiSelect-nativeInput"
-          onAnimationStart={[Function]}
-          onChange={[Function]}
-          tabIndex={-1}
-          value={20}
-        />
+        More details
+      </div>
+      <div
+        class=\\"columnHeader\\"
+      >
+        Time
         <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root MuiSelect-icon MuiTablePagination-selectIcon"
-          focusable="false"
-          viewBox="0 0 24 24"
+          aria-hidden=\\"true\\"
+          class=\\"MuiSvgIcon-root sortIcon selected true\\"
+          focusable=\\"false\\"
+          viewBox=\\"0 0 24 24\\"
         >
           <path
-            d="M7 10l5 5 5-5z"
+            d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
           />
         </svg>
       </div>
-      <p
-        className="MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit"
-      >
-        
-      </p>
+      <div />
+    </div>
+    <div
+      class=\\"auditlogs-list\\"
+    >
       <div
-        className="flexbox"
+        class=\\"auditlogs-list-item clickable\\"
       >
-        <button
-          className="MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled"
-          disabled={true}
-          onBlur={[Function]}
-          onClick={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={-1}
-          type="button"
-        >
-          <span
-            className="MuiIconButton-label"
-          >
-            <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z"
-              />
-            </svg>
-          </span>
-        </button>
-        <button
-          className="MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled"
-          disabled={true}
-          onBlur={[Function]}
-          onClick={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={-1}
-          type="button"
-        >
-          <span
-            className="MuiIconButton-label"
-          >
-            <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"
-              />
-            </svg>
-          </span>
-        </button>
+        <div>
+          string@example.com
+        </div>
         <div
-          className="flexbox"
-          style={
-            Object {
-              "alignItems": "baseline",
-            }
-          }
+          class=\\"uppercased\\"
+        >
+          create
+        </div>
+        <div
+          class=\\"capitalized\\"
+        >
+          user
+        </div>
+        <div>
+          user@acme.com
+        </div>
+        <div
+          class=\\"capitalized\\"
+          style=\\"align-items: flex-start; white-space: pre-line;\\"
+        >
+          change1
+        </div>
+        <time
+          datetime=\\"2019-01-01T12:10:22+00:00\\"
+        >
+          2019-01-01 12:10
+        </time>
+        <div
+          class=\\"uppercased link-color bold\\"
+        >
+          view details 
+          <svg
+            aria-hidden=\\"true\\"
+            class=\\"MuiSvgIcon-root\\"
+            focusable=\\"false\\"
+            viewBox=\\"0 0 24 24\\"
+          >
+            <path
+              d=\\"M16.01 11H4v2h12.01v3L20 12l-3.99-4z\\"
+            />
+          </svg>
+        </div>
+      </div>
+      <div
+        class=\\"auditlogs-list-item clickable\\"
+      >
+        <div>
+          string
+        </div>
+        <div
+          class=\\"uppercased\\"
+        >
+          create
+        </div>
+        <div
+          class=\\"capitalized\\"
+        >
+          deployment
+        </div>
+        <div>
+          to production
+        </div>
+        <a
+          href=\\"/deployments/finished?open=true&id=string\\"
+        >
+          View deployment
+        </a>
+        <time
+          datetime=\\"2019-01-01T12:16:22+00:00\\"
+        >
+          2019-01-01 12:16
+        </time>
+        <div
+          class=\\"uppercased link-color bold\\"
+        >
+          view details 
+          <svg
+            aria-hidden=\\"true\\"
+            class=\\"MuiSvgIcon-root\\"
+            focusable=\\"false\\"
+            viewBox=\\"0 0 24 24\\"
+          >
+            <path
+              d=\\"M16.01 11H4v2h12.01v3L20 12l-3.99-4z\\"
+            />
+          </svg>
+        </div>
+      </div>
+      <div
+        class=\\"auditlogs-list-item clickable\\"
+      >
+        <div>
+          string@example.com
+        </div>
+        <div
+          class=\\"uppercased\\"
+        >
+          open_terminal
+        </div>
+        <div
+          class=\\"capitalized\\"
+        >
+          device
+        </div>
+        <div>
+          a1
+        </div>
+        <a>
+          View session log
+        </a>
+        <time
+          datetime=\\"2019-01-01T12:10:22+00:00\\"
+        >
+          2019-01-01 12:10
+        </time>
+        <div
+          class=\\"uppercased link-color bold\\"
+        >
+          view details 
+          <svg
+            aria-hidden=\\"true\\"
+            class=\\"MuiSvgIcon-root\\"
+            focusable=\\"false\\"
+            viewBox=\\"0 0 24 24\\"
+          >
+            <path
+              d=\\"M16.01 11H4v2h12.01v3L20 12l-3.99-4z\\"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div
+      class=\\"loaderContainer shrunk\\"
+    >
+      <div
+        class=\\"loader\\"
+      >
+        <span
+          class=\\"dot dot_1\\"
+        />
+        <span
+          class=\\"dot dot_2\\"
+        />
+        <span
+          class=\\"dot dot_3\\"
+        />
+        <span
+          class=\\"dot dot_4\\"
+        />
+      </div>
+    </div>
+    <div
+      class=\\"MuiTablePagination-root flexbox margin-top \\"
+    >
+      <div
+        class=\\"MuiToolbar-root MuiToolbar-regular MuiTablePagination-toolbar MuiToolbar-gutters\\"
+      >
+        <div
+          class=\\"MuiTablePagination-spacer flexbox no-basis\\"
+        />
+        <p
+          class=\\"MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit\\"
+          
+        >
+          Rows
+        </p>
+        <div
+          class=\\"MuiInputBase-root MuiTablePagination-input MuiTablePagination-selectRoot\\"
         >
           <div
-            className="MuiFormControl-root MuiTextField-root MuiFormControl-marginDense"
-            onKeyUp={[Function]}
-            style={
-              Object {
-                "marginRight": 10,
-                "maxWidth": 30,
-                "minWidth": 30,
-              }
-            }
+            aria-haspopup=\\"listbox\\"
+            
+            class=\\"MuiSelect-root MuiSelect-select MuiTablePagination-select MuiSelect-selectMenu MuiInputBase-input\\"
+            
+            role=\\"button\\"
+            tabindex=\\"0\\"
+          >
+            20
+          </div>
+          <input
+            aria-hidden=\\"true\\"
+            class=\\"MuiSelect-nativeInput\\"
+            tabindex=\\"-1\\"
+            value=\\"20\\"
+          />
+          <svg
+            aria-hidden=\\"true\\"
+            class=\\"MuiSvgIcon-root MuiSelect-icon MuiTablePagination-selectIcon\\"
+            focusable=\\"false\\"
+            viewBox=\\"0 0 24 24\\"
+          >
+            <path
+              d=\\"M7 10l5 5 5-5z\\"
+            />
+          </svg>
+        </div>
+        <p
+          class=\\"MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit\\"
+        />
+        <div
+          class=\\"flexbox\\"
+        >
+          <button
+            class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+            disabled=\\"\\"
+            tabindex=\\"-1\\"
+            type=\\"button\\"
+          >
+            <span
+              class=\\"MuiIconButton-label\\"
+            >
+              <svg
+                aria-hidden=\\"true\\"
+                class=\\"MuiSvgIcon-root\\"
+                focusable=\\"false\\"
+                viewBox=\\"0 0 24 24\\"
+              >
+                <path
+                  d=\\"M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z\\"
+                />
+              </svg>
+            </span>
+          </button>
+          <button
+            class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+            disabled=\\"\\"
+            tabindex=\\"-1\\"
+            type=\\"button\\"
+          >
+            <span
+              class=\\"MuiIconButton-label\\"
+            >
+              <svg
+                aria-hidden=\\"true\\"
+                class=\\"MuiSvgIcon-root\\"
+                focusable=\\"false\\"
+                viewBox=\\"0 0 24 24\\"
+              >
+                <path
+                  d=\\"M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z\\"
+                />
+              </svg>
+            </span>
+          </button>
+          <div
+            class=\\"flexbox\\"
+            style=\\"align-items: baseline;\\"
           >
             <div
-              className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-marginDense MuiInput-marginDense"
-              onClick={[Function]}
+              class=\\"MuiFormControl-root MuiTextField-root MuiFormControl-marginDense\\"
+              style=\\"min-width: 30px; max-width: 30px; margin-right: 10px;\\"
             >
-              <input
-                aria-invalid={false}
-                autoFocus={false}
-                className="MuiInputBase-input MuiInput-input MuiInputBase-inputMarginDense MuiInput-inputMarginDense"
-                disabled={false}
-                onAnimationStart={[Function]}
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                required={false}
-                type="text"
-                value={1}
-              />
+              <div
+                class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-marginDense MuiInput-marginDense\\"
+              >
+                <input
+                  aria-invalid=\\"false\\"
+                  class=\\"MuiInputBase-input MuiInput-input MuiInputBase-inputMarginDense MuiInput-inputMarginDense\\"
+                  type=\\"text\\"
+                  value=\\"1\\"
+                />
+              </div>
             </div>
+            / 1
           </div>
-          / 1
+          <button
+            class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+            disabled=\\"\\"
+            tabindex=\\"-1\\"
+            type=\\"button\\"
+          >
+            <span
+              class=\\"MuiIconButton-label\\"
+            >
+              <svg
+                aria-hidden=\\"true\\"
+                class=\\"MuiSvgIcon-root\\"
+                focusable=\\"false\\"
+                viewBox=\\"0 0 24 24\\"
+              >
+                <path
+                  d=\\"M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z\\"
+                />
+              </svg>
+            </span>
+          </button>
+          <button
+            class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+            disabled=\\"\\"
+            tabindex=\\"-1\\"
+            type=\\"button\\"
+          >
+            <span
+              class=\\"MuiIconButton-label\\"
+            >
+              <svg
+                aria-hidden=\\"true\\"
+                class=\\"MuiSvgIcon-root\\"
+                focusable=\\"false\\"
+                viewBox=\\"0 0 24 24\\"
+              >
+                <path
+                  d=\\"M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z\\"
+                />
+              </svg>
+            </span>
+          </button>
         </div>
-        <button
-          className="MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled"
-          disabled={true}
-          onBlur={[Function]}
-          onClick={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={-1}
-          type="button"
-        >
-          <span
-            className="MuiIconButton-label"
-          >
-            <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
-              />
-            </svg>
-          </span>
-        </button>
-        <button
-          className="MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled"
-          disabled={true}
-          onBlur={[Function]}
-          onClick={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={-1}
-          type="button"
-        >
-          <span
-            className="MuiIconButton-label"
-          >
-            <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z"
-              />
-            </svg>
-          </span>
-        </button>
       </div>
     </div>
   </div>
-</div>
+</div>"
 `;

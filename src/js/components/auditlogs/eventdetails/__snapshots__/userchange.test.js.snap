@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserChange Component renders correctly 1`] = `
+<div
+  class="code flexbox column"
+>
+  <span
+    class=""
+  >
+    change1
+  </span>
+</div>
+`;

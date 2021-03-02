@@ -224,9 +224,26 @@ export const defaultState = {
           }
         },
         change: 'change2'
+      },
+      {
+        actor: {
+          id: 'string',
+          type: 'user',
+          email: 'string@example.com'
+        },
+        time: '2019-01-01T12:10:22.667Z',
+        action: 'open_terminal',
+        meta: {
+          session_id: ['abd313a8-ee88-48ab-9c99-fbcd80048e6e']
+        },
+        object: {
+          id: 'a1',
+          type: 'device'
+        },
+        change: 'change3'
       }
     ],
-    eventsTotal: 2,
+    eventsTotal: 3,
     intentId: 'testIntent',
     organization: {
       id: 1,

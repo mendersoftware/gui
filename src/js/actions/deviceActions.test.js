@@ -26,6 +26,7 @@ import {
   getDynamicGroups,
   getGroupDevices,
   getGroups,
+  getSessionDetails,
   initializeGroupsDevices,
   preauthDevice,
   removeDevicesFromGroup,
@@ -700,5 +701,16 @@ describe('device config ', () => {
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+});
+
+describe('troubleshooting related actions', () => {
+  it('should allow session info retrieval', async () => {
+    const store = mockStore({ ...defaultState });
+    const endDate = '2019-01-01T12:10:22.667Z';
+    const sessionId = 'abd313a8-ee88-48ab-9c99-fbcd80048e6e';
+    const result = await store.dispatch(getSessionDetails(sessionId, defaultState.devices.byId.a1.id, defaultState.users.currentUser, undefined, endDate));
+
+    expect(result).toMatchObject({ start: new Date(endDate), end: new Date(endDate) });
   });
 });

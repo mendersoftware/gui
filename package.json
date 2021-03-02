@@ -48,6 +48,7 @@
     "universal-cookie": "^4.0.4",
     "validator": "^13.5.2",
     "victory": "^35.4.9",
+    "xterm": "^4.10.0",
     "xterm-addon-fit": "^0.5.0",
     "xterm-addon-search": "^0.8.0",
     "xterm-for-react": "^1.0.4",
