@@ -250,7 +250,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
   return (
     <div className={`${className} `}>
       <div className="relative">
-        <XTerm addons={[fitAddon, searchAddon]} className="xterm-fullscreen" ref={xtermRef} options={{ scrollback: 5000 }} />
+        <XTerm addons={[fitAddon, searchAddon]} className="xterm-min-screen" ref={xtermRef} options={{ scrollback: 5000 }} />
         {!wasStarted && (
           <div
             className="flexbox centered clickable"
