@@ -41,7 +41,8 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
 
   useEffect(() => {
     getUserList();
-    return history.listen(trackLocationChange);
+    trackLocationChange(history.location);
+    history.listen(trackLocationChange);
   }, []);
 
   useEffect(() => {
