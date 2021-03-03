@@ -2,7 +2,7 @@
 
 exports[`ReleasesList Component renders correctly 1`] = `
 <div
-  class="repository-list flexbox column"
+  class="repository-list flexbox column overflow-hidden"
 >
   <div
     class="flexbox"
