@@ -10,7 +10,7 @@ exports[`Artifacts Component renders correctly 1`] = `
       style="align-items: flex-start;"
     >
       <div
-        class="repository-list flexbox column"
+        class="repository-list flexbox column overflow-hidden"
       >
         <div
           class="flexbox"

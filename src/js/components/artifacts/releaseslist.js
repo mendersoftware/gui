@@ -45,7 +45,7 @@ export const ReleasesList = ({ loading, onFilter, onSelect, releases, selectedRe
   const sortedReleases = (filteredReleases || releases).sort(customSort(sortDown, sortingOptions[selectedSortOption].value));
 
   return (
-    <div className="repository-list flexbox column">
+    <div className="repository-list flexbox column overflow-hidden">
       <div className="flexbox" style={{ alignItems: 'center' }}>
         <h3>Releases</h3>
         <TextField placeholder="Filter" className="search" onChange={e => searchUpdated(e.target.value)} style={{ marginLeft: 30, marginTop: 0 }} />
