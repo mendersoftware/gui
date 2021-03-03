@@ -7,6 +7,7 @@ import { applyDeviceConfig, decommissionDevice, setDeviceConfig } from '../../ac
 import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { getDocsVersion, getTenantCapabilities } from '../../selectors';
+import Tracking from '../../tracking';
 import { AuthButton } from '../helptips/helptooltips';
 import AuthsetsDialog from './authsets';
 import TerminalDialog from './terminal';
@@ -59,6 +60,7 @@ export const ExpandedDevice = ({
   };
 
   const launchTerminal = () => {
+    Tracking.event({ category: 'devices', action: 'open_terminal' });
     setSocketClosed(false);
     setTerminal(true);
   };
