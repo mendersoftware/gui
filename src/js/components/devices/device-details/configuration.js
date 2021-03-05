@@ -18,6 +18,7 @@ import ConfigurationObject from '../../common/configurationobject';
 import Confirm from '../../common/confirm';
 import LogDialog from '../../common/dialogs/log';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
+import { ConfigureRaspberryLedTip, ConfigureTimezoneTip } from '../../helptips/helptooltips';
 import Loader from '../../common/loader';
 import ConfigImportDialog from './configimportdialog';
 
@@ -26,6 +27,17 @@ const iconStyle = { margin: 12 };
 const textStyle = { textTransform: 'capitalize', textAlign: 'left' };
 
 const defaultReportTimeStamp = '0001-01-01T00:00:00Z';
+
+const configHelpTipsMap = {
+  'mender-demo-raspberrypi-led': {
+    position: 'right',
+    component: ConfigureRaspberryLedTip
+  },
+  timezone: {
+    position: 'right',
+    component: ConfigureTimezoneTip
+  }
+};
 
 export const ConfigUpToDateNote = ({ updated_ts = defaultReportTimeStamp }) => (
   <div className="flexbox margin-small">
@@ -111,7 +123,8 @@ export const DeviceConfiguration = ({
   getDeviceLog,
   getSingleDeployment,
   saveGlobalSettings,
-  setDeviceConfig
+  setDeviceConfig,
+  showHelptips
 }) => {
   const { config = {}, status } = device;
   const { configured, deployment_id, reported = {}, reported_ts, updated_ts } = config;
@@ -276,6 +289,14 @@ export const DeviceConfiguration = ({
     );
   }
 
+  const helpTipsMap = Object.entries(configHelpTipsMap).reduce((accu, [key, value]) => {
+    accu[key] = {
+      ...value,
+      props: { deviceId: device.id }
+    };
+    return accu;
+  }, {});
+
   return (
     <div className="bordered margin-bottom-small">
       <div className="two-columns">
@@ -294,7 +315,15 @@ export const DeviceConfiguration = ({
         )}
       </div>
       {isEditingConfig ? (
-        <KeyValueEditor disabled={isEditDisabled} errortext={''} input={changedConfig} onInputChange={setChangedConfig} reset={shouldUpdateEditor} />
+        <KeyValueEditor
+          disabled={isEditDisabled}
+          errortext={''}
+          input={changedConfig}
+          inputHelpTipsMap={helpTipsMap}
+          onInputChange={setChangedConfig}
+          reset={shouldUpdateEditor}
+          showHelptips={showHelptips}
+        />
       ) : (
         hasDeviceConfig && <ConfigurationObject className="margin-top" config={reported} />
       )}
