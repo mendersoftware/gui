@@ -7,10 +7,16 @@ import { Help as HelpIcon } from '@material-ui/icons';
 
 import { toggleHelptips } from '../../actions/userActions';
 import { getDocsVersion } from '../../selectors';
+import ConfigurationObject from '../common/configurationobject';
 
 const actionCreators = { toggleHelptips };
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
+  let device = {};
+  if (ownProps.deviceId) {
+    device = state.devices.byId[ownProps.deviceId];
+  }
   return {
+    device,
     docsVersion: getDocsVersion(state)
   };
 };
@@ -145,3 +151,72 @@ const DeviceSupportTipComponent = ({ docsVersion }) => (
 );
 
 export const DeviceSupportTip = connect(mapStateToProps, actionCreators)(DeviceSupportTipComponent);
+
+const ConfigureTimezoneTipComponent = ({ anchor, device, toggleHelptips }) => {
+  if (!['qemux86-64', 'raspberry', 'rpi'].some(type => device.attributes?.device_type?.startsWith(type))) {
+    return null;
+  }
+  return (
+    <>
+      <div id="config-timezone-help" className="fadeIn tooltip help" data-tip data-for="config-timezone-tip" data-event="click focus" style={anchor}>
+        <HelpIcon />
+      </div>
+      <ReactTooltip id="config-timezone-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+        <>
+          To see the effects of applying a configuration to your device you can set one of the below values to modify the timezone of your device. While all
+          values from <i>timedatectl list-timezones</i> will work, to easily see the impact of the changed value you can use one of the following values:
+          <ul>
+            <li>Europe/Oslo</li>
+            <li>America/Los_Angeles</li>
+            <li>Asia/Tokyo</li>
+          </ul>
+          Once the configuration has been applied you can see the effect by opening the Remote Terminal to the device and executing the <i>date</i> command.
+          <HideHelptipsButton toggleHelptips={toggleHelptips} />
+        </>
+      </ReactTooltip>
+    </>
+  );
+};
+
+export const ConfigureTimezoneTip = connect(mapStateToProps, actionCreators)(ConfigureTimezoneTipComponent);
+
+const ConfigureRaspberryLedComponent = ({ anchor, device, toggleHelptips }) => {
+  if (!['raspberry', 'rpi'].some(type => device.attributes?.device_type?.startsWith(type))) {
+    return null;
+  }
+  return (
+    <>
+      <div id="config-timezone-help" className="fadeIn tooltip help" data-tip data-for="config-timezone-tip" data-event="click focus" style={anchor}>
+        <HelpIcon />
+      </div>
+      <ReactTooltip id="config-timezone-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+        <>
+          To see the effects of applying a configuration to your device you can set one of the below values to modify the behaviour of your Raspberry Pi green
+          status LED
+          <ConfigurationObject
+            className="react-tooltip margin-top-small margin-bottom-small"
+            config={{
+              mmc0: 'The default, which blinks the led on storage activity',
+              on: 'Turn on the light permanently',
+              off: 'Turn off the light permanently',
+              heartbeat: 'Enable heartbeat blinking'
+            }}
+            compact
+          />
+          There are other possible values, but we won&apos;t advertise them here. See
+          <a href="http://www.d3noob.org/2020/07/controlling-activity-led-on-raspberry-pi.html" target="_blank" rel="noopener noreferrer">
+            this blog post
+          </a>{' '}
+          or{' '}
+          <a href="https://www.raspberrypi.org/forums/viewtopic.php?t=273194#p1658930" target="_blank" rel="noopener noreferrer">
+            in the Raspberry Pi forums
+          </a>
+          for more information.
+          <HideHelptipsButton toggleHelptips={toggleHelptips} />
+        </>
+      </ReactTooltip>
+    </>
+  );
+};
+
+export const ConfigureRaspberryLedTip = connect(mapStateToProps, actionCreators)(ConfigureRaspberryLedComponent);
