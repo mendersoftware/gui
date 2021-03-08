@@ -7,7 +7,7 @@ import { MemoryRouter } from 'react-router-dom';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import AuditLogs from './auditlogs';
-import { defaultState, mockDate, undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -15,15 +15,6 @@ describe('Auditlogs Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({ ...defaultState });
-    const _Date = Date;
-    global.Date = jest.fn(() => mockDate);
-    global.Date.parse = _Date.parse;
-    global.Date.now = _Date.now;
-    global.Date.toISOString = _Date.toISOString;
-    global.Date.UTC = _Date.UTC;
-    global.Date.getUTCFullYear = _Date.getUTCFullYear;
-    global.Date.getUTCMonth = _Date.getUTCMonth;
-    global.Date.getUTCDate = _Date.getUTCDate;
   });
 
   it('renders correctly', async () => {

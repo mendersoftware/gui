@@ -177,6 +177,9 @@ describe('CreateDeployment Component', () => {
     fireEvent.change(within(secondPhase).getByDisplayValue('2'), { target: { value: '25' } });
 
     userEvent.click(screen.getAllByText('Next')[0]);
+
+    // extra explicit here as the general date mocking seems to be ignored by the moment/ date combination
+    jest.setSystemTime(mockDate);
     userEvent.click(screen.getByText('Create'));
 
     const secondBatchDate = new Date(new Date(mockDate).setMinutes(mockDate.getMinutes() + 30));

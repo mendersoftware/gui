@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
 
 import handlers from './__mocks__/requestHandlers';
-import { token as mockToken, TEST_SESSION_DATETIME } from './mockData';
+import { mockDate, token as mockToken } from './mockData';
 
 export const RETRY_TIMES = 3;
 export const TEST_LOCATION = 'localhost';
@@ -38,6 +38,8 @@ jest.mock('universal-cookie', () => {
   return jest.fn(() => mockCookie);
 });
 
+jest.setSystemTime(mockDate);
+
 beforeAll(async () => {
   // Enable the mocking in tests.
   delete window.location;
@@ -57,7 +59,6 @@ beforeAll(async () => {
   await server.listen();
   Object.defineProperty(navigator, 'appVersion', { value: 'Test', writable: true });
   jest.spyOn(React, 'useEffect').mockImplementation(React.useLayoutEffect);
-  jest.setSystemTime(new Date(TEST_SESSION_DATETIME));
 });
 
 afterEach(async () => {
