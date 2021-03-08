@@ -1,4 +1,4 @@
-image: node:15.5.1-alpine
+image: node:15.11.0-alpine
 
 stages:
   - pre-test
