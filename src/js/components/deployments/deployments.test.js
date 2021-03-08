@@ -73,11 +73,11 @@ describe('Deployments Component', () => {
     userEvent.click(screen.getByRole('button', { name: /Cancel/i }));
     const deployment = screen.getByText(/test deployment 2/i).parentElement.parentElement;
     userEvent.click(within(deployment).getByRole('button', { name: /Abort/i }));
+    jest.advanceTimersByTime(200);
     await waitFor(() => expect(screen.getByText(/Confirm abort/i)).toBeInTheDocument());
     userEvent.click(document.querySelector('#confirmAbort'));
     userEvent.click(within(deployment).getByRole('button', { name: /View details/i }));
-    // TODO: investigate why this flakes out ~80% of the time...
-    // await waitFor(() => expect(screen.getByRole('button', { name: /Close/i })).toBeInTheDocument(), { timeout: 2500 });
-    // userEvent.click(screen.getByRole('button', { name: /Close/i }));
+    await waitFor(() => expect(screen.getByRole('button', { name: /Close/i })).toBeInTheDocument(), { timeout: 2500 });
+    userEvent.click(screen.getByRole('button', { name: /Close/i }));
   }, 30000);
 });
