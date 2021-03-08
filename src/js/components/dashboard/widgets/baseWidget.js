@@ -22,39 +22,39 @@ export const styles = {
   }
 };
 
-export class BaseWidget extends React.PureComponent {
-  render() {
-    const content = (
-      <div style={Object.assign({}, styles.contentStyle, styles.columnStyle)} ref={ref => (this.props.innerRef ? this.props.innerRef(ref) : null)}>
-        {this.props.showHelptips ? this.props.main.prepend : null}
-        {this.props.header ? (
-          <div style={Object.assign({ borderBottomStyle: 'solid' }, styles.rowStyle)} className="widgetHeader">
-            {this.props.header}
-          </div>
-        ) : null}
-        <div style={Object.assign({}, styles.columnStyle, styles.rightAlign)} className="widgetMainContent align-right">
-          <div className="header">{this.props.main.header}</div>
-          <div className="counter">{this.props.main.counter}</div>
+export const BaseWidget = ({ className = '', footer, header, innerRef, isActive, main, onClick, showHelptips }) => {
+  const content = (
+    <div style={{ ...styles.contentStyle, ...styles.columnStyle }} ref={ref => (innerRef ? (innerRef.current = ref) : null)}>
+      {showHelptips ? main.prepend : null}
+      {header ? (
+        <div style={Object.assign({ borderBottomStyle: 'solid' }, styles.rowStyle)} className="widgetHeader">
+          {header}
         </div>
-        <span className="link">{this.props.main.targetLabel}</span>
-        {this.props.footer ? (
-          <div className="widgetFooter" style={Object.assign({ borderTopStyle: 'solid' }, styles.rowStyle)}>
-            {this.props.footer}
-          </div>
-        ) : null}
+      ) : null}
+      <div style={Object.assign({}, styles.columnStyle, styles.rightAlign)} className="widgetMainContent align-right">
+        <div className="header">{main.header}</div>
+        <div className="counter">{main.counter}</div>
       </div>
-    );
-    if (this.props.isActive) {
-      return (
-        <Paper className={`widget ${this.props.className || ''}`} onClick={this.props.onClick} elevation={2}>
-          {content}
-        </Paper>
-      );
-    }
+      <span className="link">{main.targetLabel}</span>
+      {footer ? (
+        <div className="widgetFooter" style={Object.assign({ borderTopStyle: 'solid' }, styles.rowStyle)}>
+          {footer}
+        </div>
+      ) : null}
+    </div>
+  );
+  if (isActive) {
     return (
-      <div className={`notActive widget ${this.props.className || ''}`} onClick={this.props.onClick}>
+      <Paper className={`widget ${className}`} onClick={onClick} elevation={2}>
         {content}
-      </div>
+      </Paper>
     );
   }
-}
+  return (
+    <div className={`notActive widget ${className}`} onClick={onClick}>
+      {content}
+    </div>
+  );
+};
+
+export default BaseWidget;
