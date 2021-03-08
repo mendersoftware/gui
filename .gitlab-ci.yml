@@ -24,6 +24,7 @@ test:lint:
   except:
     - master
     - /^saas-[a-zA-Z0-9.]+$/
+  needs: []
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
@@ -66,6 +67,7 @@ test:unit:
   except:
     - /^(staging|saas-[a-zA-Z0-9.]+)$/
   image: node:14-alpine
+  needs: []
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
@@ -87,6 +89,7 @@ test:unit:
 
 test:docs-links:
   stage: test
+  needs: []
   except:
     - /^(staging|saas-[a-zA-Z0-9.]+)$/
   before_script:
