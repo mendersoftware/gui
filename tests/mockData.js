@@ -276,6 +276,8 @@ export const defaultState = {
           }
         ],
         device_types_compatible: ['qemux86-64'],
+        descriptions: ['test description'],
+        latestModified: '2020-09-10T12:16:22.667Z',
         metaData: {}
       }
     },
