@@ -2,52 +2,44 @@
 
 exports[`Review deployment Component renders correctly 1`] = `
 <div
-  className="margin-small"
+  class="margin-small"
 >
   <div
-    className="two-columns"
+    class="two-columns"
   >
     <div>
       <h4
-        className="dashboard-header"
+        class="dashboard-header"
       >
         <span>
           General
         </span>
       </h4>
       <ul
-        className="MuiList-root MuiList-padding"
+        class="MuiList-root MuiList-padding"
       >
         <div
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
-          style={
-            Object {
-              "marginBottom": -15,
-            }
-          }
+          style="margin-bottom: -15px;"
         >
           <li
-            className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
-            disabled={true}
+            class="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+            disabled=""
           >
             <div
-              className="MuiListItemText-root MuiListItemText-multiline"
+              class="MuiListItemText-root MuiListItemText-multiline"
             >
               <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
                 Release
               </span>
               <div
-                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
                 title="test-release"
               >
                 <div>
                   <span
-                    className="inventory-text"
-                    style={Object {}}
+                    class="inventory-text"
                   >
                     test-release
                   </span>
@@ -58,38 +50,28 @@ exports[`Review deployment Component renders correctly 1`] = `
           </li>
         </div>
         <div
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
-          style={
-            Object {
-              "marginBottom": -15,
-            }
-          }
+          style="margin-bottom: -15px;"
         >
           <li
-            className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
-            disabled={true}
+            class="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+            disabled=""
           >
             <div
-              className="MuiListItemText-root MuiListItemText-multiline"
+              class="MuiListItemText-root MuiListItemText-multiline"
             >
               <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
                 Device types compatible
               </span>
               <div
-                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
                 title=""
               >
                 <div>
                   <span
-                    className="inventory-text"
-                    style={Object {}}
-                  >
-                    
-                  </span>
+                    class="inventory-text"
+                  />
                    
                 </div>
               </div>
@@ -97,35 +79,27 @@ exports[`Review deployment Component renders correctly 1`] = `
           </li>
         </div>
         <div
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
-          style={
-            Object {
-              "marginBottom": -15,
-            }
-          }
+          style="margin-bottom: -15px;"
         >
           <li
-            className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
-            disabled={true}
+            class="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+            disabled=""
           >
             <div
-              className="MuiListItemText-root MuiListItemText-multiline"
+              class="MuiListItemText-root MuiListItemText-multiline"
             >
               <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
                 Target device(s)
               </span>
               <div
-                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
                 title="test"
               >
                 <div>
                   <span
-                    className="inventory-text"
-                    style={Object {}}
+                    class="inventory-text"
                   >
                     test
                   </span>
@@ -136,35 +110,27 @@ exports[`Review deployment Component renders correctly 1`] = `
           </li>
         </div>
         <div
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
-          style={
-            Object {
-              "marginBottom": -15,
-            }
-          }
+          style="margin-bottom: -15px;"
         >
           <li
-            className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
-            disabled={true}
+            class="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+            disabled=""
           >
             <div
-              className="MuiListItemText-root MuiListItemText-multiline"
+              class="MuiListItemText-root MuiListItemText-multiline"
             >
               <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
                 Number of retries
               </span>
               <div
-                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                title={0}
+                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                title="0"
               >
                 <div>
                   <span
-                    className="inventory-text"
-                    style={Object {}}
+                    class="inventory-text"
                   >
                     0
                   </span>
@@ -178,49 +144,40 @@ exports[`Review deployment Component renders correctly 1`] = `
     </div>
     <div>
       <h4
-        className="dashboard-header"
+        class="dashboard-header"
       >
         <span>
           Schedule
         </span>
       </h4>
       <ul
-        className="MuiList-root MuiList-padding"
+        class="MuiList-root MuiList-padding"
       >
         <div
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
-          style={
-            Object {
-              "marginBottom": -15,
-            }
-          }
+          style="margin-bottom: -15px;"
         >
           <li
-            className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
-            disabled={true}
+            class="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+            disabled=""
           >
             <div
-              className="MuiListItemText-root MuiListItemText-multiline"
+              class="MuiListItemText-root MuiListItemText-multiline"
             >
               <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
                 Created at
               </span>
               <div
-                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                title="2019-01-01T13:00:00.000Z"
+                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                title="2019-01-01T13:00:00.900Z"
               >
                 <div>
                   <span
-                    className="inventory-text"
-                    style={Object {}}
+                    class="inventory-text"
                   >
                     <time
-                      dateTime="2019-01-01T13:00:00+00:00"
-                      title={null}
+                      datetime="2019-01-01T13:00:00+00:00"
                     >
                       2019-01-01 13:00
                     </time>
@@ -232,39 +189,30 @@ exports[`Review deployment Component renders correctly 1`] = `
           </li>
         </div>
         <div
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
-          style={
-            Object {
-              "marginBottom": -15,
-            }
-          }
+          style="margin-bottom: -15px;"
         >
           <li
-            className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
-            disabled={true}
+            class="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+            disabled=""
           >
             <div
-              className="MuiListItemText-root MuiListItemText-multiline"
+              class="MuiListItemText-root MuiListItemText-multiline"
             >
               <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
                 Start time
               </span>
               <div
-                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                title="2019-01-01T13:00:00.000Z"
+                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                title="2019-01-01T13:00:00.900Z"
               >
                 <div>
                   <span
-                    className="inventory-text"
-                    style={Object {}}
+                    class="inventory-text"
                   >
                     <time
-                      dateTime="2019-01-01T13:00:00+00:00"
-                      title={null}
+                      datetime="2019-01-01T13:00:00+00:00"
                     >
                       2019-01-01 13:00
                     </time>
@@ -276,35 +224,27 @@ exports[`Review deployment Component renders correctly 1`] = `
           </li>
         </div>
         <div
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
-          style={
-            Object {
-              "marginBottom": -15,
-            }
-          }
+          style="margin-bottom: -15px;"
         >
           <li
-            className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
-            disabled={true}
+            class="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
+            disabled=""
           >
             <div
-              className="MuiListItemText-root MuiListItemText-multiline"
+              class="MuiListItemText-root MuiListItemText-multiline"
             >
               <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
               >
                 End time
               </span>
               <div
-                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
                 title="-"
               >
                 <div>
                   <span
-                    className="inventory-text"
-                    style={Object {}}
+                    class="inventory-text"
                   >
                     -
                   </span>
@@ -319,17 +259,17 @@ exports[`Review deployment Component renders correctly 1`] = `
   </div>
   <div>
     <h4
-      className="dashboard-header"
+      class="dashboard-header"
     >
       <span>
         Rollout Schedule
       </span>
     </h4>
     <div
-      className="flexbox deployment-phases-list margin-top-small margin-bottom-small"
+      class="flexbox deployment-phases-list margin-top-small margin-bottom-small"
     >
       <div
-        className="flexbox column align-right"
+        class="flexbox column align-right"
       >
         <div>
           Phase begins
@@ -339,23 +279,20 @@ exports[`Review deployment Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        className="flexbox column"
+        class="flexbox column"
       >
         <div
-          className="MuiChip-root MuiChip-sizeSmall"
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
+          class="MuiChip-root MuiChip-sizeSmall"
         >
           <span
-            className="MuiChip-label MuiChip-labelSmall"
+            class="MuiChip-label MuiChip-labelSmall"
           >
             Phase 1
           </span>
         </div>
         <div>
           <time
-            dateTime="2019-01-01T13:00:00+00:00"
-            title={null}
+            datetime="2019-01-01T13:00:00+00:00"
           >
             2019-01-01 13:00
           </time>
@@ -367,18 +304,13 @@ exports[`Review deployment Component renders correctly 1`] = `
     </div>
   </div>
   <p
-    className="info icon"
+    class="info icon"
   >
     <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
       focusable="false"
-      style={
-        Object {
-          "margin": "0 6px 4px 0",
-          "verticalAlign": "middle",
-        }
-      }
+      style="vertical-align: middle; margin: 0px 6px 4px 0px;"
       viewBox="0 0 24 24"
     >
       <path
