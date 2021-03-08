@@ -66,7 +66,7 @@ describe('Header Component', () => {
     const listbox = document.body.querySelector('ul[role=menu]');
     const listItem = within(listbox).getByText(/log out/i);
     userEvent.click(listItem);
-    fireEvent.mouseDown(listItem);
+    await fireEvent.mouseDown(listItem);
     await waitFor(() => rerender(view));
     const storeActions = store.getActions();
     const expectedActions = [{ type: UserConstants.USER_LOGOUT }];

@@ -77,7 +77,8 @@ describe('Deployments Component', () => {
     await waitFor(() => expect(screen.getByText(/Confirm abort/i)).toBeInTheDocument());
     userEvent.click(document.querySelector('#confirmAbort'));
     userEvent.click(within(deployment).getByRole('button', { name: /View details/i }));
-    await waitFor(() => expect(screen.getByRole('button', { name: /Close/i })).toBeInTheDocument(), { timeout: 2500 });
+    await waitFor(() => screen.queryByRole('button', { name: /Close/i }), { timeout: 2500 });
+    expect(screen.getByRole('button', { name: /Close/i })).toBeInTheDocument();
     userEvent.click(screen.getByRole('button', { name: /Close/i }));
   }, 30000);
 });
