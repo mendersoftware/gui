@@ -1,12 +1,13 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { screen, render, waitForElementToBeRemoved, within } from '@testing-library/react';
+import { screen, render, within, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Header from './header';
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import UserConstants from '../../constants/userConstants';
 
 const mockStore = configureStore([thunk]);
 
@@ -52,19 +53,23 @@ describe('Header Component', () => {
   });
 
   it('works as intended', async () => {
-    render(
+    const view = (
       <MemoryRouter>
         <Provider store={store}>
           <Header />
         </Provider>
       </MemoryRouter>
     );
-
+    const { rerender } = render(view);
     const selectButton = screen.getByRole('button', { name: defaultState.users.byId[defaultState.users.currentUser].email });
     userEvent.click(selectButton);
     const listbox = document.body.querySelector('ul[role=menu]');
     const listItem = within(listbox).getByText(/log out/i);
     userEvent.click(listItem);
-    await waitForElementToBeRemoved(() => document.body.querySelector('ul[role=menu]'));
+    await fireEvent.mouseDown(listItem);
+    await waitFor(() => rerender(view));
+    const storeActions = store.getActions();
+    const expectedActions = [{ type: UserConstants.USER_LOGOUT }];
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
 });

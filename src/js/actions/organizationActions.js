@@ -84,8 +84,8 @@ export const completeUpgrade = (tenantId, plan) => dispatch =>
   );
 
 export const getAuditLogs = (page, perPage, startDate, endDate, userId, type, detail, sort = 'desc') => dispatch => {
-  const createdAfter = endDate ? `&created_after=${Math.round(Date.parse(endDate) / 1000)}` : '';
-  const createdBefore = startDate ? `&created_before=${Math.round(Date.parse(startDate) / 1000)}` : '';
+  const createdAfter = startDate ? `&created_after=${Math.round(Date.parse(startDate) / 1000)}` : '';
+  const createdBefore = endDate ? `&created_before=${Math.round(Date.parse(endDate) / 1000)}` : '';
   const typeSearch = type ? `&object_type=${type}` : '';
   const userSearch = userId ? `&actor_id=${userId}` : '';
   const queryParameter = type && detail ? OrganizationConstants.AUDIT_LOGS_TYPES.find(typeObject => typeObject.value === type).queryParameter : '';

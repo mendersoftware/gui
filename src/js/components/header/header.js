@@ -124,6 +124,7 @@ export class Header extends React.Component {
       setHideAnnouncement,
       inProgress,
       isEnterprise,
+      isHosted,
       multitenancy,
       organization,
       pendingDevices,
@@ -133,6 +134,7 @@ export class Header extends React.Component {
     } = self.props;
 
     const showOffer =
+      isHosted &&
       moment().isBefore(currentOffer.expires) &&
       (organization && organization.trial ? currentOffer.trial : currentOffer[organization.plan]) &&
       !self.state.offerCookie;
@@ -236,6 +238,7 @@ const mapStateToProps = state => {
     hasTrackingEnabled: getUserSettings(state).trackingConsentGiven,
     inProgress: state.deployments.byStatus.inprogress.total,
     isEnterprise: getIsEnterprise(state),
+    isHosted: state.app.features.isHosted,
     multitenancy: state.app.features.hasMultitenancy || state.app.features.isEnterprise || state.app.features.isHosted,
     showHelptips: state.users.showHelptips,
     pendingDevices: state.devices.byStatus.pending.total,

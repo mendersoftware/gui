@@ -1,16 +1,15 @@
 import React from 'react';
-import { prettyDOM } from '@testing-library/dom';
 import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import DeploymentReport from './report';
-import { defaultState } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../../tests/mockData';
+import TerminalSession from './terminalsession';
 
 const mockStore = configureStore([thunk]);
 
-describe('DeploymentReport Component', () => {
+describe('TerminalSession Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({ ...defaultState });
@@ -20,15 +19,13 @@ describe('DeploymentReport Component', () => {
     const { baseElement } = render(
       <MemoryRouter>
         <Provider store={store}>
-          <DeploymentReport deployment={{ id: defaultState.deployments.byId.d1.id }} type="finished" />
+          <TerminalSession item={defaultState.organization.events[2]} />
         </Provider>
       </MemoryRouter>
     );
-    const dialog = baseElement.getElementsByClassName('MuiDialog-root')[0];
-    const view = prettyDOM(dialog, 100000, { highlight: false })
-      .replace(/id="mui-[0-9]*"/g, '')
-      .replace(/aria-labelledby="(mui-[0-9]* *)*"/g, '')
-      .replace(/\\/g, '');
+
+    const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

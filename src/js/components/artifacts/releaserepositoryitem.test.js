@@ -4,7 +4,7 @@ import ReleaseRepositoryItem from './releaserepositoryitem';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('ReleaseRepositoryItem Component', () => {
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
     const tree = renderer
       .create(<ReleaseRepositoryItem artifact={{ device_types_compatible: ['test-type'], updates: [], modified: '2019-01-01' }} onExpanded={() => {}} />)
       .toJSON();

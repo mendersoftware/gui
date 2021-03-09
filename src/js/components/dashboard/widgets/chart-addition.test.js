@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ChartAdditionWidget from './chart-addition';
 import { defaultState, undefineds } from '../../../../../tests/mockData';
@@ -19,8 +19,9 @@ describe('ChartAdditionWidget Component', () => {
     expect(screen.queryByText(/Device group/i)).not.toBeInTheDocument();
     userEvent.click(screen.getByText(/Add a chart/i));
     expect(screen.queryByText(/Device group/i)).toBeInTheDocument();
-    await selectMaterialUiSelectOption(screen.getByText(/Device group/i), 'testGroup');
-    userEvent.click(screen.getByRole('button', { name: /Save/i }));
+    const element = screen.getByText(/Device group/i);
+    await selectMaterialUiSelectOption(element, 'testGroup');
+    act(() => userEvent.click(screen.getByRole('button', { name: /Save/i })));
     expect(submitCheck).toHaveBeenCalled();
     expect(screen.queryByText(/Device group/i)).not.toBeInTheDocument();
   });

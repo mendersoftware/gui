@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { compose, setDisplayName } from 'recompose';
 
 // material ui
@@ -66,70 +66,60 @@ export const DeploymentStatus = compose(setDisplayName('DeploymentStatus'))(({ d
   <DeploymentStats key="DeploymentStatus" vertical={false} deployment={deployment} />
 ));
 
-export default class DeploymentItem extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      abort: null
-    };
-  }
+export const DeploymentItem = ({ abort: abortDeployment, columnHeaders, deployment, isEnterprise, openReport, type }) => {
+  const [abort, setAbort] = useState(null);
 
-  toggleConfirm(id) {
-    const self = this;
-    setTimeout(() => self.setState({ abort: self.state.abort ? null : id }), 150);
-  }
+  const toggleConfirm = id => {
+    setTimeout(() => setAbort(abort ? null : id), 150);
+  };
+  const groupedStats = groupDeploymentStats(deployment);
+  const { created, id, phases } = deployment;
 
-  render() {
-    const self = this;
-    const { abort: abortDeployment, columnHeaders, deployment, isEnterprise, openReport, type } = self.props;
-    const { abort } = self.state;
-    const groupedStats = groupDeploymentStats(deployment);
-    const { created, id, phases } = deployment;
-
-    let confirmation;
-    if (abort === id) {
-      confirmation = (
-        <Confirm
-          classes="flexbox centered confirmation-overlay"
-          cancel={() => self.toggleConfirm(id)}
-          action={() => abortDeployment(id)}
-          table={true}
-          type="abort"
-        />
-      );
-    }
-    const started = isEnterprise && phases && phases.length >= 1 ? phases[0].start_ts || created : created;
-    return (
-      <div className={`deployment-item ${deploymentTypeClasses[type]}`}>
-        {!!confirmation && confirmation}
-        {columnHeaders.map((column, i) => (
-          <div className={column.class} key={`deploy-item-${i}`}>
-            {column.title && <span className="deployment-item-title text-muted">{column.title}</span>}
-            {column.renderer({
-              ...self.props,
-              className: column.class || '',
-              deployment,
-              started,
-              groupedStats: { ...groupedStats, current: groupedStats.inprogress },
-              ...column.props
-            })}
-          </div>
-        ))}
-        <Button
-          variant="contained"
-          onClick={() => openReport(type, deployment.id)}
-          style={{ justifySelf: 'center', backgroundColor: 'transparent', textTransform: 'none' }}
-        >
-          View details
-        </Button>
-        {type !== DEPLOYMENT_STATES.finished && (
-          <Tooltip className="columnHeader" title="Abort" placement="top-start">
-            <IconButton onClick={() => self.toggleConfirm(id)}>
-              <CancelOutlinedIcon className="cancelButton muted" />
-            </IconButton>
-          </Tooltip>
-        )}
-      </div>
+  let confirmation;
+  if (abort === id) {
+    confirmation = (
+      <Confirm
+        classes="flexbox centered confirmation-overlay"
+        cancel={() => self.toggleConfirm(id)}
+        action={() => abortDeployment(id)}
+        table={true}
+        type="abort"
+      />
     );
   }
-}
+  const started = isEnterprise && phases && phases.length >= 1 ? phases[0].start_ts || created : created;
+  return (
+    <div className={`deployment-item ${deploymentTypeClasses[type]}`}>
+      {!!confirmation && confirmation}
+      {columnHeaders.map((column, i) => (
+        <div className={column.class} key={`deploy-item-${i}`}>
+          {column.title && <span className="deployment-item-title text-muted">{column.title}</span>}
+          {column.renderer({
+            ...self.props,
+            className: column.class || '',
+            deployment,
+            started,
+            groupedStats: { ...groupedStats, current: groupedStats.inprogress },
+            ...column.props
+          })}
+        </div>
+      ))}
+      <Button
+        variant="contained"
+        onClick={() => openReport(type, deployment.id)}
+        style={{ justifySelf: 'center', backgroundColor: 'transparent', textTransform: 'none' }}
+      >
+        View details
+      </Button>
+      {type !== DEPLOYMENT_STATES.finished && (
+        <Tooltip className="columnHeader" title="Abort" placement="top-start">
+          <IconButton onClick={() => toggleConfirm(id)}>
+            <CancelOutlinedIcon className="cancelButton muted" />
+          </IconButton>
+        </Tooltip>
+      )}
+    </div>
+  );
+};
+
+export default DeploymentItem;

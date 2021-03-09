@@ -6,11 +6,11 @@
   "dependencies": {
     "@cypress/skip-test": "^2.6.0",
     "@nuintun/qrcode": "^3.0.1",
-    "cypress": "^6.4.0",
+    "cypress": "^6.6.0",
     "cypress-file-upload": "^5.0.2",
     "cypress-iframe": "^1.0.1",
     "cypress-image-snapshot": "^4.0.1",
-    "cypress-localstorage-commands": "^1.4.0",
+    "cypress-localstorage-commands": "^1.4.1",
     "cypress-otp": "^1.0.3",
     "cypress-wait-until": "^1.7.1",
     "dayjs": "^1.10.4",

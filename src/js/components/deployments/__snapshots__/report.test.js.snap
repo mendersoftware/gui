@@ -224,7 +224,7 @@ exports[`DeploymentReport Component renders correctly 1`] = `
                     />
                   </svg>
                   <span>
-                    0 h 30 m 00 s
+                    0 h 30 m 01 s
                   </span>
                 </h2>
                 <div>
