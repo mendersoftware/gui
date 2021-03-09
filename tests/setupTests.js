@@ -77,7 +77,7 @@ afterAll(async () => {
 });
 
 export const selectMaterialUiSelectOption = async (element, optionText) => {
-  // The the button that opens the dropdown, which is a sibling of the input
+  // The button that opens the dropdown, which is a sibling of the input
   const selectButton = element.parentNode.querySelector('[role=button]');
   // Open the select dropdown
   userEvent.click(selectButton);
