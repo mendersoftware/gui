@@ -1,11 +1,14 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import Review from './review';
+import { undefineds } from '../../../../../tests/mockData';
 
 describe('Review deployment Component', () => {
   it('renders correctly', async () => {
     const release = { Name: 'test-release', device_types_compatible: [], phases: [] };
-    const tree = renderer.create(<Review group="test" release={release} deploymentDeviceIds={[]} deploymentDeviceCount={0} />).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { baseElement } = render(<Review group="test" release={release} deploymentDeviceIds={[]} deploymentDeviceCount={0} />);
+    const view = baseElement.firstChild.firstChild;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

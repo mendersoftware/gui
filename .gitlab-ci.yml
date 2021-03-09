@@ -1,4 +1,4 @@
-image: node:15.5.1-alpine
+image: node:15.11.0-alpine
 
 stages:
   - pre-test
@@ -24,6 +24,7 @@ test:lint:
   except:
     - master
     - /^saas-[a-zA-Z0-9.]+$/
+  needs: []
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
@@ -35,7 +36,7 @@ test:lint:
 test:acceptance:
   stage: e2e-test
   except:
-    - /^saas-[a-zA-Z0-9.]+$/
+    - /^(staging|saas-[a-zA-Z0-9.]+)$/
   image: tiangolo/docker-with-compose
   dependencies:
     - build:docker
@@ -64,8 +65,9 @@ test:acceptance:
 test:unit:
   stage: test
   except:
-    - /^saas-[a-zA-Z0-9.]+$/
+    - /^(staging|saas-[a-zA-Z0-9.]+)$/
   image: node:14-alpine
+  needs: []
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
@@ -87,6 +89,7 @@ test:unit:
 
 test:docs-links:
   stage: test
+  needs: []
   except:
     - /^(staging|saas-[a-zA-Z0-9.]+)$/
   before_script:

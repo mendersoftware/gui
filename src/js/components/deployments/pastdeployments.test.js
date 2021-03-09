@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Past from './pastdeployments';
-import { defaultState, mockDate, undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -24,15 +24,6 @@ describe('PastDeployments Component', () => {
         }
       }
     });
-    const _Date = Date;
-    global.Date = jest.fn(() => mockDate);
-    global.Date.parse = _Date.parse;
-    global.Date.now = _Date.now;
-    global.Date.toISOString = _Date.toISOString;
-    global.Date.UTC = _Date.UTC;
-    global.Date.getUTCFullYear = _Date.getUTCFullYear;
-    global.Date.getUTCMonth = _Date.getUTCMonth;
-    global.Date.getUTCDate = _Date.getUTCDate;
   });
 
   it('renders correctly', async () => {

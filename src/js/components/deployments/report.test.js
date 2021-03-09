@@ -20,7 +20,7 @@ describe('DeploymentReport Component', () => {
     const { baseElement } = render(
       <MemoryRouter>
         <Provider store={store}>
-          <DeploymentReport deployment={{ id: 'a1' }} type="finished" />
+          <DeploymentReport deployment={{ id: defaultState.deployments.byId.d1.id }} type="finished" />
         </Provider>
       </MemoryRouter>
     );

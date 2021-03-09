@@ -87,7 +87,7 @@ describe('stringToBoolean function', () => {
 });
 
 describe('versionCompare function', () => {
-  it('should works as intended', () => {
+  it('should work as intended', async () => {
     expect(versionCompare('2.5.1', '2.6.0').toString()).toEqual('-1');
     expect(versionCompare('2.6.0', '2.6.0').toString()).toEqual('0');
     expect(versionCompare('2.6.x', '2.6.0').toString()).toEqual('1');

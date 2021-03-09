@@ -231,7 +231,7 @@ export const defaultState = {
           type: 'user',
           email: 'string@example.com'
         },
-        time: '2019-01-01T12:10:22.667Z',
+        time: '2019-01-01T12:10:22.669Z',
         action: 'open_terminal',
         meta: {
           session_id: ['abd313a8-ee88-48ab-9c99-fbcd80048e6e']
@@ -276,6 +276,8 @@ export const defaultState = {
           }
         ],
         device_types_compatible: ['qemux86-64'],
+        descriptions: ['test description'],
+        latestModified: '2020-09-10T12:16:22.667Z',
         metaData: {}
       }
     },
