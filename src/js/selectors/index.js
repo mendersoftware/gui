@@ -64,7 +64,10 @@ export const getUserRoles = createSelector(
   }
 );
 
-export const getTenantCapabilities = createSelector([getFeatures, getOrganization], ({ hasDeviceConfig: isDeviceConfigEnabled, isHosted }, { addons = [] }) => {
-  const hasDeviceConfig = (!isHosted && isDeviceConfigEnabled) || addons.some(addon => addon.name === 'configure' && Boolean(addon.enabled));
-  return { hasDeviceConfig };
-});
+export const getTenantCapabilities = createSelector(
+  [getFeatures, getOrganization],
+  ({ hasAddons, hasDeviceConfig: isDeviceConfigEnabled, isHosted }, { addons = [] }) => {
+    const hasDeviceConfig = (!isHosted && (isDeviceConfigEnabled || !hasAddons)) || addons.some(addon => addon.name === 'configure' && Boolean(addon.enabled));
+    return { hasDeviceConfig };
+  }
+);
