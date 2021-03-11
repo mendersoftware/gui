@@ -43,7 +43,7 @@ export const ExpandedDevice = ({
 
   const [showAuthsetsDialog, setShowAuthsetsDialog] = useState(false);
   const [socketClosed, setSocketClosed] = useState(true);
-  const [terminal, setTerminal] = useState(false);
+  const [troubleshootType, setTroubleshootType] = useState();
 
   const toggleAuthsets = (authsets = !showAuthsetsDialog, shouldUpdate = false) => {
     setShowAuthsetsDialog(authsets);
@@ -59,10 +59,10 @@ export const ExpandedDevice = ({
       .finally(() => refreshDevices(true));
   };
 
-  const launchTerminal = () => {
+  const launchTroubleshoot = type => {
     Tracking.event({ category: 'devices', action: 'open_terminal' });
     setSocketClosed(false);
-    setTerminal(true);
+    setTroubleshootType(type);
   };
 
   const waiting = !(attributes && Object.values(attributes).some(i => i));
@@ -95,7 +95,9 @@ export const ExpandedDevice = ({
         )}
         {status === DEVICE_STATES.accepted && (
           <>
-            {hasDeviceConnect && <DeviceConnection device={device} docsVersion={docsVersion} launchTerminal={launchTerminal} socketClosed={socketClosed} />}
+            {hasDeviceConnect && (
+              <DeviceConnection device={device} docsVersion={docsVersion} startTroubleshoot={launchTroubleshoot} socketClosed={socketClosed} />
+            )}
             {waiting ? <DeviceInventoryLoader docsVersion={docsVersion} /> : <DeviceInventory device={device} setSnackbar={setSnackbar} />}
           </>
         )}
@@ -112,10 +114,11 @@ export const ExpandedDevice = ({
 
       <TroubleshootDialog
         deviceId={device.id}
-        onCancel={() => setTerminal(false)}
+        onCancel={() => setTroubleshootType()}
         onSocketClose={() => setTimeout(() => setSocketClosed(true), 5000)}
-        open={terminal}
+        open={Boolean(troubleshootType)}
         setSocketClosed={setSocketClosed}
+        type={troubleshootType}
       />
     </div>
   );

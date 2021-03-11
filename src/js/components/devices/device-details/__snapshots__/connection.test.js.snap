@@ -8,7 +8,7 @@ exports[`DeviceConnection Component renders correctly 1`] = `
     <h4
       class="margin-bottom-small"
     >
-      Remote Terminal
+      Troubleshoot
     </h4>
     <div
       class="flexbox"
@@ -18,7 +18,7 @@ exports[`DeviceConnection Component renders correctly 1`] = `
         class="MuiTypography-root MuiTypography-body1"
         style="text-transform: none; text-align: left;"
       >
-        The Remote terminal add-on does not seem to be enabled on this device.
+        The troubleshoot add-on does not seem to be enabled on this device.
         <br />
         Please see
          

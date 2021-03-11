@@ -43,6 +43,9 @@ export const Terminal = ({ onDownloadClick, sendMessage, setSnackbar, setSession
   const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
   const [snackbarAlreadySet, setSnackbarAlreadySet] = useState(false);
   const [term, setTerminal] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const observer = new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting));
 
   const healthcheckFailed = () => {
     setHealthcheckHasFailed(true);
@@ -54,36 +57,20 @@ export const Terminal = ({ onDownloadClick, sendMessage, setSnackbar, setSession
       return;
     }
     setTerminal(xtermRef.current.terminal);
+    observer.observe(xtermRef.current.terminalRef.current);
     try {
       fitAddon.fit();
     } catch {
       setSnackbar('Fit not possible, terminal not yet visible', 5000);
     }
 
-    socket.onopen = () => {
-      setSnackbar('Connection with the device established.', 5000);
-      setSocketInitialized(true);
-    };
+    socket.onopen = onSocketOpen;
+    socket.onclose = onSocketClose;
+    socket.onerror = onSocketError;
 
-    socket.onclose = event => {
-      if (!snackbarAlreadySet && healthcheckHasFailed) {
-        setSnackbar('Health check failed: connection with the device lost.', 5000);
-      } else if (!snackbarAlreadySet && event.wasClean) {
-        setSnackbar(`Connection with the device closed.`, 5000);
-      } else if (!snackbarAlreadySet && event.code == 1006) {
-        // 1006: abnormal closure
-        setSnackbar('Connection to the remote terminal is forbidden.', 5000);
-      } else if (!snackbarAlreadySet) {
-        setSnackbar('Connection with the device died.', 5000);
-      }
-      if (xtermRef.current) {
-        cleanupSocket();
-      }
-    };
-
-    socket.onerror = error => {
-      setSnackbar(`WebSocket error: ${error.message}`, 5000);
-      cleanupSocket();
+    // Remove the observer as soon as the component is unmounted
+    return () => {
+      observer.disconnect();
     };
     // xtermRef.current = null;
   }, [socket]);
@@ -94,63 +81,21 @@ export const Terminal = ({ onDownloadClick, sendMessage, setSnackbar, setSession
     }
     term.reset();
     fitAddon.fit();
-    let newDimensions = fitAddon.proposeDimensions();
-    //
-    const message = {
-      typ: MessageTypes.New,
-      props: { terminal_height: newDimensions.rows, terminal_width: newDimensions.cols }
-    };
+    const { rows = 40, cols = 80 } = fitAddon.proposeDimensions() || {};
+    const message = { typ: MessageTypes.New, props: { terminal_height: rows, terminal_width: cols } };
     sendMessage(message);
-    setDimensions(newDimensions);
+    setDimensions({ rows, cols });
     term.focus();
     term.registerLinkProvider(
       new WebLinkProvider(term, /^\s*(\/.+)\b/, (e, link) => {
         onDownloadClick(link);
       })
     );
-    socket.onmessage = event =>
-      blobToString(event.data).then(data => {
-        const {
-          hdr: { props = {}, proto, sid, typ },
-          body
-        } = MessagePack.decode(data);
-        if (proto !== MessageProtocols.Shell) {
-          return;
-        }
-        switch (typ) {
-          case MessageTypes.New: {
-            if (props.status == 2) {
-              setSnackbar(`Error: ${byteArrayToString(body)}`, 5000);
-              setSnackbarAlreadySet(true);
-              return cleanupSocket();
-            } else {
-              return setSessionId(sid);
-            }
-          }
-          case MessageTypes.Shell:
-            return term.write(byteArrayToString(body));
-          case MessageTypes.Stop:
-            return cleanupSocket();
-          case MessageTypes.Ping: {
-            if (healthcheckTimeout) {
-              clearTimeout(healthcheckTimeout);
-            }
-            sendMessage({ typ: MessageTypes.Pong });
-            //
-            var timeout = parseInt(props.timeout);
-            if (timeout > 0) {
-              healthcheckTimeout = setTimeout(healthcheckFailed, timeout * 1000);
-            }
-            return;
-          }
-          default:
-            break;
-        }
-      });
-  }, [socketInitialized]);
+    socket.onmessage = onSocketMessage;
+  }, [socketInitialized, term]);
 
   useEffect(() => {
-    if (!socketInitialized || !term) {
+    if (!socketInitialized || !term || !isVisible) {
       return;
     }
     fitAddon.fit();
@@ -164,7 +109,7 @@ export const Terminal = ({ onDownloadClick, sendMessage, setSnackbar, setSession
       sendMessage(message);
       setDimensions(newDimensions);
     }
-  }, [size]);
+  }, [size, isVisible]);
 
   useLayoutEffect(() => {
     const updateSize = () => {
@@ -174,6 +119,72 @@ export const Terminal = ({ onDownloadClick, sendMessage, setSnackbar, setSession
     updateSize();
     return () => window.removeEventListener('resize', updateSize);
   }, []);
+
+  const onSocketOpen = () => {
+    setSnackbar('Connection with the device established.', 5000);
+    setSocketInitialized(true);
+  };
+
+  const onSocketClose = event => {
+    if (!snackbarAlreadySet && healthcheckHasFailed) {
+      setSnackbar('Health check failed: connection with the device lost.', 5000);
+    } else if (!snackbarAlreadySet && event.wasClean) {
+      setSnackbar(`Connection with the device closed.`, 5000);
+    } else if (!snackbarAlreadySet && event.code == 1006) {
+      // 1006: abnormal closure
+      setSnackbar('Connection to the remote terminal is forbidden.', 5000);
+    } else if (!snackbarAlreadySet) {
+      setSnackbar('Connection with the device died.', 5000);
+    }
+    if (xtermRef.current) {
+      cleanupSocket();
+    }
+  };
+
+  const onSocketMessage = event =>
+    blobToString(event.data).then(data => {
+      const {
+        hdr: { props = {}, proto, sid, typ },
+        body
+      } = MessagePack.decode(data);
+      if (proto !== MessageProtocols.Shell) {
+        return;
+      }
+      switch (typ) {
+        case MessageTypes.New: {
+          if (props.status == 2) {
+            setSnackbar(`Error: ${byteArrayToString(body)}`, 5000);
+            setSnackbarAlreadySet(true);
+            return cleanupSocket();
+          } else {
+            return setSessionId(sid);
+          }
+        }
+        case MessageTypes.Shell:
+          return term.write(byteArrayToString(body));
+        case MessageTypes.Stop:
+          return cleanupSocket();
+        case MessageTypes.Ping: {
+          if (healthcheckTimeout) {
+            clearTimeout(healthcheckTimeout);
+          }
+          sendMessage({ typ: MessageTypes.Pong });
+          //
+          var timeout = parseInt(props.timeout);
+          if (timeout > 0) {
+            healthcheckTimeout = setTimeout(healthcheckFailed, timeout * 1000);
+          }
+          return;
+        }
+        default:
+          break;
+      }
+    });
+
+  const onSocketError = error => {
+    setSnackbar(`WebSocket error: ${error.message}`, 5000);
+    cleanupSocket();
+  };
 
   const cleanupSocket = () => {
     socket.close();

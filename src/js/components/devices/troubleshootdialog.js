@@ -44,10 +44,20 @@ const tabs = {
   transfer: { link: 'file transfer logs', title: () => 'File transfer', value: 'transfer' }
 };
 
-export const TroubleshootDialog = ({ deviceId, deviceFileDownload, deviceFileUpload, onCancel, onSocketClose, open, setSnackbar, setSocketClosed }) => {
+export const TroubleshootDialog = ({
+  deviceId,
+  deviceFileDownload,
+  deviceFileUpload,
+  onCancel,
+  onSocketClose,
+  open,
+  setSnackbar,
+  setSocketClosed,
+  type = tabs.terminal.value
+}) => {
   const timer = useRef();
 
-  const [currentTab, setCurrentTab] = useState(tabs.terminal.value);
+  const [currentTab, setCurrentTab] = useState(type);
   const [downloadPath, setDownloadPath] = useState('');
   const [elapsed, setElapsed] = useState(moment());
   const [file, setFile] = useState();
@@ -55,6 +65,16 @@ export const TroubleshootDialog = ({ deviceId, deviceFileDownload, deviceFileUpl
   const [socketInitialized, setSocketInitialized] = useState(false);
   const [startTime, setStartTime] = useState();
   const [uploadPath, setUploadPath] = useState('');
+
+  useEffect(() => {
+    if (open) {
+      setCurrentTab(type);
+      return;
+    }
+    setDownloadPath('');
+    setUploadPath('');
+    setFile();
+  }, [open]);
 
   useEffect(() => {
     if (socket && !socketInitialized) {
@@ -97,6 +117,7 @@ export const TroubleshootDialog = ({ deviceId, deviceFileDownload, deviceFileUpl
     if (socketInitialized) {
       onSendMessage({ typ: MessageTypes.Stop, body: {}, props: {} });
     } else {
+      setSocketInitialized(false);
       socket = new WebSocket(`wss://${window.location.host}/api/management/v1/deviceconnect/devices/${deviceId}/connect`);
     }
   };
@@ -128,7 +149,7 @@ export const TroubleshootDialog = ({ deviceId, deviceFileDownload, deviceFileUpl
       <DialogContent className="dialog-content flexbox column" style={{ padding: 0, margin: '0 24px', height: '75vh' }}>
         <Tabs value={currentTab} onChange={(e, tab) => setCurrentTab(tab)} textColor="primary" TabIndicatorProps={{ className: 'hidden' }}>
           {Object.values(tabs).map(tab => (
-            <Tab key={tab.value} label={tab.title(socketInitialized)} value={tab.value} />
+            <Tab key={tab.value} label={tab.title(sessionId)} value={tab.value} />
           ))}
         </Tabs>
         {currentTab === tabs.transfer.value && (
@@ -190,7 +211,7 @@ export const TroubleshootDialog = ({ deviceId, deviceFileDownload, deviceFileUpl
           ) : (
             <div style={{ width: 280 }} />
           )}
-          <Button component={Link} to={`auditlogs?object_id=${deviceId}&start_date=${BEGINNING_OF_TIME}`}>
+          <Button component={Link} to={`auditlog?object_id=${deviceId}&start_date=${BEGINNING_OF_TIME}`}>
             View {tabs[currentTab].link} for this device
           </Button>
         </div>

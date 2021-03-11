@@ -244,7 +244,7 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
           <a
             aria-disabled="false"
             class="MuiButtonBase-root MuiButton-root MuiButton-text"
-            href="/auditlogs?object_id=undefined&start_date=2020-01-01T00:00:00.000Z"
+            href="/auditlog?object_id=undefined&start_date=2020-01-01T00:00:00.000Z"
             role="button"
             tabindex="0"
           >
