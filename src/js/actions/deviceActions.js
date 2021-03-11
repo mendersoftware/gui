@@ -596,13 +596,13 @@ export const deviceFileDownload = (deviceId, path) => () => GeneralApi.post(`${d
 
 export const deviceFileUpload = (deviceId, path, file) => dispatch => {
   var formData = new FormData();
-  formData.append('file', file);
   formData.append('path', path);
+  formData.append('file', file);
   const cancelSource = axios.CancelToken.source();
   return Promise.all([
     dispatch(setSnackbar('Uploading file')),
     dispatch({ type: AppConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0, cancelSource }),
-    GeneralApi.upload(`${deviceConnect}/devices/${deviceId}/upload`, formData, e => progress(e, dispatch), cancelSource.token)
+    GeneralApi.uploadPut(`${deviceConnect}/devices/${deviceId}/upload`, formData, e => progress(e, dispatch), cancelSource.token)
   ])
     .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', 5000))))
     .catch(err => {
