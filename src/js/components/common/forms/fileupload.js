@@ -5,8 +5,16 @@ import Dropzone from 'react-dropzone';
 import { IconButton, TextField } from '@material-ui/core';
 import { Clear as ClearIcon, CloudUpload as FileIcon } from '@material-ui/icons';
 
-export const FileUpload = ({ enableContentReading = true, onFileChange, onFileSelect = () => undefined, placeholder, setSnackbar, style = {} }) => {
-  const [filename, setFilename] = useState();
+export const FileUpload = ({
+  enableContentReading = true,
+  fileNameSelection,
+  onFileChange,
+  onFileSelect = () => undefined,
+  placeholder,
+  setSnackbar,
+  style = {}
+}) => {
+  const [filename, setFilename] = useState(fileNameSelection);
 
   const onDrop = (acceptedFiles, rejectedFiles) => {
     if (acceptedFiles.length) {

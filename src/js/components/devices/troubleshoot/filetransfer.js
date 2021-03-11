@@ -31,9 +31,15 @@ export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUploa
     setUploadPath(path);
   };
 
-  const onFileSelect = file => {
-    setFile(file);
-    setUploadPath(`${uploadPath}/${file?.name || ''}`);
+  const onFileSelect = selectedFile => {
+    let path;
+    if (selectedFile) {
+      path = `${uploadPath}/${selectedFile.name}`;
+    } else {
+      path = file && uploadPath.includes(file.name) ? uploadPath.substring(0, uploadPath.lastIndexOf('/')) : uploadPath;
+    }
+    setUploadPath(path);
+    setFile(selectedFile);
   };
 
   return (
@@ -53,6 +59,7 @@ export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUploa
             </p>
             <FileUpload
               enableContentReading={false}
+              fileNameSelection={file?.name}
               onFileChange={() => undefined}
               onFileSelect={onFileSelect}
               placeholder={
