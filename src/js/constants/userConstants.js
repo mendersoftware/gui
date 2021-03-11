@@ -26,6 +26,7 @@ module.exports = {
     admin: 'RBAC_ROLE_PERMIT_ALL',
     readOnly: 'RBAC_ROLE_OBSERVER',
     ci: 'RBAC_ROLE_CI',
+    deploymentsManager: 'RBAC_ROLE_DEPLOYMENTS_MANAGER',
     userManagement: { action: 'http', object: { type: 'any', value: `${useradmApiUrl}/.*` } },
     deploymentCreation: { action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: undefined } },
     groupAccess: { action: 'VIEW_DEVICE', object: { type: 'DEVICE_GROUP', value: undefined } }
