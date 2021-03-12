@@ -193,7 +193,7 @@ const mapStateToProps = state => {
   return {
     canHave2FA: isEnterprise || (state.app.features.isHosted && plan !== 'os'),
     currentUser: state.users.byId[state.users.currentUser] || {},
-    has2FA: state.users.globalSettings.hasOwnProperty('2fa') && state.users.globalSettings['2fa'] === 'enabled',
+    has2FA: state.users.globalSettings.hasOwnProperty('2fa') && state.users.globalSettings[`${state.users.currentUser}_2fa`] === 'enabled',
     hasTracking: !!state.app.trackerCode,
     hasTrackingConsent: getUserSettings(state).trackingConsentGiven,
     isEnterprise
