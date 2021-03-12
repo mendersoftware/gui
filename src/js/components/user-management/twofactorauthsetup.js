@@ -1,130 +1,81 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
-import { Button } from '@material-ui/core';
-import { CheckCircle as CheckCircleIcon } from '@material-ui/icons';
+import { Collapse, Switch } from '@material-ui/core';
 
-import Form from '../common/forms/form';
-import TextInput from '../common/forms/textinput';
+import { setSnackbar } from '../../actions/appActions';
+import { saveGlobalSettings, verify2FA, verifyEmailComplete, verifyEmailStart } from '../../actions/userActions';
+import { twoFAStates } from '../../constants/userConstants';
+import { getCurrentUser } from '../../selectors';
 
-import { saveGlobalSettings, verify2FA } from '../../actions/userActions';
+import AuthSetup from './twofactorauth-steps/authsetup';
+import EmailVerification from './twofactorauth-steps/emailverification';
 
-import Loader from '../common/loader';
+export const TwoFactorAuthSetup = ({ currentUser, has2FA, qrImage, saveGlobalSettings, setSnackbar, verify2FA, verifyEmailComplete, verifyEmailStart }) => {
+  const [qrExpanded, setQrExpanded] = useState(false);
+  const [is2FAEnabled, setIs2FAEnabled] = useState(has2FA);
+  const [showEmailVerification, setShowEmailVerification] = useState(false);
 
-export class TwoFactorAuthSetup extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    const self = this;
-    self.state = { validated2fa: false, validating2fa: false };
-    self.props.saveGlobalSettings({ '2fa': 'enabled' });
-    self.onUnload = self.onUnload.bind(self);
-  }
-
-  componentDidMount() {
-    window.addEventListener('beforeunload', this.onUnload);
-  }
-
-  componentWillUnmount() {
-    if (!this.state.validated2fa && this.props.qrImage) {
-      this.props.saveGlobalSettings({ '2fa': 'disabled' });
+  useEffect(() => {
+    if (currentUser.verified && is2FAEnabled && !has2FA) {
+      setShowEmailVerification(false);
+      setQrExpanded(true);
     }
-    window.removeEventListener('beforeunload', this.onUnload);
-  }
+  }, [currentUser.verified]);
 
-  onUnload(e) {
-    if (!e || (this.state.validated2fa && this.props.has2FA) || !this.props.qrImage) {
+  const handle2FAState = state => {
+    setQrExpanded(state === twoFAStates.unverified);
+    setIs2FAEnabled(state !== twoFAStates.disabled);
+    saveGlobalSettings({ [`${currentUser.id}_2fa`]: state }).then(() =>
+      state === twoFAStates.enabled ? setSnackbar('Two Factor authentication set up successfully.') : null
+    );
+  };
+
+  const onToggle2FAClick = () => {
+    if (!currentUser.verified) {
+      setShowEmailVerification(!showEmailVerification);
+      setIs2FAEnabled(!showEmailVerification);
       return;
     }
-    e.returnValue = '2fa setup incomplete';
-    return e.returnValue;
-  }
+    if (has2FA) {
+      handle2FAState(twoFAStates.disabled);
+    } else {
+      setQrExpanded(!is2FAEnabled);
+      setIs2FAEnabled(!is2FAEnabled);
+    }
+  };
 
-  validate2faSetup(formData) {
-    const self = this;
-    self.setState({ validating2fa: true });
-    formData.email = self.props.user.email;
-    self.props
-      .verify2FA(formData)
-      .then(() => self.setState({ validated2fa: true, validating2fa: false }))
-      .catch(() => self.setState({ validated2fa: false, validating2fa: false }));
-  }
-
-  render() {
-    const self = this;
-    const { handle2FAState, qrImage } = self.props;
-    const { validated2fa, validating2fa } = self.state;
-
-    return (
-      <div className="margin-top">
-        Setup:
-        <div className="flexbox margin-top">
-          <ol className="spaced-list margin-right-large" style={{ paddingInlineStart: 20 }}>
-            <li className="margin-top-none">
-              To use Two Factor Authentication, first download a third party authentication app such as{' '}
-              <a href="https://authy.com/download/" target="_blank" rel="noopener noreferrer">
-                Authy
-              </a>{' '}
-              or{' '}
-              <a href="https://support.google.com/accounts/answer/1066447" target="_blank" rel="noopener noreferrer">
-                Google Authenticator
-              </a>
-              .
-            </li>
-            <li>Scan the QR code on the right with the authenticator app you just downloaded on your device.</li>
-            <li>
-              <div>
-                Type in the generated code in the input field below and click Verify.
-                {validated2fa ? (
-                  <div className="flexbox space-between centered margin-top margin-right margin-bottom" style={{ justifyContent: 'flex-end' }}>
-                    <CheckCircleIcon className="green" />
-                    <h3 className="green margin-left-small" style={{ textTransform: 'uppercase' }}>
-                      Verified
-                    </h3>
-                  </div>
-                ) : (
-                  <>
-                    <Form
-                      showButtons={!validating2fa}
-                      buttonColor="primary"
-                      onSubmit={formdata => self.validate2faSetup(formdata)}
-                      submitLabel="Verify"
-                      submitButtonId="confirm-button"
-                    >
-                      <TextInput hint="Verification code" label="Verification code" id="token2fa" validations="isLength:6,isNumeric" required={true} />
-                    </Form>
-                    {validating2fa && (
-                      <div className="flexbox" style={{ alignItems: 'flex-end', justifyContent: 'flex-end', height: 'min-content' }}>
-                        <Loader show={true} />
-                        <Button variant="contained" color="primary" onClick={() => this.updateModel()} disabled={true} style={{ marginLeft: 30 }}>
-                          Verifying...
-                        </Button>
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
-            </li>
-            <li>Then each time you log in, you will be asked for a verification code which you can retrieve from the authentication app on your device.</li>
-          </ol>
-          {!qrImage ? <Loader show={!qrImage} /> : <img src={`data:image/png;base64,${qrImage}`} style={{ maxHeight: '20vh' }} />}
-        </div>
-        <div className="flexbox" style={{ justifyContent: 'flex-end' }}>
-          <Button onClick={() => handle2FAState(false)} style={{ marginRight: 10 }}>
-            Cancel
-          </Button>
-          <Button variant="contained" color="secondary" disabled={!validated2fa} onClick={() => handle2FAState(true)}>
-            Save
-          </Button>
-        </div>
+  return (
+    <div className="margin-top">
+      <div className="clickable flexbox space-between" onClick={onToggle2FAClick}>
+        <p className="help-content">Enable Two Factor authentication</p>
+        <Switch checked={is2FAEnabled} />
       </div>
-    );
-  }
-}
+      <p className="info" style={{ width: '75%', margin: 0 }}>
+        Two Factor Authentication adds a second layer of protection to your account by asking for an additional verification code each time you log in.
+      </p>
+      {showEmailVerification && <EmailVerification verifyEmailComplete={verifyEmailComplete} verifyEmailStart={verifyEmailStart} />}
+      <Collapse in={qrExpanded} timeout="auto" unmountOnExit>
+        <AuthSetup
+          currentUser={currentUser}
+          handle2FAState={handle2FAState}
+          has2FA={has2FA}
+          saveGlobalSettings={saveGlobalSettings}
+          qrImage={qrImage}
+          verify2FA={verify2FA}
+        />
+      </Collapse>
+    </div>
+  );
+};
 
-const actionCreators = { saveGlobalSettings, verify2FA };
+const actionCreators = { saveGlobalSettings, setSnackbar, verify2FA, verifyEmailComplete, verifyEmailStart };
 
 const mapStateToProps = state => {
+  const twoFaAccessor = `${state.users.currentUser}_2fa`;
   return {
+    currentUser: getCurrentUser(state),
+    has2FA: state.users.globalSettings.hasOwnProperty(twoFaAccessor) && state.users.globalSettings[twoFaAccessor] === twoFAStates.enabled,
     previousPhases: state.users.globalSettings.previousPhases,
     qrImage: state.users.qrCode
   };

@@ -5,7 +5,7 @@ import GeneralApi from '../api/general-api';
 import UsersApi from '../api/users-api';
 import AppConstants from '../constants/appConstants';
 import OnboardingConstants from '../constants/onboardingConstants';
-import UserConstants from '../constants/userConstants';
+import UserConstants, { twoFAStates } from '../constants/userConstants';
 import { getCurrentUser, getOnboardingState, getUserSettings } from '../selectors';
 import { getToken, logout } from '../auth';
 import { extractErrorMessage, hashString, preformatWithRequestID } from '../helpers';
@@ -14,11 +14,12 @@ import { clearAllRetryTimers } from '../utils/retrytimer';
 const cookies = new Cookies();
 const { emptyRole, rolesByName, useradmApiUrl } = UserConstants;
 
-const handleLoginError = (err, has2FA) => dispatch => {
+const handleLoginError = (err, has2FA) => (dispatch, getState) => {
   const errorText = extractErrorMessage(err);
-  const is2FABackend = errorText.includes('2fa');
+  const twoFaSelector = `${getState().users.currentUser}_2fa`;
+  const is2FABackend = errorText.includes(twoFaSelector);
   if (is2FABackend && !has2FA) {
-    return dispatch(saveGlobalSettings({ '2fa': 'enabled' }, true));
+    return dispatch(saveGlobalSettings({ [twoFaSelector]: twoFAStates.enabled }, true));
   }
   const twoFAError = is2FABackend || has2FA ? ' and verification code' : '';
   const errorMessage = `There was a problem logging in. Please check your email${
@@ -59,7 +60,8 @@ export const loginUser = userData => (dispatch, getState) =>
       cookies.remove('noExpiry', { path: '/ui' });
       cookies.remove('JWT', { path: '/' });
       cookies.remove('JWT', { path: '/ui' });
-      const has2FA = getState().users.globalSettings.hasOwnProperty('2fa') && getState().users.globalSettings['2fa'] === 'enabled';
+      const twoFaAccessor = `${getState().users.currentUser}_2fa`;
+      const has2FA = getState().users.globalSettings.hasOwnProperty(twoFaAccessor) && getState().users.globalSettings[twoFaAccessor] === twoFAStates.enabled;
       return Promise.all([Promise.reject(err), dispatch(handleLoginError(err, has2FA))]);
     });
 
@@ -95,6 +97,16 @@ export const passwordResetComplete = (secretHash, newPassword) => dispatch =>
     dispatch(setSnackbar('The password reset request cannot be processed: ' + errorMsg));
     return Promise.reject(err);
   });
+
+export const verifyEmailStart = () => (dispatch, getState) =>
+  GeneralApi.post(`${useradmApiUrl}/auth/verify-email/start`, { email: getCurrentUser(getState()).email })
+    .catch(err => commonErrorHandler(err, 'An error occured starting the email verification process:', dispatch))
+    .finally(() => Promise.resolve(dispatch(getUser('me'))));
+
+export const verifyEmailComplete = secret => dispatch =>
+  GeneralApi.post(`${useradmApiUrl}/auth/verify-email/complete`, { secret })
+    .catch(err => commonErrorHandler(err, 'An error occured completing the email verification process:', dispatch))
+    .finally(() => Promise.resolve(dispatch(getUser('me'))));
 
 export const verify2FA = tfaData => dispatch =>
   UsersApi.putVerifyTFA(`${useradmApiUrl}/2faverify`, tfaData)
@@ -259,7 +271,8 @@ export const saveGlobalSettings = (settings, beOptimistic = false, notify = fals
   let tasks = [dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: updatedSettings })];
   return GeneralApi.post(`${useradmApiUrl}/settings`, updatedSettings)
     .then(() => {
-      if (updatedSettings.hasOwnProperty('2fa') && updatedSettings['2fa'] === 'enabled') {
+      const twoFaAccessor = `${getState().users.currentUser}_2fa`;
+      if (updatedSettings.hasOwnProperty(twoFaAccessor) && updatedSettings[twoFaAccessor] === twoFAStates.unverified) {
         tasks.push(dispatch(get2FAQRCode()));
       }
       if (notify) {

@@ -7,6 +7,7 @@ import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Login, { Login as LoginComponent } from './login';
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { twoFAStates } from '../../constants/userConstants';
 
 const mockStore = configureStore([thunk]);
 
@@ -26,7 +27,7 @@ describe('Login Component', () => {
         ...defaultState.users,
         globalSettings: {
           ...defaultState.users.globalSettings,
-          '2fa': 'enabled'
+          [`${defaultState.users.currentUser}_2fa`]: twoFAStates.enabled
         }
       }
     });
