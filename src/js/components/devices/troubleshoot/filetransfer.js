@@ -128,7 +128,7 @@ export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUploa
                 variant="contained"
                 color="primary"
                 disabled={!(downloadPath && isValidDestination)}
-                onClick={() => onDownload(deviceId, downloadPath)}
+                onClick={() => onDownload(downloadPath)}
                 style={{ alignSelf: 'flex-end' }}
               >
                 Download

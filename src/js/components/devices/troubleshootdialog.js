@@ -12,7 +12,7 @@ import { mdiConsole as ConsoleIcon } from '@mdi/js';
 import msgpack5 from 'msgpack5';
 
 import { setSnackbar } from '../../actions/appActions';
-import { deviceFileDownload, deviceFileUpload } from '../../actions/deviceActions';
+import { getDeviceFileDownloadLink, deviceFileUpload } from '../../actions/deviceActions';
 import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as MessageProtocols } from '../../constants/deviceConstants';
 
 import theme, { colors } from '../../themes/mender-theme';
@@ -46,7 +46,7 @@ const tabs = {
 
 export const TroubleshootDialog = ({
   deviceId,
-  deviceFileDownload,
+  getDeviceFileDownloadLink,
   deviceFileUpload,
   onCancel,
   onSocketClose,
@@ -130,9 +130,16 @@ export const TroubleshootDialog = ({
     }
   };
 
-  const onDownloadClick = link => {
-    deviceFileDownload(deviceId, link).finally(() => {
-      setDownloadPath(link);
+  const onDownloadClick = path => {
+    setDownloadPath(path);
+    getDeviceFileDownloadLink(deviceId, path).then(address => {
+      const fileName = path.substring(path.lastIndexOf('/') + 1) || 'file';
+      const link = document.createElement('a');
+      link.setAttribute('href', address);
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     });
   };
 
@@ -157,7 +164,7 @@ export const TroubleshootDialog = ({
             deviceId={deviceId}
             downloadPath={downloadPath}
             file={file}
-            onDownload={deviceFileDownload}
+            onDownload={onDownloadClick}
             onUpload={deviceFileUpload}
             setDownloadPath={setDownloadPath}
             setFile={setFile}
@@ -221,7 +228,7 @@ export const TroubleshootDialog = ({
   );
 };
 
-const actionCreators = { deviceFileDownload, deviceFileUpload, setSnackbar };
+const actionCreators = { getDeviceFileDownloadLink, deviceFileUpload, setSnackbar };
 
 const mapStateToProps = () => {
   return {};

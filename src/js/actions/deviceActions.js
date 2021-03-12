@@ -592,7 +592,8 @@ export const getSessionDetails = (sessionId, deviceId, userId, startDate, endDat
   );
 };
 
-export const deviceFileDownload = (deviceId, path) => () => GeneralApi.post(`${deviceConnect}/devices/${deviceId}/download`, { path });
+export const getDeviceFileDownloadLink = (deviceId, path) => () =>
+  Promise.resolve(`${deviceConnect}/devices/${deviceId}/download?path=${encodeURIComponent(path)}`);
 
 export const deviceFileUpload = (deviceId, path, file) => dispatch => {
   var formData = new FormData();
