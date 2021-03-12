@@ -84,12 +84,13 @@ export const ExpandedDevice = ({
             abortDeployment={abortDeployment}
             applyDeviceConfig={applyDeviceConfig}
             defaultConfig={defaultConfig}
+            deployment={deviceConfigDeployment}
             device={device}
             getDeviceLog={getDeviceLog}
             getSingleDeployment={getSingleDeployment}
             saveGlobalSettings={saveGlobalSettings}
             setDeviceConfig={setDeviceConfig}
-            deployment={deviceConfigDeployment}
+            showHelptips={showHelptips}
           />
         )}
         {status === DEVICE_STATES.accepted && (

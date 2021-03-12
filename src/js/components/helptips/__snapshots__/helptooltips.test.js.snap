@@ -130,6 +130,171 @@ exports[`Helptooltips Components renders Connect(AuthButtonComponent) correctly 
 </div>
 `;
 
+exports[`Helptooltips Components renders Connect(ConfigureRaspberryLedComponent) correctly 1`] = `
+Array [
+  <div
+    className="fadeIn tooltip help"
+    data-event="click focus"
+    data-for="config-timezone-tip"
+    data-tip={true}
+    id="config-timezone-help"
+  >
+    <svg
+      aria-hidden={true}
+      className="MuiSvgIcon-root"
+      focusable="false"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+      />
+    </svg>
+  </div>,
+  <div
+    className="__react_component_tooltip place-bottom type-dark"
+    data-id="tooltip"
+    id="config-timezone-tip"
+  >
+    To see the effects of applying a configuration to your device you can set one of the below values to modify the behaviour of your Raspberry Pi green status LED
+    <div
+      className="react-tooltip margin-top-small margin-bottom-small text-muted two-columns"
+      style={
+        Object {
+          "gridTemplateColumns": "max-content 1fr",
+          "maxWidth": 280,
+        }
+      }
+    >
+      <div
+        className="align-right"
+      >
+        <b>
+          mmc0
+        </b>
+      </div>
+      <div>
+        The default, which blinks the led on storage activity
+      </div>
+      <div
+        className="align-right"
+      >
+        <b>
+          on
+        </b>
+      </div>
+      <div>
+        Turn on the light permanently
+      </div>
+      <div
+        className="align-right"
+      >
+        <b>
+          off
+        </b>
+      </div>
+      <div>
+        Turn off the light permanently
+      </div>
+      <div
+        className="align-right"
+      >
+        <b>
+          heartbeat
+        </b>
+      </div>
+      <div>
+        Enable heartbeat blinking
+      </div>
+    </div>
+    There are other possible values, but we won't advertise them here. See
+    <a
+      href="http://www.d3noob.org/2020/07/controlling-activity-led-on-raspberry-pi.html"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      this blog post
+    </a>
+     
+    or
+     
+    <a
+      href="https://www.raspberrypi.org/forums/viewtopic.php?t=273194#p1658930"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      in the Raspberry Pi forums
+    </a>
+    for more information.
+    <p>
+      <a
+        className="hidehelp"
+        onClick={[Function]}
+      >
+        Hide all help tips
+      </a>
+    </p>
+  </div>,
+]
+`;
+
+exports[`Helptooltips Components renders Connect(ConfigureTimezoneTipComponent) correctly 1`] = `
+Array [
+  <div
+    className="fadeIn tooltip help"
+    data-event="click focus"
+    data-for="config-timezone-tip"
+    data-tip={true}
+    id="config-timezone-help"
+  >
+    <svg
+      aria-hidden={true}
+      className="MuiSvgIcon-root"
+      focusable="false"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+      />
+    </svg>
+  </div>,
+  <div
+    className="__react_component_tooltip place-bottom type-dark"
+    data-id="tooltip"
+    id="config-timezone-tip"
+  >
+    To see the effects of applying a configuration to your device you can set one of the below values to modify the timezone of your device. While all values from 
+    <i>
+      timedatectl list-timezones
+    </i>
+     will work, to easily see the impact of the changed value you can use one of the following values:
+    <ul>
+      <li>
+        Europe/Oslo
+      </li>
+      <li>
+        America/Los_Angeles
+      </li>
+      <li>
+        Asia/Tokyo
+      </li>
+    </ul>
+    Once the configuration has been applied you can see the effect by opening the Remote Terminal to the device and executing the 
+    <i>
+      date
+    </i>
+     command.
+    <p>
+      <a
+        className="hidehelp"
+        onClick={[Function]}
+      >
+        Hide all help tips
+      </a>
+    </p>
+  </div>,
+]
+`;
+
 exports[`Helptooltips Components renders Connect(DeviceSupportTipComponent) correctly 1`] = `
 <div>
   <div

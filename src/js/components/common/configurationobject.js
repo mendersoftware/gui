@@ -7,7 +7,7 @@ const style = {
   },
   compact: {
     maxWidth: 280,
-    gridTemplateColumns: 'min-content min-content'
+    gridTemplateColumns: 'max-content 1fr'
   }
 };
 
