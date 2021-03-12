@@ -77,7 +77,7 @@ exports[`Settings Component renders correctly 1`] = `
       className="margin-top-small"
       style={
         Object {
-          "maxWidth": "750px",
+          "maxWidth": 750,
         }
       }
     >
@@ -140,7 +140,7 @@ exports[`Settings Component renders correctly 1`] = `
           style={
             Object {
               "maxWidth": "100%",
-              "width": "400px",
+              "width": 400,
             }
           }
         >
