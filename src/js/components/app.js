@@ -94,7 +94,10 @@ export const AppRoot = ({
           {onboardingComponent ? onboardingComponent : null}
           {showDismissHelptipsDialog && <ConfirmDismissHelptips />}
           {showDeviceConnectionDialog && <DeviceConnectionDialog onCancel={() => setShowConnectingDialog(false)} />}
-          <LiveChatBox />
+          {
+            // eslint-disable-next-line no-undef
+            ENV === 'production' && <LiveChatBox />
+          }
         </>
       ) : (
         publicRoutes

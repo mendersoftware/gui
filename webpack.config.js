@@ -97,6 +97,7 @@ module.exports = (env, argv) => ({
       Buffer: ['buffer', 'Buffer']
     }),
     new webpack.DefinePlugin({
+      ENV: JSON.stringify(argv.mode),
       XTERM_VERSION: JSON.stringify(require('./package.json').dependencies.xterm),
       XTERM_FIT_VERSION: JSON.stringify(require('./package.json').dependencies['xterm-addon-fit']),
       XTERM_SEARCH_VERSION: JSON.stringify(require('./package.json').dependencies['xterm-addon-search'])
