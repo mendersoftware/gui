@@ -16,9 +16,9 @@ const { emptyRole, rolesByName, useradmApiUrl } = UserConstants;
 
 const handleLoginError = (err, has2FA) => (dispatch, getState) => {
   const errorText = extractErrorMessage(err);
-  const twoFaSelector = `${getState().users.currentUser}_2fa`;
-  const is2FABackend = errorText.includes(twoFaSelector);
+  const is2FABackend = errorText.includes('2fa');
   if (is2FABackend && !has2FA) {
+    const twoFaSelector = `${getState().users.currentUser}_2fa`;
     return dispatch(saveGlobalSettings({ [twoFaSelector]: twoFAStates.enabled }, true));
   }
   const twoFAError = is2FABackend || has2FA ? ' and verification code' : '';
@@ -267,7 +267,8 @@ export const saveGlobalSettings = (settings, beOptimistic = false, notify = fals
   if (!window.sessionStorage.getItem('settings-initialized') && !beOptimistic) {
     return;
   }
-  const updatedSettings = { ...getState().users.globalSettings, ...settings };
+  let updatedSettings = { ...getState().users.globalSettings, ...settings };
+  updatedSettings['2fa'] = twoFAStates.enabled;
   let tasks = [dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: updatedSettings })];
   return GeneralApi.post(`${useradmApiUrl}/settings`, updatedSettings)
     .then(() => {
