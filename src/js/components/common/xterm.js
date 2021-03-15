@@ -19,29 +19,26 @@ export default class Xterm extends React.Component {
      */
     this.terminalRef = React.createRef();
 
-    // Bind Methods
-    this.onData = this.onData.bind(this);
-
     this.setupTerminal();
   }
 
   setupTerminal() {
+    const self = this;
+    // eslint-disable-next-line no-unused-vars
+    const { addons, className, customKeyEventHandler, options, style, ...remainingProps } = self.props;
     // Setup the XTerm terminal.
-    this.terminal = new Terminal(this.props.options);
-
+    self.terminal = new Terminal(options);
     // Load addons if the prop exists.
-    if (this.props.addons) {
-      this.props.addons.forEach(addon => {
-        this.terminal.loadAddon(addon);
-      });
+    if (addons) {
+      addons.forEach(addon => this.terminal.loadAddon(addon));
     }
 
     // Create Listeners
-    this.terminal.onData(this.onData);
+    Object.entries(remainingProps).map(([key, value]) => (value ? self.terminal[key](value) : undefined));
 
     // Add Custom Key Event Handler
-    if (this.props.customKeyEventHandler) {
-      this.terminal.attachCustomKeyEventHandler(this.props.customKeyEventHandler);
+    if (customKeyEventHandler) {
+      self.terminal.attachCustomKeyEventHandler(customKeyEventHandler);
     }
   }
 
@@ -57,11 +54,7 @@ export default class Xterm extends React.Component {
     this.terminal.dispose();
   }
 
-  onData(data) {
-    if (this.props.onData) this.props.onData(data);
-  }
-
   render() {
-    return <div className={this.props.className} ref={this.terminalRef} />;
+    return <div className={this.props.className} ref={this.terminalRef} style={this.props.style} />;
   }
 }

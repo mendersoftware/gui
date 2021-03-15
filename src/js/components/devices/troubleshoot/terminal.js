@@ -36,7 +36,17 @@ export const options = {
 
 let healthcheckTimeout = null;
 
-export const Terminal = ({ onDownloadClick, sendMessage, setSnackbar, setSessionId, setSocketClosed, setSocketInitialized, socket, socketInitialized }) => {
+export const Terminal = ({
+  onDownloadClick,
+  sendMessage,
+  setSnackbar,
+  setSessionId,
+  setSocketClosed,
+  setSocketInitialized,
+  socket,
+  socketInitialized,
+  ...xtermProps
+}) => {
   const xtermRef = useRef(null);
   const [dimensions, setDimensions] = useState({});
   const [healthcheckHasFailed, setHealthcheckHasFailed] = useState(false);
@@ -197,7 +207,7 @@ export const Terminal = ({ onDownloadClick, sendMessage, setSnackbar, setSession
 
   const onData = data => sendMessage({ typ: MessageTypes.Shell, body: data });
 
-  return <XTerm ref={xtermRef} addons={[fitAddon, searchAddon, webLinksAddon]} options={options} onData={onData} className="xterm-fullscreen" />;
+  return <XTerm ref={xtermRef} addons={[fitAddon, searchAddon, webLinksAddon]} options={options} onData={onData} {...xtermProps} />;
 };
 
 export default Terminal;
