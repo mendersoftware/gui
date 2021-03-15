@@ -105,7 +105,7 @@ export const TroubleshootDialog = ({
   }, [deviceId, open]);
 
   const onSendMessage = ({ typ, body, props }) => {
-    if (!socketInitialized) {
+    if (!socket) {
       return;
     }
     const proto_header = { proto: MessageProtocols.Shell, typ, sid: sessionId, props };
@@ -173,7 +173,15 @@ export const TroubleshootDialog = ({
             uploadPath={uploadPath}
           />
         )}
-        <div className={`flexbox column ${currentTab === tabs.terminal.value ? '' : 'hidden'}`} style={{ flexGrow: 1 }}>
+        <div
+          className={`${currentTab === tabs.terminal.value ? '' : 'hidden'}`}
+          style={{
+            display: 'grid',
+            gridTemplateRows: `max-content ${socket ? 'minmax(min-content, 1fr)' : '0'}`,
+            flexGrow: 1,
+            overflow: 'hidden'
+          }}
+        >
           <div className="margin-top-small margin-bottom-small">
             <div>
               <b>Session status:</b> {sessionId ? 'connected' : 'disconnected'}
@@ -187,9 +195,8 @@ export const TroubleshootDialog = ({
           </div>
           <Dropzone activeClassName="active" rejectClassName="active" multiple={false} onDrop={onDrop}>
             {({ getRootProps }) => (
-              <div {...getRootProps()} style={{ flexGrow: 1, ...visibilityToggle }}>
+              <div {...getRootProps()} style={{ position: 'relative', ...visibilityToggle }}>
                 <Terminal
-                  onConnectionToggle={onConnectionToggle}
                   onDownloadClick={onDownloadClick}
                   sendMessage={onSendMessage}
                   setSessionId={setSessionId}
@@ -198,12 +205,13 @@ export const TroubleshootDialog = ({
                   setSocketInitialized={setSocketInitialized}
                   socket={socket}
                   socketInitialized={socketInitialized}
+                  style={{ position: 'absolute', width: '100%', height: '100%', ...visibilityToggle }}
                 />
               </div>
             )}
           </Dropzone>
           {!socket && (
-            <div className="flexbox centered" style={{ background: colors.textColor, height: '100%' }}>
+            <div className="flexbox centered" style={{ background: colors.textColor }}>
               <Button variant="contained" color="secondary" onClick={onConnectionToggle}>
                 Connect Terminal
               </Button>
