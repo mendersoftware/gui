@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const { ESBuildPlugin, ESBuildMinifyPlugin } = require('esbuild-loader');
+const { ESBuildMinifyPlugin } = require('esbuild-loader');
 
 module.exports = (env, argv) => ({
   devtool: 'source-map',
@@ -21,11 +21,13 @@ module.exports = (env, argv) => ({
           target: 'es2015'
         }
       },
-      {
-        test: /\.m?js[x]?$/,
-        exclude: /node_modules/,
-        loader: 'eslint-loader'
-      },
+      argv.mode === 'production'
+        ? {}
+        : {
+            test: /\.m?js[x]?$/,
+            exclude: /node_modules/,
+            loader: 'eslint-loader'
+          },
       {
         test: /\.(less|css)$/,
         use: [
@@ -102,7 +104,6 @@ module.exports = (env, argv) => ({
       XTERM_FIT_VERSION: JSON.stringify(require('./package.json').dependencies['xterm-addon-fit']),
       XTERM_SEARCH_VERSION: JSON.stringify(require('./package.json').dependencies['xterm-addon-search'])
     }),
-    new ESBuildPlugin(),
     new HtmlWebPackPlugin({
       favicon: './src/favicon.ico',
       hash: true,
