@@ -9,7 +9,7 @@ import PasswordInput from '../common/forms/passwordinput';
 import EnterpriseNotification from '../common/enterpriseNotification';
 
 import { editUser, saveGlobalSettings, saveUserSettings } from '../../actions/userActions';
-import { getIsEnterprise, getUserSettings } from '../../selectors';
+import { getCurrentUser, getIsEnterprise, getUserSettings } from '../../selectors';
 import { OAuth2Providers } from './oauth2providers';
 import TwoFactorAuthSetup from './twofactorauthsetup';
 
@@ -142,7 +142,7 @@ const mapStateToProps = state => {
   const isEnterprise = getIsEnterprise(state);
   return {
     canHave2FA: isEnterprise || (state.app.features.isHosted && plan !== 'os'),
-    currentUser: state.users.byId[state.users.currentUser] || {},
+    currentUser: getCurrentUser(state),
     hasTracking: !!state.app.trackerCode,
     hasTrackingConsent: getUserSettings(state).trackingConsentGiven,
     isEnterprise

@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { rolesByName } from '../constants/userConstants';
+import { rolesByName, twoFAStates } from '../constants/userConstants';
 import { getDemoDeviceAddress as getDemoDeviceAddressHelper } from '../helpers';
 
 const getAppDocsVersion = state => state.app.docsVersion;
@@ -11,8 +11,14 @@ const getOnboarding = state => state.onboarding;
 const getShowHelptips = state => state.users.showHelptips;
 const getGlobalSettings = state => state.users.globalSettings;
 
-export const getCurrentUser = state => state.users.byId[state.users.currentUser];
+export const getCurrentUser = state => state.users.byId[state.users.currentUser] || {};
 export const getUserSettings = state => state.users.globalSettings[state.users.currentUser] || {};
+export const get2FaAccessor = state => `${state.users.currentUser}_2fa`;
+
+export const getHas2FA = createSelector(
+  [get2FaAccessor, getGlobalSettings],
+  (twoFaAccessor, globalSettings) => globalSettings.hasOwnProperty(twoFaAccessor) && globalSettings[twoFaAccessor] === twoFAStates.enabled
+);
 
 export const getDemoDeviceAddress = createSelector([getDevicesList, getOnboarding], (devices, { approach, demoArtifactPort }) => {
   return getDemoDeviceAddressHelper(devices, approach, demoArtifactPort);
@@ -44,7 +50,7 @@ export const getUserRoles = createSelector(
     let isAdmin = false || !(hasMultitenancy || isEnterprise || (isHosted && plan !== 'os'));
     let allowUserManagement = isAdmin;
     let isGroupRestricted = false;
-    if (currentUser?.roles) {
+    if (currentUser.roles) {
       isAdmin = currentUser.roles.some(role => role === rolesByName.admin);
       allowUserManagement =
         isAdmin ||

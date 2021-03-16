@@ -8,7 +8,7 @@ import PaymentIcon from '@material-ui/icons/Payment';
 
 import { Elements } from '@stripe/react-stripe-js';
 
-import { getIsEnterprise, getUserRoles } from '../../selectors';
+import { getCurrentUser, getIsEnterprise, getUserRoles } from '../../selectors';
 import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
 import Organization from './organization';
@@ -106,12 +106,11 @@ export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, hi
 };
 
 const mapStateToProps = state => {
-  const currentUser = state.users.byId[state.users.currentUser];
   const { plan = 'os', trial = false } = state.organization.organization;
   const { allowUserManagement, isAdmin } = getUserRoles(state);
   return {
     allowUserManagement,
-    currentUser,
+    currentUser: getCurrentUser(state),
     isAdmin,
     isHosted: state.app.features.isHosted,
     isEnterprise: getIsEnterprise(state),

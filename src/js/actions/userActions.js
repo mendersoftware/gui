@@ -6,7 +6,7 @@ import UsersApi from '../api/users-api';
 import AppConstants from '../constants/appConstants';
 import OnboardingConstants from '../constants/onboardingConstants';
 import UserConstants, { twoFAStates } from '../constants/userConstants';
-import { getCurrentUser, getOnboardingState, getUserSettings } from '../selectors';
+import { getCurrentUser, getHas2FA, get2FaAccessor, getOnboardingState, getUserSettings } from '../selectors';
 import { getToken, logout } from '../auth';
 import { extractErrorMessage, hashString, preformatWithRequestID } from '../helpers';
 import { clearAllRetryTimers } from '../utils/retrytimer';
@@ -18,7 +18,7 @@ const handleLoginError = (err, has2FA) => (dispatch, getState) => {
   const errorText = extractErrorMessage(err);
   const is2FABackend = errorText.includes('2fa');
   if (is2FABackend && !has2FA) {
-    const twoFaSelector = `${getState().users.currentUser}_2fa`;
+    const twoFaSelector = get2FaAccessor(getState());
     return dispatch(saveGlobalSettings({ [twoFaSelector]: twoFAStates.enabled }, true));
   }
   const twoFAError = is2FABackend || has2FA ? ' and verification code' : '';
@@ -60,8 +60,7 @@ export const loginUser = userData => (dispatch, getState) =>
       cookies.remove('noExpiry', { path: '/ui' });
       cookies.remove('JWT', { path: '/' });
       cookies.remove('JWT', { path: '/ui' });
-      const twoFaAccessor = `${getState().users.currentUser}_2fa`;
-      const has2FA = getState().users.globalSettings.hasOwnProperty(twoFaAccessor) && getState().users.globalSettings[twoFaAccessor] === twoFAStates.enabled;
+      const has2FA = getHas2FA(getState());
       return Promise.all([Promise.reject(err), dispatch(handleLoginError(err, has2FA))]);
     });
 
@@ -272,7 +271,7 @@ export const saveGlobalSettings = (settings, beOptimistic = false, notify = fals
   let tasks = [dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: updatedSettings })];
   return GeneralApi.post(`${useradmApiUrl}/settings`, updatedSettings)
     .then(() => {
-      const twoFaAccessor = `${getState().users.currentUser}_2fa`;
+      const twoFaAccessor = get2FaAccessor(getState());
       if (updatedSettings.hasOwnProperty(twoFaAccessor) && updatedSettings[twoFaAccessor] === twoFAStates.unverified) {
         tasks.push(dispatch(get2FAQRCode()));
       }
@@ -320,7 +319,7 @@ export const setShowHelptips = show => (dispatch, getState) => {
 
 export const toggleHelptips = () => (dispatch, getState) => {
   const state = getState();
-  const user = state.users.byId[state.users.currentUser] || {};
+  const user = getCurrentUser(state);
   if (user.id) {
     // if current user id available from store
     let userCookie = cookies.get(user.id) || {};

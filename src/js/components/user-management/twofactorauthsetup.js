@@ -6,7 +6,7 @@ import { Collapse, Switch } from '@material-ui/core';
 import { setSnackbar } from '../../actions/appActions';
 import { saveGlobalSettings, verify2FA, verifyEmailComplete, verifyEmailStart } from '../../actions/userActions';
 import { twoFAStates } from '../../constants/userConstants';
-import { getCurrentUser } from '../../selectors';
+import { getCurrentUser, getHas2FA, get2FaAccessor } from '../../selectors';
 
 import AuthSetup from './twofactorauth-steps/authsetup';
 import EmailVerification from './twofactorauth-steps/emailverification';
@@ -72,10 +72,10 @@ export const TwoFactorAuthSetup = ({ currentUser, has2FA, qrImage, saveGlobalSet
 const actionCreators = { saveGlobalSettings, setSnackbar, verify2FA, verifyEmailComplete, verifyEmailStart };
 
 const mapStateToProps = state => {
-  const twoFaAccessor = `${state.users.currentUser}_2fa`;
   return {
     currentUser: getCurrentUser(state),
-    has2FA: state.users.globalSettings.hasOwnProperty(twoFaAccessor) && state.users.globalSettings[twoFaAccessor] === twoFAStates.enabled,
+    has2FA: getHas2FA(state),
+    twoFaAccessor: get2FaAccessor(state),
     previousPhases: state.users.globalSettings.previousPhases,
     qrImage: state.users.qrCode
   };

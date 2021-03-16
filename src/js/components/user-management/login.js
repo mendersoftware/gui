@@ -19,7 +19,7 @@ import PasswordInput from '../common/forms/passwordinput';
 import FormCheckbox from '../common/forms/formcheckbox';
 
 import { OAuth2Providers } from './oauth2providers';
-import { twoFAStates } from '../../constants/userConstants';
+import { getCurrentUser, getHas2FA } from '../../selectors';
 
 export class Login extends React.Component {
   constructor(props, context) {
@@ -151,10 +151,9 @@ export class Login extends React.Component {
 const actionCreators = { loginUser, logoutUser, setSnackbar };
 
 const mapStateToProps = state => {
-  const twoFaAccessor = `${state.users.currentUser}_2fa`;
   return {
-    currentUser: state.users.byId[state.users.currentUser] || {},
-    has2FA: state.users.globalSettings.hasOwnProperty(twoFaAccessor) && state.users.globalSettings[twoFaAccessor] === twoFAStates.enabled,
+    currentUser: getCurrentUser(state),
+    has2FA: getHas2FA(state),
     isHosted: state.app.features.isHosted
   };
 };
