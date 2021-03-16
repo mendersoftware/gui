@@ -23,6 +23,12 @@ export const TwoFactorAuthSetup = ({ currentUser, has2FA, qrImage, saveGlobalSet
     }
   }, [currentUser.verified]);
 
+  useEffect(() => {
+    if (has2FA) {
+      setIs2FAEnabled(has2FA);
+    }
+  }, [has2FA]);
+
   const handle2FAState = state => {
     setQrExpanded(state === twoFAStates.unverified);
     setIs2FAEnabled(state !== twoFAStates.disabled);
