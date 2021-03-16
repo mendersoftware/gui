@@ -292,7 +292,7 @@ export const defaultState = {
       'a30a780b-b843-5344-80e3-0fd95a4f6fc3': { email: 'a2@b.com', id: 'a30a780b-b843-5344-80e3-0fd95a4f6fc3', created_ts: '2019-01-01T12:30:00.000Z' }
     },
     currentUser: 'a1',
-    globalSettings: { id_attribute: 'Device ID', previousFilters: [] },
+    globalSettings: { '2fa': 'enabled', id_attribute: 'Device ID', previousFilters: [] },
     jwtToken: null,
     qrCode: null,
     rolesById: {
