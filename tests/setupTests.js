@@ -55,6 +55,7 @@ beforeAll(async () => {
     setItem: jest.fn(),
     removeItem: jest.fn()
   };
+  window.ENV = 'test';
   server = setupServer(...handlers);
   await server.listen();
   Object.defineProperty(navigator, 'appVersion', { value: 'Test', writable: true });
