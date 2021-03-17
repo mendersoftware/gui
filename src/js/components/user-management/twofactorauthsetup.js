@@ -4,14 +4,25 @@ import { connect } from 'react-redux';
 import { Collapse, Switch } from '@material-ui/core';
 
 import { setSnackbar } from '../../actions/appActions';
-import { saveGlobalSettings, verify2FA, verifyEmailComplete, verifyEmailStart } from '../../actions/userActions';
+import { get2FAQRCode, saveGlobalSettings, verify2FA, verifyEmailComplete, verifyEmailStart } from '../../actions/userActions';
 import { twoFAStates } from '../../constants/userConstants';
 import { getCurrentUser, getHas2FA, get2FaAccessor } from '../../selectors';
 
 import AuthSetup from './twofactorauth-steps/authsetup';
 import EmailVerification from './twofactorauth-steps/emailverification';
 
-export const TwoFactorAuthSetup = ({ currentUser, has2FA, qrImage, saveGlobalSettings, setSnackbar, verify2FA, verifyEmailComplete, verifyEmailStart }) => {
+export const TwoFactorAuthSetup = ({
+  currentUser,
+  get2FAQRCode,
+  has2FA,
+  qrImage,
+  saveGlobalSettings,
+  setSnackbar,
+  twoFaAccessor,
+  verify2FA,
+  verifyEmailComplete,
+  verifyEmailStart
+}) => {
   const [qrExpanded, setQrExpanded] = useState(false);
   const [is2FAEnabled, setIs2FAEnabled] = useState(has2FA);
   const [showEmailVerification, setShowEmailVerification] = useState(false);
@@ -30,11 +41,15 @@ export const TwoFactorAuthSetup = ({ currentUser, has2FA, qrImage, saveGlobalSet
   }, [has2FA]);
 
   const handle2FAState = state => {
-    setQrExpanded(state === twoFAStates.unverified);
     setIs2FAEnabled(state !== twoFAStates.disabled);
-    saveGlobalSettings({ [`${currentUser.id}_2fa`]: state }).then(() =>
-      state === twoFAStates.enabled ? setSnackbar('Two Factor authentication set up successfully.') : null
-    );
+    setQrExpanded(state === twoFAStates.unverified);
+    saveGlobalSettings({ [twoFaAccessor]: state }).then(() => {
+      if (state === twoFAStates.unverified) {
+        get2FAQRCode();
+      } else if (state === twoFAStates.enabled) {
+        setSnackbar('Two Factor authentication set up successfully.');
+      }
+    });
   };
 
   const onToggle2FAClick = () => {
@@ -46,6 +61,7 @@ export const TwoFactorAuthSetup = ({ currentUser, has2FA, qrImage, saveGlobalSet
     if (has2FA) {
       handle2FAState(twoFAStates.disabled);
     } else {
+      is2FAEnabled ? saveGlobalSettings({ [twoFaAccessor]: twoFAStates.disabled }) : undefined;
       setQrExpanded(!is2FAEnabled);
       setIs2FAEnabled(!is2FAEnabled);
     }
@@ -62,20 +78,13 @@ export const TwoFactorAuthSetup = ({ currentUser, has2FA, qrImage, saveGlobalSet
       </p>
       {showEmailVerification && <EmailVerification verifyEmailComplete={verifyEmailComplete} verifyEmailStart={verifyEmailStart} />}
       <Collapse in={qrExpanded} timeout="auto" unmountOnExit>
-        <AuthSetup
-          currentUser={currentUser}
-          handle2FAState={handle2FAState}
-          has2FA={has2FA}
-          saveGlobalSettings={saveGlobalSettings}
-          qrImage={qrImage}
-          verify2FA={verify2FA}
-        />
+        <AuthSetup currentUser={currentUser} handle2FAState={handle2FAState} has2FA={has2FA} qrImage={qrImage} verify2FA={verify2FA} />
       </Collapse>
     </div>
   );
 };
 
-const actionCreators = { saveGlobalSettings, setSnackbar, verify2FA, verifyEmailComplete, verifyEmailStart };
+const actionCreators = { get2FAQRCode, saveGlobalSettings, setSnackbar, verify2FA, verifyEmailComplete, verifyEmailStart };
 
 const mapStateToProps = state => {
   return {

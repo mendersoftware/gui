@@ -100,7 +100,10 @@ describe('user actions', () => {
   });
   it('should verify 2fa codes during 2fa setup', async () => {
     jest.clearAllMocks();
-    const expectedActions = [{ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }];
+    const expectedActions = [
+      { type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token },
+      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: defaultState.users.globalSettings }
+    ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(verify2FA({ token2fa: '123456' }));
     const storeActions = store.getActions();

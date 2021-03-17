@@ -109,7 +109,7 @@ export const verifyEmailComplete = secret => dispatch =>
 
 export const verify2FA = tfaData => dispatch =>
   UsersApi.putVerifyTFA(`${useradmApiUrl}/2faverify`, tfaData)
-    .then(() => Promise.resolve(dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: getToken() })))
+    .then(() => Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: getToken() }), dispatch(getGlobalSettings())]))
     .catch(err => commonErrorHandler(err, 'An error occured validating the verification code: failed to verify token, please try again.', dispatch));
 
 export const getUserList = () => dispatch =>
@@ -271,10 +271,6 @@ export const saveGlobalSettings = (settings, beOptimistic = false, notify = fals
   let tasks = [dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: updatedSettings })];
   return GeneralApi.post(`${useradmApiUrl}/settings`, updatedSettings)
     .then(() => {
-      const twoFaAccessor = get2FaAccessor(getState());
-      if (updatedSettings.hasOwnProperty(twoFaAccessor) && updatedSettings[twoFaAccessor] === twoFAStates.unverified) {
-        tasks.push(dispatch(get2FAQRCode()));
-      }
       if (notify) {
         tasks.push(dispatch(setSnackbar('Settings saved successfully')));
       }
