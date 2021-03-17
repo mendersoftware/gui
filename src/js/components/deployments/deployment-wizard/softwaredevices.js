@@ -24,7 +24,7 @@ const styles = {
 export class SoftwareDevices extends React.PureComponent {
   deploymentSettingsUpdate(value, property) {
     const {
-      acceptedDevices,
+      acceptedDeviceCount,
       advanceOnboarding,
       deploymentDeviceCount,
       deploymentDeviceIds = [],
@@ -39,13 +39,15 @@ export class SoftwareDevices extends React.PureComponent {
     let deviceIds = deploymentDeviceIds;
     let deviceCount = deploymentDeviceCount;
     if ((device || state.group) && state.release) {
-      deviceIds = state.group === allDevices ? acceptedDevices : [];
+      deviceIds = [];
       deviceCount = deviceIds.length;
       if (device) {
         deviceIds = [device.id];
         deviceCount = deviceIds.length;
       } else if (state.group !== allDevices) {
         deviceCount = groups[state.group].total;
+      } else {
+        deviceCount = acceptedDeviceCount;
       }
       advanceOnboarding(onboardingSteps.SCHEDULING_GROUP_SELECTION);
     }
@@ -216,7 +218,7 @@ export class SoftwareDevices extends React.PureComponent {
               {(deploymentDeviceIds.length > 0 || group) && (
                 <p className="info">
                   {group ? (
-                    <>All devices in this group</>
+                    <>All devices{group !== allDevices ? ' in this group' : null}</>
                   ) : (
                     <>
                       {deploymentDeviceIds.length} {pluralize('devices', deploymentDeviceIds.length)}
