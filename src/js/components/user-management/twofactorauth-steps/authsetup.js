@@ -16,7 +16,7 @@ export const AuthSetup = ({ currentUser, handle2FAState, has2FA, qrImage, verify
     handle2FAState(twoFAStates.unverified);
     window.addEventListener('beforeunload', onUnload);
     return () => {
-      if (!validated2fa && qrImage) {
+      if (!has2FA && qrImage) {
         handle2FAState(twoFAStates.disabled);
       }
       window.removeEventListener('beforeunload', onUnload);
