@@ -31,5 +31,10 @@ module.exports = {
     deploymentCreation: { action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: undefined } },
     groupAccess: { action: 'VIEW_DEVICE', object: { type: 'DEVICE_GROUP', value: undefined } }
   },
+  twoFAStates: {
+    enabled: 'enabled',
+    disabled: 'disabled',
+    unverified: 'unverified'
+  },
   useradmApiUrl
 };

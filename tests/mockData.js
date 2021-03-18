@@ -288,11 +288,11 @@ export const defaultState = {
   },
   users: {
     byId: {
-      a1: { email: 'a@b.com', id: 'a1', created_ts: '2019-01-01T10:30:00.000Z', roles: [rolesByName.admin] },
+      a1: { email: 'a@b.com', id: 'a1', created_ts: '2019-01-01T10:30:00.000Z', roles: [rolesByName.admin], verified: true },
       'a30a780b-b843-5344-80e3-0fd95a4f6fc3': { email: 'a2@b.com', id: 'a30a780b-b843-5344-80e3-0fd95a4f6fc3', created_ts: '2019-01-01T12:30:00.000Z' }
     },
     currentUser: 'a1',
-    globalSettings: { id_attribute: 'Device ID', previousFilters: [] },
+    globalSettings: { '2fa': 'enabled', id_attribute: 'Device ID', previousFilters: [] },
     jwtToken: null,
     qrCode: null,
     rolesById: {

@@ -7,7 +7,7 @@ import UserList from './userlist';
 import UserForm from './userform';
 import { setSnackbar } from '../../actions/appActions';
 import { createUser, editUser, getUserList, removeUser } from '../../actions/userActions';
-import { getIsEnterprise, getUserRoles } from '../../selectors';
+import { getCurrentUser, getIsEnterprise, getUserRoles } from '../../selectors';
 
 const actions = {
   create: 'createUser',
@@ -118,7 +118,7 @@ const actionCreators = { createUser, editUser, getUserList, removeUser, setSnack
 const mapStateToProps = state => {
   const { isAdmin } = getUserRoles(state);
   return {
-    currentUser: state.users.byId[state.users.currentUser] || {},
+    currentUser: getCurrentUser(state),
     isAdmin,
     isEnterprise: getIsEnterprise(state),
     roles: Object.entries(state.users.rolesById).map(([id, role]) => ({ id, ...role })),
