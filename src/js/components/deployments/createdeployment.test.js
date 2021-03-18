@@ -80,11 +80,14 @@ describe('CreateDeployment Component', () => {
     userEvent.click(screen.getAllByText('Next')[0]);
     userEvent.click(screen.getByText('Create'));
     expect(createDeployment).toHaveBeenCalledWith({
+      all_devices: true,
       artifact_name: defaultState.releases.byId.a1.Name,
-      devices: defaultState.devices.byStatus.accepted.deviceIds,
+      devices: [],
       filter_id: undefined,
       group: undefined,
-      name: 'All devices'
+      name: 'All devices',
+      phases: undefined,
+      retries: undefined
     });
     await waitFor(() => expect(submitCheck).toHaveBeenCalled());
   });
@@ -185,8 +188,9 @@ describe('CreateDeployment Component', () => {
     const secondBatchDate = new Date(new Date(mockDate).setMinutes(mockDate.getMinutes() + 30));
     const thirdBatchDate = new Date(new Date(secondBatchDate).setDate(secondBatchDate.getDate() + 25));
     expect(createDeployment).toHaveBeenCalledWith({
+      all_devices: true,
       artifact_name: defaultState.releases.byId.a1.Name,
-      devices: [...Object.keys(defaultState.devices.byId), 'test1', 'test2'],
+      devices: [],
       filter_id: undefined,
       group: undefined,
       name: 'All devices',
