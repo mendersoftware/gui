@@ -2451,13 +2451,14 @@ span.day {
   background-color: #ffffff;
   border: 1px solid @lightergrey;
   border-radius: 4px;
-  height: 60px;
+  height: 4 * @defaultGutterWidth;
   padding: 0 @defaultGutterWidth;
   overflow: hidden;
   color: @grey;
   margin: 25px 0 @defaultGutterWidth;
   grid-template-rows: 30px 30px;
   grid-template-columns: 1fr 60px;
+  z-index: 10000;
   >.MuiIconButton-root {
     grid-column: 2;
     grid-row-start: 1;

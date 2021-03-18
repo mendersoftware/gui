@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 import GeneralApi from '../api/general-api';
-import { commonErrorHandler, setSnackbar } from '../actions/appActions';
+import { commonErrorHandler, progress, setSnackbar } from '../actions/appActions';
+import AppConstants from '../constants/appConstants';
 import ReleaseConstants from '../constants/releaseConstants';
 import OnboardingConstants from '../constants/onboardingConstants';
 
@@ -51,17 +52,6 @@ export const getArtifactUrl = id => (dispatch, getState) =>
     return dispatch({ type: ReleaseConstants.ARTIFACTS_SET_ARTIFACT_URL, release });
   });
 
-const progress = (e, dispatch) => {
-  const uploadProgress = (e.loaded / e.total) * 100;
-  return dispatch({
-    type: ReleaseConstants.UPLOAD_PROGRESS,
-    inprogress: uploadProgress !== 100,
-    uploadProgress: uploadProgress < 50 ? Math.ceil(uploadProgress) : Math.round(uploadProgress)
-  });
-};
-
-let cancelSource;
-
 export const createArtifact = (meta, file) => dispatch => {
   let formData = Object.entries(meta).reduce((accu, [key, value]) => {
     if (Array.isArray(value)) {
@@ -75,10 +65,10 @@ export const createArtifact = (meta, file) => dispatch => {
   }, new FormData());
   formData.append('type', ReleaseConstants.ARTIFACT_GENERATION_TYPE.SINGLE_FILE);
   formData.append('file', file);
-  cancelSource = axios.CancelToken.source();
+  const cancelSource = axios.CancelToken.source();
   return Promise.all([
     dispatch(setSnackbar('Generating artifact')),
-    dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 }),
+    dispatch({ type: AppConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0, cancelSource }),
     GeneralApi.upload(`${deploymentsApiUrl}/artifacts/generate`, formData, e => progress(e, dispatch), cancelSource.token)
   ])
     .then(() => Promise.all([dispatch(selectRelease(meta.name)), dispatch(setSnackbar('Upload successful', 5000))]))
@@ -88,10 +78,7 @@ export const createArtifact = (meta, file) => dispatch => {
       }
       return commonErrorHandler(err, `Artifact couldn't be generated.`, dispatch);
     })
-    .finally(() => {
-      cancelSource = undefined;
-      dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 });
-    });
+    .finally(() => Promise.resolve(dispatch({ type: AppConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 })));
 };
 
 export const uploadArtifact = (meta, file) => dispatch => {
@@ -99,10 +86,10 @@ export const uploadArtifact = (meta, file) => dispatch => {
   formData.append('size', file.size);
   formData.append('description', meta.description);
   formData.append('artifact', file);
-  cancelSource = axios.CancelToken.source();
+  const cancelSource = axios.CancelToken.source();
   return Promise.all([
     dispatch(setSnackbar('Uploading artifact')),
-    dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 }),
+    dispatch({ type: AppConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0, cancelSource }),
     GeneralApi.upload(`${deploymentsApiUrl}/artifacts`, formData, e => progress(e, dispatch), cancelSource.token)
   ])
     .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', 5000))))
@@ -112,16 +99,7 @@ export const uploadArtifact = (meta, file) => dispatch => {
       }
       return commonErrorHandler(err, `Artifact couldn't be uploaded.`, dispatch);
     })
-    .finally(() => {
-      cancelSource = undefined;
-      return dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 });
-    });
-};
-
-export const cancelArtifactUpload = () => dispatch => {
-  cancelSource.cancel();
-  cancelSource = undefined;
-  return Promise.resolve(dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 }));
+    .finally(() => Promise.resolve(dispatch({ type: AppConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 })));
 };
 
 export const editArtifact = (id, body) => (dispatch, getState) =>

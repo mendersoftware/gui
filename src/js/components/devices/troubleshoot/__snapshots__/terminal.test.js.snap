@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Terminal Component renders correctly 1`] = `
+<div>
+  <div>
+    <div
+      class="terminal xterm"
+      dir="ltr"
+      role="document"
+      tabindex="0"
+    >
+      <div
+        class="xterm-viewport"
+        style="background-color: rgb(0, 0, 0);"
+      >
+        <div
+          class="xterm-scroll-area"
+        />
+      </div>
+      <div
+        class="xterm-screen"
+      >
+        <div
+          class="xterm-helpers"
+        >
+          <textarea
+            aria-label="Terminal input"
+            aria-multiline="false"
+            autocapitalize="off"
+            autocorrect="off"
+            class="xterm-helper-textarea"
+            spellcheck="false"
+            tabindex="0"
+          />
+          <span
+            aria-hidden="true"
+            class="xterm-char-measure-element"
+            style="font-family: courier-new, courier, monospace; font-size: 15px;"
+          >
+            W
+          </span>
+          <div
+            class="composition-view"
+          />
+        </div>
+        <canvas
+          class="xterm-text-layer"
+          style="z-index: 0;"
+        />
+        <canvas
+          class="xterm-selection-layer"
+          style="z-index: 1;"
+        />
+        <canvas
+          class="xterm-link-layer"
+          style="z-index: 2;"
+        />
+        <canvas
+          class="xterm-cursor-layer"
+          style="z-index: 3;"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -3,7 +3,7 @@ const { spawn } = require('child_process');
 const generateOtp = require('cypress-otp');
 const fs = require('fs');
 
-const { addMatchImageSnapshotPlugin } = require('cypress-image-snapshot/plugin');
+const { addMatchImageSnapshotPlugin } = require('mzedel-cypress-image-snapshot/plugin');
 
 const updateConfigFileWithUrl = (fileName, serverUrl = 'https://docker.mender.io', token = '', projectRoot) => {
   const connectConfigFile = fs.readFileSync(`dockerClient/${fileName}.json`);
@@ -57,6 +57,8 @@ module.exports = (on, config) => {
       updateConfigFileWithUrl('mender-connect', baseUrl, token, config.projectRoot);
       let args = [
         'run',
+        '--name',
+        'connect-client',
         '-v',
         `${config.projectRoot}/hosted.pem:/certs/hosted.pem`,
         '-v',

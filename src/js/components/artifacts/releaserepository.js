@@ -260,7 +260,7 @@ const mapStateToProps = state => {
     releases: Object.values(state.releases.byId),
     selectedArtifact: state.releases.selectedArtifact,
     showHelptips: state.users.showHelptips,
-    uploading: state.releases.uploading
+    uploading: state.app.uploading
   };
 };
 

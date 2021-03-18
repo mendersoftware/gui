@@ -100,10 +100,10 @@ describe('release actions', () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Generating artifact' } },
-      { type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 },
+      { type: AppConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 },
       { type: ReleaseConstants.SELECTED_RELEASE, release: 'createdRelease' },
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Upload successful' } },
-      { type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 }
+      { type: AppConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 }
     ];
     await store.dispatch(createArtifact({ name: 'createdRelease', some: 'thing', someList: ['test', 'more'], complex: { objectThing: 'yes' } }, 'filethings'));
     const storeActions = store.getActions();
@@ -131,9 +131,9 @@ describe('release actions', () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Uploading artifact' } },
-      { type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 },
+      { type: AppConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 },
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Upload successful' } },
-      { type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 }
+      { type: AppConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 }
     ];
     await store.dispatch(uploadArtifact({ description: 'new artifact to upload' }, { size: 1234 }));
     const storeActions = store.getActions();

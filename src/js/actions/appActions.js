@@ -85,3 +85,18 @@ export const setFirstLoginAfterSignup = firstLoginAfterSignup => dispatch =>
     type: AppConstants.SET_FIRST_LOGIN_AFTER_SIGNUP,
     firstLoginAfterSignup: firstLoginAfterSignup
   });
+
+export const progress = (e, dispatch) => {
+  const uploadProgress = (e.loaded / e.total) * 100;
+  return dispatch({
+    type: AppConstants.UPLOAD_PROGRESS,
+    inprogress: uploadProgress !== 100,
+    uploadProgress: uploadProgress < 50 ? Math.ceil(uploadProgress) : Math.round(uploadProgress)
+  });
+};
+
+export const cancelFileUpload = () => (dispatch, getState) => {
+  const cancelSource = getState().app.cancelSource;
+  cancelSource.cancel();
+  return Promise.resolve(dispatch({ type: AppConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 }));
+};

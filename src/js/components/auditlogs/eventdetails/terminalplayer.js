@@ -2,13 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { Button } from '@material-ui/core';
 
-import { XTerm } from 'xterm-for-react';
 import { FitAddon } from 'xterm-addon-fit';
 import { SearchAddon } from 'xterm-addon-search';
 import msgpack5 from 'msgpack5';
 import { deviceConnect } from '../../../actions/deviceActions';
-import { MessageProtocol, MessageTypes, blobToString, byteArrayToString } from '../../devices/terminal';
+import { blobToString, byteArrayToString } from '../../devices/troubleshoot/terminal';
+import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as MessageProtocols } from '../../../constants/deviceConstants';
 import { CloudDownload, Pause, PlayArrow, Refresh } from '@material-ui/icons';
+import XTerm from '../../common/xterm';
 import { colors } from '../../../themes/mender-theme';
 
 const MessagePack = msgpack5();
@@ -177,7 +178,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
           hdr: { proto, typ, props = {} },
           body
         } = MessagePack.decode(data);
-        if (proto !== MessageProtocol.Shell) {
+        if (proto !== MessageProtocols.Shell) {
           return;
         }
         clearTimeout(timer);
