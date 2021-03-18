@@ -103,7 +103,7 @@ export const verifyEmailStart = () => (dispatch, getState) =>
     .finally(() => Promise.resolve(dispatch(getUser('me'))));
 
 export const verifyEmailComplete = secret => dispatch =>
-  GeneralApi.post(`${useradmApiUrl}/auth/verify-email/complete`, { secret })
+  GeneralApi.post(`${useradmApiUrl}/auth/verify-email/complete`, { secret_hash: secret })
     .catch(err => commonErrorHandler(err, 'An error occured completing the email verification process:', dispatch))
     .finally(() => Promise.resolve(dispatch(getUser('me'))));
 
