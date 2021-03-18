@@ -129,38 +129,6 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="device-connect bordered report-list"
-    >
-      <h4
-        class="margin-bottom-small"
-      >
-        Troubleshoot
-      </h4>
-      <div
-        class="flexbox"
-        style="flex-direction: row;"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body1"
-          style="text-transform: none; text-align: left;"
-        >
-          The troubleshoot add-on does not seem to be enabled on this device.
-          <br />
-          Please see
-           
-          <a
-            href="https://docs.mender.io/add-ons/remote-terminal"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            the documentation
-          </a>
-           
-          for a description on how it works and how to enable it.
-        </p>
-      </div>
-    </div>
-    <div
       class="device-inventory bordered report-list"
     >
       <h4
