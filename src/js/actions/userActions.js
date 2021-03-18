@@ -271,6 +271,8 @@ export const saveGlobalSettings = (settings, beOptimistic = false, notify = fals
   let updatedSettings = { ...getState().users.globalSettings, ...settings };
   if (getCurrentUser(getState()).verified) {
     updatedSettings['2fa'] = twoFAStates.enabled;
+  } else {
+    delete updatedSettings['2fa'];
   }
   let tasks = [dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: updatedSettings })];
   return GeneralApi.post(`${useradmApiUrl}/settings`, updatedSettings)
