@@ -3,7 +3,7 @@ import 'cypress-file-upload';
 import 'cypress-iframe';
 import 'cypress-localstorage-commands';
 import 'cypress-wait-until';
-import { addMatchImageSnapshotCommand } from 'cypress-image-snapshot/command';
+import { addMatchImageSnapshotCommand } from 'mzedel-cypress-image-snapshot/command';
 import jwtDecode from 'jwt-decode';
 
 addMatchImageSnapshotCommand({ allowSizeMismatch: true });
@@ -45,4 +45,17 @@ Cypress.Commands.add('tenantTokenRetrieval', () => {
   cy.get('.tenant-token-text')
     .invoke('text')
     .then(token => cy.setCookie('tenantToken', token));
+});
+
+Cypress.Commands.add('downloadPng', (filename, selector) => {
+  expect(filename).to.be.a('string');
+
+  // the simplest way is to grab the data url and use
+  // https://on.cypress.io/writefile to save PNG file
+  return cy.get(selector).then($canvas => {
+    const url = $canvas[0].toDataURL();
+    const data = url.replace(/^data:image\/png;base64,/, '');
+    cy.writeFile(filename, data, 'base64');
+    cy.wrap(selector);
+  });
 });
