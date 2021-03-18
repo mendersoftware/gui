@@ -136,13 +136,13 @@ const actionCreators = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const { hasDeviceConfig } = getTenantCapabilities(state);
+  const { hasDeviceConfig, hasDeviceConnect } = getTenantCapabilities(state);
   const { deployment_id: configDeploymentId } = ownProps.device.config || {};
   return {
     defaultConfig: state.users.globalSettings.defaultDeviceConfig,
     deviceConfigDeployment: state.deployments.byId[configDeploymentId] || {},
     docsVersion: getDocsVersion(state),
-    hasDeviceConnect: state.app.features.hasDeviceConnect,
+    hasDeviceConnect,
     hasDeviceConfig,
     onboardingComplete: state.onboarding.complete,
     showHelptips: state.users.showHelptips
