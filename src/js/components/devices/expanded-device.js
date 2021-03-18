@@ -6,11 +6,12 @@ import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../action
 import { applyDeviceConfig, decommissionDevice, setDeviceConfig } from '../../actions/deviceActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { versionCompare } from '../../helpers';
 import { getDocsVersion, getTenantCapabilities } from '../../selectors';
 import Tracking from '../../tracking';
 import { AuthButton } from '../helptips/helptooltips';
 import AuthsetsDialog from './authsets';
-import TerminalDialog from './terminal';
+import TroubleshootDialog from './troubleshootdialog';
 import AuthStatus from './device-details/authstatus';
 import DeviceConfiguration from './device-details/configuration';
 import DeviceInventory from './device-details/deviceinventory';
@@ -31,6 +32,7 @@ export const ExpandedDevice = ({
   getSingleDeployment,
   hasDeviceConfig,
   hasDeviceConnect,
+  hasFileTransfer,
   highlightHelp,
   limitMaxed,
   refreshDevices,
@@ -43,7 +45,7 @@ export const ExpandedDevice = ({
 
   const [showAuthsetsDialog, setShowAuthsetsDialog] = useState(false);
   const [socketClosed, setSocketClosed] = useState(true);
-  const [terminal, setTerminal] = useState(false);
+  const [troubleshootType, setTroubleshootType] = useState();
 
   const toggleAuthsets = (authsets = !showAuthsetsDialog, shouldUpdate = false) => {
     setShowAuthsetsDialog(authsets);
@@ -59,10 +61,10 @@ export const ExpandedDevice = ({
       .finally(() => refreshDevices(true));
   };
 
-  const launchTerminal = () => {
+  const launchTroubleshoot = type => {
     Tracking.event({ category: 'devices', action: 'open_terminal' });
     setSocketClosed(false);
-    setTerminal(true);
+    setTroubleshootType(type);
   };
 
   const waiting = !(attributes && Object.values(attributes).some(i => i));
@@ -95,7 +97,15 @@ export const ExpandedDevice = ({
         )}
         {status === DEVICE_STATES.accepted && (
           <>
-            {hasDeviceConnect && <DeviceConnection device={device} docsVersion={docsVersion} launchTerminal={launchTerminal} socketClosed={socketClosed} />}
+            {hasDeviceConnect && (
+              <DeviceConnection
+                device={device}
+                docsVersion={docsVersion}
+                hasFileTransfer={hasFileTransfer}
+                startTroubleshoot={launchTroubleshoot}
+                socketClosed={socketClosed}
+              />
+            )}
             {waiting ? <DeviceInventoryLoader docsVersion={docsVersion} /> : <DeviceInventory device={device} setSnackbar={setSnackbar} />}
           </>
         )}
@@ -110,11 +120,14 @@ export const ExpandedDevice = ({
         open={showAuthsetsDialog}
       />
 
-      <TerminalDialog
-        open={terminal}
-        onCancel={() => setTerminal(false)}
-        onSocketClose={() => setTimeout(() => setSocketClosed(true), 5000)}
+      <TroubleshootDialog
         deviceId={device.id}
+        hasFileTransfer={hasFileTransfer}
+        onCancel={() => setTroubleshootType()}
+        onSocketClose={() => setTimeout(() => setSocketClosed(true), 5000)}
+        open={Boolean(troubleshootType)}
+        setSocketClosed={setSocketClosed}
+        type={troubleshootType}
       />
     </div>
   );
@@ -132,14 +145,15 @@ const actionCreators = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const { hasDeviceConfig } = getTenantCapabilities(state);
+  const { hasDeviceConfig, hasDeviceConnect } = getTenantCapabilities(state);
   const { deployment_id: configDeploymentId } = ownProps.device.config || {};
   return {
     defaultConfig: state.users.globalSettings.defaultDeviceConfig,
     deviceConfigDeployment: state.deployments.byId[configDeploymentId] || {},
     docsVersion: getDocsVersion(state),
-    hasDeviceConnect: state.app.features.hasDeviceConnect,
+    hasDeviceConnect,
     hasDeviceConfig,
+    hasFileTransfer: versionCompare(state.app.versionInformation.Integration, '2.7.0') > -1,
     onboardingComplete: state.onboarding.complete,
     showHelptips: state.users.showHelptips
   };

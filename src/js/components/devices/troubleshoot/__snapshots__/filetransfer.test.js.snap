@@ -1,0 +1,156 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FileTransfer Component renders correctly 1`] = `
+<div>
+  <div
+    class="tab-container with-sub-panels"
+    style="min-height: 95%;"
+  >
+    <ul
+      class="MuiList-root leftFixed MuiList-padding"
+    >
+      <li
+        class="MuiListItem-root navLink settingsNav capitalized active MuiListItem-gutters"
+      >
+        <div
+          class="MuiListItemText-root"
+        >
+          <span
+            class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+          >
+            upload
+          </span>
+        </div>
+      </li>
+      <li
+        class="MuiListItem-root navLink settingsNav capitalized  MuiListItem-gutters"
+      >
+        <div
+          class="MuiListItemText-root"
+        >
+          <span
+            class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+          >
+            download
+          </span>
+        </div>
+      </li>
+    </ul>
+    <div
+      class="rightFluid padding-right"
+    >
+      <p
+        class="info"
+        style="max-width: 400px;"
+      >
+        Upload a file to the device
+      </p>
+      <div
+        style="max-width: 400px;"
+      >
+        <div
+          class="dropzone onboard dashboard-placeholder flexbox centered"
+          style="padding: 15px;"
+          tabindex="0"
+        >
+          <input
+            autocomplete="off"
+            style="display: none;"
+            tabindex="-1"
+            type="file"
+          />
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root icon"
+            focusable="false"
+            style="height: 24px; width: 24px; vertical-align: middle; margin-top: -2px;"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"
+            />
+          </svg>
+          <div
+            class="margin-left-small"
+            style="font-size: 11pt;"
+          >
+            Drag here or 
+            <a>
+              browse
+            </a>
+             to upload a file
+          </div>
+        </div>
+      </div>
+      <div
+        style="display: grid; grid-template-columns: 400px max-content;"
+      >
+        <div
+          class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+        >
+          <label
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink Mui-focused Mui-focused"
+            data-shrink="true"
+          >
+            Destination directory on the device where the file will be transferred
+          </label>
+          <div
+            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth Mui-focused Mui-focused MuiInputBase-formControl MuiInput-formControl"
+          >
+            <input
+              aria-invalid="false"
+              class="MuiInputBase-input MuiInput-input"
+              placeholder="Example: /opt/installed-by-single-file"
+              style="margin-top: 16px;"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <button
+          class="MuiButtonBase-root MuiIconButton-root"
+          style="align-self: flex-end;"
+          tabindex="0"
+          title="Paste"
+          type="button"
+        >
+          <span
+            class="MuiIconButton-label"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"
+              />
+            </svg>
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+      <div
+        class="flexbox margin-top"
+        style="max-width: 400px; justify-content: flex-end;"
+      >
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled"
+          disabled=""
+          tabindex="-1"
+          type="button"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            Upload
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

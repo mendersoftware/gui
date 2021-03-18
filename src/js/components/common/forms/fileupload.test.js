@@ -13,10 +13,12 @@ describe('FileUpload Component', () => {
   });
 
   it('works as intended', async () => {
+    const selectMock = jest.fn();
     const submitMock = jest.fn();
+
     const menderFile = new File(['testContent plain'], 'test.file');
 
-    const ui = <FileUpload onFileChange={submitMock} placeholder="test placeholder" setSnackbar={jest.fn} />;
+    const ui = <FileUpload onFileChange={submitMock} onFileSelect={selectMock} placeholder="test placeholder" setSnackbar={jest.fn} />;
     const { rerender } = render(ui);
     expect(screen.getByText(/test placeholder/i)).toBeInTheDocument();
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work
@@ -29,5 +31,6 @@ describe('FileUpload Component', () => {
     expect(screen.getByDisplayValue('test.file')).toBeInTheDocument();
 
     expect(submitMock).toHaveBeenCalled();
+    expect(selectMock).toHaveBeenCalled();
   });
 });
