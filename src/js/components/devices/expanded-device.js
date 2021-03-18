@@ -6,6 +6,7 @@ import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../action
 import { applyDeviceConfig, decommissionDevice, setDeviceConfig } from '../../actions/deviceActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { versionCompare } from '../../helpers';
 import { getDocsVersion, getTenantCapabilities } from '../../selectors';
 import Tracking from '../../tracking';
 import { AuthButton } from '../helptips/helptooltips';
@@ -31,6 +32,7 @@ export const ExpandedDevice = ({
   getSingleDeployment,
   hasDeviceConfig,
   hasDeviceConnect,
+  hasFileTransfer,
   highlightHelp,
   limitMaxed,
   refreshDevices,
@@ -96,7 +98,13 @@ export const ExpandedDevice = ({
         {status === DEVICE_STATES.accepted && (
           <>
             {hasDeviceConnect && (
-              <DeviceConnection device={device} docsVersion={docsVersion} startTroubleshoot={launchTroubleshoot} socketClosed={socketClosed} />
+              <DeviceConnection
+                device={device}
+                docsVersion={docsVersion}
+                hasFileTransfer={hasFileTransfer}
+                startTroubleshoot={launchTroubleshoot}
+                socketClosed={socketClosed}
+              />
             )}
             {waiting ? <DeviceInventoryLoader docsVersion={docsVersion} /> : <DeviceInventory device={device} setSnackbar={setSnackbar} />}
           </>
@@ -114,6 +122,7 @@ export const ExpandedDevice = ({
 
       <TroubleshootDialog
         deviceId={device.id}
+        hasFileTransfer={hasFileTransfer}
         onCancel={() => setTroubleshootType()}
         onSocketClose={() => setTimeout(() => setSocketClosed(true), 5000)}
         open={Boolean(troubleshootType)}
@@ -144,6 +153,7 @@ const mapStateToProps = (state, ownProps) => {
     docsVersion: getDocsVersion(state),
     hasDeviceConnect,
     hasDeviceConfig,
+    hasFileTransfer: versionCompare(state.app.versionInformation.Integration, '2.7.0') > -1,
     onboardingComplete: state.onboarding.complete,
     showHelptips: state.users.showHelptips
   };

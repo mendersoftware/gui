@@ -46,8 +46,9 @@ const tabs = {
 
 export const TroubleshootDialog = ({
   deviceId,
-  getDeviceFileDownloadLink,
   deviceFileUpload,
+  getDeviceFileDownloadLink,
+  hasFileTransfer,
   onCancel,
   onSocketClose,
   open,
@@ -123,7 +124,7 @@ export const TroubleshootDialog = ({
   };
 
   const onDrop = acceptedFiles => {
-    if (acceptedFiles.length === 1) {
+    if (acceptedFiles.length === 1 && hasFileTransfer) {
       setFile(acceptedFiles[0]);
       setUploadPath(`/tmp/${acceptedFiles[0].name}`);
       setCurrentTab(tabs.transfer.value);
@@ -131,6 +132,9 @@ export const TroubleshootDialog = ({
   };
 
   const onDownloadClick = path => {
+    if (!hasFileTransfer) {
+      return;
+    }
     setDownloadPath(path);
     getDeviceFileDownloadLink(deviceId, path).then(address => {
       const fileName = path.substring(path.lastIndexOf('/') + 1) || 'file';
@@ -155,9 +159,13 @@ export const TroubleshootDialog = ({
       <DialogTitle>Troubleshoot</DialogTitle>
       <DialogContent className="dialog-content flexbox column" style={{ padding: 0, margin: '0 24px', height: '75vh' }}>
         <Tabs value={currentTab} onChange={(e, tab) => setCurrentTab(tab)} textColor="primary" TabIndicatorProps={{ className: 'hidden' }}>
-          {Object.values(tabs).map(tab => (
-            <Tab key={tab.value} label={tab.title(sessionId)} value={tab.value} />
-          ))}
+          {Object.values(tabs).reduce((accu, tab) => {
+            if (!hasFileTransfer && tab.value === tabs.transfer.value) {
+              return accu;
+            }
+            accu.push(<Tab key={tab.value} label={tab.title(sessionId)} value={tab.value} />);
+            return accu;
+          }, [])}
         </Tabs>
         {currentTab === tabs.transfer.value && (
           <FileTransfer

@@ -22,7 +22,7 @@ const troubleshootingTools = {
   transfer: { title: 'Launch File Transfer', icon: <ImportExportIcon /> }
 };
 
-export const DeviceConnection = ({ device, docsVersion = '', startTroubleshoot, socketClosed }) => {
+export const DeviceConnection = ({ device, docsVersion = '', hasFileTransfer, startTroubleshoot, socketClosed }) => {
   const { connect_status = DEVICE_CONNECT_STATES.unknown, connect_updated_ts } = device;
   return (
     <div className="device-connect bordered report-list">
@@ -51,13 +51,25 @@ export const DeviceConnection = ({ device, docsVersion = '', startTroubleshoot, 
           </Typography>
         )}
         {connect_status === DEVICE_CONNECT_STATES.connected &&
-          Object.entries(troubleshootingTools).map(([type, item]) => (
-            <Button key={type} onClick={() => startTroubleshoot(type)} disabled={!socketClosed} startIcon={item.icon} style={{ marginLeft: theme.spacing(2) }}>
-              <Typography variant="subtitle2" style={buttonStyle}>
-                {item.title}
-              </Typography>
-            </Button>
-          ))}
+          Object.entries(troubleshootingTools).reduce((accu, [type, item]) => {
+            if (!hasFileTransfer && type === 'transfer') {
+              return accu;
+            }
+            accu.push(
+              <Button
+                key={type}
+                onClick={() => startTroubleshoot(type)}
+                disabled={!socketClosed}
+                startIcon={item.icon}
+                style={{ marginLeft: theme.spacing(2) }}
+              >
+                <Typography variant="subtitle2" style={buttonStyle}>
+                  {item.title}
+                </Typography>
+              </Button>
+            );
+            return accu;
+          }, [])}
       </div>
     </div>
   );
