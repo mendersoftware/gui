@@ -12,6 +12,7 @@ import AuthSetup from './twofactorauth-steps/authsetup';
 import EmailVerification from './twofactorauth-steps/emailverification';
 
 export const TwoFactorAuthSetup = ({
+  activationCode,
   currentUser,
   get2FAQRCode,
   has2FA,
@@ -33,6 +34,16 @@ export const TwoFactorAuthSetup = ({
       setQrExpanded(true);
     }
   }, [currentUser.verified]);
+
+  useEffect(() => {
+    if (activationCode) {
+      setIs2FAEnabled(true);
+      verifyEmailComplete(activationCode).catch(() => {
+        setShowEmailVerification(true);
+        setQrExpanded(false);
+      });
+    }
+  }, [activationCode]);
 
   useEffect(() => {
     if (has2FA) {
@@ -76,7 +87,9 @@ export const TwoFactorAuthSetup = ({
       <p className="info" style={{ width: '75%', margin: 0 }}>
         Two Factor Authentication adds a second layer of protection to your account by asking for an additional verification code each time you log in.
       </p>
-      {showEmailVerification && <EmailVerification verifyEmailComplete={verifyEmailComplete} verifyEmailStart={verifyEmailStart} />}
+      {showEmailVerification && (
+        <EmailVerification activationCode={activationCode} verifyEmailComplete={verifyEmailComplete} verifyEmailStart={verifyEmailStart} />
+      )}
       <Collapse in={qrExpanded} timeout="auto" unmountOnExit>
         <AuthSetup currentUser={currentUser} handle2FAState={handle2FAState} has2FA={has2FA} qrImage={qrImage} verify2FA={verify2FA} />
       </Collapse>
@@ -88,6 +101,7 @@ const actionCreators = { get2FAQRCode, saveGlobalSettings, setSnackbar, verify2F
 
 const mapStateToProps = state => {
   return {
+    activationCode: state.users.activationCode,
     currentUser: getCurrentUser(state),
     has2FA: getHas2FA(state),
     twoFaAccessor: get2FaAccessor(state),

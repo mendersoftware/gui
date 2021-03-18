@@ -33,6 +33,11 @@ describe('user reducer', () => {
     });
   });
 
+  it('should handle RECEIVED_ACTIVATION_CODE', async () => {
+    expect(reducer(undefined, { type: UserConstants.RECEIVED_ACTIVATION_CODE, code: 'code' }).activationCode).toEqual('code');
+    expect(reducer({ ...initialState }, { type: UserConstants.RECEIVED_ACTIVATION_CODE, code: 'code' }).activationCode).toEqual('code');
+  });
+
   it('should handle RECEIVED_USER', async () => {
     expect(reducer(undefined, { type: UserConstants.RECEIVED_USER, user: testUser }).byId).toEqual({ '123': testUser });
     expect(reducer({ ...initialState, byId: { '123': testUser } }, { type: UserConstants.RECEIVED_USER, user: testUser }).byId).toEqual({ '123': testUser });

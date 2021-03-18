@@ -102,6 +102,8 @@ export const verifyEmailStart = () => (dispatch, getState) =>
     .catch(err => commonErrorHandler(err, 'An error occured starting the email verification process:', dispatch))
     .finally(() => Promise.resolve(dispatch(getUser('me'))));
 
+export const setAccountActivationCode = code => dispatch => Promise.resolve(dispatch({ type: UserConstants.RECEIVED_ACTIVATION_CODE, code }));
+
 export const verifyEmailComplete = secret => dispatch =>
   GeneralApi.post(`${useradmApiUrl}/auth/verify-email/complete`, { secret_hash: secret })
     .catch(err => commonErrorHandler(err, 'An error occured completing the email verification process:', dispatch))
@@ -267,7 +269,9 @@ export const saveGlobalSettings = (settings, beOptimistic = false, notify = fals
     return;
   }
   let updatedSettings = { ...getState().users.globalSettings, ...settings };
-  updatedSettings['2fa'] = twoFAStates.enabled;
+  if (getCurrentUser(getState()).verified) {
+    updatedSettings['2fa'] = twoFAStates.enabled;
+  }
   let tasks = [dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: updatedSettings })];
   return GeneralApi.post(`${useradmApiUrl}/settings`, updatedSettings)
     .then(() => {
