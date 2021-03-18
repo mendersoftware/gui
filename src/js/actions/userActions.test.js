@@ -21,6 +21,7 @@ import {
   removeUser,
   saveGlobalSettings,
   saveUserSettings,
+  setAccountActivationCode,
   setHideAnnouncement,
   setShowConnectingDialog,
   toggleHelptips,
@@ -106,6 +107,16 @@ describe('user actions', () => {
     ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(verify2FA({ token2fa: '123456' }));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+
+  it('should allow processing email verification codes', async () => {
+    jest.clearAllMocks();
+    const expectedActions = [{ type: UserConstants.RECEIVED_ACTIVATION_CODE, code: 'code' }];
+    const store = mockStore({ ...defaultState });
+    await store.dispatch(setAccountActivationCode('code'));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

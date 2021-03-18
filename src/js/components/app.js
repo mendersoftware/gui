@@ -10,7 +10,7 @@ import { Cancel as CancelIcon } from '@material-ui/icons';
 
 import { getToken, updateMaxAge, expirySet } from '../auth';
 import { cancelFileUpload, setSnackbar } from '../actions/appActions';
-import { logoutUser, saveUserSettings, setShowConnectingDialog } from '../actions/userActions';
+import { logoutUser, saveUserSettings, setAccountActivationCode, setShowConnectingDialog } from '../actions/userActions';
 import { privateRoutes, publicRoutes } from '../config/routes';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import SharedSnackbar from '../components/common/sharedsnackbar';
@@ -25,6 +25,7 @@ import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
 import Header from './header/header';
 import LeftNav from './leftnav';
 
+const activationPath = '/activate';
 const timeout = 900000; // 15 minutes idle time
 const cookies = new Cookies();
 
@@ -34,6 +35,7 @@ export const AppRoot = ({
   history,
   logoutUser,
   onboardingState,
+  setAccountActivationCode,
   setShowConnectingDialog,
   showDeviceConnectionDialog,
   showDismissHelptipsDialog,
@@ -67,6 +69,9 @@ export const AppRoot = ({
       const filters = page.slice(splitter + 1);
       const keyOnlyFilters = filters.split('&').reduce((accu, item) => `${accu}:${item.split('=')[0]}&`, ''); // assume the keys to filter by are not as revealing as the values things are filtered by
       page = `${page.substring(0, splitter)}?${keyOnlyFilters.substring(0, keyOnlyFilters.length - 1)}`; // cut off the last & of the reduced filters string
+    } else if (page.startsWith(activationPath)) {
+      setAccountActivationCode(page.substring(activationPath.length + 1));
+      history.replace('/settings/my-profile');
     }
     Tracking.pageview(page);
   };
@@ -124,7 +129,7 @@ export const AppRoot = ({
   );
 };
 
-const actionCreators = { cancelFileUpload, logoutUser, saveUserSettings, setShowConnectingDialog, setSnackbar };
+const actionCreators = { cancelFileUpload, logoutUser, saveUserSettings, setAccountActivationCode, setShowConnectingDialog, setSnackbar };
 
 const mapStateToProps = state => {
   return {

@@ -38,6 +38,11 @@ const userReducer = (state = initialState, action) => {
         ...state,
         byId: { ...action.users }
       };
+    case UserConstants.RECEIVED_ACTIVATION_CODE:
+      return {
+        ...state,
+        activationCode: action.code
+      };
     case UserConstants.RECEIVED_USER:
       return {
         ...state,
