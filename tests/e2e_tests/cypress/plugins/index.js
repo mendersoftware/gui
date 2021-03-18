@@ -57,6 +57,8 @@ module.exports = (on, config) => {
       updateConfigFileWithUrl('mender-connect', baseUrl, token, config.projectRoot);
       let args = [
         'run',
+        '--name',
+        'connect-client',
         '-v',
         `${config.projectRoot}/hosted.pem:/certs/hosted.pem`,
         '-v',
