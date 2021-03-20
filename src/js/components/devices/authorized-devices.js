@@ -33,7 +33,7 @@ import DeviceList from './devicelist';
 import DeviceStatus from './device-status';
 import { refreshLength as refreshDeviceLength } from './devices';
 import Filters from './filters';
-import BaseDevices, { RelativeDeviceTime } from './base-devices';
+import BaseDevices, { DeviceExpansion, RelativeDeviceTime } from './base-devices';
 
 const deviceStatus = device => <DeviceStatus device={device} />;
 
@@ -60,6 +60,12 @@ const defaultHeaders = [
     title: '',
     attribute: { name: 'status', scope: 'identity' },
     render: deviceStatus,
+    sortable: false
+  },
+  {
+    title: '',
+    attribute: {},
+    render: DeviceExpansion,
     sortable: false
   }
 ];

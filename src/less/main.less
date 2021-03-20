@@ -1462,6 +1462,19 @@ div:focus {
         grid-template-columns: @row-selector-width @columns-5 @row-expander-width;
       }
     }
+    &.columns-6 {
+      @columns-6: 1.5fr 1fr minmax(350px, 1.5fr) 1fr 1fr 1fr;
+      grid-template-columns: @columns-6;
+      &.selectable {
+        grid-template-columns: @row-selector-width @columns-6;
+      }
+      &.expandable {
+        grid-template-columns: @columns-6 @row-expander-width;
+      }
+      &.selectable.expandable {
+        grid-template-columns: @row-selector-width @columns-6 @row-expander-width;
+      }
+    }
     > div {
       overflow: hidden;
       word-break: break-all;
