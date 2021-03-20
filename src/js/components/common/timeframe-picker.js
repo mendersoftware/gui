@@ -9,7 +9,7 @@ export const TimeframePicker = ({ classNames, endDate, onChange, startDate, toni
     let currentEndDate = endDate;
     if (date > currentEndDate) {
       currentEndDate = date;
-      currentEndDate._isAMomentObject ? currentEndDate.endOf('day') : currentEndDate.setHours(23, 59, 59, 999);
+      currentEndDate._isAMomentObject ? currentEndDate.endOf('day') : currentEndDate.setHours(23, 59, 59);
     }
     date._isAMomentObject ? date.startOf('day') : date.setHours(0, 0, 0, 0);
     onChange(date, currentEndDate);
@@ -21,7 +21,7 @@ export const TimeframePicker = ({ classNames, endDate, onChange, startDate, toni
       currentStartDate = date;
       currentStartDate._isAMomentObject ? currentStartDate.startOf('day') : currentStartDate.setHours(0, 0, 0, 0);
     }
-    date._isAMomentObject ? date.endOf('day') : date.setHours(23, 59, 59, 999);
+    date._isAMomentObject ? date.endOf('day') : date.setHours(23, 59, 59);
     onChange(currentStartDate, date);
   };
 

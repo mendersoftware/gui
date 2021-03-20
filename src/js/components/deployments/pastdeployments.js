@@ -23,7 +23,7 @@ import { DeploymentStatus } from './deploymentitem';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
 
 const today = new Date(new Date().setHours(0, 0, 0));
-const tonight = new Date(new Date().setHours(23, 59, 59));
+const tonight = new Date(new Date().setHours(23, 59, 59, 999));
 
 const headers = [...defaultHeaders.slice(0, defaultHeaders.length - 1), { title: 'Status', renderer: DeploymentStatus }];
 
