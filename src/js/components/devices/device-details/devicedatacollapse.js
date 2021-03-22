@@ -11,7 +11,7 @@ export const DeviceDataCollapse = ({ children, className = '', disableBottomBord
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    setOpen(isOpen);
+    setOpen(Boolean(isOpen));
   }, [isOpen]);
 
   const onCollapseClick = () => {
