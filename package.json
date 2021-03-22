@@ -102,7 +102,7 @@
     "redux-mock-store": "^1.5.4",
     "url-loader": "^4.1.1",
     "util": "^0.12.3",
-    "webpack": "^5.26.0",
+    "webpack": "^5.27.1",
     "webpack-cli": "^4.5.0",
     "yarn": "^1.22.10"
   },
