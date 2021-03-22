@@ -47,7 +47,7 @@
     "stream-browserify": "^3.0.0",
     "universal-cookie": "^4.0.4",
     "validator": "^13.5.2",
-    "victory": "^35.4.11",
+    "victory": "^35.4.12",
     "xterm": "^4.11.0",
     "xterm-addon-fit": "^0.5.0",
     "xterm-addon-search": "^0.8.0",
