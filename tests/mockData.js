@@ -298,7 +298,7 @@ export const defaultState = {
     rolesById: {
       RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false, permissions: [] },
       RBAC_ROLE_OBSERVER: {
-        title: 'Read only',
+        title: 'Read Access',
         allowUserManagement: false,
         groups: [],
         description:
@@ -306,7 +306,7 @@ export const defaultState = {
         editable: false,
         permissions: []
       },
-      RBAC_ROLE_CI: { title: 'CI', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
+      RBAC_ROLE_CI: { title: 'Releases Manager', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
       test: { title: 'test', description: 'test description', groups: ['testgroup'], editable: true }
     },
     showHelptips: true
