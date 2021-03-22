@@ -539,6 +539,24 @@ ul.link-list {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 2 * @defaultGutterWidth;
+  &.column-data {
+    max-width: 19 * @defaultGutterWidth;
+    row-gap: @defaultGutterWidth;
+    &.compact {
+      grid-template-columns: max-content 1fr;
+      row-gap: initial;
+    }
+    &.multiple {
+      grid-template-columns: 1fr 1fr;
+      max-width: 23 * @defaultGutterWidth;
+    }
+  }
+}
+
+.two-columns-multiple {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max-content, 25vw));
+  column-gap: 2 * @defaultGutterWidth;
 }
 
 .overflow-hidden {

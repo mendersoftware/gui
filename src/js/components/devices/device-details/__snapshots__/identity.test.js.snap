@@ -41,7 +41,7 @@ exports[`DeviceIdentity Component renders correctly 1`] = `
     style="padding-left: 32px;"
   >
     <div
-      class=" text-muted two-columns"
+      class="break-all text-muted two-columns column-data compact "
       style="max-width: 50%; grid-template-columns: minmax(max-content, 150px) auto;"
     >
       <div
