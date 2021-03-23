@@ -21,6 +21,7 @@ import KeyValueEditor from '../../common/forms/keyvalueeditor';
 import { ConfigureRaspberryLedTip, ConfigureTimezoneTip } from '../../helptips/helptooltips';
 import Loader from '../../common/loader';
 import ConfigImportDialog from './configimportdialog';
+import DeviceDataCollapse from './devicedatacollapse';
 
 const buttonStyle = { marginLeft: 30 };
 const iconStyle = { margin: 12 };
@@ -135,6 +136,7 @@ export const DeviceConfiguration = ({
   const [isEditingConfig, setIsEditingConfig] = useState(false);
   const [isSetAsDefault, setIsSetAsDefault] = useState(false);
   const [isUpdatingConfig, setIsUpdatingConfig] = useState(false);
+  const [open, setOpen] = useState(false);
   const [shouldUpdateEditor, setShouldUpdateEditor] = useState(false);
   const [showConfigImport, setShowConfigImport] = useState(false);
   const [showLog, setShowLog] = useState(false);
@@ -149,6 +151,7 @@ export const DeviceConfiguration = ({
     if (device.config || changedConfig) {
       setIsEditDisabled(isUpdatingConfig);
       setIsEditingConfig(isUpdatingConfig || updateFailed);
+      setOpen(isUpdatingConfig || updateFailed);
     }
   }, [isUpdatingConfig, updateFailed]);
 
@@ -249,6 +252,11 @@ export const DeviceConfiguration = ({
       });
   };
 
+  const onStartEdit = () => {
+    setOpen(true);
+    setIsEditingConfig(true);
+  };
+
   const hasDeviceConfig = !isEmpty(reported);
   let footer = hasDeviceConfig ? <ConfigUpToDateNote updated_ts={reported_ts} /> : <ConfigEmptyNote updated_ts={device.updated_ts} />;
   if (isEditingConfig) {
@@ -298,22 +306,27 @@ export const DeviceConfiguration = ({
   }, {});
 
   return (
-    <div className="bordered margin-bottom-small">
-      <div className="two-columns">
-        <div className="flexbox" style={{ alignItems: 'baseline' }}>
-          <h4 className="margin-bottom-none margin-right">Device configuration</h4>
-          {!(isEditingConfig || isUpdatingConfig) && (
-            <Button onClick={setIsEditingConfig} startIcon={<EditIcon />} size="small">
-              Edit
+    <DeviceDataCollapse
+      isOpen={open}
+      onClick={setOpen}
+      title={
+        <div className="two-columns">
+          <div className="flexbox" style={{ alignItems: 'baseline' }}>
+            <h4 className="margin-bottom-none margin-right">Device configuration</h4>
+            {!(isEditingConfig || isUpdatingConfig) && (
+              <Button onClick={onStartEdit} startIcon={<EditIcon />} size="small">
+                Edit
+              </Button>
+            )}
+          </div>
+          {open && isEditingConfig && (
+            <Button onClick={setShowConfigImport} disabled={isUpdatingConfig} startIcon={<SaveAltIcon />} style={{ justifySelf: 'left' }}>
+              Import configuration
             </Button>
           )}
         </div>
-        {!!isEditingConfig && (
-          <Button onClick={setShowConfigImport} disabled={isUpdatingConfig} startIcon={<SaveAltIcon />} style={{ justifySelf: 'left' }}>
-            Import configuration
-          </Button>
-        )}
-      </div>
+      }
+    >
       {isEditingConfig ? (
         <KeyValueEditor
           disabled={isEditDisabled}
@@ -332,7 +345,7 @@ export const DeviceConfiguration = ({
       </div>
       {showLog && <LogDialog logData={updateLog} onClose={() => setShowLog(false)} type="configUpdateLog" />}
       {showConfigImport && <ConfigImportDialog onCancel={() => setShowConfigImport(false)} onSubmit={onConfigImport} />}
-    </div>
+    </DeviceDataCollapse>
   );
 };
 
