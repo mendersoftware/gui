@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import copy from 'copy-to-clipboard';
 
-import { Button, Divider, Drawer } from '@material-ui/core';
-import { Link as LinkIcon, Replay as ReplayIcon } from '@material-ui/icons';
+import { Button, Divider, Drawer, IconButton } from '@material-ui/core';
+import { Close as CloseIcon, Link as LinkIcon, Replay as ReplayIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../actions/deploymentActions';
@@ -73,14 +73,17 @@ export const ExpandedDevice = ({
   const isAcceptedDevice = status === DEVICE_STATES.accepted;
   return (
     <Drawer anchor="right" className="expandedDevice" open={open} onClose={onClose} PaperProps={{ style: { minWidth: '67vw' } }}>
-      <div className="flexbox margin-top margin-bottom-small" style={{ alignItems: 'center' }}>
+      <div className="flexbox margin-bottom-small" style={{ alignItems: 'center' }}>
         <b>Device information for {deviceIdentifier}</b>
         <div className="muted margin-left margin-right">
-          Last check-in: <RelativeTime className="muted" updateTime={device.updated_ts} />
+          Last check-in: <RelativeTime updateTime={device.updated_ts} />
         </div>
         <Button onClick={copyLinkToClipboard} startIcon={<LinkIcon />} size="small">
           Copy link to this device
         </Button>
+        <IconButton style={{ marginLeft: 'auto' }} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
       </div>
       <Divider />
       <DeviceIdentity device={device} setSnackbar={setSnackbar} />
