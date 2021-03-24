@@ -157,7 +157,13 @@ Array [
   >
     To see the effects of applying a configuration to your device you can set one of the below values to modify the behaviour of your Raspberry Pi green status LED
     <div
-      className="break-all text-muted two-columns column-data compact react-tooltip margin-top-small margin-bottom-small"
+      className="react-tooltip margin-top-small margin-bottom-small text-muted two-columns"
+      style={
+        Object {
+          "gridTemplateColumns": "max-content 1fr",
+          "maxWidth": 280,
+        }
+      }
     >
       <div
         className="align-right"

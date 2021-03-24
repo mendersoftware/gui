@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 
 import { extractSoftware } from '../../../helpers';
-import { TwoColumnDataMultiple } from '../../common/configurationobject';
+import { TwoColumnData } from '../../common/configurationobject';
 import DeviceInventoryLoader from './deviceinventoryloader';
 import DeviceDataCollapse from './devicedatacollapse';
+
+const style = { maxWidth: '50%', gridTemplateColumns: 'minmax(max-content, 150px) auto' };
 
 export const DeviceInventory = ({ device, docsVersion }) => {
   const [open, setOpen] = useState(false);
@@ -40,7 +42,7 @@ export const DeviceInventory = ({ device, docsVersion }) => {
         ) : (
           !open && (
             <>
-              <TwoColumnDataMultiple config={keyContent} />
+              <TwoColumnData config={keyContent} compact style={style} />
               {attributeCount - Object.keys(keyContent).length > 0 && <a onClick={setOpen}>show {attributeCount - Object.keys(keyContent).length} more</a>}
             </>
           )
@@ -50,7 +52,7 @@ export const DeviceInventory = ({ device, docsVersion }) => {
       onClick={setOpen}
       title="Device inventory"
     >
-      <TwoColumnDataMultiple config={deviceInventory} />
+      <TwoColumnData config={deviceInventory} compact style={style} />
       <a onClick={() => setOpen(false)}>show less</a>
     </DeviceDataCollapse>
   );
