@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Time from 'react-time';
 
-import { Button, Checkbox, FormControlLabel, Typography } from '@material-ui/core';
+import { Button, Checkbox, Collapse, Divider, FormControlLabel, Typography } from '@material-ui/core';
 import {
   Block as BlockIcon,
   CheckCircle as CheckCircleIcon,
@@ -14,6 +14,7 @@ import {
 
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { deepCompare, groupDeploymentStats, groupDeploymentDevicesStats, isEmpty } from '../../../helpers';
+import theme from '../../../themes/mender-theme';
 import ConfigurationObject from '../../common/configurationobject';
 import Confirm from '../../common/confirm';
 import LogDialog from '../../common/dialogs/log';
@@ -21,7 +22,6 @@ import KeyValueEditor from '../../common/forms/keyvalueeditor';
 import { ConfigureRaspberryLedTip, ConfigureTimezoneTip } from '../../helptips/helptooltips';
 import Loader from '../../common/loader';
 import ConfigImportDialog from './configimportdialog';
-import DeviceDataCollapse from './devicedatacollapse';
 
 const buttonStyle = { marginLeft: 30 };
 const iconStyle = { margin: 12 };
@@ -306,46 +306,44 @@ export const DeviceConfiguration = ({
   }, {});
 
   return (
-    <DeviceDataCollapse
-      isOpen={open}
-      onClick={setOpen}
-      title={
-        <div className="two-columns">
-          <div className="flexbox" style={{ alignItems: 'baseline' }}>
-            <h4 className="margin-bottom-none margin-right">Device configuration</h4>
-            {!(isEditingConfig || isUpdatingConfig) && (
-              <Button onClick={onStartEdit} startIcon={<EditIcon />} size="small">
-                Edit
-              </Button>
-            )}
-          </div>
-          {open && isEditingConfig && (
-            <Button onClick={setShowConfigImport} disabled={isUpdatingConfig} startIcon={<SaveAltIcon />} style={{ justifySelf: 'left' }}>
-              Import configuration
+    <div className="clickable margin-top-small margin-bottom">
+      <div className="two-columns">
+        <div className="flexbox" style={{ alignItems: 'baseline' }}>
+          <h4 className="margin-bottom-none margin-right">Device configuration</h4>
+          {!(isEditingConfig || isUpdatingConfig) && (
+            <Button onClick={onStartEdit} startIcon={<EditIcon />} size="small">
+              Edit
             </Button>
           )}
         </div>
-      }
-    >
-      {isEditingConfig ? (
-        <KeyValueEditor
-          disabled={isEditDisabled}
-          errortext={''}
-          input={changedConfig}
-          inputHelpTipsMap={helpTipsMap}
-          onInputChange={setChangedConfig}
-          reset={shouldUpdateEditor}
-          showHelptips={showHelptips}
-        />
-      ) : (
-        hasDeviceConfig && <ConfigurationObject className="margin-top" config={reported} />
-      )}
-      <div className="flexbox margin-bottom margin-top" style={{ alignItems: 'center' }}>
-        {footer}
+        {open && isEditingConfig && (
+          <Button onClick={setShowConfigImport} disabled={isUpdatingConfig} startIcon={<SaveAltIcon />} style={{ justifySelf: 'left' }}>
+            Import configuration
+          </Button>
+        )}
       </div>
-      {showLog && <LogDialog logData={updateLog} onClose={() => setShowLog(false)} type="configUpdateLog" />}
-      {showConfigImport && <ConfigImportDialog onCancel={() => setShowConfigImport(false)} onSubmit={onConfigImport} />}
-    </DeviceDataCollapse>
+      <Collapse in={open} timeout="auto" unmountOnExit>
+        {isEditingConfig ? (
+          <KeyValueEditor
+            disabled={isEditDisabled}
+            errortext={''}
+            input={changedConfig}
+            inputHelpTipsMap={helpTipsMap}
+            onInputChange={setChangedConfig}
+            reset={shouldUpdateEditor}
+            showHelptips={showHelptips}
+          />
+        ) : (
+          hasDeviceConfig && <ConfigurationObject className="margin-top" config={reported} />
+        )}
+        <div className="flexbox margin-bottom margin-top" style={{ alignItems: 'center' }}>
+          {footer}
+        </div>
+        {showLog && <LogDialog logData={updateLog} onClose={() => setShowLog(false)} type="configUpdateLog" />}
+        {showConfigImport && <ConfigImportDialog onCancel={() => setShowConfigImport(false)} onSubmit={onConfigImport} />}
+      </Collapse>
+      <Divider style={{ marginTop: theme.spacing(2) }} />
+    </div>
   );
 };
 
