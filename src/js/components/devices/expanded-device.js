@@ -70,6 +70,7 @@ export const ExpandedDevice = ({
   };
 
   const deviceIdentifier = device?.attributes?.name ?? device?.id ?? '-';
+  const isAcceptedDevice = status === DEVICE_STATES.accepted;
   return (
     <Drawer anchor="right" className="expandedDevice" open={open} onClose={onClose} PaperProps={{ style: { minWidth: '67vw' } }}>
       <div className="flexbox margin-top margin-bottom-small" style={{ alignItems: 'center' }}>
@@ -83,7 +84,7 @@ export const ExpandedDevice = ({
       </div>
       <Divider />
       <DeviceIdentity device={device} setSnackbar={setSnackbar} />
-      <AuthStatus device={device} decommission={onDecommissionDevice} showHelptips={showHelptips} />
+      <AuthStatus device={device} decommission={onDecommissionDevice} disableBottomBorder={!isAcceptedDevice} showHelptips={showHelptips} />
       {hasDeviceConfig && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(status) && (
         <DeviceConfiguration
           abortDeployment={abortDeployment}
@@ -98,28 +99,31 @@ export const ExpandedDevice = ({
           showHelptips={showHelptips}
         />
       )}
-      {status === DEVICE_STATES.accepted && (
+      {isAcceptedDevice && (
         <>
           <InstalledSoftware device={device} docsVersion={docsVersion} setSnackbar={setSnackbar} />
           <DeviceInventory device={device} docsVersion={docsVersion} setSnackbar={setSnackbar} />
         </>
       )}
       <Divider style={{ marginTop: theme.spacing(3), marginBottom: theme.spacing(2) }} />
-      <div className="flexbox" style={{ alignItems: 'center' }}>
-        {status === DEVICE_STATES.accepted && hasDeviceConnect && (
-          <DeviceConnection
-            device={device}
-            docsVersion={docsVersion}
-            hasFileTransfer={hasFileTransfer}
-            startTroubleshoot={launchTroubleshoot}
-            socketClosed={socketClosed}
-            style={{ marginRight: theme.spacing(2) }}
-          />
-        )}
-        <Button to={`/deployments?open=true&deviceId=${device.id}`} component={ForwardingLink} startIcon={<ReplayIcon />}>
-          Create a deployment for this device
-        </Button>
-      </div>
+      {isAcceptedDevice && (
+        <div className="flexbox" style={{ alignItems: 'center' }}>
+          {hasDeviceConnect && (
+            <DeviceConnection
+              device={device}
+              docsVersion={docsVersion}
+              hasFileTransfer={hasFileTransfer}
+              startTroubleshoot={launchTroubleshoot}
+              socketClosed={socketClosed}
+              style={{ marginRight: theme.spacing(2) }}
+            />
+          )}
+          <Button to={`/deployments?open=true&deviceId=${device.id}`} component={ForwardingLink} startIcon={<ReplayIcon />}>
+            Create a deployment for this device
+          </Button>
+        </div>
+      )}
+
       <TroubleshootDialog
         deviceId={device.id}
         hasFileTransfer={hasFileTransfer}
