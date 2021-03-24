@@ -14,7 +14,7 @@ import DeviceList from './devicelist';
 import { refreshLength as refreshDeviceLength } from './devices';
 import PreauthDialog from './preauth-dialog';
 import { getIdAttribute, getLimitMaxed } from '../../selectors';
-import BaseDevices, { DeviceCreationTime, DeviceExpansion, DeviceStatusHeading } from './base-devices';
+import BaseDevices, { DeviceCreationTime, DeviceStatusHeading } from './base-devices';
 
 const defaultHeaders = [
   {
@@ -28,12 +28,6 @@ const defaultHeaders = [
     attribute: { name: 'status', scope: 'identity' },
     render: DeviceStatusHeading,
     sortable: true
-  },
-  {
-    title: '',
-    attribute: {},
-    render: DeviceExpansion,
-    sortable: false
   }
 ];
 

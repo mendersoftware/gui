@@ -12,7 +12,7 @@ import DeviceList from './devicelist';
 import { refreshLength as refreshDeviceLength } from './devices';
 import Filters from './filters';
 import { getIdAttribute, getLimitMaxed } from '../../selectors';
-import BaseDevices, { DeviceCreationTime, DeviceExpansion, DeviceStatusHeading, RelativeDeviceTime } from './base-devices';
+import BaseDevices, { DeviceCreationTime, DeviceStatusHeading, RelativeDeviceTime } from './base-devices';
 
 const defaultHeaders = [
   {
@@ -32,12 +32,6 @@ const defaultHeaders = [
     attribute: { name: 'status', scope: 'identity' },
     render: DeviceStatusHeading,
     sortable: true
-  },
-  {
-    title: '',
-    attribute: {},
-    render: DeviceExpansion,
-    sortable: false
   }
 ];
 

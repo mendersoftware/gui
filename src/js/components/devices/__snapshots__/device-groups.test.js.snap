@@ -230,7 +230,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             class=\\"deviceList \\"
           >
             <div
-              class=\\"header deviceListRow columns-6 selectable\\"
+              class=\\"header deviceListRow columns-5 selectable\\"
             >
               <span
                 aria-disabled=\\"false\\"
@@ -326,11 +326,6 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 
               </div>
               <div
-                class=\\"columnHeader\\"
-              >
-                
-              </div>
-              <div
                 style=\\"width: 48px;\\"
               />
             </div>
@@ -338,7 +333,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
               class=\\"body\\"
             >
               <div
-                class=\\"deviceListRow columns-6 selectable deviceListItem \\"
+                class=\\"deviceListRow columns-5 selectable deviceListItem \\"
                 style=\\"align-items: center;\\"
               >
                 <span
@@ -390,27 +385,9 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 <div>
                   <div />
                 </div>
-                <div>
-                  <div
-                    class=\\"bold flexbox link-color margin-right-small uppercased\\"
-                    style=\\"align-items: center; justify-content: flex-end;\\"
-                  >
-                    view details 
-                    <svg
-                      aria-hidden=\\"true\\"
-                      class=\\"MuiSvgIcon-root\\"
-                      focusable=\\"false\\"
-                      viewBox=\\"0 0 24 24\\"
-                    >
-                      <path
-                        d=\\"M16.01 11H4v2h12.01v3L20 12l-3.99-4z\\"
-                      />
-                    </svg>
-                  </div>
-                </div>
               </div>
               <div
-                class=\\"deviceListRow columns-6 selectable deviceListItem \\"
+                class=\\"deviceListRow columns-5 selectable deviceListItem \\"
                 style=\\"align-items: center;\\"
               >
                 <span
@@ -461,24 +438,6 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 </div>
                 <div>
                   <div />
-                </div>
-                <div>
-                  <div
-                    class=\\"bold flexbox link-color margin-right-small uppercased\\"
-                    style=\\"align-items: center; justify-content: flex-end;\\"
-                  >
-                    view details 
-                    <svg
-                      aria-hidden=\\"true\\"
-                      class=\\"MuiSvgIcon-root\\"
-                      focusable=\\"false\\"
-                      viewBox=\\"0 0 24 24\\"
-                    >
-                      <path
-                        d=\\"M16.01 11H4v2h12.01v3L20 12l-3.99-4z\\"
-                      />
-                    </svg>
-                  </div>
                 </div>
               </div>
             </div>
