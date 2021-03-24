@@ -31,10 +31,10 @@ const HideHelptipsButton = ({ toggleHelptips }) => (
 
 const AuthExplainComponent = ({ docsVersion }) => (
   <div>
-    <div id="inventory-info" className="tooltip" style={{ right: '20%', bottom: -40 }} data-tip data-for="inventory-wait" data-event="click focus">
+    <div id="auth-info" className="tooltip" style={{ right: 0, top: -70 }} data-tip data-for="auth-info-tip" data-event="click focus">
       <InfoIcon />
     </div>
-    <ReactTooltip id="inventory-wait" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+    <ReactTooltip id="auth-info-tip" globalEventOff="click" place="left" type="light" effect="solid" className="react-tooltip">
       <h3>Device authorization status</h3>
       <p>
         Each device sends an authentication request containing its identity attributes and its current public key. You can accept, reject or dismiss these
