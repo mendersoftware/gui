@@ -41,27 +41,34 @@ exports[`DeviceInventory Component renders correctly 1`] = `
     style="padding-left: 32px;"
   >
     <div
-      class=" text-muted two-columns"
-      style="max-width: 50%; grid-template-columns: minmax(max-content, 150px) auto;"
+      class="two-columns-multiple "
     >
       <div
-        class="align-right"
+        class="break-all text-muted two-columns column-data compact multiple"
       >
-        <b>
-          artifact_name
-        </b>
-      </div>
-      <div>
-        myapp
+        <div
+          class="align-right"
+        >
+          <b>
+            artifact_name
+          </b>
+        </div>
+        <div>
+          myapp
+        </div>
       </div>
       <div
-        class="align-right"
+        class="break-all text-muted two-columns column-data compact multiple"
       >
-        <b>
-          device_type
-        </b>
+        <div
+          class="align-right"
+        >
+          <b>
+            device_type
+          </b>
+        </div>
+        <div />
       </div>
-      <div />
     </div>
     <a>
       show 

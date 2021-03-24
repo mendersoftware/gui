@@ -2,8 +2,7 @@
 
 exports[`ConfigurationObject Component renders correctly 1`] = `
 <div
-  class=" text-muted two-columns"
-  style="max-width: 280px; row-gap: 15px;"
+  class="break-all text-muted two-columns column-data  "
 >
   <div
     class="align-right"
