@@ -84,7 +84,7 @@ exports[`Roles Component renders correctly 1`] = `
         <td
           class="MuiTableCell-root MuiTableCell-body"
         >
-          Read only
+          Read Access
         </td>
         <td
           class="MuiTableCell-root MuiTableCell-body"
@@ -111,7 +111,7 @@ exports[`Roles Component renders correctly 1`] = `
         <td
           class="MuiTableCell-root MuiTableCell-body"
         >
-          CI
+          Releases Manager
         </td>
         <td
           class="MuiTableCell-root MuiTableCell-body"

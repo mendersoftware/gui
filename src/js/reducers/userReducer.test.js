@@ -109,11 +109,11 @@ describe('user reducer', () => {
   it('should handle UPDATED_ROLE', async () => {
     expect(
       reducer(undefined, { type: UserConstants.UPDATED_ROLE, roleId: 'RBAC_ROLE_CI', role: { description: 'new description' } }).rolesById.RBAC_ROLE_CI.title
-    ).toEqual('CI');
+    ).toEqual('Releases Manager');
     expect(
       reducer({ ...initialState }, { type: UserConstants.UPDATED_ROLE, roleId: 'RBAC_ROLE_CI', role: { description: 'new description' } }).rolesById
         .RBAC_ROLE_CI.title
-    ).toEqual('CI');
+    ).toEqual('Releases Manager');
   });
 
   it('should handle SET_GLOBAL_SETTINGS', async () => {

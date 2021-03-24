@@ -79,7 +79,7 @@ describe('UserManagement Component', () => {
     const selectButton = screen.getByText(/roles/i).parentNode.querySelector('[role=button]');
     userEvent.click(selectButton);
     const listbox = document.body.querySelector('ul[role=listbox]');
-    const listItem = within(listbox).getByText(/ci/i);
+    const listItem = within(listbox).getByText(/releases/i);
     userEvent.click(listItem);
     userEvent.click(screen.getByDisplayValue(defaultState.users.byId['a30a780b-b843-5344-80e3-0fd95a4f6fc3'].email));
     expect(screen.getByText(/the selected role may prevent/i)).toBeInTheDocument();
