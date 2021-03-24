@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Time from 'react-time';
 
-import { Button, Checkbox, Collapse, Divider, FormControlLabel, Typography } from '@material-ui/core';
+import { Button, Checkbox, FormControlLabel, Typography } from '@material-ui/core';
 import {
   Block as BlockIcon,
   CheckCircle as CheckCircleIcon,
@@ -14,7 +14,6 @@ import {
 
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { deepCompare, groupDeploymentStats, groupDeploymentDevicesStats, isEmpty } from '../../../helpers';
-import theme from '../../../themes/mender-theme';
 import ConfigurationObject from '../../common/configurationobject';
 import Confirm from '../../common/confirm';
 import LogDialog from '../../common/dialogs/log';
@@ -136,7 +135,6 @@ export const DeviceConfiguration = ({
   const [isEditingConfig, setIsEditingConfig] = useState(false);
   const [isSetAsDefault, setIsSetAsDefault] = useState(false);
   const [isUpdatingConfig, setIsUpdatingConfig] = useState(false);
-  const [open, setOpen] = useState(false);
   const [shouldUpdateEditor, setShouldUpdateEditor] = useState(false);
   const [showConfigImport, setShowConfigImport] = useState(false);
   const [showLog, setShowLog] = useState(false);
@@ -151,7 +149,6 @@ export const DeviceConfiguration = ({
     if (device.config || changedConfig) {
       setIsEditDisabled(isUpdatingConfig);
       setIsEditingConfig(isUpdatingConfig || updateFailed);
-      setOpen(isUpdatingConfig || updateFailed);
     }
   }, [isUpdatingConfig, updateFailed]);
 
@@ -252,11 +249,6 @@ export const DeviceConfiguration = ({
       });
   };
 
-  const onStartEdit = () => {
-    setOpen(true);
-    setIsEditingConfig(true);
-  };
-
   const hasDeviceConfig = !isEmpty(reported);
   let footer = hasDeviceConfig ? <ConfigUpToDateNote updated_ts={reported_ts} /> : <ConfigEmptyNote updated_ts={device.updated_ts} />;
   if (isEditingConfig) {
@@ -306,43 +298,40 @@ export const DeviceConfiguration = ({
   }, {});
 
   return (
-    <div className="clickable margin-top-small margin-bottom">
+    <div className="bordered margin-bottom-small">
       <div className="two-columns">
         <div className="flexbox" style={{ alignItems: 'baseline' }}>
           <h4 className="margin-bottom-none margin-right">Device configuration</h4>
           {!(isEditingConfig || isUpdatingConfig) && (
-            <Button onClick={onStartEdit} startIcon={<EditIcon />} size="small">
+            <Button onClick={setIsEditingConfig} startIcon={<EditIcon />} size="small">
               Edit
             </Button>
           )}
         </div>
-        {open && isEditingConfig && (
+        {!!isEditingConfig && (
           <Button onClick={setShowConfigImport} disabled={isUpdatingConfig} startIcon={<SaveAltIcon />} style={{ justifySelf: 'left' }}>
             Import configuration
           </Button>
         )}
       </div>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        {isEditingConfig ? (
-          <KeyValueEditor
-            disabled={isEditDisabled}
-            errortext={''}
-            input={changedConfig}
-            inputHelpTipsMap={helpTipsMap}
-            onInputChange={setChangedConfig}
-            reset={shouldUpdateEditor}
-            showHelptips={showHelptips}
-          />
-        ) : (
-          hasDeviceConfig && <ConfigurationObject className="margin-top" config={reported} />
-        )}
-        <div className="flexbox margin-bottom margin-top" style={{ alignItems: 'center' }}>
-          {footer}
-        </div>
-        {showLog && <LogDialog logData={updateLog} onClose={() => setShowLog(false)} type="configUpdateLog" />}
-        {showConfigImport && <ConfigImportDialog onCancel={() => setShowConfigImport(false)} onSubmit={onConfigImport} />}
-      </Collapse>
-      <Divider style={{ marginTop: theme.spacing(2) }} />
+      {isEditingConfig ? (
+        <KeyValueEditor
+          disabled={isEditDisabled}
+          errortext={''}
+          input={changedConfig}
+          inputHelpTipsMap={helpTipsMap}
+          onInputChange={setChangedConfig}
+          reset={shouldUpdateEditor}
+          showHelptips={showHelptips}
+        />
+      ) : (
+        hasDeviceConfig && <ConfigurationObject className="margin-top" config={reported} />
+      )}
+      <div className="flexbox margin-bottom margin-top" style={{ alignItems: 'center' }}>
+        {footer}
+      </div>
+      {showLog && <LogDialog logData={updateLog} onClose={() => setShowLog(false)} type="configUpdateLog" />}
+      {showConfigImport && <ConfigImportDialog onCancel={() => setShowConfigImport(false)} onSubmit={onConfigImport} />}
     </div>
   );
 };

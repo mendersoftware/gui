@@ -63,8 +63,8 @@ export class DeviceList extends React.Component {
     setSnackbar('');
     let device = devices[rowNumber];
     clearInterval(self.timer);
-    if (!device || expandedDeviceId === device.id) {
-      device = undefined;
+    if (expandedDeviceId === device.id) {
+      device = null;
     } else {
       self.timer = setInterval(() => self.getDeviceInfo(device), refreshDeviceLength);
       self.getDeviceInfo(device);
@@ -72,7 +72,7 @@ export class DeviceList extends React.Component {
     if (!onboardingComplete) {
       advanceOnboarding(onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING);
     }
-    self.setState({ expandedDeviceId: device ? device.id : undefined });
+    self.setState({ expandedDeviceId: device ? device.id : null });
   }
 
   _isSelected(index) {
@@ -104,7 +104,7 @@ export class DeviceList extends React.Component {
 
   onPageChange(page) {
     this.props.onPageChange(page);
-    this.setState({ expandedDeviceId: undefined });
+    this.setState({ expandedDeviceId: null });
   }
 
   render() {
@@ -154,10 +154,10 @@ export class DeviceList extends React.Component {
               {...self.props}
               device={device}
               itemClassName={itemClassName}
-              key={device.id}
+              key={`device-${device.id}`}
               selectable={!!onSelect}
               selected={self._isSelected(index)}
-              onClick={event => (expandable ? self._expandRow(event, index) : self._onRowSelection(index))}
+              onClick={event => (expandable ? self._expandRow(event, device) : self._onRowSelection(index))}
               onRowSelect={() => self._onRowSelection(index)}
             />
           ))}
@@ -176,7 +176,13 @@ export class DeviceList extends React.Component {
             <Loader show={true} />
           </div>
         )}
-        <ExpandedDevice {...self.props} deviceId={expandedDeviceId} open={Boolean(expandedDeviceId)} onClose={e => self._expandRow(e)} />
+        <ExpandedDevice
+          {...self.props}
+          className="expandedDevice"
+          deviceId={expandedDeviceId}
+          open={Boolean(expandedDeviceId)}
+          onClose={e => self._expandRow(e, expandedDeviceId)}
+        />
       </div>
     );
   }

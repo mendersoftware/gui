@@ -4,9 +4,9 @@ import Time from 'react-time';
 // material ui
 import { Button, Accordion, AccordionActions, AccordionDetails, AccordionSummary } from '@material-ui/core';
 
-import { DEVICE_STATES } from '../../../../constants/deviceConstants';
-import { formatTime, formatPublicKey } from '../../../../helpers';
-import Loader from '../../../common/loader';
+import { formatTime, formatPublicKey } from '../../helpers';
+import { DEVICE_STATES } from '../../constants/deviceConstants';
+import Loader from '../common/loader';
 
 const padder = <div key="padder" style={{ flexGrow: 1 }}></div>;
 
