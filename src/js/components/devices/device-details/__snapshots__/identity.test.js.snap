@@ -42,7 +42,7 @@ exports[`DeviceIdentity Component renders correctly 1`] = `
   >
     <div
       class="break-all text-muted two-columns column-data compact "
-      style="max-width: 50%; grid-template-columns: minmax(max-content, 150px) auto;"
+      style="max-width: 50%; grid-template-columns: minmax(max-content, 150px) auto; margin-bottom: 5px;"
     >
       <div
         class="align-right"
