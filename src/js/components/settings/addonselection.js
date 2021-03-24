@@ -45,9 +45,9 @@ export const AddOnSelection = ({ addons = [], updatedPlan = 'os', onChange }) =>
               {isUpgrade && (
                 <div className="flexbox column" style={noteStyle}>
                   <div className="link-color bold" style={priceStyle}>
-                    {addOn.price}
+                    {addOn[updatedPlan].price}
                   </div>
-                  <div>{addOn.deviceCount}</div>
+                  <div>{addOn[updatedPlan].deviceCount}</div>
                 </div>
               )}
               <span className="info">{addOn.description}</span>

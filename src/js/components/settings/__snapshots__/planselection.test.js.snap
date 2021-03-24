@@ -21,7 +21,7 @@ exports[`PlanSelection component renders correctly 1`] = `
         current plan
       </div>
       <h4>
-        Starter
+        Basic
          
       </h4>
       <div>

@@ -125,7 +125,7 @@ exports[`AddOnSelection component renders correctly 1`] = `
           class="link-color bold"
           style="font-size: 1rem;"
         >
-          $10/month
+          $24/month
         </div>
         <div>
           for first 50 devices

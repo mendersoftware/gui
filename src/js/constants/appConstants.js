@@ -5,7 +5,7 @@ module.exports = {
   SET_FIRST_LOGIN_AFTER_SIGNUP: 'SET_FIRST_LOGIN_AFTER_SIGNUP',
   PLANS: {
     os: {
-      name: 'Starter',
+      name: 'Basic',
       offer: true,
       price: '$29/month',
       deviceCount: 'for first 50 devices',
@@ -36,14 +36,26 @@ module.exports = {
     configure: {
       title: 'Configure',
       description: 'Expand your plan with device configuration features',
-      price: '$10/month',
-      deviceCount: 'for first 50 devices'
+      os: {
+        price: '$10/month',
+        deviceCount: 'for first 50 devices'
+      },
+      professional: {
+        price: '$60/month',
+        deviceCount: 'for first 250 devices'
+      }
     },
     troubleshoot: {
       title: 'Troubleshoot',
       description: 'Expand your plan with device troubleshooting features',
-      price: '$10/month',
-      deviceCount: 'for first 50 devices'
+      os: {
+        price: '$24/month',
+        deviceCount: 'for first 50 devices'
+      },
+      professional: {
+        price: '$67/month',
+        deviceCount: 'for first 250 devices'
+      }
     }
   }
 };

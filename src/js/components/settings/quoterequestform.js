@@ -30,13 +30,18 @@ export const QuoteRequestForm = ({ addOns, currentPlan, isTrial, onSendMessage, 
     <div className="flexbox column margin-bottom-large">
       <h3 className="margin-top-large">{title}</h3>
       {isEnterpriseUpgrade ? 'You are requesting a quote for the following subscription:' : 'You are requesting the following changes:'}
-      <p>
-        <div>
+      <div>
+        <p>
           Plan: {isUpgrade ? 'Upgrade to ' : ''}
           <b>{PLANS[updatedPlan].name}</b>
-        </div>
-        {!isTrial && !!addOns.length && <div>Add-ons: {addOns.map(addon => ADDONS[addon.name].title).join(', ')}</div>}
-      </p>
+          {!isTrial && !!addOns.length && (
+            <span>
+              <br />
+              Add-ons: {addOns.map(addon => ADDONS[addon.name].title).join(', ')}
+            </span>
+          )}
+        </p>
+      </div>
       <FormControl style={{ marginBottom: 30, marginTop: 0 }}>
         <FormHelperText>Your message</FormHelperText>
         <TextField fullWidth multiline placeholder={note} value={message} onChange={e => setMessage(e.target.value)} />

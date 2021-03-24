@@ -10,15 +10,15 @@ exports[`QuoteRequestForm component renders correctly 1`] = `
     Request a quote from our team
   </h3>
   You are requesting a quote for the following subscription:
-  <p>
-    <div>
+  <div>
+    <p>
       Plan: 
       Upgrade to 
       <b>
         Enterprise
       </b>
-    </div>
-  </p>
+    </p>
+  </div>
   <div
     class="MuiFormControl-root"
     style="margin-bottom: 30px; margin-top: 0px;"

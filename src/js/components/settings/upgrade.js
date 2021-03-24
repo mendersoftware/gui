@@ -133,11 +133,15 @@ export const Upgrade = ({
       <h2 style={{ marginTop: 15 }}>{title}</h2>
       <p>{description}</p>
       <p>
-        Learn more about the different plans at{' '}
+        Learn more about the different plans and at{' '}
         <a href="https://mender.io/plans/pricing" target="_blank" rel="noopener noreferrer">
           mender.io/plans/pricing
         </a>
-        .
+        . Prices can change at larger device counts, please see our{' '}
+        <a href="https://mender.io/plans/pricing#calculator" target="_blank" rel="noopener noreferrer">
+          price calculator
+        </a>{' '}
+        for more.
       </p>
       <PlanSelection
         currentPlan={currentPlan}
@@ -149,7 +153,7 @@ export const Upgrade = ({
       />
       {isTrial && offerValid && (
         <p className="offerBox">
-          {offerTag} – upgrade before December 31st to get a 20% discount for 6 months on Mender Starter and Mender Professional plans. The discount will be
+          {offerTag} – upgrade before December 31st to get a 20% discount for 6 months on Mender Basic and Mender Professional plans. The discount will be
           automatically applied to your account.
         </p>
       )}

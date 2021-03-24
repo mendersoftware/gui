@@ -14,7 +14,7 @@ exports[`Upgrade Component renders correctly 1`] = `
     Upgrade your plan or purchase an add-on to connect more devices, access more features and advanced support.
   </p>
   <p>
-    Learn more about the different plans at
+    Learn more about the different plans and at
      
     <a
       href="https://mender.io/plans/pricing"
@@ -23,7 +23,17 @@ exports[`Upgrade Component renders correctly 1`] = `
     >
       mender.io/plans/pricing
     </a>
-    .
+    . Prices can change at larger device counts, please see our
+     
+    <a
+      href="https://mender.io/plans/pricing#calculator"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      price calculator
+    </a>
+     
+    for more.
   </p>
   <h3
     class="margin-top"
@@ -44,7 +54,7 @@ exports[`Upgrade Component renders correctly 1`] = `
         current plan
       </div>
       <h4>
-        Starter
+        Basic
          
       </h4>
       <div>
@@ -280,7 +290,7 @@ exports[`Upgrade Component renders correctly 1`] = `
           class="link-color bold"
           style="font-size: 1rem;"
         >
-          $10/month
+          $24/month
         </div>
         <div>
           for first 50 devices
@@ -310,15 +320,15 @@ exports[`Upgrade Component renders correctly 1`] = `
       Request a change to your plan
     </h3>
     You are requesting the following changes:
-    <p>
-      <div>
+    <div>
+      <p>
         Plan: 
         
         <b>
-          Starter
+          Basic
         </b>
-      </div>
-    </p>
+      </p>
+    </div>
     <div
       class="MuiFormControl-root"
       style="margin-bottom: 30px; margin-top: 0px;"
