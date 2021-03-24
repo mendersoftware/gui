@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Time from 'react-time';
 
 // material ui
-import { Button, Accordion, AccordionActions, AccordionDetails, AccordionSummary } from '@material-ui/core';
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Chip } from '@material-ui/core';
 
 import { DEVICE_STATES } from '../../../../constants/deviceConstants';
-import { formatTime, formatPublicKey } from '../../../../helpers';
+import { formatTime } from '../../../../helpers';
 import Loader from '../../../common/loader';
 
 const padder = <div key="padder" style={{ flexGrow: 1 }}></div>;
@@ -51,7 +51,7 @@ export const getConfirmationMessage = (status, device, authset) => {
   return message;
 };
 
-const AuthsetListItem = ({ authset, confirm, device, isActive, isExpanded, limitMaxed, loading, onExpand, total }) => {
+const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loading, onExpand, total }) => {
   const [showKey, setShowKey] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState('');
   const [newStatus, setNewStatus] = useState('');
@@ -83,14 +83,7 @@ const AuthsetListItem = ({ authset, confirm, device, isActive, isExpanded, limit
     onExpand(authset.id);
   };
 
-  let key = (
-    <div>
-      {formatPublicKey(authset.pubkey)}{' '}
-      <a onClick={() => onShowKey(true)} className="margin-left-small">
-        show more
-      </a>
-    </div>
-  );
+  let key = <a onClick={onShowKey}>show more</a>;
   let content = [
     padder,
     <p className="bold expanded" key="content">
@@ -104,11 +97,7 @@ const AuthsetListItem = ({ authset, confirm, device, isActive, isExpanded, limit
       </div>,
       padder
     ];
-    key = (
-      <a onClick={() => onShowKey(false)} style={{ marginLeft: 255 }}>
-        show less
-      </a>
-    );
+    key = <a onClick={() => onShowKey(false)}>show less</a>;
   }
 
   const actionButtons = confirmMessage.length ? (
@@ -129,12 +118,20 @@ const AuthsetListItem = ({ authset, confirm, device, isActive, isExpanded, limit
     </div>
   );
 
+  let authsetStatus = <div />;
+  if (authset.status === device.status) {
+    authsetStatus = <div className="capitalized">Active</div>;
+  } else if (authset.status === DEVICE_STATES.pending) {
+    authsetStatus = <Chip size="small" label="new" color="primary" style={{ justifySelf: 'flex-start' }} />;
+  }
+
   return (
-    <Accordion square expanded={isExpanded} style={isActive ? { backgroundColor: '#e9f4f3' } : {}}>
+    <Accordion square expanded={isExpanded}>
       <AccordionSummary style={{ cursor: 'default' }}>
+        {authsetStatus}
+        <div className="capitalized">{authset.status}</div>
         {key}
         <Time value={formatTime(authset.ts)} format="YYYY-MM-DD HH:mm" />
-        <div className="capitalized">{authset.status}</div>
         {loading === authset.id ? (
           <div>
             Updating status <Loader table={true} waiting={true} show={true} style={{ height: '4px', marginLeft: '10px' }} />
