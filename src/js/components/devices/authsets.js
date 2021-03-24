@@ -177,7 +177,7 @@ export const AuthsetsDialog = ({
 const actionCreators = { deleteAuthset, getDeviceAuth, updateDeviceAuth };
 
 const mapStateToProps = (state, ownProps) => {
-  const device = state.devices.byId[ownProps.device.id] || {};
+  const device = state.devices.byId[ownProps.device.id];
   let authsets = { active: [], inactive: [] };
   authsets = device.auth_sets
     ? device.auth_sets.reduce(
