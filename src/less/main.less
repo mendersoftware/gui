@@ -1560,14 +1560,12 @@ div.waiting-inventory {
 /* device auth */
 .authsets {
   font-size: 0.875rem;
-  .header,
-  .body .MuiAccordionSummary-content {
+  .header, .body .MuiAccordionSummary-content {
     display: grid;
-    grid-template-columns: 0.5fr 1fr 3fr 2fr 2fr;
-    grid-column-gap: @defaultGutterWidth;
+    grid-template-columns: 3fr 1fr  1fr 2fr;
+    grid-column-gap: 20px;
   }
-  .header,
-  .MuiAccordion-root {
+  .header, .MuiAccordion-root {
     border-bottom: 1px solid @grey;
   }
   .MuiAccordionDetails-root {
@@ -1587,6 +1585,7 @@ div.waiting-inventory {
     max-width: 400px;
   }
 }
+
 
 /* Buttons */
 
