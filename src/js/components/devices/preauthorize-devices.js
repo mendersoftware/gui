@@ -13,7 +13,7 @@ import Loader from '../common/loader';
 import DeviceList from './devicelist';
 import { refreshLength as refreshDeviceLength } from './devices';
 import PreauthDialog from './preauth-dialog';
-import { getIdAttribute, getLimitMaxed } from '../../selectors';
+import { getIdAttribute } from '../../selectors';
 import BaseDevices, { DeviceCreationTime, DeviceStatusHeading } from './base-devices';
 
 const defaultHeaders = [
@@ -86,8 +86,9 @@ export class Preauthorize extends BaseDevices {
 
   render() {
     const self = this;
-    const { acceptedDevices, count, deviceLimit, devices, idAttribute, limitMaxed, openSettingsDialog, preauthDevice, setSnackbar } = self.props;
+    const { acceptedDevices, count, deviceLimit, devices, idAttribute, openSettingsDialog, preauthDevice, setSnackbar } = self.props;
     const { openPreauth, pageLoading } = self.state;
+    const limitMaxed = deviceLimit && deviceLimit <= acceptedDevices;
 
     const columnHeaders = [
       {
@@ -165,8 +166,7 @@ const mapStateToProps = state => {
     count: state.devices.byStatus.preauthorized.total,
     devices: state.devices.selectedDeviceList,
     deviceLimit: state.devices.limit,
-    idAttribute: getIdAttribute(state),
-    limitMaxed: getLimitMaxed(state)
+    idAttribute: getIdAttribute(state)
   };
 };
 
