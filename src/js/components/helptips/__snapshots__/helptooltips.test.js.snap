@@ -72,8 +72,8 @@ exports[`Helptooltips Components renders Connect(AuthButtonComponent) correctly 
     id="onboard-4"
     style={
       Object {
-        "left": "625px",
-        "top": "308px",
+        "left": "75%",
+        "top": 0,
       }
     }
   >
