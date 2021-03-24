@@ -1,67 +1,50 @@
-import React, { useState } from 'react';
+import React from 'react';
+
+import { List } from '@material-ui/core';
 
 import { extractSoftwareInformation } from '../../../helpers';
-import { TwoColumnData } from '../../common/configurationobject';
+import ExpandableAttribute from '../../common/expandable-attribute';
 import DeviceInventoryLoader from './deviceinventoryloader';
 import DeviceDataCollapse from './devicedatacollapse';
+
+const listItemTextClass = { secondary: 'inventory-text' };
 
 const softwareTitleMap = {
   'rootfs-image.version': { title: 'System software version', priority: 0 },
   'rootfs-image.checksum': { title: 'checksum', priority: 1 }
 };
 
-export const InstalledSoftware = ({ device, docsVersion }) => {
-  const [open, setOpen] = useState(false);
+export const InstalledSoftware = ({ device, docsVersion, setSnackbar }) => {
   const { attributes = {} } = device;
 
-  let softwareInformation = Object.entries(extractSoftwareInformation(attributes, softwareTitleMap)).map(item => ({
+  const softwareInformation = Object.entries(extractSoftwareInformation(attributes, softwareTitleMap)).map(item => ({
     title: item[0],
-    content: item[1].reduce(
-      (accu, info) => ({
-        ...accu,
-        [info.primary]: info.secondary
-      }),
-      {}
-    )
+    content: item[1].map((info, index) => (
+      <ExpandableAttribute
+        key={`${item[0]}-info-${index}`}
+        primary={info.primary}
+        secondary={info.secondary}
+        textClasses={listItemTextClass}
+        copyToClipboard={true}
+        setSnackbar={setSnackbar}
+      />
+    ))
   }));
 
-  if (!softwareInformation.length) {
-    softwareInformation = [
-      {
-        title: softwareTitleMap['rootfs-image.version'].title,
-        content: { [softwareTitleMap['rootfs-image.version'].title]: attributes.artifact_name }
-      }
-    ];
-  }
-
   const waiting = !Object.values(attributes).some(i => i);
-  const keyInfo = !waiting && softwareInformation.length ? softwareInformation[0] : [];
   return (
-    <DeviceDataCollapse
-      header={
-        waiting ? (
-          <DeviceInventoryLoader docsVersion={docsVersion} />
-        ) : (
-          !open && (
-            <div>
-              <div className="muted">{keyInfo.title}</div>
-              <TwoColumnData className="margin-bottom margin-left-small margin-top-small" config={keyInfo.content} compact />
-              {softwareInformation.length > 1 && <a onClick={setOpen}>show {softwareInformation.length - 1} more</a>}
-            </div>
-          )
-        )
-      }
-      isOpen={open}
-      onClick={setOpen}
-      title="Installed software"
-    >
-      {softwareInformation.map((layer, layerIndex) => (
-        <div key={`layer-${layerIndex}`}>
-          <div className="muted">{layer.title}</div>
-          <TwoColumnData className="margin-bottom margin-left-small margin-top-small" config={layer.content} compact />
-        </div>
-      ))}
-      {open && <a onClick={() => setOpen(false)}>show less</a>}
+    <DeviceDataCollapse title="Installed software">
+      {waiting ? (
+        <DeviceInventoryLoader docsVersion={docsVersion} />
+      ) : (
+        !!softwareInformation.length &&
+        softwareInformation.map((layer, layerIndex) => (
+          <div className="flexbox column" key={`layer-${layerIndex}`}>
+            <div className="margin-top-small">{layer.title}</div>
+            <List>{layer.content}</List>
+          </div>
+        ))
+      )}
     </DeviceDataCollapse>
   );
 };
