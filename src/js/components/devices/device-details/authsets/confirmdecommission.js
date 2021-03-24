@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { IconButton } from '@material-ui/core';
 import { Cancel as CancelIcon, CheckCircle as CheckCircleIcon } from '@material-ui/icons';
 
-import Loader from '../common/loader';
+import Loader from '../../../common/loader';
 
 export const ConfirmDecommission = ({ cancel, decommission }) => {
   const [className, setClassName] = useState('fadeIn');
