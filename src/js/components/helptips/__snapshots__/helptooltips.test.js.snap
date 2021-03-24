@@ -166,7 +166,9 @@ Array [
           mmc0
         </b>
       </div>
-      <div>
+      <div
+        onClick={[Function]}
+      >
         The default, which blinks the led on storage activity
       </div>
       <div
@@ -176,7 +178,9 @@ Array [
           on
         </b>
       </div>
-      <div>
+      <div
+        onClick={[Function]}
+      >
         Turn on the light permanently
       </div>
       <div
@@ -186,7 +190,9 @@ Array [
           off
         </b>
       </div>
-      <div>
+      <div
+        onClick={[Function]}
+      >
         Turn off the light permanently
       </div>
       <div
@@ -196,7 +202,9 @@ Array [
           heartbeat
         </b>
       </div>
-      <div>
+      <div
+        onClick={[Function]}
+      >
         Enable heartbeat blinking
       </div>
     </div>

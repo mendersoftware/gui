@@ -1,22 +1,33 @@
 import React, { Fragment } from 'react';
 
-export const TwoColumnData = ({ className = '', compact = false, config, style }) => (
-  <div className={`break-all text-muted two-columns column-data ${compact ? 'compact' : ''} ${className}`} style={style}>
-    {Object.entries(config).map(([key, value]) => (
-      <Fragment key={key}>
-        <div className="align-right">
-          <b>{key}</b>
-        </div>
-        <div>{value}</div>
-      </Fragment>
-    ))}
-  </div>
-);
+import copy from 'copy-to-clipboard';
 
-export const TwoColumnDataMultiple = ({ className = '', config, style }) => (
+export const TwoColumnData = ({ className = '', compact = false, config, setSnackbar, style }) => {
+  const onClick = ({ target: { textContent } }) => {
+    if (setSnackbar) {
+      copy(textContent);
+      setSnackbar('Value copied to clipboard');
+    }
+  };
+
+  return (
+    <div className={`break-all text-muted two-columns column-data ${compact ? 'compact' : ''} ${className}`} style={style}>
+      {Object.entries(config).map(([key, value]) => (
+        <Fragment key={key}>
+          <div className="align-right">
+            <b>{key}</b>
+          </div>
+          <div onClick={onClick}>{value}</div>
+        </Fragment>
+      ))}
+    </div>
+  );
+};
+
+export const TwoColumnDataMultiple = ({ className = '', config, style, ...props }) => (
   <div className={`two-columns-multiple ${className}`} style={{ ...style }}>
     {Object.entries(config).map(([key, value]) => (
-      <TwoColumnData className="multiple" config={{ [key]: value }} key={key} compact />
+      <TwoColumnData className="multiple" config={{ [key]: value }} key={key} compact {...props} />
     ))}
   </div>
 );
