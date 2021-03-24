@@ -146,7 +146,7 @@ export class Artifacts extends React.Component {
               color="secondary"
               onClick={() => self.onUploadClick()}
               startIcon={<CloudUpload fontSize="small" />}
-              style={{ marginTop: 30, minWidth: 164 }}
+              style={{ marginTop: 30, minHeight: 'min-content', minWidth: 164 }}
               variant="contained"
             >
               Upload
