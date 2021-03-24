@@ -16,9 +16,6 @@ context('Layout assertions', () => {
       cy.get('a').contains('Devices').click();
       cy.get('.deviceListItem').click();
       cy.get('.expandedDevice')
-        .contains(/show 1\d+ more/i)
-        .click();
-      cy.get('.expandedDevice')
         .should('contain', `${Cypress.config('demoDeviceName') || 'release-v1'}`)
         .and('contain', 'Linux')
         .and('contain', 'mac')
@@ -29,7 +26,7 @@ context('Layout assertions', () => {
       cy.get('a').contains('Devices').click();
       cy.get('.deviceListItem').click();
       // the deviceconnect connection might not be established right away
-      cy.waitUntil(() => cy.contains('Launch a new Remote Terminal'), { timeout: 10000 })
+      cy.waitUntil(() => Boolean(Cypress.$('.expandedDevice .device-connect button').length), { timeout: 10000 })
         .get('.expandedDevice')
         .contains('Launch a new Remote Terminal')
         .click()

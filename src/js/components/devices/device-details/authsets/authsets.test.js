@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { render } from '@testing-library/react';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import Authsets from './authsets';
+import Authsets from './index';
 import { defaultState, undefineds } from '../../../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);

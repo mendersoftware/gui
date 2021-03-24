@@ -3,6 +3,11 @@
 exports[`AuthsetList Component renders correctly 1`] = `
 <div
   className="MuiPaper-root MuiAccordion-root Mui-expanded MuiPaper-elevation1"
+  style={
+    Object {
+      "backgroundColor": "#e9f4f3",
+    }
+  }
 >
   <div
     aria-disabled={false}
@@ -31,27 +36,30 @@ exports[`AuthsetList Component renders correctly 1`] = `
     <div
       className="MuiAccordionSummary-content Mui-expanded"
     >
-      <div
-        className="capitalized"
-      >
-        Active
+      <div>
+        
+MIIBojANBgkqhk ... IStkZAgMBAAE=
+
+
+         
+        <a
+          className="margin-left-small"
+          onClick={[Function]}
+        >
+          show more
+        </a>
       </div>
-      <div
-        className="capitalized"
-      >
-        accepted
-      </div>
-      <a
-        onClick={[Function]}
-      >
-        show more
-      </a>
       <time
         dateTime="2020-09-21T12:42:34+00:00"
         title={null}
       >
         2020-09-21 12:42
       </time>
+      <div
+        className="capitalized"
+      >
+        accepted
+      </div>
       <div
         className="action-buttons flexbox"
       >
