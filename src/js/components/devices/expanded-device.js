@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { Drawer } from '@material-ui/core';
 
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../actions/deploymentActions';
@@ -35,6 +36,8 @@ export const ExpandedDevice = ({
   hasFileTransfer,
   highlightHelp,
   limitMaxed,
+  onClose,
+  open,
   refreshDevices,
   saveGlobalSettings,
   setDeviceConfig,
@@ -69,7 +72,7 @@ export const ExpandedDevice = ({
 
   const waiting = !(attributes && Object.values(attributes).some(i => i));
   return (
-    <div className={className}>
+    <Drawer anchor="right" className={className} open={open} onClose={onClose}>
       <div key="deviceinfo">
         <div className="device-identity bordered">
           <DeviceIdentity device={device} setSnackbar={setSnackbar} />
@@ -129,7 +132,7 @@ export const ExpandedDevice = ({
         setSocketClosed={setSocketClosed}
         type={troubleshootType}
       />
-    </div>
+    </Drawer>
   );
 };
 
@@ -146,9 +149,12 @@ const actionCreators = {
 
 const mapStateToProps = (state, ownProps) => {
   const { hasDeviceConfig, hasDeviceConnect } = getTenantCapabilities(state);
-  const { deployment_id: configDeploymentId } = ownProps.device.config || {};
+  const device = state.devices.byId[ownProps.deviceId] || {};
+  const { config = {} } = device;
+  const { deployment_id: configDeploymentId } = config;
   return {
     defaultConfig: state.users.globalSettings.defaultDeviceConfig,
+    device,
     deviceConfigDeployment: state.deployments.byId[configDeploymentId] || {},
     docsVersion: getDocsVersion(state),
     hasDeviceConnect,
