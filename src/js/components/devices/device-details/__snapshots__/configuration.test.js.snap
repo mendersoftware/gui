@@ -13,10 +13,10 @@ exports[`Configuration Component renders correctly 1`] = `
     >
       <div
         class="flexbox"
-        style="align-items: baseline;"
+        style="align-items: center;"
       >
         <h4
-          class="margin-bottom-none margin-right"
+          class="margin-right"
         >
           Device configuration
         </h4>
