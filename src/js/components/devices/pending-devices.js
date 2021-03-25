@@ -17,13 +17,13 @@ import { getDevicesByStatus, selectGroup, setDeviceFilters, updateDevicesAuth } 
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_STATES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getIdAttribute, getOnboardingState } from '../../selectors';
+import { getIdAttribute, getLimitMaxed, getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
 import DeviceList from './devicelist';
 import { refreshLength as refreshDeviceLength } from './devices';
 import Filters from './filters';
-import BaseDevices, { DeviceCreationTime, DeviceStatusHeading, RelativeDeviceTime } from './base-devices';
+import BaseDevices, { DeviceCreationTime, DeviceExpansion, DeviceStatusHeading, RelativeDeviceTime } from './base-devices';
 
 const defaultHeaders = [
   {
@@ -43,6 +43,12 @@ const defaultHeaders = [
     attribute: { name: 'status', scope: 'identity' },
     render: DeviceStatusHeading,
     sortable: true
+  },
+  {
+    title: '',
+    attribute: {},
+    render: DeviceExpansion,
+    sortable: false
   }
 ];
 
@@ -139,12 +145,12 @@ export class Pending extends BaseDevices {
       filters,
       highlightHelp,
       idAttribute,
+      limitMaxed,
       onboardingState,
       openSettingsDialog,
       showHelptips
     } = self.props;
     const { authLoading, pageLoading, selectedRows, showActions, showFilters } = self.state;
-    const limitMaxed = deviceLimit ? deviceLimit <= acceptedDevices : false;
     const limitNear = deviceLimit ? deviceLimit < acceptedDevices + devices.length : false;
     const selectedOverLimit = deviceLimit ? deviceLimit < acceptedDevices + selectedRows.length : false;
 
@@ -305,6 +311,7 @@ const mapStateToProps = state => {
     count: state.devices.byStatus.pending.total,
     devices: state.devices.selectedDeviceList.slice(0, DEVICE_LIST_MAXIMUM_LENGTH),
     deviceLimit: state.devices.limit,
+    limitMaxed: getLimitMaxed(state),
     filters: state.devices.filters || [],
     highlightHelp: !state.devices.byStatus.accepted.total,
     idAttribute: getIdAttribute(state),

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 
-import { Help as HelpIcon } from '@material-ui/icons';
+import { Help as HelpIcon, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import { toggleHelptips } from '../../actions/userActions';
 import { getDocsVersion } from '../../selectors';
@@ -29,6 +29,29 @@ const HideHelptipsButton = ({ toggleHelptips }) => (
   </p>
 );
 
+const AuthExplainComponent = ({ docsVersion }) => (
+  <div>
+    <div id="auth-info" className="tooltip" style={{ right: 0, top: -70 }} data-tip data-for="auth-info-tip" data-event="click focus">
+      <InfoIcon />
+    </div>
+    <ReactTooltip id="auth-info-tip" globalEventOff="click" place="left" type="light" effect="solid" className="react-tooltip">
+      <h3>Device authorization status</h3>
+      <p>
+        Each device sends an authentication request containing its identity attributes and its current public key. You can accept, reject or dismiss these
+        requests to determine the authorization status of the device.
+      </p>
+      <p>
+        In cases such as key rotation, each device may have more than one identity/key combination listed. See the documentation for more on{' '}
+        <a href={`https://docs.mender.io/${docsVersion}overview/device-authentication`} target="_blank" rel="noopener noreferrer">
+          Device authentication
+        </a>
+        .
+      </p>
+    </ReactTooltip>
+  </div>
+);
+export const AuthExplainButton = connect(mapStateToProps, actionCreators)(AuthExplainComponent);
+
 const AuthButtonComponent = ({ highlightHelp, toggleHelptips }) => (
   <div>
     <div
@@ -37,7 +60,7 @@ const AuthButtonComponent = ({ highlightHelp, toggleHelptips }) => (
       data-tip
       data-for="auth-button-tip"
       data-event="click focus"
-      style={{ left: '625px', top: '308px' }}
+      style={{ left: '75%', top: 0 }}
     >
       <HelpIcon />
     </div>

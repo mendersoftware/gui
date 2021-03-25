@@ -1,8 +1,8 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import AuthsetListItem, { getConfirmationMessage } from './authsetlistitem';
-import { undefineds } from '../../../../tests/mockData';
-import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { undefineds } from '../../../../../../tests/mockData';
+import { DEVICE_STATES } from '../../../../constants/deviceConstants';
 
 describe('AuthsetList Component', () => {
   it('renders correctly', async () => {
