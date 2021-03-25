@@ -2,7 +2,7 @@
 
 exports[`DeviceListItem Component renders correctly 1`] = `
 <div
-  className=" deviceListItem "
+  className=" deviceListItem clickable"
   style={
     Object {
       "alignItems": "center",

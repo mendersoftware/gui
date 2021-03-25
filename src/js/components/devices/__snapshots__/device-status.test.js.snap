@@ -12,7 +12,7 @@ exports[`DeviceStatus Component renders correctly 1`] = `
   onMouseOver={[Function]}
   onTouchEnd={[Function]}
   onTouchStart={[Function]}
-  title="This device has a new auth request. This can happen if the device's public key changes. Expand the row to see more details"
+  title="This device has a new auth request. This can happen if the device's public key changes. Click on the row to see more details"
 >
   <div
     className="MuiBox-root MuiBox-root-1 flexbox centered notificationCounter"

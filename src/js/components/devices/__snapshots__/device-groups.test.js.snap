@@ -338,7 +338,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
               class=\\"body\\"
             >
               <div
-                class=\\"deviceListRow columns-6 selectable deviceListItem \\"
+                class=\\"deviceListRow columns-6 selectable deviceListItem clickable\\"
                 style=\\"align-items: center;\\"
               >
                 <span
@@ -410,7 +410,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 </div>
               </div>
               <div
-                class=\\"deviceListRow columns-6 selectable deviceListItem \\"
+                class=\\"deviceListRow columns-6 selectable deviceListItem clickable\\"
                 style=\\"align-items: center;\\"
               >
                 <span
