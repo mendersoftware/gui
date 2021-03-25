@@ -2,7 +2,7 @@
 
 exports[`AuthsetList Component renders correctly 1`] = `
 <div
-  className="MuiPaper-root MuiAccordion-root Mui-expanded MuiPaper-elevation1"
+  className="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 Mui-expanded WithStyles(ForwardRef(Accordion))-expanded-2 MuiPaper-elevation1"
 >
   <div
     aria-disabled={false}
@@ -44,7 +44,7 @@ exports[`AuthsetList Component renders correctly 1`] = `
       <a
         onClick={[Function]}
       >
-        show more
+        show key
       </a>
       <time
         dateTime="2020-09-21T12:42:34+00:00"
@@ -101,7 +101,7 @@ exports[`AuthsetList Component renders correctly 1`] = `
             <p
               className="bold expanded"
             >
-               Are you sure you want to  this?
+               Are you sure you want to continue?
             </p>
           </div>
           <div
@@ -153,9 +153,9 @@ exports[`AuthsetList Component renders correctly 1`] = `
                 className="MuiButton-label"
               >
                 <span
-                  className="capitalized"
+                  className="uppercase"
                 >
-                  
+                  confirm
                 </span>
               </span>
             </button>

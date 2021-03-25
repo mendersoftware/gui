@@ -540,7 +540,7 @@ ul.link-list {
   grid-template-columns: 1fr 1fr;
   column-gap: 2 * @defaultGutterWidth;
   &.column-data {
-    max-width: 19 * @defaultGutterWidth;
+    max-width: 25 * @defaultGutterWidth;
     row-gap: @defaultGutterWidth;
     &.compact {
       grid-template-columns: max-content 1fr;
@@ -548,7 +548,12 @@ ul.link-list {
     }
     &.multiple {
       grid-template-columns: 1fr 1fr;
-      max-width: 23 * @defaultGutterWidth;
+      max-width: 25 * @defaultGutterWidth;
+    }
+    .key > b {
+      padding: 2px 14px;
+      background-color: #f7f7f7;
+      border-radius: 10px;
     }
   }
 }
@@ -557,6 +562,7 @@ ul.link-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(max-content, 25vw));
   column-gap: 2 * @defaultGutterWidth;
+  row-gap: 5px;
 }
 
 .overflow-hidden {
@@ -1590,11 +1596,10 @@ div.waiting-inventory {
 
 /* device auth */
 .authsets {
-  font-size: 0.875rem;
   .header,
   .body .MuiAccordionSummary-content {
     display: grid;
-    grid-template-columns: 0.5fr 1fr 3fr 2fr 2fr;
+    grid-template-columns: 0.5fr 1fr 2fr 2fr 2fr;
     grid-column-gap: @defaultGutterWidth;
   }
   .header,

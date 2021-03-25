@@ -37,8 +37,10 @@ export const Authsets = ({ decommission, deleteAuthset, device, getDeviceAuth, l
   };
 
   return (
-    <div style={{ minWidth: 900, marginBottom: theme.spacing(2) }}>
-      {status === DEVICE_STATES.pending ? `Authorization ${pluralize('request', auth_sets.length)}` : 'Authorization sets'}
+    <div style={{ minWidth: 700, marginBottom: theme.spacing(2), backgroundColor: '#f7f7f7', border: '1px solid rgb(224, 224, 224)', padding: '16px' }}>
+      <div className="margin-bottom-small">
+        {status === DEVICE_STATES.pending ? `Authorization ${pluralize('request', auth_sets.length)}` : 'Authorization sets'}
+      </div>
       <Authsetlist
         limitMaxed={limitMaxed}
         total={auth_sets.length}

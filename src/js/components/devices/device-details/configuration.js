@@ -312,8 +312,8 @@ export const DeviceConfiguration = ({
       onClick={setOpen}
       title={
         <div className="two-columns">
-          <div className="flexbox" style={{ alignItems: 'baseline' }}>
-            <h4 className="margin-bottom-none margin-right">Device configuration</h4>
+          <div className="flexbox" style={{ alignItems: 'center' }}>
+            <h4 className="margin-right">Device configuration</h4>
             {!(isEditingConfig || isUpdatingConfig) && (
               <Button onClick={onStartEdit} startIcon={<EditIcon />} size="small">
                 Edit

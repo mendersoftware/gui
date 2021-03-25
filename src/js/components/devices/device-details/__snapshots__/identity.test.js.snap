@@ -2,7 +2,7 @@
 
 exports[`DeviceIdentity Component renders correctly 1`] = `
 <div
-  class="margin-top-small margin-bottom "
+  class="margin-bottom "
 >
   <div
     class="clickable flexbox space-between"
@@ -37,15 +37,13 @@ exports[`DeviceIdentity Component renders correctly 1`] = `
       />
     </button>
   </div>
-  <div
-    style="padding-left: 32px;"
-  >
+  <div>
     <div
-      class="break-all text-muted two-columns column-data compact "
-      style="max-width: 50%; grid-template-columns: minmax(max-content, 150px) auto; margin-bottom: 5px;"
+      class="break-all two-columns column-data compact "
+      style="max-width: 80%; grid-template-columns: minmax(max-content, 150px) auto; margin-bottom: 5px;"
     >
       <div
-        class="align-right"
+        class="align-right key text-muted"
       >
         <b>
           ID
@@ -68,7 +66,7 @@ exports[`DeviceIdentity Component renders correctly 1`] = `
         </svg>
       </div>
       <div
-        class="align-right"
+        class="align-right key text-muted"
       >
         <b>
           mac
@@ -99,7 +97,7 @@ exports[`DeviceIdentity Component renders correctly 1`] = `
   </div>
   <hr
     class="MuiDivider-root"
-    style="margin-top: 16px;"
+    style="margin-top: 24px;"
   />
 </div>
 `;
