@@ -106,7 +106,7 @@ describe('getDebConfigurationCode function', () => {
   });
   it('should return a sane result', async () => {
     expect(code).toMatch(
-      `wget -q -O- https://get.mender.io/ | sudo bash -s && \\
+      `wget -q -O- https://get.mender.io/ | sudo bash -s -- --demo && \\
 sudo bash -c 'DEVICE_TYPE="raspberrypi3" && \\
 TENANT_TOKEN="token" && \\
 echo "Running mender setup for localhost" && \\
@@ -150,7 +150,7 @@ echo "Done!"'
     it('should contain sane information for hosted calls', async () => {
       code = getDebConfigurationCode(undefined, true, false, 'token', 'raspberrypi3');
       expect(code).toMatch(
-        `wget -q -O- https://get.mender.io/ | sudo bash -s && \\
+        `wget -q -O- https://get.mender.io/ | sudo bash -s -- --demo && \\
 sudo bash -c 'DEVICE_TYPE="raspberrypi3" && \\
 TENANT_TOKEN="token" && \\
 echo "Running mender setup for hosted.mender.io" && \\
@@ -193,7 +193,7 @@ echo "Done!"'
     it('should contain sane information for staging calls', async () => {
       code = getDebConfigurationCode(undefined, true, false, 'token', 'raspberrypi3');
       expect(code).toMatch(
-        `wget -q -O- https://get.mender.io/ | sudo bash -s && \\
+        `wget -q -O- https://get.mender.io/ | sudo bash -s -- --demo && \\
 sudo bash -c 'DEVICE_TYPE="raspberrypi3" && \\
 TENANT_TOKEN="token" && \\
 echo "Running mender setup for staging.hosted.mender.io" && \\

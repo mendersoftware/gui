@@ -1993,7 +1993,7 @@ exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders Install
           <span
             style="white-space: pre-wrap; word-break: break-word;"
           >
-            wget -q -O- https://get.mender.io/ | sudo bash -s && \\
+            wget -q -O- https://get.mender.io/ | sudo bash -s -- --demo && \\
 sudo bash -c 'DEVICE_TYPE="raspberrypi7" && \\
 TENANT_TOKEN="testtoken" && \\
 echo "Running mender setup for localhost" && \\

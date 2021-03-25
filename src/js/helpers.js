@@ -494,7 +494,7 @@ ${enterpriseSettings}`;
   }
   const debInstallationCode = `wget -q -O- https://get.mender.io/${
     isPreRelease && window.location.hostname.includes('staging') ? 'staging' : ''
-  } | sudo bash -s${isPreRelease && window.location.hostname.includes('staging') ? ' -- --demo' : ''}`;
+  } | sudo bash -s -- --demo`;
   let codeToCopy = `${debInstallationCode} && \\
 sudo bash -c 'DEVICE_TYPE="${deviceType}" && \\${
     token
