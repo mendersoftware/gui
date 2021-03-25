@@ -5,7 +5,7 @@ import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { TwoColumnData } from '../../common/configurationobject';
 import DeviceDataCollapse from './devicedatacollapse';
 
-const style = { maxWidth: '50%', gridTemplateColumns: 'minmax(max-content, 150px) auto' };
+const style = { maxWidth: '80%', gridTemplateColumns: 'minmax(max-content, 150px) auto' };
 
 export const DeviceIdentity = ({ device, setSnackbar }) => {
   const [open, setOpen] = useState(false);

@@ -2,7 +2,7 @@
 
 exports[`AuthStatus Component renders correctly 1`] = `
 <div
-  class="margin-top-small margin-bottom "
+  class="margin-bottom "
 >
   <div
     class="clickable flexbox space-between"
@@ -12,9 +12,7 @@ exports[`AuthStatus Component renders correctly 1`] = `
       class="flexbox"
       style="align-items: center;"
     >
-      <h4
-        class="margin-bottom-small"
-      >
+      <h4>
         Authentication status
       </h4>
       <div
@@ -72,16 +70,14 @@ exports[`AuthStatus Component renders correctly 1`] = `
       />
     </button>
   </div>
-  <div
-    style="padding-left: 32px;"
-  >
+  <div>
     <a>
       show more
     </a>
   </div>
   <hr
     class="MuiDivider-root"
-    style="margin-top: 16px;"
+    style="margin-top: 24px;"
   />
 </div>
 `;

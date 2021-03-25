@@ -42,7 +42,7 @@ export const AuthStatus = ({ device, decommission, disableBottomBorder, showHelp
       onClick={setOpen}
       title={
         <div className="flexbox" style={{ alignItems: 'center' }}>
-          <h4 className="margin-bottom-small">Authentication status</h4>
+          <h4>Authentication status</h4>
           <div className="flexbox margin-left margin-right" style={{ alignItems: 'center' }}>
             <div className="capitalized">{status}</div>
             {statusIcon}

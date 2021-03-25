@@ -2,7 +2,7 @@
 
 exports[`DeviceInventory Component renders correctly 1`] = `
 <div
-  class="margin-top-small margin-bottom "
+  class="margin-bottom "
 >
   <div
     class="clickable flexbox space-between"
@@ -37,18 +37,16 @@ exports[`DeviceInventory Component renders correctly 1`] = `
       />
     </button>
   </div>
-  <div
-    style="padding-left: 32px;"
-  >
+  <div>
     <div
       class="two-columns-multiple "
       style="margin-bottom: 5px;"
     >
       <div
-        class="break-all text-muted two-columns column-data compact multiple"
+        class="break-all two-columns column-data compact multiple"
       >
         <div
-          class="align-right"
+          class="align-right key text-muted"
         >
           <b>
             artifact_name
@@ -72,10 +70,10 @@ exports[`DeviceInventory Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="break-all text-muted two-columns column-data compact multiple"
+        class="break-all two-columns column-data compact multiple"
       >
         <div
-          class="align-right"
+          class="align-right key text-muted"
         >
           <b>
             device_type
