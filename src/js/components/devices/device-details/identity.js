@@ -7,7 +7,7 @@ import DeviceDataCollapse from './devicedatacollapse';
 
 const style = { maxWidth: '50%', gridTemplateColumns: 'minmax(max-content, 150px) auto' };
 
-export const DeviceIdentity = ({ device }) => {
+export const DeviceIdentity = ({ device, setSnackbar }) => {
   const [open, setOpen] = useState(false);
   const { attributes = {}, created_ts, id, identity_data = {}, status = DEVICE_STATES.accepted } = device;
 
@@ -31,7 +31,7 @@ export const DeviceIdentity = ({ device }) => {
     <DeviceDataCollapse
       header={
         <>
-          {!open && <TwoColumnData config={keyContent} compact style={style} />}
+          {!open && <TwoColumnData config={keyContent} compact setSnackbar={setSnackbar} style={style} />}
           {!(open || !Object.keys(extendedContent).length) && (
             <a onClick={setOpen}>show {Object.keys(extendedContent).length - Object.keys(keyContent).length} more</a>
           )}
@@ -41,7 +41,7 @@ export const DeviceIdentity = ({ device }) => {
       onClick={setOpen}
       title="Device identity"
     >
-      <TwoColumnData config={extendedContent} compact style={style} />
+      <TwoColumnData config={extendedContent} compact setSnackbar={setSnackbar} style={style} />
       {open && <a onClick={() => setOpen(false)}>show less</a>}
     </DeviceDataCollapse>
   );

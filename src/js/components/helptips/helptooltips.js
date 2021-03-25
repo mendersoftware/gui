@@ -5,11 +5,12 @@ import ReactTooltip from 'react-tooltip';
 
 import { Help as HelpIcon, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
+import { setSnackbar } from '../../actions/appActions';
 import { toggleHelptips } from '../../actions/userActions';
 import { getDocsVersion } from '../../selectors';
 import ConfigurationObject from '../common/configurationobject';
 
-const actionCreators = { toggleHelptips };
+const actionCreators = { setSnackbar, toggleHelptips };
 const mapStateToProps = (state, ownProps) => {
   let device = {};
   if (ownProps.deviceId) {
@@ -203,7 +204,7 @@ const ConfigureTimezoneTipComponent = ({ anchor, device, toggleHelptips }) => {
 
 export const ConfigureTimezoneTip = connect(mapStateToProps, actionCreators)(ConfigureTimezoneTipComponent);
 
-const ConfigureRaspberryLedComponent = ({ anchor, device, toggleHelptips }) => {
+const ConfigureRaspberryLedComponent = ({ anchor, device, setSnackbar, toggleHelptips }) => {
   if (!['raspberry', 'rpi'].some(type => device.attributes?.device_type?.startsWith(type))) {
     return null;
   }
@@ -225,6 +226,7 @@ const ConfigureRaspberryLedComponent = ({ anchor, device, toggleHelptips }) => {
               heartbeat: 'Enable heartbeat blinking'
             }}
             compact
+            setSnackbar={setSnackbar}
           />
           There are other possible values, but we won&apos;t advertise them here. See
           <a href="http://www.d3noob.org/2020/07/controlling-activity-led-on-raspberry-pi.html" target="_blank" rel="noopener noreferrer">

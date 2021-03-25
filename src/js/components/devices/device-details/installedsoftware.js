@@ -10,7 +10,7 @@ const softwareTitleMap = {
   'rootfs-image.checksum': { title: 'checksum', priority: 1 }
 };
 
-export const InstalledSoftware = ({ device, docsVersion }) => {
+export const InstalledSoftware = ({ device, docsVersion, setSnackbar }) => {
   const [open, setOpen] = useState(false);
   const { attributes = {} } = device;
 
@@ -45,7 +45,7 @@ export const InstalledSoftware = ({ device, docsVersion }) => {
           !open && (
             <div>
               <div className="muted">{keyInfo.title}</div>
-              <TwoColumnData className="margin-bottom margin-left-small margin-top-small" config={keyInfo.content} compact />
+              <TwoColumnData className="margin-bottom margin-left-small margin-top-small" config={keyInfo.content} compact setSnackbar={setSnackbar} />
               {softwareInformation.length > 1 && <a onClick={setOpen}>show {softwareInformation.length - 1} more</a>}
             </div>
           )
@@ -58,7 +58,7 @@ export const InstalledSoftware = ({ device, docsVersion }) => {
       {softwareInformation.map((layer, layerIndex) => (
         <div key={`layer-${layerIndex}`}>
           <div className="muted">{layer.title}</div>
-          <TwoColumnData className="margin-bottom margin-left-small margin-top-small" config={layer.content} compact />
+          <TwoColumnData className="margin-bottom margin-left-small margin-top-small" config={layer.content} compact setSnackbar={setSnackbar} />
         </div>
       ))}
       {open && <a onClick={() => setOpen(false)}>show less</a>}

@@ -5,7 +5,7 @@ import { TwoColumnDataMultiple } from '../../common/configurationobject';
 import DeviceInventoryLoader from './deviceinventoryloader';
 import DeviceDataCollapse from './devicedatacollapse';
 
-export const DeviceInventory = ({ device, docsVersion }) => {
+export const DeviceInventory = ({ device, docsVersion, setSnackbar }) => {
   const [open, setOpen] = useState(false);
   const { attributes = {} } = device;
 
@@ -40,7 +40,7 @@ export const DeviceInventory = ({ device, docsVersion }) => {
         ) : (
           !open && (
             <>
-              <TwoColumnDataMultiple config={keyContent} />
+              <TwoColumnDataMultiple config={keyContent} setSnackbar={setSnackbar} />
               {attributeCount - Object.keys(keyContent).length > 0 && <a onClick={setOpen}>show {attributeCount - Object.keys(keyContent).length} more</a>}
             </>
           )
@@ -50,7 +50,7 @@ export const DeviceInventory = ({ device, docsVersion }) => {
       onClick={setOpen}
       title="Device inventory"
     >
-      <TwoColumnDataMultiple config={deviceInventory} />
+      <TwoColumnDataMultiple config={deviceInventory} setSnackbar={setSnackbar} />
       <a onClick={() => setOpen(false)}>show less</a>
     </DeviceDataCollapse>
   );
