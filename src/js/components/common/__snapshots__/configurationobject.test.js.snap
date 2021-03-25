@@ -11,7 +11,9 @@ exports[`ConfigurationObject Component renders correctly 1`] = `
       uiPasswordRequired
     </b>
   </div>
-  <div>
+  <div
+    class="flexbox "
+  >
     true
   </div>
   <div
@@ -21,7 +23,9 @@ exports[`ConfigurationObject Component renders correctly 1`] = `
       foo
     </b>
   </div>
-  <div>
+  <div
+    class="flexbox "
+  >
     bar
   </div>
   <div
@@ -31,7 +35,9 @@ exports[`ConfigurationObject Component renders correctly 1`] = `
       timezone
     </b>
   </div>
-  <div>
+  <div
+    class="flexbox "
+  >
     GMT+2
   </div>
 </div>

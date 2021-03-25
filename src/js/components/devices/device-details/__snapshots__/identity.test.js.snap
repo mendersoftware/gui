@@ -42,7 +42,7 @@ exports[`DeviceIdentity Component renders correctly 1`] = `
   >
     <div
       class="break-all text-muted two-columns column-data compact "
-      style="max-width: 50%; grid-template-columns: minmax(max-content, 150px) auto;"
+      style="max-width: 50%; grid-template-columns: minmax(max-content, 150px) auto; margin-bottom: 5px;"
     >
       <div
         class="align-right"
@@ -51,8 +51,21 @@ exports[`DeviceIdentity Component renders correctly 1`] = `
           ID
         </b>
       </div>
-      <div>
+      <div
+        class="flexbox clickable"
+      >
         a1
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root margin-left-small fadeOut MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall"
+          focusable="false"
+          title="Copy to clipboard"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+          />
+        </svg>
       </div>
       <div
         class="align-right"
@@ -61,8 +74,21 @@ exports[`DeviceIdentity Component renders correctly 1`] = `
           mac
         </b>
       </div>
-      <div>
+      <div
+        class="flexbox clickable"
+      >
         dc:a6:32:12:ad:bf
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root margin-left-small fadeOut MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall"
+          focusable="false"
+          title="Copy to clipboard"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+          />
+        </svg>
       </div>
     </div>
     <a>

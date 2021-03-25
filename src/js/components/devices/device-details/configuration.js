@@ -125,6 +125,7 @@ export const DeviceConfiguration = ({
   getSingleDeployment,
   saveGlobalSettings,
   setDeviceConfig,
+  setSnackbar,
   showHelptips
 }) => {
   const { config = {}, status } = device;
@@ -338,7 +339,7 @@ export const DeviceConfiguration = ({
           showHelptips={showHelptips}
         />
       ) : (
-        hasDeviceConfig && <ConfigurationObject className="margin-top" config={reported} />
+        hasDeviceConfig && <ConfigurationObject className="margin-top" config={reported} setSnackbar={setSnackbar} />
       )}
       <div className="flexbox margin-bottom margin-top" style={{ alignItems: 'center' }}>
         {footer}

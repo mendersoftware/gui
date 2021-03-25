@@ -417,7 +417,7 @@ exports[`Devices Component renders correctly 1`] = `
               class=\\"body\\"
             >
               <div
-                class=\\"deviceListRow columns-6 selectable deviceListItem \\"
+                class=\\"deviceListRow columns-6 selectable deviceListItem clickable\\"
                 style=\\"align-items: center;\\"
               >
                 <span
@@ -452,7 +452,7 @@ exports[`Devices Component renders correctly 1`] = `
                   a1
                 </div>
                 <div>
-                  -
+                  raspberrypi4
                 </div>
                 <div>
                   -
@@ -489,7 +489,7 @@ exports[`Devices Component renders correctly 1`] = `
                 </div>
               </div>
               <div
-                class=\\"deviceListRow columns-6 selectable deviceListItem \\"
+                class=\\"deviceListRow columns-6 selectable deviceListItem clickable\\"
                 style=\\"align-items: center;\\"
               >
                 <span

@@ -14,7 +14,7 @@ exports[`Artifacts Component renders correctly 1`] = `
       >
         <div
           class="flexbox"
-          style="align-items: center;"
+          style="align-items: center; min-height: min-content;"
         >
           <h3>
             Releases
@@ -39,6 +39,7 @@ exports[`Artifacts Component renders correctly 1`] = `
         <div
           class="MuiButtonGroup-root muted"
           role="group"
+          style="min-height: min-content;"
         >
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlined MuiButton-outlinedSizeSmall MuiButton-sizeSmall"
@@ -147,7 +148,7 @@ exports[`Artifacts Component renders correctly 1`] = `
       </div>
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
-        style="margin-top: 30px; min-width: 164px;"
+        style="margin-top: 30px; min-height: min-content; min-width: 164px;"
         tabindex="0"
         type="button"
       >

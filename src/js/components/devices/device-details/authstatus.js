@@ -55,7 +55,7 @@ export const AuthStatus = ({ device, decommission, disableBottomBorder, showHelp
       }
     >
       <Authsets decommission={decommission} device={device} showHelptips={showHelptips} />
-      {open && <a onClick={() => setOpen(false)}>show less</a>}
+      <a onClick={() => setOpen(false)}>show less</a>
     </DeviceDataCollapse>
   );
 };

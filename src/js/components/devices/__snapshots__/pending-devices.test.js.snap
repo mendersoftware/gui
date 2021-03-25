@@ -185,7 +185,7 @@ exports[`PendingDevices Component renders correctly 1`] = `
         class=\\"body\\"
       >
         <div
-          class=\\"deviceListRow columns-5 selectable deviceListItem \\"
+          class=\\"deviceListRow columns-5 selectable deviceListItem clickable\\"
           style=\\"align-items: center;\\"
         >
           <span

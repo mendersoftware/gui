@@ -1,22 +1,55 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 
-export const TwoColumnData = ({ className = '', compact = false, config, style }) => (
-  <div className={`break-all text-muted two-columns column-data ${compact ? 'compact' : ''} ${className}`} style={style}>
-    {Object.entries(config).map(([key, value]) => (
-      <Fragment key={key}>
-        <div className="align-right">
-          <b>{key}</b>
-        </div>
-        <div>{value}</div>
-      </Fragment>
-    ))}
-  </div>
-);
+import copy from 'copy-to-clipboard';
 
-export const TwoColumnDataMultiple = ({ className = '', config, style }) => (
+// material ui
+import { Tooltip } from '@material-ui/core';
+import { FileCopyOutlined as CopyToClipboardIcon } from '@material-ui/icons';
+
+const ValueColumn = ({ value, setSnackbar }) => {
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const onClick = ({ target: { textContent } }) => {
+    if (setSnackbar) {
+      copy(textContent);
+      setSnackbar('Value copied to clipboard');
+    }
+  };
+  return (
+    <div
+      className={`flexbox ${setSnackbar ? 'clickable' : ''}`}
+      onClick={onClick}
+      onMouseEnter={() => setTooltipVisible(true)}
+      onMouseLeave={() => setTooltipVisible(false)}
+    >
+      {value}
+      {setSnackbar && (
+        <Tooltip title={'Copy to clipboard'} placement="top" open={tooltipVisible}>
+          <CopyToClipboardIcon color="primary" className={`margin-left-small ${tooltipVisible ? 'fadeIn' : 'fadeOut'}`} fontSize="small"></CopyToClipboardIcon>
+        </Tooltip>
+      )}
+    </div>
+  );
+};
+
+export const TwoColumnData = ({ className = '', compact = false, config, setSnackbar, style }) => {
+  return (
+    <div className={`break-all text-muted two-columns column-data ${compact ? 'compact' : ''} ${className}`} style={style}>
+      {Object.entries(config).map(([key, value]) => (
+        <Fragment key={key}>
+          <div className="align-right">
+            <b>{key}</b>
+          </div>
+          <ValueColumn setSnackbar={setSnackbar} value={value} />
+        </Fragment>
+      ))}
+    </div>
+  );
+};
+
+export const TwoColumnDataMultiple = ({ className = '', config, style, ...props }) => (
   <div className={`two-columns-multiple ${className}`} style={{ ...style }}>
     {Object.entries(config).map(([key, value]) => (
-      <TwoColumnData className="multiple" config={{ [key]: value }} key={key} compact />
+      <TwoColumnData className="multiple" config={{ [key]: value }} key={key} compact {...props} />
     ))}
   </div>
 );

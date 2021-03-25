@@ -10,7 +10,7 @@ const softwareTitleMap = {
   'rootfs-image.checksum': { title: 'checksum', priority: 1 }
 };
 
-export const InstalledSoftware = ({ device, docsVersion }) => {
+export const InstalledSoftware = ({ device, docsVersion, setSnackbar }) => {
   const [open, setOpen] = useState(false);
   const { attributes = {} } = device;
 
@@ -35,20 +35,24 @@ export const InstalledSoftware = ({ device, docsVersion }) => {
   }
 
   const waiting = !Object.values(attributes).some(i => i);
-  const keyInfo = !waiting && softwareInformation.length ? softwareInformation[0] : [];
+  const keyInfo = !waiting && softwareInformation.length ? softwareInformation.shift() : [];
   return (
     <DeviceDataCollapse
       header={
         waiting ? (
           <DeviceInventoryLoader docsVersion={docsVersion} />
         ) : (
-          !open && (
-            <div>
-              <div className="muted">{keyInfo.title}</div>
-              <TwoColumnData className="margin-bottom margin-left-small margin-top-small" config={keyInfo.content} compact />
-              {softwareInformation.length > 1 && <a onClick={setOpen}>show {softwareInformation.length - 1} more</a>}
-            </div>
-          )
+          <>
+            <div className="muted">{keyInfo.title}</div>
+            <TwoColumnData
+              className="margin-bottom margin-left-small margin-top-small"
+              config={keyInfo.content}
+              compact
+              setSnackbar={setSnackbar}
+              style={{ marginBottom: 5 }}
+            />
+            {!open && !!softwareInformation.length && <a onClick={setOpen}>show {softwareInformation.length} more</a>}
+          </>
         )
       }
       isOpen={open}
@@ -58,10 +62,10 @@ export const InstalledSoftware = ({ device, docsVersion }) => {
       {softwareInformation.map((layer, layerIndex) => (
         <div key={`layer-${layerIndex}`}>
           <div className="muted">{layer.title}</div>
-          <TwoColumnData className="margin-bottom margin-left-small margin-top-small" config={layer.content} compact />
+          <TwoColumnData className="margin-bottom margin-left-small margin-top-small" config={layer.content} compact setSnackbar={setSnackbar} />
         </div>
       ))}
-      {open && <a onClick={() => setOpen(false)}>show less</a>}
+      <a onClick={() => setOpen(false)}>show less</a>
     </DeviceDataCollapse>
   );
 };

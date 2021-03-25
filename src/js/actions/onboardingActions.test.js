@@ -209,7 +209,7 @@ describe('onboarding actions', () => {
     await store.dispatch(getOnboardingState(stepNames[0]));
     const expectedActions = [
       { type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: false },
-      { type: OnboardingConstants.SET_ONBOARDING_DEVICE_TYPE, value: undefined },
+      { type: OnboardingConstants.SET_ONBOARDING_DEVICE_TYPE, value: 'raspberrypi4' },
       { type: OnboardingConstants.SET_ONBOARDING_APPROACH, value: 'physical' },
       { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: undefined },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true },
@@ -225,7 +225,7 @@ describe('onboarding actions', () => {
               approach: 'physical',
               artifactIncluded: undefined,
               complete: false,
-              deviceType: undefined,
+              deviceType: 'raspberrypi4',
               progress: 'application-update-reminder-tip',
               showArtifactCreation: false,
               showTips: true

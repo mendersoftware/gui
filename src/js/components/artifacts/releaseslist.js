@@ -19,6 +19,7 @@ const sortingOptions = [
 ];
 
 const buttonStyle = { border: 'none', textTransform: 'none' };
+const heightEnsuringStyle = { minHeight: 'min-content' };
 
 export const ReleasesList = ({ loading, onFilter, onSelect, releases, selectedRelease }) => {
   const [anchorEl, setAnchorEl] = useState();
@@ -46,12 +47,14 @@ export const ReleasesList = ({ loading, onFilter, onSelect, releases, selectedRe
 
   return (
     <div className="repository-list flexbox column overflow-hidden">
-      <div className="flexbox" style={{ alignItems: 'center' }}>
+      <div className="flexbox" style={{ alignItems: 'center', ...heightEnsuringStyle }}>
         <h3>Releases</h3>
         <TextField placeholder="Filter" className="search" onChange={e => searchUpdated(e.target.value)} style={{ marginLeft: 30, marginTop: 0 }} />
       </div>
-      {releases.length !== sortedReleases.length && <p className="muted">{`Filtered from ${releases.length} ${pluralize('Release', releases.length)}`}</p>}
-      <ButtonGroup className="muted" size="small">
+      {releases.length !== sortedReleases.length && (
+        <p className="muted" style={heightEnsuringStyle}>{`Filtered from ${releases.length} ${pluralize('Release', releases.length)}`}</p>
+      )}
+      <ButtonGroup className="muted" size="small" style={heightEnsuringStyle}>
         <Button onClick={() => setSortDown(!sortDown)} endIcon={<SortIcon className={`sortIcon ${sortDown.toString()}`} />} style={buttonStyle}>
           {sortingOptions[selectedSortOption].title}
         </Button>
