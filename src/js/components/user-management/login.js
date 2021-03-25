@@ -19,6 +19,7 @@ import PasswordInput from '../common/forms/passwordinput';
 import FormCheckbox from '../common/forms/formcheckbox';
 
 import { OAuth2Providers } from './oauth2providers';
+import { getCurrentUser, getHas2FA } from '../../selectors';
 
 export class Login extends React.Component {
   constructor(props, context) {
@@ -151,8 +152,8 @@ const actionCreators = { loginUser, logoutUser, setSnackbar };
 
 const mapStateToProps = state => {
   return {
-    currentUser: state.users.byId[state.users.currentUser] || {},
-    has2FA: state.users.globalSettings.hasOwnProperty('2fa') && state.users.globalSettings['2fa'] === 'enabled',
+    currentUser: getCurrentUser(state),
+    has2FA: getHas2FA(state),
     isHosted: state.app.features.isHosted
   };
 };

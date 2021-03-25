@@ -30,6 +30,7 @@ const menderEnvironment = {
 };
 
 export const initialState = {
+  cancelSource: undefined,
   demoArtifactLink: 'https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender',
   hostAddress: menderEnvironment.hostAddress,
   snackbar: {
@@ -50,9 +51,11 @@ export const initialState = {
   hostedAnnouncement: menderEnvironment.hostedAnnouncement,
   docsVersion: isNaN(menderEnvironment.integrationVersion.charAt(0)) ? '' : menderEnvironment.integrationVersion.split('.').slice(0, 2).join('.'),
   menderDebPackageVersion: menderEnvironment.menderDebPackageVersion || 'master',
-  trackerCode: menderEnvironment.trackerCode,
   recaptchaSiteKey: menderEnvironment.recaptchaSiteKey,
   stripeAPIKey: menderEnvironment.stripeAPIKey,
+  trackerCode: menderEnvironment.trackerCode,
+  uploading: false,
+  uploadProgress: 0,
   versionInformation: {
     Integration: isNaN(menderEnvironment.integrationVersion.charAt(0)) ? 'master' : menderEnvironment.integrationVersion,
     'Mender-Client': isNaN(menderEnvironment.menderVersion.charAt(0)) ? 'master' : menderEnvironment.menderVersion,
@@ -82,6 +85,15 @@ const appReducer = (state = initialState, action) => {
         ...state,
         hostedAnnouncement: action.announcement
       };
+    case AppConstants.UPLOAD_PROGRESS: {
+      const cancelSource = action.inprogress ? action.cancelSource || state.cancelSource : undefined;
+      return {
+        ...state,
+        cancelSource,
+        uploading: action.inprogress,
+        uploadProgress: action.uploadProgress
+      };
+    }
     default:
       return state;
   }

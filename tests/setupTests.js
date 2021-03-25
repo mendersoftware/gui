@@ -55,9 +55,15 @@ beforeAll(async () => {
     setItem: jest.fn(),
     removeItem: jest.fn()
   };
+  window.ENV = 'test';
   server = setupServer(...handlers);
   await server.listen();
   Object.defineProperty(navigator, 'appVersion', { value: 'Test', writable: true });
+  const intersectionObserverMock = () => ({
+    observe: jest.fn,
+    disconnect: jest.fn
+  });
+  window.IntersectionObserver = jest.fn().mockImplementation(intersectionObserverMock);
   jest.spyOn(React, 'useEffect').mockImplementation(React.useLayoutEffect);
 });
 

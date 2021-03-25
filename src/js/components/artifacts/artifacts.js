@@ -2,14 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { Button, LinearProgress, IconButton, Tooltip } from '@material-ui/core';
-import { Cancel as CancelIcon, CloudUpload, InfoOutlined as InfoIcon } from '@material-ui/icons';
+import { Button } from '@material-ui/core';
+import { CloudUpload, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
-import { setSnackbar } from '../../actions/appActions';
+import { cancelFileUpload, setSnackbar } from '../../actions/appActions';
 import { selectDevices } from '../../actions/deviceActions';
 import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
 import {
-  cancelArtifactUpload,
   createArtifact,
   getReleases,
   removeArtifact,
@@ -19,7 +18,6 @@ import {
   uploadArtifact
 } from '../../actions/releaseActions';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { colors } from '../../themes/mender-theme';
 import { getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
@@ -107,8 +105,6 @@ export class Artifacts extends React.Component {
     const self = this;
     const { doneLoading, selectedFile, showCreateArtifactDialog } = self.state;
     const {
-      artifactProgress,
-      cancelArtifactUpload,
       onboardingState,
       releases,
       showRemoveDialog,
@@ -150,7 +146,7 @@ export class Artifacts extends React.Component {
               color="secondary"
               onClick={() => self.onUploadClick()}
               startIcon={<CloudUpload fontSize="small" />}
-              style={{ marginTop: 30, minWidth: 164 }}
+              style={{ marginTop: 30, minHeight: 'min-content', minWidth: 164 }}
               variant="contained"
             >
               Upload
@@ -168,17 +164,6 @@ export class Artifacts extends React.Component {
             release={selectedRelease}
           />
         </div>
-        {artifactProgress ? (
-          <div id="progressBarContainer">
-            <p className="align-center">Upload in progress ({Math.round(artifactProgress)}%)</p>
-            <LinearProgress variant="determinate" style={{ backgroundColor: colors.grey, gridColumn: 1, margin: '15px 0' }} value={artifactProgress} />
-            <Tooltip title="Abort" placement="top">
-              <IconButton onClick={cancelArtifactUpload}>
-                <CancelIcon />
-              </IconButton>
-            </Tooltip>
-          </div>
-        ) : null}
         {showRemoveDialog && (
           <RemoveArtifactDialog
             artifact={selectedArtifact.name}
@@ -203,7 +188,7 @@ export class Artifacts extends React.Component {
 
 const actionCreators = {
   advanceOnboarding,
-  cancelArtifactUpload,
+  cancelFileUpload,
   createArtifact,
   getReleases,
   removeArtifact,
@@ -225,7 +210,6 @@ const mapStateToProps = state => {
     return accu;
   }, {});
   return {
-    artifactProgress: state.releases.uploadProgress,
     deviceTypes: Object.keys(deviceTypes),
     onboardingState: getOnboardingState(state),
     showOnboardingDialog: state.onboarding.showCreateArtifactDialog,

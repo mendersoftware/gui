@@ -14,9 +14,17 @@ export const initialState = {
   showHelptips: true,
   rolesById: {
     RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false, permissions: [] },
-    RBAC_ROLE_OBSERVER: { title: 'Read only', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
-    RBAC_ROLE_CI: { title: 'CI', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
-    RBAC_ROLE_REMOTE_TERMINAL: { title: 'Remote terminal', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] }
+    RBAC_ROLE_OBSERVER: { title: 'Read Access', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
+    RBAC_ROLE_CI: { title: 'Releases Manager', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
+    RBAC_ROLE_DEPLOYMENTS_MANAGER: { title: 'Deployments Manager', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
+    RBAC_ROLE_REMOTE_TERMINAL: {
+      title: 'Troubleshooting',
+      allowUserManagement: false,
+      groups: [],
+      description: 'Access to the troubleshooting features: Remote Terminal, File Transfer, Port Forwarding',
+      editable: false,
+      permissions: []
+    }
   }
 };
 
@@ -36,6 +44,11 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         byId: { ...action.users }
+      };
+    case UserConstants.RECEIVED_ACTIVATION_CODE:
+      return {
+        ...state,
+        activationCode: action.code
       };
     case UserConstants.RECEIVED_USER:
       return {

@@ -2,97 +2,15 @@
 
 exports[`DeviceListItem Component renders correctly 1`] = `
 <div
-  className="MuiPaper-root MuiAccordion-root deviceListItem MuiPaper-elevation1"
+  className=" deviceListItem clickable"
+  style={
+    Object {
+      "alignItems": "center",
+    }
+  }
 >
-  <div
-    aria-disabled={false}
-    aria-expanded={false}
-    className="MuiButtonBase-root MuiAccordionSummary-root"
-    onBlur={[Function]}
-    onClick={[Function]}
-    onDragLeave={[Function]}
-    onFocus={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseDown={[Function]}
-    onMouseLeave={[Function]}
-    onMouseUp={[Function]}
-    onTouchEnd={[Function]}
-    onTouchMove={[Function]}
-    onTouchStart={[Function]}
-    role="button"
-    style={
-      Object {
-        "padding": 0,
-      }
-    }
-    tabIndex={0}
-  >
-    <div
-      className="MuiAccordionSummary-content"
-    >
-      <div>
-        1
-      </div>
-      <button
-        className="MuiButtonBase-root MuiIconButton-root expandButton"
-        disabled={false}
-        onBlur={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        tabIndex={0}
-        type="button"
-      >
-        <span
-          className="MuiIconButton-label"
-        >
-          <svg
-            aria-hidden={true}
-            className="MuiSvgIcon-root"
-            focusable="false"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M7 10l5 5 5-5z"
-            />
-          </svg>
-        </span>
-      </button>
-    </div>
-  </div>
-  <div
-    className="MuiCollapse-container MuiCollapse-hidden"
-    style={
-      Object {
-        "minHeight": "0px",
-      }
-    }
-  >
-    <div
-      className="MuiCollapse-wrapper"
-    >
-      <div
-        className="MuiCollapse-wrapperInner"
-      >
-        <div
-          role="region"
-        >
-          <div
-            className="MuiAccordionDetails-root"
-          >
-            <div />
-          </div>
-        </div>
-      </div>
-    </div>
+  <div>
+    1
   </div>
 </div>
 `;

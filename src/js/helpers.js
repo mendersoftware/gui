@@ -288,12 +288,6 @@ export const formatTime = date => {
   return;
 };
 
-export function formatPublicKey(key) {
-  key = key.replace('-----BEGIN PUBLIC KEY-----', '');
-  key = key.replace('-----END PUBLIC KEY-----', '');
-  return `${key.substring(0, 15)} ... ${key.substring(key.length - 15)}`;
-}
-
 export const customSort = (direction, field) => (a, b) => {
   if (typeof a[field] === 'string') {
     const result = a[field].localeCompare(b[field], { sensitivity: 'case' });
@@ -494,7 +488,7 @@ ${enterpriseSettings}`;
   }
   const debInstallationCode = `wget -q -O- https://get.mender.io/${
     isPreRelease && window.location.hostname.includes('staging') ? 'staging' : ''
-  } | sudo bash -s${isPreRelease && window.location.hostname.includes('staging') ? ' -- --demo' : ''}`;
+  } | sudo bash -s -- --demo`;
   let codeToCopy = `${debInstallationCode} && \\
 sudo bash -c 'DEVICE_TYPE="${deviceType}" && \\${
     token

@@ -2,12 +2,7 @@
 
 exports[`AuthsetList Component renders correctly 1`] = `
 <div
-  className="MuiPaper-root MuiAccordion-root Mui-expanded MuiPaper-elevation1"
-  style={
-    Object {
-      "backgroundColor": "#e9f4f3",
-    }
-  }
+  className="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 Mui-expanded WithStyles(ForwardRef(Accordion))-expanded-2 MuiPaper-elevation1"
 >
   <div
     aria-disabled={false}
@@ -36,30 +31,27 @@ exports[`AuthsetList Component renders correctly 1`] = `
     <div
       className="MuiAccordionSummary-content Mui-expanded"
     >
-      <div>
-        
-MIIBojANBgkqhk ... IStkZAgMBAAE=
-
-
-         
-        <a
-          className="margin-left-small"
-          onClick={[Function]}
-        >
-          show more
-        </a>
+      <div
+        className="capitalized"
+      >
+        Active
       </div>
+      <div
+        className="capitalized"
+      >
+        accepted
+      </div>
+      <a
+        onClick={[Function]}
+      >
+        show key
+      </a>
       <time
         dateTime="2020-09-21T12:42:34+00:00"
         title={null}
       >
         2020-09-21 12:42
       </time>
-      <div
-        className="capitalized"
-      >
-        accepted
-      </div>
       <div
         className="action-buttons flexbox"
       >
@@ -109,7 +101,7 @@ MIIBojANBgkqhk ... IStkZAgMBAAE=
             <p
               className="bold expanded"
             >
-               Are you sure you want to  this?
+               Are you sure you want to continue?
             </p>
           </div>
           <div
@@ -161,9 +153,9 @@ MIIBojANBgkqhk ... IStkZAgMBAAE=
                 className="MuiButton-label"
               >
                 <span
-                  className="capitalized"
+                  className="uppercase"
                 >
-                  
+                  confirm
                 </span>
               </span>
             </button>

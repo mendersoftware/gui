@@ -1,36 +1,18 @@
 import React from 'react';
 
 // material ui
-import { Checkbox, Accordion, AccordionDetails, AccordionSummary, IconButton } from '@material-ui/core';
-import { ArrowDropDown as ArrowDropDownIcon, ArrowDropUp as ArrowDropUpIcon } from '@material-ui/icons';
-
-import ExpandedDevice from './expanded-device';
+import { Checkbox } from '@material-ui/core';
 
 const DeviceListItem = props => {
-  const { columnHeaders, device, expandable = true, expanded, idAttribute, itemClassName, onClick, onRowSelect, selectable, selected } = props;
+  const { columnHeaders, device, idAttribute, itemClassName = '', onClick, onRowSelect, selectable, selected } = props;
   const idValue = idAttribute !== 'Device ID' ? (device.identity_data || {})[idAttribute] : device.id;
-  return expandable ? (
-    <Accordion className="deviceListItem" square expanded={expanded} onChange={onClick}>
-      <AccordionSummary classes={{ content: itemClassName }} style={{ padding: 0 }}>
-        {selectable ? <Checkbox checked={selected} onChange={onRowSelect} /> : null}
-        <div style={columnHeaders[0].style}>{idValue}</div>
-        {/* we'll skip the first column, since this is the id and that gets resolved differently in the lines above */}
-        {columnHeaders.slice(1).map((item, index) => (
-          <div key={`column-${index}`} style={item.style}>
-            {item.render(device)}
-          </div>
-        ))}
-        <IconButton className="expandButton">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>
-      </AccordionSummary>
-      <AccordionDetails>{expanded ? <ExpandedDevice {...props} className="expandedDevice" device={device} /> : <div />}</AccordionDetails>
-    </Accordion>
-  ) : (
-    <div className={`${itemClassName} deviceListItem `} style={{ padding: '0px 12px', alignItems: 'center' }}>
+  return (
+    <div className={`${itemClassName} deviceListItem clickable`} style={{ alignItems: 'center' }} onClick={onClick}>
       {selectable ? <Checkbox checked={selected} onChange={onRowSelect} /> : null}
-      <div style={{ ...columnHeaders[0].style, padding: '0 24px' }}>{idAttribute}</div>
+      <div style={columnHeaders[0].style}>{idValue}</div>
       {/* we'll skip the first column, since this is the id and that gets resolved differently in the lines above */}
       {columnHeaders.slice(1).map((item, index) => (
-        <div key={`column-${index}`} style={{ ...item.style, padding: '0 24px' }}>
+        <div key={`column-${index}`} style={item.style}>
           {item.render(device)}
         </div>
       ))}

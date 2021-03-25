@@ -55,12 +55,13 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
       return;
     }
     const params = new URLSearchParams(location.search);
-    setPage(params.get('page') ?? 1);
-    setPerPage(params.get('per_page') ?? defaultRowsPerPage);
-    setType(params.get('object_type') ?? '');
-    setDetail(params.get('object_id') ?? '');
-    setUser(params.get('user_id') ?? '');
-    setSorting(params.get('sort') ?? 'desc');
+    const { title: type = '' } = AUDIT_LOGS_TYPES.find(typeObject => typeObject.value === params.get('object_type')) || {};
+    setPage(params.get('page') || 1);
+    setPerPage(params.get('per_page') || defaultRowsPerPage);
+    setType(type);
+    setDetail(params.get('object_id') || '');
+    setUser(params.get('user_id') || '');
+    setSorting(params.get('sort') || 'desc');
     setStartDate(params.get('start_date') ?? today);
     setEndDate(params.get('end_date') ?? tonight);
     setLocationChange(!locationChange);
@@ -108,6 +109,13 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
       setCsvLoading(false);
     });
   };
+
+  const typeOptionsMap = {
+    Deployment: groups,
+    User: Object.values(users),
+    Device: []
+  };
+  let detailOptions = typeOptionsMap[type];
 
   return (
     <div className="fadeIn margin-left flexbox column" style={{ marginRight: '5%' }}>
@@ -160,7 +168,7 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
           handleHomeEndKeys
           inputValue={detail}
           onInputChange={(e, value) => refresh(1, perPage, startDate, endDate, user, type, value)}
-          options={type === 'Deployment' ? groups : Object.values(users)}
+          options={detailOptions}
           renderInput={params => <TextField {...params} placeholder={detailsMap[type] || '-'} InputProps={{ ...params.InputProps }} />}
           renderOption={option => option.email || option}
           style={{ marginRight: 15, marginTop: 16 }}

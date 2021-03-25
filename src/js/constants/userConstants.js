@@ -6,6 +6,7 @@ module.exports = {
 
   SUCCESSFULLY_LOGGED_IN: 'SUCCESSFULLY_LOGGED_IN',
   USER_LOGOUT: 'USER_LOGOUT',
+  RECEIVED_ACTIVATION_CODE: 'RECEIVED_ACTIVATION_CODE',
   RECEIVED_USER_LIST: 'RECEIVED_USER_LIST',
   RECEIVED_USER: 'RECEIVED_USER',
   CREATED_USER: 'CREATED_USER',
@@ -26,9 +27,15 @@ module.exports = {
     admin: 'RBAC_ROLE_PERMIT_ALL',
     readOnly: 'RBAC_ROLE_OBSERVER',
     ci: 'RBAC_ROLE_CI',
+    deploymentsManager: 'RBAC_ROLE_DEPLOYMENTS_MANAGER',
     userManagement: { action: 'http', object: { type: 'any', value: `${useradmApiUrl}/.*` } },
     deploymentCreation: { action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: undefined } },
     groupAccess: { action: 'VIEW_DEVICE', object: { type: 'DEVICE_GROUP', value: undefined } }
+  },
+  twoFAStates: {
+    enabled: 'enabled',
+    disabled: 'disabled',
+    unverified: 'unverified'
   },
   useradmApiUrl
 };

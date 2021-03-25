@@ -3,36 +3,25 @@ import { Provider } from 'react-redux';
 import { render } from '@testing-library/react';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import TerminalDialog from './terminal';
-import { defaultState, undefineds } from '../../../../tests/mockData';
+import Authsets from './authsets';
+import { defaultState, undefineds } from '../../../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
-describe('TerminalDialog Component', () => {
+describe('Authsets Component', () => {
   let store;
-  let socketSpyFactory;
-  let socketSpy;
-
   beforeEach(() => {
     store = mockStore({ ...defaultState });
-    socketSpyFactory = jest.spyOn(window, 'WebSocket');
-    socketSpyFactory.mockImplementation(() => {
-      socketSpy = {
-        close: () => {},
-        send: () => {}
-      };
-      return socketSpy;
-    });
-  });
-
-  afterEach(() => {
-    socketSpyFactory.mockReset();
   });
 
   it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
-        <TerminalDialog onCancel={jest.fn} onSocketClose={jest.fn} open={true} />
+        <Authsets
+          device={{ id: 'a1', status: 'accepted', attributes: [], auth_sets: [] }}
+          id_attribute={defaultState.users.globalSettings.id_attribute}
+          open={true}
+        />
       </Provider>
     );
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];

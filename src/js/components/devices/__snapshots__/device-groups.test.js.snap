@@ -230,7 +230,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             class=\\"deviceList \\"
           >
             <div
-              class=\\"header deviceListRow columns-5 selectable expandable\\"
+              class=\\"header deviceListRow columns-6 selectable\\"
             >
               <span
                 aria-disabled=\\"false\\"
@@ -326,6 +326,11 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 
               </div>
               <div
+                class=\\"columnHeader\\"
+              >
+                
+              </div>
+              <div
                 style=\\"width: 48px;\\"
               />
             </div>
@@ -333,224 +338,146 @@ exports[`DeviceGroups Component renders correctly 1`] = `
               class=\\"body\\"
             >
               <div
-                class=\\"MuiPaper-root MuiAccordion-root deviceListItem MuiPaper-elevation1\\"
+                class=\\"deviceListRow columns-6 selectable deviceListItem clickable\\"
+                style=\\"align-items: center;\\"
               >
-                <div
+                <span
                   aria-disabled=\\"false\\"
-                  aria-expanded=\\"false\\"
-                  class=\\"MuiButtonBase-root MuiAccordionSummary-root\\"
-                  role=\\"button\\"
-                  style=\\"padding: 0px;\\"
-                  tabindex=\\"0\\"
+                  class=\\"MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary\\"
                 >
-                  <div
-                    class=\\"MuiAccordionSummary-content deviceListRow columns-5 selectable expandable\\"
+                  <span
+                    class=\\"MuiIconButton-label\\"
                   >
-                    <span
-                      aria-disabled=\\"false\\"
-                      class=\\"MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary\\"
+                    <input
+                      class=\\"PrivateSwitchBase-input-4\\"
+                      data-indeterminate=\\"false\\"
+                      type=\\"checkbox\\"
+                      value=\\"\\"
+                    />
+                    <svg
+                      aria-hidden=\\"true\\"
+                      class=\\"MuiSvgIcon-root\\"
+                      focusable=\\"false\\"
+                      viewBox=\\"0 0 24 24\\"
                     >
-                      <span
-                        class=\\"MuiIconButton-label\\"
-                      >
-                        <input
-                          class=\\"PrivateSwitchBase-input-4\\"
-                          data-indeterminate=\\"false\\"
-                          type=\\"checkbox\\"
-                          value=\\"\\"
-                        />
-                        <svg
-                          aria-hidden=\\"true\\"
-                          class=\\"MuiSvgIcon-root\\"
-                          focusable=\\"false\\"
-                          viewBox=\\"0 0 24 24\\"
-                        >
-                          <path
-                            d=\\"M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z\\"
-                          />
-                        </svg>
-                      </span>
-                      <span
-                        class=\\"MuiTouchRipple-root\\"
+                      <path
+                        d=\\"M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z\\"
                       />
-                    </span>
-                    <div>
-                      a1
-                    </div>
-                    <div>
-                      -
-                    </div>
-                    <div>
-                      -
-                    </div>
-                    <div>
-                      <time
-                        class=\\"\\"
-                        datetime=\\"2019-01-01T09:25:00+00:00\\"
-                        title=\\"Tue Jan 01 2019 09:25:00 GMT+0000\\"
-                      >
-                        2019-01-01 09:25
-                      </time>
-                    </div>
-                    <div>
-                      <div />
-                    </div>
-                    <button
-                      class=\\"MuiButtonBase-root MuiIconButton-root expandButton\\"
-                      tabindex=\\"0\\"
-                      type=\\"button\\"
-                    >
-                      <span
-                        class=\\"MuiIconButton-label\\"
-                      >
-                        <svg
-                          aria-hidden=\\"true\\"
-                          class=\\"MuiSvgIcon-root\\"
-                          focusable=\\"false\\"
-                          viewBox=\\"0 0 24 24\\"
-                        >
-                          <path
-                            d=\\"M7 10l5 5 5-5z\\"
-                          />
-                        </svg>
-                      </span>
-                      <span
-                        class=\\"MuiTouchRipple-root\\"
-                      />
-                    </button>
-                  </div>
+                    </svg>
+                  </span>
+                  <span
+                    class=\\"MuiTouchRipple-root\\"
+                  />
+                </span>
+                <div>
+                  a1
                 </div>
-                <div
-                  class=\\"MuiCollapse-container MuiCollapse-hidden\\"
-                  style=\\"min-height: 0px;\\"
-                >
-                  <div
-                    class=\\"MuiCollapse-wrapper\\"
+                <div>
+                  raspberrypi4
+                </div>
+                <div>
+                  -
+                </div>
+                <div>
+                  <time
+                    class=\\"\\"
+                    datetime=\\"2019-01-01T09:25:00+00:00\\"
+                    title=\\"Tue Jan 01 2019 09:25:00 GMT+0000\\"
                   >
-                    <div
-                      class=\\"MuiCollapse-wrapperInner\\"
+                    2019-01-01 09:25
+                  </time>
+                </div>
+                <div>
+                  <div />
+                </div>
+                <div>
+                  <div
+                    class=\\"bold flexbox link-color margin-right-small uppercased\\"
+                    style=\\"align-items: center; white-space: nowrap;\\"
+                  >
+                    view details 
+                    <svg
+                      aria-hidden=\\"true\\"
+                      class=\\"MuiSvgIcon-root\\"
+                      focusable=\\"false\\"
+                      viewBox=\\"0 0 24 24\\"
                     >
-                      <div
-                        role=\\"region\\"
-                      >
-                        <div
-                          class=\\"MuiAccordionDetails-root\\"
-                        >
-                          <div />
-                        </div>
-                      </div>
-                    </div>
+                      <path
+                        d=\\"M16.01 11H4v2h12.01v3L20 12l-3.99-4z\\"
+                      />
+                    </svg>
                   </div>
                 </div>
               </div>
               <div
-                class=\\"MuiPaper-root MuiAccordion-root deviceListItem MuiPaper-elevation1\\"
+                class=\\"deviceListRow columns-6 selectable deviceListItem clickable\\"
+                style=\\"align-items: center;\\"
               >
-                <div
+                <span
                   aria-disabled=\\"false\\"
-                  aria-expanded=\\"false\\"
-                  class=\\"MuiButtonBase-root MuiAccordionSummary-root\\"
-                  role=\\"button\\"
-                  style=\\"padding: 0px;\\"
-                  tabindex=\\"0\\"
+                  class=\\"MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary\\"
                 >
-                  <div
-                    class=\\"MuiAccordionSummary-content deviceListRow columns-5 selectable expandable\\"
+                  <span
+                    class=\\"MuiIconButton-label\\"
                   >
-                    <span
-                      aria-disabled=\\"false\\"
-                      class=\\"MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary\\"
+                    <input
+                      class=\\"PrivateSwitchBase-input-4\\"
+                      data-indeterminate=\\"false\\"
+                      type=\\"checkbox\\"
+                      value=\\"\\"
+                    />
+                    <svg
+                      aria-hidden=\\"true\\"
+                      class=\\"MuiSvgIcon-root\\"
+                      focusable=\\"false\\"
+                      viewBox=\\"0 0 24 24\\"
                     >
-                      <span
-                        class=\\"MuiIconButton-label\\"
-                      >
-                        <input
-                          class=\\"PrivateSwitchBase-input-4\\"
-                          data-indeterminate=\\"false\\"
-                          type=\\"checkbox\\"
-                          value=\\"\\"
-                        />
-                        <svg
-                          aria-hidden=\\"true\\"
-                          class=\\"MuiSvgIcon-root\\"
-                          focusable=\\"false\\"
-                          viewBox=\\"0 0 24 24\\"
-                        >
-                          <path
-                            d=\\"M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z\\"
-                          />
-                        </svg>
-                      </span>
-                      <span
-                        class=\\"MuiTouchRipple-root\\"
+                      <path
+                        d=\\"M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z\\"
                       />
-                    </span>
-                    <div>
-                      b1
-                    </div>
-                    <div>
-                      qemux86-64
-                    </div>
-                    <div>
-                      -
-                    </div>
-                    <div>
-                      <time
-                        class=\\"\\"
-                        datetime=\\"2019-01-01T09:25:00+00:00\\"
-                        title=\\"Tue Jan 01 2019 09:25:00 GMT+0000\\"
-                      >
-                        2019-01-01 09:25
-                      </time>
-                    </div>
-                    <div>
-                      <div />
-                    </div>
-                    <button
-                      class=\\"MuiButtonBase-root MuiIconButton-root expandButton\\"
-                      tabindex=\\"0\\"
-                      type=\\"button\\"
-                    >
-                      <span
-                        class=\\"MuiIconButton-label\\"
-                      >
-                        <svg
-                          aria-hidden=\\"true\\"
-                          class=\\"MuiSvgIcon-root\\"
-                          focusable=\\"false\\"
-                          viewBox=\\"0 0 24 24\\"
-                        >
-                          <path
-                            d=\\"M7 10l5 5 5-5z\\"
-                          />
-                        </svg>
-                      </span>
-                      <span
-                        class=\\"MuiTouchRipple-root\\"
-                      />
-                    </button>
-                  </div>
+                    </svg>
+                  </span>
+                  <span
+                    class=\\"MuiTouchRipple-root\\"
+                  />
+                </span>
+                <div>
+                  b1
                 </div>
-                <div
-                  class=\\"MuiCollapse-container MuiCollapse-hidden\\"
-                  style=\\"min-height: 0px;\\"
-                >
-                  <div
-                    class=\\"MuiCollapse-wrapper\\"
+                <div>
+                  qemux86-64
+                </div>
+                <div>
+                  -
+                </div>
+                <div>
+                  <time
+                    class=\\"\\"
+                    datetime=\\"2019-01-01T09:25:00+00:00\\"
+                    title=\\"Tue Jan 01 2019 09:25:00 GMT+0000\\"
                   >
-                    <div
-                      class=\\"MuiCollapse-wrapperInner\\"
+                    2019-01-01 09:25
+                  </time>
+                </div>
+                <div>
+                  <div />
+                </div>
+                <div>
+                  <div
+                    class=\\"bold flexbox link-color margin-right-small uppercased\\"
+                    style=\\"align-items: center; white-space: nowrap;\\"
+                  >
+                    view details 
+                    <svg
+                      aria-hidden=\\"true\\"
+                      class=\\"MuiSvgIcon-root\\"
+                      focusable=\\"false\\"
+                      viewBox=\\"0 0 24 24\\"
                     >
-                      <div
-                        role=\\"region\\"
-                      >
-                        <div
-                          class=\\"MuiAccordionDetails-root\\"
-                        >
-                          <div />
-                        </div>
-                      </div>
-                    </div>
+                      <path
+                        d=\\"M16.01 11H4v2h12.01v3L20 12l-3.99-4z\\"
+                      />
+                    </svg>
                   </div>
                 </div>
               </div>

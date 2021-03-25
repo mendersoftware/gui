@@ -47,4 +47,26 @@ describe('app reducer', () => {
     expect(reducer(undefined, { type: AppConstants.SET_ANNOUNCEMENT, announcement: 'something' }).hostedAnnouncement).toEqual('something');
     expect(reducer(initialState, { type: AppConstants.SET_ANNOUNCEMENT, announcement: undefined }).hostedAnnouncement).toEqual(undefined);
   });
+
+  it('should handle UPLOAD_PROGRESS', async () => {
+    const { uploading, uploadProgress } = reducer(undefined, {
+      type: AppConstants.UPLOAD_PROGRESS,
+      inprogress: true,
+      uploadProgress: 40
+    });
+    expect({ uploading, uploadProgress }).toEqual({
+      uploading: true,
+      uploadProgress: 40
+    });
+
+    const { uploading: uploading2, uploadProgress: uploadProgress2 } = reducer(initialState, {
+      type: AppConstants.UPLOAD_PROGRESS,
+      inprogress: true,
+      uploadProgress: 40
+    });
+    expect({ uploading: uploading2, uploadProgress: uploadProgress2 }).toEqual({
+      uploading: true,
+      uploadProgress: 40
+    });
+  });
 });

@@ -98,6 +98,7 @@ export const defaultState = {
       a1: {
         id: 'a1',
         attributes: {
+          device_type: 'raspberrypi4',
           ipv4_wlan0: '192.168.10.141/24'
         },
         identity_data: { mac: 'dc:a6:32:12:ad:bf' },
@@ -288,17 +289,17 @@ export const defaultState = {
   },
   users: {
     byId: {
-      a1: { email: 'a@b.com', id: 'a1', created_ts: '2019-01-01T10:30:00.000Z', roles: [rolesByName.admin] },
+      a1: { email: 'a@b.com', id: 'a1', created_ts: '2019-01-01T10:30:00.000Z', roles: [rolesByName.admin], verified: true },
       'a30a780b-b843-5344-80e3-0fd95a4f6fc3': { email: 'a2@b.com', id: 'a30a780b-b843-5344-80e3-0fd95a4f6fc3', created_ts: '2019-01-01T12:30:00.000Z' }
     },
     currentUser: 'a1',
-    globalSettings: { id_attribute: 'Device ID', previousFilters: [] },
+    globalSettings: { '2fa': 'enabled', id_attribute: 'Device ID', previousFilters: [] },
     jwtToken: null,
     qrCode: null,
     rolesById: {
       RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false, permissions: [] },
       RBAC_ROLE_OBSERVER: {
-        title: 'Read only',
+        title: 'Read Access',
         allowUserManagement: false,
         groups: [],
         description:
@@ -306,7 +307,7 @@ export const defaultState = {
         editable: false,
         permissions: []
       },
-      RBAC_ROLE_CI: { title: 'CI', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
+      RBAC_ROLE_CI: { title: 'Releases Manager', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
       test: { title: 'test', description: 'test description', groups: ['testgroup'], editable: true }
     },
     showHelptips: true

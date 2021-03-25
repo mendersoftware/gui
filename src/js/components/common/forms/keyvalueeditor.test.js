@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import KeyValueEditor from './keyvalueeditor';
 import { undefineds } from '../../../../../tests/mockData';
@@ -18,38 +18,48 @@ describe('KeyValueEditor Component', () => {
     const submitMock = jest.fn();
 
     const ui = <KeyValueEditor onInputChange={submitMock} />;
-    const { rerender } = render(ui);
-
+    render(ui);
     userEvent.type(screen.getByPlaceholderText(/key/i), 'testKey');
     userEvent.type(screen.getByPlaceholderText(/value/i), 'testValue');
     expect(document.querySelector('.MuiFab-root')).not.toBeDisabled();
     userEvent.click(document.querySelector('.MuiFab-root'));
-    await act(() => waitFor(() => rerender(ui)));
     expect(submitMock).toHaveBeenLastCalledWith({ testKey: 'testValue' });
     userEvent.type(screen.getByDisplayValue('testValue'), 's');
-    await act(() => waitFor(() => rerender(ui)));
     expect(submitMock).toHaveBeenLastCalledWith({ testKey: 'testValues' });
   });
 
   it('warns of duplicate keys', async () => {
     const ui = <KeyValueEditor onInputChange={jest.fn} />;
-    const { rerender } = render(ui);
+    render(ui);
     userEvent.type(screen.getByPlaceholderText(/key/i), 'testKey');
     userEvent.type(screen.getByPlaceholderText(/value/i), 'testValue');
     userEvent.click(document.querySelector('.MuiFab-root'));
-    await act(() => waitFor(() => rerender(ui)));
     userEvent.type(screen.getAllByPlaceholderText(/key/i)[1], 'testKey');
     userEvent.type(screen.getAllByPlaceholderText(/value/i)[1], 'testValue2');
-    await act(() => waitFor(() => rerender(ui)));
     expect(screen.getByText(/Duplicate keys exist/i)).toBeInTheDocument();
   });
 
   it('forwards a warning', async () => {
     const ui = <KeyValueEditor errortext="I should be rendered" onInputChange={jest.fn} />;
-    const { rerender } = render(ui);
+    render(ui);
     userEvent.type(screen.getByPlaceholderText(/key/i), 'testKey');
     userEvent.type(screen.getByPlaceholderText(/value/i), 'testValue');
     expect(screen.getByText(/I should be rendered/i)).toBeInTheDocument();
-    await act(() => waitFor(() => rerender(ui)));
+  });
+
+  it('displays tooltips when keys match', async () => {
+    const TestComponent = () => <div>testthing</div>;
+    const helptipsMap = {
+      timezone: {
+        component: TestComponent
+      }
+    };
+
+    const ui = <KeyValueEditor inputHelpTipsMap={helptipsMap} onInputChange={jest.fn} showHelptips={true} />;
+    render(ui);
+    userEvent.type(screen.getByPlaceholderText(/key/i), 'timezon');
+    expect(screen.queryByText(/testthing/i)).not.toBeInTheDocument();
+    userEvent.type(screen.getByPlaceholderText(/key/i), 'e');
+    expect(screen.getByText(/testthing/i)).toBeInTheDocument();
   });
 });

@@ -5,36 +5,44 @@ import { withRouter } from 'react-router-dom';
 import IdleTimer from 'react-idle-timer';
 import Cookies from 'universal-cookie';
 
+import { LinearProgress, IconButton, Tooltip } from '@material-ui/core';
+import { Cancel as CancelIcon } from '@material-ui/icons';
+
 import { getToken, updateMaxAge, expirySet } from '../auth';
-import { setSnackbar } from '../actions/appActions';
-import { logoutUser, saveUserSettings, setShowConnectingDialog } from '../actions/userActions';
+import { cancelFileUpload, setSnackbar } from '../actions/appActions';
+import { logoutUser, saveUserSettings, setAccountActivationCode, setShowConnectingDialog } from '../actions/userActions';
 import { privateRoutes, publicRoutes } from '../config/routes';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import SharedSnackbar from '../components/common/sharedsnackbar';
 import ErrorBoundary from '../errorboundary';
 import { getOnboardingState } from '../selectors';
-import { getOnboardingComponentFor } from '../utils/onboardingmanager';
+import { colors } from '../themes/mender-theme';
 import Tracking from '../tracking';
+import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import LiveChatBox from './livechatbox';
 import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
 import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
 import Header from './header/header';
 import LeftNav from './leftnav';
 
+const activationPath = '/activate';
 const timeout = 900000; // 15 minutes idle time
 const cookies = new Cookies();
 
 export const AppRoot = ({
+  cancelFileUpload,
   currentUser,
   history,
   logoutUser,
-  trackingCode,
   onboardingState,
+  setAccountActivationCode,
   setShowConnectingDialog,
   showDeviceConnectionDialog,
   showDismissHelptipsDialog,
   setSnackbar,
-  snackbar
+  snackbar,
+  trackingCode,
+  uploadProgress
 }) => {
   useEffect(() => {
     if (trackingCode) {
@@ -61,6 +69,9 @@ export const AppRoot = ({
       const filters = page.slice(splitter + 1);
       const keyOnlyFilters = filters.split('&').reduce((accu, item) => `${accu}:${item.split('=')[0]}&`, ''); // assume the keys to filter by are not as revealing as the values things are filtered by
       page = `${page.substring(0, splitter)}?${keyOnlyFilters.substring(0, keyOnlyFilters.length - 1)}`; // cut off the last & of the reduced filters string
+    } else if (page.startsWith(activationPath)) {
+      setAccountActivationCode(page.substring(activationPath.length + 1));
+      history.replace('/settings/my-profile');
     }
     Tracking.pageview(page);
   };
@@ -94,26 +105,41 @@ export const AppRoot = ({
           {onboardingComponent ? onboardingComponent : null}
           {showDismissHelptipsDialog && <ConfirmDismissHelptips />}
           {showDeviceConnectionDialog && <DeviceConnectionDialog onCancel={() => setShowConnectingDialog(false)} />}
-          <LiveChatBox />
+          {
+            // eslint-disable-next-line no-undef
+            ENV === 'production' && <LiveChatBox />
+          }
         </>
       ) : (
         publicRoutes
       )}
       <SharedSnackbar snackbar={snackbar} setSnackbar={setSnackbar} />
+      {Boolean(uploadProgress) && (
+        <div id="progressBarContainer">
+          <p className="align-center">Upload in progress ({Math.round(uploadProgress)}%)</p>
+          <LinearProgress variant="determinate" style={{ backgroundColor: colors.grey, gridColumn: 1, margin: '15px 0' }} value={uploadProgress} />
+          <Tooltip title="Abort" placement="top">
+            <IconButton onClick={cancelFileUpload}>
+              <CancelIcon />
+            </IconButton>
+          </Tooltip>
+        </div>
+      )}
     </>
   );
 };
 
-const actionCreators = { logoutUser, saveUserSettings, setShowConnectingDialog, setSnackbar };
+const actionCreators = { cancelFileUpload, logoutUser, saveUserSettings, setAccountActivationCode, setShowConnectingDialog, setSnackbar };
 
 const mapStateToProps = state => {
   return {
-    onboardingState: getOnboardingState(state),
     currentUser: state.users.currentUser,
+    onboardingState: getOnboardingState(state),
     showDismissHelptipsDialog: !state.onboarding.complete && state.onboarding.showTipsDialog,
     showDeviceConnectionDialog: state.users.showConnectDeviceDialog,
     snackbar: state.app.snackbar,
-    trackingCode: state.app.trackerCode
+    trackingCode: state.app.trackerCode,
+    uploadProgress: state.app.uploadProgress
   };
 };
 

@@ -9,7 +9,7 @@ import { Launch as LaunchIcon } from '@material-ui/icons';
 
 import { getDeviceById, getSessionDetails } from '../../../actions/deviceActions';
 import { getIdAttribute } from '../../../selectors';
-import theme from '../../../themes/mender-theme';
+import theme, { colors } from '../../../themes/mender-theme';
 import Loader from '../../common/loader';
 import { formatTime } from '../../../helpers';
 import TerminalPlayer from './terminalplayer';
@@ -45,14 +45,14 @@ export const TerminalSession = ({ device, idAttribute, item, getDeviceById, getS
   const deviceDetails = {
     ...nameContainer,
     [usesId ? 'Device ID' : idAttribute]: (
-      <div className="flexbox" style={{ alignItems: 'center' }}>
+      <Link className="flexbox" style={{ alignItems: 'center', color: colors.disabledColor, fontWeight: 'initial' }} to={`/devices?id=${device.id}`}>
         <span>{usesId ? device.id : device.attributes[idAttribute]}</span>
         <LaunchIcon className="margin-left-small link-color" fontSize="small" />
-      </div>
+      </Link>
     ),
     'Device type': device_type,
     'System software version': device['rootfs-image.version'] || artifact_name || '-',
-    ' ': <Link to={`/auditlog?object_id=${item.object.id}&start_date=${BEGINNING_OF_TIME}`}>List all log entries for this device</Link>
+    ' ': <Link to={`/auditlog?object_type=device&object_id=${item.object.id}&start_date=${BEGINNING_OF_TIME}`}>List all log entries for this device</Link>
   };
 
   const sessionMeta = {

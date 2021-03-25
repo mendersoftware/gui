@@ -4,11 +4,11 @@ module.exports = {
   SELECT_DEVICES: 'SELECT_DEVICES',
 
   ADD_TO_GROUP: 'ADD_TO_GROUP',
-  ADD_STATIC_GROUP: 'ADD_STATIC_GROUP',
-  REMOVE_STATIC_GROUP: 'REMOVE_STATIC_GROUP',
   ADD_DYNAMIC_GROUP: 'ADD_DYNAMIC_GROUP',
-  REMOVE_FROM_GROUP: 'REMOVE_FROM_GROUP',
+  ADD_STATIC_GROUP: 'ADD_STATIC_GROUP',
   REMOVE_DYNAMIC_GROUP: 'REMOVE_DYNAMIC_GROUP',
+  REMOVE_STATIC_GROUP: 'REMOVE_STATIC_GROUP',
+  REMOVE_FROM_GROUP: 'REMOVE_FROM_GROUP',
   RECEIVE_GROUPS: 'RECEIVE_GROUPS',
   RECEIVE_DYNAMIC_GROUPS: 'RECEIVE_DYNAMIC_GROUPS',
   RECEIVE_DEVICE: 'RECEIVE_DEVICE',
@@ -33,6 +33,22 @@ module.exports = {
   SET_INACTIVE_DEVICES: 'SET_INACTIVE_DEVICES',
 
   SET_DEVICE_LIMIT: 'SET_DEVICE_LIMIT',
+
+  // see https://github.com/mendersoftware/go-lib-micro/tree/master/ws
+  //     for the description of proto_header and the consts
+  // *Note*: this needs to be aligned with mender-connect and deviceconnect.
+  DEVICE_MESSAGE_PROTOCOLS: {
+    Shell: 1
+  },
+  DEVICE_MESSAGE_TYPES: {
+    Delay: 'delay',
+    New: 'new',
+    Ping: 'ping',
+    Pong: 'pong',
+    Resize: 'resize',
+    Shell: 'shell',
+    Stop: 'stop'
+  },
 
   DEVICE_LIST_MAXIMUM_LENGTH: 50,
   DEVICE_FILTERING_OPTIONS: {

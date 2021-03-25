@@ -9,11 +9,11 @@ import ScheduleRollout from './deployment-wizard/schedulerollout';
 import Review from './deployment-wizard/review';
 
 import { createDeployment } from '../../actions/deploymentActions';
-import { getAllDevicesByStatus, selectDevice } from '../../actions/deviceActions';
+import { selectDevice } from '../../actions/deviceActions';
 import { selectRelease } from '../../actions/releaseActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { saveGlobalSettings } from '../../actions/userActions';
-import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getIsEnterprise, getOnboardingState } from '../../selectors';
 
@@ -64,7 +64,6 @@ export class CreateDialog extends React.Component {
       return accu;
     }, []);
     self.setState({ steps });
-    self.props.getAllDevicesByStatus(DEVICE_STATES.accepted);
   }
 
   componentDidUpdate(prevProps) {
@@ -104,6 +103,7 @@ export class CreateDialog extends React.Component {
       artifact_name: release.Name,
       devices: filterId || (group && group !== allDevices) ? undefined : deploymentDeviceIds,
       filter_id: filterId,
+      all_devices: !filterId && group === allDevices,
       group: group === allDevices ? undefined : group,
       name: device?.id || (group ? decodeURIComponent(group) : 'All devices'),
       phases: phases
@@ -205,14 +205,14 @@ export class CreateDialog extends React.Component {
   }
 }
 
-const actionCreators = { advanceOnboarding, createDeployment, getAllDevicesByStatus, saveGlobalSettings, selectDevice, selectRelease };
+const actionCreators = { advanceOnboarding, createDeployment, saveGlobalSettings, selectDevice, selectRelease };
 
 export const mapStateToProps = state => {
   const { plan = 'os' } = state.organization.organization;
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
-    acceptedDevices: state.devices.byStatus.accepted.deviceIds,
+    acceptedDeviceCount: state.devices.byStatus.accepted.total,
     createdGroup: Object.values(state.devices.groups.byId)[1],
     device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
     globalSettings: state.users.globalSettings,

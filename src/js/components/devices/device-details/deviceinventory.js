@@ -1,94 +1,58 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import copy from 'copy-to-clipboard';
+import { extractSoftware } from '../../../helpers';
+import { TwoColumnDataMultiple } from '../../common/configurationobject';
+import DeviceInventoryLoader from './deviceinventoryloader';
+import DeviceDataCollapse from './devicedatacollapse';
 
-import { Button, List } from '@material-ui/core';
-import { Link as LinkIcon, Replay as ReplayIcon } from '@material-ui/icons';
+export const DeviceInventory = ({ device, docsVersion, setSnackbar }) => {
+  const [open, setOpen] = useState(false);
+  const { attributes = {} } = device;
 
-import { extractSoftware, extractSoftwareInformation } from '../../../helpers';
-import ExpandableAttribute from '../../common/expandable-attribute';
-import ForwardingLink from '../../common/forwardlink';
-import { inlineHeadingStyle } from '../../artifacts/artifactPayload';
-
-const listItemTextClass = { secondary: 'inventory-text' };
-
-const softwareTitleMap = {
-  'rootfs-image.version': { title: 'System software version', priority: 0 },
-  'rootfs-image.checksum': { title: 'checksum', priority: 1 }
-};
-
-export const DeviceInventory = ({ device, setSnackbar }) => {
-  const { attributes, id } = device;
-
-  const copyLinkToClipboard = () => {
-    const location = window.location.href.substring(0, window.location.href.indexOf('/devices') + '/devices'.length);
-    copy(`${location}?id=${id}`);
-    setSnackbar('Link copied to clipboard');
-  };
+  const { device_type, artifact_name, ...remainingAttributes } = attributes;
 
   const softwareInfo = extractSoftware(attributes);
-  const deviceInventory = Object.entries(attributes)
+  const keyAttributeCount = Object.keys(attributes).length - Object.keys(remainingAttributes).length;
+  const { deviceInventory, keyContent } = Object.entries(remainingAttributes)
     .sort((a, b) => a[0].localeCompare(b[0]))
-    .reduce((accu, attribute, i) => {
-      const softwareAttribute = softwareInfo.find(info => attribute[0].startsWith(info));
-      if (!softwareAttribute) {
-        const secondaryText = Array.isArray(attribute[1]) ? attribute[1].join(',') : attribute[1];
-        accu.push(
-          <ExpandableAttribute
-            key={`info-${i}`}
-            primary={attribute[0]}
-            secondary={secondaryText}
-            textClasses={listItemTextClass}
-            copyToClipboard={true}
-            setSnackbar={setSnackbar}
-          />
-        );
-      }
-      return accu;
-    }, []);
+    .reduce(
+      (accu, attribute, index) => {
+        const softwareAttribute = softwareInfo.find(info => attribute[0].startsWith(info));
+        if (!softwareAttribute) {
+          const attributeValue = Array.isArray(attribute[1]) ? attribute[1].join(',') : attribute[1];
+          if (index < keyAttributeCount) {
+            accu.keyContent[attribute[0]] = attributeValue;
+          } else {
+            accu.deviceInventory[attribute[0]] = attributeValue;
+          }
+        }
+        return accu;
+      },
+      { deviceInventory: {}, keyContent: { artifact_name, device_type } }
+    );
 
-  const softwareInformation = Object.entries(extractSoftwareInformation(attributes, softwareTitleMap)).map(item => ({
-    title: item[0],
-    content: item[1].map((info, index) => (
-      <ExpandableAttribute
-        key={`${item[0]}-info-${index}`}
-        primary={info.primary}
-        secondary={info.secondary}
-        textClasses={listItemTextClass}
-        copyToClipboard={true}
-        setSnackbar={setSnackbar}
-      />
-    ))
-  }));
-
+  const waiting = !Object.values(attributes).some(i => i);
+  const attributeCount = Object.keys(deviceInventory).length;
   return (
-    <>
-      <div className="device-inventory bordered report-list">
-        <h4>Device inventory</h4>
-        {!!softwareInformation.length && (
-          <div className="file-details">
-            <h4 style={inlineHeadingStyle}>Installed software</h4>
-            {softwareInformation.map((layer, layerIndex) => (
-              <div className="flexbox column" key={`layer-${layerIndex}`}>
-                <div className="margin-top-small">{layer.title}</div>
-                <List>{layer.content}</List>
-              </div>
-            ))}
-          </div>
-        )}
-        <List>{deviceInventory}</List>
-      </div>
-      <div className="device-actions" style={{ marginTop: '24px' }}>
-        <Button onClick={copyLinkToClipboard} startIcon={<LinkIcon />}>
-          Copy link to this device
-        </Button>
-        <span className="margin-left">
-          <Button to={`/deployments?open=true&deviceId=${id}`} component={ForwardingLink} startIcon={<ReplayIcon />}>
-            Create a deployment for this device
-          </Button>
-        </span>
-      </div>
-    </>
+    <DeviceDataCollapse
+      disableBottomBorder
+      header={
+        waiting ? (
+          <DeviceInventoryLoader docsVersion={docsVersion} />
+        ) : (
+          <>
+            <TwoColumnDataMultiple config={keyContent} setSnackbar={setSnackbar} style={{ marginBottom: 5 }} />
+            {!open && !!attributeCount && <a onClick={setOpen}>show {attributeCount} more</a>}
+          </>
+        )
+      }
+      isOpen={open}
+      onClick={setOpen}
+      title="Device inventory"
+    >
+      <TwoColumnDataMultiple config={deviceInventory} setSnackbar={setSnackbar} />
+      <a onClick={() => setOpen(false)}>show less</a>
+    </DeviceDataCollapse>
   );
 };
 
