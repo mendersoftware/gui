@@ -20,21 +20,19 @@ export const DeviceIdentity = ({ device, setSnackbar }) => {
     mac
   };
 
-  let extendedContent = { ...keyContent, ...remainingIdentity };
-
+  let extendedContent = remainingIdentity;
   if (created_ts) {
     const createdTime = <Time value={created_ts} format="YYYY-MM-DD HH:mm" />;
     extendedContent[status === DEVICE_STATES.preauth ? 'Date added' : 'First request'] = createdTime;
   }
 
+  const extendedContentLength = Object.keys(extendedContent).length;
   return (
     <DeviceDataCollapse
       header={
         <>
-          {!open && <TwoColumnData config={keyContent} compact setSnackbar={setSnackbar} style={style} />}
-          {!(open || !Object.keys(extendedContent).length) && (
-            <a onClick={setOpen}>show {Object.keys(extendedContent).length - Object.keys(keyContent).length} more</a>
-          )}
+          <TwoColumnData config={keyContent} compact setSnackbar={setSnackbar} style={{ ...style, marginBottom: 5 }} />
+          {!open && !!extendedContentLength && <a onClick={setOpen}>show {extendedContentLength} more</a>}
         </>
       }
       isOpen={open}
@@ -42,7 +40,7 @@ export const DeviceIdentity = ({ device, setSnackbar }) => {
       title="Device identity"
     >
       <TwoColumnData config={extendedContent} compact setSnackbar={setSnackbar} style={style} />
-      {open && <a onClick={() => setOpen(false)}>show less</a>}
+      <a onClick={() => setOpen(false)}>show less</a>
     </DeviceDataCollapse>
   );
 };

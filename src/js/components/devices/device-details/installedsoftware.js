@@ -35,20 +35,24 @@ export const InstalledSoftware = ({ device, docsVersion, setSnackbar }) => {
   }
 
   const waiting = !Object.values(attributes).some(i => i);
-  const keyInfo = !waiting && softwareInformation.length ? softwareInformation[0] : [];
+  const keyInfo = !waiting && softwareInformation.length ? softwareInformation.shift() : [];
   return (
     <DeviceDataCollapse
       header={
         waiting ? (
           <DeviceInventoryLoader docsVersion={docsVersion} />
         ) : (
-          !open && (
-            <div>
-              <div className="muted">{keyInfo.title}</div>
-              <TwoColumnData className="margin-bottom margin-left-small margin-top-small" config={keyInfo.content} compact setSnackbar={setSnackbar} />
-              {softwareInformation.length > 1 && <a onClick={setOpen}>show {softwareInformation.length - 1} more</a>}
-            </div>
-          )
+          <>
+            <div className="muted">{keyInfo.title}</div>
+            <TwoColumnData
+              className="margin-bottom margin-left-small margin-top-small"
+              config={keyInfo.content}
+              compact
+              setSnackbar={setSnackbar}
+              style={{ marginBottom: 5 }}
+            />
+            {!open && !!softwareInformation.length && <a onClick={setOpen}>show {softwareInformation.length} more</a>}
+          </>
         )
       }
       isOpen={open}
@@ -61,7 +65,7 @@ export const InstalledSoftware = ({ device, docsVersion, setSnackbar }) => {
           <TwoColumnData className="margin-bottom margin-left-small margin-top-small" config={layer.content} compact setSnackbar={setSnackbar} />
         </div>
       ))}
-      {open && <a onClick={() => setOpen(false)}>show less</a>}
+      <a onClick={() => setOpen(false)}>show less</a>
     </DeviceDataCollapse>
   );
 };

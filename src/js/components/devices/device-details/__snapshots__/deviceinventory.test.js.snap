@@ -42,6 +42,7 @@ exports[`DeviceInventory Component renders correctly 1`] = `
   >
     <div
       class="two-columns-multiple "
+      style="margin-bottom: 5px;"
     >
       <div
         class="break-all text-muted two-columns column-data compact multiple"
@@ -83,6 +84,7 @@ exports[`DeviceInventory Component renders correctly 1`] = `
         <div
           class="flexbox clickable"
         >
+          raspberrypi4
           <svg
             aria-hidden="true"
             class="MuiSvgIcon-root margin-left-small fadeOut MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall"

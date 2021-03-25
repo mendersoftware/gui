@@ -26,7 +26,7 @@ export const DeviceDataCollapse = ({ children, className = '', disableBottomBord
         <IconButton>{open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}</IconButton>
       </div>
       <div style={{ paddingLeft }}>{header}</div>
-      <Collapse in={open} timeout="auto" unmountOnExit style={{ paddingLeft }}>
+      <Collapse className={open ? 'fadeIn' : 'fadeOut'} in={open} timeout="auto" unmountOnExit style={{ paddingLeft }}>
         {children}
       </Collapse>
       {!disableBottomBorder && <Divider style={{ marginTop: theme.spacing(2) }} />}
