@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Time from 'react-time';
 
 // material ui
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Chip } from '@material-ui/core';
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Chip, withStyles } from '@material-ui/core';
 
 import { DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { formatTime } from '../../../../helpers';
@@ -83,11 +83,11 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
     onExpand(authset.id);
   };
 
-  let key = <a onClick={onShowKey}>show more</a>;
+  let key = <a onClick={onShowKey}>show key</a>;
   let content = [
     padder,
     <p className="bold expanded" key="content">
-      {loading === authset.id ? 'Updating status' : `${confirmMessage} Are you sure you want to ${newStatus} this?`}
+      {loading === authset.id ? 'Updating status' : `${confirmMessage} Are you sure you want to continue?`}
     </p>
   ];
   if (showKey) {
@@ -97,11 +97,11 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
       </div>,
       padder
     ];
-    key = <a onClick={() => onShowKey(false)}>show less</a>;
+    key = <a onClick={() => onShowKey(false)}>hide key</a>;
   }
 
   const actionButtons = confirmMessage.length ? (
-    `Confirm ${newStatus}?`
+    `Set to: ${newStatus}?`
   ) : (
     <div className="action-buttons flexbox">
       {authset.status !== DEVICE_STATES.accepted && authset.status !== DEVICE_STATES.preauth && !limitMaxed ? (
@@ -114,7 +114,7 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
       ) : (
         <div>Reject</div>
       )}
-      <a onClick={() => (total > 1 || device.status !== DEVICE_STATES.pending ? onConfirm('dismiss') : confirm(device.id, authset.id, 'dismiss'))}>Dismiss</a>
+      <a onClick={() => (total > 1 || device.status !== DEVICE_STATES.pending ? onConfirm('dismiss') : confirm(device.id, authset.id, 'dismissed'))}>Dismiss</a>
     </div>
   );
 
@@ -125,8 +125,21 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
     authsetStatus = <Chip size="small" label="new" color="primary" style={{ justifySelf: 'flex-start' }} />;
   }
 
+  const CustomAccordion = withStyles({
+    root: {
+      backgroundColor: '#f7f7f7',
+      '&:before': {
+        display: 'none'
+      },
+      '&$expanded': {
+        margin: 'auto'
+      }
+    },
+    expanded: {}
+  })(Accordion);
+
   return (
-    <Accordion square expanded={isExpanded}>
+    <CustomAccordion square expanded={isExpanded}>
       <AccordionSummary style={{ cursor: 'default' }}>
         {authsetStatus}
         <div className="capitalized">{authset.status}</div>
@@ -151,13 +164,13 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
                 Cancel
               </Button>
               <Button variant="contained" onClick={() => confirm(device.id, authset.id, newStatus)}>
-                <span className="capitalized">{newStatus}</span>
+                <span className="uppercase">confirm</span>
               </Button>
             </>
           )}
         </AccordionActions>
       )}
-    </Accordion>
+    </CustomAccordion>
   );
 };
 

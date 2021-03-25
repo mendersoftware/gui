@@ -157,10 +157,10 @@ Array [
   >
     To see the effects of applying a configuration to your device you can set one of the below values to modify the behaviour of your Raspberry Pi green status LED
     <div
-      className="break-all text-muted two-columns column-data compact react-tooltip margin-top-small margin-bottom-small"
+      className="break-all two-columns column-data compact react-tooltip margin-top-small margin-bottom-small"
     >
       <div
-        className="align-right"
+        className="align-right key text-muted"
       >
         <b>
           mmc0
@@ -193,7 +193,7 @@ Array [
         </svg>
       </div>
       <div
-        className="align-right"
+        className="align-right key text-muted"
       >
         <b>
           on
@@ -226,7 +226,7 @@ Array [
         </svg>
       </div>
       <div
-        className="align-right"
+        className="align-right key text-muted"
       >
         <b>
           off
@@ -259,7 +259,7 @@ Array [
         </svg>
       </div>
       <div
-        className="align-right"
+        className="align-right key text-muted"
       >
         <b>
           heartbeat

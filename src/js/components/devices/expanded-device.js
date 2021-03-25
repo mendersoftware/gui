@@ -74,18 +74,18 @@ export const ExpandedDevice = ({
   return (
     <Drawer anchor="right" className="expandedDevice" open={open} onClose={onClose} PaperProps={{ style: { minWidth: '67vw' } }}>
       <div className="flexbox margin-bottom-small" style={{ alignItems: 'center' }}>
-        <b>Device information for {deviceIdentifier}</b>
+        <h3>Device information for {deviceIdentifier}</h3>
+        <IconButton onClick={copyLinkToClipboard}>
+          <LinkIcon />
+        </IconButton>
         <div className="muted margin-left margin-right">
           Last check-in: <RelativeTime updateTime={device.updated_ts} />
         </div>
-        <Button onClick={copyLinkToClipboard} startIcon={<LinkIcon />} size="small">
-          Copy link to this device
-        </Button>
         <IconButton style={{ marginLeft: 'auto' }} onClick={onClose}>
           <CloseIcon />
         </IconButton>
       </div>
-      <Divider />
+      <Divider style={{ marginBottom: theme.spacing(3) }} />
       <DeviceIdentity device={device} setSnackbar={setSnackbar} />
       <AuthStatus device={device} decommission={onDecommissionDevice} disableBottomBorder={!isAcceptedDevice} showHelptips={showHelptips} />
       {hasDeviceConfig && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(status) && (
