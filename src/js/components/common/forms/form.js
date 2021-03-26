@@ -205,6 +205,11 @@ export default class Form extends React.Component {
       this.updateModel();
     }
   }
+
+  onSubmit(event) {
+    event.preventDefault();
+  }
+
   render() {
     var uploadActions = !!this.props.showButtons && (
       <div
@@ -230,7 +235,12 @@ export default class Form extends React.Component {
     );
 
     return (
-      <form key={this.props.uniqueId} className={this.props.className || ''} autoComplete={this.props.autocomplete || undefined}>
+      <form
+        key={this.props.uniqueId}
+        className={this.props.className || ''}
+        autoComplete={this.props.autocomplete || undefined}
+        onSubmit={e => this.onSubmit(e)}
+      >
         {this.newChildren}
         {uploadActions}
       </form>
