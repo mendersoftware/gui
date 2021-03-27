@@ -11,7 +11,6 @@ import { getDeviceById, getSessionDetails } from '../../../actions/deviceActions
 import { getIdAttribute } from '../../../selectors';
 import theme, { colors } from '../../../themes/mender-theme';
 import Loader from '../../common/loader';
-import { formatTime } from '../../../helpers';
 import TerminalPlayer from './terminalplayer';
 
 momentDurationFormatSetup(moment);
@@ -46,7 +45,7 @@ export const TerminalSession = ({ device, idAttribute, item, getDeviceById, getS
     ...nameContainer,
     [usesId ? 'Device ID' : idAttribute]: (
       <Link className="flexbox" style={{ alignItems: 'center', color: colors.disabledColor, fontWeight: 'initial' }} to={`/devices?id=${device.id}`}>
-        <span>{usesId ? device.id : device.attributes[idAttribute]}</span>
+        <span>{usesId ? device.id : (device.identity_data || {})[idAttribute]}</span>
         <LaunchIcon className="margin-left-small link-color" fontSize="small" />
       </Link>
     ),
@@ -57,8 +56,8 @@ export const TerminalSession = ({ device, idAttribute, item, getDeviceById, getS
 
   const sessionMeta = {
     'Session ID': item.meta.session_id[0],
-    'Start time': <Time value={formatTime(sessionDetails.start)} format="YYYY-MM-DD HH:mm" />,
-    'End time': <Time value={formatTime(sessionDetails.end)} format="YYYY-MM-DD HH:mm" />,
+    'Start time': <Time value={sessionDetails.start} format="YYYY-MM-DD HH:mm" />,
+    'End time': <Time value={sessionDetails.end} format="YYYY-MM-DD HH:mm" />,
     'Duration': moment.duration(moment(sessionDetails.end).diff(sessionDetails.start)).format('*hh:*mm:ss:SSS'),
     User: item.actor.email
   };
