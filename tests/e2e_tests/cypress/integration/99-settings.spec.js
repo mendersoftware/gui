@@ -32,9 +32,9 @@ context('Settings', () => {
       it('allows higher device limits once upgraded', () => {
         cy.get('#limit a.inline span').contains('250').should('be.visible');
         cy.getCookie('tenantToken').then(({ value: token }) => {
-          cy.task('startClient', { token, count: 100 });
-          // eslint-disable-next-line cypress/no-unnecessary-waiting
-          cy.visit(`${Cypress.config().baseUrl}ui/#/devices`).wait(60000);
+          cy.task('startClient', { token, count: 50 });
+          cy.visit(`${Cypress.config().baseUrl}ui/#/devices`);
+          cy.get('.header-section [href="/ui/#/devices/pending"]', { timeout: 120000 }).should('be.visible');
           cy.get('.header-section [href="/ui/#/devices/pending"]').contains('pending').should('be.visible');
           cy.get('.header-section [href="/ui/#/devices/pending"]')
             .invoke('text')

@@ -130,7 +130,7 @@ test-prep:
 
 test:staging-deployment:
   image:
-    name: cypress/included:6.2.1
+    name: cypress/included:6.8.0
     # cypress/included images have entrypoint set to "cypress"
     # which conflicts with GitLab CI wrapper shell script
     entrypoint: ['']
@@ -154,7 +154,6 @@ test:staging-deployment:
     - mv mender-stress-test-client tests/e2e_tests/ && cd tests/e2e_tests
     - wget -qP cypress/fixtures "https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender"
     - touch hosted.pem && true | openssl s_client -connect staging.hosted.mender.io:443 2>/dev/null | openssl x509 > hosted.pem
-    - apt-get install -qy musl-dev
   script:
     - npm ci --cache .npm --prefer-offline
     - npx cypress verify
@@ -165,7 +164,7 @@ test:staging-deployment:
   only:
     - staging
   when: delayed
-  start_in: 30 minutes
+  start_in: 15 minutes
   artifacts:
     expire_in: 2w
     paths:
