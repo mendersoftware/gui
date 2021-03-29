@@ -48,7 +48,6 @@ test:acceptance:
     - export SERVICE_IMAGE=${DOCKER_REPOSITORY}:${DOCKER_TAG}
     - apk add --no-cache bash git wget
     - wget -qP tests/e2e_tests/cypress/fixtures "https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender"
-    - docker load -i clientImage.tar
   script:
     - docker load -i image.tar
     - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:pr
@@ -124,12 +123,9 @@ test-prep:
     - docker:19.03.5-dind
   script:
     - docker run --rm --entrypoint "/bin/sh" -v $(pwd):/extract mendersoftware/mender-stress-test-client -c "cp mender-stress-test-client /extract/"
-    - docker build -f tests/e2e_tests/dockerClient/Dockerfile.client -t mendersoftware/mender-client-docker:connect tests/e2e_tests/dockerClient
-    - docker save mendersoftware/mender-client-docker:connect > clientImage.tar
   artifacts:
     paths:
       - mender-stress-test-client
-      - clientImage.tar
     expire_in: 30 days
 
 test:staging-deployment:
@@ -155,7 +151,6 @@ test:staging-deployment:
     DEVICE_TYPE: qemux86-64
   before_script:
     - curl -fsSL https://get.docker.com | sh
-    - docker load -i clientImage.tar
     - mv mender-stress-test-client tests/e2e_tests/ && cd tests/e2e_tests
     - wget -qP cypress/fixtures "https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender"
     - touch hosted.pem && true | openssl s_client -connect staging.hosted.mender.io:443 2>/dev/null | openssl x509 > hosted.pem
