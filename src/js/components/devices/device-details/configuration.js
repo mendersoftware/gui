@@ -253,7 +253,8 @@ export const DeviceConfiguration = ({
       });
   };
 
-  const onStartEdit = () => {
+  const onStartEdit = e => {
+    e.stopPropagation();
     setOpen(true);
     setIsEditingConfig(true);
   };
@@ -320,11 +321,11 @@ export const DeviceConfiguration = ({
               </Button>
             )}
           </div>
-          {open && isEditingConfig && (
+          {open && isEditingConfig ? (
             <Button onClick={setShowConfigImport} disabled={isUpdatingConfig} startIcon={<SaveAltIcon />} style={{ justifySelf: 'left' }}>
               Import configuration
             </Button>
-          )}
+          ) : null}
         </div>
       }
     >
