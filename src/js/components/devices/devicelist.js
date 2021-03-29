@@ -12,6 +12,7 @@ import { advanceOnboarding } from '../../actions/onboardingActions';
 
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
+import { getTenantCapabilities } from '../../selectors';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import ExpandedDevice from './expanded-device';
@@ -43,7 +44,7 @@ export class DeviceList extends React.Component {
   getDeviceInfo(device) {
     const { getDeviceAuth, getDeviceById, getDeviceConfig, getDeviceConnect } = this.props;
     getDeviceAuth(device.id);
-    if ([DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(device.status)) {
+    if (this.props.hasDeviceConfig && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(device.status)) {
       getDeviceConfig(device.id);
     }
     if (device.status === DEVICE_STATES.accepted) {
@@ -185,6 +186,7 @@ export class DeviceList extends React.Component {
 const actionCreators = { advanceOnboarding, getDeviceAuth, getDeviceById, getDeviceConfig, getDeviceConnect, setSnackbar };
 
 const mapStateToProps = (state, ownProps) => {
+  const { hasDeviceConfig } = getTenantCapabilities(state);
   const devices = ownProps.devices.reduce((accu, deviceId) => {
     if (deviceId && state.devices.byId[deviceId]) {
       accu.push({ auth_sets: [], ...state.devices.byId[deviceId] });
@@ -196,6 +198,7 @@ const mapStateToProps = (state, ownProps) => {
     devices,
     filters: state.devices.filters,
     globalSettings: state.users.globalSettings,
+    hasDeviceConfig,
     onboardingComplete: state.onboarding.complete
   };
 };

@@ -119,7 +119,7 @@ export const DeviceConnectionDialog = ({ advanceOnboarding, docsVersion, onboard
         {(onDevice || virtualDevice) && (
           <div>
             <Button onClick={onBackClick}>Back</Button>
-            {progress < 2 ? (
+            {progress < 2 && (!virtualDevice || progress < 1) ? (
               <Button variant="contained" disabled={!(virtualDevice || (onDevice && onboardingDeviceType))} onClick={onAdvance}>
                 Next
               </Button>
