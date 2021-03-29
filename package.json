@@ -11,7 +11,7 @@
     "@material-ui/pickers": "^3.3.10",
     "@mdi/js": "^5.9.55",
     "@stripe/react-stripe-js": "^1.4.0",
-    "@stripe/stripe-js": "^1.13.1",
+    "@stripe/stripe-js": "^1.13.2",
     "axios": "^0.21.1",
     "buffer": "^6.0.3",
     "copy-to-clipboard": "^3.3.1",
