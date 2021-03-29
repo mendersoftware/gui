@@ -40,7 +40,7 @@ test:acceptance:
   image: tiangolo/docker-with-compose
   dependencies:
     - build:docker
-    - test-prep
+    - test:prep
   services:
     - docker:19.03.5-dind
   before_script:
@@ -116,7 +116,7 @@ test:docs-links:hosted:
   variables:
     DOCS_VERSION: hosted
 
-test-prep:
+test:prep:
   stage: pre-test
   image: docker
   services:
@@ -142,7 +142,7 @@ test:staging-deployment:
     paths:
       - .npm/
   dependencies:
-    - test-prep
+    - test:prep
   variables:
     DOCKER_DRIVER: overlay2
     DOCKER_HOST: tcp://docker:2375/
