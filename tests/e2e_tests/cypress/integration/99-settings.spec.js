@@ -25,7 +25,7 @@ context('Settings', () => {
           body().find('[name="postal"]').type('12345');
         });
         cy.contains('button', 'Sign up').click();
-        cy.contains('Your upgrade was successful!').should('be.visible');
+        cy.contains('Your upgrade was successful!', { timeout: 10000 }).should('be.visible');
         cy.contains('Organization name', { timeout: 10000 });
         cy.contains('Organization name').should('be.visible');
       });
