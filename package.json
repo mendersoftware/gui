@@ -35,7 +35,7 @@
     "react-google-recaptcha": "^2.1.0",
     "react-idle-timer": "^4.5.6",
     "react-linkify": "^1.0.0-alpha",
-    "react-redux": "^7.2.2",
+    "react-redux": "^7.2.3",
     "react-router-dom": "^5.2.0",
     "react-time": "^4.3.0",
     "react-tooltip": "^3.11.6",
