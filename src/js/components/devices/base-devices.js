@@ -1,11 +1,18 @@
 import React from 'react';
 import Time from 'react-time';
 
+import { ArrowRightAlt as ArrowRightAltIcon } from '@material-ui/icons';
+
 import RelativeTime from '../common/relative-time';
 
 export const RelativeDeviceTime = device => <RelativeTime updateTime={device.updated_ts} />;
 export const DeviceStatusHeading = device => (device.status ? <div className="capitalized">{device.status}</div> : '-');
 export const DeviceCreationTime = device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-');
+export const DeviceExpansion = () => (
+  <div className="bold flexbox link-color margin-right-small uppercased" style={{ alignItems: 'center', whiteSpace: 'nowrap' }}>
+    view details <ArrowRightAltIcon />
+  </div>
+);
 
 export default class BaseDevices extends React.Component {
   componentWillUnmount() {

@@ -2,79 +2,82 @@
 
 exports[`AuthStatus Component renders correctly 1`] = `
 <div
-  class="margin-bottom-small flexbox"
-  style="flex-direction: row;"
+  class="margin-bottom "
 >
-  <span
-    style="display: flex; min-width: 180px; align-items: center; margin-right: 2vw;"
+  <div
+    class="clickable flexbox space-between"
+    style="align-items: flex-start;"
   >
-    <svg
-      aria-hidden="true"
-      class="MuiSvgIcon-root green"
-      focusable="false"
-      style="margin: 12px;"
-      viewBox="0 0 24 24"
+    <div
+      class="flexbox"
+      style="align-items: center;"
     >
-      <path
-        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-      />
-    </svg>
-    <span
-      class="inline-block"
+      <h4>
+        Authentication status
+      </h4>
+      <div
+        class="flexbox margin-left margin-right"
+        style="align-items: center;"
+      >
+        <div
+          class="capitalized"
+        >
+          accepted
+        </div>
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root green"
+          focusable="false"
+          style="margin: 12px;"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+          />
+        </svg>
+      </div>
+      <div
+        class="MuiChip-root MuiChip-colorPrimary MuiChip-sizeSmall"
+      >
+        <span
+          class="MuiChip-label MuiChip-labelSmall"
+        >
+          new request
+        </span>
+      </div>
+    </div>
+    <button
+      class="MuiButtonBase-root MuiIconButton-root"
+      tabindex="0"
+      type="button"
     >
-      <h6
-        class="MuiTypography-root MuiTypography-subtitle2"
-        style="text-transform: capitalize; text-align: left;"
-      >
-        Device status
-      </h6>
-      <p
-        class="MuiTypography-root MuiTypography-body1"
-        style="text-transform: capitalize; text-align: left;"
-      >
-        accepted
-      </p>
-    </span>
-  </span>
-  <button
-    class="MuiButtonBase-root MuiButton-root MuiButton-text"
-    tabindex="0"
-    type="button"
-  >
-    <span
-      class="MuiButton-label"
-    >
-      <svg
-        aria-hidden="true"
-        class="MuiSvgIcon-root auth"
-        focusable="false"
-        style="margin: 12px;"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
-        />
-      </svg>
       <span
-        class="inline-block"
+        class="MuiIconButton-label"
       >
-        <h6
-          class="MuiTypography-root MuiTypography-subtitle2"
-          style="text-transform: none; text-align: left;"
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root"
+          focusable="false"
+          viewBox="0 0 24 24"
         >
-          This device has a pending authentication set
-        </h6>
-        <p
-          class="MuiTypography-root muted MuiTypography-body1"
-          style="text-transform: none; text-align: left;"
-        >
-          Click to adjust authorization status for this device
-        </p>
+          <path
+            d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+          />
+        </svg>
       </span>
-    </span>
-    <span
-      class="MuiTouchRipple-root"
-    />
-  </button>
+      <span
+        class="MuiTouchRipple-root"
+      />
+    </button>
+  </div>
+  <div>
+    <a>
+      show more
+    </a>
+  </div>
+  <hr
+    class="MuiDivider-root"
+    style="margin-top: 24px;"
+  />
 </div>
 `;

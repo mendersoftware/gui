@@ -1,93 +1,84 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CreateGroup Component renders correctly 1`] = `
-<div
-  className="device-inventory bordered report-list"
+<ul
+  className="MuiList-root MuiList-padding"
 >
-  <h4
-    className="margin-bottom-none"
-  >
-    Device inventory
-  </h4>
-  <ul
-    className="MuiList-root MuiList-padding"
+  <div
+    className="waiting-inventory"
   >
     <div
-      className="waiting-inventory"
+      className="tooltip info"
+      data-event="click focus"
+      data-for="inventory-wait"
+      data-tip={true}
+      id="inventory-info"
+      onClick={[Function]}
+      style={
+        Object {
+          "right": "8px",
+          "top": "8px",
+        }
+      }
+    >
+      <svg
+        aria-hidden={true}
+        className="MuiSvgIcon-root"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+        />
+      </svg>
+    </div>
+    <div
+      className="__react_component_tooltip place-top type-dark"
+      data-id="tooltip"
+      id="inventory-wait"
+    >
+      <h3>
+        Waiting for inventory data
+      </h3>
+      <p>
+        Inventory data not yet received from the device - this can take up to 30 minutes with default installation.
+      </p>
+      <p>
+        Also see the documentation for
+         
+        <a
+          href="https://docs.mender.io/client-installation/configuration-file/polling-intervals"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Polling intervals
+        </a>
+        .
+      </p>
+    </div>
+    <p>
+      Waiting for inventory data from the device
+    </p>
+    <div
+      className="loaderContainer"
     >
       <div
-        className="tooltip info"
-        data-event="click focus"
-        data-for="inventory-wait"
-        data-tip={true}
-        id="inventory-info"
-        onClick={[Function]}
-        style={
-          Object {
-            "right": "8px",
-            "top": "8px",
-          }
-        }
+        className="waiting-loader loader"
       >
-        <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-          />
-        </svg>
-      </div>
-      <div
-        className="__react_component_tooltip place-top type-dark"
-        data-id="tooltip"
-        id="inventory-wait"
-      >
-        <h3>
-          Waiting for inventory data
-        </h3>
-        <p>
-          Inventory data not yet received from the device - this can take up to 30 minutes with default installation.
-        </p>
-        <p>
-          Also see the documentation for
-           
-          <a
-            href="https://docs.mender.io/client-installation/configuration-file/polling-intervals"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Polling intervals
-          </a>
-          .
-        </p>
-      </div>
-      <p>
-        Waiting for inventory data from the device
-      </p>
-      <div
-        className="loaderContainer"
-      >
-        <div
-          className="waiting-loader loader"
-        >
-          <span
-            className="dot dot_1"
-          />
-          <span
-            className="dot dot_2"
-          />
-          <span
-            className="dot dot_3"
-          />
-          <span
-            className="dot dot_4"
-          />
-        </div>
+        <span
+          className="dot dot_1"
+        />
+        <span
+          className="dot dot_2"
+        />
+        <span
+          className="dot dot_3"
+        />
+        <span
+          className="dot dot_4"
+        />
       </div>
     </div>
-  </ul>
-</div>
+  </div>
+</ul>
 `;

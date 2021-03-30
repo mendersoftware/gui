@@ -6,6 +6,8 @@ const getAppDocsVersion = state => state.app.docsVersion;
 const getFeatures = state => state.app.features;
 const getRolesById = state => state.users.rolesById;
 const getOrganization = state => state.organization.organization;
+const getAcceptedDevices = state => state.devices.byStatus.accepted;
+const getDeviceLimit = state => state.devices.limit;
 const getDevicesList = state => Object.values(state.devices.byId);
 const getOnboarding = state => state.onboarding;
 const getShowHelptips = state => state.users.showHelptips;
@@ -25,6 +27,10 @@ export const getDemoDeviceAddress = createSelector([getDevicesList, getOnboardin
 });
 
 export const getIdAttribute = createSelector([getGlobalSettings], ({ id_attribute = 'Device ID' }) => id_attribute);
+
+export const getLimitMaxed = createSelector([getAcceptedDevices, getDeviceLimit], ({ total: acceptedDevices = 0 }, deviceLimit) =>
+  Boolean(deviceLimit && deviceLimit <= acceptedDevices)
+);
 
 export const getOnboardingState = createSelector([getOnboarding, getShowHelptips], ({ complete, progress, showTips }, showHelptips) => ({
   complete,

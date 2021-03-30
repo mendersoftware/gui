@@ -2,46 +2,60 @@
 
 exports[`DeviceIdentity Component renders correctly 1`] = `
 <div
-  class="margin-bottom-small"
+  class="margin-bottom "
 >
-  <h4
-    class="margin-bottom-none"
+  <div
+    class="clickable flexbox space-between"
+    style="align-items: flex-start;"
   >
-    Device identity
-  </h4>
-  <ul
-    class="MuiList-root list-horizontal-flex MuiList-padding"
-  >
-    <div>
-      <li
-        class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-        disabled=""
+    <h4
+      class="margin-bottom-small"
+    >
+      Device identity
+    </h4>
+    <button
+      class="MuiButtonBase-root MuiIconButton-root"
+      tabindex="0"
+      type="button"
+    >
+      <span
+        class="MuiIconButton-label"
       >
-        <div
-          class="MuiListItemText-root MuiListItemText-multiline"
-        >
-          <span
-            class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-          >
-            Device ID
-          </span>
-          <div
-            class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-            title="a1"
-          >
-            <div>
-              <span
-                class="inventory-text"
-              >
-                a1
-              </span>
-               
-            </div>
-          </div>
-        </div>
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+          class="MuiSvgIcon-root"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+          />
+        </svg>
+      </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
+    </button>
+  </div>
+  <div>
+    <div
+      class="break-all two-columns column-data compact "
+      style="max-width: 80%; grid-template-columns: minmax(max-content, 150px) auto; margin-bottom: 5px;"
+    >
+      <div
+        class="align-right key text-muted"
+      >
+        <b>
+          ID
+        </b>
+      </div>
+      <div
+        class="flexbox clickable"
+      >
+        a1
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root margin-left-small fadeOut MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall"
           focusable="false"
           title="Copy to clipboard"
           viewBox="0 0 24 24"
@@ -50,41 +64,21 @@ exports[`DeviceIdentity Component renders correctly 1`] = `
             d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
           />
         </svg>
-      </li>
-      <hr
-        class="MuiDivider-root"
-      />
-    </div>
-    <div>
-      <li
-        class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-        disabled=""
+      </div>
+      <div
+        class="align-right key text-muted"
       >
-        <div
-          class="MuiListItemText-root MuiListItemText-multiline"
-        >
-          <span
-            class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-          >
-            mac
-          </span>
-          <div
-            class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-            title="dc:a6:32:12:ad:bf"
-          >
-            <div>
-              <span
-                class="inventory-text"
-              >
-                dc:a6:32:12:ad:bf
-              </span>
-               
-            </div>
-          </div>
-        </div>
+        <b>
+          mac
+        </b>
+      </div>
+      <div
+        class="flexbox clickable"
+      >
+        dc:a6:32:12:ad:bf
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+          class="MuiSvgIcon-root margin-left-small fadeOut MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall"
           focusable="false"
           title="Copy to clipboard"
           viewBox="0 0 24 24"
@@ -93,58 +87,17 @@ exports[`DeviceIdentity Component renders correctly 1`] = `
             d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
           />
         </svg>
-      </li>
-      <hr
-        class="MuiDivider-root"
-      />
+      </div>
     </div>
-    <div>
-      <li
-        class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-        disabled=""
-      >
-        <div
-          class="MuiListItemText-root MuiListItemText-multiline"
-        >
-          <span
-            class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-          >
-            First request
-          </span>
-          <div
-            class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-            title="[object Object]"
-          >
-            <div>
-              <span
-                class="inventory-text"
-              >
-                <time
-                  datetime="2019-01-01T06:25:00+00:00"
-                >
-                  2019-01-01 06:25
-                </time>
-              </span>
-               
-            </div>
-          </div>
-        </div>
-        <svg
-          aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-          focusable="false"
-          title="Copy to clipboard"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-          />
-        </svg>
-      </li>
-      <hr
-        class="MuiDivider-root"
-      />
-    </div>
-  </ul>
+    <a>
+      show 
+      1
+       more
+    </a>
+  </div>
+  <hr
+    class="MuiDivider-root"
+    style="margin-top: 24px;"
+  />
 </div>
 `;

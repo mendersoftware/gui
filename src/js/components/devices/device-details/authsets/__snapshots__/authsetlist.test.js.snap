@@ -5,17 +5,12 @@ exports[`AuthsetList Component renders correctly 1`] = `
   className="authsets"
 >
   <div
-    className="flexbox header"
+    className="header"
   >
     <div
       className="columnHeader"
     >
-      Public key
-    </div>
-    <div
-      className="columnHeader"
-    >
-      Request time
+      
     </div>
     <div
       className="columnHeader"
@@ -25,11 +20,26 @@ exports[`AuthsetList Component renders correctly 1`] = `
     <div
       className="columnHeader"
     >
+      Public key
+    </div>
+    <div
+      className="columnHeader"
+    >
+      Time of request
+    </div>
+    <div
+      className="columnHeader"
+    >
       Actions
     </div>
   </div>
   <div
     className="body"
+    style={
+      Object {
+        "position": "relative",
+      }
+    }
   />
 </div>
 `;

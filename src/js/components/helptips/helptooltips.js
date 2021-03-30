@@ -3,13 +3,14 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 
-import { Help as HelpIcon } from '@material-ui/icons';
+import { Help as HelpIcon, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
+import { setSnackbar } from '../../actions/appActions';
 import { toggleHelptips } from '../../actions/userActions';
 import { getDocsVersion } from '../../selectors';
 import ConfigurationObject from '../common/configurationobject';
 
-const actionCreators = { toggleHelptips };
+const actionCreators = { setSnackbar, toggleHelptips };
 const mapStateToProps = (state, ownProps) => {
   let device = {};
   if (ownProps.deviceId) {
@@ -29,6 +30,29 @@ const HideHelptipsButton = ({ toggleHelptips }) => (
   </p>
 );
 
+const AuthExplainComponent = ({ docsVersion }) => (
+  <div>
+    <div id="auth-info" className="tooltip" style={{ right: 0, top: -70 }} data-tip data-for="auth-info-tip" data-event="click focus">
+      <InfoIcon />
+    </div>
+    <ReactTooltip id="auth-info-tip" globalEventOff="click" place="left" type="light" effect="solid" className="react-tooltip">
+      <h3>Device authorization status</h3>
+      <p>
+        Each device sends an authentication request containing its identity attributes and its current public key. You can accept, reject or dismiss these
+        requests to determine the authorization status of the device.
+      </p>
+      <p>
+        In cases such as key rotation, each device may have more than one identity/key combination listed. See the documentation for more on{' '}
+        <a href={`https://docs.mender.io/${docsVersion}overview/device-authentication`} target="_blank" rel="noopener noreferrer">
+          Device authentication
+        </a>
+        .
+      </p>
+    </ReactTooltip>
+  </div>
+);
+export const AuthExplainButton = connect(mapStateToProps, actionCreators)(AuthExplainComponent);
+
 const AuthButtonComponent = ({ highlightHelp, toggleHelptips }) => (
   <div>
     <div
@@ -37,7 +61,7 @@ const AuthButtonComponent = ({ highlightHelp, toggleHelptips }) => (
       data-tip
       data-for="auth-button-tip"
       data-event="click focus"
-      style={{ left: '625px', top: '308px' }}
+      style={{ left: '75%', top: 0 }}
     >
       <HelpIcon />
     </div>
@@ -180,7 +204,7 @@ const ConfigureTimezoneTipComponent = ({ anchor, device, toggleHelptips }) => {
 
 export const ConfigureTimezoneTip = connect(mapStateToProps, actionCreators)(ConfigureTimezoneTipComponent);
 
-const ConfigureRaspberryLedComponent = ({ anchor, device, toggleHelptips }) => {
+const ConfigureRaspberryLedComponent = ({ anchor, device, setSnackbar, toggleHelptips }) => {
   if (!['raspberry', 'rpi'].some(type => device.attributes?.device_type?.startsWith(type))) {
     return null;
   }
@@ -202,6 +226,7 @@ const ConfigureRaspberryLedComponent = ({ anchor, device, toggleHelptips }) => {
               heartbeat: 'Enable heartbeat blinking'
             }}
             compact
+            setSnackbar={setSnackbar}
           />
           There are other possible values, but we won&apos;t advertise them here. See
           <a href="http://www.d3noob.org/2020/07/controlling-activity-led-on-raspberry-pi.html" target="_blank" rel="noopener noreferrer">

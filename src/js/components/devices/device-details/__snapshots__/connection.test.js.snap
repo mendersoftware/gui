@@ -3,36 +3,27 @@
 exports[`DeviceConnection Component renders correctly 1`] = `
 <div>
   <div
-    class="device-connect bordered report-list"
+    class="flexbox"
+    style="flex-direction: row;"
   >
-    <h4
-      class="margin-bottom-small"
+    <p
+      class="MuiTypography-root MuiTypography-body1"
+      style="text-transform: none; text-align: left;"
     >
-      Troubleshoot
-    </h4>
-    <div
-      class="flexbox"
-      style="flex-direction: row;"
-    >
-      <p
-        class="MuiTypography-root MuiTypography-body1"
-        style="text-transform: none; text-align: left;"
+      The troubleshoot add-on does not seem to be enabled on this device.
+      <br />
+      Please see
+       
+      <a
+        href="https://docs.mender.io/add-ons/remote-terminal"
+        rel="noopener noreferrer"
+        target="_blank"
       >
-        The troubleshoot add-on does not seem to be enabled on this device.
-        <br />
-        Please see
-         
-        <a
-          href="https://docs.mender.io/add-ons/remote-terminal"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          the documentation
-        </a>
-         
-        for a description on how it works and how to enable it.
-      </p>
-    </div>
+        the documentation
+      </a>
+       
+      for a description on how it works and how to enable it.
+    </p>
   </div>
 </div>
 `;
@@ -40,50 +31,41 @@ exports[`DeviceConnection Component renders correctly 1`] = `
 exports[`DeviceConnection Component renders correctly when connected 1`] = `
 <div>
   <div
-    class="device-connect bordered report-list"
+    class="flexbox"
+    style="flex-direction: row;"
   >
-    <h4
-      class="margin-bottom-small"
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-text Mui-disabled Mui-disabled"
+      disabled=""
+      style="margin-left: 16px;"
+      tabindex="-1"
+      type="button"
     >
-      Troubleshoot
-    </h4>
-    <div
-      class="flexbox"
-      style="flex-direction: row;"
-    >
-      <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-text Mui-disabled Mui-disabled"
-        disabled=""
-        style="margin-left: 16px;"
-        tabindex="-1"
-        type="button"
+      <span
+        class="MuiButton-label"
       >
         <span
-          class="MuiButton-label"
+          class="MuiButton-startIcon MuiButton-iconSizeMedium"
         >
-          <span
-            class="MuiButton-startIcon MuiButton-iconSizeMedium"
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit"
+            focusable="false"
+            viewBox="0 0 24 24"
           >
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M20,19V7H4V19H20M20,3A2,2 0 0,1 22,5V19A2,2 0 0,1 20,21H4A2,2 0 0,1 2,19V5C2,3.89 2.9,3 4,3H20M13,17V15H18V17H13M9.58,13L5.57,9H8.4L11.7,12.3C12.09,12.69 12.09,13.33 11.7,13.72L8.42,17H5.59L9.58,13Z"
-              />
-            </svg>
-          </span>
-          <h6
-            class="MuiTypography-root MuiTypography-subtitle2"
-            style="text-transform: none; text-align: left;"
-          >
-            Launch a new Remote Terminal session
-          </h6>
+            <path
+              d="M20,19V7H4V19H20M20,3A2,2 0 0,1 22,5V19A2,2 0 0,1 20,21H4A2,2 0 0,1 2,19V5C2,3.89 2.9,3 4,3H20M13,17V15H18V17H13M9.58,13L5.57,9H8.4L11.7,12.3C12.09,12.69 12.09,13.33 11.7,13.72L8.42,17H5.59L9.58,13Z"
+            />
+          </svg>
         </span>
-      </button>
-    </div>
+        <h6
+          class="MuiTypography-root MuiTypography-subtitle2"
+          style="text-transform: none; text-align: left;"
+        >
+          Launch a new Remote Terminal session
+        </h6>
+      </span>
+    </button>
   </div>
 </div>
 `;
@@ -91,41 +73,32 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
 exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
 <div>
   <div
-    class="device-connect bordered report-list"
+    class="flexbox"
+    style="flex-direction: row;"
   >
-    <h4
-      class="margin-bottom-small"
+    <p
+      class="MuiTypography-root MuiTypography-body1"
+      style="text-transform: none; text-align: left;"
     >
-      Troubleshoot
-    </h4>
-    <div
-      class="flexbox"
-      style="flex-direction: row;"
-    >
-      <p
-        class="MuiTypography-root MuiTypography-body1"
-        style="text-transform: none; text-align: left;"
+      The troubleshoot add-on is not currently connected on this device, it was last connected on
+       
+      <span>
+        Invalid date
+      </span>
+      .
+      <br />
+      Please see
+       
+      <a
+        href="https://docs.mender.io/add-ons/remote-terminal"
+        rel="noopener noreferrer"
+        target="_blank"
       >
-        The troubleshoot add-on is not currently connected on this device, it was last connected on
-         
-        <span>
-          Invalid date
-        </span>
-        .
-        <br />
-        Please see
-         
-        <a
-          href="https://docs.mender.io/add-ons/remote-terminal"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          the documentation
-        </a>
-         
-        for more information.
-      </p>
-    </div>
+        the documentation
+      </a>
+       
+      for more information.
+    </p>
   </div>
 </div>
 `;

@@ -88,11 +88,11 @@ describe('Configuration Component', () => {
     userEvent.type(screen.getByPlaceholderText(/value/i), 'testValue');
     expect(document.querySelector('.MuiFab-root')).not.toBeDisabled();
     userEvent.click(screen.getByRole('checkbox', { name: /save/i }));
-    userEvent.click(screen.getByRole('button', { name: /save/i }));
+    act(() => userEvent.click(screen.getByRole('button', { name: /save/i })));
     await act(() => waitFor(() => rerender(ui)));
 
     expect(screen.getByText(/Configuration could not be updated on device/i)).toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', { name: /Retry/i }));
+    act(() => userEvent.click(screen.getByRole('button', { name: /Retry/i })));
     expect(submitMock).toHaveBeenLastCalledWith(defaultState.devices.byId.a1.id, { testKey: 'testValue' });
     expect(applyMock).toHaveBeenLastCalledWith(defaultState.devices.byId.a1.id, { testKey: 'testValue' }, true);
     device.config = {
@@ -116,12 +116,13 @@ describe('Configuration Component', () => {
         )
       )
     );
+    act(() => userEvent.click(document.querySelector('.clickable .MuiIconButton-label')));
     expect(screen.getByText(/aNumber/i)).toBeInTheDocument();
 
     userEvent.click(screen.getByRole('button', { name: /edit/i }));
     userEvent.type(screen.getByDisplayValue('something'), 'testKey');
     userEvent.type(screen.getByDisplayValue('else'), 'testValue');
-    userEvent.click(screen.getByRole('button', { name: /Cancel/i }));
+    act(() => userEvent.click(screen.getByRole('button', { name: /Cancel/i })));
     expect(screen.queryByText(/key/i)).not.toBeInTheDocument();
 
     // userEvent.click(screen.getByRole('button', { name: /View log/i }));

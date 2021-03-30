@@ -8,9 +8,9 @@ const statusTypes = {
   default: { severity: 'none', notification: '', label: '' },
   authRequests: {
     severity: 'default',
-    notification: `This device has a new auth request. This can happen if the device's public key changes. Expand the row to see more details`
+    notification: `This device has a new auth request. This can happen if the device's public key changes. Click on the row to see more details`
   },
-  offline: { severity: 'error', notification: 'This device has not communicated with the Mender backend for a while. Expand the row to see more details' },
+  offline: { severity: 'error', notification: 'This device has not communicated with the Mender backend for a while. Click on the row to see more details' },
   updateFailed: { severity: 'warning', notification: '' }
 };
 

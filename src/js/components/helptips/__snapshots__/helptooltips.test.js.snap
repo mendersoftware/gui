@@ -72,8 +72,8 @@ exports[`Helptooltips Components renders Connect(AuthButtonComponent) correctly 
     id="onboard-4"
     style={
       Object {
-        "left": "625px",
-        "top": "308px",
+        "left": "75%",
+        "top": 0,
       }
     }
   >
@@ -157,53 +157,139 @@ Array [
   >
     To see the effects of applying a configuration to your device you can set one of the below values to modify the behaviour of your Raspberry Pi green status LED
     <div
-      className="react-tooltip margin-top-small margin-bottom-small text-muted two-columns"
-      style={
-        Object {
-          "gridTemplateColumns": "max-content 1fr",
-          "maxWidth": 280,
-        }
-      }
+      className="break-all two-columns column-data compact react-tooltip margin-top-small margin-bottom-small"
     >
       <div
-        className="align-right"
+        className="align-right key text-muted"
       >
         <b>
           mmc0
         </b>
       </div>
-      <div>
+      <div
+        className="flexbox clickable"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+      >
         The default, which blinks the led on storage activity
+        <svg
+          aria-describedby={null}
+          aria-hidden={true}
+          className="MuiSvgIcon-root margin-left-small fadeOut MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall"
+          focusable="false"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseLeave={[Function]}
+          onMouseOver={[Function]}
+          onTouchEnd={[Function]}
+          onTouchStart={[Function]}
+          title="Copy to clipboard"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+          />
+        </svg>
       </div>
       <div
-        className="align-right"
+        className="align-right key text-muted"
       >
         <b>
           on
         </b>
       </div>
-      <div>
+      <div
+        className="flexbox clickable"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+      >
         Turn on the light permanently
+        <svg
+          aria-describedby={null}
+          aria-hidden={true}
+          className="MuiSvgIcon-root margin-left-small fadeOut MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall"
+          focusable="false"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseLeave={[Function]}
+          onMouseOver={[Function]}
+          onTouchEnd={[Function]}
+          onTouchStart={[Function]}
+          title="Copy to clipboard"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+          />
+        </svg>
       </div>
       <div
-        className="align-right"
+        className="align-right key text-muted"
       >
         <b>
           off
         </b>
       </div>
-      <div>
+      <div
+        className="flexbox clickable"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+      >
         Turn off the light permanently
+        <svg
+          aria-describedby={null}
+          aria-hidden={true}
+          className="MuiSvgIcon-root margin-left-small fadeOut MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall"
+          focusable="false"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseLeave={[Function]}
+          onMouseOver={[Function]}
+          onTouchEnd={[Function]}
+          onTouchStart={[Function]}
+          title="Copy to clipboard"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+          />
+        </svg>
       </div>
       <div
-        className="align-right"
+        className="align-right key text-muted"
       >
         <b>
           heartbeat
         </b>
       </div>
-      <div>
+      <div
+        className="flexbox clickable"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+      >
         Enable heartbeat blinking
+        <svg
+          aria-describedby={null}
+          aria-hidden={true}
+          className="MuiSvgIcon-root margin-left-small fadeOut MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall"
+          focusable="false"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseLeave={[Function]}
+          onMouseOver={[Function]}
+          onTouchEnd={[Function]}
+          onTouchStart={[Function]}
+          title="Copy to clipboard"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+          />
+        </svg>
       </div>
     </div>
     There are other possible values, but we won't advertise them here. See

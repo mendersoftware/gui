@@ -9,8 +9,8 @@ const updateConfigFileWithUrl = (fileName, serverUrl = 'https://docker.mender.io
   const connectConfigFile = fs.readFileSync(`dockerClient/${fileName}.json`);
   let connectConfig = JSON.parse(connectConfigFile);
   connectConfig.ServerURL = serverUrl;
+  connectConfig.ServerCertificate = '/certs/hosted.pem';
   if (token) {
-    connectConfig.ServerCertificate = '/certs/hosted.pem';
     connectConfig.TenantToken = token;
   }
   fs.writeFileSync(`${projectRoot}/dockerClient/${fileName}-test.json`, JSON.stringify(connectConfig));
@@ -65,7 +65,7 @@ module.exports = (on, config) => {
         `${config.projectRoot}/dockerClient/mender-test.json:/etc/mender/mender.conf`,
         '-v',
         `${config.projectRoot}/dockerClient/mender-connect-test.json:/etc/mender/mender-connect.conf`,
-        'mendersoftware/mender-client-docker:connect'
+        'mendersoftware/mender-client-docker-addons:master'
       ];
       console.log(`starting with: ${token}`);
       console.log(`starting using: docker ${args.join(' ')}`);

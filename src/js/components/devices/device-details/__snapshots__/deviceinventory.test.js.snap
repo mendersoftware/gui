@@ -2,462 +2,106 @@
 
 exports[`DeviceInventory Component renders correctly 1`] = `
 <div
-  class="device-inventory bordered report-list"
+  class="margin-bottom "
 >
-  <h4>
-    Device inventory
-  </h4>
   <div
-    class="file-details"
+    class="clickable flexbox space-between"
+    style="align-items: flex-start;"
   >
     <h4
-      style="position: absolute; background: rgb(247, 247, 247); top: -35px; padding: 10px;"
+      class="margin-bottom-small"
     >
-      Installed software
+      Device inventory
     </h4>
-    <div
-      class="flexbox column"
+    <button
+      class="MuiButtonBase-root MuiIconButton-root"
+      tabindex="0"
+      type="button"
     >
-      <div
-        class="margin-top-small"
+      <span
+        class="MuiIconButton-label"
       >
-        a
-      </div>
-      <ul
-        class="MuiList-root MuiList-padding"
-      >
-        <div>
-          <li
-            class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-            disabled=""
-          >
-            <div
-              class="MuiListItemText-root MuiListItemText-multiline"
-            >
-              <span
-                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-              >
-                artifact_name
-              </span>
-              <div
-                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                title="myapp"
-              >
-                <div>
-                  <span
-                    class="inventory-text"
-                  >
-                    myapp
-                  </span>
-                   
-                </div>
-              </div>
-            </div>
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-              focusable="false"
-              title="Copy to clipboard"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-              />
-            </svg>
-          </li>
-          <hr
-            class="MuiDivider-root"
-          />
-        </div>
-        <div>
-          <li
-            class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-            disabled=""
-          >
-            <div
-              class="MuiListItemText-root MuiListItemText-multiline"
-            >
-              <span
-                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-              >
-                whole
-              </span>
-              <div
-                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                title="test-3"
-              >
-                <div>
-                  <span
-                    class="inventory-text"
-                  >
-                    test-3
-                  </span>
-                   
-                </div>
-              </div>
-            </div>
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-              focusable="false"
-              title="Copy to clipboard"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-              />
-            </svg>
-          </li>
-          <hr
-            class="MuiDivider-root"
-          />
-        </div>
-        <div>
-          <li
-            class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-            disabled=""
-          >
-            <div
-              class="MuiListItemText-root MuiListItemText-multiline"
-            >
-              <span
-                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-              >
-                whole
-              </span>
-              <div
-                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                title="test-4"
-              >
-                <div>
-                  <span
-                    class="inventory-text"
-                  >
-                    test-4
-                  </span>
-                   
-                </div>
-              </div>
-            </div>
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-              focusable="false"
-              title="Copy to clipboard"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-              />
-            </svg>
-          </li>
-          <hr
-            class="MuiDivider-root"
-          />
-        </div>
-      </ul>
-    </div>
-    <div
-      class="flexbox column"
-    >
-      <div
-        class="margin-top-small"
-      >
-        rootfs-image
-      </div>
-      <ul
-        class="MuiList-root MuiList-padding"
-      >
-        <div>
-          <li
-            class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-            disabled=""
-          >
-            <div
-              class="MuiListItemText-root MuiListItemText-multiline"
-            >
-              <span
-                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-              >
-                System software version
-              </span>
-              <div
-                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                title="stablev1-beta-final-v0"
-              >
-                <div>
-                  <span
-                    class="inventory-text"
-                  >
-                    stablev1-beta-final-v0
-                  </span>
-                   
-                </div>
-              </div>
-            </div>
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-              focusable="false"
-              title="Copy to clipboard"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-              />
-            </svg>
-          </li>
-          <hr
-            class="MuiDivider-root"
-          />
-        </div>
-        <div>
-          <li
-            class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-            disabled=""
-          >
-            <div
-              class="MuiListItemText-root MuiListItemText-multiline"
-            >
-              <span
-                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-              >
-                checksum
-              </span>
-              <div
-                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                title="12341143"
-              >
-                <div>
-                  <span
-                    class="inventory-text"
-                  >
-                    12341143
-                  </span>
-                   
-                </div>
-              </div>
-            </div>
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-              focusable="false"
-              title="Copy to clipboard"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-              />
-            </svg>
-          </li>
-          <hr
-            class="MuiDivider-root"
-          />
-        </div>
-      </ul>
-    </div>
-    <div
-      class="flexbox column"
-    >
-      <div
-        class="margin-top-small"
-      >
-        test
-      </div>
-      <ul
-        class="MuiList-root MuiList-padding"
-      >
-        <div>
-          <li
-            class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-            disabled=""
-          >
-            <div
-              class="MuiListItemText-root MuiListItemText-multiline"
-            >
-              <span
-                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-              >
-                test.version
-              </span>
-              <div
-                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                title="test-2"
-              >
-                <div>
-                  <span
-                    class="inventory-text"
-                  >
-                    test-2
-                  </span>
-                   
-                </div>
-              </div>
-            </div>
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-              focusable="false"
-              title="Copy to clipboard"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-              />
-            </svg>
-          </li>
-          <hr
-            class="MuiDivider-root"
-          />
-        </div>
-      </ul>
-    </div>
-    <div
-      class="flexbox column"
-    >
-      <div
-        class="margin-top-small"
-      >
-        even
-      </div>
-      <ul
-        class="MuiList-root MuiList-padding"
-      >
-        <div>
-          <li
-            class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-            disabled=""
-          >
-            <div
-              class="MuiListItemText-root MuiListItemText-multiline"
-            >
-              <span
-                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-              >
-                more
-              </span>
-              <div
-                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                title="test-5"
-              >
-                <div>
-                  <span
-                    class="inventory-text"
-                  >
-                    test-5
-                  </span>
-                   
-                </div>
-              </div>
-            </div>
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-              focusable="false"
-              title="Copy to clipboard"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-              />
-            </svg>
-          </li>
-          <hr
-            class="MuiDivider-root"
-          />
-        </div>
-        <div>
-          <li
-            class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-            disabled=""
-          >
-            <div
-              class="MuiListItemText-root MuiListItemText-multiline"
-            >
-              <span
-                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-              >
-                more
-              </span>
-              <div
-                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                title="test-6"
-              >
-                <div>
-                  <span
-                    class="inventory-text"
-                  >
-                    test-6
-                  </span>
-                   
-                </div>
-              </div>
-            </div>
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-              focusable="false"
-              title="Copy to clipboard"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-              />
-            </svg>
-          </li>
-          <hr
-            class="MuiDivider-root"
-          />
-        </div>
-      </ul>
-    </div>
-  </div>
-  <ul
-    class="MuiList-root MuiList-padding"
-  >
-    <div>
-      <li
-        class="MuiListItem-root attributes copy-to-clipboard MuiListItem-gutters Mui-disabled"
-        disabled=""
-      >
-        <div
-          class="MuiListItemText-root MuiListItemText-multiline"
-        >
-          <span
-            class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-          >
-            ipv4_wlan0
-          </span>
-          <div
-            class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-            title="192.168.10.141/24"
-          >
-            <div>
-              <span
-                class="inventory-text"
-              >
-                192.168.10.141/24
-              </span>
-               
-            </div>
-          </div>
-        </div>
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+          class="MuiSvgIcon-root"
           focusable="false"
-          title="Copy to clipboard"
           viewBox="0 0 24 24"
         >
           <path
-            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+            d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
           />
         </svg>
-      </li>
-      <hr
-        class="MuiDivider-root"
+      </span>
+      <span
+        class="MuiTouchRipple-root"
       />
+    </button>
+  </div>
+  <div>
+    <div
+      class="two-columns-multiple "
+      style="margin-bottom: 5px;"
+    >
+      <div
+        class="break-all two-columns column-data compact multiple"
+      >
+        <div
+          class="align-right key text-muted"
+        >
+          <b>
+            artifact_name
+          </b>
+        </div>
+        <div
+          class="flexbox clickable"
+        >
+          myapp
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root margin-left-small fadeOut MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall"
+            focusable="false"
+            title="Copy to clipboard"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+            />
+          </svg>
+        </div>
+      </div>
+      <div
+        class="break-all two-columns column-data compact multiple"
+      >
+        <div
+          class="align-right key text-muted"
+        >
+          <b>
+            device_type
+          </b>
+        </div>
+        <div
+          class="flexbox clickable"
+        >
+          raspberrypi4
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root margin-left-small fadeOut MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall"
+            focusable="false"
+            title="Copy to clipboard"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+            />
+          </svg>
+        </div>
+      </div>
     </div>
-  </ul>
+    <a>
+      show 
+      1
+       more
+    </a>
+  </div>
 </div>
 `;

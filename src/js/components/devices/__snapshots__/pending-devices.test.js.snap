@@ -82,7 +82,7 @@ exports[`PendingDevices Component renders correctly 1`] = `
       class=\\"deviceList pending\\"
     >
       <div
-        class=\\"header deviceListRow columns-4 selectable expandable\\"
+        class=\\"header deviceListRow columns-5 selectable\\"
       >
         <span
           aria-disabled=\\"false\\"
@@ -173,6 +173,11 @@ exports[`PendingDevices Component renders correctly 1`] = `
           </svg>
         </div>
         <div
+          class=\\"columnHeader\\"
+        >
+          
+        </div>
+        <div
           style=\\"width: 48px;\\"
         />
       </div>
@@ -180,109 +185,70 @@ exports[`PendingDevices Component renders correctly 1`] = `
         class=\\"body\\"
       >
         <div
-          class=\\"MuiPaper-root MuiAccordion-root deviceListItem MuiPaper-elevation1\\"
+          class=\\"deviceListRow columns-5 selectable deviceListItem clickable\\"
+          style=\\"align-items: center;\\"
         >
-          <div
+          <span
             aria-disabled=\\"false\\"
-            aria-expanded=\\"false\\"
-            class=\\"MuiButtonBase-root MuiAccordionSummary-root\\"
-            role=\\"button\\"
-            style=\\"padding: 0px;\\"
-            tabindex=\\"0\\"
+            class=\\"MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary\\"
           >
-            <div
-              class=\\"MuiAccordionSummary-content deviceListRow columns-4 selectable expandable\\"
+            <span
+              class=\\"MuiIconButton-label\\"
             >
-              <span
-                aria-disabled=\\"false\\"
-                class=\\"MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary\\"
+              <input
+                class=\\"PrivateSwitchBase-input-4\\"
+                data-indeterminate=\\"false\\"
+                type=\\"checkbox\\"
+                value=\\"\\"
+              />
+              <svg
+                aria-hidden=\\"true\\"
+                class=\\"MuiSvgIcon-root\\"
+                focusable=\\"false\\"
+                viewBox=\\"0 0 24 24\\"
               >
-                <span
-                  class=\\"MuiIconButton-label\\"
-                >
-                  <input
-                    class=\\"PrivateSwitchBase-input-4\\"
-                    data-indeterminate=\\"false\\"
-                    type=\\"checkbox\\"
-                    value=\\"\\"
-                  />
-                  <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root\\"
-                    focusable=\\"false\\"
-                    viewBox=\\"0 0 24 24\\"
-                  >
-                    <path
-                      d=\\"M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z\\"
-                    />
-                  </svg>
-                </span>
-                <span
-                  class=\\"MuiTouchRipple-root\\"
+                <path
+                  d=\\"M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z\\"
                 />
-              </span>
-              <div>
-                c1
-              </div>
-              <div>
-                -
-              </div>
-              <div>
-                <div
-                  class=\\"\\"
-                  title=\\"\\"
-                >
-                  -
-                </div>
-              </div>
-              <div>
-                -
-              </div>
-              <button
-                class=\\"MuiButtonBase-root MuiIconButton-root expandButton\\"
-                tabindex=\\"0\\"
-                type=\\"button\\"
-              >
-                <span
-                  class=\\"MuiIconButton-label\\"
-                >
-                  <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root\\"
-                    focusable=\\"false\\"
-                    viewBox=\\"0 0 24 24\\"
-                  >
-                    <path
-                      d=\\"M7 10l5 5 5-5z\\"
-                    />
-                  </svg>
-                </span>
-                <span
-                  class=\\"MuiTouchRipple-root\\"
-                />
-              </button>
+              </svg>
+            </span>
+            <span
+              class=\\"MuiTouchRipple-root\\"
+            />
+          </span>
+          <div>
+            c1
+          </div>
+          <div>
+            -
+          </div>
+          <div>
+            <div
+              class=\\"\\"
+              title=\\"\\"
+            >
+              -
             </div>
           </div>
-          <div
-            class=\\"MuiCollapse-container MuiCollapse-hidden\\"
-            style=\\"min-height: 0px;\\"
-          >
+          <div>
+            -
+          </div>
+          <div>
             <div
-              class=\\"MuiCollapse-wrapper\\"
+              class=\\"bold flexbox link-color margin-right-small uppercased\\"
+              style=\\"align-items: center; white-space: nowrap;\\"
             >
-              <div
-                class=\\"MuiCollapse-wrapperInner\\"
+              view details 
+              <svg
+                aria-hidden=\\"true\\"
+                class=\\"MuiSvgIcon-root\\"
+                focusable=\\"false\\"
+                viewBox=\\"0 0 24 24\\"
               >
-                <div
-                  role=\\"region\\"
-                >
-                  <div
-                    class=\\"MuiAccordionDetails-root\\"
-                  >
-                    <div />
-                  </div>
-                </div>
-              </div>
+                <path
+                  d=\\"M16.01 11H4v2h12.01v3L20 12l-3.99-4z\\"
+                />
+              </svg>
             </div>
           </div>
         </div>

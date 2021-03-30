@@ -5,7 +5,7 @@ exports[`DeviceList Component renders correctly 1`] = `
   className="deviceList "
 >
   <div
-    className="header deviceListRow columns-4  expandable"
+    className="header deviceListRow columns-4 "
   >
     <div
       className="columnHeader"

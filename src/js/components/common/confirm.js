@@ -16,6 +16,10 @@ const confirmationType = {
   chartRemoval: {
     loading: 'Removing...',
     message: 'Remove this chart?'
+  },
+  decommissioning: {
+    loading: 'Decommissioning...',
+    message: 'Decommission this device and remove all of its data from the server. This cannot be undone. Are you sure?'
   }
 };
 
@@ -33,16 +37,14 @@ export const Confirm = ({ action, cancel, classes = '', style, type }) => {
   };
 
   return (
-    <div className={`${className} ${classes}`} style={{ marginRight: '12px', ...style }}>
-      <div className="float-right">
-        <span className="bold">{loading ? confirmationType[type].loading : confirmationType[type].message}</span>
-        <IconButton id="confirmAbort" onClick={handleConfirm}>
-          <CheckCircleIcon className="green" />
-        </IconButton>
-        <IconButton onClick={handleCancel}>
-          <CancelIcon className="red" />
-        </IconButton>
-      </div>
+    <div className={`flexbox ${className} ${classes}`} style={{ marginRight: '12px', justifyContent: 'flex-end', alignItems: 'center', ...style }}>
+      <span className="bold">{loading ? confirmationType[type].loading : confirmationType[type].message}</span>
+      <IconButton id="confirmAbort" onClick={handleConfirm}>
+        <CheckCircleIcon className="green" />
+      </IconButton>
+      <IconButton onClick={handleCancel}>
+        <CancelIcon className="red" />
+      </IconButton>
     </div>
   );
 };

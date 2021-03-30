@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 
 import { ArrowRightAlt as ArrowRightAltIcon, Sort as SortIcon } from '@material-ui/icons';
 
-import { formatTime } from '../../helpers';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import EventDetailsDrawer from './eventdetailsdrawer';
@@ -67,7 +66,7 @@ const ChangeDetailsDescriptor = (item, index) => {
   const Comp = mapChangeToContent(item).component;
   return <Comp key={`${item.time}-${index}`} item={item} />;
 };
-const TimeWrapper = (item, index) => <Time key={`${item.time}-${index}`} value={formatTime(item.time)} format="YYYY-MM-DD HH:mm" />;
+const TimeWrapper = (item, index) => <Time key={`${item.time}-${index}`} value={item.time} format="YYYY-MM-DD HH:mm" />;
 
 const auditLogColumns = [
   { title: 'User', sortable: false, render: UserDescriptor },

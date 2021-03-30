@@ -2,10 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // material ui
-import Checkbox from '@material-ui/core/Checkbox';
+import { Checkbox } from '@material-ui/core';
 
-import SettingsIcon from '@material-ui/icons/Settings';
-import SortIcon from '@material-ui/icons/Sort';
+import { Settings as SettingsIcon, Sort as SortIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeviceAuth, getDeviceById, getDeviceConfig, getDeviceConnect } from '../../actions/deviceActions';
@@ -13,8 +12,10 @@ import { advanceOnboarding } from '../../actions/onboardingActions';
 
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
+import { getTenantCapabilities } from '../../selectors';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
+import ExpandedDevice from './expanded-device';
 import DeviceListItem from './devicelistitem';
 import { refreshLength as refreshDeviceLength } from './devices';
 
@@ -22,7 +23,7 @@ export class DeviceList extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      expandedDeviceId: null
+      expandedDeviceId: undefined
     };
   }
 
@@ -43,7 +44,7 @@ export class DeviceList extends React.Component {
   getDeviceInfo(device) {
     const { getDeviceAuth, getDeviceById, getDeviceConfig, getDeviceConnect } = this.props;
     getDeviceAuth(device.id);
-    if ([DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(device.status)) {
+    if (this.props.hasDeviceConfig && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(device.status)) {
       getDeviceConfig(device.id);
     }
     if (device.status === DEVICE_STATES.accepted) {
@@ -59,11 +60,12 @@ export class DeviceList extends React.Component {
       return;
     }
     const { advanceOnboarding, devices, onboardingComplete, setSnackbar } = self.props;
+    const { expandedDeviceId } = self.state;
     setSnackbar('');
     let device = devices[rowNumber];
     clearInterval(self.timer);
-    if (self.state.expandedDeviceId === device.id) {
-      device = null;
+    if (!device || expandedDeviceId === device.id) {
+      device = undefined;
     } else {
       self.timer = setInterval(() => self.getDeviceInfo(device), refreshDeviceLength);
       self.getDeviceInfo(device);
@@ -71,7 +73,7 @@ export class DeviceList extends React.Component {
     if (!onboardingComplete) {
       advanceOnboarding(onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING);
     }
-    self.setState({ expandedDeviceId: device ? device.id : null });
+    self.setState({ expandedDeviceId: device ? device.id : undefined });
   }
 
   _isSelected(index) {
@@ -103,7 +105,7 @@ export class DeviceList extends React.Component {
 
   onPageChange(page) {
     this.props.onPageChange(page);
-    this.setState({ expandedDeviceId: null });
+    this.setState({ expandedDeviceId: undefined });
   }
 
   render() {
@@ -127,22 +129,22 @@ export class DeviceList extends React.Component {
     } = self.props;
     const { expandedDeviceId } = self.state;
     const numSelected = (selectedRows || []).length;
-    const itemClassName = `deviceListRow columns-${columnHeaders.length} ${onSelect ? 'selectable' : ''} ${expandable ? 'expandable' : ''}`;
+    const itemClassName = `deviceListRow columns-${columnHeaders.length} ${onSelect ? 'selectable' : ''}`;
     return (
       <div className={`deviceList ${className || ''}`}>
         <div className={`header ${itemClassName}`}>
-          {onSelect ? (
+          {onSelect && (
             <Checkbox
               indeterminate={numSelected > 0 && numSelected < devices.length}
               checked={numSelected === devices.length}
               onChange={() => self.onSelectAllClick()}
             />
-          ) : null}
+          )}
           {columnHeaders.map((item, index) => (
             <div className="columnHeader" key={`columnHeader-${index}`} style={item.style} onClick={() => onSort(item.attribute ? item.attribute : {})}>
               {item.title}
-              {item.sortable ? <SortIcon className={`sortIcon ${sortCol === item.attribute.name ? 'selected' : ''} ${sortDown.toString()}`} /> : null}
-              {item.customize ? <SettingsIcon onClick={item.customize} style={{ fontSize: 16, marginLeft: 'auto' }} /> : null}
+              {item.sortable && <SortIcon className={`sortIcon ${sortCol === item.attribute.name ? 'selected' : ''} ${sortDown.toString()}`} />}
+              {item.customize && <SettingsIcon onClick={item.customize} style={{ fontSize: 16, marginLeft: 'auto' }} />}
             </div>
           ))}
           {expandable && <div style={{ width: 48 }} />}
@@ -152,9 +154,8 @@ export class DeviceList extends React.Component {
             <DeviceListItem
               {...self.props}
               device={device}
-              expanded={expandedDeviceId === device.id}
               itemClassName={itemClassName}
-              key={`device-${device.id}`}
+              key={device.id}
               selectable={!!onSelect}
               selected={self._isSelected(index)}
               onClick={event => (expandable ? self._expandRow(event, index) : self._onRowSelection(index))}
@@ -171,11 +172,12 @@ export class DeviceList extends React.Component {
             onChangePage={page => self.onPageChange(page)}
           />
         )}
-        {pageLoading ? (
+        {pageLoading && (
           <div className="smallLoaderContainer">
             <Loader show={true} />
           </div>
-        ) : null}
+        )}
+        <ExpandedDevice {...self.props} deviceId={expandedDeviceId} open={Boolean(expandedDeviceId)} onClose={e => self._expandRow(e)} />
       </div>
     );
   }
@@ -184,6 +186,7 @@ export class DeviceList extends React.Component {
 const actionCreators = { advanceOnboarding, getDeviceAuth, getDeviceById, getDeviceConfig, getDeviceConnect, setSnackbar };
 
 const mapStateToProps = (state, ownProps) => {
+  const { hasDeviceConfig } = getTenantCapabilities(state);
   const devices = ownProps.devices.reduce((accu, deviceId) => {
     if (deviceId && state.devices.byId[deviceId]) {
       accu.push({ auth_sets: [], ...state.devices.byId[deviceId] });
@@ -195,6 +198,7 @@ const mapStateToProps = (state, ownProps) => {
     devices,
     filters: state.devices.filters,
     globalSettings: state.users.globalSettings,
+    hasDeviceConfig,
     onboardingComplete: state.onboarding.complete
   };
 };
