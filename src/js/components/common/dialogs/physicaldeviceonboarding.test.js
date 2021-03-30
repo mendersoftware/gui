@@ -25,6 +25,7 @@ describe('PhysicalDeviceOnboarding Component', () => {
             ipAddress="test.address"
             isEnterprise={false}
             isHosted={true}
+            onboardingState={{ complete: false, showTips: true, showHelptips: true }}
             onSelect={jest.fn}
             selection="raspberrypi7"
             token="testtoken"
