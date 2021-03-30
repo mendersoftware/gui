@@ -49,6 +49,7 @@ export const TroubleshootDialog = ({
   deviceFileUpload,
   getDeviceFileDownloadLink,
   hasFileTransfer,
+  isEnterprise,
   onCancel,
   onSocketClose,
   open,
@@ -234,9 +235,11 @@ export const TroubleshootDialog = ({
           ) : (
             <div style={{ width: 280 }} />
           )}
-          <Button component={Link} to={`auditlog?object_id=${deviceId}&start_date=${BEGINNING_OF_TIME}`}>
-            View {tabs[currentTab].link} for this device
-          </Button>
+          {isEnterprise && (
+            <Button component={Link} to={`auditlog?object_id=${deviceId}&start_date=${BEGINNING_OF_TIME}`}>
+              View {tabs[currentTab].link} for this device
+            </Button>
+          )}
         </div>
         <Button onClick={onCancel}>Close</Button>
       </DialogActions>

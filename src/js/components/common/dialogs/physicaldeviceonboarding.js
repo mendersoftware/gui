@@ -10,7 +10,7 @@ import CopyCode from '../copy-code';
 import { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType } from '../../../actions/onboardingActions';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDebConfigurationCode, versionCompare } from '../../../helpers';
-import { getDocsVersion, getIsEnterprise } from '../../../selectors';
+import { getDocsVersion, getIsEnterprise, getOnboardingState } from '../../../selectors';
 
 const filter = createFilterOptions();
 
@@ -25,7 +25,8 @@ const types = [
   }
 ];
 
-export const DeviceTypeSelectionStep = ({ selection = '', onSelect, hasConvertedImage, docsVersion }) => {
+export const DeviceTypeSelectionStep = ({ docsVersion, hasConvertedImage, onboardingState, onSelect, selection = '' }) => {
+  const shouldShowOnboardingTip = !onboardingState.complete && onboardingState.showTips && onboardingState.showHelptips;
   return (
     <div className="flexbox column">
       <b>1. Enter your device type</b>
@@ -68,27 +69,31 @@ export const DeviceTypeSelectionStep = ({ selection = '', onSelect, hasConverted
           value={selection}
         />
       </div>
-      <div id="onboard-connect-1" className="tooltip help" data-tip data-for="physical-device-type-tip" data-event="click focus">
-        <HelpIcon />
-      </div>
-      <ReactTooltip
-        id="physical-device-type-tip"
-        globalEventOff="click"
-        place="bottom"
-        type="light"
-        effect="solid"
-        className="react-tooltip"
-        style={{ maxWidth: 300 }}
-      >
-        <div>
-          <p>
-            If you don&apos;t see your exact device on the list, choose <i>Generic ARMv6 or newer</i> to continue the tutorial for now.
-          </p>
-          <p>
-            (Note: if your device is <i>not</i> based on ARMv6 or newer, the tutorial won&apos;t work - instead, go back and use the virtual device)
-          </p>
-        </div>
-      </ReactTooltip>
+      {shouldShowOnboardingTip && (
+        <>
+          <div id="onboard-connect-1" className="tooltip help" data-tip data-for="physical-device-type-tip" data-event="click focus">
+            <HelpIcon />
+          </div>
+          <ReactTooltip
+            id="physical-device-type-tip"
+            globalEventOff="click"
+            place="bottom"
+            type="light"
+            effect="solid"
+            className="react-tooltip"
+            style={{ maxWidth: 300 }}
+          >
+            <div>
+              <p>
+                If you don&apos;t see your exact device on the list, choose <i>Generic ARMv6 or newer</i> to continue the tutorial for now.
+              </p>
+              <p>
+                (Note: if your device is <i>not</i> based on ARMv6 or newer, the tutorial won&apos;t work - instead, go back and use the virtual device)
+              </p>
+            </div>
+          </ReactTooltip>
+        </>
+      )}
       {hasConvertedImage && (
         <div className="margin-top">
           <p>
@@ -134,6 +139,7 @@ export const PhysicalDeviceOnboarding = ({
   isHosted,
   isEnterprise,
   isPreRelease,
+  onboardingState,
   progress,
   setOnboardingApproach,
   setOnboardingDeviceType,
@@ -164,6 +170,7 @@ export const PhysicalDeviceOnboarding = ({
       isEnterprise={isEnterprise}
       isHosted={isHosted}
       isPreRelease={isPreRelease}
+      onboardingState={onboardingState}
       onSelect={onSelect}
       selection={selection}
       token={token}
@@ -180,6 +187,7 @@ const mapStateToProps = state => {
     isEnterprise: getIsEnterprise(state),
     isHosted: state.app.features.isHosted,
     isPreRelease: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
+    onboardingState: getOnboardingState(state),
     token: state.organization.organization.tenant_token
   };
 };
