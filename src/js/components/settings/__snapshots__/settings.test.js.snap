@@ -88,6 +88,7 @@ exports[`Settings Component renders correctly 1`] = `
       </h2>
       <form
         className="flexbox space-between"
+        onSubmit={[Function]}
       >
         <div
           className="MuiFormControl-root"

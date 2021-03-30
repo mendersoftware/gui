@@ -14,6 +14,7 @@ Array [
   </h2>,
   <form
     className=""
+    onSubmit={[Function]}
   >
     <div
       className="MuiFormControl-root  required"
