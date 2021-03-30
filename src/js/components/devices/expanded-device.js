@@ -13,7 +13,7 @@ import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { versionCompare } from '../../helpers';
 import ForwardingLink from '../common/forwardlink';
 import RelativeTime from '../common/relative-time';
-import { getDocsVersion, getTenantCapabilities } from '../../selectors';
+import { getDocsVersion, getIsEnterprise, getTenantCapabilities } from '../../selectors';
 import theme from '../../themes/mender-theme';
 import Tracking from '../../tracking';
 import TroubleshootDialog from './troubleshootdialog';
@@ -37,6 +37,7 @@ export const ExpandedDevice = ({
   hasDeviceConfig,
   hasDeviceConnect,
   hasFileTransfer,
+  isEnterprise,
   onClose,
   open,
   refreshDevices,
@@ -130,6 +131,7 @@ export const ExpandedDevice = ({
       <TroubleshootDialog
         deviceId={device.id}
         hasFileTransfer={hasFileTransfer}
+        isEnterprise={isEnterprise}
         open={Boolean(troubleshootType)}
         onCancel={() => setTroubleshootType()}
         onSocketClose={() => setTimeout(() => setSocketClosed(true), 5000)}
@@ -164,6 +166,7 @@ const mapStateToProps = (state, ownProps) => {
     hasDeviceConnect,
     hasDeviceConfig,
     hasFileTransfer: versionCompare(state.app.versionInformation.Integration, '2.7.0') > -1,
+    isEnterprise: getIsEnterprise(state),
     onboardingComplete: state.onboarding.complete,
     showHelptips: state.users.showHelptips
   };
