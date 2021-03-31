@@ -4,7 +4,7 @@ import Time from 'react-time';
 // material ui
 import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Chip, withStyles } from '@material-ui/core';
 
-import { DEVICE_STATES } from '../../../../constants/deviceConstants';
+import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { formatTime } from '../../../../helpers';
 import Loader from '../../../common/loader';
 
@@ -24,7 +24,7 @@ export const getConfirmationMessage = (status, device, authset) => {
       // if device is accepted but you are rejecting an authset that is not accepted, device status is unaffected:
       message = `${message} Rejecting this request will not affect the device status as it is using a different key. `;
     }
-  } else if (status === 'dismiss') {
+  } else if (status === DEVICE_DISMISSAL_STATE) {
     if (authset.status === DEVICE_STATES.preauth) {
       message = 'The device authentication set will be removed from the preauthorization list.';
     } else if (authset.status === DEVICE_STATES.accepted) {
@@ -114,7 +114,13 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
       ) : (
         <div>Reject</div>
       )}
-      <a onClick={() => (total > 1 || device.status !== DEVICE_STATES.pending ? onConfirm('dismiss') : confirm(device.id, authset.id, 'dismiss'))}>Dismiss</a>
+      <a
+        onClick={() =>
+          total > 1 || device.status !== DEVICE_STATES.pending ? onConfirm(DEVICE_DISMISSAL_STATE) : confirm(device.id, authset.id, DEVICE_DISMISSAL_STATE)
+        }
+      >
+        Dismiss
+      </a>
     </div>
   );
 
