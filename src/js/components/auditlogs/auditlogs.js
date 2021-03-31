@@ -14,6 +14,7 @@ import TimeframePicker from '../common/timeframe-picker';
 import TimerangePicker from '../common/timerange-picker';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { getTenantCapabilities } from '../../selectors';
 import AuditLogsList, { defaultRowsPerPage } from './auditlogslist';
 
 const today = new Date(new Date().setHours(0, 0, 0));
@@ -230,6 +231,7 @@ const mapStateToProps = state => {
     count: state.organization.eventsTotal || state.organization.events.length,
     events: state.organization.events,
     groups: ['All devices', ...Object.keys(groups).sort()],
+    tenantCapabilties: getTenantCapabilities(state),
     users: state.users.byId
   };
 };
