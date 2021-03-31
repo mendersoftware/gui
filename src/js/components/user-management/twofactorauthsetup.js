@@ -64,7 +64,7 @@ export const TwoFactorAuthSetup = ({
   };
 
   const onToggle2FAClick = () => {
-    if (!currentUser.verified) {
+    if (!(currentUser.verified || currentUser.email?.endsWith('@example.com'))) {
       setShowEmailVerification(!showEmailVerification);
       setIs2FAEnabled(!showEmailVerification);
       return;
