@@ -7,7 +7,7 @@ import { onboardingSteps } from '../constants/onboardingConstants';
 import { extractErrorMessage, preformatWithRequestID } from '../helpers';
 import { getUserSettings } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
-import { getDeviceAttributes, getDevicesByStatus, getDeviceLimit, getDynamicGroups, getGroups } from './deviceActions';
+import { getDeviceAttributes, getDeviceById, getDevicesByStatus, getDeviceLimit, getDynamicGroups, getGroups } from './deviceActions';
 import { getDeploymentsByStatus } from './deploymentActions';
 import { getReleases } from './releaseActions';
 import { saveUserSettings, getGlobalSettings, getRoles } from './userActions';
@@ -53,6 +53,10 @@ export const initializeAppData = () => (dispatch, getState) => {
       if (welcomeTip) {
         dispatch(setSnackbar('open', 10000, '', welcomeTip, () => {}, true));
       }
+      // try to retrieve full device details for onboarding devices to ensure ips etc. are available
+      // we only load the first few/ 20 devices, as it is possible the onboarding is left dangling
+      // and a lot of devices are present and we don't want to flood the backend for this
+      state.devices.byStatus[DEVICE_STATES.accepted].deviceIds.map(id => dispatch(getDeviceById(id)));
     }
     const hasTrackingEnabled = getUserSettings(state).trackingConsentGiven;
     if (cookies.get('_ga') && typeof hasTrackingEnabled === 'undefined') {

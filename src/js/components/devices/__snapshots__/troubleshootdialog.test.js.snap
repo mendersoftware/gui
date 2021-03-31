@@ -225,24 +225,6 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
               class="MuiTouchRipple-root"
             />
           </button>
-          <a
-            aria-disabled="false"
-            class="MuiButtonBase-root MuiButton-root MuiButton-text"
-            href="/auditlog?object_id=undefined&start_date=2020-01-01T00:00:00.000Z"
-            role="button"
-            tabindex="0"
-          >
-            <span
-              class="MuiButton-label"
-            >
-              View 
-              session logs
-               for this device
-            </span>
-            <span
-              class="MuiTouchRipple-root"
-            />
-          </a>
         </div>
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-text"
