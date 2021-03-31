@@ -114,7 +114,7 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
       ) : (
         <div>Reject</div>
       )}
-      <a onClick={() => (total > 1 || device.status !== DEVICE_STATES.pending ? onConfirm('dismiss') : confirm(device.id, authset.id, 'dismissed'))}>Dismiss</a>
+      <a onClick={() => (total > 1 || device.status !== DEVICE_STATES.pending ? onConfirm('dismiss') : confirm(device.id, authset.id, 'dismiss'))}>Dismiss</a>
     </div>
   );
 
