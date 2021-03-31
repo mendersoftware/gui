@@ -7,7 +7,7 @@ import { Button } from '@material-ui/core';
 import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import { deleteAuthset, getDeviceAuth, updateDeviceAuth } from '../../../../actions/deviceActions';
-import { DEVICE_STATES } from '../../../../constants/deviceConstants';
+import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { getLimitMaxed } from '../../../../selectors';
 import theme from '../../../../themes/mender-theme';
 import Confirm from './../../../common/confirm';
@@ -21,7 +21,7 @@ export const Authsets = ({ decommission, deleteAuthset, device, getDeviceAuth, l
   const updateDeviceAuthStatus = (device_id, auth_id, status) => {
     setLoading(auth_id);
     let changeRequest;
-    if (status === 'dismiss') {
+    if (status === DEVICE_DISMISSAL_STATE) {
       changeRequest = deleteAuthset(device_id, auth_id);
     } else {
       // call API to update authset

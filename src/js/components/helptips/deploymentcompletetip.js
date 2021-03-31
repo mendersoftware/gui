@@ -6,15 +6,27 @@ import ReactTooltip from 'react-tooltip';
 import Button from '@material-ui/core/Button';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
+import { getDeviceById, getDevicesByStatus } from '../../actions/deviceActions';
 import { advanceOnboarding, setOnboardingComplete, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
+import DeviceConstants from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getDemoDeviceAddress } from '../../selectors';
 import Loader from '../common/loader';
 
-export const DeploymentCompleteTip = ({ advanceOnboarding, anchor, setShowCreateArtifactDialog, setOnboardingComplete, url }) => {
+export const DeploymentCompleteTip = ({
+  advanceOnboarding,
+  anchor,
+  getDeviceById,
+  getDevicesByStatus,
+  setShowCreateArtifactDialog,
+  setOnboardingComplete,
+  url
+}) => {
   const tipRef = useRef(null);
+
   useEffect(() => {
     ReactTooltip.show(tipRef.current);
+    getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted).then(tasks => tasks[tasks.length - 1].deviceAccu.ids.map(getDeviceById));
   }, []);
 
   const onClick = () => {
@@ -44,7 +56,7 @@ export const DeploymentCompleteTip = ({ advanceOnboarding, anchor, setShowCreate
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ advanceOnboarding, setOnboardingComplete, setShowCreateArtifactDialog }, dispatch);
+  return bindActionCreators({ advanceOnboarding, getDeviceById, getDevicesByStatus, setOnboardingComplete, setShowCreateArtifactDialog }, dispatch);
 };
 
 const mapStateToProps = (state, ownProps) => {
