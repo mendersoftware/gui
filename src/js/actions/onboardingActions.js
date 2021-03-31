@@ -44,7 +44,7 @@ export const getOnboardingState = () => (dispatch, getState) => {
       ),
       showTips: onboardingState.showTips != null ? onboardingState.showTips : true,
       deviceType: onboardingState.deviceType || store.onboarding.deviceType || deviceType,
-      approach: onboardingState.approach || (deviceType || '').startsWith('qemu') ? 'virtual' : 'physical' || store.onboarding.approach,
+      approach: onboardingState.approach || ((deviceType || '').startsWith('qemu') ? 'virtual' : 'physical') || store.onboarding.approach,
       artifactIncluded: onboardingState.artifactIncluded || store.onboarding.artifactIncluded,
       progress
     };
@@ -142,7 +142,9 @@ export const advanceOnboarding = stepId => (dispatch, getState) => {
   const steps = Object.keys(onboardingSteps);
   const progress = steps.findIndex(step => step === getState().onboarding.progress);
   const stepIndex = steps.findIndex(step => step === stepId);
-  if (progress > stepIndex) {
+  // if there is no progress set yet, the onboarding state deduction hasn't happened
+  // and the subsequent settings persistence would overwrite what we stored
+  if (progress > stepIndex || progress === null) {
     return;
   }
   const madeProgress = steps[stepIndex + 1];
