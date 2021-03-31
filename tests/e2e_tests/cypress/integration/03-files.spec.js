@@ -46,7 +46,7 @@ context('Files', () => {
   it('allows artifact downloads', () => {
     // TODO allow download in tests, for reference: https://github.com/cypress-io/cypress/issues/949
     cy.get('.expandButton').click().end();
-    cy.get('.release-repo-item a').contains('Download Artifact');
+    cy.contains('Download Artifact');
     // .click().then(anchor => {
     //   const url = anchor.attr('href');
     //   cy.request(url).then(response =>

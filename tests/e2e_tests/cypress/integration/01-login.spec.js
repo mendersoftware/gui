@@ -38,11 +38,8 @@ context('Login', () => {
         url: Cypress.config().baseUrl + '/users',
         failOnStatusCode: false
       };
-      onlyOn('staging', () => cy.request(request).its('status').should('equal', 404));
-      skipOn('staging', () => {
-        cy.request(request).its('status').should('equal', 200);
-        return cy.contains('Log in').should('be.visible');
-      });
+      cy.request(request).its('status').should('equal', 200);
+      cy.contains('Log in').should('be.visible');
     });
 
     it('Does not log in with invalid password', () => {

@@ -42,7 +42,8 @@ context('Layout assertions', () => {
       cy.get('.MuiSpeedDial-fab').click();
       cy.get('#device-actions-actions').get('.MuiSpeedDialAction-staticTooltipLabel').contains('Accept').parent().find('button').click().end();
       cy.get('a').contains('Device groups').click();
-      cy.contains('.deviceListItem', 'release', { timeout: 30000 });
+      onlyOn('staging', () => cy.contains('.deviceListItem', 'original', { timeout: 60000 }));
+      skipOn('staging', () => cy.contains('.deviceListItem', 'release', { timeout: 60000 }));
       cy.get('.deviceListItem').click();
     });
 

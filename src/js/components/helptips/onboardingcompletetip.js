@@ -3,21 +3,23 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
 
-import Button from '@material-ui/core/Button';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import { Button } from '@material-ui/core';
+import { CheckCircle as CheckCircleIcon } from '@material-ui/icons';
 
-import { getDevicesByStatus } from '../../actions/deviceActions';
+import { getDeviceById, getDevicesByStatus } from '../../actions/deviceActions';
 import { setOnboardingComplete } from '../../actions/onboardingActions';
-import * as DeviceConstants from '../../constants/deviceConstants';
+import DeviceConstants from '../../constants/deviceConstants';
 import { getDemoDeviceAddress, getDocsVersion } from '../../selectors';
 import Loader from '../common/loader';
 
-export const OnboardingCompleteTip = ({ anchor, docsVersion, getDevicesByStatus, setOnboardingComplete, url }) => {
+export const OnboardingCompleteTip = ({ anchor, docsVersion, getDeviceById, getDevicesByStatus, setOnboardingComplete, url }) => {
   const tipRef = useRef(null);
 
   useEffect(() => {
     ReactTooltip.show(tipRef.current);
-    getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted).finally(() => setTimeout(() => setOnboardingComplete(true), 120000));
+    getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted)
+      .then(tasks => tasks[tasks.length - 1].deviceAccu.ids.map(getDeviceById))
+      .finally(() => setTimeout(() => setOnboardingComplete(true), 120000));
     return () => {
       setOnboardingComplete(true);
     };
@@ -76,7 +78,7 @@ export const OnboardingCompleteTip = ({ anchor, docsVersion, getDevicesByStatus,
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ getDevicesByStatus, setOnboardingComplete }, dispatch);
+  return bindActionCreators({ getDeviceById, getDevicesByStatus, setOnboardingComplete }, dispatch);
 };
 
 const mapStateToProps = (state, ownProps) => {
