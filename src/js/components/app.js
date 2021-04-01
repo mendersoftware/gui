@@ -83,15 +83,7 @@ export const AppRoot = ({
     }
   };
 
-  let onboardingComponent = getOnboardingComponentFor(onboardingSteps.APPLICATION_UPDATE_REMINDER_TIP, onboardingState, {
-    anchor: {
-      left: 170,
-      top: 225
-    },
-    place: 'right'
-  });
-  onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_CREATION_DIALOG, onboardingState, {}, onboardingComponent);
-
+  const onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_CREATION_DIALOG, onboardingState);
   return (
     <>
       {getToken() ? (

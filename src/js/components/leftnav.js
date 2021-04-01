@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { connect } from 'react-redux';
 import { Link, NavLink, withRouter } from 'react-router-dom';
 import copy from 'copy-to-clipboard';
@@ -6,8 +6,10 @@ import copy from 'copy-to-clipboard';
 // material ui
 import { List, ListItem, ListItemText, Tooltip } from '@material-ui/core';
 
-import { colors } from '../themes/mender-theme';
-import { getDocsVersion, getIsEnterprise, getUserRoles } from '../selectors';
+import theme, { colors } from '../themes/mender-theme';
+import { onboardingSteps } from '../constants/onboardingConstants';
+import { getDocsVersion, getIsEnterprise, getOnboardingState, getUserRoles } from '../selectors';
+import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 
 const listItems = [
   { route: '/', text: 'Dashboard', isAdmin: false, isEnterprise: false },
@@ -21,7 +23,8 @@ const listItemStyle = {
   container: { padding: '16px 16px 16px 42px' }
 };
 
-export const LeftNav = ({ className, docsVersion, isAdmin, isEnterprise, versionInformation }) => {
+export const LeftNav = ({ className, docsVersion, isAdmin, isEnterprise, onboardingState, versionInformation }) => {
+  const releasesRef = useRef();
   const licenseLink = (
     <a
       target="_blank"
@@ -52,7 +55,16 @@ export const LeftNav = ({ className, docsVersion, isAdmin, isEnterprise, version
       <div onClick={() => copy(JSON.stringify(versionInformation))}>{versionInformation.Integration ? `Version: ${versionInformation.Integration}` : ''}</div>
     </Tooltip>
   );
-
+  let onboardingComponent;
+  if (releasesRef.current) {
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.APPLICATION_UPDATE_REMINDER_TIP, onboardingState, {
+      anchor: {
+        left: releasesRef.current.offsetWidth - theme.spacing(6),
+        top: releasesRef.current.offsetTop + releasesRef.current.offsetHeight / 2
+      },
+      place: 'right'
+    });
+  }
   return (
     <div className={className}>
       <List style={{ padding: '0' }}>
@@ -67,6 +79,7 @@ export const LeftNav = ({ className, docsVersion, isAdmin, isEnterprise, version
               exact={item.route === '/'}
               key={index}
               style={{ padding: '22px 16px 22px 42px' }}
+              ref={item.route === '/releases' ? releasesRef : null}
               to={item.route}
             >
               <ListItemText primary={item.text} style={Object.assign({ textTransform: 'uppercase' })} />
@@ -75,7 +88,7 @@ export const LeftNav = ({ className, docsVersion, isAdmin, isEnterprise, version
           return accu;
         }, [])}
       </List>
-
+      {onboardingComponent ? onboardingComponent : null}
       <List style={{ padding: '0', position: 'absolute', bottom: '30px', left: '0px', right: '0px' }}>
         <ListItem className="navLink leftNav" component={Link} style={listItemStyle.container} to="/help">
           <ListItemText primary="Help" style={listItemStyle.font} />
@@ -93,6 +106,7 @@ const mapStateToProps = state => {
     docsVersion: getDocsVersion(state),
     isAdmin: getUserRoles(state).isAdmin,
     isEnterprise: getIsEnterprise(state),
+    onboardingState: getOnboardingState(state),
     versionInformation: state.app.versionInformation
   };
 };
