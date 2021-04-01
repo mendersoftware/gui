@@ -7,6 +7,9 @@ import copy from 'copy-to-clipboard';
 import { List, ListItem, ListItemText, Tooltip } from '@material-ui/core';
 
 import theme, { colors } from '../themes/mender-theme';
+
+import { setSnackbar } from '../actions/appActions';
+
 import { onboardingSteps } from '../constants/onboardingConstants';
 import { getDocsVersion, getIsEnterprise, getOnboardingState, getUserRoles } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
@@ -23,8 +26,14 @@ const listItemStyle = {
   container: { padding: '16px 16px 16px 42px' }
 };
 
-export const LeftNav = ({ className, docsVersion, isAdmin, isEnterprise, onboardingState, versionInformation }) => {
+export const LeftNav = ({ className, docsVersion, isAdmin, isEnterprise, onboardingState, setSnackbar, versionInformation }) => {
   const releasesRef = useRef();
+
+  const onVersionClick = () => {
+    copy(JSON.stringify(versionInformation));
+    setSnackbar('Version information copied to clipboard');
+  };
+
   const licenseLink = (
     <a
       target="_blank"
@@ -52,7 +61,9 @@ export const LeftNav = ({ className, docsVersion, isAdmin, isEnterprise, onboard
   );
   const versionInfo = (
     <Tooltip title={versions} placement="top">
-      <div onClick={() => copy(JSON.stringify(versionInformation))}>{versionInformation.Integration ? `Version: ${versionInformation.Integration}` : ''}</div>
+      <div className="clickable" onClick={onVersionClick}>
+        {versionInformation.Integration ? `Version: ${versionInformation.Integration}` : ''}
+      </div>
     </Tooltip>
   );
   let onboardingComponent;
@@ -101,6 +112,8 @@ export const LeftNav = ({ className, docsVersion, isAdmin, isEnterprise, onboard
   );
 };
 
+const actionCreators = { setSnackbar };
+
 const mapStateToProps = state => {
   return {
     docsVersion: getDocsVersion(state),
@@ -111,4 +124,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(connect(mapStateToProps)(LeftNav));
+export default withRouter(connect(mapStateToProps, actionCreators)(LeftNav));
