@@ -32,7 +32,7 @@ export const EventDetailsDrawer = ({ eventItem = {}, onClose, open }) => {
         <HelpOutlineIcon />
       </div>
       <Divider />
-      <Component item={eventItem} />
+      <Component item={eventItem} onClose={onClose} />
       <Divider light style={{ marginTop: theme.spacing(2) }} />
     </Drawer>
   );
