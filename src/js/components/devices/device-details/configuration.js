@@ -307,8 +307,20 @@ export const DeviceConfiguration = ({
     return accu;
   }, {});
 
+  const visibleConfigKey = Object.keys(reported).length ? Object.keys(reported)[0] : '';
+  const { [visibleConfigKey]: visibleConfig, ...remainderReported } = reported;
+  const extendedContentLength = Object.keys(remainderReported).length;
   return (
     <DeviceDataCollapse
+      header={
+        visibleConfig &&
+        !isEditingConfig && (
+          <>
+            <ConfigurationObject className="margin-top" config={{ [visibleConfigKey]: visibleConfig }} setSnackbar={setSnackbar} style={{ marginBottom: 10 }} />
+            {!open && !!extendedContentLength && <a onClick={setOpen}>show more</a>}
+          </>
+        )
+      }
       isOpen={open}
       onClick={setOpen}
       title={
@@ -340,11 +352,12 @@ export const DeviceConfiguration = ({
           showHelptips={showHelptips}
         />
       ) : (
-        hasDeviceConfig && <ConfigurationObject className="margin-top" config={reported} setSnackbar={setSnackbar} />
+        hasDeviceConfig && <ConfigurationObject config={remainderReported} setSnackbar={setSnackbar} />
       )}
       <div className="flexbox margin-bottom margin-top" style={{ alignItems: 'center' }}>
         {footer}
       </div>
+      {hasDeviceConfig && !isEditingConfig && <a onClick={() => setOpen(false)}>show less</a>}
       {showLog && <LogDialog logData={updateLog} onClose={() => setShowLog(false)} type="configUpdateLog" />}
       {showConfigImport && <ConfigImportDialog onCancel={() => setShowConfigImport(false)} onSubmit={onConfigImport} />}
     </DeviceDataCollapse>
