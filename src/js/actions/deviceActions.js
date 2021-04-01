@@ -579,7 +579,7 @@ export const getSessionDetails = (sessionId, deviceId, userId, startDate, endDat
     ({ data: auditLogEntries }) => {
       const { start, end } = auditLogEntries.reduce(
         (accu, item) => {
-          if (item.meta?.session_id.includes(sessionId)) {
+          if (item.meta?.session_id?.includes(sessionId)) {
             accu.start = new Date(item.action.startsWith('open') ? item.time : accu.start);
             accu.end = new Date(item.action.startsWith('close') ? item.time : accu.end);
           }
