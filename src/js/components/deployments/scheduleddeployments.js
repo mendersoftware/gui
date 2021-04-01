@@ -73,9 +73,8 @@ export class Scheduled extends React.Component {
         if (deployment.phases && deployment.phases.length && deployment.phases[deployment.phases.length - 1].end_ts) {
           endDate = new Date(deployment.phases[deployment.phases.length - 1].end_ts);
         } else if (deployment.filter_id || deployment.filter) {
-          // calendar doesn't support never ending events so we set to the upper limit of js supported dates,
-          // - this should be the next best thing to infinity
-          endDate = new Date(8640000000000000);
+          // calendar doesn't support never ending events so we arbitrarly set one year
+          endDate = moment(start).add(1, 'year');
         }
         return {
           allDay: !(deployment.filter_id || deployment.filter),
