@@ -579,7 +579,7 @@ export const getSessionDetails = (sessionId, deviceId, userId, startDate, endDat
     ({ data: auditLogEntries }) => {
       const { start, end } = auditLogEntries.reduce(
         (accu, item) => {
-          if (item.meta?.session_id.includes(sessionId)) {
+          if (item.meta?.session_id?.includes(sessionId)) {
             accu.start = new Date(item.action.startsWith('open') ? item.time : accu.start);
             accu.end = new Date(item.action.startsWith('close') ? item.time : accu.end);
           }
@@ -747,8 +747,8 @@ export const setDeviceConfig = (deviceId, config) => dispatch =>
     .catch(err => commonErrorHandler(err, `There was an error setting the configuration for device ${deviceId}.`, dispatch, 'Please check your connection.'))
     .then(() => Promise.resolve(dispatch(getDeviceConfig(deviceId))));
 
-export const applyDeviceConfig = (deviceId, config, isDefault) => (dispatch, getState) =>
-  GeneralApi.post(`${deviceConfig}/${deviceId}/deploy`, config)
+export const applyDeviceConfig = (deviceId, configDeploymentConfiguration, isDefault, config) => (dispatch, getState) =>
+  GeneralApi.post(`${deviceConfig}/${deviceId}/deploy`, configDeploymentConfiguration)
     .catch(err => commonErrorHandler(err, `There was an error deploying the configuration to device ${deviceId}.`, dispatch, 'Please check your connection.'))
     .then(({ data }) => {
       let tasks = [dispatch(getSingleDeployment(data.deployment_id))];

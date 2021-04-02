@@ -8,9 +8,9 @@ import { FileCopyOutlined as CopyToClipboardIcon } from '@material-ui/icons';
 
 const ValueColumn = ({ value, setSnackbar }) => {
   const [tooltipVisible, setTooltipVisible] = useState(false);
-  const onClick = () => {
+  const onClick = ({ target: { dateTime } }) => {
     if (setSnackbar) {
-      copy(value);
+      copy(dateTime || value);
       setSnackbar('Value copied to clipboard');
     }
   };
