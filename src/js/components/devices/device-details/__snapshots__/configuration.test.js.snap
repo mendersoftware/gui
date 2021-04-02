@@ -74,7 +74,28 @@ exports[`Configuration Component renders correctly 1`] = `
       />
     </button>
   </div>
-  <div />
+  <div>
+    <div
+      class="break-all two-columns column-data  margin-top"
+      style="margin-bottom: 10px;"
+    >
+      <div
+        class="align-right key text-muted"
+      >
+        <b>
+          uiPasswordRequired
+        </b>
+      </div>
+      <div
+        class="flexbox "
+      >
+        true
+      </div>
+    </div>
+    <a>
+      show more
+    </a>
+  </div>
   <hr
     class="MuiDivider-root"
     style="margin-top: 24px;"
