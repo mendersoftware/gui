@@ -241,7 +241,8 @@ export const DeviceConfiguration = ({
   const onSubmit = () => {
     setIsUpdatingConfig(true);
     setUpdateFailed(false);
-    return Promise.all([setDeviceConfig(device.id, changedConfig), applyDeviceConfig(device.id, changedConfig, isSetAsDefault)])
+    return setDeviceConfig(device.id, changedConfig)
+      .then(() => applyDeviceConfig(device.id, { retries: 0 }, isSetAsDefault, changedConfig))
       .then(() => {
         setUpdateFailed(false);
       })
