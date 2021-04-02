@@ -264,7 +264,7 @@ exports[`App Component renders correctly 1`] = `
               class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
             >
               <div
-                class=""
+                class="clickable"
               />
             </span>
             <p
