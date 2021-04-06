@@ -53,7 +53,7 @@ const AuthExplainComponent = ({ docsVersion }) => (
 );
 export const AuthExplainButton = connect(mapStateToProps, actionCreators)(AuthExplainComponent);
 
-const AuthButtonComponent = ({ highlightHelp, toggleHelptips }) => (
+const AuthButtonComponent = ({ docsVersion, highlightHelp, toggleHelptips }) => (
   <div>
     <div
       id="onboard-4"
@@ -74,7 +74,11 @@ const AuthButtonComponent = ({ highlightHelp, toggleHelptips }) => (
           now.
         </p>
         <p>
-          You can find out more about connecting different types of devices in <Link to="/help/get-started">the help section</Link>.
+          See the documentation for more on{' '}
+          <a href={`https://docs.mender.io/${docsVersion}overview/device-authentication`} target="_blank" rel="noopener noreferrer">
+            Device authentication
+          </a>
+          .
         </p>
         <HideHelptipsButton toggleHelptips={toggleHelptips} />
       </div>
