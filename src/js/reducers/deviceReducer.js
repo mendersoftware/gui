@@ -190,7 +190,7 @@ const deviceReducer = (state = initialState, action) => {
     case DeviceConstants.SET_REJECTED_DEVICES:
     case DeviceConstants.SET_PREAUTHORIZED_DEVICES:
     case DeviceConstants.SET_ACCEPTED_DEVICES: {
-      const statusDeviceInfo = action.total ? { deviceIds: action.deviceIds, total: action.total } : state.byStatus[action.status];
+      const statusDeviceInfo = action.total || action.forceUpdate ? { deviceIds: action.deviceIds, total: action.total } : state.byStatus[action.status];
       return {
         ...state,
         byStatus: {

@@ -55,7 +55,10 @@ export const ExpandedDevice = ({
     // close dialog!
     // close expanded device
     // trigger reset of list!
-    return decommissionDevice(device_id).finally(() => refreshDevices(true));
+    return decommissionDevice(device_id).finally(() => {
+      refreshDevices(true);
+      onClose();
+    });
   };
 
   const launchTroubleshoot = type => {
@@ -88,7 +91,13 @@ export const ExpandedDevice = ({
       </div>
       <Divider style={{ marginBottom: theme.spacing(3) }} />
       <DeviceIdentity device={device} setSnackbar={setSnackbar} />
-      <AuthStatus device={device} decommission={onDecommissionDevice} disableBottomBorder={!isAcceptedDevice} showHelptips={showHelptips} />
+      <AuthStatus
+        device={device}
+        decommission={onDecommissionDevice}
+        deviceListRefresh={() => refreshDevices(true)}
+        disableBottomBorder={!isAcceptedDevice}
+        showHelptips={showHelptips}
+      />
       {hasDeviceConfig && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(status) && (
         <DeviceConfiguration
           abortDeployment={abortDeployment}

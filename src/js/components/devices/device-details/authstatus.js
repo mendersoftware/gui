@@ -19,7 +19,7 @@ const states = {
   preauthorized: <CheckIcon style={iconStyle} />
 };
 
-export const AuthStatus = ({ device, decommission, disableBottomBorder, showHelptips }) => {
+export const AuthStatus = ({ decommission, device, deviceListRefresh, disableBottomBorder, showHelptips }) => {
   const [open, setOpen] = useState(false);
 
   const { auth_sets = [], status = DEVICE_STATES.accepted } = device;
@@ -54,7 +54,7 @@ export const AuthStatus = ({ device, decommission, disableBottomBorder, showHelp
         </div>
       }
     >
-      <Authsets decommission={decommission} device={device} showHelptips={showHelptips} />
+      <Authsets decommission={decommission} device={device} deviceListRefresh={deviceListRefresh} showHelptips={showHelptips} />
       <a onClick={() => setOpen(false)}>show less</a>
     </DeviceDataCollapse>
   );

@@ -218,13 +218,13 @@ describe('device auth handling', () => {
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Device authorization status was updated successfully' } },
+      { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice },
       {
         type: DeviceConstants.SET_ACCEPTED_DEVICES,
         deviceIds: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id),
         status: DeviceConstants.DEVICE_STATES.accepted,
         total: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id).length
-      },
-      { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice }
+      }
     ];
     await store.dispatch(
       updateDeviceAuth(defaultState.devices.byId.a1.id, defaultState.devices.byId.a1.auth_sets[0].id, DeviceConstants.DEVICE_STATES.pending)
@@ -239,13 +239,13 @@ describe('device auth handling', () => {
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Device authorization status was updated successfully' } },
+      { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice },
       {
         type: DeviceConstants.SET_ACCEPTED_DEVICES,
         deviceIds: [defaultState.devices.byId.b1.id],
         status: DeviceConstants.DEVICE_STATES.accepted,
         total: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id).length
       },
-      { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice },
       {
         type: AppConstants.SET_SNACKBAR,
         snackbar: {
@@ -304,6 +304,7 @@ describe('device auth handling', () => {
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Device was decommissioned successfully' } },
+      { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice },
       {
         type: DeviceConstants.SET_ACCEPTED_DEVICES,
         deviceIds: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id),
