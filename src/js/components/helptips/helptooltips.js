@@ -210,10 +210,10 @@ const ConfigureRaspberryLedComponent = ({ anchor, device, setSnackbar, toggleHel
   }
   return (
     <>
-      <div id="config-timezone-help" className="fadeIn tooltip help" data-tip data-for="config-timezone-tip" data-event="click focus" style={anchor}>
+      <div id="config-led-help" className="fadeIn tooltip help" data-tip data-for="config-led-tip" data-event="click focus" style={anchor}>
         <HelpIcon />
       </div>
-      <ReactTooltip id="config-timezone-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+      <ReactTooltip id="config-led-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
         <>
           To see the effects of applying a configuration to your device you can set one of the below values to modify the behaviour of your Raspberry Pi green
           status LED
