@@ -10,7 +10,11 @@ const ValueColumn = ({ value, setSnackbar }) => {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const onClick = () => {
     if (setSnackbar) {
-      copy(value);
+      let copyable = value;
+      if (React.isValidElement(value)) {
+        copyable = value.props.value;
+      }
+      copy(copyable);
       setSnackbar('Value copied to clipboard');
     }
   };

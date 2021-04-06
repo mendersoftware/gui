@@ -94,7 +94,7 @@ describe('Configuration Component', () => {
     expect(screen.getByText(/Configuration could not be updated on device/i)).toBeInTheDocument();
     act(() => userEvent.click(screen.getByRole('button', { name: /Retry/i })));
     expect(submitMock).toHaveBeenLastCalledWith(defaultState.devices.byId.a1.id, { testKey: 'testValue' });
-    expect(applyMock).toHaveBeenLastCalledWith(defaultState.devices.byId.a1.id, { testKey: 'testValue' }, true);
+    expect(applyMock).toHaveBeenLastCalledWith(defaultState.devices.byId.a1.id, { retries: 0 }, true, { testKey: 'testValue' });
     device.config = {
       configured: { test: true, something: 'else', aNumber: 42 },
       reported: { test: true, something: 'else', aNumber: 42 },

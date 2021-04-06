@@ -17,7 +17,7 @@ momentDurationFormatSetup(moment);
 
 const BEGINNING_OF_TIME = '2020-01-01T00:00:00.000Z';
 
-export const TerminalSession = ({ device, idAttribute, item, getDeviceById, getSessionDetails }) => {
+export const TerminalSession = ({ device, idAttribute, item, getDeviceById, getSessionDetails, onClose }) => {
   const [sessionDetails, setSessionDetails] = useState();
 
   useEffect(() => {
@@ -51,7 +51,11 @@ export const TerminalSession = ({ device, idAttribute, item, getDeviceById, getS
     ),
     'Device type': device_type,
     'System software version': device['rootfs-image.version'] || artifact_name || '-',
-    ' ': <Link to={`/auditlog?object_type=device&object_id=${item.object.id}&start_date=${BEGINNING_OF_TIME}`}>List all log entries for this device</Link>
+    ' ': (
+      <Link to={`/auditlog?object_type=device&object_id=${item.object.id}&start_date=${BEGINNING_OF_TIME}`} onClick={onClose}>
+        List all log entries for this device
+      </Link>
+    )
   };
 
   const sessionMeta = {
