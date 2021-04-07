@@ -57,6 +57,7 @@ import Announcement from './announcement';
 import DemoNotification from './demonotification';
 import DeploymentNotifications from './deploymentnotifications';
 import DeviceNotifications from './devicenotifications';
+import FeatureNotification from './featurenotification';
 import OfferHeader from './offerheader';
 import TrialNotification from './trialnotification';
 
@@ -211,6 +212,7 @@ export const Header = ({ mode }) => {
         </div>
         <Search isSearching={isSearching} searchTerm={searchTerm} onSearch={onSearch} />
         <div className="flexbox center-aligned">
+          <FeatureNotification />
           <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
           <DeploymentNotifications inprogress={inProgress} />
           <Button

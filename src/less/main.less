@@ -54,6 +54,14 @@ body {
   }
 }
 
+.featureNotification {
+  overflow: hidden;
+  overflow-y: scroll;
+  img {
+    max-width: 100%;
+  }
+}
+
 /* General */
 
 .green {
@@ -62,6 +70,10 @@ body {
 
 .red {
   color: @red;
+}
+
+.text-muted {
+  color: @textmuted;
 }
 
 .link-color {
@@ -1027,7 +1039,7 @@ div:focus {
   display: inline-block;
   position: relative;
   width: 100%;
-  vertical-align: middle; 
+  vertical-align: middle;
   overflow: hidden;
 }
 
