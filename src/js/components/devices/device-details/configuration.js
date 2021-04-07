@@ -181,7 +181,7 @@ export const DeviceConfiguration = ({
 
   useEffect(() => {
     const { config = {} } = device;
-    if (!changedConfig && device.config && (!config.deployment_id || deployment.status)) {
+    if (!changedConfig && device.config && (!deployment_id || deployment.status)) {
       const { configured = {}, reported = {}, reported_ts } = config;
       let currentConfig = reported;
       const stats = groupDeploymentStats(deployment);
@@ -190,7 +190,7 @@ export const DeviceConfiguration = ({
       }
       setChangedConfig(currentConfig);
     }
-    if (deployment.status !== 'finished' && deployment_id && deployment_id !== '00000000-0000-0000-0000-000000000000') {
+    if (deployment.status !== 'finished' && deployment_id) {
       getSingleDeployment(deployment_id);
     }
   }, [device.config, deployment.status]);

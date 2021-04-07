@@ -135,9 +135,9 @@ Array [
   <div
     className="fadeIn tooltip help"
     data-event="click focus"
-    data-for="config-timezone-tip"
+    data-for="config-led-tip"
     data-tip={true}
-    id="config-timezone-help"
+    id="config-led-help"
   >
     <svg
       aria-hidden={true}
@@ -153,7 +153,7 @@ Array [
   <div
     className="__react_component_tooltip place-bottom type-dark"
     data-id="tooltip"
-    id="config-timezone-tip"
+    id="config-led-tip"
   >
     To see the effects of applying a configuration to your device you can set one of the below values to modify the behaviour of your Raspberry Pi green status LED
     <div
