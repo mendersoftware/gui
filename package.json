@@ -95,7 +95,7 @@
     "lint-staged": "^10.5.4",
     "mini-css-extract-plugin": "^1.4.0",
     "msw": "^0.28.1",
-    "postcss": "^8.2.9",
+    "postcss": "^8.2.10",
     "postcss-loader": "^5.2.0",
     "prettier": "^2.2.1",
     "react-test-renderer": "~16.14.0",
