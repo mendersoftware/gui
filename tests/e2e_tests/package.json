@@ -1,35 +1,36 @@
 {
   "name": "mender-gui-e2e-tests",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Test mender e2e - with focus on the GUI",
-  "main": "login.spec.js",
-  "dependencies": {
-    "@cypress/skip-test": "^2.6.0",
-    "@nuintun/qrcode": "^3.0.1",
-    "cypress": "^6.9.1",
-    "cypress-file-upload": "^5.0.7",
-    "cypress-iframe": "^1.0.1",
-    "mzedel-cypress-image-snapshot": "^4.0.5",
-    "cypress-localstorage-commands": "^1.4.4",
-    "cypress-otp": "^1.0.3",
-    "cypress-wait-until": "^1.7.1",
-    "dayjs": "^1.10.4",
-    "jwt-decode": "^3.1.2",
-    "uuid": "^8.3.2"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mendersoftware/integration.git"
   },
   "scripts": {
-    "test": "cypress run --headless -b chrome --project .",
-    "ciTest": "cypress run --headless -b chrome --project . --config video=false",
-    "watch": "cypress open --port 8888 --project . --config pageLoadTimeout=100000,watchForFileChanges=true"
+    "test": "folio --workers 1 --config=config.ts",
+    "test-ci": "folio --workers 1 --config=config.ts",
+    "test-visual": "PWDEBUG=1 folio --workers 1 --config=config.ts"
   },
-  "author": "Michael Clelland",
+  "author": {
+    "name": "Northern.tech"
+  },
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mendersoftware/gui/issues"
+    "url": "https://tracker.mender.io/projects/MEN/issues/"
   },
-  "homepage": "https://mender.io"
+  "homepage": "https://mender.io",
+  "devDependencies": {
+    "@nuintun/qrcode": "^3.0.1",
+    "@playwright/test": "0.1101",
+    "axios": "^0.21.1",
+    "dayjs": "^1.10.4",
+    "jwt-decode": "^3.1.2",
+    "md5": "^2.3.0",
+    "otplib": "^12.0.1",
+    "pixelmatch": "^5.2.1",
+    "playwright": "^1.10.0",
+    "playwright-chromium": "1.10.0",
+    "typescript": "^4.2.4",
+    "uuid": "^8.3.2"
+  }
 }

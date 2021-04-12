@@ -5,6 +5,7 @@ services:
     build:
       dockerfile: Dockerfile.gui
       context: ${GUI_REPOSITORY}/tests/e2e_tests
+    command: tail -f /dev/null
     networks:
       - mender
     depends_on:
@@ -21,9 +22,9 @@ services:
       - mender-create-artifact-worker
       - minio
     volumes:
-      - ${GUI_REPOSITORY}/screenshots:/e2e/cypress/screenshots
-      # - ${GUI_REPOSITORY}/tests/e2e_tests/cypress/snapshots:/e2e/cypress/snapshots
-      - ${GUI_REPOSITORY}/videos:/e2e/cypress/videos
+      - ${GUI_REPOSITORY}/screenshots:/e2e/test-results
+      # - ${GUI_REPOSITORY}/tests/e2e_tests/snapshots:/e2e/snapshots
+      - ${GUI_REPOSITORY}/videos:/e2e/videos
       - ${GUI_REPOSITORY}/logs:/root/.npm/_logs
 
   mender-client:

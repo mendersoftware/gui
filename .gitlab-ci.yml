@@ -47,7 +47,7 @@ test:acceptance:
     - export DOCKER_TAG=${CI_COMMIT_REF_SLUG:-master}
     - export SERVICE_IMAGE=${DOCKER_REPOSITORY}:${DOCKER_TAG}
     - apk add --no-cache bash git wget
-    - wget -qP tests/e2e_tests/cypress/fixtures "https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender"
+    - wget -qP tests/e2e_tests/fixtures "https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender"
   script:
     - docker load -i image.tar
     - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:pr
@@ -129,11 +129,7 @@ test:prep:
     expire_in: 30 days
 
 test:staging-deployment:
-  image:
-    name: cypress/included:6.8.0
-    # cypress/included images have entrypoint set to "cypress"
-    # which conflicts with GitLab CI wrapper shell script
-    entrypoint: ['']
+  image: mcr.microsoft.com/playwright:v1.10.0
   stage: .post
   services:
     - docker:19.03.5-dind
@@ -147,17 +143,16 @@ test:staging-deployment:
     DOCKER_DRIVER: overlay2
     DOCKER_HOST: tcp://docker:2375/
     CI: 1
-    CYPRESS_BASE_URL: https://staging.hosted.mender.io/
     DEVICE_TYPE: qemux86-64
+    TEST_ENVIRONMENT: staging
   before_script:
     - curl -fsSL https://get.docker.com | sh
     - mv mender-stress-test-client tests/e2e_tests/ && cd tests/e2e_tests
-    - wget -qP cypress/fixtures "https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender"
+    - wget -qP fixtures "https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender"
     - touch hosted.pem && true | openssl s_client -connect staging.hosted.mender.io:443 2>/dev/null | openssl x509 > hosted.pem
   script:
     - npm ci --cache .npm --prefer-offline
-    - npx cypress verify
-    - npm run ciTest
+    - npm run test
   after_script:
     - cd $CI_PROJECT_DIR
     - mkdir logs && cp /root/.npm/_logs/* logs/
@@ -168,7 +163,7 @@ test:staging-deployment:
   artifacts:
     expire_in: 2w
     paths:
-      - tests/e2e_tests/cypress/screenshots
+      - tests/e2e_tests/screenshots
       - logs
     when: on_failure
 
