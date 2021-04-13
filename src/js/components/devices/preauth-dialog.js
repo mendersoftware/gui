@@ -23,7 +23,7 @@ export const PreauthDialog = ({ deviceLimitWarning, limitMaxed, onCancel, onSubm
       pubkey: publicKey,
       identity_data: jsonIdentity
     };
-    preauthDevice(authset)
+    return preauthDevice(authset)
       .then(() => onSubmit(shouldClose))
       .catch(setErrortext);
   };

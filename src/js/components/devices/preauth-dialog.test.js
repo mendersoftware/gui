@@ -52,9 +52,10 @@ describe('PreauthDialog Component', () => {
     userEvent.type(screen.getByDisplayValue('testValue'), 'testValues');
     await waitFor(() => expect(screen.queryByText('test-errortext')).not.toBeInTheDocument());
     uploadMock.mockResolvedValue(true);
-    userEvent.click(screen.getByRole('button', { name: 'Save and add another' }));
-    await act(() => waitFor(() => rerender(ui)));
-    expect(submitMock).toHaveBeenCalled();
+    await act(() => userEvent.click(screen.getByRole('button', { name: 'Save and add another' })));
+    await waitFor(() => rerender(ui));
+    jest.advanceTimersByTime(150);
+    expect(uploadMock).toHaveBeenCalled();
   });
 
   it('prevents preauthorizations when device limit was reached', async () => {
