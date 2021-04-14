@@ -31,7 +31,7 @@ export const publicRoutes = (
     <Route path="/login" component={Login} />
     <Route exact path="/password" component={Password} />
     <Route exact path="/password/:secretHash" component={PasswordReset} />
-    <Route path="/signup" component={Signup} />
+    <Route path="/signup/:campaign?" component={Signup} />
     <Route component={Login} />
   </Switch>
 );

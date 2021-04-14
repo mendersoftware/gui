@@ -66,7 +66,7 @@ describe('Configuration Component', () => {
         reported_ts: '2019-01-01T09:25:01.000Z'
       }
     };
-    const ui = (
+    let ui = (
       <MemoryRouter>
         <Configuration
           device={device}
@@ -81,18 +81,21 @@ describe('Configuration Component', () => {
     );
     const { rerender } = render(ui);
     expect(screen.queryByRole('button', { name: /import configuration/i })).not.toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', { name: /edit/i }));
+    while (screen.queryByRole('button', { name: /edit/i })) {
+      userEvent.click(screen.getByRole('button', { name: /edit/i }));
+      await waitFor(() => rerender(ui));
+    }
     expect(screen.getByRole('button', { name: /import configuration/i })).toBeInTheDocument();
     expect(document.querySelector('.MuiFab-root')).toBeDisabled();
     userEvent.type(screen.getByPlaceholderText(/key/i), 'testKey');
     userEvent.type(screen.getByPlaceholderText(/value/i), 'testValue');
     expect(document.querySelector('.MuiFab-root')).not.toBeDisabled();
     userEvent.click(screen.getByRole('checkbox', { name: /save/i }));
-    act(() => userEvent.click(screen.getByRole('button', { name: /save/i })));
+    await act(() => userEvent.click(screen.getByRole('button', { name: /save/i })));
     await act(() => waitFor(() => rerender(ui)));
 
     expect(screen.getByText(/Configuration could not be updated on device/i)).toBeInTheDocument();
-    act(() => userEvent.click(screen.getByRole('button', { name: /Retry/i })));
+    await act(() => userEvent.click(screen.getByRole('button', { name: /Retry/i })));
     expect(submitMock).toHaveBeenLastCalledWith(defaultState.devices.byId.a1.id, { testKey: 'testValue' });
     expect(applyMock).toHaveBeenLastCalledWith(defaultState.devices.byId.a1.id, { retries: 0 }, true, { testKey: 'testValue' });
     device.config = {
@@ -101,28 +104,29 @@ describe('Configuration Component', () => {
       updated_ts: '2019-01-01T09:25:00.000Z',
       reported_ts: '2019-01-01T09:25:01.000Z'
     };
-    await act(() =>
-      waitFor(() =>
-        rerender(
-          <Configuration
-            device={device}
-            abortDeployment={jest.fn}
-            applyDeviceConfig={applyMock}
-            getDeviceLog={jest.fn}
-            getSingleDeployment={jest.fn}
-            saveGlobalSettings={jest.fn}
-            setDeviceConfig={submitMock}
-          />
-        )
-      )
+    ui = (
+      <Configuration
+        device={device}
+        abortDeployment={jest.fn}
+        applyDeviceConfig={applyMock}
+        getDeviceLog={jest.fn}
+        getSingleDeployment={jest.fn}
+        saveGlobalSettings={jest.fn}
+        setDeviceConfig={submitMock}
+      />
     );
-    act(() => userEvent.click(document.querySelector('.clickable .MuiIconButton-label')));
-    expect(screen.getByText(/aNumber/i)).toBeInTheDocument();
+    await act(() => waitFor(() => rerender(ui)));
+    while (screen.queryByText(/show more/i)) {
+      userEvent.click(screen.getByText(/show more/i));
+      await waitFor(() => rerender(ui));
+    }
 
+    expect(screen.getByText(/aNumber/i)).toBeInTheDocument();
     userEvent.click(screen.getByRole('button', { name: /edit/i }));
+    await waitFor(() => rerender(ui));
     userEvent.type(screen.getByDisplayValue('something'), 'testKey');
     userEvent.type(screen.getByDisplayValue('else'), 'testValue');
-    act(() => userEvent.click(screen.getByRole('button', { name: /Cancel/i })));
+    await act(() => userEvent.click(screen.getByRole('button', { name: /Cancel/i })));
     expect(screen.queryByText(/key/i)).not.toBeInTheDocument();
 
     // userEvent.click(screen.getByRole('button', { name: /View log/i }));

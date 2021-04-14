@@ -99,7 +99,7 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
 
   const createCsvDownload = () => {
     setCsvLoading(true);
-    getAuditLogsCsvLink().then(address => {
+    getAuditLogsCsvLink(startDate, endDate, user?.id || user, `${type}`.toLowerCase(), detail?.id || detail, sorting).then(address => {
       const link = document.createElement('a');
       link.setAttribute('href', encodeURI(address));
       link.setAttribute('download', `Mender-AuditLog-${moment(startDate).format(moment.HTML5_FMT.DATE)}-${moment(endDate).format(moment.HTML5_FMT.DATE)}.csv`);

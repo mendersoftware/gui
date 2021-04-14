@@ -75,12 +75,28 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
     setConfirmMessage('');
   };
 
-  const onConfirm = status => {
+  const onRequestConfirm = status => {
     let message = getConfirmationMessage(status, device, authset);
     setConfirmMessage(message);
     setNewStatus(status);
     setShowKey(false);
     onExpand(authset.id);
+  };
+
+  const onConfirm = confirmedState => confirm(device.id, authset.id, confirmedState).then(onCancelConfirm);
+
+  const onDismissClick = () => {
+    if (total > 1 || device.status !== DEVICE_STATES.pending) {
+      return onRequestConfirm(DEVICE_DISMISSAL_STATE);
+    }
+    return onConfirm(DEVICE_DISMISSAL_STATE);
+  };
+
+  const onAcceptClick = () => {
+    if (total > 1) {
+      return onRequestConfirm(DEVICE_STATES.accepted);
+    }
+    return onConfirm(DEVICE_STATES.accepted);
   };
 
   let key = <a onClick={onShowKey}>show key</a>;
@@ -105,22 +121,16 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
   ) : (
     <div className="action-buttons flexbox">
       {authset.status !== DEVICE_STATES.accepted && authset.status !== DEVICE_STATES.preauth && !limitMaxed ? (
-        <a onClick={() => (total > 1 ? onConfirm(DEVICE_STATES.accepted) : confirm(device.id, authset.id, DEVICE_STATES.accepted))}>Accept</a>
+        <a onClick={onAcceptClick}>Accept</a>
       ) : (
         <div>Accept</div>
       )}
       {authset.status !== DEVICE_STATES.rejected && authset.status !== DEVICE_STATES.preauth ? (
-        <a onClick={() => onConfirm(DEVICE_STATES.rejected)}>Reject</a>
+        <a onClick={() => onRequestConfirm(DEVICE_STATES.rejected)}>Reject</a>
       ) : (
         <div>Reject</div>
       )}
-      <a
-        onClick={() =>
-          total > 1 || device.status !== DEVICE_STATES.pending ? onConfirm(DEVICE_DISMISSAL_STATE) : confirm(device.id, authset.id, DEVICE_DISMISSAL_STATE)
-        }
-      >
-        Dismiss
-      </a>
+      <a onClick={onDismissClick}>Dismiss</a>
     </div>
   );
 
@@ -169,8 +179,8 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
               <Button className="margin-right-small" onClick={onCancelConfirm}>
                 Cancel
               </Button>
-              <Button variant="contained" onClick={() => confirm(device.id, authset.id, newStatus)}>
-                <span className="uppercase">confirm</span>
+              <Button variant="contained" onClick={() => onConfirm(newStatus)}>
+                Confirm
               </Button>
             </>
           )}

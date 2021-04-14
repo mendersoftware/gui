@@ -152,11 +152,7 @@ exports[`AuthsetList Component renders correctly 1`] = `
               <span
                 className="MuiButton-label"
               >
-                <span
-                  className="uppercase"
-                >
-                  confirm
-                </span>
+                Confirm
               </span>
             </button>
           </div>
