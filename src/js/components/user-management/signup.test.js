@@ -19,7 +19,7 @@ describe('Signup Component', () => {
     const { baseElement } = render(
       <MemoryRouter>
         <Provider store={store}>
-          <Signup location={{ state: { from: '' } }} />
+          <Signup match={{ params: { campaign: '' } }} />
         </Provider>
       </MemoryRouter>
     );

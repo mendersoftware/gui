@@ -16,7 +16,7 @@ import { OAuth2Providers } from './oauth2providers';
 
 const cookies = new Cookies();
 
-export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setFirstLoginAfterSignup, recaptchaSiteKey, setSnackbar }) => {
+export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setFirstLoginAfterSignup, recaptchaSiteKey, setSnackbar, match }) => {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
@@ -27,6 +27,7 @@ export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setF
   const [organization, setOrganization] = useState('');
   const [tos, setTos] = useState(false);
   const [redirectOnLogin, setRedirectOnLogin] = useState(false);
+  const campaign = match.params.campaign;
 
   useEffect(() => {
     cookies.remove('noExpiry', { path: '/' });
@@ -62,7 +63,8 @@ export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setF
       plan: 'enterprise',
       tos: formData.tos,
       marketing: formData.marketing == 'true',
-      'g-recaptcha-response': recaptcha || 'empty'
+      'g-recaptcha-response': recaptcha || 'empty',
+      campaign: campaign || ''
     };
     return createOrganizationTrial(signup)
       .catch(() => {
