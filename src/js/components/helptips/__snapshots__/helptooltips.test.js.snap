@@ -108,12 +108,14 @@ exports[`Helptooltips Components renders Connect(AuthButtonComponent) correctly 
         Click this button to view the authentication options for this device. You can decide whether to accept it, reject it, or just dismiss this device for now.
       </p>
       <p>
-        You can find out more about connecting different types of devices in 
+        See the documentation for more on
+         
         <a
-          href="/help/get-started"
-          onClick={[Function]}
+          href="https://docs.mender.io/overview/device-authentication"
+          rel="noopener noreferrer"
+          target="_blank"
         >
-          the help section
+          Device authentication
         </a>
         .
       </p>
