@@ -709,7 +709,7 @@ export const preauthDevice = authset => dispatch =>
 
 export const decommissionDevice = (deviceId, authId) => dispatch =>
   GeneralApi.delete(`${deviceAuthV2}/devices/${deviceId}`)
-    .then(() => Promise.all([dispatch(getDeviceAuth(deviceId)), dispatch(setSnackbar('Device was decommissioned successfully'))]))
+    .then(() => Promise.resolve(dispatch(setSnackbar('Device was decommissioned successfully'))))
     .catch(err => commonErrorHandler(err, 'There was a problem decommissioning the device:', dispatch))
     .then(() => Promise.resolve(dispatch(maybeUpdateDevicesByStatus(deviceId, authId))));
 
