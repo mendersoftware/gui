@@ -5,7 +5,7 @@ import { undefineds } from '../../../../../../tests/mockData';
 
 describe('AuthsetList Component', () => {
   it('renders correctly', async () => {
-    const tree = renderer.create(<AuthsetList device={{ auth_sets: [] }} />).toJSON();
+    const tree = renderer.create(<AuthsetList authsets={[]} device={{ auth_sets: [] }} />).toJSON();
     expect(tree).toMatchSnapshot();
     expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
   });

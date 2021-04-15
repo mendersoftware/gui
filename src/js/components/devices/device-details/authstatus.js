@@ -37,7 +37,16 @@ export const AuthStatus = ({ decommission, device, deviceListRefresh, disableBot
   return (
     <DeviceDataCollapse
       disableBottomBorder={disableBottomBorder}
-      header={!open && <a onClick={setOpen}>show more</a>}
+      header={
+        !open && (
+          <div className="flexbox column">
+            <Authsets decommission={decommission} device={device} deviceListRefresh={deviceListRefresh} activeOnly />
+            <a className="margin-top-small" onClick={setOpen}>
+              show more
+            </a>
+          </div>
+        )
+      }
       isOpen={open}
       onClick={setOpen}
       title={
@@ -54,7 +63,7 @@ export const AuthStatus = ({ decommission, device, deviceListRefresh, disableBot
         </div>
       }
     >
-      <Authsets decommission={decommission} device={device} deviceListRefresh={deviceListRefresh} showHelptips={showHelptips} />
+      <Authsets decommission={decommission} device={device} deviceListRefresh={deviceListRefresh} />
       <a onClick={() => setOpen(false)}>show less</a>
     </DeviceDataCollapse>
   );

@@ -14,7 +14,7 @@ import Confirm from './../../../common/confirm';
 import Authsetlist from './authsetlist';
 import { customSort } from '../../../../helpers';
 
-export const Authsets = ({ decommission, deleteAuthset, device, deviceListRefresh, getDeviceAuth, limitMaxed, showHelptips, updateDeviceAuth }) => {
+export const Authsets = ({ activeOnly, decommission, deleteAuthset, device, deviceListRefresh, getDeviceAuth, limitMaxed, showHelptips, updateDeviceAuth }) => {
   const [confirmDecommission, setConfirmDecomission] = useState(false);
   const [loading, setLoading] = useState(false);
   const { auth_sets = [], status = DEVICE_STATES.accepted } = device;
@@ -29,6 +29,25 @@ export const Authsets = ({ decommission, deleteAuthset, device, deviceListRefres
       return accu;
     }, sortedSets[0]);
   }, [device]);
+
+  const orderedAuthsets = useMemo(() => {
+    const { auth_sets: authsets = [], status = DEVICE_STATES.accepted } = device;
+    let groupedAuthsets = authsets.reduce(
+      // for each authset compare the device status and if it matches authset status, put it in correct list
+      (accu, authset) => {
+        if (authset.status === status) {
+          accu.active.push(authset);
+        } else if (authset.status === DEVICE_STATES.pending) {
+          accu.active.unshift(authset);
+        } else {
+          accu.inactive.push(authset);
+        }
+        return accu;
+      },
+      { active: [], inactive: [] }
+    );
+    return [...groupedAuthsets.active, ...groupedAuthsets.inactive];
+  }, [device.auth_sets, device.status]);
 
   const updateDeviceAuthStatus = (device_id, auth_id, status) => {
     setLoading(auth_id);
@@ -55,12 +74,22 @@ export const Authsets = ({ decommission, deleteAuthset, device, deviceListRefres
     }
   };
 
-  return (
+  return activeOnly ? (
+    <Authsetlist
+      authsets={[currentAuthSet]}
+      limitMaxed={limitMaxed}
+      total={auth_sets.length}
+      confirm={updateDeviceAuthStatus}
+      loading={loading}
+      device={device}
+    />
+  ) : (
     <div style={{ minWidth: 700, marginBottom: theme.spacing(2), backgroundColor: '#f7f7f7', border: '1px solid rgb(224, 224, 224)', padding: '16px' }}>
       <div className="margin-bottom-small">
         {status === DEVICE_STATES.pending ? `Authorization ${pluralize('request', auth_sets.length)}` : 'Authorization sets'}
       </div>
       <Authsetlist
+        authsets={orderedAuthsets}
         limitMaxed={limitMaxed}
         total={auth_sets.length}
         confirm={updateDeviceAuthStatus}
@@ -98,7 +127,8 @@ const mapStateToProps = (state, ownProps) => {
   const device = state.devices.byId[ownProps.device.id] || {};
   return {
     device,
-    limitMaxed: getLimitMaxed(state)
+    limitMaxed: getLimitMaxed(state),
+    showHelptips: state.users.showHelptips
   };
 };
 

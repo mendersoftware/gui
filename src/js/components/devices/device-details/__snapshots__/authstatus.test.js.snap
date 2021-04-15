@@ -71,9 +71,128 @@ exports[`AuthStatus Component renders correctly 1`] = `
     </button>
   </div>
   <div>
-    <a>
-      show more
-    </a>
+    <div
+      class="flexbox column"
+    >
+      <div
+        class="authsets"
+      >
+        <div
+          class="header"
+        >
+          <div
+            class="columnHeader"
+          />
+          <div
+            class="columnHeader"
+          >
+            Status
+          </div>
+          <div
+            class="columnHeader"
+          >
+            Public key
+          </div>
+          <div
+            class="columnHeader"
+          >
+            Time of request
+          </div>
+          <div
+            class="columnHeader"
+          >
+            Actions
+          </div>
+        </div>
+        <div
+          class="body"
+          style="position: relative;"
+        >
+          <div
+            class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+          >
+            <div
+              aria-disabled="false"
+              aria-expanded="false"
+              class="MuiButtonBase-root MuiAccordionSummary-root"
+              role="button"
+              style="cursor: default;"
+              tabindex="0"
+            >
+              <div
+                class="MuiAccordionSummary-content"
+              >
+                <div
+                  class="capitalized"
+                >
+                  Active
+                </div>
+                <div
+                  class="capitalized"
+                >
+                  accepted
+                </div>
+                <a>
+                  show key
+                </a>
+                <time
+                  datetime="2019-01-01T06:25:00+00:00"
+                >
+                  2019-01-01 06:25
+                </time>
+                <div
+                  class="action-buttons flexbox"
+                >
+                  <div>
+                    Accept
+                  </div>
+                  <a>
+                    Reject
+                  </a>
+                  <a>
+                    Dismiss
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div
+              class="MuiCollapse-container MuiCollapse-hidden"
+              style="min-height: 0px;"
+            >
+              <div
+                class="MuiCollapse-wrapper"
+              >
+                <div
+                  class="MuiCollapse-wrapperInner"
+                >
+                  <div
+                    role="region"
+                  >
+                    <div
+                      class="MuiAccordionDetails-root"
+                    >
+                      <div
+                        style="flex-grow: 1;"
+                      />
+                      <p
+                        class="bold expanded"
+                      >
+                         Are you sure you want to continue?
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a
+        class="margin-top-small"
+      >
+        show more
+      </a>
+    </div>
   </div>
   <hr
     class="MuiDivider-root"
