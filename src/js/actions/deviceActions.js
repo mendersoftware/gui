@@ -616,7 +616,13 @@ export const deviceFileUpload = (deviceId, path, file) => dispatch => {
     .finally(() => Promise.resolve(dispatch({ type: AppConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 })));
 };
 
-export const getDeviceAuth = id => dispatch => Promise.resolve(dispatch(getDevicesWithAuth([{ id }]))).then(results => Promise.resolve(results[1][0]));
+export const getDeviceAuth = id => dispatch =>
+  Promise.resolve(dispatch(getDevicesWithAuth([{ id }]))).then(results => {
+    if (results[results.length - 1]) {
+      return Promise.resolve(results[results.length - 1][0]);
+    }
+    return Promise.resolve();
+  });
 
 export const getDevicesWithAuth = devices => dispatch =>
   devices.length
