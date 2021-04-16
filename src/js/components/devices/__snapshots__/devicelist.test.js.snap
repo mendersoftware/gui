@@ -171,7 +171,7 @@ exports[`DeviceList Component renders correctly 1`] = `
             style={
               Object {
                 "marginRight": 10,
-                "maxWidth": 30,
+                "maxWidth": "3ch",
                 "minWidth": 30,
               }
             }
