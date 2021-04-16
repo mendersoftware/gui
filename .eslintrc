@@ -28,6 +28,22 @@
     "no-multiple-empty-lines": 2,
     "no-prototype-builtins": 0,
     "quotes": [2, "single", { "allowTemplateLiterals": true }],
-    "react/prop-types": 0
+    "react/forbid-dom-props": 2,
+    "react/no-redundant-should-component-update": 2,
+    "react/no-this-in-sfc": 2,
+    "react/no-typos": 2,
+    "react/no-unsafe": 2,
+    "react/no-unused-prop-types": 2,
+    "react/no-unused-state": 0,
+    "react/prefer-es6-class": 2,
+    "react/prefer-stateless-function": 2,
+    "react/prop-types": 0,
+    "react/require-default-props": 2,
+    "react/sort-prop-types": 2,
+    "react/state-in-constructor": 2,
+    "react/static-property-placement": 2,
+    "react/style-prop-object": 2,
+    "react/void-dom-elements-no-children": 2,
+    "react/jsx-no-target-blank": 2
   }
 }
