@@ -352,7 +352,7 @@ exports[`PendingDevices Component renders correctly 1`] = `
             >
               <div
                 class=\\"MuiFormControl-root MuiTextField-root MuiFormControl-marginDense\\"
-                style=\\"min-width: 30px; max-width: 30px; margin-right: 10px;\\"
+                style=\\"min-width: 30px; max-width: 3ch; margin-right: 10px;\\"
               >
                 <div
                   class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-marginDense MuiInput-marginDense\\"
