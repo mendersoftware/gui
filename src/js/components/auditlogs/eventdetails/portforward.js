@@ -9,11 +9,10 @@ import { getIdAttribute } from '../../../selectors';
 import theme from '../../../themes/mender-theme';
 import Loader from '../../common/loader';
 import DeviceDetails, { DetailInformation } from './devicedetails';
-import TerminalPlayer from './terminalplayer';
 
 momentDurationFormatSetup(moment);
 
-export const TerminalSession = ({ device, idAttribute, item, getDeviceById, getSessionDetails, onClose }) => {
+export const PortForward = ({ device, idAttribute, item, getDeviceById, getSessionDetails, onClose }) => {
   const [sessionDetails, setSessionDetails] = useState();
 
   useEffect(() => {
@@ -43,12 +42,9 @@ export const TerminalSession = ({ device, idAttribute, item, getDeviceById, getS
   };
 
   return (
-    <div className="flexbox" style={{ flexWrap: 'wrap' }}>
-      <TerminalPlayer className="flexbox column margin-top" item={item} sessionInitialized={!!sessionDetails} />
-      <div className="flexbox column" style={{ margin: theme.spacing(3), minWidth: 'min-content' }}>
-        <DeviceDetails device={device} idAttribute={idAttribute} onClose={onClose} />
-        <DetailInformation title="session" details={sessionMeta} />
-      </div>
+    <div className="flexbox column" style={{ margin: theme.spacing(3), minWidth: 'min-content' }}>
+      <DeviceDetails device={device} idAttribute={idAttribute} onClose={onClose} />
+      <DetailInformation title="port forwarding" details={sessionMeta} />
     </div>
   );
 };
@@ -64,4 +60,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, actionCreators)(TerminalSession);
+export default connect(mapStateToProps, actionCreators)(PortForward);
