@@ -151,7 +151,7 @@ export class Header extends React.Component {
           </Link>
           {demo && <DemoNotification docsVersion={docsVersion} />}
           {!!announcement && <Announcement announcement={announcement} onHide={setHideAnnouncement} />}
-          {organization && organization.trial && <TrialNotification />}
+          {organization?.trial && <TrialNotification expiration={organization.trial_expiration} />}
           <div style={{ flexGrow: '1' }}></div>
           <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
           <DeploymentNotifications inprogress={inProgress} />
