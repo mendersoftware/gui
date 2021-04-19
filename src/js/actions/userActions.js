@@ -81,7 +81,7 @@ export const logoutUser = reason => (dispatch, getState) => {
 
 export const passwordResetStart = email => dispatch =>
   GeneralApi.post(`${useradmApiUrl}/auth/password-reset/start`, { email: email }).catch(err =>
-    commonErrorHandler(err, `The password reset request cannot be processed:`, dispatch)
+    commonErrorHandler(err, `The password reset request cannot be processed:`, dispatch, undefined, true)
   );
 
 export const passwordResetComplete = (secretHash, newPassword) => dispatch =>
@@ -112,7 +112,9 @@ export const verifyEmailComplete = secret => dispatch =>
 export const verify2FA = tfaData => dispatch =>
   UsersApi.putVerifyTFA(`${useradmApiUrl}/2faverify`, tfaData)
     .then(() => Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: getToken() }), dispatch(getGlobalSettings())]))
-    .catch(err => commonErrorHandler(err, 'An error occured validating the verification code: failed to verify token, please try again.', dispatch));
+    .catch(err =>
+      commonErrorHandler(err, 'An error occured validating the verification code: failed to verify token, please try again.', dispatch, undefined, true)
+    );
 
 export const getUserList = () => dispatch =>
   GeneralApi.get(`${useradmApiUrl}/users`)
