@@ -1,8 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`App Component renders correctly 1`] = `
-<body>
-  <div>
+<div>
+  <div
+    id="app"
+  >
     <div
       class="MuiToolbar-root MuiToolbar-regular header MuiToolbar-gutters"
       id="fixedHeader"
@@ -313,8 +315,5 @@ exports[`App Component renders correctly 1`] = `
       </div>
     </div>
   </div>
-  <script
-    src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js"
-  />
-</body>
+</div>
 `;
