@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import pluralize from 'pluralize';
 
@@ -31,51 +31,42 @@ const headerStyle = {
   justifyContent: 'flex-end'
 };
 
-export class Deployments extends React.Component {
-  constructor(props, state) {
-    super(props, state);
-    const self = this;
-    self.timer = null;
-    const lastDeploymentCheck = self.updateDeploymentCutoff(new Date());
-    self.state = {
-      lastDeploymentCheck,
-      loading: true
+let timer;
+
+export const Deployments = ({ clickHandle, finishedCount, inprogressCount, onboardingState, pendingCount, setSnackbar, styles }) => {
+  const [lastDeploymentCheck, setLastDeploymentCheck] = useState();
+  const [loading, setLoading] = useState(true);
+  // eslint-disable-next-line no-unused-vars
+  const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
+  const deploymentsRef = useRef();
+
+  const handleResize = () => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), 500);
+
+  useEffect(() => {
+    clearAllRetryTimers(setSnackbar);
+    timer = setInterval(getDeployments, refreshDeploymentsLength);
+    getDeployments();
+    setLastDeploymentCheck(updateDeploymentCutoff(new Date()));
+    window.addEventListener('resize', handleResize);
+    return () => {
+      clearInterval(timer);
+      clearAllRetryTimers(setSnackbar);
+      window.removeEventListener('resize', handleResize);
     };
-  }
+  }, []);
 
-  handleResize() {
-    setTimeout(() => {
-      this.setState({ height: window.innerHeight, width: window.innerWidth });
-    }, 500);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timer);
-    clearAllRetryTimers(this.props.setSnackbar);
-    window.removeEventListener('resize', this.handleResize.bind(this));
-  }
-
-  componentDidMount() {
-    var self = this;
-    clearAllRetryTimers(self.props.setSnackbar);
-    self.timer = setInterval(() => self.getDeployments(), refreshDeploymentsLength);
-    self.getDeployments();
-    window.addEventListener('resize', this.handleResize.bind(this));
-  }
-
-  getDeployments() {
-    const self = this;
-    const roundedStartDate = Math.round(Date.parse(self.state.lastDeploymentCheck) / 1000);
+  const getDeployments = () => {
+    const roundedStartDate = Math.round(Date.parse(lastDeploymentCheck || Date.now()) / 1000);
     const updateRequests = Object.keys(DEPLOYMENT_STATES)
       // we need to exclude the scheduled state here as the os version is not able to process these and will prevent the dashboard from loading
       .filter(status => status !== DEPLOYMENT_STATES.scheduled)
-      .map(status => self.props.getDeploymentsByStatus(status, 1, 1, status === DEPLOYMENT_STATES.finished ? roundedStartDate : undefined));
+      .map(status => getDeploymentsByStatus(status, 1, 1, status === DEPLOYMENT_STATES.finished ? roundedStartDate : undefined));
     return Promise.all(updateRequests)
-      .then(() => self.setState({ loading: false }))
-      .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, self.props.setSnackbar));
-  }
+      .then(() => setLoading(false))
+      .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, setSnackbar));
+  };
 
-  updateDeploymentCutoff(today) {
+  const updateDeploymentCutoff = today => {
     const jsonContent = window.localStorage.getItem('deploymentChecker');
     let lastCheck = today;
     try {
@@ -88,82 +79,71 @@ export class Deployments extends React.Component {
       window.sessionStorage.setItem('sessionDeploymentChecker', JSON.stringify(today));
     }
     return lastCheck;
-  }
+  };
 
-  render() {
-    const self = this;
-    const { inprogressCount, pendingCount, finishedCount, onboardingState } = self.props;
-    const { lastDeploymentCheck, loading } = self.state;
-
-    const pendingWidgetMain = {
-      counter: pendingCount,
-      header: (
-        <div className="flexbox" style={headerStyle}>
-          <UpdateIcon className="flip-horizontal" style={iconStyles} />
-          <div>Pending {pluralize('deployment', pendingCount)}</div>
-        </div>
-      ),
-      targetLabel: 'View details'
-    };
-    const activeWidgetMain = {
-      counter: inprogressCount,
-      header: (
-        <div className="flexbox" style={headerStyle}>
-          <RefreshIcon className="flip-horizontal" style={iconStyles} />
-          <div>{pluralize('Deployment', inprogressCount)} in progress</div>
-        </div>
-      ),
-      targetLabel: 'View progress'
-    };
-    let onboardingComponent;
-    if (this.deploymentsRef) {
-      const anchor = {
-        top: this.deploymentsRef.offsetTop + this.deploymentsRef.offsetHeight,
-        left: this.deploymentsRef.offsetLeft + this.deploymentsRef.offsetWidth / 2
-      };
-      onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor });
-    }
-    return (
-      <div>
-        <h4 className="dashboard-header">
-          <span>Deployments</span>
-        </h4>
-        <div className="deployments" style={Object.assign({ marginBottom: 50 })}>
-          {loading ? (
-            <Loader show={loading} fade={true} />
-          ) : (
-            <div style={this.props.styles}>
-              <BaseWidget
-                className={inprogressCount ? 'current-widget active' : 'current-widget'}
-                main={activeWidgetMain}
-                onClick={() => self.props.clickHandle({ route: 'deployments/active' })}
-              />
-              <BaseWidget
-                className={pendingCount ? 'current-widget pending' : 'current-widget'}
-                main={pendingWidgetMain}
-                onClick={() => self.props.clickHandle({ route: 'deployments/active' })}
-              />
-              <CompletedDeployments
-                onClick={deploymentsTimeframe => self.props.clickHandle(deploymentsTimeframe)}
-                finishedCount={finishedCount}
-                cutoffDate={lastDeploymentCheck}
-                innerRef={ref => (this.deploymentsRef = ref)}
-              />
-              <RedirectionWidget
-                target="/deployments/active?open=true"
-                content="Create a new deployment to update a group of devices"
-                buttonContent="Create a deployment"
-                onClick={() => this.props.clickHandle({ route: '/deployments/active?open=true' })}
-                isActive={false}
-              />
-            </div>
-          )}
-          {onboardingComponent}
-        </div>
+  const pendingWidgetMain = {
+    counter: pendingCount,
+    header: (
+      <div className="flexbox" style={headerStyle}>
+        <UpdateIcon className="flip-horizontal" style={iconStyles} />
+        <div>Pending {pluralize('deployment', pendingCount)}</div>
       </div>
-    );
+    ),
+    targetLabel: 'View details'
+  };
+  const activeWidgetMain = {
+    counter: inprogressCount,
+    header: (
+      <div className="flexbox" style={headerStyle}>
+        <RefreshIcon className="flip-horizontal" style={iconStyles} />
+        <div>{pluralize('Deployment', inprogressCount)} in progress</div>
+      </div>
+    ),
+    targetLabel: 'View progress'
+  };
+  let onboardingComponent;
+  if (deploymentsRef.current) {
+    const anchor = {
+      top: deploymentsRef.current.offsetTop + deploymentsRef.current.offsetHeight,
+      left: deploymentsRef.current.offsetLeft + deploymentsRef.current.offsetWidth / 2
+    };
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor });
   }
-}
+  return (
+    <div>
+      <h4 className="dashboard-header">
+        <span>Deployments</span>
+      </h4>
+      <div className="deployments" style={{ marginBottom: 50 }}>
+        {loading ? (
+          <Loader show={loading} fade={true} />
+        ) : (
+          <div style={styles}>
+            <BaseWidget
+              className={inprogressCount ? 'current-widget active' : 'current-widget'}
+              main={activeWidgetMain}
+              onClick={() => clickHandle({ route: 'deployments/active' })}
+            />
+            <BaseWidget
+              className={pendingCount ? 'current-widget pending' : 'current-widget'}
+              main={pendingWidgetMain}
+              onClick={() => clickHandle({ route: 'deployments/active' })}
+            />
+            <CompletedDeployments onClick={clickHandle} finishedCount={finishedCount} cutoffDate={lastDeploymentCheck} innerRef={deploymentsRef} />
+            <RedirectionWidget
+              target="/deployments/active?open=true"
+              content="Create a new deployment to update a group of devices"
+              buttonContent="Create a deployment"
+              onClick={() => clickHandle({ route: '/deployments/active?open=true' })}
+              isActive={false}
+            />
+          </div>
+        )}
+        {onboardingComponent}
+      </div>
+    </div>
+  );
+};
 
 const actionCreators = { getDeploymentsByStatus, setSnackbar };
 

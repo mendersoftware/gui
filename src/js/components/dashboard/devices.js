@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { getAllDevicesByStatus, getDeviceCount } from '../../actions/deviceActions';
@@ -11,45 +11,55 @@ import AcceptedDevices from './widgets/accepteddevices';
 import PendingDevices from './widgets/pendingdevices';
 import RedirectionWidget from './widgets/redirectionwidget';
 
-export class Devices extends React.Component {
-  constructor(props, state) {
-    super(props, state);
-    const self = this;
-    self.state = {
-      deltaActivity: 0,
-      loading: null
-    };
-  }
+export const Devices = props => {
+  const [deltaActivity, setDeltaActivity] = useState(0);
+  const [loading, setLoading] = useState();
+  // eslint-disable-next-line no-unused-vars
+  const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
+  const anchor = useRef();
+  const pendingsRef = useRef();
 
-  handleResize() {
-    setTimeout(() => {
-      this.setState({ height: window.innerHeight, width: window.innerWidth });
-    }, 500);
-  }
+  const {
+    acceptedDevicesCount,
+    activeDevicesCount,
+    clickHandle,
+    deploymentDeviceLimit,
+    getAllDevicesByStatus,
+    getDeviceCount,
+    inactiveDevicesCount,
+    onboardingState,
+    pendingDevicesCount,
+    setShowConnectingDialog,
+    showHelptips,
+    styles
+  } = props;
 
-  componentDidMount() {
-    var self = this;
+  const handleResize = () => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), 500);
+
+  useEffect(() => {
     // on render the store might not be updated so we resort to the API and let all later request go through the store
     // to be in sync with the rest of the UI
-    self._refreshDevices();
-    window.addEventListener('resize', this.handleResize.bind(this));
-  }
+    refreshDevices();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize.bind(this));
-  }
-
-  _refreshDevices() {
-    if (this.state.loading || this.props.acceptedDevicesCount > this.props.deploymentDeviceLimit) {
+  const refreshDevices = () => {
+    if (loading || acceptedDevicesCount > deploymentDeviceLimit) {
       return;
     }
-    this.props.getAllDevicesByStatus(DEVICE_STATES.accepted);
-    this.props.getDeviceCount(DEVICE_STATES.pending);
-    const deltaActivity = this._updateDeviceActivityHistory(this.props.activeDevicesCount);
-    this.setState({ deltaActivity });
-  }
+    setLoading(true);
+    Promise.all([getAllDevicesByStatus(DEVICE_STATES.accepted), getDeviceCount(DEVICE_STATES.pending)])
+      .then(() => {
+        const deltaActivity = updateDeviceActivityHistory(activeDevicesCount);
+        setDeltaActivity(deltaActivity);
+      })
+      .finally(() => setLoading(false));
+  };
 
-  _updateDeviceActivityHistory(deviceCount) {
+  const updateDeviceActivityHistory = deviceCount => {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const today = new Date();
@@ -81,55 +91,57 @@ export class Devices extends React.Component {
     }
     window.localStorage.setItem('dailyDeviceActivityCount', JSON.stringify(history.slice(0, 7)));
     return deviceCount - previousCount;
-  }
+  };
 
-  render() {
-    const { deltaActivity } = this.state;
-    const { acceptedDevicesCount, inactiveDevicesCount, onboardingState, pendingDevicesCount, setShowConnectingDialog, showHelptips } = this.props;
-    const noDevicesAvailable = !(acceptedDevicesCount + pendingDevicesCount > 0);
-    let onboardingComponent = null;
-    if (this.anchor) {
-      const element = this.anchor.children[this.anchor.children.length - 1];
-      const anchor = { left: element.offsetLeft + element.offsetWidth / 2, top: element.offsetTop + element.offsetHeight - 50 };
-      onboardingComponent = getOnboardingComponentFor(onboardingSteps.DASHBOARD_ONBOARDING_START, onboardingState, { anchor });
-      if (this.pendingsRef) {
-        const element = this.pendingsRef.wrappedElement.lastChild;
-        const anchor = {
-          left: this.pendingsRef.wrappedElement.offsetLeft + element.offsetWidth / 2,
-          top: this.pendingsRef.wrappedElement.offsetTop + element.offsetHeight
-        };
-        onboardingComponent = getOnboardingComponentFor(onboardingSteps.DASHBOARD_ONBOARDING_PENDINGS, onboardingState, { anchor });
-      }
+  const noDevicesAvailable = !(acceptedDevicesCount + pendingDevicesCount > 0);
+  let onboardingComponent = null;
+  if (anchor.current) {
+    const element = anchor.current.children[anchor.current.children.length - 1];
+    const deviceConnectionAnchor = { left: element.offsetLeft + element.offsetWidth / 2, top: element.offsetTop + element.offsetHeight - 50 };
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DASHBOARD_ONBOARDING_START, onboardingState, { anchor: deviceConnectionAnchor });
+    if (pendingsRef.current) {
+      const element = pendingsRef.current.lastChild;
+      const pendingsAnchor = {
+        left: pendingsRef.current.offsetLeft + element.offsetWidth / 2,
+        top: pendingsRef.current.offsetTop + element.offsetHeight
+      };
+      onboardingComponent = getOnboardingComponentFor(onboardingSteps.DASHBOARD_ONBOARDING_PENDINGS, onboardingState, { anchor: pendingsAnchor });
     }
-    return (
-      <div>
-        <h4 className="dashboard-header">
-          <span>Devices</span>
-        </h4>
-        <div style={Object.assign({ marginBottom: 30 }, this.props.styles)} ref={element => (this.anchor = element)}>
-          {!!pendingDevicesCount && (
-            <PendingDevices
-              pendingDevicesCount={pendingDevicesCount}
-              isActive={pendingDevicesCount > 0}
-              showHelptips={showHelptips}
-              onClick={this.props.clickHandle}
-              ref={ref => (this.pendingsRef = ref)}
-            />
-          )}
-          <AcceptedDevices devicesCount={acceptedDevicesCount} inactiveCount={inactiveDevicesCount} delta={deltaActivity} onClick={this.props.clickHandle} />
-          <RedirectionWidget
-            target="/devices"
-            content="Learn how to connect a device"
-            buttonContent="Connect a device"
-            onClick={() => setShowConnectingDialog(true)}
-            isActive={noDevicesAvailable}
-          />
-        </div>
-        {onboardingComponent ? onboardingComponent : null}
-      </div>
-    );
   }
-}
+  return (
+    <div>
+      <h4 className="dashboard-header">
+        <span>Devices</span>
+      </h4>
+      <div style={Object.assign({ marginBottom: 30 }, styles)} ref={anchor}>
+        {!!pendingDevicesCount && (
+          <PendingDevices
+            pendingDevicesCount={pendingDevicesCount}
+            isActive={pendingDevicesCount > 0}
+            showHelptips={showHelptips}
+            onClick={clickHandle}
+            innerRef={pendingsRef}
+          />
+        )}
+        <AcceptedDevices
+          deviceLimit={deploymentDeviceLimit}
+          devicesCount={acceptedDevicesCount}
+          inactiveCount={inactiveDevicesCount}
+          delta={deltaActivity}
+          onClick={clickHandle}
+        />
+        <RedirectionWidget
+          target="/devices"
+          content="Learn how to connect a device"
+          buttonContent="Connect a device"
+          onClick={() => setShowConnectingDialog(true)}
+          isActive={noDevicesAvailable}
+        />
+      </div>
+      {onboardingComponent ? onboardingComponent : null}
+    </div>
+  );
+};
 
 const actionCreators = { getAllDevicesByStatus, getDeviceCount, setShowConnectingDialog };
 

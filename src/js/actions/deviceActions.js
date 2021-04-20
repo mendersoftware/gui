@@ -516,12 +516,16 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
       filters: mapFiltersToTerms([{ key: 'status', value: status, operator: '$eq', scope: 'identity' }]),
       attributes
     }).then(res => {
-      const deviceAccu = reduceReceivedDevices(res.data, devices, getState(), status);
+      const state = getState();
+      const deviceAccu = reduceReceivedDevices(res.data, devices, state, status);
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICES,
         devicesById: deviceAccu.devicesById
       });
       const total = Number(res.headers[headerNames.total]);
+      if (total > state.deployments.deploymentDeviceLimit) {
+        return Promise.resolve();
+      }
       if (total > perPage * page) {
         return getAllDevices(perPage, page + 1, deviceAccu.ids);
       }
