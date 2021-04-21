@@ -13,18 +13,31 @@ const mockStore = configureStore([thunk]);
 describe('DeploymentReport Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({ ...defaultState });
+    store = mockStore({
+      ...defaultState,
+      deployments: {
+        ...defaultState.deployments,
+        byId: {
+          ...defaultState.deployments.byId,
+          d1: {
+            ...defaultState.deployments.byId.d1,
+            artifact_name: 'a1'
+          }
+        },
+        selectedDeployment: defaultState.deployments.byId.d1.id
+      }
+    });
   });
 
   it('renders correctly', async () => {
     const { baseElement } = render(
       <MemoryRouter>
         <Provider store={store}>
-          <DeploymentReport deployment={{ id: defaultState.deployments.byId.d1.id }} type="finished" />
+          <DeploymentReport open type="finished" />
         </Provider>
       </MemoryRouter>
     );
-    const dialog = baseElement.getElementsByClassName('MuiDialog-root')[0];
+    const dialog = baseElement.getElementsByClassName('MuiDrawer-root')[0];
     const view = prettyDOM(dialog, 100000, { highlight: false })
       .replace(/id="mui-[0-9]*"/g, '')
       .replace(/aria-labelledby="(mui-[0-9]* *)*"/g, '')

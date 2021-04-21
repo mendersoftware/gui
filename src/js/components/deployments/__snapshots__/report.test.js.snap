@@ -2,7 +2,7 @@
 
 exports[`DeploymentReport Component renders correctly 1`] = `
 "<div
-  class=\\"MuiDialog-root\\"
+  class=\\"MuiDrawer-root MuiDrawer-modal fadeIn\\"
   role=\\"presentation\\"
   style=\\"position: fixed; z-index: 1300; right: 0px; bottom: 0px; top: 0px; left: 0px;\\"
 >
@@ -16,674 +16,105 @@ exports[`DeploymentReport Component renders correctly 1`] = `
     tabindex=\\"0\\"
   />
   <div
-    class=\\"MuiDialog-container MuiDialog-scrollPaper\\"
-    role=\\"none presentation\\"
-    style=\\"opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;\\"
+    class=\\"MuiPaper-root MuiDrawer-paper MuiDrawer-paperAnchorRight MuiPaper-elevation16\\"
+    style=\\"min-width: 75vw;\\"
     tabindex=\\"-1\\"
   >
     <div
-      class=\\"MuiPaper-root MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthLg MuiDialog-paperFullWidth MuiPaper-elevation24 MuiPaper-rounded\\"
-      role=\\"dialog\\"
+      class=\\"flexbox margin-bottom-small space-between\\"
     >
       <div
-        class=\\"MuiDialogTitle-root\\"
+        class=\\"flexbox\\"
       >
-        <h2
-          class=\\"MuiTypography-root MuiTypography-h6\\"
-        >
+        <h3>
           Deployment details
-        </h2>
-      </div>
-      <div
-        class=\\"MuiDialogContent-root deployment-report\\"
-        style=\\"overflow: hidden;\\"
-      >
-        <div
-          class=\\"MuiTabs-root\\"
+        </h3>
+        <h4
+          class=\\"margin-left-small margin-right-small\\"
         >
-          <div
-            class=\\"MuiTabs-scroller MuiTabs-fixed\\"
-            style=\\"overflow: hidden;\\"
+          ID: 
+          d1
+        </h4>
+        <button
+          class=\\"MuiButtonBase-root MuiIconButton-root\\"
+          style=\\"align-self: center;\\"
+          tabindex=\\"0\\"
+          type=\\"button\\"
+        >
+          <span
+            class=\\"MuiIconButton-label\\"
           >
-            <div
-              class=\\"MuiTabs-flexContainer\\"
-              role=\\"tablist\\"
+            <svg
+              aria-hidden=\\"true\\"
+              class=\\"MuiSvgIcon-root\\"
+              focusable=\\"false\\"
+              viewBox=\\"0 0 24 24\\"
             >
-              <button
-                aria-selected=\\"true\\"
-                class=\\"MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected\\"
-                role=\\"tab\\"
-                tabindex=\\"0\\"
-                type=\\"button\\"
-              >
-                <span
-                  class=\\"MuiTab-wrapper\\"
-                >
-                  Devices overview
-                </span>
-                <span
-                  class=\\"MuiTouchRipple-root\\"
-                />
-              </button>
-              <button
-                aria-selected=\\"false\\"
-                class=\\"MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary\\"
-                role=\\"tab\\"
-                tabindex=\\"-1\\"
-                type=\\"button\\"
-              >
-                <span
-                  class=\\"MuiTab-wrapper\\"
-                >
-                  Deployment details
-                </span>
-                <span
-                  class=\\"MuiTouchRipple-root\\"
-                />
-              </button>
-            </div>
-            <span
-              class=\\"PrivateTabIndicator-root-1 PrivateTabIndicator-colorSecondary-3 hidden\\"
-              style=\\"left: 0px; width: 0px;\\"
-            />
-          </div>
-        </div>
-        <div>
-          <div
-            class=\\"report-container\\"
-          >
-            <div
-              class=\\"deploymentInfo two-columns\\"
-            >
-              <div>
-                <div
-                  style=\\"margin-bottom: -15px;\\"
-                >
-                  <li
-                    class=\\"MuiListItem-root attributes MuiListItem-gutters Mui-disabled\\"
-                    disabled=\\"\\"
-                  >
-                    <div
-                      class=\\"MuiListItemText-root MuiListItemText-multiline\\"
-                    >
-                      <span
-                        class=\\"MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock\\"
-                      >
-                        Release:
-                      </span>
-                      <div
-                        class=\\"MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock\\"
-                        title=\\"[object Object]\\"
-                      >
-                        <div>
-                          <span
-                            class=\\"inventory-text\\"
-                          >
-                            <a
-                              href=\\"/releases/test\\"
-                              style=\\"font-weight: 500;\\"
-                            >
-                              test
-                            </a>
-                          </span>
-                           
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                </div>
-                <div
-                  style=\\"margin-bottom: -15px;\\"
-                >
-                  <li
-                    class=\\"MuiListItem-root attributes MuiListItem-gutters Mui-disabled\\"
-                    disabled=\\"\\"
-                  >
-                    <div
-                      class=\\"MuiListItemText-root MuiListItemText-multiline\\"
-                    >
-                      <span
-                        class=\\"MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock\\"
-                      >
-                        Target device(s):
-                      </span>
-                      <div
-                        class=\\"MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock\\"
-                        title=\\"test deployment\\"
-                      >
-                        <div>
-                          <span
-                            class=\\"inventory-text\\"
-                          >
-                            test deployment
-                          </span>
-                           
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                </div>
-              </div>
-              <div
-                style=\\"margin-bottom: -15px;\\"
-              >
-                <li
-                  class=\\"MuiListItem-root attributes MuiListItem-gutters Mui-disabled\\"
-                  disabled=\\"\\"
-                >
-                  <div
-                    class=\\"MuiListItemText-root MuiListItemText-multiline\\"
-                  >
-                    <span
-                      class=\\"MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock\\"
-                    >
-                      Status:
-                    </span>
-                    <div
-                      class=\\"MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock\\"
-                      title=\\"[object Object]\\"
-                    >
-                      <div>
-                        <span
-                          class=\\"inventory-text\\"
-                        >
-                          <div
-                            class=\\"capitalized-start\\"
-                          >
-                            
-                          </div>
-                        </span>
-                         
-                      </div>
-                    </div>
-                  </div>
-                </li>
-              </div>
-            </div>
-            <div
-              class=\\"progressStatus flexbox centered space-between\\"
-            >
-              <div
-                id=\\"progressStatus\\"
-              >
-                <h3
-                  style=\\"margin-top: 0px;\\"
-                >
-                  In progress
-                </h3>
-                <h2>
-                  <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root\\"
-                    focusable=\\"false\\"
-                    style=\\"margin: 0px 10px 0px -10px; color: rgb(172, 212, 208); vertical-align: text-top;\\"
-                    viewBox=\\"0 0 24 24\\"
-                  >
-                    <path
-                      d=\\"M16.24 7.76C15.07 6.59 13.54 6 12 6v6l-4.24 4.24c2.34 2.34 6.14 2.34 8.49 0 2.34-2.34 2.34-6.14-.01-8.48zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z\\"
-                    />
-                  </svg>
-                  <span>
-                    0 h 30 m 01 s
-                  </span>
-                </h2>
-                <div>
-                  <div>
-                    Started: 
-                  </div>
-                  <time
-                    datetime=\\"2019-01-01T12:30:00+00:00\\"
-                  >
-                    2019-01-01 12:30
-                  </time>
-                </div>
-              </div>
-              <div>
-                <div
-                  class=\\"flexbox results-status column\\"
-                >
-                  <div
-                    class=\\"disabled\\"
-                    title=\\"Skipped\\"
-                  >
-                    <img
-                      src=\\"skipped_status.png\\"
-                    />
-                    <span
-                      class=\\"status\\"
-                    >
-                      0
-                    </span>
-                    <span
-                      class=\\"label\\"
-                    >
-                      Skipped
-                    </span>
-                  </div>
-                  <div
-                    class=\\"disabled\\"
-                    title=\\"Pending\\"
-                  >
-                    <img
-                      src=\\"pending_status.png\\"
-                    />
-                    <span
-                      class=\\"status\\"
-                    >
-                      0
-                    </span>
-                    <span
-                      class=\\"label\\"
-                    >
-                      Pending
-                    </span>
-                  </div>
-                  <div
-                    class=\\"\\"
-                    title=\\"In progress\\"
-                  >
-                    <img
-                      src=\\"progress_status.png\\"
-                    />
-                    <span
-                      class=\\"status\\"
-                    >
-                      1
-                    </span>
-                    <span
-                      class=\\"label\\"
-                    >
-                      In progress
-                    </span>
-                  </div>
-                  <div
-                    class=\\"disabled\\"
-                    title=\\"Successful\\"
-                  >
-                    <img
-                      src=\\"success_status.png\\"
-                    />
-                    <span
-                      class=\\"status\\"
-                    >
-                      0
-                    </span>
-                    <span
-                      class=\\"label\\"
-                    >
-                      Successful
-                    </span>
-                  </div>
-                  <div
-                    class=\\"disabled\\"
-                    title=\\"Failed\\"
-                  >
-                    <img
-                      src=\\"error_status.png\\"
-                    />
-                    <span
-                      class=\\"status\\"
-                    >
-                      0
-                    </span>
-                    <span
-                      class=\\"label\\"
-                    >
-                      Failed
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <button
-              class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary\\"
-              style=\\"align-self: baseline; margin-top: 45px;\\"
-              tabindex=\\"0\\"
-              title=\\"Devices that have not yet started the deployment will not start the deployment.
-Devices that have already completed the deployment are not affected by the abort.
-Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback.\\"
-              type=\\"button\\"
-            >
-              <span
-                class=\\"MuiButton-label\\"
-              >
-                <span
-                  class=\\"MuiButton-startIcon MuiButton-iconSizeMedium\\"
-                >
-                  <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeSmall\\"
-                    focusable=\\"false\\"
-                    viewBox=\\"0 0 24 24\\"
-                  >
-                    <path
-                      d=\\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-4.42 3.58-8 8-8 1.85 0 3.55.63 4.9 1.69L5.69 16.9C4.63 15.55 4 13.85 4 12zm8 8c-1.85 0-3.55-.63-4.9-1.69L18.31 7.1C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z\\"
-                    />
-                  </svg>
-                </span>
-                Abort
-                 deployment
-              </span>
-              <span
-                class=\\"MuiTouchRipple-root\\"
+              <path
+                d=\\"M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z\\"
               />
-            </button>
-          </div>
-          <div
-            style=\\"min-height: 20vh;\\"
-          >
-            <div
-              style=\\"max-height: 40vh; overflow-x: auto;\\"
-            >
-              <table
-                class=\\"MuiTable-root\\"
-              >
-                <thead
-                  class=\\"MuiTableHead-root\\"
-                >
-                  <tr
-                    class=\\"MuiTableRow-root MuiTableRow-head\\"
-                  >
-                    <th
-                      class=\\"MuiTableCell-root MuiTableCell-head\\"
-                      scope=\\"col\\"
-                      style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
-                      tooltip=\\"Device ID\\"
-                    >
-                      Device ID
-                    </th>
-                    <th
-                      class=\\"MuiTableCell-root MuiTableCell-head\\"
-                      scope=\\"col\\"
-                      style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
-                      tooltip=\\"Device type\\"
-                    >
-                      Device type
-                    </th>
-                    <th
-                      class=\\"MuiTableCell-root MuiTableCell-head\\"
-                      scope=\\"col\\"
-                      style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
-                      tooltip=\\"Current software\\"
-                    >
-                      Current software
-                    </th>
-                    <th
-                      class=\\"MuiTableCell-root MuiTableCell-head\\"
-                      scope=\\"col\\"
-                      style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
-                      tooltip=\\"Started\\"
-                    >
-                      Started
-                    </th>
-                    <th
-                      class=\\"MuiTableCell-root MuiTableCell-head\\"
-                      scope=\\"col\\"
-                      style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
-                      tooltip=\\"Finished\\"
-                    >
-                      Finished
-                    </th>
-                    <th
-                      class=\\"MuiTableCell-root MuiTableCell-head\\"
-                      scope=\\"col\\"
-                      style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
-                      tooltip=\\"Deployment status\\"
-                    >
-                      Deployment status
-                    </th>
-                    <th
-                      class=\\"MuiTableCell-root MuiTableCell-head\\"
-                      scope=\\"col\\"
-                      style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
-                      tooltip=\\"\\"
-                    />
-                  </tr>
-                </thead>
-                <tbody
-                  class=\\"MuiTableBody-root\\"
-                >
-                  <tr
-                    class=\\"MuiTableRow-root\\"
-                  >
-                    <td
-                      class=\\"MuiTableCell-root MuiTableCell-body\\"
-                    >
-                      <a
-                        href=\\"/devices/id=a1\\"
-                        style=\\"font-weight: 500;\\"
-                      >
-                        a1
-                      </a>
-                    </td>
-                    <td
-                      class=\\"MuiTableCell-root MuiTableCell-body\\"
-                    >
-                      -
-                    </td>
-                    <td
-                      class=\\"MuiTableCell-root MuiTableCell-body\\"
-                    >
-                      -
-                    </td>
-                    <td
-                      class=\\"MuiTableCell-root MuiTableCell-body\\"
-                    >
-                      -
-                    </td>
-                    <td
-                      class=\\"MuiTableCell-root MuiTableCell-body\\"
-                    >
-                      -
-                    </td>
-                    <td
-                      class=\\"MuiTableCell-root MuiTableCell-body\\"
-                      style=\\"padding-right: 0px; position: relative; min-width: 200px;\\"
-                    >
-                      installing
-                      <div
-                        style=\\"position: absolute; bottom: 0px; width: 100%;\\"
-                      >
-                        <div
-                          style=\\"text-align: end; color: rgb(170, 170, 170);\\"
-                        >
-                          70%
-                        </div>
-                        <div
-                          aria-valuemax=\\"100\\"
-                          aria-valuemin=\\"0\\"
-                          aria-valuenow=\\"70\\"
-                          class=\\"MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate\\"
-                          role=\\"progressbar\\"
-                        >
-                          <div
-                            class=\\"MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate\\"
-                            style=\\"transform: translateX(-30%);\\"
-                          />
-                        </div>
-                      </div>
-                    </td>
-                    <td
-                      class=\\"MuiTableCell-root MuiTableCell-body\\"
-                    />
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div
-              class=\\"MuiTablePagination-root flexbox margin-top \\"
-            >
-              <div
-                class=\\"MuiToolbar-root MuiToolbar-regular MuiTablePagination-toolbar MuiToolbar-gutters\\"
-              >
-                <div
-                  class=\\"MuiTablePagination-spacer flexbox no-basis\\"
-                />
-                <p
-                  class=\\"MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit\\"
-                  
-                >
-                  Rows
-                </p>
-                <div
-                  class=\\"MuiInputBase-root MuiTablePagination-input MuiTablePagination-selectRoot\\"
-                >
-                  <div
-                    aria-haspopup=\\"listbox\\"
-                    
-                    class=\\"MuiSelect-root MuiSelect-select MuiTablePagination-select MuiSelect-selectMenu MuiInputBase-input\\"
-                    
-                    role=\\"button\\"
-                    tabindex=\\"0\\"
-                  >
-                    20
-                  </div>
-                  <input
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSelect-nativeInput\\"
-                    tabindex=\\"-1\\"
-                    value=\\"20\\"
-                  />
-                  <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root MuiSelect-icon MuiTablePagination-selectIcon\\"
-                    focusable=\\"false\\"
-                    viewBox=\\"0 0 24 24\\"
-                  >
-                    <path
-                      d=\\"M7 10l5 5 5-5z\\"
-                    />
-                  </svg>
-                </div>
-                <p
-                  class=\\"MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit\\"
-                />
-                <div
-                  class=\\"flexbox\\"
-                >
-                  <button
-                    class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
-                    disabled=\\"\\"
-                    tabindex=\\"-1\\"
-                    type=\\"button\\"
-                  >
-                    <span
-                      class=\\"MuiIconButton-label\\"
-                    >
-                      <svg
-                        aria-hidden=\\"true\\"
-                        class=\\"MuiSvgIcon-root\\"
-                        focusable=\\"false\\"
-                        viewBox=\\"0 0 24 24\\"
-                      >
-                        <path
-                          d=\\"M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z\\"
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                  <button
-                    class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
-                    disabled=\\"\\"
-                    tabindex=\\"-1\\"
-                    type=\\"button\\"
-                  >
-                    <span
-                      class=\\"MuiIconButton-label\\"
-                    >
-                      <svg
-                        aria-hidden=\\"true\\"
-                        class=\\"MuiSvgIcon-root\\"
-                        focusable=\\"false\\"
-                        viewBox=\\"0 0 24 24\\"
-                      >
-                        <path
-                          d=\\"M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z\\"
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                  <div
-                    class=\\"flexbox\\"
-                    style=\\"align-items: baseline;\\"
-                  >
-                    <div
-                      class=\\"MuiFormControl-root MuiTextField-root MuiFormControl-marginDense\\"
-                      style=\\"min-width: 30px; max-width: 3ch; margin-right: 10px;\\"
-                    >
-                      <div
-                        class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-marginDense MuiInput-marginDense\\"
-                      >
-                        <input
-                          aria-invalid=\\"false\\"
-                          class=\\"MuiInputBase-input MuiInput-input MuiInputBase-inputMarginDense MuiInput-inputMarginDense\\"
-                          type=\\"text\\"
-                          value=\\"1\\"
-                        />
-                      </div>
-                    </div>
-                    / 1
-                  </div>
-                  <button
-                    class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
-                    disabled=\\"\\"
-                    tabindex=\\"-1\\"
-                    type=\\"button\\"
-                  >
-                    <span
-                      class=\\"MuiIconButton-label\\"
-                    >
-                      <svg
-                        aria-hidden=\\"true\\"
-                        class=\\"MuiSvgIcon-root\\"
-                        focusable=\\"false\\"
-                        viewBox=\\"0 0 24 24\\"
-                      >
-                        <path
-                          d=\\"M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z\\"
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                  <button
-                    class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
-                    disabled=\\"\\"
-                    tabindex=\\"-1\\"
-                    type=\\"button\\"
-                  >
-                    <span
-                      class=\\"MuiIconButton-label\\"
-                    >
-                      <svg
-                        aria-hidden=\\"true\\"
-                        class=\\"MuiSvgIcon-root\\"
-                        focusable=\\"false\\"
-                        viewBox=\\"0 0 24 24\\"
-                      >
-                        <path
-                          d=\\"M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z\\"
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+            </svg>
+          </span>
+          <span
+            class=\\"MuiTouchRipple-root\\"
+          />
+        </button>
       </div>
       <div
-        class=\\"MuiDialogActions-root MuiDialogActions-spacing\\"
+        class=\\"flexbox\\"
+        style=\\"align-items: center;\\"
       >
         <button
-          class=\\"MuiButtonBase-root MuiButton-root MuiButton-text\\"
+          class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary\\"
           tabindex=\\"0\\"
+          title=\\"Devices that have not yet started the deployment will not start the deployment.
+Devices that have already completed the deployment are not affected by the abort.
+Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback.\\"
           type=\\"button\\"
         >
           <span
             class=\\"MuiButton-label\\"
           >
-            Close
+            <span
+              class=\\"MuiButton-startIcon MuiButton-iconSizeMedium\\"
+            >
+              <svg
+                aria-hidden=\\"true\\"
+                class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeSmall\\"
+                focusable=\\"false\\"
+                viewBox=\\"0 0 24 24\\"
+              >
+                <path
+                  d=\\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-4.42 3.58-8 8-8 1.85 0 3.55.63 4.9 1.69L5.69 16.9C4.63 15.55 4 13.85 4 12zm8 8c-1.85 0-3.55-.63-4.9-1.69L18.31 7.1C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z\\"
+                />
+              </svg>
+            </span>
+            Abort
+             deployment
+          </span>
+          <span
+            class=\\"MuiTouchRipple-root\\"
+          />
+        </button>
+        <button
+          aria-label=\\"close\\"
+          class=\\"MuiButtonBase-root MuiIconButton-root\\"
+          tabindex=\\"0\\"
+          type=\\"button\\"
+        >
+          <span
+            class=\\"MuiIconButton-label\\"
+          >
+            <svg
+              aria-hidden=\\"true\\"
+              class=\\"MuiSvgIcon-root\\"
+              focusable=\\"false\\"
+              viewBox=\\"0 0 24 24\\"
+            >
+              <path
+                d=\\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\\"
+              />
+            </svg>
           </span>
           <span
             class=\\"MuiTouchRipple-root\\"
@@ -691,6 +122,788 @@ Devices that are in the middle of the deployment at the time of abort will finis
         </button>
       </div>
     </div>
+    <hr
+      class=\\"MuiDivider-root\\"
+    />
+    <div
+      class=\\"deployment-report\\"
+    >
+      <div
+        class=\\"report-container margin-top-large margin-bottom-large\\"
+      >
+        <div
+          class=\\"break-all two-columns column-data  \\"
+          style=\\"align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr);\\"
+        >
+          <div
+            class=\\"align-right  text-muted\\"
+          >
+            <b>
+              Release
+            </b>
+          </div>
+          <div
+            class=\\"flexbox \\"
+          >
+            <a
+              class=\\"flexbox centered\\"
+              href=\\"/releases/a1\\"
+              rel=\\"noopener noreferrer\\"
+              style=\\"font-weight: 500;\\"
+              target=\\"_blank\\"
+            >
+              a1
+              <svg
+                aria-hidden=\\"true\\"
+                class=\\"MuiSvgIcon-root margin-left-small MuiSvgIcon-fontSizeSmall\\"
+                focusable=\\"false\\"
+                viewBox=\\"0 0 24 24\\"
+              >
+                <path
+                  d=\\"M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z\\"
+                />
+              </svg>
+            </a>
+          </div>
+          <div
+            class=\\"align-right  text-muted\\"
+          >
+            <b>
+              Target device(s)
+            </b>
+          </div>
+          <div
+            class=\\"flexbox \\"
+          >
+            <a
+              class=\\"flexbox centered\\"
+              href=\\"/devices?group=test%20deployment\\"
+              rel=\\"noopener noreferrer\\"
+              style=\\"font-weight: 500;\\"
+              target=\\"_blank\\"
+            >
+              test deployment
+              <svg
+                aria-hidden=\\"true\\"
+                class=\\"MuiSvgIcon-root margin-left-small MuiSvgIcon-fontSizeSmall\\"
+                focusable=\\"false\\"
+                viewBox=\\"0 0 24 24\\"
+              >
+                <path
+                  d=\\"M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z\\"
+                />
+              </svg>
+              <div
+                class=\\"MuiChip-root margin-left uppercased MuiChip-sizeSmall\\"
+                style=\\"opacity: 0.5; font-size: 0.675rem; height: 18px;\\"
+              >
+                <span
+                  class=\\"MuiChip-label MuiChip-labelSmall\\"
+                >
+                  static
+                </span>
+              </div>
+            </a>
+          </div>
+          <div
+            class=\\"align-right  text-muted\\"
+          >
+            <b>
+              Catergory
+            </b>
+          </div>
+          <div
+            class=\\"flexbox \\"
+          >
+            Software update
+          </div>
+          <div
+            class=\\"align-right  text-muted\\"
+          >
+            <b>
+              Type
+            </b>
+          </div>
+          <div
+            class=\\"flexbox \\"
+          >
+            Download and Apply
+          </div>
+        </div>
+        <div
+          class=\\"flexbox column\\"
+        >
+          <div
+            class=\\"break-all two-columns column-data  \\"
+            style=\\"align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr);\\"
+          >
+            <div
+              class=\\"align-right  text-muted\\"
+            >
+              <b>
+                Created at
+              </b>
+            </div>
+            <div
+              class=\\"flexbox \\"
+            >
+              <time
+                datetime=\\"2019-01-01T12:30:00+00:00\\"
+              >
+                2019-01-01 12:30
+              </time>
+            </div>
+            <div
+              class=\\"align-right  text-muted\\"
+            >
+              <b>
+                Comments
+              </b>
+            </div>
+            <div
+              class=\\"flexbox \\"
+            >
+              -
+            </div>
+          </div>
+          <a
+            class=\\"margin-top-small flexbox\\"
+            style=\\"align-items: center; margin-left: 64px;\\"
+          >
+            Schedule details 
+            <svg
+              aria-hidden=\\"true\\"
+              class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeSmall\\"
+              focusable=\\"false\\"
+              style=\\"margin-left: 8px;\\"
+              viewBox=\\"0 0 24 24\\"
+            >
+              <path
+                d=\\"M12 4c4.41 0 8 3.59 8 8s-3.59 8-8 8-8-3.59-8-8 3.59-8 8-8m0-2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 13l-4-4h8z\\"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+      <h4
+        class=\\"dashboard-header\\"
+      >
+        <span>
+          Status
+        </span>
+      </h4>
+      <div
+        class=\\"progressStatus flexbox space-between centered margin-bottom \\"
+      >
+        <div
+          class=\\"flexbox column\\"
+        >
+          <div
+            class=\\"text-muted\\"
+          >
+            Status
+          </div>
+          <h3
+            class=\\"margin-bottom-none text-muted\\"
+          >
+            
+          </h3>
+        </div>
+        <div
+          class=\\"flexbox space-between align-right\\"
+          style=\\"min-width: 40%;\\"
+        >
+          <div
+            class=\\"flexbox column\\"
+          >
+            <div
+              class=\\"text-muted margin-bottom-small\\"
+            >
+              # devices
+            </div>
+            <div>
+              1
+            </div>
+          </div>
+          <div
+            class=\\"flexbox column disabled\\"
+          >
+            <div
+              class=\\"text-muted margin-bottom-small\\"
+            >
+              Skipped
+            </div>
+            <div
+              class=\\"status\\"
+            >
+              0
+            </div>
+          </div>
+          <div
+            class=\\"flexbox column disabled\\"
+          >
+            <div
+              class=\\"text-muted margin-bottom-small\\"
+            >
+              Pending
+            </div>
+            <div
+              class=\\"status\\"
+            >
+              0
+            </div>
+          </div>
+          <div
+            class=\\"flexbox column \\"
+          >
+            <div
+              class=\\"text-muted margin-bottom-small\\"
+            >
+              In Progress
+            </div>
+            <div
+              class=\\"status\\"
+            >
+              1
+            </div>
+          </div>
+          <div
+            class=\\"flexbox column disabled\\"
+          >
+            <div
+              class=\\"text-muted margin-bottom-small\\"
+            >
+              Success
+            </div>
+            <div
+              class=\\"status\\"
+            >
+              0
+            </div>
+          </div>
+          <div
+            class=\\"flexbox column disabled\\"
+          >
+            <div
+              class=\\"text-muted margin-bottom-small\\"
+            >
+              Fail
+            </div>
+            <div
+              class=\\"status\\"
+            >
+              0
+            </div>
+          </div>
+        </div>
+        <div
+          class=\\"break-all two-columns column-data  \\"
+          style=\\"grid-template-columns: max-content 1fr;\\"
+        >
+          <div
+            class=\\"align-right  text-muted\\"
+          >
+            <b>
+              Max attempts per device
+            </b>
+          </div>
+          <div
+            class=\\"flexbox \\"
+          >
+            N/A
+          </div>
+          <div
+            class=\\"align-right  text-muted\\"
+          >
+            <b>
+              Maximum number of devices
+            </b>
+          </div>
+          <div
+            class=\\"flexbox \\"
+          >
+            N/A
+          </div>
+        </div>
+      </div>
+      <div>
+        <table
+          class=\\"MuiTable-root\\"
+          style=\\"min-height: 20vh; max-height: 40vh; overflow-x: auto;\\"
+        >
+          <thead
+            class=\\"MuiTableHead-root\\"
+          >
+            <tr
+              class=\\"MuiTableRow-root MuiTableRow-head\\"
+            >
+              <th
+                class=\\"MuiTableCell-root MuiTableCell-head\\"
+                scope=\\"col\\"
+                style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+                tooltip=\\"Device ID\\"
+              >
+                Device ID
+              </th>
+              <th
+                class=\\"MuiTableCell-root MuiTableCell-head\\"
+                scope=\\"col\\"
+                style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+                tooltip=\\"Device type\\"
+              >
+                Device type
+              </th>
+              <th
+                class=\\"MuiTableCell-root MuiTableCell-head\\"
+                scope=\\"col\\"
+                style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+                tooltip=\\"Current software\\"
+              >
+                Current software
+              </th>
+              <th
+                class=\\"MuiTableCell-root MuiTableCell-head\\"
+                scope=\\"col\\"
+                style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+                tooltip=\\"Started\\"
+              >
+                Started
+              </th>
+              <th
+                class=\\"MuiTableCell-root MuiTableCell-head\\"
+                scope=\\"col\\"
+                style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+                tooltip=\\"Finished\\"
+              >
+                Finished
+              </th>
+              <th
+                class=\\"MuiTableCell-root MuiTableCell-head\\"
+                scope=\\"col\\"
+                style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+                tooltip=\\"Deployment status\\"
+              >
+                Deployment status
+              </th>
+              <th
+                class=\\"MuiTableCell-root MuiTableCell-head\\"
+                scope=\\"col\\"
+                style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+                tooltip=\\"\\"
+              />
+            </tr>
+          </thead>
+          <tbody
+            class=\\"MuiTableBody-root\\"
+          >
+            <tr
+              class=\\"MuiTableRow-root\\"
+            >
+              <td
+                class=\\"MuiTableCell-root MuiTableCell-body\\"
+              >
+                <a
+                  href=\\"/devices/id=a1\\"
+                  style=\\"font-weight: 500;\\"
+                >
+                  a1
+                </a>
+              </td>
+              <td
+                class=\\"MuiTableCell-root MuiTableCell-body\\"
+              >
+                -
+              </td>
+              <td
+                class=\\"MuiTableCell-root MuiTableCell-body\\"
+              >
+                -
+              </td>
+              <td
+                class=\\"MuiTableCell-root MuiTableCell-body\\"
+              >
+                -
+              </td>
+              <td
+                class=\\"MuiTableCell-root MuiTableCell-body\\"
+              >
+                -
+              </td>
+              <td
+                class=\\"MuiTableCell-root MuiTableCell-body\\"
+                style=\\"padding-right: 0px; position: relative; min-width: 200px;\\"
+              >
+                installing
+                <div
+                  style=\\"position: absolute; bottom: 0px; width: 100%;\\"
+                >
+                  <div
+                    style=\\"text-align: end; color: rgb(170, 170, 170);\\"
+                  >
+                    70%
+                  </div>
+                  <div
+                    aria-valuemax=\\"100\\"
+                    aria-valuemin=\\"0\\"
+                    aria-valuenow=\\"70\\"
+                    class=\\"MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate\\"
+                    role=\\"progressbar\\"
+                  >
+                    <div
+                      class=\\"MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate\\"
+                      style=\\"transform: translateX(-30%);\\"
+                    />
+                  </div>
+                </div>
+              </td>
+              <td
+                class=\\"MuiTableCell-root MuiTableCell-body\\"
+              />
+            </tr>
+          </tbody>
+        </table>
+        <div
+          class=\\"MuiTablePagination-root flexbox margin-top \\"
+        >
+          <div
+            class=\\"MuiToolbar-root MuiToolbar-regular MuiTablePagination-toolbar MuiToolbar-gutters\\"
+          >
+            <div
+              class=\\"MuiTablePagination-spacer flexbox no-basis\\"
+            />
+            <p
+              class=\\"MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit\\"
+              
+            >
+              Rows
+            </p>
+            <div
+              class=\\"MuiInputBase-root MuiTablePagination-input MuiTablePagination-selectRoot\\"
+            >
+              <div
+                aria-haspopup=\\"listbox\\"
+                
+                class=\\"MuiSelect-root MuiSelect-select MuiTablePagination-select MuiSelect-selectMenu MuiInputBase-input\\"
+                
+                role=\\"button\\"
+                tabindex=\\"0\\"
+              >
+                20
+              </div>
+              <input
+                aria-hidden=\\"true\\"
+                class=\\"MuiSelect-nativeInput\\"
+                tabindex=\\"-1\\"
+                value=\\"20\\"
+              />
+              <svg
+                aria-hidden=\\"true\\"
+                class=\\"MuiSvgIcon-root MuiSelect-icon MuiTablePagination-selectIcon\\"
+                focusable=\\"false\\"
+                viewBox=\\"0 0 24 24\\"
+              >
+                <path
+                  d=\\"M7 10l5 5 5-5z\\"
+                />
+              </svg>
+            </div>
+            <p
+              class=\\"MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit\\"
+            />
+            <div
+              class=\\"flexbox\\"
+            >
+              <button
+                class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+                disabled=\\"\\"
+                tabindex=\\"-1\\"
+                type=\\"button\\"
+              >
+                <span
+                  class=\\"MuiIconButton-label\\"
+                >
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root\\"
+                    focusable=\\"false\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z\\"
+                    />
+                  </svg>
+                </span>
+              </button>
+              <button
+                class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+                disabled=\\"\\"
+                tabindex=\\"-1\\"
+                type=\\"button\\"
+              >
+                <span
+                  class=\\"MuiIconButton-label\\"
+                >
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root\\"
+                    focusable=\\"false\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z\\"
+                    />
+                  </svg>
+                </span>
+              </button>
+              <div
+                class=\\"flexbox\\"
+                style=\\"align-items: baseline;\\"
+              >
+                <div
+                  class=\\"MuiFormControl-root MuiTextField-root MuiFormControl-marginDense\\"
+                  style=\\"min-width: 30px; max-width: 3ch; margin-right: 10px;\\"
+                >
+                  <div
+                    class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-marginDense MuiInput-marginDense\\"
+                  >
+                    <input
+                      aria-invalid=\\"false\\"
+                      class=\\"MuiInputBase-input MuiInput-input MuiInputBase-inputMarginDense MuiInput-inputMarginDense\\"
+                      type=\\"text\\"
+                      value=\\"1\\"
+                    />
+                  </div>
+                </div>
+                / 1
+              </div>
+              <button
+                class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+                disabled=\\"\\"
+                tabindex=\\"-1\\"
+                type=\\"button\\"
+              >
+                <span
+                  class=\\"MuiIconButton-label\\"
+                >
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root\\"
+                    focusable=\\"false\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z\\"
+                    />
+                  </svg>
+                </span>
+              </button>
+              <button
+                class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+                disabled=\\"\\"
+                tabindex=\\"-1\\"
+                type=\\"button\\"
+              >
+                <span
+                  class=\\"MuiIconButton-label\\"
+                >
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root\\"
+                    focusable=\\"false\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z\\"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h4
+        class=\\"dashboard-header margin-top-large\\"
+      >
+        <span>
+          Rollout Schedule
+        </span>
+      </h4>
+      <div
+        class=\\"flexbox\\"
+      >
+        <div
+          class=\\"break-all two-columns column-data  \\"
+          style=\\"align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr);\\"
+        >
+          <div
+            class=\\"align-right  text-muted\\"
+          >
+            <b>
+              Start time
+            </b>
+          </div>
+          <div
+            class=\\"flexbox \\"
+          >
+            <time
+              datetime=\\"2019-01-01T12:30:00+00:00\\"
+            >
+              2019-01-01 12:30
+            </time>
+          </div>
+          <div
+            class=\\"align-right  text-muted\\"
+          >
+            <b>
+              Current phase
+            </b>
+          </div>
+          <div
+            class=\\"flexbox \\"
+          >
+            <time
+              datetime=\\"2019-01-01T12:30:00+00:00\\"
+            >
+              2019-01-01 12:30
+            </time>
+          </div>
+        </div>
+        <svg
+          aria-hidden=\\"true\\"
+          class=\\"MuiSvgIcon-root\\"
+          focusable=\\"false\\"
+          style=\\"margin-left: 32px; margin-right: 32px;\\"
+          viewBox=\\"0 0 24 24\\"
+        >
+          <path
+            d=\\"M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z\\"
+          />
+        </svg>
+        <div
+          class=\\"break-all two-columns column-data  \\"
+          style=\\"align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr);\\"
+        >
+          <div
+            class=\\"align-right  text-muted\\"
+          >
+            <b>
+              End time
+            </b>
+          </div>
+          <div
+            class=\\"flexbox \\"
+          >
+            -
+          </div>
+        </div>
+      </div>
+      <div
+        class=\\"progress-chart-container margin-top\\"
+      >
+        <div
+          class=\\"progress-chart\\"
+        >
+          <div
+            class=\\"progress-step\\"
+            style=\\"flex-grow: 1;\\"
+          >
+            <div
+              class=\\"progress-step-number text-muted\\"
+            >
+              Phase 1
+            </div>
+            <div
+              class=\\"flexbox\\"
+              style=\\"width: 100%;\\"
+            >
+              <div
+                class=\\"progress-bar green\\"
+                style=\\"width: 0%;\\"
+              />
+              <div
+                class=\\"progress-bar warning\\"
+                style=\\"width: 0%;\\"
+              />
+            </div>
+          </div>
+          <div
+            class=\\"progress-step progress-step-total\\"
+          >
+            <div
+              class=\\"progress-bar\\"
+              style=\\"width: 100%;\\"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class=\\"deployment-phases-report margin-top margin-bottom\\"
+        style=\\"grid-template-columns: repeat(auto-fit, 270px);\\"
+      >
+        <div
+          class=\\"flexbox column centered\\"
+          style=\\"max-width: 270px; border-radius: 5px; padding-top: 8px; padding-bottom: 24px;\\"
+        >
+          <div
+            class=\\"text-muted\\"
+          >
+            Complete
+          </div>
+          <div
+            class=\\"MuiChip-root MuiChip-sizeSmall\\"
+            style=\\"align-self: flex-start; margin: 16px 16px 16px 20px;\\"
+          >
+            <span
+              class=\\"MuiChip-label MuiChip-labelSmall\\"
+            >
+              Phase 1
+            </span>
+          </div>
+          <div
+            class=\\"break-all two-columns column-data  \\"
+            style=\\"align-items: center; align-self: initial; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr);\\"
+          >
+            <div
+              class=\\"align-right  text-muted\\"
+            >
+              <b>
+                Start time
+              </b>
+            </div>
+            <div
+              class=\\"flexbox \\"
+            >
+              <time
+                datetime=\\"2019-01-01T12:30:00+00:00\\"
+              >
+                2019-01-01 12:30
+              </time>
+            </div>
+            <div
+              class=\\"align-right  text-muted\\"
+            >
+              <b>
+                Batch size
+              </b>
+            </div>
+            <div
+              class=\\"flexbox \\"
+            >
+              <div
+                class=\\"text-muted\\"
+              >
+                100% (1 device)
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr
+      class=\\"MuiDivider-root MuiDivider-light\\"
+      style=\\"margin-top: 16px;\\"
+    />
   </div>
   <div
     data-test=\\"sentinelEnd\\"

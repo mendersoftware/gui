@@ -1,0 +1,183 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RolloutSchedule Component renders correctly 1`] = `
+<div>
+  <h4
+    class="dashboard-header margin-top-large"
+  >
+    <span>
+      Rollout Schedule
+    </span>
+  </h4>
+  <div
+    class="flexbox"
+  >
+    <div
+      class="break-all two-columns column-data  "
+      style="align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr);"
+    >
+      <div
+        class="align-right  text-muted"
+      >
+        <b>
+          Start time
+        </b>
+      </div>
+      <div
+        class="flexbox "
+      >
+        <time
+          datetime="2019-01-01T12:25:00+00:00"
+        >
+          2019-01-01 12:25
+        </time>
+      </div>
+      <div
+        class="align-right  text-muted"
+      >
+        <b>
+          Current phase
+        </b>
+      </div>
+      <div
+        class="flexbox "
+      >
+        <time
+          datetime="2019-01-01T12:25:00+00:00"
+        >
+          2019-01-01 12:25
+        </time>
+      </div>
+    </div>
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
+      focusable="false"
+      style="margin-left: 32px; margin-right: 32px;"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+      />
+    </svg>
+    <div
+      class="break-all two-columns column-data  "
+      style="align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr);"
+    >
+      <div
+        class="align-right  text-muted"
+      >
+        <b>
+          End time
+        </b>
+      </div>
+      <div
+        class="flexbox "
+      >
+        -
+      </div>
+    </div>
+  </div>
+  <div
+    class="progress-chart-container margin-top"
+  >
+    <div
+      class="progress-chart"
+    >
+      <div
+        class="progress-step"
+        style="flex-grow: 1;"
+      >
+        <div
+          class="progress-step-number text-muted"
+        >
+          Phase 1
+        </div>
+        <div
+          class="flexbox"
+          style="width: 100%;"
+        >
+          <div
+            class="progress-bar green"
+            style="width: 0%;"
+          />
+          <div
+            class="progress-bar warning"
+            style="width: 0%;"
+          />
+        </div>
+      </div>
+      <div
+        class="progress-step progress-step-total"
+      >
+        <div
+          class="progress-bar"
+          style="width: 100%;"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="deployment-phases-report margin-top margin-bottom"
+    style="grid-template-columns: repeat(auto-fit, 270px);"
+  >
+    <div
+      class="flexbox column centered"
+      style="max-width: 270px; border-radius: 5px; padding-top: 8px; padding-bottom: 24px;"
+    >
+      <div
+        class="text-muted"
+      >
+        Complete
+      </div>
+      <div
+        class="MuiChip-root MuiChip-sizeSmall"
+        style="align-self: flex-start; margin: 16px 16px 16px 20px;"
+      >
+        <span
+          class="MuiChip-label MuiChip-labelSmall"
+        >
+          Phase 1
+        </span>
+      </div>
+      <div
+        class="break-all two-columns column-data  "
+        style="align-items: center; align-self: initial; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr);"
+      >
+        <div
+          class="align-right  text-muted"
+        >
+          <b>
+            Start time
+          </b>
+        </div>
+        <div
+          class="flexbox "
+        >
+          <time
+            datetime="2019-01-01T12:25:00+00:00"
+          >
+            2019-01-01 12:25
+          </time>
+        </div>
+        <div
+          class="align-right  text-muted"
+        >
+          <b>
+            Batch size
+          </b>
+        </div>
+        <div
+          class="flexbox "
+        >
+          <div
+            class="text-muted"
+          >
+            100% (1 device)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

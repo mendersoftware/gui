@@ -1,267 +1,297 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ProgressDeviceList Component renders correctly 1`] = `
-<div
-  style={
-    Object {
-      "maxHeight": "40vh",
-      "overflowX": "auto",
-    }
-  }
->
+"<div>
   <table
-    className="MuiTable-root"
-    role={null}
+    class=\\"MuiTable-root\\"
+    style=\\"min-height: 20vh; max-height: 40vh; overflow-x: auto;\\"
   >
     <thead
-      className="MuiTableHead-root"
-      role={null}
+      class=\\"MuiTableHead-root\\"
     >
       <tr
-        className="MuiTableRow-root MuiTableRow-head"
-        role={null}
+        class=\\"MuiTableRow-root MuiTableRow-head\\"
       >
         <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head"
-          scope="col"
-          style={
-            Object {
-              "background": "white",
-              "position": "sticky",
-              "top": 0,
-              "zIndex": 1,
-            }
-          }
-          tooltip="Device ID"
-        >
-          Device ID
-        </th>
+          class=\\"MuiTableCell-root MuiTableCell-head\\"
+          scope=\\"col\\"
+          style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+        />
         <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head"
-          scope="col"
-          style={
-            Object {
-              "background": "white",
-              "position": "sticky",
-              "top": 0,
-              "zIndex": 1,
-            }
-          }
-          tooltip="Device type"
+          class=\\"MuiTableCell-root MuiTableCell-head\\"
+          scope=\\"col\\"
+          style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+          tooltip=\\"Device type\\"
         >
           Device type
         </th>
         <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head"
-          scope="col"
-          style={
-            Object {
-              "background": "white",
-              "position": "sticky",
-              "top": 0,
-              "zIndex": 1,
-            }
-          }
-          tooltip="Current software"
+          class=\\"MuiTableCell-root MuiTableCell-head\\"
+          scope=\\"col\\"
+          style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+          tooltip=\\"Current software\\"
         >
           Current software
         </th>
         <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head"
-          scope="col"
-          style={
-            Object {
-              "background": "white",
-              "position": "sticky",
-              "top": 0,
-              "zIndex": 1,
-            }
-          }
-          tooltip="Started"
+          class=\\"MuiTableCell-root MuiTableCell-head\\"
+          scope=\\"col\\"
+          style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+          tooltip=\\"Started\\"
         >
           Started
         </th>
         <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head"
-          scope="col"
-          style={
-            Object {
-              "background": "white",
-              "position": "sticky",
-              "top": 0,
-              "zIndex": 1,
-            }
-          }
-          tooltip="Finished"
+          class=\\"MuiTableCell-root MuiTableCell-head\\"
+          scope=\\"col\\"
+          style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+          tooltip=\\"Finished\\"
         >
           Finished
         </th>
         <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head"
-          scope="col"
-          style={
-            Object {
-              "background": "white",
-              "position": "sticky",
-              "top": 0,
-              "zIndex": 1,
-            }
-          }
-          tooltip="Attempts"
-        >
-          Attempts
-        </th>
-        <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head"
-          scope="col"
-          style={
-            Object {
-              "background": "white",
-              "position": "sticky",
-              "top": 0,
-              "zIndex": 1,
-            }
-          }
-          tooltip="Deployment status"
+          class=\\"MuiTableCell-root MuiTableCell-head\\"
+          scope=\\"col\\"
+          style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+          tooltip=\\"Deployment status\\"
         >
           Deployment status
         </th>
         <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head"
-          scope="col"
-          style={
-            Object {
-              "background": "white",
-              "position": "sticky",
-              "top": 0,
-              "zIndex": 1,
-            }
-          }
-          tooltip=""
-        >
-          
-        </th>
+          class=\\"MuiTableCell-root MuiTableCell-head\\"
+          scope=\\"col\\"
+          style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
+          tooltip=\\"\\"
+        />
       </tr>
     </thead>
     <tbody
-      className="MuiTableBody-root"
-      role={null}
+      class=\\"MuiTableBody-root\\"
     >
       <tr
-        className="MuiTableRow-root"
-        role={null}
+        class=\\"MuiTableRow-root\\"
       >
         <td
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-body"
+          class=\\"MuiTableCell-root MuiTableCell-body\\"
         >
           <a
-            href="/devices/id=a1"
-            onClick={[Function]}
-            style={
-              Object {
-                "fontWeight": "500",
-              }
-            }
+            href=\\"/devices/id=a1\\"
+            style=\\"font-weight: 500;\\"
           >
             a1
           </a>
         </td>
         <td
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-body"
+          class=\\"MuiTableCell-root MuiTableCell-body\\"
         >
           -
         </td>
         <td
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-body"
+          class=\\"MuiTableCell-root MuiTableCell-body\\"
         >
           -
         </td>
         <td
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-body"
+          class=\\"MuiTableCell-root MuiTableCell-body\\"
         >
           -
         </td>
         <td
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-body"
+          class=\\"MuiTableCell-root MuiTableCell-body\\"
         >
           -
         </td>
         <td
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-body"
-        >
-          1
-          /
-          4
-        </td>
-        <td
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-body"
-          style={
-            Object {
-              "minWidth": 200,
-              "paddingRight": "0px",
-              "position": "relative",
-            }
-          }
+          class=\\"MuiTableCell-root MuiTableCell-body\\"
+          style=\\"padding-right: 0px; position: relative; min-width: 200px;\\"
         >
           installing
           <div
-            style={
-              Object {
-                "bottom": 0,
-                "position": "absolute",
-                "width": "100%",
-              }
-            }
+            style=\\"position: absolute; bottom: 0px; width: 100%;\\"
           >
             <div
-              style={
-                Object {
-                  "color": "#aaaaaa",
-                  "textAlign": "end",
-                }
-              }
+              style=\\"text-align: end; color: rgb(170, 170, 170);\\"
             >
               70%
             </div>
             <div
-              aria-valuemax={100}
-              aria-valuemin={0}
-              aria-valuenow={70}
-              className="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate"
-              role="progressbar"
+              aria-valuemax=\\"100\\"
+              aria-valuemin=\\"0\\"
+              aria-valuenow=\\"70\\"
+              class=\\"MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate\\"
+              role=\\"progressbar\\"
             >
               <div
-                className="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate"
-                style={
-                  Object {
-                    "transform": "translateX(-30%)",
-                  }
-                }
+                class=\\"MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate\\"
+                style=\\"transform: translateX(-30%);\\"
               />
             </div>
           </div>
         </td>
         <td
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-body"
+          class=\\"MuiTableCell-root MuiTableCell-body\\"
         />
       </tr>
     </tbody>
   </table>
-</div>
+  <div
+    class=\\"MuiTablePagination-root flexbox margin-top \\"
+  >
+    <div
+      class=\\"MuiToolbar-root MuiToolbar-regular MuiTablePagination-toolbar MuiToolbar-gutters\\"
+    >
+      <div
+        class=\\"MuiTablePagination-spacer flexbox no-basis\\"
+      />
+      <p
+        class=\\"MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit\\"
+        
+      >
+        Rows
+      </p>
+      <div
+        class=\\"MuiInputBase-root MuiTablePagination-input MuiTablePagination-selectRoot\\"
+      >
+        <div
+          aria-haspopup=\\"listbox\\"
+          
+          class=\\"MuiSelect-root MuiSelect-select MuiTablePagination-select MuiSelect-selectMenu MuiInputBase-input\\"
+          
+          role=\\"button\\"
+          tabindex=\\"0\\"
+        >
+          20
+        </div>
+        <input
+          aria-hidden=\\"true\\"
+          class=\\"MuiSelect-nativeInput\\"
+          tabindex=\\"-1\\"
+          value=\\"20\\"
+        />
+        <svg
+          aria-hidden=\\"true\\"
+          class=\\"MuiSvgIcon-root MuiSelect-icon MuiTablePagination-selectIcon\\"
+          focusable=\\"false\\"
+          viewBox=\\"0 0 24 24\\"
+        >
+          <path
+            d=\\"M7 10l5 5 5-5z\\"
+          />
+        </svg>
+      </div>
+      <p
+        class=\\"MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit\\"
+      />
+      <div
+        class=\\"flexbox\\"
+      >
+        <button
+          class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+          disabled=\\"\\"
+          tabindex=\\"-1\\"
+          type=\\"button\\"
+        >
+          <span
+            class=\\"MuiIconButton-label\\"
+          >
+            <svg
+              aria-hidden=\\"true\\"
+              class=\\"MuiSvgIcon-root\\"
+              focusable=\\"false\\"
+              viewBox=\\"0 0 24 24\\"
+            >
+              <path
+                d=\\"M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z\\"
+              />
+            </svg>
+          </span>
+        </button>
+        <button
+          class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+          disabled=\\"\\"
+          tabindex=\\"-1\\"
+          type=\\"button\\"
+        >
+          <span
+            class=\\"MuiIconButton-label\\"
+          >
+            <svg
+              aria-hidden=\\"true\\"
+              class=\\"MuiSvgIcon-root\\"
+              focusable=\\"false\\"
+              viewBox=\\"0 0 24 24\\"
+            >
+              <path
+                d=\\"M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z\\"
+              />
+            </svg>
+          </span>
+        </button>
+        <div
+          class=\\"flexbox\\"
+          style=\\"align-items: baseline;\\"
+        >
+          <div
+            class=\\"MuiFormControl-root MuiTextField-root MuiFormControl-marginDense\\"
+            style=\\"min-width: 30px; max-width: 3ch; margin-right: 10px;\\"
+          >
+            <div
+              class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-marginDense MuiInput-marginDense\\"
+            >
+              <input
+                aria-invalid=\\"false\\"
+                class=\\"MuiInputBase-input MuiInput-input MuiInputBase-inputMarginDense MuiInput-inputMarginDense\\"
+                type=\\"text\\"
+                value=\\"1\\"
+              />
+            </div>
+          </div>
+          / 1
+        </div>
+        <button
+          class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+          disabled=\\"\\"
+          tabindex=\\"-1\\"
+          type=\\"button\\"
+        >
+          <span
+            class=\\"MuiIconButton-label\\"
+          >
+            <svg
+              aria-hidden=\\"true\\"
+              class=\\"MuiSvgIcon-root\\"
+              focusable=\\"false\\"
+              viewBox=\\"0 0 24 24\\"
+            >
+              <path
+                d=\\"M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z\\"
+              />
+            </svg>
+          </span>
+        </button>
+        <button
+          class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+          disabled=\\"\\"
+          tabindex=\\"-1\\"
+          type=\\"button\\"
+        >
+          <span
+            class=\\"MuiIconButton-label\\"
+          >
+            <svg
+              aria-hidden=\\"true\\"
+              class=\\"MuiSvgIcon-root\\"
+              focusable=\\"false\\"
+              viewBox=\\"0 0 24 24\\"
+            >
+              <path
+                d=\\"M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z\\"
+              />
+            </svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>"
 `;

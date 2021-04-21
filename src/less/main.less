@@ -1923,6 +1923,13 @@ span.day {
   align-items: baseline;
 }
 
+.deployment-phases-report {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 270px);
+  grid-column-gap: @defaultGutterWidth;
+  grid-row-gap: @defaultGutterWidth;
+}
+
 .deployment-phases-list {
   overflow: auto;
   max-width: 900px;
