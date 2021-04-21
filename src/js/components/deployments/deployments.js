@@ -87,7 +87,7 @@ export const Deployments = ({
       reportType = match.params.tab;
       if (params.get('open')) {
         if (params.get('id')) {
-          showReport(reportType || match.params.tab, params.get('id'));
+          showReport(reportType, params.get('id'));
         } else if (params.get('release')) {
           selectRelease(params.get('release'));
         } else if (params.get('deviceId')) {
@@ -100,7 +100,7 @@ export const Deployments = ({
         startDate.setHours(0, 0, 0);
       }
     }
-    setCreateDialog(Boolean(params.get('open')));
+    setCreateDialog(Boolean(params.get('open')) && !params.get('id'));
     setReportType(reportType);
     setStartDate(startDate);
     setTabIndex(updateActive());
