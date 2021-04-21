@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 
@@ -7,7 +7,6 @@ import { Button, Tab, Tabs } from '@material-ui/core';
 import { getGroups, getDynamicGroups, initializeGroupsDevices, selectDevice } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { selectRelease } from '../../actions/releaseActions';
-import { saveGlobalSettings } from '../../actions/userActions';
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, selectDeployment } from '../../actions/deploymentActions';
 import { onboardingSteps } from '../../constants/onboardingConstants';
@@ -41,68 +40,77 @@ const routes = {
 
 export const defaultRefreshDeploymentsLength = 30000;
 
-export class Deployments extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      deploymentObject: {},
-      createDialog: false,
-      reportDialog: false,
-      startDate: null,
-      tabIndex: this._updateActive()
-    };
-  }
+const today = new Date(new Date().setHours(0, 0, 0));
 
-  handleResize() {
+export const Deployments = ({
+  abortDeployment,
+  advanceOnboarding,
+  getDynamicGroups,
+  getGroups,
+  initializeGroupsDevices,
+  isEnterprise,
+  location,
+  match,
+  onboardingState,
+  pastCount,
+  selectDeployment,
+  selectDevice,
+  selectRelease,
+  setSnackbar
+}) => {
+  const [deploymentObject, setDeploymentObject] = useState({});
+  const [createDialog, setCreateDialog] = useState(false);
+  const [reportDialog, setReportDialog] = useState(false);
+  const [reportType, setReportType] = useState();
+  const [startDate, setStartDate] = useState();
+  const [tabIndex, setTabIndex] = useState(routes.active.route);
+  // eslint-disable-next-line no-unused-vars
+  const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
+  const tabsRef = useRef();
+
+  const handleResize = () => {
     setTimeout(() => {
-      this.setState({ height: window.innerHeight, width: window.innerWidth });
+      setSize({ height: window.innerHeight, width: window.innerWidth });
     }, 500);
-  }
+  };
 
-  componentDidMount() {
-    const self = this;
-    let tasks = [self.props.getGroups(), self.props.selectRelease(), self.props.selectDevice()];
-    if (self.props.isEnterprise) {
-      tasks.push(self.props.getDynamicGroups());
+  useEffect(() => {
+    let tasks = [getGroups(), selectRelease(), selectDevice()];
+    if (isEnterprise) {
+      tasks.push(getDynamicGroups());
     }
-    Promise.all(tasks)
-      .then(() => self.props.initializeGroupsDevices())
-      .catch(err => console.log(err));
-    let startDate = self.state.startDate;
-    const params = new URLSearchParams(this.props.location.search);
+    Promise.all(tasks).then(initializeGroupsDevices).catch(console.log);
+    let startDate = today;
+    const params = new URLSearchParams(location.search);
     let reportType = 'active';
-    if (self.props.match) {
-      reportType = self.props.match.params.tab;
+    if (match) {
+      reportType = match.params.tab;
       if (params.get('open')) {
         if (params.get('id')) {
-          self.showReport(self.state.reportType || self.props.match.params.tab, params.get('id'));
+          showReport(reportType || match.params.tab, params.get('id'));
         } else if (params.get('release')) {
-          self.props.selectRelease(params.get('release'));
+          selectRelease(params.get('release'));
         } else if (params.get('deviceId')) {
-          self.props.selectDevice(params.get('deviceId'));
+          selectDevice(params.get('deviceId'));
         } else {
-          setTimeout(() => self.setState({ createDialog: true }), 400);
+          setTimeout(() => setCreateDialog(true), 400);
         }
       } else if (params.get('from')) {
         startDate = new Date(params.get('from'));
         startDate.setHours(0, 0, 0);
       }
     }
-    self.setState({
-      createDialog: Boolean(params.get('open')),
-      reportType,
-      startDate,
-      tabIndex: self._updateActive()
-    });
-    window.addEventListener('resize', this.handleResize.bind(this));
-  }
+    setCreateDialog(Boolean(params.get('open')));
+    setReportType(reportType);
+    setStartDate(startDate);
+    setTabIndex(updateActive());
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize.bind(this));
-  }
-
-  retryDeployment(deployment, devices) {
-    const self = this;
+  const retryDeployment = (deployment, devices) => {
     const release = { Name: deployment.artifact_name, device_types_compatible: deployment.device_types_compatible || [] };
     const deploymentObject = {
       group: deployment.name,
@@ -110,120 +118,106 @@ export class Deployments extends React.Component {
       release,
       phases: [{ batch_size: 100, start_ts: new Date().toISOString(), delay: 0 }]
     };
-    self.setState({ deploymentObject, createDialog: true, reportDialog: false });
-  }
+    setDeploymentObject(deploymentObject);
+    setCreateDialog(true);
+    setReportDialog(false);
+  };
 
-  onScheduleSubmit() {
-    const self = this;
-    self.setState({ createDialog: false, reportDialog: false, deploymentObject: {} });
+  const onScheduleSubmit = () => {
+    setCreateDialog(false);
+    setReportDialog(false);
+    setDeploymentObject({});
     // successfully retrieved new deployment
-    if (self._getCurrentRoute().title !== routes.active.title) {
-      self.props.history.push(routes.active.route);
-      self._changeTab(routes.active.route);
+    if (getCurrentRoute().title !== routes.active.title) {
+      history.push(routes.active.route);
+      changeTab(routes.active.route);
     }
-  }
+  };
 
-  _abortDeployment(id) {
-    var self = this;
-    return self.props.abortDeployment(id).then(() => {
-      self.setState({ createDialog: false, reportDialog: false });
+  const onAbortDeployment = id =>
+    abortDeployment(id).then(() => {
+      setCreateDialog(false);
+      setReportDialog(false);
       return Promise.resolve();
     });
-  }
 
-  _updateActive(tab = this.props.match.params.tab) {
+  const updateActive = (tab = match.params.tab) => {
     if (routes.hasOwnProperty(tab)) {
       return routes[tab].route;
     }
     return routes.active.route;
-  }
+  };
 
-  _getCurrentRoute(tab = this.props.match.params.tab) {
+  const getCurrentRoute = (tab = match.params.tab) => {
     if (routes.hasOwnProperty(tab)) {
       return routes[tab];
     }
     return routes.active;
-  }
+  };
 
-  _changeTab(tabIndex) {
-    this.setState({ tabIndex });
-    this.props.setSnackbar('');
-    if (this.props.pastCount && !this.props.onboardingState.complete) {
-      this.props.advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST);
+  const changeTab = tabIndex => {
+    setTabIndex(tabIndex);
+    setSnackbar('');
+    if (pastCount && !onboardingState.complete) {
+      advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST);
     }
-  }
+  };
 
-  showReport(reportType, deploymentId) {
-    const self = this;
-    if (!self.props.onboardingState.complete) {
-      self.props.advanceOnboarding(onboardingSteps.DEPLOYMENTS_INPROGRESS);
+  const showReport = (reportType, deploymentId) => {
+    if (!onboardingState.complete) {
+      advanceOnboarding(onboardingSteps.DEPLOYMENTS_INPROGRESS);
     }
-    self.props.selectDeployment(deploymentId).then(() => self.setState({ createDialog: false, reportType, reportDialog: true }));
-  }
+    selectDeployment(deploymentId).then(() => {
+      setCreateDialog(false);
+      setReportType(reportType);
+      setReportDialog(true);
+    });
+  };
 
-  closeReport() {
-    const self = this;
-    self.setState({ reportDialog: false }, () => self.props.selectDeployment());
-  }
+  const closeReport = () => {
+    setReportDialog(false);
+    selectDeployment();
+  };
 
-  render() {
-    const self = this;
-    const { onboardingState, pastCount } = self.props;
-    // tabs
-    const { createDialog, deploymentObject, reportDialog, reportType, startDate, tabIndex } = self.state;
-    let onboardingComponent = null;
-    // the pastCount prop is needed to trigger the rerender as the change in past deployments would otherwise not be noticed on this view
-    if (pastCount && self.tabsRef) {
-      const tabs = self.tabsRef.getElementsByClassName('MuiTab-root');
-      const finishedTab = tabs[tabs.length - 1];
-      onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST, onboardingState, {
-        anchor: {
-          left: self.tabsRef.offsetLeft + self.tabsRef.offsetWidth - finishedTab.offsetWidth / 2,
-          top: self.tabsRef.parentElement.offsetTop + finishedTab.offsetHeight
-        }
-      });
-    }
-    const ComponentToShow = self._getCurrentRoute().component;
-    return (
-      <>
-        <div className="margin-left-small margin-top" style={{ maxWidth: '80vw' }}>
-          <div className="flexbox space-between">
-            <Tabs value={tabIndex} onChange={(e, newTabIndex) => self._changeTab(newTabIndex)} ref={ref => (self.tabsRef = ref)}>
-              {Object.values(routes).map(route => (
-                <Tab component={Link} key={route.route} label={route.title} to={route.route} value={route.route} />
-              ))}
-            </Tabs>
-            <Button color="secondary" variant="contained" onClick={() => self.setState({ createDialog: true })} style={{ height: '100%' }}>
-              Create a deployment
-            </Button>
-          </div>
-          <ComponentToShow
-            abort={id => self._abortDeployment(id)}
-            createClick={() => self.setState({ createDialog: true })}
-            openReport={(type, id) => self.showReport(type, id)}
-            startDate={startDate}
-          />
+  const onCreationDismiss = () => {
+    setCreateDialog(false);
+    setDeploymentObject({});
+  };
+
+  let onboardingComponent = null;
+  // the pastCount prop is needed to trigger the rerender as the change in past deployments would otherwise not be noticed on this view
+  if (pastCount && tabsRef.current) {
+    const tabs = tabsRef.current.getElementsByClassName('MuiTab-root');
+    const finishedTab = tabs[tabs.length - 1];
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST, onboardingState, {
+      anchor: {
+        left: tabsRef.current.offsetLeft + tabsRef.current.offsetWidth - finishedTab.offsetWidth / 2,
+        top: tabsRef.current.parentElement.offsetTop + finishedTab.offsetHeight
+      }
+    });
+  }
+  const ComponentToShow = getCurrentRoute().component;
+  return (
+    <>
+      <div className="margin-left-small margin-top" style={{ maxWidth: '80vw' }}>
+        <div className="flexbox space-between">
+          <Tabs value={tabIndex} onChange={(e, newTabIndex) => changeTab(newTabIndex)} ref={tabsRef}>
+            {Object.values(routes).map(route => (
+              <Tab component={Link} key={route.route} label={route.title} to={route.route} value={route.route} />
+            ))}
+          </Tabs>
+          <Button color="secondary" variant="contained" onClick={() => setCreateDialog(true)} style={{ height: '100%' }}>
+            Create a deployment
+          </Button>
         </div>
-        {reportDialog && (
-          <Report
-            abort={id => self._abortDeployment(id)}
-            onClose={() => self.closeReport()}
-            retry={(deployment, devices) => self.retryDeployment(deployment, devices)}
-            type={reportType}
-          />
-        )}
-        {createDialog && (
-          <CreateDialog
-            onDismiss={() => self.setState({ createDialog: false, deploymentObject: {} })}
-            deploymentObject={deploymentObject}
-            onScheduleSubmit={() => self.onScheduleSubmit()}
-          />
-        )}
-        {onboardingComponent}
-      </>
-    );
-  }
-}
+        <ComponentToShow abort={onAbortDeployment} createClick={() => setCreateDialog(true)} openReport={showReport} startDate={startDate} />
+      </div>
+      <Report abort={onAbortDeployment} onClose={closeReport} open={reportDialog} retry={retryDeployment} type={reportType} />
+      {createDialog && <CreateDialog onDismiss={onCreationDismiss} deploymentObject={deploymentObject} onScheduleSubmit={onScheduleSubmit} />}
+      {onboardingComponent}
+    </>
+  );
+};
 
 const actionCreators = {
   abortDeployment,
@@ -231,7 +225,6 @@ const actionCreators = {
   getGroups,
   getDynamicGroups,
   initializeGroupsDevices,
-  saveGlobalSettings,
   selectDevice,
   selectDeployment,
   selectRelease,

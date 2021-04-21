@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
@@ -29,34 +29,50 @@ const headers = [...defaultHeaders.slice(0, defaultHeaders.length - 1), { title:
 
 const type = DEPLOYMENT_STATES.finished;
 
-export class Past extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      deviceGroup: '',
-      endDate: props.endDate || tonight,
-      startDate: props.startDate || today,
-      page: 1,
-      perPage: 20
-    };
-  }
+let timer;
 
-  handleResize() {
+export const Past = props => {
+  const {
+    advanceOnboarding,
+    count,
+    createClick,
+    getDeploymentsByStatus,
+    groups,
+    loading,
+    onboardingState,
+    past,
+    setSnackbar,
+    startDate: startDateProp = today,
+    endDate: endDateProp = tonight
+  } = props;
+  const [deviceGroup, setDeviceGroup] = useState('');
+  const [endDate, setEndDate] = useState(endDateProp);
+  const [startDate, setStartDate] = useState(startDateProp);
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(20);
+  // eslint-disable-next-line no-unused-vars
+  const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
+  const deploymentsRef = useRef();
+
+  const handleResize = () => {
     setTimeout(() => {
-      this.setState({ height: window.innerHeight, width: window.innerWidth });
+      setSize({ height: window.innerHeight, width: window.innerWidth });
     }, 500);
-  }
+  };
 
-  componentDidMount() {
-    const self = this;
-    clearInterval(self.timer);
-    self.timer = setInterval(() => self.refreshPast(), refreshDeploymentsLength);
-    self.refreshPast();
-    window.addEventListener('resize', this.handleResize.bind(this));
-  }
+  useEffect(() => {
+    clearInterval(timer);
+    timer = setInterval(refreshPast, refreshDeploymentsLength);
+    refreshPast();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearInterval(timer);
+      clearAllRetryTimers(setSnackbar);
+    };
+  }, []);
 
-  componentDidUpdate() {
-    const { advanceOnboarding, onboardingState, past, setSnackbar } = this.props;
+  useEffect(() => {
     if (past.length && !onboardingState.complete) {
       const pastDeploymentsFailed = past.reduce(
         (accu, item) =>
@@ -76,127 +92,111 @@ export class Past extends React.Component {
         !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
       }, 400);
     }
-    window.removeEventListener('resize', this.handleResize.bind(this));
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timer);
-    clearAllRetryTimers(this.props.setSnackbar);
-  }
+  }, [past, onboardingState.complete]);
 
   /*
   / refresh only finished deployments
   /
   */
-  refreshPast(
-    page = this.state.page,
-    perPage = this.state.perPage,
-    startDate = this.state.startDate,
-    endDate = this.state.endDate,
-    deviceGroup = this.state.deviceGroup
-  ) {
-    const self = this;
-    self.setState({ page, perPage, endDate, startDate, deviceGroup }, () => {
-      const roundedStartDate = Math.round(Date.parse(startDate) / 1000);
-      const roundedEndDate = Math.round(Date.parse(endDate) / 1000);
-      self.props
-        .getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, deviceGroup)
-        .then(deploymentsAction => {
-          clearRetryTimer(type, self.props.setSnackbar);
-          if (deploymentsAction && deploymentsAction[0].total && !deploymentsAction[0].deploymentIds.length) {
-            return self.refreshDeployments(...arguments);
-          }
-        })
-        .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, self.props.setSnackbar));
-    });
-  }
+  const refreshPast = (
+    currentPage = page,
+    currentPerPage = perPage,
+    currentStartDate = startDate,
+    currentEndDate = endDate,
+    currentDeviceGroup = deviceGroup
+  ) => {
+    setPage(currentPage);
+    setPerPage(currentPerPage);
+    setEndDate(currentEndDate);
+    setStartDate(currentStartDate);
+    setDeviceGroup(currentDeviceGroup);
+    const roundedStartDate = Math.round(Date.parse(currentStartDate) / 1000);
+    const roundedEndDate = Math.round(Date.parse(currentEndDate) / 1000);
+    return getDeploymentsByStatus(type, currentPage, currentPerPage, roundedStartDate, roundedEndDate, currentDeviceGroup)
+      .then(deploymentsAction => {
+        clearRetryTimer(type, setSnackbar);
+        if (deploymentsAction && deploymentsAction[0].total && !deploymentsAction[0].deploymentIds.length) {
+          return refreshPast(currentPage, currentPerPage, currentStartDate, currentEndDate, currentDeviceGroup);
+        }
+      })
+      .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, setSnackbar));
+  };
 
-  render() {
-    const self = this;
-    const { count, createClick, groups, loading, onboardingState, past } = self.props;
-    const { deviceGroup, page, perPage, endDate, startDate } = self.state;
-    let onboardingComponent = null;
-    if (this.deploymentsRef) {
-      const detailsButtons = self.deploymentsRef.getElementsByClassName('MuiButton-contained');
-      const left = detailsButtons.length
-        ? self.deploymentsRef.offsetLeft + detailsButtons[0].offsetLeft + detailsButtons[0].offsetWidth / 2 + 15
-        : self.deploymentsRef.offsetWidth;
-      let anchor = { left: self.deploymentsRef.offsetWidth / 2, top: self.deploymentsRef.offsetTop };
-      onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor });
-      onboardingComponent = getOnboardingComponentFor(
-        onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE,
-        onboardingState,
-        { anchor: { left, top: anchor.top } },
-        onboardingComponent
-      );
-      onboardingComponent = getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED, onboardingState, { anchor }, onboardingComponent);
-    }
-
-    return (
-      <div className="fadeIn margin-left margin-top-large">
-        <div className="datepicker-container">
-          <TimerangePicker onChange={(start, end) => self.refreshPast(1, perPage, start, end)} />
-          <TimeframePicker
-            classNames="margin-left margin-right inline-block"
-            onChange={(start, end) => self.refreshPast(1, perPage, start, end)}
-            endDate={endDate}
-            startDate={startDate}
-            tonight={tonight}
-          />
-          <Autocomplete
-            id="device-group-selection"
-            autoSelect
-            filterSelectedOptions
-            freeSolo
-            handleHomeEndKeys
-            inputValue={deviceGroup}
-            options={groups}
-            onInputChange={(e, value) => self.refreshPast(1, perPage, startDate, endDate, value)}
-            renderInput={params => (
-              <TextField
-                {...params}
-                label="Filter by device group"
-                placeholder="Select a group"
-                InputProps={{ ...params.InputProps }}
-                style={{ marginTop: 0 }}
-              />
-            )}
-          />
-        </div>
-        <div className="deploy-table-contain">
-          <Loader show={loading} />
-          {/* TODO: fix status retrieval for past deployments to decide what to show here - */}
-          {!loading && !!past.length && !!onboardingComponent && onboardingComponent}
-          {!!past.length && (
-            <RootRef rootRef={ref => (this.deploymentsRef = ref)}>
-              <DeploymentsList
-                {...self.props}
-                componentClass="margin-left-small"
-                count={count || past.length}
-                headers={headers}
-                items={past}
-                page={page}
-                onChangeRowsPerPage={newPerPage => self.refreshPast(1, newPerPage)}
-                onChangePage={(...args) => self.refreshPast(...args)}
-                pageSize={perPage}
-                type={type}
-              />
-            </RootRef>
-          )}
-          {!(loading || past.length) && (
-            <div className="dashboard-placeholder">
-              <p>No finished deployments were found.</p>
-              <p>
-                Try a different date range, or <a onClick={createClick}>Create a new deployment</a> to get started
-              </p>
-              <img src={historyImage} alt="Past" />
-            </div>
-          )}
-        </div>
-      </div>
+  let onboardingComponent = null;
+  if (deploymentsRef.current) {
+    const detailsButtons = deploymentsRef.current.getElementsByClassName('MuiButton-contained');
+    const left = detailsButtons.length
+      ? deploymentsRef.current.offsetLeft + detailsButtons[0].offsetLeft + detailsButtons[0].offsetWidth / 2 + 15
+      : deploymentsRef.current.offsetWidth;
+    let anchor = { left: deploymentsRef.current.offsetWidth / 2, top: deploymentsRef.current.offsetTop };
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor });
+    onboardingComponent = getOnboardingComponentFor(
+      onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE,
+      onboardingState,
+      { anchor: { left, top: anchor.top } },
+      onboardingComponent
     );
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED, onboardingState, { anchor }, onboardingComponent);
   }
-}
+
+  return (
+    <div className="fadeIn margin-left margin-top-large">
+      <div className="datepicker-container">
+        <TimerangePicker onChange={(start, end) => refreshPast(1, perPage, start, end)} />
+        <TimeframePicker
+          classNames="margin-left margin-right inline-block"
+          onChange={(start, end) => refreshPast(1, perPage, start, end)}
+          endDate={endDate}
+          startDate={startDate}
+          tonight={tonight}
+        />
+        <Autocomplete
+          id="device-group-selection"
+          autoSelect
+          filterSelectedOptions
+          freeSolo
+          handleHomeEndKeys
+          inputValue={deviceGroup}
+          options={groups}
+          onInputChange={(e, value) => refreshPast(1, perPage, startDate, endDate, value)}
+          renderInput={params => (
+            <TextField {...params} label="Filter by device group" placeholder="Select a group" InputProps={{ ...params.InputProps }} style={{ marginTop: 0 }} />
+          )}
+        />
+      </div>
+      <div className="deploy-table-contain">
+        <Loader show={loading} />
+        {/* TODO: fix status retrieval for past deployments to decide what to show here - */}
+        {!loading && !!past.length && !!onboardingComponent && onboardingComponent}
+        {!!past.length && (
+          <RootRef rootRef={deploymentsRef}>
+            <DeploymentsList
+              {...props}
+              componentClass="margin-left-small"
+              count={count || past.length}
+              headers={headers}
+              items={past}
+              page={page}
+              onChangeRowsPerPage={newPerPage => refreshPast(1, newPerPage)}
+              onChangePage={refreshPast}
+              pageSize={perPage}
+              type={type}
+            />
+          </RootRef>
+        )}
+        {!(loading || past.length) && (
+          <div className="dashboard-placeholder">
+            <p>No finished deployments were found.</p>
+            <p>
+              Try a different date range, or <a onClick={createClick}>Create a new deployment</a> to get started
+            </p>
+            <img src={historyImage} alt="Past" />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const actionCreators = { advanceOnboarding, getDeploymentsByStatus, setSnackbar, selectDeployment };
 
