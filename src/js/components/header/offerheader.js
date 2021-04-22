@@ -1,21 +1,20 @@
 import React from 'react';
-import { LocalOffer as LocalOfferIcon, Close as CloseIcon } from '@material-ui/icons';
+import { Announcement as AnnouncmentIcon, Close as CloseIcon } from '@material-ui/icons';
 
-const OfferHeader = ({ docsVersion, organization, onHide }) => (
+const OfferHeader = ({ docsVersion, onHide }) => (
   <div id="offerHeader" className="offerBox">
-    <LocalOfferIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
-    {organization && organization.trial ? (
-      <span>
-        Try out the new <b>Remote terminal</b> feature for free with your current trial.&nbsp;
-      </span>
-    ) : (
-      <span>
-        Try out the new <b>Remote terminal</b> feature for free on your current plan until March 31st.&nbsp;
-      </span>
-    )}
-    <a href={`https://docs.mender.io/${docsVersion}add-ons/remote-terminal`} target="_blank" rel="noreferrer">
-      Read the documentation to learn how to enable it
-    </a>
+    <AnnouncmentIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
+    <span>
+      Learn more about Mender&apos;s new add-ons at&nbsp;
+      <a href="https://mender.io/plans/pricing" target="_blank" rel="noreferrer">
+        mender.io/plans/pricing
+      </a>
+      .&nbsp;
+      <a href={`https://docs.mender.io/${docsVersion}add-ons/`} target="_blank" rel="noreferrer">
+        Visit our documentation
+      </a>
+      &nbsp;to learn how to enable add-on features
+    </span>
     <CloseIcon style={{ marginLeft: '4px', height: '16px', cursor: 'pointer' }} onClick={onHide} />
   </div>
 );
