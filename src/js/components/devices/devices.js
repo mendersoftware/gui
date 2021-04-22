@@ -97,15 +97,16 @@ export class Devices extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { filteringAttributes, location, selectGroup, setDeviceFilters } = this.props;
+    const { filteringAttributes, groups, location, selectGroup, setDeviceFilters } = this.props;
     if (
       location.search &&
-      !Object.values(prevProps.filteringAttributes)
+      ((!Object.values(prevProps.filteringAttributes)
         .flat()
         .some(attribute => attribute) &&
-      Object.values(filteringAttributes)
-        .flat()
-        .some(attribute => attribute)
+        Object.values(filteringAttributes)
+          .flat()
+          .some(attribute => attribute)) ||
+        prevProps.groups.length !== groups.length)
     ) {
       const queryResult = convertQueryToFilterAndGroup(location.search, filteringAttributes);
       this.updateDeviceSelection(queryResult, selectGroup, setDeviceFilters);
@@ -182,6 +183,7 @@ const mapStateToProps = state => {
   const { isGroupRestricted } = getUserRoles(state);
   return {
     filteringAttributes: state.devices.filteringAttributes,
+    groups: Object.keys(state.devices.groups.byId),
     isGroupRestricted,
     pendingCount: state.devices.byStatus.pending.total
   };

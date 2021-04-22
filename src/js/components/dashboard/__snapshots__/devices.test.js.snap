@@ -64,9 +64,6 @@ exports[`Devices Component renders correctly 1`] = `
             />
           </svg>
         </span>
-        <span
-          className="MuiTouchRipple-root"
-        />
       </a>
       <div
         className="MuiPaper-root widget  MuiPaper-elevation2 MuiPaper-rounded"
@@ -243,9 +240,6 @@ exports[`Devices Component renders correctly 1`] = `
         >
           Connect a device
         </span>
-        <span
-          className="MuiTouchRipple-root"
-        />
       </a>
     </div>
   </div>
