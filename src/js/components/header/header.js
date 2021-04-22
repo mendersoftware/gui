@@ -35,8 +35,8 @@ const menuButtonColor = colors.grey;
 
 // Change this when a new feature/offer is introduced
 const currentOffer = {
-  name: 'remote',
-  expires: '2021-04-01',
+  name: 'add-ons',
+  expires: '2021-06-30',
   trial: true,
   os: true,
   professional: true,

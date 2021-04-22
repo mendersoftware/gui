@@ -8,7 +8,6 @@ import MyOrganization, {
   OrgHeader,
   TrialExpirationNote,
   DeviceLimitExpansionNotification,
-  EnterpriseModificationsNote,
   CancelSubscriptionAlert,
   CancelSubscriptionButton
 } from './organization';
@@ -74,26 +73,24 @@ describe('MyOrganization Component', () => {
 });
 
 describe('smaller components', () => {
-  [OrgHeader, TrialExpirationNote, DeviceLimitExpansionNotification, EnterpriseModificationsNote, CancelSubscriptionAlert, CancelSubscriptionButton].forEach(
-    Component => {
-      it(`renders ${Component.displayName || Component.name} correctly`, () => {
-        const tree = renderer
-          .create(
-            <MemoryRouter>
-              <Component
-                trial_expiration="2019-10-05T13:00:00.000Z"
-                isTrial={true}
-                handleCancelSubscription={jest.fn}
-                orgName="test"
-                mailBodyTexts={{ billing: 'bill this', upgrade: 'upgrade here' }}
-              />
-            </MemoryRouter>
-          )
-          .toJSON();
+  [OrgHeader, TrialExpirationNote, DeviceLimitExpansionNotification, CancelSubscriptionAlert, CancelSubscriptionButton].forEach(Component => {
+    it(`renders ${Component.displayName || Component.name} correctly`, () => {
+      const tree = renderer
+        .create(
+          <MemoryRouter>
+            <Component
+              trial_expiration="2019-10-05T13:00:00.000Z"
+              isTrial={true}
+              handleCancelSubscription={jest.fn}
+              orgName="test"
+              mailBodyTexts={{ billing: 'bill this', upgrade: 'upgrade here' }}
+            />
+          </MemoryRouter>
+        )
+        .toJSON();
 
-        expect(tree).toMatchSnapshot();
-        expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
-      });
-    }
-  );
+      expect(tree).toMatchSnapshot();
+      expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    });
+  });
 });

@@ -516,12 +516,16 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
       filters: mapFiltersToTerms([{ key: 'status', value: status, operator: '$eq', scope: 'identity' }]),
       attributes
     }).then(res => {
-      const deviceAccu = reduceReceivedDevices(res.data, devices, getState(), status);
+      const state = getState();
+      const deviceAccu = reduceReceivedDevices(res.data, devices, state, status);
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICES,
         devicesById: deviceAccu.devicesById
       });
       const total = Number(res.headers[headerNames.total]);
+      if (total > state.deployments.deploymentDeviceLimit) {
+        return Promise.resolve();
+      }
       if (total > perPage * page) {
         return getAllDevices(perPage, page + 1, deviceAccu.ids);
       }
@@ -616,7 +620,13 @@ export const deviceFileUpload = (deviceId, path, file) => dispatch => {
     .finally(() => Promise.resolve(dispatch({ type: AppConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 })));
 };
 
-export const getDeviceAuth = id => dispatch => Promise.resolve(dispatch(getDevicesWithAuth([{ id }]))).then(results => Promise.resolve(results[1][0]));
+export const getDeviceAuth = id => dispatch =>
+  Promise.resolve(dispatch(getDevicesWithAuth([{ id }]))).then(results => {
+    if (results[results.length - 1]) {
+      return Promise.resolve(results[results.length - 1][0]);
+    }
+    return Promise.resolve();
+  });
 
 export const getDevicesWithAuth = devices => dispatch =>
   devices.length
@@ -709,7 +719,7 @@ export const preauthDevice = authset => dispatch =>
 
 export const decommissionDevice = (deviceId, authId) => dispatch =>
   GeneralApi.delete(`${deviceAuthV2}/devices/${deviceId}`)
-    .then(() => Promise.all([dispatch(getDeviceAuth(deviceId)), dispatch(setSnackbar('Device was decommissioned successfully'))]))
+    .then(() => Promise.resolve(dispatch(setSnackbar('Device was decommissioned successfully'))))
     .catch(err => commonErrorHandler(err, 'There was a problem decommissioning the device:', dispatch))
     .then(() => Promise.resolve(dispatch(maybeUpdateDevicesByStatus(deviceId, authId))));
 

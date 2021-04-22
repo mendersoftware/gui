@@ -1,21 +1,17 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import Time from 'react-time';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
-import { Launch as LaunchIcon } from '@material-ui/icons';
-
 import { getDeviceById, getSessionDetails } from '../../../actions/deviceActions';
 import { getIdAttribute } from '../../../selectors';
-import theme, { colors } from '../../../themes/mender-theme';
+import theme from '../../../themes/mender-theme';
 import Loader from '../../common/loader';
+import DeviceDetails, { DetailInformation } from './devicedetails';
 import TerminalPlayer from './terminalplayer';
 
 momentDurationFormatSetup(moment);
-
-const BEGINNING_OF_TIME = '2020-01-01T00:00:00.000Z';
 
 export const TerminalSession = ({ device, idAttribute, item, getDeviceById, getSessionDetails, onClose }) => {
   const [sessionDetails, setSessionDetails] = useState();
@@ -38,26 +34,6 @@ export const TerminalSession = ({ device, idAttribute, item, getDeviceById, getS
     return <Loader show={true} />;
   }
 
-  const { name, device_type, artifact_name } = device.attributes;
-  const usesId = !idAttribute || idAttribute === 'id' || idAttribute === 'Device ID';
-  const nameContainer = name ? { Name: name } : {};
-  const deviceDetails = {
-    ...nameContainer,
-    [usesId ? 'Device ID' : idAttribute]: (
-      <Link className="flexbox" style={{ alignItems: 'center', color: colors.disabledColor, fontWeight: 'initial' }} to={`/devices?id=${device.id}`}>
-        <span>{usesId ? device.id : (device.identity_data || {})[idAttribute]}</span>
-        <LaunchIcon className="margin-left-small link-color" fontSize="small" />
-      </Link>
-    ),
-    'Device type': device_type,
-    'System software version': device['rootfs-image.version'] || artifact_name || '-',
-    ' ': (
-      <Link to={`/auditlog?object_type=device&object_id=${item.object.id}&start_date=${BEGINNING_OF_TIME}`} onClick={onClose}>
-        List all log entries for this device
-      </Link>
-    )
-  };
-
   const sessionMeta = {
     'Session ID': item.meta.session_id[0],
     'Start time': <Time value={sessionDetails.start} format="YYYY-MM-DD HH:mm" />,
@@ -66,30 +42,12 @@ export const TerminalSession = ({ device, idAttribute, item, getDeviceById, getS
     User: item.actor.email
   };
 
-  const sessionInformation = {
-    device: deviceDetails,
-    session: sessionMeta
-  };
-
   return (
     <div className="flexbox" style={{ flexWrap: 'wrap' }}>
       <TerminalPlayer className="flexbox column margin-top" item={item} sessionInitialized={!!sessionDetails} />
       <div className="flexbox column" style={{ margin: theme.spacing(3), minWidth: 'min-content' }}>
-        {Object.entries(sessionInformation).map(([title, details]) => (
-          <div key={`${title}-details`} className="flexbox column margin-top-small">
-            <b className="margin-bottom-small capitalized-start">{title} details</b>
-            <div className="text-muted two-columns" style={{ gridTemplateColumns: 'minmax(max-content, 150px) max-content', rowGap: theme.spacing(2.5) }}>
-              {Object.entries(details).map(([key, value]) => (
-                <Fragment key={key}>
-                  <div className="align-right">
-                    <b>{key}</b>
-                  </div>
-                  <div>{value}</div>
-                </Fragment>
-              ))}
-            </div>
-          </div>
-        ))}
+        <DeviceDetails device={device} idAttribute={idAttribute} onClose={onClose} />
+        <DetailInformation title="session" details={sessionMeta} />
       </div>
     </div>
   );

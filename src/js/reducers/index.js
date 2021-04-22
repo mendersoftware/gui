@@ -1,6 +1,5 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import thunkMiddleware from 'redux-thunk';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+
 import appReducer from './appReducer';
 import deploymentReducer from './deploymentReducer';
 import deviceReducer from './deviceReducer';
@@ -27,6 +26,8 @@ const sessionReducer = (state, action) => {
   return rootReducer(state, action);
 };
 
-const store = createStore(sessionReducer, composeWithDevTools(applyMiddleware(thunkMiddleware)));
+const store = configureStore({
+  reducer: sessionReducer
+});
 
 export default store;

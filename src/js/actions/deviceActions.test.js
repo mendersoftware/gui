@@ -304,7 +304,6 @@ describe('device auth handling', () => {
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Device was decommissioned successfully' } },
-      { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice },
       {
         type: DeviceConstants.SET_ACCEPTED_DEVICES,
         deviceIds: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id),

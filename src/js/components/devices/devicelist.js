@@ -56,7 +56,7 @@ export class DeviceList extends React.Component {
 
   _expandRow(event, rowNumber) {
     const self = this;
-    if (event.target.closest('input') && event.target.closest('input').hasOwnProperty('checked')) {
+    if (event && event.target.closest('input')?.hasOwnProperty('checked')) {
       return;
     }
     const { advanceOnboarding, devices, onboardingComplete, setSnackbar } = self.props;
@@ -177,7 +177,7 @@ export class DeviceList extends React.Component {
             <Loader show={true} />
           </div>
         )}
-        <ExpandedDevice {...self.props} deviceId={expandedDeviceId} open={Boolean(expandedDeviceId)} onClose={e => self._expandRow(e)} />
+        <ExpandedDevice {...self.props} deviceId={expandedDeviceId} open={Boolean(expandedDeviceId)} onClose={() => self._expandRow()} />
       </div>
     );
   }

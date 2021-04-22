@@ -1,0 +1,159 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PortForward Component renders correctly 1`] = `
+<div
+  class="flexbox column"
+  style="margin: 24px; min-width: min-content;"
+>
+  <div
+    class="flexbox column margin-top-small"
+  >
+    <b
+      class="margin-bottom-small capitalized-start"
+    >
+      device
+       details
+    </b>
+    <div
+      class="text-muted two-columns"
+      style="grid-template-columns: minmax(max-content, 150px) max-content; row-gap: 20px;"
+    >
+      <div
+        class="align-right"
+      >
+        <b>
+          Device ID
+        </b>
+      </div>
+      <div>
+        <a
+          class="flexbox"
+          href="/devices?id=a1"
+          style="align-items: center; color: rgba(0, 0, 0, 0.54); font-weight: initial;"
+        >
+          <span>
+            a1
+          </span>
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root margin-left-small link-color MuiSvgIcon-fontSizeSmall"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+            />
+          </svg>
+        </a>
+      </div>
+      <div
+        class="align-right"
+      >
+        <b>
+          Device type
+        </b>
+      </div>
+      <div>
+        raspberrypi4
+      </div>
+      <div
+        class="align-right"
+      >
+        <b>
+          System software version
+        </b>
+      </div>
+      <div>
+        -
+      </div>
+      <div
+        class="align-right"
+      >
+        <b>
+           
+        </b>
+      </div>
+      <div>
+        <a
+          href="/auditlog?object_type=device&object_id=a1&start_date=2020-01-01T00:00:00.000Z"
+        >
+          List all log entries for this device
+        </a>
+      </div>
+    </div>
+  </div>
+  <div
+    class="flexbox column margin-top-small"
+  >
+    <b
+      class="margin-bottom-small capitalized-start"
+    >
+      port forwarding
+       details
+    </b>
+    <div
+      class="text-muted two-columns"
+      style="grid-template-columns: minmax(max-content, 150px) max-content; row-gap: 20px;"
+    >
+      <div
+        class="align-right"
+      >
+        <b>
+          Session ID
+        </b>
+      </div>
+      <div>
+        abd313a8-ee88-48ab-9c99-fbcd80048e6e
+      </div>
+      <div
+        class="align-right"
+      >
+        <b>
+          Start time
+        </b>
+      </div>
+      <div>
+        <time
+          datetime="2019-01-01T12:10:22+00:00"
+        >
+          2019-01-01 12:10
+        </time>
+      </div>
+      <div
+        class="align-right"
+      >
+        <b>
+          End time
+        </b>
+      </div>
+      <div>
+        <time
+          datetime="2019-01-01T12:16:22+00:00"
+        >
+          2019-01-01 12:16
+        </time>
+      </div>
+      <div
+        class="align-right"
+      >
+        <b>
+          Duration
+        </b>
+      </div>
+      <div>
+        00:05:59:998
+      </div>
+      <div
+        class="align-right"
+      >
+        <b>
+          User
+        </b>
+      </div>
+      <div>
+        string@example.com
+      </div>
+    </div>
+  </div>
+</div>
+`;

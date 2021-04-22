@@ -1,5 +1,6 @@
 import Cookies from 'universal-cookie';
 
+import { getToken } from '../auth';
 import AppConstants from '../constants/appConstants';
 import { DEVICE_STATES } from '../constants/deviceConstants';
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
@@ -15,9 +16,11 @@ import { getUserOrganization } from './organizationActions';
 
 const cookies = new Cookies();
 
-export const commonErrorHandler = (err, errorContext, dispatch, fallback) => {
+export const commonErrorHandler = (err, errorContext, dispatch, fallback, mightBeAuthRelated = false) => {
   const errMsg = extractErrorMessage(err, fallback);
-  dispatch(setSnackbar(preformatWithRequestID(err.response, `${errorContext} ${errMsg}`), null, 'Copy to clipboard'));
+  if (mightBeAuthRelated || getToken()) {
+    dispatch(setSnackbar(preformatWithRequestID(err.response, `${errorContext} ${errMsg}`), null, 'Copy to clipboard'));
+  }
   return Promise.reject(err);
 };
 

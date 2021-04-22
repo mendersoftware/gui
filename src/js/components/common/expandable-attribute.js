@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 // material ui
-import { Divider, ListItem, ListItemText, Tooltip } from '@material-ui/core';
+import { ListItem, ListItemText, Tooltip } from '@material-ui/core';
 
 import { FileCopyOutlined as CopyToClipboardIcon } from '@material-ui/icons';
 
@@ -10,7 +10,9 @@ import copy from 'copy-to-clipboard';
 const defaultClasses = { root: 'attributes' };
 
 export const ExpandableAttribute = ({
+  component = 'li',
   copyToClipboard,
+  disableGutters,
   dividerDisabled,
   primary,
   secondary,
@@ -61,7 +63,7 @@ export const ExpandableAttribute = ({
 
   return (
     <div onClick={onClick} onMouseEnter={() => setTooltipVisible(true)} onMouseLeave={() => setTooltipVisible(false)} style={style}>
-      <ListItem classes={cssClasses} disabled={true}>
+      <ListItem classes={cssClasses} disableGutters={disableGutters} disabled={true} divider={!dividerDisabled} component={component}>
         <ListItemText
           primary={primary}
           secondary={secondaryText}
@@ -73,7 +75,6 @@ export const ExpandableAttribute = ({
           </Tooltip>
         ) : null}
       </ListItem>
-      {dividerDisabled ? null : <Divider />}
     </div>
   );
 };

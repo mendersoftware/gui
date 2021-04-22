@@ -51,7 +51,13 @@ export const TablePaginationActions = ({ count, page = 0, onChangePage, rowsPerP
         <KeyboardArrowLeft />
       </IconButton>
       <div className="flexbox" style={{ alignItems: 'baseline' }}>
-        <TextField value={pageNo} onChange={onChange} onKeyUp={onKeyPress} margin="dense" style={{ minWidth: 30, maxWidth: 30, marginRight: 10 }} />
+        <TextField
+          value={pageNo}
+          onChange={onChange}
+          onKeyUp={onKeyPress}
+          margin="dense"
+          style={{ minWidth: 30, maxWidth: `${`${pageNo}`.length + 2}ch`, marginRight: 10 }}
+        />
         {`/ ${pages}`}
       </div>
       <IconButton onClick={() => setPageNo(pageNo + 1)} disabled={pageNo >= Math.ceil(count / rowsPerPage)}>

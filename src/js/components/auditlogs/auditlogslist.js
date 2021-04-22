@@ -103,7 +103,7 @@ export const AuditLogsList = ({ count, items, loading, locationChange, onChangeP
         </div>
         <div className="auditlogs-list">
           {items.map(item => {
-            const allowsExpansion = !!item.change || item.action.includes('terminal');
+            const allowsExpansion = !!item.change || item.action.includes('terminal') || item.action.includes('portforward');
             return (
               <div
                 className={`auditlogs-list-item ${allowsExpansion ? 'clickable' : ''}`}

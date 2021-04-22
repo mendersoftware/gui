@@ -7,16 +7,16 @@ import { Link } from 'react-router-dom';
 
 // material ui
 import { Button, List, LinearProgress } from '@material-ui/core';
-import { Error as ErrorIcon, FileCopy as CopyPasteIcon, Info as InfoIcon } from '@material-ui/icons';
+import { Error as ErrorIcon, FileCopy as CopyPasteIcon, Info as InfoIcon, OpenInNew as OpenInNewIcon } from '@material-ui/icons';
 
 import { cancelRequest, getUserOrganization } from '../../actions/organizationActions';
-import { PLANS as plans } from '../../constants/appConstants';
+import { ADDONS, PLANS } from '../../constants/appConstants';
 import { getIsEnterprise } from '../../selectors';
 import { colors } from '../../themes/mender-theme';
 import Alert from '../common/alert';
 import ExpandableAttribute from '../common/expandable-attribute';
 import CancelRequestDialog from './dialogs/cancelrequest';
-import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
+import OrganizationSettingsItem, { maxWidth, padding } from './organizationsettingsitem';
 import OrganizationPaymentSettings from './organizationpaymentsettings';
 
 export const OrgHeader = () => (
@@ -67,22 +67,6 @@ export const DeviceLimitExpansionNotification = ({ isTrial }) => (
   </div>
 );
 
-export const EnterpriseModificationsNote = ({ orgName, mailBodyTexts }) => (
-  <>
-    <p className="info" style={{ marginLeft: 15, marginRight: 15, maxWidth }}>
-      For changes to your plan or any other support questions, contact us at{' '}
-      <a href={`mailto:support@mender.io?subject=${orgName}: Enterprise upgrade&body=${mailBodyTexts.upgrade}`} target="_blank" rel="noopener noreferrer">
-        support@mender.io
-      </a>
-    </p>
-    <p className="margin-left-small margin-right-small margin-bottom-none" style={{ maxWidth }}>
-      <a href={`mailto:support@mender.io?subject=${orgName}: Update billing&body=${mailBodyTexts.billing}`} target="_blank" rel="noopener noreferrer">
-        Request to update your billing details
-      </a>
-    </p>
-  </>
-);
-
 export const CancelSubscriptionAlert = () => (
   <Alert className="margin-top-large" severity="error" style={{ maxWidth }}>
     <p>We&#39;ve started the process to cancel your plan and deactivate your account.</p>
@@ -103,29 +87,20 @@ export const CancelSubscriptionButton = ({ handleCancelSubscription, isTrial }) 
   </p>
 );
 
-export const Organization = ({ cancelRequest, currentPlan, getUserOrganization, org, isEnterprise, isHosted, acceptedDevices, deviceLimit }) => {
+export const Organization = ({ cancelRequest, currentPlan = 'os', getUserOrganization, org, isEnterprise, isHosted, acceptedDevices, deviceLimit }) => {
   const [copied, setCopied] = useState(false);
   const [cancelSubscription, setCancelSubscription] = useState(false);
   const [cancelSubscriptionConfirmation, setCancelSubscriptionConfirmation] = useState(false);
 
-  const mailBodyTexts = {
-    upgrade: `
-Organization%20ID%3A%20
-${org.id}
-%0AOrganization%20name%3A%20
-${org.name}
-%0APlan%20name%3A%20
-${plans[currentPlan]}
-%0A%0AI%20would%20like%20to%20make%20a%20change%20to%20my%20Mender%20plan.`,
-    billing: `
-Organization%20ID%3A%20
-${org.id}
-%0AOrganization%20name%3A%20
-${org.name}
-%0APlan%20name%3A%20
-${plans[currentPlan]}
-%0A%0AI%20would%20like%20to%20make%20a%20change%20to%20my%20billing%20details.`
-  };
+  const planName = PLANS[currentPlan].name;
+
+  const enabledAddOns =
+    org.addons?.reduce((accu, addon) => {
+      if (addon.enabled) {
+        accu.push(`${ADDONS[addon.name].title} - ${ADDONS[addon.name].price}`);
+      }
+      return accu;
+    }, []) || [];
 
   useEffect(() => {
     getUserOrganization();
@@ -154,30 +129,36 @@ ${plans[currentPlan]}
       <h2 className="margin-top-small">Organization and billing</h2>
       <List>
         <OrganizationSettingsItem title="Organization name" content={{ action: { internal: true }, description: org.name }} />
-        <div className="flexbox" style={{ alignItems: 'flex-end' }}>
-          <ExpandableAttribute
-            style={{ width: maxWidth, display: 'inline-block' }}
-            key="org_token"
-            primary={<OrgHeader />}
-            secondary={org.tenant_token}
-            textClasses={{ secondary: 'break-all inventory-text tenant-token-text' }}
-          />
-          <CopyToClipboard text={org.tenant_token} onCopy={onCopied}>
-            <Button style={{ margin: '0 15px 15px' }} startIcon={<CopyPasteIcon />}>
-              Copy to clipboard
-            </Button>
-          </CopyToClipboard>
-          <div>
-            <p style={{ marginBottom: 30 }}>{copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
-          </div>
-        </div>
+        <OrganizationSettingsItem
+          title={<OrgHeader />}
+          content={{}}
+          secondary={
+            <ExpandableAttribute
+              component="div"
+              disableGutters
+              dividerDisabled
+              style={{ width: maxWidth - 2 * padding }}
+              key="org_token"
+              secondary={org.tenant_token}
+              textClasses={{ secondary: 'break-all inventory-text tenant-token-text' }}
+            />
+          }
+          sideBarContent={
+            <div>
+              <CopyToClipboard text={org.tenant_token} onCopy={onCopied}>
+                <Button startIcon={<CopyPasteIcon />}>Copy to clipboard</Button>
+              </CopyToClipboard>
+              <div style={{ height: 30, padding: 15 }}>{copied && <span className="green fadeIn">Copied to clipboard.</span>}</div>
+            </div>
+          }
+        />
         {isHosted && (
           <>
             <OrganizationSettingsItem
               title="Current plan"
               content={{
                 action: { title: 'Compare product plans', internal: false, target: 'https://mender.io/plans/pricing' },
-                description: org.trial ? 'Trial' : plans[currentPlan]
+                description: org.trial ? 'Trial' : planName
               }}
               notification={org.trial ? <TrialExpirationNote trial_expiration={org.trial_expiration} /> : null}
             />
@@ -195,11 +176,26 @@ ${plans[currentPlan]}
                 notification={<DeviceLimitExpansionNotification isTrial={org.trial} />}
               />
             )}
+            <OrganizationSettingsItem
+              title="Current add-ons"
+              content={{
+                action: { title: 'Purchase an add-on', internal: true, action: () => window.location.replace('#/settings/upgrade') },
+                description: enabledAddOns.length ? enabledAddOns.join(', ') : `You currently don't have any add-ons`
+              }}
+              notification={org.trial && <TrialExpirationNote trial_expiration={org.trial_expiration} />}
+              sideBarContent={
+                <div className="margin-left-small margin-bottom">
+                  <a className="flexbox center-aligned" href="https://mender.io/plans/pricing" target="_blank" rel="noopener noreferrer">
+                    <div style={{ maxWidth: 200 }}>Compare plans and add-ons at mender.io</div>
+                    <OpenInNewIcon fontSize="small" />
+                  </a>
+                </div>
+              }
+            />
             {!org.trial && !isEnterprise && <OrganizationPaymentSettings />}
           </>
         )}
       </List>
-      {isEnterprise && <EnterpriseModificationsNote orgName={org.name} mailBodyTexts={mailBodyTexts} />}
       {isHosted && (
         <>
           {cancelSubscriptionConfirmation ? (
