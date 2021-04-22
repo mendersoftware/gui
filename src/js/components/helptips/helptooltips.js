@@ -70,8 +70,8 @@ const AuthButtonComponent = ({ docsVersion, highlightHelp, toggleHelptips }) => 
         <h3>Authorize devices</h3>
         <hr />
         <p>
-          Click this button to view the authentication options for this device. You can decide whether to accept it, reject it, or just dismiss this device for
-          now.
+          Expand this section to view the authentication options for this device. You can decide whether to accept it, reject it, or just dismiss this device
+          for now.
         </p>
         <p>
           See the documentation for more on{' '}
