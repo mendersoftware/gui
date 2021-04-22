@@ -4,6 +4,7 @@ import { stringToBoolean } from '../helpers';
 const menderEnvironment = {
   hostAddress: null,
   features: {
+    hasAddons: false,
     hasMultitenancy: false,
     isHosted: false,
     isEnterprise: false,
@@ -38,6 +39,7 @@ export const initialState = {
   },
   // return boolean rather than organization details
   features: {
+    hasAddons: stringToBoolean(menderEnvironment.features.hasAddons),
     hasMultitenancy: stringToBoolean(menderEnvironment.features.hasMultitenancy),
     hasDeviceConfig: stringToBoolean(menderEnvironment.features.hasDeviceConfig),
     hasDeviceConnect: stringToBoolean(menderEnvironment.features.hasDeviceConnect),

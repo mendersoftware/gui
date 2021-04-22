@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`QuoteRequestForm component renders correctly 1`] = `
+<div
+  class="flexbox column margin-bottom-large"
+>
+  <h3
+    class="margin-top-large"
+  >
+    Request a quote from our team
+  </h3>
+  You are requesting a quote for the following subscription:
+  <div>
+    <p>
+      Plan: 
+      Upgrade to 
+      <b>
+        Enterprise
+      </b>
+    </p>
+  </div>
+  <div
+    class="MuiFormControl-root"
+    style="margin-bottom: 30px; margin-top: 0px;"
+  >
+    <p
+      class="MuiFormHelperText-root"
+    >
+      Your message
+    </p>
+    <div
+      class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+    >
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-multiline MuiInput-multiline"
+      >
+        <textarea
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input MuiInputBase-inputMultiline MuiInput-inputMultiline"
+          placeholder="If you have any notes about your requirements or device fleet size, leave a message and we'll respond as soon as we can"
+          rows="1"
+          style="height: 0px; overflow: hidden;"
+        />
+        <textarea
+          aria-hidden="true"
+          class="MuiInputBase-input MuiInput-input MuiInputBase-inputMultiline MuiInput-inputMultiline"
+          readonly=""
+          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); width: 100%;"
+          tabindex="-1"
+        />
+      </div>
+    </div>
+  </div>
+  <p>
+    After we receive your request, we'll be in touch to discuss your needs and provide a quote.
+  </p>
+  <button
+    class="MuiButtonBase-root MuiButton-root MuiButton-contained margin-top margin-bottom MuiButton-containedSecondary Mui-disabled Mui-disabled"
+    disabled=""
+    style="align-self: flex-start;"
+    tabindex="-1"
+    type="button"
+  >
+    <span
+      class="MuiButton-label"
+    >
+      Submit request
+    </span>
+  </button>
+</div>
+`;

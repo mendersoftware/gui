@@ -1,230 +1,456 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`GlobalSettings Component renders correctly 1`] = `
+exports[`Upgrade Component renders correctly 1`] = `
 <div
-  className="margin-top-small"
-  style={
-    Object {
-      "maxWidth": "750px",
-    }
-  }
+  class="margin-top-small"
+  style="max-width: 750px;"
 >
   <h2
-    style={
-      Object {
-        "marginTop": "15px",
-      }
-    }
+    style="margin-top: 15px;"
+  >
+    Upgrades and add-ons
+  </h2>
+  <p>
+    Upgrade your plan or purchase an add-on to connect more devices, access more features and advanced support.
+  </p>
+  <p>
+    Learn more about the different plans and at
+     
+    <a
+      href="https://mender.io/plans/pricing"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      mender.io/plans/pricing
+    </a>
+    . Prices can change at larger device counts, please see our
+     
+    <a
+      href="https://mender.io/plans/pricing#calculator"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      price calculator
+    </a>
+     
+    for more.
+  </p>
+  <h3
+    class="margin-top"
+  >
+    Plans
+  </h3>
+  <div
+    class="flexbox space-between"
+    style="padding-bottom: 15px;"
+  >
+    <div
+      class="planPanel active "
+    >
+      <div
+        class="uppercased align-center muted"
+        style="margin-bottom: -11px; font-size: smaller;"
+      >
+        current plan
+      </div>
+      <h4>
+        Basic
+         
+      </h4>
+      <div>
+        <div
+          class="link-color bold"
+          style="font-size: 1rem;"
+        >
+          $29/month
+        </div>
+        <div>
+          for first 50 devices
+        </div>
+      </div>
+      <ul
+        class="unstyled"
+      >
+        <li>
+          <span
+            class="info"
+          >
+            Basic OTA features
+          </span>
+        </li>
+      </ul>
+    </div>
+    <div
+      class="planPanel  "
+    >
+      <div
+        class="uppercased align-center muted"
+        style="margin-bottom: -11px; font-size: smaller;"
+      >
+        upgrade
+      </div>
+      <h4>
+        Professional
+         
+      </h4>
+      <div>
+        <div
+          class="link-color bold"
+          style="font-size: 1rem;"
+        >
+          $249/month
+        </div>
+        <div>
+          for first 250 devices
+        </div>
+      </div>
+      <ul
+        class="unstyled"
+      >
+        <li>
+          <span
+            class="info"
+          >
+            + Advanced OTA features
+          </span>
+        </li>
+        <li>
+          <span
+            class="info"
+          >
+            + Standard support
+          </span>
+        </li>
+      </ul>
+    </div>
+    <div
+      class="planPanel  "
+    >
+      <div
+        class="uppercased align-center muted"
+        style="margin-bottom: -11px; font-size: smaller;"
+      >
+        upgrade
+      </div>
+      <h4>
+        Enterprise
+         
+      </h4>
+      <div>
+        <div
+          class="link-color bold"
+          style="font-size: 1rem;"
+        >
+          Custom pricing
+        </div>
+        <div>
+          unlimited devices
+        </div>
+      </div>
+      <ul
+        class="unstyled"
+      >
+        <li>
+          <span
+            class="info"
+          >
+            + Enterprise-grade OTA features
+          </span>
+        </li>
+        <li>
+          <span
+            class="info"
+          >
+            + Premium support
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <h3
+    class="margin-top-large"
+  >
+    Get more features with add-ons
+  </h3>
+  <div
+    class="flexbox column"
+  >
+    <p>
+      Extend Mender features with our add-ons. Select one or more from the list and submit to request add-ons to be added to your plan. We'll adjust your subscription and confirm it with you.
+    </p>
+    <div
+      class="planPanel flexbox "
+      style="align-items: center; margin-top: 10px;"
+    >
+      <span
+        aria-disabled="false"
+        class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+      >
+        <span
+          class="MuiIconButton-label"
+        >
+          <input
+            class="PrivateSwitchBase-input-4"
+            data-indeterminate="false"
+            type="checkbox"
+            value=""
+          />
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+            />
+          </svg>
+        </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
+      </span>
+      <div
+        class="bold"
+        style="min-width: 120px;"
+      >
+        Configure
+      </div>
+      <div
+        class="flexbox column"
+        style="min-width: 120px;"
+      >
+        <div
+          class="link-color bold"
+          style="font-size: 1rem;"
+        >
+          $10/month
+        </div>
+        <div>
+          for first 50 devices
+        </div>
+      </div>
+      <span
+        class="info"
+      >
+        Expand your plan with device configuration features
+      </span>
+      <a
+        class="margin-left-small"
+        href="https://mender.io/plans/features"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Learn more
+      </a>
+    </div>
+    <div
+      class="planPanel flexbox "
+      style="align-items: center; margin-top: 10px;"
+    >
+      <span
+        aria-disabled="false"
+        class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+      >
+        <span
+          class="MuiIconButton-label"
+        >
+          <input
+            class="PrivateSwitchBase-input-4"
+            data-indeterminate="false"
+            type="checkbox"
+            value=""
+          />
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+            />
+          </svg>
+        </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
+      </span>
+      <div
+        class="bold"
+        style="min-width: 120px;"
+      >
+        Troubleshoot
+      </div>
+      <div
+        class="flexbox column"
+        style="min-width: 120px;"
+      >
+        <div
+          class="link-color bold"
+          style="font-size: 1rem;"
+        >
+          $24/month
+        </div>
+        <div>
+          for first 50 devices
+        </div>
+      </div>
+      <span
+        class="info"
+      >
+        Expand your plan with device troubleshooting features
+      </span>
+      <a
+        class="margin-left-small"
+        href="https://mender.io/plans/features"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Learn more
+      </a>
+    </div>
+  </div>
+  <div
+    class="flexbox column margin-bottom-large"
+  >
+    <h3
+      class="margin-top-large"
+    >
+      Request a change to your plan
+    </h3>
+    You are requesting the following changes:
+    <div>
+      <p>
+        Plan: 
+        
+        <b>
+          Basic
+        </b>
+      </p>
+    </div>
+    <div
+      class="MuiFormControl-root"
+      style="margin-bottom: 30px; margin-top: 0px;"
+    >
+      <p
+        class="MuiFormHelperText-root"
+      >
+        Your message
+      </p>
+      <div
+        class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+      >
+        <div
+          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-multiline MuiInput-multiline"
+        >
+          <textarea
+            aria-invalid="false"
+            class="MuiInputBase-input MuiInput-input MuiInputBase-inputMultiline MuiInput-inputMultiline"
+            placeholder="If you have any questions regarding plan pricing or device limits, leave us a message and we'll respond as soon as we can."
+            rows="1"
+            style="height: 0px; overflow: hidden;"
+          />
+          <textarea
+            aria-hidden="true"
+            class="MuiInputBase-input MuiInput-input MuiInputBase-inputMultiline MuiInput-inputMultiline"
+            readonly=""
+            style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); width: 100%;"
+            tabindex="-1"
+          />
+        </div>
+      </div>
+    </div>
+    <p>
+      We'll send you a confirmation of any changes to your subscription.
+    </p>
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained margin-top margin-bottom MuiButton-containedSecondary Mui-disabled Mui-disabled"
+      disabled=""
+      style="align-self: flex-start;"
+      tabindex="-1"
+      type="button"
+    >
+      <span
+        class="MuiButton-label"
+      >
+        Submit request
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`smaller components renders PostUpgradeNote correctly 1`] = `
+<div
+  class="margin-top-small"
+  style="max-width: 750px;"
+>
+  <h2
+    style="margin-top: 15px;"
   >
     Upgrade now
   </h2>
   <div>
     <p>
-      Upgrade to one of our plans to connect more devices, continue using advanced features, and get access to support.
+      <b>
+        Your upgrade was successful! 
+      </b>
+      You are now signed up to the 
+      <b />
+       plan.
     </p>
     <p>
-      Learn more about the different plans at
-       
-      <a
-        href="https://mender.io/plans/pricing"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        mender.io/plans/pricing
-      </a>
-      .
+      Redirecting you to your organization page...
     </p>
-    <h3
-      className="margin-top"
+    <div
+      class="loaderContainer"
     >
-      1. Choose a plan
-    </h3>
-    <div>
       <div
-        className="planPanel active"
-        onClick={[Function]}
+        class="loader"
       >
-        <h4>
-          Starter
-           
-        </h4>
-        <p>
-          <span>
-            $29/month for first 50 devices
-          </span>
-        </p>
         <span
-          className="info"
-        >
-          Basic features
-        </span>
-      </div>
-      <div
-        className="planPanel "
-        onClick={[Function]}
-      >
-        <h4>
-          Professional
-           
-        </h4>
-        <p>
-          <span>
-            $249/month for first 250 devices
-          </span>
-        </p>
-        <span
-          className="info"
-        >
-          + Extra features
-        </span>
-      </div>
-      <div
-        className="planPanel "
-        onClick={[Function]}
-      >
-        <h4>
-          Enterprise
-           
-        </h4>
-        <p>
-          <span>
-            Custom pricing, unlimited devices
-          </span>
-        </p>
-        <span
-          className="info"
-        >
-          + Full features + SLA support
-        </span>
-      </div>
-    </div>
-    <p
-      className="info"
-    >
-      <svg
-        aria-hidden={true}
-        className="MuiSvgIcon-root"
-        focusable="false"
-        style={
-          Object {
-            "fontSize": "14px",
-            "margin": "0 4px 4px 0",
-            "verticalAlign": "middle",
-          }
-        }
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+          class="dot dot_1"
         />
-      </svg>
-      If you have any questions about the plan pricing or device limits,
-       
-      <a
-        href="mailto:contact@mender.io"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        contact our team
-      </a>
-      .
-    </p>
-    <div>
-      <h3
-        className="margin-top-large"
-      >
-        2. Enter your payment details
-      </h3>
-      <p>
-        You are upgrading to
-         
-        <b>
-          Mender 
-          <span
-            className="capitalized-start"
-          >
-            Starter
-          </span>
-        </b>
-      </p>
-      <form
-        className="margin-top-small"
-        onReset={[Function]}
-        onSubmit={[Function]}
-      >
-        <div
-          className="warning"
+        <span
+          class="dot dot_2"
         />
-        <div
-          id="poweredByStripe"
-        >
-          <div>
-            All standard credit card fees apply (e.g. foreign transaction fee, if your card has one)
-          </div>
-          <img
-            src="powered_by_stripe.png"
-          />
-        </div>
-        <p
-          className="info"
-        >
-          Billing will be scheduled monthly, starting from today. You can cancel at any time.
-        </p>
-        <div
-          className="flexbox margin-top-small"
-          style={
-            Object {
-              "alignItems": "center",
-              "justifyContent": "flex-end",
-            }
-          }
-        >
-          <button
-            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary Mui-disabled Mui-disabled"
-            disabled={true}
-            onBlur={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            tabIndex={-1}
-            type="submit"
-          >
-            <span
-              className="MuiButton-label"
-            >
-              Sign up
-            </span>
-          </button>
-        </div>
-        <div
-          className="loaderContainer shrunk"
-        >
-          <div
-            className="loader"
-          >
-            <span
-              className="dot dot_1"
-            />
-            <span
-              className="dot dot_2"
-            />
-            <span
-              className="dot dot_3"
-            />
-            <span
-              className="dot dot_4"
-            />
-          </div>
-        </div>
-      </form>
+        <span
+          class="dot dot_3"
+        />
+        <span
+          class="dot dot_4"
+        />
+      </div>
     </div>
   </div>
 </div>
+`;
+
+exports[`smaller components renders PricingContactNote correctly 1`] = `
+<p
+  class="info"
+>
+  <svg
+    aria-hidden="true"
+    class="MuiSvgIcon-root"
+    focusable="false"
+    style="font-size: 14px; margin: 0px 4px 4px 0px; vertical-align: middle;"
+    viewBox="0 0 24 24"
+  >
+    <path
+      d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+    />
+  </svg>
+  If you have any questions about the plan pricing or device limits,
+   
+  <a
+    href="mailto:contact@mender.io"
+    rel="noopener noreferrer"
+    target="_blank"
+  >
+    contact our team
+  </a>
+  .
+</p>
 `;

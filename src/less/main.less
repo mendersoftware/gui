@@ -520,9 +520,11 @@ ul.link-list {
 
 .flexbox {
   display: flex;
+  &.center-aligned, &.centered {
+    align-items: center;
+  }
   &.centered {
     justify-content: center;
-    align-items: center;
   }
   &.column {
     flex-direction: column;
@@ -1341,31 +1343,40 @@ div:focus {
   }
 }
 
+// Settings
+.org-settings-item {
+  display: grid;
+  grid-template-columns: 500px 1fr;
+  grid-column-gap: @defaultGutterWidth;
+  > *:nth-child(2n) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+  }
+}
+
 /* Upgrade */
 
 .planPanel {
   padding: 10px 20px;
   border-radius: 5px;
   border: 1px solid @lightergrey;
-  display: inline-block;
   vertical-align: top;
-  margin-right: 2%;
-  margin-bottom: 10px;
   width: 32%;
   height: 190px;
   .transition(all 0.2s ease);
   cursor: pointer;
-
-  &:last-child {
-    margin-right: 0;
-  }
 
   &.active,
   &:hover {
     border-color: @lightgrey;
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
   }
-
+  &.muted, &.muted:hover {
+    cursor: default;
+    box-shadow: none;
+  }
   &.active {
     background-color: @lightestgrey;
   }
