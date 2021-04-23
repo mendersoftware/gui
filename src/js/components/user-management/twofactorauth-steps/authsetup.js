@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { Button } from '@material-ui/core';
 import { CheckCircle as CheckCircleIcon } from '@material-ui/icons';
@@ -9,19 +9,23 @@ import TextInput from '../../common/forms/textinput';
 import Loader from '../../common/loader';
 
 export const AuthSetup = ({ currentUser, handle2FAState, has2FA, qrImage, verify2FA }) => {
+  const current2FA = useRef(has2FA);
   const [validated2fa, setValidated2fa] = useState(false);
   const [validating2fa, setValidating2fa] = useState(false);
 
   useEffect(() => {
-    handle2FAState(twoFAStates.unverified);
     window.addEventListener('beforeunload', onUnload);
     return () => {
-      if (!has2FA && qrImage) {
+      if (!current2FA.current && qrImage) {
         handle2FAState(twoFAStates.disabled);
       }
       window.removeEventListener('beforeunload', onUnload);
     };
   }, []);
+
+  useEffect(() => {
+    current2FA.current = has2FA;
+  }, [has2FA]);
 
   const onUnload = e => {
     if (!e || (validated2fa && has2FA) || !qrImage) {

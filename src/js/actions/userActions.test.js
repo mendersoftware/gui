@@ -7,8 +7,10 @@ import { roles as rbacRoles } from '../../../tests/__mocks__/userHandlers';
 import {
   createRole,
   createUser,
+  disableUser2fa,
   editRole,
   editUser,
+  enableUser2fa,
   get2FAQRCode,
   getRoles,
   getUser,
@@ -102,8 +104,9 @@ describe('user actions', () => {
   it('should verify 2fa codes during 2fa setup', async () => {
     jest.clearAllMocks();
     const expectedActions = [
-      { type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token },
-      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: defaultState.users.globalSettings }
+      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId['a30a780b-b843-5344-80e3-0fd95a4f6fc3'] },
+      { type: UserConstants.SET_SHOW_HELP, show: true },
+      { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true }
     ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(verify2FA({ token2fa: '123456' }));
@@ -111,7 +114,32 @@ describe('user actions', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
-
+  it('should allow enabling 2fa during 2fa setup', async () => {
+    jest.clearAllMocks();
+    const expectedActions = [
+      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId.a1 },
+      { type: UserConstants.SET_SHOW_HELP, show: true },
+      { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true }
+    ];
+    const store = mockStore({ ...defaultState });
+    await store.dispatch(enableUser2fa(defaultState.users.byId.a1.id));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should allow disabling 2fa during 2fa setup', async () => {
+    jest.clearAllMocks();
+    const expectedActions = [
+      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId.a1 },
+      { type: UserConstants.SET_SHOW_HELP, show: true },
+      { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true }
+    ];
+    const store = mockStore({ ...defaultState });
+    await store.dispatch(disableUser2fa(defaultState.users.byId.a1.id));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
   it('should allow processing email verification codes', async () => {
     jest.clearAllMocks();
     const expectedActions = [{ type: UserConstants.RECEIVED_ACTIVATION_CODE, code: 'code' }];
