@@ -198,36 +198,8 @@ exports[`Login Component renders correctly 1`] = `
       </a>
     </div>
     <div
-      class="MuiFormControl-root  required"
-    >
-      <label
-        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-        data-shrink="false"
-        for="token2fa"
-      >
-        Two Factor Authentication Code
-      </label>
-      <div
-        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-        required=""
-        style="width: 400px; max-width: 100%;"
-      >
-        <input
-          aria-invalid="false"
-          class="MuiInputBase-input MuiInput-input"
-          id="token2fa"
-          name="token2fa"
-          placeholder="Two Factor Authentication Code"
-          required=""
-          type="text"
-          value=""
-        />
-      </div>
-      <p
-        class="MuiFormHelperText-root"
-        id="component-error-text"
-      />
-    </div>
+      validations=""
+    />
     <label
       class="MuiFormControlLabel-root"
     >
