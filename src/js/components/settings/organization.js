@@ -97,7 +97,13 @@ export const Organization = ({ cancelRequest, currentPlan = 'os', getUserOrganiz
   const enabledAddOns =
     org.addons?.reduce((accu, addon) => {
       if (addon.enabled) {
-        accu.push(`${ADDONS[addon.name].title} - ${ADDONS[addon.name].price}`);
+        const { title } = ADDONS[addon.name];
+        let addonPrice = '';
+        if (!org.trial && !isEnterprise) {
+          const planAddon = ADDONS[addon.name][currentPlan] ? ADDONS[addon.name][currentPlan] : ADDONS[addon.name].os;
+          addonPrice = ` - ${planAddon.price}`;
+        }
+        accu.push(`${title}${addonPrice}`);
       }
       return accu;
     }, []) || [];
