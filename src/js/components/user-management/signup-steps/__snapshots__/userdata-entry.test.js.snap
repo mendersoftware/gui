@@ -66,6 +66,9 @@ Array [
         </span>
         Github
       </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </a>
     <a
       aria-disabled={false}
@@ -103,6 +106,9 @@ Array [
         </span>
         Google
       </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
     </a>
   </div>,
   <h4
@@ -246,6 +252,9 @@ Array [
                   />
                 </svg>
               </span>
+              <span
+                className="MuiTouchRipple-root"
+              />
             </button>
           </div>
         </div>
@@ -345,6 +354,9 @@ Array [
                   />
                 </svg>
               </span>
+              <span
+                className="MuiTouchRipple-root"
+              />
             </button>
           </div>
         </div>

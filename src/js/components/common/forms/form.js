@@ -6,24 +6,26 @@ import Button from '@material-ui/core/Button';
 export default class Form extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = { isValid: false };
+    this.state = { children: {}, isValid: false };
     this.model = {};
-    this.newChildren = {};
     this.inputs = {}; // We create a map of traversed inputs
+  }
+
+  componentDidMount() {
     this.registerInputs(); // We register inputs from the children
   }
-  componentDidUpdate() {
+
+  componentDidUpdate(prevProps) {
     const self = this;
-    self.newChildren = React.Children.map(
-      // Use nextprops for registering components cwu
-      self.props.children,
-      child => self._cloneChild(child, self)
-    );
-    self.registerInputs();
+    // Use nextprops for registering components cwu
+    if (prevProps.children !== self.props.children) {
+      self.registerInputs();
+    }
   }
+
   registerInputs() {
     const self = this;
-    self.newChildren = React.Children.map(self.props.children, child => self._cloneChild(child, self));
+    self.setState({ newChildren: React.Children.map(self.props.children, child => self._cloneChild(child, self)) });
   }
 
   // eslint-disable-next-line consistent-this
@@ -241,7 +243,7 @@ export default class Form extends React.Component {
         autoComplete={this.props.autocomplete || undefined}
         onSubmit={e => this.onSubmit(e)}
       >
-        {this.newChildren}
+        {this.state.newChildren}
         {uploadActions}
       </form>
     );
