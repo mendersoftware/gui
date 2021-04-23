@@ -6,7 +6,7 @@ const priceStyle = { fontSize: '1rem' };
 
 export const PlanSelection = ({ currentPlan = 'os', isTrial, offerValid, offerTag, setUpdatedPlan, updatedPlan }) => {
   const canUpgrade = plan => Object.keys(PLANS).indexOf(plan) >= Object.keys(PLANS).indexOf(currentPlan);
-  const onPlanSelect = plan => (canUpgrade(plan) ? setUpdatedPlan(plan) : undefined);
+  const onPlanSelect = plan => (isTrial || canUpgrade(plan) ? setUpdatedPlan(plan) : undefined);
   return (
     <>
       <h3 className="margin-top">{isTrial ? '1. Choose a plan' : 'Plans'}</h3>
@@ -14,7 +14,7 @@ export const PlanSelection = ({ currentPlan = 'os', isTrial, offerValid, offerTa
         {Object.values(PLANS).map(item => (
           <div
             key={item.value}
-            className={`planPanel ${updatedPlan === item.value ? 'active' : ''} ${canUpgrade(item.value) ? '' : 'muted'}`}
+            className={`planPanel ${updatedPlan === item.value ? 'active' : ''} ${isTrial || canUpgrade(item.value) ? '' : 'muted'}`}
             onClick={() => onPlanSelect(item.value)}
           >
             {!isTrial && canUpgrade(item.value) && (
