@@ -6,7 +6,7 @@
   "dependencies": {
     "@cypress/skip-test": "^2.6.0",
     "@nuintun/qrcode": "^3.0.1",
-    "cypress": "^6.9.1",
+    "cypress": "^7.1.0",
     "cypress-file-upload": "^5.0.6",
     "cypress-iframe": "^1.0.1",
     "mzedel-cypress-image-snapshot": "^4.0.5",
