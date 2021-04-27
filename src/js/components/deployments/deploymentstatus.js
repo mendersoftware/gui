@@ -7,7 +7,7 @@ import pendingImage from '../../../assets/img/pending_status.png';
 import inprogressImage from '../../../assets/img/progress_status.png';
 import skippedImage from '../../../assets/img/skipped_status.png';
 
-const defaultStats = {
+export const defaultStats = {
   success: 0,
   decommissioned: 0,
   pending: 0,

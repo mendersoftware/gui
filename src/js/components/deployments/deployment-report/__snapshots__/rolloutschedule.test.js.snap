@@ -1,0 +1,141 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeploymentStatus Component renders correctly 1`] = `
+<div>
+  <div
+    class="progressStatus flexbox space-between centered margin-bottom "
+  >
+    <div
+      class="flexbox column"
+    >
+      <div
+        class="text-muted"
+      >
+        Status
+      </div>
+      <h3
+        class="margin-bottom-none text-muted"
+      >
+        Pending
+         (awaiting devices)
+      </h3>
+    </div>
+    <div
+      class="flexbox space-between align-right"
+      style="min-width: 40%;"
+    >
+      <div
+        class="flexbox column"
+      >
+        <div
+          class="text-muted margin-bottom-small"
+        >
+          # devices
+        </div>
+        <div>
+          1
+        </div>
+      </div>
+      <div
+        class="flexbox column disabled"
+      >
+        <div
+          class="text-muted margin-bottom-small"
+        >
+          Skipped
+        </div>
+        <div
+          class="status"
+        >
+          0
+        </div>
+      </div>
+      <div
+        class="flexbox column "
+      >
+        <div
+          class="text-muted margin-bottom-small"
+        >
+          Pending
+        </div>
+        <div
+          class="status"
+        >
+          1
+        </div>
+      </div>
+      <div
+        class="flexbox column disabled"
+      >
+        <div
+          class="text-muted margin-bottom-small"
+        >
+          In Progress
+        </div>
+        <div
+          class="status"
+        >
+          0
+        </div>
+      </div>
+      <div
+        class="flexbox column disabled"
+      >
+        <div
+          class="text-muted margin-bottom-small"
+        >
+          Success
+        </div>
+        <div
+          class="status"
+        >
+          0
+        </div>
+      </div>
+      <div
+        class="flexbox column disabled"
+      >
+        <div
+          class="text-muted margin-bottom-small"
+        >
+          Fail
+        </div>
+        <div
+          class="status"
+        >
+          0
+        </div>
+      </div>
+    </div>
+    <div
+      class="break-all two-columns column-data  "
+      style="grid-template-columns: max-content 1fr;"
+    >
+      <div
+        class="align-right  text-muted"
+      >
+        <b>
+          Max attempts per device
+        </b>
+      </div>
+      <div
+        class="flexbox "
+      >
+        1
+      </div>
+      <div
+        class="align-right  text-muted"
+      >
+        <b>
+          Maximum number of devices
+        </b>
+      </div>
+      <div
+        class="flexbox "
+      >
+        N/A
+      </div>
+    </div>
+  </div>
+</div>
+`;

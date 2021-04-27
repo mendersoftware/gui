@@ -6,7 +6,6 @@ import { Button, IconButton, Tooltip } from '@material-ui/core';
 import { CancelOutlined as CancelOutlinedIcon } from '@material-ui/icons';
 
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
-import { groupDeploymentStats } from '../../helpers';
 import Confirm from '../common/confirm';
 import RelativeTime from '../common/relative-time';
 import ProgressChart from './progressChart';
@@ -37,19 +36,8 @@ export const DeploymentEndTime = compose(setDisplayName('DeploymentEndTime'))(({
 export const DeploymentPhases = compose(setDisplayName('DeploymentPhases'))(({ deployment }) => (
   <div key="DeploymentPhases">{deployment.phases ? deployment.phases.length : '-'}</div>
 ));
-export const DeploymentProgress = compose(setDisplayName('DeploymentProgress'))(({ deployment, groupedStats }) => (
-  <ProgressChart
-    key="DeploymentProgress"
-    created={deployment.created}
-    currentPendingCount={groupedStats.pending}
-    currentProgressCount={groupedStats.current}
-    id={deployment.id}
-    phases={deployment.phases}
-    status={deployment.status}
-    totalSuccessCount={groupedStats.successes}
-    totalDeviceCount={Math.max(deployment.device_count, deployment.max_devices || 0)}
-    totalFailureCount={groupedStats.failures}
-  />
+export const DeploymentProgress = compose(setDisplayName('DeploymentProgress'))(({ deployment }) => (
+  <ProgressChart key="DeploymentProgress" deployment={deployment} />
 ));
 export const DeploymentRelease = compose(setDisplayName('DeploymentRelease'))(props => {
   const {
@@ -72,7 +60,6 @@ export const DeploymentItem = ({ abort: abortDeployment, columnHeaders, deployme
   const toggleConfirm = id => {
     setTimeout(() => setAbort(abort ? null : id), 150);
   };
-  const groupedStats = groupDeploymentStats(deployment);
   const { created, id, phases } = deployment;
 
   let confirmation;
@@ -99,7 +86,6 @@ export const DeploymentItem = ({ abort: abortDeployment, columnHeaders, deployme
             className: column.class || '',
             deployment,
             started,
-            groupedStats: { ...groupedStats, current: groupedStats.inprogress },
             ...column.props
           })}
         </div>

@@ -139,13 +139,18 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
                       style="flex-grow: 1;"
                     >
                       <div
-                        class="progress-bar green"
-                        style="width: 0%;"
-                      />
-                      <div
-                        class="progress-bar warning"
-                        style="width: 0%;"
-                      />
+                        class="flexbox"
+                        style="width: 100%;"
+                      >
+                        <div
+                          class="progress-bar green"
+                          style="width: 0%;"
+                        />
+                        <div
+                          class="progress-bar warning"
+                          style="width: 0%;"
+                        />
+                      </div>
                       <div
                         class="progress-bar"
                         style="width: 100%; background-color: rgb(170, 170, 170);"
@@ -354,13 +359,18 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
                     style="flex-grow: 1;"
                   >
                     <div
-                      class="progress-bar green"
-                      style="width: 0%;"
-                    />
-                    <div
-                      class="progress-bar warning"
-                      style="width: 0%;"
-                    />
+                      class="flexbox"
+                      style="width: 100%;"
+                    >
+                      <div
+                        class="progress-bar green"
+                        style="width: 0%;"
+                      />
+                      <div
+                        class="progress-bar warning"
+                        style="width: 0%;"
+                      />
+                    </div>
                   </div>
                   <div
                     class="progress-step progress-step-total"

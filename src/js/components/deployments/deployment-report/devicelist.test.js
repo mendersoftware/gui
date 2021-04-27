@@ -1,6 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
+import { prettyDOM } from '@testing-library/dom';
+import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
@@ -16,20 +17,24 @@ describe('ProgressDeviceList Component', () => {
   });
 
   it('renders correctly', async () => {
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <Provider store={store}>
-            <ProgressDeviceList
-              devices={Object.values(defaultState.deployments.byId.d1.devices)}
-              created={defaultState.deployments.byId.d1.created}
-              retries={3}
-            />
-          </Provider>
-        </MemoryRouter>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { baseElement } = render(
+      <MemoryRouter>
+        <Provider store={store}>
+          <ProgressDeviceList
+            allDevices={Object.values(defaultState.deployments.byId.d1.devices)}
+            created={defaultState.deployments.byId.d1.created}
+            deployment={defaultState.deployments.byId.d1}
+            devicesById={defaultState.devices.byId}
+            retries={3}
+          />
+        </Provider>
+      </MemoryRouter>
+    );
+    const view = prettyDOM(baseElement.firstChild.firstChild, 100000, { highlight: false })
+      .replace(/id="mui-[0-9]*"/g, '')
+      .replace(/aria-labelledby="(mui-[0-9]* *)*"/g, '')
+      .replace(/\\/g, '');
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });
