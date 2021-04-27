@@ -16,7 +16,8 @@ exports[`DeploymentStatus Component renders correctly 1`] = `
       <h3
         class="margin-bottom-none text-muted"
       >
-        
+        Pending
+         (awaiting devices)
       </h3>
     </div>
     <div
@@ -120,7 +121,7 @@ exports[`DeploymentStatus Component renders correctly 1`] = `
       <div
         class="flexbox "
       >
-        N/A
+        1
       </div>
       <div
         class="align-right  text-muted"

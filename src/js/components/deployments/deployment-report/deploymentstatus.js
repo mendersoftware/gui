@@ -4,6 +4,7 @@ import { defaultStats } from '../deploymentstatus';
 import { defaultColumnDataProps } from '../report';
 
 const phases = {
+  scheduled: 'Scheduled',
   skipped: 'Skipped',
   pending: 'Pending',
   inprogress: 'In Progress',
@@ -12,7 +13,7 @@ const phases = {
 };
 
 export const DeploymentStatus = ({ className = '', deployment = {} }) => {
-  const { device_count, finished, max_devices, retries, status } = deployment;
+  const { device_count, finished, max_devices, retries = 1, status = 'pending' } = deployment;
   const stats = { ...defaultStats, ...deployment.stats };
   const phaseStats = {
     inprogress: stats.downloading + stats.installing + stats.rebooting,
@@ -31,6 +32,10 @@ export const DeploymentStatus = ({ className = '', deployment = {} }) => {
     </>
   );
 
+  const statsBasedDeviceCount = Object.values(phaseStats).reduce((sum, count) => sum + count, 0);
+  // eslint-disable-next-line no-unused-vars
+  const { scheduled, ...phasesWithStats } = phases;
+
   return (
     <div className={`progressStatus flexbox space-between centered margin-bottom ${className}`}>
       <div className="flexbox column">
@@ -40,9 +45,9 @@ export const DeploymentStatus = ({ className = '', deployment = {} }) => {
       <div className="flexbox space-between align-right" style={{ minWidth: '40%' }}>
         <div className="flexbox column">
           <div className="text-muted margin-bottom-small"># devices</div>
-          <div>{device_count}</div>
+          <div>{statsBasedDeviceCount}</div>
         </div>
-        {Object.entries(phases).map(([key, phase]) => (
+        {Object.entries(phasesWithStats).map(([key, phase]) => (
           <div key={key} className={`flexbox column ${phaseStats[key] ? '' : 'disabled'}`}>
             <div className="text-muted margin-bottom-small">{phase}</div>
             <div className="status">{phaseStats[key].toLocaleString()}</div>
@@ -51,7 +56,7 @@ export const DeploymentStatus = ({ className = '', deployment = {} }) => {
       </div>
       <TwoColumnData
         {...defaultColumnDataProps}
-        config={{ 'Max attempts per device': retries || 'N/A', 'Maximum number of devices': max_devices || 'N/A' }}
+        config={{ 'Max attempts per device': retries, 'Maximum number of devices': max_devices || 'N/A' }}
         style={{ gridTemplateColumns: 'max-content 1fr' }}
       />
     </div>
