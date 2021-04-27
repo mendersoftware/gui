@@ -2,27 +2,22 @@
 
 exports[`DeviceNotifications Component renders correctly 1`] = `
 <div
-  className="flexbox centered"
+  class="flexbox centered"
   id="trialVersion"
 >
   <div
-    className="muted margin-right-small"
+    class="muted margin-right-small"
+    currentitem="false"
     data-event="click focus"
     data-for="trial-version"
     data-offset="{'bottom': 15, 'right': 60}"
-    data-tip={true}
+    data-tip="true"
   >
     <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root"
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
       focusable="false"
-      style={
-        Object {
-          "height": "16px",
-          "marginRight": "2px",
-          "verticalAlign": "bottom",
-        }
-      }
+      style="margin-right: 2px; height: 16px; vertical-align: bottom;"
       viewBox="0 0 24 24"
     >
       <path
@@ -32,7 +27,7 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
     Trial plan
   </div>
   <div
-    className="__react_component_tooltip place-bottom type-dark"
+    class="__react_component_tooltip place-bottom type-dark"
     data-id="tooltip"
     id="trial-version"
   >
@@ -45,7 +40,6 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
     <p>
       <a
         href="/settings/upgrade"
-        onClick={[Function]}
       >
         Upgrade to a plan
       </a>
@@ -65,34 +59,22 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
     </p>
   </div>
   <a
-    aria-disabled={false}
-    className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary"
+    aria-disabled="false"
+    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary"
     href="/settings/upgrade"
     id="trial-upgrade-now"
-    onBlur={[Function]}
-    onClick={[Function]}
-    onDragLeave={[Function]}
-    onFocus={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseDown={[Function]}
-    onMouseLeave={[Function]}
-    onMouseUp={[Function]}
-    onTouchEnd={[Function]}
-    onTouchMove={[Function]}
-    onTouchStart={[Function]}
     role="button"
-    tabIndex={0}
+    tabindex="0"
   >
     <span
-      className="MuiButton-label"
+      class="MuiButton-label"
     >
       <span
-        className="MuiButton-startIcon MuiButton-iconSizeMedium"
+        class="MuiButton-startIcon MuiButton-iconSizeMedium"
       >
         <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root"
+          aria-hidden="true"
+          class="MuiSvgIcon-root"
           focusable="false"
           viewBox="0 0 24 24"
         >
@@ -103,6 +85,110 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
       </span>
       Upgrade now
     </span>
+    <span
+      class="MuiTouchRipple-root"
+    />
   </a>
+</div>
+`;
+
+exports[`DeviceNotifications Component renders correctly with an expiration date 1`] = `
+<div
+  class="flexbox centered"
+  id="trialVersion"
+>
+  <div
+    class="muted margin-right-small"
+    currentitem="false"
+    data-event="click focus"
+    data-for="trial-version"
+    data-offset="{'bottom': 15, 'right': 60}"
+    data-tip="true"
+  >
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
+      focusable="false"
+      style="margin-right: 2px; height: 16px; vertical-align: bottom;"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+      />
+    </svg>
+    Trial plan
+  </div>
+  <div
+    class="__react_component_tooltip place-bottom type-dark"
+    data-id="tooltip"
+    id="trial-version"
+  >
+    <h3>
+      Trial plan
+    </h3>
+    <p>
+      You're using the trial version of Mender – it's free for up to 10 devices for 12 months.
+    </p>
+    <p>
+      <a
+        href="/settings/upgrade"
+      >
+        Upgrade to a plan
+      </a>
+       to add more devices and continue using Mender after the trial expires.
+    </p>
+    <p>
+      Or compare the plans at
+       
+      <a
+        href="https://mender.io/plans/pricing"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        mender.io/plans/pricing
+      </a>
+      .
+    </p>
+  </div>
+  <a
+    aria-disabled="false"
+    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary"
+    href="/settings/upgrade"
+    id="trial-upgrade-now"
+    role="button"
+    tabindex="0"
+  >
+    <span
+      class="MuiButton-label"
+    >
+      <span
+        class="MuiButton-startIcon MuiButton-iconSizeMedium"
+      >
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"
+          />
+        </svg>
+      </span>
+      Upgrade now
+    </span>
+    <span
+      class="MuiTouchRipple-root"
+    />
+  </a>
+  <div
+    class="muted"
+  >
+    You have 
+    30
+     
+    days
+     remaining on the trial plan
+  </div>
 </div>
 `;
