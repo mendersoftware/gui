@@ -60,14 +60,12 @@ export const DeploymentOverview = ({ allDevices, creator, deployment, onSchedule
   const deploymentInfo = {
     'Release': deploymentRelease,
     'Target device(s)': targetDevices,
-    'Catergory': isSoftwareDeployment ? 'Software update' : 'Configuration',
-    'Type': 'Download and Apply'
+    'Category': isSoftwareDeployment ? 'Software update' : 'Configuration'
   };
   const createdBy = creator ? { 'Created by': creator } : {};
   const deploymentInfo2 = {
     ...createdBy,
-    'Created at': <Time value={creationTime} format="YYYY-MM-DD HH:mm" />,
-    'Comments': '-'
+    'Created at': <Time value={creationTime} format="YYYY-MM-DD HH:mm" />
   };
 
   return (

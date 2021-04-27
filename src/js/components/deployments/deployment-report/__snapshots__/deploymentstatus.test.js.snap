@@ -42,11 +42,7 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
       <div
         class="flexbox "
       >
-        <time
-          datetime="2019-01-01T12:25:00+00:00"
-        >
-          2019-01-01 12:25
-        </time>
+        1
       </div>
     </div>
     <svg

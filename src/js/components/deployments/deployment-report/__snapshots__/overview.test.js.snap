@@ -112,7 +112,7 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
       className="align-right  text-muted"
     >
       <b>
-        Catergory
+        Category
       </b>
     </div>
     <div
@@ -122,21 +122,6 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
       onMouseLeave={[Function]}
     >
       Software update
-    </div>
-    <div
-      className="align-right  text-muted"
-    >
-      <b>
-        Type
-      </b>
-    </div>
-    <div
-      className="flexbox "
-      onClick={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-    >
-      Download and Apply
     </div>
   </div>
   <div
@@ -171,21 +156,6 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
         >
           2019-01-01 00:00
         </time>
-      </div>
-      <div
-        className="align-right  text-muted"
-      >
-        <b>
-          Comments
-        </b>
-      </div>
-      <div
-        className="flexbox "
-        onClick={[Function]}
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
-      >
-        -
       </div>
     </div>
     <a

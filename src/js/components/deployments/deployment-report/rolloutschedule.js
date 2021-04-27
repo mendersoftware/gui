@@ -44,7 +44,7 @@ export const RolloutSchedule = ({ deployment, innerRef }) => {
   const currentPhaseStartTime = getPhaseStartTime(phases, currentPhaseIndex, start_time);
   let currentPhaseTime = 'N/A';
   if (now.isSameOrAfter(currentPhaseStartTime)) {
-    currentPhaseTime = <Time value={formatTime(currentPhaseStartTime)} format="YYYY-MM-DD HH:mm" />;
+    currentPhaseTime = currentPhaseIndex + 1;
   }
   const endTime = finished ? <Time value={formatTime(finished)} format="YYYY-MM-DD HH:mm" /> : filterId ? 'N/A' : '-';
   return (

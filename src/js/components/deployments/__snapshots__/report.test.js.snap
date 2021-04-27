@@ -209,25 +209,13 @@ Devices that are in the middle of the deployment at the time of abort will finis
             class=\\"align-right  text-muted\\"
           >
             <b>
-              Catergory
+              Category
             </b>
           </div>
           <div
             class=\\"flexbox \\"
           >
             Software update
-          </div>
-          <div
-            class=\\"align-right  text-muted\\"
-          >
-            <b>
-              Type
-            </b>
-          </div>
-          <div
-            class=\\"flexbox \\"
-          >
-            Download and Apply
           </div>
         </div>
         <div
@@ -252,18 +240,6 @@ Devices that are in the middle of the deployment at the time of abort will finis
               >
                 2019-01-01 12:30
               </time>
-            </div>
-            <div
-              class=\\"align-right  text-muted\\"
-            >
-              <b>
-                Comments
-              </b>
-            </div>
-            <div
-              class=\\"flexbox \\"
-            >
-              -
             </div>
           </div>
           <a
@@ -762,11 +738,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
           <div
             class=\\"flexbox \\"
           >
-            <time
-              datetime=\\"2019-01-01T12:30:00+00:00\\"
-            >
-              2019-01-01 12:30
-            </time>
+            1
           </div>
         </div>
         <svg
