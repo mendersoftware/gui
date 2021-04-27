@@ -56,6 +56,17 @@ describe('Deployments Component', () => {
           ...defaultState.app.features,
           isEnterprise: true
         }
+      },
+      deployments: {
+        ...defaultState.deployments,
+        byId: {
+          ...defaultState.deployments.byId,
+          d1: {
+            ...defaultState.deployments.byId.d1,
+            artifact_name: 'a1'
+          }
+        },
+        selectedDeployment: defaultState.deployments.byId.d1.id
       }
     });
     render(
@@ -77,8 +88,8 @@ describe('Deployments Component', () => {
     await waitFor(() => expect(screen.getByText(/Confirm abort/i)).toBeInTheDocument());
     userEvent.click(document.querySelector('#confirmAbort'));
     userEvent.click(within(deployment).getByRole('button', { name: /View details/i }));
-    await waitFor(() => screen.queryByRole('button', { name: /Close/i }), { timeout: 2500 });
-    expect(screen.getByRole('button', { name: /Close/i })).toBeInTheDocument();
+    await waitFor(() => screen.queryByText(/Deployment details/i), { timeout: 2500 });
+    expect(screen.getByText(/Deployment details/i)).toBeInTheDocument();
     userEvent.click(screen.getByRole('button', { name: /Close/i }));
   }, 30000);
 });

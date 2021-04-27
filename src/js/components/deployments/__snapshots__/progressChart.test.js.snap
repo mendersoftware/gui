@@ -1,76 +1,56 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ProgressChart Component renders correctly 1`] = `
-<div
-  className="flexbox column progress-chart-container "
->
+<div>
   <div
-    style={
-      Object {
-        "display": "grid",
-        "gridColumnGap": 15,
-        "gridTemplateColumns": "2fr 1fr",
-      }
-    }
+    class="flexbox column progress-chart-container "
   >
     <div
-      className="progress-chart"
+      style="display: grid; grid-template-columns: 2fr 1fr;"
     >
       <div
-        className="progress-step"
-        style={
-          Object {
-            "borderRight": "none",
-            "flexGrow": 1,
-          }
-        }
+        class="progress-chart"
       >
         <div
-          className="progress-bar green"
-          style={
-            Object {
-              "width": "0%",
-            }
-          }
-        />
+          class="progress-step"
+          style="flex-grow: 1;"
+        >
+          <div
+            class="flexbox"
+            style="width: 100%;"
+          >
+            <div
+              class="progress-bar green"
+              style="width: 0%;"
+            />
+            <div
+              class="progress-bar warning"
+              style="width: 0%;"
+            />
+          </div>
+        </div>
         <div
-          className="progress-bar warning"
-          style={
-            Object {
-              "width": "0%",
-            }
-          }
-        />
+          class="progress-step progress-step-total"
+        >
+          <div
+            class="progress-bar"
+            style="width: 100%;"
+          />
+        </div>
       </div>
       <div
-        className="progress-step progress-step-total"
+        class="flexbox space-between centered muted"
+        style="justify-content: flex-end;"
       >
-        <div
-          className="progress-bar"
-          style={
-            Object {
-              "width": "100%",
-            }
-          }
-        />
+        0 failures
       </div>
     </div>
     <div
-      className="flexbox space-between centered muted"
-      style={
-        Object {
-          "justifyContent": "flex-end",
-        }
-      }
+      class="flexbox space-between muted"
     >
-      0 failures
-    </div>
-  </div>
-  <div
-    className="flexbox space-between muted"
-  >
-    <div>
-      Current phase: 1 of 1
+      <div>
+        Current phase: 1 of 1
+      </div>
     </div>
   </div>
 </div>

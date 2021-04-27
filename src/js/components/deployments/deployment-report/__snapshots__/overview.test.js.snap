@@ -1,160 +1,195 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DeploymentOverview Component renders correctly 1`] = `
-<div>
+<div
+  className="report-container margin-top-large margin-bottom-large"
+>
   <div
-    className="report-container"
+    className="break-all two-columns column-data  "
+    style={
+      Object {
+        "alignItems": "center",
+        "alignSelf": "flex-start",
+        "gridTemplateColumns": "minmax(140px, 1fr) minmax(220px, 1fr)",
+      }
+    }
   >
     <div
-      className="deploymentInfo two-columns"
+      className="align-right  text-muted"
     >
-      <div>
+      <b>
+        Release
+      </b>
+    </div>
+    <div
+      className="flexbox "
+      onClick={[Function]}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+    >
+      <a
+        className="flexbox centered"
+        href="/releases/test"
+        onClick={[Function]}
+        rel="noopener noreferrer"
+        style={
+          Object {
+            "fontWeight": "500",
+          }
+        }
+        target="_blank"
+      >
+        test
+        <svg
+          aria-hidden={true}
+          className="MuiSvgIcon-root margin-left-small MuiSvgIcon-fontSizeSmall"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+          />
+        </svg>
+      </a>
+    </div>
+    <div
+      className="align-right  text-muted"
+    >
+      <b>
+        Target device(s)
+      </b>
+    </div>
+    <div
+      className="flexbox "
+      onClick={[Function]}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+    >
+      <a
+        className="flexbox centered"
+        href="/devices?group=test%20deployment"
+        onClick={[Function]}
+        rel="noopener noreferrer"
+        style={
+          Object {
+            "fontWeight": "500",
+          }
+        }
+        target="_blank"
+      >
+        test deployment
+        <svg
+          aria-hidden={true}
+          className="MuiSvgIcon-root margin-left-small MuiSvgIcon-fontSizeSmall"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+          />
+        </svg>
         <div
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
+          className="MuiChip-root margin-left uppercased MuiChip-sizeSmall"
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
           style={
             Object {
-              "marginBottom": -15,
+              "fontSize": "0.675rem",
+              "height": 18,
+              "opacity": 0.5,
             }
           }
         >
-          <li
-            className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
-            disabled={true}
+          <span
+            className="MuiChip-label MuiChip-labelSmall"
           >
-            <div
-              className="MuiListItemText-root MuiListItemText-multiline"
-            >
-              <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-              >
-                Release:
-              </span>
-              <div
-                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                title={
-                  <Link
-                    style={
-                      Object {
-                        "fontWeight": "500",
-                      }
-                    }
-                    to="/releases/test"
-                  >
-                    test
-                  </Link>
-                }
-              >
-                <div>
-                  <span
-                    className="inventory-text"
-                    style={Object {}}
-                  >
-                    <a
-                      href="/releases/test"
-                      onClick={[Function]}
-                      style={
-                        Object {
-                          "fontWeight": "500",
-                        }
-                      }
-                    >
-                      test
-                    </a>
-                  </span>
-                   
-                </div>
-              </div>
-            </div>
-          </li>
+            static
+          </span>
         </div>
-        <div
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
-          style={
-            Object {
-              "marginBottom": -15,
-            }
-          }
-        >
-          <li
-            className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
-            disabled={true}
-          >
-            <div
-              className="MuiListItemText-root MuiListItemText-multiline"
-            >
-              <span
-                className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-              >
-                Target device(s):
-              </span>
-              <div
-                className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                title="test deployment"
-              >
-                <div>
-                  <span
-                    className="inventory-text"
-                    style={Object {}}
-                  >
-                    test deployment
-                  </span>
-                   
-                </div>
-              </div>
-            </div>
-          </li>
-        </div>
+      </a>
+    </div>
+    <div
+      className="align-right  text-muted"
+    >
+      <b>
+        Category
+      </b>
+    </div>
+    <div
+      className="flexbox "
+      onClick={[Function]}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+    >
+      Software update
+    </div>
+  </div>
+  <div
+    className="flexbox column"
+  >
+    <div
+      className="break-all two-columns column-data  "
+      style={
+        Object {
+          "alignItems": "center",
+          "alignSelf": "flex-start",
+          "gridTemplateColumns": "minmax(140px, 1fr) minmax(220px, 1fr)",
+        }
+      }
+    >
+      <div
+        className="align-right  text-muted"
+      >
+        <b>
+          Created at
+        </b>
       </div>
       <div
+        className="flexbox "
         onClick={[Function]}
         onMouseEnter={[Function]}
         onMouseLeave={[Function]}
-        style={
-          Object {
-            "marginBottom": -15,
-          }
-        }
       >
-        <li
-          className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
-          disabled={true}
+        <time
+          dateTime="2019-01-01T00:00:00+00:00"
+          title={null}
         >
-          <div
-            className="MuiListItemText-root MuiListItemText-multiline"
-          >
-            <span
-              className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-            >
-              Status:
-            </span>
-            <div
-              className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-              title={
-                <div>
-                  Finished 
-                </div>
-              }
-            >
-              <div>
-                <span
-                  className="inventory-text"
-                  style={Object {}}
-                >
-                  <div>
-                    Finished 
-                  </div>
-                </span>
-                 
-              </div>
-            </div>
-          </div>
-        </li>
+          2019-01-01 00:00
+        </time>
       </div>
     </div>
+    <a
+      className="margin-top-small flexbox"
+      style={
+        Object {
+          "alignItems": "center",
+          "className": "flexbox centered",
+          "marginLeft": 64,
+          "rel": "noopener noreferrer",
+          "style": Object {
+            "fontWeight": "500",
+          },
+          "target": "_blank",
+        }
+      }
+    >
+      Schedule details 
+      <svg
+        aria-hidden={true}
+        className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+        focusable="false"
+        style={
+          Object {
+            "marginLeft": 8,
+          }
+        }
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M12 4c4.41 0 8 3.59 8 8s-3.59 8-8 8-8-3.59-8-8 3.59-8 8-8m0-2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 13l-4-4h8z"
+        />
+      </svg>
+    </a>
   </div>
 </div>
 `;

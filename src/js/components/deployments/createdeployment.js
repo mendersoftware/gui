@@ -31,7 +31,7 @@ const deploymentSteps = [
 
 export const getPhaseStartTime = (phases, index, startDate) => {
   if (index < 1) {
-    return startDate;
+    return startDate.toISOString ? startDate.toISOString() : startDate;
   }
   // since we don't want to get stale phase start times when the creation dialog is open for a long time
   // we have to ensure start times are based on delay from previous phases

@@ -36,11 +36,11 @@ const deploymentReducer = (state = initialState, action) => {
         }
       };
     case DeploymentConstants.REMOVE_DEPLOYMENT: {
-      const byId = state.byId;
-      delete byId[action.deploymentId];
+      // eslint-disable-next-line no-unused-vars
+      const { [action.deploymentId]: removedDeployment, ...remainder } = state.byId;
       return {
         ...state,
-        byId
+        byId: remainder
       };
     }
     case DeploymentConstants.RECEIVE_DEPLOYMENT:

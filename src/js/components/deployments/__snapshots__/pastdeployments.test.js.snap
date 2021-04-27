@@ -64,8 +64,8 @@ exports[`PastDeployments Component renders correctly 1`] = `
       }
     >
       <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-        data-shrink={false}
+        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+        data-shrink={true}
       >
         From
       </label>
@@ -104,8 +104,8 @@ exports[`PastDeployments Component renders correctly 1`] = `
       }
     >
       <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-        data-shrink={false}
+        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+        data-shrink={true}
       >
         To
       </label>
@@ -218,9 +218,6 @@ exports[`PastDeployments Component renders correctly 1`] = `
                   />
                 </svg>
               </span>
-              <span
-                className="MuiTouchRipple-root"
-              />
             </button>
           </div>
         </div>
