@@ -4,7 +4,7 @@ exports[`ProgressDeviceList Component renders correctly 1`] = `
 "<div>
   <table
     class=\\"MuiTable-root\\"
-    style=\\"min-height: 20vh; max-height: 40vh; overflow-x: auto;\\"
+    style=\\"min-height: 10vh; max-height: 40vh; overflow-x: auto;\\"
   >
     <thead
       class=\\"MuiTableHead-root\\"

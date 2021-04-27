@@ -406,7 +406,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
       <div>
         <table
           class=\\"MuiTable-root\\"
-          style=\\"min-height: 20vh; max-height: 40vh; overflow-x: auto;\\"
+          style=\\"min-height: 10vh; max-height: 40vh; overflow-x: auto;\\"
         >
           <thead
             class=\\"MuiTableHead-root\\"

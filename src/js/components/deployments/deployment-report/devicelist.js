@@ -59,7 +59,7 @@ export const DeploymentDeviceList = ({ allDevices, created, deployment, devicesB
 
   return totalDeviceCount || !!pagedDevices.length ? (
     <div>
-      <Table style={{ minHeight: '20vh', maxHeight: '40vh', overflowX: 'auto' }}>
+      <Table style={{ minHeight: '10vh', maxHeight: '40vh', overflowX: 'auto' }}>
         <TableHead>
           <TableRow>
             <TableCell style={headerStyle} tooltip={idAttribute}>
