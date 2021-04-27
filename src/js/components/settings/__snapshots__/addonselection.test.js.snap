@@ -1,0 +1,150 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AddOnSelection component renders correctly 1`] = `
+<div>
+  <h3
+    class="margin-top-large"
+  >
+    Get more features with add-ons
+  </h3>
+  <div
+    class="flexbox column"
+  >
+    <p>
+      Extend Mender features with our add-ons. Select one or more from the list and submit to request add-ons to be added to your plan. We'll adjust your subscription and confirm it with you.
+    </p>
+    <div
+      class="planPanel flexbox "
+      style="align-items: center; margin-top: 10px;"
+    >
+      <span
+        aria-disabled="false"
+        class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+      >
+        <span
+          class="MuiIconButton-label"
+        >
+          <input
+            class="PrivateSwitchBase-input-4"
+            data-indeterminate="false"
+            type="checkbox"
+            value=""
+          />
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+            />
+          </svg>
+        </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
+      </span>
+      <div
+        class="bold"
+        style="min-width: 120px;"
+      >
+        Configure
+      </div>
+      <div
+        class="flexbox column"
+        style="min-width: 120px;"
+      >
+        <div
+          class="link-color bold"
+          style="font-size: 1rem;"
+        >
+          $10/month
+        </div>
+        <div>
+          for first 50 devices
+        </div>
+      </div>
+      <span
+        class="info"
+      >
+        Expand your plan with device configuration features
+      </span>
+      <a
+        class="margin-left-small"
+        href="https://mender.io/plans/features"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Learn more
+      </a>
+    </div>
+    <div
+      class="planPanel flexbox "
+      style="align-items: center; margin-top: 10px;"
+    >
+      <span
+        aria-disabled="false"
+        class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+      >
+        <span
+          class="MuiIconButton-label"
+        >
+          <input
+            class="PrivateSwitchBase-input-4"
+            data-indeterminate="false"
+            type="checkbox"
+            value=""
+          />
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+            />
+          </svg>
+        </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
+      </span>
+      <div
+        class="bold"
+        style="min-width: 120px;"
+      >
+        Troubleshoot
+      </div>
+      <div
+        class="flexbox column"
+        style="min-width: 120px;"
+      >
+        <div
+          class="link-color bold"
+          style="font-size: 1rem;"
+        >
+          $24/month
+        </div>
+        <div>
+          for first 50 devices
+        </div>
+      </div>
+      <span
+        class="info"
+      >
+        Expand your plan with device troubleshooting features
+      </span>
+      <a
+        class="margin-left-small"
+        href="https://mender.io/plans/features"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Learn more
+      </a>
+    </div>
+  </div>
+</div>
+`;

@@ -258,13 +258,13 @@ export class Authorized extends BaseDevices {
     const pluralized = pluralize('devices', selectedRows.length);
     let actions = [{ icon: <HighlightOffOutlinedIcon className="red" />, title: `Reject ${pluralized}`, action: () => self.onRejectDevices(selectedRows) }];
     if (selectedGroup) {
-      actions.push(
-        {
-          icon: <HeightOutlinedIcon className="rotated ninety" />,
-          title: `Move selected ${pluralized} to another group`,
-          action: () => self.onAddDevicesToGroup(selectedRows)
-        },
-        {
+      actions.push({
+        icon: <HeightOutlinedIcon className="rotated ninety" />,
+        title: `Move selected ${pluralized} to another group`,
+        action: () => self.onAddDevicesToGroup(selectedRows)
+      });
+      if (selectedGroup !== UNGROUPED_GROUP.id) {
+        actions.push({
           icon: (
             <SvgIcon fontSize="inherit">
               <path d={TrashCan} />
@@ -272,8 +272,8 @@ export class Authorized extends BaseDevices {
           ),
           title: `Remove selected ${pluralized} from this group`,
           action: () => self.onRemoveDevicesFromGroup(selectedRows)
-        }
-      );
+        });
+      }
     } else {
       actions.push({
         icon: <AddCircleIcon className="green" />,

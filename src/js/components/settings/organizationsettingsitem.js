@@ -6,9 +6,9 @@ import theme from '../../themes/mender-theme';
 
 const defaultItemProps = { alignItems: 'flex-start', disabled: true, divider: false };
 export const maxWidth = 500;
-const padding = theme.spacing(2);
+export const padding = theme.spacing(2);
 
-const OrganizationSettingsItem = ({ title, content: { action, description }, secondary, notification }) => {
+const OrganizationSettingsItem = ({ title, content: { action, description }, secondary, sideBarContent, notification }) => {
   const secondaryContent = secondary ? (
     secondary
   ) : (
@@ -27,17 +27,20 @@ const OrganizationSettingsItem = ({ title, content: { action, description }, sec
   );
   const style = { display: 'grid', width: '100%', marginBottom: secondary ? 0 : theme.spacing() };
   return (
-    <ListItem {...defaultItemProps} classes={{ root: 'flexbox column margin-top-small' }} style={{ maxWidth }}>
-      <ListItemText
-        classes={{ secondary: secondary ? '' : 'two-columns' }}
-        primary={title}
-        secondaryTypographyProps={{ component: 'div', style }}
-        secondary={<>{secondaryContent}</>}
-        style={style}
-      />
-      <Divider style={{ marginBottom: theme.spacing(), marginLeft: -1 * padding, width: maxWidth }} />
-      {notification}
-    </ListItem>
+    <div className="margin-top-small org-settings-item">
+      <ListItem {...defaultItemProps} classes={{ root: 'flexbox column' }}>
+        <ListItemText
+          classes={{ secondary: secondary ? '' : 'two-columns' }}
+          primary={title}
+          secondaryTypographyProps={{ component: 'div', style }}
+          secondary={<>{secondaryContent}</>}
+          style={style}
+        />
+        <Divider style={{ marginBottom: theme.spacing(), marginLeft: -1 * padding, width: maxWidth }} />
+        {notification}
+      </ListItem>
+      {sideBarContent}
+    </div>
   );
 };
 

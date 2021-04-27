@@ -1,16 +1,35 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
-import Upgrade from './upgrade';
+import Upgrade, { PostUpgradeNote, PricingContactNote } from './upgrade';
 import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
-describe('GlobalSettings Component', () => {
+describe('smaller components', () => {
+  [PostUpgradeNote, PricingContactNote].forEach(Component => {
+    it(`renders ${Component.displayName || Component.name} correctly`, () => {
+      const { baseElement } = render(
+        <Component
+          trial_expiration="2019-10-05T13:00:00.000Z"
+          isTrial={true}
+          handleCancelSubscription={jest.fn}
+          orgName="test"
+          mailBodyTexts={{ billing: 'bill this', upgrade: 'upgrade here' }}
+        />
+      );
+      const view = baseElement.firstChild.firstChild;
+      expect(view).toMatchSnapshot();
+      expect(view).toEqual(expect.not.stringMatching(undefineds));
+    });
+  });
+});
+
+describe('Upgrade Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
@@ -22,16 +41,15 @@ describe('GlobalSettings Component', () => {
       loadStripe: () => ({ createPaymentMethod: jest.fn() })
     }));
     const stripe = loadStripe();
-    const tree = renderer
-      .create(
-        <Provider store={store}>
-          <Elements stripe={stripe}>
-            <Upgrade />
-          </Elements>
-        </Provider>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { baseElement } = render(
+      <Provider store={store}>
+        <Elements stripe={stripe}>
+          <Upgrade />
+        </Elements>
+      </Provider>
+    );
+    const view = baseElement.firstChild.firstChild;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

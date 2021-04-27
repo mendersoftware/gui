@@ -50,7 +50,7 @@ describe('App Component', () => {
         </Provider>
       </MemoryRouter>
     );
-    const view = baseElement;
+    const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });

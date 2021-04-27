@@ -35,8 +35,8 @@ const menuButtonColor = colors.grey;
 
 // Change this when a new feature/offer is introduced
 const currentOffer = {
-  name: 'remote',
-  expires: '2021-04-01',
+  name: 'add-ons',
+  expires: '2021-06-30',
   trial: true,
   os: true,
   professional: true,
@@ -151,7 +151,7 @@ export class Header extends React.Component {
           </Link>
           {demo && <DemoNotification docsVersion={docsVersion} />}
           {!!announcement && <Announcement announcement={announcement} onHide={setHideAnnouncement} />}
-          {organization && organization.trial && <TrialNotification />}
+          {organization?.trial && <TrialNotification expiration={organization.trial_expiration} />}
           <div style={{ flexGrow: '1' }}></div>
           <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
           <DeploymentNotifications inprogress={inProgress} />

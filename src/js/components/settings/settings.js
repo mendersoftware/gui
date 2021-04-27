@@ -56,10 +56,10 @@ export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, hi
       admin: false,
       enterprise: false,
       multitenancy: true,
-      trial: true,
+      trial: false,
       userManagement: false,
-      component: <Upgrade history={history} trial={trial} />,
-      text: 'Upgrade to a plan'
+      component: <Upgrade history={history} />,
+      text: trial ? 'Upgrade to a plan' : 'Upgrades and add-ons'
     }
   };
 
