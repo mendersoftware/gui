@@ -10,7 +10,7 @@
     "cypress-file-upload": "^5.0.6",
     "cypress-iframe": "^1.0.1",
     "mzedel-cypress-image-snapshot": "^4.0.5",
-    "cypress-localstorage-commands": "^1.4.3",
+    "cypress-localstorage-commands": "^1.4.4",
     "cypress-otp": "^1.0.3",
     "cypress-wait-until": "^1.7.1",
     "dayjs": "^1.10.4",
