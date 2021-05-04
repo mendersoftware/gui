@@ -546,9 +546,10 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
   return getAllDevices();
 };
 
+const ATTRIBUTE_LIST_CUTOFF = 100;
 export const getDeviceAttributes = () => dispatch =>
   GeneralApi.get(`${inventoryApiUrlV2}/filters/attributes`).then(({ data }) => {
-    const { inventory: inventoryAttributes, identity: identityAttributes } = (data || []).reduce(
+    const { inventory: inventoryAttributes, identity: identityAttributes } = (data || []).slice(0, ATTRIBUTE_LIST_CUTOFF).reduce(
       (accu, item) => {
         if (!accu[item.scope]) {
           accu[item.scope] = [];
