@@ -106,7 +106,7 @@ export const Upgrade = ({
     addons
       .reduce((accu, item) => {
         if (item.enabled) {
-          accu.push(item);
+          accu.push(item.name);
         }
         return accu;
       }, [])
@@ -118,8 +118,8 @@ export const Upgrade = ({
       body: `
       Current plan: ${PLANS[org.plan || 'os'].name}
       Requested plan: ${PLANS[updatedPlan].name}
-      Current addons: ${addOnsToString(org.addons)}
-      Requested addons: ${addOnsToString(addons)}
+      Current addons: ${addOnsToString(org.addons) || '-'}
+      Requested addons: ${addOnsToString(addons) || '-'}
       User Message: ${message}
       `
     };
