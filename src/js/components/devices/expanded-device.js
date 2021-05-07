@@ -85,7 +85,7 @@ export const ExpandedDevice = ({
         <div className="muted margin-left margin-right">
           Last check-in: <RelativeTime updateTime={device.updated_ts} />
         </div>
-        <IconButton style={{ marginLeft: 'auto' }} onClick={onClose}>
+        <IconButton style={{ marginLeft: 'auto' }} onClick={onClose} aria-label="close">
           <CloseIcon />
         </IconButton>
       </div>
