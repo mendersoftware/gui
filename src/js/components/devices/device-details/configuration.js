@@ -322,6 +322,7 @@ export const DeviceConfiguration = ({
           </>
         )
       }
+      isAddOn
       isOpen={open}
       onClick={setOpen}
       title={
