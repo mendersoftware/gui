@@ -45,7 +45,7 @@
     "stream-browserify": "^3.0.0",
     "universal-cookie": "^4.0.4",
     "validator": "^13.6.0",
-    "victory": "^35.5.1",
+    "victory": "^35.6.2",
     "xterm": "^4.11.0",
     "xterm-addon-fit": "^0.5.0",
     "xterm-addon-search": "^0.8.0",
@@ -83,7 +83,7 @@
     "gulp": "^4.0.2",
     "html-webpack-plugin": "^5.3.1",
     "husky": "^6.0.0",
-    "jest": "27.0.0-next.5",
+    "jest": "27.0.0-next.9",
     "jest-canvas-mock": "^2.3.1",
     "jest-junit": "^12.0.0",
     "jest-resolve": "~26.6.2",
@@ -101,7 +101,7 @@
     "url-loader": "^4.1.1",
     "util": "^0.12.3",
     "webpack": "^5.36.2",
-    "webpack-cli": "^4.6.0",
+    "webpack-cli": "^4.7.0",
     "yarn": "^1.22.10"
   },
   "browserslist": [
