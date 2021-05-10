@@ -3,23 +3,313 @@
 exports[`DeviceConnection Component renders correctly 1`] = `
 <div>
   <div
-    class="flexbox"
-    style="flex-direction: row;"
+    class="margin-bottom "
   >
+    <div
+      class=" flexbox space-between"
+      style="align-items: flex-start;"
+    >
+      <h4
+        class="margin-bottom-small"
+      >
+        Troubleshoot
+      </h4>
+      <div
+        class="flexbox centered"
+      >
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained Mui-disabled Mui-disabled"
+          disabled=""
+          style="margin-right: 16px; font-weight: 900; font-size: smaller;"
+          tabindex="-1"
+          type="button"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            Add-on
+          </span>
+        </button>
+        <div
+          style="height: 48px; width: 48px;"
+        />
+      </div>
+    </div>
+    <div>
+      <div
+        class="flexbox"
+        style="flex-direction: row;"
+      >
+        <div
+          class="flexbox text-muted"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+            focusable="false"
+            style="margin-right: 8px;"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+            />
+          </svg>
+          <p
+            class="MuiTypography-root MuiTypography-body1"
+            style="text-transform: none; text-align: left;"
+          >
+            The troubleshoot add-on does not seem to be enabled on this device.
+            <br />
+            Please
+             
+            <a
+              href="https://docs.mender.io/add-ons/remote-terminal"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              see the documentation
+            </a>
+             
+            for a description on how it works and how to enable it.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`DeviceConnection Component renders correctly when connected 1`] = `
+<div>
+  <div
+    class="margin-bottom "
+  >
+    <div
+      class=" flexbox space-between"
+      style="align-items: flex-start;"
+    >
+      <h4
+        class="margin-bottom-small"
+      >
+        Troubleshoot
+      </h4>
+      <div
+        class="flexbox centered"
+      >
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained Mui-disabled Mui-disabled"
+          disabled=""
+          style="margin-right: 16px; font-weight: 900; font-size: smaller;"
+          tabindex="-1"
+          type="button"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            Add-on
+          </span>
+        </button>
+        <div
+          style="height: 48px; width: 48px;"
+        />
+      </div>
+    </div>
+    <div>
+      <div
+        class="flexbox"
+        style="flex-direction: row;"
+      >
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-text Mui-disabled Mui-disabled"
+          disabled=""
+          style="margin-right: 16px;"
+          tabindex="-1"
+          type="button"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            <span
+              class="MuiButton-startIcon MuiButton-iconSizeMedium"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M20,19V7H4V19H20M20,3A2,2 0 0,1 22,5V19A2,2 0 0,1 20,21H4A2,2 0 0,1 2,19V5C2,3.89 2.9,3 4,3H20M13,17V15H18V17H13M9.58,13L5.57,9H8.4L11.7,12.3C12.09,12.69 12.09,13.33 11.7,13.72L8.42,17H5.59L9.58,13Z"
+                />
+              </svg>
+            </span>
+            <h6
+              class="MuiTypography-root MuiTypography-subtitle2"
+              style="text-transform: none; text-align: left;"
+            >
+              Launch a new Remote Terminal session
+            </h6>
+          </span>
+        </button>
+        <a
+          class="flexbox centered margin-left"
+          currentitem="false"
+          data-for="port-forward-tip"
+          data-tip="true"
+          href="https://docs.mender.io/add-ons/port-forward"
+          id="port-forward-link"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Enable port forwarding
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root margin-left-small MuiSvgIcon-fontSizeSmall"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+            />
+          </svg>
+        </a>
+        <div
+          class="__react_component_tooltip place-bottom type-dark"
+          data-id="tooltip"
+          id="port-forward-tip"
+        >
+          <div
+            style="white-space: normal;"
+          >
+            <h3>
+              Port forwarding
+            </h3>
+            <p>
+              Port forwarding allows you to troubleshoot or use services on or via the device, without opening any ports on the device itself.
+            </p>
+            <p>
+              To enable port forwarding you will need to install and configure the necessary software on the device and your workstation. Follow the link to learn more.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
+<div>
+  <div
+    class="margin-bottom "
+  >
+    <div
+      class=" flexbox space-between"
+      style="align-items: flex-start;"
+    >
+      <h4
+        class="margin-bottom-small"
+      >
+        Troubleshoot
+      </h4>
+      <div
+        class="flexbox centered"
+      >
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained Mui-disabled Mui-disabled"
+          disabled=""
+          style="margin-right: 16px; font-weight: 900; font-size: smaller;"
+          tabindex="-1"
+          type="button"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            Add-on
+          </span>
+        </button>
+        <div
+          style="height: 48px; width: 48px;"
+        />
+      </div>
+    </div>
+    <div>
+      <div
+        class="flexbox"
+        style="flex-direction: row;"
+      >
+        <div
+          class="flexbox text-muted"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+            focusable="false"
+            style="margin-right: 8px;"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+            />
+          </svg>
+          <p
+            class="MuiTypography-root MuiTypography-body1"
+            style="text-transform: none; text-align: left;"
+          >
+            The troubleshoot add-on is not currently connected on this device, it was last connected on 
+            <span>
+              Invalid date
+            </span>
+            .
+            <br />
+            Please
+             
+            <a
+              href="https://docs.mender.io/add-ons/remote-terminal"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              see the documentation
+            </a>
+             
+            for more information.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`tiny DeviceConnection components renders DeviceConnectionMissingNote correctly 1`] = `
+<div>
+  <div
+    class="flexbox text-muted"
+  >
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+      focusable="false"
+      style="margin-right: 8px;"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+      />
+    </svg>
     <p
       class="MuiTypography-root MuiTypography-body1"
-      style="text-transform: none; text-align: left;"
     >
       The troubleshoot add-on does not seem to be enabled on this device.
       <br />
-      Please see
+      Please
        
       <a
         href="https://docs.mender.io/add-ons/remote-terminal"
         rel="noopener noreferrer"
         target="_blank"
       >
-        the documentation
+        see the documentation
       </a>
        
       for a description on how it works and how to enable it.
@@ -28,77 +318,91 @@ exports[`DeviceConnection Component renders correctly 1`] = `
 </div>
 `;
 
-exports[`DeviceConnection Component renders correctly when connected 1`] = `
+exports[`tiny DeviceConnection components renders DeviceDisconnectedNote correctly 1`] = `
 <div>
   <div
-    class="flexbox"
-    style="flex-direction: row;"
+    class="flexbox text-muted"
   >
-    <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-text Mui-disabled Mui-disabled"
-      disabled=""
-      style="margin-left: 16px;"
-      tabindex="-1"
-      type="button"
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+      focusable="false"
+      style="margin-right: 8px;"
+      viewBox="0 0 24 24"
     >
-      <span
-        class="MuiButton-label"
-      >
-        <span
-          class="MuiButton-startIcon MuiButton-iconSizeMedium"
-        >
-          <svg
-            aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit"
-            focusable="false"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M20,19V7H4V19H20M20,3A2,2 0 0,1 22,5V19A2,2 0 0,1 20,21H4A2,2 0 0,1 2,19V5C2,3.89 2.9,3 4,3H20M13,17V15H18V17H13M9.58,13L5.57,9H8.4L11.7,12.3C12.09,12.69 12.09,13.33 11.7,13.72L8.42,17H5.59L9.58,13Z"
-            />
-          </svg>
-        </span>
-        <h6
-          class="MuiTypography-root MuiTypography-subtitle2"
-          style="text-transform: none; text-align: left;"
-        >
-          Launch a new Remote Terminal session
-        </h6>
-      </span>
-    </button>
-  </div>
-</div>
-`;
-
-exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
-<div>
-  <div
-    class="flexbox"
-    style="flex-direction: row;"
-  >
+      <path
+        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+      />
+    </svg>
     <p
       class="MuiTypography-root MuiTypography-body1"
-      style="text-transform: none; text-align: left;"
     >
-      The troubleshoot add-on is not currently connected on this device, it was last connected on
-       
-      <span>
-        Invalid date
-      </span>
+      The troubleshoot add-on is not currently connected on this device, it was last connected on 
+      <time
+        datetime="2019-01-01T09:25:00+00:00"
+      >
+        2019-01-01 09:25
+      </time>
       .
       <br />
-      Please see
+      Please
        
       <a
         href="https://docs.mender.io/add-ons/remote-terminal"
         rel="noopener noreferrer"
         target="_blank"
       >
-        the documentation
+        see the documentation
       </a>
        
       for more information.
     </p>
+  </div>
+</div>
+`;
+
+exports[`tiny DeviceConnection components renders PortForwardLink correctly 1`] = `
+<div>
+  <a
+    class="flexbox centered margin-left"
+    currentitem="false"
+    data-for="port-forward-tip"
+    data-tip="true"
+    href="https://docs.mender.io/add-ons/port-forward"
+    id="port-forward-link"
+    rel="noopener noreferrer"
+    target="_blank"
+  >
+    Enable port forwarding
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root margin-left-small MuiSvgIcon-fontSizeSmall"
+      focusable="false"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+      />
+    </svg>
+  </a>
+  <div
+    class="__react_component_tooltip place-bottom type-dark"
+    data-id="tooltip"
+    id="port-forward-tip"
+  >
+    <div
+      style="white-space: normal;"
+    >
+      <h3>
+        Port forwarding
+      </h3>
+      <p>
+        Port forwarding allows you to troubleshoot or use services on or via the device, without opening any ports on the device itself.
+      </p>
+      <p>
+        To enable port forwarding you will need to install and configure the necessary software on the device and your workstation. Follow the link to learn more.
+      </p>
+    </div>
   </div>
 </div>
 `;
