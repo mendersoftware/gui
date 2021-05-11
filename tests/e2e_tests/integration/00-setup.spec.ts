@@ -82,7 +82,7 @@ test.describe('Test setup', () => {
       await page.goto(`${baseUrl}ui/`);
       const token = await tenantTokenRetrieval(baseUrl, loggedInContext, page);
       fs.writeFileSync('token.json', token);
-      if (['enterprise', 'staging'].includes(environment)) {
+      if (environment === 'staging') {
         await startDockerClient(baseUrl, token);
       }
     });

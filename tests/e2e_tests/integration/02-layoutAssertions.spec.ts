@@ -1,7 +1,7 @@
 import { BrowserContext, Page } from 'playwright';
 import { test, expect } from '@playwright/test';
 
-import { startDockerClient, setupPage, login } from '../utils/commands';
+import { setupPage, login } from '../utils/commands';
 import { contextOptions, testParams } from '../config';
 
 const { baseUrl, environment, password, username } = testParams;

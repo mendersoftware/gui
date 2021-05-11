@@ -64,6 +64,7 @@ USER=mender-demo@example.com
 PASSWORD=mysecretpassword!123
 
 run_tests() {
+    cat ${INTEGRATION_PATH}/certs/api-gateway/cert.crt ${INTEGRATION_PATH}/certs/storage-proxy/cert.crt > ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/cert.crt
     COMPOSE_CMD+=$TEST_COMPOSE
     $COMPOSE_CMD build && $COMPOSE_CMD up -d
     declare retries=5
@@ -80,10 +81,19 @@ run_tests() {
             echo "failed to get tenantadm id"
             return 1
         fi
-        docker exec $containerid /usr/bin/tenantadm create-org --name=test --username=$USER --password=$PASSWORD
+        tenant=$(docker exec $containerid /usr/bin/tenantadm create-org --name=test --username=$USER --password=$PASSWORD)
+        token=$(docker exec $containerid /usr/bin/tenantadm get-tenant --id $tenant | jq -r .tenant_token)
+        jq --arg tenantToken "$token" '. + { "TenantToken": $tenantToken }' ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender.json > ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender-test.json
         # remove the client, since it won't be able to connect without a proper tenant token config
         # starting it is easier when done in the test suite
         $COMPOSE_CMD rm -fsv mender-client
+        docker run --name connect-client -d --network=gui-tests_mender \
+            -v ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/cert.crt:/certs/hosted.pem \
+            -v ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender-test.json:/etc/mender/mender.conf \
+            -v ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender-connect.json:/etc/mender/mender-connect.conf \
+            -v ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/artifact_info:/etc/mender/artifact_info \
+            -v ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/device_type:/var/lib/mender/device_type \
+            mendersoftware/mender-client-docker-addons:master
     else
         while [[ $retries -gt 0 && -z $containerid ]]; do
             containerid=$(get_container_id mender-useradm)
@@ -120,6 +130,7 @@ get_container_id() {
 }
 
 cleanup(){
+    [ -z $SKIP_CLEANUP ] && docker stop connect-client && docker rm connect-client || true
     [ -z $SKIP_CLEANUP ] && $COMPOSE_CMD down || true
 }
 
