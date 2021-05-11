@@ -73,7 +73,7 @@
     "core-js": "^3.11.1",
     "css-loader": "^5.2.4",
     "esbuild-loader": "^2.13.0",
-    "eslint": "^7.25.0",
+    "eslint": "^7.26.0",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-cypress": "^2.11.2",
     "eslint-plugin-import": "^2.22.1",
