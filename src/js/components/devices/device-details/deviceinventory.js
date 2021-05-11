@@ -35,7 +35,6 @@ export const DeviceInventory = ({ device, docsVersion, setSnackbar }) => {
   const attributeCount = Object.keys(deviceInventory).length;
   return (
     <DeviceDataCollapse
-      disableBottomBorder
       header={
         waiting ? (
           <DeviceInventoryLoader docsVersion={docsVersion} />

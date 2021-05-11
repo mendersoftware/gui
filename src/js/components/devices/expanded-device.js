@@ -98,6 +98,12 @@ export const ExpandedDevice = ({
         disableBottomBorder={!isAcceptedDevice}
         showHelptips={showHelptips}
       />
+      {isAcceptedDevice && (
+        <>
+          <InstalledSoftware device={device} docsVersion={docsVersion} setSnackbar={setSnackbar} />
+          <DeviceInventory device={device} docsVersion={docsVersion} setSnackbar={setSnackbar} />
+        </>
+      )}
       {hasDeviceConfig && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(status) && (
         <DeviceConfiguration
           abortDeployment={abortDeployment}
@@ -112,25 +118,19 @@ export const ExpandedDevice = ({
           showHelptips={showHelptips}
         />
       )}
-      {isAcceptedDevice && (
-        <>
-          <InstalledSoftware device={device} docsVersion={docsVersion} setSnackbar={setSnackbar} />
-          <DeviceInventory device={device} docsVersion={docsVersion} setSnackbar={setSnackbar} />
-        </>
+      {isAcceptedDevice && hasDeviceConnect && (
+        <DeviceConnection
+          device={device}
+          docsVersion={docsVersion}
+          hasFileTransfer={hasFileTransfer}
+          startTroubleshoot={launchTroubleshoot}
+          socketClosed={socketClosed}
+          style={{ marginRight: theme.spacing(2) }}
+        />
       )}
       <Divider style={{ marginTop: theme.spacing(3), marginBottom: theme.spacing(2) }} />
       {isAcceptedDevice && (
         <div className="flexbox" style={{ alignItems: 'center' }}>
-          {hasDeviceConnect && (
-            <DeviceConnection
-              device={device}
-              docsVersion={docsVersion}
-              hasFileTransfer={hasFileTransfer}
-              startTroubleshoot={launchTroubleshoot}
-              socketClosed={socketClosed}
-              style={{ marginRight: theme.spacing(2) }}
-            />
-          )}
           <Button to={`/deployments?open=true&deviceId=${device.id}`} component={ForwardingLink} startIcon={<ReplayIcon />}>
             Create a deployment for this device
           </Button>

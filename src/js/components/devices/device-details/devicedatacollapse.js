@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
-import { Collapse, Divider, IconButton } from '@material-ui/core';
+import { Button, Collapse, Divider, IconButton } from '@material-ui/core';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
 
 import theme from '../../../themes/mender-theme';
 
-export const DeviceDataCollapse = ({ children, className = '', disableBottomBorder, header, isOpen, onClick, title }) => {
+export const DeviceDataCollapse = ({ children, className = '', disableBottomBorder, header, isAddOn, isOpen, onClick, title }) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -13,15 +13,29 @@ export const DeviceDataCollapse = ({ children, className = '', disableBottomBord
   }, [isOpen]);
 
   const onCollapseClick = () => {
+    if (!onClick) {
+      return;
+    }
     onClick(!open);
     setOpen(!open);
   };
 
   return (
     <div className={`margin-bottom ${className}`}>
-      <div className="clickable flexbox space-between" onClick={onCollapseClick} style={{ alignItems: 'flex-start' }}>
+      <div className={`${onClick ? 'clickable' : ''} flexbox space-between`} onClick={onCollapseClick} style={{ alignItems: 'flex-start' }}>
         {typeof title === 'string' ? <h4 className="margin-bottom-small">{title}</h4> : title}
-        <IconButton>{open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}</IconButton>
+        <div className="flexbox centered">
+          {isAddOn && (
+            <Button variant="contained" disabled style={{ marginRight: theme.spacing(2), fontWeight: 900, fontSize: 'smaller' }}>
+              Add-on
+            </Button>
+          )}
+          {onClick ? (
+            <IconButton>{open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}</IconButton>
+          ) : (
+            <div style={{ height: theme.spacing(6), width: theme.spacing(6) }} />
+          )}
+        </div>
       </div>
       <div>{header}</div>
       <Collapse className={open ? 'fadeIn' : 'fadeOut'} in={open} timeout="auto" unmountOnExit>

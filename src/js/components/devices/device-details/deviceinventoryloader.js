@@ -20,7 +20,7 @@ export const DeviceInventoryLoader = ({ docsVersion = '' }) => (
       >
         <InfoIcon />
       </div>
-      <ReactTooltip id="inventory-wait" globalEventOff="click" place="top" type="light" effect="solid" className="react-tooltip">
+      <ReactTooltip id="inventory-wait" globalEventOff="click" place="left" type="light" effect="solid" className="react-tooltip">
         <h3>Waiting for inventory data</h3>
         <p>Inventory data not yet received from the device - this can take up to 30 minutes with default installation.</p>
         <p>
