@@ -15,11 +15,10 @@ const getGlobalSettings = state => state.users.globalSettings;
 
 export const getCurrentUser = state => state.users.byId[state.users.currentUser] || {};
 export const getUserSettings = state => state.users.globalSettings[state.users.currentUser] || {};
-export const get2FaAccessor = state => `${state.users.currentUser}_2fa`;
 
 export const getHas2FA = createSelector(
-  [get2FaAccessor, getGlobalSettings],
-  (twoFaAccessor, globalSettings) => globalSettings.hasOwnProperty(twoFaAccessor) && globalSettings[twoFaAccessor] === twoFAStates.enabled
+  [getCurrentUser],
+  currentUser => currentUser.hasOwnProperty('tfa_status') && currentUser.tfa_status === twoFAStates.enabled
 );
 
 export const getDemoDeviceAddress = createSelector([getDevicesList, getOnboarding], (devices, { approach, demoArtifactPort }) => {

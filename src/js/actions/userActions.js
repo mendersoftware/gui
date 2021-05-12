@@ -6,33 +6,39 @@ import UsersApi from '../api/users-api';
 import AppConstants from '../constants/appConstants';
 import OnboardingConstants from '../constants/onboardingConstants';
 import UserConstants, { twoFAStates } from '../constants/userConstants';
-import { getCurrentUser, getHas2FA, get2FaAccessor, getOnboardingState, getUserSettings } from '../selectors';
-import { getToken, logout } from '../auth';
+import { getCurrentUser, getOnboardingState, getUserSettings } from '../selectors';
+import { logout } from '../auth';
 import { extractErrorMessage, hashString, preformatWithRequestID } from '../helpers';
 import { clearAllRetryTimers } from '../utils/retrytimer';
 
 const cookies = new Cookies();
 const { emptyRole, rolesByName, useradmApiUrl } = UserConstants;
 
-const handleLoginError = (err, has2FA) => (dispatch, getState) => {
+const handleLoginError = (err, has2FA) => dispatch => {
   const errorText = extractErrorMessage(err);
   const is2FABackend = errorText.includes('2fa');
   if (is2FABackend && !has2FA) {
-    const twoFaSelector = get2FaAccessor(getState());
-    return dispatch(saveGlobalSettings({ [twoFaSelector]: twoFAStates.enabled }, true));
+    return Promise.reject({ error: '2fa code missing' });
   }
-  const twoFAError = is2FABackend || has2FA ? ' and verification code' : '';
+  const twoFAError = is2FABackend ? ' and verification code' : '';
   const errorMessage = `There was a problem logging in. Please check your email${
     twoFAError ? ',' : ' and'
   } password${twoFAError}. If you still have problems, contact an administrator.`;
-  return dispatch(setSnackbar(preformatWithRequestID(err.response, errorMessage), null, 'Copy to clipboard'));
+  return Promise.reject(dispatch(setSnackbar(preformatWithRequestID(err.response, errorMessage), null, 'Copy to clipboard')));
 };
 
 /*
   User management
 */
-export const loginUser = userData => (dispatch, getState) =>
+export const loginUser = userData => dispatch =>
   UsersApi.postLogin(`${useradmApiUrl}/auth/login`, userData)
+    .catch(err => {
+      cookies.remove('noExpiry', { path: '/' });
+      cookies.remove('noExpiry', { path: '/ui' });
+      cookies.remove('JWT', { path: '/' });
+      cookies.remove('JWT', { path: '/ui' });
+      return Promise.resolve(dispatch(handleLoginError(err, userData['token2fa'])));
+    })
     .then(res => {
       const token = res.text;
       if (!token) {
@@ -54,14 +60,6 @@ export const loginUser = userData => (dispatch, getState) =>
       window.sessionStorage.removeItem('pendings-redirect');
       window.location.replace('#/');
       return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), dispatch(getUser('me'))]);
-    })
-    .catch(err => {
-      cookies.remove('noExpiry', { path: '/' });
-      cookies.remove('noExpiry', { path: '/ui' });
-      cookies.remove('JWT', { path: '/' });
-      cookies.remove('JWT', { path: '/ui' });
-      const has2FA = getHas2FA(getState());
-      return Promise.all([Promise.reject(err), dispatch(handleLoginError(err, has2FA))]);
     });
 
 export const logoutUser = reason => (dispatch, getState) => {
@@ -111,7 +109,7 @@ export const verifyEmailComplete = secret => dispatch =>
 
 export const verify2FA = tfaData => dispatch =>
   UsersApi.putVerifyTFA(`${useradmApiUrl}/2faverify`, tfaData)
-    .then(() => Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: getToken() }), dispatch(getGlobalSettings())]))
+    .then(() => Promise.resolve(dispatch(getUser('me'))))
     .catch(err =>
       commonErrorHandler(err, 'An error occured validating the verification code: failed to verify token, please try again.', dispatch, undefined, true)
     );
@@ -181,6 +179,16 @@ export const editUser = (userId, userData) => dispatch =>
   GeneralApi.put(`${useradmApiUrl}/users/${userId}`, userData)
     .then(() => Promise.all([dispatch({ type: UserConstants.UPDATED_USER, userId, user: userData }), dispatch(setSnackbar(actions.edit.successMessage))]))
     .catch(err => userActionErrorHandler(err, 'edit', dispatch));
+
+export const enableUser2fa = userId => dispatch =>
+  GeneralApi.post(`${useradmApiUrl}/users/${userId}/2fa/enable`)
+    .catch(err => commonErrorHandler(err, `There was an error enabling Two Factor authentication for the user.`, dispatch))
+    .then(() => Promise.resolve(dispatch(getUser(userId))));
+
+export const disableUser2fa = userId => dispatch =>
+  GeneralApi.post(`${useradmApiUrl}/users/${userId}/2fa/disable`)
+    .catch(err => commonErrorHandler(err, `There was an error disabling Two Factor authentication for the user.`, dispatch))
+    .then(() => Promise.resolve(dispatch(getUser(userId))));
 
 export const getRoles = () => (dispatch, getState) =>
   GeneralApi.get(`${useradmApiUrl}/roles`).then(({ data: roles }) => {
