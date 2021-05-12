@@ -14,7 +14,6 @@ const updateConfigFileWithUrl = (fileName, serverUrl = 'https://docker.mender.io
   const connectConfigFile = fs.readFileSync(`dockerClient/${fileName}.json`, 'utf8');
   let connectConfig = JSON.parse(connectConfigFile);
   connectConfig.ServerURL = serverUrl;
-  connectConfig.ServerCertificate = '/certs/hosted.pem';
   if (token) {
     connectConfig.TenantToken = token;
   }
@@ -54,12 +53,20 @@ export const startDockerClient = async (baseUrl, token) => {
   const srippedBaseUrl = baseUrl.replace(/\/$/, '');
   updateConfigFileWithUrl('mender', srippedBaseUrl, token, projectRoot);
   updateConfigFileWithUrl('mender-connect', srippedBaseUrl, token, projectRoot);
+  // NB! to run the tests against a running local Mender backend, uncomment & adjust the following
+  // const localNetwork = ['--network', 'menderintegration_mender'];
+  const localNetwork = baseUrl.includes('docker.mender.io')
+    ? ['--network', 'gui-tests_mender', '-v', `${process.env.INTEGRATION_PATH}/certs/api-gateway/cert.crt:/certs/hosted.pem`]
+    : ['-v', `${projectRoot}/hosted.pem:/certs/hosted.pem`];
   let args = [
     'run',
     '--name',
     'connect-client',
+    ...localNetwork,
     '-v',
-    `${projectRoot}/hosted.pem:/certs/hosted.pem`,
+    `${projectRoot}/dockerClient/artifact_info:/etc/mender/artifact_info`,
+    '-v',
+    `${projectRoot}/dockerClient/device_type:/var/lib/mender/device_type`,
     '-v',
     `${projectRoot}/dockerClient/mender-test.json:/etc/mender/mender.conf`,
     '-v',
@@ -121,7 +128,8 @@ export const login = async (username: string, password: string, baseUrl: string,
   const domain = baseUrlToDomain(baseUrl);
   context.addCookies([
     { name: 'JWT', value: token, path: '/', domain },
-    { name: `${userId}-onboarded`, value: 'true', path: '/', domain }
+    { name: `${userId}-onboarded`, value: 'true', path: '/', domain },
+    { name: 'cookieconsent_status', value: 'allow', path: '/', domain }
   ]);
   return context;
 };

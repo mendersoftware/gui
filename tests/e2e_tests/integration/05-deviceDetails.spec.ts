@@ -34,8 +34,7 @@ test.describe('Device details', () => {
       expect(await page.isVisible(`css=.expandedDevice >> text=Linux`)).toBeTruthy();
       expect(await page.isVisible(`css=.expandedDevice >> text=mac`)).toBeTruthy();
       expect(await page.isVisible(`css=.expandedDevice >> text=qemux86-64`)).toBeTruthy();
-      const deviceName = demoDeviceName.length ? demoDeviceName : 'release-v1';
-      expect(await page.isVisible(`css=.expandedDevice >> text=${deviceName}`)).toBeTruthy();
+      expect(await page.isVisible(`css=.expandedDevice >> text=${demoDeviceName}`)).toBeTruthy();
     });
 
     test('can open a terminal', async () => {

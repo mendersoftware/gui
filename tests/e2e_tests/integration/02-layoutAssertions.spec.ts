@@ -44,12 +44,7 @@ test.describe('Layout assertions', () => {
       await page.click(`${navbar}:has-text('Deployments')`);
     });
 
-    test('can authorize a device', async ({ context }) => {
-      if (environment === 'staging') {
-        const cookies = await context.cookies();
-        const token = cookies.find(cookie => cookie.name === 'tenantToken');
-        await startDockerClient(baseUrl, token);
-      }
+    test('can authorize a device', async () => {
       await page.click(`.leftNav :text('Devices')`);
       await page.click(`a:has-text('Pending')`);
       await page.waitForSelector('.deviceListItem', { timeout: 60000 });
@@ -58,14 +53,9 @@ test.describe('Layout assertions', () => {
       await page.hover('#device-actions-actions');
       await page.click('[aria-label="accept"]');
       await page.click(`:is(a:has-text('Device groups'))`);
-      await page.waitForSelector(`.deviceListItem :text('release')`);
+      await page.waitForSelector(`css=.deviceListItem >> text=release`);
       const element = await page.textContent('.deviceListItem');
-      if (environment === 'staging') {
-        expect(await page.isVisible(`.deviceListItem:text-matches('original', 'i')`)).toBeTruthy();
-        expect(element.includes('original')).toBeTruthy();
-      } else {
-        expect(element.includes('release')).toBeTruthy();
-      }
+      expect(element.includes('release')).toBeTruthy();
       await page.click('.deviceListItem');
     });
 

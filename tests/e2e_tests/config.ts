@@ -1,5 +1,6 @@
 import { ChromiumEnv, PlaywrightOptions, setConfig, test } from '@playwright/test';
 import { v4 as uuid } from 'uuid';
+import { baseUrlToDomain } from './utils/commands';
 
 setConfig({
   forbidOnly: !!process.env.CI,
@@ -55,7 +56,7 @@ const options: PlaywrightOptions = {
   ignoreHTTPSErrors: true,
   viewport: { width: 1600, height: 900 },
   storageState: {
-    cookies: [{ name: 'cookieconsent_status', value: 'allow', url: testParams.baseUrl }]
+    cookies: [{ name: 'cookieconsent_status', value: 'allow', path: '/', domain: baseUrlToDomain(testParams.baseUrl) }]
   }
 };
 
