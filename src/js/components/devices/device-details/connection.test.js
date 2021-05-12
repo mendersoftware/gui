@@ -1,8 +1,19 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import DeviceConnection from './connection';
+import DeviceConnection, { DeviceConnectionMissingNote, DeviceDisconnectedNote, PortForwardLink } from './connection';
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { DEVICE_CONNECT_STATES } from '../../../constants/deviceConstants';
+
+describe('tiny DeviceConnection components', () => {
+  [DeviceConnectionMissingNote, DeviceDisconnectedNote, PortForwardLink].forEach(async Component => {
+    it(`renders ${Component.displayName || Component.name} correctly`, () => {
+      const { baseElement } = render(<Component docsVersion="" lastConnectionTs={defaultState.devices.byId.a1.updated_ts} />);
+      const view = baseElement.firstChild;
+      expect(view).toMatchSnapshot();
+      expect(view).toEqual(expect.not.stringMatching(undefineds));
+    });
+  });
+});
 
 describe('DeviceConnection Component', () => {
   it('renders correctly', async () => {

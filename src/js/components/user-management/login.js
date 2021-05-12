@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
@@ -19,141 +19,143 @@ import PasswordInput from '../common/forms/passwordinput';
 import FormCheckbox from '../common/forms/formcheckbox';
 
 import { OAuth2Providers } from './oauth2providers';
-import { getCurrentUser, getHas2FA } from '../../selectors';
+import { getCurrentUser } from '../../selectors';
 
-export class Login extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    const cookies = new Cookies();
-    this.state = {
-      noExpiry: cookies.get('noExpiry')
+const cookies = new Cookies();
+
+export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackbar }) => {
+  const [noExpiry] = useState(cookies.get('noExpiry'));
+  const [refresh, setRefresh] = useState(false);
+  const [has2FA, setHas2FA] = useState(false);
+  const twoFARef = useRef();
+
+  useEffect(() => {
+    clearAllRetryTimers(setSnackbar);
+    if (getToken()) {
+      logoutUser();
+    }
+    const loginError = cookies.get('error');
+    if (loginError) {
+      setSnackbar(loginError, 10000);
+      cookies.remove('error');
+    }
+    return () => {
+      setSnackbar('');
+    };
+  }, []);
+
+  useEffect(() => {
+    if (currentUser.id) {
+      setSnackbar('');
+    }
+  }, [currentUser]);
+
+  const onLoginClick = loginData =>
+    loginUser(loginData).catch(err => {
+      // don't reset the state once it was set - thus not setting `has2FA` solely based on the existence of 2fa in the error
+      if (err?.error?.includes('2fa')) {
+        setHas2FA(true);
+      }
+    });
+
+  const onSetRef = ref => {
+    twoFARef.current = ref;
+    setRefresh(!refresh);
+  };
+
+  let twoFAAnchor = {};
+  if (twoFARef.current) {
+    twoFAAnchor = {
+      right: -120,
+      top: twoFARef.current.parentElement.parentElement.offsetTop + twoFARef.current.parentElement.offsetHeight / 2
     };
   }
 
-  componentDidMount() {
-    clearAllRetryTimers(this.props.setSnackbar);
-    if (getToken()) {
-      this.props.logoutUser();
-    }
-    const cookies = new Cookies();
-    const loginError = cookies.get('error');
-    if (loginError) {
-      this.props.setSnackbar(loginError, 10000);
-      cookies.remove('error');
-    }
-  }
+  return (
+    <div className="flexbox column" id="login-box">
+      <h3>Log in</h3>
+      <img src={loginLogo} alt="mender-logo" className="margin-bottom-small" />
 
-  componentDidUpdate(prevProps) {
-    const self = this;
-    if (prevProps.currentUser !== this.props.currentUser && !!this.props.currentUser.id) {
-      self.props.setSnackbar('');
-    }
-    if (prevProps.has2FA !== self.props.has2FA && self.props.has2FA) {
-      self.setState({});
-    }
-  }
+      {isHosted && (
+        <>
+          <div className="flexbox centered margin-bottom">Log in with:</div>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            {OAuth2Providers.map(provider => (
+              <Button
+                className="oauth-provider"
+                variant="contained"
+                key={provider.id}
+                href={`/api/management/v1/useradm/oauth2/${provider.id}`}
+                startIcon={provider.icon}
+              >
+                {provider.name}
+              </Button>
+            ))}
+          </div>
+          <h4 className="dashboard-header margin-top-large" style={{ display: 'flex', justifyContent: 'center' }}>
+            <span style={{ padding: 15, top: -24 }}>or your email address</span>
+          </h4>
+        </>
+      )}
 
-  componentWillUnmount() {
-    this.props.setSnackbar('');
-  }
-
-  render() {
-    const { noExpiry } = this.state;
-    const { has2FA, isHosted, loginUser } = this.props;
-    let twoFAAnchor = {};
-    if (this.twoFARef) {
-      twoFAAnchor = {
-        right: -120,
-        top: this.twoFARef.parentElement.parentElement.offsetTop + this.twoFARef.parentElement.offsetHeight / 2
-      };
-    }
-    return (
-      <div className="flexbox column" id="login-box">
-        <h3>Log in</h3>
-        <img src={loginLogo} alt="mender-logo" className="margin-bottom-small" />
-
-        {isHosted && (
-          <>
-            <div className="flexbox centered margin-bottom">Log in with:</div>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              {OAuth2Providers.map(provider => (
-                <Button
-                  className="oauth-provider"
-                  variant="contained"
-                  key={provider.id}
-                  href={`/api/management/v1/useradm/oauth2/${provider.id}`}
-                  startIcon={provider.icon}
-                >
-                  {provider.name}
-                </Button>
-              ))}
-            </div>
-            <h4 className="dashboard-header margin-top-large" style={{ display: 'flex', justifyContent: 'center' }}>
-              <span style={{ padding: 15, top: -24 }}>or your email address</span>
-            </h4>
-          </>
+      <Form showButtons={true} buttonColor="primary" onSubmit={onLoginClick} submitLabel="Log in" submitButtonId="login_button" style={{ maxWidth: 400 }}>
+        <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
+        <PasswordInput className="margin-bottom-small" id="password" label="Password" required={true} />
+        {isHosted ? (
+          <div className="flexbox">
+            <Link style={{ marginLeft: '4px' }} to="/password">
+              Forgot your password?
+            </Link>
+          </div>
+        ) : (
+          <div />
         )}
-
-        <Form showButtons={true} buttonColor="primary" onSubmit={loginUser} submitLabel="Log in" submitButtonId="login_button" style={{ maxWidth: 400 }}>
-          <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
-          <PasswordInput className="margin-bottom-small" id="password" label="Password" required={true} />
-          {isHosted ? (
-            <div className="flexbox">
-              <Link style={{ marginLeft: '4px' }} to="/password">
-                Forgot your password?
+        {has2FA ? (
+          <TextInput
+            hint="Two Factor Authentication Code"
+            label="Two Factor Authentication Code"
+            id="token2fa"
+            validations="isLength:6,isNumeric"
+            required={true}
+            setControlRef={onSetRef}
+          />
+        ) : (
+          <div />
+        )}
+        <FormCheckbox id="noExpiry" label="Stay logged in" checked={noExpiry === 'true'} />
+      </Form>
+      {isHosted && (
+        <>
+          {twoFARef.current && (
+            <div>
+              <div id="onboard-6" className="tooltip info" data-tip data-for="2fa-tip" data-event="click focus" style={twoFAAnchor}>
+                <HelpIcon />
+              </div>
+              <ReactTooltip id="2fa-tip" globalEventOff="click" place="right" effect="solid" className="react-tooltip info" style={{ maxWidth: 300 }}>
+                Two Factor Authentication is enabled for your account. If you haven&apos;t set up a 3rd party authentication app with a verification code,
+                please contact an administrator.
+              </ReactTooltip>
+            </div>
+          )}
+          <div className="margin-top text-muted">
+            <div className="flexbox centered">
+              Don&#39;t have an account?{' '}
+              <Link style={{ marginLeft: '4px' }} to="/signup">
+                Sign up here
               </Link>
             </div>
-          ) : (
-            <div />
-          )}
-          {has2FA ? (
-            <TextInput
-              hint="Two Factor Authentication Code"
-              label="Two Factor Authentication Code"
-              id="token2fa"
-              validations="isLength:6,isNumeric"
-              required={true}
-              setControlRef={re => (this.twoFARef = re)}
-            />
-          ) : (
-            <div />
-          )}
-          <FormCheckbox id="noExpiry" label="Stay logged in" checked={noExpiry === 'true'} />
-        </Form>
-        {isHosted && (
-          <>
-            {this.twoFARef && (
-              <div>
-                <div id="onboard-6" className="tooltip info" data-tip data-for="2fa-tip" data-event="click focus" style={twoFAAnchor}>
-                  <HelpIcon />
-                </div>
-                <ReactTooltip id="2fa-tip" globalEventOff="click" place="right" effect="solid" className="react-tooltip info" style={{ maxWidth: 300 }}>
-                  Two Factor Authentication is enabled for your account. If you haven&apos;t set up a 3rd party authentication app with a verification code,
-                  please contact an administrator.
-                </ReactTooltip>
-              </div>
-            )}
-            <div className="margin-top text-muted">
-              <div className="flexbox centered">
-                Don&#39;t have an account?{' '}
-                <Link style={{ marginLeft: '4px' }} to="/signup">
-                  Sign up here
-                </Link>
-              </div>
-            </div>
-          </>
-        )}
-      </div>
-    );
-  }
-}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
 
 const actionCreators = { loginUser, logoutUser, setSnackbar };
 
 const mapStateToProps = state => {
   return {
     currentUser: getCurrentUser(state),
-    has2FA: getHas2FA(state),
     isHosted: state.app.features.isHosted
   };
 };

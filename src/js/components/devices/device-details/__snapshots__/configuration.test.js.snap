@@ -50,29 +50,46 @@ exports[`Configuration Component renders correctly 1`] = `
         </button>
       </div>
     </div>
-    <button
-      class="MuiButtonBase-root MuiIconButton-root"
-      tabindex="0"
-      type="button"
+    <div
+      class="flexbox centered"
     >
-      <span
-        class="MuiIconButton-label"
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained Mui-disabled Mui-disabled"
+        disabled=""
+        style="margin-right: 16px; font-weight: 900; font-size: smaller;"
+        tabindex="-1"
+        type="button"
       >
-        <svg
-          aria-hidden="true"
-          class="MuiSvgIcon-root"
-          focusable="false"
-          viewBox="0 0 24 24"
+        <span
+          class="MuiButton-label"
         >
-          <path
-            d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
-          />
-        </svg>
-      </span>
-      <span
-        class="MuiTouchRipple-root"
-      />
-    </button>
+          Add-on
+        </span>
+      </button>
+      <button
+        class="MuiButtonBase-root MuiIconButton-root"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiIconButton-label"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+            />
+          </svg>
+        </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
+      </button>
+    </div>
   </div>
   <div>
     <div
