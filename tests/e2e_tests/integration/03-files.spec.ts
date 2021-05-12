@@ -65,4 +65,26 @@ test.describe('Files', () => {
     const testFile = await fs.readFileSync(`fixtures/${fileName}`);
     expect(md5(newFile)).toEqual(md5(testFile));
   });
+
+  test('allows file transfer', async () => {
+    test.skip(!['enterprise', 'staging'].includes(environment));
+    await page.click(`.leftNav :text('Devices')`);
+    await page.click(`.deviceListItem`);
+    // the deviceconnect connection might not be established right away
+    await page.waitForSelector('text=/file transfer/i', { timeout: 10000 });
+    await page.click(`css=.expandedDevice >> text=file transfer`);
+    await page.waitForSelector(`text=Connection with the device established`, { timeout: 10000 });
+    await page.setInputFiles('.MuiDialog-paper .dropzone input', `fixtures/${fileName}`);
+    await page.click('[placeholder*=Example]', { clickCount: 3 });
+    await page.type('[placeholder*=Example]', `/tmp/${fileName}`);
+    await page.click('css=button >> text=Upload');
+    await page.click('css=.navLink >> text=Download');
+    await page.type('[placeholder*=Example]', `/tmp/${fileName}`);
+    expect(await page.isVisible(`css=button >> text=Download`)).toBeTruthy();
+    const [download] = await Promise.all([page.waitForEvent('download'), page.click(`css=button >> text=Download`)]);
+    const downloadTargetPath = await download.path();
+    const newFile = await fs.readFileSync(downloadTargetPath);
+    const testFile = await fs.readFileSync(`fixtures/${fileName}`);
+    expect(md5(newFile)).toEqual(md5(testFile));
+  });
 });
