@@ -7,8 +7,14 @@ COMPOSE_CMD="docker-compose -p gui-tests \
              -f ${INTEGRATION_PATH}/docker-compose.client.yml \
              -f ${INTEGRATION_PATH}/docker-compose.demo.yml \
              -f ${INTEGRATION_PATH}/docker-compose.storage.minio.yml \
-             -f ${INTEGRATION_PATH}/docker-compose.connect.yml \
-             -f ${GUI_REPOSITORY}/tests/e2e_tests/docker-compose.e2e-tests.yml"
+             -f ${INTEGRATION_PATH}/docker-compose.config.yml \
+             -f ${INTEGRATION_PATH}/docker-compose.connect.yml"
+ENTERPRISE_COMPOSE=" -f ${INTEGRATION_PATH}/docker-compose.enterprise.yml \
+                    -f ${INTEGRATION_PATH}/docker-compose.auditlogs.yml \
+                    -f ${INTEGRATION_PATH}/docker-compose.auditlogs.config.yml \
+                    -f ${INTEGRATION_PATH}/docker-compose.auditlogs.connect.yml"
+TEST_COMPOSE=" -f ${GUI_REPOSITORY}/tests/e2e_tests/docker-compose.e2e-tests.yml"
+ENTERPRISE=0
 
 COMPOSE_FILES=()
 
@@ -31,41 +37,66 @@ parse_args(){
 
     # FIXME args must be passed in the form -f=<path>; spaces don't workalthough they're standard...
     while [ $# -gt 0 ]; do
-        PARAM=`echo $1 | awk -F= '{print $1}'`
-        VALUE=`echo $1 | awk -F= '{print $2}'`
-        case $PARAM in
+        case $1 in
             -h | --help)
             usage
             exit
             ;;
             -c | --skip-cleanup)
             SKIP_CLEANUP=1
+            shift
+            ;;
+            --enterprise)
+            COMPOSE_CMD+=$ENTERPRISE_COMPOSE
+            ENTERPRISE=1
+            shift
             ;;
             -f)
-            COMPOSE_CMD+=( $VALUE )
+            COMPOSE_CMD+=$2
+            shift 2
             ;;
             *)
         esac
-        shift 1
     done
 }
 
+USER=mender-demo@example.com
+PASSWORD=mysecretpassword!123
+
 run_tests() {
+    COMPOSE_CMD+=$TEST_COMPOSE
     $COMPOSE_CMD build && $COMPOSE_CMD up -d
     declare retries=5
-    while [[ $retries -gt 0 && -z $useradmid ]]; do
-        useradmid=$(get_container_id mender-useradm)
-        sleep 1
-        retries=$((retries-1))
-    done
 
-    if [[ -z $useradmid ]]; then
-        echo "failed to get container id"
-        return 1
+    if [[ $ENTERPRISE -eq 1 ]]; then
+        export TEST_ENVIRONMENT=enterprise
+        while [[ $retries -gt 0 && -z $containerid ]]; do
+            containerid=$(get_container_id mender-tenantadm)
+            sleep 1
+            retries=$((retries-1))
+        done
+
+        if [[ -z $containerid ]]; then
+            echo "failed to get tenantadm id"
+            return 1
+        fi
+        docker exec $containerid /usr/bin/tenantadm create-org --name=test --username=$USER --password=$PASSWORD
+        # remove the client, since it won't be able to connect without a proper tenant token config
+        # starting it is easier when done in the test suite
+        $COMPOSE_CMD rm -fsv mender-client
+    else
+        while [[ $retries -gt 0 && -z $containerid ]]; do
+            containerid=$(get_container_id mender-useradm)
+            sleep 1
+            retries=$((retries-1))
+        done
+
+        if [[ -z $containerid ]]; then
+            echo "failed to get useradm id"
+            return 1
+        fi
+        docker exec $containerid /usr/bin/useradm create-user --username $USER --password $PASSWORD
     fi
-
-    docker exec $useradmid /usr/bin/useradm create-user --username mender-demo@example.com --password mysecretpassword!123
-
     declare retries=5
     while [[ $retries -gt 0 && -z $runnerid ]]; do
         runnerid=$(get_container_id mender-gui-tests-runner)
@@ -74,7 +105,7 @@ run_tests() {
     done
 
     if [[ -z $runnerid ]]; then
-        echo "failed to get container id"
+        echo "failed to get runner id"
         return 1
     fi
 

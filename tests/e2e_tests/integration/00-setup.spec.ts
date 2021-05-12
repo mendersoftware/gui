@@ -2,8 +2,8 @@ import jwtDecode from 'jwt-decode';
 import * as fs from 'fs';
 import { test, expect } from '@playwright/test';
 
-import { login, tenantTokenRetrieval, baseUrlToDomain } from '../utils/commands';
-import { contextOptions, testParams } from '../config';
+import { baseUrlToDomain, login, startDockerClient, tenantTokenRetrieval } from '../utils/commands';
+import { testParams } from '../config';
 
 const { baseUrl, environment, password, username } = testParams;
 
@@ -69,11 +69,10 @@ test.describe('Test setup', () => {
       cookies = await context.cookies();
       const cookieJson = JSON.stringify(cookies);
       fs.writeFileSync('cookies.json', cookieJson);
-      await page.pause();
       await page.waitForSelector('text=/License information/i', { timeout: 15000 });
     });
     test('supports tenant token retrieval', async ({ context }) => {
-      test.skip(environment !== 'staging');
+      test.skip(!['enterprise', 'staging'].includes(environment));
       console.log(`logging in user with username: ${username} and password: ${password}`);
       const domain = baseUrlToDomain(baseUrl);
       await context.addCookies([{ name: 'cookieconsent_status', value: 'allow', path: '/', domain }]);
@@ -83,6 +82,9 @@ test.describe('Test setup', () => {
       await page.goto(`${baseUrl}ui/`);
       const token = await tenantTokenRetrieval(baseUrl, loggedInContext, page);
       fs.writeFileSync('token.json', token);
+      if (['enterprise', 'staging'].includes(environment)) {
+        await startDockerClient(baseUrl, token);
+      }
     });
   });
 });

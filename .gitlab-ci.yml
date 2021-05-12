@@ -61,6 +61,39 @@ test:acceptance:
       - logs
     when: on_failure
 
+test:acceptance:enterprise:
+  stage: e2e-test
+  except:
+    - /^(staging|saas-[a-zA-Z0-9.]+)$/
+  image: tiangolo/docker-with-compose
+  dependencies:
+    - build:docker
+    - test:prep
+  services:
+    - docker:19.03.5-dind
+  variables:
+    TEST_ENVIRONMENT: enterprise
+  before_script:
+    - export DOCKER_TAG=${CI_COMMIT_REF_SLUG:-master}
+    - export SERVICE_IMAGE=${DOCKER_REPOSITORY}:${DOCKER_TAG}
+    - apk add --no-cache bash git wget
+    - wget -qP tests/e2e_tests/fixtures "https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender"
+    - if [ -n "$REGISTRY_MENDER_IO_USERNAME" ]; then
+    - docker login -u $REGISTRY_MENDER_IO_USERNAME -p $REGISTRY_MENDER_IO_PASSWORD registry.mender.io
+    - fi
+  script:
+    - docker load -i image.tar
+    - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:pr
+    - git clone --no-tags --depth=1 --single-branch https://github.com/mendersoftware/integration.git
+    - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run --enterprise
+    - docker rmi $DOCKER_REPOSITORY:pr
+  artifacts:
+    expire_in: 2w
+    paths:
+      - screenshots
+      - logs
+    when: on_failure
+
 test:unit:
   stage: test
   except:

@@ -40,10 +40,15 @@ test.describe('Deployments', () => {
     await page.type('#deployment-device-group-selection', 'All');
     await page.click(`#deployment-device-group-selection-popup li:has-text('All devices')`);
     await page.click(`button:has-text('Next')`);
-    if (environment === 'staging') {
-      await page.click(`.MuiDialog-container button:has-text('Next')`);
+    if (['enterprise', 'staging'].includes(environment)) {
+      await page.click(`css=.MuiDialog-container button >> text=Next`);
     }
-    await page.click(`.MuiDialog-container button:has-text('Create')`);
+    // adding the following to ensure we reached the end of the dialog, as this might not happen in CI runs
+    const hasNextButton = await page.isVisible(`.MuiDialog-container button >> text=Next`);
+    if (hasNextButton) {
+      await page.click(`.MuiDialog-container button >> text=Next`);
+    }
+    await page.click(`css=.MuiDialog-container button >> text=Create`);
     await page.waitForSelector('.deployment-item', { timeout: 10000 });
     await page.click(`[role="tab"]:has-text('Finished')`);
     await page.waitForSelector('.deployment-item:not(.deployment-header-item)', { timeout: 60000 });
@@ -67,13 +72,16 @@ test.describe('Deployments', () => {
     await page.focus('#deployment-device-group-selection');
     await page.type('#deployment-device-group-selection', 'test');
     await page.click(`#deployment-device-group-selection-popup li:has-text('testgroup')`);
-
     await page.click(`button:has-text('Next')`);
-
-    if (environment === 'staging') {
-      await page.click(`.MuiDialog-container button:has-text('Next')`);
+    if (['enterprise', 'staging'].includes(environment)) {
+      await page.click(`.MuiDialog-container button >> text=Next`);
     }
-    await page.click(`.MuiDialog-container button:has-text('Create')`);
+    // adding the following to ensure we reached the end of the dialog, as this might not happen in CI runs
+    const hasNextButton = await page.isVisible(`.MuiDialog-container button >> text=Next`);
+    if (hasNextButton) {
+      await page.click(`.MuiDialog-container button >> text=Next`);
+    }
+    await page.click(`.MuiDialog-container button >> text=Create`);
     await page.waitForSelector('.deployment-item', { timeout: 10000 });
     await page.click(`[role="tab"]:has-text('Finished')`);
     await page.waitForSelector('.deployment-item:not(.deployment-header-item)', { timeout: 60000 });
