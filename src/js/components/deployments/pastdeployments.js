@@ -31,6 +31,12 @@ const type = DEPLOYMENT_STATES.finished;
 
 let timer;
 
+const BEGINNING_OF_TIME = '2016-01-01T00:00:00.000Z';
+const SORTING_DIRECTIONS = {
+  asc: 'asc',
+  desc: 'desc'
+};
+
 export const Past = props => {
   const {
     advanceOnboarding,
@@ -52,6 +58,7 @@ export const Past = props => {
   const [perPage, setPerPage] = useState(20);
   // eslint-disable-next-line no-unused-vars
   const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
+  const [timeRangeToggle, setTimeRangeToggle] = useState(false);
   const deploymentsRef = useRef();
 
   const handleResize = () => {
@@ -63,7 +70,20 @@ export const Past = props => {
   useEffect(() => {
     clearInterval(timer);
     timer = setInterval(refreshPast, refreshDeploymentsLength);
-    refreshPast();
+    const roundedStartDate = Math.round(Date.parse(BEGINNING_OF_TIME) / 1000);
+    const roundedEndDate = Math.round(Date.parse(endDate) / 1000);
+    getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, deviceGroup, true, SORTING_DIRECTIONS.desc).then(deploymentsAction => {
+      const deploymentsList = deploymentsAction ? Object.values(deploymentsAction[0].deployments) : [];
+      if (deploymentsList.length) {
+        let newStartDate = new Date(deploymentsList[0].created);
+        newStartDate.setHours(0, 0, 0, 0);
+        let newEndDate = new Date(deploymentsList[deploymentsList.length - 1].created);
+        newEndDate.setHours(23, 59, 59, 999);
+        setStartDate(newStartDate);
+        setEndDate(newEndDate);
+        setTimeRangeToggle(!timeRangeToggle);
+      }
+    });
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -142,7 +162,7 @@ export const Past = props => {
   return (
     <div className="fadeIn margin-left margin-top-large">
       <div className="datepicker-container">
-        <TimerangePicker onChange={(start, end) => refreshPast(1, perPage, start, end)} />
+        <TimerangePicker onChange={(start, end) => refreshPast(1, perPage, start, end)} toggleActive={timeRangeToggle} />
         <TimeframePicker
           classNames="margin-left margin-right inline-block"
           onChange={(start, end) => refreshPast(1, perPage, start, end)}
