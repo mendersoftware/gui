@@ -63,8 +63,8 @@ test:acceptance:
 
 test:acceptance:enterprise:
   stage: e2e-test
-  except:
-    - /^(staging|saas-[a-zA-Z0-9.]+)$/
+  only:
+    - master
   image: tiangolo/docker-with-compose
   dependencies:
     - build:docker
