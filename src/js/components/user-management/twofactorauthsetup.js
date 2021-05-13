@@ -56,11 +56,11 @@ export const TwoFactorAuthSetup = ({
     setQrExpanded(state === twoFAStates.unverified);
     let request;
     if (state === twoFAStates.disabled) {
-      request = disableUser2fa(currentUser.id);
+      request = disableUser2fa();
     } else if (state === twoFAStates.enabled && has2FA) {
       request = Promise.resolve(setQrExpanded(false));
     } else {
-      request = enableUser2fa(currentUser.id);
+      request = enableUser2fa();
     }
     request.then(() => {
       if (state === twoFAStates.unverified) {
@@ -80,7 +80,7 @@ export const TwoFactorAuthSetup = ({
     if (has2FA) {
       handle2FAState(twoFAStates.disabled);
     } else {
-      is2FAEnabled ? disableUser2fa(currentUser.id) : handle2FAState(twoFAStates.unverified);
+      is2FAEnabled ? disableUser2fa() : handle2FAState(twoFAStates.unverified);
       setQrExpanded(!is2FAEnabled);
       setIs2FAEnabled(!is2FAEnabled);
     }
