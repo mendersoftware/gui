@@ -22,6 +22,7 @@ module.exports = {
   SET_SHOW_HELP: 'SET_SHOW_HELP',
   SET_SHOW_CONNECT_DEVICE: 'SET_SHOW_CONNECT_DEVICE',
 
+  OWN_USER_ID: 'me',
   emptyRole: { title: undefined, allowUserManagement: false, groups: [], description: '', editable: undefined, permissions: [] },
   rolesByName: {
     admin: 'RBAC_ROLE_PERMIT_ALL',

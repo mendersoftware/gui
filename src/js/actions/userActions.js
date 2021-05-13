@@ -5,7 +5,7 @@ import GeneralApi from '../api/general-api';
 import UsersApi from '../api/users-api';
 import AppConstants from '../constants/appConstants';
 import OnboardingConstants from '../constants/onboardingConstants';
-import UserConstants, { twoFAStates } from '../constants/userConstants';
+import UserConstants, { OWN_USER_ID, twoFAStates } from '../constants/userConstants';
 import { getCurrentUser, getOnboardingState, getUserSettings } from '../selectors';
 import { logout } from '../auth';
 import { extractErrorMessage, hashString, preformatWithRequestID } from '../helpers';
@@ -59,7 +59,7 @@ export const loginUser = userData => dispatch =>
 
       window.sessionStorage.removeItem('pendings-redirect');
       window.location.replace('#/');
-      return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), dispatch(getUser('me'))]);
+      return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), dispatch(getUser(OWN_USER_ID))]);
     });
 
 export const logoutUser = reason => (dispatch, getState) => {
@@ -98,18 +98,18 @@ export const passwordResetComplete = (secretHash, newPassword) => dispatch =>
 export const verifyEmailStart = () => (dispatch, getState) =>
   GeneralApi.post(`${useradmApiUrl}/auth/verify-email/start`, { email: getCurrentUser(getState()).email })
     .catch(err => commonErrorHandler(err, 'An error occured starting the email verification process:', dispatch))
-    .finally(() => Promise.resolve(dispatch(getUser('me'))));
+    .finally(() => Promise.resolve(dispatch(getUser(OWN_USER_ID))));
 
 export const setAccountActivationCode = code => dispatch => Promise.resolve(dispatch({ type: UserConstants.RECEIVED_ACTIVATION_CODE, code }));
 
 export const verifyEmailComplete = secret => dispatch =>
   GeneralApi.post(`${useradmApiUrl}/auth/verify-email/complete`, { secret_hash: secret })
     .catch(err => commonErrorHandler(err, 'An error occured completing the email verification process:', dispatch))
-    .finally(() => Promise.resolve(dispatch(getUser('me'))));
+    .finally(() => Promise.resolve(dispatch(getUser(OWN_USER_ID))));
 
 export const verify2FA = tfaData => dispatch =>
   UsersApi.putVerifyTFA(`${useradmApiUrl}/2faverify`, tfaData)
-    .then(() => Promise.resolve(dispatch(getUser('me'))))
+    .then(() => Promise.resolve(dispatch(getUser(OWN_USER_ID))))
     .catch(err =>
       commonErrorHandler(err, 'An error occured validating the verification code: failed to verify token, please try again.', dispatch, undefined, true)
     );
@@ -180,12 +180,12 @@ export const editUser = (userId, userData) => dispatch =>
     .then(() => Promise.all([dispatch({ type: UserConstants.UPDATED_USER, userId, user: userData }), dispatch(setSnackbar(actions.edit.successMessage))]))
     .catch(err => userActionErrorHandler(err, 'edit', dispatch));
 
-export const enableUser2fa = userId => dispatch =>
+export const enableUser2fa = (userId = OWN_USER_ID) => dispatch =>
   GeneralApi.post(`${useradmApiUrl}/users/${userId}/2fa/enable`)
     .catch(err => commonErrorHandler(err, `There was an error enabling Two Factor authentication for the user.`, dispatch))
     .then(() => Promise.resolve(dispatch(getUser(userId))));
 
-export const disableUser2fa = userId => dispatch =>
+export const disableUser2fa = (userId = OWN_USER_ID) => dispatch =>
   GeneralApi.post(`${useradmApiUrl}/users/${userId}/2fa/disable`)
     .catch(err => commonErrorHandler(err, `There was an error disabling Two Factor authentication for the user.`, dispatch))
     .then(() => Promise.resolve(dispatch(getUser(userId))));
