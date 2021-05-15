@@ -68,29 +68,31 @@ export const Past = props => {
   };
 
   useEffect(() => {
-    clearInterval(timer);
-    timer = setInterval(refreshPast, refreshDeploymentsLength);
     const roundedStartDate = Math.round(Date.parse(BEGINNING_OF_TIME) / 1000);
     const roundedEndDate = Math.round(Date.parse(endDate) / 1000);
     getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, deviceGroup, true, SORTING_DIRECTIONS.desc).then(deploymentsAction => {
       const deploymentsList = deploymentsAction ? Object.values(deploymentsAction[0].deployments) : [];
       if (deploymentsList.length) {
-        let newStartDate = new Date(deploymentsList[0].created);
+        let newStartDate = new Date(deploymentsList[deploymentsList.length - 1].created);
         newStartDate.setHours(0, 0, 0, 0);
-        let newEndDate = new Date(deploymentsList[deploymentsList.length - 1].created);
-        newEndDate.setHours(23, 59, 59, 999);
         setStartDate(newStartDate);
-        setEndDate(newEndDate);
         setTimeRangeToggle(!timeRangeToggle);
       }
     });
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
-      clearInterval(timer);
       clearAllRetryTimers(setSnackbar);
     };
   }, []);
+
+  useEffect(() => {
+    clearInterval(timer);
+    timer = setInterval(refreshPast, refreshDeploymentsLength);
+    return () => {
+      clearInterval(timer);
+    };
+  }, [page, perPage, startDate, endDate, deviceGroup]);
 
   useEffect(() => {
     if (past.length && !onboardingState.complete) {
