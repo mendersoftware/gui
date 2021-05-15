@@ -202,6 +202,7 @@ export const Past = props => {
               onChangeRowsPerPage={newPerPage => refreshPast(1, newPerPage)}
               onChangePage={refreshPast}
               pageSize={perPage}
+              showPagination
               type={type}
             />
           </RootRef>

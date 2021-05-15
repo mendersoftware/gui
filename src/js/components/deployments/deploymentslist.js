@@ -35,6 +35,7 @@ export const DeploymentsList = ({
   onChangeRowsPerPage,
   page,
   pageSize,
+  showPagination,
   type
 }) =>
   !!items.length && (
@@ -59,7 +60,7 @@ export const DeploymentsList = ({
           />
         ))}
       </div>
-      {(count > items.length || items.length > defaultRowsPerPage) && (
+      {(count > items.length || items.length > defaultRowsPerPage || showPagination) && (
         <Pagination count={count} rowsPerPage={pageSize} onChangeRowsPerPage={onChangeRowsPerPage} page={page} onChangePage={onChangePage} />
       )}
     </div>
