@@ -16,14 +16,15 @@ describe('InProgressDeployments Component', () => {
   });
 
   it('renders correctly', async () => {
-    const { container } = render(
+    const { baseElement } = render(
       <MemoryRouter>
         <Provider store={store}>
           <Progress />
         </Provider>
       </MemoryRouter>
     );
-    expect(container.firstChild).toMatchSnapshot();
-    expect(container).toEqual(expect.not.stringMatching(undefineds));
+    const view = baseElement.firstChild.firstChild;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

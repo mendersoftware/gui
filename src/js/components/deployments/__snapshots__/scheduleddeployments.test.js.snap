@@ -2,10 +2,10 @@
 
 exports[`ScheduledDeployments Component renders correctly 1`] = `
 <div
-  className="fadeIn margin-left"
+  class="fadeIn margin-left"
 >
   <div
-    className="dashboard-placeholder margin-top"
+    class="dashboard-placeholder margin-top"
   >
     <p>
       Scheduled deployments will appear here. 
@@ -17,17 +17,10 @@ exports[`ScheduledDeployments Component renders correctly 1`] = `
        to get started
     </p>
     <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root"
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
       focusable="false"
-      style={
-        Object {
-          "fill": "#e3e3e3",
-          "height": 111,
-          "transform": "rotateY(-180deg)",
-          "width": 111,
-        }
-      }
+      style="transform: rotateY(-180deg); fill: #e3e3e3; width: 111px; height: 111px;"
       viewBox="0 0 24 24"
     >
       <path
