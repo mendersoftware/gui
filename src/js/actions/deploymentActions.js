@@ -27,41 +27,52 @@ const transformDeployments = (deployments, deploymentsById) =>
     { deployments: {}, deploymentIds: [] }
   );
 
+const SORTING_DIRECTIONS = {
+  asc: 'asc',
+  desc: 'desc'
+};
+
 /*Deployments */
-export const getDeploymentsByStatus = (status, page = default_page, per_page = default_per_page, startDate, endDate, group, shouldSelect = true) => (
-  dispatch,
-  getState
-) => {
+export const getDeploymentsByStatus = (
+  status,
+  page = default_page,
+  per_page = default_per_page,
+  startDate,
+  endDate,
+  group,
+  shouldSelect = true,
+  sort = SORTING_DIRECTIONS.desc
+) => (dispatch, getState) => {
   var created_after = startDate ? `&created_after=${startDate}` : '';
   var created_before = endDate ? `&created_before=${endDate}` : '';
   var search = group ? `&search=${group}` : '';
-  return GeneralApi.get(`${deploymentsApiUrl}/deployments?status=${status}&per_page=${per_page}&page=${page}${created_after}${created_before}${search}`).then(
-    res => {
-      const { deployments, deploymentIds } = transformDeployments(res.data, getState().deployments.byId);
-      let tasks = deploymentIds.reduce(
-        (accu, deploymentId) => {
-          accu.push(dispatch(getSingleDeploymentStats(deploymentId)));
-          if (deployments[deploymentId].type === DeploymentConstants.DEPLOYMENT_TYPES.configuration) {
-            accu.push(dispatch(getSingleDeployment(deploymentId)));
-          }
-          return accu;
-        },
-        [
-          dispatch({
-            type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`],
-            deployments,
-            deploymentIds,
-            status,
-            total: Number(res.headers[headerNames.total])
-          })
-        ]
-      );
-      if (shouldSelect) {
-        tasks.push(dispatch({ type: DeploymentConstants[`SELECT_${status.toUpperCase()}_DEPLOYMENTS`], deploymentIds, status }));
-      }
-      return Promise.all(tasks);
+  return GeneralApi.get(
+    `${deploymentsApiUrl}/deployments?status=${status}&per_page=${per_page}&page=${page}${created_after}${created_before}${search}&sort=${sort}`
+  ).then(res => {
+    const { deployments, deploymentIds } = transformDeployments(res.data, getState().deployments.byId);
+    let tasks = deploymentIds.reduce(
+      (accu, deploymentId) => {
+        accu.push(dispatch(getSingleDeploymentStats(deploymentId)));
+        if (deployments[deploymentId].type === DeploymentConstants.DEPLOYMENT_TYPES.configuration) {
+          accu.push(dispatch(getSingleDeployment(deploymentId)));
+        }
+        return accu;
+      },
+      [
+        dispatch({
+          type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`],
+          deployments,
+          deploymentIds,
+          status,
+          total: Number(res.headers[headerNames.total])
+        })
+      ]
+    );
+    if (shouldSelect) {
+      tasks.push(dispatch({ type: DeploymentConstants[`SELECT_${status.toUpperCase()}_DEPLOYMENTS`], deploymentIds, status }));
     }
-  );
+    return Promise.all(tasks);
+  });
 };
 
 export const createDeployment = newDeployment => dispatch => {
