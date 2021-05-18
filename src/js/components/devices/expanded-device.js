@@ -10,7 +10,6 @@ import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../action
 import { applyDeviceConfig, decommissionDevice, setDeviceConfig } from '../../actions/deviceActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
-import { versionCompare } from '../../helpers';
 import ForwardingLink from '../common/forwardlink';
 import RelativeTime from '../common/relative-time';
 import { getDocsVersion, getIsEnterprise, getTenantCapabilities } from '../../selectors';
@@ -36,7 +35,6 @@ export const ExpandedDevice = ({
   getSingleDeployment,
   hasDeviceConfig,
   hasDeviceConnect,
-  hasFileTransfer,
   isEnterprise,
   onClose,
   open,
@@ -85,7 +83,7 @@ export const ExpandedDevice = ({
         <div className="muted margin-left margin-right">
           Last check-in: <RelativeTime updateTime={device.updated_ts} />
         </div>
-        <IconButton style={{ marginLeft: 'auto' }} onClick={onClose}>
+        <IconButton style={{ marginLeft: 'auto' }} onClick={onClose} aria-label="close">
           <CloseIcon />
         </IconButton>
       </div>
@@ -122,7 +120,6 @@ export const ExpandedDevice = ({
         <DeviceConnection
           device={device}
           docsVersion={docsVersion}
-          hasFileTransfer={hasFileTransfer}
           startTroubleshoot={launchTroubleshoot}
           socketClosed={socketClosed}
           style={{ marginRight: theme.spacing(2) }}
@@ -139,7 +136,6 @@ export const ExpandedDevice = ({
 
       <TroubleshootDialog
         deviceId={device.id}
-        hasFileTransfer={hasFileTransfer}
         isEnterprise={isEnterprise}
         open={Boolean(troubleshootType)}
         onCancel={() => setTroubleshootType()}
@@ -174,7 +170,6 @@ const mapStateToProps = (state, ownProps) => {
     docsVersion: getDocsVersion(state),
     hasDeviceConnect,
     hasDeviceConfig,
-    hasFileTransfer: versionCompare(state.app.versionInformation.Integration, '2.7.0') > -1,
     isEnterprise: getIsEnterprise(state),
     onboardingComplete: state.onboarding.complete,
     showHelptips: state.users.showHelptips

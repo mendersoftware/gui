@@ -151,6 +151,38 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
             </h6>
           </span>
         </button>
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-text Mui-disabled Mui-disabled"
+          disabled=""
+          style="margin-right: 16px;"
+          tabindex="-1"
+          type="button"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            <span
+              class="MuiButton-startIcon MuiButton-iconSizeMedium"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M9 3L5 6.99h3V14h2V6.99h3L9 3zm7 14.01V10h-2v7.01h-3L15 21l4-3.99h-3z"
+                />
+              </svg>
+            </span>
+            <h6
+              class="MuiTypography-root MuiTypography-subtitle2"
+              style="text-transform: none; text-align: left;"
+            >
+              Launch File Transfer
+            </h6>
+          </span>
+        </button>
         <a
           class="flexbox centered margin-left"
           currentitem="false"

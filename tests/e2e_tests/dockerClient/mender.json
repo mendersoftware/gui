@@ -3,5 +3,5 @@
   "RetryPollIntervalSeconds": 30,
   "ServerURL": "https://docker.mender.io/",
   "UpdatePollIntervalSeconds": 5,
-  "ServerCertificate": "/usr/share/doc/mender-client/examples/demo.crt"
+  "ServerCertificate": "/certs/hosted.pem"
 }

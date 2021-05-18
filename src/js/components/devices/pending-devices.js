@@ -199,11 +199,13 @@ export class Pending extends BaseDevices {
     const actions = [
       {
         icon: <HighlightOffOutlinedIcon className="red" />,
+        key: 'reject',
         title: `Reject ${pluralized}`,
         action: () => self.onAuthorizationChange(selectedRows, DEVICE_STATES.rejected)
       },
       {
         icon: <CheckCircleIcon className="green" />,
+        key: 'accept',
         title: `Accept ${pluralized}`,
         action: () => self.onAuthorizationChange(selectedRows, DEVICE_STATES.accepted)
       }
@@ -291,7 +293,7 @@ export class Pending extends BaseDevices {
               open={showActions}
             >
               {actions.map(action => (
-                <SpeedDialAction key={action.title} icon={action.icon} tooltipTitle={action.title} tooltipOpen onClick={action.action} />
+                <SpeedDialAction key={action.key} aria-label={action.key} icon={action.icon} tooltipTitle={action.title} tooltipOpen onClick={action.action} />
               ))}
             </SpeedDial>
             {deviceLimitWarning}
