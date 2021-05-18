@@ -58,14 +58,22 @@ export const Scheduled = props => {
     if (!isEnterprise) {
       return;
     }
-    clearInterval(timer);
-    timer = setInterval(refreshDeployments, refreshDeploymentsLength);
     refreshDeployments();
     return () => {
-      clearInterval(timer);
       clearAllRetryTimers(setSnackbar);
     };
   }, [isEnterprise]);
+
+  useEffect(() => {
+    if (!isEnterprise) {
+      return;
+    }
+    clearInterval(timer);
+    timer = setInterval(refreshDeployments, refreshDeploymentsLength);
+    return () => {
+      clearInterval(timer);
+    };
+  }, [isEnterprise, page, perPage]);
 
   useEffect(() => {
     if (tabIndex !== tabs.calendar.index) {

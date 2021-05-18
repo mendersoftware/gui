@@ -47,6 +47,7 @@ export const Deployments = ({
   advanceOnboarding,
   getDynamicGroups,
   getGroups,
+  history,
   initializeGroupsDevices,
   isEnterprise,
   location,

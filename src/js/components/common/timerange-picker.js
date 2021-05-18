@@ -7,12 +7,19 @@ const timeranges = {
   month: { start: 29, end: 0, title: 'Last 30 days' }
 };
 
-export const TimerangePicker = ({ classNames = '', onChange, reset }) => {
+export const TimerangePicker = ({ classNames = '', onChange, reset, toggleActive }) => {
   const [active, setActive] = useState(Object.keys(timeranges)[0]);
 
   useEffect(() => {
     setActive(Object.keys(timeranges)[0]);
   }, [reset]);
+
+  useEffect(() => {
+    if (toggleActive === undefined) {
+      return;
+    }
+    setActive();
+  }, [toggleActive]);
 
   const setRange = (after, before, key) => {
     let newStartDate = new Date();

@@ -2,48 +2,44 @@
 
 exports[`PastDeployments Component renders correctly 1`] = `
 <div
-  className="fadeIn margin-left margin-top-large"
+  class="fadeIn margin-left margin-top-large"
 >
   <div
-    className="datepicker-container"
+    class="datepicker-container"
   >
     <div
-      className=""
+      class=""
     >
       <span>
         Filter by date
       </span>
       <ul
-        className="unstyled link-list horizontal"
+        class="unstyled link-list horizontal"
       >
         <li>
           <a
-            className="active"
-            onClick={[Function]}
+            class=""
           >
             Today
           </a>
         </li>
         <li>
           <a
-            className=""
-            onClick={[Function]}
+            class=""
           >
             Yesterday
           </a>
         </li>
         <li>
           <a
-            className=""
-            onClick={[Function]}
+            class=""
           >
             Last 7 days
           </a>
         </li>
         <li>
           <a
-            className=""
-            onClick={[Function]}
+            class=""
           >
             Last 30 days
           </a>
@@ -51,39 +47,23 @@ exports[`PastDeployments Component renders correctly 1`] = `
       </ul>
     </div>
     <div
-      className="MuiFormControl-root MuiTextField-root"
+      class="MuiFormControl-root MuiTextField-root"
       format="MMMM Do"
-      onClick={[Function]}
-      onKeyDown={[Function]}
-      style={
-        Object {
-          "margin": 7.5,
-          "marginTop": 0,
-          "width": 160,
-        }
-      }
+      style="width: 160px; margin: 0px 7.5px 7.5px 7.5px;"
     >
       <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
-        data-shrink={true}
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+        data-shrink="true"
       >
         From
       </label>
       <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-        onClick={[Function]}
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
       >
         <input
-          aria-invalid={false}
-          autoFocus={false}
-          className="MuiInputBase-input MuiInput-input"
-          disabled={false}
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          readOnly={true}
-          required={false}
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input"
+          readonly=""
           type="text"
           value="January 1st"
         />
@@ -91,39 +71,23 @@ exports[`PastDeployments Component renders correctly 1`] = `
       
     </div>
     <div
-      className="MuiFormControl-root MuiTextField-root"
+      class="MuiFormControl-root MuiTextField-root"
       format="MMMM Do"
-      onClick={[Function]}
-      onKeyDown={[Function]}
-      style={
-        Object {
-          "margin": 7.5,
-          "marginTop": 0,
-          "width": 160,
-        }
-      }
+      style="width: 160px; margin: 0px 7.5px 7.5px 7.5px;"
     >
       <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
-        data-shrink={true}
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+        data-shrink="true"
       >
         To
       </label>
       <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-        onClick={[Function]}
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
       >
         <input
-          aria-invalid={false}
-          autoFocus={false}
-          className="MuiInputBase-input MuiInput-input"
-          disabled={false}
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          readOnly={true}
-          required={false}
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input"
+          readonly=""
           type="text"
           value="January 1st"
         />
@@ -131,85 +95,53 @@ exports[`PastDeployments Component renders correctly 1`] = `
       
     </div>
     <div
-      aria-expanded={false}
-      aria-owns={null}
-      className="MuiAutocomplete-root MuiAutocomplete-hasClearIcon"
-      onClick={[Function]}
-      onKeyDown={[Function]}
-      onMouseDown={[Function]}
+      aria-expanded="false"
+      class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon"
       role="combobox"
     >
       <div
-        className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
-        style={
-          Object {
-            "marginTop": 0,
-          }
-        }
+        class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+        style="margin-top: 0px;"
       >
         <label
-          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-          data-shrink={false}
-          htmlFor="device-group-selection"
+          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+          data-shrink="false"
+          for="device-group-selection"
           id="device-group-selection-label"
         >
           Filter by device group
         </label>
         <div
-          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
-          onClick={[Function]}
+          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
         >
           <input
-            aria-activedescendant={null}
             aria-autocomplete="list"
-            aria-controls={null}
-            aria-invalid={false}
-            autoCapitalize="none"
-            autoComplete="off"
-            autoFocus={false}
-            className="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
-            disabled={false}
+            aria-invalid="false"
+            autocapitalize="none"
+            autocomplete="off"
+            class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
             id="device-group-selection"
-            onAnimationStart={[Function]}
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseDown={[Function]}
             placeholder="Select a group"
-            required={false}
-            spellCheck="false"
+            spellcheck="false"
             type="text"
             value=""
           />
           <div
-            className="MuiAutocomplete-endAdornment"
+            class="MuiAutocomplete-endAdornment"
           >
             <button
               aria-label="Clear"
-              className="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator"
-              disabled={false}
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              tabIndex={-1}
+              class="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator"
+              tabindex="-1"
               title="Clear"
               type="button"
             >
               <span
-                className="MuiIconButton-label"
+                class="MuiIconButton-label"
               >
                 <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
                   focusable="false"
                   viewBox="0 0 24 24"
                 >
@@ -218,6 +150,9 @@ exports[`PastDeployments Component renders correctly 1`] = `
                   />
                 </svg>
               </span>
+              <span
+                class="MuiTouchRipple-root"
+              />
             </button>
           </div>
         </div>
@@ -225,30 +160,30 @@ exports[`PastDeployments Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    className="deploy-table-contain"
+    class="deploy-table-contain"
   >
     <div
-      className="loaderContainer shrunk"
+      class="loaderContainer shrunk"
     >
       <div
-        className="loader"
+        class="loader"
       >
         <span
-          className="dot dot_1"
+          class="dot dot_1"
         />
         <span
-          className="dot dot_2"
+          class="dot dot_2"
         />
         <span
-          className="dot dot_3"
+          class="dot dot_3"
         />
         <span
-          className="dot dot_4"
+          class="dot dot_4"
         />
       </div>
     </div>
     <div
-      className="dashboard-placeholder"
+      class="dashboard-placeholder"
     >
       <p>
         No finished deployments were found.
