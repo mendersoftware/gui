@@ -256,10 +256,13 @@ export class Authorized extends BaseDevices {
 
     const groupLabel = selectedGroup ? decodeURIComponent(selectedGroup) : 'All devices';
     const pluralized = pluralize('devices', selectedRows.length);
-    let actions = [{ icon: <HighlightOffOutlinedIcon className="red" />, title: `Reject ${pluralized}`, action: () => self.onRejectDevices(selectedRows) }];
+    let actions = [
+      { icon: <HighlightOffOutlinedIcon className="red" />, key: 'reject', title: `Reject ${pluralized}`, action: () => self.onRejectDevices(selectedRows) }
+    ];
     if (selectedGroup) {
       actions.push({
         icon: <HeightOutlinedIcon className="rotated ninety" />,
+        key: 'group-change',
         title: `Move selected ${pluralized} to another group`,
         action: () => self.onAddDevicesToGroup(selectedRows)
       });
@@ -270,6 +273,7 @@ export class Authorized extends BaseDevices {
               <path d={TrashCan} />
             </SvgIcon>
           ),
+          key: 'group-remove',
           title: `Remove selected ${pluralized} from this group`,
           action: () => self.onRemoveDevicesFromGroup(selectedRows)
         });
@@ -277,6 +281,7 @@ export class Authorized extends BaseDevices {
     } else {
       actions.push({
         icon: <AddCircleIcon className="green" />,
+        key: 'group-add',
         title: `Add selected ${pluralized} to a group`,
         action: () => self.onAddDevicesToGroup(selectedRows)
       });
@@ -376,7 +381,7 @@ export class Authorized extends BaseDevices {
               open={showActions}
             >
               {actions.map(action => (
-                <SpeedDialAction key={action.title} icon={action.icon} tooltipTitle={action.title} tooltipOpen onClick={action.action} />
+                <SpeedDialAction key={action.key} aria-label={action.key} icon={action.icon} tooltipTitle={action.title} tooltipOpen onClick={action.action} />
               ))}
             </SpeedDial>
           </div>

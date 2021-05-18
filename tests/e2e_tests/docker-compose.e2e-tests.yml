@@ -5,6 +5,7 @@ services:
     build:
       dockerfile: Dockerfile.gui
       context: ${GUI_REPOSITORY}/tests/e2e_tests
+    command: tail -f /dev/null
     networks:
       - mender
     depends_on:
@@ -21,38 +22,24 @@ services:
       - mender-create-artifact-worker
       - minio
     volumes:
-      - ${GUI_REPOSITORY}/screenshots:/e2e/cypress/screenshots
-      # - ${GUI_REPOSITORY}/tests/e2e_tests/cypress/snapshots:/e2e/cypress/snapshots
-      - ${GUI_REPOSITORY}/videos:/e2e/cypress/videos
+      - ${GUI_REPOSITORY}/screenshots:/e2e/test-results
+      # - ${GUI_REPOSITORY}/tests/e2e_tests/snapshots:/e2e/snapshots
+      - ${GUI_REPOSITORY}/videos:/e2e/videos
       - ${GUI_REPOSITORY}/logs:/root/.npm/_logs
 
   mender-client:
     image: mendersoftware/mender-client-docker-addons:master
     volumes:
+      - ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/cert.crt:/certs/hosted.pem
       - ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/artifact_info:/etc/mender/artifact_info
       - ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/device_type:/var/lib/mender/device_type
       - ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender.json:/etc/mender/mender.conf
       - ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender-connect.json:/etc/mender/mender-connect.conf
 
-    ##
-    ## to execute or edit the tests locally:
-    ##
-    ## either use cypress locally using `npm install` in the e2e_tests directory
-    ## or:
-    ## add the following to your local `docker-compose.override.yml` and start the demo environment with that
-    ##
-    # entrypoint: cypress open --port 8888 --project /e2e --config pageLoadTimeout=100000,watchForFileChanges=true
-    # ports:
-    #   - '8888:8888'
-    # environment:
-    #   - DISPLAY=10.20.32.214:0
-    # volumes:
-    #   - ./tests/e2e_tests:/e2e
-    #   - /tmp/.X11-unix:/tmp/.X11-unix
-    ##
-    ## you probably have to take some preparatory measures (mainly X forwarding) to get the cypress window to show up
-    ## - you might find help on: https://www.cypress.io/blog/2019/05/02/run-cypress-with-a-single-docker-command/
-    ##
+  ##
+  ## to execute or edit the tests locally:
+  ## use playwright locally using `npm install` in the e2e_tests directory and run `npm run test`
+  ##
 
   mender-gui:
     image: mendersoftware/gui:pr

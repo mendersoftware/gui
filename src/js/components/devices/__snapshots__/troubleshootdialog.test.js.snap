@@ -82,6 +82,22 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
                   class="MuiTouchRipple-root"
                 />
               </button>
+              <button
+                aria-selected="false"
+                class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary"
+                role="tab"
+                tabindex="-1"
+                type="button"
+              >
+                <span
+                  class="MuiTab-wrapper"
+                >
+                  File transfer
+                </span>
+                <span
+                  class="MuiTouchRipple-root"
+                />
+              </button>
             </div>
             <span
               class="PrivateTabIndicator-root-1 PrivateTabIndicator-colorSecondary-3 hidden"

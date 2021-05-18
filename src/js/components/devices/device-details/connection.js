@@ -84,7 +84,7 @@ export const DeviceDisconnectedNote = ({ docsVersion, lastConnectionTs, style })
   </DeviceConnectionNote>
 );
 
-export const DeviceConnection = ({ device, docsVersion = '', hasFileTransfer, startTroubleshoot, socketClosed, style }) => {
+export const DeviceConnection = ({ device, docsVersion = '', startTroubleshoot, socketClosed, style }) => {
   const { connect_status = DEVICE_CONNECT_STATES.unknown, connect_updated_ts } = device;
   return (
     <DeviceDataCollapse
@@ -100,9 +100,6 @@ export const DeviceConnection = ({ device, docsVersion = '', hasFileTransfer, st
               .reverse()
               .reduce(
                 (accu, [type, item]) => {
-                  if (!hasFileTransfer && type === 'transfer') {
-                    return accu;
-                  }
                   accu.unshift(
                     <Button
                       key={type}
