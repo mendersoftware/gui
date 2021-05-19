@@ -46,14 +46,17 @@ test.describe('Layout assertions', () => {
 
     test('can authorize a device', async () => {
       await page.click(`.leftNav :text('Devices')`);
-      await page.click(`a:has-text('Pending')`);
-      await page.waitForSelector('.deviceListItem', { timeout: 60000 });
-      await page.click('.deviceListItem input');
-      await page.click('.MuiSpeedDial-fab');
-      await page.hover('#device-actions-actions');
-      await page.click('[aria-label="accept"]');
+      const hasAcceptedDevice = await page.isVisible('.deviceListItem');
+      if (!hasAcceptedDevice) {
+        await page.click(`a:has-text('Pending')`);
+        await page.waitForSelector('.deviceListItem', { timeout: 60000 });
+        await page.click('.deviceListItem input');
+        await page.click('.MuiSpeedDial-fab');
+        await page.hover('#device-actions-actions');
+        await page.click('[aria-label="accept"]');
+      }
       await page.click(`:is(a:has-text('Device groups'))`);
-      await page.waitForSelector(`css=.deviceListItem >> text=release`);
+      await page.waitForSelector(`css=.deviceListItem >> text=/release/`, { timeout: 60000 });
       const element = await page.textContent('.deviceListItem');
       expect(element.includes('release')).toBeTruthy();
       await page.click('.deviceListItem');
