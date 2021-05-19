@@ -25,6 +25,8 @@ describe('ProgressDeviceList Component', () => {
             created={defaultState.deployments.byId.d1.created}
             deployment={defaultState.deployments.byId.d1}
             devicesById={defaultState.devices.byId}
+            getDeviceById={jest.fn}
+            getDeviceAuth={jest.fn}
             retries={3}
           />
         </Provider>

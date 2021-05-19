@@ -62,7 +62,22 @@ export const DeploymentReport = props => {
   const [deviceId, setDeviceId] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
   const rolloutSchedule = useRef();
-  const { abort, allDevices, deployment, getAuditLogs, getRelease, isEnterprise, open, onClose, past, retry, release, type } = props;
+  const {
+    abort,
+    allDevices,
+    deployment,
+    getAuditLogs,
+    getDeviceLog,
+    getRelease,
+    getSingleDeployment,
+    isEnterprise,
+    open,
+    onClose,
+    past,
+    retry,
+    release,
+    type
+  } = props;
 
   useEffect(() => {
     if (!open) {
@@ -85,8 +100,8 @@ export const DeploymentReport = props => {
   }, [open]);
 
   useEffect(() => {
-    const { stats } = deployment;
-    if (stats && stats.downloading + stats.installing + stats.rebooting + stats.pending <= 0) {
+    const { device_count, stats } = deployment;
+    if (device_count && stats && stats.downloading + stats.installing + stats.rebooting + stats.pending <= 0) {
       // if no more devices in "progress" statuses, deployment has finished, stop counter
       clearInterval(timer);
     }
