@@ -22,12 +22,14 @@ const defaultResponseActions = {
   },
   log: {
     type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICE_LOG,
-    deploymentId: Object.keys(defaultState.deployments.byId)[0],
-    devices: {
-      ...defaultState.deployments.byId.d1.devices,
-      a1: {
-        ...defaultState.deployments.byId.d1.devices.a1,
-        log: 'test'
+    deployment: {
+      ...defaultState.deployments.byId.d1,
+      devices: {
+        ...defaultState.deployments.byId.d1.devices,
+        a1: {
+          ...defaultState.deployments.byId.d1.devices.a1,
+          log: 'test'
+        }
       }
     }
   },

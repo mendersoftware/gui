@@ -67,10 +67,7 @@ const deploymentReducer = (state = initialState, action) => {
         ...state,
         byId: {
           ...state.byId,
-          [action.deploymentId]: {
-            ...state.byId[action.deploymentId],
-            devices: action.devices
-          }
+          [action.deployment.id]: action.deployment
         }
       };
     case DeploymentConstants.RECEIVE_INPROGRESS_DEPLOYMENTS:
