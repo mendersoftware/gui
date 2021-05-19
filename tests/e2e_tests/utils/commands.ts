@@ -145,12 +145,21 @@ export const tenantTokenRetrieval = async (baseUrl: string, context: BrowserCont
 };
 
 let previousSecret;
-export const generateOtp = async (otpSecret = previousSecret) => {
-  previousSecret = otpSecret;
+export const generateOtp = async (otpSecret?) => {
+  let filesecret;
+  try {
+    filesecret = fs.readFileSync('secret.txt', 'utf8');
+    console.log(filesecret);
+  } catch (error) {
+    console.log('no secret.txt found - moving on...');
+  }
+  previousSecret = otpSecret ?? previousSecret ?? filesecret;
   const secret = previousSecret;
   if (!secret) {
     throw new Error('No secret has been provided.');
   }
+  fs.writeFileSync('secret.txt', secret);
+  console.log(`2fa secret: ${secret}`);
   return authenticator.generate(secret);
 };
 
