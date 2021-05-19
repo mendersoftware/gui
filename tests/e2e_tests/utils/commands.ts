@@ -22,15 +22,29 @@ const updateConfigFileWithUrl = (fileName, serverUrl = 'https://docker.mender.io
 
 export const startClient = async (baseUrl, token, count) => {
   const srippedBaseUrl = baseUrl.replace(/\/$/, '');
+  const deviceType = 'qemux86-64';
+  const artifactName = 'release-v1';
+  const attributes = {
+    device_type: deviceType,
+    client_version: 'mender-2.2.0',
+    artifact_name: artifactName,
+    kernel: 'test Linux version',
+    mac_enp0: '12.34'
+  };
+  const updateInterval = 5;
   let args = [
-    '-inventory="device_type:qemux86-64,client_version:mender-2.2.0,artifact_name:release-v1,kernel:test Linux version,mac_enp0:12.34"',
-    '-invfreq=5',
-    '-pollfreq=5',
-    `-count=${count}`,
-    `-backend=${srippedBaseUrl}`
+    'run',
+    ...Object.entries(attributes).map(([key, value]) => `--inventory-attribute="${key}:${value}"`),
+    `--device-type=${deviceType}`,
+    `--artifact-name=${artifactName}`,
+    `--auth-interval=${updateInterval}`,
+    `--inventory-interval=${updateInterval}`,
+    `--update-interval=${updateInterval}`,
+    `--count=${count}`,
+    `--server-url=${srippedBaseUrl}`
   ];
   if (token) {
-    args.push(`-tenant=${token}`);
+    args.push(`--tenant-token=${token}`);
   }
   console.log(`starting using: ./mender-stress-test-client ${args.join(' ')}`);
   let child = spawn('./mender-stress-test-client', args);
