@@ -27,12 +27,10 @@ describe('device reducer', () => {
   it('should handle RECEIVE_DEPLOYMENT_DEVICE_LOG', async () => {
     const { devices } = defaultState.deployments.byId.d1;
     expect(
-      reducer(undefined, { type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICE_LOG, deploymentId: defaultState.deployments.byId.d1.id, devices }).byId.d1
-        .devices.a1.id
+      reducer(undefined, { type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICE_LOG, deployment: defaultState.deployments.byId.d1 }).byId.d1.devices.a1.id
     ).toEqual(devices.a1.id);
     expect(
-      reducer(initialState, { type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICE_LOG, deploymentId: defaultState.deployments.byId.d1.id, devices }).byId.d1
-        .devices.a1.id
+      reducer(initialState, { type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICE_LOG, deployment: defaultState.deployments.byId.d1 }).byId.d1.devices.a1.id
     ).toEqual(devices.a1.id);
   });
 

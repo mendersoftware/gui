@@ -147,14 +147,22 @@ export const getDeviceLog = (deploymentId, deviceId) => (dispatch, getState) =>
       return Promise.reject();
     })
     .then(({ data: log }) => {
-      const devices = getState().deployments.byId[deploymentId].devices;
-      devices[deviceId].log = log;
+      const stateDeployment = getState().deployments.byId[deploymentId];
+      const deployment = {
+        ...stateDeployment,
+        devices: {
+          ...stateDeployment.devices,
+          [deviceId]: {
+            ...stateDeployment.devices[deviceId],
+            log
+          }
+        }
+      };
       return Promise.all([
         Promise.resolve(
           dispatch({
             type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICE_LOG,
-            devices,
-            deploymentId
+            deployment
           })
         ),
         Promise.resolve(log)

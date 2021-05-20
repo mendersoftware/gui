@@ -52,18 +52,21 @@ export class CreateDialog extends React.Component {
   }
 
   componentDidMount() {
-    const self = this;
-    if (Object.keys(self.props.deploymentObject).length) {
-      self.setState({ ...self.props.deploymentObject });
+    const { deploymentObject, isEnterprise, isHosted, plan, selectDevice } = this.props;
+    if (Object.keys(deploymentObject).length) {
+      this.setState({ ...deploymentObject });
+      if (deploymentObject.deploymentDeviceIds.length === 1 && deploymentObject.deploymentDeviceIds[0] === deploymentObject.group) {
+        selectDevice(deploymentObject.deploymentDeviceIds[0]);
+      }
     }
     const steps = deploymentSteps.reduce((accu, step) => {
-      if (step.closed && ((!self.props.isEnterprise && self.props.plan === 'os') || !(self.props.isHosted || self.props.isEnterprise))) {
+      if (step.closed && ((!isEnterprise && plan === 'os') || !(isHosted || isEnterprise))) {
         return accu;
       }
       accu.push(step);
       return accu;
     }, []);
-    self.setState({ steps });
+    this.setState({ steps });
   }
 
   componentDidUpdate(prevProps) {
@@ -101,10 +104,10 @@ export class CreateDialog extends React.Component {
     const startTime = phases?.length ? phases[0].start_ts || new Date() : new Date();
     const newDeployment = {
       artifact_name: release.Name,
-      devices: filterId || (group && group !== allDevices) ? undefined : deploymentDeviceIds,
+      devices: filterId || (group && group !== allDevices && !device) ? undefined : deploymentDeviceIds,
       filter_id: filterId,
       all_devices: !filterId && group === allDevices,
-      group: group === allDevices ? undefined : group,
+      group: group === allDevices || device ? undefined : group,
       name: device?.id || (group ? decodeURIComponent(group) : 'All devices'),
       phases: phases
         ? phases.map((phase, i, origPhases) => {

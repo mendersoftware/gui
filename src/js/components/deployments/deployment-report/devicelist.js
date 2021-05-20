@@ -13,7 +13,7 @@ const headerStyle = { position: 'sticky', top: 0, background: 'white', zIndex: 1
 export const DeploymentDeviceList = ({ allDevices, created, deployment, devicesById, getDeviceAuth, getDeviceById, idAttribute, viewLog }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(20);
-  const totalDeviceCount = allDevices.length ?? deployment.device_count ?? 0;
+  const totalDeviceCount = allDevices.length || deployment.device_count || 0;
   const end = Math.min(allDevices.length, perPage);
   const [pagedDevices, setPagedDevices] = useState(allDevices.slice(0, end));
   const { retries } = deployment;
@@ -26,12 +26,16 @@ export const DeploymentDeviceList = ({ allDevices, created, deployment, devicesB
     handlePageChange(1);
   }, [perPage]);
 
+  useEffect(() => {
+    handlePageChange();
+  }, [allDevices.length, deployment.status, deployment.stats]);
+
   const getDeviceDetails = devices => {
     // get device artifact, inventory and identity details not listed in schedule data
     devices.map(device => Promise.all([getDeviceById(device.id), getDeviceAuth(device.id)]));
   };
 
-  const handlePageChange = pageNo => {
+  const handlePageChange = (pageNo = currentPage) => {
     const start = pageNo * perPage - perPage;
     const end = Math.min(allDevices.length, pageNo * perPage);
     // cut slice from full list of devices
