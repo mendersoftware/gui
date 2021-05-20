@@ -70,6 +70,7 @@ const releaseReducer = (state = initialState, action) => {
       return {
         ...state,
         byId: {
+          ...state.byId,
           [action.release.Name]: {
             ...state.byId[action.release.Name],
             ...action.release

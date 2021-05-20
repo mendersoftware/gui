@@ -59,10 +59,24 @@ export const DeploymentAbortButton = ({ abort, deployment }) => {
 };
 
 export const DeploymentReport = props => {
-  const [deviceId, setDeviceId] = useState(null);
-  const [showDialog, setShowDialog] = useState(false);
+  const [deviceId, setDeviceId] = useState();
   const rolloutSchedule = useRef();
-  const { abort, allDevices, deployment, getAuditLogs, getRelease, isEnterprise, open, onClose, past, retry, release, type } = props;
+  const {
+    abort,
+    allDevices,
+    deployment,
+    getAuditLogs,
+    getDeviceLog,
+    getRelease,
+    getSingleDeployment,
+    isEnterprise,
+    open,
+    onClose,
+    past,
+    retry,
+    release,
+    type
+  } = props;
 
   useEffect(() => {
     if (!open) {
@@ -85,8 +99,8 @@ export const DeploymentReport = props => {
   }, [open]);
 
   useEffect(() => {
-    const { stats } = deployment;
-    if (stats && stats.downloading + stats.installing + stats.rebooting + stats.pending <= 0) {
+    const { device_count, stats } = deployment;
+    if (device_count && stats && stats.downloading + stats.installing + stats.rebooting + stats.pending <= 0) {
       // if no more devices in "progress" statuses, deployment has finished, stop counter
       clearInterval(timer);
     }
@@ -105,7 +119,6 @@ export const DeploymentReport = props => {
 
   const viewLog = id =>
     getDeviceLog(deployment.id, id).then(() => {
-      setShowDialog(true);
       setDeviceId(id);
     });
 
@@ -116,7 +129,7 @@ export const DeploymentReport = props => {
   };
 
   const { created = new Date().toISOString(), devices, type: deploymentType } = deployment;
-  const logData = deviceId ? devices[deviceId].log : null;
+  const logData = deviceId && devices[deviceId] ? devices[deviceId].log : null;
   const finished = deployment.finished || deployment.status === DEPLOYMENT_STATES.finished;
   const isConfigurationDeployment = deploymentType === DEPLOYMENT_TYPES.configuration;
   let config = {};
@@ -180,7 +193,7 @@ export const DeploymentReport = props => {
         <DeploymentStatus deployment={deployment} />
         <DeviceList {...props} created={created} viewLog={viewLog} />
         <RolloutSchedule deployment={deployment} innerRef={rolloutSchedule} />
-        {showDialog && <LogDialog logData={logData} onClose={() => setShowDialog(false)} />}
+        {deviceId && <LogDialog logData={logData} onClose={() => setDeviceId()} />}
       </div>
       <Divider light style={{ marginTop: theme.spacing(2) }} />
     </Drawer>

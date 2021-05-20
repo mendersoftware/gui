@@ -100,11 +100,13 @@ export const ProgressDisplay = ({ className = '', deployment }) => {
   const totalDeviceCount = Math.max(device_count, max_devices || 0);
 
   useEffect(() => {
-    timer = setInterval(() => setTime(new Date()), 1000);
+    timer = setInterval(updateTime, 1000);
     return () => {
       clearInterval(timer);
     };
   }, []);
+
+  const updateTime = () => setTime(new Date());
 
   const status = deploymentStatus === 'pending' && currentProgressCount === 0 ? 'queued' : deploymentStatus;
   let phases = deploymentPhases.length ? deploymentPhases : [{ id, device_count: totalSuccessCount, batch_size: totalDeviceCount, start_ts: created }];
