@@ -33,6 +33,15 @@ test.describe('Test setup', () => {
   test.describe('account creation', () => {
     test('allows account creation', async ({ context }) => {
       test.skip(environment !== 'staging');
+      let loggedInContext;
+      try {
+        loggedInContext = await login(username, password, baseUrl, context);
+      } catch (error) {
+        // looks like this is the first run, let's continue
+      }
+      if (loggedInContext) {
+        test.skip('looks like the account was created already, continue with the remaining tests');
+      }
       const domain = baseUrlToDomain(baseUrl);
       await context.addCookies([{ name: 'cookieconsent_status', value: 'allow', path: '/', domain }]);
       const page = await context.newPage();

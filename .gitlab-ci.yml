@@ -152,17 +152,19 @@ test:docs-links:hosted:
 test:prep:
   stage: pre-test
   image: docker
+  only:
+    - staging
   services:
     - docker:19.03.5-dind
   script:
-    - docker run --rm --entrypoint "/bin/sh" -v $(pwd):/extract mendersoftware/mender-stress-test-client -c "cp mender-stress-test-client /extract/"
+    - docker run --rm --entrypoint "/bin/sh" -v $(pwd):/extract mendersoftware/mender-stress-test-client:master -c "cp mender-stress-test-client /extract/"
   artifacts:
     paths:
       - mender-stress-test-client
     expire_in: 30 days
 
 test:staging-deployment:
-  image: mcr.microsoft.com/playwright:v1.10.0
+  image: mcr.microsoft.com/playwright:v1.11.0
   stage: .post
   services:
     - docker:19.03.5-dind
@@ -181,8 +183,9 @@ test:staging-deployment:
   before_script:
     - curl -fsSL https://get.docker.com | sh
     - mv mender-stress-test-client tests/e2e_tests/ && cd tests/e2e_tests
-    - wget -qP fixtures "https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender"
+    - curl -o fixtures/mender-demo-artifact.mender "https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender"
     - touch hosted.pem && true | openssl s_client -connect staging.hosted.mender.io:443 2>/dev/null | openssl x509 > hosted.pem
+    - docker pull mendersoftware/mender-client-docker-addons:master
   script:
     - npm ci --cache .npm --prefer-offline
     - npm run test
@@ -196,7 +199,7 @@ test:staging-deployment:
   artifacts:
     expire_in: 2w
     paths:
-      - tests/e2e_tests/screenshots
+      - tests/e2e_tests/test-results
       - logs
     when: on_failure
 
