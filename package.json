@@ -62,7 +62,7 @@
     "@testing-library/dom": "^7.31.0",
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^13.1.2",
+    "@testing-library/user-event": "^13.1.9",
     "assert": "^2.0.0",
     "autoprefixer": "^10.2.5",
     "axios-mock-adapter": "^1.19.0",
