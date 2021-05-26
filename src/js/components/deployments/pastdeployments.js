@@ -215,7 +215,7 @@ export const Past = props => {
           autoSelect
           filterSelectedOptions
           handleHomeEndKeys
-          classes={{ input: 'capitalized', option: 'capitalized' }}
+          classes={{ input: deploymentType ? 'capitalized' : '', option: 'capitalized' }}
           inputValue={deploymentType}
           onInputChange={onTypeFilterChange}
           options={Object.keys(DEPLOYMENT_TYPES)}
@@ -249,7 +249,7 @@ export const Past = props => {
           <div className="dashboard-placeholder">
             <p>No finished deployments were found.</p>
             <p>
-              Try a different date range, or <a onClick={createClick}>Create a new deployment</a> to get started
+              Try adjusting the filters, or <a onClick={createClick}>Create a new deployment</a> to get started
             </p>
             <img src={historyImage} alt="Past" />
           </div>

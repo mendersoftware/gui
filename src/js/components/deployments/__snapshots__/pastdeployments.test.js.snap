@@ -183,7 +183,7 @@ exports[`PastDeployments Component renders correctly 1`] = `
             aria-invalid="false"
             autocapitalize="none"
             autocomplete="off"
-            class="MuiInputBase-input MuiInput-input MuiAutocomplete-input capitalized MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
+            class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
             id="deployment-type-selection"
             placeholder="Select a type"
             spellcheck="false"
@@ -278,7 +278,7 @@ exports[`PastDeployments Component renders correctly 1`] = `
         No finished deployments were found.
       </p>
       <p>
-        Try a different date range, or 
+        Try adjusting the filters, or 
         <a>
           Create a new deployment
         </a>
