@@ -55,9 +55,11 @@ export const RoleDefinition = ({ adding, editing, stateGroups, onCancel, onSubmi
   const filteredGroups = groups.filter(group => group.selected);
   const isSubmitDisabled = Boolean(
     nameError ||
-      !(allowUserManagement || groups.some(group => group.selected)) ||
-      Object.entries({ allowUserManagement, description, id }).every(([key, value]) => selectedRole[key] === value) ||
-      (groups.length && filteredGroups.length === selectedRole.groups.length && filteredGroups.every(group => selectedRole.groups.includes(group)))
+      !(allowUserManagement || filteredGroups.length) ||
+      (Object.entries({ allowUserManagement, description, id }).every(([key, value]) => selectedRole[key] === value) &&
+        groups.length &&
+        filteredGroups.length === selectedRole.groups.length &&
+        filteredGroups.every(group => selectedRole.groups.includes(group.name)))
   );
 
   return (
