@@ -167,12 +167,13 @@ test.describe('Settings', () => {
       await page.waitForSelector('text=/Global settings/i');
       await page.click('text=/user management/i');
       await page.goto(`${baseUrl}ui/#/settings/user-management`);
-      const allowsUserCreation = await page.isVisible(`text=Create new user`);
-      const content = await page.$('.tab-container.with-sub-panels');
-      if (!allowsUserCreation) {
-        console.log(content);
+      const isVisible = await page.isVisible(`text=/Create new user/i`);
+      if (!isVisible) {
+        console.log('settings may not be loaded - move around');
+        await page.goto(`${baseUrl}ui/#/help`);
+        await page.goto(`${baseUrl}ui/#/settings/user-management`);
       }
-      expect(allowsUserCreation).toBeTruthy();
+      await page.waitForSelector('css=button >> text=Create new user');
     });
     test('allows email changes', async () => {
       await page.goto(`${baseUrl}ui/#/settings/my-account`);
@@ -196,7 +197,6 @@ test.describe('Settings', () => {
 
       await page.click(`:is(span:has-text('Log out'))`);
       await context.clearCookies();
-      // await page.waitForSelector('text=/Log in/i');
       await page.goto(`${baseUrl}ui/`);
       expect(await page.isVisible('text=/Log in/i')).toBeTruthy();
     });
