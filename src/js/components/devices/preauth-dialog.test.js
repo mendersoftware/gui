@@ -55,6 +55,8 @@ describe('PreauthDialog Component', () => {
     await act(() => userEvent.click(screen.getByRole('button', { name: 'Save and add another' })));
     await waitFor(() => rerender(ui));
     jest.advanceTimersByTime(150);
+    jest.runAllTimers();
+    jest.runAllTicks();
     expect(uploadMock).toHaveBeenCalled();
   });
 
