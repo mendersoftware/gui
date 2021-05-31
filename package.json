@@ -67,7 +67,7 @@
     "autoprefixer": "^10.2.6",
     "axios-mock-adapter": "^1.19.0",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "~26.6.3",
+    "babel-jest": "~27.0.2",
     "child_process": "^1.0.2",
     "clean-webpack-plugin": "^3.0.0",
     "core-js": "^3.13.1",
