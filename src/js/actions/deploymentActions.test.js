@@ -164,7 +164,7 @@ describe('deployment actions', () => {
       { ...defaultResponseActions.stats, deploymentId: defaultState.deployments.byId.d2.id, stats: defaultState.deployments.byId.d2.stats }
     ];
     return store
-      .dispatch(getDeploymentsByStatus('inprogress', null, null, new Date(), new Date(), Object.keys(defaultState.devices.groups.byId)[0], true))
+      .dispatch(getDeploymentsByStatus('inprogress', null, null, new Date(), new Date(), Object.keys(defaultState.devices.groups.byId)[0], undefined, true))
       .then(() => {
         const storeActions = store.getActions();
         expect(storeActions.length).toEqual(expectedActions.length);

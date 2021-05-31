@@ -213,7 +213,7 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
       {!(loading || events.length) && (
         <div className="dashboard-placeholder">
           <p>No log entries were found.</p>
-          <p>Try a different date range.</p>
+          <p>Try adjusting the filters.</p>
           <img src={historyImage} alt="Past" />
         </div>
       )}

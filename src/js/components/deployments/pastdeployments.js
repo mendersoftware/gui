@@ -9,7 +9,7 @@ import historyImage from '../../../assets/img/history.png';
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, selectDeployment } from '../../actions/deploymentActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
-import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
+import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import Loader from '../common/loader';
@@ -30,6 +30,7 @@ const headers = [...defaultHeaders.slice(0, defaultHeaders.length - 1), { title:
 const type = DEPLOYMENT_STATES.finished;
 
 let timer;
+let inputDelayTimer;
 
 const BEGINNING_OF_TIME = '2016-01-01T00:00:00.000Z';
 const SORTING_DIRECTIONS = {
@@ -59,6 +60,7 @@ export const Past = props => {
   // eslint-disable-next-line no-unused-vars
   const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
   const [timeRangeToggle, setTimeRangeToggle] = useState(false);
+  const [deploymentType, setDeploymentType] = useState(DEPLOYMENT_TYPES.software);
   const deploymentsRef = useRef();
 
   const handleResize = () => {
@@ -70,15 +72,17 @@ export const Past = props => {
   useEffect(() => {
     const roundedStartDate = Math.round(Date.parse(BEGINNING_OF_TIME) / 1000);
     const roundedEndDate = Math.round(Date.parse(endDate) / 1000);
-    getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, deviceGroup, true, SORTING_DIRECTIONS.desc).then(deploymentsAction => {
-      const deploymentsList = deploymentsAction ? Object.values(deploymentsAction[0].deployments) : [];
-      if (deploymentsList.length) {
-        let newStartDate = new Date(deploymentsList[deploymentsList.length - 1].created);
-        newStartDate.setHours(0, 0, 0, 0);
-        setStartDate(newStartDate);
-        setTimeRangeToggle(!timeRangeToggle);
+    getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, deviceGroup, deploymentType, true, SORTING_DIRECTIONS.desc).then(
+      deploymentsAction => {
+        const deploymentsList = deploymentsAction ? Object.values(deploymentsAction[0].deployments) : [];
+        if (deploymentsList.length) {
+          let newStartDate = new Date(deploymentsList[deploymentsList.length - 1].created);
+          newStartDate.setHours(0, 0, 0, 0);
+          setStartDate(newStartDate);
+          setTimeRangeToggle(!timeRangeToggle);
+        }
       }
-    });
+    );
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -92,7 +96,7 @@ export const Past = props => {
     return () => {
       clearInterval(timer);
     };
-  }, [page, perPage, startDate, endDate, deviceGroup]);
+  }, [page, perPage, startDate, endDate, deviceGroup, deploymentType]);
 
   useEffect(() => {
     if (past.length && !onboardingState.complete) {
@@ -125,16 +129,18 @@ export const Past = props => {
     currentPerPage = perPage,
     currentStartDate = startDate,
     currentEndDate = endDate,
-    currentDeviceGroup = deviceGroup
+    currentDeviceGroup = deviceGroup,
+    currentType = deploymentType
   ) => {
     setPage(currentPage);
     setPerPage(currentPerPage);
     setEndDate(currentEndDate);
     setStartDate(currentStartDate);
     setDeviceGroup(currentDeviceGroup);
+    setDeploymentType(currentType);
     const roundedStartDate = Math.round(Date.parse(currentStartDate) / 1000);
     const roundedEndDate = Math.round(Date.parse(currentEndDate) / 1000);
-    return getDeploymentsByStatus(type, currentPage, currentPerPage, roundedStartDate, roundedEndDate, currentDeviceGroup)
+    return getDeploymentsByStatus(type, currentPage, currentPerPage, roundedStartDate, roundedEndDate, currentDeviceGroup, currentType)
       .then(deploymentsAction => {
         clearRetryTimer(type, setSnackbar);
         if (deploymentsAction && deploymentsAction[0].total && !deploymentsAction[0].deploymentIds.length) {
@@ -161,28 +167,60 @@ export const Past = props => {
     onboardingComponent = getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED, onboardingState, { anchor }, onboardingComponent);
   }
 
+  const onFilterUpdate = (...args) => {
+    clearTimeout(inputDelayTimer);
+    inputDelayTimer = setTimeout(() => refreshPast(...args), 700);
+  };
+
+  const onGroupFilterChange = (e, value) => {
+    setDeviceGroup(value);
+    onFilterUpdate(1, perPage, startDate, endDate, value);
+  };
+
+  const onTypeFilterChange = (e, value) => {
+    setDeploymentType(value);
+    onFilterUpdate(1, perPage, startDate, endDate, deviceGroup, value);
+  };
+
+  const onTimeFilterChange = (start, end) => refreshPast(1, perPage, start, end);
+
   return (
     <div className="fadeIn margin-left margin-top-large">
       <div className="datepicker-container">
-        <TimerangePicker onChange={(start, end) => refreshPast(1, perPage, start, end)} toggleActive={timeRangeToggle} />
+        <TimerangePicker onChange={onTimeFilterChange} toggleActive={timeRangeToggle} />
         <TimeframePicker
           classNames="margin-left margin-right inline-block"
-          onChange={(start, end) => refreshPast(1, perPage, start, end)}
+          onChange={onTimeFilterChange}
           endDate={endDate}
           startDate={startDate}
           tonight={tonight}
         />
         <Autocomplete
           id="device-group-selection"
+          autoHighlight
           autoSelect
           filterSelectedOptions
           freeSolo
           handleHomeEndKeys
           inputValue={deviceGroup}
           options={groups}
-          onInputChange={(e, value) => refreshPast(1, perPage, startDate, endDate, value)}
+          onInputChange={onGroupFilterChange}
           renderInput={params => (
             <TextField {...params} label="Filter by device group" placeholder="Select a group" InputProps={{ ...params.InputProps }} style={{ marginTop: 0 }} />
+          )}
+        />
+        <Autocomplete
+          id="deployment-type-selection"
+          autoHighlight
+          autoSelect
+          filterSelectedOptions
+          handleHomeEndKeys
+          classes={{ input: deploymentType ? 'capitalized' : '', option: 'capitalized' }}
+          inputValue={deploymentType}
+          onInputChange={onTypeFilterChange}
+          options={Object.keys(DEPLOYMENT_TYPES)}
+          renderInput={params => (
+            <TextField {...params} label="Filter by type" placeholder="Select a type" InputProps={{ ...params.InputProps }} style={{ marginTop: 0 }} />
           )}
         />
       </div>
@@ -211,7 +249,7 @@ export const Past = props => {
           <div className="dashboard-placeholder">
             <p>No finished deployments were found.</p>
             <p>
-              Try a different date range, or <a onClick={createClick}>Create a new deployment</a> to get started
+              Try adjusting the filters, or <a onClick={createClick}>Create a new deployment</a> to get started
             </p>
             <img src={historyImage} alt="Past" />
           </div>
