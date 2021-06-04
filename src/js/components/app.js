@@ -84,7 +84,7 @@ export const AppRoot = ({
   };
 
   const onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_CREATION_DIALOG, onboardingState);
-  const containerProps = getToken() ? { id: 'app' } : { className: 'flexbox centered', style: { height: '100vh' } };
+  const containerProps = getToken() ? { id: 'app' } : { className: 'flexbox centered', style: { minHeight: '100vh' } };
   return (
     <div {...containerProps}>
       {getToken() ? (
