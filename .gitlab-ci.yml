@@ -203,20 +203,6 @@ test:staging-deployment:
       - logs
     when: on_failure
 
-publish:image:
-  needs:
-    - job: build:docker
-      artifacts: true
-    - job: test:acceptance
-      optional: true
-
-publish:image:mender:
-  needs:
-    - job: build:docker
-      artifacts: true
-    - job: test:acceptance
-      optional: true
-
 publish:tests:
   stage: publish
   except:
