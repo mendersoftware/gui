@@ -72,7 +72,7 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
   }
 
   return (
-    <div className="flexbox column" id="login-box">
+    <div className="flexbox column padding-bottom margin-bottom" id="login-box">
       <h3>Log in</h3>
       <img src={loginLogo} alt="mender-logo" className="margin-bottom-small" />
 

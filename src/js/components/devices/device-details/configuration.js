@@ -14,6 +14,7 @@ import {
 
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { deepCompare, groupDeploymentStats, groupDeploymentDevicesStats, isEmpty } from '../../../helpers';
+import Tracking from '../../../tracking';
 import ConfigurationObject from '../../common/configurationobject';
 import Confirm from '../../common/confirm';
 import LogDialog from '../../common/dialogs/log';
@@ -239,6 +240,7 @@ export const DeviceConfiguration = ({
   };
 
   const onSubmit = () => {
+    Tracking.event({ category: 'devices', action: 'apply_configuration' });
     setIsUpdatingConfig(true);
     setUpdateFailed(false);
     return setDeviceConfig(device.id, changedConfig)

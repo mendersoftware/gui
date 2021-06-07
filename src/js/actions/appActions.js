@@ -28,7 +28,7 @@ export const initializeAppData = () => (dispatch, getState) => {
   let tasks = [
     dispatch(getGlobalSettings()),
     dispatch(getDeviceAttributes()),
-    dispatch(getDeploymentsByStatus(DEPLOYMENT_STATES.finished, undefined, undefined, undefined, undefined, undefined, false)),
+    dispatch(getDeploymentsByStatus(DEPLOYMENT_STATES.finished, undefined, undefined, undefined, undefined, undefined, undefined, false)),
     dispatch(getDeploymentsByStatus(DEPLOYMENT_STATES.inprogress)),
     dispatch(getDevicesByStatus(DEVICE_STATES.accepted)),
     dispatch(getDevicesByStatus(DEVICE_STATES.pending)),

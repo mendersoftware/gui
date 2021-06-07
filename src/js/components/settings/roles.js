@@ -9,6 +9,7 @@ import { getGroups, getDynamicGroups } from '../../actions/deviceActions';
 import { createRole, editRole, getRoles, removeRole } from '../../actions/userActions';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import RoleDefinition, { emptyRole } from './roledefinition';
+import theme from './../../themes/mender-theme';
 
 export const RoleManagement = ({ createRole, editRole, getDynamicGroups, getGroups, getRoles, groups, removeRole, roles }) => {
   const [adding, setAdding] = useState(false);
@@ -83,7 +84,7 @@ export const RoleManagement = ({ createRole, editRole, getDynamicGroups, getGrou
         </TableBody>
       </Table>
 
-      {!adding && <Chip className="margin-top-small" color="primary" icon={<AddIcon />} label="Add a role" onClick={addRole} />}
+      {!adding && <Chip color="primary" icon={<AddIcon />} label="Add a role" onClick={addRole} style={{ marginBottom: theme.spacing(2) }} />}
       <RoleDefinition adding={adding} editing={editing} onCancel={onCancel} onSubmit={onSubmit} selectedRole={role} stateGroups={groups} />
     </div>
   );

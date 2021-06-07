@@ -40,14 +40,16 @@ export const getDeploymentsByStatus = (
   startDate,
   endDate,
   group,
+  type,
   shouldSelect = true,
   sort = SORTING_DIRECTIONS.desc
 ) => (dispatch, getState) => {
-  var created_after = startDate ? `&created_after=${startDate}` : '';
-  var created_before = endDate ? `&created_before=${endDate}` : '';
-  var search = group ? `&search=${group}` : '';
+  const created_after = startDate ? `&created_after=${startDate}` : '';
+  const created_before = endDate ? `&created_before=${endDate}` : '';
+  const search = group ? `&search=${group}` : '';
+  const typeFilter = type ? `&type=${type}` : '';
   return GeneralApi.get(
-    `${deploymentsApiUrl}/deployments?status=${status}&per_page=${per_page}&page=${page}${created_after}${created_before}${search}&sort=${sort}`
+    `${deploymentsApiUrl}/deployments?status=${status}&per_page=${per_page}&page=${page}${created_after}${created_before}${search}${typeFilter}&sort=${sort}`
   ).then(res => {
     const { deployments, deploymentIds } = transformDeployments(res.data, getState().deployments.byId);
     let tasks = deploymentIds.reduce(

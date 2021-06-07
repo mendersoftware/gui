@@ -7,17 +7,8 @@ setConfig({
   // Two retries for each test.
   retries: 2,
   testDir: 'integration',
-  timeout: 60000,
-  workers: 1
+  timeout: 60000
 });
-
-// type TestFixtures = {
-//   baseUrl: string;
-//   config: Object;
-//   username: string;
-//   password: string;
-//   demoDeviceName: string;
-// };
 
 const defaultConfig = {
   baseUrl: 'https://docker.mender.io/',

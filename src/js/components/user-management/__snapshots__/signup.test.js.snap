@@ -2,7 +2,7 @@
 
 exports[`Signup Component renders correctly 1`] = `
 <div
-  class="flexbox column"
+  class="flexbox column padding-top padding-bottom"
   id="signup-box"
 >
   <img
