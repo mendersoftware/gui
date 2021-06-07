@@ -114,7 +114,7 @@ export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setF
     )
   };
   return (
-    <div className="flexbox column" id="signup-box">
+    <div className="flexbox column padding-top padding-bottom" id="signup-box">
       {loading ? (
         <Loader show={true} style={{ display: 'flex' }} />
       ) : (
