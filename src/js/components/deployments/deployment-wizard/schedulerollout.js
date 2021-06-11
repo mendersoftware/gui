@@ -19,33 +19,21 @@ const styles = {
 };
 
 export const ScheduleRollout = props => {
-  const {
-    setDeploymentSettings,
-    deploymentDeviceIds = [],
-    deploymentDeviceCount = 0,
-    disableSchedule,
-    filterId,
-    hasNewRetryDefault = false,
-    isEnterprise,
-    onSaveRetriesSetting,
-    phases = [],
-    plan,
-    previousPhases = [],
-    previousRetries,
-    retries
-  } = props;
+  const { setDeploymentSettings, deploymentObject = {}, disableSchedule, filterId, isEnterprise, plan, previousPhases = [] } = props;
 
   const [isPickerOpen, setIsPickerOpen] = useState(false);
+
+  const { deploymentDeviceCount = 0, deploymentDeviceIds = [], phases = [] } = deploymentObject;
 
   const handleStartTimeChange = value => {
     // if there is no existing phase, set phase and start time
     if (!phases.length) {
-      setDeploymentSettings([{ batch_size: 100, start_ts: value, delay: 0 }], 'phases');
+      setDeploymentSettings({ ...deploymentObject, phases: [{ batch_size: 100, start_ts: value, delay: 0 }] });
     } else {
       //if there are existing phases, set the first phases to the new start time and adjust later phases in different function
       let newPhases = phases;
       newPhases[0].start_ts = value;
-      setDeploymentSettings(newPhases, 'phases');
+      setDeploymentSettings({ ...deploymentObject, phases: newPhases });
     }
   };
 
@@ -77,10 +65,9 @@ export const ScheduleRollout = props => {
         updatedPhases = JSON.parse(JSON.stringify(value));
         break;
     }
-    setDeploymentSettings(updatedPhases, 'phases');
+    setDeploymentSettings({ ...deploymentObject, phases: updatedPhases });
   };
 
-  const currentRetries = retries ? retries : previousRetries;
   const numberDevices = deploymentDeviceCount ? deploymentDeviceCount : deploymentDeviceIds ? deploymentDeviceIds.length : 0;
   const start_time = phases && phases.length ? phases[0].start_ts : null;
   const customPattern = phases && phases.length > 1 ? 1 : 0;

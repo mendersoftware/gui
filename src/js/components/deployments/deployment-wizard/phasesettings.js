@@ -10,13 +10,15 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import { getPhaseStartTime } from '../createdeployment';
 import { getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
 
-export const PhaseSettings = ({ classNames, disabled, filterId, numberDevices, setDeploymentSettings, phases = [] }) => {
+export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, filterId, numberDevices, setDeploymentSettings }) => {
+  const { phases = [] } = deploymentObject;
   const updateDelay = (value, index) => {
     let newPhases = phases;
     // value must be at least 1
     value = Math.max(1, value);
     newPhases[index].delay = value;
-    setDeploymentSettings(newPhases, 'phases');
+
+    setDeploymentSettings({ ...deploymentObject, phases: newPhases });
     // logic for updating time stamps should be in parent - only change delays here
   };
 
@@ -31,7 +33,7 @@ export const PhaseSettings = ({ classNames, disabled, filterId, numberDevices, s
       newPhases.pop();
       newPhases[newPhases.length - 1].batch_size = null;
     }
-    setDeploymentSettings(newPhases, 'phases');
+    setDeploymentSettings({ ...deploymentObject, phases: newPhases });
   };
 
   const addPhase = () => {
@@ -52,7 +54,7 @@ export const PhaseSettings = ({ classNames, disabled, filterId, numberDevices, s
 
     newPhases.push(newPhase);
     // use function to set new phases incl start time of new phase
-    setDeploymentSettings(newPhases, 'phases');
+    setDeploymentSettings({ ...deploymentObject, phases: newPhases });
   };
 
   const removePhase = index => {
@@ -65,13 +67,13 @@ export const PhaseSettings = ({ classNames, disabled, filterId, numberDevices, s
     if (newPhases.length === 1) {
       delete newPhases[0].delay;
     }
-    setDeploymentSettings(newPhases, 'phases');
+    setDeploymentSettings({ ...deploymentObject, phases: newPhases });
   };
 
   const handleDelayToggle = (value, index) => {
     let newPhases = phases;
     newPhases[index].delayUnit = value;
-    setDeploymentSettings(newPhases, 'phases');
+    setDeploymentSettings({ ...deploymentObject, phases: newPhases });
   };
 
   const remainder = getRemainderPercent(phases);

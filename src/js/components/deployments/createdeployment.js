@@ -47,6 +47,7 @@ export class CreateDialog extends React.Component {
     this.state = {
       activeStep: 0,
       deploymentDeviceIds: [],
+      deploymentObject: {},
       steps: deploymentSteps,
       retries: props.retries
     };
@@ -75,10 +76,6 @@ export class CreateDialog extends React.Component {
     if (prevProps.device !== this.props.device && this.props.device) {
       this.setState({ deploymentDeviceIds: [this.props.device.id] });
     }
-  }
-
-  setDeploymentSettings(value, property) {
-    this.setState({ [property]: value });
   }
 
   cleanUpDeploymentsStatus() {
@@ -155,17 +152,15 @@ export class CreateDialog extends React.Component {
   render() {
     const self = this;
     const { device, deploymentObject, groups, release } = self.props;
-    const { activeStep, deploymentDeviceIds, deploymentDeviceCount, group, phases, retries, steps } = self.state;
+    const { activeStep, deploymentObject: deploymentObjectState, steps } = self.state;
+    const { group = deploymentObject.group, phases, release: stateRelease = deploymentObject.release || release } = deploymentObjectState;
     const ComponentToShow = steps[activeStep].component;
     const deploymentSettings = {
-      deploymentDeviceIds: deploymentObject.deploymentDeviceIds || deploymentDeviceIds,
-      deploymentDeviceCount: deploymentObject.deploymentDeviceCount || deploymentDeviceCount,
-      filterId: groups[deploymentObject.group || group] ? groups[deploymentObject.group || group].id : undefined,
+      ...deploymentObject,
+      ...deploymentObjectState,
+      filterId: groups[group] ? groups[group].id : undefined,
       device,
-      group: deploymentObject.group || group,
-      phases,
-      release: deploymentObject.release || release || self.state.release,
-      retries: deploymentObject.retries || retries
+      release: stateRelease
     };
     const disableSchedule = !validatePhases(phases, deploymentSettings.deploymentDeviceCount, deploymentSettings.filterId);
     const disabled =
@@ -193,7 +188,7 @@ export class CreateDialog extends React.Component {
             {...self.props}
             {...self.state}
             {...deploymentSettings}
-            setDeploymentSettings={(...args) => self.setDeploymentSettings(...args)}
+            setDeploymentSettings={deploymentObject => self.setState({ deploymentObject })}
             onSaveRetriesSetting={shouldSave => self.onSaveRetriesSetting(shouldSave)}
           />
         </DialogContent>
