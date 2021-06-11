@@ -86,8 +86,7 @@ describe('CreateDeployment Component', () => {
       filter_id: undefined,
       group: undefined,
       name: 'All devices',
-      phases: undefined,
-      retries: undefined
+      phases: undefined
     });
     await waitFor(() => expect(submitCheck).toHaveBeenCalled());
   });

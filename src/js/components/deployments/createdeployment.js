@@ -13,6 +13,7 @@ import { selectDevice } from '../../actions/deviceActions';
 import { selectRelease } from '../../actions/releaseActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { saveGlobalSettings } from '../../actions/userActions';
+import { PLANS } from '../../constants/appConstants';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getIsEnterprise, getOnboardingState } from '../../selectors';
@@ -60,7 +61,7 @@ export class CreateDialog extends React.Component {
       }
     }
     const steps = deploymentSteps.reduce((accu, step) => {
-      if (step.closed && ((!isEnterprise && plan === 'os') || !(isHosted || isEnterprise))) {
+      if (step.closed && ((!isEnterprise && plan === PLANS.os.value) || !(isHosted || isEnterprise))) {
         return accu;
       }
       accu.push(step);
@@ -99,9 +100,20 @@ export class CreateDialog extends React.Component {
   onScheduleSubmit(settings) {
     const self = this;
     const { hasNewRetryDefault } = self.state;
-    const { advanceOnboarding, createDeployment, globalSettings, isOnboardingComplete, onScheduleSubmit, saveGlobalSettings } = self.props;
+    const {
+      advanceOnboarding,
+      createDeployment,
+      globalSettings,
+      isEnterprise,
+      isHosted,
+      isOnboardingComplete,
+      onScheduleSubmit,
+      plan,
+      saveGlobalSettings
+    } = self.props;
     const { deploymentDeviceIds, device, filterId, group, phases, release, retries } = settings;
     const startTime = phases?.length ? phases[0].start_ts || new Date() : new Date();
+    const retrySetting = isEnterprise || (isHosted && plan !== PLANS.os.value) ? { retries } : {};
     const newDeployment = {
       artifact_name: release.Name,
       devices: filterId || (group && group !== allDevices && !device) ? undefined : deploymentDeviceIds,
@@ -115,7 +127,7 @@ export class CreateDialog extends React.Component {
             return phase;
           })
         : phases,
-      retries
+      ...retrySetting
     };
     if (!isOnboardingComplete) {
       advanceOnboarding(onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES);
@@ -211,7 +223,7 @@ export class CreateDialog extends React.Component {
 const actionCreators = { advanceOnboarding, createDeployment, saveGlobalSettings, selectDevice, selectRelease };
 
 export const mapStateToProps = state => {
-  const { plan = 'os' } = state.organization.organization;
+  const { plan = PLANS.os.value } = state.organization.organization;
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
