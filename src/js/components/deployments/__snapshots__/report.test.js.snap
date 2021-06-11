@@ -61,8 +61,7 @@ exports[`DeploymentReport Component renders correctly 1`] = `
         </button>
       </div>
       <div
-        class=\\"flexbox\\"
-        style=\\"align-items: center;\\"
+        class=\\"flexbox center-aligned\\"
       >
         <button
           class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary\\"
@@ -243,8 +242,8 @@ Devices that are in the middle of the deployment at the time of abort will finis
             </div>
           </div>
           <a
-            class=\\"margin-top-small flexbox\\"
-            style=\\"align-items: center; margin-left: 64px;\\"
+            class=\\"margin-top-small flexbox center-aligned\\"
+            style=\\"margin-left: 64px;\\"
           >
             Schedule details 
             <svg

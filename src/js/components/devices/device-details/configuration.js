@@ -334,7 +334,7 @@ export const DeviceConfiguration = ({
       onClick={setOpen}
       title={
         <div className="two-columns">
-          <div className="flexbox" style={{ alignItems: 'center' }}>
+          <div className="flexbox center-aligned">
             <h4 className="margin-right">Device configuration</h4>
             {!(isEditingConfig || isUpdatingConfig) && (
               <Button onClick={onStartEdit} startIcon={<EditIcon />} size="small">
@@ -354,7 +354,7 @@ export const DeviceConfiguration = ({
         {isEditingConfig ? (
           <KeyValueEditor
             disabled={isEditDisabled}
-            errortext={''}
+            errortext=""
             input={changedConfig}
             inputHelpTipsMap={helpTipsMap}
             onInputChange={setChangedConfig}
@@ -365,12 +365,10 @@ export const DeviceConfiguration = ({
           hasDeviceConfig && <ConfigurationObject config={remainderReported} setSnackbar={setSnackbar} />
         )}
         {showHelptips && <ConfigureAddOnTip />}
-        <div className="flexbox margin-bottom margin-top" style={{ alignItems: 'center' }}>
-          {footer}
-        </div>
+        <div className="flexbox center-aligned margin-bottom margin-top">{footer}</div>
         {hasDeviceConfig && !isEditingConfig && <a onClick={() => setOpen(false)}>show less</a>}
         {showLog && <LogDialog logData={updateLog} onClose={() => setShowLog(false)} type="configUpdateLog" />}
-        {showConfigImport && <ConfigImportDialog onCancel={() => setShowConfigImport(false)} onSubmit={onConfigImport} />}
+        {showConfigImport && <ConfigImportDialog onCancel={() => setShowConfigImport(false)} onSubmit={onConfigImport} setSnackbar={setSnackbar} />}
       </div>
     </DeviceDataCollapse>
   );

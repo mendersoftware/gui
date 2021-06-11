@@ -5,8 +5,8 @@ exports[`ReleasesList Component renders correctly 1`] = `
   class="repository-list flexbox column overflow-hidden"
 >
   <div
-    class="flexbox"
-    style="align-items: center; min-height: min-content;"
+    class="flexbox center-aligned"
+    style="min-height: min-content;"
   >
     <h3>
       Releases

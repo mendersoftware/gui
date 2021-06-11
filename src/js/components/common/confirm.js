@@ -37,7 +37,7 @@ export const Confirm = ({ action, cancel, classes = '', style, type }) => {
   };
 
   return (
-    <div className={`flexbox ${className} ${classes}`} style={{ marginRight: '12px', justifyContent: 'flex-end', alignItems: 'center', ...style }}>
+    <div className={`flexbox center-aligned ${className} ${classes}`} style={{ marginRight: '12px', justifyContent: 'flex-end', ...style }}>
       <span className="bold">{loading ? confirmationType[type].loading : confirmationType[type].message}</span>
       <IconButton id="confirmAbort" onClick={handleConfirm}>
         <CheckCircleIcon className="green" />

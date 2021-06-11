@@ -151,7 +151,7 @@ export const DeploymentReport = props => {
             <LinkIcon />
           </IconButton>
         </div>
-        <div className="flexbox" style={{ alignItems: 'center' }}>
+        <div className="flexbox center-aligned">
           {!finished ? (
             <DeploymentAbortButton abort={abort} deployment={deployment} />
           ) : deployment.stats.failure || deployment.stats.aborted ? (

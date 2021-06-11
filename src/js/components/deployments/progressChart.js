@@ -129,7 +129,7 @@ export const ProgressDisplay = ({ className = '', deployment }) => {
   ) : (
     <div className={`flexbox column progress-chart-container ${className}`}>
       {statusMap[status] && (
-        <span className="flexbox small text-muted" style={{ alignItems: 'center' }}>
+        <span className="flexbox center-aligned small text-muted">
           {statusMap[status].icon}
           <span className="margin-left-small">{statusMap[status].description()}</span>
         </span>

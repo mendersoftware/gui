@@ -75,7 +75,7 @@ export const ExpandedDevice = ({
   const isAcceptedDevice = status === DEVICE_STATES.accepted;
   return (
     <Drawer anchor="right" className="expandedDevice" open={open} onClose={onClose} PaperProps={{ style: { minWidth: '67vw' } }}>
-      <div className="flexbox margin-bottom-small" style={{ alignItems: 'center' }}>
+      <div className="flexbox center-aligned margin-bottom-small">
         <h3>Device information for {deviceIdentifier}</h3>
         <IconButton onClick={copyLinkToClipboard}>
           <LinkIcon />
@@ -127,7 +127,7 @@ export const ExpandedDevice = ({
       )}
       <Divider style={{ marginTop: theme.spacing(3), marginBottom: theme.spacing(2) }} />
       {isAcceptedDevice && (
-        <div className="flexbox" style={{ alignItems: 'center' }}>
+        <div className="flexbox center-aligned">
           <Button to={`/deployments?open=true&deviceId=${device.id}`} component={ForwardingLink} startIcon={<ReplayIcon />}>
             Create a deployment for this device
           </Button>

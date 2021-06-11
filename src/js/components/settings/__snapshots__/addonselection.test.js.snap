@@ -14,8 +14,8 @@ exports[`AddOnSelection component renders correctly 1`] = `
       Extend Mender features with our add-ons. Select one or more from the list and submit to request add-ons to be added to your plan. We'll adjust your subscription and confirm it with you.
     </p>
     <div
-      class="planPanel flexbox "
-      style="align-items: center; margin-top: 10px;"
+      class="planPanel flexbox center-aligned "
+      style="margin-top: 10px;"
     >
       <span
         aria-disabled="false"
@@ -80,8 +80,8 @@ exports[`AddOnSelection component renders correctly 1`] = `
       </a>
     </div>
     <div
-      class="planPanel flexbox "
-      style="align-items: center; margin-top: 10px;"
+      class="planPanel flexbox center-aligned "
+      style="margin-top: 10px;"
     >
       <span
         aria-disabled="false"

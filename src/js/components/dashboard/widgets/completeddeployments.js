@@ -4,14 +4,14 @@ import Time from 'react-time';
 // material ui
 import { BaseWidget } from './baseWidget';
 
-const headerStyle = { alignItems: 'center', justifyContent: 'flex-end' };
+const headerStyle = { justifyContent: 'flex-end' };
 const countStyle = { fontSize: 36, marginRight: '1vw' };
 
 export const CompletedDeployments = props => {
   const { cutoffDate, finishedCount, onClick } = props;
   const widgetMain = {
     header: (
-      <div className="flexbox" style={headerStyle}>
+      <div className="flexbox center-aligned" style={headerStyle}>
         <div style={countStyle}>{finishedCount}</div>
         <div>completed</div>
       </div>
