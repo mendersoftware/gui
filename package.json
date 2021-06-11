@@ -88,7 +88,7 @@
     "jest-resolve": "~27.0.4",
     "jest-watch-typeahead": "0.6.4",
     "less": "^4.1.1",
-    "less-loader": "^9.0.0",
+    "less-loader": "^9.1.0",
     "lint-staged": "^11.0.0",
     "mini-css-extract-plugin": "^1.6.0",
     "msw": "^0.29.0",
