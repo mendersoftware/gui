@@ -226,7 +226,7 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    class="deployments-pending margin-top"
+    class="deployments-pending margin-top margin-bottom-large"
   >
     <h4
       class="dashboard-header margin-small margin-top"
