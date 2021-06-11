@@ -7,6 +7,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Step, StepLa
 import SoftwareDevices from './deployment-wizard/softwaredevices';
 import ScheduleRollout from './deployment-wizard/schedulerollout';
 import Review from './deployment-wizard/review';
+import RolloutOptions from './deployment-wizard/rolloutoptions';
 
 import { createDeployment } from '../../actions/deploymentActions';
 import { selectDevice } from '../../actions/deviceActions';
@@ -25,8 +26,9 @@ export const allDevices = 'All devices';
 const MAX_PREVIOUS_PHASES_COUNT = 5;
 
 const deploymentSteps = [
-  { title: 'Select target software and devices', closed: false, component: SoftwareDevices },
+  { title: 'Select devices and Release', closed: false, component: SoftwareDevices },
   { title: 'Set a rollout schedule', closed: true, component: ScheduleRollout },
+  { title: 'Set update process options', closed: true, component: RolloutOptions },
   { title: 'Review and create', closed: false, component: Review }
 ];
 
@@ -108,7 +110,7 @@ export class CreateDialog extends React.Component {
       plan,
       saveGlobalSettings
     } = self.props;
-    const { deploymentDeviceIds, device, filterId, group, phases, release, retries } = settings;
+    const { deploymentDeviceIds, device, filterId, group, phases, release, retries, update_control_map } = settings;
     const startTime = phases?.length ? phases[0].start_ts || new Date() : new Date();
     const retrySetting = isEnterprise || (isHosted && plan !== PLANS.os.value) ? { retries } : {};
     const newDeployment = {
@@ -124,7 +126,8 @@ export class CreateDialog extends React.Component {
             return phase;
           })
         : phases,
-      ...retrySetting
+      ...retrySetting,
+      update_control_map
     };
     if (!isOnboardingComplete) {
       advanceOnboarding(onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES);
@@ -165,14 +168,11 @@ export class CreateDialog extends React.Component {
     const disableSchedule = !validatePhases(phases, deploymentSettings.deploymentDeviceCount, deploymentSettings.filterId);
     const disabled =
       activeStep === 0
-        ? !(
-            deploymentSettings.release &&
-            (deploymentSettings.deploymentDeviceCount || deploymentSettings.filterId || (deploymentSettings.group && deploymentSettings.group !== allDevices))
-          )
+        ? !(deploymentSettings.release && (deploymentSettings.deploymentDeviceCount || deploymentSettings.filterId || deploymentSettings.group))
         : disableSchedule;
     const finalStep = activeStep === steps.length - 1;
     return (
-      <Dialog open={true} fullWidth={false} maxWidth="md">
+      <Dialog open={true} fullWidth={false} maxWidth="md" PaperProps={{ style: { maxWidth: 800 } }}>
         <DialogTitle>Create a deployment</DialogTitle>
         <DialogContent className="dialog">
           <Stepper activeStep={activeStep} alternativeLabel style={{ minWidth: '500px' }}>

@@ -17,7 +17,7 @@ import {
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
-import { getDeviceLog, getSingleDeployment } from '../../actions/deploymentActions';
+import { getDeviceLog, getSingleDeployment, updateDeploymentControlMap } from '../../actions/deploymentActions';
 import { getAuditLogs } from '../../actions/organizationActions';
 import { getRelease } from '../../actions/releaseActions';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
@@ -31,6 +31,7 @@ import { sortDeploymentDevices } from '../../helpers';
 import Confirm from '../common/confirm';
 import DeviceList from './deployment-report/devicelist';
 import DeploymentStatus from './deployment-report/deploymentstatus';
+import DeploymentPhaseNotification from './deployment-report/deploymentphasenotification';
 
 momentDurationFormatSetup(moment);
 
@@ -75,7 +76,8 @@ export const DeploymentReport = props => {
     past,
     retry,
     release,
-    type
+    type,
+    updateDeploymentControlMap
   } = props;
 
   useEffect(() => {
@@ -141,6 +143,11 @@ export const DeploymentReport = props => {
     }
   }
 
+  const onUpdateControlChange = updatedMap => {
+    const { id, update_control_map } = deployment;
+    updateDeploymentControlMap(id, { ...update_control_map, ...updatedMap });
+  };
+
   return (
     <Drawer className={`${open ? 'fadeIn' : 'fadeOut'}`} anchor="right" open={open} onClose={onClose} PaperProps={{ style: { minWidth: '75vw' } }}>
       <div className="flexbox margin-bottom-small space-between">
@@ -176,6 +183,7 @@ export const DeploymentReport = props => {
       </div>
       <Divider />
       <div className="deployment-report">
+        <DeploymentPhaseNotification deployment={deployment} onReviewClick={scrollToBottom} />
         <DeploymentOverview {...props} onScheduleClick={scrollToBottom} />
 
         {isConfigurationDeployment && (
@@ -192,7 +200,7 @@ export const DeploymentReport = props => {
         </h4>
         <DeploymentStatus deployment={deployment} />
         <DeviceList {...props} created={created} viewLog={viewLog} />
-        <RolloutSchedule deployment={deployment} innerRef={rolloutSchedule} />
+        <RolloutSchedule deployment={deployment} onUpdateControlChange={onUpdateControlChange} onAbort={abort} innerRef={rolloutSchedule} />
         {deviceId && <LogDialog logData={logData} onClose={() => setDeviceId()} />}
       </div>
       <Divider light style={{ marginTop: theme.spacing(2) }} />
@@ -200,7 +208,7 @@ export const DeploymentReport = props => {
   );
 };
 
-const actionCreators = { getAuditLogs, getDeviceAuth, getDeviceById, getDeviceLog, getRelease, getSingleDeployment, setSnackbar };
+const actionCreators = { getAuditLogs, getDeviceAuth, getDeviceById, getDeviceLog, getRelease, getSingleDeployment, setSnackbar, updateDeploymentControlMap };
 
 const mapStateToProps = state => {
   const devices = state.deployments.byId[state.deployments.selectedDeployment]?.devices || {};

@@ -9,7 +9,10 @@ import { formatTime, statusToPercentage } from '../../../helpers';
 
 const stateTitleMap = {
   noartifact: 'No compatible artifact found',
-  'already-installed': 'Already installed'
+  'already-installed': 'Already installed',
+  'pause-before-installing': 'Paused before installing',
+  'pause-before-rebooting': 'Paused before rebooting',
+  'pause-before-committing': 'Paused before committing'
 };
 
 const DeploymentDeviceListItem = ({ created: deploymentCreationDate, device, idAttribute, viewLog, retries: maxRetries }) => {

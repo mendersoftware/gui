@@ -20,6 +20,14 @@ const confirmationType = {
   decommissioning: {
     loading: 'Decommissioning...',
     message: 'Decommission this device and remove all of its data from the server. This cannot be undone. Are you sure?'
+  },
+  deploymentContinuation: {
+    loading: 'Continuing...',
+    message: 'All devices with no errors will continue to the next step of the updates. Confirm continue?'
+  },
+  deploymentAbort: {
+    loading: 'Aborting...',
+    message: 'This will abort the deployment and attempt to roll back all devices. Confirm abort?'
   }
 };
 

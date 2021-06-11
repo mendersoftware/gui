@@ -1,0 +1,137 @@
+import React from 'react';
+
+import { Chip } from '@material-ui/core';
+import { Add as AddIcon, ArrowRight as ArrowRightIcon, InfoOutlined as InfoOutlinedIcon, PauseCircleOutline as PauseIcon } from '@material-ui/icons';
+
+import EnterpriseNotification from '../../common/enterpriseNotification';
+import MenderTooltip from '../../common/mendertooltip';
+import theme, { colors } from './../../../themes/mender-theme';
+
+const chipStyle = { marginLeft: theme.spacing(-3), marginRight: theme.spacing(-3) };
+
+const stepActions = {
+  continue: 'continue',
+  force_continue: 'force_continue',
+  pause: 'pause',
+  fail: 'fail'
+};
+
+const defaultStep = { action: stepActions.continue };
+
+const defaultSteps = {
+  ArtifactDownload: { ...defaultStep, title: 'Download', tooltip: 'The Artifact is downloaded (streamed) to the inactive partition.' },
+  ArtifactInstall_Enter: {
+    ...defaultStep,
+    title: 'Install',
+    tooltip: (
+      <>
+        For <b>system updates</b>, this means switching the <i>inactive</i> partition on the device to be <i>active</i> next time the device reboots. This means
+        that on the next reboot the device will boot the updated software, regardless if it was rebooted by Mender, an external process or due to power loss.
+        <br />
+        For <b>application updates</b>, it depends on the Update Module but in general refers to the <i>system changing</i> effects; e.g. writing a file to its
+        location, running a script, installing or starting a container.
+      </>
+    ),
+    state: 'ArtifactInstall_Enter'
+  },
+  ArtifactReboot_Enter: {
+    ...defaultStep,
+    title: 'Reboot',
+    tooltip:
+      'The device will reboot and the installed update will be active when the device boots up again. As changes are not yet committed, the update is not persistent and the device will still roll back again on the next reboot.',
+    state: 'ArtifactReboot_Enter'
+  },
+  ArtifactCommit_Enter: {
+    ...defaultStep,
+    title: 'Commit',
+    tooltip:
+      'If the update passes integrity checks, Mender will mark the update as successful and continue running from this partition. The commit makes the update persistent.',
+    state: 'ArtifactCommit_Enter'
+  }
+};
+
+export const RolloutStepConnector = ({ disabled, step, onStepChange }) => {
+  const onTogglePauseClick = () => {
+    onStepChange({ ...step, action: step.action === stepActions.pause ? stepActions.continue : stepActions.pause });
+  };
+
+  let stepModifier = { props: {}, toggleButton: undefined };
+  if (onStepChange) {
+    stepModifier.props = { onDelete: onTogglePauseClick };
+    stepModifier.toggleButton = <Chip icon={<AddIcon />} label="Add a pause" color="primary" onClick={onTogglePauseClick} style={chipStyle} />;
+  }
+
+  return (
+    <div className="flexbox column center-aligned" style={{ minWidth: theme.spacing(10) }}>
+      <div className="flexbox centered" style={{ height: theme.spacing(4), paddingLeft: theme.spacing(), width: '100%' }}>
+        <div
+          style={{
+            backgroundColor: colors.mutedText,
+            height: 3,
+            width: '100%',
+            marginRight: theme.spacing(-1)
+          }}
+        />
+        <ArrowRightIcon fontSize="small" style={{ color: colors.mutedText }} />
+      </div>
+      {!disabled && (
+        <>
+          {(onStepChange || step.action === stepActions.pause) && (
+            <div style={{ borderLeft: `${colors.grey} dashed 1px`, height: theme.spacing(6), margin: 4, marginTop: -10 }} />
+          )}
+          {step.action === stepActions.pause ? (
+            <Chip icon={<PauseIcon />} label="Pause" style={chipStyle} {...stepModifier.props} />
+          ) : (
+            stepModifier.toggleButton
+          )}
+        </>
+      )}
+    </div>
+  );
+};
+
+export const RolloutSteps = ({ disabled, onStepChange, steps }) => {
+  const mappableSteps = Object.values({ ...defaultSteps, ...steps });
+  return (
+    <div className={`flexbox margin-top ${onStepChange ? 'margin-left-large margin-right-large' : ''}`}>
+      {mappableSteps.map((step, index) => (
+        <React.Fragment key={step.title}>
+          {index !== 0 && <RolloutStepConnector disabled={disabled} step={step} onStepChange={onStepChange} />}
+          <MenderTooltip title={step.tooltip} arrow>
+            <Chip disabled={disabled} label={step.title} variant="outlined" style={{ minWidth: theme.spacing(11) }} />
+          </MenderTooltip>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+};
+
+export const RolloutStepsContainer = ({ className = '', disabled, docsVersion, isEnterprise, onStepChange, steps }) => (
+  <div className={className}>
+    <div className={disabled ? 'muted' : ''}>
+      <RolloutSteps disabled={disabled} onStepChange={onStepChange} steps={steps} />
+      {onStepChange && !disabled && (
+        <p className="info">
+          A &apos;pause&apos; means each device will pause its update after completing the previous step, and wait for approval before continuing. You can grant
+          approval by clicking &quot;continue&quot; in the deployment progress UI.{' '}
+          <a href={`https://docs.mender.io/${docsVersion}`} target="_blank" rel="noopener noreferrer">
+            Learn more
+          </a>
+        </p>
+      )}
+    </div>
+    {isEnterprise ? (
+      disabled && (
+        <p className="info icon">
+          <InfoOutlinedIcon fontSize="small" style={{ verticalAlign: 'middle', margin: '0 6px 4px 0' }} />
+          This feature is not available on <b>phased deployments</b>. If you&apos;d like to set pause states between update steps, go back and adjust the
+          rollout schedule to a <b>single phase</b>.
+        </p>
+      )
+    ) : (
+      <EnterpriseNotification isEnterprise={isEnterprise} benefit="granular control about update rollout to allow synchronization across your fleet" />
+    )}
+  </div>
+);
+
+export default RolloutStepsContainer;

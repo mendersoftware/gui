@@ -2,149 +2,120 @@
 
 exports[`PhaseSettings Component renders correctly 1`] = `
 <div>
-  <table
-    className="MuiTable-root"
-    role={null}
-  >
-    <thead
-      className="MuiTableHead-root"
-      role={null}
+  <div>
+    <table
+      class="MuiTable-root"
     >
-      <tr
-        className="MuiTableRow-root MuiTableRow-head"
-        role={null}
+      <thead
+        class="MuiTableHead-root"
       >
-        <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeSmall"
-          scope="col"
-        />
-        <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeSmall"
-          scope="col"
+        <tr
+          class="MuiTableRow-root MuiTableRow-head"
         >
-          Batch size
-        </th>
-        <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeSmall"
-          scope="col"
-        >
-          Phase begins
-        </th>
-        <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeSmall"
-          scope="col"
-        >
-          Delay before next phase
-        </th>
-        <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeSmall"
-          scope="col"
-        />
-      </tr>
-    </thead>
-    <tbody
-      className="MuiTableBody-root"
-      role={null}
-    >
-      <tr
-        className="MuiTableRow-root"
-        role={null}
-      >
-        <th
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall"
-          role="cell"
-          scope="row"
-        >
-          <div
-            className="MuiChip-root MuiChip-sizeSmall"
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
+          <th
+            class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeSmall"
+            scope="col"
+          />
+          <th
+            class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeSmall"
+            scope="col"
           >
-            <span
-              className="MuiChip-label MuiChip-labelSmall"
+            Batch size
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeSmall"
+            scope="col"
+          >
+            Phase begins
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeSmall"
+            scope="col"
+          >
+            Delay before next phase
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeSmall"
+            scope="col"
+          />
+        </tr>
+      </thead>
+      <tbody
+        class="MuiTableBody-root"
+      >
+        <tr
+          class="MuiTableRow-root"
+        >
+          <th
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall"
+            role="cell"
+            scope="row"
+          >
+            <div
+              class="MuiChip-root MuiChip-sizeSmall"
             >
-              Phase 1
+              <span
+                class="MuiChip-label MuiChip-labelSmall"
+              >
+                Phase 1
+              </span>
+            </div>
+          </th>
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall"
+          >
+            100
+            <span
+              class="info"
+              style="margin-left: 5px;"
+            >
+              (1 device)
             </span>
-          </div>
-        </th>
-        <td
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall"
-        >
-          100
-          <span
-            className="info"
-            style={
-              Object {
-                "marginLeft": "5px",
-              }
-            }
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall"
           >
-            (1 device)
-          </span>
-        </td>
-        <td
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall"
-        >
-          <time
-            dateTime="2019-01-01T13:00:00+00:00"
-            title={null}
+            <time
+              datetime="2019-01-01T13:00:00+00:00"
+            >
+              2019-01-01 13:00
+            </time>
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall"
           >
-            2019-01-01 13:00
-          </time>
-        </td>
-        <td
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall"
-        >
-          -
-        </td>
-        <td
-          aria-sort={null}
-          className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall"
+            -
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall"
+          />
+        </tr>
+      </tbody>
+    </table>
+    <div
+      class="MuiButtonBase-root MuiChip-root margin-top-small MuiChip-colorPrimary MuiChip-clickableColorPrimary MuiChip-clickable"
+      role="button"
+      tabindex="0"
+    >
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiChip-icon MuiChip-iconColorPrimary"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
         />
-      </tr>
-    </tbody>
-  </table>
-  <div
-    className="MuiButtonBase-root MuiChip-root margin-top-small MuiChip-colorPrimary MuiChip-clickableColorPrimary MuiChip-clickable"
-    onBlur={[Function]}
-    onClick={[Function]}
-    onDragLeave={[Function]}
-    onFocus={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseDown={[Function]}
-    onMouseLeave={[Function]}
-    onMouseUp={[Function]}
-    onTouchEnd={[Function]}
-    onTouchMove={[Function]}
-    onTouchStart={[Function]}
-    role="button"
-    tabIndex={0}
-  >
-    <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root MuiChip-icon MuiChip-iconColorPrimary"
-      focusable="false"
-      viewBox="0 0 24 24"
-    >
-      <path
-        d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+      </svg>
+      <span
+        class="MuiChip-label"
+      >
+        Add a phase
+      </span>
+      <span
+        class="MuiTouchRipple-root"
       />
-    </svg>
-    <span
-      className="MuiChip-label"
-    >
-      Add a phase
-    </span>
+    </div>
   </div>
 </div>
 `;

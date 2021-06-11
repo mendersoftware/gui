@@ -6,7 +6,7 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
     class="dashboard-header margin-top-large"
   >
     <span>
-      Rollout Schedule
+      Schedule details
     </span>
   </h4>
   <div
@@ -78,7 +78,7 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
     class="progress-chart-container margin-top"
   >
     <div
-      class="progress-chart"
+      class="progress-chart detailed"
     >
       <div
         class="progress-step"
