@@ -60,14 +60,10 @@ export const Past = props => {
   // eslint-disable-next-line no-unused-vars
   const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
   const [timeRangeToggle, setTimeRangeToggle] = useState(false);
-  const [deploymentType, setDeploymentType] = useState(DEPLOYMENT_TYPES.software);
+  const [deploymentType, setDeploymentType] = useState('');
   const deploymentsRef = useRef();
 
-  const handleResize = () => {
-    setTimeout(() => {
-      setSize({ height: window.innerHeight, width: window.innerWidth });
-    }, 500);
-  };
+  const handleResize = () => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), 500);
 
   useEffect(() => {
     const roundedStartDate = Math.round(Date.parse(BEGINNING_OF_TIME) / 1000);
