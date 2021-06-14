@@ -183,6 +183,16 @@ export const defaultState = {
     showConnectDeviceDialog: false,
     showTipsDialog: false
   },
+  monitor: {
+    alerts: {
+      byDeviceId: {}
+    },
+    settings: {
+      global: {
+        channels: { email: { enabled: true } }
+      }
+    }
+  },
   organization: {
     card: {
       brand: 'testCorp',

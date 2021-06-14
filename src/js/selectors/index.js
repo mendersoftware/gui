@@ -77,9 +77,10 @@ export const getUserRoles = createSelector(
 
 export const getTenantCapabilities = createSelector(
   [getFeatures, getOrganization],
-  ({ hasDeviceConfig: isDeviceConfigEnabled, hasDeviceConnect: isDeviceConnectEnabled, isHosted }, { addons = [] }) => {
+  ({ hasDeviceConfig: isDeviceConfigEnabled, hasDeviceConnect: isDeviceConnectEnabled, hasMonitor: isMonitorEnabled, isHosted }, { addons = [] }) => {
     const hasDeviceConfig = (!isHosted && isDeviceConfigEnabled) || addons.some(addon => addon.name === 'configure' && Boolean(addon.enabled));
     const hasDeviceConnect = (!isHosted && isDeviceConnectEnabled) || addons.some(addon => addon.name === 'troubleshoot' && Boolean(addon.enabled));
-    return { hasDeviceConfig, hasDeviceConnect };
+    const hasMonitor = (!isHosted && isMonitorEnabled) || addons.some(addon => addon.name === 'monitor' && Boolean(addon.enabled));
+    return { hasDeviceConfig, hasDeviceConnect, hasMonitor };
   }
 );
