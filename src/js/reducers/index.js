@@ -3,6 +3,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import appReducer from './appReducer';
 import deploymentReducer from './deploymentReducer';
 import deviceReducer from './deviceReducer';
+import monitorReducer from './monitorReducer';
 import organizationReducer from './organizationReducer';
 import onboardingReducer from './onboardingReducer';
 import releaseReducer from './releaseReducer';
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   app: appReducer,
   devices: deviceReducer,
   deployments: deploymentReducer,
+  monitor: monitorReducer,
   onboarding: onboardingReducer,
   organization: organizationReducer,
   releases: releaseReducer,
