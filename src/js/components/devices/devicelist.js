@@ -163,20 +163,20 @@ export class DeviceList extends React.Component {
             />
           ))}
         </div>
-        {showPagination && (
-          <Pagination
-            count={pageTotal}
-            rowsPerPage={pageLength}
-            onChangeRowsPerPage={onChangeRowsPerPage}
-            page={pageNo}
-            onChangePage={page => self.onPageChange(page)}
-          />
-        )}
-        {pageLoading && (
-          <div className="smallLoaderContainer">
-            <Loader show={true} />
-          </div>
-        )}
+        <div className="flexbox margin-top">
+          {showPagination && (
+            <Pagination
+              className="margin-top-none"
+              count={pageTotal}
+              rowsPerPage={pageLength}
+              onChangeRowsPerPage={onChangeRowsPerPage}
+              page={pageNo}
+              onChangePage={page => self.onPageChange(page)}
+            />
+          )}
+          {pageLoading && <Loader show small />}
+        </div>
+
         <ExpandedDevice {...self.props} deviceId={expandedDeviceId} open={Boolean(expandedDeviceId)} onClose={() => self._expandRow()} />
       </div>
     );

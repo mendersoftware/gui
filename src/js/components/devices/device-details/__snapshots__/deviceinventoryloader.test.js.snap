@@ -63,7 +63,7 @@ exports[`CreateGroup Component renders correctly 1`] = `
       className="loaderContainer"
     >
       <div
-        className="waiting-loader loader"
+        className=" waiting-loader loader"
       >
         <span
           className="dot dot_1"
