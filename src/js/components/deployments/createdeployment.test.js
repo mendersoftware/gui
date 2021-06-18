@@ -88,6 +88,7 @@ describe('CreateDeployment Component', () => {
       name: 'All devices',
       phases: undefined
     });
+    await jest.runAllTicks();
     await waitFor(() => expect(submitCheck).toHaveBeenCalled());
   });
 
@@ -201,6 +202,7 @@ describe('CreateDeployment Component', () => {
       retries: 1
     });
     expect(advanceOnboarding).toHaveBeenCalled();
+    await jest.runAllTicks();
     await waitFor(() => expect(submitCheck).toHaveBeenCalled());
     expect(saveGlobalSettings).toHaveBeenCalled();
   }, 15000);

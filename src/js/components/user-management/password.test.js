@@ -39,8 +39,8 @@ describe('Password Component', () => {
     const { rerender } = render(ui);
 
     userEvent.type(screen.queryByLabelText(/your email/i), 'something@example.com');
-    userEvent.click(screen.getByRole('button', { name: /Send/i }));
-    await act(() => waitFor(() => rerender(ui)));
+    act(() => userEvent.click(screen.getByRole('button', { name: /Send/i })));
+    await waitFor(() => rerender(ui));
     expect(screen.queryByText(/Thanks - we're sending you an email now!/i)).toBeInTheDocument();
   });
 });

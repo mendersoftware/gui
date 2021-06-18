@@ -32,8 +32,8 @@ describe('PreauthDialog Component', () => {
     expect(screen.getByText(/upload a public key file/i)).toBeInTheDocument();
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work
     const uploadInput = document.querySelector('.dropzone input');
-    userEvent.upload(uploadInput, menderFile);
-    await act(() => waitFor(() => rerender(ui)));
+    act(() => userEvent.upload(uploadInput, menderFile));
+    await waitFor(() => rerender(ui));
 
     expect(uploadInput.files).toHaveLength(1);
     await waitFor(() => expect(document.querySelector('.dropzone input')).not.toBeInTheDocument());
@@ -42,8 +42,8 @@ describe('PreauthDialog Component', () => {
     userEvent.type(screen.getByPlaceholderText(/key/i), 'testKey');
     userEvent.type(screen.getByPlaceholderText(/value/i), 'testValue');
     expect(document.querySelector('.MuiFab-root')).not.toBeDisabled();
-    userEvent.click(document.querySelector('.MuiFab-root'));
-
+    act(() => userEvent.click(document.querySelector('.MuiFab-root')));
+    await waitFor(() => rerender(ui));
     uploadMock.mockRejectedValueOnce('test-errortext');
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => expect(screen.queryAllByText('test-errortext')).toBeTruthy());
@@ -52,11 +52,8 @@ describe('PreauthDialog Component', () => {
     userEvent.type(screen.getByDisplayValue('testValue'), 'testValues');
     await waitFor(() => expect(screen.queryByText('test-errortext')).not.toBeInTheDocument());
     uploadMock.mockResolvedValue(true);
-    await act(() => userEvent.click(screen.getByRole('button', { name: 'Save and add another' })));
+    act(() => userEvent.click(screen.getByRole('button', { name: 'Save and add another' })));
     await waitFor(() => rerender(ui));
-    jest.advanceTimersByTime(150);
-    jest.runAllTimers();
-    jest.runAllTicks();
     expect(uploadMock).toHaveBeenCalled();
   });
 
@@ -66,12 +63,12 @@ describe('PreauthDialog Component', () => {
     const { rerender } = render(ui);
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work
     const uploadInput = document.querySelector('.dropzone input');
-    userEvent.upload(uploadInput, menderFile);
-    await act(() => waitFor(() => rerender(ui)));
+    act(() => userEvent.upload(uploadInput, menderFile));
+    await waitFor(() => rerender(ui));
     userEvent.type(screen.getByPlaceholderText(/key/i), 'testKey');
     userEvent.type(screen.getByPlaceholderText(/value/i), 'testValue');
+    await waitFor(() => rerender(ui));
     expect(screen.getByText(/I should be rendered/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
-    await act(() => waitFor(() => rerender(ui)));
   });
 });

@@ -29,7 +29,7 @@ describe('AddArtifact Component', () => {
   it('allows uploading a mender artifact', async () => {
     const uploadMock = jest.fn(() => Promise.resolve());
     const menderFile = new File(['testContent'], 'test.mender');
-    render(
+    const ui = (
       <Provider store={store}>
         <AddArtifact
           onboardingState={{ complete: false }}
@@ -42,11 +42,13 @@ describe('AddArtifact Component', () => {
         />
       </Provider>
     );
+    const { rerender } = render(ui);
     expect(screen.getByText(/Upload a pre-built .mender Artifact/i)).toBeInTheDocument();
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work
     const uploadInput = document.querySelector('.dropzone input');
     userEvent.upload(uploadInput, menderFile);
     expect(uploadInput.files).toHaveLength(1);
+    await waitFor(() => rerender(ui));
     await waitFor(() => expect(screen.getByRole('button', { name: /upload/i })).toBeInTheDocument());
     expect(screen.getByDisplayValue('test.mender')).toBeInTheDocument();
     // FileSize component is not an input based component -> query text only
@@ -58,7 +60,7 @@ describe('AddArtifact Component', () => {
   it('allows creating a mender artifact', async () => {
     const uploadMock = jest.fn(() => Promise.resolve());
     const menderFile = new File(['testContent plain'], 'test.txt');
-    render(
+    const ui = (
       <Provider store={store}>
         <AddArtifact
           open={true}
@@ -72,11 +74,13 @@ describe('AddArtifact Component', () => {
         />
       </Provider>
     );
+    const { rerender } = render(ui);
     expect(screen.getByText(/Upload a pre-built .mender Artifact/i)).toBeInTheDocument();
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work
     const uploadInput = document.querySelector('.dropzone input');
     userEvent.upload(uploadInput, menderFile);
     expect(uploadInput.files).toHaveLength(1);
+    await waitFor(() => rerender(ui));
     await waitFor(() => expect(screen.getByPlaceholderText('Example: /opt/installed-by-single-file')).toBeInTheDocument());
     expect(screen.getByDisplayValue('test.txt')).toBeInTheDocument();
     // FileSize component is not an input based component -> query text only

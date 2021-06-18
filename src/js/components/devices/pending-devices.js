@@ -56,9 +56,9 @@ export class Pending extends BaseDevices {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      authLoading: 'all',
+      authLoading: !props.pendingDeviceIds.length ? 'all' : false,
       pageLength: 20,
-      pageLoading: true,
+      pageLoading: !props.pendingDeviceIds.length,
       pageNo: 1,
       selectedRows: [],
       showActions: false,

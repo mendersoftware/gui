@@ -1,6 +1,6 @@
 import React from 'react';
 import { prettyDOM } from '@testing-library/dom';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
@@ -56,7 +56,7 @@ describe('Auditlogs Component', () => {
       </MemoryRouter>
     );
     const { rerender } = render(ui);
-    await act(() => waitFor(() => rerender(ui)));
+    await waitFor(() => rerender(ui));
     userEvent.click(screen.getByText(/clear filter/i));
   });
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CopyCode from './copy-code';
 import { undefineds } from '../../../../tests/mockData';
@@ -24,7 +24,7 @@ describe('CopyCode Component', () => {
     expect(document.execCommand).toHaveBeenCalledTimes(1);
     expect(screen.queryByText(/Copied to clipboard/i)).toBeInTheDocument();
     jest.advanceTimersByTime(6000);
-    await act(() => waitFor(() => rerender(ui)));
+    await waitFor(() => rerender(ui));
     expect(screen.queryByText(/Copied to clipboard/i)).not.toBeInTheDocument();
   });
 });
