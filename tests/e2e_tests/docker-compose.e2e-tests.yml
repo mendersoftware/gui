@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile.gui
       context: ${GUI_REPOSITORY}/tests/e2e_tests
     command: tail -f /dev/null
+    environment:
+      - TEST_ENVIRONMENT
     networks:
       - mender
     depends_on:
@@ -26,6 +28,7 @@ services:
       # - ${GUI_REPOSITORY}/tests/e2e_tests/snapshots:/e2e/snapshots
       - ${GUI_REPOSITORY}/videos:/e2e/videos
       - ${GUI_REPOSITORY}/logs:/root/.npm/_logs
+      - ${GUI_REPOSITORY}/junit:/e2e/junit
 
   mender-client:
     image: mendersoftware/mender-client-docker-addons:master
