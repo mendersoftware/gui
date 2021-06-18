@@ -19,7 +19,7 @@ export const deploymentHandlers = [
     if (releaseName) {
       // eslint-disable-next-line no-unused-vars
       const { descriptions, device_types_compatible, ...remainder } = release;
-      return Object.keys(remainder).length ? res(ctx.status(200), ctx.json([remainder])) : res(ctx.status(500));
+      return Object.keys(remainder).length ? res(ctx.status(200), ctx.json([remainder])) : res(ctx.status(520));
     }
     const releases = Object.values(defaultState.releases.byId).map(stateRelease => {
       // eslint-disable-next-line no-unused-vars
@@ -40,7 +40,7 @@ export const deploymentHandlers = [
     } else if (defaultState.deployments.byId[deploymentId]) {
       return res(ctx.json(Object.values(defaultState.deployments.byId[deploymentId].devices)));
     }
-    return res(ctx.status(500));
+    return res(ctx.status(521));
   }),
   rest.get(`${deploymentsApiUrl}/deployments/:deploymentId/statistics`, ({ params: { deploymentId } }, res, ctx) => {
     if (deploymentId === createdDeployment.id) {
@@ -48,29 +48,29 @@ export const deploymentHandlers = [
     } else if (defaultState.deployments.byId[deploymentId]) {
       return res(ctx.json(defaultState.deployments.byId[deploymentId].stats));
     }
-    return res(ctx.status(500));
+    return res(ctx.status(522));
   }),
   rest.get(`${deploymentsApiUrl}/deployments/:deploymentId/devices/:deviceId/log`, ({ params: { deploymentId, deviceId } }, res, ctx) => {
     if (defaultState.deployments.byId[deploymentId] && defaultState.deployments.byId[deploymentId].devices[deviceId]) {
       return res(ctx.text('test'));
     }
-    return res(ctx.status(500));
+    return res(ctx.status(523));
   }),
   rest.post(`${deploymentsApiUrl}/deployments`, (req, res, ctx) => {
     if (!Object.keys(req.body).length) {
-      return res(ctx.status(500), ctx.json({}));
+      return res(ctx.status(524), ctx.json({}));
     }
     return res(ctx.set('location', `find/me/here/${createdDeployment.id}`), ctx.json({}));
   }),
   rest.post(`${deploymentsApiUrlV2}/deployments`, ({ body: { filter_id, devices = [] } }, res, ctx) => {
     if (!filter_id || !!devices.length) {
-      return res(ctx.status(500), ctx.json({}));
+      return res(ctx.status(525), ctx.json({}));
     }
     return res(ctx.set('location', `find/me/here/${createdDeployment.id}`), ctx.json({}));
   }),
   rest.post(`${deploymentsApiUrl}/deployments/group/:deploymentGroup`, ({ params: { deploymentGroup }, body: { filter_id, devices = [] } }, res, ctx) => {
     if (filter_id || !!devices.length || deploymentGroup !== Object.keys(defaultState.devices.groups.byId)[0]) {
-      return res(ctx.status(500), ctx.json({}));
+      return res(ctx.status(526), ctx.json({}));
     }
     return res(ctx.set('location', `find/me/here/${createdDeployment.id}`), ctx.json({}));
   }),
@@ -80,7 +80,7 @@ export const deploymentHandlers = [
         status === 'aborted' &&
           [...defaultState.deployments.byStatus.pending.deploymentIds, ...defaultState.deployments.byStatus.inprogress.deploymentIds].includes(deploymentId)
           ? 200
-          : 500
+          : 528
       ),
       ctx.json({})
     )
