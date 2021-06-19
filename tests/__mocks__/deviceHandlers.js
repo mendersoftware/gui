@@ -78,39 +78,39 @@ export const deviceHandlers = [
     if (defaultState.devices.byId[deviceId].auth_sets.find(authSet => authSet.id === authId)) {
       return res(ctx.status(200));
     }
-    return res(ctx.status(500));
+    return res(ctx.status(501));
   }),
   rest.delete(`${deviceAuthV2}/devices/:deviceId`, ({ params: { deviceId } }, res, ctx) => {
     if (defaultState.devices.byId[deviceId]) {
       return res(ctx.status(200));
     }
-    return res(ctx.status(501));
+    return res(ctx.status(502));
   }),
   rest.delete(`${inventoryApiUrl}/groups/:group/devices`, ({ params: { group }, body: deviceIds }, res, ctx) => {
     if (defaultState.devices.groups.byId[group] && deviceIds.every(id => !!defaultState.devices.byId[id])) {
       return res(ctx.status(200));
     }
-    return res(ctx.status(502));
+    return res(ctx.status(503));
   }),
   rest.delete(`${inventoryApiUrlV2}/filters/:filterId`, ({ params: { filterId } }, res, ctx) => {
     if (Object.values(defaultState.devices.groups.byId).find(group => group.id === filterId)) {
       return res(ctx.status(200));
     }
-    return res(ctx.status(503));
+    return res(ctx.status(504));
   }),
   rest.get(`${deviceAuthV2}/devices`, (req, res, ctx) => {
     const deviceIds = req.url.searchParams.getAll('id');
     if (deviceIds.every(id => !!defaultState.devices.byId[id])) {
       return res(ctx.json(deviceIds.map(id => ({ ...deviceAuthDevice, id }))));
     }
-    return res(ctx.status(504));
+    return res(ctx.status(505));
   }),
   rest.get(`${deviceAuthV2}/limits/max_devices`, (req, res, ctx) => res(ctx.json({ limit: defaultState.devices.limit }))),
   rest.get(`${inventoryApiUrl}/devices/:deviceId`, ({ params: { deviceId } }, res, ctx) => {
     if (defaultState.devices.byId[deviceId]) {
       return res(ctx.json(inventoryDevice));
     }
-    return res(ctx.status(505));
+    return res(ctx.status(506));
   }),
   rest.get(`${inventoryApiUrl}/groups`, (req, res, ctx) => {
     const status = req.url.searchParams.get('status');
@@ -123,7 +123,7 @@ export const deviceHandlers = [
       }, []);
       return res(ctx.json(groups));
     }
-    return res(ctx.status(506));
+    return res(ctx.status(507));
   }),
   rest.get(`${inventoryApiUrlV2}/filters/attributes`, (req, res, ctx) => res(ctx.json(deviceAttributes))),
   rest.get(`${inventoryApiUrlV2}/filters`, (req, res, ctx) =>
@@ -141,7 +141,7 @@ export const deviceHandlers = [
     if (!!group && deviceIds.every(id => !!defaultState.devices.byId[id])) {
       return res(ctx.status(200));
     }
-    return res(ctx.status(507));
+    return res(ctx.status(508));
   }),
   rest.post(`${deviceAuthV2}/devices`, ({ body: authset }, res, ctx) => {
     if (
@@ -155,7 +155,7 @@ export const deviceHandlers = [
   }),
   rest.post(`${inventoryApiUrlV2}/filters/search`, ({ body: { page, per_page, filters } }, res, ctx) => {
     if ([page, per_page, filters].some(item => !item)) {
-      return res(ctx.status(508));
+      return res(ctx.status(509));
     }
     const filter = filters.find(
       filter => filter.scope === 'identity' && filter.attribute === 'status' && Object.values(DeviceConstants.DEVICE_STATES).includes(filter.value)
@@ -183,7 +183,7 @@ export const deviceHandlers = [
           DeviceConstants.DEVICE_FILTERING_OPTIONS[term.type] && ['identity', 'inventory', 'system'].includes(term.scope) && !!term.value && !!term.attribute
       )
     ) {
-      return res(ctx.status(500));
+      return res(ctx.status(510));
     }
     return res(ctx.set('location', 'find/me/here/createdFilterId'), ctx.json({}));
   }),
@@ -191,7 +191,7 @@ export const deviceHandlers = [
     if (defaultState.devices.byId[deviceId].auth_sets.find(authSet => authSet.id === authId) && DeviceConstants.DEVICE_STATES[status]) {
       return res(ctx.status(200));
     }
-    return res(ctx.status(500));
+    return res(ctx.status(511));
   }),
   rest.get(`${deviceConfig}/:deviceId`, ({ params: { deviceId } }, res, ctx) => {
     if (deviceId === 'testId') {
@@ -207,18 +207,18 @@ export const deviceHandlers = [
         })
       );
     }
-    return res(ctx.status(538));
+    return res(ctx.status(512));
   }),
   rest.put(`${deviceConfig}/:deviceId`, ({ params: { deviceId } }, res, ctx) => {
     if (defaultState.devices.byId[deviceId]) {
       return res(ctx.status(201));
     }
-    return res(ctx.status(539));
+    return res(ctx.status(513));
   }),
   rest.post(`${deviceConfig}/:deviceId/deploy`, ({ params: { deviceId } }, res, ctx) => {
     if (defaultState.devices.byId[deviceId]) {
       return res(ctx.status(200), ctx.json({ deployment_id: defaultState.deployments.byId.d1.id }));
     }
-    return res(ctx.status(539));
+    return res(ctx.status(514));
   })
 ];

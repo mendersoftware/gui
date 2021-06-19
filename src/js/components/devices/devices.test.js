@@ -1,7 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { prettyDOM } from '@testing-library/dom';
-import { render, screen, waitFor, waitForElementToBeRemoved, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
@@ -67,13 +67,14 @@ describe('Devices Component', () => {
         }
       }
     });
-    render(
+    const ui = (
       <MemoryRouter>
         <Provider store={store}>
           <Devices />
         </Provider>
       </MemoryRouter>
     );
+    const { rerender } = render(ui);
     await waitFor(() => expect(screen.getByText(defaultState.devices.byId.a1.id)).toBeInTheDocument());
 
     userEvent.click(screen.getByRole('tab', { name: /Pending/i }));
@@ -82,11 +83,14 @@ describe('Devices Component', () => {
     expect(screen.getByRole('heading', { level: 2, name: 'testGroup' })).toBeInTheDocument();
     const deviceIdHeader = screen.getByText('Device ID');
     userEvent.click(deviceIdHeader.lastChild);
-    const idDialog = screen.getByText('Default device identity attribute').parentElement.parentElement;
+    const idDialogHeader = screen.getByText('Default device identity attribute');
+    const idDialog = idDialogHeader.parentElement.parentElement;
     expect(idDialog).toBeInTheDocument();
     await selectMaterialUiSelectOption(idDialog, 'mac');
-    userEvent.click(within(idDialog).getByText(/Save/i));
-    await waitForElementToBeRemoved(() => screen.getByText('Default device identity attribute'), { timeout: 2500 });
+    act(() => userEvent.click(within(idDialog).getByText(/Save/i)));
+    await waitFor(() => rerender(ui));
+    await waitFor(() => expect(screen.queryByText('Default device identity attribute')).not.toBeInTheDocument(), { timeout: 5000 });
+    // await waitForElementToBeRemoved(screen.queryByText('Default device identity attribute'), { timeout: 5000 });
     userEvent.click(screen.getByRole('button', { name: 'testGroupDynamic' }));
     userEvent.click(screen.getByRole('button', { name: /Remove group/i }));
 
@@ -100,5 +104,5 @@ describe('Devices Component', () => {
     expect(screen.getByText(defaultState.devices.byId.a1.attributes.ipv4_wlan0)).toBeInTheDocument();
     userEvent.click(deviceListItem);
     expect(screen.queryByText(defaultState.devices.byId.a1.attributes.ipv4_wlan0)).toBeFalsy();
-  }, 40000);
+  }, 10000);
 });

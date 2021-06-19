@@ -91,11 +91,12 @@ describe('Configuration Component', () => {
     userEvent.type(screen.getByPlaceholderText(/value/i), 'testValue');
     expect(document.querySelector('.MuiFab-root')).not.toBeDisabled();
     userEvent.click(screen.getByRole('checkbox', { name: /save/i }));
-    await act(() => userEvent.click(screen.getByRole('button', { name: /save/i })));
-    await act(() => waitFor(() => rerender(ui)));
+    await act(async () => await userEvent.click(screen.getByRole('button', { name: /save/i })));
+    await waitFor(() => rerender(ui));
 
     expect(screen.getByText(/Configuration could not be updated on device/i)).toBeInTheDocument();
-    await act(() => userEvent.click(screen.getByRole('button', { name: /Retry/i })));
+    act(() => userEvent.click(screen.getByRole('button', { name: /Retry/i })));
+    await waitFor(() => rerender(ui));
     expect(submitMock).toHaveBeenLastCalledWith(defaultState.devices.byId.a1.id, { testKey: 'testValue' });
     expect(applyMock).toHaveBeenLastCalledWith(defaultState.devices.byId.a1.id, { retries: 0 }, true, { testKey: 'testValue' });
     device.config = {
@@ -115,7 +116,7 @@ describe('Configuration Component', () => {
         setDeviceConfig={submitMock}
       />
     );
-    await act(() => waitFor(() => rerender(ui)));
+    await waitFor(() => rerender(ui));
     while (screen.queryByText(/show more/i)) {
       userEvent.click(screen.getByText(/show more/i));
       await waitFor(() => rerender(ui));
@@ -126,7 +127,8 @@ describe('Configuration Component', () => {
     await waitFor(() => rerender(ui));
     userEvent.type(screen.getByDisplayValue('something'), 'testKey');
     userEvent.type(screen.getByDisplayValue('else'), 'testValue');
-    await act(() => userEvent.click(screen.getByRole('button', { name: /Cancel/i })));
+    act(() => userEvent.click(screen.getByRole('button', { name: /Cancel/i })));
+    await waitFor(() => rerender(ui));
     expect(screen.queryByText(/key/i)).not.toBeInTheDocument();
 
     // userEvent.click(screen.getByRole('button', { name: /View log/i }));

@@ -20,25 +20,25 @@ export const organizationHandlers = [
     if (intentId == defaultState.organization.intentId) {
       return res(ctx.status(200));
     }
-    return res(ctx.status(500));
+    return res(ctx.status(540));
   }),
   rest.post(`${tenantadmApiUrlv2}/tenants/:tenantId/upgrade/:status`, ({ params: { status, tenantId }, body: { plan } }, res, ctx) => {
     if (tenantId != defaultState.organization.organization.id || !['cancel', 'complete', 'start'].includes(status)) {
-      return res(ctx.status(500));
+      return res(ctx.status(541));
     }
     if (status === 'start') {
       return res(ctx.json({ secret: 'testSecret' }));
     }
     if (plan && !Object.keys(PLANS).includes(plan)) {
       console.log('meh');
-      return res(ctx.status(500));
+      return res(ctx.status(542));
     }
     return res(ctx.status(200));
   }),
   rest.post(`${tenantadmApiUrlv2}/contact/support`, ({ body: { subject, body } }, res, ctx) => {
     console.log('subject');
     if (!(subject && body)) {
-      return res(ctx.status(500));
+      return res(ctx.status(543));
     }
     return res(ctx.status(200));
   }),
