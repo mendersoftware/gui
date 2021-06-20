@@ -262,6 +262,11 @@ export const DeviceConfiguration = ({
     setIsEditingConfig(true);
   };
 
+  const onStartImportClick = e => {
+    e.stopPropagation();
+    setShowConfigImport(true);
+  };
+
   const hasDeviceConfig = !isEmpty(reported);
   let footer = hasDeviceConfig ? <ConfigUpToDateNote updated_ts={reported_ts} /> : <ConfigEmptyNote updated_ts={device.updated_ts} />;
   if (isEditingConfig) {
@@ -338,7 +343,7 @@ export const DeviceConfiguration = ({
             )}
           </div>
           {open && isEditingConfig ? (
-            <Button onClick={setShowConfigImport} disabled={isUpdatingConfig} startIcon={<SaveAltIcon />} style={{ justifySelf: 'left' }}>
+            <Button onClick={onStartImportClick} disabled={isUpdatingConfig} startIcon={<SaveAltIcon />} style={{ justifySelf: 'left' }}>
               Import configuration
             </Button>
           ) : null}
