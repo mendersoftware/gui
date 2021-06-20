@@ -249,3 +249,32 @@ const ConfigureRaspberryLedComponent = ({ anchor, device, setSnackbar, toggleHel
 };
 
 export const ConfigureRaspberryLedTip = connect(mapStateToProps, actionCreators)(ConfigureRaspberryLedComponent);
+
+const ConfigureAddOnTipComponent = ({ docsVersion }) => (
+  <div>
+    <div
+      id="configure-add-on-help"
+      className="tooltip help"
+      data-tip
+      data-for="configure-add-on-help-tip"
+      data-event="click focus"
+      style={{ top: '10%', left: '75%' }}
+    >
+      <HelpIcon />
+    </div>
+    <ReactTooltip id="configure-add-on-help-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+      <p>
+        Mender deploys the configuration attributes using the same mechanisms as software updates. The configuration is stored as a JSON file at
+        <code>/var/lib/mender-configure/device-config.json</code> on the device and then all the scripts in{' '}
+        <code>/usr/lib/mender-configure/apply-device-config.d/</code> are executed to apply the configuration attributes. To add a new configuration attribute,
+        you simply need to input it in the UI and add a script to that directory that applies it accordingly. Read more about how it works in the{' '}
+        <a href={`https://docs.mender.io/${docsVersion}add-ons/configure`} target="_blank" rel="noopener noreferrer">
+          Configure documentation
+        </a>
+        .
+      </p>
+    </ReactTooltip>
+  </div>
+);
+
+export const ConfigureAddOnTip = connect(mapStateToProps, actionCreators)(ConfigureAddOnTipComponent);

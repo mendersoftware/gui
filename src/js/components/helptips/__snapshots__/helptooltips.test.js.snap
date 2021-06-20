@@ -3,20 +3,17 @@
 exports[`Helptooltips Components renders Connect(AddGroupComponent) correctly 1`] = `
 <div>
   <div
-    className="tooltip help"
+    class="tooltip help"
+    currentitem="false"
     data-event="click focus"
     data-for="groups-tip"
-    data-tip={true}
+    data-tip="true"
     id="onboard-5"
-    style={
-      Object {
-        "bottom": "-10px",
-      }
-    }
+    style="bottom: -10px;"
   >
     <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root"
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
       focusable="false"
       viewBox="0 0 24 24"
     >
@@ -26,7 +23,7 @@ exports[`Helptooltips Components renders Connect(AddGroupComponent) correctly 1`
     </svg>
   </div>
   <div
-    className="__react_component_tooltip place-bottom type-dark"
+    class="__react_component_tooltip place-bottom type-dark"
     data-id="tooltip"
     id="groups-tip"
   >
@@ -44,7 +41,6 @@ exports[`Helptooltips Components renders Connect(AddGroupComponent) correctly 1`
       You can find out additional information about device groups in 
       <a
         href="/help/devices"
-        onClick={[Function]}
       >
         the help section
       </a>
@@ -52,8 +48,7 @@ exports[`Helptooltips Components renders Connect(AddGroupComponent) correctly 1`
     </p>
     <p>
       <a
-        className="hidehelp"
-        onClick={[Function]}
+        class="hidehelp"
       >
         Hide all help tips
       </a>
@@ -65,21 +60,17 @@ exports[`Helptooltips Components renders Connect(AddGroupComponent) correctly 1`
 exports[`Helptooltips Components renders Connect(AuthButtonComponent) correctly 1`] = `
 <div>
   <div
-    className="tooltip help"
+    class="tooltip help"
+    currentitem="false"
     data-event="click focus"
     data-for="auth-button-tip"
-    data-tip={true}
+    data-tip="true"
     id="onboard-4"
-    style={
-      Object {
-        "left": "75%",
-        "top": 0,
-      }
-    }
+    style="left: 75%; top: 0px;"
   >
     <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root"
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
       focusable="false"
       viewBox="0 0 24 24"
     >
@@ -89,16 +80,12 @@ exports[`Helptooltips Components renders Connect(AuthButtonComponent) correctly 
     </svg>
   </div>
   <div
-    className="__react_component_tooltip place-bottom type-dark"
+    class="__react_component_tooltip place-bottom type-dark"
     data-id="tooltip"
     id="auth-button-tip"
   >
     <div
-      style={
-        Object {
-          "whiteSpace": "normal",
-        }
-      }
+      style="white-space: normal;"
     >
       <h3>
         Authorize devices
@@ -121,8 +108,7 @@ exports[`Helptooltips Components renders Connect(AuthButtonComponent) correctly 
       </p>
       <p>
         <a
-          className="hidehelp"
-          onClick={[Function]}
+          class="hidehelp"
         >
           Hide all help tips
         </a>
@@ -132,18 +118,71 @@ exports[`Helptooltips Components renders Connect(AuthButtonComponent) correctly 
 </div>
 `;
 
-exports[`Helptooltips Components renders Connect(ConfigureRaspberryLedComponent) correctly 1`] = `
-Array [
+exports[`Helptooltips Components renders Connect(ConfigureAddOnTipComponent) correctly 1`] = `
+<div>
   <div
-    className="fadeIn tooltip help"
+    class="tooltip help"
+    currentitem="false"
+    data-event="click focus"
+    data-for="configure-add-on-help-tip"
+    data-tip="true"
+    id="configure-add-on-help"
+    style="top: 10%; left: 75%;"
+  >
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
+      focusable="false"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+      />
+    </svg>
+  </div>
+  <div
+    class="__react_component_tooltip place-bottom type-dark"
+    data-id="tooltip"
+    id="configure-add-on-help-tip"
+  >
+    <p>
+      Mender deploys the configuration attributes using the same mechanisms as software updates. The configuration is stored as a JSON file at
+      <code>
+        /var/lib/mender-configure/device-config.json
+      </code>
+       on the device and then all the scripts in
+       
+      <code>
+        /usr/lib/mender-configure/apply-device-config.d/
+      </code>
+       are executed to apply the configuration attributes. To add a new configuration attribute, you simply need to input it in the UI and add a script to that directory that applies it accordingly. Read more about how it works in the
+       
+      <a
+        href="https://docs.mender.io/add-ons/configure"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Configure documentation
+      </a>
+      .
+    </p>
+  </div>
+</div>
+`;
+
+exports[`Helptooltips Components renders Connect(ConfigureRaspberryLedComponent) correctly 1`] = `
+NodeList [
+  <div
+    class="fadeIn tooltip help"
+    currentitem="false"
     data-event="click focus"
     data-for="config-led-tip"
-    data-tip={true}
+    data-tip="true"
     id="config-led-help"
   >
     <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root"
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
       focusable="false"
       viewBox="0 0 24 24"
     >
@@ -153,39 +192,29 @@ Array [
     </svg>
   </div>,
   <div
-    className="__react_component_tooltip place-bottom type-dark"
+    class="__react_component_tooltip place-bottom type-dark"
     data-id="tooltip"
     id="config-led-tip"
   >
     To see the effects of applying a configuration to your device you can set one of the below values to modify the behaviour of your Raspberry Pi green status LED
     <div
-      className="break-all two-columns column-data compact react-tooltip margin-top-small margin-bottom-small"
+      class="break-all two-columns column-data compact react-tooltip margin-top-small margin-bottom-small"
     >
       <div
-        className="align-right key text-muted"
+        class="align-right key text-muted"
       >
         <b>
           mmc0
         </b>
       </div>
       <div
-        className="flexbox clickable"
-        onClick={[Function]}
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
+        class="flexbox clickable"
       >
         The default, which blinks the led on storage activity
         <svg
-          aria-describedby={null}
-          aria-hidden={true}
-          className="MuiSvgIcon-root margin-left-small fadeOut MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall"
+          aria-hidden="true"
+          class="MuiSvgIcon-root margin-left-small fadeOut MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall"
           focusable="false"
-          onBlur={[Function]}
-          onFocus={[Function]}
-          onMouseLeave={[Function]}
-          onMouseOver={[Function]}
-          onTouchEnd={[Function]}
-          onTouchStart={[Function]}
           title="Copy to clipboard"
           viewBox="0 0 24 24"
         >
@@ -195,30 +224,20 @@ Array [
         </svg>
       </div>
       <div
-        className="align-right key text-muted"
+        class="align-right key text-muted"
       >
         <b>
           on
         </b>
       </div>
       <div
-        className="flexbox clickable"
-        onClick={[Function]}
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
+        class="flexbox clickable"
       >
         Turn on the light permanently
         <svg
-          aria-describedby={null}
-          aria-hidden={true}
-          className="MuiSvgIcon-root margin-left-small fadeOut MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall"
+          aria-hidden="true"
+          class="MuiSvgIcon-root margin-left-small fadeOut MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall"
           focusable="false"
-          onBlur={[Function]}
-          onFocus={[Function]}
-          onMouseLeave={[Function]}
-          onMouseOver={[Function]}
-          onTouchEnd={[Function]}
-          onTouchStart={[Function]}
           title="Copy to clipboard"
           viewBox="0 0 24 24"
         >
@@ -228,30 +247,20 @@ Array [
         </svg>
       </div>
       <div
-        className="align-right key text-muted"
+        class="align-right key text-muted"
       >
         <b>
           off
         </b>
       </div>
       <div
-        className="flexbox clickable"
-        onClick={[Function]}
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
+        class="flexbox clickable"
       >
         Turn off the light permanently
         <svg
-          aria-describedby={null}
-          aria-hidden={true}
-          className="MuiSvgIcon-root margin-left-small fadeOut MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall"
+          aria-hidden="true"
+          class="MuiSvgIcon-root margin-left-small fadeOut MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall"
           focusable="false"
-          onBlur={[Function]}
-          onFocus={[Function]}
-          onMouseLeave={[Function]}
-          onMouseOver={[Function]}
-          onTouchEnd={[Function]}
-          onTouchStart={[Function]}
           title="Copy to clipboard"
           viewBox="0 0 24 24"
         >
@@ -261,30 +270,20 @@ Array [
         </svg>
       </div>
       <div
-        className="align-right key text-muted"
+        class="align-right key text-muted"
       >
         <b>
           heartbeat
         </b>
       </div>
       <div
-        className="flexbox clickable"
-        onClick={[Function]}
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
+        class="flexbox clickable"
       >
         Enable heartbeat blinking
         <svg
-          aria-describedby={null}
-          aria-hidden={true}
-          className="MuiSvgIcon-root margin-left-small fadeOut MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall"
+          aria-hidden="true"
+          class="MuiSvgIcon-root margin-left-small fadeOut MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall"
           focusable="false"
-          onBlur={[Function]}
-          onFocus={[Function]}
-          onMouseLeave={[Function]}
-          onMouseOver={[Function]}
-          onTouchEnd={[Function]}
-          onTouchStart={[Function]}
           title="Copy to clipboard"
           viewBox="0 0 24 24"
         >
@@ -315,8 +314,7 @@ Array [
     for more information.
     <p>
       <a
-        className="hidehelp"
-        onClick={[Function]}
+        class="hidehelp"
       >
         Hide all help tips
       </a>
@@ -326,17 +324,18 @@ Array [
 `;
 
 exports[`Helptooltips Components renders Connect(ConfigureTimezoneTipComponent) correctly 1`] = `
-Array [
+NodeList [
   <div
-    className="fadeIn tooltip help"
+    class="fadeIn tooltip help"
+    currentitem="false"
     data-event="click focus"
     data-for="config-timezone-tip"
-    data-tip={true}
+    data-tip="true"
     id="config-timezone-help"
   >
     <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root"
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
       focusable="false"
       viewBox="0 0 24 24"
     >
@@ -346,7 +345,7 @@ Array [
     </svg>
   </div>,
   <div
-    className="__react_component_tooltip place-bottom type-dark"
+    class="__react_component_tooltip place-bottom type-dark"
     data-id="tooltip"
     id="config-timezone-tip"
   >
@@ -373,8 +372,7 @@ Array [
      command.
     <p>
       <a
-        className="hidehelp"
-        onClick={[Function]}
+        class="hidehelp"
       >
         Hide all help tips
       </a>
@@ -386,21 +384,17 @@ Array [
 exports[`Helptooltips Components renders Connect(DeviceSupportTipComponent) correctly 1`] = `
 <div>
   <div
-    className="tooltip help"
+    class="tooltip help"
+    currentitem="false"
     data-event="click focus"
     data-for="deb-package-tip"
-    data-tip={true}
+    data-tip="true"
     id="deb-package-help"
-    style={
-      Object {
-        "left": "88%",
-        "top": "22%",
-      }
-    }
+    style="top: 22%; left: 88%;"
   >
     <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root"
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
       focusable="false"
       viewBox="0 0 24 24"
     >
@@ -410,7 +404,7 @@ exports[`Helptooltips Components renders Connect(DeviceSupportTipComponent) corr
     </svg>
   </div>
   <div
-    className="__react_component_tooltip place-bottom type-dark"
+    class="__react_component_tooltip place-bottom type-dark"
     data-id="tooltip"
     id="deb-package-tip"
   >
@@ -433,15 +427,16 @@ exports[`Helptooltips Components renders Connect(DeviceSupportTipComponent) corr
 exports[`Helptooltips Components renders Connect(ExpandArtifactComponent) correctly 1`] = `
 <div>
   <div
-    className="tooltip help"
+    class="tooltip help"
+    currentitem="false"
     data-event="click focus"
     data-for="artifact-expand-tip"
-    data-tip={true}
+    data-tip="true"
     id="onboard-10"
   >
     <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root"
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
       focusable="false"
       viewBox="0 0 24 24"
     >
@@ -451,7 +446,7 @@ exports[`Helptooltips Components renders Connect(ExpandArtifactComponent) correc
     </svg>
   </div>
   <div
-    className="__react_component_tooltip place-bottom type-dark"
+    class="__react_component_tooltip place-bottom type-dark"
     data-id="tooltip"
     id="artifact-expand-tip"
   >
@@ -483,8 +478,7 @@ exports[`Helptooltips Components renders Connect(ExpandArtifactComponent) correc
     </p>
     <p>
       <a
-        className="hidehelp"
-        onClick={[Function]}
+        class="hidehelp"
       >
         Hide all help tips
       </a>
@@ -496,21 +490,17 @@ exports[`Helptooltips Components renders Connect(ExpandArtifactComponent) correc
 exports[`Helptooltips Components renders Connect(ExpandDeviceComponent) correctly 1`] = `
 <div>
   <div
-    className="tooltip help"
+    class="tooltip help"
+    currentitem="false"
     data-event="click focus"
     data-for="expand-device-tip"
-    data-tip={true}
+    data-tip="true"
     id="onboard-6"
-    style={
-      Object {
-        "left": "inherit",
-        "right": "45px",
-      }
-    }
+    style="right: 45px;"
   >
     <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root"
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
       focusable="false"
       viewBox="0 0 24 24"
     >
@@ -520,7 +510,7 @@ exports[`Helptooltips Components renders Connect(ExpandDeviceComponent) correctl
     </svg>
   </div>
   <div
-    className="__react_component_tooltip place-left type-dark"
+    class="__react_component_tooltip place-left type-dark"
     data-id="tooltip"
     id="expand-device-tip"
   >
@@ -545,8 +535,7 @@ exports[`Helptooltips Components renders Connect(ExpandDeviceComponent) correctl
     </p>
     <p>
       <a
-        className="hidehelp"
-        onClick={[Function]}
+        class="hidehelp"
       >
         Hide all help tips
       </a>
