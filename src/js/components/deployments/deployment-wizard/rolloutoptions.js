@@ -18,9 +18,11 @@ export const RolloutOptions = ({
 }) => {
   const currentRetries = retries ? retries : previousRetries;
 
+  const { states = {} } = deploymentObject.update_control_map || {};
+
   const onStepChangeClick = step => {
-    const controlMap = deploymentObject.update_control_map || {};
-    setDeploymentSettings({ ...deploymentObject, update_control_map: { ...controlMap, [step.state]: step } });
+    const { action } = step;
+    setDeploymentSettings({ ...deploymentObject, update_control_map: { states: { ...states, [step.state]: { action } } } });
   };
 
   const onChangeRetries = ({ target: { value } }) => setDeploymentSettings({ ...deploymentObject, retries: value });
@@ -30,13 +32,7 @@ export const RolloutOptions = ({
   return (
     <form className="flexbox column margin margin-top-none" style={{ overflow: 'visible', minHeight: 300 }}>
       <h4 style={styles.selectionTitle}>Add pauses between update steps</h4>
-      <RolloutSteps
-        disabled={phases.length > 1}
-        docsVersion={docsVersion}
-        isEnterprise={isEnterprise}
-        onStepChange={onStepChangeClick}
-        steps={deploymentObject.update_control_map}
-      />
+      <RolloutSteps disabled={phases.length > 1} docsVersion={docsVersion} isEnterprise={isEnterprise} onStepChange={onStepChangeClick} steps={states} />
       <h4>Select the number of times each device will attempt to apply the update</h4>
       <FormControl className="margin-bottom" style={{ width: 400 }}>
         <FormGroup row>

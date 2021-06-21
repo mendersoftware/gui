@@ -49,8 +49,10 @@ const Review = ({ deployment = {}, deploymentObject = {}, docsVersion, filterId,
     phases = [{ batch_size: 100 }],
     release = { device_types_compatible: [] },
     retries = 0,
-    update_control_map
+    update_control_map = {}
   } = deploymentObject;
+
+  const { states: rolloutSteps } = update_control_map;
 
   const creationTime = deployment.created || new Date().toISOString();
   const start_time = phases[0].start_ts || creationTime;
@@ -104,7 +106,7 @@ const Review = ({ deployment = {}, deploymentObject = {}, docsVersion, filterId,
       ) : (
         <>
           <h5 className="margin-left-small">Pauses</h5>
-          <RolloutSteps className="margin-left-small" docsVersion={docsVersion} isEnterprise={isEnterprise} steps={update_control_map} />
+          <RolloutSteps className="margin-left-small" docsVersion={docsVersion} isEnterprise={isEnterprise} steps={rolloutSteps} />
         </>
       )}
       {<EnterpriseNotification isEnterprise={isEnterprise} benefit="deployment roll outs in multiple phases and on schedule, as well as deployment retries" />}

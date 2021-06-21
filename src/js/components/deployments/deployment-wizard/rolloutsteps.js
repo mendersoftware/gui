@@ -90,8 +90,9 @@ export const RolloutStepConnector = ({ disabled, step, onStepChange }) => {
   );
 };
 
-export const RolloutSteps = ({ disabled, onStepChange, steps }) => {
-  const mappableSteps = Object.values({ ...defaultSteps, ...steps });
+export const RolloutSteps = ({ disabled, onStepChange, steps = {} }) => {
+  const mappableSteps = Object.entries(defaultSteps).reduce((accu, [key, step]) => [...accu, { ...step, ...steps[key] }], []);
+
   return (
     <div className={`flexbox margin-top ${onStepChange ? 'margin-left-large margin-right-large' : ''}`}>
       {mappableSteps.map((step, index) => (

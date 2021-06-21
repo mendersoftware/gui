@@ -143,9 +143,11 @@ export const DeploymentReport = props => {
     }
   }
 
-  const onUpdateControlChange = updatedMap => {
-    const { id, update_control_map } = deployment;
-    updateDeploymentControlMap(id, { ...update_control_map, ...updatedMap });
+  const onUpdateControlChange = (updatedMap = {}) => {
+    const { id, update_control_map = {} } = deployment;
+    const { states } = update_control_map;
+    const { states: updatedStates } = updatedMap;
+    updateDeploymentControlMap(id, { states: { ...states, ...updatedStates } });
   };
 
   return (
