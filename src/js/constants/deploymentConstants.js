@@ -48,6 +48,7 @@ module.exports = {
     success: 0
   },
   deploymentDisplayStates: {
+    finished: 'Finished',
     scheduled: 'Scheduled',
     skipped: 'Skipped',
     paused: 'Paused',

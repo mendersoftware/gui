@@ -30,7 +30,7 @@ export const DeploymentStatus = ({ className = '', deployment = {} }) => {
 
   const statsBasedDeviceCount = Object.values(phaseStats).reduce((sum, count) => sum + count, 0);
   // eslint-disable-next-line no-unused-vars
-  const { failure, scheduled, success, ...phasesWithStats } = deploymentDisplayStates;
+  const { failure, finished: finishedDeployment, scheduled, success, ...phasesWithStats } = deploymentDisplayStates;
 
   return (
     <div className={`progressStatus flexbox space-between centered margin-bottom ${className}`}>
