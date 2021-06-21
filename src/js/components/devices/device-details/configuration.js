@@ -19,7 +19,7 @@ import ConfigurationObject from '../../common/configurationobject';
 import Confirm from '../../common/confirm';
 import LogDialog from '../../common/dialogs/log';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
-import { ConfigureRaspberryLedTip, ConfigureTimezoneTip } from '../../helptips/helptooltips';
+import { ConfigureAddOnTip, ConfigureRaspberryLedTip, ConfigureTimezoneTip } from '../../helptips/helptooltips';
 import Loader from '../../common/loader';
 import ConfigImportDialog from './configimportdialog';
 import DeviceDataCollapse from './devicedatacollapse';
@@ -345,25 +345,28 @@ export const DeviceConfiguration = ({
         </div>
       }
     >
-      {isEditingConfig ? (
-        <KeyValueEditor
-          disabled={isEditDisabled}
-          errortext={''}
-          input={changedConfig}
-          inputHelpTipsMap={helpTipsMap}
-          onInputChange={setChangedConfig}
-          reset={shouldUpdateEditor}
-          showHelptips={showHelptips}
-        />
-      ) : (
-        hasDeviceConfig && <ConfigurationObject config={remainderReported} setSnackbar={setSnackbar} />
-      )}
-      <div className="flexbox margin-bottom margin-top" style={{ alignItems: 'center' }}>
-        {footer}
+      <div className="relative">
+        {isEditingConfig ? (
+          <KeyValueEditor
+            disabled={isEditDisabled}
+            errortext={''}
+            input={changedConfig}
+            inputHelpTipsMap={helpTipsMap}
+            onInputChange={setChangedConfig}
+            reset={shouldUpdateEditor}
+            showHelptips={showHelptips}
+          />
+        ) : (
+          hasDeviceConfig && <ConfigurationObject config={remainderReported} setSnackbar={setSnackbar} />
+        )}
+        {showHelptips && <ConfigureAddOnTip />}
+        <div className="flexbox margin-bottom margin-top" style={{ alignItems: 'center' }}>
+          {footer}
+        </div>
+        {hasDeviceConfig && !isEditingConfig && <a onClick={() => setOpen(false)}>show less</a>}
+        {showLog && <LogDialog logData={updateLog} onClose={() => setShowLog(false)} type="configUpdateLog" />}
+        {showConfigImport && <ConfigImportDialog onCancel={() => setShowConfigImport(false)} onSubmit={onConfigImport} />}
       </div>
-      {hasDeviceConfig && !isEditingConfig && <a onClick={() => setOpen(false)}>show less</a>}
-      {showLog && <LogDialog logData={updateLog} onClose={() => setShowLog(false)} type="configUpdateLog" />}
-      {showConfigImport && <ConfigImportDialog onCancel={() => setShowConfigImport(false)} onSubmit={onConfigImport} />}
     </DeviceDataCollapse>
   );
 };

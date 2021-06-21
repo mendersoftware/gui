@@ -1,10 +1,15 @@
 import React from 'react';
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
 import { MemoryRouter } from 'react-router-dom';
+import thunk from 'redux-thunk';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import Configuration, { ConfigEditingActions, ConfigUpdateFailureActions, ConfigEmptyNote, ConfigUpdateNote, ConfigUpToDateNote } from './configuration';
+
+const mockStore = configureStore([thunk]);
 
 describe('tiny components', () => {
   [ConfigEditingActions, ConfigUpdateFailureActions, ConfigUpdateNote, ConfigEmptyNote, ConfigUpToDateNote].forEach(async Component => {
@@ -29,25 +34,31 @@ describe('tiny components', () => {
 });
 
 describe('Configuration Component', () => {
+  let store;
+  beforeEach(() => {
+    store = mockStore({ ...defaultState });
+  });
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <Configuration
-        device={{
-          ...defaultState.devices.byId.a1,
-          config: {
-            configured: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
-            reported: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
-            updated_ts: '2019-01-01T09:25:00.000Z',
-            reported_ts: '2019-01-01T09:25:01.000Z'
-          }
-        }}
-        abortDeployment={jest.fn}
-        applyDeviceConfig={jest.fn}
-        getDeviceLog={jest.fn}
-        getSingleDeployment={jest.fn}
-        saveGlobalSettings={jest.fn}
-        setDeviceConfig={jest.fn}
-      />
+      <Provider store={store}>
+        <Configuration
+          device={{
+            ...defaultState.devices.byId.a1,
+            config: {
+              configured: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
+              reported: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
+              updated_ts: '2019-01-01T09:25:00.000Z',
+              reported_ts: '2019-01-01T09:25:01.000Z'
+            }
+          }}
+          abortDeployment={jest.fn}
+          applyDeviceConfig={jest.fn}
+          getDeviceLog={jest.fn}
+          getSingleDeployment={jest.fn}
+          saveGlobalSettings={jest.fn}
+          setDeviceConfig={jest.fn}
+        />
+      </Provider>
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
@@ -68,15 +79,17 @@ describe('Configuration Component', () => {
     };
     let ui = (
       <MemoryRouter>
-        <Configuration
-          device={device}
-          abortDeployment={jest.fn}
-          applyDeviceConfig={applyMock}
-          getDeviceLog={jest.fn}
-          getSingleDeployment={jest.fn}
-          saveGlobalSettings={jest.fn}
-          setDeviceConfig={submitMock}
-        />
+        <Provider store={store}>
+          <Configuration
+            device={device}
+            abortDeployment={jest.fn}
+            applyDeviceConfig={applyMock}
+            getDeviceLog={jest.fn}
+            getSingleDeployment={jest.fn}
+            saveGlobalSettings={jest.fn}
+            setDeviceConfig={submitMock}
+          />
+        </Provider>
       </MemoryRouter>
     );
     const { rerender } = render(ui);
@@ -106,15 +119,17 @@ describe('Configuration Component', () => {
       reported_ts: '2019-01-01T09:25:01.000Z'
     };
     ui = (
-      <Configuration
-        device={device}
-        abortDeployment={jest.fn}
-        applyDeviceConfig={applyMock}
-        getDeviceLog={jest.fn}
-        getSingleDeployment={jest.fn}
-        saveGlobalSettings={jest.fn}
-        setDeviceConfig={submitMock}
-      />
+      <Provider store={store}>
+        <Configuration
+          device={device}
+          abortDeployment={jest.fn}
+          applyDeviceConfig={applyMock}
+          getDeviceLog={jest.fn}
+          getSingleDeployment={jest.fn}
+          saveGlobalSettings={jest.fn}
+          setDeviceConfig={submitMock}
+        />
+      </Provider>
     );
     await waitFor(() => rerender(ui));
     while (screen.queryByText(/show more/i)) {
