@@ -48,7 +48,6 @@ export class CreateDialog extends React.Component {
     super(props, context);
     this.state = {
       activeStep: 0,
-      deploymentDeviceIds: [],
       deploymentObject: {},
       steps: deploymentSteps,
       retries: props.retries
@@ -75,8 +74,10 @@ export class CreateDialog extends React.Component {
 
   componentDidUpdate(prevProps) {
     // Update state if single device passed from props
-    if (prevProps.device !== this.props.device && this.props.device) {
-      this.setState({ deploymentDeviceIds: [this.props.device.id] });
+    const { device } = this.props;
+    const { deploymentObject } = this.state;
+    if (prevProps.device !== device && device) {
+      this.setState({ deploymentObject: { ...deploymentObject, deploymentDeviceIds: [device.id], device } });
     }
   }
 
