@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
@@ -11,6 +11,7 @@ import EnterpriseNotification from '../common/enterpriseNotification';
 import FilterItem from './filteritem';
 
 import { DEVICE_FILTERING_OPTIONS } from '../../constants/deviceConstants';
+import { deepCompare } from '../../helpers';
 
 export const emptyFilter = { key: null, value: '', operator: '$eq', scope: 'inventory' };
 
@@ -21,73 +22,83 @@ export const getFilterLabelByKey = (key, attributes) => {
 
 const MAX_PREVIOUS_FILTERS_COUNT = 3;
 
-export class Filters extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      adding: props.isModification || true,
-      newFilter: emptyFilter
-    };
-  }
+export const Filters = ({
+  attributes,
+  canFilterMultiple,
+  filters,
+  groupFilters,
+  isEnterprise,
+  isHosted,
+  isModification = true,
+  onFilterChange,
+  onGroupClick,
+  open,
+  plan,
+  previousFilters,
+  resetIdFilter,
+  selectedGroup,
+  setDeviceFilters
+}) => {
+  const [adding, setAdding] = useState(isModification);
+  const [newFilter, setNewFilter] = useState(emptyFilter);
 
-  componentDidMount() {
-    this.onFilterChange(this.props.filters);
-  }
+  useEffect(() => {
+    setAdding(adding && groupFilters.length ? isModification : true);
+    setNewFilter(emptyFilter);
+  }, [isModification, groupFilters.length]);
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.isModification !== this.props.isModification) {
-      this.setState({ newFilter: emptyFilter, adding: !this.props.isModification });
-    }
-  }
-
-  componentWillUnmount() {
-    this.clearFilters();
-  }
-
-  updateFilter(newFilter) {
-    this.setState({ newFilter });
-    let filterIndex = this.props.filters.findIndex(filter => filter.key === newFilter.key);
-    this.saveUpdatedFilter(newFilter);
+  const updateFilter = newFilter => {
+    setNewFilter(newFilter);
+    let filterIndex = filters.findIndex(filter => deepCompare(filter, newFilter));
+    saveUpdatedFilter(newFilter);
+    let changedFilters = [...filters];
     if (filterIndex === -1) {
-      return this.onFilterChange([...this.props.filters, newFilter]);
+      changedFilters.push(newFilter);
+      return handleFilterChange(changedFilters);
     }
-    this.props.filters[filterIndex] = newFilter;
-    this.onFilterChange(this.props.filters);
-  }
+    changedFilters[filterIndex] = newFilter;
+    handleFilterChange(changedFilters);
+  };
 
-  saveUpdatedFilter(newFilter) {
-    let previousFilters = this.props.previousFilters;
-    if (!previousFilters.find(filter => newFilter.key === filter.key)) {
-      previousFilters.push(newFilter);
-      this.props.saveGlobalSettings({ previousFilters: previousFilters.slice(-1 * MAX_PREVIOUS_FILTERS_COUNT) });
+  const saveUpdatedFilter = newFilter => {
+    let changedPreviousFilters = [...previousFilters];
+    if (!changedPreviousFilters.find(filter => deepCompare(filter, newFilter))) {
+      changedPreviousFilters.push(newFilter);
+      saveGlobalSettings({ previousFilters: changedPreviousFilters.slice(-1 * MAX_PREVIOUS_FILTERS_COUNT) });
     }
-  }
+  };
 
-  removeFilter(removedFilter) {
-    const filters = this.props.filters.filter(filter => filter.key !== removedFilter.key);
+  const removeFilter = removedFilter => {
+    const changedFilters = filters.filter(filter => !deepCompare(filter, removedFilter));
     if (removedFilter.key === 'id') {
-      this.props.resetIdFilter();
+      resetIdFilter();
     }
-    if (removedFilter.key === this.state.newFilter.key) {
-      this.setState({ newFilter: emptyFilter });
+    if (removedFilter.key === newFilter.key) {
+      setNewFilter(emptyFilter);
     }
-    if (!filters.length) {
-      this.setState({ adding: true });
+    if (!changedFilters.length) {
+      setAdding(true);
     }
-    this.onFilterChange(filters);
-  }
+    handleFilterChange(changedFilters);
+  };
 
-  clearFilters() {
-    this.onFilterChange([]);
-    this.props.resetIdFilter();
-  }
+  const clearFilters = () => {
+    handleFilterChange([]);
+    resetIdFilter();
+    setNewFilter(emptyFilter);
+  };
 
-  onFilterChange(filters) {
+  const onAddClick = () => {
+    setAdding(true);
+    setNewFilter(emptyFilter);
+  };
+
+  const handleFilterChange = filters => {
     const activeFilters = filters.filter(item => item.value !== '');
-    this.props.setDeviceFilters(activeFilters);
-    this.props.onFilterChange(activeFilters);
+    setDeviceFilters(activeFilters);
+    onFilterChange(activeFilters);
     if (activeFilters.length === 0) {
-      this.setState({ adding: true });
+      setAdding(true);
     } else {
       const location = window.location.hash.substring(0, window.location.hash.indexOf('?')) || window.location.hash;
       const search = activeFilters
@@ -98,95 +109,59 @@ export class Filters extends React.Component {
         .join('&');
       window.location.replace(`${location}?${search}`); // lgtm [js/client-side-unvalidated-url-redirection]
     }
-  }
+  };
 
-  render() {
-    const self = this;
-    const { attributes, canFilterMultiple, filters, isEnterprise, isHosted, onGroupClick, open, plan, selectedGroup } = self.props;
-    const { adding, newFilter } = self.state;
-    const addedFilters = filters.filter(filter => filter.key !== newFilter.key);
-    const { currentFilters, remainingFilters } = attributes.reduce(
-      (accu, currentFilter) => {
-        const isInUse = filters.find(filter => filter.key === currentFilter.key);
-        if (isInUse) {
-          accu.currentFilters.push(currentFilter);
-        } else {
-          accu.remainingFilters.push(currentFilter);
-        }
-        return accu;
-      },
-      { currentFilters: [], remainingFilters: [] }
-    );
-
-    const addButton = (
-      <Chip
-        icon={<AddIcon />}
-        disabled={!remainingFilters.length}
-        label="Add a rule"
-        color="primary"
-        onClick={() => self.setState({ adding: !adding, newFilter: emptyFilter })}
-      />
-    );
-
-    const filter = filters.find(item => item.key === newFilter.key) || newFilter;
-    const addedFilterDefined = filter && Object.values(filter).every(thing => !!thing);
-    return (
-      <Collapse in={open} timeout="auto" className="filter-wrapper" unmountOnExit>
-        <>
-          <div className="flexbox">
-            <div className="margin-right" style={{ marginTop: addedFilters.length ? 8 : 25 }}>
-              Devices matching:
-            </div>
-            <div>
-              {addedFilters.length ? (
-                <div className="filter-list">
-                  {addedFilters.map(item => (
-                    <Chip
-                      className="margin-right-small"
-                      key={`filter-${item.key}`}
-                      label={`${getFilterLabelByKey(item.key, self.props.attributes)} ${DEVICE_FILTERING_OPTIONS[item.operator].shortform} ${
-                        item.operator !== '$exists' && item.operator !== '$nexists' ? (item.operator === '$regex' ? `${item.value}.*` : item.value) : ''
-                      }`}
-                      onDelete={() => self.removeFilter(item)}
-                    />
-                  ))}
-                  {!adding && addButton}
-                </div>
-              ) : null}
-              {adding && (
-                <FilterItem
-                  filter={filter}
-                  filters={remainingFilters}
-                  attributes={attributes}
-                  onRemove={filter => self.removeFilter(filter)}
-                  onSelect={filter => self.updateFilter(filter)}
-                  plan={plan}
-                />
-              )}
-              {addedFilterDefined && addButton}
-            </div>
+  const addedFilters = filters.filter(filter => filter !== newFilter);
+  const filter = filters.find(filter => deepCompare(filter, newFilter)) || newFilter;
+  const isFilterDefined = filter && Object.values(filter).every(thing => !!thing);
+  const addButton = <Chip icon={<AddIcon />} label="Add a rule" color="primary" onClick={onAddClick} />;
+  return (
+    <Collapse in={open} timeout="auto" className="filter-wrapper" unmountOnExit>
+      <>
+        <div className="flexbox">
+          <div className="margin-right" style={{ marginTop: addedFilters.length ? 8 : 25 }}>
+            Devices matching:
           </div>
-          <div className="flexbox column margin-top-small margin-bottom-small" style={{ alignItems: 'flex-end' }}>
-            {filters.length > 0 && (
-              <span className="link margin-top-small margin-right-small" onClick={() => self.clearFilters()}>
-                Clear filter
-              </span>
-            )}
-            <EnterpriseNotification
-              isEnterprise={isEnterprise || (isHosted && plan === 'enterprise')}
-              benefit="filtering by multiple attributes to improve the device overview and the creation of dynamic groups to ease device management"
-            />
-            {canFilterMultiple && (plan === 'enterprise' || isEnterprise) && currentFilters.length >= 1 && (
-              <Button variant="contained" color="secondary" onClick={onGroupClick}>
-                {selectedGroup ? 'Save group' : 'Create group with this filter'}
-              </Button>
-            )}
+          <div>
+            {addedFilters.length ? (
+              <div className="filter-list">
+                {addedFilters.map(item => (
+                  <Chip
+                    className="margin-right-small"
+                    key={`filter-${item.key}-${item.operator}-${item.value}`}
+                    label={`${getFilterLabelByKey(item.key, attributes)} ${DEVICE_FILTERING_OPTIONS[item.operator].shortform} ${
+                      item.operator !== '$exists' && item.operator !== '$nexists' ? (item.operator === '$regex' ? `${item.value}.*` : item.value) : ''
+                    }`}
+                    onDelete={() => removeFilter(item)}
+                  />
+                ))}
+                {!adding && addButton}
+              </div>
+            ) : null}
+            {adding && <FilterItem attributes={attributes} filter={filter} onRemove={removeFilter} onSelect={updateFilter} plan={plan} />}
+            {isFilterDefined && addButton}
           </div>
-        </>
-      </Collapse>
-    );
-  }
-}
+        </div>
+        <div className="flexbox column margin-top-small margin-bottom-small" style={{ alignItems: 'flex-end' }}>
+          {filters.length > 0 && (
+            <span className="link margin-small margin-top-none" onClick={clearFilters}>
+              Clear filter
+            </span>
+          )}
+          <EnterpriseNotification
+            isEnterprise={isEnterprise || (isHosted && plan === 'enterprise')}
+            benefit="filtering by multiple attributes to improve the device overview and the creation of dynamic groups to ease device management"
+          />
+          {canFilterMultiple && (plan === 'enterprise' || isEnterprise) && filters.length >= 1 && (
+            <Button variant="contained" color="secondary" onClick={onGroupClick}>
+              {selectedGroup ? 'Save group' : 'Create group with this filter'}
+            </Button>
+          )}
+        </div>
+      </>
+    </Collapse>
+  );
+};
 
 const actionCreators = {
   resetIdFilter,
@@ -213,15 +188,18 @@ const mapStateToProps = (state, ownProps) => {
       ...state.devices.filteringAttributes.inventoryAttributes.map(item => ({ key: item, value: item, scope: 'inventory', category: 'inventory', priority: 2 }))
     ];
   }
+  const selectedGroup = state.devices.groups.selectedGroup;
+  const groupFilters = selectedGroup ? state.devices.groups.byId[selectedGroup].filters || [] : [];
   return {
     attributes: attributes.filter((item, index, array) => array.findIndex(filter => filter.key === item.key && filter.scope === item.scope) == index),
     canFilterMultiple: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
     filters: ownProps.filters || state.devices.filters || [],
+    groupFilters,
     isHosted: state.app.features.isHosted,
     isEnterprise: state.app.features.isEnterprise,
     plan,
     previousFilters: state.users.globalSettings.previousFilters || [],
-    selectedGroup: state.devices.groups.selectedGroup
+    selectedGroup
   };
 };
 
