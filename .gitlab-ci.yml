@@ -207,7 +207,7 @@ publish:tests:
   stage: publish
   except:
     - /^(staging|saas-[a-zA-Z0-9.]+)$/
-  dependencies:
+  needs:
     - test:unit
   before_script:
     - export CI_BUILD_REF=${CI_COMMIT_SHA}
