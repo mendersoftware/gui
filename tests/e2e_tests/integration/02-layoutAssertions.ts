@@ -46,20 +46,27 @@ test.describe('Layout assertions', () => {
 
     test('can authorize a device', async () => {
       await page.click(`.leftNav :text('Devices')`);
-      const hasAcceptedDevice = await page.isVisible('.deviceListItem');
+      let hasAcceptedDevice = false;
+      try {
+        hasAcceptedDevice = Boolean(await page.waitForSelector('.deviceListItem', { timeout: 10000 }));
+      } catch (e) {
+        console.log(`no accepted device present so far`);
+      }
       if (!hasAcceptedDevice) {
-        await page.click(`a:has-text('Pending')`);
-        await page.waitForSelector('.deviceListItem', { timeout: 60000 });
+        await page.waitForSelector(`text=pending authorization`, { timeout: 60000 });
+        await page.click(`text=pending authorization`);
         await page.click('.deviceListItem input');
         await page.click('.MuiSpeedDial-fab');
         await page.hover('#device-actions-actions');
         await page.click('[aria-label="accept"]');
       }
-      await page.click(`:is(a:has-text('Device groups'))`);
+      await page.click(`.MuiSelect-root:left-of(:text("Filters"))`);
+      await page.click(`css=.MuiPaper-root >> text=/Accepted/`);
       await page.waitForSelector(`css=.deviceListItem >> text=/release/`, { timeout: 60000 });
       const element = await page.textContent('.deviceListItem');
       expect(element.includes('release')).toBeTruthy();
       await page.click('.deviceListItem');
+      expect(await page.isVisible('text=Authentication status')).toBeTruthy();
     });
 
     test('can group a device', async () => {
