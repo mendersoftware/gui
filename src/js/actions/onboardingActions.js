@@ -69,8 +69,7 @@ export const setShowOnboardingHelp = (show, update = true) => (dispatch, getStat
   let tasks = [dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show })];
   if (update) {
     const { onboarding = {} } = getUserSettings(getState());
-    onboarding.showTips = show;
-    tasks.push(dispatch(saveUserSettings({ onboarding })));
+    tasks.push(dispatch(saveUserSettings({ onboarding: { ...onboarding, showTips: show } })));
     tasks.push(dispatch(toggleHelptips()));
   }
   return Promise.all(tasks);
@@ -82,8 +81,7 @@ export const setOnboardingDeviceType = (value, update = true) => (dispatch, getS
   let tasks = [dispatch({ type: OnboardingConstants.SET_ONBOARDING_DEVICE_TYPE, value })];
   if (update) {
     const { onboarding = {} } = getUserSettings(getState());
-    onboarding.deviceType = value;
-    tasks.push(dispatch(saveUserSettings({ onboarding })));
+    tasks.push(dispatch(saveUserSettings({ onboarding: { ...onboarding, deviceType: value } })));
   }
   return Promise.all(tasks);
 };
@@ -92,8 +90,7 @@ export const setOnboardingApproach = (value, update = true) => (dispatch, getSta
   let tasks = [dispatch({ type: OnboardingConstants.SET_ONBOARDING_APPROACH, value })];
   if (update) {
     const { onboarding = {} } = getUserSettings(getState());
-    onboarding.approach = value;
-    tasks.push(dispatch(saveUserSettings({ onboarding })));
+    tasks.push(dispatch(saveUserSettings({ onboarding: { ...onboarding, approach: value } })));
   }
   return Promise.all(tasks);
 };
