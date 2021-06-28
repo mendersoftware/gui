@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 import pluralize from 'pluralize';
@@ -189,11 +189,19 @@ const confirmationStyle = {
 export const PhaseProgress = ({ className = '', deployment = {}, onAbort, onUpdateControlChange }) => {
   const [shouldContinue, setShouldContinue] = useState(false);
   const [shouldAbort, setShouldAbort] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { id, stats } = deployment;
   const { failures: totalFailureCount } = groupDeploymentStats(deployment);
 
   const status = getDeploymentState(deployment);
+
+  useEffect(() => {
+    if (!isLoading) {
+      return;
+    }
+    setIsLoading(false);
+  }, [status]);
 
   const onAbortClick = () => {
     setShouldAbort(false);
@@ -201,6 +209,7 @@ export const PhaseProgress = ({ className = '', deployment = {}, onAbort, onUpda
   };
 
   const onContinueClick = () => {
+    setIsLoading(true);
     const currentPauseState = Object.keys(pauseMap)
       .reverse()
       .find(key => stats[key] > 0);
@@ -236,10 +245,12 @@ export const PhaseProgress = ({ className = '', deployment = {}, onAbort, onUpda
               style={confirmationStyle}
             />
           )}
-          <Button variant="contained" color="primary" onClick={setShouldContinue} style={{ marginRight: theme.spacing(2) }}>
+          <Button variant="contained" color="primary" disabled={isLoading} onClick={setShouldContinue} style={{ marginRight: theme.spacing(2) }}>
             Continue
           </Button>
-          <Button onClick={setShouldAbort}>Abort</Button>
+          <Button disabled={isLoading} onClick={setShouldAbort}>
+            Abort
+          </Button>
         </div>
       )}
     </div>
