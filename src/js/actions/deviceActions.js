@@ -7,7 +7,7 @@ import { saveGlobalSettings } from '../actions/userActions';
 import { auditLogsApiUrl } from '../actions/organizationActions';
 import GeneralApi, { headerNames, MAX_PAGE_SIZE } from '../api/general-api';
 import AppConstants from '../constants/appConstants';
-import DeviceConstants from '../constants/deviceConstants';
+import DeviceConstants, { DEVICE_STATES } from '../constants/deviceConstants';
 
 import { extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
 
@@ -675,7 +675,7 @@ const maybeUpdateDevicesByStatus = (deviceId, authId) => (dispatch, getState) =>
   const devicesState = getState().devices;
   const device = devicesState.byId[deviceId];
   const hasMultipleAuthSets = authId ? device.auth_sets.filter(authset => authset.id !== authId).length > 0 : false;
-  if (!hasMultipleAuthSets) {
+  if (!hasMultipleAuthSets && Object.values(DEVICE_STATES).includes(device.status)) {
     const deviceIds = devicesState.byStatus[device.status].deviceIds.filter(id => id !== deviceId);
     return Promise.resolve(
       dispatch({
