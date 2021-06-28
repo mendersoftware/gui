@@ -10,6 +10,7 @@ import RemoveGroup from './remove-group';
 import {
   addDynamicGroup,
   addStaticGroup,
+  getAllDeviceCounts,
   getDynamicGroups,
   getGroups,
   initializeGroupsDevices,
@@ -178,6 +179,7 @@ export const convertQueryToFilterAndGroup = (query, filteringAttributes) => {
 };
 
 let deviceTimer;
+const refreshLength = 10000;
 
 export const DeviceGroups = ({
   acceptedCount,
@@ -187,6 +189,7 @@ export const DeviceGroups = ({
   deviceListState,
   docsVersion,
   filters,
+  getAllDeviceCounts,
   getDynamicGroups,
   getGroups,
   groupCount,
@@ -221,6 +224,11 @@ export const DeviceGroups = ({
 
   useEffect(() => {
     refreshGroups();
+    clearInterval(deviceTimer);
+    deviceTimer = setInterval(getAllDeviceCounts, refreshLength);
+    return () => {
+      clearInterval(deviceTimer);
+    };
   }, []);
 
   useEffect(() => {
@@ -275,7 +283,6 @@ export const DeviceGroups = ({
   };
 
   const onRemoveDevicesFromGroup = devices => {
-    clearInterval(deviceTimer);
     const isGroupRemoval = devices.length >= groupCount;
     let request;
     if (isGroupRemoval) {
@@ -392,6 +399,7 @@ export const DeviceGroups = ({
 const actionCreators = {
   addDynamicGroup,
   addStaticGroup,
+  getAllDeviceCounts,
   getDynamicGroups,
   getGroups,
   initializeGroupsDevices,
