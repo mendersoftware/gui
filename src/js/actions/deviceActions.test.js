@@ -33,10 +33,10 @@ import {
   removeDynamicGroup,
   removeStaticGroup,
   selectDevice,
-  selectDevices,
   selectGroup,
   setDeviceConfig,
   setDeviceFilters,
+  setDeviceListState,
   updateDeviceAuth,
   updateDevicesAuth,
   updateDynamicGroup
@@ -48,8 +48,8 @@ const mockStore = configureMockStore(middlewares);
 describe('selecting things', () => {
   it('should allow device list selections', async () => {
     const store = mockStore({ ...defaultState });
-    await store.dispatch(selectDevices(['a1']));
-    const expectedActions = [{ type: DeviceConstants.SELECT_DEVICES, deviceIds: ['a1'] }];
+    await store.dispatch(setDeviceListState({ deviceIds: ['a1'] }));
+    const expectedActions = [{ type: DeviceConstants.SET_DEVICE_LIST_STATE, state: { deviceIds: ['a1'] } }];
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
@@ -160,7 +160,7 @@ describe('overall device information retrieval', () => {
   it('should allow count retrieval for all state counts', async () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
-      ...Object.values(DeviceConstants.DEVICE_STATES).map(status => ({
+      ...[DeviceConstants.DEVICE_STATES.accepted, DeviceConstants.DEVICE_STATES.pending].map(status => ({
         type: DeviceConstants[`SET_${status.toUpperCase()}_DEVICES_COUNT`],
         count: defaultState.devices.byStatus[status].total,
         status
@@ -406,13 +406,13 @@ describe('static grouping related actions', () => {
     // eslint-disable-next-line no-unused-vars
     const { attributes, updated_ts, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: { ...expectedDevice, attributes } } },
       {
         type: DeviceConstants.SET_ACCEPTED_DEVICES,
         deviceIds: [defaultState.devices.byId.a1.id],
         status: DeviceConstants.DEVICE_STATES.accepted,
         total: null
       },
-      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: { ...expectedDevice, attributes } } },
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: { ...expectedDevice, updated_ts } },
       {
         type: DeviceConstants.RECEIVE_GROUP_DEVICES,
@@ -448,13 +448,14 @@ describe('static grouping related actions', () => {
     // eslint-disable-next-line no-unused-vars
     const { attributes, updated_ts, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: { ...expectedDevice, attributes } } },
       {
         type: DeviceConstants.SET_ACCEPTED_DEVICES,
         deviceIds: [defaultState.devices.byId.a1.id],
         status: DeviceConstants.DEVICE_STATES.accepted,
         total: null
       },
-      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: { ...expectedDevice, attributes } } },
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: {} },
       // these are the devices retrieved for the dynamic test group -> the mock backend won't serve them, thus an empty array...
       {
         type: DeviceConstants.SET_ACCEPTED_DEVICES,
@@ -462,7 +463,6 @@ describe('static grouping related actions', () => {
         status: DeviceConstants.DEVICE_STATES.accepted,
         total: null
       },
-      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: {} },
       { type: DeviceConstants.RECEIVE_GROUP_DEVICES, group: defaultState.devices.groups.byId.testGroupDynamic, groupName: 'testGroupDynamic' },
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: { ...expectedDevice, updated_ts } },
       {
@@ -579,13 +579,13 @@ describe('device retrieval ', () => {
     // eslint-disable-next-line no-unused-vars
     const { attributes, updated_ts, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: expectedDevice } },
       {
         type: DeviceConstants.SET_ACCEPTED_DEVICES,
         deviceIds: Array.from({ length: defaultState.devices.byStatus.accepted.total }, () => defaultState.devices.byId.a1.id),
         status: DeviceConstants.DEVICE_STATES.accepted,
         total: defaultState.devices.byStatus.accepted.total
       },
-      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: expectedDevice } },
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice }
     ];
     await store.dispatch(getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted));
@@ -598,17 +598,17 @@ describe('device retrieval ', () => {
     // eslint-disable-next-line no-unused-vars
     const { attributes, updated_ts, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: expectedDevice } },
       {
         type: DeviceConstants.SET_ACCEPTED_DEVICES,
         deviceIds: [defaultState.devices.byId.a1.id],
         status: DeviceConstants.DEVICE_STATES.accepted,
         total: defaultState.devices.byStatus.accepted.total
       },
-      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: expectedDevice } },
-      { type: DeviceConstants.SELECT_DEVICES, deviceIds: [defaultState.devices.byId.a1.id] },
+      { type: DeviceConstants.SET_DEVICE_LIST_STATE, state: { deviceIds: [defaultState.devices.byId.a1.id] } },
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice }
     ];
-    await store.dispatch(getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, 1, 1, true));
+    await store.dispatch(getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, { perPage: 1, shouldSelectDevices: true }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

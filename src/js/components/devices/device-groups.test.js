@@ -21,7 +21,10 @@ describe('DeviceGroups Component', () => {
           ...defaultState.devices.groups,
           selectedGroup: 'testGroup'
         },
-        selectedDeviceList: defaultState.devices.byStatus.accepted.deviceIds
+        deviceList: {
+          ...defaultState.devices.deviceList,
+          deviceIds: defaultState.devices.byStatus.accepted.deviceIds
+        }
       }
     });
   });

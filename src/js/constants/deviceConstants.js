@@ -1,7 +1,6 @@
 module.exports = {
   SELECT_GROUP: 'SELECT_GROUP',
   SELECT_DEVICE: 'SELECT_DEVICE',
-  SELECT_DEVICES: 'SELECT_DEVICES',
 
   ADD_TO_GROUP: 'ADD_TO_GROUP',
   ADD_DYNAMIC_GROUP: 'ADD_DYNAMIC_GROUP',
@@ -31,6 +30,7 @@ module.exports = {
   SET_PREAUTHORIZED_DEVICES: 'SET_PREAUTHORIZED_DEVICES',
 
   SET_INACTIVE_DEVICES: 'SET_INACTIVE_DEVICES',
+  SET_DEVICE_LIST_STATE: 'SET_DEVICE_LIST_STATE',
 
   SET_DEVICE_LIMIT: 'SET_DEVICE_LIMIT',
 
@@ -105,6 +105,10 @@ module.exports = {
       shortform: `matches`,
       help: `The "regular expression" operator matches the selected field's value with a Perl compatible regular expression (PCRE), automatically anchored by ^. If the regular expression is not valid, the filter will produce no results. If you need to specify options and flags, you can provide the full regex in the format of /regex/flags, for example.`
     }
+  },
+  DEVICE_SORTING_OPTIONS: {
+    asc: 'asc',
+    desc: 'desc'
   },
   // we can't include the dismiss state with the rest since this would include dismissed devices in several queries
   DEVICE_DISMISSAL_STATE: 'dismiss',

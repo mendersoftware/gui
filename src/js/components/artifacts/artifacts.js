@@ -6,7 +6,7 @@ import { Button } from '@material-ui/core';
 import { CloudUpload, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import { cancelFileUpload, setSnackbar } from '../../actions/appActions';
-import { selectDevices } from '../../actions/deviceActions';
+import { setDeviceListState } from '../../actions/deviceActions';
 import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
 import {
   createArtifact,
@@ -49,7 +49,7 @@ export class Artifacts extends React.Component {
     const self = this;
     const { artifactVersion } = self.props.match.params;
     if (!self.props.onboardingState.complete) {
-      self.props.selectDevices([]);
+      self.props.setDeviceListState({ deviceIds: [] });
     }
     if (!self.props.releases.length) {
       self._getReleases(artifactVersion);
@@ -192,7 +192,7 @@ const actionCreators = {
   getReleases,
   removeArtifact,
   selectArtifact,
-  selectDevices,
+  setDeviceListState,
   selectRelease,
   setShowCreateArtifactDialog,
   setSnackbar,

@@ -111,9 +111,9 @@ describe('device reducer', () => {
     expect(reducer(undefined, { type: DeviceConstants.SELECT_DEVICE, deviceId: 'test' }).selectedDevice).toEqual('test');
     expect(reducer(initialState, { type: DeviceConstants.SELECT_DEVICE, deviceId: 'test' }).selectedDevice).toEqual('test');
   });
-  it('should handle SELECT_DEVICES', async () => {
-    expect(reducer(undefined, { type: DeviceConstants.SELECT_DEVICES, deviceIds: ['test'] }).selectedDeviceList).toEqual(['test']);
-    expect(reducer(initialState, { type: DeviceConstants.SELECT_DEVICES, deviceIds: ['test'] }).selectedDeviceList).toEqual(['test']);
+  it('should handle SET_DEVICE_LIST_STATE', async () => {
+    expect(reducer(undefined, { type: DeviceConstants.SET_DEVICE_LIST_STATE, state: { deviceIds: ['test'] } }).deviceList.deviceIds).toEqual(['test']);
+    expect(reducer(initialState, { type: DeviceConstants.SET_DEVICE_LIST_STATE, state: { deviceIds: ['test'] } }).deviceList.deviceIds).toEqual(['test']);
   });
   it('should handle SET_DEVICE_FILTERS', async () => {
     expect(
