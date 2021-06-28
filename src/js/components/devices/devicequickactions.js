@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import pluralize from 'pluralize';
 
 import { SvgIcon } from '@material-ui/core';
@@ -7,11 +7,13 @@ import {
   AddCircle as AddCircleIcon,
   CheckCircle as CheckCircleIcon,
   HeightOutlined as HeightOutlinedIcon,
-  HighlightOffOutlined as HighlightOffOutlinedIcon
+  HighlightOffOutlined as HighlightOffOutlinedIcon,
+  RemoveCircleOutline as RemoveCircleOutlineIcon
 } from '@material-ui/icons';
 import { mdiTrashCanOutline as TrashCan } from '@mdi/js';
 
-import { DEVICE_DISMISSAL_STATE, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { deepCompare } from '../../helpers';
 
 const defaultActions = {
   accept: {
@@ -21,10 +23,10 @@ const defaultActions = {
     action: ({ onAuthorizationChange, selection }) => onAuthorizationChange(selection, DEVICE_STATES.accepted)
   },
   dismiss: {
-    icon: <HighlightOffOutlinedIcon className="red" />,
+    icon: <RemoveCircleOutlineIcon className="red" />,
     key: 'dismiss',
     title: pluralized => `Dismiss ${pluralized}`,
-    action: ({ onAuthorizationChange, selection }) => onAuthorizationChange(selection, DEVICE_DISMISSAL_STATE)
+    action: ({ onDeviceDismiss, selection }) => onDeviceDismiss(selection)
   },
   reject: {
     icon: <HighlightOffOutlinedIcon className="red" />,
@@ -129,4 +131,11 @@ export const DeviceQuickActions = ({ devices, actionCallbacks, selectedGroup, se
   );
 };
 
-export default DeviceQuickActions;
+const areEqual = (prevProps, nextProps) => {
+  if (prevProps.selectedGroup != nextProps.selectedGroup) {
+    return false;
+  }
+  return deepCompare(prevProps.selectedRows, nextProps.selectedRows);
+};
+
+export default memo(DeviceQuickActions, areEqual);

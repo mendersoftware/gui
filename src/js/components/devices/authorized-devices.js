@@ -7,7 +7,7 @@ import { Button, MenuItem, Select } from '@material-ui/core';
 import { Autorenew as AutorenewIcon, Delete as DeleteIcon, FilterList as FilterListIcon, LockOutlined } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getDevicesByStatus, setDeviceFilters, setDeviceListState, updateDevicesAuth } from '../../actions/deviceActions';
+import { deleteAuthset, getDevicesByStatus, setDeviceFilters, setDeviceListState, updateDevicesAuth } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_SORTING_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
@@ -34,6 +34,7 @@ export const Authorized = props => {
     addDevicesToGroup,
     advanceOnboarding,
     allCount,
+    deleteAuthset,
     deploymentDeviceLimit,
     deviceCount,
     deviceListState,
@@ -177,6 +178,23 @@ export const Authorized = props => {
     });
   };
 
+  const onDeviceDismiss = rows => {
+    setPageLoading(true);
+    const mappedDevices = rows.reduce((accu, row) => {
+      if (devices[row].auth_sets?.length) {
+        accu.push({ deviceId: devices[row].id, authId: devices[row].auth_sets[0].id });
+      }
+      return accu;
+    }, []);
+    Promise.all(mappedDevices.map(({ deviceId, authId }) => deleteAuthset(deviceId, authId)))
+      // on finish, change "loading" back to null
+      .then(() => {
+        onSelectionChange([]);
+        getDevices(true);
+      })
+      .finally(() => setPageLoading(false));
+  };
+
   const onCreateGroupClick = () => {
     if (selectedGroup) {
       setShowFilters(!showFilters);
@@ -294,7 +312,7 @@ export const Authorized = props => {
       {onboardingComponent ? onboardingComponent : null}
       {!!selectedRows.length && (
         <DeviceQuickActions
-          actionCallbacks={{ onAddDevicesToGroup, onAuthorizationChange, onRemoveDevicesFromGroup }}
+          actionCallbacks={{ onAddDevicesToGroup, onAuthorizationChange, onDeviceDismiss, onRemoveDevicesFromGroup }}
           devices={devices}
           selectedGroup={selectedGroup}
           selectedRows={selectedRows}
@@ -306,6 +324,7 @@ export const Authorized = props => {
 
 const actionCreators = {
   advanceOnboarding,
+  deleteAuthset,
   getDevicesByStatus,
   setDeviceFilters,
   setDeviceListState,
