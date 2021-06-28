@@ -5,6 +5,36 @@ const deploymentStatesToSubstates = {
   pending: ['pending'],
   successes: ['success', 'already-installed', 'noartifact']
 };
+const installationSubstatesMap = {
+  download: {
+    title: 'download',
+    done: 'downloaded',
+    successIndicators: ['installing', 'rebooting', ...deploymentStatesToSubstates.paused, 'success'],
+    failureIndicators: deploymentStatesToSubstates.failures,
+    pauseConfigurationIndicator: 'ArtifactInstall_Enter'
+  },
+  install: {
+    title: 'install',
+    done: 'installed',
+    successIndicators: ['rebooting', 'pause_before_rebooting', 'pause_before_committing', 'success'],
+    failureIndicators: [],
+    pauseConfigurationIndicator: 'ArtifactReboot_Enter'
+  },
+  reboot: {
+    title: 'reboot',
+    done: 'rebooted',
+    successIndicators: ['pause_before_committing', 'success'],
+    failureIndicators: [],
+    pauseConfigurationIndicator: 'ArtifactCommit_Enter'
+  },
+  commit: {
+    title: 'commit',
+    done: 'committed',
+    successIndicators: deploymentStatesToSubstates.successes,
+    failureIndicators: [],
+    pauseConfigurationIndicator: undefined
+  }
+};
 
 module.exports = {
   CREATE_DEPLOYMENT: 'CREATE_DEPLOYMENT',
@@ -73,9 +103,10 @@ module.exports = {
     name: undefined,
     stats: {}
   },
+  installationSubstatesMap,
   pauseMap: {
-    pause_before_installing: { title: 'downloaded', followUp: 'ArtifactInstall_Enter' },
-    pause_before_rebooting: { title: 'installed', followUp: 'ArtifactReboot_Enter' },
-    pause_before_committing: { title: 'rebooted', followUp: 'ArtifactCommit_Enter' }
+    pause_before_installing: { title: installationSubstatesMap.download.done, followUp: installationSubstatesMap.download.pauseConfigurationIndicator },
+    pause_before_rebooting: { title: installationSubstatesMap.install.done, followUp: installationSubstatesMap.install.pauseConfigurationIndicator },
+    pause_before_committing: { title: installationSubstatesMap.reboot.done, followUp: installationSubstatesMap.reboot.pauseConfigurationIndicator }
   }
 };

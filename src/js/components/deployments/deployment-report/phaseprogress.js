@@ -6,7 +6,7 @@ import pluralize from 'pluralize';
 import { Button } from '@material-ui/core';
 import { CheckCircle, ErrorRounded, Pause, PlayArrow, Warning as WarningIcon } from '@material-ui/icons';
 
-import { deploymentDisplayStates, deploymentStatesToSubstates, pauseMap } from '../../../constants/deploymentConstants';
+import { deploymentDisplayStates, installationSubstatesMap, pauseMap } from '../../../constants/deploymentConstants';
 import { getDeploymentState, groupDeploymentStats, statCollector } from '../../../helpers';
 import Confirm from '../../common/confirm';
 import theme, { colors } from '../../../themes/mender-theme';
@@ -15,28 +15,13 @@ import inprogressImage from '../../../../assets/img/pending_status.png';
 momentDurationFormatSetup(moment);
 
 const shortCircuitIndicators = ['already-installed', 'noartifact'];
-const substateMap = {
-  download: {
-    title: 'download',
-    done: 'downloaded',
-    successIndicators: ['installing', 'rebooting', ...deploymentStatesToSubstates.paused, 'success'],
-    failureIndicators: deploymentStatesToSubstates.failures
-  },
-  install: {
-    title: 'install',
-    done: 'installed',
-    successIndicators: ['rebooting', 'pause_before_rebooting', 'pause_before_committing', 'success'],
-    failureIndicators: []
-  },
-  reboot: { title: 'reboot', done: 'rebooted', successIndicators: ['pause_before_committing', 'success'], failureIndicators: [] },
-  commit: { title: 'commit', done: 'comitted', successIndicators: deploymentStatesToSubstates.successes, failureIndicators: [] }
-};
 
 const substateIconMap = {
   finished: { state: 'finished', icon: <CheckCircle fontSize="small" /> },
   inprogress: { state: 'inprogress', icon: <img src={inprogressImage} /> },
   failed: { state: 'failed', icon: <ErrorRounded fontSize="small" /> },
-  paused: { state: 'paused', icon: <Pause fontSize="small" /> }
+  paused: { state: 'paused', icon: <Pause fontSize="small" /> },
+  pendingPause: { state: 'pendingPause', icon: <Pause fontSize="small" color="disabled" /> }
 };
 
 const fullWidthStyle = { width: '100%' };
@@ -66,10 +51,10 @@ const PhaseDelimiter = ({ compact, delimiterStyle, index, isActive, isFinal, sta
 };
 
 const ProgressChart = ({ deployment = {}, showDetails, style }) => {
-  const { device_count = 0, max_devices = 0, stats } = deployment;
+  const { device_count = 0, max_devices = 0, stats, update_control_map = {} } = deployment;
   const totalDeviceCount = Math.max(device_count, max_devices);
 
-  const determineSubstateStatus = (successes, failures, totalDeviceCount, pauseIndicator) => {
+  const determineSubstateStatus = (successes, failures, totalDeviceCount, pauseIndicator, hasPauseDefined) => {
     let status;
     if (successes === totalDeviceCount) {
       status = substateIconMap.finished.state;
@@ -79,11 +64,13 @@ const ProgressChart = ({ deployment = {}, showDetails, style }) => {
       status = substateIconMap.paused.state;
     } else if (successes || failures) {
       status = substateIconMap.inprogress.state;
+    } else if (hasPauseDefined) {
+      status = substateIconMap.pendingPause.state;
     }
     return status;
   };
 
-  const { displayablePhases } = Object.values(substateMap).reduce(
+  const { displayablePhases } = Object.values(installationSubstatesMap).reduce(
     (accu, substate, index) => {
       let successes = statCollector(substate.successIndicators, stats);
       successes = Math.min(totalDeviceCount, successes + accu.shortCutSuccesses);
@@ -100,14 +87,16 @@ const ProgressChart = ({ deployment = {}, showDetails, style }) => {
       failures = Math.min(totalDeviceCount - successes, failures);
       const successWidth = `${(successes / totalDeviceCount) * 100 || 0}%`;
       const failureWidth = `${(failures / totalDeviceCount) * 100 || 0}%`;
-      const status = determineSubstateStatus(successes, failures, totalDeviceCount, !!stats[substate.pauseIndicator]);
+      const { states = {} } = update_control_map;
+      const hasPauseDefined = states[substate.pauseConfigurationIndicator]?.action === 'pause';
+      const status = determineSubstateStatus(successes, failures, totalDeviceCount, !!stats[substate.pauseIndicator], hasPauseDefined);
       accu.displayablePhases.push({ substate, successes, failures, successWidth, failureWidth, status });
       return accu;
     },
     { displayablePhases: [], shortCutSuccesses: statCollector(shortCircuitIndicators, stats) }
   );
 
-  const stepTotalWidth = 100 / Object.keys(substateMap).length;
+  const stepTotalWidth = 100 / Object.keys(installationSubstatesMap).length;
   const stepWidth = `${stepTotalWidth}%`;
   const height = showDetails ? stepHeight.details : stepHeight.default;
   const stepStyle = { border: 'none', width: stepWidth, height };

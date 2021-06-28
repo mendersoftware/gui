@@ -354,7 +354,7 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
         <div
           class="capitalized slightly-smaller"
         >
-          comitted
+          committed
         </div>
       </div>
       <div
