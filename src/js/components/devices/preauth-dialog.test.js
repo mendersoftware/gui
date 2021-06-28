@@ -42,9 +42,9 @@ describe('PreauthDialog Component', () => {
     userEvent.type(screen.getByPlaceholderText(/key/i), 'testKey');
     userEvent.type(screen.getByPlaceholderText(/value/i), 'testValue');
     expect(document.querySelector('.MuiFab-root')).not.toBeDisabled();
+    uploadMock.mockRejectedValueOnce('test-errortext');
     act(() => userEvent.click(document.querySelector('.MuiFab-root')));
     await waitFor(() => rerender(ui));
-    uploadMock.mockRejectedValueOnce('test-errortext');
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => expect(screen.queryAllByText('test-errortext')).toBeTruthy());
     uploadMock.mockClear();
@@ -59,7 +59,7 @@ describe('PreauthDialog Component', () => {
 
   it('prevents preauthorizations when device limit was reached', async () => {
     const menderFile = new File(['testContent plain'], 'test.pem');
-    const ui = <PreauthDialog deviceLimitWarning={<div>I should be rendered</div>} limitMaxed={true} />;
+    const ui = <PreauthDialog acceptedDevices={100} deviceLimit={2} limitMaxed={true} />;
     const { rerender } = render(ui);
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work
     const uploadInput = document.querySelector('.dropzone input');
@@ -68,7 +68,7 @@ describe('PreauthDialog Component', () => {
     userEvent.type(screen.getByPlaceholderText(/key/i), 'testKey');
     userEvent.type(screen.getByPlaceholderText(/value/i), 'testValue');
     await waitFor(() => rerender(ui));
-    expect(screen.getByText(/I should be rendered/i)).toBeInTheDocument();
+    expect(screen.getByText(/You have reached your limit/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
   });
 });

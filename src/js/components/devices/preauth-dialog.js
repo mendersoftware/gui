@@ -45,7 +45,7 @@ export const PreauthDialog = ({ acceptedDevices, deviceLimit, limitMaxed, onCanc
 
   const isSubmitDisabled = !publicKey || isEmpty(jsonIdentity) || !!limitMaxed;
   return (
-    <Dialog open={true}>
+    <Dialog open>
       <DialogTitle>Preauthorize devices</DialogTitle>
       <DialogContent style={{ overflow: 'hidden' }}>
         <p>You can preauthorize a device by adding its authentication dataset here.</p>
@@ -63,7 +63,7 @@ export const PreauthDialog = ({ acceptedDevices, deviceLimit, limitMaxed, onCanc
         />
         <h4 className="margin-bottom-none margin-top">Identity data</h4>
         <KeyValueEditor errortext={errortext} onInputChange={convertIdentityToJSON} />
-        {!!limitMaxed && deviceLimitWarning}
+        {!!limitMaxed && <DeviceLimitWarning acceptedDevices={acceptedDevices} deviceLimit={deviceLimit} />}
       </DialogContent>
       <DialogActions>
         <Button onClick={onCancel}>Cancel</Button>
