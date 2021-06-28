@@ -30,13 +30,11 @@ export const organizationHandlers = [
       return res(ctx.json({ secret: 'testSecret' }));
     }
     if (plan && !Object.keys(PLANS).includes(plan)) {
-      console.log('meh');
       return res(ctx.status(542));
     }
     return res(ctx.status(200));
   }),
   rest.post(`${tenantadmApiUrlv2}/contact/support`, ({ body: { subject, body } }, res, ctx) => {
-    console.log('subject');
     if (!(subject && body)) {
       return res(ctx.status(543));
     }
