@@ -332,7 +332,7 @@ export const DeviceGroups = ({
         </div>
         <DeviceAdditionWidget docsVersion={docsVersion} onConnectClick={setShowConnectingDialog} onPreauthClick={setOpenPreauth} />
       </div>
-      <div className="tab-container with-sub-panels" style={{ padding: 0 }}>
+      <div className="tab-container with-sub-panels" style={{ padding: 0, height: '100%' }}>
         <div className="leftFixed">
           <Groups
             acceptedCount={acceptedCount}
@@ -343,7 +343,7 @@ export const DeviceGroups = ({
             showHelptips={showHelptips}
           />
         </div>
-        <div className="rightFluid" style={{ paddingTop: '0' }}>
+        <div className="rightFluid relative" style={{ paddingTop: 0 }}>
           {limitMaxed && <DeviceLimitWarning acceptedDevices={acceptedCount} deviceLimit={deviceLimit} />}
           {!!pendingCount && !selectedGroup && selectedState !== DEVICE_STATES.pending && (
             <DeviceStatusNotification deviceCount={pendingCount} state={DEVICE_STATES.pending} onClick={onShowDeviceStateClick} />

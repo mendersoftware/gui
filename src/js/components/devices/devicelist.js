@@ -5,7 +5,7 @@ import { Checkbox } from '@material-ui/core';
 
 import { Settings as SettingsIcon, Sort as SortIcon } from '@material-ui/icons';
 
-import { DEVICE_SORTING_OPTIONS } from '../../constants/deviceConstants';
+import { DEVICE_SORTING_OPTIONS, DEVICE_STATES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
@@ -55,6 +55,9 @@ export const DeviceList = props => {
     }
     if (!onboardingState.complete) {
       advanceOnboarding(onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING);
+      if (device && device.status === DEVICE_STATES.accepted && Object.values(device.attributes).some(value => value)) {
+        advanceOnboarding(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION);
+      }
     }
     setExpandedDeviceId(device ? device.id : undefined);
   };
@@ -144,6 +147,8 @@ const areEqual = (prevProps, nextProps) => {
   } else if (prevProps.idAttribute != nextProps.idAttribute) {
     return false;
   } else if (!deepCompare(prevProps.onboardingState, nextProps.onboardingState)) {
+    return false;
+  } else if (!deepCompare(prevProps.devices, nextProps.devices)) {
     return false;
   }
   return deepCompare(prevProps.deviceListState, nextProps.deviceListState);

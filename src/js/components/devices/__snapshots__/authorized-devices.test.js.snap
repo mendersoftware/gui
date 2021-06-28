@@ -3,111 +3,107 @@
 exports[`AuthorizedDevices Component renders correctly 1`] = `
 <div>
   <div
-    class="relative"
+    class="margin-left-small"
   >
-    <div
-      class="margin-left-small"
+    <h3
+      class="margin-right"
     >
-      <h3
-        class="margin-right"
-      >
-        All devices
-      </h3>
+      All devices
+    </h3>
+    <div
+      class="flexbox space-between filter-header"
+    >
       <div
-        class="flexbox space-between filter-header"
+        class="flexbox"
       >
         <div
-          class="flexbox"
+          class="flexbox centered"
         >
+          Status:
           <div
-            class="flexbox centered"
+            class="MuiInputBase-root MuiInput-root margin-right"
+            style="font-size: 13px; margin-left: 8px;"
           >
-            Status:
             <div
-              class="MuiInputBase-root MuiInput-root margin-right"
-              style="font-size: 13px; margin-left: 8px;"
-            >
-              <div
-                aria-haspopup="listbox"
-                class="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
-                role="button"
-                tabindex="0"
-              >
-                Accepted
-              </div>
-              <input
-                aria-hidden="true"
-                class="MuiSelect-nativeInput"
-                tabindex="-1"
-                value="accepted"
-              />
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root MuiSelect-icon"
-                focusable="false"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M7 10l5 5 5-5z"
-                />
-              </svg>
-            </div>
-          </div>
-          <div
-            class="flexbox centered "
-            style="margin-bottom: -1px;"
-          >
-            <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
-              style="background-color: transparent;"
+              aria-haspopup="listbox"
+              class="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
+              role="button"
               tabindex="0"
-              type="button"
+            >
+              Accepted
+            </div>
+            <input
+              aria-hidden="true"
+              class="MuiSelect-nativeInput"
+              tabindex="-1"
+              value="accepted"
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSelect-icon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M7 10l5 5 5-5z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="flexbox centered "
+          style="margin-bottom: -1px;"
+        >
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
+            style="background-color: transparent;"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="MuiButton-label"
             >
               <span
-                class="MuiButton-label"
+                class="MuiButton-startIcon MuiButton-iconSizeMedium"
               >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeMedium"
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
                 >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
-                    />
-                  </svg>
-                </span>
-                Filters
+                  <path
+                    d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
+                  />
+                </svg>
               </span>
-            </button>
-          </div>
+              Filters
+            </span>
+          </button>
         </div>
       </div>
     </div>
-    <div
-      class="loaderContainer"
-    >
-      <div
-        class="  loader"
-      >
-        <span
-          class="dot dot_1"
-        />
-        <span
-          class="dot dot_2"
-        />
-        <span
-          class="dot dot_3"
-        />
-        <span
-          class="dot dot_4"
-        />
-      </div>
-    </div>
-    <div />
   </div>
+  <div
+    class="loaderContainer"
+  >
+    <div
+      class="  loader"
+    >
+      <span
+        class="dot dot_1"
+      />
+      <span
+        class="dot dot_2"
+      />
+      <span
+        class="dot dot_3"
+      />
+      <span
+        class="dot dot_4"
+      />
+    </div>
+  </div>
+  <div />
 </div>
 `;

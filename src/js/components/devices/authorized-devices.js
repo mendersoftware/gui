@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
@@ -51,6 +51,7 @@ export const Authorized = props => {
     onGroupRemoval,
     onPreauthClick,
     openSettingsDialog,
+    pendingCount,
     removeDevicesFromGroup,
     selectedGroup,
     setDeviceFilters,
@@ -62,6 +63,9 @@ export const Authorized = props => {
   const [isInitialized, setIsInitialized] = useState(!!props.devices.length);
   const [pageLoading, setPageLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
+  const deviceListRef = useRef();
+  const authorizeRef = useRef();
+
   // eslint-disable-next-line no-unused-vars
   const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
 
@@ -103,16 +107,25 @@ export const Authorized = props => {
       return;
     }
     advanceOnboarding(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING);
-    if (devices.every(item => Object.values(item.attributes).some(value => value))) {
-      advanceOnboarding(onboardingSteps.APPLICATION_UPDATE_REMINDER_TIP);
-    }
+
     if (acceptedCount < 2) {
+      if (!window.sessionStorage.getItem('pendings-redirect')) {
+        window.sessionStorage.setItem('pendings-redirect', true);
+        onDeviceStateSelectionChange(DEVICE_STATES.accepted);
+      }
       setTimeout(() => {
         const notification = getOnboardingComponentFor(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION, onboardingState);
         !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
       }, 400);
     }
   }, [acceptedCount, onboardingState.complete]);
+
+  useEffect(() => {
+    if (onboardingState.complete || !pendingCount) {
+      return;
+    }
+    advanceOnboarding(onboardingSteps.DEVICES_PENDING_ONBOARDING_START);
+  }, [pendingCount, onboardingState.complete]);
 
   useEffect(() => {
     if (!selectedGroup) {
@@ -240,16 +253,42 @@ export const Authorized = props => {
 
   const groupLabel = selectedGroup ? decodeURIComponent(selectedGroup) : 'All devices';
 
-  const onSelectionChange = selection => {
+  const onSelectionChange = (selection = []) => {
+    if (!onboardingState.complete && selection.length) {
+      advanceOnboarding(onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING);
+    }
     setDeviceListState({ selection });
   };
 
-  const anchor = { left: 200, top: 146 };
-  let onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING, onboardingState, { anchor });
-  onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor }, onboardingComponent);
+  let onboardingComponent;
+  const devicePendingTip = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING_START, onboardingState);
+  if (deviceListRef.current) {
+    const element = deviceListRef.current.getElementsByClassName('body')[0];
+    const anchor = { left: 200, top: element ? element.offsetTop + element.offsetHeight : 170 };
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING, onboardingState, { anchor }, onboardingComponent);
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor }, onboardingComponent);
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING, onboardingState, { anchor }, onboardingComponent);
+  }
+  if (selectedRows && authorizeRef.current) {
+    const anchor = {
+      left: authorizeRef.current.offsetLeft - authorizeRef.current.offsetWidth,
+      top:
+        authorizeRef.current.offsetTop +
+        authorizeRef.current.offsetHeight -
+        authorizeRef.current.lastElementChild.offsetHeight +
+        authorizeRef.current.lastElementChild.firstElementChild.offsetHeight * 1.5
+    };
+    onboardingComponent = getOnboardingComponentFor(
+      onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING,
+      onboardingState,
+      { place: 'left', anchor },
+      onboardingComponent
+    );
+  }
+
   const isUngroupedGroup = selectedGroup && selectedGroup === UNGROUPED_GROUP.id;
   return (
-    <div className="relative">
+    <>
       <div className="margin-left-small">
         <h3 className="margin-right">{isUngroupedGroup ? UNGROUPED_GROUP.name : groupLabel}</h3>
         <div className="flexbox space-between filter-header">
@@ -288,10 +327,9 @@ export const Authorized = props => {
       <Loader show={!isInitialized} />
       {isInitialized ? (
         devices.length > 0 ? (
-          <>
+          <div className="padding-bottom" ref={deviceListRef}>
             <DeviceList
               {...props}
-              className="padding-bottom"
               columnHeaders={columnHeaders}
               onChangeRowsPerPage={onPageLengthChange}
               onPageChange={handlePageChange}
@@ -302,9 +340,15 @@ export const Authorized = props => {
               refreshDevices={getDevices}
             />
             {showHelptips && <ExpandDevice />}
-          </>
+          </div>
         ) : (
-          <EmptyState allCount={allCount} filters={filters} highlightHelp={highlightHelp} limitMaxed={limitMaxed} onClick={onPreauthClick} />
+          <>
+            {devicePendingTip ? (
+              devicePendingTip
+            ) : (
+              <EmptyState allCount={allCount} filters={filters} highlightHelp={highlightHelp} limitMaxed={limitMaxed} onClick={onPreauthClick} />
+            )}
+          </>
         )
       ) : (
         <div />
@@ -316,9 +360,10 @@ export const Authorized = props => {
           devices={devices}
           selectedGroup={selectedGroup}
           selectedRows={selectedRows}
+          ref={authorizeRef}
         />
       )}
-    </div>
+    </>
   );
 };
 
@@ -364,6 +409,7 @@ const mapStateToProps = state => {
     hasDeviceConfig,
     idAttribute: getIdAttribute(state),
     onboardingState: getOnboardingState(state),
+    pendingCount: state.devices.byStatus.pending.total || 0,
     selectedGroup,
     showHelptips: state.users.showHelptips
   };

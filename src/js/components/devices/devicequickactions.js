@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState } from 'react';
+import React, { forwardRef, memo, useMemo, useState } from 'react';
 import pluralize from 'pluralize';
 
 import { SvgIcon } from '@material-ui/core';
@@ -73,7 +73,7 @@ const defaultActionsList = [
   }
 ];
 
-export const DeviceQuickActions = ({ devices, actionCallbacks, selectedGroup, selectedRows }) => {
+export const DeviceQuickActions = ({ devices, actionCallbacks, selectedGroup, selectedRows }, ref) => {
   const [showActions, setShowActions] = useState(false);
 
   const actions = useMemo(() => {
@@ -104,7 +104,7 @@ export const DeviceQuickActions = ({ devices, actionCallbacks, selectedGroup, se
 
   const pluralized = pluralize('devices', selectedRows.length);
   return (
-    <div className="flexbox fixedButtons">
+    <div className="flexbox fixedButtons" ref={ref}>
       <div className="margin-right">
         {selectedRows.length} {pluralize('devices', selectedRows.length)} selected
       </div>
@@ -138,4 +138,4 @@ const areEqual = (prevProps, nextProps) => {
   return deepCompare(prevProps.selectedRows, nextProps.selectedRows);
 };
 
-export default memo(DeviceQuickActions, areEqual);
+export default memo(forwardRef(DeviceQuickActions), areEqual);
