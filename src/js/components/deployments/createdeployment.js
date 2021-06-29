@@ -237,7 +237,7 @@ export const mapStateToProps = state => {
     onboardingState: getOnboardingState(state),
     plan,
     previousPhases: state.users.globalSettings.previousPhases,
-    previousRetries: state.users.globalSettings.previousRetries || 0,
+    previousRetries: state.users.globalSettings.retries || 0,
     release: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null,
     releases: Object.values(state.releases.byId),
     retries: state.users.globalSettings.retries,
