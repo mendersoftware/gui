@@ -50,7 +50,9 @@ const defaultSteps = {
   }
 };
 
-export const RolloutStepConnector = ({ disabled, step, onStepChange }) => {
+const menderDemoArtifactName = 'mender-demo-artifact';
+
+export const RolloutStepConnector = ({ disabled, step, onStepChange, release = {} }) => {
   const onTogglePauseClick = () => {
     onStepChange({ ...step, action: step.action === stepActions.pause ? stepActions.continue : stepActions.pause });
   };
@@ -60,6 +62,21 @@ export const RolloutStepConnector = ({ disabled, step, onStepChange }) => {
     stepModifier.props = { onDelete: onTogglePauseClick };
     stepModifier.toggleButton = <Chip icon={<AddIcon />} label="Add a pause" color="primary" onClick={onTogglePauseClick} style={chipStyle} />;
   }
+
+  const pauseChip = <Chip icon={<PauseIcon />} label="Pause" style={chipStyle} {...stepModifier.props} />;
+  const stepPauseChip =
+    step.state === defaultSteps.ArtifactReboot_Enter.state && release.Name?.includes(menderDemoArtifactName) ? (
+      <MenderTooltip
+        arrow
+        leaveDelay={1000}
+        placement="top"
+        title="The demo artifact you selected does not require a reboot and will not pause before starting with the next stage."
+      >
+        {pauseChip}
+      </MenderTooltip>
+    ) : (
+      pauseChip
+    );
 
   return (
     <div className="flexbox column center-aligned" style={{ minWidth: theme.spacing(10) }}>
@@ -79,25 +96,21 @@ export const RolloutStepConnector = ({ disabled, step, onStepChange }) => {
           {(onStepChange || step.action === stepActions.pause) && (
             <div style={{ borderLeft: `${colors.grey} dashed 1px`, height: theme.spacing(6), margin: 4, marginTop: -10 }} />
           )}
-          {step.action === stepActions.pause ? (
-            <Chip icon={<PauseIcon />} label="Pause" style={chipStyle} {...stepModifier.props} />
-          ) : (
-            stepModifier.toggleButton
-          )}
+          {step.action === stepActions.pause ? stepPauseChip : stepModifier.toggleButton}
         </>
       )}
     </div>
   );
 };
 
-export const RolloutSteps = ({ disabled, onStepChange, steps = {} }) => {
+export const RolloutSteps = ({ disabled, onStepChange, release, steps = {} }) => {
   const mappableSteps = Object.entries(defaultSteps).reduce((accu, [key, step]) => [...accu, { ...step, ...steps[key] }], []);
 
   return (
     <div className={`flexbox margin-top ${onStepChange ? 'margin-left-large margin-right-large' : ''}`}>
       {mappableSteps.map((step, index) => (
         <React.Fragment key={step.title}>
-          {index !== 0 && <RolloutStepConnector disabled={disabled} step={step} onStepChange={onStepChange} />}
+          {index !== 0 && <RolloutStepConnector disabled={disabled} step={step} onStepChange={onStepChange} release={release} />}
           <MenderTooltip title={step.tooltip} arrow>
             <Chip disabled={disabled} label={step.title} variant="outlined" style={{ minWidth: theme.spacing(11) }} />
           </MenderTooltip>
@@ -107,10 +120,10 @@ export const RolloutSteps = ({ disabled, onStepChange, steps = {} }) => {
   );
 };
 
-export const RolloutStepsContainer = ({ className = '', disabled, docsVersion, isEnterprise, onStepChange, steps }) => (
+export const RolloutStepsContainer = ({ className = '', disabled, docsVersion, isEnterprise, onStepChange, release, steps }) => (
   <div className={className}>
     <div className={disabled ? 'muted' : ''}>
-      <RolloutSteps disabled={disabled} onStepChange={onStepChange} steps={steps} />
+      <RolloutSteps disabled={disabled} onStepChange={onStepChange} release={release} steps={steps} />
       {onStepChange && !disabled && (
         <p className="info">
           A &apos;pause&apos; means each device will pause its update after completing the previous step, and wait for approval before continuing. You can grant
