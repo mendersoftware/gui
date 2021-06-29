@@ -1,102 +1,113 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AuthorizedDevices Component renders correctly 1`] = `
-<div
-  className="relative"
->
+<div>
   <div
-    style={
-      Object {
-        "marginLeft": "20px",
-      }
-    }
+    class="relative"
   >
     <div
-      className="flexbox space-between filter-header"
+      class="margin-left-small"
     >
-      <div
-        className="flexbox"
+      <h3
+        class="margin-right"
       >
-        <h2
-          className="margin-right"
-        >
-          All devices
-        </h2>
+        All devices
+      </h3>
+      <div
+        class="flexbox space-between filter-header"
+      >
         <div
-          className="flexbox centered "
-          style={
-            Object {
-              "marginBottom": -1,
-            }
-          }
+          class="flexbox"
         >
-          <button
-            className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
-            disabled={false}
-            onBlur={[Function]}
-            onClick={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            style={
-              Object {
-                "backgroundColor": "transparent",
-              }
-            }
-            tabIndex={0}
-            type="button"
+          <div
+            class="flexbox centered"
           >
-            <span
-              className="MuiButton-label"
+            Status:
+            <div
+              class="MuiInputBase-root MuiInput-root margin-right"
+              style="font-size: 13px; margin-left: 8px;"
+            >
+              <div
+                aria-haspopup="listbox"
+                class="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
+                role="button"
+                tabindex="0"
+              >
+                Accepted
+              </div>
+              <input
+                aria-hidden="true"
+                class="MuiSelect-nativeInput"
+                tabindex="-1"
+                value="accepted"
+              />
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSelect-icon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M7 10l5 5 5-5z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            class="flexbox centered "
+            style="margin-bottom: -1px;"
+          >
+            <button
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
+              style="background-color: transparent;"
+              tabindex="0"
+              type="button"
             >
               <span
-                className="MuiButton-startIcon MuiButton-iconSizeMedium"
+                class="MuiButton-label"
               >
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root"
-                  focusable="false"
-                  viewBox="0 0 24 24"
+                <span
+                  class="MuiButton-startIcon MuiButton-iconSizeMedium"
                 >
-                  <path
-                    d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
-                  />
-                </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
+                    />
+                  </svg>
+                </span>
+                Filters
               </span>
-              Filters
-            </span>
-          </button>
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div
-    className="loaderContainer"
-  >
     <div
-      className="loader"
+      class="loaderContainer"
     >
-      <span
-        className="dot dot_1"
-      />
-      <span
-        className="dot dot_2"
-      />
-      <span
-        className="dot dot_3"
-      />
-      <span
-        className="dot dot_4"
-      />
+      <div
+        class="  loader"
+      >
+        <span
+          class="dot dot_1"
+        />
+        <span
+          class="dot dot_2"
+        />
+        <span
+          class="dot dot_3"
+        />
+        <span
+          class="dot dot_4"
+        />
+      </div>
     </div>
+    <div />
   </div>
-  <div />
 </div>
 `;

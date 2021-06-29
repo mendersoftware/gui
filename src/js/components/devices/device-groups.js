@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+
+import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
 
 import AuthorizedDevices from './authorized-devices';
 import CreateGroup from './create-group';
@@ -11,133 +13,381 @@ import {
   getDynamicGroups,
   getGroups,
   initializeGroupsDevices,
+  preauthDevice,
   removeDevicesFromGroup,
   removeDynamicGroup,
   removeStaticGroup,
   selectGroup,
+  setDeviceFilters,
+  setDeviceListState,
   updateDynamicGroup
 } from '../../actions/deviceActions';
-import { getIsEnterprise } from '../../selectors';
+import { setShowConnectingDialog } from '../../actions/userActions';
+import { getDocsVersion, getIsEnterprise, getLimitMaxed } from '../../selectors';
 import CreateGroupExplainer from './create-group-explainer';
+import Global from '../settings/global';
+import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { emptyFilter } from './filters';
+import PreauthDialog, { DeviceLimitWarning } from './preauth-dialog';
+import {
+  AcceptedEmptyState,
+  DeviceCreationTime,
+  DeviceExpansion,
+  DeviceStatusHeading,
+  PendingEmptyState,
+  PreauthorizedEmptyState,
+  RejectedEmptyState,
+  RelativeDeviceTime
+} from './base-devices';
+import DeviceAdditionWidget from './deviceadditionwidget';
+import QuickFilter from './quickfilter';
+import DeviceStatusNotification from './devicestatusnotification';
 
-export class DeviceGroups extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      createGroupExplanation: false,
-      modifyGroupDialog: false,
-      removeGroup: false,
-      tmpDevices: []
-    };
-    this._refreshGroups();
+const defaultHeaders = {
+  deviceCreationTime: {
+    title: 'First request',
+    attribute: { name: 'created_ts', scope: 'system' },
+    render: DeviceCreationTime,
+    sortable: true
+  },
+  deviceStatus: {
+    title: 'Status',
+    attribute: { name: 'status', scope: 'identity' },
+    render: DeviceStatusHeading,
+    sortable: true
+  },
+  deviceExpansion: {
+    title: '',
+    attribute: {},
+    render: DeviceExpansion,
+    sortable: false
+  },
+  lastCheckIn: {
+    title: 'Last check-in',
+    attribute: { name: 'updated_ts', scope: 'system' },
+    render: RelativeDeviceTime,
+    sortable: true
   }
+};
 
-  componentDidUpdate(prevProps) {
-    if ((prevProps.groupCount !== this.props.groupCount || prevProps.selectedGroup !== this.props.selectedGroup) && this.props.currentTab === 'Device groups') {
-      this._refreshGroups();
+const acceptedDevicesRoute = {
+  key: DEVICE_STATES.accepted,
+  groupRestricted: false,
+  route: '/devices',
+  title: () => 'Accepted',
+  emptyState: AcceptedEmptyState,
+  defaultHeaders: [
+    {
+      title: 'Device type',
+      attribute: { name: 'device_type', scope: 'inventory' },
+      render: device => (device.attributes && device.attributes.device_type ? device.attributes.device_type : '-'),
+      sortable: true
+    },
+    {
+      title: 'Current software',
+      attribute: { name: 'rootfs-image.version', scope: 'inventory', alternative: 'artifact_name' },
+      render: ({ attributes = {} }) => attributes['rootfs-image.version'] || attributes.artifact_name || '-',
+      sortable: true
+    },
+    defaultHeaders.lastCheckIn,
+    defaultHeaders.deviceStatus,
+    defaultHeaders.deviceExpansion
+  ]
+};
+
+export const routes = {
+  allDevices: {
+    ...acceptedDevicesRoute,
+    key: 'any',
+    title: () => 'Any'
+  },
+  devices: acceptedDevicesRoute,
+  [DEVICE_STATES.accepted]: acceptedDevicesRoute,
+  [DEVICE_STATES.pending]: {
+    key: DEVICE_STATES.pending,
+    groupRestricted: true,
+    route: '/devices/pending',
+    title: count => `Pending${count ? ` (${count})` : ''}`,
+    emptyState: PendingEmptyState,
+    defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn, defaultHeaders.deviceStatus, defaultHeaders.deviceExpansion]
+  },
+  [DEVICE_STATES.preauth]: {
+    key: DEVICE_STATES.preauth,
+    groupRestricted: true,
+    route: '/devices/preauthorized',
+    title: () => 'Preauthorized',
+    emptyState: PreauthorizedEmptyState,
+    defaultHeaders: [
+      {
+        ...defaultHeaders.deviceCreationTime,
+        title: 'Date added'
+      },
+      defaultHeaders.deviceStatus,
+      defaultHeaders.deviceExpansion
+    ]
+  },
+  [DEVICE_STATES.rejected]: {
+    key: DEVICE_STATES.rejected,
+    groupRestricted: true,
+    route: '/devices/rejected',
+    title: () => 'Rejected',
+    emptyState: RejectedEmptyState,
+    defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn, defaultHeaders.deviceStatus, defaultHeaders.deviceExpansion]
+  }
+};
+
+export const sortingAlternatives = Object.values(routes)
+  .reduce((accu, item) => [...accu, ...item.defaultHeaders], [])
+  .reduce((accu, item) => {
+    if (item.attribute.alternative) {
+      accu[item.attribute.name] = item.attribute.alternative;
+      accu[item.attribute.alternative] = item.attribute.name;
     }
-  }
+    return accu;
+  }, {});
+
+export const convertQueryToFilterAndGroup = (query, filteringAttributes) => {
+  const search = query.startsWith('?') ? query.substring(1) : query;
+  const str = decodeURIComponent(search);
+  const filters = str.split('&').reduce(
+    (accu, filter) => {
+      const filterPair = filter.split('=');
+      let scope = {};
+      if (filterPair[0] === 'group') {
+        accu.groupName = filterPair[1];
+        return accu;
+      } else if (filterPair[0] === 'id') {
+        scope = { scope: 'identity' };
+      } else {
+        scope = Object.entries(filteringAttributes).reduce(
+          (accu, [attributesType, attributes]) => {
+            if (attributes.includes(filterPair[0])) {
+              accu.scope = attributesType.substring(0, attributesType.indexOf('Attr'));
+            }
+            return accu;
+          },
+          { scope: emptyFilter.scope }
+        );
+      }
+      accu.filters.push({ ...emptyFilter, ...scope, key: filterPair[0], value: filterPair[1] });
+      return accu;
+    },
+    { filters: [], groupName: '' }
+  );
+  return filters;
+};
+
+let deviceTimer;
+
+export const DeviceGroups = ({
+  acceptedCount,
+  addDynamicGroup,
+  addStaticGroup,
+  deviceLimit,
+  deviceListState,
+  docsVersion,
+  filters,
+  getDynamicGroups,
+  getGroups,
+  groupCount,
+  groupFilters,
+  groups,
+  groupsById,
+  history,
+  identityAttributes,
+  isEnterprise,
+  limitMaxed,
+  pendingCount,
+  selectedGroup,
+  selectGroup,
+  setDeviceFilters,
+  setDeviceListState,
+  setShowConnectingDialog,
+  showHelptips,
+  preauthDevice,
+  setSnackbar
+}) => {
+  const [createGroupExplanation, setCreateGroupExplanation] = useState(false);
+  const [deviceRefreshTrigger, setDeviceRefreshTrigger] = useState(false);
+  const [fromFilters, setFromFilters] = useState(false);
+  const [modifyGroupDialog, setModifyGroupDialog] = useState(false);
+  const [openIdDialog, setOpenIdDialog] = useState(false);
+  const [openPreauth, setOpenPreauth] = useState(false);
+  const [removeGroup, setRemoveGroup] = useState(false);
+  const [tmpDevices, setTmpDevices] = useState([]);
+  const [quickFilterResetTrigger, setQuickFilterResetTrigger] = useState(false);
+
+  const { state: selectedState } = deviceListState;
+
+  useEffect(() => {
+    refreshGroups();
+  }, []);
+
+  useEffect(() => {
+    refreshGroups();
+  }, [groupCount]);
 
   /*
    * Groups
    */
-  _refreshGroups() {
-    let tasks = [this.props.getGroups()];
-    if (this.props.isEnterprise) {
-      tasks.push(this.props.getDynamicGroups());
+  const refreshGroups = () => {
+    let tasks = [getGroups()];
+    if (isEnterprise) {
+      tasks.push(getDynamicGroups());
     }
     return Promise.all(tasks).catch(err => console.log(err));
-  }
+  };
 
-  _handleGroupChange(group) {
-    this.props.selectGroup(group);
-    this.props.history.push(group ? `/devices?group=${group}` : '/devices');
-  }
+  const handleGroupChange = group => {
+    selectGroup(group);
+    history.push(group ? `/devices?group=${group}` : '/devices');
+  };
 
-  _removeCurrentGroup() {
-    var self = this;
-    const request = self.props.groupFilters.length
-      ? self.props.removeDynamicGroup(self.props.selectedGroup)
-      : self.props.removeStaticGroup(self.props.selectedGroup);
-    return request.then(() => self.setState({ removeGroup: !self.state.removeGroup })).catch(err => console.log(err));
-  }
+  const removeCurrentGroup = () => {
+    const request = groupFilters.length ? removeDynamicGroup(selectedGroup) : removeStaticGroup(selectedGroup);
+    return request.then(() => setRemoveGroup(!removeGroup)).catch(err => console.log(err));
+  };
 
   // Edit groups from device selection
-  _addDevicesToGroup(tmpDevices) {
+  const addDevicesToGroup = tmpDevices => {
     // (save selected devices in state, open dialog)
-    this.setState({ tmpDevices, modifyGroupDialog: !this.state.modifyGroupDialog });
-  }
+    setTmpDevices(tmpDevices);
+    setModifyGroupDialog(!modifyGroupDialog);
+  };
 
-  _createGroupFromDialog(devices, group) {
-    var self = this;
-    let request = self.state.fromFilters ? self.props.addDynamicGroup(group, this.props.filters) : self.props.addStaticGroup(group, devices);
+  const createGroupFromDialog = (devices, group) => {
+    let request = fromFilters ? addDynamicGroup(group, filters) : addStaticGroup(group, devices);
     return request.then(() => {
       // reached end of list
-      self.setState({ createGroupExplanation: false, modifyGroupDialog: false, fromFilters: false }, () => self._refreshGroups());
+      setCreateGroupExplanation(false);
+      setModifyGroupDialog(false);
+      setFromFilters(false);
+      refreshGroups();
     });
-  }
+  };
 
-  onGroupClick() {
-    if (this.props.selectedGroup) {
-      return this.props.updateDynamicGroup(this.props.selectedGroup, this.props.filters);
+  const onGroupClick = () => {
+    if (selectedGroup) {
+      return updateDynamicGroup(selectedGroup, filters);
     }
-    this.setState({ modifyGroupDialog: true, fromFilters: true });
-  }
+    setModifyGroupDialog(true);
+    setFromFilters(true);
+  };
 
-  _removeDevicesFromGroup(devices) {
-    const self = this;
-    clearInterval(self.deviceTimer);
-    const isGroupRemoval = devices.length >= self.props.groupCount;
+  const onRemoveDevicesFromGroup = devices => {
+    clearInterval(deviceTimer);
+    const isGroupRemoval = devices.length >= groupCount;
     let request;
     if (isGroupRemoval) {
-      request = self.props.removeStaticGroup(self.props.selectedGroup);
+      request = removeStaticGroup(selectedGroup);
     } else {
-      request = self.props.removeDevicesFromGroup(self.props.selectedGroup, devices);
+      request = removeDevicesFromGroup(selectedGroup, devices);
     }
     return request.catch(err => console.log(err));
-  }
+  };
 
-  render() {
-    const self = this;
-    const { acceptedCount, groups, groupsById, isEnterprise, openSettingsDialog, selectedGroup, showHelptips } = self.props;
-    const { createGroupExplanation, fromFilters, modifyGroupDialog, removeGroup, tmpDevices } = self.state;
-    return (
-      <div className="tab-container with-sub-panels">
+  const openSettingsDialog = e => {
+    e.preventDefault();
+    setOpenIdDialog(!openIdDialog);
+  };
+
+  const onCreateGroupClose = () => {
+    setModifyGroupDialog(false);
+    setFromFilters(false);
+    setTmpDevices([]);
+  };
+
+  const onPreauthSaved = addMore => {
+    setOpenPreauth(!addMore);
+    setDeviceRefreshTrigger(!deviceRefreshTrigger);
+  };
+
+  const onFilterDevices = (value, key) => {
+    setDeviceListState({ state: routes.allDevices.key });
+    setDeviceFilters([{ scope: 'identity', key, operator: '$eq', value }]);
+  };
+
+  const onClearSearchClick = () => {
+    setQuickFilterResetTrigger(!quickFilterResetTrigger);
+  };
+
+  const onShowDeviceStateClick = state => {
+    setDeviceListState({ state });
+    selectGroup();
+  };
+
+  return (
+    <>
+      <div className="flexbox space-between margin-right">
+        <div className="flexbox padding-top-small">
+          <h3 style={{ minWidth: 300, marginTop: 0 }}>Devices</h3>
+          <QuickFilter attributes={identityAttributes} onChange={onFilterDevices} resetTrigger={quickFilterResetTrigger} />
+        </div>
+        <DeviceAdditionWidget docsVersion={docsVersion} onConnectClick={setShowConnectingDialog} onPreauthClick={setOpenPreauth} />
+      </div>
+      <div className="tab-container with-sub-panels" style={{ padding: 0 }}>
         <div className="leftFixed">
           <Groups
             acceptedCount={acceptedCount}
-            changeGroup={group => self._handleGroupChange(group)}
+            changeGroup={handleGroupChange}
             groups={groupsById}
-            openGroupDialog={() => self.setState({ createGroupExplanation: true })}
+            openGroupDialog={setCreateGroupExplanation}
             selectedGroup={selectedGroup}
             showHelptips={showHelptips}
           />
         </div>
         <div className="rightFluid" style={{ paddingTop: '0' }}>
+          {limitMaxed && <DeviceLimitWarning acceptedDevices={acceptedCount} deviceLimit={deviceLimit} />}
+          {!!pendingCount && !selectedGroup && selectedState !== DEVICE_STATES.pending && (
+            <DeviceStatusNotification deviceCount={pendingCount} state={DEVICE_STATES.pending} onClick={onShowDeviceStateClick} />
+          )}
           <AuthorizedDevices
-            addDevicesToGroup={devices => self._addDevicesToGroup(devices)}
-            onGroupClick={() => self.onGroupClick()}
-            onGroupRemoval={() => self.setState({ removeGroup: !removeGroup })}
+            addDevicesToGroup={addDevicesToGroup}
+            deviceRefreshTrigger={deviceRefreshTrigger}
+            onGroupClick={onGroupClick}
+            onGroupRemoval={() => setRemoveGroup(!removeGroup)}
+            onPreauthClick={setOpenPreauth}
+            onClearSearchClick={onClearSearchClick}
             openSettingsDialog={openSettingsDialog}
-            removeDevicesFromGroup={devices => self._removeDevicesFromGroup(devices)}
+            removeDevicesFromGroup={onRemoveDevicesFromGroup}
+            states={routes}
           />
         </div>
-        {removeGroup && <RemoveGroup onClose={() => self.setState({ removeGroup: !removeGroup })} onRemove={() => self._removeCurrentGroup()} />}
+        {removeGroup && <RemoveGroup onClose={() => setRemoveGroup(!removeGroup)} onRemove={removeCurrentGroup} />}
         {modifyGroupDialog && (
           <CreateGroup
-            addListOfDevices={(devices, group) => self._createGroupFromDialog(devices, group)}
+            addListOfDevices={createGroupFromDialog}
             fromFilters={fromFilters}
             groups={groups}
             isCreation={fromFilters || !groups.length}
             selectedDevices={tmpDevices}
-            onClose={() => self.setState({ modifyGroupDialog: false, fromFilters: false, tmpDevices: [] })}
+            onClose={onCreateGroupClose}
           />
         )}
-        {createGroupExplanation && <CreateGroupExplainer isEnterprise={isEnterprise} onClose={() => self.setState({ createGroupExplanation: false })} />}
+        {createGroupExplanation && <CreateGroupExplainer isEnterprise={isEnterprise} onClose={() => setCreateGroupExplanation(false)} />}
+        {openIdDialog && (
+          <Dialog open>
+            <DialogTitle>Default device identity attribute</DialogTitle>
+            <DialogContent style={{ overflow: 'hidden' }}>
+              <Global dialog closeDialog={openSettingsDialog} />
+            </DialogContent>
+          </Dialog>
+        )}
+        {openPreauth && (
+          <PreauthDialog
+            acceptedDevices={acceptedCount}
+            deviceLimit={deviceLimit}
+            limitMaxed={limitMaxed}
+            preauthDevice={preauthDevice}
+            onSubmit={onPreauthSaved}
+            onCancel={() => setOpenPreauth(false)}
+            setSnackbar={setSnackbar}
+          />
+        )}
       </div>
-    );
-  }
-}
+    </>
+  );
+};
 
 const actionCreators = {
   addDynamicGroup,
@@ -145,10 +395,14 @@ const actionCreators = {
   getDynamicGroups,
   getGroups,
   initializeGroupsDevices,
+  preauthDevice,
   removeDevicesFromGroup,
   removeDynamicGroup,
   removeStaticGroup,
   selectGroup,
+  setDeviceFilters,
+  setDeviceListState,
+  setShowConnectingDialog,
   updateDynamicGroup
 };
 
@@ -161,14 +415,25 @@ const mapStateToProps = state => {
     groupCount = state.devices.groups.byId[selectedGroup].total;
     groupFilters = state.devices.groups.byId[selectedGroup].filters || [];
   }
+  const deviceIdAttribute = { key: 'id', value: 'Device ID', scope: 'identity', category: 'identity', priority: 1 };
+  let identityAttributes = [
+    deviceIdAttribute,
+    ...state.devices.filteringAttributes.identityAttributes.map(item => ({ key: item, value: item, scope: 'identity', category: 'identity', priority: 1 }))
+  ];
   return {
     acceptedCount: state.devices.byStatus.accepted.total || 0,
+    deviceLimit: state.devices.limit,
+    deviceListState: state.devices.deviceList,
+    docsVersion: getDocsVersion(state),
     filters: state.devices.filters || [],
     groups: Object.keys(state.devices.groups.byId).sort(),
     groupsById: state.devices.groups.byId,
     groupCount,
     groupFilters,
+    identityAttributes,
     isEnterprise: getIsEnterprise(state),
+    limitMaxed: getLimitMaxed(state),
+    pendingCount: state.devices.byStatus.pending.total || 0,
     selectedGroup,
     showHelptips: state.users.showHelptips
   };

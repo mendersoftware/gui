@@ -52,7 +52,7 @@ export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, se
     );
 
   return (
-    <div>
+    <>
       <div className="muted margin-bottom-small">Groups</div>
       <List>
         <ListItem classes={{ root: 'grouplist' }} button key="All" style={!selectedGroup ? styles.selectedGroup : {}} onClick={() => changeGroup()}>
@@ -72,7 +72,7 @@ export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, se
       </List>
 
       {showHelptips && acceptedCount && groups.length <= 1 ? <AddGroup /> : null}
-    </div>
+    </>
   );
 };
 

@@ -1,237 +1,44 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Groups Component renders correctly 1`] = `
-<div>
-  <div
-    className="muted margin-bottom-small"
-  >
-    Groups
-  </div>
-  <ul
-    className="MuiList-root MuiList-padding"
-  >
-    <div
-      aria-disabled={false}
-      className="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-button"
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      role="button"
-      style={
-        Object {
-          "backgroundColor": "#e7e7e7",
-        }
-      }
-      tabIndex={0}
-    >
-      <div
-        className="MuiListItemText-root"
-      >
-        <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-        >
-          All devices
-        </span>
-      </div>
-    </div>
-    <li
-      className="MuiListSubheader-root heading-lined"
-      style={
-        Object {
-          "color": "#aaaaaa",
-          "height": 48,
-        }
-      }
-    >
-      <span>
-        Dynamic
-      </span>
-      <div />
-    </li>
-    <div
-      aria-disabled={false}
-      className="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-button"
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      role="button"
-      style={Object {}}
-      tabIndex={0}
-    >
-      <div
-        className="MuiListItemText-root"
-      >
-        <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-        >
-          testGroupDynamic
-        </span>
-      </div>
-    </div>
-    <li
-      className="MuiListSubheader-root heading-lined"
-      style={
-        Object {
-          "color": "#aaaaaa",
-          "height": 48,
-        }
-      }
-    >
-      <span>
-        Static
-      </span>
-      <div />
-    </li>
-    <div
-      aria-disabled={false}
-      className="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-button"
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      role="button"
-      style={Object {}}
-      tabIndex={0}
-    >
-      <div
-        className="MuiListItemText-root"
-      >
-        <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-        >
-          testGroup
-        </span>
-      </div>
-    </div>
-    <div
-      aria-disabled={false}
-      className="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-button"
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      role="button"
-      style={
-        Object {
-          "marginTop": 30,
-        }
-      }
-      tabIndex={0}
-    >
-      <div
-        className="MuiListItemIcon-root"
-      >
-        <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-          />
-        </svg>
-      </div>
-      <div
-        className="MuiListItemText-root"
-      >
-        <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-        >
-          Create a group
-        </span>
-      </div>
-    </div>
-  </ul>
-</div>
-`;
-
-exports[`Groups sub components renders GroupItem correctly 1`] = `
+exports[`Groups Component renders GroupItem correctly 1`] = `
 <div
-  aria-disabled={false}
-  className="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-button"
-  onBlur={[Function]}
-  onClick={[Function]}
-  onDragLeave={[Function]}
-  onFocus={[Function]}
-  onKeyDown={[Function]}
-  onKeyUp={[Function]}
-  onMouseDown={[Function]}
-  onMouseLeave={[Function]}
-  onMouseUp={[Function]}
-  onTouchEnd={[Function]}
-  onTouchMove={[Function]}
-  onTouchStart={[Function]}
+  aria-disabled="false"
+  class="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-button"
   role="button"
-  style={
-    Object {
-      "backgroundColor": "#e7e7e7",
-    }
-  }
-  tabIndex={0}
+  style="background-color: rgb(231, 231, 231);"
+  tabindex="0"
 >
   <div
-    className="MuiListItemText-root"
+    class="MuiListItemText-root"
   >
     <span
-      className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+      class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
     >
       test
     </span>
   </div>
   <span
-    className="MuiTouchRipple-root"
+    class="MuiTouchRipple-root"
   />
 </div>
 `;
 
-exports[`Groups sub components renders GroupsSubheader correctly 1`] = `
+exports[`Groups Component renders GroupsSubheader correctly 1`] = `
 <li
-  className="MuiListSubheader-root heading-lined"
-  style={
-    Object {
-      "color": "#aaaaaa",
-      "height": 48,
-    }
-  }
+  class="MuiListSubheader-root heading-lined"
+  style="color: rgb(170, 170, 170); height: 48px;"
 >
   <span>
     test
   </span>
   <div />
 </li>
+`;
+
+exports[`Groups Component renders correctly 1`] = `
+<div
+  class="muted margin-bottom-small"
+>
+  Groups
+</div>
 `;

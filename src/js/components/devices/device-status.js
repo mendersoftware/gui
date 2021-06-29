@@ -20,7 +20,7 @@ const NumberIcon = props => (
   </Box>
 );
 
-const DeviceStatus = ({ device: { auth_sets = [] } }) => {
+const DeviceStatus = ({ device: { auth_sets = [], status: deviceStatus } }) => {
   let status = statusTypes.default;
   let label = status.label;
   let icon = <ErrorIcon />;
@@ -37,7 +37,7 @@ const DeviceStatus = ({ device: { auth_sets = [] } }) => {
       <Chip variant="outlined" size="small" icon={icon} label={label} className="deviceStatus" />
     </Tooltip>
   ) : (
-    <div />
+    <div className="capitalized">{deviceStatus}</div>
   );
 };
 
