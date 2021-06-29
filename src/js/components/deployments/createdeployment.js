@@ -57,7 +57,7 @@ export class CreateDialog extends React.Component {
   componentDidMount() {
     const { deploymentObject, isEnterprise, isHosted, plan, selectDevice } = this.props;
     if (Object.keys(deploymentObject).length) {
-      this.setState({ ...deploymentObject });
+      this.setState({ deploymentObject });
       if (deploymentObject.deploymentDeviceIds.length === 1 && deploymentObject.deploymentDeviceIds[0] === deploymentObject.group) {
         selectDevice(deploymentObject.deploymentDeviceIds[0]);
       }
@@ -156,7 +156,7 @@ export class CreateDialog extends React.Component {
   render() {
     const self = this;
     const { device, deploymentObject, groups, release } = self.props;
-    const { activeStep, deploymentObject: deploymentObjectState, steps } = self.state;
+    const { activeStep, deploymentObject: deploymentObjectState, hasNewRetryDefault, steps } = self.state;
     const { group = deploymentObject.group, phases, release: stateRelease = deploymentObject.release || release } = deploymentObjectState;
     const ComponentToShow = steps[activeStep].component;
     const deploymentSettings = {
@@ -184,13 +184,13 @@ export class CreateDialog extends React.Component {
             ))}
           </Stepper>
           <ComponentToShow
-            deploymentAnchor={this.deploymentRef}
-            filters={deploymentSettings.filterId ? groups[deploymentObject.group || group].filters : undefined}
             {...self.props}
-            {...self.state}
-            {...deploymentSettings}
-            setDeploymentSettings={deploymentObject => self.setState({ deploymentObject })}
+            deploymentAnchor={self.deploymentRef}
+            deploymentObject={deploymentSettings}
+            filters={deploymentSettings.filterId ? groups[deploymentObject.group || group].filters : undefined}
+            hasNewRetryDefault={hasNewRetryDefault}
             onSaveRetriesSetting={shouldSave => self.onSaveRetriesSetting(shouldSave)}
+            setDeploymentSettings={deploymentObject => self.setState({ deploymentObject })}
           />
         </DialogContent>
         <DialogActions className="margin-left margin-right">

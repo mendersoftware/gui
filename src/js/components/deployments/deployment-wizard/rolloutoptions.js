@@ -11,12 +11,11 @@ export const RolloutOptions = ({
   hasNewRetryDefault = false,
   isEnterprise,
   onSaveRetriesSetting,
-  phases = [],
   previousRetries,
-  retries,
   setDeploymentSettings
 }) => {
-  const currentRetries = retries ? retries : previousRetries;
+  const { phases = [], retries } = deploymentObject;
+  const currentRetries = retries !== undefined ? retries : previousRetries;
 
   const { states = {} } = deploymentObject.update_control_map || {};
 
