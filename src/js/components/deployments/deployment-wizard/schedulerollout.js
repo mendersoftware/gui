@@ -132,7 +132,7 @@ export const ScheduleRollout = props => {
         ) : null}
         <FormControl style={{ maxWidth: 515, width: 'min-content' }}>
           <h4>Select a rollout pattern</h4>
-          <Select onChange={handlePatternChange} value={customPattern} style={styles.textField} disabled={!isEnterprise || plan !== 'enterprise'}>
+          <Select onChange={handlePatternChange} value={customPattern} style={styles.textField} disabled={!isEnterprise}>
             <MenuItem value={0}>Single phase: 100%</MenuItem>
             {(numberDevices > 1 || filterId) && [
               <MenuItem key="customPhaseSetting" divider={true} value={1}>
