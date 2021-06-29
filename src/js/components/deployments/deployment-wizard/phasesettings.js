@@ -9,6 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableRow, Select, MenuItem, Inp
 import CancelIcon from '@material-ui/icons/Cancel';
 import { getPhaseStartTime } from '../createdeployment';
 import { getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
+import theme from '../../../themes/mender-theme';
 
 export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, filterId, numberDevices, setDeploymentSettings }) => {
   const { phases = [] } = deploymentObject;
@@ -175,7 +176,7 @@ export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, fil
       </Table>
 
       {!disableAdd ? (
-        <Chip className="margin-top-small" color="primary" clickable={!disableAdd} icon={<AddIcon />} label="Add a phase" onClick={addPhase} />
+        <Chip color="primary" clickable={!disableAdd} icon={<AddIcon />} label="Add a phase" onClick={addPhase} style={{ marginTop: theme.spacing(2) }} />
       ) : null}
     </div>
   );

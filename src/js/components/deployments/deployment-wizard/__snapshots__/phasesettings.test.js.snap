@@ -93,8 +93,9 @@ exports[`PhaseSettings Component renders correctly 1`] = `
       </tbody>
     </table>
     <div
-      class="MuiButtonBase-root MuiChip-root margin-top-small MuiChip-colorPrimary MuiChip-clickableColorPrimary MuiChip-clickable"
+      class="MuiButtonBase-root MuiChip-root MuiChip-colorPrimary MuiChip-clickableColorPrimary MuiChip-clickable"
       role="button"
+      style="margin-top: 16px;"
       tabindex="0"
     >
       <svg
