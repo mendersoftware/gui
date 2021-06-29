@@ -86,8 +86,8 @@ const ProgressChart = ({ deployment = {}, showDetails, style }) => {
   const { displayablePhases } = Object.values(substateMap).reduce(
     (accu, substate, index) => {
       let successes = statCollector(substate.successIndicators, stats);
+      successes = Math.min(totalDeviceCount, successes + accu.shortCutSuccesses);
       let failures = statCollector(substate.failureIndicators, stats);
-      const successesWithShortCuts = Math.min(totalDeviceCount, successes + accu.shortCutSuccesses);
       if (index) {
         // make sure to only include "final" stats from completed deployment substates if there are non-final stats/
         // the substate is actually running
@@ -96,9 +96,6 @@ const ProgressChart = ({ deployment = {}, showDetails, style }) => {
         } else {
           failures = 0;
         }
-        successes = successes || failures ? successesWithShortCuts : successes;
-      } else {
-        successes = successesWithShortCuts;
       }
       failures = Math.min(totalDeviceCount - successes, failures);
       const successWidth = `${(successes / totalDeviceCount) * 100 || 0}%`;
