@@ -74,6 +74,12 @@ export const deploymentHandlers = [
     }
     return res(ctx.set('location', `find/me/here/${createdDeployment.id}`), ctx.json({}));
   }),
+  rest.patch(`${deploymentsApiUrl}/deployments/:deploymentId`, ({ params: { deploymentId }, body: { update_control_map } }, res, ctx) => {
+    if (deploymentId === createdDeployment.id && Object.keys(update_control_map).length) {
+      return res(ctx.status(204));
+    }
+    return res(ctx.status(581));
+  }),
   rest.put(`${deploymentsApiUrl}/deployments/:deploymentId/status`, ({ params: { deploymentId }, body: { status } }, res, ctx) =>
     res(
       ctx.status(

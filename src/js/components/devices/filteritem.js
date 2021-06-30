@@ -114,7 +114,7 @@ export default class FilterItem extends React.Component {
     const showValue = typeof (filterOptions[operator] || {}).value === 'undefined';
     return (
       <>
-        <div className="flexbox" style={{ alignItems: 'center' }}>
+        <div className="flexbox center-aligned">
           <Autocomplete
             autoComplete
             autoHighlight

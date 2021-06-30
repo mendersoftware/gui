@@ -12,19 +12,18 @@ import {
   createArtifact,
   getReleases,
   removeArtifact,
-  showRemoveArtifactDialog,
   selectArtifact,
   selectRelease,
+  showRemoveArtifactDialog,
   uploadArtifact
 } from '../../actions/releaseActions';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
-
+import AddArtifactDialog from './dialogs/addartifact';
+import RemoveArtifactDialog from './dialogs/removeartifact';
 import ReleaseRepository from './releaserepository';
 import ReleasesList from './releaseslist';
-import RemoveArtifactDialog from './dialogs/removeartifact';
-import AddArtifactDialog from './dialogs/addartifact';
 
 const refreshArtifactsLength = 30000; //60000
 
@@ -151,7 +150,7 @@ export class Artifacts extends React.Component {
             >
               Upload
             </Button>
-            <p className="info flexbox" style={{ alignItems: 'center' }}>
+            <p className="info flexbox center-aligned">
               <InfoIcon fontSize="small" />
               Upload an Artifact to an existing or new Release
             </p>

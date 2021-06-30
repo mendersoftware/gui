@@ -3,12 +3,7 @@
 exports[`FilterItem Component renders correctly 1`] = `
 Array [
   <div
-    className="flexbox"
-    style={
-      Object {
-        "alignItems": "center",
-      }
-    }
+    className="flexbox center-aligned"
   >
     <div
       aria-expanded={false}

@@ -42,6 +42,7 @@ test.describe('Deployments', () => {
     await page.click(`button:has-text('Next')`);
     if (['enterprise', 'staging'].includes(environment)) {
       await page.click(`css=.MuiDialog-container button >> text=Next`);
+      await page.click(`css=.MuiDialog-container button >> text=Next`);
     }
     // adding the following to ensure we reached the end of the dialog, as this might not happen in CI runs
     const hasNextButton = await page.isVisible(`.MuiDialog-container button >> text=Next`);
@@ -74,6 +75,7 @@ test.describe('Deployments', () => {
     await page.click(`#deployment-device-group-selection-popup li:has-text('testgroup')`);
     await page.click(`button:has-text('Next')`);
     if (['enterprise', 'staging'].includes(environment)) {
+      await page.click(`.MuiDialog-container button >> text=Next`);
       await page.click(`.MuiDialog-container button >> text=Next`);
     }
     // adding the following to ensure we reached the end of the dialog, as this might not happen in CI runs

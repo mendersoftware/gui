@@ -684,13 +684,14 @@ describe('deployment stats grouping functions', () => {
         installing: 1,
         noartifact: 1,
         pending: 2,
+        paused: 0,
         rebooting: 1,
         success: 1
       }
     };
-    expect(groupDeploymentStats(deployment)).toEqual({ inprogress: 5, pending: 2, successes: 3, failures: 4 });
+    expect(groupDeploymentStats(deployment)).toEqual({ inprogress: 5, paused: 0, pending: 2, successes: 3, failures: 4 });
     deployment = { ...deployment, max_devices: 100, device_count: 10 };
-    expect(groupDeploymentStats(deployment)).toEqual({ inprogress: 5, pending: 92, successes: 3, failures: 4 });
+    expect(groupDeploymentStats(deployment)).toEqual({ inprogress: 5, paused: 0, pending: 92, successes: 3, failures: 4 });
   });
   it('groups correctly based on deployment devices states', async () => {
     const deployment = {
@@ -707,6 +708,6 @@ describe('deployment stats grouping functions', () => {
         j: { status: 'success' }
       }
     };
-    expect(groupDeploymentDevicesStats(deployment)).toEqual({ inprogress: 3, pending: 1, successes: 3, failures: 3 });
+    expect(groupDeploymentDevicesStats(deployment)).toEqual({ inprogress: 3, paused: 0, pending: 1, successes: 3, failures: 3 });
   });
 });

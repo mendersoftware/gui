@@ -471,8 +471,8 @@ exports[`Devices Component renders correctly 1`] = `
                 </div>
                 <div>
                   <div
-                    class=\\"bold flexbox link-color margin-right-small uppercased\\"
-                    style=\\"align-items: center; white-space: nowrap;\\"
+                    class=\\"bold flexbox center-aligned link-color margin-right-small uppercased\\"
+                    style=\\"white-space: nowrap;\\"
                   >
                     view details 
                     <svg
@@ -543,8 +543,8 @@ exports[`Devices Component renders correctly 1`] = `
                 </div>
                 <div>
                   <div
-                    class=\\"bold flexbox link-color margin-right-small uppercased\\"
-                    style=\\"align-items: center; white-space: nowrap;\\"
+                    class=\\"bold flexbox center-aligned link-color margin-right-small uppercased\\"
+                    style=\\"white-space: nowrap;\\"
                   >
                     view details 
                     <svg

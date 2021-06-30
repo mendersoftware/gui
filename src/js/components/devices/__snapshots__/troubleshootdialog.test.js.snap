@@ -60,8 +60,7 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
                   class="MuiTab-wrapper"
                 >
                   <div
-                    class="flexbox"
-                    style="align-items: center;"
+                    class="flexbox center-aligned"
                   >
                     Remote terminal
                      

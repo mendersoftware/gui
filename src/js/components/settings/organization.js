@@ -34,7 +34,7 @@ export const OrgHeader = () => (
     </div>
     <ReactTooltip id="token-help" globalEventOff="click" place="top" type="light" effect="solid" style={{}} className="react-tooltip">
       <h3>Organization token</h3>
-      <p style={{ color: '#DECFD9', margin: '1em 0' }}>
+      <p style={{ color: colors.tooltipText, margin: '1em 0' }}>
         This token is unique for your organization and ensures that only devices that you own are able to connect to your account.
       </p>
     </ReactTooltip>

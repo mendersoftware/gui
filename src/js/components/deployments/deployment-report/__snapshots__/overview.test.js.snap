@@ -159,10 +159,9 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
       </div>
     </div>
     <a
-      className="margin-top-small flexbox"
+      className="margin-top-small flexbox center-aligned"
       style={
         Object {
-          "alignItems": "center",
           "className": "flexbox centered",
           "marginLeft": 64,
           "rel": "noopener noreferrer",
