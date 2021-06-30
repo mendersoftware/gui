@@ -1,13 +1,13 @@
 import React from 'react';
 import { MemoryRouter, Switch, Route } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Cookies from 'universal-cookie';
 import Signup from './signup';
-import { defaultState, undefineds } from '../../../../tests/mockData';
+import { defaultState, token, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -52,19 +52,23 @@ describe('Signup Component', () => {
     expect(container.querySelector('#pass-strength > meter')).toBeVisible();
     await waitFor(() => rerender(ui));
     expect(screen.getByRole('button', { name: /sign up/i })).toBeEnabled();
-    userEvent.click(screen.getByRole('button', { name: /sign up/i }));
+    act(() => userEvent.click(screen.getByRole('button', { name: /sign up/i })));
     await waitFor(() => screen.getByText('Company or organization name *'));
-    userEvent.type(screen.getByRole('textbox', { name: /company or organization name \*/i }), 'test');
+    act(() => userEvent.type(screen.getByRole('textbox', { name: /company or organization name \*/i }), 'test'));
     expect(screen.getByRole('button', { name: /complete signup/i })).toBeDisabled();
-    userEvent.click(screen.getByRole('checkbox', { name: /by checking this you agree to our/i }));
+    act(() => userEvent.click(screen.getByRole('checkbox', { name: /by checking this you agree to our/i })));
+    await waitFor(() => rerender(ui));
     expect(screen.getByRole('button', { name: /complete signup/i })).toBeEnabled();
 
     const cookies = new Cookies();
     cookies.set.mockReturnValue();
-    await userEvent.click(screen.getByRole('button', { name: /complete signup/i }));
-    await waitFor(() => expect(container.querySelector('.loaderContainer')).toBeVisible());
-    jest.advanceTimersByTime(5000);
-    await waitFor(() => expect(cookies.set).toHaveBeenCalledTimes(2));
+    await act(async () => {
+      userEvent.click(screen.getByRole('button', { name: /complete signup/i }));
+      jest.advanceTimersByTime(5000);
+      return waitFor(() => expect(container.querySelector('.loaderContainer')).toBeVisible());
+    });
+    await waitFor(() => rerender(ui));
+    await waitFor(() => expect(cookies.set).toHaveBeenLastCalledWith('JWT', token, { maxAge: 900, path: '/', sameSite: 'strict' }));
     await waitFor(() => screen.getByText(/signed up/i));
   }, 10000);
 });

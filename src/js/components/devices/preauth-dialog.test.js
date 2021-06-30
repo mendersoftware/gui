@@ -18,6 +18,7 @@ describe('PreauthDialog Component', () => {
     const uploadMock = jest.fn();
     const submitMock = jest.fn();
     const menderFile = new File(['testContent plain'], 'test.pem');
+    uploadMock.mockRejectedValueOnce('test-errortext');
 
     const ui = (
       <PreauthDialog
@@ -39,17 +40,16 @@ describe('PreauthDialog Component', () => {
     await waitFor(() => expect(document.querySelector('.dropzone input')).not.toBeInTheDocument());
     expect(screen.getByDisplayValue('test.pem')).toBeInTheDocument();
     expect(document.querySelector('.MuiFab-root')).toBeDisabled();
-    userEvent.type(screen.getByPlaceholderText(/key/i), 'testKey');
-    userEvent.type(screen.getByPlaceholderText(/value/i), 'testValue');
+    act(() => userEvent.paste(screen.getByPlaceholderText(/key/i), 'testKey'));
+    act(() => userEvent.paste(screen.getByPlaceholderText(/value/i), 'testValue'));
     expect(document.querySelector('.MuiFab-root')).not.toBeDisabled();
-    uploadMock.mockRejectedValueOnce('test-errortext');
     act(() => userEvent.click(document.querySelector('.MuiFab-root')));
     await waitFor(() => rerender(ui));
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await waitFor(() => expect(screen.queryByText('test-errortext')).not.toBeInTheDocument());
+    act(() => userEvent.click(screen.getByRole('button', { name: 'Save' })));
     await waitFor(() => expect(screen.queryAllByText('test-errortext')).toBeTruthy());
     uploadMock.mockClear();
-
-    userEvent.type(screen.getByDisplayValue('testValue'), 'testValues');
+    act(() => userEvent.type(screen.getByDisplayValue('testValue'), 'testValues'));
     await waitFor(() => expect(screen.queryByText('test-errortext')).not.toBeInTheDocument());
     uploadMock.mockResolvedValue(true);
     act(() => userEvent.click(screen.getByRole('button', { name: 'Save and add another' })));
