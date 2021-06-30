@@ -113,17 +113,13 @@ export const deviceHandlers = [
     return res(ctx.status(506));
   }),
   rest.get(`${inventoryApiUrl}/groups`, (req, res, ctx) => {
-    const status = req.url.searchParams.get('status');
-    if (status === DeviceConstants.DEVICE_STATES.accepted) {
-      const groups = Object.entries(defaultState.devices.groups.byId).reduce((accu, [groupName, group]) => {
-        if (!group.id) {
-          accu.push(groupName);
-        }
-        return accu;
-      }, []);
-      return res(ctx.json(groups));
-    }
-    return res(ctx.status(507));
+    const groups = Object.entries(defaultState.devices.groups.byId).reduce((accu, [groupName, group]) => {
+      if (!group.id) {
+        accu.push(groupName);
+      }
+      return accu;
+    }, []);
+    return res(ctx.json(groups));
   }),
   rest.get(`${inventoryApiUrlV2}/filters/attributes`, (req, res, ctx) => res(ctx.json(deviceAttributes))),
   rest.get(`${inventoryApiUrlV2}/filters`, (req, res, ctx) =>

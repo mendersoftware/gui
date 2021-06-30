@@ -33,7 +33,7 @@ const defaultAttributes = [
 ];
 
 export const getGroups = () => (dispatch, getState) =>
-  GeneralApi.get(`${inventoryApiUrl}/groups?status=${DeviceConstants.DEVICE_STATES.accepted}`).then(res => {
+  GeneralApi.get(`${inventoryApiUrl}/groups`).then(res => {
     const state = getState().devices.groups.byId;
     const groups = res.data.reduce((accu, group) => {
       accu[group] = { deviceIds: [], filters: [], total: 0, ...state[group] };
