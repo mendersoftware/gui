@@ -7,6 +7,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Step, StepLa
 import SoftwareDevices from './deployment-wizard/softwaredevices';
 import ScheduleRollout from './deployment-wizard/schedulerollout';
 import Review from './deployment-wizard/review';
+import RolloutOptions from './deployment-wizard/rolloutoptions';
 
 import { createDeployment } from '../../actions/deploymentActions';
 import { selectDevice } from '../../actions/deviceActions';
@@ -25,8 +26,9 @@ export const allDevices = 'All devices';
 const MAX_PREVIOUS_PHASES_COUNT = 5;
 
 const deploymentSteps = [
-  { title: 'Select target software and devices', closed: false, component: SoftwareDevices },
+  { title: 'Select devices and Release', closed: false, component: SoftwareDevices },
   { title: 'Set a rollout schedule', closed: true, component: ScheduleRollout },
+  { title: 'Set update process options', closed: true, component: RolloutOptions },
   { title: 'Review and create', closed: false, component: Review }
 ];
 
@@ -46,7 +48,7 @@ export class CreateDialog extends React.Component {
     super(props, context);
     this.state = {
       activeStep: 0,
-      deploymentDeviceIds: [],
+      deploymentObject: {},
       steps: deploymentSteps,
       retries: props.retries
     };
@@ -55,7 +57,7 @@ export class CreateDialog extends React.Component {
   componentDidMount() {
     const { deploymentObject, isEnterprise, isHosted, plan, selectDevice } = this.props;
     if (Object.keys(deploymentObject).length) {
-      this.setState({ ...deploymentObject });
+      this.setState({ deploymentObject });
       if (deploymentObject.deploymentDeviceIds.length === 1 && deploymentObject.deploymentDeviceIds[0] === deploymentObject.group) {
         selectDevice(deploymentObject.deploymentDeviceIds[0]);
       }
@@ -72,13 +74,11 @@ export class CreateDialog extends React.Component {
 
   componentDidUpdate(prevProps) {
     // Update state if single device passed from props
-    if (prevProps.device !== this.props.device && this.props.device) {
-      this.setState({ deploymentDeviceIds: [this.props.device.id] });
+    const { device } = this.props;
+    const { deploymentObject } = this.state;
+    if (prevProps.device !== device && device) {
+      this.setState({ deploymentObject: { ...deploymentObject, deploymentDeviceIds: [device.id], device } });
     }
-  }
-
-  setDeploymentSettings(value, property) {
-    this.setState({ [property]: value });
   }
 
   cleanUpDeploymentsStatus() {
@@ -111,7 +111,7 @@ export class CreateDialog extends React.Component {
       plan,
       saveGlobalSettings
     } = self.props;
-    const { deploymentDeviceIds, device, filterId, group, phases, release, retries } = settings;
+    const { deploymentDeviceIds, device, filterId, group, phases, release, retries, update_control_map } = settings;
     const startTime = phases?.length ? phases[0].start_ts || new Date() : new Date();
     const retrySetting = isEnterprise || (isHosted && plan !== PLANS.os.value) ? { retries } : {};
     const newDeployment = {
@@ -127,7 +127,8 @@ export class CreateDialog extends React.Component {
             return phase;
           })
         : phases,
-      ...retrySetting
+      ...retrySetting,
+      update_control_map
     };
     if (!isOnboardingComplete) {
       advanceOnboarding(onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES);
@@ -155,29 +156,24 @@ export class CreateDialog extends React.Component {
   render() {
     const self = this;
     const { device, deploymentObject, groups, release } = self.props;
-    const { activeStep, deploymentDeviceIds, deploymentDeviceCount, group, phases, retries, steps } = self.state;
+    const { activeStep, deploymentObject: deploymentObjectState, hasNewRetryDefault, steps } = self.state;
+    const { group = deploymentObject.group, phases, release: stateRelease = deploymentObject.release || release } = deploymentObjectState;
     const ComponentToShow = steps[activeStep].component;
     const deploymentSettings = {
-      deploymentDeviceIds: deploymentObject.deploymentDeviceIds || deploymentDeviceIds,
-      deploymentDeviceCount: deploymentObject.deploymentDeviceCount || deploymentDeviceCount,
-      filterId: groups[deploymentObject.group || group] ? groups[deploymentObject.group || group].id : undefined,
+      ...deploymentObject,
+      ...deploymentObjectState,
+      filterId: groups[group] ? groups[group].id : undefined,
       device,
-      group: deploymentObject.group || group,
-      phases,
-      release: deploymentObject.release || release || self.state.release,
-      retries: deploymentObject.retries || retries
+      release: stateRelease
     };
     const disableSchedule = !validatePhases(phases, deploymentSettings.deploymentDeviceCount, deploymentSettings.filterId);
     const disabled =
       activeStep === 0
-        ? !(
-            deploymentSettings.release &&
-            (deploymentSettings.deploymentDeviceCount || deploymentSettings.filterId || (deploymentSettings.group && deploymentSettings.group !== allDevices))
-          )
+        ? !(deploymentSettings.release && (deploymentSettings.deploymentDeviceCount || deploymentSettings.filterId || deploymentSettings.group))
         : disableSchedule;
     const finalStep = activeStep === steps.length - 1;
     return (
-      <Dialog open={true} fullWidth={false} maxWidth="md">
+      <Dialog open={true} fullWidth={false} maxWidth="md" PaperProps={{ style: { maxWidth: 800 } }}>
         <DialogTitle>Create a deployment</DialogTitle>
         <DialogContent className="dialog">
           <Stepper activeStep={activeStep} alternativeLabel style={{ minWidth: '500px' }}>
@@ -188,13 +184,13 @@ export class CreateDialog extends React.Component {
             ))}
           </Stepper>
           <ComponentToShow
-            deploymentAnchor={this.deploymentRef}
-            filters={deploymentSettings.filterId ? groups[deploymentObject.group || group].filters : undefined}
             {...self.props}
-            {...self.state}
-            {...deploymentSettings}
-            setDeploymentSettings={(...args) => self.setDeploymentSettings(...args)}
+            deploymentAnchor={self.deploymentRef}
+            deploymentObject={deploymentSettings}
+            filters={deploymentSettings.filterId ? groups[deploymentObject.group || group].filters : undefined}
+            hasNewRetryDefault={hasNewRetryDefault}
             onSaveRetriesSetting={shouldSave => self.onSaveRetriesSetting(shouldSave)}
+            setDeploymentSettings={deploymentObject => self.setState({ deploymentObject })}
           />
         </DialogContent>
         <DialogActions className="margin-left margin-right">
@@ -241,7 +237,7 @@ export const mapStateToProps = state => {
     onboardingState: getOnboardingState(state),
     plan,
     previousPhases: state.users.globalSettings.previousPhases,
-    previousRetries: state.users.globalSettings.previousRetries || 0,
+    previousRetries: state.users.globalSettings.retries || 0,
     release: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null,
     releases: Object.values(state.releases.byId),
     retries: state.users.globalSettings.retries,

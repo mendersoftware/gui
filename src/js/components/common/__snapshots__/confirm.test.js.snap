@@ -2,8 +2,8 @@
 
 exports[`Confirm Component renders correctly 1`] = `
 <div
-  class="flexbox fadeIn "
-  style="margin-right: 12px; justify-content: flex-end; align-items: center;"
+  class="flexbox center-aligned fadeIn "
+  style="margin-right: 12px; justify-content: flex-end;"
 >
   <span
     class="bold"

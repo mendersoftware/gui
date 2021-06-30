@@ -8,7 +8,6 @@ import dynamicImage from '../../../assets/img/dynamic-group-creation.gif';
 export const defaultStyles = {
   columns: 'two-columns',
   groupType: { flexGrow: 1, padding: 25 },
-  heading: { alignItems: 'center' },
   icon: { color: '#7b7b7b' },
   image: { maxWidth: '100%' }
 };
@@ -17,7 +16,7 @@ export const CreateGroupExplainerContent = ({ styles = defaultStyles, isEnterpri
   <div className="flexbox column">
     <div className={`${styles.columns} margin-bottom`} style={styles.groupType}>
       <div className="margin-right-large">
-        <div className="flexbox margin-bottom" style={styles.heading}>
+        <div className="flexbox center-aligned margin-bottom">
           <LockOutlined fontSize="small" style={styles.icon} />
           <div className="bold margin-left-small">Static group</div>
         </div>
@@ -33,7 +32,7 @@ export const CreateGroupExplainerContent = ({ styles = defaultStyles, isEnterpri
       style={{ ...styles.groupType, padding: isEnterprise ? styles.groupType.padding : 25 }}
     >
       <div className="margin-right-large">
-        <div className="flexbox margin-bottom" style={styles.heading}>
+        <div className="flexbox center-aligned margin-bottom">
           <Autorenew fontSize="small" style={styles.icon} />
           <div className="bold margin-left-small margin-right">Dynamic group</div>
           {!isEnterprise && (

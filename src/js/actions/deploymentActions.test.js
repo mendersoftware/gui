@@ -2,7 +2,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { defaultState } from '../../../tests/mockData';
 
-import { abortDeployment, createDeployment, getDeploymentsByStatus, getDeviceLog, selectDeployment } from './deploymentActions';
+import { abortDeployment, createDeployment, getDeploymentsByStatus, getDeviceLog, selectDeployment, updateDeploymentControlMap } from './deploymentActions';
 import AppConstants from '../constants/appConstants';
 import DeploymentConstants from '../constants/deploymentConstants';
 
@@ -175,6 +175,15 @@ describe('deployment actions', () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [defaultResponseActions.log];
     return store.dispatch(getDeviceLog(Object.keys(defaultState.deployments.byId)[0], defaultState.deployments.byId.d1.devices.a1.id)).then(() => {
+      const storeActions = store.getActions();
+      expect(storeActions.length).toEqual(expectedActions.length);
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    });
+  });
+  it('should allow updating a deployment to continue the execution', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [defaultResponseActions.receive, defaultResponseActions.stats];
+    return store.dispatch(updateDeploymentControlMap(createdDeployment.id, { something: 'continue' })).then(() => {
       const storeActions = store.getActions();
       expect(storeActions.length).toEqual(expectedActions.length);
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

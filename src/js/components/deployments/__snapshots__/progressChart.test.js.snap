@@ -9,7 +9,7 @@ exports[`ProgressChart Component renders correctly 1`] = `
       style="display: grid; grid-template-columns: 2fr 1fr;"
     >
       <div
-        class="progress-chart"
+        class="progress-chart "
       >
         <div
           class="progress-step"

@@ -47,7 +47,7 @@ export const ReleasesList = ({ loading, onFilter, onSelect, releases, selectedRe
 
   return (
     <div className="repository-list flexbox column overflow-hidden">
-      <div className="flexbox" style={{ alignItems: 'center', ...heightEnsuringStyle }}>
+      <div className="flexbox center-aligned" style={heightEnsuringStyle}>
         <h3>Releases</h3>
         <TextField placeholder="Filter" className="search" onChange={e => searchUpdated(e.target.value)} style={{ marginLeft: 30, marginTop: 0 }} />
       </div>

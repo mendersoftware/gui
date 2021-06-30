@@ -11,6 +11,7 @@ export const colors = {
   alertpurple: '#7D3F69', //
   textColor: 'rgba(0, 0, 0, 0.8)',
   mutedText: 'rgba(0, 0, 0, 0.3)',
+  tooltipText: '#DECFD9',
   alternateTextColor: 'white',
   canvasColor: 'white',
   borderColor: '#e0e0e0',

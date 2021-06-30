@@ -27,7 +27,6 @@ const iconStyles = {
 };
 
 const headerStyle = {
-  alignItems: 'center',
   justifyContent: 'flex-end'
 };
 
@@ -84,7 +83,7 @@ export const Deployments = ({ clickHandle, finishedCount, inprogressCount, onboa
   const pendingWidgetMain = {
     counter: pendingCount,
     header: (
-      <div className="flexbox" style={headerStyle}>
+      <div className="flexbox center-aligned" style={headerStyle}>
         <UpdateIcon className="flip-horizontal" style={iconStyles} />
         <div>Pending {pluralize('deployment', pendingCount)}</div>
       </div>
@@ -94,7 +93,7 @@ export const Deployments = ({ clickHandle, finishedCount, inprogressCount, onboa
   const activeWidgetMain = {
     counter: inprogressCount,
     header: (
-      <div className="flexbox" style={headerStyle}>
+      <div className="flexbox center-aligned" style={headerStyle}>
         <RefreshIcon className="flip-horizontal" style={iconStyles} />
         <div>{pluralize('Deployment', inprogressCount)} in progress</div>
       </div>

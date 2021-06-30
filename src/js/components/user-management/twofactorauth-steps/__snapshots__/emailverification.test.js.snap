@@ -9,8 +9,7 @@ exports[`EmailVerification Component renders correctly 1`] = `
     <br />
     Once you click the button below we will send you an email with a confirmation link in it and a confirmation field will appear below. Click on the link to complete the verification. If the link does not work, you can also enter the confirmation code from the link in a confirmation field that will appear below once you clicked the button.
     <div
-      class="flexbox"
-      style="align-items: center;"
+      class="flexbox center-aligned"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"

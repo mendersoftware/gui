@@ -132,7 +132,7 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
                   style="display: grid; grid-template-columns: 2fr 1fr;"
                 >
                   <div
-                    class="progress-chart"
+                    class="progress-chart "
                   >
                     <div
                       class="progress-step"
@@ -226,7 +226,7 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    class="deployments-pending margin-top"
+    class="deployments-pending margin-top margin-bottom-large"
   >
     <h4
       class="dashboard-header margin-small margin-top"
@@ -346,55 +346,23 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
               Status
             </span>
             <div
-              class="flexbox column progress-chart-container "
+              class="flexbox center-aligned"
             >
-              <div
-                style="display: grid; grid-template-columns: 2fr 1fr;"
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit"
+                focusable="false"
+                viewBox="0 0 24 24"
               >
-                <div
-                  class="progress-chart"
-                >
-                  <div
-                    class="progress-step"
-                    style="flex-grow: 1;"
-                  >
-                    <div
-                      class="flexbox"
-                      style="width: 100%;"
-                    >
-                      <div
-                        class="progress-bar green"
-                        style="width: 0%;"
-                      />
-                      <div
-                        class="progress-bar warning"
-                        style="width: 0%;"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="progress-step progress-step-total"
-                  >
-                    <div
-                      class="progress-bar"
-                      style="width: 100%;"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="flexbox space-between centered muted"
-                  style="justify-content: flex-end;"
-                >
-                  0 failures
-                </div>
-              </div>
-              <div
-                class="flexbox space-between muted"
+                <path
+                  d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,10.5A1.5,1.5 0 0,1 13.5,12A1.5,1.5 0 0,1 12,13.5A1.5,1.5 0 0,1 10.5,12A1.5,1.5 0 0,1 12,10.5M7.5,10.5A1.5,1.5 0 0,1 9,12A1.5,1.5 0 0,1 7.5,13.5A1.5,1.5 0 0,1 6,12A1.5,1.5 0 0,1 7.5,10.5M16.5,10.5A1.5,1.5 0 0,1 18,12A1.5,1.5 0 0,1 16.5,13.5A1.5,1.5 0 0,1 15,12A1.5,1.5 0 0,1 16.5,10.5Z"
+                />
+              </svg>
+              <span
+                class="margin-left-small"
               >
-                <div>
-                  Current phase: 1 of 1
-                </div>
-              </div>
+                Queued to start
+              </span>
             </div>
           </div>
           <button

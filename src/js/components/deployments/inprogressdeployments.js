@@ -147,7 +147,7 @@ export class Progress extends React.Component {
         )}
         {!!onboardingComponent && onboardingComponent}
         {!!(pendingCount && pending.length) && (
-          <div className="deployments-pending margin-top">
+          <div className="deployments-pending margin-top margin-bottom-large">
             <h4 className="dashboard-header margin-small margin-top">
               <span>Pending</span>
             </h4>

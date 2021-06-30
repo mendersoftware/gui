@@ -28,7 +28,7 @@ let socket = null;
 
 const ConnectionIndicator = isConnected => {
   return (
-    <div className="flexbox" style={{ alignItems: 'center' }}>
+    <div className="flexbox center-aligned">
       Remote terminal{' '}
       {
         <SvgIcon fontSize="inherit" style={{ color: isConnected ? colors.green : colors.red, marginLeft: theme.spacing() }}>

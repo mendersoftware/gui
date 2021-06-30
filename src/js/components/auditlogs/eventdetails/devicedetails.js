@@ -32,7 +32,7 @@ export const DeviceDetails = ({ device, idAttribute, onClose }) => {
   const deviceDetails = {
     ...nameContainer,
     [usesId ? 'Device ID' : idAttribute]: (
-      <Link className="flexbox" style={{ alignItems: 'center', color: colors.disabledColor, fontWeight: 'initial' }} to={`/devices?id=${device.id}`}>
+      <Link className="flexbox center-aligned" style={{ color: colors.disabledColor, fontWeight: 'initial' }} to={`/devices?id=${device.id}`}>
         <span>{usesId ? device.id : (device.identity_data || {})[idAttribute]}</span>
         <LaunchIcon className="margin-left-small link-color" fontSize="small" />
       </Link>

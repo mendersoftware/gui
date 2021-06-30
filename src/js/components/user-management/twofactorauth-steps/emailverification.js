@@ -35,7 +35,7 @@ export const EmailVerification = ({ activationCode, verifyEmailComplete, verifyE
       complete the verification. If the link does not work, you can also enter the confirmation code from the link in a confirmation field that will appear
       below once you clicked the button.
       {!isVerifying ? (
-        <div className="flexbox" style={{ alignItems: 'center' }}>
+        <div className="flexbox center-aligned">
           <Button variant="contained" disabled={isLoading} color="primary" onClick={startVerification} style={{ marginTop: 20, marginRight: 30 }}>
             Verify your email address
           </Button>

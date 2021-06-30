@@ -24,6 +24,7 @@ exports[`CreateDeployment Component renders correctly 1`] = `
     <div
       class="MuiPaper-root MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthMd MuiPaper-elevation24 MuiPaper-rounded"
       role="dialog"
+      style="max-width: 800px;"
     >
       <div
         class="MuiDialogTitle-root"
@@ -77,7 +78,7 @@ exports[`CreateDeployment Component renders correctly 1`] = `
                 <span
                   class="MuiTypography-root MuiStepLabel-label MuiStepLabel-alternativeLabel MuiStepLabel-active MuiTypography-body2 MuiTypography-displayBlock"
                 >
-                  Select target software and devices
+                  Select devices and Release
                 </span>
               </span>
             </span>
@@ -135,101 +136,16 @@ exports[`CreateDeployment Component renders correctly 1`] = `
           style="overflow: visible; min-height: 300px; margin-top: 15px;"
         >
           <form
-            class="flexbox centered column"
+            class="flexbox column margin margin-top-none"
           >
-            <div
-              style="min-width: min-content; min-height: 105px;"
+            <h4
+              style="margin-bottom: 0px;"
             >
-              <div
-                aria-expanded="false"
-                class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon MuiAutocomplete-hasPopupIcon"
-                role="combobox"
-              >
-                <div
-                  class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
-                  style="min-width: 400px;"
-                >
-                  <label
-                    class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-                    data-shrink="false"
-                    for="deployment-release-selection"
-                    id="deployment-release-selection-label"
-                  >
-                    Select a Release to deploy
-                  </label>
-                  <div
-                    class="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
-                  >
-                    <input
-                      aria-autocomplete="list"
-                      aria-invalid="false"
-                      autocapitalize="none"
-                      autocomplete="off"
-                      class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
-                      id="deployment-release-selection"
-                      spellcheck="false"
-                      type="text"
-                      value=""
-                    />
-                    <div
-                      class="MuiAutocomplete-endAdornment"
-                    >
-                      <button
-                        aria-label="Clear"
-                        class="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator"
-                        tabindex="-1"
-                        title="Clear"
-                        type="button"
-                      >
-                        <span
-                          class="MuiIconButton-label"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                            focusable="false"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-                            />
-                          </svg>
-                        </span>
-                        <span
-                          class="MuiTouchRipple-root"
-                        />
-                      </button>
-                      <button
-                        aria-label="Open"
-                        class="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-popupIndicator"
-                        tabindex="-1"
-                        title="Open"
-                        type="button"
-                      >
-                        <span
-                          class="MuiIconButton-label"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            class="MuiSvgIcon-root"
-                            focusable="false"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              d="M7 10l5 5 5-5z"
-                            />
-                          </svg>
-                        </span>
-                        <span
-                          class="MuiTouchRipple-root"
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div>
+              Select a device group to target
+            </h4>
+            <div
+              style="min-width: min-content; max-width: 400px; min-height: 105px;"
+            >
               <div>
                 <div
                   aria-expanded="false"
@@ -240,14 +156,6 @@ exports[`CreateDeployment Component renders correctly 1`] = `
                     class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
                     style="min-width: 400px;"
                   >
-                    <label
-                      class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-                      data-shrink="false"
-                      for="deployment-device-group-selection"
-                      id="deployment-device-group-selection-label"
-                    >
-                      Select a device group to deploy to
-                    </label>
                     <div
                       class="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
                     >
@@ -258,6 +166,7 @@ exports[`CreateDeployment Component renders correctly 1`] = `
                         autocomplete="off"
                         class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
                         id="deployment-device-group-selection"
+                        placeholder="Select a device group"
                         spellcheck="false"
                         type="text"
                         value=""
@@ -321,6 +230,112 @@ exports[`CreateDeployment Component renders correctly 1`] = `
                 </div>
               </div>
             </div>
+            <h4
+              style="margin-bottom: 0px;"
+            >
+              Select a Release to deploy
+            </h4>
+            <div
+              style="min-width: min-content; max-width: 400px; min-height: 105px;"
+            >
+              <div
+                aria-expanded="false"
+                class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon MuiAutocomplete-hasPopupIcon"
+                role="combobox"
+              >
+                <div
+                  class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+                  style="min-width: 400px;"
+                >
+                  <div
+                    class="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-invalid="false"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
+                      id="deployment-release-selection"
+                      placeholder="Select a Release"
+                      spellcheck="false"
+                      type="text"
+                      value=""
+                    />
+                    <div
+                      class="MuiAutocomplete-endAdornment"
+                    >
+                      <button
+                        aria-label="Clear"
+                        class="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator"
+                        tabindex="-1"
+                        title="Clear"
+                        type="button"
+                      >
+                        <span
+                          class="MuiIconButton-label"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                            />
+                          </svg>
+                        </span>
+                        <span
+                          class="MuiTouchRipple-root"
+                        />
+                      </button>
+                      <button
+                        aria-label="Open"
+                        class="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-popupIndicator"
+                        tabindex="-1"
+                        title="Open"
+                        type="button"
+                      >
+                        <span
+                          class="MuiIconButton-label"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M7 10l5 5 5-5z"
+                            />
+                          </svg>
+                        </span>
+                        <span
+                          class="MuiTouchRipple-root"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p
+              class="info icon"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                focusable="false"
+                style="vertical-align: middle; margin: 0px 6px 4px 0px;"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                />
+              </svg>
+              The deployment will skip any devices in the group that are already on the target Release version, or that have an incompatible device type.
+            </p>
           </form>
         </div>
       </div>

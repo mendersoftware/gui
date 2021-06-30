@@ -9,7 +9,7 @@ export const RelativeDeviceTime = device => <RelativeTime updateTime={device.upd
 export const DeviceStatusHeading = device => (device.status ? <div className="capitalized">{device.status}</div> : '-');
 export const DeviceCreationTime = device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-');
 export const DeviceExpansion = () => (
-  <div className="bold flexbox link-color margin-right-small uppercased" style={{ alignItems: 'center', whiteSpace: 'nowrap' }}>
+  <div className="bold flexbox center-aligned link-color margin-right-small uppercased" style={{ whiteSpace: 'nowrap' }}>
     view details <ArrowRightAltIcon />
   </div>
 );

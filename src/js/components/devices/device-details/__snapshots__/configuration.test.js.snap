@@ -12,8 +12,7 @@ exports[`Configuration Component renders correctly 1`] = `
       class="two-columns"
     >
       <div
-        class="flexbox"
-        style="align-items: center;"
+        class="flexbox center-aligned"
       >
         <h4
           class="margin-right"

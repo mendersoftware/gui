@@ -9,15 +9,13 @@ exports[`AuthStatus Component renders correctly 1`] = `
     style="align-items: flex-start;"
   >
     <div
-      class="flexbox"
-      style="align-items: center;"
+      class="flexbox center-aligned"
     >
       <h4>
         Authentication status
       </h4>
       <div
-        class="flexbox margin-left margin-right"
-        style="align-items: center;"
+        class="flexbox center-aligned margin-left margin-right"
       >
         <div
           class="capitalized"

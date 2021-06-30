@@ -23,8 +23,8 @@ exports[`GlobalSettings Component renders correctly 1`] = `
     Billing will be scheduled monthly, starting from today. You can cancel at any time.
   </p>
   <div
-    class="flexbox margin-top-small"
-    style="align-items: center; justify-content: flex-end;"
+    class="flexbox center-aligned margin-top-small"
+    style="justify-content: flex-end;"
   >
     <button
       class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary Mui-disabled Mui-disabled"

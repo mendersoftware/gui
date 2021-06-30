@@ -13,8 +13,8 @@ exports[`Artifacts Component renders correctly 1`] = `
         class="repository-list flexbox column overflow-hidden"
       >
         <div
-          class="flexbox"
-          style="align-items: center; min-height: min-content;"
+          class="flexbox center-aligned"
+          style="min-height: min-content;"
         >
           <h3>
             Releases
@@ -176,8 +176,7 @@ exports[`Artifacts Component renders correctly 1`] = `
         />
       </button>
       <p
-        class="info flexbox"
-        style="align-items: center;"
+        class="info flexbox center-aligned"
       >
         <svg
           aria-hidden="true"

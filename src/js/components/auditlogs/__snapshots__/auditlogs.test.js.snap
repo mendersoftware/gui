@@ -314,8 +314,8 @@ exports[`Auditlogs Component renders correctly 1`] = `
       </div>
     </div>
     <div
-      class=\\"flexbox\\"
-      style=\\"align-items: center; justify-content: flex-end;\\"
+      class=\\"flexbox center-aligned\\"
+      style=\\"justify-content: flex-end;\\"
     >
       <div
         class=\\"loaderContainer shrunk\\"

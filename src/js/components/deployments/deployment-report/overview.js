@@ -73,7 +73,7 @@ export const DeploymentOverview = ({ allDevices, creator, deployment, onSchedule
       <TwoColumnData config={deploymentInfo} {...defaultColumnDataProps} />
       <div className="flexbox column">
         <TwoColumnData config={deploymentInfo2} {...defaultColumnDataProps} />
-        <a className="margin-top-small flexbox" onClick={onScheduleClick} style={{ ...defaultLinkProps, alignItems: 'center', marginLeft: theme.spacing(8) }}>
+        <a className="margin-top-small flexbox center-aligned" onClick={onScheduleClick} style={{ ...defaultLinkProps, marginLeft: theme.spacing(8) }}>
           Schedule details <ScrollDownIcon fontSize="small" style={{ marginLeft: theme.spacing() }} />
         </a>
       </div>

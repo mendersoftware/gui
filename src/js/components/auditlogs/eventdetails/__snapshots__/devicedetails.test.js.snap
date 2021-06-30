@@ -23,9 +23,9 @@ exports[`DeviceDetails Component renders correctly 1`] = `
     </div>
     <div>
       <a
-        class="flexbox"
+        class="flexbox center-aligned"
         href="/devices?id=a1"
-        style="align-items: center; color: rgba(0, 0, 0, 0.54); font-weight: initial;"
+        style="color: rgba(0, 0, 0, 0.54); font-weight: initial;"
       >
         <span>
           a1
