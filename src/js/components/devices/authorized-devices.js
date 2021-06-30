@@ -22,8 +22,6 @@ import DeviceQuickActions from './devicequickactions';
 import Filters from './filters';
 import theme from '../../themes/mender-theme';
 
-import { sortingAlternatives } from './device-groups';
-
 const refreshDeviceLength = 10000;
 let timer;
 
@@ -141,6 +139,16 @@ export const Authorized = props => {
     timer = setInterval(getDevices, refreshDeviceLength);
     getDevices(true);
   }, [filters, pageNo, selectedGroup, selectedState, sortCol, sortDown, sortScope, deviceRefreshTrigger]);
+
+  const sortingAlternatives = Object.values(states)
+    .reduce((accu, item) => [...accu, ...item.defaultHeaders], [])
+    .reduce((accu, item) => {
+      if (item.attribute.alternative) {
+        accu[item.attribute.name] = item.attribute.alternative;
+        accu[item.attribute.alternative] = item.attribute.name;
+      }
+      return accu;
+    }, {});
 
   /*
    * Devices

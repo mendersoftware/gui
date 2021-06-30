@@ -9,7 +9,7 @@ import GeneralApi, { headerNames, MAX_PAGE_SIZE } from '../api/general-api';
 import AppConstants from '../constants/appConstants';
 import DeviceConstants, { DEVICE_STATES } from '../constants/deviceConstants';
 
-import { extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
+import { deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
 
 // default per page until pagination and counting integrated
 const defaultPerPage = 20;
@@ -205,6 +205,13 @@ export const removeDynamicGroup = groupName => (dispatch, getState) => {
   });
 };
 
+const cleanFilters = (filters, selectedGroup, groupFilters = []) => {
+  if (selectedGroup && groupFilters.length) {
+    return filters.filter(filter => !groupFilters.some(groupFilter => deepCompare(groupFilter, filter)));
+  }
+  return filters;
+};
+
 /*
  * Device inventory functions
  */
@@ -214,13 +221,20 @@ export const selectGroup = (group, filters = []) => (dispatch, getState) => {
     return;
   }
   let tasks = [];
-  const selectedGroup = getState().devices.groups.byId[groupName];
+  const state = getState();
+  const selectedGroup = state.devices.groups.byId[groupName];
   if (selectedGroup && selectedGroup.filters && selectedGroup.filters.length) {
-    tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: selectedGroup.filters.concat(filters) }));
+    let cleanedFilters = [];
+    if (groupName !== DeviceConstants.UNGROUPED_GROUP.id) {
+      cleanedFilters = cleanFilters(filters, selectedGroup, selectedGroup.filters);
+    }
+    tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: selectedGroup.filters.concat(cleanedFilters) }));
   } else {
-    tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: filters }));
+    const currentlySelectedGroup = state.devices.groups.byId[state.devices.groups.selectedGroup];
+    const cleanedFilters = cleanFilters(filters, currentlySelectedGroup, currentlySelectedGroup?.filters);
+    tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: cleanedFilters }));
   }
-  const selectedGroupName = selectedGroup ? groupName : null;
+  const selectedGroupName = selectedGroup || !Object.keys(state.devices.groups.byId).length ? groupName : null;
   tasks.push(dispatch({ type: DeviceConstants.SELECT_GROUP, group: selectedGroupName }));
   return Promise.all(tasks);
 };
@@ -370,11 +384,14 @@ export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
   return getAllDevices();
 };
 
-export const setDeviceFilters = filters => dispatch =>
-  dispatch({
-    type: DeviceConstants.SET_DEVICE_FILTERS,
-    filters
-  });
+export const setDeviceFilters = filters => (dispatch, getState) => {
+  const state = getState();
+  if (deepCompare(filters, state.devices.filters)) {
+    return Promise.resolve();
+  }
+  let cleanedFilters = cleanFilters(filters, state.devices.selectedGroup, state.devices.groups.byId[state.devices.selectedGroup]?.filters);
+  return Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: cleanedFilters }));
+};
 
 export const getDeviceById = id => dispatch =>
   GeneralApi.get(`${inventoryApiUrl}/devices/${id}`)

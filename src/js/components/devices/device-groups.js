@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
 
@@ -27,7 +28,7 @@ import { setShowConnectingDialog } from '../../actions/userActions';
 import { getDocsVersion, getIsEnterprise, getLimitMaxed } from '../../selectors';
 import CreateGroupExplainer from './create-group-explainer';
 import Global from '../settings/global';
-import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { emptyFilter } from './filters';
 import PreauthDialog, { DeviceLimitWarning } from './preauth-dialog';
 import {
@@ -137,45 +138,32 @@ export const routes = {
   }
 };
 
-export const sortingAlternatives = Object.values(routes)
-  .reduce((accu, item) => [...accu, ...item.defaultHeaders], [])
-  .reduce((accu, item) => {
-    if (item.attribute.alternative) {
-      accu[item.attribute.name] = item.attribute.alternative;
-      accu[item.attribute.alternative] = item.attribute.name;
-    }
-    return accu;
-  }, {});
-
 export const convertQueryToFilterAndGroup = (query, filteringAttributes) => {
-  const search = query.startsWith('?') ? query.substring(1) : query;
-  const str = decodeURIComponent(search);
-  const filters = str.split('&').reduce(
-    (accu, filter) => {
-      const filterPair = filter.split('=');
-      let scope = {};
-      if (filterPair[0] === 'group') {
-        accu.groupName = filterPair[1];
+  const queryParams = new URLSearchParams(query);
+  let groupName = '';
+  if (queryParams.has('group')) {
+    groupName = queryParams.get('group');
+    queryParams.delete('group');
+  }
+  let filters = [];
+  if (queryParams.has('id')) {
+    filters.push({ ...emptyFilter, scope: 'identity', key: 'id', value: queryParams.get('id') });
+    queryParams.delete('id');
+  }
+  filters = [...queryParams.entries()].reduce((accu, filterPair) => {
+    const scope = Object.entries(filteringAttributes).reduce(
+      (accu, [attributesType, attributes]) => {
+        if (attributes.includes(filterPair[0])) {
+          accu.scope = attributesType.substring(0, attributesType.indexOf('Attr'));
+        }
         return accu;
-      } else if (filterPair[0] === 'id') {
-        scope = { scope: 'identity' };
-      } else {
-        scope = Object.entries(filteringAttributes).reduce(
-          (accu, [attributesType, attributes]) => {
-            if (attributes.includes(filterPair[0])) {
-              accu.scope = attributesType.substring(0, attributesType.indexOf('Attr'));
-            }
-            return accu;
-          },
-          { scope: emptyFilter.scope }
-        );
-      }
-      accu.filters.push({ ...emptyFilter, ...scope, key: filterPair[0], value: filterPair[1] });
-      return accu;
-    },
-    { filters: [], groupName: '' }
-  );
-  return filters;
+      },
+      { scope: emptyFilter.scope }
+    );
+    accu.push({ ...emptyFilter, ...scope, key: filterPair[0], value: filterPair[1] });
+    return accu;
+  }, filters);
+  return { filters, groupName };
 };
 
 let deviceTimer;
@@ -188,6 +176,7 @@ export const DeviceGroups = ({
   deviceLimit,
   deviceListState,
   docsVersion,
+  filteringAttributes,
   filters,
   getAllDeviceCounts,
   getDynamicGroups,
@@ -200,6 +189,7 @@ export const DeviceGroups = ({
   identityAttributes,
   isEnterprise,
   limitMaxed,
+  match,
   pendingCount,
   selectedGroup,
   selectGroup,
@@ -226,6 +216,14 @@ export const DeviceGroups = ({
     refreshGroups();
     clearInterval(deviceTimer);
     deviceTimer = setInterval(getAllDeviceCounts, refreshLength);
+    const { status = '' } = match.params;
+    if (status && selectedState !== status) {
+      setDeviceListState({ state: status });
+    }
+    const { pathname, search } = generateBrowserLocation(status, filters, selectedGroup, true);
+    if (pathname !== history.location.pathname || history.location.search !== `?${search}`) {
+      history.replace({ pathname, search }); // lgtm [js/client-side-unvalidated-url-redirection]
+    }
     return () => {
       clearInterval(deviceTimer);
     };
@@ -234,6 +232,53 @@ export const DeviceGroups = ({
   useEffect(() => {
     refreshGroups();
   }, [groupCount]);
+
+  useEffect(() => {
+    const { filters: filterQuery = '' } = match.params;
+    const query = filterQuery || history.location.search;
+    if (query) {
+      const { filters: queryFilters, groupName } = convertQueryToFilterAndGroup(query, filteringAttributes);
+      if (groupName) {
+        selectGroup(groupName, queryFilters);
+      } else if (queryFilters) {
+        setDeviceFilters(queryFilters);
+      }
+    }
+  }, [match.params.filters, history.location.search]);
+
+  useEffect(() => {
+    if (!deviceTimer) {
+      return;
+    }
+    const { pathname, search } = generateBrowserLocation(selectedState, filters, selectedGroup);
+    if (pathname !== history.location.pathname || history.location.search !== `?${search}`) {
+      history.replace({ pathname, search }); // lgtm [js/client-side-unvalidated-url-redirection]
+    }
+  }, [selectedState, filters, selectedGroup]);
+
+  const generateBrowserLocation = (selectedState, filters, selectedGroup, isInitialization) => {
+    const activeFilters = filters.filter(item => item.value !== '');
+    let searchParams = new URLSearchParams(isInitialization ? history.location.search : undefined);
+    searchParams = activeFilters.reduce((accu, item) => {
+      if (!accu.getAll(item.key).includes(item.value)) {
+        accu.append(item.key, item.value);
+      }
+      return accu;
+    }, searchParams);
+    if (selectedGroup) {
+      searchParams.set('group', selectedGroup);
+      if (selectedGroup === UNGROUPED_GROUP.id) {
+        searchParams = new URLSearchParams();
+      }
+    }
+    const search = searchParams.toString();
+    const path = [history.location.pathname.substring(0, '/devices'.length)];
+    if (![DEVICE_STATES.accepted, routes.allDevices.key, ''].includes(selectedState)) {
+      path.push(selectedState);
+    }
+    let pathname = path.join('/');
+    return { pathname, search };
+  };
 
   /*
    * Groups
@@ -247,8 +292,7 @@ export const DeviceGroups = ({
   };
 
   const handleGroupChange = group => {
-    selectGroup(group);
-    history.push(group ? `/devices?group=${group}` : '/devices');
+    selectGroup(group, filters);
   };
 
   const removeCurrentGroup = () => {
@@ -433,6 +477,7 @@ const mapStateToProps = state => {
     deviceLimit: state.devices.limit,
     deviceListState: state.devices.deviceList,
     docsVersion: getDocsVersion(state),
+    filteringAttributes: state.devices.filteringAttributes,
     filters: state.devices.filters || [],
     groups: Object.keys(state.devices.groups.byId).sort(),
     groupsById: state.devices.groups.byId,
@@ -447,4 +492,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, actionCreators)(DeviceGroups);
+export default withRouter(connect(mapStateToProps, actionCreators)(DeviceGroups));

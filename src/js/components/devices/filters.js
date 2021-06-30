@@ -99,15 +99,6 @@ export const Filters = ({
     onFilterChange(activeFilters);
     if (activeFilters.length === 0) {
       setAdding(true);
-    } else {
-      const location = window.location.hash.substring(0, window.location.hash.indexOf('?')) || window.location.hash;
-      const search = activeFilters
-        .reduce((accu, item) => {
-          accu.push(`${item.key}=${item.value}`);
-          return accu;
-        }, [])
-        .join('&');
-      window.location.replace(`${location}?${search}`); // lgtm [js/client-side-unvalidated-url-redirection]
     }
   };
 
@@ -189,7 +180,7 @@ const mapStateToProps = (state, ownProps) => {
     ];
   }
   const selectedGroup = state.devices.groups.selectedGroup;
-  const groupFilters = selectedGroup ? state.devices.groups.byId[selectedGroup].filters || [] : [];
+  const groupFilters = state.devices.groups.byId[selectedGroup]?.filters ?? [];
   return {
     attributes: attributes.filter((item, index, array) => array.findIndex(filter => filter.key === item.key && filter.scope === item.scope) == index),
     canFilterMultiple: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
