@@ -143,9 +143,9 @@ export const Filters = ({
             isEnterprise={isEnterprise || (isHosted && plan === 'enterprise')}
             benefit="filtering by multiple attributes to improve the device overview and the creation of dynamic groups to ease device management"
           />
-          {canFilterMultiple && (plan === 'enterprise' || isEnterprise) && filters.length >= 1 && (
+          {!selectedGroup && canFilterMultiple && (plan === 'enterprise' || isEnterprise) && filters.length >= 1 && (
             <Button variant="contained" color="secondary" onClick={onGroupClick}>
-              {selectedGroup ? 'Save group' : 'Create group with this filter'}
+              Create group with this filter
             </Button>
           )}
         </div>

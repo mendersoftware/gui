@@ -215,13 +215,6 @@ export const Authorized = props => {
       .finally(() => setPageLoading(false));
   };
 
-  const onCreateGroupClick = () => {
-    if (selectedGroup) {
-      setShowFilters(!showFilters);
-    }
-    return onGroupClick();
-  };
-
   const handlePageChange = page => {
     setPageLoading(true);
     setDeviceListState({ page });
@@ -329,7 +322,7 @@ export const Authorized = props => {
             </div>
           )}
         </div>
-        <Filters onFilterChange={onFilterChange} onGroupClick={onCreateGroupClick} isModification={!!groupFilters.length} open={showFilters} />
+        <Filters onFilterChange={onFilterChange} onGroupClick={onGroupClick} isModification={!!groupFilters.length} open={showFilters} />
       </div>
       <Loader show={!isInitialized} />
       {isInitialized ? (
