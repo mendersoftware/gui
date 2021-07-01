@@ -309,7 +309,7 @@ export const getGroupDevices = (group, options) => (dispatch, getState) =>
   });
 
 export const getAllGroupDevices = (group, shouldIncludeAllStates) => (dispatch, getState) => {
-  if (!!group && (!getState().devices.groups.byId[group] || getState().devices.groups.byId[group].filters.length)) {
+  if (!group || (!!group && (!getState().devices.groups.byId[group] || getState().devices.groups.byId[group].filters.length))) {
     return Promise.resolve();
   }
   const attributes = [...defaultAttributes, { scope: 'identity', attribute: getState().users.globalSettings.id_attribute || 'id' }];
