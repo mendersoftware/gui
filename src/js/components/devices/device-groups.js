@@ -208,7 +208,6 @@ export const DeviceGroups = ({
   const [openPreauth, setOpenPreauth] = useState(false);
   const [removeGroup, setRemoveGroup] = useState(false);
   const [tmpDevices, setTmpDevices] = useState([]);
-  const [quickFilterResetTrigger, setQuickFilterResetTrigger] = useState(false);
 
   const { state: selectedState } = deviceListState;
 
@@ -319,9 +318,6 @@ export const DeviceGroups = ({
   };
 
   const onGroupClick = () => {
-    if (selectedGroup) {
-      return updateDynamicGroup(selectedGroup, filters);
-    }
     setModifyGroupDialog(true);
     setFromFilters(true);
   };
@@ -355,11 +351,11 @@ export const DeviceGroups = ({
 
   const onFilterDevices = (value, key) => {
     setDeviceListState({ state: routes.allDevices.key });
-    setDeviceFilters([{ scope: 'identity', key, operator: '$eq', value }]);
-  };
-
-  const onClearSearchClick = () => {
-    setQuickFilterResetTrigger(!quickFilterResetTrigger);
+    if (key) {
+      selectGroup(undefined, [{ scope: 'identity', key, operator: '$eq', value }]);
+    } else {
+      setDeviceFilters([]);
+    }
   };
 
   const onShowDeviceStateClick = state => {
@@ -372,7 +368,7 @@ export const DeviceGroups = ({
       <div className="flexbox space-between margin-right">
         <div className="flexbox padding-top-small">
           <h3 style={{ minWidth: 300, marginTop: 0 }}>Devices</h3>
-          <QuickFilter attributes={identityAttributes} onChange={onFilterDevices} resetTrigger={quickFilterResetTrigger} />
+          <QuickFilter attributes={identityAttributes} filters={filters} onChange={onFilterDevices} />
         </div>
         <DeviceAdditionWidget docsVersion={docsVersion} onConnectClick={setShowConnectingDialog} onPreauthClick={setOpenPreauth} />
       </div>
@@ -398,7 +394,6 @@ export const DeviceGroups = ({
             onGroupClick={onGroupClick}
             onGroupRemoval={() => setRemoveGroup(!removeGroup)}
             onPreauthClick={setOpenPreauth}
-            onClearSearchClick={onClearSearchClick}
             openSettingsDialog={openSettingsDialog}
             removeDevicesFromGroup={onRemoveDevicesFromGroup}
             states={routes}
