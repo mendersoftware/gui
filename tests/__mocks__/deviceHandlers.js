@@ -157,7 +157,7 @@ export const deviceHandlers = [
       filter => filter.scope === 'identity' && filter.attribute === 'status' && Object.values(DeviceConstants.DEVICE_STATES).includes(filter.value)
     );
     const status = filter?.value || '';
-    if (filters.length > 1) {
+    if (!status || filters.length > 1) {
       if (filters.find(filter => filter.attribute === 'group' && filter.value === Object.keys(defaultState.devices.groups.byId)[0])) {
         return res(ctx.set(headerNames.total, 2), ctx.json([inventoryDevice]));
       }

@@ -233,6 +233,7 @@ export const selectGroup = (group, filters = []) => (dispatch, getState) => {
     const currentlySelectedGroup = state.devices.groups.byId[state.devices.groups.selectedGroup];
     const cleanedFilters = cleanFilters(filters, currentlySelectedGroup, currentlySelectedGroup?.filters);
     tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: cleanedFilters }));
+    tasks.push(dispatch(getAllGroupDevices(groupName, true)));
   }
   const selectedGroupName = selectedGroup || !Object.keys(state.devices.groups.byId).length ? groupName : null;
   tasks.push(dispatch({ type: DeviceConstants.SELECT_GROUP, group: selectedGroupName }));
@@ -307,19 +308,20 @@ export const getGroupDevices = (group, options) => (dispatch, getState) =>
     );
   });
 
-export const getAllGroupDevices = group => (dispatch, getState) => {
+export const getAllGroupDevices = (group, shouldIncludeAllStates) => (dispatch, getState) => {
   if (!!group && (!getState().devices.groups.byId[group] || getState().devices.groups.byId[group].filters.length)) {
     return Promise.resolve();
   }
   const attributes = [...defaultAttributes, { scope: 'identity', attribute: getState().users.globalSettings.id_attribute || 'id' }];
+  let filters = [{ key: 'group', value: group, operator: '$eq', scope: 'system' }];
+  if (!shouldIncludeAllStates) {
+    filters.push({ key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' });
+  }
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
     GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
       page,
       per_page: perPage,
-      filters: mapFiltersToTerms([
-        { key: 'group', value: group, operator: '$eq', scope: 'system' },
-        { key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' }
-      ]),
+      filters: mapFiltersToTerms(filters),
       attributes
     }).then(res => {
       const state = getState();

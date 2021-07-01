@@ -95,8 +95,12 @@ describe('selecting things', () => {
   it('should allow static group selection', async () => {
     const store = mockStore({ ...defaultState });
     await store.dispatch(selectGroup('testGroup'));
+    // eslint-disable-next-line no-unused-vars
+    const { attributes, updated_ts, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
       { type: DeviceConstants.SET_DEVICE_FILTERS, filters: [] },
+      { type: DeviceConstants.SELECT_GROUP, group: 'testGroup' },
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: { ...expectedDevice, attributes } } },
       { type: DeviceConstants.SELECT_GROUP, group: 'testGroup' }
     ];
     const storeActions = store.getActions();
