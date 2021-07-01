@@ -107,8 +107,8 @@ export const removeStaticGroup = groupName => (dispatch, getState) => {
   const { deviceIds } = getState().devices.groups.byId[groupName];
   return Promise.resolve(dispatch(removeDevicesFromGroup(groupName, deviceIds))).then(() => {
     const selectedGroup = getState().devices.groups.selectedGroup === groupName ? undefined : getState().devices.groups.selectedGroup;
-    let groups = { ...getState().devices.groups.byId };
-    delete groups[groupName];
+    // eslint-disable-next-line no-unused-vars
+    const { [groupName]: removal, ...groups } = getState().devices.groups.byId;
     return Promise.all([
       dispatch({
         type: DeviceConstants.REMOVE_STATIC_GROUP,

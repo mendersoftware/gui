@@ -81,15 +81,20 @@ const deviceReducer = (state = initialState, action) => {
       const group = {
         ...maybeExistingGroup,
         deviceIds: deviceIds.filter(id => !action.deviceIds.includes(id)),
-        total: Math.max(total - 1, 0)
+        total: Math.max(total - action.deviceIds.length, 0)
       };
-      let byId = state.groups.byId;
+      let byId = {};
       let selectedGroup = state.groups.selectedGroup;
       if (group.total || group.deviceIds.length) {
-        byId[action.group] = group;
+        byId = {
+          ...state.groups.byId,
+          [action.group]: group
+        };
       } else if (state.groups.selectedGroup === action.group) {
         selectedGroup = null;
-        delete byId[action.group];
+        // eslint-disable-next-line no-unused-vars
+        const { [action.group]: removal, ...remainingById } = state.groups.byId;
+        byId = remainingById;
       }
       return {
         ...state,
