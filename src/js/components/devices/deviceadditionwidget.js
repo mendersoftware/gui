@@ -23,7 +23,7 @@ export const DeviceAdditionWidget = ({ docsVersion, onConnectClick, onPreauthCli
   const handleSelection = index => {
     setSelectedIndex(index);
     handleToggle();
-    options[index].action();
+    options[index].action(true);
   };
 
   return (
