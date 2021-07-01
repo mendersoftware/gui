@@ -41,6 +41,11 @@ export const Filters = ({
 }) => {
   const [adding, setAdding] = useState(isModification);
   const [newFilter, setNewFilter] = useState(emptyFilter);
+  const [currentFilters, setCurrentFilters] = useState([]);
+
+  useEffect(() => {
+    setCurrentFilters(filters);
+  }, [open]);
 
   useEffect(() => {
     setAdding(adding && groupFilters.length ? isModification : true);
@@ -73,36 +78,40 @@ export const Filters = ({
     if (removedFilter.key === 'id') {
       resetIdFilter();
     }
-    if (removedFilter.key === newFilter.key) {
+    if (deepCompare(newFilter, removedFilter)) {
       setNewFilter(emptyFilter);
     }
     if (!changedFilters.length) {
       setAdding(true);
     }
+    setCurrentFilters(changedFilters);
     handleFilterChange(changedFilters);
   };
 
   const clearFilters = () => {
     handleFilterChange([]);
     resetIdFilter();
+    setCurrentFilters([]);
     setNewFilter(emptyFilter);
   };
 
   const onAddClick = () => {
     setAdding(true);
+    if (Object.values(newFilter).every(thing => !!thing)) {
+      setCurrentFilters([...currentFilters, newFilter]);
+    }
     setNewFilter(emptyFilter);
   };
 
   const handleFilterChange = filters => {
     const activeFilters = filters.filter(item => item.value !== '');
     setDeviceFilters(activeFilters);
-    onFilterChange(activeFilters);
+    onFilterChange();
     if (activeFilters.length === 0) {
       setAdding(true);
     }
   };
 
-  const addedFilters = filters.filter(filter => filter !== newFilter);
   const filter = filters.find(filter => deepCompare(filter, newFilter)) || newFilter;
   const isFilterDefined = filter && Object.values(filter).every(thing => !!thing);
   const addButton = <Chip icon={<AddIcon />} label="Add a rule" color="primary" onClick={onAddClick} />;
@@ -110,13 +119,13 @@ export const Filters = ({
     <Collapse in={open} timeout="auto" className="filter-wrapper" unmountOnExit>
       <>
         <div className="flexbox">
-          <div className="margin-right" style={{ marginTop: addedFilters.length ? 8 : 25 }}>
+          <div className="margin-right" style={{ marginTop: currentFilters.length ? 8 : 25 }}>
             Devices matching:
           </div>
           <div>
-            {addedFilters.length ? (
+            {currentFilters.length ? (
               <div className="filter-list">
-                {addedFilters.map(item => (
+                {currentFilters.map(item => (
                   <Chip
                     className="margin-right-small"
                     key={`filter-${item.key}-${item.operator}-${item.value}`}

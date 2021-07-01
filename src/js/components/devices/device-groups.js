@@ -138,7 +138,7 @@ export const routes = {
   }
 };
 
-export const convertQueryToFilterAndGroup = (query, filteringAttributes) => {
+export const convertQueryToFilterAndGroup = (query, filteringAttributes, currentFilters) => {
   const queryParams = new URLSearchParams(query);
   let groupName = '';
   if (queryParams.has('group')) {
@@ -153,7 +153,9 @@ export const convertQueryToFilterAndGroup = (query, filteringAttributes) => {
   filters = [...queryParams.entries()].reduce((accu, filterPair) => {
     const scope = Object.entries(filteringAttributes).reduce(
       (accu, [attributesType, attributes]) => {
-        if (attributes.includes(filterPair[0])) {
+        if (currentFilters.some(filter => filter.key === filterPair[0])) {
+          accu.scope = currentFilters.find(filter => filter.key === filterPair[0]).scope;
+        } else if (attributes.includes(filterPair[0])) {
           accu.scope = attributesType.substring(0, attributesType.indexOf('Attr'));
         }
         return accu;
@@ -164,6 +166,30 @@ export const convertQueryToFilterAndGroup = (query, filteringAttributes) => {
     return accu;
   }, filters);
   return { filters, groupName };
+};
+
+export const generateBrowserLocation = (selectedState, filters, selectedGroup, location, isInitialization) => {
+  const activeFilters = filters.filter(item => item.value !== '');
+  let searchParams = new URLSearchParams(isInitialization ? location.search : undefined);
+  searchParams = activeFilters.reduce((accu, item) => {
+    if (!accu.getAll(item.key).includes(item.value)) {
+      accu.append(item.key, item.value);
+    }
+    return accu;
+  }, searchParams);
+  if (selectedGroup) {
+    searchParams.set('group', selectedGroup);
+    if (selectedGroup === UNGROUPED_GROUP.id) {
+      searchParams = new URLSearchParams();
+    }
+  }
+  const search = searchParams.toString();
+  const path = [location.pathname.substring(0, '/devices'.length)];
+  if (![DEVICE_STATES.accepted, routes.allDevices.key, ''].includes(selectedState)) {
+    path.push(selectedState);
+  }
+  let pathname = path.join('/');
+  return { pathname, search };
 };
 
 let deviceTimer;
@@ -218,11 +244,12 @@ export const DeviceGroups = ({
     refreshGroups();
     clearInterval(deviceTimer);
     deviceTimer = setInterval(getAllDeviceCounts, refreshLength);
-    const { status = '' } = match.params;
+    const { filters: filterQuery = '', status = '' } = match.params;
+    maybeSetGroupAndFilters(filterQuery);
     if (status && selectedState !== status) {
       setDeviceListState({ state: status });
     }
-    const { pathname, search } = generateBrowserLocation(status, filters, selectedGroup, true);
+    const { pathname, search } = generateBrowserLocation(status, filters, selectedGroup, history.location, true);
     if (pathname !== history.location.pathname || history.location.search !== `?${search}`) {
       history.replace({ pathname, search }); // lgtm [js/client-side-unvalidated-url-redirection]
     }
@@ -236,50 +263,30 @@ export const DeviceGroups = ({
   }, [groupCount]);
 
   useEffect(() => {
+    if (!deviceTimer) {
+      return;
+    }
+    const { pathname, search } = generateBrowserLocation(selectedState, filters, selectedGroup, history.location);
+    if (pathname !== history.location.pathname || history.location.search !== `?${search}`) {
+      history.replace({ pathname, search }); // lgtm [js/client-side-unvalidated-url-redirection]
+    }
+  }, [selectedState, filters, selectedGroup]);
+
+  useEffect(() => {
     const { filters: filterQuery = '' } = match.params;
+    maybeSetGroupAndFilters(filterQuery);
+  }, [filters, match.params.filters, history.location.search]);
+
+  const maybeSetGroupAndFilters = filterQuery => {
     const query = filterQuery || history.location.search;
     if (query) {
-      const { filters: queryFilters, groupName } = convertQueryToFilterAndGroup(query, filteringAttributes);
+      const { filters: queryFilters, groupName } = convertQueryToFilterAndGroup(query, filteringAttributes, filters);
       if (groupName) {
         selectGroup(groupName, queryFilters);
       } else if (queryFilters) {
         setDeviceFilters(queryFilters);
       }
     }
-  }, [match.params.filters, history.location.search]);
-
-  useEffect(() => {
-    if (!deviceTimer) {
-      return;
-    }
-    const { pathname, search } = generateBrowserLocation(selectedState, filters, selectedGroup);
-    if (pathname !== history.location.pathname || history.location.search !== `?${search}`) {
-      history.replace({ pathname, search }); // lgtm [js/client-side-unvalidated-url-redirection]
-    }
-  }, [selectedState, filters, selectedGroup]);
-
-  const generateBrowserLocation = (selectedState, filters, selectedGroup, isInitialization) => {
-    const activeFilters = filters.filter(item => item.value !== '');
-    let searchParams = new URLSearchParams(isInitialization ? history.location.search : undefined);
-    searchParams = activeFilters.reduce((accu, item) => {
-      if (!accu.getAll(item.key).includes(item.value)) {
-        accu.append(item.key, item.value);
-      }
-      return accu;
-    }, searchParams);
-    if (selectedGroup) {
-      searchParams.set('group', selectedGroup);
-      if (selectedGroup === UNGROUPED_GROUP.id) {
-        searchParams = new URLSearchParams();
-      }
-    }
-    const search = searchParams.toString();
-    const path = [history.location.pathname.substring(0, '/devices'.length)];
-    if (![DEVICE_STATES.accepted, routes.allDevices.key, ''].includes(selectedState)) {
-      path.push(selectedState);
-    }
-    let pathname = path.join('/');
-    return { pathname, search };
   };
 
   /*
