@@ -91,7 +91,7 @@ export const Authorized = props => {
     clearInterval(timer);
     // no group, no filters, all devices
     timer = setInterval(getDevices, refreshDeviceLength);
-    getDevices(true);
+    getDevices();
     window.addEventListener('resize', handleResize);
     return () => {
       clearInterval(timer);
@@ -137,7 +137,7 @@ export const Authorized = props => {
     onSelectionChange([]);
     clearInterval(timer);
     timer = setInterval(getDevices, refreshDeviceLength);
-    getDevices(true);
+    getDevices();
   }, [filters, pageNo, selectedGroup, selectedState, sortCol, sortDown, sortScope, deviceRefreshTrigger]);
 
   const sortingAlternatives = Object.values(states)
@@ -153,17 +153,16 @@ export const Authorized = props => {
   /*
    * Devices
    */
-  const getDevices = (shouldUpdate = false) => {
+  const getDevices = () => {
     const sortBy = sortCol ? [{ attribute: sortCol, order: sortDown, scope: sortScope }] : undefined;
     if (sortCol && sortingAlternatives[sortCol]) {
       sortBy.push({ ...sortBy[0], attribute: sortingAlternatives[sortCol] });
     }
-    const hasFilters = filters.length && filters[0].value;
     const applicableSelectedState = selectedState === states.allDevices.key ? undefined : selectedState;
     getDevicesByStatus(applicableSelectedState, {
       page: pageNo,
       perPage: pageLength,
-      shouldSelectDevices: shouldUpdate || hasFilters,
+      shouldSelectDevices: true,
       group: selectedGroup,
       sortOptions: sortBy
     })
@@ -195,7 +194,7 @@ export const Authorized = props => {
     const deviceIds = rows.map(row => devices[row].id);
     return updateDevicesAuth(deviceIds, changedState).then(() => {
       onSelectionChange([]);
-      setPageLoading(false);
+      getDevices();
     });
   };
 
@@ -211,7 +210,7 @@ export const Authorized = props => {
       // on finish, change "loading" back to null
       .then(() => {
         onSelectionChange([]);
-        getDevices(true);
+        getDevices();
       })
       .finally(() => setPageLoading(false));
   };

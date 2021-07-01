@@ -93,7 +93,7 @@ export const ExpandedDevice = ({
     // close expanded device
     // trigger reset of list!
     return decommissionDevice(device_id).finally(() => {
-      refreshDevices(true);
+      refreshDevices();
       onClose();
     });
   };
@@ -131,7 +131,7 @@ export const ExpandedDevice = ({
       <AuthStatus
         device={device}
         decommission={onDecommissionDevice}
-        deviceListRefresh={() => refreshDevices(true)}
+        deviceListRefresh={refreshDevices}
         disableBottomBorder={!isAcceptedDevice}
         showHelptips={showHelptips}
       />
