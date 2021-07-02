@@ -204,14 +204,6 @@ export const removeDynamicGroup = groupName => (dispatch, getState) => {
     ]);
   });
 };
-
-const cleanFilters = (filters, selectedGroup, groupFilters = []) => {
-  if (selectedGroup && groupFilters.length) {
-    return filters.filter(filter => !groupFilters.some(groupFilter => deepCompare(groupFilter, filter)));
-  }
-  return filters;
-};
-
 /*
  * Device inventory functions
  */
@@ -223,16 +215,11 @@ export const selectGroup = (group, filters = []) => (dispatch, getState) => {
   let tasks = [];
   const state = getState();
   const selectedGroup = state.devices.groups.byId[groupName];
-  if (selectedGroup && selectedGroup.filters && selectedGroup.filters.length) {
-    let cleanedFilters = [];
-    if (groupName !== DeviceConstants.UNGROUPED_GROUP.id) {
-      cleanedFilters = cleanFilters(filters, selectedGroup, selectedGroup.filters);
-    }
-    tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: selectedGroup.filters.concat(cleanedFilters) }));
+  if (selectedGroup?.filters?.length) {
+    const cleanedFilters = selectedGroup.filters.concat(filters).filter((item, index, array) => array.findIndex(filter => deepCompare(filter, item)) == index);
+    tasks.push(dispatch(setDeviceFilters(cleanedFilters)));
   } else {
-    const currentlySelectedGroup = state.devices.groups.byId[state.devices.groups.selectedGroup];
-    const cleanedFilters = cleanFilters(filters, currentlySelectedGroup, currentlySelectedGroup?.filters);
-    tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: cleanedFilters }));
+    tasks.push(dispatch(setDeviceFilters(filters)));
     tasks.push(dispatch(getAllGroupDevices(groupName, true)));
   }
   const selectedGroupName = selectedGroup || !Object.keys(state.devices.groups.byId).length ? groupName : null;
@@ -391,8 +378,7 @@ export const setDeviceFilters = filters => (dispatch, getState) => {
   if (deepCompare(filters, state.devices.filters)) {
     return Promise.resolve();
   }
-  let cleanedFilters = cleanFilters(filters, state.devices.selectedGroup, state.devices.groups.byId[state.devices.selectedGroup]?.filters);
-  return Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters: cleanedFilters }));
+  return Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters }));
 };
 
 export const getDeviceById = id => dispatch =>

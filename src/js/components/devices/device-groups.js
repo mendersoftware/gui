@@ -303,7 +303,7 @@ export const DeviceGroups = ({
   };
 
   const handleGroupChange = group => {
-    selectGroup(group, filters);
+    selectGroup(group);
   };
 
   const removeCurrentGroup = () => {
