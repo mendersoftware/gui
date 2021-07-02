@@ -335,6 +335,9 @@ export const DeviceGroups = ({
   };
 
   const onGroupClick = () => {
+    if (selectedGroup && groupFilters.length) {
+      return updateDynamicGroup(selectedGroup, filters);
+    }
     setModifyGroupDialog(true);
     setFromFilters(true);
   };

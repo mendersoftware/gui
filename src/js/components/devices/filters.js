@@ -8,6 +8,7 @@ import { Add as AddIcon } from '@material-ui/icons';
 import { selectDevice as resetIdFilter, setDeviceFilters } from '../../actions/deviceActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import EnterpriseNotification from '../common/enterpriseNotification';
+import MenderTooltip from '../common/mendertooltip';
 import FilterItem from './filteritem';
 
 import { DEVICE_FILTERING_OPTIONS } from '../../constants/deviceConstants';
@@ -161,10 +162,22 @@ export const Filters = ({
             isEnterprise={isEnterprise || (isHosted && plan === 'enterprise')}
             benefit="filtering by multiple attributes to improve the device overview and the creation of dynamic groups to ease device management"
           />
-          {!selectedGroup && canFilterMultiple && (plan === 'enterprise' || isEnterprise) && filters.length >= 1 && (
-            <Button variant="contained" color="secondary" onClick={onGroupClick}>
-              Create group with this filter
-            </Button>
+          {canFilterMultiple && (plan === 'enterprise' || isEnterprise) && filters.length >= 1 && (
+            <>
+              {selectedGroup ? (
+                groupFilters.length && (
+                  <MenderTooltip title="Ongoing deployments for this dynamic group will not change their target devices" arrow>
+                    <Button variant="contained" color="secondary" onClick={onGroupClick}>
+                      Save group
+                    </Button>
+                  </MenderTooltip>
+                )
+              ) : (
+                <Button variant="contained" color="secondary" onClick={onGroupClick}>
+                  Create group with this filter
+                </Button>
+              )}
+            </>
           )}
         </div>
       </>
