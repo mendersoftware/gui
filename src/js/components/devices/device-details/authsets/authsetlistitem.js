@@ -108,9 +108,9 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
   ];
   if (showKey) {
     content = [
-      <div className="expanded" key="content">
+      <code className="expanded pre-line" key="content">
         {authset.pubkey}
-      </div>,
+      </code>,
       padder
     ];
     key = <a onClick={() => onShowKey(false)}>hide key</a>;
