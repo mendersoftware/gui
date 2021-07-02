@@ -42,9 +42,11 @@ export const Filters = ({
   const [adding, setAdding] = useState(isModification);
   const [newFilter, setNewFilter] = useState(emptyFilter);
   const [currentFilters, setCurrentFilters] = useState([]);
+  const [editedIndex, setEditedIndex] = useState(0);
 
   useEffect(() => {
     setCurrentFilters(filters);
+    setEditedIndex(filters.length);
   }, [open]);
 
   useEffect(() => {
@@ -54,14 +56,13 @@ export const Filters = ({
 
   const updateFilter = newFilter => {
     setNewFilter(newFilter);
-    let filterIndex = filters.findIndex(filter => deepCompare(filter, newFilter));
     saveUpdatedFilter(newFilter);
     let changedFilters = [...filters];
-    if (filterIndex === -1) {
+    if (editedIndex == filters.length) {
       changedFilters.push(newFilter);
       return handleFilterChange(changedFilters);
     }
-    changedFilters[filterIndex] = newFilter;
+    changedFilters[editedIndex] = newFilter;
     handleFilterChange(changedFilters);
   };
 
@@ -74,29 +75,37 @@ export const Filters = ({
   };
 
   const removeFilter = removedFilter => {
-    const changedFilters = filters.filter(filter => !deepCompare(filter, removedFilter));
+    let changedFilters = filters.filter(filter => !deepCompare(filter, removedFilter));
     if (removedFilter.key === 'id') {
       resetIdFilter();
     }
+    handleFilterChange(changedFilters);
     if (deepCompare(newFilter, removedFilter)) {
       setNewFilter(emptyFilter);
+    } else {
+      changedFilters =
+        changedFilters.length && deepCompare(changedFilters[changedFilters.length - 1], newFilter)
+          ? changedFilters.slice(0, changedFilters.length - 1)
+          : changedFilters;
+      setEditedIndex(changedFilters.length);
     }
+    setCurrentFilters(changedFilters);
     if (!changedFilters.length) {
       setAdding(true);
     }
-    setCurrentFilters(changedFilters);
-    handleFilterChange(changedFilters);
   };
 
   const clearFilters = () => {
     handleFilterChange([]);
     resetIdFilter();
     setCurrentFilters([]);
+    setEditedIndex(0);
     setNewFilter(emptyFilter);
   };
 
   const onAddClick = () => {
     setAdding(true);
+    setEditedIndex(filters.length);
     if (Object.values(newFilter).every(thing => !!thing)) {
       setCurrentFilters([...currentFilters, newFilter]);
     }

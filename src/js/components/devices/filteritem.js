@@ -50,7 +50,19 @@ export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => 
   }, [filter.key]);
 
   useEffect(() => {
-    notifyFilterUpdate();
+    clearTimeout(timer);
+    timer = setTimeout(
+      () =>
+        key && (value || operator.includes('exists'))
+          ? onSelect({
+              key,
+              operator,
+              scope,
+              value
+            })
+          : null,
+      700
+    );
   }, [key, operator, scope, value]);
 
   const updateFilterKey = (value, selectedScope) => {
@@ -71,22 +83,6 @@ export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => 
 
   const updateFilterValue = ({ target: { value = '' } }) => {
     setValue(value);
-  };
-
-  const notifyFilterUpdate = () => {
-    clearTimeout(timer);
-    timer = setTimeout(
-      () =>
-        key && (value || operator.includes('exists'))
-          ? onSelect({
-              key,
-              operator,
-              scope,
-              value
-            })
-          : null,
-      700
-    );
   };
 
   const removeFilter = () => {
