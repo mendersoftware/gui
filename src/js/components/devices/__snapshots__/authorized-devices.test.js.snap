@@ -30,7 +30,7 @@ exports[`AuthorizedDevices Component renders correctly 1`] = `
               role="button"
               tabindex="0"
             >
-              Accepted
+              accepted
             </div>
             <input
               aria-hidden="true"

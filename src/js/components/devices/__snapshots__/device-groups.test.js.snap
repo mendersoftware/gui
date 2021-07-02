@@ -290,7 +290,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                   role=\\"button\\"
                   tabindex=\\"0\\"
                 >
-                  Accepted
+                  accepted
                 </div>
                 <input
                   aria-hidden=\\"true\\"
@@ -600,9 +600,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 </time>
               </div>
               <div>
-                <div
-                  class=\\"capitalized\\"
-                >
+                <div>
                   accepted
                 </div>
               </div>
@@ -676,9 +674,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 </time>
               </div>
               <div>
-                <div
-                  class=\\"capitalized\\"
-                >
+                <div>
                   accepted
                 </div>
               </div>

@@ -61,7 +61,7 @@ test.describe('Layout assertions', () => {
         await page.click('[aria-label="accept"]');
       }
       await page.click(`.MuiSelect-root:left-of(:text("Filters"))`);
-      await page.click(`css=.MuiPaper-root >> text=/Accepted/`);
+      await page.click(`css=.MuiPaper-root >> text=/Accepted/i`);
       await page.waitForSelector(`css=.deviceListItem >> text=/release/`, { timeout: 60000 });
       const element = await page.textContent('.deviceListItem');
       expect(element.includes('release')).toBeTruthy();

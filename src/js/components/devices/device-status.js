@@ -37,7 +37,7 @@ const DeviceStatus = ({ device: { auth_sets = [], status: deviceStatus } }) => {
       <Chip variant="outlined" size="small" icon={icon} label={label} className="deviceStatus" />
     </Tooltip>
   ) : (
-    <div className="capitalized">{deviceStatus}</div>
+    <div>{deviceStatus}</div>
   );
 };
 

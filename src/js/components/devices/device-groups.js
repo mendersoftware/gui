@@ -72,11 +72,13 @@ const defaultHeaders = {
   }
 };
 
+const baseDevicesRoute = '/devices';
+
 const acceptedDevicesRoute = {
   key: DEVICE_STATES.accepted,
   groupRestricted: false,
-  route: '/devices',
-  title: () => 'Accepted',
+  route: baseDevicesRoute,
+  title: () => DEVICE_STATES.accepted,
   emptyState: AcceptedEmptyState,
   defaultHeaders: [
     {
@@ -101,23 +103,23 @@ export const routes = {
   allDevices: {
     ...acceptedDevicesRoute,
     key: 'any',
-    title: () => 'Any'
+    title: () => 'any'
   },
   devices: acceptedDevicesRoute,
   [DEVICE_STATES.accepted]: acceptedDevicesRoute,
   [DEVICE_STATES.pending]: {
     key: DEVICE_STATES.pending,
     groupRestricted: true,
-    route: '/devices/pending',
-    title: count => `Pending${count ? ` (${count})` : ''}`,
+    route: `${baseDevicesRoute}/${DEVICE_STATES.pending}`,
+    title: count => `${DEVICE_STATES.pending}${count ? ` (${count})` : ''}`,
     emptyState: PendingEmptyState,
     defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn, defaultHeaders.deviceStatus, defaultHeaders.deviceExpansion]
   },
   [DEVICE_STATES.preauth]: {
     key: DEVICE_STATES.preauth,
     groupRestricted: true,
-    route: '/devices/preauthorized',
-    title: () => 'Preauthorized',
+    route: `${baseDevicesRoute}/${DEVICE_STATES.preauth}`,
+    title: () => DEVICE_STATES.preauth,
     emptyState: PreauthorizedEmptyState,
     defaultHeaders: [
       {
@@ -131,8 +133,8 @@ export const routes = {
   [DEVICE_STATES.rejected]: {
     key: DEVICE_STATES.rejected,
     groupRestricted: true,
-    route: '/devices/rejected',
-    title: () => 'Rejected',
+    route: `${baseDevicesRoute}/${DEVICE_STATES.rejected}`,
+    title: () => DEVICE_STATES.rejected,
     emptyState: RejectedEmptyState,
     defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn, defaultHeaders.deviceStatus, defaultHeaders.deviceExpansion]
   }

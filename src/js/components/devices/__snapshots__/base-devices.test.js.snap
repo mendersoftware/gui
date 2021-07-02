@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`smaller components renders AcceptedEmptyState correctly 1`] = `
+<div
+  class="dashboard-placeholder"
+>
+  <p>
+    No devices found
+  </p>
+</div>
+`;
+
+exports[`smaller components renders DeviceCreationTime correctly 1`] = `-`;
+
+exports[`smaller components renders DeviceExpansion correctly 1`] = `
+<div
+  class="bold flexbox center-aligned link-color margin-right-small uppercased"
+  style="white-space: nowrap;"
+>
+  view details 
+  <svg
+    aria-hidden="true"
+    class="MuiSvgIcon-root"
+    focusable="false"
+    viewBox="0 0 24 24"
+  >
+    <path
+      d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z"
+    />
+  </svg>
+</div>
+`;
+
+exports[`smaller components renders DeviceStatusHeading correctly 1`] = `<div />`;
+
+exports[`smaller components renders PendingEmptyState correctly 1`] = `
+<div
+  class="dashboard-placeholder"
+>
+  <p>
+    There are no devices pending authorization
+  </p>
+  <p>
+    Visit the 
+    <a
+      href="/help/get-started"
+    >
+      Help section
+    </a>
+     to learn how to connect devices to the Mender server.
+  </p>
+</div>
+`;
+
+exports[`smaller components renders PreauthorizedEmptyState correctly 1`] = `
+<div
+  class="dashboard-placeholder"
+>
+  <p>
+    There are no preauthorized devices.
+  </p>
+  <p>
+    Preauthorize devices
+     so that when they come online, they will connect to the server immediately
+  </p>
+  <img
+    alt="preauthorize"
+    src="preauthorize.png"
+  />
+</div>
+`;
+
+exports[`smaller components renders RejectedEmptyState correctly 1`] = `
+<div
+  class="dashboard-placeholder"
+>
+  <p>
+    There are no rejected devices
+  </p>
+</div>
+`;
+
+exports[`smaller components renders RelativeDeviceTime correctly 1`] = `
+<div
+  class=""
+  title=""
+>
+  -
+</div>
+`;
