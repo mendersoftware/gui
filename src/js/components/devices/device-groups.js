@@ -156,13 +156,15 @@ export const convertQueryToFilterAndGroup = (query, filteringAttributes, current
     const scope = Object.entries(filteringAttributes).reduce(
       (accu, [attributesType, attributes]) => {
         if (currentFilters.some(filter => filter.key === filterPair[0])) {
-          accu.scope = currentFilters.find(filter => filter.key === filterPair[0]).scope;
+          const existingFilter = currentFilters.find(filter => filter.key === filterPair[0]);
+          accu.scope = existingFilter.scope;
+          accu.operator = existingFilter.operator;
         } else if (attributes.includes(filterPair[0])) {
           accu.scope = attributesType.substring(0, attributesType.indexOf('Attr'));
         }
         return accu;
       },
-      { scope: emptyFilter.scope }
+      { operator: emptyFilter.operator, scope: emptyFilter.scope }
     );
     accu.push({ ...emptyFilter, ...scope, key: filterPair[0], value: filterPair[1] });
     return accu;
