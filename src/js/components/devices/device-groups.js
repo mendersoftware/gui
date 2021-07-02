@@ -244,10 +244,8 @@ export const DeviceGroups = ({
 
   useEffect(() => {
     refreshGroups();
-    clearInterval(deviceTimer);
-    deviceTimer = setInterval(getAllDeviceCounts, refreshLength);
     const { filters: filterQuery = '', status = '' } = match.params;
-    maybeSetGroupAndFilters(filterQuery);
+    maybeSetGroupAndFilters(filterQuery, history.location.search, filteringAttributes, filters);
     if (status && selectedState !== status) {
       setDeviceListState({ state: status });
     }
@@ -255,6 +253,8 @@ export const DeviceGroups = ({
     if (pathname !== history.location.pathname || history.location.search !== `?${search}`) {
       history.replace({ pathname, search }); // lgtm [js/client-side-unvalidated-url-redirection]
     }
+    clearInterval(deviceTimer);
+    deviceTimer = setInterval(getAllDeviceCounts, refreshLength);
     return () => {
       clearInterval(deviceTimer);
     };
@@ -275,14 +275,17 @@ export const DeviceGroups = ({
   }, [selectedState, filters, selectedGroup]);
 
   useEffect(() => {
+    if (!deviceTimer) {
+      return;
+    }
     const { filters: filterQuery = '' } = match.params;
-    maybeSetGroupAndFilters(filterQuery);
+    maybeSetGroupAndFilters(filterQuery, history.location.search, filteringAttributes, filters);
   }, [filters, match.params.filters, history.location.search]);
 
-  const maybeSetGroupAndFilters = filterQuery => {
-    const query = filterQuery || history.location.search;
+  const maybeSetGroupAndFilters = (filterQuery, search, attributes, currentFilters) => {
+    const query = filterQuery || search;
     if (query) {
-      const { filters: queryFilters, groupName } = convertQueryToFilterAndGroup(query, filteringAttributes, filters);
+      const { filters: queryFilters, groupName } = convertQueryToFilterAndGroup(query, attributes, currentFilters);
       if (groupName) {
         selectGroup(groupName, queryFilters);
       } else if (queryFilters) {
