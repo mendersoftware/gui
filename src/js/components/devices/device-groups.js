@@ -8,6 +8,7 @@ import AuthorizedDevices from './authorized-devices';
 import CreateGroup from './create-group';
 import Groups from './groups';
 import RemoveGroup from './remove-group';
+import { setSnackbar } from '../../actions/appActions';
 import {
   addDynamicGroup,
   addStaticGroup,
@@ -221,6 +222,7 @@ export const DeviceGroups = ({
   limitMaxed,
   match,
   pendingCount,
+  preauthDevice,
   removeDevicesFromGroup,
   removeDynamicGroup,
   removeStaticGroup,
@@ -229,9 +231,9 @@ export const DeviceGroups = ({
   setDeviceFilters,
   setDeviceListState,
   setShowConnectingDialog,
+  setSnackbar,
   showHelptips,
-  preauthDevice,
-  setSnackbar
+  updateDynamicGroup
 }) => {
   const [createGroupExplanation, setCreateGroupExplanation] = useState(false);
   const [deviceRefreshTrigger, setDeviceRefreshTrigger] = useState(false);
@@ -472,6 +474,7 @@ const actionCreators = {
   setDeviceFilters,
   setDeviceListState,
   setShowConnectingDialog,
+  setSnackbar,
   updateDynamicGroup
 };
 
