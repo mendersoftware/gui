@@ -10,6 +10,7 @@ import EventDetailsDrawer from './eventdetailsdrawer';
 
 export const defaultRowsPerPage = 20;
 
+const ArtifactLink = ({ item }) => <Link to={`/releases/${item.object.artifact.name}`}>View artifact</Link>;
 const DeploymentLink = ({ item }) => <Link to={`/deployments/finished?open=true&id=${item.object.id}`}>View deployment</Link>;
 const DeviceLink = ({ item }) => <Link to={`/devices?id=${item.object.id}`}>View device</Link>;
 const TerminalSessionLink = () => <a>View session log</a>;
@@ -25,8 +26,19 @@ const UserChange = ({ item: { change = '-' } }) => {
   );
 };
 
+const fallbackFormatter = data => {
+  let result = '';
+  try {
+    result = JSON.stringify(data);
+  } catch (error) {
+    console.log(error);
+  }
+  return result;
+};
+
 const changeMap = {
-  default: { component: 'div', actionFormatter: data => data, title: 'defaultTitle' },
+  default: { component: 'div', actionFormatter: fallbackFormatter, title: 'defaultTitle' },
+  artifact: { actionFormatter: data => `uploaded ${decodeURIComponent(data.artifact.name)}`, component: ArtifactLink },
   deployment: { actionFormatter: data => `to ${decodeURIComponent(data.deployment.name)}`, component: DeploymentLink },
   user: { component: UserChange, actionFormatter: data => data.user.email }
 };
