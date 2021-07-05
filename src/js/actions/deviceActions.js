@@ -216,7 +216,9 @@ export const selectGroup = (group, filters = []) => (dispatch, getState) => {
   const state = getState();
   const selectedGroup = state.devices.groups.byId[groupName];
   if (selectedGroup?.filters?.length) {
-    const cleanedFilters = selectedGroup.filters.concat(filters).filter((item, index, array) => array.findIndex(filter => deepCompare(filter, item)) == index);
+    const cleanedFilters = (filters.length ? filters : selectedGroup.filters).filter(
+      (item, index, array) => array.findIndex(filter => deepCompare(filter, item)) == index
+    );
     tasks.push(dispatch(setDeviceFilters(cleanedFilters)));
   } else {
     tasks.push(dispatch(setDeviceFilters(filters)));

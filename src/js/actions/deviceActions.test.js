@@ -124,7 +124,12 @@ describe('selecting things', () => {
   });
   it('should allow dynamic group selection with extra filters', async () => {
     const store = mockStore({ ...defaultState });
-    await store.dispatch(selectGroup('testGroupDynamic', [{ scope: 'system', key: 'group2', operator: '$eq', value: 'things2' }]));
+    await store.dispatch(
+      selectGroup('testGroupDynamic', [
+        ...defaultState.devices.groups.byId.testGroupDynamic.filters,
+        { scope: 'system', key: 'group2', operator: '$eq', value: 'things2' }
+      ])
+    );
     const expectedActions = [
       {
         type: DeviceConstants.SET_DEVICE_FILTERS,
