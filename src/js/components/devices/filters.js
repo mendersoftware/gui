@@ -153,7 +153,7 @@ export const Filters = ({
           </div>
         </div>
         <div className="flexbox column margin-top-small margin-bottom-small" style={{ alignItems: 'flex-end' }}>
-          {filters.length > 0 && (
+          {!!filters.length && !groupFilters.length && (
             <span className="link margin-small margin-top-none" onClick={clearFilters}>
               Clear filter
             </span>
@@ -165,8 +165,11 @@ export const Filters = ({
           {canFilterMultiple && (plan === 'enterprise' || isEnterprise) && filters.length >= 1 && (
             <>
               {selectedGroup ? (
-                groupFilters.length && (
-                  <MenderTooltip title="Ongoing deployments for this dynamic group will not change their target devices" arrow>
+                !!groupFilters.length && (
+                  <MenderTooltip
+                    title="Saved changes will not change the target devices of any ongoing deployments to this group, but will take effect for new deployments"
+                    arrow
+                  >
                     <Button variant="contained" color="secondary" onClick={onGroupClick}>
                       Save group
                     </Button>
