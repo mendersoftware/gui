@@ -90,7 +90,7 @@
     "less": "^4.1.1",
     "less-loader": "^10.0.1",
     "lint-staged": "^11.0.0",
-    "mini-css-extract-plugin": "^2.0.0",
+    "mini-css-extract-plugin": "^2.1.0",
     "msw": "^0.30.1",
     "postcss": "^8.3.5",
     "postcss-loader": "^6.1.1",
