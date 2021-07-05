@@ -5,7 +5,7 @@ exports[`Loader Component renders correctly 1`] = `
   className="loaderContainer shrunk"
 >
   <div
-    className="loader"
+    className="  loader"
   >
     <span
       className="dot dot_1"

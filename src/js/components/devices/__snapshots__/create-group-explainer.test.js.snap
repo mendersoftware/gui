@@ -49,8 +49,7 @@ exports[`CreateGroupExplainer Component renders correctly 1`] = `
               class="margin-right-large"
             >
               <div
-                class="flexbox margin-bottom"
-                style="align-items: center;"
+                class="flexbox center-aligned margin-bottom"
               >
                 <svg
                   aria-hidden="true"
@@ -88,8 +87,7 @@ exports[`CreateGroupExplainer Component renders correctly 1`] = `
               class="margin-right-large"
             >
               <div
-                class="flexbox margin-bottom"
-                style="align-items: center;"
+                class="flexbox center-aligned margin-bottom"
               >
                 <svg
                   aria-hidden="true"

@@ -30,6 +30,7 @@ import OfferHeader from './offerheader';
 import { colors } from '../../themes/mender-theme';
 import logo from '../../../assets/img/headerlogo.png';
 import enterpriseLogo from '../../../assets/img/headerlogo-enterprise.png';
+import UserConstants from '../../constants/userConstants';
 
 const menuButtonColor = colors.grey;
 
@@ -85,7 +86,7 @@ export class Header extends React.Component {
     // get current user
     return (
       self.props
-        .getUser('me')
+        .getUser(UserConstants.OWN_USER_ID)
         .then(self.props.initializeAppData)
         // this is allowed to fail if no user information are available
         .catch(err => console.log(extractErrorMessage(err)))

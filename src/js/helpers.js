@@ -4,6 +4,13 @@ import md5 from 'md5';
 import pluralize from 'pluralize';
 
 import { DEVICE_FILTERING_OPTIONS } from './constants/deviceConstants';
+import {
+  DEPLOYMENT_STATES,
+  defaultStats,
+  deploymentDisplayStates,
+  deploymentStatesToSubstates,
+  deploymentStatesToSubstatesWithSkipped
+} from './constants/deploymentConstants';
 import { initialState as onboardingReducerState } from './reducers/onboardingReducer';
 
 const isEncoded = uri => {
@@ -18,13 +25,6 @@ export const fullyDecodeURI = uri => {
   return uri;
 };
 
-const deploymentStatesToSubstates = {
-  failures: ['failure', 'aborted', 'decommissioned'],
-  inprogress: ['downloading', 'installing', 'rebooting'],
-  pending: ['pending'],
-  successes: ['success', 'already-installed', 'noartifact']
-};
-
 export const groupDeploymentDevicesStats = deployment => {
   const deviceStatCollector = (deploymentStates, devices) =>
     Object.values(devices).reduce((accu, device) => (deploymentStates.includes(device.status) ? accu + 1 : accu), 0);
@@ -33,18 +33,42 @@ export const groupDeploymentDevicesStats = deployment => {
   const pending = deviceStatCollector(deploymentStatesToSubstates.pending, deployment.devices);
   const successes = deviceStatCollector(deploymentStatesToSubstates.successes, deployment.devices);
   const failures = deviceStatCollector(deploymentStatesToSubstates.failures, deployment.devices);
-  return { inprogress, pending, successes, failures };
+  const paused = deviceStatCollector(deploymentStatesToSubstates.paused, deployment.devices);
+  return { inprogress, paused, pending, successes, failures };
 };
 
-const statCollector = (items, statistics) => items.reduce((accu, property) => accu + Number(statistics[property] || 0), 0);
-export const groupDeploymentStats = deployment => {
-  const stats = deployment.stats || {};
-  // don't include 'pending' as inprogress, as all remaining devices will be pending - we don't discriminate based on phase membership
-  const inprogress = statCollector(deploymentStatesToSubstates.inprogress, stats);
-  const pending = (deployment.max_devices ? deployment.max_devices - deployment.device_count : 0) + (stats['pending'] || 0);
-  const successes = statCollector(deploymentStatesToSubstates.successes, stats);
-  const failures = statCollector(deploymentStatesToSubstates.failures, stats);
-  return { inprogress, pending, successes, failures };
+export const statCollector = (items, statistics) => items.reduce((accu, property) => accu + Number(statistics[property] || 0), 0);
+export const groupDeploymentStats = (deployment, withSkipped) => {
+  const stats = { ...defaultStats, ...deployment.stats };
+  let groupStates = deploymentStatesToSubstates;
+  let result = {};
+  if (withSkipped) {
+    groupStates = deploymentStatesToSubstatesWithSkipped;
+    result.skipped = statCollector(groupStates.skipped, stats);
+  }
+  result = {
+    ...result,
+    // don't include 'pending' as inprogress, as all remaining devices will be pending - we don't discriminate based on phase membership
+    inprogress: statCollector(groupStates.inprogress, stats),
+    pending: (deployment.max_devices ? deployment.max_devices - deployment.device_count : 0) + statCollector(groupStates.pending, stats),
+    successes: statCollector(groupStates.successes, stats),
+    failures: statCollector(groupStates.failures, stats),
+    paused: statCollector(groupStates.paused, stats)
+  };
+  return result;
+};
+
+export const getDeploymentState = deployment => {
+  const { status: deploymentStatus = DEPLOYMENT_STATES.pending } = deployment;
+  const { inprogress: currentProgressCount, paused } = groupDeploymentStats(deployment);
+
+  let status = deploymentDisplayStates[deploymentStatus];
+  if (deploymentStatus === DEPLOYMENT_STATES.pending && currentProgressCount === 0) {
+    status = 'queued';
+  } else if (paused > 0) {
+    status = deploymentDisplayStates.paused;
+  }
+  return status;
 };
 
 export function statusToPercentage(state, intervals) {
@@ -60,9 +84,12 @@ export function statusToPercentage(state, intervals) {
       time = minutes < 15 && intervals < 69 ? 0 + intervals : 69;
       return time;
 
+    case 'pause_before_installing':
     case 'installing':
       return 70;
 
+    case 'pause_before_committing':
+    case 'pause_before_rebooting':
     case 'rebooting':
       time = minutes < 18 && 75 + intervals < 99 ? 75 + intervals : 99;
       return time;
@@ -112,14 +139,6 @@ export function preformatWithRequestID(res, failMsg) {
   }
   return failMsg;
 }
-
-export const filtersCompare = (filters, otherFilters) =>
-  filters.length !== otherFilters.length ||
-  filters.some(filter =>
-    otherFilters.find(
-      otherFilter => otherFilter.key === filter.key && Object.entries(filter).reduce((accu, [key, value]) => accu || otherFilter[key] !== value, false)
-    )
-  );
 
 export const versionCompare = (v1, v2) => {
   const partsV1 = `${v1}`.split('.');
@@ -434,10 +453,16 @@ export const sortDeploymentDevices = devices => {
     noartifact: [],
     pending: [],
     rebooting: [],
-    success: []
+    success: [],
+    pause_before_committing: [],
+    pause_before_installing: [],
+    pause_before_rebooting: []
   };
   devices.map(device => (newList.hasOwnProperty(device.status) ? newList[device.status].push(device) : newList.decommissioned.push(device)));
   const newCombine = newList.failure.concat(
+    newList.pause_before_committing,
+    newList.pause_before_installing,
+    newList.pause_before_rebooting,
     newList.downloading,
     newList.installing,
     newList.rebooting,

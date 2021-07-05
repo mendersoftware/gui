@@ -17,8 +17,8 @@ export const ChartAdditionWidget = ({ groups, onAdditionClick, style }) => {
   const [adding, setAdding] = useState(false);
   const [selection, setSelection] = useState('');
 
-  const addCurrentSelection = newSelection => {
-    onAdditionClick({ ...defaultReports[0], group: typeof newSelection === 'string' ? newSelection : null });
+  const addCurrentSelection = () => {
+    onAdditionClick({ ...defaultReports[0], group: typeof selection === 'string' ? selection : null });
     setAdding(false);
     setSelection('');
   };
@@ -46,7 +46,7 @@ export const ChartAdditionWidget = ({ groups, onAdditionClick, style }) => {
             <Button onClick={() => setAdding(false)} style={styles.button}>
               Cancel
             </Button>
-            <Button variant="contained" disabled={!selection} onClick={() => addCurrentSelection(selection)} style={styles.button}>
+            <Button variant="contained" disabled={!selection} onClick={addCurrentSelection} style={styles.button}>
               Save
             </Button>
           </div>

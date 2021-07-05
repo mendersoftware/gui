@@ -11,7 +11,20 @@ export const initialState = {
     [DeviceConstants.DEVICE_STATES.rejected]: { deviceIds: [], total: 0 }
   },
   selectedDevice: null,
-  selectedDeviceList: [],
+  deviceList: {
+    deviceIds: [],
+    page: 1,
+    perPage: 20,
+    selection: [],
+    sort: {
+      direction: DeviceConstants.DEVICE_SORTING_OPTIONS.desc,
+      columns: [
+        // { column: null, scope: null }
+      ]
+    },
+    state: DeviceConstants.DEVICE_STATES.accepted,
+    total: 0
+  },
   filters: [
     // { key: 'device_type', value: 'raspberry', operator: '$eq', scope: 'inventory' }
   ],
@@ -68,15 +81,20 @@ const deviceReducer = (state = initialState, action) => {
       const group = {
         ...maybeExistingGroup,
         deviceIds: deviceIds.filter(id => !action.deviceIds.includes(id)),
-        total: Math.max(total - 1, 0)
+        total: Math.max(total - action.deviceIds.length, 0)
       };
-      let byId = state.groups.byId;
+      let byId = {};
       let selectedGroup = state.groups.selectedGroup;
       if (group.total || group.deviceIds.length) {
-        byId[action.group] = group;
+        byId = {
+          ...state.groups.byId,
+          [action.group]: group
+        };
       } else if (state.groups.selectedGroup === action.group) {
         selectedGroup = null;
-        delete byId[action.group];
+        // eslint-disable-next-line no-unused-vars
+        const { [action.group]: removal, ...remainingById } = state.groups.byId;
+        byId = remainingById;
       }
       return {
         ...state,
@@ -119,8 +137,10 @@ const deviceReducer = (state = initialState, action) => {
     case DeviceConstants.SELECT_GROUP:
       return {
         ...state,
-        selectedDeviceList:
-          state.groups.byId[action.group] && state.groups.byId[action.group].deviceIds.length > 0 ? state.groups.byId[action.group].deviceIds : [],
+        deviceList: {
+          ...state.deviceList,
+          deviceIds: state.groups.byId[action.group] && state.groups.byId[action.group].deviceIds.length > 0 ? state.groups.byId[action.group].deviceIds : []
+        },
         groups: {
           ...state.groups,
           selectedGroup: action.group
@@ -128,8 +148,8 @@ const deviceReducer = (state = initialState, action) => {
       };
     case DeviceConstants.SELECT_DEVICE:
       return { ...state, selectedDevice: action.deviceId };
-    case DeviceConstants.SELECT_DEVICES:
-      return { ...state, selectedDeviceList: action.deviceIds };
+    case DeviceConstants.SET_DEVICE_LIST_STATE:
+      return { ...state, deviceList: action.state };
     case DeviceConstants.RECEIVE_GROUP_DEVICES:
       return {
         ...state,

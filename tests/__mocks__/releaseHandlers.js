@@ -9,13 +9,13 @@ export const releaseHandlers = [
     if (id === defaultState.releases.byId.a1.Artifacts[0].id) {
       return res(ctx.status(200));
     }
-    return res(ctx.status(500));
+    return res(ctx.status(591));
   }),
   rest.put(`${deploymentsApiUrl}/artifacts/:id`, ({ params: { id }, body: { description } }, res, ctx) => {
     if (id === defaultState.releases.byId.a1.Artifacts[0].id && description) {
       return res(ctx.status(200));
     }
-    return res(ctx.status(500));
+    return res(ctx.status(592));
   }),
   rest.post(`${deploymentsApiUrl}/artifacts/generate`, (req, res, ctx) => res(ctx.status(200))),
   rest.post(`${deploymentsApiUrl}/artifacts`, (req, res, ctx) => res(ctx.status(200)))

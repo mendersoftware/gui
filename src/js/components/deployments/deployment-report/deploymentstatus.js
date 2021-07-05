@@ -1,40 +1,36 @@
 import React from 'react';
 import { TwoColumnData } from '../../common/configurationobject';
-import { defaultStats } from '../deploymentstatus';
 import { defaultColumnDataProps } from '../report';
-
-const phases = {
-  scheduled: 'Scheduled',
-  skipped: 'Skipped',
-  pending: 'Pending',
-  inprogress: 'In Progress',
-  success: 'Success',
-  failure: 'Fail'
-};
+import { deploymentDisplayStates, pauseMap } from '../../../constants/deploymentConstants';
+import { groupDeploymentStats } from '../../../helpers';
 
 export const DeploymentStatus = ({ className = '', deployment = {} }) => {
-  const { device_count, finished, max_devices, retries = 1, status = 'pending' } = deployment;
-  const stats = { ...defaultStats, ...deployment.stats };
-  const phaseStats = {
-    inprogress: stats.downloading + stats.installing + stats.rebooting,
-    failure: stats.failure,
-    skipped: stats.aborted + stats.noartifact + stats['already-installed'] + stats.decommissioned,
-    success: stats.success,
-    pending: (max_devices ? max_devices - device_count : 0) + stats.pending
-  };
+  const { finished, max_devices, retries = 1, status = 'pending', stats } = deployment;
+  const phaseStats = groupDeploymentStats(deployment, true);
 
-  const statusDescription = finished ? (
-    <div>Finished {!!phaseStats.failure && <span className="failures">with failures</span>}</div>
-  ) : (
+  let statusDescription = (
     <>
-      {phases[status]}
+      {deploymentDisplayStates[status]}
       {status === 'pending' ? ' (awaiting devices)' : ''}
     </>
   );
+  if (finished) {
+    statusDescription = <div>Finished {!!phaseStats.failure && <span className="failures">with failures</span>}</div>;
+  } else if (status === 'paused' && phaseStats.paused > 0) {
+    // based on the order of the possible pause states we find the furthest possible and use that as the current pause state - if applicable
+    const currentPauseState = Object.keys(pauseMap)
+      .reverse()
+      .find(key => stats[key] > 0);
+    statusDescription = (
+      <>
+        {deploymentDisplayStates[status]} ({pauseMap[currentPauseState].title})
+      </>
+    );
+  }
 
   const statsBasedDeviceCount = Object.values(phaseStats).reduce((sum, count) => sum + count, 0);
   // eslint-disable-next-line no-unused-vars
-  const { scheduled, ...phasesWithStats } = phases;
+  const { failure, finished: finishedDeployment, scheduled, success, ...phasesWithStats } = deploymentDisplayStates;
 
   return (
     <div className={`progressStatus flexbox space-between centered margin-bottom ${className}`}>
@@ -57,7 +53,7 @@ export const DeploymentStatus = ({ className = '', deployment = {} }) => {
       <TwoColumnData
         {...defaultColumnDataProps}
         config={{ 'Max attempts per device': retries, 'Maximum number of devices': max_devices || 'N/A' }}
-        style={{ gridTemplateColumns: 'max-content 1fr' }}
+        style={{ ...defaultColumnDataProps.style, gridTemplateColumns: 'max-content 1fr' }}
       />
     </div>
   );

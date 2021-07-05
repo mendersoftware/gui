@@ -6,25 +6,24 @@ import { Button } from '@material-ui/core';
 import { CloudUpload, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import { cancelFileUpload, setSnackbar } from '../../actions/appActions';
-import { selectDevices } from '../../actions/deviceActions';
+import { setDeviceListState } from '../../actions/deviceActions';
 import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
 import {
   createArtifact,
   getReleases,
   removeArtifact,
-  showRemoveArtifactDialog,
   selectArtifact,
   selectRelease,
+  showRemoveArtifactDialog,
   uploadArtifact
 } from '../../actions/releaseActions';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
-
+import AddArtifactDialog from './dialogs/addartifact';
+import RemoveArtifactDialog from './dialogs/removeartifact';
 import ReleaseRepository from './releaserepository';
 import ReleasesList from './releaseslist';
-import RemoveArtifactDialog from './dialogs/removeartifact';
-import AddArtifactDialog from './dialogs/addartifact';
 
 const refreshArtifactsLength = 30000; //60000
 
@@ -50,7 +49,7 @@ export class Artifacts extends React.Component {
     const self = this;
     const { artifactVersion } = self.props.match.params;
     if (!self.props.onboardingState.complete) {
-      self.props.selectDevices([]);
+      self.props.setDeviceListState({ deviceIds: [] });
     }
     if (!self.props.releases.length) {
       self._getReleases(artifactVersion);
@@ -151,7 +150,7 @@ export class Artifacts extends React.Component {
             >
               Upload
             </Button>
-            <p className="info flexbox" style={{ alignItems: 'center' }}>
+            <p className="info flexbox center-aligned">
               <InfoIcon fontSize="small" />
               Upload an Artifact to an existing or new Release
             </p>
@@ -193,7 +192,7 @@ const actionCreators = {
   getReleases,
   removeArtifact,
   selectArtifact,
-  selectDevices,
+  setDeviceListState,
   selectRelease,
   setShowCreateArtifactDialog,
   setSnackbar,

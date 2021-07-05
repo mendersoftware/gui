@@ -1,0 +1,216 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeviceQuickActions Component renders correctly 1`] = `
+<div
+  class="flexbox fixedButtons"
+>
+  <div
+    class="margin-right"
+  >
+    1
+     
+    device
+     selected
+  </div>
+  <div
+    class="MuiSpeedDial-root MuiSpeedDial-directionUp margin-small"
+    role="presentation"
+  >
+    <button
+      aria-controls="device-actions-actions"
+      aria-expanded="false"
+      aria-haspopup="true"
+      aria-label="device-actions"
+      class="MuiButtonBase-root MuiFab-root MuiSpeedDial-fab MuiFab-primary"
+      style="transform: none; webkit-transition: transform 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: transform 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
+      tabindex="0"
+      type="button"
+    >
+      <span
+        class="MuiFab-label"
+      >
+        <span
+          class="MuiSpeedDialIcon-root"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSpeedDialIcon-icon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+            />
+          </svg>
+        </span>
+      </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
+    </button>
+    <div
+      aria-orientation="vertical"
+      class="MuiSpeedDial-actions MuiSpeedDial-actionsClosed"
+      id="device-actions-actions"
+      role="menu"
+    >
+      <span
+        aria-label="dismiss"
+        class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed"
+        id="device-actions-action-0"
+      >
+        <span
+          class="MuiSpeedDialAction-staticTooltipLabel"
+          id="device-actions-action-0-label"
+          style="transition-delay: 120ms;"
+        >
+          Dismiss device
+        </span>
+        <button
+          aria-describedby="device-actions-action-0-label"
+          class="MuiButtonBase-root MuiFab-root MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed MuiFab-sizeSmall"
+          role="menuitem"
+          style="transition-delay: 120ms;"
+          tabindex="-1"
+          type="button"
+        >
+          <span
+            class="MuiFab-label"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root red"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M7 11v2h10v-2H7zm5-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+              />
+            </svg>
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </span>
+      <span
+        aria-label="reject"
+        class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed"
+        id="device-actions-action-1"
+      >
+        <span
+          class="MuiSpeedDialAction-staticTooltipLabel"
+          id="device-actions-action-1-label"
+          style="transition-delay: 90ms;"
+        >
+          Reject device
+        </span>
+        <button
+          aria-describedby="device-actions-action-1-label"
+          class="MuiButtonBase-root MuiFab-root MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed MuiFab-sizeSmall"
+          role="menuitem"
+          style="transition-delay: 90ms;"
+          tabindex="-1"
+          type="button"
+        >
+          <span
+            class="MuiFab-label"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root red"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M14.59 8L12 10.59 9.41 8 8 9.41 10.59 12 8 14.59 9.41 16 12 13.41 14.59 16 16 14.59 13.41 12 16 9.41 14.59 8zM12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+              />
+            </svg>
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </span>
+      <span
+        aria-label="accept"
+        class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed"
+        id="device-actions-action-2"
+      >
+        <span
+          class="MuiSpeedDialAction-staticTooltipLabel"
+          id="device-actions-action-2-label"
+          style="transition-delay: 60ms;"
+        >
+          Accept device
+        </span>
+        <button
+          aria-describedby="device-actions-action-2-label"
+          class="MuiButtonBase-root MuiFab-root MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed MuiFab-sizeSmall"
+          role="menuitem"
+          style="transition-delay: 60ms;"
+          tabindex="-1"
+          type="button"
+        >
+          <span
+            class="MuiFab-label"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root green"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+              />
+            </svg>
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </span>
+      <span
+        aria-label="group-add"
+        class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed"
+        id="device-actions-action-3"
+      >
+        <span
+          class="MuiSpeedDialAction-staticTooltipLabel"
+          id="device-actions-action-3-label"
+          style="transition-delay: 30ms;"
+        >
+          Add selected device to a group
+        </span>
+        <button
+          aria-describedby="device-actions-action-3-label"
+          class="MuiButtonBase-root MuiFab-root MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed MuiFab-sizeSmall"
+          role="menuitem"
+          style="transition-delay: 30ms;"
+          tabindex="-1"
+          type="button"
+        >
+          <span
+            class="MuiFab-label"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root green"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"
+              />
+            </svg>
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </span>
+    </div>
+  </div>
+</div>
+`;

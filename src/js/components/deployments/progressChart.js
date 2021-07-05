@@ -67,7 +67,7 @@ export const ProgressChart = ({ currentPhase, currentProgressCount, phases, show
   ).displayablePhases;
 
   return (
-    <div className="progress-chart">
+    <div className={`progress-chart ${showPhaseNumber ? 'detailed' : ''}`}>
       {displayablePhases.map((phase, index) => {
         let style = { width: `${phase.batch_size}%` };
         if (index === phases.length - 1) {
@@ -91,11 +91,18 @@ export const ProgressChart = ({ currentPhase, currentProgressCount, phases, show
   );
 };
 
+export const DeploymentStatusNotification = ({ status }) => (
+  <div className="flexbox center-aligned">
+    {statusMap[status].icon}
+    <span className="margin-left-small">{statusMap[status].description()}</span>
+  </div>
+);
+
 let timer;
-export const ProgressDisplay = ({ className = '', deployment }) => {
+export const ProgressDisplay = ({ className = '', deployment, status }) => {
   const [time, setTime] = useState(new Date());
 
-  const { created, device_count, id, phases: deploymentPhases = [], status: deploymentStatus, max_devices } = deployment;
+  const { created, device_count, id, phases: deploymentPhases = [], max_devices } = deployment;
   const { inprogress: currentProgressCount, successes: totalSuccessCount, failures: totalFailureCount } = groupDeploymentStats(deployment);
   const totalDeviceCount = Math.max(device_count, max_devices || 0);
 
@@ -108,7 +115,6 @@ export const ProgressDisplay = ({ className = '', deployment }) => {
 
   const updateTime = () => setTime(new Date());
 
-  const status = deploymentStatus === 'pending' && currentProgressCount === 0 ? 'queued' : deploymentStatus;
   let phases = deploymentPhases.length ? deploymentPhases : [{ id, device_count: totalSuccessCount, batch_size: totalDeviceCount, start_ts: created }];
 
   const currentPhase =
@@ -121,15 +127,10 @@ export const ProgressDisplay = ({ className = '', deployment }) => {
   const momentaryTime = moment(time);
   const duration = moment.duration(nextPhaseStart.diff(momentaryTime));
 
-  return status === 'queued' ? (
-    <div className="flexbox" style={{ alignItems: 'center' }}>
-      {statusMap[status].icon}
-      <span className="margin-left-small">{statusMap[status].description()}</span>
-    </div>
-  ) : (
+  return (
     <div className={`flexbox column progress-chart-container ${className}`}>
       {statusMap[status] && (
-        <span className="flexbox small text-muted" style={{ alignItems: 'center' }}>
+        <span className="flexbox center-aligned small text-muted">
           {statusMap[status].icon}
           <span className="margin-left-small">{statusMap[status].description()}</span>
         </span>

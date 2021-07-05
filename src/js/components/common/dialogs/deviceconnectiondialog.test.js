@@ -40,6 +40,6 @@ describe('DeviceConnectionDialog Component', () => {
     userEvent.click(screen.getByRole('button', { name: /back/i }));
     userEvent.click(screen.getByText(/Prepare a virtual device/i));
     expect(screen.getByText(/run the following command to start the virtual device/i)).toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', { name: /Waiting for device/i }));
+    expect(screen.getByRole('button', { name: /Waiting for device/i })).toBeInTheDocument();
   });
 });

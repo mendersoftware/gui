@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeviceStatusNotification Component renders correctly 1`] = `
+<div
+  class="clickable margin-top-small onboard"
+  style="background: rgb(245, 245, 245); padding: 12px;"
+>
+  <span
+    class="info"
+  >
+    1
+     
+    device
+     
+    is
+     
+    pending authorization
+  </span>
+  <b
+    class="margin-left-small link link-color"
+  >
+    View 
+    device
+  </b>
+</div>
+`;

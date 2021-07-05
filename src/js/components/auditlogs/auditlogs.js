@@ -190,7 +190,7 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
           </span>
         )}
       </div>
-      <div className="flexbox" style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
+      <div className="flexbox center-aligned" style={{ justifyContent: 'flex-end' }}>
         <Loader show={csvLoading} />
         <Button variant="contained" color="secondary" disabled={csvLoading || !events.length} onClick={createCsvDownload} style={{ marginLeft: 15 }}>
           Download results as csv

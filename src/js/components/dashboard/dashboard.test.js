@@ -66,7 +66,7 @@ describe('Dashboard Component', () => {
   });
 
   it('allows navigating to deployments', async () => {
-    render(
+    const ui = (
       <MemoryRouter>
         <Provider store={store}>
           <Dashboard />
@@ -78,6 +78,8 @@ describe('Dashboard Component', () => {
         </Provider>
       </MemoryRouter>
     );
+    const { rerender } = render(ui);
+    await waitFor(() => rerender(ui));
     await waitFor(() => screen.getByText(/View progress/i));
     userEvent.click(screen.getByText(/View progress/i));
     await waitFor(() => screen.getByText(/deployments route/i));

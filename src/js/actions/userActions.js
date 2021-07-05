@@ -341,7 +341,7 @@ export const toggleHelptips = () => (dispatch, getState) => {
   }
 };
 
-export const setShowConnectingDialog = show => dispatch => dispatch({ type: UserConstants.SET_SHOW_CONNECT_DEVICE, show });
+export const setShowConnectingDialog = show => dispatch => dispatch({ type: UserConstants.SET_SHOW_CONNECT_DEVICE, show: Boolean(show) });
 
 export const setHideAnnouncement = (shouldHide, userId) => (dispatch, getState) => {
   const currentUserId = userId || getCurrentUser(getState()).id;

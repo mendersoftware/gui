@@ -1,0 +1,688 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RolloutSteps Component renders correctly 1`] = `
+<div>
+  <div
+    class=""
+  >
+    <div
+      class=""
+    >
+      <div
+        class="flexbox margin-top margin-left-large margin-right-large"
+      >
+        <div
+          class="MuiChip-root MuiChip-outlined"
+          style="min-width: 88px;"
+          title="The Artifact is downloaded (streamed) to the inactive partition."
+        >
+          <span
+            class="MuiChip-label"
+          >
+            Download
+          </span>
+        </div>
+        <div
+          class="flexbox column center-aligned"
+          style="min-width: 80px;"
+        >
+          <div
+            class="flexbox centered"
+            style="height: 32px; padding-left: 8px; width: 100%;"
+          >
+            <div
+              style="background-color: rgba(0, 0, 0, 0.3); height: 3px; width: 100%; margin-right: -8px;"
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              focusable="false"
+              style="color: rgba(0, 0, 0, 0.3);"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M10 17l5-5-5-5v10z"
+              />
+            </svg>
+          </div>
+          <div
+            style="border-left: 1px dashed #c7c7c7; height: 48px; margin: -10px 4px 4px 4px;"
+          />
+          <div
+            class="MuiButtonBase-root MuiChip-root MuiChip-colorPrimary MuiChip-clickableColorPrimary MuiChip-clickable"
+            role="button"
+            style="margin-left: -24px; margin-right: -24px;"
+            tabindex="0"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiChip-icon MuiChip-iconColorPrimary"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+              />
+            </svg>
+            <span
+              class="MuiChip-label"
+            >
+              Add a pause
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </div>
+        </div>
+        <div
+          class="MuiChip-root MuiChip-outlined"
+          style="min-width: 88px;"
+        >
+          <span
+            class="MuiChip-label"
+          >
+            Install
+          </span>
+        </div>
+        <div
+          class="flexbox column center-aligned"
+          style="min-width: 80px;"
+        >
+          <div
+            class="flexbox centered"
+            style="height: 32px; padding-left: 8px; width: 100%;"
+          >
+            <div
+              style="background-color: rgba(0, 0, 0, 0.3); height: 3px; width: 100%; margin-right: -8px;"
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              focusable="false"
+              style="color: rgba(0, 0, 0, 0.3);"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M10 17l5-5-5-5v10z"
+              />
+            </svg>
+          </div>
+          <div
+            style="border-left: 1px dashed #c7c7c7; height: 48px; margin: -10px 4px 4px 4px;"
+          />
+          <div
+            class="MuiButtonBase-root MuiChip-root MuiChip-colorPrimary MuiChip-clickableColorPrimary MuiChip-clickable"
+            role="button"
+            style="margin-left: -24px; margin-right: -24px;"
+            tabindex="0"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiChip-icon MuiChip-iconColorPrimary"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+              />
+            </svg>
+            <span
+              class="MuiChip-label"
+            >
+              Add a pause
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </div>
+        </div>
+        <div
+          class="MuiChip-root MuiChip-outlined"
+          style="min-width: 88px;"
+          title="The device will reboot and the installed update will be active when the device boots up again. As changes are not yet committed, the update is not persistent and the device will still roll back again on the next reboot."
+        >
+          <span
+            class="MuiChip-label"
+          >
+            Reboot
+          </span>
+        </div>
+        <div
+          class="flexbox column center-aligned"
+          style="min-width: 80px;"
+        >
+          <div
+            class="flexbox centered"
+            style="height: 32px; padding-left: 8px; width: 100%;"
+          >
+            <div
+              style="background-color: rgba(0, 0, 0, 0.3); height: 3px; width: 100%; margin-right: -8px;"
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              focusable="false"
+              style="color: rgba(0, 0, 0, 0.3);"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M10 17l5-5-5-5v10z"
+              />
+            </svg>
+          </div>
+          <div
+            style="border-left: 1px dashed #c7c7c7; height: 48px; margin: -10px 4px 4px 4px;"
+          />
+          <div
+            class="MuiButtonBase-root MuiChip-root MuiChip-colorPrimary MuiChip-clickableColorPrimary MuiChip-clickable"
+            role="button"
+            style="margin-left: -24px; margin-right: -24px;"
+            tabindex="0"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiChip-icon MuiChip-iconColorPrimary"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+              />
+            </svg>
+            <span
+              class="MuiChip-label"
+            >
+              Add a pause
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </div>
+        </div>
+        <div
+          class="MuiChip-root MuiChip-outlined"
+          style="min-width: 88px;"
+          title="If the update passes integrity checks, Mender will mark the update as successful and continue running from this partition. The commit makes the update persistent."
+        >
+          <span
+            class="MuiChip-label"
+          >
+            Commit
+          </span>
+        </div>
+      </div>
+      <p
+        class="info"
+      >
+        A 'pause' means each device will pause its update after completing the previous step, and wait for approval before continuing. You can grant approval by clicking "continue" in the deployment progress UI.
+         
+        <a
+          href="https://docs.mender.io/undefined"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Learn more
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`RolloutSteps Component renders correctly 2`] = `
+<div>
+  <div
+    class=""
+  >
+    <div
+      class=""
+    >
+      <div
+        class="flexbox margin-top margin-left-large margin-right-large"
+      >
+        <div
+          class="MuiChip-root MuiChip-outlined"
+          style="min-width: 88px;"
+          title="The Artifact is downloaded (streamed) to the inactive partition."
+        >
+          <span
+            class="MuiChip-label"
+          >
+            Download
+          </span>
+        </div>
+        <div
+          class="flexbox column center-aligned"
+          style="min-width: 80px;"
+        >
+          <div
+            class="flexbox centered"
+            style="height: 32px; padding-left: 8px; width: 100%;"
+          >
+            <div
+              style="background-color: rgba(0, 0, 0, 0.3); height: 3px; width: 100%; margin-right: -8px;"
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              focusable="false"
+              style="color: rgba(0, 0, 0, 0.3);"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M10 17l5-5-5-5v10z"
+              />
+            </svg>
+          </div>
+          <div
+            style="border-left: 1px dashed #c7c7c7; height: 48px; margin: -10px 4px 4px 4px;"
+          />
+          <div
+            class="MuiButtonBase-root MuiChip-root MuiChip-colorPrimary MuiChip-clickableColorPrimary MuiChip-clickable"
+            role="button"
+            style="margin-left: -24px; margin-right: -24px;"
+            tabindex="0"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiChip-icon MuiChip-iconColorPrimary"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+              />
+            </svg>
+            <span
+              class="MuiChip-label"
+            >
+              Add a pause
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </div>
+        </div>
+        <div
+          class="MuiChip-root MuiChip-outlined"
+          style="min-width: 88px;"
+        >
+          <span
+            class="MuiChip-label"
+          >
+            Install
+          </span>
+        </div>
+        <div
+          class="flexbox column center-aligned"
+          style="min-width: 80px;"
+        >
+          <div
+            class="flexbox centered"
+            style="height: 32px; padding-left: 8px; width: 100%;"
+          >
+            <div
+              style="background-color: rgba(0, 0, 0, 0.3); height: 3px; width: 100%; margin-right: -8px;"
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              focusable="false"
+              style="color: rgba(0, 0, 0, 0.3);"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M10 17l5-5-5-5v10z"
+              />
+            </svg>
+          </div>
+          <div
+            style="border-left: 1px dashed #c7c7c7; height: 48px; margin: -10px 4px 4px 4px;"
+          />
+          <div
+            class="MuiButtonBase-root MuiChip-root MuiChip-colorPrimary MuiChip-clickableColorPrimary MuiChip-clickable"
+            role="button"
+            style="margin-left: -24px; margin-right: -24px;"
+            tabindex="0"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiChip-icon MuiChip-iconColorPrimary"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+              />
+            </svg>
+            <span
+              class="MuiChip-label"
+            >
+              Add a pause
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </div>
+        </div>
+        <div
+          class="MuiChip-root MuiChip-outlined"
+          style="min-width: 88px;"
+          title="The device will reboot and the installed update will be active when the device boots up again. As changes are not yet committed, the update is not persistent and the device will still roll back again on the next reboot."
+        >
+          <span
+            class="MuiChip-label"
+          >
+            Reboot
+          </span>
+        </div>
+        <div
+          class="flexbox column center-aligned"
+          style="min-width: 80px;"
+        >
+          <div
+            class="flexbox centered"
+            style="height: 32px; padding-left: 8px; width: 100%;"
+          >
+            <div
+              style="background-color: rgba(0, 0, 0, 0.3); height: 3px; width: 100%; margin-right: -8px;"
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              focusable="false"
+              style="color: rgba(0, 0, 0, 0.3);"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M10 17l5-5-5-5v10z"
+              />
+            </svg>
+          </div>
+          <div
+            style="border-left: 1px dashed #c7c7c7; height: 48px; margin: -10px 4px 4px 4px;"
+          />
+          <div
+            class="MuiButtonBase-root MuiChip-root MuiChip-colorPrimary MuiChip-clickableColorPrimary MuiChip-clickable"
+            role="button"
+            style="margin-left: -24px; margin-right: -24px;"
+            tabindex="0"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiChip-icon MuiChip-iconColorPrimary"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+              />
+            </svg>
+            <span
+              class="MuiChip-label"
+            >
+              Add a pause
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </div>
+        </div>
+        <div
+          class="MuiChip-root MuiChip-outlined"
+          style="min-width: 88px;"
+          title="If the update passes integrity checks, Mender will mark the update as successful and continue running from this partition. The commit makes the update persistent."
+        >
+          <span
+            class="MuiChip-label"
+          >
+            Commit
+          </span>
+        </div>
+      </div>
+      <p
+        class="info"
+      >
+        A 'pause' means each device will pause its update after completing the previous step, and wait for approval before continuing. You can grant approval by clicking "continue" in the deployment progress UI.
+         
+        <a
+          href="https://docs.mender.io/undefined"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Learn more
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`RolloutSteps Component renders correctly 3`] = `
+<div>
+  <div
+    class=""
+  >
+    <div
+      class=""
+    >
+      <div
+        class="flexbox margin-top margin-left-large margin-right-large"
+      >
+        <div
+          class="MuiChip-root MuiChip-outlined"
+          style="min-width: 88px;"
+          title="The Artifact is downloaded (streamed) to the inactive partition."
+        >
+          <span
+            class="MuiChip-label"
+          >
+            Download
+          </span>
+        </div>
+        <div
+          class="flexbox column center-aligned"
+          style="min-width: 80px;"
+        >
+          <div
+            class="flexbox centered"
+            style="height: 32px; padding-left: 8px; width: 100%;"
+          >
+            <div
+              style="background-color: rgba(0, 0, 0, 0.3); height: 3px; width: 100%; margin-right: -8px;"
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              focusable="false"
+              style="color: rgba(0, 0, 0, 0.3);"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M10 17l5-5-5-5v10z"
+              />
+            </svg>
+          </div>
+          <div
+            style="border-left: 1px dashed #c7c7c7; height: 48px; margin: -10px 4px 4px 4px;"
+          />
+          <div
+            class="MuiButtonBase-root MuiChip-root MuiChip-colorPrimary MuiChip-clickableColorPrimary MuiChip-clickable"
+            role="button"
+            style="margin-left: -24px; margin-right: -24px;"
+            tabindex="0"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiChip-icon MuiChip-iconColorPrimary"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+              />
+            </svg>
+            <span
+              class="MuiChip-label"
+            >
+              Add a pause
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </div>
+        </div>
+        <div
+          class="MuiChip-root MuiChip-outlined"
+          style="min-width: 88px;"
+        >
+          <span
+            class="MuiChip-label"
+          >
+            Install
+          </span>
+        </div>
+        <div
+          class="flexbox column center-aligned"
+          style="min-width: 80px;"
+        >
+          <div
+            class="flexbox centered"
+            style="height: 32px; padding-left: 8px; width: 100%;"
+          >
+            <div
+              style="background-color: rgba(0, 0, 0, 0.3); height: 3px; width: 100%; margin-right: -8px;"
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              focusable="false"
+              style="color: rgba(0, 0, 0, 0.3);"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M10 17l5-5-5-5v10z"
+              />
+            </svg>
+          </div>
+          <div
+            style="border-left: 1px dashed #c7c7c7; height: 48px; margin: -10px 4px 4px 4px;"
+          />
+          <div
+            class="MuiButtonBase-root MuiChip-root MuiChip-colorPrimary MuiChip-clickableColorPrimary MuiChip-clickable"
+            role="button"
+            style="margin-left: -24px; margin-right: -24px;"
+            tabindex="0"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiChip-icon MuiChip-iconColorPrimary"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+              />
+            </svg>
+            <span
+              class="MuiChip-label"
+            >
+              Add a pause
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </div>
+        </div>
+        <div
+          class="MuiChip-root MuiChip-outlined"
+          style="min-width: 88px;"
+          title="The device will reboot and the installed update will be active when the device boots up again. As changes are not yet committed, the update is not persistent and the device will still roll back again on the next reboot."
+        >
+          <span
+            class="MuiChip-label"
+          >
+            Reboot
+          </span>
+        </div>
+        <div
+          class="flexbox column center-aligned"
+          style="min-width: 80px;"
+        >
+          <div
+            class="flexbox centered"
+            style="height: 32px; padding-left: 8px; width: 100%;"
+          >
+            <div
+              style="background-color: rgba(0, 0, 0, 0.3); height: 3px; width: 100%; margin-right: -8px;"
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              focusable="false"
+              style="color: rgba(0, 0, 0, 0.3);"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M10 17l5-5-5-5v10z"
+              />
+            </svg>
+          </div>
+          <div
+            style="border-left: 1px dashed #c7c7c7; height: 48px; margin: -10px 4px 4px 4px;"
+          />
+          <div
+            class="MuiButtonBase-root MuiChip-root MuiChip-colorPrimary MuiChip-clickableColorPrimary MuiChip-clickable"
+            role="button"
+            style="margin-left: -24px; margin-right: -24px;"
+            tabindex="0"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiChip-icon MuiChip-iconColorPrimary"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+              />
+            </svg>
+            <span
+              class="MuiChip-label"
+            >
+              Add a pause
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </div>
+        </div>
+        <div
+          class="MuiChip-root MuiChip-outlined"
+          style="min-width: 88px;"
+          title="If the update passes integrity checks, Mender will mark the update as successful and continue running from this partition. The commit makes the update persistent."
+        >
+          <span
+            class="MuiChip-label"
+          >
+            Commit
+          </span>
+        </div>
+      </div>
+      <p
+        class="info"
+      >
+        A 'pause' means each device will pause its update after completing the previous step, and wait for approval before continuing. You can grant approval by clicking "continue" in the deployment progress UI.
+         
+        <a
+          href="https://docs.mender.io/undefined"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Learn more
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+`;

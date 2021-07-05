@@ -14,12 +14,13 @@ import { getPhaseStartTime } from '../createdeployment';
 import { ProgressChart } from '../progressChart';
 import { defaultColumnDataProps } from '../report';
 import { DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
+import PhaseProgress from './phaseprogress';
 
 momentDurationFormatSetup(moment);
 
 const maxPhaseWidth = 270;
 
-export const RolloutSchedule = ({ deployment, innerRef }) => {
+export const RolloutSchedule = ({ deployment, innerRef, onAbort, onUpdateControlChange }) => {
   const now = moment();
   const {
     created: creationTime = now.toISOString(),
@@ -28,7 +29,8 @@ export const RolloutSchedule = ({ deployment, innerRef }) => {
     finished,
     max_devices,
     phases = [{ batch_size: 100 }],
-    status
+    status,
+    update_control_map
   } = deployment;
   const { id: filterId } = filter;
   const { inprogress: currentProgressCount, successes: totalSuccessCount, failures: totalFailureCount } = groupDeploymentStats(deployment);
@@ -50,30 +52,36 @@ export const RolloutSchedule = ({ deployment, innerRef }) => {
   return (
     <>
       <h4 className="dashboard-header margin-top-large" ref={innerRef}>
-        <span>Rollout Schedule</span>
+        <span>Schedule details</span>
       </h4>
-      <div className="flexbox">
-        <TwoColumnData
-          {...defaultColumnDataProps}
-          config={{
-            'Start time': <Time value={formatTime(creationTime)} format="YYYY-MM-DD HH:mm" />,
-            'Current phase': currentPhaseTime
-          }}
-        />
-        <ArrowForward style={{ marginLeft: theme.spacing(4), marginRight: theme.spacing(4) }} />
-        <TwoColumnData {...defaultColumnDataProps} config={{ 'End time': endTime }} />
-      </div>
-      <div className="progress-chart-container margin-top" style={{ background: 'initial' }}>
-        <ProgressChart
-          currentPhase={currentPhase}
-          currentProgressCount={currentProgressCount}
-          phases={phases}
-          showPhaseNumber
-          totalDeviceCount={totalDeviceCount}
-          totalFailureCount={totalFailureCount}
-          totalSuccessCount={totalSuccessCount}
-        />
-      </div>
+      {phases.length > 1 || !update_control_map ? (
+        <>
+          <div className="flexbox">
+            <TwoColumnData
+              {...defaultColumnDataProps}
+              config={{
+                'Start time': <Time value={formatTime(creationTime)} format="YYYY-MM-DD HH:mm" />,
+                'Current phase': currentPhaseTime
+              }}
+            />
+            <ArrowForward style={{ marginLeft: theme.spacing(4), marginRight: theme.spacing(4) }} />
+            <TwoColumnData {...defaultColumnDataProps} config={{ 'End time': endTime }} />
+          </div>
+          <div className="progress-chart-container margin-top" style={{ background: 'initial' }}>
+            <ProgressChart
+              currentPhase={currentPhase}
+              currentProgressCount={currentProgressCount}
+              phases={phases}
+              showPhaseNumber
+              totalDeviceCount={totalDeviceCount}
+              totalFailureCount={totalFailureCount}
+              totalSuccessCount={totalSuccessCount}
+            />
+          </div>
+        </>
+      ) : (
+        <PhaseProgress deployment={deployment} onAbort={onAbort} onUpdateControlChange={onUpdateControlChange} />
+      )}
       <div className="deployment-phases-report margin-top margin-bottom" style={{ gridTemplateColumns: `repeat(auto-fit, ${maxPhaseWidth}px)` }}>
         {phases.map((phase, index) => {
           phase.batch_size = phase.batch_size || getRemainderPercent(phases);

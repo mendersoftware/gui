@@ -68,12 +68,12 @@ describe('CreateDeployment Component', () => {
     );
     const releaseId = Object.keys(defaultState.releases.byId)[0];
     expect(screen.queryByText(releaseId)).not.toBeInTheDocument();
-    const releaseSelect = screen.getByLabelText(/Select a Release to deploy/i);
+    const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
     userEvent.click(releaseSelect);
     fireEvent.keyDown(releaseSelect, { key: 'ArrowDown' });
     fireEvent.keyDown(releaseSelect, { key: 'Enter' });
     expect(releaseSelect).toHaveValue(releaseId);
-    const groupSelect = screen.getByLabelText(/Select a device group to deploy to/i);
+    const groupSelect = screen.getByPlaceholderText(/Select a device group/i);
     userEvent.click(groupSelect);
     fireEvent.keyDown(groupSelect, { key: 'Enter' });
     expect(groupSelect).toHaveValue('All devices');
@@ -88,6 +88,7 @@ describe('CreateDeployment Component', () => {
       name: 'All devices',
       phases: undefined
     });
+    await jest.runAllTicks();
     await waitFor(() => expect(submitCheck).toHaveBeenCalled());
   });
 
@@ -153,17 +154,15 @@ describe('CreateDeployment Component', () => {
     );
     const releaseId = Object.keys(defaultState.releases.byId)[0];
     expect(screen.queryByText(releaseId)).not.toBeInTheDocument();
-    const releaseSelect = screen.getByLabelText(/Select a Release to deploy/i);
+    const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
     userEvent.click(releaseSelect);
     fireEvent.keyDown(releaseSelect, { key: 'ArrowDown' });
     fireEvent.keyDown(releaseSelect, { key: 'Enter' });
-    const groupSelect = screen.getByLabelText(/Select a device group to deploy to/i);
+    const groupSelect = screen.getByPlaceholderText(/Select a device group/i);
     userEvent.click(groupSelect);
     fireEvent.keyDown(groupSelect, { key: 'Enter' });
     userEvent.click(screen.getAllByText('Next')[0]);
 
-    userEvent.click(screen.getByRole('checkbox', { name: /save as default/i }));
-    await selectMaterialUiSelectOption(screen.getByText(/Retries/i), 1);
     await selectMaterialUiSelectOption(screen.getByText(/Single phase: 100%/i), /Custom/i);
     const firstPhase = screen.getByText(/Phase 1/i).parentElement.parentElement.parentElement;
     await selectMaterialUiSelectOption(within(firstPhase).getByText(/hours/i), /minutes/i);
@@ -177,7 +176,10 @@ describe('CreateDeployment Component', () => {
     expect(within(secondPhase).getByText(/Phases must have at least 1 device/i)).toBeTruthy();
     fireEvent.change(within(secondPhase).getByDisplayValue(10), { target: { value: '25' } });
     fireEvent.change(within(secondPhase).getByDisplayValue('2'), { target: { value: '25' } });
+    userEvent.click(screen.getAllByText('Next')[0]);
 
+    userEvent.click(screen.getByRole('checkbox', { name: /save as default/i }));
+    await selectMaterialUiSelectOption(screen.getByText(/don't retry/i), 1);
     userEvent.click(screen.getAllByText('Next')[0]);
 
     // extra explicit here as the general date mocking seems to be ignored by the moment/ date combination
@@ -201,6 +203,7 @@ describe('CreateDeployment Component', () => {
       retries: 1
     });
     expect(advanceOnboarding).toHaveBeenCalled();
+    await jest.runAllTicks();
     await waitFor(() => expect(submitCheck).toHaveBeenCalled());
     expect(saveGlobalSettings).toHaveBeenCalled();
   }, 15000);

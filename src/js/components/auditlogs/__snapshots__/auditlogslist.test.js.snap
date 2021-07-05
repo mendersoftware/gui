@@ -197,7 +197,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
       class=\\"loaderContainer shrunk\\"
     >
       <div
-        class=\\"loader\\"
+        class=\\"  loader\\"
       >
         <span
           class=\\"dot dot_1\\"

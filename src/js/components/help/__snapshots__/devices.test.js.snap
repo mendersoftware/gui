@@ -17,12 +17,7 @@ exports[`GettingStarted Component renders correctly 1`] = `
       className="margin-right-large"
     >
       <div
-        className="flexbox margin-bottom"
-        style={
-          Object {
-            "alignItems": "center",
-          }
-        }
+        className="flexbox center-aligned margin-bottom"
       >
         <svg
           aria-hidden={true}
@@ -73,12 +68,7 @@ exports[`GettingStarted Component renders correctly 1`] = `
       className="margin-right-large"
     >
       <div
-        className="flexbox margin-bottom"
-        style={
-          Object {
-            "alignItems": "center",
-          }
-        }
+        className="flexbox center-aligned margin-bottom"
       >
         <svg
           aria-hidden={true}

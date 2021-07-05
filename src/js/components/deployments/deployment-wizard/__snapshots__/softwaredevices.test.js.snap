@@ -11,148 +11,23 @@ exports[`SoftwareDevices Component renders correctly 1`] = `
   }
 >
   <form
-    className="flexbox centered column"
+    className="flexbox column margin margin-top-none"
   >
-    <div
+    <h4
       style={
         Object {
-          "minHeight": "105px",
-          "minWidth": "min-content",
+          "marginBottom": 0,
         }
       }
     >
-      <div
-        aria-expanded={false}
-        aria-owns={null}
-        className="MuiAutocomplete-root MuiAutocomplete-hasClearIcon MuiAutocomplete-hasPopupIcon"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        onMouseDown={[Function]}
-        role="combobox"
-      >
-        <div
-          className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
-          style={
-            Object {
-              "minWidth": "400px",
-            }
-          }
-        >
-          <label
-            className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-            data-shrink={false}
-            htmlFor="deployment-release-selection"
-            id="deployment-release-selection-label"
-          >
-            Select a Release to deploy
-          </label>
-          <div
-            className="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
-            onClick={[Function]}
-          >
-            <input
-              aria-activedescendant={null}
-              aria-autocomplete="list"
-              aria-controls={null}
-              aria-invalid={false}
-              autoCapitalize="none"
-              autoComplete="off"
-              autoFocus={false}
-              className="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
-              disabled={false}
-              id="deployment-release-selection"
-              onAnimationStart={[Function]}
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onMouseDown={[Function]}
-              required={false}
-              spellCheck="false"
-              type="text"
-              value=""
-            />
-            <div
-              className="MuiAutocomplete-endAdornment"
-            >
-              <button
-                aria-label="Clear"
-                className="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty"
-                disabled={false}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                tabIndex={-1}
-                title="Clear"
-                type="button"
-              >
-                <span
-                  className="MuiIconButton-label"
-                >
-                  <svg
-                    aria-hidden={true}
-                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-                    />
-                  </svg>
-                </span>
-              </button>
-              <button
-                aria-label="Open"
-                className="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-popupIndicator"
-                disabled={false}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                tabIndex={-1}
-                title="Open"
-                type="button"
-              >
-                <span
-                  className="MuiIconButton-label"
-                >
-                  <svg
-                    aria-hidden={true}
-                    className="MuiSvgIcon-root"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M7 10l5 5 5-5z"
-                    />
-                  </svg>
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      Select a device group to target
+    </h4>
     <div
       style={
         Object {
-          "width": "min-content",
+          "maxWidth": 400,
+          "minHeight": 105,
+          "minWidth": "min-content",
         }
       }
     >
@@ -170,18 +45,10 @@ exports[`SoftwareDevices Component renders correctly 1`] = `
             className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
             style={
               Object {
-                "minWidth": "400px",
+                "minWidth": 400,
               }
             }
           >
-            <label
-              className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-              data-shrink={false}
-              htmlFor="deployment-device-group-selection"
-              id="deployment-device-group-selection-label"
-            >
-              Select a device group to deploy to
-            </label>
             <div
               className="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
               onClick={[Function]}
@@ -202,6 +69,7 @@ exports[`SoftwareDevices Component renders correctly 1`] = `
                 onChange={[Function]}
                 onFocus={[Function]}
                 onMouseDown={[Function]}
+                placeholder="Select a device group"
                 required={false}
                 spellCheck="false"
                 type="text"
@@ -286,6 +154,166 @@ exports[`SoftwareDevices Component renders correctly 1`] = `
         </div>
       </div>
     </div>
+    <h4
+      style={
+        Object {
+          "marginBottom": 0,
+        }
+      }
+    >
+      Select a Release to deploy
+    </h4>
+    <div
+      style={
+        Object {
+          "maxWidth": 400,
+          "minHeight": 105,
+          "minWidth": "min-content",
+        }
+      }
+    >
+      <div
+        aria-expanded={false}
+        aria-owns={null}
+        className="MuiAutocomplete-root MuiAutocomplete-hasClearIcon MuiAutocomplete-hasPopupIcon"
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onMouseDown={[Function]}
+        role="combobox"
+      >
+        <div
+          className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+          style={
+            Object {
+              "minWidth": 400,
+            }
+          }
+        >
+          <div
+            className="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+            onClick={[Function]}
+          >
+            <input
+              aria-activedescendant={null}
+              aria-autocomplete="list"
+              aria-controls={null}
+              aria-invalid={false}
+              autoCapitalize="none"
+              autoComplete="off"
+              autoFocus={false}
+              className="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
+              disabled={false}
+              id="deployment-release-selection"
+              onAnimationStart={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onMouseDown={[Function]}
+              placeholder="Select a Release"
+              required={false}
+              spellCheck="false"
+              type="text"
+              value=""
+            />
+            <div
+              className="MuiAutocomplete-endAdornment"
+            >
+              <button
+                aria-label="Clear"
+                className="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator"
+                disabled={false}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                tabIndex={-1}
+                title="Clear"
+                type="button"
+              >
+                <span
+                  className="MuiIconButton-label"
+                >
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                    />
+                  </svg>
+                </span>
+              </button>
+              <button
+                aria-label="Open"
+                className="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-popupIndicator"
+                disabled={false}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                tabIndex={-1}
+                title="Open"
+                type="button"
+              >
+                <span
+                  className="MuiIconButton-label"
+                >
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M7 10l5 5 5-5z"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p
+      className="info icon"
+    >
+      <svg
+        aria-hidden={true}
+        className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+        focusable="false"
+        style={
+          Object {
+            "margin": "0 6px 4px 0",
+            "verticalAlign": "middle",
+          }
+        }
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+        />
+      </svg>
+      The deployment will skip any devices in the group that are already on the target Release version, or that have an incompatible device type.
+    </p>
   </form>
 </div>
 `;

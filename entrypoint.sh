@@ -26,6 +26,7 @@ cat >/var/www/mender-gui/dist/env.js <<EOF
     isDemoMode: "$DEMO",
     features: {
       hasAddons: "$HAVE_ADDONS",
+      hasAuditlogs: "$HAVE_AUDITLOGS",
       hasDeviceConfig: "$HAVE_DEVICECONFIG",
       hasDeviceConnect: "$HAVE_DEVICECONNECT",
       hasMultitenancy: "$HAVE_MULTITENANT",

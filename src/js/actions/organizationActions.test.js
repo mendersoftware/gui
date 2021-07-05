@@ -183,7 +183,16 @@ describe('organization actions', () => {
   });
 
   it('should handle auditlog retrieval', async () => {
-    const store = mockStore({ ...defaultState });
+    const store = mockStore({
+      ...defaultState,
+      app: {
+        ...defaultState.app,
+        features: {
+          ...defaultState.app.features,
+          hasAuditlogs: true
+        }
+      }
+    });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
       {

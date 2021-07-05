@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, InputLabel, ListSubheader, MenuItem, Select, Tooltip } from '@material-ui/core';
+import { FormControl, ListSubheader, MenuItem, Select, Tooltip } from '@material-ui/core';
 import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
@@ -19,33 +19,21 @@ const styles = {
 };
 
 export const ScheduleRollout = props => {
-  const {
-    setDeploymentSettings,
-    deploymentDeviceIds = [],
-    deploymentDeviceCount = 0,
-    disableSchedule,
-    filterId,
-    hasNewRetryDefault = false,
-    isEnterprise,
-    onSaveRetriesSetting,
-    phases = [],
-    plan,
-    previousPhases = [],
-    previousRetries,
-    retries
-  } = props;
+  const { setDeploymentSettings, deploymentObject = {}, disableSchedule, filterId, isEnterprise, plan, previousPhases = [] } = props;
 
   const [isPickerOpen, setIsPickerOpen] = useState(false);
+
+  const { deploymentDeviceCount = 0, deploymentDeviceIds = [], phases = [] } = deploymentObject;
 
   const handleStartTimeChange = value => {
     // if there is no existing phase, set phase and start time
     if (!phases.length) {
-      setDeploymentSettings([{ batch_size: 100, start_ts: value, delay: 0 }], 'phases');
+      setDeploymentSettings({ ...deploymentObject, phases: [{ batch_size: 100, start_ts: value, delay: 0 }] });
     } else {
       //if there are existing phases, set the first phases to the new start time and adjust later phases in different function
       let newPhases = phases;
       newPhases[0].start_ts = value;
-      setDeploymentSettings(newPhases, 'phases');
+      setDeploymentSettings({ ...deploymentObject, phases: newPhases });
     }
   };
 
@@ -77,10 +65,9 @@ export const ScheduleRollout = props => {
         updatedPhases = JSON.parse(JSON.stringify(value));
         break;
     }
-    setDeploymentSettings(updatedPhases, 'phases');
+    setDeploymentSettings({ ...deploymentObject, phases: updatedPhases });
   };
 
-  const currentRetries = retries ? retries : previousRetries;
   const numberDevices = deploymentDeviceCount ? deploymentDeviceCount : deploymentDeviceIds ? deploymentDeviceIds.length : 0;
   const start_time = phases && phases.length ? phases[0].start_ts : null;
   const customPattern = phases && phases.length > 1 ? 1 : 0;
@@ -112,10 +99,10 @@ export const ScheduleRollout = props => {
 
   const canSchedule = isEnterprise || plan === 'professional';
   return (
-    <form className="flexbox column margin-top-small" style={{ overflow: 'visible', minHeight: '300px' }}>
+    <form className="flexbox column  margin margin-top-none" style={{ overflow: 'visible', minHeight: 300 }}>
       <div className="deployment-scheduling-view">
         <FormControl style={{ width: 'min-content', marginBottom: isPickerOpen || start_time ? 0 : 30 }}>
-          <InputLabel>Set a start time</InputLabel>
+          <h4>Select a start time</h4>
           <Select onChange={handleStartChange} value={start_time ? 'custom' : 0} style={styles.textField}>
             <MenuItem value={0}>Start immediately</MenuItem>
             <MenuItem value="custom">Schedule the start date &amp; time</MenuItem>
@@ -143,29 +130,9 @@ export const ScheduleRollout = props => {
             {deploymentTimeNotification}
           </>
         ) : null}
-        <FormControl className="margin-bottom" style={{ width: 400 }}>
-          <FormGroup row>
-            <InputLabel>Retries</InputLabel>
-            <Select className="margin-right" onChange={e => setDeploymentSettings(e.target.value, 'retries')} value={currentRetries} style={{ width: 150 }}>
-              <MenuItem value={0}>Don&apos;t retry</MenuItem>
-              {[1, 2, 3].map(value => (
-                <MenuItem key={`retries-option-${value}`} value={value}>
-                  {value}
-                </MenuItem>
-              ))}
-            </Select>
-            <FormControlLabel
-              control={<Checkbox checked={hasNewRetryDefault} onChange={(e, checked) => onSaveRetriesSetting(checked)} />}
-              label="Save as default"
-              style={{ marginTop: 0, marginBottom: -15 }}
-            />
-          </FormGroup>
-          <FormHelperText>Number of times a device will retry the update if it fails</FormHelperText>
-        </FormControl>
-        <div />
         <FormControl style={{ maxWidth: 515, width: 'min-content' }}>
-          <InputLabel>Select a rollout pattern</InputLabel>
-          <Select onChange={handlePatternChange} value={customPattern} style={styles.textField} disabled={!isEnterprise || plan !== 'enterprise'}>
+          <h4>Select a rollout pattern</h4>
+          <Select onChange={handlePatternChange} value={customPattern} style={styles.textField} disabled={!isEnterprise}>
             <MenuItem value={0}>Single phase: 100%</MenuItem>
             {(numberDevices > 1 || filterId) && [
               <MenuItem key="customPhaseSetting" divider={true} value={1}>

@@ -8,8 +8,10 @@ import { CancelOutlined as CancelOutlinedIcon } from '@material-ui/icons';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
 import Confirm from '../common/confirm';
 import RelativeTime from '../common/relative-time';
-import ProgressChart from './progressChart';
+import ProgressDisplay, { DeploymentStatusNotification } from './progressChart';
 import DeploymentStats from './deploymentstatus';
+import { PhaseProgressDisplay } from './deployment-report/phaseprogress';
+import { getDeploymentState } from '../../helpers';
 
 export const deploymentTypeClasses = {
   finished: 'past-item',
@@ -36,9 +38,16 @@ export const DeploymentEndTime = compose(setDisplayName('DeploymentEndTime'))(({
 export const DeploymentPhases = compose(setDisplayName('DeploymentPhases'))(({ deployment }) => (
   <div key="DeploymentPhases">{deployment.phases ? deployment.phases.length : '-'}</div>
 ));
-export const DeploymentProgress = compose(setDisplayName('DeploymentProgress'))(({ deployment }) => (
-  <ProgressChart key="DeploymentProgress" deployment={deployment} />
-));
+export const DeploymentProgress = compose(setDisplayName('DeploymentProgress'))(({ deployment }) => {
+  const { phases = [], update_control_map } = deployment;
+  const status = getDeploymentState(deployment);
+  if (status === 'queued') {
+    return <DeploymentStatusNotification status={status} />;
+  } else if (phases.length > 1 || !update_control_map) {
+    return <ProgressDisplay key="DeploymentProgress" deployment={deployment} status={status} />;
+  }
+  return <PhaseProgressDisplay key="DeploymentProgress" deployment={deployment} status={status} />;
+});
 export const DeploymentRelease = compose(setDisplayName('DeploymentRelease'))(props => {
   const {
     deployment: { artifact_name, type = DEPLOYMENT_TYPES.software }
@@ -64,15 +73,7 @@ export const DeploymentItem = ({ abort: abortDeployment, columnHeaders, deployme
 
   let confirmation;
   if (abort === id) {
-    confirmation = (
-      <Confirm
-        classes="flexbox centered confirmation-overlay"
-        cancel={() => self.toggleConfirm(id)}
-        action={() => abortDeployment(id)}
-        table={true}
-        type="abort"
-      />
-    );
+    confirmation = <Confirm classes="flexbox centered confirmation-overlay" cancel={() => toggleConfirm(id)} action={() => abortDeployment(id)} type="abort" />;
   }
   const started = isEnterprise && phases && phases.length >= 1 ? phases[0].start_ts || created : created;
   return (

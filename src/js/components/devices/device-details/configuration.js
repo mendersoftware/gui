@@ -19,7 +19,7 @@ import ConfigurationObject from '../../common/configurationobject';
 import Confirm from '../../common/confirm';
 import LogDialog from '../../common/dialogs/log';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
-import { ConfigureRaspberryLedTip, ConfigureTimezoneTip } from '../../helptips/helptooltips';
+import { ConfigureAddOnTip, ConfigureRaspberryLedTip, ConfigureTimezoneTip } from '../../helptips/helptooltips';
 import Loader from '../../common/loader';
 import ConfigImportDialog from './configimportdialog';
 import DeviceDataCollapse from './devicedatacollapse';
@@ -262,6 +262,11 @@ export const DeviceConfiguration = ({
     setIsEditingConfig(true);
   };
 
+  const onStartImportClick = e => {
+    e.stopPropagation();
+    setShowConfigImport(true);
+  };
+
   const hasDeviceConfig = !isEmpty(reported);
   let footer = hasDeviceConfig ? <ConfigUpToDateNote updated_ts={reported_ts} /> : <ConfigEmptyNote updated_ts={device.updated_ts} />;
   if (isEditingConfig) {
@@ -329,7 +334,7 @@ export const DeviceConfiguration = ({
       onClick={setOpen}
       title={
         <div className="two-columns">
-          <div className="flexbox" style={{ alignItems: 'center' }}>
+          <div className="flexbox center-aligned">
             <h4 className="margin-right">Device configuration</h4>
             {!(isEditingConfig || isUpdatingConfig) && (
               <Button onClick={onStartEdit} startIcon={<EditIcon />} size="small">
@@ -338,32 +343,33 @@ export const DeviceConfiguration = ({
             )}
           </div>
           {open && isEditingConfig ? (
-            <Button onClick={setShowConfigImport} disabled={isUpdatingConfig} startIcon={<SaveAltIcon />} style={{ justifySelf: 'left' }}>
+            <Button onClick={onStartImportClick} disabled={isUpdatingConfig} startIcon={<SaveAltIcon />} style={{ justifySelf: 'left' }}>
               Import configuration
             </Button>
           ) : null}
         </div>
       }
     >
-      {isEditingConfig ? (
-        <KeyValueEditor
-          disabled={isEditDisabled}
-          errortext={''}
-          input={changedConfig}
-          inputHelpTipsMap={helpTipsMap}
-          onInputChange={setChangedConfig}
-          reset={shouldUpdateEditor}
-          showHelptips={showHelptips}
-        />
-      ) : (
-        hasDeviceConfig && <ConfigurationObject config={remainderReported} setSnackbar={setSnackbar} />
-      )}
-      <div className="flexbox margin-bottom margin-top" style={{ alignItems: 'center' }}>
-        {footer}
+      <div className="relative">
+        {isEditingConfig ? (
+          <KeyValueEditor
+            disabled={isEditDisabled}
+            errortext=""
+            input={changedConfig}
+            inputHelpTipsMap={helpTipsMap}
+            onInputChange={setChangedConfig}
+            reset={shouldUpdateEditor}
+            showHelptips={showHelptips}
+          />
+        ) : (
+          hasDeviceConfig && <ConfigurationObject config={remainderReported} setSnackbar={setSnackbar} />
+        )}
+        {showHelptips && <ConfigureAddOnTip />}
+        <div className="flexbox center-aligned margin-bottom margin-top">{footer}</div>
+        {hasDeviceConfig && !isEditingConfig && <a onClick={() => setOpen(false)}>show less</a>}
+        {showLog && <LogDialog logData={updateLog} onClose={() => setShowLog(false)} type="configUpdateLog" />}
+        {showConfigImport && <ConfigImportDialog onCancel={() => setShowConfigImport(false)} onSubmit={onConfigImport} setSnackbar={setSnackbar} />}
       </div>
-      {hasDeviceConfig && !isEditingConfig && <a onClick={() => setOpen(false)}>show less</a>}
-      {showLog && <LogDialog logData={updateLog} onClose={() => setShowLog(false)} type="configUpdateLog" />}
-      {showConfigImport && <ConfigImportDialog onCancel={() => setShowConfigImport(false)} onSubmit={onConfigImport} />}
     </DeviceDataCollapse>
   );
 };

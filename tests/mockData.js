@@ -1,4 +1,5 @@
 import { rolesByName } from '../src/js/constants/userConstants';
+import DeviceConstants from '../src/js/constants/deviceConstants';
 
 export const undefineds = /undefined|\[object Object\]/;
 window.mender_environment = {
@@ -153,6 +154,20 @@ export const defaultState = {
       preauthorized: { deviceIds: [], total: 0 },
       rejected: { deviceIds: [], total: 0 }
     },
+    deviceList: {
+      deviceIds: [],
+      page: 1,
+      perPage: 20,
+      selection: [],
+      sort: {
+        direction: DeviceConstants.DEVICE_SORTING_OPTIONS.desc,
+        columns: [
+          // { column: null, scope: null }
+        ]
+      },
+      state: DeviceConstants.DEVICE_STATES.accepted,
+      total: 0
+    },
     filteringAttributes: {
       identityAttributes: ['mac'],
       inventoryAttributes: ['artifact_name']
@@ -173,8 +188,7 @@ export const defaultState = {
       },
       selectedGroup: null
     },
-    limit: 500,
-    selectedDeviceList: []
+    limit: 500
   },
   onboarding: {
     complete: false,

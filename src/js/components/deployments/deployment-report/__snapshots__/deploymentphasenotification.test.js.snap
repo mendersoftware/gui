@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PhaseProgress Component renders correctly 1`] = `
+<div>
+  <div
+    class="progressStatus flexbox center-aligned margin-bottom clickable "
+    style="padding: 15px;"
+  >
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
+      focusable="false"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"
+      />
+    </svg>
+    <div
+      class="text-muted"
+    >
+      Deployment is 
+      <span
+        class="uppercased"
+      >
+        paused
+      </span>
+      . 
+      <a>
+        Review its status
+      </a>
+       to continue, retry or abort the deployment
+       
+    </div>
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root link-color MuiSvgIcon-fontSizeSmall"
+      focusable="false"
+      style="margin-left: 8px;"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M12 4c4.41 0 8 3.59 8 8s-3.59 8-8 8-8-3.59-8-8 3.59-8 8-8m0-2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 13l-4-4h8z"
+      />
+    </svg>
+  </div>
+</div>
+`;

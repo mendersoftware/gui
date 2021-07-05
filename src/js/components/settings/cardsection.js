@@ -68,7 +68,7 @@ const CardSection = ({ isSignUp, onCancel, onComplete, onSubmit, setSnackbar }) 
 
       {isSignUp && <p className="info">Billing will be scheduled monthly, starting from today. You can cancel at any time.</p>}
 
-      <div className="flexbox margin-top-small" style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
+      <div className="flexbox center-aligned margin-top-small" style={{ justifyContent: 'flex-end' }}>
         {!isSignUp && (
           <Button type="reset" disabled={loading} style={{ marginRight: 15 }}>
             Cancel

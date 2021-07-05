@@ -2,13 +2,28 @@ import React, { useState } from 'react';
 
 // material ui
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import FileUpload from '../common/forms/fileupload';
 import KeyValueEditor from '../common/forms/keyvalueeditor';
 
 import { isEmpty } from '../../helpers';
 
-export const PreauthDialog = ({ deviceLimitWarning, limitMaxed, onCancel, onSubmit, preauthDevice, setSnackbar }) => {
+export const DeviceLimitWarning = ({ acceptedDevices, deviceLimit, hasContactInfo }) => {
+  return (
+    <p className="warning">
+      <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
+      You have reached your limit of authorized devices: {acceptedDevices} of {deviceLimit}
+      {hasContactInfo && (
+        <p>
+          Contact us by email at <a href="mailto:support@mender.io">support@mender.io</a> to request a higher limit.
+        </p>
+      )}
+    </p>
+  );
+};
+
+export const PreauthDialog = ({ acceptedDevices, deviceLimit, limitMaxed, onCancel, onSubmit, preauthDevice, setSnackbar }) => {
   const [errortext, setErrortext] = useState(null);
   const [jsonIdentity, setJsonIdentity] = useState(null);
   const [publicKey, setPublicKey] = useState(null);
@@ -30,7 +45,7 @@ export const PreauthDialog = ({ deviceLimitWarning, limitMaxed, onCancel, onSubm
 
   const isSubmitDisabled = !publicKey || isEmpty(jsonIdentity) || !!limitMaxed;
   return (
-    <Dialog open={true}>
+    <Dialog open>
       <DialogTitle>Preauthorize devices</DialogTitle>
       <DialogContent style={{ overflow: 'hidden' }}>
         <p>You can preauthorize a device by adding its authentication dataset here.</p>
@@ -48,7 +63,7 @@ export const PreauthDialog = ({ deviceLimitWarning, limitMaxed, onCancel, onSubm
         />
         <h4 className="margin-bottom-none margin-top">Identity data</h4>
         <KeyValueEditor errortext={errortext} onInputChange={convertIdentityToJSON} />
-        {!!limitMaxed && deviceLimitWarning}
+        {!!limitMaxed && <DeviceLimitWarning acceptedDevices={acceptedDevices} deviceLimit={deviceLimit} />}
       </DialogContent>
       <DialogActions>
         <Button onClick={onCancel}>Cancel</Button>

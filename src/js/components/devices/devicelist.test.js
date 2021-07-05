@@ -1,5 +1,6 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { prettyDOM } from '@testing-library/dom';
+import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
@@ -13,23 +14,24 @@ describe('DeviceList Component', () => {
   beforeEach(() => {
     store = mockStore({ ...defaultState });
   });
-
   it('renders correctly', async () => {
-    const tree = renderer
-      .create(
-        <Provider store={store}>
-          <DeviceList
-            devices={[]}
-            selectedRows={[]}
-            columnHeaders={[{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4 }]}
-            columnWidth={100}
-            pageLength={10}
-            pageTotal={50}
-          />
-        </Provider>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { baseElement } = render(
+      <Provider store={store}>
+        <DeviceList
+          devices={[]}
+          deviceListState={defaultState.devices.deviceList}
+          selectedRows={[]}
+          columnHeaders={[{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4 }]}
+          pageTotal={50}
+        />
+      </Provider>
+    );
+    // special snapshot handling here to work around unstable ids in mui code...
+    const view = prettyDOM(baseElement.firstChild, 100000, { highlight: false })
+      .replace(/id="mui-[0-9]*"/g, '')
+      .replace(/aria-labelledby="(mui-[0-9]* *)*"/g, '')
+      .replace(/\\/g, '');
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

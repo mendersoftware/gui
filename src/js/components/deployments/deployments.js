@@ -112,12 +112,15 @@ export const Deployments = ({
   }, []);
 
   const retryDeployment = (deployment, devices) => {
-    const release = { Name: deployment.artifact_name, device_types_compatible: deployment.device_types_compatible || [] };
+    const { artifact_name, device_types_compatible = [], name, update_control_map = {} } = deployment;
+    const release = { Name: artifact_name, device_types_compatible };
+    const updateControlMap = isEnterprise ? { update_control_map: { states: update_control_map.states || {} } } : {};
     const deploymentObject = {
-      group: deployment.name,
+      group: name,
       deploymentDeviceIds: devices.map(item => item.id),
+      phases: [{ batch_size: 100, start_ts: undefined, delay: 0 }],
       release,
-      phases: [{ batch_size: 100, start_ts: new Date().toISOString(), delay: 0 }]
+      ...updateControlMap
     };
     setDeploymentObject(deploymentObject);
     setCreateDialog(true);

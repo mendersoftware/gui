@@ -17,20 +17,21 @@ import {
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
-import { getDeviceLog, getSingleDeployment } from '../../actions/deploymentActions';
+import { getDeviceLog, getSingleDeployment, updateDeploymentControlMap } from '../../actions/deploymentActions';
 import { getAuditLogs } from '../../actions/organizationActions';
 import { getRelease } from '../../actions/releaseActions';
-import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
+import { deploymentStatesToSubstates, DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
 import { getIdAttribute, getIsEnterprise } from '../../selectors';
 import theme from '../../themes/mender-theme';
 import ConfigurationObject from '../common/configurationobject';
 import LogDialog from '../common/dialogs/log';
 import DeploymentOverview from './deployment-report/overview';
 import RolloutSchedule from './deployment-report/rolloutschedule';
-import { sortDeploymentDevices } from '../../helpers';
+import { sortDeploymentDevices, statCollector } from '../../helpers';
 import Confirm from '../common/confirm';
 import DeviceList from './deployment-report/devicelist';
 import DeploymentStatus from './deployment-report/deploymentstatus';
+import DeploymentPhaseNotification from './deployment-report/deploymentphasenotification';
 
 momentDurationFormatSetup(moment);
 
@@ -75,16 +76,14 @@ export const DeploymentReport = props => {
     past,
     retry,
     release,
-    type
+    type,
+    updateDeploymentControlMap
   } = props;
 
   useEffect(() => {
-    if (!open) {
-      return;
-    }
     clearInterval(timer);
     if (!(deployment.finished || deployment.status === DEPLOYMENT_STATES.finished)) {
-      timer = past ? null : setInterval(refreshDeploymentDevices, 5000);
+      timer = past ? null : setInterval(refreshDeployment, 5000);
     }
     if (deployment.type === DEPLOYMENT_TYPES.software || !release.device_types_compatible.length) {
       getRelease(deployment.artifact_name);
@@ -92,15 +91,21 @@ export const DeploymentReport = props => {
     if (isEnterprise) {
       getAuditLogs(1, 100, undefined, undefined, undefined, 'deployment', deployment.name);
     }
-    refreshDeploymentDevices();
+    refreshDeployment();
     return () => {
       clearInterval(timer);
     };
-  }, [open]);
+  }, [deployment.id]);
 
   useEffect(() => {
-    const { device_count, stats } = deployment;
-    if (device_count && stats && stats.downloading + stats.installing + stats.rebooting + stats.pending <= 0) {
+    const { device_count, stats = {} } = deployment;
+
+    const progressCount =
+      statCollector(deploymentStatesToSubstates.paused, stats) +
+      statCollector(deploymentStatesToSubstates.pending, stats) +
+      statCollector(deploymentStatesToSubstates.inprogress, stats);
+
+    if (!!device_count && progressCount <= 0) {
       // if no more devices in "progress" statuses, deployment has finished, stop counter
       clearInterval(timer);
     }
@@ -110,7 +115,7 @@ export const DeploymentReport = props => {
     rolloutSchedule.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const refreshDeploymentDevices = () => {
+  const refreshDeployment = () => {
     if (!deployment.id) {
       return;
     }
@@ -141,6 +146,13 @@ export const DeploymentReport = props => {
     }
   }
 
+  const onUpdateControlChange = (updatedMap = {}) => {
+    const { id, update_control_map = {} } = deployment;
+    const { states } = update_control_map;
+    const { states: updatedStates } = updatedMap;
+    updateDeploymentControlMap(id, { states: { ...states, ...updatedStates } });
+  };
+
   return (
     <Drawer className={`${open ? 'fadeIn' : 'fadeOut'}`} anchor="right" open={open} onClose={onClose} PaperProps={{ style: { minWidth: '75vw' } }}>
       <div className="flexbox margin-bottom-small space-between">
@@ -151,7 +163,7 @@ export const DeploymentReport = props => {
             <LinkIcon />
           </IconButton>
         </div>
-        <div className="flexbox" style={{ alignItems: 'center' }}>
+        <div className="flexbox center-aligned">
           {!finished ? (
             <DeploymentAbortButton abort={abort} deployment={deployment} />
           ) : deployment.stats.failure || deployment.stats.aborted ? (
@@ -176,6 +188,7 @@ export const DeploymentReport = props => {
       </div>
       <Divider />
       <div className="deployment-report">
+        <DeploymentPhaseNotification deployment={deployment} onReviewClick={scrollToBottom} />
         <DeploymentOverview {...props} onScheduleClick={scrollToBottom} />
 
         {isConfigurationDeployment && (
@@ -192,7 +205,7 @@ export const DeploymentReport = props => {
         </h4>
         <DeploymentStatus deployment={deployment} />
         <DeviceList {...props} created={created} viewLog={viewLog} />
-        <RolloutSchedule deployment={deployment} innerRef={rolloutSchedule} />
+        <RolloutSchedule deployment={deployment} onUpdateControlChange={onUpdateControlChange} onAbort={abort} innerRef={rolloutSchedule} />
         {deviceId && <LogDialog logData={logData} onClose={() => setDeviceId()} />}
       </div>
       <Divider light style={{ marginTop: theme.spacing(2) }} />
@@ -200,7 +213,7 @@ export const DeploymentReport = props => {
   );
 };
 
-const actionCreators = { getAuditLogs, getDeviceAuth, getDeviceById, getDeviceLog, getRelease, getSingleDeployment, setSnackbar };
+const actionCreators = { getAuditLogs, getDeviceAuth, getDeviceById, getDeviceLog, getRelease, getSingleDeployment, setSnackbar, updateDeploymentControlMap };
 
 const mapStateToProps = state => {
   const devices = state.deployments.byId[state.deployments.selectedDeployment]?.devices || {};

@@ -34,8 +34,8 @@ export const AddOnSelection = ({ addons = [], updatedPlan = 'os', onChange }) =>
           return (
             <div
               key={addOnName}
-              className={`planPanel flexbox ${isEnabled ? 'active' : ''}`}
-              style={{ alignItems: 'center', height: 'initial', marginTop: 10, width: 'initial' }}
+              className={`planPanel flexbox center-aligned ${isEnabled ? 'active' : ''}`}
+              style={{ height: 'initial', marginTop: 10, width: 'initial' }}
               onClick={e => onAddOnClick(e, addOnName, !isEnabled)}
             >
               <Checkbox checked={isEnabled} />
