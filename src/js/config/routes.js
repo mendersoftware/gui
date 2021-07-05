@@ -4,7 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import Artifacts from '../components/artifacts/artifacts';
 import Dashboard from '../components/dashboard/dashboard';
 import Deployments from '../components/deployments/deployments';
-import Devices from '../components/devices/devices';
+import Devices from '../components/devices/device-groups';
 import Help from '../components/help/help';
 import Settings from '../components/settings/settings';
 import Login from '../components/user-management/login';

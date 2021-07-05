@@ -14,7 +14,7 @@ body {
 
 #app {
   display: grid;
-  min-height: 100vh;
+  height: 100vh;
   grid-template-columns: 200px 1fr;
   grid-template-rows: min-content 1fr;
   grid-template-areas:
@@ -57,6 +57,12 @@ body {
     justify-content: center;
     display: flex;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 3px, rgba(0, 0, 0, 0.1) 0px 1px 3px;
+  }
+}
+@media screen and (max-width: 600px) {
+  #app {
+    min-height: 100vh;
+    height: initial;
   }
 }
 
@@ -290,15 +296,35 @@ ul.link-list {
   margin-bottom: 0;
 }
 
+.padding {
+  padding: 2 * @defaultGutterWidth;
+}
+.padding-small {
+  padding: @defaultGutterWidth;
+}
 .padding-right {
   padding-right: 3 * @defaultGutterWidth;
 }
-
 .padding-top {
   padding-top: 2 * @defaultGutterWidth;
 }
 .padding-bottom {
   padding-bottom: 2 * @defaultGutterWidth;
+}
+.padding-top-small {
+  padding-top: @defaultGutterWidth;
+}
+.padding-top-none {
+  padding-top: 0;
+}
+.padding-right-none {
+  padding-right: 0;
+}
+.padding-bottom-none {
+  padding-bottom: 0;
+}
+.padding-left-none {
+  padding-left: 0;
 }
 
 .inline-block {
@@ -1539,6 +1565,17 @@ div:focus {
   }
   &.pending .deviceListItem {
     background: @lightergrey;
+  }
+}
+
+.device-addition-widget {
+  border-radius: 5px;
+  border: 1px solid @bordercolor;
+  color: @verylightgrey;
+  padding-top: 0.5 * @defaultGutterWidth;
+  a {
+    color: @verylightgrey;
+    font-weight: normal;
   }
 }
 

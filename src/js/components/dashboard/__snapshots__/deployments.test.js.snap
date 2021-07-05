@@ -21,7 +21,7 @@ exports[`Deployments Component renders correctly 1`] = `
       className="loaderContainer"
     >
       <div
-        className="loader"
+        className="  loader"
       >
         <span
           className="dot dot_1"

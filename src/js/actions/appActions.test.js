@@ -89,12 +89,6 @@ describe('app actions', () => {
         status: 'inprogress'
       },
       {
-        type: DeviceConstants.SET_ACCEPTED_DEVICES,
-        deviceIds: Array.from({ length: defaultState.devices.byStatus.accepted.total }, () => defaultState.devices.byId.a1.id),
-        status: 'accepted',
-        total: defaultState.devices.byStatus.accepted.deviceIds.length
-      },
-      {
         type: DeviceConstants.RECEIVE_DEVICES,
         devicesById: {
           a1: {
@@ -111,10 +105,10 @@ describe('app actions', () => {
         }
       },
       {
-        type: DeviceConstants.SET_PENDING_DEVICES,
-        deviceIds: Array.from({ length: defaultState.devices.byStatus.pending.total }, () => defaultState.devices.byId.a1.id),
-        status: 'pending',
-        total: defaultState.devices.byStatus.pending.deviceIds.length
+        type: DeviceConstants.SET_ACCEPTED_DEVICES,
+        deviceIds: Array.from({ length: defaultState.devices.byStatus.accepted.total }, () => defaultState.devices.byId.a1.id),
+        status: 'accepted',
+        total: defaultState.devices.byStatus.accepted.deviceIds.length
       },
       {
         type: DeviceConstants.RECEIVE_DEVICES,
@@ -133,10 +127,16 @@ describe('app actions', () => {
           }
         }
       },
+      {
+        type: DeviceConstants.SET_PENDING_DEVICES,
+        deviceIds: Array.from({ length: defaultState.devices.byStatus.pending.total }, () => defaultState.devices.byId.a1.id),
+        status: 'pending',
+        total: defaultState.devices.byStatus.pending.deviceIds.length
+      },
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: {} },
       { type: DeviceConstants.SET_PREAUTHORIZED_DEVICES, deviceIds: [], status: 'preauthorized', total: 0 },
       { type: DeviceConstants.RECEIVE_DEVICES, devicesById: {} },
       { type: DeviceConstants.SET_REJECTED_DEVICES, deviceIds: [], status: 'rejected', total: 0 },
-      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: {} },
       {
         type: DeviceConstants.RECEIVE_DYNAMIC_GROUPS,
         groups: {

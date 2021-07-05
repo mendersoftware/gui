@@ -1,67 +1,74 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AuthorizedDevices Component renders correctly 1`] = `
-<div
-  className="relative"
->
+<div>
   <div
-    style={
-      Object {
-        "marginLeft": "20px",
-      }
-    }
+    class="margin-left-small"
   >
+    <h3
+      class="margin-right"
+    >
+      All devices
+    </h3>
     <div
-      className="flexbox space-between filter-header"
+      class="flexbox space-between filter-header"
     >
       <div
-        className="flexbox"
+        class="flexbox"
       >
-        <h2
-          className="margin-right"
-        >
-          All devices
-        </h2>
         <div
-          className="flexbox centered "
-          style={
-            Object {
-              "marginBottom": -1,
-            }
-          }
+          class="flexbox centered"
+        >
+          Status:
+          <div
+            class="MuiInputBase-root MuiInput-root margin-right"
+            style="font-size: 13px; margin-left: 8px;"
+          >
+            <div
+              aria-haspopup="listbox"
+              class="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
+              role="button"
+              tabindex="0"
+            >
+              accepted
+            </div>
+            <input
+              aria-hidden="true"
+              class="MuiSelect-nativeInput"
+              tabindex="-1"
+              value="accepted"
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSelect-icon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M7 10l5 5 5-5z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="flexbox centered "
+          style="margin-bottom: -1px;"
         >
           <button
-            className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
-            disabled={false}
-            onBlur={[Function]}
-            onClick={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            style={
-              Object {
-                "backgroundColor": "transparent",
-              }
-            }
-            tabIndex={0}
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
+            style="background-color: transparent;"
+            tabindex="0"
             type="button"
           >
             <span
-              className="MuiButton-label"
+              class="MuiButton-label"
             >
               <span
-                className="MuiButton-startIcon MuiButton-iconSizeMedium"
+                class="MuiButton-startIcon MuiButton-iconSizeMedium"
               >
                 <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root"
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
                   focusable="false"
                   viewBox="0 0 24 24"
                 >
@@ -78,22 +85,22 @@ exports[`AuthorizedDevices Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    className="loaderContainer"
+    class="loaderContainer"
   >
     <div
-      className="loader"
+      class="  loader"
     >
       <span
-        className="dot dot_1"
+        class="dot dot_1"
       />
       <span
-        className="dot dot_2"
+        class="dot dot_2"
       />
       <span
-        className="dot dot_3"
+        class="dot dot_3"
       />
       <span
-        className="dot dot_4"
+        class="dot dot_4"
       />
     </div>
   </div>

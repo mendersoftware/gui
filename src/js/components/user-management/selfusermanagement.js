@@ -12,8 +12,7 @@ import { editUser, saveGlobalSettings, saveUserSettings } from '../../actions/us
 import { getCurrentUser, getIsEnterprise, getUserSettings } from '../../selectors';
 import { OAuth2Providers } from './oauth2providers';
 import TwoFactorAuthSetup from './twofactorauthsetup';
-
-const me = 'me';
+import UserConstants from '../../constants/userConstants';
 
 export const SelfUserManagement = ({ canHave2FA, currentUser, editUser, hasTracking, hasTrackingConsent, isEnterprise, saveUserSettings }) => {
   const [editEmail, setEditEmail] = useState(false);
@@ -21,7 +20,7 @@ export const SelfUserManagement = ({ canHave2FA, currentUser, editUser, hasTrack
   const [emailFormId, setEmailFormId] = useState(new Date());
 
   const editSubmit = userData =>
-    editUser(me, userData).then(() => {
+    editUser(UserConstants.OWN_USER_ID, userData).then(() => {
       setEditEmail(false);
       setEditPass(false);
     });

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import copy from 'copy-to-clipboard';
 
@@ -7,7 +7,15 @@ import { Close as CloseIcon, Link as LinkIcon, Replay as ReplayIcon } from '@mat
 
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../actions/deploymentActions';
-import { applyDeviceConfig, decommissionDevice, setDeviceConfig } from '../../actions/deviceActions';
+import {
+  applyDeviceConfig,
+  decommissionDevice,
+  getDeviceAuth,
+  getDeviceById,
+  getDeviceConfig,
+  getDeviceConnect,
+  setDeviceConfig
+} from '../../actions/deviceActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import ForwardingLink from '../common/forwardlink';
@@ -23,6 +31,9 @@ import DeviceIdentity from './device-details/identity';
 import DeviceConnection from './device-details/connection';
 import InstalledSoftware from './device-details/installedsoftware';
 
+const refreshDeviceLength = 10000;
+let timer;
+
 export const ExpandedDevice = ({
   abortDeployment,
   applyDeviceConfig,
@@ -32,6 +43,10 @@ export const ExpandedDevice = ({
   deviceConfigDeployment,
   docsVersion,
   getDeviceLog,
+  getDeviceAuth,
+  getDeviceById,
+  getDeviceConfig,
+  getDeviceConnect,
   getSingleDeployment,
   hasDeviceConfig,
   hasDeviceConnect,
@@ -49,12 +64,36 @@ export const ExpandedDevice = ({
   const [socketClosed, setSocketClosed] = useState(true);
   const [troubleshootType, setTroubleshootType] = useState();
 
+  useEffect(() => {
+    if (!device.id) {
+      return;
+    }
+    clearInterval(timer);
+    timer = setInterval(() => getDeviceInfo(device), refreshDeviceLength);
+    getDeviceInfo(device);
+    return () => {
+      clearInterval(timer);
+    };
+  }, [device.id, device.status]);
+
+  const getDeviceInfo = device => {
+    getDeviceAuth(device.id);
+    if (hasDeviceConfig && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(device.status)) {
+      getDeviceConfig(device.id);
+    }
+    if (device.status === DEVICE_STATES.accepted) {
+      // Get full device identity details for single selected device
+      getDeviceById(device.id);
+      getDeviceConnect(device.id);
+    }
+  };
+
   const onDecommissionDevice = device_id => {
     // close dialog!
     // close expanded device
     // trigger reset of list!
     return decommissionDevice(device_id).finally(() => {
-      refreshDevices(true);
+      refreshDevices();
       onClose();
     });
   };
@@ -92,7 +131,7 @@ export const ExpandedDevice = ({
       <AuthStatus
         device={device}
         decommission={onDecommissionDevice}
-        deviceListRefresh={() => refreshDevices(true)}
+        deviceListRefresh={refreshDevices}
         disableBottomBorder={!isAcceptedDevice}
         showHelptips={showHelptips}
       />
@@ -112,6 +151,7 @@ export const ExpandedDevice = ({
           getDeviceLog={getDeviceLog}
           getSingleDeployment={getSingleDeployment}
           saveGlobalSettings={saveGlobalSettings}
+          setSnackbar={setSnackbar}
           setDeviceConfig={setDeviceConfig}
           showHelptips={showHelptips}
         />
@@ -152,6 +192,10 @@ const actionCreators = {
   applyDeviceConfig,
   decommissionDevice,
   getDeviceLog,
+  getDeviceAuth,
+  getDeviceById,
+  getDeviceConfig,
+  getDeviceConnect,
   getSingleDeployment,
   saveGlobalSettings,
   setDeviceConfig,

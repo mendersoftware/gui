@@ -140,14 +140,6 @@ export function preformatWithRequestID(res, failMsg) {
   return failMsg;
 }
 
-export const filtersCompare = (filters, otherFilters) =>
-  filters.length !== otherFilters.length ||
-  filters.some(filter =>
-    otherFilters.find(
-      otherFilter => otherFilter.key === filter.key && Object.entries(filter).reduce((accu, [key, value]) => accu || otherFilter[key] !== value, false)
-    )
-  );
-
 export const versionCompare = (v1, v2) => {
   const partsV1 = `${v1}`.split('.');
   const partsV2 = `${v2}`.split('.');

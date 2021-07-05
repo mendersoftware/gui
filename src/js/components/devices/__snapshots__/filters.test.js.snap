@@ -120,9 +120,6 @@ exports[`Filters Component renders correctly 1`] = `
                           />
                         </svg>
                       </span>
-                      <span
-                        className="MuiTouchRipple-root"
-                      />
                     </button>
                   </div>
                 </div>
@@ -194,26 +191,6 @@ exports[`Filters Component renders correctly 1`] = `
                   required={false}
                   type="text"
                   value=""
-                />
-              </div>
-            </div>
-            <div
-              className="loaderContainer shrunk"
-            >
-              <div
-                className="loader"
-              >
-                <span
-                  className="dot dot_1"
-                />
-                <span
-                  className="dot dot_2"
-                />
-                <span
-                  className="dot dot_3"
-                />
-                <span
-                  className="dot dot_4"
                 />
               </div>
             </div>
