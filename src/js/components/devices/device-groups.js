@@ -313,7 +313,7 @@ export const DeviceGroups = ({
 
   const removeCurrentGroup = () => {
     const request = groupFilters.length ? removeDynamicGroup(selectedGroup) : removeStaticGroup(selectedGroup);
-    return request.then(() => setRemoveGroup(!removeGroup)).catch(err => console.log(err));
+    return request.then(toggleGroupRemoval).catch(err => console.log(err));
   };
 
   // Edit groups from device selection
@@ -383,6 +383,8 @@ export const DeviceGroups = ({
     selectGroup();
   };
 
+  const toggleGroupRemoval = () => setRemoveGroup(!removeGroup);
+
   return (
     <>
       <div className="flexbox space-between margin-right">
@@ -412,14 +414,14 @@ export const DeviceGroups = ({
             addDevicesToGroup={addDevicesToGroup}
             deviceRefreshTrigger={deviceRefreshTrigger}
             onGroupClick={onGroupClick}
-            onGroupRemoval={() => setRemoveGroup(!removeGroup)}
+            onGroupRemoval={toggleGroupRemoval}
             onPreauthClick={setOpenPreauth}
             openSettingsDialog={openSettingsDialog}
             removeDevicesFromGroup={onRemoveDevicesFromGroup}
             states={routes}
           />
         </div>
-        {removeGroup && <RemoveGroup onClose={() => setRemoveGroup(!removeGroup)} onRemove={removeCurrentGroup} />}
+        {removeGroup && <RemoveGroup onClose={toggleGroupRemoval} onRemove={removeCurrentGroup} />}
         {modifyGroupDialog && (
           <CreateGroup
             addListOfDevices={createGroupFromDialog}
