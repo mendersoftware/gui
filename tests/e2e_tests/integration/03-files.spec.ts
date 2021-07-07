@@ -1,38 +1,18 @@
 import * as fs from 'fs';
-import { BrowserContext, Page } from 'playwright';
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween.js';
 import md5 from 'md5';
-
-import { login, setupPage } from '../utils/commands';
-import { contextOptions, testParams } from '../config';
-
-const { baseUrl, environment, password, username } = testParams;
+import test from '../fixtures/fixtures';
 
 dayjs.extend(isBetween);
 
 test.describe('Files', () => {
   const fileName = 'mender-demo-artifact.mender';
+  test.use({ storageState: 'storage.json' });
 
-  let page: Page;
-  let context: BrowserContext;
-  test.beforeEach(async ({ browser }) => {
-    const storageState = JSON.parse(process.env.STORAGE || '{}');
-    context = await browser.newContext({ ...contextOptions.contextOptions, storageState });
-    if (!process.env.STORAGE) {
-      context = await login(username, password, baseUrl, context);
-    }
-    page = await setupPage(environment, context, page, baseUrl);
-    await page.goto(`${baseUrl}ui/#/releases`);
-  });
-
-  test.afterEach(async () => {
-    const storage = await context.storageState();
-    process.env.STORAGE = JSON.stringify(storage);
-  });
-
-  test('allows file uploads', async () => {
+  test('allows file uploads', async ({ loggedInPage: page }) => {
+    await page.click(`.leftNav :text('Releases')`);
     // create an artifact to download first
     await page.click(`button:has-text('Upload')`);
     await page.setInputFiles('.MuiDialog-paper .dropzone input', `fixtures/${fileName}`);
@@ -55,7 +35,8 @@ test.describe('Files', () => {
   //       })
   // })
 
-  test('allows artifact downloads', async () => {
+  test('allows artifact downloads', async ({ loggedInPage: page }) => {
+    await page.click(`.leftNav :text('Releases')`);
     await page.click('.expandButton');
     await page.waitForSelector(`a:has-text('Download Artifact'), button:has-text('Download Artifact')`, { timeout: 2000 });
     expect(await page.isVisible(`a:has-text('Download Artifact'), button:has-text('Download Artifact')`)).toBeTruthy();
@@ -66,7 +47,7 @@ test.describe('Files', () => {
     expect(md5(newFile)).toEqual(md5(testFile));
   });
 
-  test('allows file transfer', async () => {
+  test('allows file transfer', async ({ environment, loggedInPage: page }) => {
     test.skip(!['enterprise', 'staging'].includes(environment));
     await page.click(`.leftNav :text('Devices')`);
     await page.click(`.deviceListItem`);

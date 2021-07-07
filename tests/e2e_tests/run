@@ -48,6 +48,7 @@ parse_args(){
             ;;
             --enterprise)
             COMPOSE_CMD+=$ENTERPRISE_COMPOSE
+            export TEST_ENVIRONMENT=enterprise
             ENTERPRISE=1
             shift
             ;;
@@ -70,7 +71,6 @@ run_tests() {
     declare retries=5
 
     if [[ $ENTERPRISE -eq 1 ]]; then
-        export TEST_ENVIRONMENT=enterprise
         while [[ $retries -gt 0 && -z $containerid ]]; do
             containerid=$(get_container_id mender-tenantadm)
             sleep 1
