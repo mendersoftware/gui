@@ -104,7 +104,7 @@ const ProgressChart = ({ deployment = {}, showDetails, style }) => {
     <>
       {!showDetails && (
         <>
-          Phase 1: {Math.round((device_count / max_devices) * 100)}% ({device_count} {pluralize('device', device_count)})
+          Phase 1: {Math.round((device_count / totalDeviceCount || 0) * 100)}% ({device_count} {pluralize('device', device_count)})
         </>
       )}
       <div className={`progress-chart ${!showDetails ? 'detailed' : ''}`} style={style}>
