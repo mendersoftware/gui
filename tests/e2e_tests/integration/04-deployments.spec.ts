@@ -1,37 +1,23 @@
-import { BrowserContext, Page } from 'playwright';
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween.js';
 
-import { login, setupPage } from '../utils/commands';
-import { contextOptions, testParams } from '../config';
-
-const { baseUrl, environment, password, username } = testParams;
+import test from '../fixtures/fixtures';
 
 dayjs.extend(isBetween);
 
 test.describe('Deployments', () => {
-  let page: Page;
-  let context: BrowserContext;
-  test.beforeEach(async ({ browser }) => {
-    const storageState = JSON.parse(process.env.STORAGE || '{}');
-    context = await browser.newContext({ ...contextOptions.contextOptions, storageState });
-    if (!process.env.STORAGE) {
-      context = await login(username, password, baseUrl, context);
-    }
-    page = await setupPage(environment, context, page, baseUrl);
+  test.use({ storageState: 'storage.json' });
+
+  test.beforeEach(async ({ baseUrl, loggedInPage: page }) => {
     await page.goto(`${baseUrl}ui/#/devices`);
     await page.waitForTimeout(2000);
     await page.goto(`${baseUrl}ui/#/releases`);
     await page.waitForTimeout(2000);
   });
 
-  test.afterEach(async () => {
-    const storage = await context.storageState();
-    process.env.STORAGE = JSON.stringify(storage);
-  });
-
-  test('allows shortcut deployments', async () => {
+  test('allows shortcut deployments', async ({ environment, loggedInPage: page }) => {
+    console.log(`allows shortcut deployments`);
     // create an artifact to download first
     await page.click(`.repository-list-item:has-text('mender-demo-artifact')`);
     await page.click(`a:has-text('Create deployment')`);
@@ -45,9 +31,11 @@ test.describe('Deployments', () => {
       await page.click(`css=.MuiDialog-container button >> text=Next`);
     }
     // adding the following to ensure we reached the end of the dialog, as this might not happen in CI runs
-    const hasNextButton = await page.isVisible(`.MuiDialog-container button >> text=Next`);
-    if (hasNextButton) {
+    try {
+      await page.waitForSelector('..MuiDialog-container button >> text=Next', { timeout: 1000 });
       await page.click(`.MuiDialog-container button >> text=Next`);
+    } catch (e) {
+      console.log(`go ahead and create the deployment`);
     }
     await page.click(`css=.MuiDialog-container button >> text=Create`);
     await page.waitForSelector('.deployment-item', { timeout: 10000 });
@@ -60,7 +48,8 @@ test.describe('Deployments', () => {
     expect(time.isBetween(earlier, now));
   });
 
-  test('allows group deployments', async () => {
+  test('allows group deployments', async ({ environment, loggedInPage: page }) => {
+    console.log(`allows group deployments`);
     await page.click(`a:has-text('Deployments')`);
     await page.click(`button:has-text('Create a deployment')`);
 
@@ -79,9 +68,11 @@ test.describe('Deployments', () => {
       await page.click(`.MuiDialog-container button >> text=Next`);
     }
     // adding the following to ensure we reached the end of the dialog, as this might not happen in CI runs
-    const hasNextButton = await page.isVisible(`.MuiDialog-container button >> text=Next`);
-    if (hasNextButton) {
+    try {
+      await page.waitForSelector('..MuiDialog-container button >> text=Next', { timeout: 1000 });
       await page.click(`.MuiDialog-container button >> text=Next`);
+    } catch (e) {
+      console.log(`go ahead and create the deployment`);
     }
     await page.click(`.MuiDialog-container button >> text=Create`);
     await page.waitForSelector('.deployment-item', { timeout: 10000 });

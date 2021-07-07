@@ -4,7 +4,7 @@ import * as https from 'https';
 import * as path from 'path';
 import jwtDecode from 'jwt-decode';
 import { spawn } from 'child_process';
-import { Page, BrowserContext } from 'playwright';
+import { Page } from '@playwright/test';
 import { PNG } from 'pngjs';
 import pixelmatch from 'pixelmatch';
 
@@ -105,22 +105,7 @@ export const startDockerClient = async (baseUrl, token) => {
   return Promise.resolve();
 };
 
-export const setupPage = async (environment: string, context: BrowserContext, page: Page, baseUrl: string) => {
-  let cookies = [];
-  if (environment === 'staging') {
-    try {
-      const token = fs.readFileSync('token.json', 'utf8');
-      cookies.push({ name: 'tenantToken', value: token, path: '/', domain: baseUrl });
-    } catch (error) {
-      console.log('no token.json found - moving on...');
-    }
-  }
-  await context.addCookies(cookies);
-  page = await context.newPage();
-  return page;
-};
-
-export const login = async (username: string, password: string, baseUrl: string, context: BrowserContext, failOnStatusCode = true) => {
+export const login = async (username: string, password: string, baseUrl: string) => {
   const request = await axios({
     url: `${baseUrl}api/management/v1/useradm/auth/login`,
     method: 'POST',
@@ -133,28 +118,20 @@ export const login = async (username: string, password: string, baseUrl: string,
     })
   });
 
-  if (failOnStatusCode && request.status !== 200) {
+  if (request.status !== 200) {
     throw 'oh no';
   }
 
   const token = request.data;
   const userId = jwtDecode(token).sub;
-  const domain = baseUrlToDomain(baseUrl);
-  context.addCookies([
-    { name: 'JWT', value: token, path: '/', domain },
-    { name: `${userId}-onboarded`, value: 'true', path: '/', domain },
-    { name: 'cookieconsent_status', value: 'allow', path: '/', domain }
-  ]);
-  return context;
+  return { token, userId };
 };
 
-export const tenantTokenRetrieval = async (baseUrl: string, context: BrowserContext, page: Page) => {
+export const tenantTokenRetrieval = async (baseUrl: string, page: Page) => {
   await page.goto(`${baseUrl}ui/#/settings/organization-and-billing`);
   await page.waitForSelector('.tenant-token-text');
   const token = await page.$eval('.tenant-token-text', el => el.textContent);
   console.log(token);
-  const domain = baseUrlToDomain(baseUrl);
-  context.addCookies([{ name: 'tenantToken', value: token, path: '/', domain }]);
   return token;
 };
 

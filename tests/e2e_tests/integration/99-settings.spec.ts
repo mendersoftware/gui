@@ -1,34 +1,16 @@
 import * as fs from 'fs';
 import { Decoder } from '@nuintun/qrcode';
-import { BrowserContext, Page } from 'playwright';
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { PNG } from 'pngjs';
 
-import { generateOtp, login, setupPage, startClient, tenantTokenRetrieval } from '../utils/commands';
-import { contextOptions, testParams } from '../config';
-
-const { baseUrl, environment, password, username } = testParams;
+import test from '../fixtures/fixtures';
+import { baseUrlToDomain, generateOtp, login, startClient, tenantTokenRetrieval } from '../utils/commands';
 
 test.describe('Settings', () => {
   test.describe('account upgrades', () => {
-    let page: Page;
-    let context: BrowserContext;
-    test.beforeEach(async ({ browser }) => {
-      const storageState = JSON.parse(process.env.STORAGE || '{}');
-      context = await browser.newContext({ ...contextOptions.contextOptions, storageState });
-      if (!process.env.STORAGE) {
-        context = await login(username, password, baseUrl, context);
-      }
-      page = await setupPage(environment, context, page, baseUrl);
-      await page.goto(`${baseUrl}ui/`);
-    });
-
-    test.afterEach(async () => {
-      const storage = await context.storageState();
-      process.env.STORAGE = JSON.stringify(storage);
-    });
-    test.skip(environment !== 'staging');
-    test('allows upgrading to Professional', async () => {
+    test.use({ storageState: 'storage.json' });
+    test('allows upgrading to Professional', async ({ environment, loggedInPage: page }) => {
+      test.skip(environment !== 'staging');
       const wasUpgraded = await page.isVisible(`css=#limit a.inline span >> text=250`);
       if (wasUpgraded) {
         test.skip('looks like the account was upgraded already, continue with the remaining tests');
@@ -46,10 +28,10 @@ test.describe('Settings', () => {
       await page.waitForSelector('Your upgrade was successful', { timeout: 10000 });
       await page.waitForSelector('Organization name', { timeout: 10000 });
     });
-    test('allows higher device limits once upgraded', async ({ context }) => {
+    test('allows higher device limits once upgraded', async ({ baseUrl, environment, loggedInPage: page }) => {
       test.skip(environment !== 'staging');
       expect(await page.isVisible(`css=#limit a.inline span >> text=250`)).toBeTruthy();
-      const token = await tenantTokenRetrieval(baseUrl, context, page);
+      const token = await tenantTokenRetrieval(baseUrl, page);
       await startClient(baseUrl, token, 50);
       await page.goto(`${baseUrl}ui/#/devices`);
       await page.waitForSelector('.header-section [href="/ui/#/devices/pending"]', { timeout: 120000 });
@@ -60,10 +42,18 @@ test.describe('Settings', () => {
   });
 
   test.describe('2FA setup', () => {
-    let context: BrowserContext;
-    let page: Page;
-    test.skip(environment !== 'staging');
-    test('supports regular 2fa setup', async ({ browser }) => {
+    test('supports regular 2fa setup', async ({ baseUrl, context, environment, username, password }) => {
+      test.skip(environment !== 'staging');
+      const { token, userId } = await login(username, password, baseUrl);
+      const domain = baseUrlToDomain(baseUrl);
+      await context.addCookies([
+        { name: 'JWT', value: token, path: '/', domain },
+        { name: `${userId}-onboarded`, value: 'true', path: '/', domain },
+        { name: 'cookieconsent_status', value: 'allow', path: '/', domain }
+      ]);
+      const page = await context.newPage();
+      await page.goto(`${baseUrl}ui`);
+
       let tfaSecret;
       try {
         tfaSecret = fs.readFileSync('secret.txt', 'utf8');
@@ -73,10 +63,6 @@ test.describe('Settings', () => {
       if (tfaSecret) {
         test.skip('looks like the account is already 2fa enabled, continue with the remaining tests');
       }
-      context = await browser.newContext({ ...contextOptions.contextOptions });
-      context = await login(username, password, baseUrl, context);
-      page = await setupPage(environment, context, page, baseUrl);
-
       await page.goto(`${baseUrl}ui/#/settings/my-account`);
       await page.click('text=/Enable Two Factor/');
       await page.waitForSelector('.margin-top img');
@@ -99,9 +85,8 @@ test.describe('Settings', () => {
       await page.goto(`${baseUrl}ui/`);
       expect(await page.isVisible(`button :has-text('Log in')`)).toBeTruthy();
     });
-    test(`prevents from logging in without 2fa code`, async ({ browser }) => {
-      context = await browser.newContext({ ...contextOptions.contextOptions });
-      page = await setupPage(environment, context, page, baseUrl);
+    test(`prevents from logging in without 2fa code`, async ({ baseUrl, environment, page, password, username }) => {
+      test.skip(environment !== 'staging');
       await page.goto(`${baseUrl}ui/`);
       expect(await page.isVisible(`button :has-text('Log in')`)).toBeTruthy();
       // enter valid username and password
@@ -115,9 +100,8 @@ test.describe('Settings', () => {
       expect(await page.isVisible(`button :has-text('Log in')`)).toBeTruthy();
       await page.waitForSelector('text=/There was a problem logging in/', { timeout: 2000 });
     });
-    test('allows turning 2fa off again', async ({ browser }) => {
-      context = await browser.newContext({ ...contextOptions.contextOptions });
-      page = await setupPage(environment, context, page, baseUrl);
+    test('allows turning 2fa off again', async ({ baseUrl, environment, page, password, username }) => {
+      test.skip(environment !== 'staging');
       await page.goto(`${baseUrl}ui/#/login`);
       await page.type('[name=email]', username);
       await page.type('[name=password]', password);
@@ -130,9 +114,8 @@ test.describe('Settings', () => {
       await page.click('text=/Enable Two Factor/');
       await page.waitForTimeout(2000);
     });
-    test('allows logging in without 2fa after deactivation', async ({ browser }) => {
-      context = await browser.newContext({ ...contextOptions.contextOptions });
-      page = await setupPage(environment, context, page, baseUrl);
+    test('allows logging in without 2fa after deactivation', async ({ baseUrl, environment, page, password, username }) => {
+      test.skip(environment !== 'staging');
       await page.goto(`${baseUrl}ui/#/login`);
       await page.type('[name=email]', username);
       await page.type('[name=password]', password);
@@ -143,26 +126,10 @@ test.describe('Settings', () => {
   });
 
   test.describe('Basic setting features', () => {
-    let page: Page;
-    let context: BrowserContext;
-    test.beforeEach(async ({ browser }) => {
-      const storageState = JSON.parse(process.env.STORAGE || '{}');
-      context = await browser.newContext({ ...contextOptions.contextOptions, storageState });
-      if (!process.env.STORAGE) {
-        context = await login(username, password, baseUrl, context);
-      }
-      page = await setupPage(environment, context, page, baseUrl);
-      await page.goto(`${baseUrl}ui/`);
-    });
-
-    test.afterEach(async () => {
-      const storage = await context.storageState();
-      process.env.STORAGE = JSON.stringify(storage);
-    });
-
     const replacementPassword = 'mysecretpassword!456';
 
-    test('allows access to user management', async () => {
+    test('allows access to user management', async ({ baseUrl, loggedInPage: page }) => {
+      // test.use({ storageState: 'storage.json' });
       await page.goto(`${baseUrl}ui/#/settings`);
       await page.waitForSelector('text=/Global settings/i');
       await page.click('text=/user management/i');
@@ -175,11 +142,13 @@ test.describe('Settings', () => {
       }
       await page.waitForSelector('css=button >> text=Create new user');
     });
-    test('allows email changes', async () => {
+    test('allows email changes', async ({ baseUrl, loggedInPage: page }) => {
+      // test.use({ storageState: 'storage.json' });
       await page.goto(`${baseUrl}ui/#/settings/my-account`);
       await page.click('#change_email');
     });
-    test('allows changing the password', async ({ context }) => {
+    test('allows changing the password', async ({ baseUrl, context, loggedInPage: page, username }) => {
+      // test.use({ storageState: 'storage.json' });
       await page.goto(`${baseUrl}ui/#/settings/my-account`);
       await page.click('#change_password');
 
@@ -201,19 +170,17 @@ test.describe('Settings', () => {
       expect(await page.isVisible('text=/Log in/i')).toBeTruthy();
     });
 
-    test('allows changing the password back', async ({ browser }) => {
-      await page.goto(`${baseUrl}ui/`);
-      const showsLogin = await page.isVisible('text=/Log in/i');
-      if (showsLogin) {
-        await page.waitForSelector('[name=email]');
-        await page.click('[name=email]');
-        await page.type('[name=email]', username);
-        await page.waitForSelector('[name=password]');
-        await page.click('[name=password]');
-        await page.type('[name=password]', replacementPassword);
-        await page.click(`:is(button:has-text('Log in'))`);
-        await page.waitForSelector('text=License information');
-      }
+    test('allows changing the password back', async ({ baseUrl, context, password, username }) => {
+      const { token, userId } = await login(username, replacementPassword, baseUrl);
+      const domain = baseUrlToDomain(baseUrl);
+      await context.addCookies([
+        { name: 'JWT', value: token, path: '/', domain },
+        { name: `${userId}-onboarded`, value: 'true', path: '/', domain },
+        { name: 'cookieconsent_status', value: 'allow', path: '/', domain }
+      ]);
+      const page = await context.newPage();
+      await page.goto(`${baseUrl}ui`);
+      await page.waitForSelector('text=/License information/i');
       await page.goto(`${baseUrl}ui/#/settings/my-account`);
       await page.click('#change_password');
 
@@ -227,9 +194,8 @@ test.describe('Settings', () => {
       await page.waitForSelector('text=/user has been updated/i', { timeout: 10000 });
       await page.waitForTimeout(3000);
 
-      const storageState = JSON.parse(process.env.STORAGE || '{}');
-      context = await browser.newContext({ ...contextOptions.contextOptions, storageState });
-      expect(await login(username, password, baseUrl, context)).toBeTruthy();
+      const { token: newToken } = await login(username, password, baseUrl);
+      expect(newToken).toBeTruthy();
     });
   });
 });

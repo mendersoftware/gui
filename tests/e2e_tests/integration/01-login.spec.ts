@@ -1,22 +1,17 @@
 import axios from 'axios';
 import * as https from 'https';
 import jwtDecode from 'jwt-decode';
-import { BrowserContext, Page } from 'playwright';
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 
-import { contextOptions, testParams } from '../config';
-
-const { baseUrl, password, username } = testParams;
+import test from '../fixtures/fixtures';
 
 test.describe('Login', () => {
   test.describe('works as expected', () => {
-    let page: Page;
-    test.beforeEach(async ({ context }) => {
-      page = await context.newPage();
+    test.beforeEach(async ({ baseUrl, page }) => {
       await page.goto(`${baseUrl}ui/`);
     });
 
-    test('Logs in using UI', async ({ context }) => {
+    test('Logs in using UI', async ({ context, page, password, username }) => {
       console.log(`logging in user with username: ${username} and password: ${password}`);
       // enter valid username and password
       await page.waitForSelector('[name=email]');
@@ -32,6 +27,7 @@ test.describe('Login', () => {
       const token = cookies.find(cookie => cookie.name === 'JWT').value;
       const userId = jwtDecode(token).sub;
       await page.evaluate(({ userId }) => localStorage.setItem(`${userId}-onboarding`, JSON.stringify({ complete: true })), { userId });
+      await context.storageState({ path: 'storage.json' });
       // now we can log out
       await page.click('.header-dropdown', { force: true });
       await page.click(`:is(span:has-text('Log out'))`, { force: true });
@@ -40,15 +36,13 @@ test.describe('Login', () => {
       expect(loginVisible).toBeTruthy();
     });
 
-    test('does not stay logged in across sessions, after browser restart', async ({ context }) => {
-      const page = await context.newPage();
+    test('does not stay logged in across sessions, after browser restart', async ({ baseUrl, page }) => {
       await page.goto(`${baseUrl}ui/`);
       const loginVisible = await page.isVisible(`:is(button:has-text('Log in'))`);
       expect(loginVisible).toBeTruthy();
     });
 
-    test('fails to access unknown resource', async ({ context }) => {
-      const page = await context.newPage();
+    test('fails to access unknown resource', async ({ baseUrl, page }) => {
       await page.goto(`${baseUrl}ui/`);
       const request = await axios({
         url: `${baseUrl}/users`,
@@ -63,9 +57,8 @@ test.describe('Login', () => {
       expect(loginVisible).toBeTruthy();
     });
 
-    test('Does not log in with invalid password', async ({ context }) => {
+    test('Does not log in with invalid password', async ({ baseUrl, page, username }) => {
       console.log(`logging in user with username: ${username} and password: lewrongpassword`);
-      const page = await context.newPage();
       await page.goto(`${baseUrl}ui/`);
       // enter valid username and invalid password
       await page.waitForSelector('[name=email]');
@@ -84,21 +77,11 @@ test.describe('Login', () => {
   });
 
   test.describe('stays logged in across sessions, after browser restart if selected', () => {
-    let page: Page;
-    let context: BrowserContext;
-    test.beforeEach(async ({ browser }) => {
-      const storageState = JSON.parse(process.env.STORAGE || '{}');
-      context = await browser.newContext({ ...contextOptions.contextOptions, storageState });
-      page = await context.newPage();
+    test.beforeEach(async ({ baseUrl, page }) => {
       await page.goto(`${baseUrl}ui/`);
     });
 
-    test.afterEach(async () => {
-      const storage = await context.storageState();
-      process.env.STORAGE = JSON.stringify(storage);
-    });
-
-    test('pt1', async () => {
+    test('pt1', async ({ context, password, page, username }) => {
       console.log(`logging in user with username: ${username} and password: ${password}`);
       // enter valid username and password
       await page.waitForSelector('[name=email]');
@@ -112,11 +95,19 @@ test.describe('Login', () => {
 
       // confirm we have logged in successfully
       await page.waitForSelector('text=License information');
+      const loginVisible = await page.isVisible(`:is(button:has-text('Log in'))`);
+      expect(loginVisible).toBeFalsy();
+      const cookies = await context.cookies();
+      process.env.LOGIN_STORAGE = JSON.stringify(cookies);
     });
 
-    test('pt2', async () => {
-      await page.goto(`${baseUrl}ui/#/devices`);
+    test('pt2', async ({ baseUrl, context }) => {
+      const cookies = JSON.parse(process.env.LOGIN_STORAGE);
+      await context.addCookies(cookies);
+      const page = await context.newPage();
+      await page.goto(`${baseUrl}ui/`);
       const loginVisible = await page.isVisible(`:is(button:has-text('Log in'))`);
+      await context.storageState({ path: 'storage.json' });
       expect(loginVisible).toBeFalsy();
     });
   });
