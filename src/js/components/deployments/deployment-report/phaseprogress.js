@@ -177,10 +177,14 @@ export const PhaseProgress = ({ className = '', deployment = {}, onAbort, onUpda
   const [shouldAbort, setShouldAbort] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { id, stats } = deployment;
+  const { id, stats, update_control_map = {} } = deployment;
+  const { states = {} } = update_control_map;
   const { failures: totalFailureCount } = groupDeploymentStats(deployment);
 
   const status = getDeploymentState(deployment);
+  const currentPauseState = Object.keys(pauseMap)
+    .reverse()
+    .find(key => stats[key] > 0);
 
   useEffect(() => {
     if (!isLoading) {
@@ -196,13 +200,12 @@ export const PhaseProgress = ({ className = '', deployment = {}, onAbort, onUpda
 
   const onContinueClick = () => {
     setIsLoading(true);
-    const currentPauseState = Object.keys(pauseMap)
-      .reverse()
-      .find(key => stats[key] > 0);
     setShouldContinue(false);
     onUpdateControlChange({ states: { [pauseMap[currentPauseState].followUp]: { action: 'continue' } } });
   };
 
+  const disableContinuationButtons =
+    isLoading || (status === deploymentDisplayStates.paused && states[pauseMap[currentPauseState].followUp].action === 'continue');
   return (
     <div className={`flexbox column ${className}`}>
       <div className="progress-chart-container stepped-progress" style={{ background: 'none' }}>
@@ -231,10 +234,16 @@ export const PhaseProgress = ({ className = '', deployment = {}, onAbort, onUpda
               style={confirmationStyle}
             />
           )}
-          <Button variant="contained" color="primary" disabled={isLoading} onClick={setShouldContinue} style={{ marginRight: theme.spacing(2) }}>
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={disableContinuationButtons}
+            onClick={setShouldContinue}
+            style={{ marginRight: theme.spacing(2) }}
+          >
             Continue
           </Button>
-          <Button disabled={isLoading} onClick={setShouldAbort}>
+          <Button disabled={disableContinuationButtons} onClick={setShouldAbort}>
             Abort
           </Button>
         </div>
