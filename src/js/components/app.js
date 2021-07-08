@@ -19,7 +19,6 @@ import { getOnboardingState } from '../selectors';
 import { colors } from '../themes/mender-theme';
 import Tracking from '../tracking';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
-import LiveChatBox from './livechatbox';
 import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
 import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
 import Header from './header/header';
@@ -98,10 +97,6 @@ export const AppRoot = ({
           {onboardingComponent ? onboardingComponent : null}
           {showDismissHelptipsDialog && <ConfirmDismissHelptips />}
           {showDeviceConnectionDialog && <DeviceConnectionDialog onCancel={() => setShowConnectingDialog(false)} />}
-          {
-            // eslint-disable-next-line no-undef
-            ENV === 'production' && <LiveChatBox />
-          }
         </>
       ) : (
         publicRoutes
