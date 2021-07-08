@@ -224,7 +224,7 @@ export const selectGroup = (group, filters = []) => (dispatch, getState) => {
     tasks.push(dispatch(setDeviceFilters(filters)));
     tasks.push(dispatch(getAllGroupDevices(groupName, true)));
   }
-  const selectedGroupName = selectedGroup || !Object.keys(state.devices.groups.byId).length ? groupName : null;
+  const selectedGroupName = selectedGroup || !Object.keys(state.devices.groups.byId).length ? groupName : undefined;
   tasks.push(dispatch({ type: DeviceConstants.SELECT_GROUP, group: selectedGroupName }));
   return Promise.all(tasks);
 };
