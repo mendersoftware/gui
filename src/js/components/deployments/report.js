@@ -105,9 +105,10 @@ export const DeploymentReport = props => {
       statCollector(deploymentStatesToSubstates.pending, stats) +
       statCollector(deploymentStatesToSubstates.inprogress, stats);
 
-    if (!!device_count && progressCount <= 0) {
+    if (!!device_count && progressCount <= 0 && timer) {
       // if no more devices in "progress" statuses, deployment has finished, stop counter
       clearInterval(timer);
+      refreshDeployment();
     }
   }, [deployment.id, deployment.stats]);
 

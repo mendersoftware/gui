@@ -10,7 +10,7 @@ exports[`PhaseProgress Component renders correctly 1`] = `
       style="background: none;"
     >
       Phase 1: 
-      Infinity
+      100
       % (
       1
        

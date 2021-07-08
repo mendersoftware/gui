@@ -116,7 +116,7 @@ export class CreateDialog extends React.Component {
     const retrySetting = isEnterprise || (isHosted && plan !== PLANS.os.value) ? { retries } : {};
     const newDeployment = {
       artifact_name: release.Name,
-      devices: filterId || (group && group !== allDevices && !device) ? undefined : deploymentDeviceIds,
+      devices: (filterId || group) && !device ? undefined : deploymentDeviceIds,
       filter_id: filterId,
       all_devices: !filterId && group === allDevices,
       group: group === allDevices || device ? undefined : group,

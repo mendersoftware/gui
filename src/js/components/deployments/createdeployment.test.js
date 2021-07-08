@@ -82,7 +82,7 @@ describe('CreateDeployment Component', () => {
     expect(createDeployment).toHaveBeenCalledWith({
       all_devices: true,
       artifact_name: defaultState.releases.byId.a1.Name,
-      devices: [],
+      devices: undefined,
       filter_id: undefined,
       group: undefined,
       name: 'All devices',
@@ -191,7 +191,7 @@ describe('CreateDeployment Component', () => {
     expect(createDeployment).toHaveBeenCalledWith({
       all_devices: true,
       artifact_name: defaultState.releases.byId.a1.Name,
-      devices: [],
+      devices: undefined,
       filter_id: undefined,
       group: undefined,
       name: 'All devices',
