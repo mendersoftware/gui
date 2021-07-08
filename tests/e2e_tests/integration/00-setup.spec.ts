@@ -1,18 +1,11 @@
-import jwtDecode from 'jwt-decode';
-import * as fs from 'fs';
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 
 import { baseUrlToDomain, login, startDockerClient, tenantTokenRetrieval } from '../utils/commands';
-import { testParams } from '../config';
-
-const { baseUrl, environment, password, username } = testParams;
-
-// Run this test with the '--param screenshotOnFailure' command line parameter
-// or 'npm run test'.
+import test from '../fixtures/fixtures';
 
 test.describe('Test setup', () => {
   test.describe('basic window checks', () => {
-    test('get the global window object', async ({ context, page }) => {
+    test('get the global window object', async ({ baseUrl, context, page }) => {
       page = await context.newPage();
       await page.goto(`${baseUrl}ui/`);
       const theWindow = await page.evaluate(() => window.innerWidth);
@@ -23,7 +16,7 @@ test.describe('Test setup', () => {
       expect(documentCharset).toBeDefined();
       expect(documentCharset).toEqual('UTF-8');
     });
-    test('get the title', async ({ context, page }) => {
+    test('get the title', async ({ baseUrl, context, page }) => {
       page = await context.newPage();
       await page.goto(`${baseUrl}ui/`);
       expect(await page.title()).toContain('Mender');
@@ -31,20 +24,14 @@ test.describe('Test setup', () => {
   });
 
   test.describe('account creation', () => {
-    test('allows account creation', async ({ context }) => {
+    test('allows account creation', async ({ baseUrl, context, environment, page, password, username }) => {
       test.skip(environment !== 'staging');
-      let loggedInContext;
       try {
-        loggedInContext = await login(username, password, baseUrl, context);
+        const { token } = await login(username, password, baseUrl);
+        test.skip(!!token, 'looks like the account was created already, continue with the remaining tests');
       } catch (error) {
         // looks like this is the first run, let's continue
       }
-      if (loggedInContext) {
-        test.skip('looks like the account was created already, continue with the remaining tests');
-      }
-      const domain = baseUrlToDomain(baseUrl);
-      await context.addCookies([{ name: 'cookieconsent_status', value: 'allow', path: '/', domain }]);
-      const page = await context.newPage();
       await page.goto(`${baseUrl}ui/`);
       expect(await page.isVisible('text=/Sign up/i')).toBeTruthy();
       await page.click(`text=/Sign up/i`);
@@ -70,30 +57,39 @@ test.describe('Test setup', () => {
       await page.waitForTimeout(2000);
       await page.click(`button:has-text('Complete')`);
       await page.waitForTimeout(5000);
-      let cookies = await context.cookies();
-      const cookie = cookies.find(cookie => cookie.name === 'JWT');
-      const userId = jwtDecode(cookie.value).sub;
+
+      const domain = baseUrlToDomain(baseUrl);
+      const { token, userId } = await login(username, password, baseUrl);
+      await context.addCookies([
+        { name: 'JWT', value: token, path: '/', domain },
+        { name: `${userId}-onboarded`, value: 'true', path: '/', domain },
+        { name: 'cookieconsent_status', value: 'allow', path: '/', domain }
+      ]);
       await page.evaluate(({ userId }) => localStorage.setItem(`${userId}-onboarding`, JSON.stringify({ complete: true })), { userId });
-      await context.addCookies([{ name: `${userId}-onboarded`, value: 'true', path: '/', domain }]);
-      cookies = await context.cookies();
-      const cookieJson = JSON.stringify(cookies);
-      fs.writeFileSync('cookies.json', cookieJson);
+      await context.storageState({ path: 'storage.json' });
       await page.waitForSelector('text=/License information/i', { timeout: 15000 });
     });
-    test('supports tenant token retrieval', async ({ context }) => {
+  });
+
+  test.describe('enterprise setting features, that happens to start up a docker client', () => {
+    test('supports tenant token retrieval', async ({ baseUrl, context, environment, password, username }) => {
       test.skip(!['enterprise', 'staging'].includes(environment));
       console.log(`logging in user with username: ${username} and password: ${password}`);
+      const { token: JWT, userId } = await login(username, password, baseUrl);
       const domain = baseUrlToDomain(baseUrl);
-      await context.addCookies([{ name: 'cookieconsent_status', value: 'allow', path: '/', domain }]);
-      // enter valid username and password
-      let loggedInContext = await login(username, password, baseUrl, context);
+      await context.addCookies([
+        { name: 'JWT', value: JWT, path: '/', domain },
+        { name: `${userId}-onboarded`, value: 'true', path: '/', domain },
+        { name: 'cookieconsent_status', value: 'allow', path: '/', domain }
+      ]);
       const page = await context.newPage();
-      await page.goto(`${baseUrl}ui/`);
-      const token = await tenantTokenRetrieval(baseUrl, loggedInContext, page);
-      fs.writeFileSync('token.json', token);
+      await page.goto(`${baseUrl}ui/#/settings`);
+      const token = await tenantTokenRetrieval(baseUrl, page);
       if (environment === 'staging') {
         await startDockerClient(baseUrl, token);
       }
+      await context.storageState({ path: 'storage.json' });
+      expect(token).toBeTruthy();
     });
   });
 });

@@ -138,7 +138,7 @@ export const Authorized = props => {
     clearInterval(timer);
     timer = setInterval(getDevices, refreshDeviceLength);
     getDevices();
-  }, [filters, pageNo, selectedGroup, selectedState, sortCol, sortDown, sortScope, deviceRefreshTrigger]);
+  }, [filters, pageNo, pageLength, selectedGroup, selectedState, sortCol, sortDown, sortScope, deviceRefreshTrigger]);
 
   const sortingAlternatives = Object.values(states)
     .reduce((accu, item) => [...accu, ...item.defaultHeaders], [])

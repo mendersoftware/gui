@@ -309,10 +309,6 @@ export const DeviceGroups = ({
     return Promise.all(tasks).catch(err => console.log(err));
   };
 
-  const handleGroupChange = group => {
-    selectGroup(group);
-  };
-
   const removeCurrentGroup = () => {
     const request = groupFilters.length ? removeDynamicGroup(selectedGroup) : removeStaticGroup(selectedGroup);
     return request.then(toggleGroupRemoval).catch(err => console.log(err));
@@ -400,7 +396,7 @@ export const DeviceGroups = ({
         <div className="leftFixed">
           <Groups
             acceptedCount={acceptedCount}
-            changeGroup={handleGroupChange}
+            changeGroup={selectGroup}
             groups={groupsById}
             openGroupDialog={setCreateGroupExplanation}
             selectedGroup={selectedGroup}
