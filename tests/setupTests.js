@@ -1,8 +1,10 @@
 import React from 'react';
+import { TextEncoder } from 'util';
 import '@testing-library/jest-dom/extend-expect';
 import { within, queryByRole } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
+import crypto from 'crypto';
 
 import handlers from './__mocks__/requestHandlers';
 import { mockDate, token as mockToken } from './mockData';
@@ -55,7 +57,14 @@ beforeAll(async () => {
     setItem: jest.fn(),
     removeItem: jest.fn()
   };
+
   window.ENV = 'test';
+  global.TextEncoder = TextEncoder;
+  global.crypto = {
+    subtle: {
+      digest: (_, data) => Promise.resolve(crypto.createHash('sha256').update(data))
+    }
+  };
   server = setupServer(...handlers);
   await server.listen();
   Object.defineProperty(navigator, 'appVersion', { value: 'Test', writable: true });
