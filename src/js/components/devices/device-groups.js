@@ -236,7 +236,7 @@ export const DeviceGroups = ({
   updateDynamicGroup
 }) => {
   const [createGroupExplanation, setCreateGroupExplanation] = useState(false);
-  const [deviceRefreshTrigger, setDeviceRefreshTrigger] = useState(false);
+  const [deviceRefreshTrigger, setDeviceRefreshTrigger] = useState();
   const [fromFilters, setFromFilters] = useState(false);
   const [modifyGroupDialog, setModifyGroupDialog] = useState(false);
   const [openIdDialog, setOpenIdDialog] = useState(false);
@@ -258,6 +258,7 @@ export const DeviceGroups = ({
     }
     clearInterval(deviceTimer);
     deviceTimer = setInterval(getAllDeviceCounts, refreshLength);
+    setDeviceRefreshTrigger(!deviceRefreshTrigger);
     return () => {
       clearInterval(deviceTimer);
     };
