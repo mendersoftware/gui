@@ -78,15 +78,10 @@ export const Authorized = props => {
   const handleResize = () => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), 500);
 
   useEffect(() => {
-    onSelectionChange([]);
     clearAllRetryTimers(setSnackbar);
     if (!filters.length && selectedGroup && groupFilters.length) {
       setDeviceFilters(groupFilters);
     }
-    clearInterval(timer);
-    // no group, no filters, all devices
-    timer = setInterval(getDevices, refreshDeviceLength);
-    getDevices();
     window.addEventListener('resize', handleResize);
     return () => {
       clearInterval(timer);
