@@ -124,6 +124,9 @@ export const Authorized = props => {
   }, [selectedGroup]);
 
   useEffect(() => {
+    if (deviceRefreshTrigger === undefined) {
+      return;
+    }
     onSelectionChange([]);
     clearInterval(timer);
     timer = setInterval(getDevices, refreshDeviceLength);
