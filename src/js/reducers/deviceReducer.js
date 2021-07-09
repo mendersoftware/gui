@@ -1,4 +1,5 @@
 import * as DeviceConstants from '../constants/deviceConstants';
+import { duplicateFilter } from '../helpers';
 
 export const initialState = {
   byId: {},
@@ -64,6 +65,7 @@ const deviceReducer = (state = initialState, action) => {
           deviceIds: [...state.groups.byId[action.group].deviceIds, ...action.deviceIds],
           total: state.groups.byId[action.group].total + 1
         };
+        group.deviceIds.filter(duplicateFilter);
       }
       return {
         ...state,
