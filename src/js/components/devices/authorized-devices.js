@@ -9,7 +9,7 @@ import { Autorenew as AutorenewIcon, Delete as DeleteIcon, FilterList as FilterL
 import { setSnackbar } from '../../actions/appActions';
 import { deleteAuthset, getDevicesByStatus, setDeviceFilters, setDeviceListState, updateDevicesAuth } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
-import { DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_SORTING_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { DEVICE_LIST_DEFAULTS, DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_SORTING_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { duplicateFilter, isEmpty } from '../../helpers';
 import { getIdAttribute, getOnboardingState, getTenantCapabilities } from '../../selectors';
@@ -24,6 +24,7 @@ import Filters from './filters';
 import theme from '../../themes/mender-theme';
 
 const refreshDeviceLength = 10000;
+const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 let timer;
 
 export const Authorized = props => {
@@ -67,8 +68,8 @@ export const Authorized = props => {
   const size = useWindowSize();
 
   const {
-    page: pageNo = 1,
-    perPage: pageLength = 20,
+    page: pageNo = defaultPage,
+    perPage: pageLength = defaultPerPage,
     selection: selectedRows,
     sort: { direction: sortDown = DEVICE_SORTING_OPTIONS.desc, columns = [] },
     state: selectedState
