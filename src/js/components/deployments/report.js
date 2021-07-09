@@ -173,7 +173,7 @@ export const DeploymentReport = props => {
               title="This will create a new deployment with the same device group and Release.&#10;Devices with this Release already installed will be skipped, all others will be updated."
               placement="bottom"
             >
-              <Button color="secondary" startIcon={<RefreshIcon fontSize="small" />} onClick={() => retry(deployment, Object.values(allDevices))}>
+              <Button color="secondary" startIcon={<RefreshIcon fontSize="small" />} onClick={() => retry(deployment, Object.keys(devices))}>
                 Recreate deployment?
               </Button>
             </Tooltip>
@@ -191,8 +191,7 @@ export const DeploymentReport = props => {
       <Divider />
       <div className="deployment-report">
         <DeploymentPhaseNotification deployment={deployment} onReviewClick={scrollToBottom} />
-        <DeploymentOverview {...props} onScheduleClick={scrollToBottom} />
-
+        <DeploymentOverview {...props} creator={creator} deployment={deployment} onScheduleClick={scrollToBottom} />
         {isConfigurationDeployment && (
           <>
             <h4 className="dashboard-header">
@@ -201,12 +200,11 @@ export const DeploymentReport = props => {
             <ConfigurationObject className="margin-top-small margin-bottom-large" config={config} />
           </>
         )}
-
         <h4 className="dashboard-header">
           <span>Status</span>
         </h4>
         <DeploymentStatus deployment={deployment} />
-        <DeviceList {...props} created={created} viewLog={viewLog} />
+        <DeviceList {...props} viewLog={viewLog} />
         <RolloutSchedule deployment={deployment} onUpdateControlChange={onUpdateControlChange} onAbort={abort} innerRef={rolloutSchedule} />
         {deviceId && <LogDialog logData={logData} onClose={() => setDeviceId()} />}
       </div>

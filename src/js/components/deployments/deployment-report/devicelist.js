@@ -10,13 +10,13 @@ import DeploymentDeviceListItem from './deploymentdevicelistitem';
 
 const headerStyle = { position: 'sticky', top: 0, background: 'white', zIndex: 1 };
 
-export const DeploymentDeviceList = ({ allDevices, created, deployment, devicesById, getDeviceAuth, getDeviceById, idAttribute, viewLog }) => {
+export const DeploymentDeviceList = ({ allDevices, deployment, devicesById, getDeviceAuth, getDeviceById, idAttribute, viewLog }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(20);
-  const totalDeviceCount = allDevices.length || deployment.device_count || 0;
   const end = Math.min(allDevices.length, perPage);
   const [pagedDevices, setPagedDevices] = useState(allDevices.slice(0, end));
-  const { retries } = deployment;
+  const { created = new Date().toISOString(), device_count = 0, retries, totalDeviceCount: totalDevices } = deployment;
+  const totalDeviceCount = allDevices.length ?? totalDevices ?? device_count;
 
   useEffect(() => {
     handlePageChange(currentPage);
