@@ -247,7 +247,6 @@ export const DeviceGroups = ({
   const { state: selectedState } = deviceListState;
 
   useEffect(() => {
-    refreshGroups();
     const { filters: filterQuery = '', status = '' } = match.params;
     maybeSetGroupAndFilters(filterQuery, history.location.search, filteringAttributes, filters);
     if (status && selectedState !== status) {
