@@ -52,22 +52,6 @@ cat >/var/www/mender-gui/dist/env.js <<EOF
   }
 EOF
 
-cat >/var/www/mender-gui/dist/livechat.js <<EOF
-  window.HFCHAT_CONFIG = {
-    EMBED_TOKEN: '$HAPPYFOX_KEY',
-    ASSETS_URL: 'https://widget.happyfoxchat.com/v2/visitor'
-  };
-  (function () {
-    var scriptTag = document.createElement('script');
-    scriptTag.type = 'text/javascript';
-    scriptTag.async = true;
-    scriptTag.src = window.HFCHAT_CONFIG.ASSETS_URL + '/js/widget-loader.js';
-
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(scriptTag, s);
-  })();
-EOF
-
 if [ "$1" = 'nginx' ]; then
   exec nginx -g 'daemon off;'
 fi
