@@ -24,7 +24,8 @@ describe('DeploymentReport Component', () => {
             artifact_name: 'a1'
           }
         },
-        selectedDeployment: defaultState.deployments.byId.d1.id
+        selectedDeployment: defaultState.deployments.byId.d1.id,
+        selectedDeviceIds: [defaultState.deployments.byId.d1.devices.a1.id]
       }
     });
   });

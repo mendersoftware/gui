@@ -21,13 +21,11 @@ describe('ProgressDeviceList Component', () => {
       <MemoryRouter>
         <Provider store={store}>
           <ProgressDeviceList
-            allDevices={Object.values(defaultState.deployments.byId.d1.devices)}
-            created={defaultState.deployments.byId.d1.created}
+            selectedDevices={Object.values(defaultState.deployments.byId.d1.devices)}
             deployment={defaultState.deployments.byId.d1}
-            devicesById={defaultState.devices.byId}
+            getDeploymentDevices={jest.fn}
             getDeviceById={jest.fn}
             getDeviceAuth={jest.fn}
-            retries={3}
           />
         </Provider>
       </MemoryRouter>

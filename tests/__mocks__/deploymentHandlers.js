@@ -90,5 +90,16 @@ export const deploymentHandlers = [
       ),
       ctx.json({})
     )
-  )
+  ),
+  rest.get(`${deploymentsApiUrl}/deployments/:deploymentId/devices/list`, ({ params: { deploymentId } }, res, ctx) => {
+    if (deploymentId === createdDeployment.id) {
+      return res(ctx.set(headerNames.total, Object.keys(createdDeployment.devices).length), ctx.json(Object.values(createdDeployment.devices)));
+    } else if (defaultState.deployments.byId[deploymentId]) {
+      return res(
+        ctx.set(headerNames.total, Object.keys(defaultState.deployments.byId[deploymentId].devices).length),
+        ctx.json(Object.values(defaultState.deployments.byId[deploymentId].devices))
+      );
+    }
+    return res(ctx.status(529));
+  })
 ];
