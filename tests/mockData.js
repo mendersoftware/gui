@@ -186,7 +186,7 @@ export const defaultState = {
           filters: [{ scope: 'system', key: 'group', operator: '$eq', value: 'things' }]
         }
       },
-      selectedGroup: null
+      selectedGroup: undefined
     },
     limit: 500
   },

@@ -38,7 +38,7 @@ export const initialState = {
       // groupName: { deviceIds: [], total: 0, filters: [] },
       // dynamo: { deviceIds: [], total: 3, filters: [{ a: 1 }] }
     },
-    selectedGroup: null
+    selectedGroup: undefined
   }
 };
 
@@ -93,7 +93,7 @@ const deviceReducer = (state = initialState, action) => {
           [action.group]: group
         };
       } else if (state.groups.selectedGroup === action.group) {
-        selectedGroup = null;
+        selectedGroup = undefined;
         // eslint-disable-next-line no-unused-vars
         const { [action.group]: removal, ...remainingById } = state.groups.byId;
         byId = remainingById;
