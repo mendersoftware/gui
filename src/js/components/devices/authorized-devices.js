@@ -28,12 +28,10 @@ let timer;
 export const Authorized = props => {
   const {
     acceptedCount,
-    acceptedDevicesList,
     addDevicesToGroup,
     advanceOnboarding,
     allCount,
     deleteAuthset,
-    deploymentDeviceLimit,
     deviceCount,
     deviceListState,
     deviceRefreshTrigger,
@@ -80,18 +78,10 @@ export const Authorized = props => {
   const handleResize = () => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), 500);
 
   useEffect(() => {
-    onSelectionChange([]);
-    if (!acceptedDevicesList.length && acceptedCount < deploymentDeviceLimit) {
-      getDevicesByStatus(DEVICE_STATES.accepted);
-    }
     clearAllRetryTimers(setSnackbar);
     if (!filters.length && selectedGroup && groupFilters.length) {
       setDeviceFilters(groupFilters);
     }
-    clearInterval(timer);
-    // no group, no filters, all devices
-    timer = setInterval(getDevices, refreshDeviceLength);
-    getDevices();
     window.addEventListener('resize', handleResize);
     return () => {
       clearInterval(timer);
@@ -134,6 +124,9 @@ export const Authorized = props => {
   }, [selectedGroup]);
 
   useEffect(() => {
+    if (deviceRefreshTrigger === undefined) {
+      return;
+    }
     onSelectionChange([]);
     clearInterval(timer);
     timer = setInterval(getDevices, refreshDeviceLength);
@@ -398,9 +391,7 @@ const mapStateToProps = state => {
   }, []);
   return {
     acceptedCount: state.devices.byStatus.accepted.total || 0,
-    acceptedDevicesList: state.devices.byStatus.accepted.deviceIds.slice(0, 20),
     allCount: state.devices.byStatus.accepted.total + state.devices.byStatus.rejected.total || 0,
-    deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
     devices,
     deviceListState: state.devices.deviceList,
     deviceCount,

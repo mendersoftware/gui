@@ -108,7 +108,8 @@ export const DeploymentReport = props => {
     if (!!device_count && progressCount <= 0 && timer) {
       // if no more devices in "progress" statuses, deployment has finished, stop counter
       clearInterval(timer);
-      refreshDeployment();
+      timer = undefined;
+      setTimeout(refreshDeployment, 1000);
     }
   }, [deployment.id, deployment.stats]);
 
