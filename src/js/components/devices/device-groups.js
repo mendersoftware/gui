@@ -243,6 +243,7 @@ export const DeviceGroups = ({
   const [openPreauth, setOpenPreauth] = useState(false);
   const [removeGroup, setRemoveGroup] = useState(false);
   const [tmpDevices, setTmpDevices] = useState([]);
+  const [isReconciling, setIsReconciling] = useState(false);
 
   const { state: selectedState } = deviceListState;
 
@@ -250,7 +251,8 @@ export const DeviceGroups = ({
     const { filters: filterQuery = '', status = '' } = match.params;
     maybeSetGroupAndFilters(filterQuery, history.location.search, filteringAttributes, filters);
     if (status && selectedState !== status) {
-      setDeviceListState({ state: status });
+      setIsReconciling(true);
+      setDeviceListState({ state: status }).then(() => setIsReconciling(false));
     }
     const { pathname, search } = generateBrowserLocation(status, filters, selectedGroup, history.location, true);
     if (pathname !== history.location.pathname || history.location.search !== `?${search}`) {
@@ -282,9 +284,13 @@ export const DeviceGroups = ({
     if (!deviceTimer) {
       return;
     }
-    const { filters: filterQuery = '' } = match.params;
+    const { filters: filterQuery = '', status = '' } = match.params;
     maybeSetGroupAndFilters(filterQuery, history.location.search, filteringAttributes, filters);
-  }, [filters, match.params.filters, history.location.search]);
+    if (selectedState !== status && !isReconciling) {
+      setIsReconciling(true);
+      setDeviceListState({ state: status ? status : routes.devices.key }).then(() => setIsReconciling(false));
+    }
+  }, [filters, match.params, history.location.search]);
 
   const maybeSetGroupAndFilters = (filterQuery, search, attributes, currentFilters) => {
     const query = filterQuery || search;
