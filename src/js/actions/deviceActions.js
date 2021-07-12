@@ -209,13 +209,14 @@ export const removeDynamicGroup = groupName => (dispatch, getState) => {
  */
 export const selectGroup = (group, filters = []) => (dispatch, getState) => {
   const groupName = group === DeviceConstants.UNGROUPED_GROUP.id || group === DeviceConstants.UNGROUPED_GROUP.name ? DeviceConstants.UNGROUPED_GROUP.id : group;
-  if (getState().devices.groups.selectedGroup === groupName && filters.length === 0) {
+  const state = getState();
+  const selectedGroup = state.devices.groups.byId[groupName];
+  const groupFilterLength = selectedGroup?.filters?.length || 0;
+  if (state.devices.groups.selectedGroup === groupName && filters.length === 0 && !groupFilterLength) {
     return;
   }
   let tasks = [];
-  const state = getState();
-  const selectedGroup = state.devices.groups.byId[groupName];
-  if (selectedGroup?.filters?.length) {
+  if (groupFilterLength) {
     const cleanedFilters = (filters.length ? filters : selectedGroup.filters).filter(
       (item, index, array) => array.findIndex(filter => deepCompare(filter, item)) == index
     );
