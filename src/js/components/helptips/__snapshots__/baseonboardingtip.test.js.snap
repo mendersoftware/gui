@@ -2,25 +2,20 @@
 
 exports[`BaseOnboardingTip Component renders correctly 1`] = `
 <div
-  className="onboard-tip"
-  style={
-    Object {
-      "left": -14,
-      "overflow": "initial",
-      "top": 1,
-    }
-  }
+  class="onboard-tip"
+  style="left: -14px; top: 1px; overflow: initial;"
 >
   <a
-    className="tooltip onboard-icon bottom"
+    class="tooltip onboard-icon bottom"
+    currentitem="false"
     data-event="click focus"
     data-event-off="dblclick"
     data-for="onboard-tip-test"
-    data-tip={true}
+    data-tip="true"
   >
     <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root"
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
       focusable="false"
       viewBox="0 0 24 24"
     >
@@ -30,24 +25,19 @@ exports[`BaseOnboardingTip Component renders correctly 1`] = `
     </svg>
   </a>
   <div
-    className="__react_component_tooltip place-bottom type-dark allow_click"
+    class="__react_component_tooltip show place-bottom type-light allow_click content bottom"
     data-id="tooltip"
     id="onboard-tip-test"
+    style="left: 0px; top: 0px;"
   >
     <div />
     <div
-      className="flexbox"
+      class="flexbox"
     >
       <div
-        style={
-          Object {
-            "flexGrow": 1,
-          }
-        }
+        style="flex-grow: 1;"
       />
-      <a
-        onClick={[Function]}
-      >
+      <a>
         Dismiss
       </a>
     </div>

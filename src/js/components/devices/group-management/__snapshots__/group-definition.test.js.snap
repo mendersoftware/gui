@@ -1,81 +1,53 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`GroupDefinition Component renders correctly 1`] = `
-Array [
+<div>
   <div
-    aria-expanded={false}
-    aria-owns={null}
-    className="MuiAutocomplete-root MuiAutocomplete-hasClearIcon"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onMouseDown={[Function]}
+    aria-expanded="false"
+    class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon"
     role="combobox"
   >
     <div
-      className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+      class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
     >
       <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-        data-shrink={false}
-        htmlFor="group-creation-selection"
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+        data-shrink="false"
+        for="group-creation-selection"
         id="group-creation-selection-label"
       >
         Select a group, or type to create new
       </label>
       <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
-        onClick={[Function]}
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
       >
         <input
-          aria-activedescendant={null}
           aria-autocomplete="list"
-          aria-controls={null}
-          aria-invalid={false}
-          autoCapitalize="none"
-          autoComplete="off"
-          autoFocus={false}
-          className="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
-          disabled={false}
+          aria-invalid="false"
+          autocapitalize="none"
+          autocomplete="off"
+          class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
           id="group-creation-selection"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          onMouseDown={[Function]}
-          required={false}
-          spellCheck="false"
+          spellcheck="false"
           type="text"
           value=""
         />
         <div
-          className="MuiAutocomplete-endAdornment"
+          class="MuiAutocomplete-endAdornment"
         >
           <button
             aria-label="Clear"
-            className="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator"
-            disabled={false}
-            onBlur={[Function]}
-            onClick={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            tabIndex={-1}
+            class="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator"
+            tabindex="-1"
             title="Clear"
             type="button"
           >
             <span
-              className="MuiIconButton-label"
+              class="MuiIconButton-label"
             >
               <svg
-                aria-hidden={true}
-                className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
                 focusable="false"
                 viewBox="0 0 24 24"
               >
@@ -84,27 +56,27 @@ Array [
                 />
               </svg>
             </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
           </button>
         </div>
       </div>
     </div>
-  </div>,
+  </div>
   <p
-    className="MuiFormHelperText-root"
-  >
-    
-  </p>,
+    class="MuiFormHelperText-root"
+  />
   <p
-    className="info"
+    class="info"
   >
     Note: individual devices can't be added to dynamic groups.
     <br />
     <a
       href="/help/devices"
-      onClick={[Function]}
     >
       Learn more about static vs. dynamic groups
     </a>
-  </p>,
-]
+  </p>
+</div>
 `;

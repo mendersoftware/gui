@@ -1,158 +1,110 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ArtifactInformationForm Component renders correctly 1`] = `
-<div
-  className="flexbox column"
-  style={
-    Object {
-      "maxWidth": 400,
-    }
-  }
->
-  <h4>
-    Artifact information
-  </h4>
+<div>
   <div
-    aria-expanded={false}
-    aria-owns={null}
-    className="MuiAutocomplete-root MuiAutocomplete-hasClearIcon"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    onMouseDown={[Function]}
-    role="combobox"
+    class="flexbox column"
+    style="max-width: 400px;"
   >
+    <h4>
+      Artifact information
+    </h4>
     <div
-      className="MuiFormControl-root MuiTextField-root device-types-input MuiFormControl-fullWidth"
+      aria-expanded="false"
+      class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon"
+      role="combobox"
     >
-      <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-        data-shrink={false}
-        htmlFor="compatible-device-type-selection"
-        id="compatible-device-type-selection-label"
-      >
-        Device types compatible
-      </label>
       <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
-        onClick={[Function]}
+        class="MuiFormControl-root MuiTextField-root device-types-input MuiFormControl-fullWidth"
       >
-        <input
-          aria-activedescendant={null}
-          aria-autocomplete="list"
-          aria-controls={null}
-          aria-invalid={false}
-          autoCapitalize="none"
-          autoComplete="off"
-          autoFocus={false}
-          className="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
-          disabled={false}
-          id="compatible-device-type-selection"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          onMouseDown={[Function]}
-          placeholder="Enter all device types this software is compatible with"
-          required={false}
-          spellCheck="false"
-          type="text"
-        />
-        <div
-          className="MuiAutocomplete-endAdornment"
+        <label
+          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+          data-shrink="false"
+          for="compatible-device-type-selection"
+          id="compatible-device-type-selection-label"
         >
-          <button
-            aria-label="Clear"
-            className="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator"
-            disabled={false}
-            onBlur={[Function]}
-            onClick={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            tabIndex={-1}
-            title="Clear"
-            type="button"
+          Device types compatible
+        </label>
+        <div
+          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+        >
+          <input
+            aria-autocomplete="list"
+            aria-invalid="false"
+            autocapitalize="none"
+            autocomplete="off"
+            class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
+            id="compatible-device-type-selection"
+            placeholder="Enter all device types this software is compatible with"
+            spellcheck="false"
+            type="text"
+            value=""
+          />
+          <div
+            class="MuiAutocomplete-endAdornment"
           >
-            <span
-              className="MuiIconButton-label"
+            <button
+              aria-label="Clear"
+              class="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator"
+              tabindex="-1"
+              title="Clear"
+              type="button"
             >
-              <svg
-                aria-hidden={true}
-                className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                focusable="false"
-                viewBox="0 0 24 24"
+              <span
+                class="MuiIconButton-label"
               >
-                <path
-                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-                />
-              </svg>
-            </span>
-            <span
-              className="MuiTouchRipple-root"
-            />
-          </button>
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                  />
+                </svg>
+              </span>
+              <span
+                class="MuiTouchRipple-root"
+              />
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div
-    className="MuiFormControl-root"
-  >
-    <label
-      className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-      data-shrink={false}
-      htmlFor="release-name"
-      style={
-        Object {
-          "alignItems": "center",
-          "display": "flex",
-        }
-      }
-    >
-      Release name
-      <svg
-        aria-describedby={null}
-        aria-hidden={true}
-        className="MuiSvgIcon-root margin-left-small MuiSvgIcon-fontSizeSmall"
-        focusable="false"
-        onBlur={[Function]}
-        onFocus={[Function]}
-        onMouseLeave={[Function]}
-        onMouseOver={[Function]}
-        onTouchEnd={[Function]}
-        onTouchStart={[Function]}
-        title={null}
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-        />
-      </svg>
-    </label>
     <div
-      className="MuiInputBase-root MuiInput-root MuiInput-underline release-name-input MuiInputBase-formControl MuiInput-formControl"
-      onClick={[Function]}
+      class="MuiFormControl-root"
     >
-      <input
-        aria-invalid={false}
-        className="MuiInputBase-input MuiInput-input"
-        disabled={false}
-        id="release-name"
-        onAnimationStart={[Function]}
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        placeholder="A descriptive name for the software"
-        required={false}
-        type="text"
-      />
+      <label
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+        data-shrink="false"
+        for="release-name"
+        style="align-items: center; display: flex;"
+      >
+        Release name
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root margin-left-small MuiSvgIcon-fontSizeSmall"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+          />
+        </svg>
+      </label>
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline release-name-input MuiInputBase-formControl MuiInput-formControl"
+      >
+        <input
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input"
+          id="release-name"
+          placeholder="A descriptive name for the software"
+          type="text"
+          value=""
+        />
+      </div>
     </div>
   </div>
 </div>
@@ -160,23 +112,14 @@ exports[`ArtifactInformationForm Component renders correctly 1`] = `
 
 exports[`ReleaseTooltip Component renders correctly 1`] = `
 <div
-  style={
-    Object {
-      "fontSize": 12,
-    }
-  }
+  style="font-size: 12px;"
 >
   <p>
     If a Release with this name already exists, this new Artifact may be grouped into a Release with other Artifacts of the same name - so long as they are compatible with different device types
   </p>
   <a
     href="/help/releases-artifacts"
-    onClick={[Function]}
-    style={
-      Object {
-        "color": "#679ba5",
-      }
-    }
+    style="color: rgb(103, 155, 165);"
   >
     Learn more about releases
   </a>

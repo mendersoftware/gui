@@ -2,33 +2,26 @@
 
 exports[`Settings Component renders correctly 1`] = `
 <div
-  className="tab-container with-sub-panels"
-  style={
-    Object {
-      "minHeight": "95%",
-    }
-  }
+  class="tab-container with-sub-panels"
+  style="min-height: 95%;"
 >
   <ul
-    className="MuiList-root leftFixed MuiList-padding"
+    class="MuiList-root leftFixed MuiList-padding"
   >
     <li
-      className="MuiListSubheader-root MuiListSubheader-sticky MuiListSubheader-gutters"
+      class="MuiListSubheader-root MuiListSubheader-sticky MuiListSubheader-gutters"
     >
       Settings
     </li>
     <a
-      aria-current={null}
-      className="MuiListItem-root navLink settingsNav MuiListItem-gutters"
-      disabled={false}
+      class="MuiListItem-root navLink settingsNav MuiListItem-gutters"
       href="/settings/global-settings"
-      onClick={[Function]}
     >
       <div
-        className="MuiListItemText-root"
+        class="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+          class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Global settings
         </span>
@@ -36,61 +29,52 @@ exports[`Settings Component renders correctly 1`] = `
     </a>
     <a
       aria-current="page"
-      className="MuiListItem-root navLink settingsNav MuiListItem-gutters active"
-      disabled={false}
+      class="MuiListItem-root navLink settingsNav MuiListItem-gutters active"
       href="/settings/my-profile"
-      onClick={[Function]}
-      style={Object {}}
     >
       <div
-        className="MuiListItemText-root"
+        class="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+          class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           My profile
         </span>
       </div>
     </a>
     <a
-      aria-current={null}
-      className="MuiListItem-root navLink settingsNav MuiListItem-gutters"
-      disabled={false}
+      class="MuiListItem-root navLink settingsNav MuiListItem-gutters"
       href="/settings/organization-and-billing"
-      onClick={[Function]}
     >
       <div
-        className="MuiListItemText-root"
+        class="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+          class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Organization and billing
         </span>
       </div>
     </a>
     <a
-      aria-current={null}
-      className="MuiListItem-root navLink settingsNav MuiListItem-gutters"
-      disabled={false}
+      class="MuiListItem-root navLink settingsNav MuiListItem-gutters"
       href="/settings/upgrade"
-      onClick={[Function]}
     >
       <div
-        className="MuiListItemText-root"
+        class="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+          class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Upgrades and add-ons
         </span>
       </div>
       <div
-        className="MuiListItemIcon-root"
+        class="MuiListItemIcon-root"
       >
         <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root"
+          aria-hidden="true"
+          class="MuiSvgIcon-root"
           focusable="false"
           viewBox="0 0 24 24"
         >
@@ -102,152 +86,100 @@ exports[`Settings Component renders correctly 1`] = `
     </a>
   </ul>
   <div
-    className="rightFluid padding-right"
+    class="rightFluid padding-right"
   >
     <div
-      className="margin-top-small"
-      style={
-        Object {
-          "maxWidth": 750,
-        }
-      }
+      class="margin-top-small"
+      style="max-width: 750px;"
     >
       <h2
-        className="margin-top-small"
+        class="margin-top-small"
       >
         My profile
       </h2>
       <form
-        className="flexbox space-between"
-        onSubmit={[Function]}
+        class="flexbox space-between"
       >
         <div
-          className="MuiFormControl-root"
+          class="MuiFormControl-root"
         >
           <label
-            className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-            data-shrink={false}
-            htmlFor="email"
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+            data-shrink="false"
+            for="email"
           >
             Email
           </label>
           <div
-            className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-            onClick={[Function]}
-            onKeyPress={[Function]}
-            style={
-              Object {
-                "maxWidth": "100%",
-                "width": "400px",
-              }
-            }
+            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+            style="width: 400px; max-width: 100%;"
           >
             <input
-              aria-invalid={false}
-              className="MuiInputBase-input MuiInput-input"
-              disabled={false}
+              aria-invalid="false"
+              class="MuiInputBase-input MuiInput-input"
               id="email"
               name="email"
-              onAnimationStart={[Function]}
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
               placeholder="Email"
-              required={false}
               type="text"
               value=""
             />
           </div>
           <p
-            className="MuiFormHelperText-root"
+            class="MuiFormHelperText-root"
             id="component-error-text"
           />
         </div>
       </form>
       <form
-        className="flexbox space-between"
+        class="flexbox space-between"
       >
         <div
-          className="MuiFormControl-root MuiTextField-root"
-          style={
-            Object {
-              "maxWidth": "100%",
-              "width": 400,
-            }
-          }
+          class="MuiFormControl-root MuiTextField-root"
+          style="width: 400px; max-width: 100%;"
         >
           <label
-            className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated Mui-disabled Mui-disabled"
-            data-shrink={false}
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink Mui-disabled Mui-disabled MuiFormLabel-filled"
+            data-shrink="true"
           >
             Password
           </label>
           <div
-            className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl"
-            onClick={[Function]}
+            class="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl"
           >
             <input
-              aria-invalid={false}
-              autoFocus={false}
-              className="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled"
-              defaultValue="********"
-              disabled={true}
-              onAnimationStart={[Function]}
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              required={false}
+              aria-invalid="false"
+              class="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled"
+              disabled=""
               type="password"
+              value="********"
             />
           </div>
         </div>
         <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary"
-          disabled={false}
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary"
           id="change_password"
-          onBlur={[Function]}
-          onClick={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          style={
-            Object {
-              "margin": "30px 0 0 15px",
-            }
-          }
-          tabIndex={0}
+          style="margin: 30px 0px 0px 15px;"
+          tabindex="0"
           type="button"
         >
           <span
-            className="MuiButton-label"
+            class="MuiButton-label"
           >
             Change password
           </span>
           <span
-            className="MuiTouchRipple-root"
+            class="MuiTouchRipple-root"
           />
         </button>
       </form>
       <p
-        className="info icon"
+        class="info icon"
       >
         <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
           focusable="false"
-          style={
-            Object {
-              "margin": "0 6px 4px 0",
-              "verticalAlign": "middle",
-            }
-          }
+          style="vertical-align: middle; margin: 0px 6px 4px 0px;"
           viewBox="0 0 24 24"
         >
           <path

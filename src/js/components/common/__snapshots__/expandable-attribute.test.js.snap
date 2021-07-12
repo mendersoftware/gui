@@ -1,25 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ExpandableAttribute Component renders correctly 1`] = `
-<div
-  onClick={[Function]}
-  onMouseEnter={[Function]}
-  onMouseLeave={[Function]}
->
+<div>
   <li
-    className="MuiListItem-root attributes MuiListItem-gutters MuiListItem-divider Mui-disabled"
-    disabled={true}
+    class="MuiListItem-root attributes MuiListItem-gutters MuiListItem-divider Mui-disabled"
+    disabled=""
   >
     <div
-      className="MuiListItemText-root"
+      class="MuiListItemText-root"
     >
       <div
-        className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+        class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
       >
         <div>
           <span
-            className="inventory-text"
-            style={Object {}}
+            class="inventory-text"
           />
            
         </div>

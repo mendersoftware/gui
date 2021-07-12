@@ -1,12 +1,13 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import DeploymentStatus from './deploymentstatus';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('DeploymentStatus Component', () => {
   it('renders correctly', async () => {
-    const tree = renderer.create(<DeploymentStatus refreshStatus={jest.fn()} />).toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { baseElement } = render(<DeploymentStatus refreshStatus={jest.fn()} />);
+    const view = baseElement.firstChild.firstChild;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

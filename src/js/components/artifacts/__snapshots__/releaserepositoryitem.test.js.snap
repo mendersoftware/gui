@@ -2,104 +2,56 @@
 
 exports[`ReleaseRepositoryItem Component renders correctly 1`] = `
 <div
-  className="release-repo-item flexbox"
+  class="release-repo-item flexbox"
 >
   <div
-    className="muted"
+    class="muted"
   >
     NaN
   </div>
   <div
-    className="MuiPaper-root MuiAccordion-root MuiPaper-elevation1"
-    style={
-      Object {
-        "border": "1px solid",
-        "borderColor": "#e0e0e0",
-        "width": "100%",
-      }
-    }
+    class="MuiPaper-root MuiAccordion-root MuiPaper-elevation1"
+    style="width: 100%; border: 1px solid; border-color: #e0e0e0;"
   >
     <div
-      aria-disabled={false}
-      aria-expanded={false}
-      className="MuiButtonBase-root MuiAccordionSummary-root"
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
+      aria-disabled="false"
+      aria-expanded="false"
+      class="MuiButtonBase-root MuiAccordionSummary-root"
       role="button"
-      style={
-        Object {
-          "padding": "0 12px",
-        }
-      }
-      tabIndex={0}
+      style="padding: 0px 12px;"
+      tabindex="0"
     >
       <div
-        className="MuiAccordionSummary-content repo-item"
+        class="MuiAccordionSummary-content repo-item"
       >
         <div
-          aria-describedby={null}
-          className="text-overflow"
-          onBlur={[Function]}
-          onFocus={[Function]}
-          onMouseLeave={[Function]}
-          onMouseOver={[Function]}
-          onTouchEnd={[Function]}
-          onTouchStart={[Function]}
+          class="text-overflow"
           title="test-type"
         >
           test-type
         </div>
         <time
-          dateTime="2019-01-01T00:00:00+00:00"
-          title={null}
+          datetime="2019-01-01T00:00:00+00:00"
         >
           2019-01-01 00:00
         </time>
         <div
-          style={
-            Object {
-              "maxWidth": "100vw",
-            }
-          }
-        >
-          
-        </div>
+          style="max-width: 100vw;"
+        />
         <div>
           0 Bytes
         </div>
         <button
-          className="MuiButtonBase-root MuiIconButton-root expandButton"
-          disabled={false}
-          onBlur={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={0}
+          class="MuiButtonBase-root MuiIconButton-root expandButton"
+          tabindex="0"
           type="button"
         >
           <span
-            className="MuiIconButton-label"
+            class="MuiIconButton-label"
           >
             <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root"
+              aria-hidden="true"
+              class="MuiSvgIcon-root"
               focusable="false"
               viewBox="0 0 24 24"
             >
@@ -109,30 +61,26 @@ exports[`ReleaseRepositoryItem Component renders correctly 1`] = `
             </svg>
           </span>
           <span
-            className="MuiTouchRipple-root"
+            class="MuiTouchRipple-root"
           />
         </button>
       </div>
     </div>
     <div
-      className="MuiCollapse-container MuiCollapse-hidden"
-      style={
-        Object {
-          "minHeight": "0px",
-        }
-      }
+      class="MuiCollapse-container MuiCollapse-hidden"
+      style="min-height: 0px;"
     >
       <div
-        className="MuiCollapse-wrapper"
+        class="MuiCollapse-wrapper"
       >
         <div
-          className="MuiCollapse-wrapperInner"
+          class="MuiCollapse-wrapperInner"
         >
           <div
             role="region"
           >
             <div
-              className="MuiAccordionDetails-root"
+              class="MuiAccordionDetails-root"
             />
           </div>
         </div>

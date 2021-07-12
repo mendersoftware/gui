@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 import DeploymentOverview from './overview';
@@ -20,21 +20,20 @@ describe('DeploymentOverview Component', () => {
     const creationMoment = moment();
     const elapsedMoment = moment();
     const duration = moment.duration(elapsedMoment.diff(creationMoment));
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <DeploymentOverview
-            allDevices={[]}
-            deployment={deployment}
-            deviceCount={0}
-            duration={duration}
-            onAbortClick={jest.fn}
-            onRetryClick={jest.fn}
-            viewLog={jest.fn}
-          />
-        </MemoryRouter>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { baseElement } = render(
+      <MemoryRouter>
+        <DeploymentOverview
+          allDevices={[]}
+          deployment={deployment}
+          deviceCount={0}
+          duration={duration}
+          onAbortClick={jest.fn}
+          onRetryClick={jest.fn}
+          viewLog={jest.fn}
+        />
+      </MemoryRouter>
+    );
+    const view = baseElement.firstChild.firstChild;
+    expect(view).toMatchSnapshot();
   });
 });

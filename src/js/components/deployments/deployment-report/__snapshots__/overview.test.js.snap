@@ -2,47 +2,33 @@
 
 exports[`DeploymentOverview Component renders correctly 1`] = `
 <div
-  className="report-container margin-top-large margin-bottom-large"
+  class="report-container margin-top-large margin-bottom-large"
 >
   <div
-    className="break-all two-columns column-data  "
-    style={
-      Object {
-        "alignItems": "center",
-        "alignSelf": "flex-start",
-        "gridTemplateColumns": "minmax(140px, 1fr) minmax(220px, 1fr)",
-      }
-    }
+    class="break-all two-columns column-data  "
+    style="align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr);"
   >
     <div
-      className="align-right  text-muted"
+      class="align-right  text-muted"
     >
       <b>
         Release
       </b>
     </div>
     <div
-      className="flexbox "
-      onClick={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
+      class="flexbox "
     >
       <a
-        className="flexbox centered"
+        class="flexbox centered"
         href="/releases/test"
-        onClick={[Function]}
         rel="noopener noreferrer"
-        style={
-          Object {
-            "fontWeight": "500",
-          }
-        }
+        style="font-weight: 500;"
         target="_blank"
       >
         test
         <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root margin-left-small MuiSvgIcon-fontSizeSmall"
+          aria-hidden="true"
+          class="MuiSvgIcon-root margin-left-small MuiSvgIcon-fontSizeSmall"
           focusable="false"
           viewBox="0 0 24 24"
         >
@@ -53,34 +39,26 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
       </a>
     </div>
     <div
-      className="align-right  text-muted"
+      class="align-right  text-muted"
     >
       <b>
         Target device(s)
       </b>
     </div>
     <div
-      className="flexbox "
-      onClick={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
+      class="flexbox "
     >
       <a
-        className="flexbox centered"
+        class="flexbox centered"
         href="/devices?group=test%20deployment"
-        onClick={[Function]}
         rel="noopener noreferrer"
-        style={
-          Object {
-            "fontWeight": "500",
-          }
-        }
+        style="font-weight: 500;"
         target="_blank"
       >
         test deployment
         <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root margin-left-small MuiSvgIcon-fontSizeSmall"
+          aria-hidden="true"
+          class="MuiSvgIcon-root margin-left-small MuiSvgIcon-fontSizeSmall"
           focusable="false"
           viewBox="0 0 24 24"
         >
@@ -89,19 +67,11 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
           />
         </svg>
         <div
-          className="MuiChip-root margin-left uppercased MuiChip-sizeSmall"
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          style={
-            Object {
-              "fontSize": "0.675rem",
-              "height": 18,
-              "opacity": 0.5,
-            }
-          }
+          class="MuiChip-root margin-left uppercased MuiChip-sizeSmall"
+          style="opacity: 0.5; font-size: 0.675rem; height: 18px;"
         >
           <span
-            className="MuiChip-label MuiChip-labelSmall"
+            class="MuiChip-label MuiChip-labelSmall"
           >
             static
           </span>
@@ -109,79 +79,52 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
       </a>
     </div>
     <div
-      className="align-right  text-muted"
+      class="align-right  text-muted"
     >
       <b>
         Category
       </b>
     </div>
     <div
-      className="flexbox "
-      onClick={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
+      class="flexbox "
     >
       Software update
     </div>
   </div>
   <div
-    className="flexbox column"
+    class="flexbox column"
   >
     <div
-      className="break-all two-columns column-data  "
-      style={
-        Object {
-          "alignItems": "center",
-          "alignSelf": "flex-start",
-          "gridTemplateColumns": "minmax(140px, 1fr) minmax(220px, 1fr)",
-        }
-      }
+      class="break-all two-columns column-data  "
+      style="align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr);"
     >
       <div
-        className="align-right  text-muted"
+        class="align-right  text-muted"
       >
         <b>
           Created at
         </b>
       </div>
       <div
-        className="flexbox "
-        onClick={[Function]}
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
+        class="flexbox "
       >
         <time
-          dateTime="2019-01-01T00:00:00+00:00"
-          title={null}
+          datetime="2019-01-01T00:00:00+00:00"
         >
           2019-01-01 00:00
         </time>
       </div>
     </div>
     <a
-      className="margin-top-small flexbox center-aligned"
-      style={
-        Object {
-          "className": "flexbox centered",
-          "marginLeft": 64,
-          "rel": "noopener noreferrer",
-          "style": Object {
-            "fontWeight": "500",
-          },
-          "target": "_blank",
-        }
-      }
+      class="margin-top-small flexbox center-aligned"
+      style="margin-left: 64px;"
     >
       Schedule details 
       <svg
-        aria-hidden={true}
-        className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
         focusable="false"
-        style={
-          Object {
-            "marginLeft": 8,
-          }
-        }
+        style="margin-left: 8px;"
         viewBox="0 0 24 24"
       >
         <path

@@ -3,7 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import Help from './help';
 import { defaultState, undefineds } from '../../../../tests/mockData';
 
@@ -16,16 +16,15 @@ describe('Help Component', () => {
   });
 
   it('renders correctly', async () => {
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <Provider store={store}>
-            <Help location={{ pathname: '/help/get-started' }} />
-          </Provider>
-        </MemoryRouter>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { baseElement } = render(
+      <MemoryRouter>
+        <Provider store={store}>
+          <Help location={{ pathname: '/help/get-started' }} />
+        </Provider>
+      </MemoryRouter>
+    );
+    const view = baseElement.firstChild.firstChild;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

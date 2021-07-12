@@ -2,158 +2,107 @@
 
 exports[`AuthsetList Component renders correctly 1`] = `
 <div
-  className="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 Mui-expanded WithStyles(ForwardRef(Accordion))-expanded-2 MuiPaper-elevation1"
+  class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 Mui-expanded WithStyles(ForwardRef(Accordion))-expanded-2 MuiPaper-elevation1"
 >
   <div
-    aria-disabled={false}
-    aria-expanded={true}
-    className="MuiButtonBase-root MuiAccordionSummary-root Mui-expanded"
-    onBlur={[Function]}
-    onClick={[Function]}
-    onDragLeave={[Function]}
-    onFocus={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseDown={[Function]}
-    onMouseLeave={[Function]}
-    onMouseUp={[Function]}
-    onTouchEnd={[Function]}
-    onTouchMove={[Function]}
-    onTouchStart={[Function]}
+    aria-disabled="false"
+    aria-expanded="true"
+    class="MuiButtonBase-root MuiAccordionSummary-root Mui-expanded"
     role="button"
-    style={
-      Object {
-        "cursor": "default",
-      }
-    }
-    tabIndex={0}
+    style="cursor: default;"
+    tabindex="0"
   >
     <div
-      className="MuiAccordionSummary-content Mui-expanded"
+      class="MuiAccordionSummary-content Mui-expanded"
     >
       <div
-        className="capitalized"
+        class="capitalized"
       >
         Active
       </div>
       <div
-        className="capitalized"
+        class="capitalized"
       >
         accepted
       </div>
-      <a
-        onClick={[Function]}
-      >
+      <a>
         show key
       </a>
       <time
-        dateTime="2020-09-21T12:42:34+00:00"
-        title={null}
+        datetime="2020-09-21T12:42:34+00:00"
       >
         2020-09-21 12:42
       </time>
       <div
-        className="action-buttons flexbox"
+        class="action-buttons flexbox"
       >
         <div>
           Accept
         </div>
-        <a
-          onClick={[Function]}
-        >
+        <a>
           Reject
         </a>
-        <a
-          onClick={[Function]}
-        >
+        <a>
           Dismiss
         </a>
       </div>
     </div>
   </div>
   <div
-    className="MuiCollapse-container MuiCollapse-entered"
-    style={
-      Object {
-        "minHeight": "0px",
-      }
-    }
+    class="MuiCollapse-container MuiCollapse-entered"
+    style="min-height: 0px;"
   >
     <div
-      className="MuiCollapse-wrapper"
+      class="MuiCollapse-wrapper"
     >
       <div
-        className="MuiCollapse-wrapperInner"
+        class="MuiCollapse-wrapperInner"
       >
         <div
           role="region"
         >
           <div
-            className="MuiAccordionDetails-root"
+            class="MuiAccordionDetails-root"
           >
             <div
-              style={
-                Object {
-                  "flexGrow": 1,
-                }
-              }
+              style="flex-grow: 1;"
             />
             <p
-              className="bold expanded"
+              class="bold expanded"
             >
                Are you sure you want to continue?
             </p>
           </div>
           <div
-            className="MuiAccordionActions-root margin-right-small MuiAccordionActions-spacing"
+            class="MuiAccordionActions-root margin-right-small MuiAccordionActions-spacing"
           >
             <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-text margin-right-small"
-              disabled={false}
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              tabIndex={0}
+              class="MuiButtonBase-root MuiButton-root MuiButton-text margin-right-small"
+              tabindex="0"
               type="button"
             >
               <span
-                className="MuiButton-label"
+                class="MuiButton-label"
               >
                 Cancel
               </span>
+              <span
+                class="MuiTouchRipple-root"
+              />
             </button>
             <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-contained"
-              disabled={false}
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              tabIndex={0}
+              class="MuiButtonBase-root MuiButton-root MuiButton-contained"
+              tabindex="0"
               type="button"
             >
               <span
-                className="MuiButton-label"
+                class="MuiButton-label"
               >
                 Confirm
               </span>
+              <span
+                class="MuiTouchRipple-root"
+              />
             </button>
           </div>
         </div>

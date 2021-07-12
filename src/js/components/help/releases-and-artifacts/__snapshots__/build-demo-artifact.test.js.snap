@@ -27,38 +27,20 @@ exports[`BuildDemoArtifact Component renders correctly 1`] = `
     , extract it then make it executable by running:
   </p>
   <div
-    className="code"
+    class="code"
   >
     <button
-      className="MuiButtonBase-root MuiIconButton-root"
-      disabled={false}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      style={
-        Object {
-          "float": "right",
-          "margin": "-20px 0 0 10px",
-        }
-      }
-      tabIndex={0}
+      class="MuiButtonBase-root MuiIconButton-root"
+      style="float: right; margin: -20px 0px 0px 10px;"
+      tabindex="0"
       type="button"
     >
       <span
-        className="MuiIconButton-label"
+        class="MuiIconButton-label"
       >
         <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root"
+          aria-hidden="true"
+          class="MuiSvgIcon-root"
           focusable="false"
           viewBox="0 0 24 24"
         >
@@ -67,14 +49,12 @@ exports[`BuildDemoArtifact Component renders correctly 1`] = `
           />
         </svg>
       </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
     </button>
     <span
-      style={
-        Object {
-          "whiteSpace": "pre-wrap",
-          "wordBreak": "break-word",
-        }
-      }
+      style="white-space: pre-wrap; word-break: break-word;"
     >
       
 sudo chmod +x mender-artifact && \\
@@ -85,45 +65,27 @@ sudo mv mender-artifact /usr/local/bin
   <p>
     2. Copy and paste the following to download 
     <span
-      className="code"
+      class="code"
     >
       single-file-artifact-gen
     </span>
      and make it executable:
   </p>
   <div
-    className="code"
+    class="code"
   >
     <button
-      className="MuiButtonBase-root MuiIconButton-root"
-      disabled={false}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      style={
-        Object {
-          "float": "right",
-          "margin": "-20px 0 0 10px",
-        }
-      }
-      tabIndex={0}
+      class="MuiButtonBase-root MuiIconButton-root"
+      style="float: right; margin: -20px 0px 0px 10px;"
+      tabindex="0"
       type="button"
     >
       <span
-        className="MuiIconButton-label"
+        class="MuiIconButton-label"
       >
         <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root"
+          aria-hidden="true"
+          class="MuiSvgIcon-root"
           focusable="false"
           viewBox="0 0 24 24"
         >
@@ -132,14 +94,12 @@ sudo mv mender-artifact /usr/local/bin
           />
         </svg>
       </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
     </button>
     <span
-      style={
-        Object {
-          "whiteSpace": "pre-wrap",
-          "wordBreak": "break-word",
-        }
-      }
+      style="white-space: pre-wrap; word-break: break-word;"
     >
       
 wget https://raw.githubusercontent.com/mendersoftware/mender/master/support/modules-artifact-gen/single-file-artifact-gen && \\
@@ -162,14 +122,14 @@ sudo chmod +x single-file-artifact-gen
   <p>
     4. Take the 
     <span
-      className="code"
+      class="code"
     >
       mender-demo-artifact
     </span>
      Artifact you just downloaded, and extract its contents and enclosed
      
     <span
-      className="code"
+      class="code"
     >
       .tar
     </span>
@@ -187,38 +147,20 @@ sudo chmod +x single-file-artifact-gen
      with a simple string ("Hello world"), so you will be able to easily see the change when the webpage content is updated. This can be done by using:
   </p>
   <div
-    className="code"
+    class="code"
   >
     <button
-      className="MuiButtonBase-root MuiIconButton-root"
-      disabled={false}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      style={
-        Object {
-          "float": "right",
-          "margin": "-20px 0 0 10px",
-        }
-      }
-      tabIndex={0}
+      class="MuiButtonBase-root MuiIconButton-root"
+      style="float: right; margin: -20px 0px 0px 10px;"
+      tabindex="0"
       type="button"
     >
       <span
-        className="MuiIconButton-label"
+        class="MuiIconButton-label"
       >
         <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root"
+          aria-hidden="true"
+          class="MuiSvgIcon-root"
           focusable="false"
           viewBox="0 0 24 24"
         >
@@ -227,14 +169,12 @@ sudo chmod +x single-file-artifact-gen
           />
         </svg>
       </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
     </button>
     <span
-      style={
-        Object {
-          "whiteSpace": "pre-wrap",
-          "wordBreak": "break-word",
-        }
-      }
+      style="white-space: pre-wrap; word-break: break-word;"
     >
       cat &gt;index.html &lt;&lt;EOF
 Hello World!
@@ -253,45 +193,27 @@ EOF
   <p>
     NOTE: You should replace the 
     <span
-      className="code"
+      class="code"
     >
       generic_x86
     </span>
      device type with the type you require.
   </p>
   <div
-    className="code"
+    class="code"
   >
     <button
-      className="MuiButtonBase-root MuiIconButton-root"
-      disabled={false}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      style={
-        Object {
-          "float": "right",
-          "margin": "-20px 0 0 10px",
-        }
-      }
-      tabIndex={0}
+      class="MuiButtonBase-root MuiIconButton-root"
+      style="float: right; margin: -20px 0px 0px 10px;"
+      tabindex="0"
       type="button"
     >
       <span
-        className="MuiIconButton-label"
+        class="MuiIconButton-label"
       >
         <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root"
+          aria-hidden="true"
+          class="MuiSvgIcon-root"
           focusable="false"
           viewBox="0 0 24 24"
         >
@@ -300,14 +222,12 @@ EOF
           />
         </svg>
       </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
     </button>
     <span
-      style={
-        Object {
-          "whiteSpace": "pre-wrap",
-          "wordBreak": "break-word",
-        }
-      }
+      style="white-space: pre-wrap; word-break: break-word;"
     >
       
 ARTIFACT_NAME="demo-webserver-updated" && \\
@@ -323,7 +243,7 @@ FILE_NAME="index.html" && \\
   <p>
     You should now have a new Artifact file called 
     <span
-      className="code"
+      class="code"
     >
       demo-webserver-updated.mender
     </span>

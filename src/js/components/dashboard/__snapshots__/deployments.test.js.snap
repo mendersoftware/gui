@@ -3,37 +3,33 @@
 exports[`Deployments Component renders correctly 1`] = `
 <div>
   <h4
-    className="dashboard-header"
+    class="dashboard-header"
   >
     <span>
       Deployments
     </span>
   </h4>
   <div
-    className="deployments"
-    style={
-      Object {
-        "marginBottom": 50,
-      }
-    }
+    class="deployments"
+    style="margin-bottom: 50px;"
   >
     <div
-      className="loaderContainer"
+      class="loaderContainer"
     >
       <div
-        className="  loader"
+        class="  loader"
       >
         <span
-          className="dot dot_1"
+          class="dot dot_1"
         />
         <span
-          className="dot dot_2"
+          class="dot dot_2"
         />
         <span
-          className="dot dot_3"
+          class="dot dot_3"
         />
         <span
-          className="dot dot_4"
+          class="dot dot_4"
         />
       </div>
     </div>

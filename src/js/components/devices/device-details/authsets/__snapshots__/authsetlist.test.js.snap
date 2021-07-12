@@ -2,44 +2,38 @@
 
 exports[`AuthsetList Component renders correctly 1`] = `
 <div
-  className="authsets"
+  class="authsets"
 >
   <div
-    className="header"
+    class="header"
   >
     <div
-      className="columnHeader"
-    >
-      
-    </div>
+      class="columnHeader"
+    />
     <div
-      className="columnHeader"
+      class="columnHeader"
     >
       Status
     </div>
     <div
-      className="columnHeader"
+      class="columnHeader"
     >
       Public key
     </div>
     <div
-      className="columnHeader"
+      class="columnHeader"
     >
       Time of request
     </div>
     <div
-      className="columnHeader"
+      class="columnHeader"
     >
       Actions
     </div>
   </div>
   <div
-    className="body"
-    style={
-      Object {
-        "position": "relative",
-      }
-    }
+    class="body"
+    style="position: relative;"
   />
 </div>
 `;

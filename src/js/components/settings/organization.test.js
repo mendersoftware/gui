@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
@@ -58,39 +58,36 @@ describe('MyOrganization Component', () => {
   });
 
   it('renders correctly', async () => {
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <Provider store={store}>
-            <MyOrganization />
-          </Provider>
-        </MemoryRouter>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { baseElement } = render(
+      <MemoryRouter>
+        <Provider store={store}>
+          <MyOrganization />
+        </Provider>
+      </MemoryRouter>
+    );
+    const view = baseElement.firstChild.firstChild;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });
 
 describe('smaller components', () => {
   [OrgHeader, TrialExpirationNote, DeviceLimitExpansionNotification, CancelSubscriptionAlert, CancelSubscriptionButton].forEach(Component => {
     it(`renders ${Component.displayName || Component.name} correctly`, () => {
-      const tree = renderer
-        .create(
-          <MemoryRouter>
-            <Component
-              trial_expiration="2019-10-05T13:00:00.000Z"
-              isTrial={true}
-              handleCancelSubscription={jest.fn}
-              orgName="test"
-              mailBodyTexts={{ billing: 'bill this', upgrade: 'upgrade here' }}
-            />
-          </MemoryRouter>
-        )
-        .toJSON();
-
-      expect(tree).toMatchSnapshot();
-      expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+      const { baseElement } = render(
+        <MemoryRouter>
+          <Component
+            trial_expiration="2019-10-05T13:00:00.000Z"
+            isTrial={true}
+            handleCancelSubscription={jest.fn}
+            orgName="test"
+            mailBodyTexts={{ billing: 'bill this', upgrade: 'upgrade here' }}
+          />
+        </MemoryRouter>
+      );
+      const view = baseElement.firstChild.firstChild;
+      expect(view).toMatchSnapshot();
+      expect(view).toEqual(expect.not.stringMatching(undefineds));
     });
   });
 });

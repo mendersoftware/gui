@@ -1,206 +1,145 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FilterItem Component renders correctly 1`] = `
-Array [
+<div
+  class="flexbox center-aligned"
+>
   <div
-    className="flexbox center-aligned"
+    aria-expanded="false"
+    class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon"
+    role="combobox"
   >
     <div
-      aria-expanded={false}
-      aria-owns={null}
-      className="MuiAutocomplete-root MuiAutocomplete-hasClearIcon"
-      onClick={[Function]}
-      onKeyDown={[Function]}
-      onMouseDown={[Function]}
-      role="combobox"
+      class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+      style="margin-top: 0px; margin-bottom: 15px;"
     >
-      <div
-        className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
-        style={
-          Object {
-            "marginBottom": 15,
-            "marginTop": 0,
-          }
-        }
+      <label
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+        data-shrink="true"
+        for="filter-selection"
+        id="filter-selection-label"
       >
-        <label
-          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-          data-shrink={false}
-          htmlFor="filter-selection"
-          id="filter-selection-label"
-        >
-          Attribute
-        </label>
+        Attribute
+      </label>
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+      >
+        <input
+          aria-autocomplete="both"
+          aria-invalid="false"
+          autocapitalize="none"
+          autocomplete="off"
+          class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
+          id="filter-selection"
+          spellcheck="false"
+          type="text"
+          value="testvalue"
+        />
         <div
-          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
-          onClick={[Function]}
+          class="MuiAutocomplete-endAdornment"
         >
-          <input
-            aria-activedescendant={null}
-            aria-autocomplete="both"
-            aria-controls={null}
-            aria-invalid={false}
-            autoCapitalize="none"
-            autoComplete="off"
-            autoFocus={false}
-            className="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
-            disabled={false}
-            id="filter-selection"
-            onAnimationStart={[Function]}
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseDown={[Function]}
-            required={false}
-            spellCheck="false"
-            type="text"
-            value=""
-          />
-          <div
-            className="MuiAutocomplete-endAdornment"
+          <button
+            aria-label="Clear"
+            class="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty"
+            tabindex="-1"
+            title="Clear"
+            type="button"
           >
-            <button
-              aria-label="Clear"
-              className="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty"
-              disabled={false}
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              tabIndex={-1}
-              title="Clear"
-              type="button"
+            <span
+              class="MuiIconButton-label"
             >
-              <span
-                className="MuiIconButton-label"
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                focusable="false"
+                viewBox="0 0 24 24"
               >
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-                  />
-                </svg>
-              </span>
-            </button>
-          </div>
+                <path
+                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
         </div>
       </div>
     </div>
+  </div>
+  <div
+    class="MuiInputBase-root MuiInput-root MuiInput-underline margin-left-small margin-right-small"
+  >
     <div
-      className="MuiInputBase-root MuiInput-root MuiInput-underline margin-left-small margin-right-small"
-      onClick={[Function]}
+      aria-haspopup="listbox"
+      class="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
+      role="button"
+      tabindex="0"
     >
-      <div
-        aria-haspopup="listbox"
-        className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
-        onBlur={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onMouseDown={[Function]}
-        role="button"
-        tabIndex={0}
-      >
-        equals
-      </div>
-      <input
-        aria-hidden={true}
-        className="MuiSelect-nativeInput"
-        onAnimationStart={[Function]}
-        onChange={[Function]}
-        tabIndex={-1}
-        value="$eq"
+      <span>
+        ​
+      </span>
+    </div>
+    <input
+      aria-hidden="true"
+      class="MuiSelect-nativeInput"
+      tabindex="-1"
+      value="$eq"
+    />
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiSelect-icon"
+      focusable="false"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M7 10l5 5 5-5z"
       />
+    </svg>
+  </div>
+  <div
+    class="MuiFormControl-root MuiTextField-root"
+    style="margin-top: 0px; margin-bottom: 15px;"
+  >
+    <label
+      class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+      data-shrink="true"
+    >
+      Value
+    </label>
+    <div
+      class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+    >
+      <input
+        aria-invalid="false"
+        class="MuiInputBase-input MuiInput-input"
+        type="text"
+        value="testvalue"
+      />
+    </div>
+  </div>
+  <button
+    class="MuiButtonBase-root MuiIconButton-root margin-left MuiIconButton-sizeSmall"
+    tabindex="0"
+    type="button"
+  >
+    <span
+      class="MuiIconButton-label"
+    >
       <svg
-        aria-hidden={true}
-        className="MuiSvgIcon-root MuiSelect-icon"
+        aria-hidden="true"
+        class="MuiSvgIcon-root"
         focusable="false"
         viewBox="0 0 24 24"
       >
         <path
-          d="M7 10l5 5 5-5z"
+          d="M14.59 8L12 10.59 9.41 8 8 9.41 10.59 12 8 14.59 9.41 16 12 13.41 14.59 16 16 14.59 13.41 12 16 9.41 14.59 8zM12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
         />
       </svg>
-    </div>
-    <div
-      className="MuiFormControl-root MuiTextField-root"
-      style={
-        Object {
-          "marginBottom": 15,
-          "marginTop": 0,
-        }
-      }
-    >
-      <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
-        data-shrink={true}
-      >
-        Value
-      </label>
-      <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-        onClick={[Function]}
-      >
-        <input
-          aria-invalid={false}
-          autoFocus={false}
-          className="MuiInputBase-input MuiInput-input"
-          disabled={false}
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          required={false}
-          type="text"
-          value="testvalue"
-        />
-      </div>
-    </div>
-    <button
-      className="MuiButtonBase-root MuiIconButton-root margin-left MuiIconButton-sizeSmall"
-      disabled={false}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
-      type="button"
-    >
-      <span
-        className="MuiIconButton-label"
-      >
-        <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M14.59 8L12 10.59 9.41 8 8 9.41 10.59 12 8 14.59 9.41 16 12 13.41 14.59 16 16 14.59 13.41 12 16 9.41 14.59 8zM12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-          />
-        </svg>
-      </span>
-    </button>
-  </div>,
-  "",
-]
+    </span>
+    <span
+      class="MuiTouchRipple-root"
+    />
+  </button>
+</div>
 `;

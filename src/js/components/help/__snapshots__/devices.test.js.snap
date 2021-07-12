@@ -2,32 +2,23 @@
 
 exports[`GettingStarted Component renders correctly 1`] = `
 <div
-  className="flexbox column"
+  class="flexbox column"
 >
   <div
-    className="one-column margin-bottom"
-    style={
-      Object {
-        "flexGrow": 1,
-        "padding": 0,
-      }
-    }
+    class="one-column margin-bottom"
+    style="flex-grow: 1; padding: 0px;"
   >
     <div
-      className="margin-right-large"
+      class="margin-right-large"
     >
       <div
-        className="flexbox center-aligned margin-bottom"
+        class="flexbox center-aligned margin-bottom"
       >
         <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
           focusable="false"
-          style={
-            Object {
-              "color": "#7b7b7b",
-            }
-          }
+          style="color: rgb(123, 123, 123);"
           viewBox="0 0 24 24"
         >
           <path
@@ -35,50 +26,37 @@ exports[`GettingStarted Component renders correctly 1`] = `
           />
         </svg>
         <div
-          className="bold margin-left-small"
+          class="bold margin-left-small"
         >
           Static group
         </div>
       </div>
       <p
-        className="help-content"
+        class="help-content"
       >
         Select specific devices to add them to a static group. Filter to find devices in the 'All devices' UI, check the devices you want to add, and click the action button to assign them to a group.
       </p>
     </div>
     <img
       src="static-group-creation.gif"
-      style={
-        Object {
-          "maxWidth": "100%",
-        }
-      }
+      style="max-width: 100%;"
     />
   </div>
   <div
-    className="one-column lightestgrey"
-    style={
-      Object {
-        "flexGrow": 1,
-        "padding": 25,
-      }
-    }
+    class="one-column lightestgrey"
+    style="flex-grow: 1; padding: 25px;"
   >
     <div
-      className="margin-right-large"
+      class="margin-right-large"
     >
       <div
-        className="flexbox center-aligned margin-bottom"
+        class="flexbox center-aligned margin-bottom"
       >
         <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
           focusable="false"
-          style={
-            Object {
-              "color": "#7b7b7b",
-            }
-          }
+          style="color: rgb(123, 123, 123);"
           viewBox="0 0 24 24"
         >
           <path
@@ -86,28 +64,24 @@ exports[`GettingStarted Component renders correctly 1`] = `
           />
         </svg>
         <div
-          className="bold margin-left-small margin-right"
+          class="bold margin-left-small margin-right"
         >
           Dynamic group
         </div>
         <span
-          className="info uppercased"
-          style={
-            Object {
-              "margin": 0,
-            }
-          }
+          class="info uppercased"
+          style="margin: 0px;"
         >
           Enterprise
         </span>
       </div>
       <p
-        className="help-content"
+        class="help-content"
       >
         You can set filters based on device attributes, and save them as a group. At any point in time, all devices that match the filters will be part of this group. This means that new devices will automatically join the group if they match the filters.
       </p>
       <p
-        className="info"
+        class="info"
       >
         Dynamic grouping is only available to Enterprise users. 
         <a
@@ -120,11 +94,7 @@ exports[`GettingStarted Component renders correctly 1`] = `
     </div>
     <img
       src="dynamic-group-creation.gif"
-      style={
-        Object {
-          "maxWidth": "100%",
-        }
-      }
+      style="max-width: 100%;"
     />
   </div>
 </div>

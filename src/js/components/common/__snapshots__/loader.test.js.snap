@@ -2,22 +2,22 @@
 
 exports[`Loader Component renders correctly 1`] = `
 <div
-  className="loaderContainer shrunk"
+  class="loaderContainer shrunk"
 >
   <div
-    className="  loader"
+    class="  loader"
   >
     <span
-      className="dot dot_1"
+      class="dot dot_1"
     />
     <span
-      className="dot dot_2"
+      class="dot dot_2"
     />
     <span
-      className="dot dot_3"
+      class="dot dot_3"
     />
     <span
-      className="dot dot_4"
+      class="dot dot_4"
     />
   </div>
 </div>

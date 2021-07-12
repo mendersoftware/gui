@@ -2,28 +2,23 @@
 
 exports[`CreateGroup Component renders correctly 1`] = `
 <ul
-  className="MuiList-root MuiList-padding"
+  class="MuiList-root MuiList-padding"
 >
   <div
-    className="waiting-inventory"
+    class="waiting-inventory"
   >
     <div
-      className="tooltip info"
+      class="tooltip info"
+      currentitem="false"
       data-event="click focus"
       data-for="inventory-wait"
-      data-tip={true}
+      data-tip="true"
       id="inventory-info"
-      onClick={[Function]}
-      style={
-        Object {
-          "right": "8px",
-          "top": "8px",
-        }
-      }
+      style="top: 8px; right: 8px;"
     >
       <svg
-        aria-hidden={true}
-        className="MuiSvgIcon-root"
+        aria-hidden="true"
+        class="MuiSvgIcon-root"
         focusable="false"
         viewBox="0 0 24 24"
       >
@@ -33,7 +28,7 @@ exports[`CreateGroup Component renders correctly 1`] = `
       </svg>
     </div>
     <div
-      className="__react_component_tooltip place-left type-dark"
+      class="__react_component_tooltip place-left type-dark"
       data-id="tooltip"
       id="inventory-wait"
     >
@@ -60,22 +55,22 @@ exports[`CreateGroup Component renders correctly 1`] = `
       Waiting for inventory data from the device
     </p>
     <div
-      className="loaderContainer"
+      class="loaderContainer"
     >
       <div
-        className=" waiting-loader loader"
+        class=" waiting-loader loader"
       >
         <span
-          className="dot dot_1"
+          class="dot dot_1"
         />
         <span
-          className="dot dot_2"
+          class="dot dot_2"
         />
         <span
-          className="dot dot_3"
+          class="dot dot_3"
         />
         <span
-          className="dot dot_4"
+          class="dot dot_4"
         />
       </div>
     </div>

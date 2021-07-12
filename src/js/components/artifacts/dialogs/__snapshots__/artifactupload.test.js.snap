@@ -1,79 +1,38 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ArtifactUpload Component renders correctly 1`] = `
-Array [
-  <div
-    className="dashboard-placeholder fadeIn onboard dropzone"
-    onBlur={[Function]}
-    onClick={[Function]}
-    onDragEnter={[Function]}
-    onDragLeave={[Function]}
-    onDragOver={[Function]}
-    onDrop={[Function]}
-    onFocus={[Function]}
-    onKeyDown={[Function]}
-    style={
-      Object {
-        "top": 0,
-      }
-    }
-    tabIndex={0}
-  >
-    <input
-      autoComplete="off"
-      multiple={false}
-      onChange={[Function]}
-      onClick={[Function]}
-      style={
-        Object {
-          "display": "none",
-        }
-      }
-      tabIndex={-1}
-      type="file"
-    />
-    <span
-      className="icon"
-    >
-      <svg
-        aria-hidden={true}
-        className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-        focusable="false"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"
-        />
-      </svg>
-    </span>
-     
-    <span>
-      Drag here or 
-      <a>
-        browse
-      </a>
-       to upload an Artifact file
-    </span>
-  </div>,
-  <p
-    className="info flexbox centered"
-    style={
-      Object {
-        "marginTop": "10px",
-      }
-    }
+<div
+  class="dashboard-placeholder fadeIn onboard dropzone"
+  style="top: 0px;"
+  tabindex="0"
+>
+  <input
+    autocomplete="off"
+    style="display: none;"
+    tabindex="-1"
+    type="file"
+  />
+  <span
+    class="icon"
   >
     <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
       focusable="false"
       viewBox="0 0 24 24"
     >
       <path
-        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+        d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"
       />
     </svg>
-    Upload a pre-built .mender Artifact OR any file to create a single-file update Artifact
-  </p>,
-]
+  </span>
+   
+  <span>
+    Drag here or 
+    <a>
+      browse
+    </a>
+     to upload an Artifact file
+  </span>
+</div>
 `;

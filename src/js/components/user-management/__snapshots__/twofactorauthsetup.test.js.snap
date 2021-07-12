@@ -2,63 +2,47 @@
 
 exports[`TwoFactorAuthSetup Component renders correctly 1`] = `
 <div
-  className="margin-top"
+  class="margin-top"
 >
   <div
-    className="clickable flexbox space-between"
-    onClick={[Function]}
+    class="clickable flexbox space-between"
   >
     <p
-      className="help-content"
+      class="help-content"
     >
       Enable Two Factor authentication
     </p>
     <span
-      className="MuiSwitch-root"
+      class="MuiSwitch-root"
     >
       <span
-        aria-disabled={false}
-        className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiSwitch-switchBase MuiSwitch-colorSecondary"
-        onBlur={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        tabIndex={null}
+        aria-disabled="false"
+        class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiSwitch-switchBase MuiSwitch-colorSecondary"
       >
         <span
-          className="MuiIconButton-label"
+          class="MuiIconButton-label"
         >
           <input
-            checked={false}
-            className="PrivateSwitchBase-input-4 MuiSwitch-input"
-            onChange={[Function]}
+            class="PrivateSwitchBase-input-4 MuiSwitch-input"
             type="checkbox"
+            value=""
           />
           <span
-            className="MuiSwitch-thumb"
+            class="MuiSwitch-thumb"
           />
         </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
       </span>
       <span
-        className="MuiSwitch-track"
+        class="MuiSwitch-track"
       />
     </span>
   </div>
   <p
-    className="info"
-    style={
-      Object {
-        "margin": 0,
-        "width": "75%",
-      }
-    }
+    class="info"
+    style="width: 75%; margin: 0px;"
   >
     Two Factor Authentication adds a second layer of protection to your account by asking for an additional verification code each time you log in.
   </p>

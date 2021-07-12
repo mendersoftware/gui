@@ -2,72 +2,39 @@
 
 exports[`ReleaseRepository Component renders correctly 1`] = `
 <div
-  className="relative release-repo margin-left"
-  style={
-    Object {
-      "width": "100%",
-    }
-  }
+  class="relative release-repo margin-left"
+  style="width: 100%;"
 >
   <div
-    className="muted margin-bottom"
+    class="muted margin-bottom"
   >
     <p
-      className="MuiTypography-root MuiTypography-body1"
-      style={
-        Object {
-          "marginBottom": 10,
-        }
-      }
+      class="MuiTypography-root MuiTypography-body1"
+      style="margin-bottom: 10px;"
     >
       Release:
     </p>
     <p
-      className="MuiTypography-root MuiTypography-body2"
+      class="MuiTypography-root MuiTypography-body2"
     >
       No release selected
     </p>
   </div>
   <div
-    style={
-      Object {
-        "marginTop": "10px",
-        "position": "relative",
-      }
-    }
+    style="position: relative; margin-top: 10px;"
   >
     <div
-      className="dashboard-placeholder fadeIn"
-      style={
-        Object {
-          "fontSize": "16px",
-          "margin": "8vh auto",
-        }
-      }
+      class="dashboard-placeholder fadeIn"
+      style="font-size: 16px; margin: 8vh auto;"
     >
       <div
-        className="dropzone"
-        onBlur={[Function]}
-        onClick={[Function]}
-        onDragEnter={[Function]}
-        onDragLeave={[Function]}
-        onDragOver={[Function]}
-        onDrop={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        tabIndex={0}
+        class="dropzone"
+        tabindex="0"
       >
         <input
-          autoComplete="off"
-          multiple={false}
-          onChange={[Function]}
-          onClick={[Function]}
-          style={
-            Object {
-              "display": "none",
-            }
-          }
-          tabIndex={-1}
+          autocomplete="off"
+          style="display: none;"
+          tabindex="-1"
           type="file"
         />
         <p>
