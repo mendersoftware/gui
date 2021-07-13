@@ -1,14 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import Time from 'react-time';
+import CopyToClipboard from 'react-copy-to-clipboard';
 
 // material ui
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Chip, withStyles } from '@material-ui/core';
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Chip, Divider, IconButton, withStyles } from '@material-ui/core';
+import { FileCopy as CopyPasteIcon } from '@material-ui/icons';
 
 import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { formatTime } from '../../../../helpers';
+import theme from '../../../../themes/mender-theme';
 import Loader from '../../../common/loader';
 
 const padder = <div key="padder" style={{ flexGrow: 1 }}></div>;
+
+const CustomAccordion = withStyles({
+  root: {
+    backgroundColor: '#f7f7f7',
+    '&:before': {
+      display: 'none'
+    },
+    '&$expanded': {
+      margin: 'auto'
+    }
+  },
+  expanded: {}
+})(Accordion);
 
 export const getConfirmationMessage = (status, device, authset) => {
   let message = '';
@@ -55,6 +71,8 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
   const [showKey, setShowKey] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState('');
   const [newStatus, setNewStatus] = useState('');
+  const [copied, setCopied] = useState(false);
+  const [keyHash, setKeyHash] = useState('');
 
   useEffect(() => {
     if (!isExpanded) {
@@ -63,6 +81,20 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
       setNewStatus('');
     }
   }, [isExpanded]);
+
+  useEffect(() => {
+    const data = new TextEncoder().encode(authset.pubkey);
+    if (crypto?.subtle) {
+      crypto.subtle.digest('SHA-256', data).then(hashBuffer => {
+        const hashHex = Array.from(new Uint8Array(hashBuffer))
+          .map(b => b.toString(16).padStart(2, '0'))
+          .join('');
+        setKeyHash(hashHex);
+      });
+    } else {
+      setKeyHash('SHA calculation is not supported by this browser');
+    }
+  }, [authset.pubkey]);
 
   const onShowKey = show => {
     onExpand(show && authset.id);
@@ -99,6 +131,11 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
     return onConfirm(DEVICE_STATES.accepted);
   };
 
+  const onCopied = (_, result) => {
+    setCopied(result);
+    setTimeout(() => setCopied(false), 5000);
+  };
+
   let key = <a onClick={onShowKey}>show key</a>;
   let content = [
     padder,
@@ -106,11 +143,24 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
       {loading === authset.id ? 'Updating status' : `${confirmMessage} Are you sure you want to continue?`}
     </p>
   ];
+
   if (showKey) {
     content = [
-      <code className="expanded pre-line" key="content">
-        {authset.pubkey}
-      </code>,
+      <div key="content">
+        <CopyToClipboard text={authset.pubkey} onCopy={onCopied}>
+          <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
+            <CopyPasteIcon />
+          </IconButton>
+        </CopyToClipboard>
+        <code className="pre-line">{authset.pubkey}</code>
+        {copied && <p className="green fadeIn">Copied key to clipboard.</p>}
+        <Divider style={{ marginTop: theme.spacing(), marginBottom: theme.spacing() }} />
+        <div title="SHA256">
+          Checksum
+          <br />
+          <code>{keyHash}</code>
+        </div>
+      </div>,
       padder
     ];
     key = <a onClick={() => onShowKey(false)}>hide key</a>;
@@ -140,19 +190,6 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
   } else if (authset.status === DEVICE_STATES.pending) {
     authsetStatus = <Chip size="small" label="new" color="primary" style={{ justifySelf: 'flex-start' }} />;
   }
-
-  const CustomAccordion = withStyles({
-    root: {
-      backgroundColor: '#f7f7f7',
-      '&:before': {
-        display: 'none'
-      },
-      '&$expanded': {
-        margin: 'auto'
-      }
-    },
-    expanded: {}
-  })(Accordion);
 
   return (
     <CustomAccordion square expanded={isExpanded}>
