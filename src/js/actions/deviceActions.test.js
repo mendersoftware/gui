@@ -101,9 +101,10 @@ describe('selecting things', () => {
     const expectedActions = [
       { type: DeviceConstants.SELECT_GROUP, group: groupName },
       { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: { ...expectedDevice, attributes } } },
+      { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice },
       {
         type: DeviceConstants.RECEIVE_GROUP_DEVICES,
-        group: { filters: [], deviceIds: [defaultState.devices.byId.a1.id], total: 1 },
+        group: { filters: [], deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.b1.id], total: 2 },
         groupName
       }
     ];
@@ -356,6 +357,7 @@ describe('static grouping related actions', () => {
       { type: DeviceConstants.SELECT_DEVICE, deviceId: undefined },
       { type: DeviceConstants.SELECT_GROUP, group: undefined },
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The group was updated successfully' } },
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: {} },
       { type: DeviceConstants.RECEIVE_GROUPS, groups: { testGroup: defaultState.devices.groups.byId.testGroup } },
       {
         type: DeviceConstants.ADD_DYNAMIC_GROUP,
@@ -522,7 +524,8 @@ describe('dynamic grouping related actions', () => {
         group: { deviceIds: [], total: 0, filters: [{ key: 'group', operator: '$nin', scope: 'system', value: ['testGroup'] }] }
       },
       { type: DeviceConstants.SELECT_GROUP, group: undefined },
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The group was updated successfully' } }
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The group was updated successfully' } },
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: {} }
     ];
     await store.dispatch(addDynamicGroup(groupName, [{ key: 'group', operator: '$nin', scope: 'system', value: ['testGroup'] }]));
     const storeActions = store.getActions();
