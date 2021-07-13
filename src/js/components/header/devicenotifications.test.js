@@ -1,19 +1,18 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import DeviceNotifications from './devicenotifications';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('DeviceNotifications Component', () => {
   it('renders correctly', async () => {
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <DeviceNotifications pending={10} total={100} limit={1000} />
-        </MemoryRouter>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { baseElement } = render(
+      <MemoryRouter>
+        <DeviceNotifications pending={10} total={100} limit={1000} />
+      </MemoryRouter>
+    );
+    const view = baseElement.firstChild.firstChild;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

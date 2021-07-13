@@ -21,7 +21,6 @@ exports[`Support Component renders correctly 1`] = `
     You can also try our 
     <a
       href="/help/more-help-resources"
-      onClick={[Function]}
     >
       other resources
     </a>

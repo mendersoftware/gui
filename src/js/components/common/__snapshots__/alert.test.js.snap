@@ -2,7 +2,7 @@
 
 exports[`Alert Component renders correctly 1`] = `
 <div
-  className="margin-top-small alert alert-error"
+  class="margin-top-small alert alert-error"
 >
   Content
 </div>

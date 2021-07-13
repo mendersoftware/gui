@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
@@ -41,29 +41,27 @@ describe('OnboardingTips Components', () => {
 
   describe('DevicePendingTip', () => {
     it('renders correctly', async () => {
-      const tree = renderer
-        .create(
-          <MemoryRouter>
-            <Provider store={store}>
-              <DevicePendingTip />
-            </Provider>
-          </MemoryRouter>
-        )
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      const { baseElement } = render(
+        <MemoryRouter>
+          <Provider store={store}>
+            <DevicePendingTip />
+          </Provider>
+        </MemoryRouter>
+      );
+      const view = baseElement.firstChild.firstChild;
+      expect(view).toMatchSnapshot();
     });
   });
 
   describe('WelcomeSnackTip', () => {
     it('renders correctly', async () => {
-      const tree = renderer
-        .create(
-          <Provider store={store}>
-            <WelcomeSnackTip />
-          </Provider>
-        )
-        .toJSON();
-      expect(tree).toMatchSnapshot();
+      const { baseElement } = render(
+        <Provider store={store}>
+          <WelcomeSnackTip />
+        </Provider>
+      );
+      const view = baseElement.firstChild.firstChild;
+      expect(view).toMatchSnapshot();
     });
   });
 
@@ -93,20 +91,19 @@ describe('OnboardingTips Components', () => {
       UploadPreparedArtifactTip
     ].forEach(async Component => {
       it(`renders ${Component.displayName || Component.name} correctly`, () => {
-        const tree = renderer
-          .create(
-            <MemoryRouter>
-              <Component
-                createdGroup="testgroup"
-                demoArtifactLink="http://somewhere.com"
-                progress={3}
-                selectedRelease={{ Name: 'test', toString: () => 'test' }}
-                setShowCreateArtifactDialog={jest.fn}
-              />
-            </MemoryRouter>
-          )
-          .toJSON();
-        expect(tree).toMatchSnapshot();
+        const { baseElement } = render(
+          <MemoryRouter>
+            <Component
+              createdGroup="testgroup"
+              demoArtifactLink="http://somewhere.com"
+              progress={3}
+              selectedRelease={{ Name: 'test', toString: () => 'test' }}
+              setShowCreateArtifactDialog={jest.fn}
+            />
+          </MemoryRouter>
+        );
+        const view = baseElement.firstChild.firstChild;
+        expect(view).toMatchSnapshot();
       });
     });
   });

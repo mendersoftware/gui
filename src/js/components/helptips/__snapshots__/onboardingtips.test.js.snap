@@ -2,24 +2,20 @@
 
 exports[`OnboardingTips Components DevicePendingTip renders correctly 1`] = `
 <div
-  className="onboard-tip"
-  style={
-    Object {
-      "left": "50%",
-      "top": "50%",
-    }
-  }
+  class="onboard-tip"
+  style="left: 50%; top: 50%;"
 >
   <a
-    className="tooltip onboard-icon"
+    class="tooltip onboard-icon"
+    currentitem="false"
     data-event="click focus"
     data-event-off="dblclick"
     data-for="pending-device-onboarding-tip"
-    data-tip={true}
+    data-tip="true"
   >
     <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root"
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
       focusable="false"
       viewBox="0 0 24 24"
     >
@@ -32,39 +28,31 @@ exports[`OnboardingTips Components DevicePendingTip renders correctly 1`] = `
     </svg>
   </a>
   <div
-    className="__react_component_tooltip place-bottom type-dark allow_click"
+    class="__react_component_tooltip show place-bottom type-light allow_click content"
     data-id="tooltip"
     id="pending-device-onboarding-tip"
+    style="left: 0px; top: 0px;"
   >
     <p>
       It may take a few moments before your device appears.
     </p>
-    <a
-      onClick={[Function]}
-    >
+    <a>
       Open the tutorial
     </a>
      again or 
     <a
       href="/help/get-started"
-      onClick={[Function]}
     >
       go to the help pages
     </a>
      if you have problems.
     <div
-      className="flexbox"
+      class="flexbox"
     >
       <div
-        style={
-          Object {
-            "flexGrow": 1,
-          }
-        }
+        style="flex-grow: 1;"
       />
-      <a
-        onClick={[Function]}
-      >
+      <a>
         Dismiss
       </a>
     </div>
@@ -74,32 +62,19 @@ exports[`OnboardingTips Components DevicePendingTip renders correctly 1`] = `
 
 exports[`OnboardingTips Components WelcomeSnackTip renders correctly 1`] = `
 <div
-  className="onboard-snack"
+  class="onboard-snack"
 >
   <button
-    className="MuiButtonBase-root MuiIconButton-root"
-    disabled={false}
-    onBlur={[Function]}
-    onClick={[Function]}
-    onDragLeave={[Function]}
-    onFocus={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseDown={[Function]}
-    onMouseLeave={[Function]}
-    onMouseUp={[Function]}
-    onTouchEnd={[Function]}
-    onTouchMove={[Function]}
-    onTouchStart={[Function]}
-    tabIndex={0}
+    class="MuiButtonBase-root MuiIconButton-root"
+    tabindex="0"
     type="button"
   >
     <span
-      className="MuiIconButton-label"
+      class="MuiIconButton-label"
     >
       <svg
-        aria-hidden={true}
-        className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
         focusable="false"
         viewBox="0 0 24 24"
       >
@@ -108,27 +83,30 @@ exports[`OnboardingTips Components WelcomeSnackTip renders correctly 1`] = `
         />
       </svg>
     </span>
+    <span
+      class="MuiTouchRipple-root"
+    />
   </button>
   <div
-    className="flexbox"
+    class="flexbox"
   >
     <ol>
       <li
-        className=""
+        class=""
       >
         1
         . 
         Connect a device
       </li>
       <li
-        className=""
+        class=""
       >
         2
         . 
         Deploy an Application Update
       </li>
       <li
-        className=""
+        class=""
       >
         3
         . 
@@ -148,7 +126,6 @@ exports[`OnboardingTips Components tiny onboarding tips renders ApplicationUpdat
     To continue to make a demo deployment to this device click the 
     <a
       href="/releases"
-      onClick={[Function]}
     >
       Releases
     </a>
@@ -310,9 +287,7 @@ exports[`OnboardingTips Components tiny onboarding tips renders UploadNewArtifac
   Click 'Upload' to upload the file and create your new Release.
   <p>
     You can 
-    <a
-      onClick={[Function]}
-    >
+    <a>
       view the instructions again
     </a>
      if you need help creating the 

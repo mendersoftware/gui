@@ -2,115 +2,82 @@
 
 exports[`MyOrganization Component renders correctly 1`] = `
 <div
-  className="margin-top-small"
+  class="margin-top-small"
 >
   <h2
-    className="margin-top-small"
+    class="margin-top-small"
   >
     Organization and billing
   </h2>
   <ul
-    className="MuiList-root MuiList-padding"
+    class="MuiList-root MuiList-padding"
   >
     <div
-      className="margin-top-small org-settings-item"
+      class="margin-top-small org-settings-item"
     >
       <li
-        className="MuiListItem-root flexbox column MuiListItem-gutters Mui-disabled MuiListItem-alignItemsFlexStart"
-        disabled={true}
+        class="MuiListItem-root flexbox column MuiListItem-gutters Mui-disabled MuiListItem-alignItemsFlexStart"
+        disabled=""
       >
         <div
-          className="MuiListItemText-root MuiListItemText-multiline"
-          style={
-            Object {
-              "display": "grid",
-              "marginBottom": 8,
-              "width": "100%",
-            }
-          }
+          class="MuiListItemText-root MuiListItemText-multiline"
+          style="display: grid; width: 100%; margin-bottom: 8px;"
         >
           <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+            class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
             Organization name
           </span>
           <div
-            className="MuiTypography-root MuiListItemText-secondary two-columns MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-            style={
-              Object {
-                "display": "grid",
-                "marginBottom": 8,
-                "width": "100%",
-              }
-            }
+            class="MuiTypography-root MuiListItemText-secondary two-columns MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+            style="display: grid; width: 100%; margin-bottom: 8px;"
           >
             <div>
               test
             </div>
             <a
-              className="align-right"
+              class="align-right"
             />
           </div>
         </div>
         <hr
-          className="MuiDivider-root"
-          style={
-            Object {
-              "marginBottom": 8,
-              "marginLeft": -16,
-              "width": 500,
-            }
-          }
+          class="MuiDivider-root"
+          style="margin-bottom: 8px; margin-left: -16px; width: 500px;"
         />
       </li>
     </div>
     <div
-      className="margin-top-small org-settings-item"
+      class="margin-top-small org-settings-item"
     >
       <li
-        className="MuiListItem-root flexbox column MuiListItem-gutters Mui-disabled MuiListItem-alignItemsFlexStart"
-        disabled={true}
+        class="MuiListItem-root flexbox column MuiListItem-gutters Mui-disabled MuiListItem-alignItemsFlexStart"
+        disabled=""
       >
         <div
-          className="MuiListItemText-root MuiListItemText-multiline"
-          style={
-            Object {
-              "display": "grid",
-              "marginBottom": 0,
-              "width": "100%",
-            }
-          }
+          class="MuiListItemText-root MuiListItemText-multiline"
+          style="display: grid; width: 100%; margin-bottom: 0px;"
         >
           <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+            class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
             <div>
               <span
-                style={
-                  Object {
-                    "paddingRight": 10,
-                  }
-                }
+                style="padding-right: 10px;"
               >
                 Organization token
               </span>
               <div
-                className="tooltip info"
+                class="tooltip info"
+                currentitem="false"
                 data-event="click focus"
                 data-for="token-help"
-                data-tip={true}
+                data-tip="true"
                 id="token-info"
-                style={
-                  Object {
-                    "display": "inline",
-                    "position": "relative",
-                    "top": "6px",
-                  }
-                }
+                style="position: relative; display: inline; top: 6px;"
               >
                 <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root"
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
                   focusable="false"
                   viewBox="0 0 24 24"
                 >
@@ -120,7 +87,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
                 </svg>
               </div>
               <div
-                className="__react_component_tooltip place-top type-dark"
+                class="__react_component_tooltip place-top type-dark"
                 data-id="tooltip"
                 id="token-help"
               >
@@ -128,12 +95,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
                   Organization token
                 </h3>
                 <p
-                  style={
-                    Object {
-                      "color": "#DECFD9",
-                      "margin": "1em 0",
-                    }
-                  }
+                  style="color: rgb(222, 207, 217); margin: 1em 0px;"
                 >
                   This token is unique for your organization and ensures that only devices that you own are able to connect to your account.
                 </p>
@@ -141,40 +103,26 @@ exports[`MyOrganization Component renders correctly 1`] = `
             </div>
           </span>
           <div
-            className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-            style={
-              Object {
-                "display": "grid",
-                "marginBottom": 0,
-                "width": "100%",
-              }
-            }
+            class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+            style="display: grid; width: 100%; margin-bottom: 0px;"
           >
             <div
-              onClick={[Function]}
-              onMouseEnter={[Function]}
-              onMouseLeave={[Function]}
-              style={
-                Object {
-                  "width": 468,
-                }
-              }
+              style="width: 468px;"
             >
               <div
-                className="MuiListItem-root attributes Mui-disabled"
-                disabled={true}
+                class="MuiListItem-root attributes Mui-disabled"
+                disabled=""
               >
                 <div
-                  className="MuiListItemText-root"
+                  class="MuiListItemText-root"
                 >
                   <div
-                    className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                    class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
                     title="test"
                   >
                     <div>
                       <span
-                        className="break-all inventory-text tenant-token-text"
-                        style={Object {}}
+                        class="break-all inventory-text tenant-token-text"
                       >
                         test
                       </span>
@@ -187,44 +135,25 @@ exports[`MyOrganization Component renders correctly 1`] = `
           </div>
         </div>
         <hr
-          className="MuiDivider-root"
-          style={
-            Object {
-              "marginBottom": 8,
-              "marginLeft": -16,
-              "width": 500,
-            }
-          }
+          class="MuiDivider-root"
+          style="margin-bottom: 8px; margin-left: -16px; width: 500px;"
         />
       </li>
       <div>
         <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-text"
-          disabled={false}
-          onBlur={[Function]}
-          onClick={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={0}
+          class="MuiButtonBase-root MuiButton-root MuiButton-text"
+          tabindex="0"
           type="button"
         >
           <span
-            className="MuiButton-label"
+            class="MuiButton-label"
           >
             <span
-              className="MuiButton-startIcon MuiButton-iconSizeMedium"
+              class="MuiButton-startIcon MuiButton-iconSizeMedium"
             >
               <svg
-                aria-hidden={true}
-                className="MuiSvgIcon-root"
+                aria-hidden="true"
+                class="MuiSvgIcon-root"
                 focusable="false"
                 viewBox="0 0 24 24"
               >
@@ -235,54 +164,40 @@ exports[`MyOrganization Component renders correctly 1`] = `
             </span>
             Copy to clipboard
           </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
         </button>
         <div
-          style={
-            Object {
-              "height": 30,
-              "padding": 15,
-            }
-          }
+          style="height: 30px; padding: 15px;"
         />
       </div>
     </div>
     <div
-      className="margin-top-small org-settings-item"
+      class="margin-top-small org-settings-item"
     >
       <li
-        className="MuiListItem-root flexbox column MuiListItem-gutters Mui-disabled MuiListItem-alignItemsFlexStart"
-        disabled={true}
+        class="MuiListItem-root flexbox column MuiListItem-gutters Mui-disabled MuiListItem-alignItemsFlexStart"
+        disabled=""
       >
         <div
-          className="MuiListItemText-root MuiListItemText-multiline"
-          style={
-            Object {
-              "display": "grid",
-              "marginBottom": 8,
-              "width": "100%",
-            }
-          }
+          class="MuiListItemText-root MuiListItemText-multiline"
+          style="display: grid; width: 100%; margin-bottom: 8px;"
         >
           <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+            class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
             Current plan
           </span>
           <div
-            className="MuiTypography-root MuiListItemText-secondary two-columns MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-            style={
-              Object {
-                "display": "grid",
-                "marginBottom": 8,
-                "width": "100%",
-              }
-            }
+            class="MuiTypography-root MuiListItemText-secondary two-columns MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+            style="display: grid; width: 100%; margin-bottom: 8px;"
           >
             <div>
               Trial
             </div>
             <a
-              className="align-right"
+              class="align-right"
               href="https://mender.io/plans/pricing"
               rel="noopener noreferrer"
               target="_blank"
@@ -292,21 +207,15 @@ exports[`MyOrganization Component renders correctly 1`] = `
           </div>
         </div>
         <hr
-          className="MuiDivider-root"
-          style={
-            Object {
-              "marginBottom": 8,
-              "marginLeft": -16,
-              "width": 500,
-            }
-          }
+          class="MuiDivider-root"
+          style="margin-bottom: 8px; margin-left: -16px; width: 500px;"
         />
         <div
-          className="flexbox centered text-muted"
+          class="flexbox centered text-muted"
         >
           <svg
-            aria-hidden={true}
-            className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
             focusable="false"
             viewBox="0 0 24 24"
           >
@@ -315,14 +224,13 @@ exports[`MyOrganization Component renders correctly 1`] = `
             />
           </svg>
           <span
-            className="margin-left-small"
+            class="margin-left-small"
           >
             Your trial expires in 
             6 months
             . 
             <a
               href="/settings/upgrade"
-              onClick={[Function]}
             >
               Upgrade to a paid plan
             </a>
@@ -331,64 +239,45 @@ exports[`MyOrganization Component renders correctly 1`] = `
       </li>
     </div>
     <div
-      className="margin-top-small org-settings-item"
+      class="margin-top-small org-settings-item"
     >
       <li
-        className="MuiListItem-root flexbox column MuiListItem-gutters Mui-disabled MuiListItem-alignItemsFlexStart"
-        disabled={true}
+        class="MuiListItem-root flexbox column MuiListItem-gutters Mui-disabled MuiListItem-alignItemsFlexStart"
+        disabled=""
       >
         <div
-          className="MuiListItemText-root MuiListItemText-multiline"
-          style={
-            Object {
-              "display": "grid",
-              "marginBottom": 8,
-              "width": "100%",
-            }
-          }
+          class="MuiListItemText-root MuiListItemText-multiline"
+          style="display: grid; width: 100%; margin-bottom: 8px;"
         >
           <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+            class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
             Current add-ons
           </span>
           <div
-            className="MuiTypography-root MuiListItemText-secondary two-columns MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-            style={
-              Object {
-                "display": "grid",
-                "marginBottom": 8,
-                "width": "100%",
-              }
-            }
+            class="MuiTypography-root MuiListItemText-secondary two-columns MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+            style="display: grid; width: 100%; margin-bottom: 8px;"
           >
             <div>
               You currently don't have any add-ons
             </div>
             <a
-              className="align-right"
-              onClick={[Function]}
+              class="align-right"
             >
               Purchase an add-on
             </a>
           </div>
         </div>
         <hr
-          className="MuiDivider-root"
-          style={
-            Object {
-              "marginBottom": 8,
-              "marginLeft": -16,
-              "width": 500,
-            }
-          }
+          class="MuiDivider-root"
+          style="margin-bottom: 8px; margin-left: -16px; width: 500px;"
         />
         <div
-          className="flexbox centered text-muted"
+          class="flexbox centered text-muted"
         >
           <svg
-            aria-hidden={true}
-            className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
             focusable="false"
             viewBox="0 0 24 24"
           >
@@ -397,14 +286,13 @@ exports[`MyOrganization Component renders correctly 1`] = `
             />
           </svg>
           <span
-            className="margin-left-small"
+            class="margin-left-small"
           >
             Your trial expires in 
             6 months
             . 
             <a
               href="/settings/upgrade"
-              onClick={[Function]}
             >
               Upgrade to a paid plan
             </a>
@@ -412,26 +300,22 @@ exports[`MyOrganization Component renders correctly 1`] = `
         </div>
       </li>
       <div
-        className="margin-left-small margin-bottom"
+        class="margin-left-small margin-bottom"
       >
         <a
-          className="flexbox center-aligned"
+          class="flexbox center-aligned"
           href="https://mender.io/plans/pricing"
           rel="noopener noreferrer"
           target="_blank"
         >
           <div
-            style={
-              Object {
-                "maxWidth": 200,
-              }
-            }
+            style="max-width: 200px;"
           >
             Compare plans and add-ons at mender.io
           </div>
           <svg
-            aria-hidden={true}
-            className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
             focusable="false"
             viewBox="0 0 24 24"
           >
@@ -444,16 +328,11 @@ exports[`MyOrganization Component renders correctly 1`] = `
     </div>
   </ul>
   <p
-    className="margin-left-small margin-right-small"
-    style={
-      Object {
-        "maxWidth": 500,
-      }
-    }
+    class="margin-left-small margin-right-small"
+    style="max-width: 500px;"
   >
     <a
       href=""
-      onClick={[Function]}
     >
       End trial
        and deactivate account
@@ -464,12 +343,8 @@ exports[`MyOrganization Component renders correctly 1`] = `
 
 exports[`smaller components renders CancelSubscriptionAlert correctly 1`] = `
 <div
-  className="margin-top-large alert alert-error"
-  style={
-    Object {
-      "maxWidth": 500,
-    }
-  }
+  class="margin-top-large alert alert-error"
+  style="max-width: 500px;"
 >
   <p>
     We've started the process to cancel your plan and deactivate your account.
@@ -490,16 +365,11 @@ exports[`smaller components renders CancelSubscriptionAlert correctly 1`] = `
 
 exports[`smaller components renders CancelSubscriptionButton correctly 1`] = `
 <p
-  className="margin-left-small margin-right-small"
-  style={
-    Object {
-      "maxWidth": 500,
-    }
-  }
+  class="margin-left-small margin-right-small"
+  style="max-width: 500px;"
 >
   <a
     href=""
-    onClick={[Function]}
   >
     End trial
      and deactivate account
@@ -509,11 +379,11 @@ exports[`smaller components renders CancelSubscriptionButton correctly 1`] = `
 
 exports[`smaller components renders DeviceLimitExpansionNotification correctly 1`] = `
 <div
-  className="flexbox centered text-muted"
+  class="flexbox centered text-muted"
 >
   <svg
-    aria-hidden={true}
-    className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+    aria-hidden="true"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
     focusable="false"
     viewBox="0 0 24 24"
   >
@@ -522,13 +392,12 @@ exports[`smaller components renders DeviceLimitExpansionNotification correctly 1
     />
   </svg>
   <span
-    className="margin-left-small"
+    class="margin-left-small"
   >
     To increase your device limit,
      
     <a
       href="/settings/upgrade"
-      onClick={[Function]}
     >
       upgrade to a paid plan
     </a>
@@ -540,31 +409,22 @@ exports[`smaller components renders DeviceLimitExpansionNotification correctly 1
 exports[`smaller components renders OrgHeader correctly 1`] = `
 <div>
   <span
-    style={
-      Object {
-        "paddingRight": 10,
-      }
-    }
+    style="padding-right: 10px;"
   >
     Organization token
   </span>
   <div
-    className="tooltip info"
+    class="tooltip info"
+    currentitem="false"
     data-event="click focus"
     data-for="token-help"
-    data-tip={true}
+    data-tip="true"
     id="token-info"
-    style={
-      Object {
-        "display": "inline",
-        "position": "relative",
-        "top": "6px",
-      }
-    }
+    style="position: relative; display: inline; top: 6px;"
   >
     <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root"
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
       focusable="false"
       viewBox="0 0 24 24"
     >
@@ -574,7 +434,7 @@ exports[`smaller components renders OrgHeader correctly 1`] = `
     </svg>
   </div>
   <div
-    className="__react_component_tooltip place-top type-dark"
+    class="__react_component_tooltip place-top type-dark"
     data-id="tooltip"
     id="token-help"
   >
@@ -582,12 +442,7 @@ exports[`smaller components renders OrgHeader correctly 1`] = `
       Organization token
     </h3>
     <p
-      style={
-        Object {
-          "color": "#DECFD9",
-          "margin": "1em 0",
-        }
-      }
+      style="color: rgb(222, 207, 217); margin: 1em 0px;"
     >
       This token is unique for your organization and ensures that only devices that you own are able to connect to your account.
     </p>
@@ -597,11 +452,11 @@ exports[`smaller components renders OrgHeader correctly 1`] = `
 
 exports[`smaller components renders TrialExpirationNote correctly 1`] = `
 <div
-  className="flexbox centered text-muted"
+  class="flexbox centered text-muted"
 >
   <svg
-    aria-hidden={true}
-    className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+    aria-hidden="true"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
     focusable="false"
     viewBox="0 0 24 24"
   >
@@ -610,14 +465,13 @@ exports[`smaller components renders TrialExpirationNote correctly 1`] = `
     />
   </svg>
   <span
-    className="margin-left-small"
+    class="margin-left-small"
   >
     Your trial expires in 
     9 months
     . 
     <a
       href="/settings/upgrade"
-      onClick={[Function]}
     >
       Upgrade to a paid plan
     </a>

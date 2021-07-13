@@ -1,5 +1,5 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
@@ -21,14 +21,13 @@ describe('ReleaseRepository Component', () => {
   });
 
   it('renders correctly', async () => {
-    const tree = renderer
-      .create(
-        <Provider store={store}>
-          <ReleaseRepository artifacts={[]} />
-        </Provider>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { baseElement } = render(
+      <Provider store={store}>
+        <ReleaseRepository artifacts={[]} />
+      </Provider>
+    );
+    const view = baseElement.firstChild.firstChild;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

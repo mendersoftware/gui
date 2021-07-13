@@ -1,61 +1,45 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Login Component renders correctly 1`] = `
-Array [
+<div>
   <img
     alt="mender-logo"
     id="signupLogo"
     src="headerlogo.png"
-  />,
+  />
   <h1>
     Try Mender for Free
-  </h1>,
+  </h1>
   <h2
-    className="margin-bottom"
+    class="margin-bottom"
   >
     Sign up and connect up to 10 devices
     <br />
     free for 12 months – no credit card required.
-  </h2>,
+  </h2>
   <div
-    className="flexbox centered margin-bottom"
+    class="flexbox centered margin-bottom"
   >
     Sign up with:
-  </div>,
+  </div>
   <div
-    style={
-      Object {
-        "display": "flex",
-        "justifyContent": "center",
-      }
-    }
+    style="display: flex; justify-content: center;"
   >
     <a
-      aria-disabled={false}
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained oauth-provider"
+      aria-disabled="false"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained oauth-provider"
       href="/api/management/v1/useradm/oauth2/github"
-      onBlur={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
+      tabindex="0"
     >
       <span
-        className="MuiButton-label"
+        class="MuiButton-label"
       >
         <span
-          className="MuiButton-startIcon MuiButton-iconSizeMedium"
+          class="MuiButton-startIcon MuiButton-iconSizeMedium"
         >
           <svg
-            aria-hidden={true}
-            className="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit"
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit"
             focusable="false"
             viewBox="0 0 24 24"
           >
@@ -67,35 +51,24 @@ Array [
         Github
       </span>
       <span
-        className="MuiTouchRipple-root"
+        class="MuiTouchRipple-root"
       />
     </a>
     <a
-      aria-disabled={false}
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained oauth-provider"
+      aria-disabled="false"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained oauth-provider"
       href="/api/management/v1/useradm/oauth2/google"
-      onBlur={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
+      tabindex="0"
     >
       <span
-        className="MuiButton-label"
+        class="MuiButton-label"
       >
         <span
-          className="MuiButton-startIcon MuiButton-iconSizeMedium"
+          class="MuiButton-startIcon MuiButton-iconSizeMedium"
         >
           <svg
-            aria-hidden={true}
-            className="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit"
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit"
             focusable="false"
             viewBox="0 0 24 24"
           >
@@ -107,143 +80,96 @@ Array [
         Google
       </span>
       <span
-        className="MuiTouchRipple-root"
+        class="MuiTouchRipple-root"
       />
     </a>
-  </div>,
+  </div>
   <h4
-    className="dashboard-header margin-top-large"
-    style={
-      Object {
-        "display": "flex",
-        "justifyContent": "center",
-      }
-    }
+    class="dashboard-header margin-top-large"
+    style="display: flex; justify-content: center;"
   >
     <span
-      style={
-        Object {
-          "padding": 15,
-          "top": -24,
-        }
-      }
+      style="padding: 15px; top: -24px;"
     >
       or your email address
     </span>
-  </h4>,
+  </h4>
   <form
-    className=""
-    onSubmit={[Function]}
+    class=""
   >
     <div
-      className="MuiFormControl-root  required"
+      class="MuiFormControl-root  required"
     >
       <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-        data-shrink={false}
-        htmlFor="email"
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+        data-shrink="false"
+        for="email"
       >
         Email *
       </label>
       <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-        onClick={[Function]}
-        onKeyPress={[Function]}
-        required={true}
-        style={
-          Object {
-            "maxWidth": "100%",
-            "width": "400px",
-          }
-        }
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+        required=""
+        style="width: 400px; max-width: 100%;"
       >
         <input
-          aria-invalid={false}
-          className="MuiInputBase-input MuiInput-input"
-          disabled={false}
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input"
           id="email"
           name="email"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
           placeholder="Email *"
-          required={true}
+          required=""
           type="text"
           value=""
         />
       </div>
       <p
-        className="MuiFormHelperText-root"
+        class="MuiFormHelperText-root"
         id="component-error-text"
       />
     </div>
     <div
-      className="margin-bottom-small"
+      class="margin-bottom-small"
       id="password_new-holder"
     >
       <div
-        className="MuiFormControl-root required"
+        class="MuiFormControl-root required"
       >
         <label
-          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-          data-shrink={false}
-          htmlFor="password_new"
+          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+          data-shrink="false"
+          for="password_new"
         >
           Password *
         </label>
         <div
-          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
-          onClick={[Function]}
-          onKeyPress={[Function]}
-          required={true}
-          style={
-            Object {
-              "width": 400,
-            }
-          }
+          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+          required=""
+          style="width: 400px;"
         >
           <input
-            aria-invalid={false}
-            className="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd"
-            disabled={false}
+            aria-invalid="false"
+            class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd"
             id="password_new"
             name="password_new"
-            onAnimationStart={[Function]}
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            required={true}
+            required=""
             type="password"
             value=""
           />
           <div
-            className="MuiInputAdornment-root MuiInputAdornment-positionEnd"
+            class="MuiInputAdornment-root MuiInputAdornment-positionEnd"
           >
             <button
-              className="MuiButtonBase-root MuiIconButton-root"
-              disabled={false}
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              tabIndex={0}
+              class="MuiButtonBase-root MuiIconButton-root"
+              tabindex="0"
               type="button"
             >
               <span
-                className="MuiIconButton-label"
+                class="MuiIconButton-label"
               >
                 <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root"
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
                   focusable="false"
                   viewBox="0 0 24 24"
                 >
@@ -253,28 +179,28 @@ Array [
                 </svg>
               </span>
               <span
-                className="MuiTouchRipple-root"
+                class="MuiTouchRipple-root"
               />
             </button>
           </div>
         </div>
         <p
-          className="MuiFormHelperText-root"
+          class="MuiFormHelperText-root"
           id="component-error-text"
         />
       </div>
       <div>
         <div
-          className="help-text"
+          class="help-text"
           id="pass-strength"
         >
           Strength: 
           <meter
-            high={3.9}
-            low={2.5}
-            max={4}
-            min={0}
-            optimum={4}
+            high="3.9"
+            low="2.5"
+            max="4"
+            min="0"
+            optimum="4"
             value=""
           />
         </div>
@@ -285,67 +211,43 @@ Array [
       id="password_confirmation-holder"
     >
       <div
-        className="MuiFormControl-root required"
+        class="MuiFormControl-root required"
       >
         <label
-          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-          data-shrink={false}
-          htmlFor="password_confirmation"
+          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+          data-shrink="false"
+          for="password_confirmation"
         >
           Confirm password *
         </label>
         <div
-          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
-          onClick={[Function]}
-          onKeyPress={[Function]}
-          required={true}
-          style={
-            Object {
-              "width": 400,
-            }
-          }
+          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+          required=""
+          style="width: 400px;"
         >
           <input
-            aria-invalid={false}
-            className="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd"
-            disabled={false}
+            aria-invalid="false"
+            class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd"
             id="password_confirmation"
             name="password_confirmation"
-            onAnimationStart={[Function]}
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            required={true}
+            required=""
             type="password"
             value=""
           />
           <div
-            className="MuiInputAdornment-root MuiInputAdornment-positionEnd"
+            class="MuiInputAdornment-root MuiInputAdornment-positionEnd"
           >
             <button
-              className="MuiButtonBase-root MuiIconButton-root"
-              disabled={false}
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              tabIndex={0}
+              class="MuiButtonBase-root MuiIconButton-root"
+              tabindex="0"
               type="button"
             >
               <span
-                className="MuiIconButton-label"
+                class="MuiIconButton-label"
               >
                 <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root"
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
                   focusable="false"
                   viewBox="0 0 24 24"
                 >
@@ -355,53 +257,35 @@ Array [
                 </svg>
               </span>
               <span
-                className="MuiTouchRipple-root"
+                class="MuiTouchRipple-root"
               />
             </button>
           </div>
         </div>
         <p
-          className="MuiFormHelperText-root"
+          class="MuiFormHelperText-root"
           id="component-error-text"
         />
       </div>
     </div>
     <div
-      className="flexbox"
-      style={
-        Object {
-          "height": "min-content",
-          "justifyContent": "flex-end",
-          "marginTop": "32px",
-        }
-      }
+      class="flexbox"
+      style="justify-content: flex-end; margin-top: 32px;"
     >
       <button
-        className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled"
-        disabled={true}
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled"
+        disabled=""
         id="login_button"
-        onBlur={[Function]}
-        onClick={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        tabIndex={-1}
+        tabindex="-1"
         type="button"
       >
         <span
-          className="MuiButton-label"
+          class="MuiButton-label"
         >
           Sign up
         </span>
       </button>
     </div>
-  </form>,
-]
+  </form>
+</div>
 `;

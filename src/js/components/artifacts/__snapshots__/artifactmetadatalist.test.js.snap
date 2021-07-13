@@ -1,45 +1,36 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ArtifactPayload Component renders correctly 1`] = `
-Array [
+<div>
   <p
-    className="margin-bottom-none"
+    class="margin-bottom-none"
   >
     test
-  </p>,
+  </p>
   <ul
-    className="MuiList-root list-horizontal-flex MuiList-padding"
-    style={
-      Object {
-        "paddingTop": 0,
-      }
-    }
+    class="MuiList-root list-horizontal-flex MuiList-padding"
+    style="padding-top: 0px;"
   >
-    <div
-      onClick={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-    >
+    <div>
       <li
-        className="MuiListItem-root attributes MuiListItem-gutters MuiListItem-divider Mui-disabled"
-        disabled={true}
+        class="MuiListItem-root attributes MuiListItem-gutters MuiListItem-divider Mui-disabled"
+        disabled=""
       >
         <div
-          className="MuiListItemText-root MuiListItemText-multiline"
+          class="MuiListItemText-root MuiListItemText-multiline"
         >
           <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+            class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
             primary text
           </span>
           <div
-            className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+            class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
             title="secondary text"
           >
             <div>
               <span
-                className="inventory-text"
-                style={Object {}}
+                class="inventory-text"
               >
                 secondary text
               </span>
@@ -49,6 +40,6 @@ Array [
         </div>
       </li>
     </div>
-  </ul>,
-]
+  </ul>
+</div>
 `;

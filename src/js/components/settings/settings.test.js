@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
@@ -35,16 +35,15 @@ describe('Settings Component', () => {
   });
 
   it('renders correctly', async () => {
-    const tree = renderer
-      .create(
-        <MemoryRouter initialEntries={['/settings']}>
-          <Provider store={store}>
-            <Route path="/settings/:section?" component={Settings} />
-          </Provider>
-        </MemoryRouter>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { baseElement } = render(
+      <MemoryRouter initialEntries={['/settings']}>
+        <Provider store={store}>
+          <Route path="/settings/:section?" component={Settings} />
+        </Provider>
+      </MemoryRouter>
+    );
+    const view = baseElement.firstChild.firstChild;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

@@ -13,7 +13,7 @@ exports[`ReleasesArtifacts Component renders correctly 1`] = `
     . An Artifact is a
      
     <span
-      className="code"
+      class="code"
     >
       .mender
     </span>

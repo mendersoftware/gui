@@ -2,40 +2,26 @@
 
 exports[`AcceptedDevices Component renders correctly 1`] = `
 <div
-  className="notActive widget "
-  onClick={[Function]}
+  class="notActive widget "
 >
   <div
-    style={
-      Object {
-        "display": "flex",
-        "flexDirection": "column",
-        "height": "100%",
-        "width": "100%",
-      }
-    }
+    style="height: 100%; width: 100%; display: flex; flex-direction: column;"
   >
     <div
-      className="widgetMainContent align-right"
-      style={
-        Object {
-          "alignItems": "flex-end",
-          "display": "flex",
-          "flexDirection": "column",
-        }
-      }
+      class="widgetMainContent align-right"
+      style="display: flex; flex-direction: column; align-items: flex-end;"
     >
       <div
-        className="header"
+        class="header"
       >
         Accepted devices
       </div>
       <div
-        className="counter"
+        class="counter"
       />
     </div>
     <span
-      className="link"
+      class="link"
     />
   </div>
 </div>

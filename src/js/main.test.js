@@ -1,6 +1,6 @@
 import React from 'react';
 import router from 'react-router-dom';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import { Main } from './main';
 import { undefineds } from '../../tests/mockData';
 
@@ -9,8 +9,9 @@ describe('Main Component', () => {
     const { MemoryRouter } = router;
     const MockBrowserRouter = ({ children }) => <MemoryRouter initialEntries={['/']}>{children}</MemoryRouter>;
     router.BrowserRouter = MockBrowserRouter;
-    const tree = renderer.create(<Main />).toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { baseElement } = render(<Main />);
+    const view = baseElement.firstChild.firstChild;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

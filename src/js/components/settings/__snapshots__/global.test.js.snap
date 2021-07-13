@@ -2,40 +2,23 @@
 
 exports[`GlobalSettings Component renders correctly 1`] = `
 <div
-  className="margin-top-small"
-  style={
-    Object {
-      "maxWidth": "750px",
-    }
-  }
+  class="margin-top-small"
+  style="max-width: 750px;"
 >
   <h2
-    style={
-      Object {
-        "marginTop": "15px",
-      }
-    }
+    style="margin-top: 15px;"
   >
     Global settings
   </h2>
   <p
-    className="info"
-    style={
-      Object {
-        "marginBottom": "30px",
-      }
-    }
+    class="info"
+    style="margin-bottom: 30px;"
   >
     <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
       focusable="false"
-      style={
-        Object {
-          "margin": "0 6px 4px 0",
-          "verticalAlign": "middle",
-        }
-      }
+      style="vertical-align: middle; margin: 0px 6px 4px 0px;"
       viewBox="0 0 24 24"
     >
       <path
@@ -45,43 +28,35 @@ exports[`GlobalSettings Component renders correctly 1`] = `
     These settings apply to all users, so changes made here may affect other users' experience.
   </p>
   <div
-    className="MuiFormControl-root"
+    class="MuiFormControl-root"
   >
     <label
-      className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
-      data-shrink={true}
+      class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+      data-shrink="true"
       id="device-id"
     >
       Device identity attribute
     </label>
     <div
-      className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-      onClick={[Function]}
+      class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
     >
       <div
         aria-haspopup="listbox"
-        className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
-        onBlur={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onMouseDown={[Function]}
+        class="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
         role="button"
-        tabIndex={0}
+        tabindex="0"
       >
         Device ID
       </div>
       <input
-        aria-hidden={true}
-        className="MuiSelect-nativeInput"
-        onAnimationStart={[Function]}
-        onChange={[Function]}
-        required={false}
-        tabIndex={-1}
+        aria-hidden="true"
+        class="MuiSelect-nativeInput"
+        tabindex="-1"
         value="Device ID"
       />
       <svg
-        aria-hidden={true}
-        className="MuiSvgIcon-root MuiSelect-icon"
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSelect-icon"
         focusable="false"
         viewBox="0 0 24 24"
       >
@@ -91,15 +66,15 @@ exports[`GlobalSettings Component renders correctly 1`] = `
       </svg>
     </div>
     <div
-      className="MuiFormHelperText-root info MuiFormHelperText-filled"
+      class="MuiFormHelperText-root info MuiFormHelperText-filled"
     >
       <div
-        className="margin-top-small margin-bottom-small"
+        class="margin-top-small margin-bottom-small"
       >
         Choose a device identity attribute to use to identify your devices throughout the UI.
       </div>
       <div
-        className="margin-top-small margin-bottom-small"
+        class="margin-top-small margin-bottom-small"
       >
         <a
           href="https://docs.mender.io/client-installation/identity"
@@ -114,57 +89,29 @@ exports[`GlobalSettings Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    className="margin-top-large float-right"
+    class="margin-top-large float-right"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-text Mui-disabled Mui-disabled"
-      disabled={true}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      style={
-        Object {
-          "marginRight": "10px",
-        }
-      }
-      tabIndex={-1}
+      class="MuiButtonBase-root MuiButton-root MuiButton-text Mui-disabled Mui-disabled"
+      disabled=""
+      style="margin-right: 10px;"
+      tabindex="-1"
       type="button"
     >
       <span
-        className="MuiButton-label"
+        class="MuiButton-label"
       >
         Cancel
       </span>
     </button>
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled"
-      disabled={true}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={-1}
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled"
+      disabled=""
+      tabindex="-1"
       type="button"
     >
       <span
-        className="MuiButton-label"
+        class="MuiButton-label"
       >
         Save
       </span>

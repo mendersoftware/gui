@@ -2,39 +2,20 @@
 
 exports[`Form Component renders correctly 1`] = `
 <form
-  className=""
-  onSubmit={[Function]}
+  class=""
 >
   <div
-    className="flexbox"
-    style={
-      Object {
-        "height": "min-content",
-        "justifyContent": "flex-end",
-        "marginTop": "32px",
-      }
-    }
+    class="flexbox"
+    style="justify-content: flex-end; margin-top: 32px;"
   >
     <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-contained Mui-disabled Mui-disabled"
-      disabled={true}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={-1}
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained Mui-disabled Mui-disabled"
+      disabled=""
+      tabindex="-1"
       type="button"
     >
       <span
-        className="MuiButton-label"
+        class="MuiButton-label"
       />
     </button>
   </div>

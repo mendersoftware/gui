@@ -1,13 +1,14 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import MoreHelp from './more-help-resources';
 import { helpProps } from './mockData';
 import { undefineds } from '../../../../tests/mockData';
 
 describe('MoreHelp Component', () => {
   it('renders correctly', async () => {
-    const tree = renderer.create(<MoreHelp {...helpProps} />).toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { baseElement } = render(<MoreHelp {...helpProps} />);
+    const view = baseElement.firstChild.firstChild;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

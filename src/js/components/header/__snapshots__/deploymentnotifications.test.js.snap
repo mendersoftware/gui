@@ -2,23 +2,15 @@
 
 exports[`DeploymentNotifications Component renders correctly 1`] = `
 <a
-  className="header-section"
+  class="header-section"
   href="/deployments/"
-  onClick={[Function]}
 >
   <span />
   <svg
-    aria-hidden={true}
-    className="MuiSvgIcon-root flip-horizontal"
+    aria-hidden="true"
+    class="MuiSvgIcon-root flip-horizontal"
     focusable="false"
-    style={
-      Object {
-        "color": "#c7c7c7",
-        "fontSize": "20px",
-        "margin": "0 7px 0 10px",
-        "top": "5px",
-      }
-    }
+    style="color: rgb(199, 199, 199); margin: 0px 7px 0px 10px; top: 5px; font-size: 20px;"
     viewBox="0 0 24 24"
   >
     <path

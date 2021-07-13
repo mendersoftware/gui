@@ -2,143 +2,101 @@
 
 exports[`Help Component renders correctly 1`] = `
 <div
-  className="help-container"
+  class="help-container"
 >
   <ul
-    className="MuiList-root leftFixed MuiList-padding"
+    class="MuiList-root leftFixed MuiList-padding"
   >
     <li
-      className="MuiListSubheader-root MuiListSubheader-gutters"
+      class="MuiListSubheader-root MuiListSubheader-gutters"
     >
       Help topics
     </li>
     <a
-      aria-current={null}
-      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
-      disabled={false}
+      class="MuiListItem-root navLink helpNav MuiListItem-gutters"
       href="/help/get-started"
-      onClick={[Function]}
-      style={
-        Object {
-          "paddingLeft": 16,
-        }
-      }
+      style="padding-left: 16px;"
     >
       <div
-        className="MuiListItemText-root"
+        class="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+          class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Get started
         </span>
       </div>
     </a>
     <a
-      aria-current={null}
-      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
-      disabled={false}
+      class="MuiListItem-root navLink helpNav MuiListItem-gutters"
       href="/help/devices"
-      onClick={[Function]}
-      style={
-        Object {
-          "paddingLeft": 16,
-        }
-      }
+      style="padding-left: 16px;"
     >
       <div
-        className="MuiListItemText-root"
+        class="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+          class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Devices and device groups
         </span>
       </div>
     </a>
     <a
-      aria-current={null}
-      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
-      disabled={false}
+      class="MuiListItem-root navLink helpNav MuiListItem-gutters"
       href="/help/device-and-os-support"
-      onClick={[Function]}
-      style={
-        Object {
-          "paddingLeft": 16,
-        }
-      }
+      style="padding-left: 16px;"
     >
       <div
-        className="MuiListItemText-root"
+        class="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+          class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Device and Operating System support
         </span>
       </div>
     </a>
     <a
-      aria-current={null}
-      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
-      disabled={false}
+      class="MuiListItem-root navLink helpNav MuiListItem-gutters"
       href="/help/releases-artifacts"
-      onClick={[Function]}
-      style={
-        Object {
-          "paddingLeft": 16,
-        }
-      }
+      style="padding-left: 16px;"
     >
       <div
-        className="MuiListItemText-root"
+        class="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+          class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Releases and artifacts
         </span>
       </div>
     </a>
     <a
-      aria-current={null}
-      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
-      disabled={false}
+      class="MuiListItem-root navLink helpNav MuiListItem-gutters"
       href="/help/releases-artifacts/build-demo-artifact"
-      onClick={[Function]}
-      style={
-        Object {
-          "paddingLeft": 32,
-        }
-      }
+      style="padding-left: 32px;"
     >
       <div
-        className="MuiListItemText-root"
+        class="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+          class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Building a demo application update Artifact
         </span>
       </div>
     </a>
     <a
-      aria-current={null}
-      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
-      disabled={false}
+      class="MuiListItem-root navLink helpNav MuiListItem-gutters"
       href="/help/more-help-resources"
-      onClick={[Function]}
-      style={
-        Object {
-          "paddingLeft": 16,
-        }
-      }
+      style="padding-left: 16px;"
     >
       <div
-        className="MuiListItemText-root"
+        class="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+          class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           More resources
         </span>
@@ -147,25 +105,14 @@ exports[`Help Component renders correctly 1`] = `
   </ul>
   <div>
     <p
-      style={
-        Object {
-          "color": "rgba(0, 0, 0, 0.54)",
-          "maxWidth": 780,
-        }
-      }
+      style="color: rgba(0, 0, 0, 0.54); max-width: 780px;"
     >
       Help 
         &gt;  Get started
     </p>
     <div
-      className="help-content"
-      style={
-        Object {
-          "maxWidth": 780,
-          "position": "relative",
-          "top": "12px",
-        }
-      }
+      class="help-content"
+      style="position: relative; top: 12px; max-width: 780px;"
     >
       <div>
         <h2>
