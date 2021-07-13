@@ -223,7 +223,7 @@ export const selectGroup = (group, filters = []) => (dispatch, getState) => {
     tasks.push(dispatch(setDeviceFilters(cleanedFilters)));
   } else {
     tasks.push(dispatch(setDeviceFilters(filters)));
-    tasks.push(dispatch(getAllGroupDevices(groupName, true)));
+    tasks.push(dispatch(getGroupDevices(groupName, { perPage: 1, shouldIncludeAllStates: true })));
   }
   const selectedGroupName = selectedGroup || !Object.keys(state.devices.groups.byId).length ? groupName : undefined;
   tasks.push(dispatch({ type: DeviceConstants.SELECT_GROUP, group: selectedGroupName }));
@@ -274,8 +274,11 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
     { ids, devicesById: {} }
   );
 
-export const getGroupDevices = (group, options) => (dispatch, getState) =>
-  Promise.resolve(dispatch(getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, { ...options, group }))).then(results => {
+export const getGroupDevices = (group, options = {}) => (dispatch, getState) => {
+  const { shouldIncludeAllStates, ...remainder } = options;
+  return Promise.resolve(
+    dispatch(getDevicesByStatus(shouldIncludeAllStates ? undefined : DeviceConstants.DEVICE_STATES.accepted, { ...remainder, group }))
+  ).then(results => {
     if (!group) {
       return Promise.resolve();
     }
@@ -297,6 +300,7 @@ export const getGroupDevices = (group, options) => (dispatch, getState) =>
       })
     );
   });
+};
 
 export const getAllGroupDevices = (group, shouldIncludeAllStates) => (dispatch, getState) => {
   if (!group || (!!group && (!getState().devices.groups.byId[group] || getState().devices.groups.byId[group].filters.length))) {
