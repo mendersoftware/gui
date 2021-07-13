@@ -2,76 +2,52 @@
 
 exports[`ArtifactPayload Component renders correctly 1`] = `
 <div
-  className="file-details"
+  class="file-details"
 >
   <h4
-    style={
-      Object {
-        "background": "#e9e9e9",
-        "padding": 10,
-        "position": "absolute",
-        "top": -35,
-      }
-    }
+    style="position: absolute; background: rgb(233, 233, 233); top: -35px; padding: 10px;"
   >
     Payload 
   </h4>
   <ul
-    className="MuiList-root MuiList-padding"
-    style={
-      Object {
-        "display": "flex",
-        "flexDirection": "row",
-      }
-    }
+    class="MuiList-root MuiList-padding"
+    style="display: flex; flex-direction: row;"
   >
     <li
-      className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled opaque"
-      disabled={true}
-      style={
-        Object {
-          "borderBottom": "1px solid #e0e0e0",
-          "marginRight": "2vw",
-          "paddingBottom": "11px",
-        }
-      }
+      class="MuiListItem-root attributes MuiListItem-gutters Mui-disabled opaque"
+      disabled=""
+      style="padding-bottom: 11px; border-bottom: 1px solid #e0e0e0; margin-right: 2vw;"
     >
       <div
-        className="MuiListItemText-root MuiListItemText-multiline"
+        class="MuiListItemText-root MuiListItemText-multiline"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+          class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Type
         </span>
         <p
-          className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+          class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
         >
           test
         </p>
       </div>
     </li>
     <li
-      className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled opaque"
-      disabled={true}
-      style={
-        Object {
-          "borderBottom": "1px solid #e0e0e0",
-          "marginRight": "2vw",
-          "paddingBottom": "11px",
-        }
-      }
+      class="MuiListItem-root attributes MuiListItem-gutters Mui-disabled opaque"
+      disabled=""
+      style="padding-bottom: 11px; border-bottom: 1px solid #e0e0e0; margin-right: 2vw;"
     >
       <div
-        className="MuiListItemText-root MuiListItemText-multiline"
+        class="MuiListItemText-root MuiListItemText-multiline"
       >
         <span
-          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+          class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
         >
           Total Size (uncompressed)
         </span>
         <p
-          className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+          class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
         >
           0 Bytes
         </p>
@@ -79,7 +55,7 @@ exports[`ArtifactPayload Component renders correctly 1`] = `
     </li>
   </ul>
   <div
-    className="file-meta"
+    class="file-meta"
   >
     <h4>
       Files

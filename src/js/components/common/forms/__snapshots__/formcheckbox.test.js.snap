@@ -2,36 +2,24 @@
 
 exports[`FormCheckbox Component renders correctly 1`] = `
 <label
-  className="MuiFormControlLabel-root"
+  class="MuiFormControlLabel-root"
 >
   <span
-    aria-disabled={false}
-    className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
-    onBlur={[Function]}
-    onDragLeave={[Function]}
-    onFocus={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseDown={[Function]}
-    onMouseLeave={[Function]}
-    onMouseUp={[Function]}
-    onTouchEnd={[Function]}
-    onTouchMove={[Function]}
-    onTouchStart={[Function]}
-    tabIndex={null}
+    aria-disabled="false"
+    class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
   >
     <span
-      className="MuiIconButton-label"
+      class="MuiIconButton-label"
     >
       <input
-        className="PrivateSwitchBase-input-4"
-        data-indeterminate={false}
-        onChange={[Function]}
+        class="PrivateSwitchBase-input-4"
+        data-indeterminate="false"
         type="checkbox"
+        value=""
       />
       <svg
-        aria-hidden={true}
-        className="MuiSvgIcon-root"
+        aria-hidden="true"
+        class="MuiSvgIcon-root"
         focusable="false"
         viewBox="0 0 24 24"
       >
@@ -40,9 +28,12 @@ exports[`FormCheckbox Component renders correctly 1`] = `
         />
       </svg>
     </span>
+    <span
+      class="MuiTouchRipple-root"
+    />
   </span>
   <span
-    className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+    class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
   />
 </label>
 `;

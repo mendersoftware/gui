@@ -1,12 +1,13 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import PasswordInput from './passwordinput';
 import { undefineds } from '../../../../../tests/mockData';
 
 describe('PasswordInput Component', () => {
   it('renders correctly', async () => {
-    const tree = renderer.create(<PasswordInput attachToForm={() => {}} id="test" create={true} />).toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { baseElement } = render(<PasswordInput attachToForm={jest.fn} detachFromForm={jest.fn} id="test" create={true} />);
+    const view = baseElement.firstChild.firstChild;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

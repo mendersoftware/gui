@@ -3,59 +3,32 @@
 exports[`Devices Component renders correctly 1`] = `
 <div>
   <h4
-    className="dashboard-header"
+    class="dashboard-header"
   >
     <span>
       Devices
     </span>
   </h4>
   <div
-    style={
-      Object {
-        "marginBottom": 30,
-      }
-    }
+    style="margin-bottom: 30px;"
   >
     <div
-      style={
-        Object {
-          "position": "relative",
-        }
-      }
+      style="position: relative;"
     >
       <a
-        aria-disabled={false}
-        className="MuiButtonBase-root MuiFab-root MuiFab-primary"
+        aria-disabled="false"
+        class="MuiButtonBase-root MuiFab-root MuiFab-primary"
         href="/devices/pending"
-        onBlur={[Function]}
-        onClick={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
         role="button"
-        style={
-          Object {
-            "left": "15px",
-            "position": "absolute",
-            "top": "-28px",
-            "zIndex": "1",
-          }
-        }
-        tabIndex={0}
+        style="position: absolute; top: -28px; left: 15px; z-index: 1;"
+        tabindex="0"
       >
         <span
-          className="MuiFab-label"
+          class="MuiFab-label"
         >
           <svg
-            aria-hidden={true}
-            className="MuiSvgIcon-root"
+            aria-hidden="true"
+            class="MuiSvgIcon-root"
             focusable="false"
             viewBox="0 0 24 24"
           >
@@ -64,44 +37,33 @@ exports[`Devices Component renders correctly 1`] = `
             />
           </svg>
         </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
       </a>
       <div
-        className="MuiPaper-root widget  MuiPaper-elevation2 MuiPaper-rounded"
-        onClick={[Function]}
+        class="MuiPaper-root widget  MuiPaper-elevation2 MuiPaper-rounded"
       >
         <div
-          style={
-            Object {
-              "display": "flex",
-              "flexDirection": "column",
-              "height": "100%",
-              "width": "100%",
-            }
-          }
+          style="height: 100%; width: 100%; display: flex; flex-direction: column;"
         >
           <div
-            className="widgetMainContent align-right"
-            style={
-              Object {
-                "alignItems": "flex-end",
-                "display": "flex",
-                "flexDirection": "column",
-              }
-            }
+            class="widgetMainContent align-right"
+            style="display: flex; flex-direction: column; align-items: flex-end;"
           >
             <div
-              className="header"
+              class="header"
             >
               Pending devices
             </div>
             <div
-              className="counter"
+              class="counter"
             >
               1
             </div>
           </div>
           <span
-            className="link"
+            class="link"
           >
             View details
           </span>
@@ -109,49 +71,23 @@ exports[`Devices Component renders correctly 1`] = `
       </div>
     </div>
     <div
-      className="notActive widget "
-      onClick={[Function]}
+      class="notActive widget "
     >
       <div
-        style={
-          Object {
-            "display": "flex",
-            "flexDirection": "column",
-            "height": "100%",
-            "width": "100%",
-          }
-        }
+        style="height: 100%; width: 100%; display: flex; flex-direction: column;"
       >
         <div
-          className="widgetHeader"
-          style={
-            Object {
-              "borderBottomStyle": "solid",
-              "display": "flex",
-              "flexDirection": "row",
-            }
-          }
+          class="widgetHeader"
+          style="border-bottom-style: solid; display: flex; flex-direction: row;"
         >
           <div
-            style={
-              Object {
-                "display": "flex",
-                "flexDirection": "row",
-              }
-            }
+            style="display: flex; flex-direction: row;"
           >
             <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root"
+              aria-hidden="true"
+              class="MuiSvgIcon-root"
               focusable="false"
-              style={
-                Object {
-                  "color": "#009e73",
-                  "height": "14px",
-                  "marginRight": "10px",
-                  "width": "14px",
-                }
-              }
+              style="margin-right: 10px; height: 14px; width: 14px; color: rgb(0, 158, 115);"
               viewBox="0 0 24 24"
             >
               <path
@@ -159,20 +95,15 @@ exports[`Devices Component renders correctly 1`] = `
               />
             </svg>
             <div
-              style={
-                Object {
-                  "display": "flex",
-                  "flexDirection": "column",
-                }
-              }
+              style="display: flex; flex-direction: column;"
             >
               <div
-                className="hint"
+                class="hint"
               >
                 All devices online
               </div>
               <div
-                className="tiny"
+                class="tiny"
               >
                 Active in past 24h
               </div>
@@ -180,66 +111,50 @@ exports[`Devices Component renders correctly 1`] = `
           </div>
         </div>
         <div
-          className="widgetMainContent align-right"
-          style={
-            Object {
-              "alignItems": "flex-end",
-              "display": "flex",
-              "flexDirection": "column",
-            }
-          }
+          class="widgetMainContent align-right"
+          style="display: flex; flex-direction: column; align-items: flex-end;"
         >
           <div
-            className="header"
+            class="header"
           >
             Accepted devices
           </div>
           <div
-            className="counter"
+            class="counter"
           >
             2
           </div>
         </div>
         <span
-          className="link"
+          class="link"
         />
       </div>
     </div>
     <div
-      className="onboard widget"
-      onClick={[Function]}
+      class="onboard widget"
     >
       <div>
         <p
-          className="muted"
+          class="muted"
         >
           Learn how to connect a device
         </p>
       </div>
       <a
-        aria-disabled={false}
-        className="MuiButtonBase-root MuiButton-root MuiButton-text"
+        aria-disabled="false"
+        class="MuiButtonBase-root MuiButton-root MuiButton-text"
         href="/devices"
-        onBlur={[Function]}
-        onClick={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
         role="button"
-        tabIndex={0}
+        tabindex="0"
       >
         <span
-          className="MuiButton-label"
+          class="MuiButton-label"
         >
           Connect a device
         </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
       </a>
     </div>
   </div>

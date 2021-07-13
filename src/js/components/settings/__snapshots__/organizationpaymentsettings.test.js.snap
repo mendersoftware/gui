@@ -2,36 +2,24 @@
 
 exports[`OrganizationPaymentSettings Component renders correctly 1`] = `
 <div
-  className="margin-top-small org-settings-item"
+  class="margin-top-small org-settings-item"
 >
   <li
-    className="MuiListItem-root flexbox column MuiListItem-gutters Mui-disabled MuiListItem-alignItemsFlexStart"
-    disabled={true}
+    class="MuiListItem-root flexbox column MuiListItem-gutters Mui-disabled MuiListItem-alignItemsFlexStart"
+    disabled=""
   >
     <div
-      className="MuiListItemText-root MuiListItemText-multiline"
-      style={
-        Object {
-          "display": "grid",
-          "marginBottom": 8,
-          "width": "100%",
-        }
-      }
+      class="MuiListItemText-root MuiListItemText-multiline"
+      style="display: grid; width: 100%; margin-bottom: 8px;"
     >
       <span
-        className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+        class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
       >
         Payment card
       </span>
       <div
-        className="MuiTypography-root MuiListItemText-secondary two-columns MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-        style={
-          Object {
-            "display": "grid",
-            "marginBottom": 8,
-            "width": "100%",
-          }
-        }
+        class="MuiTypography-root MuiListItemText-secondary two-columns MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+        style="display: grid; width: 100%; margin-bottom: 8px;"
       >
         <div>
           <div>
@@ -49,22 +37,15 @@ exports[`OrganizationPaymentSettings Component renders correctly 1`] = `
           </div>
         </div>
         <a
-          className="align-right"
-          onClick={[Function]}
+          class="align-right"
         >
           Update payment card
         </a>
       </div>
     </div>
     <hr
-      className="MuiDivider-root"
-      style={
-        Object {
-          "marginBottom": 8,
-          "marginLeft": -16,
-          "width": 500,
-        }
-      }
+      class="MuiDivider-root"
+      style="margin-bottom: 8px; margin-left: -16px; width: 500px;"
     />
   </li>
 </div>

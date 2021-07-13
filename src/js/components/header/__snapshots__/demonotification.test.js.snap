@@ -2,27 +2,22 @@
 
 exports[`DemoNotification Component renders correctly 1`] = `
 <div
-  className="flexbox centered"
+  class="flexbox centered"
   id="demoBox"
 >
   <a
+    currentitem="false"
     data-event="click focus"
     data-for="demo-mode"
     data-offset="{'bottom': 15}"
-    data-tip={true}
+    data-tip="true"
     id="demo-info"
   >
     <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root"
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
       focusable="false"
-      style={
-        Object {
-          "height": "16px",
-          "marginRight": "2px",
-          "verticalAlign": "bottom",
-        }
-      }
+      style="margin-right: 2px; height: 16px; vertical-align: bottom;"
       viewBox="0 0 24 24"
     >
       <path
@@ -32,7 +27,7 @@ exports[`DemoNotification Component renders correctly 1`] = `
     Demo mode
   </a>
   <div
-    className="__react_component_tooltip place-bottom type-dark"
+    class="__react_component_tooltip place-bottom type-dark"
     data-id="tooltip"
     id="demo-mode"
   >

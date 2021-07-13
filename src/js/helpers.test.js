@@ -1,5 +1,5 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import {
   customSort,
   decodeSessionToken,
@@ -36,9 +36,10 @@ import { defaultState, token, undefineds } from '../../tests/mockData';
 
 describe('FileSize Component', () => {
   it('renders correctly', async () => {
-    const tree = renderer.create(<FileSize fileSize={1000} />).toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).not.toMatch(undefineds);
+    const { baseElement } = render(<FileSize fileSize={1000} />);
+    const view = baseElement.firstChild.firstChild;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });
 

@@ -2,37 +2,25 @@
 
 exports[`TextInput Component renders correctly 1`] = `
 <div
-  className="MuiFormControl-root"
+  class="MuiFormControl-root"
 >
   <label
-    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-    data-shrink={false}
+    class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+    data-shrink="false"
   />
   <div
-    className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-    onClick={[Function]}
-    style={
-      Object {
-        "maxWidth": "100%",
-        "width": "400px",
-      }
-    }
+    class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+    style="width: 400px; max-width: 100%;"
   >
     <input
-      aria-invalid={false}
-      className="MuiInputBase-input MuiInput-input"
-      disabled={false}
-      onAnimationStart={[Function]}
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      required={false}
+      aria-invalid="false"
+      class="MuiInputBase-input MuiInput-input"
       type="text"
       value=""
     />
   </div>
   <p
-    className="MuiFormHelperText-root"
+    class="MuiFormHelperText-root"
     id="component-error-text"
   />
 </div>

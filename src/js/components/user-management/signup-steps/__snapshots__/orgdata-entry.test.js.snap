@@ -1,98 +1,72 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Login Component renders correctly 1`] = `
-Array [
+<div>
   <h1>
     Setting up your Account
-  </h1>,
+  </h1>
   <h2
-    className="margin-bottom-large"
+    class="margin-bottom-large"
   >
     To finish creating your account,
     <br />
     please fill in a few details
-  </h2>,
+  </h2>
   <form
-    className=""
-    onSubmit={[Function]}
+    class=""
   >
     <div
-      className="MuiFormControl-root  required"
+      class="MuiFormControl-root  required"
     >
       <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-        data-shrink={false}
-        htmlFor="name"
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+        data-shrink="false"
+        for="name"
       >
         Company or organization name *
       </label>
       <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-        onClick={[Function]}
-        onKeyPress={[Function]}
-        required={true}
-        style={
-          Object {
-            "maxWidth": "100%",
-            "width": "400px",
-          }
-        }
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+        required=""
+        style="width: 400px; max-width: 100%;"
       >
         <input
-          aria-invalid={false}
-          className="MuiInputBase-input MuiInput-input"
-          disabled={false}
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input"
           id="name"
           name="name"
-          onAnimationStart={[Function]}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
           placeholder="Company or organization name *"
-          required={true}
+          required=""
           type="text"
           value=""
         />
       </div>
       <p
-        className="MuiFormHelperText-root"
+        class="MuiFormHelperText-root"
         id="component-error-text"
       />
     </div>
     <label
-      className="MuiFormControlLabel-root"
+      class="MuiFormControlLabel-root"
     >
       <span
-        aria-disabled={false}
-        className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
-        onBlur={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        tabIndex={null}
+        aria-disabled="false"
+        class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
       >
         <span
-          className="MuiIconButton-label"
+          class="MuiIconButton-label"
         >
           <input
-            checked={false}
-            className="PrivateSwitchBase-input-4"
-            data-indeterminate={false}
+            class="PrivateSwitchBase-input-4"
+            data-indeterminate="false"
             id="tos"
             name="tos"
-            onChange={[Function]}
             type="checkbox"
+            value=""
           />
           <svg
-            aria-hidden={true}
-            className="MuiSvgIcon-root"
+            aria-hidden="true"
+            class="MuiSvgIcon-root"
             focusable="false"
             viewBox="0 0 24 24"
           >
@@ -102,14 +76,14 @@ Array [
           </svg>
         </span>
         <span
-          className="MuiTouchRipple-root"
+          class="MuiTouchRipple-root"
         />
       </span>
       <span
-        className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+        class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
       >
         <label
-          htmlFor="tos"
+          for="tos"
         >
           By checking this you agree to our
            
@@ -136,39 +110,26 @@ Array [
       </span>
     </label>
     <label
-      className="MuiFormControlLabel-root"
+      class="MuiFormControlLabel-root"
     >
       <span
-        aria-disabled={false}
-        className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
-        onBlur={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        tabIndex={null}
+        aria-disabled="false"
+        class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
       >
         <span
-          className="MuiIconButton-label"
+          class="MuiIconButton-label"
         >
           <input
-            checked={false}
-            className="PrivateSwitchBase-input-4"
-            data-indeterminate={false}
+            class="PrivateSwitchBase-input-4"
+            data-indeterminate="false"
             id="marketing"
             name="marketing"
-            onChange={[Function]}
             type="checkbox"
+            value=""
           />
           <svg
-            aria-hidden={true}
-            className="MuiSvgIcon-root"
+            aria-hidden="true"
+            class="MuiSvgIcon-root"
             focusable="false"
             viewBox="0 0 24 24"
           >
@@ -178,62 +139,39 @@ Array [
           </svg>
         </span>
         <span
-          className="MuiTouchRipple-root"
+          class="MuiTouchRipple-root"
         />
       </span>
       <span
-        className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+        class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
       >
         By checking this you agree that we can send you occasional email updates about Mender. You can unsubscribe from these emails at any time
       </span>
     </label>
     <div
-      attachToForm={[Function]}
-      className="margin-top"
-      detachFromForm={[Function]}
-      handleKeyPress={[Function]}
-      updateModel={[Function]}
-      validate={[Function]}
+      class="margin-top"
       validations=""
     >
       <div />
     </div>
     <div
-      className="flexbox"
-      style={
-        Object {
-          "height": "min-content",
-          "justifyContent": "flex-end",
-          "marginTop": "32px",
-        }
-      }
+      class="flexbox"
+      style="justify-content: flex-end; margin-top: 32px;"
     >
       <button
-        className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled"
-        disabled={true}
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled"
+        disabled=""
         id="login_button"
-        onBlur={[Function]}
-        onClick={[Function]}
-        onDragLeave={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        tabIndex={-1}
+        tabindex="-1"
         type="button"
       >
         <span
-          className="MuiButton-label"
+          class="MuiButton-label"
         >
           Complete signup
         </span>
       </button>
     </div>
-  </form>,
-]
+  </form>
+</div>
 `;

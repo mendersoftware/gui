@@ -2,62 +2,40 @@
 
 exports[`ScheduleRollout Component renders correctly 1`] = `
 <form
-  className="flexbox column  margin margin-top-none"
-  style={
-    Object {
-      "minHeight": 300,
-      "overflow": "visible",
-    }
-  }
+  class="flexbox column  margin margin-top-none"
+  style="overflow: visible; min-height: 300px;"
 >
   <div
-    className="deployment-scheduling-view"
+    class="deployment-scheduling-view"
   >
     <div
-      className="MuiFormControl-root"
-      style={
-        Object {
-          "marginBottom": 30,
-          "width": "min-content",
-        }
-      }
+      class="MuiFormControl-root"
+      style="margin-bottom: 30px;"
     >
       <h4>
         Select a start time
       </h4>
       <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-        onClick={[Function]}
-        style={
-          Object {
-            "minWidth": 400,
-          }
-        }
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+        style="min-width: 400px;"
       >
         <div
           aria-haspopup="listbox"
-          className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
-          onBlur={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onMouseDown={[Function]}
+          class="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
           role="button"
-          tabIndex={0}
+          tabindex="0"
         >
           Start immediately
         </div>
         <input
-          aria-hidden={true}
-          className="MuiSelect-nativeInput"
-          onAnimationStart={[Function]}
-          onChange={[Function]}
-          required={false}
-          tabIndex={-1}
-          value={0}
+          aria-hidden="true"
+          class="MuiSelect-nativeInput"
+          tabindex="-1"
+          value="0"
         />
         <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root MuiSelect-icon"
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSelect-icon"
           focusable="false"
           viewBox="0 0 24 24"
         >
@@ -69,51 +47,33 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
     </div>
     <div />
     <div
-      className="MuiFormControl-root"
-      style={
-        Object {
-          "maxWidth": 515,
-          "width": "min-content",
-        }
-      }
+      class="MuiFormControl-root"
+      style="max-width: 515px;"
     >
       <h4>
         Select a rollout pattern
       </h4>
       <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl"
-        onClick={[Function]}
-        style={
-          Object {
-            "minWidth": 400,
-          }
-        }
+        class="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl"
+        style="min-width: 400px;"
       >
         <div
           aria-disabled="true"
           aria-haspopup="listbox"
-          className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled Mui-disabled"
-          onBlur={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onMouseDown={null}
+          class="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled Mui-disabled"
           role="button"
-          tabIndex={null}
         >
           Single phase: 100%
         </div>
         <input
-          aria-hidden={true}
-          className="MuiSelect-nativeInput"
-          onAnimationStart={[Function]}
-          onChange={[Function]}
-          required={false}
-          tabIndex={-1}
-          value={0}
+          aria-hidden="true"
+          class="MuiSelect-nativeInput"
+          tabindex="-1"
+          value="0"
         />
         <svg
-          aria-hidden={true}
-          className="MuiSvgIcon-root MuiSelect-icon Mui-disabled"
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSelect-icon Mui-disabled"
           focusable="false"
           viewBox="0 0 24 24"
         >
@@ -126,18 +86,13 @@ exports[`ScheduleRollout Component renders correctly 1`] = `
     <div />
   </div>
   <p
-    className="info icon"
+    class="info icon"
   >
     <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
       focusable="false"
-      style={
-        Object {
-          "margin": "0 6px 4px 0",
-          "verticalAlign": "middle",
-        }
-      }
+      style="vertical-align: middle; margin: 0px 6px 4px 0px;"
       viewBox="0 0 24 24"
     >
       <path

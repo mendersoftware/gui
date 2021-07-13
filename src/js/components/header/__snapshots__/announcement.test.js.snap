@@ -2,20 +2,14 @@
 
 exports[`Announcement Component renders correctly 1`] = `
 <div
-  className="flexbox centered fadeInSlow"
+  class="flexbox centered fadeInSlow"
   id="announcement"
 >
   <svg
-    aria-hidden={true}
-    className="MuiSvgIcon-root red"
+    aria-hidden="true"
+    class="MuiSvgIcon-root red"
     focusable="false"
-    style={
-      Object {
-        "height": "18px",
-        "marginRight": "4px",
-        "minWidth": "24px",
-      }
-    }
+    style="margin-right: 4px; height: 18px; min-width: 24px;"
     viewBox="0 0 24 24"
   >
     <path
@@ -24,16 +18,10 @@ exports[`Announcement Component renders correctly 1`] = `
   </svg>
   <p />
   <svg
-    aria-hidden={true}
-    className="MuiSvgIcon-root"
+    aria-hidden="true"
+    class="MuiSvgIcon-root"
     focusable="false"
-    style={
-      Object {
-        "cursor": "pointer",
-        "height": "16px",
-        "marginLeft": "4px",
-      }
-    }
+    style="margin-left: 4px; height: 16px; cursor: pointer;"
     viewBox="0 0 24 24"
   >
     <path

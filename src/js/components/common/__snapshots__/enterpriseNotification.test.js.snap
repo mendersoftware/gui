@@ -2,18 +2,13 @@
 
 exports[`EnterpriseNotification Component renders correctly 1`] = `
 <p
-  className="info icon"
+  class="info icon"
 >
   <svg
-    aria-hidden={true}
-    className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+    aria-hidden="true"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
     focusable="false"
-    style={
-      Object {
-        "margin": "0 6px 4px 0",
-        "verticalAlign": "middle",
-      }
-    }
+    style="vertical-align: middle; margin: 0px 6px 4px 0px;"
     viewBox="0 0 24 24"
   >
     <path

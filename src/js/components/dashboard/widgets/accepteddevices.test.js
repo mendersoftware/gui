@@ -1,12 +1,13 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import AcceptedDevices from './accepteddevices';
 import { undefineds } from '../../../../../tests/mockData';
 
 describe('AcceptedDevices Component', () => {
   it('renders correctly', async () => {
-    const tree = renderer.create(<AcceptedDevices />).toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { baseElement } = render(<AcceptedDevices />);
+    const view = baseElement.firstChild.firstChild;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

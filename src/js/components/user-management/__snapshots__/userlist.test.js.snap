@@ -2,41 +2,34 @@
 
 exports[`UserList Component renders correctly 1`] = `
 <table
-  className="MuiTable-root"
-  role={null}
+  class="MuiTable-root"
 >
   <thead
-    className="MuiTableHead-root"
-    role={null}
+    class="MuiTableHead-root"
   >
     <tr
-      className="MuiTableRow-root MuiTableRow-head"
-      role={null}
+      class="MuiTableRow-root MuiTableRow-head"
     >
       <th
-        aria-sort={null}
-        className="MuiTableCell-root MuiTableCell-head"
+        class="MuiTableCell-root MuiTableCell-head"
         scope="col"
       >
         Email
       </th>
       <th
-        aria-sort={null}
-        className="MuiTableCell-root MuiTableCell-head"
+        class="MuiTableCell-root MuiTableCell-head"
         scope="col"
       >
         Date created
       </th>
       <th
-        aria-sort={null}
-        className="MuiTableCell-root MuiTableCell-head"
+        class="MuiTableCell-root MuiTableCell-head"
         scope="col"
       >
         Last updated
       </th>
       <th
-        aria-sort={null}
-        className="MuiTableCell-root MuiTableCell-head"
+        class="MuiTableCell-root MuiTableCell-head"
         scope="col"
       >
         Manage
@@ -44,8 +37,7 @@ exports[`UserList Component renders correctly 1`] = `
     </tr>
   </thead>
   <tbody
-    className="MuiTableBody-root"
-    role={null}
+    class="MuiTableBody-root"
   />
 </table>
 `;

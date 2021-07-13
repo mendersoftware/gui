@@ -1,5 +1,5 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import AuthsetListItem, { getConfirmationMessage } from './authsetlistitem';
 import { undefineds } from '../../../../../../tests/mockData';
 import { DEVICE_STATES } from '../../../../constants/deviceConstants';
@@ -34,23 +34,22 @@ gnr0OSIDwEL31l+12DbAQ9+ANv6TLpWNfLpX0E6IStkZAgMBAAE=
       auth_sets: [authset]
     };
 
-    const tree = renderer
-      .create(
-        <AuthsetListItem
-          authset={authset}
-          isActive={true}
-          isExpanded={true}
-          onExpand={jest.fn}
-          confirm={jest.fn}
-          device={device}
-          limitMaxed={false}
-          loading={false}
-          total={10}
-        />
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-    expect(JSON.stringify(tree)).toEqual(expect.not.stringMatching(undefineds));
+    const { baseElement } = render(
+      <AuthsetListItem
+        authset={authset}
+        isActive={true}
+        isExpanded={true}
+        onExpand={jest.fn}
+        confirm={jest.fn}
+        device={device}
+        limitMaxed={false}
+        loading={false}
+        total={10}
+      />
+    );
+    const view = baseElement.firstChild.firstChild;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
   it('shows proper confirmation messages depending on device auth status', async () => {
     expect(

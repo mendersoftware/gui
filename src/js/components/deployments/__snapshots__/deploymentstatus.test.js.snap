@@ -3,104 +3,69 @@
 exports[`DeploymentStatus Component renders correctly 1`] = `
 <div>
   <div
-    className="flexbox results-status"
+    class="flexbox results-status"
   >
     <div
-      aria-describedby={null}
-      className="disabled"
-      onBlur={[Function]}
-      onFocus={[Function]}
-      onMouseLeave={[Function]}
-      onMouseOver={[Function]}
-      onTouchEnd={[Function]}
-      onTouchStart={[Function]}
+      class="disabled"
       title="Skipped"
     >
       <img
         src="skipped_status.png"
       />
       <span
-        className="status"
+        class="status"
       >
         0
       </span>
     </div>
     <div
-      aria-describedby={null}
-      className="disabled"
-      onBlur={[Function]}
-      onFocus={[Function]}
-      onMouseLeave={[Function]}
-      onMouseOver={[Function]}
-      onTouchEnd={[Function]}
-      onTouchStart={[Function]}
+      class="disabled"
       title="Pending"
     >
       <img
         src="pending_status.png"
       />
       <span
-        className="status"
+        class="status"
       >
         0
       </span>
     </div>
     <div
-      aria-describedby={null}
-      className="disabled"
-      onBlur={[Function]}
-      onFocus={[Function]}
-      onMouseLeave={[Function]}
-      onMouseOver={[Function]}
-      onTouchEnd={[Function]}
-      onTouchStart={[Function]}
+      class="disabled"
       title="In progress"
     >
       <img
         src="progress_status.png"
       />
       <span
-        className="status"
+        class="status"
       >
         0
       </span>
     </div>
     <div
-      aria-describedby={null}
-      className="disabled"
-      onBlur={[Function]}
-      onFocus={[Function]}
-      onMouseLeave={[Function]}
-      onMouseOver={[Function]}
-      onTouchEnd={[Function]}
-      onTouchStart={[Function]}
+      class="disabled"
       title="Successful"
     >
       <img
         src="success_status.png"
       />
       <span
-        className="status"
+        class="status"
       >
         0
       </span>
     </div>
     <div
-      aria-describedby={null}
-      className="disabled"
-      onBlur={[Function]}
-      onFocus={[Function]}
-      onMouseLeave={[Function]}
-      onMouseOver={[Function]}
-      onTouchEnd={[Function]}
-      onTouchStart={[Function]}
+      class="disabled"
       title="Failed"
     >
       <img
         src="error_status.png"
       />
       <span
-        className="status"
+        class="status"
       >
         0
       </span>
