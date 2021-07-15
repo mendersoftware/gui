@@ -107,7 +107,6 @@ export class ArtifactInformation extends React.Component {
             <TextField
               className="device-types-input"
               {...params}
-              defaultValue={customDeviceTypes}
               fullWidth
               inputProps={{
                 ...params.inputProps,
