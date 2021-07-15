@@ -50,11 +50,12 @@ export const SoftwareDevices = ({
 
   const deploymentSettingsUpdate = (value, property) => {
     const state = { ...deploymentObject, [property]: value };
-    let deviceIds = (state.deploymentDeviceIds = []);
+    let deviceIds = state.deploymentDeviceIds || [];
     let deviceCount = state.deploymentDeviceCount;
-    if ((state.device || state.group) && state.release) {
-      deviceIds = [];
-      deviceCount = deviceIds.length;
+    if (state.release) {
+      advanceOnboarding(onboardingSteps.SCHEDULING_ARTIFACT_SELECTION);
+    }
+    if (state.device || state.group) {
       if (state.device) {
         deviceIds = [state.device.id];
         deviceCount = deviceIds.length;
@@ -62,6 +63,7 @@ export const SoftwareDevices = ({
         deviceCount = groups[state.group].total;
       } else {
         deviceCount = acceptedDeviceCount;
+        advanceOnboarding(onboardingSteps.SCHEDULING_ALL_DEVICES_SELECTION);
       }
       advanceOnboarding(onboardingSteps.SCHEDULING_GROUP_SELECTION);
     }
@@ -78,7 +80,7 @@ export const SoftwareDevices = ({
   }, []);
 
   const { deploymentDeviceCount, deploymentDeviceIds = [], device, group = null, release: deploymentRelease = null } = deploymentObject;
-  const releaseDeviceTypes = deploymentRelease ? deploymentRelease.device_types_compatible : [];
+  const releaseDeviceTypes = (deploymentRelease && deploymentRelease.device_types_compatible) ?? [];
   const devicetypesInfo = (
     <Tooltip title={<p>{releaseDeviceTypes.join(', ')}</p>} placement="bottom">
       <span className="link">
@@ -100,25 +102,25 @@ export const SoftwareDevices = ({
 
   let onboardingComponent = null;
   if (releaseRef.current && groupRef.current && deploymentAnchor) {
-    const anchor = { top: releaseRef.current.offsetTop + (releaseRef.current.offsetHeight / 3) * 2, left: releaseRef.current.offsetWidth / 2 };
-    onboardingComponent = getOnboardingComponentFor(
-      onboardingSteps.SCHEDULING_ARTIFACT_SELECTION,
-      { ...onboardingState, selectedRelease: deploymentRelease },
-      { anchor, place: 'right' }
-    );
-    const groupAnchor = { top: groupRef.current.offsetTop + (groupRef.current.offsetHeight / 3) * 2, left: groupRef.current.offsetWidth };
-    onboardingComponent = getOnboardingComponentFor(
-      onboardingSteps.SCHEDULING_ALL_DEVICES_SELECTION,
-      onboardingState,
-      { anchor: groupAnchor, place: 'right' },
-      onboardingComponent
-    );
-    onboardingComponent = getOnboardingComponentFor(
-      onboardingSteps.SCHEDULING_GROUP_SELECTION,
-      { ...onboardingState, createdGroup },
-      { anchor: groupAnchor, place: 'right' },
-      onboardingComponent
-    );
+    const anchor = { top: releaseRef.current.offsetTop + releaseRef.current.offsetHeight / 3, left: releaseRef.current.offsetWidth };
+    const groupAnchor = { top: groupRef.current.offsetTop + groupRef.current.offsetHeight / 3, left: groupRef.current.offsetWidth };
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.SCHEDULING_ALL_DEVICES_SELECTION, onboardingState, { anchor: groupAnchor, place: 'right' });
+    if (createdGroup) {
+      onboardingComponent = getOnboardingComponentFor(
+        onboardingSteps.SCHEDULING_GROUP_SELECTION,
+        { ...onboardingState, createdGroup },
+        { anchor: groupAnchor, place: 'right' },
+        onboardingComponent
+      );
+    }
+    if (!deploymentRelease) {
+      onboardingComponent = getOnboardingComponentFor(
+        onboardingSteps.SCHEDULING_ARTIFACT_SELECTION,
+        { ...onboardingState, selectedRelease: releases[0] || {} },
+        { anchor, place: 'right' },
+        onboardingComponent
+      );
+    }
     if (hasDevices && deploymentDeviceCount && deploymentRelease) {
       const buttonAnchor = {
         top: deploymentAnchor.offsetTop - deploymentAnchor.offsetHeight,

@@ -65,13 +65,10 @@ export class ArtifactInformation extends React.Component {
 
   render() {
     const self = this;
-    const { advanceOnboarding, customDeviceTypes, deviceTypes = [], name, onboardingState, selectedDeviceTypes = [], updateCreation } = self.props;
+    const { customDeviceTypes, deviceTypes = [], name, onboardingState, selectedDeviceTypes = [], updateCreation } = self.props;
 
     let onboardingComponent = null;
     if (!onboardingState.complete && self.deviceTypeRef && self.releaseNameRef) {
-      if (selectedDeviceTypes.length || customDeviceTypes.length > 3) {
-        advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE);
-      }
       const deviceTypeAnchor = {
         left: self.deviceTypeRef.offsetLeft + self.deviceTypeRef.clientWidth,
         top: self.deviceTypeRef.offsetTop + self.deviceTypeRef.clientHeight / 2

@@ -135,7 +135,7 @@ export const ArtifactIncludedOnboarding = ({ artifactIncluded }) => (
 
 export const ArtifactIncludedDeployOnboarding = () => <div>Let&apos;s deploy this Release to your device now</div>;
 
-export const SchedulingArtifactSelection = ({ selectedRelease }) => <div>{`Select the ${selectedRelease} release we included.`}</div>;
+export const SchedulingArtifactSelection = ({ selectedRelease }) => <div>{`Select the ${selectedRelease.Name} release we included.`}</div>;
 
 export const SchedulingAllDevicesSelection = () => (
   <div>

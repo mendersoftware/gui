@@ -91,26 +91,26 @@ export const onboardingSteps = {
     progress: 1
   },
   [stepNames.ARTIFACT_INCLUDED_DEPLOY_ONBOARDING]: {
-    condition: { min: stepNames.ARTIFACT_INCLUDED_ONBOARDING, max: stepNames.DEPLOYMENTS_INPROGRESS },
+    condition: { max: stepNames.DEPLOYMENTS_INPROGRESS },
     component: ArtifactIncludedDeployOnboarding,
     fallbackStep: stepNames.ARTIFACT_INCLUDED_ONBOARDING,
     progress: 1
   },
-  [stepNames.SCHEDULING_ARTIFACT_SELECTION]: {
-    condition: { min: stepNames.ARTIFACT_INCLUDED_DEPLOY_ONBOARDING },
-    component: SchedulingArtifactSelection,
-    fallbackStep: stepNames.ARTIFACT_INCLUDED_ONBOARDING,
-    progress: 2
-  },
   [stepNames.SCHEDULING_ALL_DEVICES_SELECTION]: {
-    condition: { max: stepNames.SCHEDULING_RELEASE_TO_DEVICES },
+    condition: { min: stepNames.ARTIFACT_INCLUDED_ONBOARDING, max: stepNames.SCHEDULING_ARTIFACT_SELECTION },
     component: SchedulingAllDevicesSelection,
     fallbackStep: stepNames.ARTIFACT_INCLUDED_ONBOARDING,
     progress: 2
   },
   [stepNames.SCHEDULING_GROUP_SELECTION]: {
-    condition: {},
+    condition: { min: stepNames.ARTIFACT_INCLUDED_ONBOARDING },
     component: SchedulingGroupSelection,
+    fallbackStep: stepNames.ARTIFACT_INCLUDED_ONBOARDING,
+    progress: 2
+  },
+  [stepNames.SCHEDULING_ARTIFACT_SELECTION]: {
+    condition: { min: stepNames.SCHEDULING_ALL_DEVICES_SELECTION },
+    component: SchedulingArtifactSelection,
     fallbackStep: stepNames.ARTIFACT_INCLUDED_ONBOARDING,
     progress: 2
   },
@@ -169,7 +169,7 @@ export const onboardingSteps = {
     progress: 2
   },
   [stepNames.UPLOAD_NEW_ARTIFACT_DIALOG_RELEASE_NAME]: {
-    condition: { min: stepNames.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE },
+    condition: {},
     component: UploadNewArtifactDialogReleaseName,
     fallbackStep: stepNames.UPLOAD_NEW_ARTIFACT_TIP,
     progress: 2
