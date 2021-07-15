@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 
@@ -25,228 +25,233 @@ const columnHeaders = [
   { title: 'Size', name: 'size', sortable: true }
 ];
 
-export class ReleaseRepository extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      sortCol: 'modified',
-      sortDown: true,
-      wasSelectedRecently: false
+export const ReleaseRepository = ({
+  advanceOnboarding,
+  artifactIncluded,
+  demoArtifactLink,
+  editArtifact,
+  loading,
+  onboardingState,
+  onUpload,
+  pastDeploymentsCount,
+  refreshArtifacts,
+  release,
+  releases,
+  selectArtifact,
+  selectedArtifact,
+  selectRelease,
+  setSnackbar,
+  showHelptips,
+  uploading
+}) => {
+  const [sortCol, setSortCol] = useState('modified');
+  const [sortDown, setSortDown] = useState(true);
+  const [wasSelectedRecently, setWasSelectedRecently] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
+
+  const creationRef = useRef();
+  const dropzoneRef = useRef();
+  let repoItemAnchor = useRef();
+
+  const handleResize = () => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), 500);
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
     };
-  }
+  }, []);
 
-  handleResize() {
-    setTimeout(() => {
-      this.setState({ height: window.innerHeight, width: window.innerWidth });
-    }, 500);
-  }
+  useEffect(() => {
+    setWasSelectedRecently(true);
+  }, [release.Name]);
 
-  componentDidMount() {
-    window.addEventListener('resize', this.handleResize.bind(this));
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize.bind(this));
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.release && this.props.release && prevProps.release.Name !== this.props.release.Name) {
-      const self = this;
-      self.setState({ wasSelectedRecently: true }, () => setTimeout(() => self.setState({ wasSelectedRecently: false }), 200));
+  useEffect(() => {
+    if (!onboardingState.complete && releases.length === 1) {
+      advanceOnboarding(onboardingSteps.UPLOAD_PREPARED_ARTIFACT_TIP);
     }
-  }
+  }, [releases.length]);
 
-  onDrop(acceptedFiles, rejectedFiles) {
+  useEffect(() => {
+    if (wasSelectedRecently) {
+      setTimeout(() => setWasSelectedRecently(false), 200);
+    }
+  }, [wasSelectedRecently]);
+
+  const onDrop = (acceptedFiles, rejectedFiles) => {
     if (acceptedFiles.length) {
-      this.props.onUpload(acceptedFiles[0]);
+      onUpload(acceptedFiles[0]);
     }
     if (rejectedFiles.length) {
-      this.props.setSnackbar(`File '${rejectedFiles[0].name}' was rejected. File should be of type .mender`, null);
+      setSnackbar(`File '${rejectedFiles[0].name}' was rejected. File should be of type .mender`, null);
     }
-  }
+  };
 
-  _onRowSelection(artifact) {
-    if (!artifact || !this.props.selectedArtifact || this.props.selectedArtifact.id !== artifact.id) {
-      this.props.selectArtifact(artifact);
+  const onRowSelection = artifact => {
+    if (!artifact || !selectedArtifact || selectedArtifact.id !== artifact.id) {
+      selectArtifact(artifact);
     } else {
-      this.props.selectArtifact();
+      selectArtifact();
     }
-    if (!this.props.onboardingState.complete) {
-      this.props.advanceOnboarding(onboardingSteps.ARTIFACT_INCLUDED_ONBOARDING);
+    if (!onboardingState.complete) {
+      advanceOnboarding(onboardingSteps.ARTIFACT_INCLUDED_ONBOARDING);
     }
-  }
+  };
 
-  _editArtifactData(id, description) {
-    const self = this;
-    return self.props.editArtifact(id, { description }).then(() => self.props.refreshArtifacts());
-  }
+  const editArtifactData = (id, description) => editArtifact(id, { description }).then(refreshArtifacts);
 
-  onCreateDeploymentFrom(release) {
-    if (!this.props.onboardingState.complete) {
-      this.props.advanceOnboarding(onboardingSteps.SCHEDULING_ARTIFACT_SELECTION);
-      if (this.props.pastDeploymentsCount === 1) {
-        this.props.advanceOnboarding(onboardingSteps.ARTIFACT_MODIFIED_ONBOARDING);
+  const onCreateDeploymentFrom = release => {
+    if (!onboardingState.complete) {
+      advanceOnboarding(onboardingSteps.ARTIFACT_INCLUDED_DEPLOY_ONBOARDING);
+      if (pastDeploymentsCount === 1) {
+        advanceOnboarding(onboardingSteps.ARTIFACT_MODIFIED_ONBOARDING);
       }
     }
-    this.props.selectRelease(release);
-  }
+    selectRelease(release);
+  };
 
-  _sortColumn(col) {
+  const sortColumn = col => {
     if (!col.sortable) {
       return;
     }
     // sort table
-    this.setState({ sortDown: !this.state.sortDown, sortCol: col.name });
-  }
+    setSortDown(!sortDown);
+    setSortCol(col);
+  };
 
-  render() {
-    const self = this;
-    const { artifactIncluded, demoArtifactLink, loading, onboardingState, onUpload, release, releases, selectedArtifact, showHelptips, uploading } = self.props;
-    const { sortCol, sortDown, wasSelectedRecently } = self.state;
-    const artifacts = release ? release.Artifacts : [];
-    const items = artifacts.sort(customSort(sortDown, sortCol)).map((pkg, index) => {
-      const expanded = !!(selectedArtifact && selectedArtifact.id === pkg.id);
-      this.repoItemAnchor = this.repoItemAnchor?.current ? this.repoItemAnchor : React.createRef();
-      return (
-        <ReleaseRepositoryItem
-          key={`repository-item-${index}`}
-          artifact={pkg}
-          expanded={expanded}
-          index={index}
-          onEdit={(id, description) => self._editArtifactData(id, description)}
-          onRowSelection={() => self._onRowSelection(pkg)}
-          // this will be run after expansion + collapse and both need some time to fully settle
-          // otherwise the measurements are off
-          onExpanded={() => setTimeout(() => self.setState({}), 500)}
-          release={release}
-          itemRef={this.repoItemAnchor}
-        />
-      );
-    });
+  const artifacts = release.Artifacts ?? [];
+  const items = artifacts.sort(customSort(sortDown, sortCol)).map((pkg, index) => {
+    const expanded = !!(selectedArtifact && selectedArtifact.id === pkg.id);
+    return (
+      <ReleaseRepositoryItem
+        key={`repository-item-${index}`}
+        artifact={pkg}
+        expanded={expanded}
+        index={index}
+        onEdit={editArtifactData}
+        onRowSelection={() => onRowSelection(pkg)}
+        // this will be run after expansion + collapse and both need some time to fully settle
+        // otherwise the measurements are off
+        onExpanded={() => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), 500)}
+        itemRef={repoItemAnchor}
+      />
+    );
+  });
 
-    const dropzoneClass = uploading ? 'dropzone disabled muted' : 'dropzone';
+  const dropzoneClass = uploading ? 'dropzone disabled muted' : 'dropzone';
 
-    let onboardingComponent = null;
-    let uploadArtifactOnboardingComponent = null;
-    if (this.repoItemAnchor && this.repoItemAnchor.current && this.creationRef) {
-      const element = this.repoItemAnchor.current;
-      const anchor = { left: element.offsetLeft + element.offsetWidth / 3, top: element.offsetTop + element.offsetHeight };
-      const artifactIncludedAnchor = {
-        left: this.creationRef.offsetLeft + this.creationRef.offsetWidth,
-        top: this.creationRef.offsetTop + this.creationRef.offsetHeight / 2
-      };
-      const artifactUploadedAnchor = {
-        left: this.creationRef.offsetLeft + this.creationRef.offsetWidth / 2,
-        top: this.creationRef.offsetTop - this.creationRef.offsetHeight / 2
-      };
+  let onboardingComponent = null;
+  let uploadArtifactOnboardingComponent = null;
+  if (repoItemAnchor.current && creationRef.current) {
+    const element = repoItemAnchor.current;
+    const anchor = { left: element.offsetLeft + element.offsetWidth / 3, top: element.offsetTop + element.offsetHeight };
+    const artifactIncludedAnchor = {
+      left: creationRef.current.offsetLeft + creationRef.current.offsetWidth,
+      top: creationRef.current.offsetTop + creationRef.current.offsetHeight / 2
+    };
+    const artifactUploadedAnchor = {
+      left: creationRef.current.offsetLeft + creationRef.current.offsetWidth / 2,
+      top: creationRef.current.offsetTop - creationRef.current.offsetHeight / 2
+    };
 
-      onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_INCLUDED_ONBOARDING, { ...onboardingState, artifactIncluded }, { anchor });
-      onboardingComponent = getOnboardingComponentFor(
-        onboardingSteps.ARTIFACT_INCLUDED_DEPLOY_ONBOARDING,
-        onboardingState,
-        { place: 'right', anchor: artifactIncludedAnchor },
-        onboardingComponent
-      );
-      onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor }, onboardingComponent);
-      onboardingComponent = getOnboardingComponentFor(
-        onboardingSteps.ARTIFACT_MODIFIED_ONBOARDING,
-        onboardingState,
-        { anchor: artifactUploadedAnchor, place: 'bottom' },
-        onboardingComponent
-      );
-    }
-    if (self.dropzoneRef && !releases.length) {
-      const dropzoneAnchor = { left: 30, top: this.dropzoneRef.offsetTop + this.dropzoneRef.offsetHeight };
-      uploadArtifactOnboardingComponent = getOnboardingComponentFor(
-        onboardingSteps.UPLOAD_PREPARED_ARTIFACT_TIP,
-        { ...onboardingState, demoArtifactLink },
-        { anchor: dropzoneAnchor, place: 'left' }
-      );
-    }
-
-    return loading || wasSelectedRecently ? (
-      <div className="flexbox centered" style={{ width: '100%', height: '50%' }}>
-        <Loader show={true} />
-      </div>
-    ) : (
-      <div className="relative release-repo margin-left" style={{ width: '100%' }}>
-        <div className="muted margin-bottom">
-          <Typography variant="body1" style={{ marginBottom: 10 }}>
-            Release:
-          </Typography>
-          <Typography variant="body2">{release ? release.Name : 'No release selected'}</Typography>
-        </div>
-        {!!release && (
-          <Typography variant="body1" style={{ fontWeight: 'bold' }}>
-            Artifacts in this Release:
-          </Typography>
-        )}
-
-        {uploadArtifactOnboardingComponent ? uploadArtifactOnboardingComponent : null}
-        <div style={{ position: 'relative', marginTop: '10px' }}>
-          {items.length ? (
-            <div>
-              <div className="release-repo-item repo-item repo-header">
-                {columnHeaders.map(item => (
-                  <Tooltip key={item.name} className="columnHeader" title={item.title} placement="top-start" onClick={() => self._sortColumn(item)}>
-                    <div>
-                      {item.title}
-                      {item.sortable ? (
-                        <SortIcon className={`sortIcon ${self.state.sortCol === item.name ? 'selected' : ''} ${self.state.sortDown.toString()}`} />
-                      ) : null}
-                    </div>
-                  </Tooltip>
-                ))}
-                <div style={{ width: 48 }} />
-              </div>
-              {items}
-              <Button
-                color="primary"
-                variant="contained"
-                buttonRef={ref => (this.creationRef = ref)}
-                component={ForwardingLink}
-                to={`/deployments?open=true&release=${release.Name}`}
-                style={{ marginLeft: 20 }}
-                onClick={() => self.onCreateDeploymentFrom(release)}
-              >
-                Create deployment with this release
-              </Button>
-            </div>
-          ) : null}
-          {!!onboardingComponent && onboardingComponent}
-
-          {showHelptips && items.length ? <ExpandArtifact /> : null}
-
-          {!items.length && (
-            <div className="dashboard-placeholder fadeIn" style={{ fontSize: '16px', margin: '8vh auto' }} ref={ref => (self.dropzoneRef = ref)}>
-              {releases.length > 0 ? (
-                <p>Select a Release on the left to view its Artifact details</p>
-              ) : (
-                <Dropzone
-                  activeClassName="active"
-                  disabled={uploading}
-                  multiple={false}
-                  noClick={true}
-                  onDrop={(accepted, rejected) => self.onDrop(accepted, rejected)}
-                  rejectClassName="active"
-                >
-                  {({ getRootProps, getInputProps }) => (
-                    <div {...getRootProps({ className: dropzoneClass })} onClick={() => onUpload()}>
-                      <input {...getInputProps()} disabled={uploading} />
-                      <p>
-                        There are no Releases yet. <a>Upload an Artifact</a> to create a new Release
-                      </p>
-                    </div>
-                  )}
-                </Dropzone>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_INCLUDED_ONBOARDING, { ...onboardingState, artifactIncluded }, { anchor });
+    onboardingComponent = getOnboardingComponentFor(
+      onboardingSteps.ARTIFACT_INCLUDED_DEPLOY_ONBOARDING,
+      onboardingState,
+      { place: 'right', anchor: artifactIncludedAnchor },
+      onboardingComponent
+    );
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor }, onboardingComponent);
+    onboardingComponent = getOnboardingComponentFor(
+      onboardingSteps.ARTIFACT_MODIFIED_ONBOARDING,
+      onboardingState,
+      { anchor: artifactUploadedAnchor, place: 'bottom' },
+      onboardingComponent
     );
   }
-}
+  if (dropzoneRef.current && !releases.length) {
+    const dropzoneAnchor = { left: 30, top: dropzoneRef.current.offsetTop + dropzoneRef.current.offsetHeight };
+    uploadArtifactOnboardingComponent = getOnboardingComponentFor(
+      onboardingSteps.UPLOAD_PREPARED_ARTIFACT_TIP,
+      { ...onboardingState, demoArtifactLink },
+      { anchor: dropzoneAnchor, place: 'left' }
+    );
+  }
+
+  return loading || wasSelectedRecently ? (
+    <div className="flexbox centered" style={{ width: '100%', height: '50%' }}>
+      <Loader show={true} />
+    </div>
+  ) : (
+    <div className="relative release-repo margin-left" style={{ width: '100%' }}>
+      <div className="muted margin-bottom">
+        <Typography variant="body1" style={{ marginBottom: 10 }}>
+          Release:
+        </Typography>
+        <Typography variant="body2">{release.Name || 'No release selected'}</Typography>
+      </div>
+      {!!release.Artifacts && (
+        <Typography variant="body1" style={{ fontWeight: 'bold' }}>
+          Artifacts in this Release:
+        </Typography>
+      )}
+
+      {uploadArtifactOnboardingComponent ? uploadArtifactOnboardingComponent : null}
+      <div style={{ position: 'relative', marginTop: '10px' }}>
+        {items.length ? (
+          <div>
+            <div className="release-repo-item repo-item repo-header">
+              {columnHeaders.map(item => (
+                <Tooltip key={item.name} className="columnHeader" title={item.title} placement="top-start" onClick={() => sortColumn(item)}>
+                  <div>
+                    {item.title}
+                    {item.sortable ? <SortIcon className={`sortIcon ${sortCol === item.name ? 'selected' : ''} ${sortDown.toString()}`} /> : null}
+                  </div>
+                </Tooltip>
+              ))}
+              <div style={{ width: 48 }} />
+            </div>
+            {items}
+            <Button
+              color="primary"
+              variant="contained"
+              buttonRef={creationRef}
+              component={ForwardingLink}
+              to={`/deployments?open=true&release=${release.Name}`}
+              style={{ marginLeft: 20 }}
+              onClick={() => onCreateDeploymentFrom(release)}
+            >
+              Create deployment with this release
+            </Button>
+          </div>
+        ) : null}
+        {!!onboardingComponent && onboardingComponent}
+
+        {showHelptips && items.length ? <ExpandArtifact /> : null}
+
+        {!items.length && (
+          <div className="dashboard-placeholder fadeIn" style={{ fontSize: '16px', margin: '8vh auto' }} ref={dropzoneRef}>
+            {releases.length > 0 ? (
+              <p>Select a Release on the left to view its Artifact details</p>
+            ) : (
+              <Dropzone activeClassName="active" disabled={uploading} multiple={false} noClick={true} onDrop={onDrop} rejectClassName="active">
+                {({ getRootProps, getInputProps }) => (
+                  <div {...getRootProps({ className: dropzoneClass })} onClick={() => onUpload()}>
+                    <input {...getInputProps()} disabled={uploading} />
+                    <p>
+                      There are no Releases yet. <a>Upload an Artifact</a> to create a new Release
+                    </p>
+                  </div>
+                )}
+              </Dropzone>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const actionCreators = { advanceOnboarding, editArtifact, selectArtifact, setSnackbar, selectRelease, uploadArtifact };
 
@@ -256,7 +261,7 @@ const mapStateToProps = state => {
     demoArtifactLink: state.app.demoArtifactLink,
     onboardingState: getOnboardingState(state),
     pastDeploymentsCount: state.deployments.byStatus.finished.total,
-    release: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null,
+    release: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : {},
     releases: Object.values(state.releases.byId),
     selectedArtifact: state.releases.selectedArtifact,
     showHelptips: state.users.showHelptips,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 import ArtifactUpload from './artifactupload';
@@ -12,42 +12,46 @@ const steps = [
   { title: 'Artifact information', component: ArtifactInformationForm }
 ];
 
-export class AddArtifactDialog extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      activeStep: 0,
-      customDeviceTypes: '',
-      destination: !props.onboardingState.complete ? '/var/www/localhost/htdocs' : '',
-      file: null,
-      selectedDeviceTypes: []
-    };
-  }
+export const AddArtifactDialog = ({
+  advanceOnboarding,
+  createArtifact,
+  deviceTypes = [],
+  onboardingState,
+  onCancel,
+  onUploadFinished,
+  onUploadStarted,
+  pastCount,
+  releases,
+  selectedFile,
+  setSnackbar,
+  uploadArtifact
+}) => {
+  const [activeStep, setActiveStep] = useState(0);
+  const [customDeviceTypes, setCustomDeviceTypes] = useState('');
+  const [destination, setDestination] = useState(!onboardingState.complete ? '/var/www/localhost/htdocs' : '');
+  const [file, setFile] = useState();
+  const [name, setName] = useState();
+  const [selectedDeviceTypes, setSelectedDeviceTypes] = useState([]);
+  const { name: filename = '' } = file || {};
 
-  componentDidMount() {
-    if (this.props.selectedFile) {
-      this.setState({ file: this.props.selectedFile });
+  useEffect(() => {
+    if (selectedFile) {
+      setFile(selectedFile);
     }
-  }
+  }, []);
 
-  onUpload({ customDeviceTypes, file, destination, selectedDeviceTypes, name }) {
+  const onUpload = () => {
     let meta = { description: '' };
-    const filename = file ? file.name : '';
     if (filename.endsWith('.mender')) {
-      return this.addArtifact(meta, file, 'upload');
-    }
-    if (!this.props.onboardingState.complete && this.props.releases.length) {
-      this.props.advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE);
+      return addArtifact(meta, file, 'upload');
     }
     const otherDeviceTypes = customDeviceTypes.split(',');
     const deviceTypes = unionizeStrings(selectedDeviceTypes, otherDeviceTypes);
     meta = { ...meta, device_types_compatible: deviceTypes, args: { dest_dir: destination, filename }, name };
-    return this.addArtifact(meta, file, 'create');
-  }
+    return addArtifact(meta, file, 'create');
+  };
 
-  addArtifact(meta, file, type = 'upload') {
-    const self = this;
-    const { advanceOnboarding, createArtifact, deviceTypes, onboardingState, pastCount, uploadArtifact, onUploadStarted, onUploadFinished } = self.props;
+  const addArtifact = (meta, file, type = 'upload') => {
     const upload = type === 'create' ? createArtifact(meta, file) : uploadArtifact(meta, file);
     onUploadStarted();
     return upload.then(() => {
@@ -61,49 +65,69 @@ export class AddArtifactDialog extends React.Component {
       Tracking.event({ category: 'artifacts', action: 'create' });
       return setTimeout(onUploadFinished, 1000);
     });
-  }
+  };
 
-  render() {
-    const self = this;
-    const { advanceOnboarding, deviceTypes = [], onboardingState, onCancel, releases, setSnackbar } = self.props;
-    const { activeStep, destination, file } = self.state;
-    const ComponentToShow = steps[activeStep].component;
-    const fileSelected = file && (destination.length > 0 || file.name.endsWith('.mender'));
-    const finalStep = activeStep === steps.length - 1 || (file && file.name.endsWith('.mender'));
-    return (
-      <Dialog open={true} fullWidth={true} maxWidth="sm">
-        <DialogTitle>Upload an Artifact</DialogTitle>
-        <DialogContent className="dialog-content margin-top margin-left margin-right margin-bottom">
-          <ComponentToShow
-            advanceOnboarding={advanceOnboarding}
-            deviceTypes={deviceTypes}
-            onboardingState={onboardingState}
-            releases={releases}
-            setSnackbar={setSnackbar}
-            updateCreation={(...args) => self.setState(...args)}
-            {...self.state}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onCancel}>Cancel</Button>
-          {activeStep !== 0 && (
-            <Button disabled={activeStep === 0} onClick={() => self.setState({ activeStep: activeStep - 1 })}>
-              Back
-            </Button>
-          )}
-          <div style={{ flexGrow: 1 }} />
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={!fileSelected}
-            onClick={finalStep ? () => self.onUpload(self.state) : () => self.setState({ activeStep: activeStep + 1 })}
-          >
-            {finalStep ? 'Upload' : 'Next'}
+  const onUpdateCreation = update => {
+    const updatedCreation = {
+      customDeviceTypes,
+      destination,
+      file,
+      name,
+      selectedDeviceTypes,
+      ...update
+    };
+    if (updatedCreation.selectedDeviceTypes.length || updatedCreation.customDeviceTypes.length > 3) {
+      advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE);
+    }
+    setCustomDeviceTypes(updatedCreation.customDeviceTypes);
+    setDestination(updatedCreation.destination);
+    setFile(updatedCreation.file);
+    setName(updatedCreation.name);
+    setSelectedDeviceTypes(updatedCreation.selectedDeviceTypes);
+  };
+
+  const onNextClick = () => {
+    if (!onboardingState.complete && activeStep === 0 && destination) {
+      advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DESTINATION);
+    }
+    setActiveStep(activeStep + 1);
+  };
+
+  const ComponentToShow = steps[activeStep].component;
+  const fileSelected = file && (destination.length > 0 || filename.endsWith('.mender'));
+  const finalStep = activeStep === steps.length - 1 || (file && filename.endsWith('.mender'));
+  return (
+    <Dialog open={true} fullWidth={true} maxWidth="sm">
+      <DialogTitle>Upload an Artifact</DialogTitle>
+      <DialogContent className="dialog-content margin-top margin-left margin-right margin-bottom">
+        <ComponentToShow
+          advanceOnboarding={advanceOnboarding}
+          deviceTypes={deviceTypes}
+          onboardingState={onboardingState}
+          releases={releases}
+          setSnackbar={setSnackbar}
+          updateCreation={onUpdateCreation}
+          customDeviceTypes={customDeviceTypes}
+          destination={destination}
+          file={file}
+          name={name}
+          selectedDeviceTypes={selectedDeviceTypes}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onCancel}>Cancel</Button>
+        {activeStep !== 0 && (
+          <Button disabled={activeStep === 0} onClick={() => setActiveStep(activeStep - 1)}>
+            Back
           </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
-}
+        )}
+        <div style={{ flexGrow: 1 }} />
+        <Button variant="contained" color="primary" disabled={!fileSelected} onClick={() => (finalStep ? onUpload() : onNextClick())}>
+          {finalStep ? 'Upload' : 'Next'}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 export default AddArtifactDialog;
