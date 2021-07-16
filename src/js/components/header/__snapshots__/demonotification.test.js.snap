@@ -48,7 +48,7 @@ exports[`DemoNotification Component renders correctly 1`] = `
     </p>
     <p>
       <a
-        href="https://docs.mender.io/development/server-installation/production-installation"
+        href="https://docs.mender.io/development/server-installation/production-installation-with-kubernetes"
         rel="noopener noreferrer"
         target="_blank"
       >
