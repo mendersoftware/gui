@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { getAllDevicesByStatus, getDeviceCount } from '../../actions/deviceActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
+import { advanceOnboarding } from '../../actions/onboardingActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getOnboardingState } from '../../selectors';
@@ -22,6 +23,7 @@ export const Devices = props => {
   const {
     acceptedDevicesCount,
     activeDevicesCount,
+    advanceOnboarding,
     clickHandle,
     deploymentDeviceLimit,
     getAllDevicesByStatus,
@@ -116,11 +118,13 @@ export const Devices = props => {
       <div style={Object.assign({ marginBottom: 30 }, styles)} ref={anchor}>
         {!!pendingDevicesCount && (
           <PendingDevices
-            pendingDevicesCount={pendingDevicesCount}
-            isActive={pendingDevicesCount > 0}
-            showHelptips={showHelptips}
-            onClick={clickHandle}
+            advanceOnboarding={advanceOnboarding}
             innerRef={pendingsRef}
+            isActive={pendingDevicesCount > 0}
+            onboardingState={onboardingState}
+            onClick={clickHandle}
+            pendingDevicesCount={pendingDevicesCount}
+            showHelptips={showHelptips}
           />
         )}
         <AcceptedDevices
@@ -143,7 +147,7 @@ export const Devices = props => {
   );
 };
 
-const actionCreators = { getAllDevicesByStatus, getDeviceCount, setShowConnectingDialog };
+const actionCreators = { advanceOnboarding, getAllDevicesByStatus, getDeviceCount, setShowConnectingDialog };
 
 const mapStateToProps = state => {
   return {

@@ -7,10 +7,16 @@ import Fab from '@material-ui/core/Fab';
 import ContentAddIcon from '@material-ui/icons/Add';
 
 import { BaseWidget } from './baseWidget';
+import { onboardingSteps } from '../../../utils/onboardingmanager';
 
 export const PendingDevices = props => {
-  const { isActive: hasPending, innerRef, onClick, pendingDevicesCount } = props;
-  const onWidgetClick = () => onClick({ route: 'devices/pending' });
+  const { advanceOnboarding, isActive: hasPending, innerRef, onboardingState, onClick, pendingDevicesCount } = props;
+  const onWidgetClick = () => {
+    if (!onboardingState.complete) {
+      advanceOnboarding(onboardingSteps.DEVICES_PENDING_ONBOARDING);
+    }
+    onClick({ route: 'devices/pending' });
+  };
 
   const pendingNotification = `Pending ${pluralize('devices', hasPending)}`;
 

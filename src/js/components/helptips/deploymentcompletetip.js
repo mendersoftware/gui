@@ -11,6 +11,7 @@ import { advanceOnboarding, setOnboardingComplete, setShowCreateArtifactDialog }
 import DeviceConstants from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getDemoDeviceAddress } from '../../selectors';
+import Tracking from '../../tracking';
 import Loader from '../common/loader';
 
 export const DeploymentCompleteTip = ({
@@ -27,6 +28,7 @@ export const DeploymentCompleteTip = ({
   useEffect(() => {
     ReactTooltip.show(tipRef.current);
     getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted).then(tasks => tasks[tasks.length - 1].deviceAccu.ids.map(getDeviceById));
+    Tracking.event({ category: 'onboarding', action: onboardingSteps.DEPLOYMENTS_PAST_COMPLETED });
   }, []);
 
   const onClick = () => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
@@ -10,6 +10,7 @@ const mockStore = configureStore([thunk]);
 
 describe('ReleaseRepository Component', () => {
   let store;
+
   beforeEach(() => {
     store = mockStore({
       ...defaultState,
@@ -18,6 +19,11 @@ describe('ReleaseRepository Component', () => {
         byId: {}
       }
     });
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   it('renders correctly', async () => {
@@ -26,7 +32,8 @@ describe('ReleaseRepository Component', () => {
         <ReleaseRepository artifacts={[]} />
       </Provider>
     );
-    const view = baseElement.firstChild.firstChild;
+    act(() => jest.advanceTimersByTime(1000));
+    const view = baseElement.lastChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
