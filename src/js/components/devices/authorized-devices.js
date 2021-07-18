@@ -14,6 +14,7 @@ import { onboardingSteps } from '../../constants/onboardingConstants';
 import { duplicateFilter, isEmpty } from '../../helpers';
 import { getIdAttribute, getOnboardingState, getTenantCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
 import { ExpandDevice } from '../helptips/helptooltips';
@@ -63,7 +64,7 @@ export const Authorized = props => {
   const authorizeRef = useRef();
 
   // eslint-disable-next-line no-unused-vars
-  const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
+  const size = useWindowSize();
 
   const {
     page: pageNo = 1,
@@ -75,18 +76,14 @@ export const Authorized = props => {
 
   const { column: sortCol, scope: sortScope } = columns.length ? columns[0] : {};
 
-  const handleResize = () => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), 500);
-
   useEffect(() => {
     clearAllRetryTimers(setSnackbar);
     if (!filters.length && selectedGroup && groupFilters.length) {
       setDeviceFilters(groupFilters);
     }
-    window.addEventListener('resize', handleResize);
     return () => {
       clearInterval(timer);
       clearAllRetryTimers(setSnackbar);
-      window.removeEventListener('resize', handleResize);
     };
   }, []);
 

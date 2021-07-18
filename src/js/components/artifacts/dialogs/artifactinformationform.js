@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 import { FormControl, Input, InputLabel, TextField, Tooltip } from '@material-ui/core';
@@ -8,6 +8,7 @@ import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { duplicateFilter, unionizeStrings } from '../../../helpers';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
+import useWindowSize from '../../../utils/resizehook';
 
 export const ReleaseTooltip = () => (
   <div style={{ fontSize: 12 }}>
@@ -25,16 +26,7 @@ export const ArtifactInformation = ({ customDeviceTypes, deviceTypes = [], name,
   const deviceTypeRef = useRef();
   const releaseNameRef = useRef();
   // eslint-disable-next-line no-unused-vars
-  const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
-
-  const handleResize = () => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), 500);
-
-  useEffect(() => {
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  const size = useWindowSize();
 
   // to allow device types to automatically be selected on entered ',' we have to filter the input and transform any completed device types (followed by a ',')
   // while also checking for duplicates and allowing complete resets of the input

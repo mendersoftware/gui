@@ -18,6 +18,7 @@ import TimerangePicker from '../common/timerange-picker';
 import { getOnboardingState } from '../../selectors';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import useWindowSize from '../../utils/resizehook';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
 import { DeploymentStatus } from './deploymentitem';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
@@ -58,12 +59,10 @@ export const Past = props => {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(20);
   // eslint-disable-next-line no-unused-vars
-  const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
+  const size = useWindowSize();
   const [timeRangeToggle, setTimeRangeToggle] = useState(false);
   const [deploymentType, setDeploymentType] = useState('');
   const deploymentsRef = useRef();
-
-  const handleResize = () => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), 500);
 
   useEffect(() => {
     const roundedStartDate = Math.round(Date.parse(BEGINNING_OF_TIME) / 1000);
@@ -79,9 +78,7 @@ export const Past = props => {
         }
       }
     );
-    window.addEventListener('resize', handleResize);
     return () => {
-      window.removeEventListener('resize', handleResize);
       clearAllRetryTimers(setSnackbar);
     };
   }, []);
