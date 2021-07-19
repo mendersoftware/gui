@@ -27,7 +27,8 @@ const defaultAttributes = [
   { scope: 'inventory', attribute: 'device_type' },
   { scope: 'inventory', attribute: 'rootfs-image.version' },
   { scope: 'system', attribute: 'created_ts' },
-  { scope: 'system', attribute: 'updated_ts' }
+  { scope: 'system', attribute: 'updated_ts' },
+  { scope: 'tags', attribute: 'name' }
 ];
 
 export const getGroups = () => (dispatch, getState) =>
@@ -258,13 +259,16 @@ export const selectDevice = (deviceId, status) => dispatch => {
 const reduceReceivedDevices = (devices, ids, state, status) =>
   devices.reduce(
     (accu, device) => {
-      const stateDevice = state.devices.byId[device.id];
-      const { identity, inventory, system } = mapDeviceAttributes(device.attributes);
-      device.attributes = stateDevice ? { ...stateDevice.attributes, ...inventory } : inventory;
-      device.identity_data = stateDevice ? { ...stateDevice.identity_data, ...identity } : identity;
+      const stateDevice = state.devices.byId[device.id] || {};
+      const { attributes: storedAttributes = {}, identity_data: storedIdentity = {}, tags: storedTags = {} } = stateDevice;
+      const { identity, inventory, system = {}, tags } = mapDeviceAttributes(device.attributes);
+      const { created_ts = device.created_ts || stateDevice.created_ts, updated_ts = device.updated_ts || stateDevice.updated_ts } = system;
+      device.attributes = { ...storedAttributes, ...inventory };
+      device.tags = { ...storedTags, ...tags };
+      device.identity_data = { ...storedIdentity, ...identity };
       device.status = status ? status : device.status || identity.status;
-      device.created_ts = system.created_ts ? system.created_ts : device.created_ts || stateDevice.created_ts;
-      device.updated_ts = system.updated_ts ? system.updated_ts : device.updated_ts || stateDevice.updated_ts;
+      device.created_ts = created_ts;
+      device.updated_ts = updated_ts;
       accu.devicesById[device.id] = { ...stateDevice, ...device };
       accu.ids.push(device.id);
       return accu;
@@ -386,15 +390,13 @@ export const setDeviceFilters = filters => (dispatch, getState) => {
   return Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters }));
 };
 
-export const getDeviceById = id => dispatch =>
+export const getDeviceById = id => (dispatch, getState) =>
   GeneralApi.get(`${inventoryApiUrl}/devices/${id}`)
     .then(res => {
-      const device = { ...res.data, attributes: mapDeviceAttributes(res.data.attributes).inventory };
+      const device = reduceReceivedDevices([res.data], [], getState()).devicesById[id];
+      device.etag = res.headers['ETag'];
       delete device.updated_ts;
-      dispatch({
-        type: DeviceConstants.RECEIVE_DEVICE,
-        device
-      });
+      dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device });
       return Promise.resolve(device);
     })
     .catch(err => {
@@ -804,3 +806,16 @@ export const applyDeviceConfig = (deviceId, configDeploymentConfiguration, isDef
       }
       return Promise.all(tasks);
     });
+
+export const setDeviceTags = (deviceId, tags) => dispatch =>
+  // to prevent tag set failures, retrieve the device & use the freshest etag we can get
+  Promise.resolve(dispatch(getDeviceById(deviceId))).then(device => {
+    const headers = device.etag ? { 'If-Match': device.etag } : {};
+    return GeneralApi.put(
+      `${inventoryApiUrl}/devices/${deviceId}/tags`,
+      Object.entries(tags).map(([name, value]) => ({ name, value })),
+      { headers }
+    )
+      .catch(err => commonErrorHandler(err, `There was an error setting tags for device ${deviceId}.`, dispatch, 'Please check your connection.'))
+      .then(() => Promise.resolve(dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device: { ...device, tags } })));
+  });

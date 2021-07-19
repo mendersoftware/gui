@@ -101,6 +101,7 @@ describe('app actions', () => {
               return accu;
             }, {}),
             identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
+            tags: {},
             updated_ts: inventoryDevice.updated_ts
           }
         }
@@ -124,6 +125,7 @@ describe('app actions', () => {
             }, {}),
             identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
             status: 'pending',
+            tags: {},
             updated_ts: inventoryDevice.updated_ts
           }
         }
