@@ -27,12 +27,12 @@ authenticatedRequest.interceptors.request.use(
 );
 
 const Api = {
-  get: url => authenticatedRequest.get(url),
+  get: authenticatedRequest.get,
   delete: (url, data) => authenticatedRequest.request({ method: 'delete', url, data }),
-  patch: (url, data) => authenticatedRequest.patch(url, data),
-  post: (url, data) => authenticatedRequest.post(url, data),
-  postUnauthorized: (url, data) => axios.post(url, data, commonRequestConfig),
-  put: (url, data) => authenticatedRequest.put(url, data),
+  patch: authenticatedRequest.patch,
+  post: authenticatedRequest.post,
+  postUnauthorized: (url, data, config = {}) => axios.post(url, data, { ...commonRequestConfig, ...config }),
+  put: authenticatedRequest.put,
   upload: (url, formData, progress, cancelToken) => authenticatedRequest.post(url, formData, { onUploadProgress: progress, timeout: 0, cancelToken }),
   uploadPut: (url, formData, progress, cancelToken) => authenticatedRequest.put(url, formData, { onUploadProgress: progress, timeout: 0, cancelToken })
 };
