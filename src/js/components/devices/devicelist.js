@@ -54,7 +54,7 @@ export const DeviceList = props => {
       device = undefined;
     }
     if (!onboardingState.complete) {
-      advanceOnboarding(onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING);
+      advanceOnboarding(onboardingSteps.DEVICES_PENDING_ONBOARDING);
       if (device && device.status === DEVICE_STATES.accepted && Object.values(device.attributes).some(value => value)) {
         advanceOnboarding(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION);
       }

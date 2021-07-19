@@ -14,6 +14,11 @@ describe('Artifacts Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({ ...defaultState });
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   it('renders correctly', async () => {
@@ -24,7 +29,7 @@ describe('Artifacts Component', () => {
         </Provider>
       </MemoryRouter>
     );
-
+    act(() => jest.advanceTimersByTime(1000));
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
@@ -50,6 +55,7 @@ describe('Artifacts Component', () => {
     act(() => userEvent.click(screen.getByRole('button', { name: /upload/i })));
     await waitFor(() => rerender(ui));
     act(() => userEvent.click(screen.getByRole('button', { name: /cancel/i })));
+    act(() => jest.advanceTimersByTime(1000));
     await waitFor(() => rerender(ui));
     expect(screen.queryByDisplayValue(defaultState.releases.byId.a1.Artifacts[0].description)).toBeInTheDocument();
     act(() => userEvent.click(screen.getByRole('button', { name: /Remove this artifact/i })));
