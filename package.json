@@ -91,7 +91,7 @@
     "less-loader": "^10.0.1",
     "lint-staged": "^11.0.1",
     "mini-css-extract-plugin": "^2.1.0",
-    "msw": "^0.31.0",
+    "msw": "^0.32.0",
     "postcss": "^8.3.5",
     "postcss-loader": "^6.1.1",
     "prettier": "^2.2.1",
