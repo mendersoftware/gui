@@ -278,3 +278,16 @@ const ConfigureAddOnTipComponent = ({ docsVersion }) => (
 );
 
 export const ConfigureAddOnTip = connect(mapStateToProps, actionCreators)(ConfigureAddOnTipComponent);
+
+export const NameTagTip = () => (
+  <div>
+    <div id="name-tag-help" className="tooltip help" data-tip data-for="name-tag-tip" data-event="click focus" style={{ top: '15%', left: '85%' }}>
+      <HelpIcon />
+    </div>
+    <ReactTooltip id="name-tag-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+      <p>
+        The <i>name</i> tag will be available as a device indentifier too.
+      </p>
+    </ReactTooltip>
+  </div>
+);
