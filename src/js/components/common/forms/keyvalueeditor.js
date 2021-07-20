@@ -21,6 +21,13 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsM
     setInputs(newInputs);
   }, [reset]);
 
+  const onClearClick = () => {
+    const changedInputs = [{ ...emptyInput }];
+    setInputs(changedInputs);
+    const inputObject = reducePairs(changedInputs);
+    onInputChange(inputObject);
+  };
+
   const updateInputs = (key, index, event) => {
     let changedInputs = [...inputs];
     const {
@@ -75,12 +82,12 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsM
         const Helptip = inputs[index].helptip?.component;
         const ref = inputRefs.current[index];
         return (
-          <div className="key-value-container flexbox" key={index}>
-            <FormControl disabled={disabled} error={hasError} style={{ marginRight: 15, marginTop: 10 }}>
+          <div className="key-value-container relative" key={index}>
+            <FormControl disabled={disabled} error={hasError}>
               <Input value={input.key} placeholder="Key" inputRef={ref} onChange={e => updateInputs('key', index, e)} type="text" />
               {hasError && <FormHelperText>{errortext || error}</FormHelperText>}
             </FormControl>
-            <FormControl disabled={disabled} error={hasError} style={{ marginTop: 10 }}>
+            <FormControl disabled={disabled} error={hasError}>
               <Input value={`${input.value}`} placeholder="Value" onChange={e => updateInputs('value', index, e)} type="text" />
             </FormControl>
             {inputs.length > 1 && !hasRemovalDisabled ? (
@@ -88,21 +95,33 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsM
                 <ClearIcon fontSize="small" />
               </IconButton>
             ) : (
-              <span style={{ minWidth: 44 }} />
+              <span />
             )}
             {showHelptips && Helptip && ref.current && <Helptip anchor={getHelptipPosition(ref)} {...inputs[index].helptip.props} />}
           </div>
         );
       })}
-      <Fab
-        disabled={disabled || !inputs[inputs.length - 1].key || !inputs[inputs.length - 1].value}
-        style={{ marginTop: 10, marginBottom: 10 }}
-        color="secondary"
-        size="small"
-        onClick={addKeyValue}
-      >
-        <ContentAddIcon />
-      </Fab>
+      <div className="key-value-container">
+        <div style={{ minWidth: theme.spacing(30) }}>
+          <Fab
+            disabled={disabled || !inputs[inputs.length - 1].key || !inputs[inputs.length - 1].value}
+            style={{ marginBottom: 10 }}
+            color="secondary"
+            size="small"
+            onClick={addKeyValue}
+          >
+            <ContentAddIcon />
+          </Fab>
+        </div>
+        <div style={{ minWidth: theme.spacing(30) }} />
+        {inputs.length > 1 ? (
+          <a className="margin-left-small" onClick={onClearClick}>
+            clear all
+          </a>
+        ) : (
+          <div />
+        )}
+      </div>
     </div>
   );
 };

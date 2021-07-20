@@ -1278,10 +1278,15 @@ div:focus {
   outline: none !important;
 }
 
-.key-value-container button {
-  margin-left: 8px;
-  height: 100%;
-  align-self: center;
+.key-value-container {
+  display: grid;
+  grid-template-columns: max-content max-content 65px;
+  column-gap: @defaultGutterWidth;
+  align-items: center;
+  justify-items: baseline;
+  > div {
+    margin-top: 10px;
+  }
 }
 
 /* Log in */
