@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Launch as LaunchIcon } from '@material-ui/icons';
 
 import theme, { colors } from '../../../themes/mender-theme';
+import DeviceIdentityDisplay from '../../common/deviceidentity';
 
 const BEGINNING_OF_TIME = '2020-01-01T00:00:00.000Z';
 
@@ -33,7 +34,7 @@ export const DeviceDetails = ({ device, idAttribute, onClose }) => {
     ...nameContainer,
     [usesId ? 'Device ID' : idAttribute]: (
       <Link className="flexbox center-aligned" style={{ color: colors.disabledColor, fontWeight: 'initial' }} to={`/devices?id=${device.id}`}>
-        <span>{usesId ? device.id : (device.identity_data || {})[idAttribute]}</span>
+        <DeviceIdentityDisplay device={device} idAttribute={idAttribute} isEditable={false} />
         <LaunchIcon className="margin-left-small link-color" fontSize="small" />
       </Link>
     ),

@@ -78,7 +78,9 @@ exports[`ProgressDeviceList Component renders correctly 1`] = `
             href=\\"/devices/id=a1\\"
             style=\\"font-weight: 500;\\"
           >
-            a1
+            <div>
+              a1
+            </div>
           </a>
         </td>
         <td

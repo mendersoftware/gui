@@ -6,6 +6,7 @@ import Time from 'react-time';
 import { Button, LinearProgress, TableCell, TableRow } from '@material-ui/core';
 
 import { formatTime, statusToPercentage } from '../../../helpers';
+import DeviceIdentityDisplay from '../../common/deviceidentity';
 
 const stateTitleMap = {
   noartifact: 'No compatible artifact found',
@@ -16,14 +17,7 @@ const stateTitleMap = {
 };
 
 const DeploymentDeviceListItem = ({ created: deploymentCreationDate, device, idAttribute, viewLog, retries: maxRetries }) => {
-  const { attempts, attributes = {}, created, finished, id = 'id', identity_data, log, retries, substate, status } = device;
-
-  let id_attribute = id;
-  if (idAttribute !== 'Device ID' && identity_data) {
-    // if global setting is not "Device Id"
-    // if device identity data is available, set custom attribute
-    id_attribute = identity_data[idAttribute];
-  }
+  const { attempts, attributes = {}, created, finished, id = 'id', log, retries, substate, status } = device;
 
   const softwareName = attributes['rootfs-image.version'] || attributes.artifact_name;
   const encodedArtifactName = encodeURIComponent(softwareName);
@@ -45,7 +39,7 @@ const DeploymentDeviceListItem = ({ created: deploymentCreationDate, device, idA
     <TableRow>
       <TableCell>
         <Link style={{ fontWeight: '500' }} to={`/devices/id=${id}`}>
-          {id_attribute}
+          <DeviceIdentityDisplay device={device} idAttribute={idAttribute} isEditable={false} />
         </Link>
       </TableCell>
       <TableCell>{attributes.device_type || '-'}</TableCell>
