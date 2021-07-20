@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeviceNameInput Component renders correctly 1`] = `
+<div
+  class="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-adornedEnd"
+  style="font-size: 0.8125rem;"
+>
+  <input
+    class="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled MuiInputBase-inputAdornedEnd"
+    disabled=""
+    id="a1-id-input"
+    type="text"
+    value="a1"
+  />
+  <div
+    class="MuiInputAdornment-root MuiInputAdornment-positionEnd"
+  >
+    <button
+      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
+      tabindex="0"
+      type="button"
+    >
+      <span
+        class="MuiIconButton-label"
+      >
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root"
+          focusable="false"
+          style="font-size: 1.25rem;"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+          />
+        </svg>
+      </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
+    </button>
+  </div>
+</div>
+`;
