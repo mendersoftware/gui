@@ -380,10 +380,10 @@ export const DeviceGroups = ({
     setDeviceRefreshTrigger(!deviceRefreshTrigger);
   };
 
-  const onFilterDevices = (value, key) => {
+  const onFilterDevices = (value, key, scope = 'identity') => {
     setDeviceListState({ state: routes.allDevices.key });
     if (key) {
-      selectGroup(undefined, [{ scope: 'identity', key, operator: '$eq', value }]);
+      selectGroup(undefined, [{ scope, key, operator: '$eq', value }]);
     } else {
       setDeviceFilters([]);
     }
@@ -503,6 +503,7 @@ const mapStateToProps = state => {
   }
   const deviceIdAttribute = { key: 'id', value: 'Device ID', scope: 'identity', category: 'identity', priority: 1 };
   let identityAttributes = [
+    { key: 'name', value: 'Name', scope: 'tags', category: 'tags', priority: 1 },
     deviceIdAttribute,
     ...state.devices.filteringAttributes.identityAttributes.map(item => ({ key: item, value: item, scope: 'identity', category: 'identity', priority: 1 }))
   ];

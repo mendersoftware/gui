@@ -6,14 +6,15 @@ let timer;
 
 export const QuickFilter = ({ attributes, filters, onChange }) => {
   const [filterValue, setFilterValue] = useState('');
-  const [selectedAttribute, setSelectedAttribute] = useState('id');
+  const [selectedAttribute, setSelectedAttribute] = useState('name');
 
   useEffect(() => {
     if (!(filterValue && selectedAttribute)) {
       return;
     }
     clearTimeout(timer);
-    timer = setTimeout(() => onChange(filterValue, selectedAttribute), 700);
+    const selectedScope = attributes.find(attribute => attribute.key === selectedAttribute)?.scope;
+    timer = setTimeout(() => onChange(filterValue, selectedAttribute, selectedScope), 700);
     return () => {
       clearTimeout(timer);
     };
