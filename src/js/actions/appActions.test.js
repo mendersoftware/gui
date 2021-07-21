@@ -203,7 +203,8 @@ describe('app actions', () => {
             showHelptips: true
           }
         }
-      }
+      },
+      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings, id_attribute: { attribute: 'mac', scope: 'identity' } } }
     ];
     await store.dispatch(initializeAppData());
     const storeActions = store.getActions();
