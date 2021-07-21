@@ -144,25 +144,27 @@ const mapFiltersToTerms = filters =>
 const mapTermsToFilters = terms => terms.map(term => ({ scope: term.scope, key: term.attribute, operator: term.type, value: term.value }));
 
 export const getDynamicGroups = () => (dispatch, getState) =>
-  GeneralApi.get(`${inventoryApiUrlV2}/filters?per_page=${MAX_PAGE_SIZE}`).then(({ data: filters }) => {
-    const state = getState().devices.groups.byId;
-    const groups = (filters || []).reduce((accu, filter) => {
-      accu[filter.name] = {
-        deviceIds: [],
-        total: 0,
-        ...state[filter.name],
-        id: filter.id,
-        filters: mapTermsToFilters(filter.terms)
-      };
-      return accu;
-    }, {});
-    return Promise.resolve(
-      dispatch({
-        type: DeviceConstants.RECEIVE_DYNAMIC_GROUPS,
-        groups
-      })
-    );
-  });
+  GeneralApi.get(`${inventoryApiUrlV2}/filters?per_page=${MAX_PAGE_SIZE}`)
+    .then(({ data: filters }) => {
+      const state = getState().devices.groups.byId;
+      const groups = (filters || []).reduce((accu, filter) => {
+        accu[filter.name] = {
+          deviceIds: [],
+          total: 0,
+          ...state[filter.name],
+          id: filter.id,
+          filters: mapTermsToFilters(filter.terms)
+        };
+        return accu;
+      }, {});
+      return Promise.resolve(
+        dispatch({
+          type: DeviceConstants.RECEIVE_DYNAMIC_GROUPS,
+          groups
+        })
+      );
+    })
+    .catch(() => console.log('Dynamic group retrieval failed - likely accessing a non-enterprise backend'));
 
 export const addDynamicGroup = (groupName, filterPredicates) => (dispatch, getState) =>
   GeneralApi.post(`${inventoryApiUrlV2}/filters`, { name: groupName, terms: mapFiltersToTerms(filterPredicates) })
