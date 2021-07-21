@@ -235,9 +235,9 @@ export const Authorized = props => {
   const EmptyState = currentSelectedState.emptyState;
   const columnHeaders = [
     {
-      title: idAttributeTitleMap[idAttribute] ?? idAttribute,
+      title: idAttributeTitleMap[idAttribute.attribute] ?? idAttribute.attribute,
       customize: openSettingsDialog,
-      attribute: { name: idAttribute, scope: 'identity' },
+      attribute: { name: idAttribute.attribute, scope: idAttribute.scope },
       sortable: true
     },
     ...currentSelectedState.defaultHeaders

@@ -10,6 +10,7 @@ import AppConstants from '../constants/appConstants';
 import DeviceConstants, { DEVICE_STATES, DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
 
 import { deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
+import { getIdAttribute } from '../selectors';
 
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
@@ -310,7 +311,7 @@ export const getAllGroupDevices = (group, shouldIncludeAllStates) => (dispatch, 
   if (!group || (!!group && (!getState().devices.groups.byId[group] || getState().devices.groups.byId[group].filters.length))) {
     return Promise.resolve();
   }
-  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getState().users.globalSettings.id_attribute || 'id' }];
+  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
   let filters = [{ key: 'group', value: group, operator: '$eq', scope: 'system' }];
   if (!shouldIncludeAllStates) {
     filters.push({ key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' });
@@ -356,7 +357,7 @@ export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
     ...getState().devices.groups.byId[group].filters,
     { key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' }
   ]);
-  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getState().users.globalSettings.id_attribute || 'id' }];
+  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
     GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, { page, per_page: perPage, filters, attributes }).then(res => {
       const state = getState();
@@ -490,7 +491,7 @@ export const getDevicesByStatus = (status, options = {}) => (dispatch, getState)
   if (typeof group === 'string' && !applicableFilters.length) {
     applicableFilters = [{ key: 'group', value: group, operator: '$eq', scope: 'system' }];
   }
-  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getState().users.globalSettings.id_attribute || 'id' }];
+  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
   const effectiveFilters = status ? [...applicableFilters, { key: 'status', value: status, operator: '$eq', scope: 'identity' }] : applicableFilters;
   return GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
     page,
@@ -553,7 +554,7 @@ export const getDevicesByStatus = (status, options = {}) => (dispatch, getState)
 };
 
 export const getAllDevicesByStatus = status => (dispatch, getState) => {
-  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getState().users.globalSettings.id_attribute || 'id' }];
+  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = 1, devices = []) =>
     GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
       page,

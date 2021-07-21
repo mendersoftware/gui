@@ -112,7 +112,7 @@ export const DeviceList = props => {
           <DeviceListItem
             columnHeaders={columnHeaders}
             device={device}
-            idAttribute={idAttribute}
+            idAttribute={idAttribute.attribute}
             itemClassName={itemClassName}
             key={device.id}
             onClick={event => (expandable ? expandRow(event, index) : onRowSelection(index))}

@@ -4,13 +4,13 @@ import { MenuItem, Select, TextField } from '@material-ui/core';
 
 let timer;
 
-export const QuickFilter = ({ attributes, attributeSetting = 'name', filters, onChange }) => {
+export const QuickFilter = ({ attributes, attributeSetting = { attribute: 'name', scope: 'tags' }, filters, onChange }) => {
   const [filterValue, setFilterValue] = useState('');
-  const [selectedAttribute, setSelectedAttribute] = useState(attributeSetting);
+  const [selectedAttribute, setSelectedAttribute] = useState(attributeSetting.attribute);
 
   useEffect(() => {
-    setSelectedAttribute(attributeSetting);
-  }, [attributeSetting]);
+    setSelectedAttribute(attributeSetting.attribute);
+  }, [attributeSetting.attribute]);
 
   useEffect(() => {
     if (!(filterValue && selectedAttribute)) {
