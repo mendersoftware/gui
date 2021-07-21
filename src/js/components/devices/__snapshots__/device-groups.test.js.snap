@@ -25,13 +25,13 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             role=\\"button\\"
             tabindex=\\"0\\"
           >
-            Device ID
+            Name
           </div>
           <input
             aria-hidden=\\"true\\"
             class=\\"MuiSelect-nativeInput\\"
             tabindex=\\"-1\\"
-            value=\\"id\\"
+            value=\\"name\\"
           />
           <svg
             aria-hidden=\\"true\\"
@@ -454,10 +454,9 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             <div
               class=\\"columnHeader\\"
             >
-              Device ID
               <svg
                 aria-hidden=\\"true\\"
-                class=\\"MuiSvgIcon-root sortIcon  true\\"
+                class=\\"MuiSvgIcon-root sortIcon selected true\\"
                 focusable=\\"false\\"
                 viewBox=\\"0 0 24 24\\"
               >

@@ -19,7 +19,7 @@ exports[`QuickFilter Component renders correctly 1`] = `
       aria-hidden="true"
       class="MuiSelect-nativeInput"
       tabindex="-1"
-      value="id"
+      value="name"
     />
     <svg
       aria-hidden="true"

@@ -227,6 +227,7 @@ export const DeviceGroups = ({
   removeDevicesFromGroup,
   removeDynamicGroup,
   removeStaticGroup,
+  selectedAttribute,
   selectedGroup,
   selectGroup,
   setDeviceFilters,
@@ -406,7 +407,7 @@ export const DeviceGroups = ({
       <div className="flexbox space-between margin-right">
         <div className="flexbox padding-top-small">
           <h3 style={{ minWidth: 300, marginTop: 0 }}>Devices</h3>
-          <QuickFilter attributes={identityAttributes} filters={filters} onChange={onFilterDevices} />
+          <QuickFilter attributes={identityAttributes} attributeSetting={selectedAttribute} filters={filters} onChange={onFilterDevices} />
         </div>
         <DeviceAdditionWidget docsVersion={docsVersion} onConnectClick={setShowConnectingDialog} onPreauthClick={setOpenPreauth} />
       </div>
@@ -501,10 +502,9 @@ const mapStateToProps = state => {
     groupCount = state.devices.groups.byId[selectedGroup].total;
     groupFilters = state.devices.groups.byId[selectedGroup].filters || [];
   }
-  const deviceIdAttribute = { key: 'id', value: 'Device ID', scope: 'identity', category: 'identity', priority: 1 };
   let identityAttributes = [
     { key: 'name', value: 'Name', scope: 'tags', category: 'tags', priority: 1 },
-    deviceIdAttribute,
+    { key: 'id', value: 'Device ID', scope: 'identity', category: 'identity', priority: 1 },
     ...state.devices.filteringAttributes.identityAttributes.map(item => ({ key: item, value: item, scope: 'identity', category: 'identity', priority: 1 }))
   ];
   return {
@@ -522,6 +522,7 @@ const mapStateToProps = state => {
     isEnterprise: getIsEnterprise(state),
     limitMaxed: getLimitMaxed(state),
     pendingCount: state.devices.byStatus.pending.total || 0,
+    selectedAttribute: state.users.globalSettings.id_attribute,
     selectedGroup,
     showHelptips: state.users.showHelptips
   };

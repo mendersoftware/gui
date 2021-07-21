@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Checkbox } from '@material-ui/core';
 import DeviceIdentityDisplay from '../common/deviceidentity';
 
-const DeviceListItem = ({ columnHeaders, device, itemClassName = '', onClick, onRowSelect, selectable, selected }) => {
+const DeviceListItem = ({ columnHeaders, device, idAttribute, itemClassName = '', onClick, onRowSelect, selectable, selected }) => {
   const [isHovering, setIsHovering] = useState(false);
 
   const onMouseOut = () => setIsHovering(false);
@@ -19,7 +19,7 @@ const DeviceListItem = ({ columnHeaders, device, itemClassName = '', onClick, on
       onMouseLeave={onMouseOut}
     >
       {selectable ? <Checkbox checked={selected} onChange={onRowSelect} /> : null}
-      <DeviceIdentityDisplay device={device} isHovered={isHovering} style={columnHeaders[0].style} />
+      <DeviceIdentityDisplay device={device} idAttribute={idAttribute} isHovered={isHovering} style={columnHeaders[0].style} />
       {/* we'll skip the first column, since this is the id and that gets resolved differently in the lines above */}
       {columnHeaders.slice(1).map((item, index) => (
         <div key={`column-${index}`} style={item.style}>
