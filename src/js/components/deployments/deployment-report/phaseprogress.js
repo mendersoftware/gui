@@ -177,9 +177,9 @@ export const PhaseProgress = ({ className = '', deployment = {}, onAbort, onUpda
   const [shouldAbort, setShouldAbort] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { id, stats, update_control_map = {} } = deployment;
+  const { id, stats = {}, update_control_map = {} } = deployment;
   const { states = {} } = update_control_map;
-  const { failures: totalFailureCount } = groupDeploymentStats(deployment);
+  const { failures: totalFailureCount, paused: totalPausedCount } = groupDeploymentStats(deployment);
 
   const status = getDeploymentState(deployment);
   const currentPauseState = Object.keys(pauseMap)
@@ -204,8 +204,9 @@ export const PhaseProgress = ({ className = '', deployment = {}, onAbort, onUpda
     onUpdateControlChange({ states: { [pauseMap[currentPauseState].followUp]: { action: 'continue' } } });
   };
 
-  const disableContinuationButtons =
-    isLoading || (status === deploymentDisplayStates.paused && states[pauseMap[currentPauseState].followUp].action === 'continue');
+  const isPaused = status === deploymentDisplayStates.paused;
+  const canContinue = isPaused && states[pauseMap[currentPauseState].followUp];
+  const disableContinuationButtons = isLoading || (canContinue && states[pauseMap[currentPauseState].followUp].action !== 'pause');
   return (
     <div className={`flexbox column ${className}`}>
       <div className="progress-chart-container stepped-progress" style={{ background: 'none' }}>
@@ -213,8 +214,9 @@ export const PhaseProgress = ({ className = '', deployment = {}, onAbort, onUpda
       </div>
       <div className="margin-top">
         Deployment is <span className="uppercased">{status}</span> with {totalFailureCount} {pluralize('failure', totalFailureCount)}
+        {isPaused && !canContinue && ` - waiting for an action on the ${pluralize('device', totalPausedCount)} to continue`}
       </div>
-      {status === deploymentDisplayStates.paused && (
+      {canContinue && (
         <div className="margin-top margin-bottom relative">
           {shouldContinue && (
             <Confirm
