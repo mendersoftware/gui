@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react';
 
 import { MenuItem, Select, TextField } from '@material-ui/core';
 
+import MenderTooltip from '../common/mendertooltip';
+
 let timer;
+
+const filterNotifications = {
+  name: 'This will only apply to devices that have a device name configured'
+};
 
 export const QuickFilter = ({ attributes, attributeSetting = { attribute: 'name', scope: 'tags' }, filters, onChange }) => {
   const [filterValue, setFilterValue] = useState('');
@@ -39,6 +45,16 @@ export const QuickFilter = ({ attributes, attributeSetting = { attribute: 'name'
 
   const onSelectionChange = ({ target: { value } }) => setSelectedAttribute(value);
 
+  const input = <TextField placeholder="Filter" className="search" value={filterValue} onChange={onSearchChange} style={{ marginLeft: 30, marginTop: 0 }} />;
+
+  const filterInput = filterNotifications[selectedAttribute] ? (
+    <MenderTooltip arrow title={filterNotifications[selectedAttribute]}>
+      {input}
+    </MenderTooltip>
+  ) : (
+    input
+  );
+
   return (
     <div>
       Quick find Device
@@ -49,7 +65,7 @@ export const QuickFilter = ({ attributes, attributeSetting = { attribute: 'name'
           </MenuItem>
         ))}
       </Select>
-      <TextField placeholder="Filter" className="search" value={filterValue} onChange={onSearchChange} style={{ marginLeft: 30, marginTop: 0 }} />
+      {filterInput}
     </div>
   );
 };

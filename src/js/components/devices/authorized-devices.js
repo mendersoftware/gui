@@ -32,6 +32,10 @@ const idAttributeTitleMap = {
   name: 'Name'
 };
 
+const sortingNotes = {
+  name: 'Sorting by Name will only work properly with devices that already have a device name defined'
+};
+
 export const Authorized = props => {
   const {
     acceptedCount,
@@ -330,6 +334,7 @@ export const Authorized = props => {
               pageLoading={pageLoading}
               pageTotal={deviceCount}
               refreshDevices={getDevices}
+              sortingNotes={sortingNotes}
             />
             {showHelptips && <ExpandDevice />}
           </div>

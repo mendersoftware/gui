@@ -2,7 +2,7 @@
 
 exports[`FilterItem Component renders correctly 1`] = `
 <div
-  class="flexbox center-aligned"
+  class="flexbox center-aligned relative"
 >
   <div
     aria-expanded="false"

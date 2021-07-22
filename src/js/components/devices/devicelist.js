@@ -12,6 +12,7 @@ import Pagination from '../common/pagination';
 import ExpandedDevice from './expanded-device';
 import DeviceListItem from './devicelistitem';
 import { deepCompare } from '../../helpers';
+import MenderTooltip from '../common/mendertooltip';
 
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
@@ -22,6 +23,7 @@ export const DeviceList = props => {
     advanceOnboarding,
     className = '',
     columnHeaders,
+    sortingNotes,
     devices,
     deviceListState,
     expandable = true,
@@ -96,15 +98,26 @@ export const DeviceList = props => {
         {onSelect && (
           <Checkbox indeterminate={numSelected > 0 && numSelected < devices.length} checked={numSelected === devices.length} onChange={onSelectAllClick} />
         )}
-        {columnHeaders.map((item, index) => (
-          <div className="columnHeader" key={`columnHeader-${index}`} style={item.style} onClick={() => onSort(item.attribute ? item.attribute : {})}>
-            {item.title}
-            {item.sortable && (
-              <SortIcon className={`sortIcon ${sortCol === item.attribute.name ? 'selected' : ''} ${(sortDown === DEVICE_SORTING_OPTIONS.desc).toString()}`} />
-            )}
-            {item.customize && <SettingsIcon onClick={item.customize} style={{ fontSize: 16, marginLeft: 'auto' }} />}
-          </div>
-        ))}
+        {columnHeaders.map((item, index) => {
+          const header = (
+            <div className="columnHeader" key={`columnHeader-${index}`} style={item.style} onClick={() => onSort(item.attribute ? item.attribute : {})}>
+              {item.title}
+              {item.sortable && (
+                <SortIcon
+                  className={`sortIcon ${sortCol === item.attribute.name ? 'selected' : ''} ${(sortDown === DEVICE_SORTING_OPTIONS.desc).toString()}`}
+                />
+              )}
+              {item.customize && <SettingsIcon onClick={item.customize} style={{ fontSize: 16, marginLeft: 'auto' }} />}
+            </div>
+          );
+          return item.sortable && sortingNotes[item.attribute.name] ? (
+            <MenderTooltip key={`columnHeader-tip-${index}`} title={sortingNotes[item.attribute.name]} placement="top-start">
+              {header}
+            </MenderTooltip>
+          ) : (
+            header
+          );
+        })}
         {expandable && <div style={{ width: 48 }} />}
       </div>
       <div className="body">

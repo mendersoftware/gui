@@ -47,6 +47,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
         <div
           class=\\"MuiFormControl-root MuiTextField-root search\\"
           style=\\"margin-left: 30px; margin-top: 0px;\\"
+          title=\\"This will only apply to devices that have a device name configured\\"
         >
           <div
             class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl\\"
@@ -425,13 +426,13 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           >
             <span
               aria-disabled=\\"false\\"
-              class=\\"MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary\\"
+              class=\\"MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-3 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary\\"
             >
               <span
                 class=\\"MuiIconButton-label\\"
               >
                 <input
-                  class=\\"PrivateSwitchBase-input-4\\"
+                  class=\\"PrivateSwitchBase-input-6\\"
                   data-indeterminate=\\"false\\"
                   type=\\"checkbox\\"
                   value=\\"\\"
@@ -554,13 +555,13 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             >
               <span
                 aria-disabled=\\"false\\"
-                class=\\"MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary\\"
+                class=\\"MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-3 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary\\"
               >
                 <span
                   class=\\"MuiIconButton-label\\"
                 >
                   <input
-                    class=\\"PrivateSwitchBase-input-4\\"
+                    class=\\"PrivateSwitchBase-input-6\\"
                     data-indeterminate=\\"false\\"
                     type=\\"checkbox\\"
                     value=\\"\\"
@@ -628,13 +629,13 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             >
               <span
                 aria-disabled=\\"false\\"
-                class=\\"MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary\\"
+                class=\\"MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-3 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary\\"
               >
                 <span
                   class=\\"MuiIconButton-label\\"
                 >
                   <input
-                    class=\\"PrivateSwitchBase-input-4\\"
+                    class=\\"PrivateSwitchBase-input-6\\"
                     data-indeterminate=\\"false\\"
                     type=\\"checkbox\\"
                     value=\\"\\"
