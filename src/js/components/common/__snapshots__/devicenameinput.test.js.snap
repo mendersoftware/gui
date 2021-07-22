@@ -9,8 +9,9 @@ exports[`DeviceNameInput Component renders correctly 1`] = `
     class="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled MuiInputBase-inputAdornedEnd"
     disabled=""
     id="a1-id-input"
+    placeholder="a1"
     type="text"
-    value="a1"
+    value=""
   />
   <div
     class="MuiInputAdornment-root MuiInputAdornment-positionEnd"
