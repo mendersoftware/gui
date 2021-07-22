@@ -15,7 +15,7 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsM
 
   useEffect(() => {
     const newInputs = Object.keys(input).length
-      ? Object.entries(input).map(([key, value]) => ({ helptip: inputHelpTipsMap[key], key, ref: createRef(), value }))
+      ? Object.entries(input).map(([key, value]) => ({ helptip: inputHelpTipsMap[key.toLowerCase()], key, ref: createRef(), value }))
       : [{ ...emptyInput, ref: createRef() }];
     inputRefs.current = newInputs.map((_, i) => inputRefs.current[i] ?? createRef());
     setInputs(newInputs);
@@ -35,8 +35,9 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsM
     } = event;
     changedInputs[index][key] = value;
     changedInputs[index].helptip = null;
-    if (inputHelpTipsMap[changedInputs[index].key]) {
-      changedInputs[index].helptip = inputHelpTipsMap[changedInputs[index].key];
+    const normalizedKey = changedInputs[index].key.toLowerCase();
+    if (inputHelpTipsMap[normalizedKey]) {
+      changedInputs[index].helptip = inputHelpTipsMap[normalizedKey];
     }
     setInputs(changedInputs);
     const inputObject = reducePairs(changedInputs);
