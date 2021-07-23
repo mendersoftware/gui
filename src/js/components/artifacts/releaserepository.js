@@ -13,6 +13,7 @@ import { onboardingSteps } from '../../constants/onboardingConstants';
 import { customSort } from '../../helpers';
 import { getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import useWindowSize from '../../utils/resizehook';
 import { ExpandArtifact } from '../helptips/helptooltips';
 import ForwardingLink from '../common/forwardlink';
 import Loader from '../common/loader';
@@ -49,19 +50,12 @@ export const ReleaseRepository = ({
   const [wasSelectedRecently, setWasSelectedRecently] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
+  // eslint-disable-next-line no-unused-vars
+  const windowSize = useWindowSize();
 
   const creationRef = useRef();
   const dropzoneRef = useRef();
   let repoItemAnchor = useRef();
-
-  const handleResize = () => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), 500);
-
-  useEffect(() => {
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   useEffect(() => {
     setWasSelectedRecently(true);
@@ -120,6 +114,8 @@ export const ReleaseRepository = ({
     setSortCol(col);
   };
 
+  const onExpansion = () => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), 500);
+
   const artifacts = release.Artifacts ?? [];
   const items = artifacts.sort(customSort(sortDown, sortCol)).map((pkg, index) => {
     const expanded = !!(selectedArtifact && selectedArtifact.id === pkg.id);
@@ -133,7 +129,7 @@ export const ReleaseRepository = ({
         onRowSelection={() => onRowSelection(pkg)}
         // this will be run after expansion + collapse and both need some time to fully settle
         // otherwise the measurements are off
-        onExpanded={() => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), 500)}
+        onExpanded={onExpansion}
         itemRef={repoItemAnchor}
       />
     );

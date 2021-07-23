@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { FitAddon } from 'xterm-addon-fit';
 import { SearchAddon } from 'xterm-addon-search';
@@ -7,7 +7,7 @@ import { WebLinkProvider } from 'xterm-addon-web-links/out/WebLinkProvider';
 import msgpack5 from 'msgpack5';
 
 import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as MessageProtocols } from '../../../constants/deviceConstants';
-
+import useWindowSize from '../../../utils/resizehook';
 import XTerm from '../../common/xterm';
 
 const MessagePack = msgpack5();
@@ -50,10 +50,10 @@ export const Terminal = ({
   const xtermRef = useRef(null);
   const [dimensions, setDimensions] = useState({});
   const [healthcheckHasFailed, setHealthcheckHasFailed] = useState(false);
-  const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
   const [snackbarAlreadySet, setSnackbarAlreadySet] = useState(false);
   const [term, setTerminal] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
+  const size = useWindowSize();
 
   const observer = new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting));
 
@@ -120,15 +120,6 @@ export const Terminal = ({
       setDimensions(newDimensions);
     }
   }, [size, isVisible]);
-
-  useLayoutEffect(() => {
-    const updateSize = () => {
-      setSize({ height: window.innerHeight, width: window.innerWidth });
-    };
-    window.addEventListener('resize', updateSize);
-    updateSize();
-    return () => window.removeEventListener('resize', updateSize);
-  }, []);
 
   const onSocketOpen = () => {
     setSnackbar('Connection with the device established.', 5000);

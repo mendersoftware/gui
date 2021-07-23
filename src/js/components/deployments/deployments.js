@@ -19,6 +19,7 @@ import Report from './report';
 import Scheduled from './scheduleddeployments';
 
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import useWindowSize from '../../utils/resizehook';
 
 const routes = {
   active: {
@@ -66,14 +67,8 @@ export const Deployments = ({
   const [startDate, setStartDate] = useState();
   const [tabIndex, setTabIndex] = useState(routes.active.route);
   // eslint-disable-next-line no-unused-vars
-  const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
+  const size = useWindowSize();
   const tabsRef = useRef();
-
-  const handleResize = () => {
-    setTimeout(() => {
-      setSize({ height: window.innerHeight, width: window.innerWidth });
-    }, 500);
-  };
 
   useEffect(() => {
     let tasks = [getGroups(), selectRelease(), selectDevice()];
@@ -105,10 +100,6 @@ export const Deployments = ({
     setReportType(reportType);
     setStartDate(startDate);
     setTabIndex(updateActive());
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
   }, []);
 
   const retryDeployment = (deployment, devices) => {
