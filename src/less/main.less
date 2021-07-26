@@ -1438,13 +1438,6 @@ div:focus {
   }
 }
 
-// table expanding
-.bordered {
-  border: 1px solid @lightgrey;
-  margin-top: 10px;
-  padding: 5px 20px;
-}
-
 .deviceList {
   min-width: 1000px;
   .header {
@@ -1533,10 +1526,6 @@ div:focus {
       position: relative;
       width: 100%;
     }
-    .device-inventory.bordered,
-    .device-connect.bordered {
-      padding-bottom: 20px;
-    }
     .device-inventory .report-list {
       width: 45%;
     }
@@ -1574,6 +1563,20 @@ div:focus {
 .expandedDevice {
   padding-left: 48px;
   padding-right: 35px;
+  .device-detail-notification {
+    &.red,
+    &.green {
+      color: @text;
+    }
+    &.bordered {
+      border: 1px solid @bordercolor;
+      background: fade(@grey, 15%);
+      &.red {
+        border-color: @red;
+        background: fade(@mendermaroon, 7.5%);
+      }
+    }
+  }
 }
 
 .inventory-text {
@@ -1598,6 +1601,15 @@ div:focus {
       white-space: initial;
     }
   }
+}
+
+.monitoring-alert {
+  display: grid;
+  grid-template-columns: min-content max-content 100px min-content 1fr max-content;
+  column-gap: @defaultGutterWidth;
+  align-items: center;
+  margin: 0 @defaultGutterWidth;
+  max-width: 900px;
 }
 
 .grouplist div span {

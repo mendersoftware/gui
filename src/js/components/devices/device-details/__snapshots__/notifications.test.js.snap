@@ -1,0 +1,196 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeviceNotifications Component renders correctly 1`] = `
+<div>
+  <div
+    class="flexbox center-aligned padding-small device-detail-notification bordered   clickable"
+    style="margin-bottom: 8px; padding-bottom: 12px; padding-top: 12px;"
+  >
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root red"
+      focusable="false"
+      style="margin-right: 16px;"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+      />
+    </svg>
+    <div
+      class="flexbox center-aligned"
+    >
+      1
+       
+      service
+       reported issues. View details in the
+      <a
+        style="margin-left: 8px; margin-right: 8px;"
+      >
+        monitoring section
+      </a>
+      below
+      <a
+        style="margin-left: 8px; margin-right: 8px;"
+      >
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+          focusable="false"
+          style="margin-bottom: -4px;"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M12 4c4.41 0 8 3.59 8 8s-3.59 8-8 8-8-3.59-8-8 3.59-8 8-8m0-2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 13l-4-4h8z"
+          />
+        </svg>
+      </a>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`tiny components renders DeviceOfflineHeaderNotification correctly 1`] = `
+<div>
+  <div
+    class="flexbox center-aligned padding-small device-detail-notification  red column-data "
+    style="margin-bottom: 8px; padding-bottom: 12px; padding-top: 12px;"
+  >
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root red"
+      focusable="false"
+      style="margin-right: 16px;"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+      />
+    </svg>
+    <div
+      class="flexbox center-aligned"
+    >
+      <div
+        class="key text-muted margin-right-small"
+      >
+        <b>
+          Device offline
+        </b>
+      </div>
+      Last check-in over 
+      24
+       
+      hours
+       ago
+    </div>
+  </div>
+</div>
+`;
+
+exports[`tiny components renders LastConnection correctly 1`] = `
+<div>
+  <div
+    class="flexbox center-aligned padding-small device-detail-notification bordered red  "
+    style="margin-bottom: 8px; padding-bottom: 12px; padding-top: 12px;"
+  >
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root red"
+      focusable="false"
+      style="margin-right: 16px;"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+      />
+    </svg>
+    <div
+      class="flexbox center-aligned"
+    >
+      Device has not connected to the server since 
+      <time
+        datetime="2019-01-01T09:25:00+00:00"
+        style="margin-left: 8px; margin-right: 8px;"
+      >
+        2019-01-01 09:25
+      </time>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`tiny components renders NoAlertsHeaderNotification correctly 1`] = `
+<div>
+  <div
+    class="flexbox center-aligned padding-small device-detail-notification    "
+    style="margin-bottom: 8px; padding-bottom: 12px; padding-top: 12px;"
+  >
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root green"
+      focusable="false"
+      style="margin-right: 16px;"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+      />
+    </svg>
+    <div
+      class="flexbox center-aligned"
+    >
+      No reported issues
+    </div>
+  </div>
+</div>
+`;
+
+exports[`tiny components renders ServiceNotification correctly 1`] = `
+<div>
+  <div
+    class="flexbox center-aligned padding-small device-detail-notification bordered   clickable"
+    style="margin-bottom: 8px; padding-bottom: 12px; padding-top: 12px;"
+  >
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root red"
+      focusable="false"
+      style="margin-right: 16px;"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+      />
+    </svg>
+    <div
+      class="flexbox center-aligned"
+    >
+      2
+       
+      services
+       reported issues. View details in the
+      <a
+        style="margin-left: 8px; margin-right: 8px;"
+      >
+        monitoring section
+      </a>
+      below
+      <a
+        style="margin-left: 8px; margin-right: 8px;"
+      >
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+          focusable="false"
+          style="margin-bottom: -4px;"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M12 4c4.41 0 8 3.59 8 8s-3.59 8-8 8-8-3.59-8-8 3.59-8 8-8m0-2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 13l-4-4h8z"
+          />
+        </svg>
+      </a>
+    </div>
+  </div>
+</div>
+`;
