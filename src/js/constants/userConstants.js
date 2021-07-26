@@ -1,6 +1,14 @@
 const apiUrl = '/api/management/v1';
 const useradmApiUrl = `${apiUrl}/useradm`;
 
+const staticRolesByName = {
+  admin: 'RBAC_ROLE_PERMIT_ALL',
+  readOnly: 'RBAC_ROLE_OBSERVER',
+  ci: 'RBAC_ROLE_CI',
+  deploymentsManager: 'RBAC_ROLE_DEPLOYMENTS_MANAGER',
+  terminalAccess: 'RBAC_ROLE_REMOTE_TERMINAL'
+};
+
 module.exports = {
   RECEIVED_QR_CODE: 'RECEIVED_QR_CODE',
 
@@ -24,11 +32,29 @@ module.exports = {
 
   OWN_USER_ID: 'me',
   emptyRole: { title: undefined, allowUserManagement: false, groups: [], description: '', editable: undefined, permissions: [] },
+  rolesById: {
+    [staticRolesByName.admin]: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false, permissions: [] },
+    [staticRolesByName.readOnly]: { title: 'Read Access', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
+    [staticRolesByName.ci]: { title: 'Releases Manager', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
+    [staticRolesByName.deploymentsManager]: {
+      title: 'Deployments Manager',
+      allowUserManagement: false,
+      groups: [],
+      description: '',
+      editable: false,
+      permissions: []
+    },
+    [staticRolesByName.terminalAccess]: {
+      title: 'Troubleshooting',
+      allowUserManagement: false,
+      groups: [],
+      description: 'Access to the troubleshooting features: Remote Terminal, File Transfer, Port Forwarding',
+      editable: false,
+      permissions: []
+    }
+  },
   rolesByName: {
-    admin: 'RBAC_ROLE_PERMIT_ALL',
-    readOnly: 'RBAC_ROLE_OBSERVER',
-    ci: 'RBAC_ROLE_CI',
-    deploymentsManager: 'RBAC_ROLE_DEPLOYMENTS_MANAGER',
+    ...staticRolesByName,
     userManagement: { action: 'http', object: { type: 'any', value: `${useradmApiUrl}/.*` } },
     deploymentCreation: { action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: undefined } },
     groupAccess: { action: 'VIEW_DEVICE', object: { type: 'DEVICE_GROUP', value: undefined } }
