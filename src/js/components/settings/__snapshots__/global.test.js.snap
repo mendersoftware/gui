@@ -6,7 +6,7 @@ exports[`GlobalSettings Component renders correctly 1`] = `
   style="max-width: 750px;"
 >
   <h2
-    style="margin-top: 15px;"
+    class="margin-top-small"
   >
     Global settings
   </h2>
@@ -28,94 +28,99 @@ exports[`GlobalSettings Component renders correctly 1`] = `
     These settings apply to all users, so changes made here may affect other users' experience.
   </p>
   <div
-    class="MuiFormControl-root"
+    class="flexbox space-between"
+    style="align-items: flex-start; max-width: 750px;"
   >
-    <label
-      class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
-      data-shrink="true"
-      id="device-id"
-    >
-      Device identity attribute
-    </label>
     <div
-      class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+      class="MuiFormControl-root"
     >
+      <label
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+        data-shrink="true"
+        id="device-id"
+      >
+        Device identity attribute
+      </label>
       <div
-        aria-haspopup="listbox"
-        class="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
-        role="button"
-        tabindex="0"
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
       >
-        Device ID
-      </div>
-      <input
-        aria-hidden="true"
-        class="MuiSelect-nativeInput"
-        tabindex="-1"
-        value="Device ID"
-      />
-      <svg
-        aria-hidden="true"
-        class="MuiSvgIcon-root MuiSelect-icon"
-        focusable="false"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M7 10l5 5 5-5z"
-        />
-      </svg>
-    </div>
-    <div
-      class="MuiFormHelperText-root info MuiFormHelperText-filled"
-    >
-      <div
-        class="margin-top-small margin-bottom-small"
-      >
-        Choose a device identity attribute to use to identify your devices throughout the UI.
-      </div>
-      <div
-        class="margin-top-small margin-bottom-small"
-      >
-        <a
-          href="https://docs.mender.io/client-installation/identity"
-          rel="noopener noreferrer"
-          target="_blank"
+        <div
+          aria-haspopup="listbox"
+          class="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
+          role="button"
+          tabindex="0"
         >
-          Learn how to add custom identity attributes
-        </a>
-         
-        to your devices.
+          Device ID
+        </div>
+        <input
+          aria-hidden="true"
+          class="MuiSelect-nativeInput"
+          tabindex="-1"
+          value="Device ID"
+        />
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSelect-icon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M7 10l5 5 5-5z"
+          />
+        </svg>
+      </div>
+      <div
+        class="MuiFormHelperText-root info MuiFormHelperText-filled"
+      >
+        <div
+          class="margin-top-small margin-bottom-small"
+        >
+          Choose a device identity attribute to use to identify your devices throughout the UI.
+        </div>
+        <div
+          class="margin-top-small margin-bottom-small"
+        >
+          <a
+            href="https://docs.mender.io/client-installation/identity"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Learn how to add custom identity attributes
+          </a>
+           
+          to your devices.
+        </div>
       </div>
     </div>
-  </div>
-  <div
-    class="margin-top-large float-right"
-  >
-    <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-text Mui-disabled Mui-disabled"
-      disabled=""
-      style="margin-right: 10px;"
-      tabindex="-1"
-      type="button"
+    <div
+      class="margin-left margin-top flexbox"
     >
-      <span
-        class="MuiButton-label"
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-text Mui-disabled Mui-disabled"
+        disabled=""
+        style="margin-right: 10px;"
+        tabindex="-1"
+        type="button"
       >
-        Cancel
-      </span>
-    </button>
-    <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled"
-      disabled=""
-      tabindex="-1"
-      type="button"
-    >
-      <span
-        class="MuiButton-label"
+        <span
+          class="MuiButton-label"
+        >
+          Cancel
+        </span>
+      </button>
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled"
+        disabled=""
+        tabindex="-1"
+        type="button"
       >
-        Save
-      </span>
-    </button>
+        <span
+          class="MuiButton-label"
+        >
+          Save
+        </span>
+      </button>
+    </div>
   </div>
 </div>
 `;
