@@ -78,7 +78,7 @@ const baseDevicesRoute = '/devices';
 const acceptedDevicesRoute = {
   key: DEVICE_STATES.accepted,
   groupRestricted: false,
-  route: baseDevicesRoute,
+  route: `${baseDevicesRoute}/${DEVICE_STATES.accepted}`,
   title: () => DEVICE_STATES.accepted,
   emptyState: AcceptedEmptyState,
   defaultHeaders: [
