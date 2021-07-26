@@ -47,12 +47,6 @@ export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceL
         redirect = `/deployments/${params.tab || 'progress'}/open=${encodeURIComponent(URIParams)}`;
         break;
       }
-      case 'devices':
-        redirect = `/devices/${params.status ? encodeURIComponent('status=' + params.status) : ''}`;
-        break;
-      case 'devices/pending':
-        redirect = '/devices/pending';
-        break;
       default:
         redirect = params.route;
     }

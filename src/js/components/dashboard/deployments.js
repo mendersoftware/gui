@@ -118,12 +118,12 @@ export const Deployments = ({ clickHandle, finishedCount, inprogressCount, onboa
             <BaseWidget
               className={inprogressCount ? 'current-widget active' : 'current-widget'}
               main={activeWidgetMain}
-              onClick={() => clickHandle({ route: 'deployments/active' })}
+              onClick={() => clickHandle({ route: '/deployments/active' })}
             />
             <BaseWidget
               className={pendingCount ? 'current-widget pending' : 'current-widget'}
               main={pendingWidgetMain}
-              onClick={() => clickHandle({ route: 'deployments/active' })}
+              onClick={() => clickHandle({ route: '/deployments/active' })}
             />
             <CompletedDeployments onClick={clickHandle} finishedCount={finishedCount} cutoffDate={lastDeploymentCheck} innerRef={deploymentsRef} />
             <RedirectionWidget

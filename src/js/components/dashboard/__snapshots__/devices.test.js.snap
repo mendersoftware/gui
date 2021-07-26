@@ -143,7 +143,7 @@ exports[`Devices Component renders correctly 1`] = `
       <a
         aria-disabled="false"
         class="MuiButtonBase-root MuiButton-root MuiButton-text"
-        href="/devices"
+        href="/devices/accepted"
         role="button"
         tabindex="0"
       >

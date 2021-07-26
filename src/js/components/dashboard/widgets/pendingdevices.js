@@ -15,7 +15,7 @@ export const PendingDevices = props => {
     if (!onboardingState.complete) {
       advanceOnboarding(onboardingSteps.DEVICES_PENDING_ONBOARDING);
     }
-    onClick({ route: 'devices/pending' });
+    onClick({ route: '/devices/pending' });
   };
 
   const pendingNotification = `Pending ${pluralize('devices', hasPending)}`;
