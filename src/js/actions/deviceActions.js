@@ -595,7 +595,7 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
 const ATTRIBUTE_LIST_CUTOFF = 100;
 export const getDeviceAttributes = () => dispatch =>
   GeneralApi.get(`${inventoryApiUrlV2}/filters/attributes`).then(({ data }) => {
-    const { inventory: inventoryAttributes, identity: identityAttributes } = (data || []).slice(0, ATTRIBUTE_LIST_CUTOFF).reduce(
+    const { inventory: inventoryAttributes, identity: identityAttributes, tags: tagAttributes } = (data || []).slice(0, ATTRIBUTE_LIST_CUTOFF).reduce(
       (accu, item) => {
         if (!accu[item.scope]) {
           accu[item.scope] = [];
@@ -603,11 +603,11 @@ export const getDeviceAttributes = () => dispatch =>
         accu[item.scope].push(item.name);
         return accu;
       },
-      { inventory: [], identity: [] }
+      { inventory: [], identity: [], tags: [] }
     );
     return dispatch({
       type: DeviceConstants.SET_FILTER_ATTRIBUTES,
-      attributes: { identityAttributes, inventoryAttributes }
+      attributes: { identityAttributes, inventoryAttributes, tagAttributes }
     });
   });
 

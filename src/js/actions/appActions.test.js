@@ -67,7 +67,8 @@ describe('app actions', () => {
             'network_interfaces',
             'os',
             'rootfs_type'
-          ]
+          ],
+          tagAttributes: []
         }
       },
       {

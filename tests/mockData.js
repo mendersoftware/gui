@@ -171,7 +171,8 @@ export const defaultState = {
     },
     filteringAttributes: {
       identityAttributes: ['mac'],
-      inventoryAttributes: ['artifact_name']
+      inventoryAttributes: ['artifact_name'],
+      tagAttributes: []
     },
     filteringAttributesLimit: 10,
     filters: [],

@@ -211,7 +211,8 @@ const mapStateToProps = (state, ownProps) => {
     deviceNameAttribute,
     deviceIdAttribute,
     ...state.devices.filteringAttributes.identityAttributes.map(item => ({ key: item, value: item, scope: 'identity', category: 'identity', priority: 1 })),
-    ...state.devices.filteringAttributes.inventoryAttributes.map(item => ({ key: item, value: item, scope: 'inventory', category: 'inventory', priority: 2 }))
+    ...state.devices.filteringAttributes.inventoryAttributes.map(item => ({ key: item, value: item, scope: 'inventory', category: 'inventory', priority: 2 })),
+    ...state.devices.filteringAttributes.tagAttributes.map(item => ({ key: item, value: item, scope: 'tags', category: 'tags', priority: 3 }))
   ];
   const selectedGroup = state.devices.groups.selectedGroup;
   const groupFilters = state.devices.groups.byId[selectedGroup]?.filters ?? [];
