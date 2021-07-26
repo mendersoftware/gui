@@ -397,7 +397,7 @@ export const getDeviceById = id => (dispatch, getState) =>
   GeneralApi.get(`${inventoryApiUrl}/devices/${id}`)
     .then(res => {
       const device = reduceReceivedDevices([res.data], [], getState()).devicesById[id];
-      device.etag = res.headers['ETag'];
+      device.etag = res.headers.etag;
       delete device.updated_ts;
       dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device });
       return Promise.resolve(device);
