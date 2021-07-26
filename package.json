@@ -58,7 +58,7 @@
     "@babel/plugin-proposal-class-properties": "^7.14.5",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/plugin-transform-runtime": "^7.14.5",
-    "@babel/preset-env": "^7.14.7",
+    "@babel/preset-env": "^7.14.8",
     "@babel/preset-react": "^7.14.5",
     "@testing-library/dom": "^8.1.0",
     "@testing-library/jest-dom": "^5.14.1",
@@ -98,7 +98,7 @@
     "redux-mock-store": "^1.5.4",
     "url-loader": "^4.1.1",
     "util": "^0.12.4",
-    "webpack": "^5.45.1",
+    "webpack": "^5.46.0",
     "webpack-cli": "^4.7.2",
     "yarn": "^1.22.10"
   },
