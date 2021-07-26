@@ -40,8 +40,8 @@ const ConnectionIndicator = isConnected => {
 };
 
 const tabs = {
-  terminal: { link: 'session logs', title: ConnectionIndicator, value: 'terminal' },
-  transfer: { link: 'file transfer logs', title: () => 'File transfer', value: 'transfer' }
+  terminal: { link: 'session logs', title: ConnectionIndicator, value: 'terminal', needsWriteAccess: true, needsTroubleshoot: true },
+  transfer: { link: 'file transfer logs', title: () => 'File transfer', value: 'transfer', needsWriteAccess: false, needsTroubleshoot: false }
 };
 
 export const TroubleshootDialog = ({
@@ -54,11 +54,13 @@ export const TroubleshootDialog = ({
   open,
   setSnackbar,
   setSocketClosed,
-  type = tabs.terminal.value
+  type = tabs.terminal.value,
+  userRoles
 }) => {
   const timer = useRef();
 
   const [currentTab, setCurrentTab] = useState(type);
+  const [availableTabs, setAvailableTabs] = useState(Object.values(tabs));
   const [downloadPath, setDownloadPath] = useState('');
   const [elapsed, setElapsed] = useState(moment());
   const [file, setFile] = useState();
@@ -76,6 +78,17 @@ export const TroubleshootDialog = ({
     setUploadPath('');
     setFile();
   }, [open]);
+
+  useEffect(() => {
+    const allowedTabs = Object.values(tabs).reduce((accu, tab) => {
+      if ((tab.needsWriteAccess && !userRoles.hasWriteAccess) || (tab.needsTroubleshoot && !userRoles.canTroubleshoot)) {
+        return accu;
+      }
+      accu.push(tab);
+      return accu;
+    }, []);
+    setAvailableTabs(allowedTabs);
+  }, [userRoles]);
 
   useEffect(() => {
     if (socket && !socketInitialized) {
@@ -96,7 +109,7 @@ export const TroubleshootDialog = ({
     if (!(open || socketInitialized) || socketInitialized) {
       return;
     }
-    socket = new WebSocket(`wss://${window.location.host}/api/management/v1/deviceconnect/devices/${deviceId}/connect`);
+    socket = userRoles.canTroubleshoot ? new WebSocket(`wss://${window.location.host}/api/management/v1/deviceconnect/devices/${deviceId}/connect`) : undefined;
 
     return () => {
       onSendMessage({ typ: MessageTypes.Stop });
@@ -156,7 +169,7 @@ export const TroubleshootDialog = ({
       <DialogTitle>Troubleshoot</DialogTitle>
       <DialogContent className="dialog-content flexbox column" style={{ padding: 0, margin: '0 24px', height: '75vh' }}>
         <Tabs value={currentTab} onChange={(e, tab) => setCurrentTab(tab)} textColor="primary" TabIndicatorProps={{ className: 'hidden' }}>
-          {Object.values(tabs).map(tab => (
+          {availableTabs.map(tab => (
             <Tab key={tab.value} label={tab.title(sessionId)} value={tab.value} />
           ))}
         </Tabs>
@@ -241,8 +254,4 @@ export const TroubleshootDialog = ({
 
 const actionCreators = { getDeviceFileDownloadLink, deviceFileUpload, setSnackbar };
 
-const mapStateToProps = () => {
-  return {};
-};
-
-export default connect(mapStateToProps, actionCreators)(TroubleshootDialog);
+export default connect(undefined, actionCreators)(TroubleshootDialog);
