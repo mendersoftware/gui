@@ -103,6 +103,7 @@ const acceptedDevicesRoute = {
 export const routes = {
   allDevices: {
     ...acceptedDevicesRoute,
+    route: baseDevicesRoute,
     key: 'any',
     title: () => 'any'
   },
@@ -190,7 +191,7 @@ export const generateBrowserLocation = (selectedState, filters, selectedGroup, l
   }
   const search = searchParams.toString();
   const path = [location.pathname.substring(0, '/devices'.length)];
-  if (![DEVICE_STATES.accepted, routes.allDevices.key, ''].includes(selectedState)) {
+  if (![routes.allDevices.key, ''].includes(selectedState)) {
     path.push(selectedState);
   }
   let pathname = path.join('/');
@@ -286,9 +287,15 @@ export const DeviceGroups = ({
     }
     const { filters: filterQuery = '', status = '' } = match.params;
     maybeSetGroupAndFilters(filterQuery, history.location.search, filteringAttributes, filters);
-    if (selectedState !== status && !isReconciling) {
+    if (
+      selectedState !== status &&
+      selectedState !== routes.allDevices.key &&
+      (status || filterQuery) &&
+      history.location.pathname.includes(status) &&
+      !isReconciling
+    ) {
       setIsReconciling(true);
-      setDeviceListState({ state: status ? status : routes.devices.key }).then(() => setIsReconciling(false));
+      setDeviceListState({ state: status ? status : routes.allDevices.key }).then(() => setIsReconciling(false));
     }
   }, [filters, match.params, history.location.search]);
 
