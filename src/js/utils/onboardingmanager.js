@@ -74,7 +74,7 @@ export const onboardingSteps = {
     specialComponent: <WelcomeSnackTip progress={2} />
   },
   [stepNames.APPLICATION_UPDATE_REMINDER_TIP]: {
-    condition: { max: stepNames.ARTIFACT_INCLUDED_DEPLOY_ONBOARDING, extra: () => window.location.hash.endsWith('#/devices') },
+    condition: { max: stepNames.ARTIFACT_INCLUDED_DEPLOY_ONBOARDING, extra: () => window.location.hash.includes('#/devices') },
     component: ApplicationUpdateReminderTip,
     progress: 2
   },

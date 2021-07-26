@@ -12,12 +12,15 @@ import Password from '../components/user-management/password';
 import PasswordReset from '../components/user-management/passwordreset';
 import Signup from '../components/user-management/signup';
 import AuditLogs from '../components/auditlogs/auditlogs';
+import { DEVICE_STATES } from '../constants/deviceConstants';
+
+const { accepted, pending, preauth, rejected } = DEVICE_STATES;
 
 export const privateRoutes = (
   <Switch>
     <Route exact path="/" component={Dashboard} />
     <Route path="/auditlog/:filters?" component={AuditLogs} />
-    <Route path="/devices/:status(pending|preauthorized|rejected)?/:filters?" component={Devices} />
+    <Route path={`/devices/:status(${accepted}|${pending}|${preauth}|${rejected})?/:filters?`} component={Devices} />
     <Route path="/releases/:artifactVersion?" component={Artifacts} />
     <Route path="/deployments/:tab(active|scheduled|finished)?" component={Deployments} />
     <Route path="/settings/:section?" component={Settings} />
