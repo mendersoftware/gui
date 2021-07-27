@@ -6,7 +6,7 @@ import { ADDONS, PLANS } from '../../constants/appConstants';
 
 const priceStyle = { fontSize: '1rem' };
 
-export const AddOnSelection = ({ addons = [], updatedPlan = 'os', onChange }) => {
+export const AddOnSelection = ({ addons = [], features, onChange, updatedPlan = 'os' }) => {
   const onAddOnClick = (e, name, enabled) => {
     if (e.target.tagName === 'A') {
       return;
@@ -29,9 +29,12 @@ export const AddOnSelection = ({ addons = [], updatedPlan = 'os', onChange }) =>
           Extend Mender features with our add-ons. Select one or more from the list and submit to request add-ons to be added to your plan. We&apos;ll adjust
           your subscription and confirm it with you.
         </p>
-        {Object.entries(ADDONS).map(([addOnName, addOn]) => {
+        {Object.entries(ADDONS).reduce((accu, [addOnName, addOn]) => {
+          if (!addOn.needs.every(need => features[need])) {
+            return accu;
+          }
           const isEnabled = addons.some(orgAddOn => orgAddOn.enabled && addOnName === orgAddOn.name);
-          return (
+          accu.push(
             <div
               key={addOnName}
               className={`planPanel flexbox center-aligned ${isEnabled ? 'active' : ''}`}
@@ -56,7 +59,8 @@ export const AddOnSelection = ({ addons = [], updatedPlan = 'os', onChange }) =>
               </a>
             </div>
           );
-        })}
+          return accu;
+        }, [])}
       </div>
     </>
   );

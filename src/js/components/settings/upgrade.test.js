@@ -33,7 +33,15 @@ describe('Upgrade Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({
-      ...defaultState
+      ...defaultState,
+      app: {
+        ...defaultState.app,
+        features: {
+          ...defaultState.app.features,
+          hasDeviceConfig: true,
+          hasDeviceConnect: true
+        }
+      }
     });
   });
   it('renders correctly', async () => {
