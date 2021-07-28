@@ -394,6 +394,11 @@ export const DeviceGroups = ({
     selectGroup();
   };
 
+  const onGroupSelect = groupName => {
+    setDeviceListState({ page: 1 });
+    selectGroup(groupName);
+  };
+
   const toggleGroupRemoval = () => setRemoveGroup(!removeGroup);
 
   return (
@@ -409,7 +414,7 @@ export const DeviceGroups = ({
         <div className="leftFixed">
           <Groups
             acceptedCount={acceptedCount}
-            changeGroup={selectGroup}
+            changeGroup={onGroupSelect}
             groups={groupsById}
             openGroupDialog={setCreateGroupExplanation}
             selectedGroup={selectedGroup}
