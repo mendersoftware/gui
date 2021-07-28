@@ -44,7 +44,7 @@ export const loginUser = userData => dispatch =>
       if (!token) {
         return;
       }
-      let options = { sameSite: 'strict', path: '/' };
+      let options = { sameSite: 'strict', secure: true, path: '/' };
       if (userData.hasOwnProperty('noExpiry')) {
         // set no expiry as cookie to remember checkbox value, even though this is set, maxAge takes precedent if present
         options = { ...options, expires: new Date('2500-12-31') };
