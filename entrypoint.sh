@@ -39,7 +39,6 @@ cat >/var/www/mender-gui/dist/env.js <<EOF
     integrationVersion: "$INTEGRATION_VERSION",
     menderVersion: "$MENDER_VERSION",
     menderArtifactVersion: "$MENDER_ARTIFACT_VERSION",
-    menderDebPackageVersion: "$MENDER_DEB_PACKAGE_VERSION",
     metaMenderVersion: "$META_MENDER_VERSION",
     services: {
       deploymentsVersion: "$MENDER_DEPLOYMENTS_VERSION",

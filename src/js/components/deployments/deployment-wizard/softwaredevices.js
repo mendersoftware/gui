@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 import pluralize from 'pluralize';
@@ -9,6 +9,7 @@ import { ErrorOutline as ErrorOutlineIcon, InfoOutlined as InfoOutlinedIcon } fr
 
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
+import useWindowSize from '../../../utils/resizehook';
 import { allDevices } from '../createdeployment';
 import theme from '../../../themes/mender-theme';
 
@@ -44,7 +45,7 @@ export const SoftwareDevices = ({
   setDeploymentSettings
 }) => {
   // eslint-disable-next-line no-unused-vars
-  const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
+  const size = useWindowSize();
   const groupRef = useRef();
   const releaseRef = useRef();
 
@@ -69,15 +70,6 @@ export const SoftwareDevices = ({
     }
     setDeploymentSettings({ ...deploymentObject, [property]: value, deploymentDeviceIds: deviceIds, deploymentDeviceCount: deviceCount });
   };
-
-  const handleResize = () => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), 500);
-
-  useEffect(() => {
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   const { deploymentDeviceCount, deploymentDeviceIds = [], device, group = null, release: deploymentRelease = null } = deploymentObject;
   const releaseDeviceTypes = (deploymentRelease && deploymentRelease.device_types_compatible) ?? [];

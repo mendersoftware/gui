@@ -13,7 +13,6 @@ const menderEnvironment = {
   },
   docsVersion: '',
   hostedAnnouncement: '',
-  menderDebPackageVersion: '',
   integrationVersion: '',
   menderVersion: '',
   menderArtifactVersion: '',
@@ -45,6 +44,7 @@ export const initialState = {
     hasMultitenancy: stringToBoolean(menderEnvironment.features.hasMultitenancy),
     hasDeviceConfig: stringToBoolean(menderEnvironment.features.hasDeviceConfig),
     hasDeviceConnect: stringToBoolean(menderEnvironment.features.hasDeviceConnect),
+    hasMonitor: stringToBoolean(menderEnvironment.features.hasMonitor),
     isHosted: stringToBoolean(menderEnvironment.features.isHosted) || window.location.hostname === 'hosted.mender.io',
     isEnterprise: stringToBoolean(menderEnvironment.features.isEnterprise),
     isDemoMode: stringToBoolean(menderEnvironment.isDemoMode)
@@ -52,7 +52,6 @@ export const initialState = {
   firstLoginAfterSignup: false,
   hostedAnnouncement: menderEnvironment.hostedAnnouncement,
   docsVersion: isNaN(menderEnvironment.integrationVersion.charAt(0)) ? '' : menderEnvironment.integrationVersion.split('.').slice(0, 2).join('.'),
-  menderDebPackageVersion: menderEnvironment.menderDebPackageVersion || 'master',
   recaptchaSiteKey: menderEnvironment.recaptchaSiteKey,
   stripeAPIKey: menderEnvironment.stripeAPIKey,
   trackerCode: menderEnvironment.trackerCode,

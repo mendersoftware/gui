@@ -14,7 +14,7 @@ export const logout = () => {
 export const updateMaxAge = () => {
   const userCookie = getToken();
   if (userCookie && expirySet()) {
-    cookies.set('JWT', userCookie, { maxAge: 900, sameSite: 'strict', path: '/' });
+    cookies.set('JWT', userCookie, { maxAge: 900, sameSite: 'strict', secure: true, path: '/' });
   }
 };
 

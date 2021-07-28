@@ -68,7 +68,7 @@ describe('Signup Component', () => {
       return waitFor(() => expect(container.querySelector('.loaderContainer')).toBeVisible());
     });
     await waitFor(() => rerender(ui));
-    await waitFor(() => expect(cookies.set).toHaveBeenLastCalledWith('JWT', token, { maxAge: 900, path: '/', sameSite: 'strict' }));
+    await waitFor(() => expect(cookies.set).toHaveBeenLastCalledWith('JWT', token, { maxAge: 900, path: '/', sameSite: 'strict', secure: true }));
     await waitFor(() => screen.getByText(/signed up/i));
   }, 10000);
 });

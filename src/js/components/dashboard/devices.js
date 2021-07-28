@@ -8,6 +8,7 @@ import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import useWindowSize from '../../utils/resizehook';
 import AcceptedDevices from './widgets/accepteddevices';
 import PendingDevices from './widgets/pendingdevices';
 import RedirectionWidget from './widgets/redirectionwidget';
@@ -16,7 +17,7 @@ export const Devices = props => {
   const [deltaActivity, setDeltaActivity] = useState(0);
   const [loading, setLoading] = useState();
   // eslint-disable-next-line no-unused-vars
-  const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
+  const size = useWindowSize();
   const anchor = useRef();
   const pendingsRef = useRef();
 
@@ -36,16 +37,10 @@ export const Devices = props => {
     styles
   } = props;
 
-  const handleResize = () => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), 500);
-
   useEffect(() => {
     // on render the store might not be updated so we resort to the API and let all later request go through the store
     // to be in sync with the rest of the UI
     refreshDevices();
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
   }, []);
 
   const refreshDevices = () => {
@@ -135,7 +130,7 @@ export const Devices = props => {
           onClick={clickHandle}
         />
         <RedirectionWidget
-          target="/devices"
+          target="/devices/accepted"
           content="Learn how to connect a device"
           buttonContent="Connect a device"
           onClick={() => setShowConnectingDialog(true)}

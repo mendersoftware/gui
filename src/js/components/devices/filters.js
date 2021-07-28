@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Button, Chip, Collapse } from '@material-ui/core';
 import { Add as AddIcon } from '@material-ui/icons';
 
-import { selectDevice as resetIdFilter, setDeviceFilters } from '../../actions/deviceActions';
+import { getDeviceAttributes, selectDevice as resetIdFilter, setDeviceFilters } from '../../actions/deviceActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import MenderTooltip from '../common/mendertooltip';
@@ -27,6 +27,7 @@ export const Filters = ({
   attributes,
   canFilterMultiple,
   filters,
+  getDeviceAttributes,
   groupFilters,
   isEnterprise,
   isHosted,
@@ -48,6 +49,7 @@ export const Filters = ({
   useEffect(() => {
     setCurrentFilters(filters);
     setEditedIndex(filters.length);
+    getDeviceAttributes();
   }, [open]);
 
   useEffect(() => {
@@ -189,6 +191,7 @@ export const Filters = ({
 };
 
 const actionCreators = {
+  getDeviceAttributes,
   resetIdFilter,
   saveGlobalSettings,
   setDeviceFilters

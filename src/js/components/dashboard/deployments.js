@@ -17,6 +17,7 @@ import Loader from '../common/loader';
 import { BaseWidget } from './widgets/baseWidget';
 import RedirectionWidget from './widgets/redirectionwidget';
 import CompletedDeployments from './widgets/completeddeployments';
+import useWindowSize from '../../utils/resizehook';
 
 const refreshDeploymentsLength = 30000;
 
@@ -36,21 +37,17 @@ export const Deployments = ({ clickHandle, finishedCount, inprogressCount, onboa
   const [lastDeploymentCheck, setLastDeploymentCheck] = useState();
   const [loading, setLoading] = useState(true);
   // eslint-disable-next-line no-unused-vars
-  const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
+  const size = useWindowSize();
   const deploymentsRef = useRef();
-
-  const handleResize = () => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), 500);
 
   useEffect(() => {
     clearAllRetryTimers(setSnackbar);
     timer = setInterval(getDeployments, refreshDeploymentsLength);
     getDeployments();
     setLastDeploymentCheck(updateDeploymentCutoff(new Date()));
-    window.addEventListener('resize', handleResize);
     return () => {
       clearInterval(timer);
       clearAllRetryTimers(setSnackbar);
-      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -121,12 +118,12 @@ export const Deployments = ({ clickHandle, finishedCount, inprogressCount, onboa
             <BaseWidget
               className={inprogressCount ? 'current-widget active' : 'current-widget'}
               main={activeWidgetMain}
-              onClick={() => clickHandle({ route: 'deployments/active' })}
+              onClick={() => clickHandle({ route: '/deployments/active' })}
             />
             <BaseWidget
               className={pendingCount ? 'current-widget pending' : 'current-widget'}
               main={pendingWidgetMain}
-              onClick={() => clickHandle({ route: 'deployments/active' })}
+              onClick={() => clickHandle({ route: '/deployments/active' })}
             />
             <CompletedDeployments onClick={clickHandle} finishedCount={finishedCount} cutoffDate={lastDeploymentCheck} innerRef={deploymentsRef} />
             <RedirectionWidget

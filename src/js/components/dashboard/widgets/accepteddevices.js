@@ -9,16 +9,16 @@ import { BaseWidget, styles } from './baseWidget';
 
 const notificationStyles = {
   base: {
-    marginRight: '10px',
-    height: '14px',
-    width: '14px'
+    marginRight: 10,
+    height: 14,
+    width: 14
   },
   green: { color: colors.successStyleColor }
 };
 
 export const AcceptedDevices = props => {
   const { delta, deviceLimit, devicesCount, inactiveCount, onClick } = props;
-  const onWidgetClick = () => onClick({ route: 'devices' });
+  const onWidgetClick = () => onClick({ route: '/devices/accepted' });
 
   const timeframe = '24h';
   let timeframeNote = 'Active in';
