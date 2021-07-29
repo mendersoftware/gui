@@ -58,6 +58,7 @@ const upgradeNotes = {
 export const Upgrade = ({
   cancelUpgrade,
   completeUpgrade,
+  features,
   getDeviceLimit,
   getUserOrganization,
   history,
@@ -157,7 +158,7 @@ export const Upgrade = ({
           automatically applied to your account.
         </p>
       )}
-      {isTrial ? <PricingContactNote /> : <AddOnSelection addons={addOns} updatedPlan={updatedPlan} onChange={setAddOns} />}
+      {isTrial ? <PricingContactNote /> : <AddOnSelection addons={addOns} features={features} updatedPlan={updatedPlan} onChange={setAddOns} />}
       {isTrial && updatedPlan !== PLANS.enterprise.value && (
         <>
           <h3 className="margin-top-large">2. Enter your payment details</h3>
@@ -188,6 +189,7 @@ const actionCreators = { cancelUpgrade, completeUpgrade, getDeviceLimit, getUser
 
 const mapStateToProps = state => {
   return {
+    features: state.app.features,
     org: state.organization.organization
   };
 };
