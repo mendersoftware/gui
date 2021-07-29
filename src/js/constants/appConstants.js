@@ -33,10 +33,12 @@ module.exports = {
       value: 'enterprise'
     }
   },
+  // the needs names need to be aligned with the name of the features in the appReducer, as they will be checked in the addonselection
   ADDONS: {
     configure: {
       title: 'Configure',
       description: 'Expand your plan with device configuration features',
+      needs: ['hasDeviceConfig'],
       os: {
         price: '$10/month',
         deviceCount: 'for first 50 devices'
@@ -49,6 +51,20 @@ module.exports = {
     troubleshoot: {
       title: 'Troubleshoot',
       description: 'Expand your plan with device troubleshooting features',
+      needs: ['hasDeviceConnect'],
+      os: {
+        price: '$24/month',
+        deviceCount: 'for first 50 devices'
+      },
+      professional: {
+        price: '$67/month',
+        deviceCount: 'for first 250 devices'
+      }
+    },
+    monitor: {
+      title: 'Monitor',
+      description: 'Expand your plan with device monitoring features',
+      needs: ['hasMonitor'],
       os: {
         price: '$24/month',
         deviceCount: 'for first 50 devices'
