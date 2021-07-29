@@ -1,3 +1,8 @@
+const startingDeviceCount = {
+  os: 'for first 50 devices',
+  professional: 'for first 250 devices'
+};
+
 module.exports = {
   SET_SNACKBAR: 'SET_SNACKBAR',
   RECEIVED_HOSTED_LINKS: 'RECEIVED_HOSTED_LINKS',
@@ -9,7 +14,7 @@ module.exports = {
       name: 'Basic',
       offer: true,
       price: '$29/month',
-      deviceCount: 'for first 50 devices',
+      deviceCount: startingDeviceCount.os,
       offerprice: '$23/month for first 50 devices',
       price2: 'for first 6 months;\n$29/month thereafter',
       features: ['Basic OTA features'],
@@ -19,7 +24,7 @@ module.exports = {
       name: 'Professional',
       offer: true,
       price: '$249/month',
-      deviceCount: 'for first 250 devices',
+      deviceCount: startingDeviceCount.professional,
       offerprice: '$200/month for first 50 devices',
       price2: 'for first 6 months;\n$249/month thereafter',
       features: ['+ Advanced OTA features', '+ Standard support'],
@@ -41,11 +46,11 @@ module.exports = {
       needs: ['hasDeviceConfig'],
       os: {
         price: '$10/month',
-        deviceCount: 'for first 50 devices'
+        deviceCount: startingDeviceCount.os
       },
       professional: {
         price: '$60/month',
-        deviceCount: 'for first 250 devices'
+        deviceCount: startingDeviceCount.professional
       }
     },
     troubleshoot: {
@@ -54,11 +59,11 @@ module.exports = {
       needs: ['hasDeviceConnect'],
       os: {
         price: '$24/month',
-        deviceCount: 'for first 50 devices'
+        deviceCount: startingDeviceCount.os
       },
       professional: {
         price: '$67/month',
-        deviceCount: 'for first 250 devices'
+        deviceCount: startingDeviceCount.professional
       }
     },
     monitor: {
@@ -67,11 +72,11 @@ module.exports = {
       needs: ['hasMonitor'],
       os: {
         price: '$24/month',
-        deviceCount: 'for first 50 devices'
+        deviceCount: startingDeviceCount.os
       },
       professional: {
         price: '$67/month',
-        deviceCount: 'for first 250 devices'
+        deviceCount: startingDeviceCount.professional
       }
     }
   }

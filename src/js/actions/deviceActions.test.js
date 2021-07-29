@@ -45,6 +45,9 @@ import {
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
+const groupUpdateSuccessMessage = 'The group was updated successfully';
+
+/* eslint-disable sonarjs/no-identical-functions */
 describe('selecting things', () => {
   it('should allow device list selections', async () => {
     const store = mockStore({ ...defaultState });
@@ -211,6 +214,7 @@ describe('overall device information retrieval', () => {
 });
 
 describe('device auth handling', () => {
+  const deviceUpdateSuccessMessage = 'Device authorization status was updated successfully';
   it('should allow device auth information retrieval', async () => {
     const store = mockStore({ ...defaultState });
     // eslint-disable-next-line no-unused-vars
@@ -231,7 +235,7 @@ describe('device auth handling', () => {
     // eslint-disable-next-line no-unused-vars
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Device authorization status was updated successfully' } },
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: deviceUpdateSuccessMessage } },
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice },
       {
         type: DeviceConstants.SET_ACCEPTED_DEVICES,
@@ -252,7 +256,7 @@ describe('device auth handling', () => {
     // eslint-disable-next-line no-unused-vars
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Device authorization status was updated successfully' } },
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: deviceUpdateSuccessMessage } },
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice },
       {
         type: DeviceConstants.SET_ACCEPTED_DEVICES,
@@ -299,7 +303,7 @@ describe('device auth handling', () => {
     // eslint-disable-next-line no-unused-vars
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Device authorization status was updated successfully' } },
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: deviceUpdateSuccessMessage } },
       {
         type: DeviceConstants.SET_ACCEPTED_DEVICES,
         deviceIds: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id),
@@ -356,7 +360,7 @@ describe('static grouping related actions', () => {
       { type: DeviceConstants.ADD_STATIC_GROUP, group: { deviceIds: [], total: 0, filters: [] }, groupName },
       { type: DeviceConstants.SELECT_DEVICE, deviceId: undefined },
       { type: DeviceConstants.SELECT_GROUP, group: undefined },
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The group was updated successfully' } },
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: groupUpdateSuccessMessage } },
       { type: DeviceConstants.RECEIVE_DEVICES, devicesById: {} },
       { type: DeviceConstants.RECEIVE_GROUPS, groups: { testGroup: defaultState.devices.groups.byId.testGroup } },
       {
@@ -524,7 +528,7 @@ describe('dynamic grouping related actions', () => {
         group: { deviceIds: [], total: 0, filters: [{ key: 'group', operator: '$nin', scope: 'system', value: ['testGroup'] }] }
       },
       { type: DeviceConstants.SELECT_GROUP, group: undefined },
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The group was updated successfully' } },
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: groupUpdateSuccessMessage } },
       { type: DeviceConstants.RECEIVE_DEVICES, devicesById: {} }
     ];
     await store.dispatch(addDynamicGroup(groupName, [{ key: 'group', operator: '$nin', scope: 'system', value: ['testGroup'] }]));
@@ -553,7 +557,7 @@ describe('dynamic grouping related actions', () => {
       { type: DeviceConstants.ADD_DYNAMIC_GROUP, groupName, group: { deviceIds: [], total: 0, filters: [] } },
       { type: DeviceConstants.SET_DEVICE_FILTERS, filters: defaultState.devices.groups.byId.testGroupDynamic.filters },
       { type: DeviceConstants.SELECT_GROUP, group: groupName },
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The group was updated successfully' } }
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: groupUpdateSuccessMessage } }
     ];
     await store.dispatch(updateDynamicGroup(groupName, []));
     const storeActions = store.getActions();

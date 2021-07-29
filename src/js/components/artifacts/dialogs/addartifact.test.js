@@ -81,15 +81,16 @@ describe('AddArtifact Component', () => {
     userEvent.upload(uploadInput, menderFile);
     expect(uploadInput.files).toHaveLength(1);
     await waitFor(() => rerender(ui));
-    await waitFor(() => expect(screen.getByPlaceholderText('Example: /opt/installed-by-single-file')).toBeInTheDocument());
+    const placeholderText = 'Example: /opt/installed-by-single-file';
+    await waitFor(() => expect(screen.getByPlaceholderText(placeholderText)).toBeInTheDocument());
     expect(screen.getByDisplayValue('test.txt')).toBeInTheDocument();
     // FileSize component is not an input based component -> query text only
     expect(screen.getByText('17.00 Bytes')).toBeInTheDocument();
-    userEvent.click(screen.getByPlaceholderText('Example: /opt/installed-by-single-file'));
-    userEvent.type(screen.getByPlaceholderText('Example: /opt/installed-by-single-file'), 'some/path');
+    userEvent.click(screen.getByPlaceholderText(placeholderText));
+    userEvent.type(screen.getByPlaceholderText(placeholderText), 'some/path');
     await waitFor(() => expect(screen.getByText(/Destination has to be an absolute path/i)).toBeInTheDocument());
-    userEvent.click(screen.getByPlaceholderText('Example: /opt/installed-by-single-file'));
-    userEvent.type(screen.getByPlaceholderText('Example: /opt/installed-by-single-file'), '/some/path');
+    userEvent.click(screen.getByPlaceholderText(placeholderText));
+    userEvent.type(screen.getByPlaceholderText(placeholderText), '/some/path');
     userEvent.click(screen.getByRole('button', { name: /next/i }));
     await waitFor(() => expect(screen.getByRole('textbox', { name: /device types compatible/i })).toBeInTheDocument());
     userEvent.type(screen.getByRole('textbox', { name: /device types compatible/i }), 'something');

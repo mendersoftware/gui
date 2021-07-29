@@ -90,7 +90,7 @@ export const Devices = props => {
     return deviceCount - previousCount;
   };
 
-  const noDevicesAvailable = !(acceptedDevicesCount + pendingDevicesCount > 0);
+  const noDevicesAvailable = acceptedDevicesCount + pendingDevicesCount <= 0;
   let onboardingComponent = null;
   if (anchor.current) {
     const element = anchor.current.children[anchor.current.children.length - 1];

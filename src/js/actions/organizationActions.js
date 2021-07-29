@@ -1,6 +1,6 @@
 import Cookies from 'universal-cookie';
 
-import { commonErrorHandler, setSnackbar } from './appActions';
+import { commonErrorFallback, commonErrorHandler, setSnackbar } from './appActions';
 import Api, { headerNames } from '../api/general-api';
 import OrganizationConstants from '../constants/organizationConstants';
 import { getTenantCapabilities } from '../selectors';
@@ -122,5 +122,5 @@ export const getUserOrganization = () => dispatch =>
 
 export const sendSupportMessage = content => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/contact/support`, content)
-    .catch(err => commonErrorHandler(err, 'There was an error sending your request', dispatch, 'Please check your connection'))
+    .catch(err => commonErrorHandler(err, 'There was an error sending your request', dispatch, commonErrorFallback))
     .then(() => Promise.resolve(dispatch(setSnackbar('Your request was sent successfully', 5000, ''))));

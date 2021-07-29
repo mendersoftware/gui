@@ -105,7 +105,7 @@ export const setOnboardingComplete = val => dispatch =>
   Promise.resolve(dispatch({ type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: val })).then(() => {
     if (val) {
       return Promise.all([
-        Promise.resolve(dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: !val })),
+        Promise.resolve(dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: false })),
         Promise.resolve(dispatch(advanceOnboarding(onboardingStepNames.ONBOARDING_FINISHED)))
       ]);
     }

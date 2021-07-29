@@ -32,8 +32,11 @@ import {
   validatePhases,
   versionCompare
 } from './helpers';
-import { defaultState, token, undefineds } from '../../tests/mockData';
+import { defaultState, token, undefineds, userId } from '../../tests/mockData';
 
+const deploymentCreationTime = defaultState.deployments.byId.d1.created;
+
+/* eslint-disable sonarjs/no-duplicate-string */
 describe('FileSize Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(<FileSize fileSize={1000} />);
@@ -132,20 +135,21 @@ echo "Done!"'
     expect(code).not.toMatch(/tenant/);
     expect(code).not.toMatch(/token/);
   });
+  const oldHostname = window.location.hostname;
+  const postTestCleanUp = () => {
+    window.location = {
+      ...window.location,
+      hostname: oldHostname
+    };
+  };
   describe('configuring devices for hosted mender', () => {
-    const oldHostname = window.location.hostname;
     beforeEach(() => {
       window.location = {
         ...window.location,
         hostname: 'hosted.mender.io'
       };
     });
-    afterEach(() => {
-      window.location = {
-        ...window.location,
-        hostname: oldHostname
-      };
-    });
+    afterEach(postTestCleanUp);
 
     it('should contain sane information for hosted calls', async () => {
       code = getDebConfigurationCode(undefined, true, false, 'token', 'raspberrypi3');
@@ -176,19 +180,13 @@ echo "Done!"'
     });
   });
   describe('configuring devices for staging.hosted.mender', () => {
-    const oldHostname = window.location.hostname;
     beforeEach(() => {
       window.location = {
         ...window.location,
         hostname: 'staging.hosted.mender.io'
       };
     });
-    afterEach(() => {
-      window.location = {
-        ...window.location,
-        hostname: oldHostname
-      };
-    });
+    afterEach(postTestCleanUp);
 
     it('should contain sane information for staging calls', async () => {
       code = getDebConfigurationCode(undefined, true, false, 'token', 'raspberrypi3');
@@ -388,7 +386,7 @@ describe('customSort function', () => {
 });
 describe('decodeSessionToken function', () => {
   it('works as expected', async () => {
-    expect(decodeSessionToken(token)).toEqual('a30a780b-b843-5344-80e3-0fd95a4f6fc3');
+    expect(decodeSessionToken(token)).toEqual(userId);
   });
   it('does not crash with faulty input', async () => {
     expect(decodeSessionToken(false)).toEqual(undefined);
@@ -455,8 +453,9 @@ describe('preformatWithRequestID function', () => {
     expect(preformatWithRequestID(undefined, token)).toEqual(
       'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjZTNkMGY4Yy1hZWRlLTQwMzAtYjM5MS03ZDUwMjBlYjg3M2UiLCJzdWIiOiJhMzBhNzgwYi1iODQzLTUzNDQtODBlMy0wZmQ5NWE0ZjZmYzMiLCJleHAiOjE2MDY4MTUzNjksImlhdCI6MTYwNjIxMDU2OSwibWVuZGVyLnRlbmF...'
     );
-    expect(preformatWithRequestID({ data: { request_id: 'someUuidLikeLongerText' } }, 'short text')).toEqual('short text [Request ID: someUuid]');
-    expect(preformatWithRequestID(undefined, 'short text')).toEqual('short text');
+    const expectedText = 'short text';
+    expect(preformatWithRequestID({ data: { request_id: 'someUuidLikeLongerText' } }, expectedText)).toEqual('short text [Request ID: someUuid]');
+    expect(preformatWithRequestID(undefined, expectedText)).toEqual(expectedText);
   });
 });
 describe('statusToPercentage function', () => {
@@ -587,9 +586,9 @@ describe('generateDeploymentGroupDetails function', () => {
 describe('standardizePhases function', () => {
   it('works as expected', async () => {
     const phases = [
-      { batch_size: 10, delay: 2, delayUnit: 'hours', start_ts: '2019-01-01T12:30:00.000Z' },
-      { batch_size: 10, delay: 2, start_ts: '2019-01-01T12:30:00.000Z' },
-      { batch_size: 10, start_ts: '2019-01-01T12:30:00.000Z' }
+      { batch_size: 10, delay: 2, delayUnit: 'hours', start_ts: deploymentCreationTime },
+      { batch_size: 10, delay: 2, start_ts: deploymentCreationTime },
+      { batch_size: 10, start_ts: deploymentCreationTime }
     ];
     expect(standardizePhases(phases)).toEqual([
       { batch_size: 10, delay: 2, delayUnit: 'hours' },
@@ -631,9 +630,9 @@ describe('getRemainderPercent function', () => {
 describe('validatePhases function', () => {
   it('works as expected', async () => {
     const phases = [
-      { batch_size: 10, delay: 2, delayUnit: 'hours', start_ts: '2019-01-01T12:30:00.000Z' },
-      { batch_size: 10, delay: 2, start_ts: '2019-01-01T12:30:00.000Z' },
-      { batch_size: 10, start_ts: '2019-01-01T12:30:00.000Z' }
+      { batch_size: 10, delay: 2, delayUnit: 'hours', start_ts: deploymentCreationTime },
+      { batch_size: 10, delay: 2, start_ts: deploymentCreationTime },
+      { batch_size: 10, start_ts: deploymentCreationTime }
     ];
     expect(validatePhases(undefined, 10000, false)).toEqual(true);
     expect(validatePhases(undefined, 10000, true)).toEqual(true);

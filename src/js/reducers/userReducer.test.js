@@ -11,6 +11,8 @@ const testUser = {
   updated_ts: ''
 };
 
+const newDescription = 'new description';
+
 describe('user reducer', () => {
   it('should return the initial state', async () => {
     expect(reducer(undefined, {})).toEqual(initialState);
@@ -92,27 +94,27 @@ describe('user reducer', () => {
       reducer(undefined, {
         type: UserConstants.CREATED_ROLE,
         roleId: 'newRole',
-        role: { name: 'newRole', description: 'new description', groups: ['123'] }
+        role: { name: 'newRole', description: newDescription, groups: ['123'] }
       }).rolesById.newRole.description
-    ).toEqual('new description');
+    ).toEqual(newDescription);
     expect(
       reducer(
         { ...initialState },
         {
           type: UserConstants.CREATED_ROLE,
           roleId: 'newRole',
-          role: { name: 'newRole', description: 'new description', groups: ['123'] }
+          role: { name: 'newRole', description: newDescription, groups: ['123'] }
         }
       ).rolesById.newRole.description
-    ).toEqual('new description');
+    ).toEqual(newDescription);
   });
   it('should handle UPDATED_ROLE', async () => {
     expect(
-      reducer(undefined, { type: UserConstants.UPDATED_ROLE, roleId: 'RBAC_ROLE_CI', role: { description: 'new description' } }).rolesById.RBAC_ROLE_CI.title
+      reducer(undefined, { type: UserConstants.UPDATED_ROLE, roleId: 'RBAC_ROLE_CI', role: { description: newDescription } }).rolesById.RBAC_ROLE_CI.title
     ).toEqual('Releases Manager');
     expect(
-      reducer({ ...initialState }, { type: UserConstants.UPDATED_ROLE, roleId: 'RBAC_ROLE_CI', role: { description: 'new description' } }).rolesById
-        .RBAC_ROLE_CI.title
+      reducer({ ...initialState }, { type: UserConstants.UPDATED_ROLE, roleId: 'RBAC_ROLE_CI', role: { description: newDescription } }).rolesById.RBAC_ROLE_CI
+        .title
     ).toEqual('Releases Manager');
   });
 

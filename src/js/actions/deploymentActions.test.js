@@ -63,6 +63,7 @@ const defaultResponseActions = {
   }
 };
 
+/* eslint-disable sonarjs/no-identical-functions */
 describe('deployment actions', () => {
   const store = mockStore({ ...defaultState });
   it('should allow aborting deployments', async () => {

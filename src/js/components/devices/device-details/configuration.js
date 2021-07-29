@@ -221,7 +221,7 @@ export const DeviceConfiguration = ({
     setIsEditingConfig(isEmpty(reported));
     setChangedConfig(reported);
     let requests = [];
-    if (deployment_id && !(deployment.status === 'finished')) {
+    if (deployment_id && deployment.status !== 'finished') {
       requests.push(abortDeployment(deployment_id));
     }
     if (deepCompare(reported, changedConfig)) {

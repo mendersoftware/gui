@@ -2,7 +2,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import Cookies from 'universal-cookie';
 
-import { defaultState, token } from '../../../tests/mockData';
+import { defaultState, token, userId } from '../../../tests/mockData';
 import { roles as rbacRoles } from '../../../tests/__mocks__/userHandlers';
 import {
   createRole,
@@ -47,6 +47,7 @@ const receivedRoles = rbacRoles.reduce((accu, role) => {
   return accu;
 }, {});
 
+/* eslint-disable sonarjs/no-identical-functions */
 describe('user actions', () => {
   it('should forward connecting dialog visibility', async () => {
     const store = mockStore({ ...defaultState });
@@ -104,7 +105,7 @@ describe('user actions', () => {
   it('should verify 2fa codes during 2fa setup', async () => {
     jest.clearAllMocks();
     const expectedActions = [
-      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId['a30a780b-b843-5344-80e3-0fd95a4f6fc3'] },
+      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId[userId] },
       { type: UserConstants.SET_SHOW_HELP, show: true },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true }
     ];
@@ -154,7 +155,7 @@ describe('user actions', () => {
     jest.clearAllMocks();
     const expectedActions = [
       { type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token },
-      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId['a30a780b-b843-5344-80e3-0fd95a4f6fc3'] },
+      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId[userId] },
       { type: UserConstants.SET_SHOW_HELP, show: true },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true }
     ];
