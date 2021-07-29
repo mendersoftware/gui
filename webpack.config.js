@@ -45,30 +45,9 @@ module.exports = (env, argv) => {
             'less-loader'
           ]
         },
-
         {
-          test: /\.(png|jpe?g|gif)$/i,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                name: 'assets/img/[name].[ext]',
-                limit: 10000
-              }
-            }
-          ]
-        },
-        {
-          test: /\.(eot|ttf|woff|woff2)/i,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                name: 'assets/fonts/[name].[ext]',
-                limit: 1024
-              }
-            }
-          ]
+          test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
+          type: 'asset'
         }
       ]
     },
