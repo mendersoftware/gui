@@ -61,7 +61,7 @@ const defaultActions = {
 const defaultActionsList = [
   {
     ...defaultActions.dismiss,
-    allowedStates: [DEVICE_STATES.accepted, DEVICE_STATES.pending, DEVICE_STATES.preauth, DEVICE_STATES.rejected]
+    allowedStates: [DEVICE_STATES.accepted, DEVICE_STATES.pending, DEVICE_STATES.preauth, DEVICE_STATES.rejected, 'noauth']
   },
   {
     ...defaultActions.reject,
@@ -69,7 +69,7 @@ const defaultActionsList = [
   },
   {
     ...defaultActions.accept,
-    allowedStates: [DEVICE_STATES.pending]
+    allowedStates: [DEVICE_STATES.pending, DEVICE_STATES.rejected]
   }
 ];
 
