@@ -3,7 +3,7 @@ import DeviceConstants from '../constants/deviceConstants';
 
 export const initialState = {
   byId: {
-    // [id]: { stats, devices: { [deploymentId]: { id, log } } }
+    // [id]: { stats, devices: { [deploymentId]: { id, log } }, totalDeviceCount }
   },
   byStatus: {
     finished: { deploymentIds: [], total: 0 },
@@ -13,6 +13,7 @@ export const initialState = {
   },
   deploymentDeviceLimit: 5000,
   selectedDeployment: null,
+  selectedDeviceIds: [],
   selectionState: {
     finished: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, endDate: undefined, search: '', selection: [], startDate: undefined, total: 0, type: '' },
     inprogress: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, perPage: DeploymentConstants.DEFAULT_PENDING_INPROGRESS_COUNT, selection: [], total: 0 },
@@ -75,6 +76,19 @@ const deploymentReducer = (state = initialState, action) => {
             stats: action.stats
           }
         }
+      };
+    case DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICES:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.deploymentId]: {
+            ...state.byId[action.deploymentId],
+            devices: action.devices,
+            totalDeviceCount: action.totalDeviceCount
+          }
+        },
+        selectedDeviceIds: action.selectedDeviceIds
       };
     case DeploymentConstants.RECEIVE_INPROGRESS_DEPLOYMENTS:
     case DeploymentConstants.RECEIVE_PENDING_DEPLOYMENTS:

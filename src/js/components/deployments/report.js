@@ -17,7 +17,7 @@ import {
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
-import { getDeviceLog, getSingleDeployment, updateDeploymentControlMap } from '../../actions/deploymentActions';
+import { getDeploymentDevices, getDeviceLog, getSingleDeployment, updateDeploymentControlMap } from '../../actions/deploymentActions';
 import { getAuditLogs } from '../../actions/organizationActions';
 import { getRelease } from '../../actions/releaseActions';
 import { deploymentStatesToSubstates, DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
@@ -27,7 +27,7 @@ import ConfigurationObject from '../common/configurationobject';
 import LogDialog from '../common/dialogs/log';
 import DeploymentOverview from './deployment-report/overview';
 import RolloutSchedule from './deployment-report/rolloutschedule';
-import { sortDeploymentDevices, statCollector } from '../../helpers';
+import { statCollector } from '../../helpers';
 import Confirm from '../common/confirm';
 import DeviceList from './deployment-report/devicelist';
 import DeploymentStatus from './deployment-report/deploymentstatus';
@@ -78,6 +78,7 @@ export const DeploymentReport = props => {
     updateDeploymentControlMap
   } = props;
   const [deviceId, setDeviceId] = useState('');
+  const [deviceListRefreshTrigger, setDeviceListRefreshTrigger] = useState(false);
   const rolloutSchedule = useRef();
 
   useEffect(() => {
@@ -124,6 +125,7 @@ export const DeploymentReport = props => {
     if (!deployment.id) {
       return;
     }
+    setDeviceListRefreshTrigger(!deviceListRefreshTrigger);
     return getSingleDeployment(deployment.id);
   };
 
@@ -191,7 +193,7 @@ export const DeploymentReport = props => {
       <Divider />
       <div className="deployment-report">
         <DeploymentPhaseNotification deployment={deployment} onReviewClick={scrollToBottom} />
-        <DeploymentOverview {...props} creator={creator} deployment={deployment} onScheduleClick={scrollToBottom} />
+        <DeploymentOverview creator={creator} deployment={deployment} onScheduleClick={scrollToBottom} />
         {isConfigurationDeployment && (
           <>
             <h4 className="dashboard-header">
@@ -204,7 +206,7 @@ export const DeploymentReport = props => {
           <span>Status</span>
         </h4>
         <DeploymentStatus deployment={deployment} />
-        <DeviceList {...props} viewLog={viewLog} />
+        <DeviceList {...props} refreshTrigger={deviceListRefreshTrigger} viewLog={viewLog} />
         <RolloutSchedule deployment={deployment} onUpdateControlChange={onUpdateControlChange} onAbort={abort} innerRef={rolloutSchedule} />
         {Boolean(deviceId.length) && <LogDialog logData={logData} onClose={() => setDeviceId('')} />}
       </div>
@@ -213,19 +215,26 @@ export const DeploymentReport = props => {
   );
 };
 
-const actionCreators = { getAuditLogs, getDeviceAuth, getDeviceById, getDeviceLog, getRelease, getSingleDeployment, setSnackbar, updateDeploymentControlMap };
+const actionCreators = {
+  getAuditLogs,
+  getDeploymentDevices,
+  getDeviceAuth,
+  getDeviceById,
+  getDeviceLog,
+  getRelease,
+  getSingleDeployment,
+  setSnackbar,
+  updateDeploymentControlMap
+};
 
 const mapStateToProps = state => {
-  const devices = state.deployments.byId[state.deployments.selectedDeployment]?.devices || {};
-  const allDevices = sortDeploymentDevices(Object.values(devices)).map(device => ({ ...state.devices.byId[device.id], ...device }));
+  const { devices = {} } = state.deployments.byId[state.deployments.selectedDeployment] || {};
+  const selectedDevices = state.deployments.selectedDeviceIds.map(deviceId => ({ ...state.devices.byId[deviceId], ...devices[deviceId] }));
   const deployment = state.deployments.byId[state.deployments.selectedDeployment] || {};
   const { actor = {} } = state.organization.auditlog.events.find(event => event.object.id === state.deployments.selectedDeployment) || {};
   return {
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
-    allDevices,
     creator: actor.email,
-    deviceCount: allDevices.length,
-    devicesById: state.devices.byId,
     deployment,
     idAttribute: getIdAttribute(state).attribute,
     isEnterprise: getIsEnterprise(state),
@@ -233,7 +242,8 @@ const mapStateToProps = state => {
     release:
       deployment.artifact_name && state.releases.byId[deployment.artifact_name]
         ? state.releases.byId[deployment.artifact_name]
-        : { device_types_compatible: [] }
+        : { device_types_compatible: [] },
+    selectedDevices
   };
 };
 

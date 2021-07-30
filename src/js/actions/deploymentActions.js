@@ -111,12 +111,11 @@ export const getSingleDeploymentStats = id => dispatch =>
     dispatch({ type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS, stats: res.data, deploymentId: id })
   );
 
-export const getSingleDeployment = id => (dispatch, getState) =>
-  Promise.all([GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}`), GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}/devices`)]).then(responses => {
-    const [deploymentRes, deploymentDeviceListRes] = responses;
-    const storedDeployment = getState().deployments.byId[id] || {};
-    const deploymentDevices = storedDeployment.devices || {};
-    const devices = deploymentDeviceListRes.data.reduce((accu, item) => {
+export const getDeploymentDevices = (id, options = {}) => (dispatch, getState) => {
+  const { page = defaultPage, perPage = defaultPerPage } = options;
+  return GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}/devices/list?deployment_id=${id}&page=${page}&per_page=${perPage}`).then(response => {
+    const { devices: deploymentDevices = {} } = getState().deployments.byId[id] || {};
+    const devices = response.data.reduce((accu, item) => {
       accu[item.id] = item;
       const log = (deploymentDevices[item.id] || {}).log;
       if (log) {
@@ -124,15 +123,29 @@ export const getSingleDeployment = id => (dispatch, getState) =>
       }
       return accu;
     }, {});
+    return Promise.resolve(
+      dispatch({
+        type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICES,
+        deploymentId: id,
+        devices,
+        selectedDeviceIds: Object.keys(devices),
+        totalDeviceCount: Number(response.headers[headerNames.total])
+      })
+    );
+  });
+};
+
+export const getSingleDeployment = id => (dispatch, getState) =>
+  Promise.resolve(GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}`)).then(({ data }) => {
+    const storedDeployment = getState().deployments.byId[id] || {};
     return Promise.all([
       dispatch({
         type: DeploymentConstants.RECEIVE_DEPLOYMENT,
         deployment: {
           ...DeploymentConstants.deploymentPrototype,
           ...storedDeployment,
-          ...deploymentRes.data,
-          name: decodeURIComponent(deploymentRes.data.name),
-          devices
+          ...data,
+          name: decodeURIComponent(data.name)
         }
       }),
       dispatch(getSingleDeploymentStats(id))
