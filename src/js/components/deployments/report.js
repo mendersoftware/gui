@@ -60,11 +60,9 @@ export const DeploymentAbortButton = ({ abort, deployment }) => {
 };
 
 export const DeploymentReport = props => {
-  const [deviceId, setDeviceId] = useState();
-  const rolloutSchedule = useRef();
   const {
     abort,
-    allDevices,
+    creator,
     deployment,
     getAuditLogs,
     getDeviceLog,
@@ -79,6 +77,8 @@ export const DeploymentReport = props => {
     type,
     updateDeploymentControlMap
   } = props;
+  const [deviceId, setDeviceId] = useState('');
+  const rolloutSchedule = useRef();
 
   useEffect(() => {
     clearInterval(timer);
@@ -124,10 +124,7 @@ export const DeploymentReport = props => {
     return getSingleDeployment(deployment.id);
   };
 
-  const viewLog = id =>
-    getDeviceLog(deployment.id, id).then(() => {
-      setDeviceId(id);
-    });
+  const viewLog = id => getDeviceLog(deployment.id, id).then(() => setDeviceId(id));
 
   const copyLinkToClipboard = () => {
     const location = window.location.href.substring(0, window.location.href.indexOf('/deployments') + '/deployments'.length);
@@ -135,8 +132,8 @@ export const DeploymentReport = props => {
     setSnackbar('Link copied to clipboard');
   };
 
-  const { created = new Date().toISOString(), devices, type: deploymentType } = deployment;
-  const logData = deviceId && devices[deviceId] ? devices[deviceId].log : null;
+  const { devices = {}, type: deploymentType } = deployment;
+  const { log: logData } = devices[deviceId] || {};
   const finished = deployment.finished || deployment.status === DEPLOYMENT_STATES.finished;
   const isConfigurationDeployment = deploymentType === DEPLOYMENT_TYPES.configuration;
   let config = {};
@@ -206,7 +203,7 @@ export const DeploymentReport = props => {
         <DeploymentStatus deployment={deployment} />
         <DeviceList {...props} viewLog={viewLog} />
         <RolloutSchedule deployment={deployment} onUpdateControlChange={onUpdateControlChange} onAbort={abort} innerRef={rolloutSchedule} />
-        {deviceId && <LogDialog logData={logData} onClose={() => setDeviceId()} />}
+        {Boolean(deviceId.length) && <LogDialog logData={logData} onClose={() => setDeviceId('')} />}
       </div>
       <Divider light style={{ marginTop: theme.spacing(2) }} />
     </Drawer>
