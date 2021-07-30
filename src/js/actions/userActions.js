@@ -1,6 +1,6 @@
 import Cookies from 'universal-cookie';
 
-import { commonErrorHandler, setSnackbar } from './appActions';
+import { commonErrorFallback, commonErrorHandler, setSnackbar } from './appActions';
 import GeneralApi from '../api/general-api';
 import UsersApi from '../api/users-api';
 import AppConstants from '../constants/appConstants';
@@ -123,7 +123,7 @@ export const getUserList = () => dispatch =>
       }, {});
       return dispatch({ type: UserConstants.RECEIVED_USER_LIST, users });
     })
-    .catch(err => commonErrorHandler(err, `Users couldn't be loaded.`, dispatch, 'Please check your connection'));
+    .catch(err => commonErrorHandler(err, `Users couldn't be loaded.`, dispatch, commonErrorFallback));
 
 export const getUser = id => dispatch =>
   GeneralApi.get(`${useradmApiUrl}/users/${id}`).then(({ data: user }) => {

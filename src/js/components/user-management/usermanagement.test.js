@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import UserManagement from './usermanagement';
-import { defaultState, undefineds } from '../../../../tests/mockData';
+import { defaultState, userId, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
@@ -48,14 +48,14 @@ describe('UserManagement Component', () => {
     userEvent.click(screen.getByRole('button', { name: /remove/i }));
     expect(screen.queryByText(/remove the user with email/i)).toBeInTheDocument();
     userEvent.click(screen.getByRole('button', { name: /cancel/i }));
-    const user = screen.getByText(defaultState.users.byId['a30a780b-b843-5344-80e3-0fd95a4f6fc3'].email).parentElement;
+    const user = screen.getByText(defaultState.users.byId[userId].email).parentElement;
     userEvent.click(within(user).getByRole('button', { name: /edit/i }));
     userEvent.click(screen.getByRole('button', { name: /change password/i }));
     const passwordGeneration = screen.getByRole('button', { name: /generate/i });
     userEvent.click(passwordGeneration);
     expect(copyCheck).toHaveBeenCalled();
     userEvent.click(within(passwordGeneration.parentElement).getByRole('button', { name: /cancel/i }));
-    const input = screen.getByDisplayValue(defaultState.users.byId['a30a780b-b843-5344-80e3-0fd95a4f6fc3'].email);
+    const input = screen.getByDisplayValue(defaultState.users.byId[userId].email);
     userEvent.clear(input);
     userEvent.type(input, 'test@test');
     expect(screen.getByText(/enter a valid email address/i)).toBeInTheDocument();
@@ -71,7 +71,7 @@ describe('UserManagement Component', () => {
       </Provider>
     );
     userEvent.click(
-      within(screen.getByText(defaultState.users.byId['a30a780b-b843-5344-80e3-0fd95a4f6fc3'].email).parentElement).getByRole('button', {
+      within(screen.getByText(defaultState.users.byId[userId].email).parentElement).getByRole('button', {
         name: /edit/i,
         hidden: true
       })
@@ -81,7 +81,7 @@ describe('UserManagement Component', () => {
     const listbox = document.body.querySelector('ul[role=listbox]');
     const listItem = within(listbox).getByText(/releases/i);
     userEvent.click(listItem);
-    userEvent.click(screen.getByDisplayValue(defaultState.users.byId['a30a780b-b843-5344-80e3-0fd95a4f6fc3'].email));
+    userEvent.click(screen.getByDisplayValue(defaultState.users.byId[userId].email));
     expect(screen.getByText(/the selected role may prevent/i)).toBeInTheDocument();
   });
 });

@@ -6,7 +6,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { render, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import CreateDeployment, { CreateDialog, mapStateToProps } from './createdeployment';
+import CreateDeployment, { allDevices, CreateDialog, mapStateToProps } from './createdeployment';
 import { defaultState, mockDate, undefineds } from '../../../../tests/mockData';
 import { selectMaterialUiSelectOption } from '../../../../tests/setupTests';
 
@@ -76,7 +76,7 @@ describe('CreateDeployment Component', () => {
     const groupSelect = screen.getByPlaceholderText(/Select a device group/i);
     userEvent.click(groupSelect);
     fireEvent.keyDown(groupSelect, { key: 'Enter' });
-    expect(groupSelect).toHaveValue('All devices');
+    expect(groupSelect).toHaveValue(allDevices);
     userEvent.click(screen.getAllByText('Next')[0]);
     userEvent.click(screen.getByText('Create'));
     expect(createDeployment).toHaveBeenCalledWith({
@@ -85,7 +85,7 @@ describe('CreateDeployment Component', () => {
       devices: undefined,
       filter_id: undefined,
       group: undefined,
-      name: 'All devices',
+      name: allDevices,
       phases: undefined
     });
     await jest.runAllTicks();
@@ -194,7 +194,7 @@ describe('CreateDeployment Component', () => {
       devices: undefined,
       filter_id: undefined,
       group: undefined,
-      name: 'All devices',
+      name: allDevices,
       phases: [
         { batch_size: 50, delay: 30, delayUnit: 'minutes', start_ts: mockDate.toISOString() },
         { batch_size: 25, delay: 25, delayUnit: 'days', start_ts: secondBatchDate.toISOString() },

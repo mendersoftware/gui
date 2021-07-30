@@ -13,7 +13,7 @@ describe('KeyValueEditor Component', () => {
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
-
+  const fabSelector = '.MuiFab-root';
   it('works as intended', async () => {
     const submitMock = jest.fn();
 
@@ -21,8 +21,8 @@ describe('KeyValueEditor Component', () => {
     render(ui);
     userEvent.type(screen.getByPlaceholderText(/key/i), 'testKey');
     userEvent.type(screen.getByPlaceholderText(/value/i), 'testValue');
-    expect(document.querySelector('.MuiFab-root')).not.toBeDisabled();
-    userEvent.click(document.querySelector('.MuiFab-root'));
+    expect(document.querySelector(fabSelector)).not.toBeDisabled();
+    userEvent.click(document.querySelector(fabSelector));
     expect(submitMock).toHaveBeenLastCalledWith({ testKey: 'testValue' });
     userEvent.type(screen.getByDisplayValue('testValue'), 's');
     expect(submitMock).toHaveBeenLastCalledWith({ testKey: 'testValues' });
@@ -33,7 +33,7 @@ describe('KeyValueEditor Component', () => {
     render(ui);
     userEvent.type(screen.getByPlaceholderText(/key/i), 'testKey');
     userEvent.type(screen.getByPlaceholderText(/value/i), 'testValue');
-    userEvent.click(document.querySelector('.MuiFab-root'));
+    userEvent.click(document.querySelector(fabSelector));
     userEvent.type(screen.getAllByPlaceholderText(/key/i)[1], 'testKey');
     userEvent.type(screen.getAllByPlaceholderText(/value/i)[1], 'testValue2');
     expect(screen.getByText(/Duplicate keys exist/i)).toBeInTheDocument();

@@ -78,7 +78,7 @@ export const AppRoot = ({
   const onIdle = () => {
     if (expirySet() && currentUser) {
       // logout user and warn
-      return logoutUser('Your session has expired. You have been automatically logged out due to inactivity.').catch(() => updateMaxAge());
+      return logoutUser('Your session has expired. You have been automatically logged out due to inactivity.').catch(updateMaxAge);
     }
   };
 

@@ -140,15 +140,13 @@ export const DeviceList = props => {
 };
 
 const areEqual = (prevProps, nextProps) => {
-  if (prevProps.pageTotal != nextProps.pageTotal) {
-    return false;
-  } else if (prevProps.pageLoading != nextProps.pageLoading) {
-    return false;
-  } else if (prevProps.idAttribute != nextProps.idAttribute) {
-    return false;
-  } else if (!deepCompare(prevProps.onboardingState, nextProps.onboardingState)) {
-    return false;
-  } else if (!deepCompare(prevProps.devices, nextProps.devices)) {
+  if (
+    prevProps.pageTotal != nextProps.pageTotal ||
+    prevProps.pageLoading != nextProps.pageLoading ||
+    prevProps.idAttribute != nextProps.idAttribute ||
+    !deepCompare(prevProps.onboardingState, nextProps.onboardingState) ||
+    !deepCompare(prevProps.devices, nextProps.devices)
+  ) {
     return false;
   }
   return deepCompare(prevProps.deviceListState, nextProps.deviceListState);

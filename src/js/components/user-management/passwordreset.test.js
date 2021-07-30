@@ -10,6 +10,9 @@ import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 
+const goodPassword = 'mysecretpassword!123';
+const badPassword = 'mysecretpassword!546';
+
 describe('PasswordReset Component', () => {
   let store;
   beforeEach(() => {
@@ -41,20 +44,20 @@ describe('PasswordReset Component', () => {
     const { rerender } = render(ui);
 
     const passwordInput = screen.getByLabelText('Password *');
-    act(() => userEvent.paste(passwordInput, 'mysecretpassword!546'));
+    act(() => userEvent.paste(passwordInput, badPassword));
     await waitFor(() => rerender(ui));
-    act(() => userEvent.paste(passwordInput, 'mysecretpassword!546'));
-    userEvent.type(screen.getByLabelText(/confirm password \*/i), 'mysecretpassword!123');
+    act(() => userEvent.paste(passwordInput, badPassword));
+    userEvent.type(screen.getByLabelText(/confirm password \*/i), goodPassword);
     userEvent.click(screen.getByRole('button', { name: /Save password/i }));
     expect(snackbar).toHaveBeenCalledWith('The passwords you provided do not match, please check again.', 5000, '');
-    act(() => userEvent.clear(screen.getByDisplayValue('mysecretpassword!546')));
+    act(() => userEvent.clear(screen.getByDisplayValue(badPassword)));
     await waitFor(() => rerender(ui));
-    act(() => userEvent.paste(passwordInput, 'mysecretpassword!123'));
+    act(() => userEvent.paste(passwordInput, goodPassword));
     await waitFor(() => rerender(ui));
     submitCheck.mockResolvedValue();
     act(() => userEvent.click(screen.getByRole('button', { name: /Save password/i })));
     await waitFor(() => rerender(ui));
-    expect(submitCheck).toHaveBeenCalledWith(secretHash, 'mysecretpassword!123');
+    expect(submitCheck).toHaveBeenCalledWith(secretHash, goodPassword);
     expect(screen.queryByText(/Your password has been updated./i)).toBeInTheDocument();
   });
 });

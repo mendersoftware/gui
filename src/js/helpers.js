@@ -131,8 +131,7 @@ export function preformatWithRequestID(res, failMsg) {
   try {
     if (res?.data && Object.keys(res.data).includes('request_id')) {
       let shortRequestUUID = res.data['request_id'].substring(0, 8);
-      let finalMessage = `${failMsg} [Request ID: ${shortRequestUUID}]`;
-      return finalMessage;
+      return `${failMsg} [Request ID: ${shortRequestUUID}]`;
     }
   } catch (e) {
     console.log('failed to extract request id:', e);
@@ -218,17 +217,13 @@ export function deepCompare() {
     // Quick checking of one object being a subset of another.
     // todo: cache the structure of arguments[0] for performance
     for (p in y) {
-      if (y.hasOwnProperty(p) !== x.hasOwnProperty(p)) {
-        return false;
-      } else if (typeof y[p] !== typeof x[p]) {
+      if (y.hasOwnProperty(p) !== x.hasOwnProperty(p) || typeof y[p] !== typeof x[p]) {
         return false;
       }
     }
 
     for (p in x) {
-      if (y.hasOwnProperty(p) !== x.hasOwnProperty(p)) {
-        return false;
-      } else if (typeof y[p] !== typeof x[p]) {
+      if (y.hasOwnProperty(p) !== x.hasOwnProperty(p) || typeof y[p] !== typeof x[p]) {
         return false;
       }
 
@@ -304,7 +299,6 @@ export const formatTime = date => {
   } else if (date) {
     return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
   }
-  return;
 };
 
 export const customSort = (direction, field) => (a, b) => {
@@ -435,7 +429,7 @@ export const validatePhases = (phases, deploymentDeviceCount, hasFilter) => {
       return accu;
     }
     const deviceCount = Math.floor((deploymentDeviceCount / 100) * (phase.batch_size || remainder));
-    return !(deviceCount < 1) || hasFilter;
+    return deviceCount >= 1 || hasFilter;
   }, true);
 };
 
@@ -459,7 +453,7 @@ export const sortDeploymentDevices = devices => {
     pause_before_rebooting: []
   };
   devices.map(device => (newList.hasOwnProperty(device.status) ? newList[device.status].push(device) : newList.decommissioned.push(device)));
-  const newCombine = newList.failure.concat(
+  return newList.failure.concat(
     newList.pause_before_committing,
     newList.pause_before_installing,
     newList.pause_before_rebooting,
@@ -473,7 +467,6 @@ export const sortDeploymentDevices = devices => {
     newList['already-installed'],
     newList.decommissioned
   );
-  return newCombine;
 };
 
 export const startTimeSort = (a, b) => (b.created > a.created) - (b.created < a.created);
@@ -514,7 +507,7 @@ ${enterpriseSettings}`;
   const debInstallationCode = `wget -q -O- https://get.mender.io/${
     isPreRelease && window.location.hostname.includes('staging') ? 'staging' : ''
   } | sudo bash -s -- --demo`;
-  let codeToCopy = `${debInstallationCode} && \\
+  return `${debInstallationCode} && \\
 sudo bash -c 'DEVICE_TYPE="${deviceType}" && \\${
     token
       ? `
@@ -536,7 +529,6 @@ EOF
 ) && systemctl restart mender-connect && \\
 echo "Done!"'
 `;
-  return codeToCopy;
 };
 
 export const getSnackbarMessage = (skipped, done) => {

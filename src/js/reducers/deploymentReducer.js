@@ -44,6 +44,7 @@ const deploymentReducer = (state = initialState, action) => {
       };
     }
     case DeploymentConstants.RECEIVE_DEPLOYMENT:
+    case DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICE_LOG:
       return {
         ...state,
         byId: {
@@ -60,14 +61,6 @@ const deploymentReducer = (state = initialState, action) => {
             ...state.byId[action.deploymentId],
             stats: action.stats
           }
-        }
-      };
-    case DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICE_LOG:
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [action.deployment.id]: action.deployment
         }
       };
     case DeploymentConstants.RECEIVE_INPROGRESS_DEPLOYMENTS:

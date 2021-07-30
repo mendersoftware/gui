@@ -20,9 +20,7 @@ export const QuickFilter = ({ attributes, filters, onChange }) => {
   }, [selectedAttribute, filterValue]);
 
   useEffect(() => {
-    if (!filters.length) {
-      setFilterValue('');
-    } else if (!filters.some(filter => filter.key === selectedAttribute && filter.value === filterValue)) {
+    if (!filters.length || !filters.some(filter => filter.key === selectedAttribute && filter.value === filterValue)) {
       setFilterValue('');
     }
   }, [filters]);

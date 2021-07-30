@@ -15,6 +15,9 @@ const styles = {
   infoStyle: {
     minWidth: 400,
     borderBottom: 'none'
+  },
+  pickerStyle: {
+    width: 'min-content'
   }
 };
 
@@ -101,7 +104,7 @@ export const ScheduleRollout = props => {
   return (
     <form className="flexbox column  margin margin-top-none" style={{ overflow: 'visible', minHeight: 300 }}>
       <div className="deployment-scheduling-view">
-        <FormControl style={{ width: 'min-content', marginBottom: isPickerOpen || start_time ? 0 : 30 }}>
+        <FormControl style={{ ...styles.pickerStyle, marginBottom: isPickerOpen || start_time ? 0 : 30 }}>
           <h4>Select a start time</h4>
           <Select onChange={handleStartChange} value={start_time ? 'custom' : 0} style={styles.textField}>
             <MenuItem value={0}>Start immediately</MenuItem>
@@ -111,7 +114,7 @@ export const ScheduleRollout = props => {
         <div />
         {isPickerOpen || start_time ? (
           <>
-            <FormControl className="margin-bottom" style={{ width: 'min-content' }}>
+            <FormControl className="margin-bottom" style={styles.pickerStyle}>
               <MuiPickersUtilsProvider utils={MomentUtils}>
                 <DateTimePicker
                   ampm={false}
@@ -130,7 +133,7 @@ export const ScheduleRollout = props => {
             {deploymentTimeNotification}
           </>
         ) : null}
-        <FormControl style={{ maxWidth: 515, width: 'min-content' }}>
+        <FormControl style={{ ...styles.pickerStyle, maxWidth: 515 }}>
           <h4>Select a rollout pattern</h4>
           <Select onChange={handlePatternChange} value={customPattern} style={styles.textField} disabled={!isEnterprise}>
             <MenuItem value={0}>Single phase: 100%</MenuItem>

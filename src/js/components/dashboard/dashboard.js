@@ -40,15 +40,12 @@ export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceL
 
   const handleClick = params => {
     let redirect;
-    switch (params.route) {
-      case 'deployments': {
-        let URIParams = params.open;
-        URIParams = params.id ? `${URIParams}&id=${params.id}` : URIParams;
-        redirect = `/deployments/${params.tab || 'progress'}/open=${encodeURIComponent(URIParams)}`;
-        break;
-      }
-      default:
-        redirect = params.route;
+    if (params.route === 'deployments') {
+      let URIParams = params.open;
+      URIParams = params.id ? `${URIParams}&id=${params.id}` : URIParams;
+      redirect = `/deployments/${params.tab || 'progress'}/open=${encodeURIComponent(URIParams)}`;
+    } else {
+      redirect = params.route;
     }
     setRedirect(redirect);
   };

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import pluralize from 'pluralize';
 
-import { commonErrorHandler, progress, setSnackbar } from '../actions/appActions';
+import { commonErrorFallback, commonErrorHandler, progress, setSnackbar } from '../actions/appActions';
 import { getSingleDeployment } from '../actions/deploymentActions';
 import { saveGlobalSettings } from '../actions/userActions';
 import { auditLogsApiUrl } from '../actions/organizationActions';
@@ -547,7 +547,7 @@ export const getDevicesByStatus = (status, options = {}) => (dispatch, getState)
       tasks.push(Promise.resolve({ deviceAccu, total: Number(response.headers[headerNames.total]) }));
       return Promise.all(tasks);
     })
-    .catch(err => commonErrorHandler(err, `${status} devices couldn't be loaded.`, dispatch, 'Please check your connection.'));
+    .catch(err => commonErrorHandler(err, `${status} devices couldn't be loaded.`, dispatch, commonErrorFallback));
 };
 
 export const getAllDevicesByStatus = status => (dispatch, getState) => {
@@ -786,18 +786,18 @@ export const getDeviceConfig = deviceId => (dispatch, getState) =>
     .catch(err => {
       // if we get a proper error response we most likely queried a device without an existing config check-in and we can just ignore the call
       if (err.response?.data?.error.status_code !== 404) {
-        return commonErrorHandler(err, `There was an error retrieving the configuration for device ${deviceId}.`, dispatch, 'Please check your connection.');
+        return commonErrorHandler(err, `There was an error retrieving the configuration for device ${deviceId}.`, dispatch, commonErrorFallback);
       }
     });
 
 export const setDeviceConfig = (deviceId, config) => dispatch =>
   GeneralApi.put(`${deviceConfig}/${deviceId}`, config)
-    .catch(err => commonErrorHandler(err, `There was an error setting the configuration for device ${deviceId}.`, dispatch, 'Please check your connection.'))
+    .catch(err => commonErrorHandler(err, `There was an error setting the configuration for device ${deviceId}.`, dispatch, commonErrorFallback))
     .then(() => Promise.resolve(dispatch(getDeviceConfig(deviceId))));
 
 export const applyDeviceConfig = (deviceId, configDeploymentConfiguration, isDefault, config) => (dispatch, getState) =>
   GeneralApi.post(`${deviceConfig}/${deviceId}/deploy`, configDeploymentConfiguration)
-    .catch(err => commonErrorHandler(err, `There was an error deploying the configuration to device ${deviceId}.`, dispatch, 'Please check your connection.'))
+    .catch(err => commonErrorHandler(err, `There was an error deploying the configuration to device ${deviceId}.`, dispatch, commonErrorFallback))
     .then(({ data }) => {
       let tasks = [dispatch(getSingleDeployment(data.deployment_id))];
       if (isDefault) {
