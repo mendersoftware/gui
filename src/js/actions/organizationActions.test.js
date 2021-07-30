@@ -14,6 +14,7 @@ import {
   getAuditLogsCsvLink,
   getCurrentCard,
   getUserOrganization,
+  requestPlanChange,
   sendSupportMessage,
   startCardUpdate,
   startUpgrade
@@ -110,6 +111,34 @@ describe('organization actions', () => {
       expect(storeActions).toHaveLength(expectedActions.length);
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
+  });
+
+  it('should handle schema based support request sending', async () => {
+    const store = mockStore({ ...defaultState });
+    expect(store.getActions()).toHaveLength(0);
+    const expectedActions = [
+      {
+        type: AppConstants.SET_SNACKBAR,
+        snackbar: {
+          message: 'Your request was sent successfully'
+        }
+      }
+    ];
+    await store
+      .dispatch(
+        requestPlanChange(defaultState.organization.organization.id, {
+          current_plan: 'Basic',
+          requested_plan: 'Enterprise',
+          current_addons: 'something,extra',
+          requested_addons: 'something,extra,special',
+          user_message: 'more please'
+        })
+      )
+      .then(() => {
+        const storeActions = store.getActions();
+        expect(storeActions).toHaveLength(expectedActions.length);
+        expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+      });
   });
 
   it('should handle account upgrade init', async () => {
