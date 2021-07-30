@@ -8,7 +8,7 @@ exports[`App Component renders correctly 1`] = `
     <div
       class="MuiToolbar-root MuiToolbar-regular header MuiToolbar-gutters"
       id="fixedHeader"
-      style="background-color: rgb(255, 255, 255); min-height: unset; padding-left: 32px; padding-right: 40px;"
+      style="min-height: unset; padding-left: 32px; padding-right: 40px;"
     >
       <div
         class="flexbox"
@@ -126,35 +126,43 @@ exports[`App Component renders correctly 1`] = `
         </a>
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-text header-dropdown"
-          style="font-size: 14px; fill: rgb(0, 0, 0); text-transform: none;"
+          style="font-size: 14px; margin-left: 4px; text-transform: none;"
           tabindex="0"
           type="button"
         >
           <span
             class="MuiButton-label"
           >
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root"
-              focusable="false"
-              style="margin-right: 8px; top: 5px; font-size: 20px; color: rgb(199, 199, 199);"
-              viewBox="0 0 24 24"
+            <span
+              class="MuiButton-startIcon MuiButton-iconSizeMedium"
             >
-              <path
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"
-              />
-            </svg>
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root"
+                focusable="false"
+                style="color: rgb(199, 199, 199);"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"
+                />
+              </svg>
+            </span>
             
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root"
-              focusable="false"
-              viewBox="0 0 24 24"
+            <span
+              class="MuiButton-endIcon MuiButton-iconSizeMedium"
             >
-              <path
-                d="M7 10l5 5 5-5z"
-              />
-            </svg>
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M7 10l5 5 5-5z"
+                />
+              </svg>
+            </span>
           </span>
           <span
             class="MuiTouchRipple-root"

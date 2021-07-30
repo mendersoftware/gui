@@ -64,31 +64,56 @@ describe('user actions', () => {
   });
   it('should toggle helptips visibility based on cookie value', async () => {
     jest.clearAllMocks();
-    const cookies = new Cookies();
     const expectedActions = [
       { type: UserConstants.SET_SHOW_HELP, show: true },
+      {
+        type: UserConstants.SET_GLOBAL_SETTINGS,
+        settings: {
+          ...defaultState.users.globalSettings,
+          [defaultState.users.currentUser]: {
+            ...defaultState.users.globalSettings[defaultState.users.currentUser],
+            showHelptips: true
+          }
+        }
+      },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true }
     ];
     const store = mockStore({ ...defaultState });
     store.dispatch(toggleHelptips());
-    expect(cookies.get).toHaveBeenCalledTimes(1);
-    expect(cookies.set).toHaveBeenCalledTimes(1);
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
   it('should toggle helptips visibility based on cookie value - pt 2', async () => {
     jest.clearAllMocks();
-    const cookies = new Cookies();
     const expectedActions = [
       { type: UserConstants.SET_SHOW_HELP, show: false },
+      {
+        type: UserConstants.SET_GLOBAL_SETTINGS,
+        settings: {
+          ...defaultState.users.globalSettings,
+          [defaultState.users.currentUser]: {
+            ...defaultState.users.globalSettings[defaultState.users.currentUser],
+            showHelptips: false
+          }
+        }
+      },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: false }
     ];
-    const store = mockStore({ ...defaultState });
-    cookies.get.mockReturnValueOnce({ help: true });
+    const store = mockStore({
+      ...defaultState,
+      users: {
+        ...defaultState.users,
+        globalSettings: {
+          ...defaultState.users.globalSettings,
+          [defaultState.users.currentUser]: {
+            ...defaultState.users.globalSettings[defaultState.users.currentUser],
+            showHelptips: true
+          }
+        }
+      }
+    });
     store.dispatch(toggleHelptips());
-    expect(cookies.get).toHaveBeenCalledTimes(1);
-    expect(cookies.set).toHaveBeenCalledTimes(1);
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
@@ -104,11 +129,7 @@ describe('user actions', () => {
   });
   it('should verify 2fa codes during 2fa setup', async () => {
     jest.clearAllMocks();
-    const expectedActions = [
-      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId[userId] },
-      { type: UserConstants.SET_SHOW_HELP, show: true },
-      { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true }
-    ];
+    const expectedActions = [{ type: UserConstants.RECEIVED_USER, user: defaultState.users.byId[userId] }];
     const store = mockStore({ ...defaultState });
     await store.dispatch(verify2FA({ token2fa: '123456' }));
     const storeActions = store.getActions();
@@ -117,11 +138,7 @@ describe('user actions', () => {
   });
   it('should allow enabling 2fa during 2fa setup', async () => {
     jest.clearAllMocks();
-    const expectedActions = [
-      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId.a1 },
-      { type: UserConstants.SET_SHOW_HELP, show: true },
-      { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true }
-    ];
+    const expectedActions = [{ type: UserConstants.RECEIVED_USER, user: defaultState.users.byId.a1 }];
     const store = mockStore({ ...defaultState });
     await store.dispatch(enableUser2fa(defaultState.users.byId.a1.id));
     const storeActions = store.getActions();
@@ -130,11 +147,7 @@ describe('user actions', () => {
   });
   it('should allow disabling 2fa during 2fa setup', async () => {
     jest.clearAllMocks();
-    const expectedActions = [
-      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId.a1 },
-      { type: UserConstants.SET_SHOW_HELP, show: true },
-      { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true }
-    ];
+    const expectedActions = [{ type: UserConstants.RECEIVED_USER, user: defaultState.users.byId.a1 }];
     const store = mockStore({ ...defaultState });
     await store.dispatch(disableUser2fa(defaultState.users.byId.a1.id));
     const storeActions = store.getActions();
@@ -155,9 +168,7 @@ describe('user actions', () => {
     jest.clearAllMocks();
     const expectedActions = [
       { type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token },
-      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId[userId] },
-      { type: UserConstants.SET_SHOW_HELP, show: true },
-      { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true }
+      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId[userId] }
     ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(loginUser({ email: 'test@example.com', password: 'mysecretpassword' }));
@@ -190,15 +201,9 @@ describe('user actions', () => {
   });
   it('should allow single user retrieval', async () => {
     jest.clearAllMocks();
-    const cookies = new Cookies();
-    const expectedActions = [
-      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId.a1 },
-      { type: UserConstants.SET_SHOW_HELP, show: true },
-      { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true }
-    ];
+    const expectedActions = [{ type: UserConstants.RECEIVED_USER, user: defaultState.users.byId.a1 }];
     const store = mockStore({ ...defaultState });
     await store.dispatch(getUser('a1'));
-    expect(cookies.set).toHaveBeenCalledTimes(1);
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

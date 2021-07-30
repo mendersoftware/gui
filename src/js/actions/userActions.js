@@ -66,12 +66,12 @@ export const logoutUser = reason => (dispatch, getState) => {
   if (getState().releases.uploadProgress) {
     return Promise.reject();
   }
+  let tasks = [dispatch({ type: UserConstants.USER_LOGOUT })];
   return GeneralApi.post(`${useradmApiUrl}/auth/logout`).finally(() => {
-    let tasks = [dispatch({ type: UserConstants.USER_LOGOUT })];
+    clearAllRetryTimers(setSnackbar);
     if (reason) {
       tasks.push(dispatch(setSnackbar(reason)));
     }
-    clearAllRetryTimers(setSnackbar);
     logout();
     return Promise.all(tasks);
   });
@@ -126,19 +126,9 @@ export const getUserList = () => dispatch =>
     .catch(err => commonErrorHandler(err, `Users couldn't be loaded.`, dispatch, commonErrorFallback));
 
 export const getUser = id => dispatch =>
-  GeneralApi.get(`${useradmApiUrl}/users/${id}`).then(({ data: user }) => {
-    let tasks = [dispatch({ type: UserConstants.RECEIVED_USER, user }), dispatch(setHideAnnouncement(false, user.id))];
-    // checks if user id is set and if cookie for helptips exists for that user
-    const userCookie = cookies.get(user.id);
-    if (typeof userCookie === 'undefined' || typeof userCookie.help === 'undefined') {
-      // if no user cookie set, do so via togglehelptips
-      tasks.push(dispatch(toggleHelptips()));
-    } else {
-      // got user cookie but help value not set
-      tasks.push(dispatch(setShowHelptips(userCookie.help)));
-    }
-    return Promise.all([...tasks, user]);
-  });
+  GeneralApi.get(`${useradmApiUrl}/users/${id}`).then(({ data: user }) =>
+    Promise.all([dispatch({ type: UserConstants.RECEIVED_USER, user }), dispatch(setHideAnnouncement(false, user.id)), user])
+  );
 
 const actions = {
   create: {
@@ -322,7 +312,7 @@ export const get2FAQRCode = () => dispatch =>
   Onboarding
 */
 export const setShowHelptips = show => (dispatch, getState) => {
-  let tasks = [dispatch({ type: UserConstants.SET_SHOW_HELP, show })];
+  let tasks = [dispatch({ type: UserConstants.SET_SHOW_HELP, show }), dispatch(saveUserSettings({ showHelptips: show }))];
   if (!getOnboardingState(getState()).complete) {
     tasks.push(dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show }));
   }
@@ -330,15 +320,8 @@ export const setShowHelptips = show => (dispatch, getState) => {
 };
 
 export const toggleHelptips = () => (dispatch, getState) => {
-  const state = getState();
-  const user = getCurrentUser(state);
-  if (user.id) {
-    // if current user id available from store
-    let userCookie = cookies.get(user.id) || {};
-    userCookie.help = !userCookie.help;
-    cookies.set(user.id, JSON.stringify(userCookie));
-    return dispatch(setShowHelptips(userCookie.help));
-  }
+  const showHelptips = getUserSettings(getState()).showHelptips;
+  return dispatch(setShowHelptips(!showHelptips));
 };
 
 export const setShowConnectingDialog = show => dispatch => dispatch({ type: UserConstants.SET_SHOW_CONNECT_DEVICE, show: Boolean(show) });
