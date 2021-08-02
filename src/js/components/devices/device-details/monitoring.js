@@ -8,7 +8,7 @@ import { DeviceOfflineHeaderNotification, NoAlertsHeaderNotification, severityMa
 
 const MonitoringAlert = ({ alert: { id, level, name, subject, timestamp }, onLogClick }) => (
   <div className="monitoring-alert column-data">
-    {severityMap.CRITICAL.listIcon}
+    {severityMap[level].listIcon}
     <div className="key text-muted">
       <b>{name}</b>
     </div>

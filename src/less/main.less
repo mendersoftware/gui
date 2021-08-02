@@ -526,7 +526,8 @@ ul.link-list {
   padding-top: 2 * @defaultGutterWidth;
   min-height: 60vh;
   overflow: hidden;
-  > div, ul {
+  > div,
+  ul {
     overflow: auto;
   }
   &.with-sub-panels {
@@ -537,7 +538,8 @@ ul.link-list {
 
 .flexbox {
   display: flex;
-  &.center-aligned, &.centered {
+  &.center-aligned,
+  &.centered {
     align-items: center;
   }
   &.centered {
@@ -1380,7 +1382,8 @@ div:focus {
     border-color: @lightgrey;
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
   }
-  &.muted, &.muted:hover {
+  &.muted,
+  &.muted:hover {
     cursor: default;
     box-shadow: none;
   }
@@ -1393,8 +1396,8 @@ div:focus {
   color: @linkgreen;
   font-size: 12px;
   svg {
-    width: .7em;
-    height: .7em;
+    width: 0.7em;
+    height: 0.7em;
     vertical-align: middle;
     margin-left: 4px;
     margin-right: 2px;
@@ -1428,7 +1431,11 @@ div:focus {
 
 /* tables */
 
-.mender-list-item, .auditlogs-list-item, .deviceListRow, .deviceListItem, .deployment-item {
+.mender-list-item,
+.auditlogs-list-item,
+.deviceListRow,
+.deviceListItem,
+.deployment-item {
   border-bottom: 1px solid @bordercolor;
   height: 3 * @defaultGutterWidth;
   min-height: 3 * @defaultGutterWidth;
@@ -1605,7 +1612,7 @@ div:focus {
 
 .monitoring-alert {
   display: grid;
-  grid-template-columns: min-content max-content 100px min-content 1fr max-content;
+  grid-template-columns: min-content 0.875fr 100px min-content 1fr max-content;
   column-gap: @defaultGutterWidth;
   align-items: center;
   margin: 0 @defaultGutterWidth;

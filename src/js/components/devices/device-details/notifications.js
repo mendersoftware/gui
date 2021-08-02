@@ -21,8 +21,8 @@ const monitoringSeverities = {
 export const severityMap = {
   [monitoringSeverities.CRITICAL]: { className: 'red', icon: errorIcon, listIcon: <ErrorIcon className="red" /> },
   [monitoringSeverities.CRITICAL_FLAPPING]: { className: '', icon: errorIcon, listIcon: <ErrorIcon className="red" /> },
-  [monitoringSeverities.OK]: { className: '', icon: successIcon },
-  [monitoringSeverities.UNKNOWN]: { className: '', icon: questionIcon }
+  [monitoringSeverities.OK]: { className: '', icon: successIcon, listIcon: <CheckIcon className="green" /> },
+  [monitoringSeverities.UNKNOWN]: { className: '', icon: questionIcon, listIcon: <HelpIcon /> }
 };
 
 export const BaseNotification = ({ bordered = true, className = '', children, severity, onClick }) => {
