@@ -257,7 +257,7 @@ const mapStateToProps = state => {
     demoArtifactLink: state.app.demoArtifactLink,
     onboardingState: getOnboardingState(state),
     pastDeploymentsCount: state.deployments.byStatus.finished.total,
-    release: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : {},
+    release: state.releases.byId[state.releases.selectedRelease] ?? {},
     releases: Object.values(state.releases.byId),
     selectedArtifact: state.releases.selectedArtifact,
     showHelptips: state.users.showHelptips,
