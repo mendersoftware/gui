@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 import { defaultState } from '../../../tests/mockData';
 import AppConstants from '../constants/appConstants';
 import MonitorConstants from '../constants/monitorConstants';
-import { changeNotificationSetting, getAlertsForDevice } from './monitorActions';
+import { changeNotificationSetting, getDeviceAlerts } from './monitorActions';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -17,11 +17,11 @@ describe('monitor actions', () => {
     const expectedActions = [
       {
         type: MonitorConstants.RECEIVE_DEVICE_ALERTS,
-        device: defaultState.devices.byId.a1.id,
+        deviceId: defaultState.devices.byId.a1.id,
         alerts: []
       }
     ];
-    const request = store.dispatch(getAlertsForDevice(defaultState.devices.byId.a1.id));
+    const request = store.dispatch(getDeviceAlerts(defaultState.devices.byId.a1.id));
     expect(request).resolves.toBeTruthy();
     await request.then(() => {
       const storeActions = store.getActions();

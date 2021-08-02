@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import copy from 'copy-to-clipboard';
 
@@ -17,8 +17,9 @@ import {
   setDeviceConfig,
   setDeviceTags
 } from '../../actions/deviceActions';
+import { getDeviceAlerts } from '../../actions/monitorActions';
 import { saveGlobalSettings } from '../../actions/userActions';
-import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { DEVICE_ONLINE_CUTOFF, DEVICE_STATES } from '../../constants/deviceConstants';
 import ForwardingLink from '../common/forwardlink';
 import RelativeTime from '../common/relative-time';
 import { getDocsVersion, getIsEnterprise, getTenantCapabilities } from '../../selectors';
@@ -32,6 +33,9 @@ import DeviceTags from './device-details/devicetags';
 import DeviceIdentity from './device-details/identity';
 import DeviceConnection from './device-details/connection';
 import InstalledSoftware from './device-details/installedsoftware';
+import DeviceMonitoring from './device-details/monitoring';
+import DeviceNotifications from './device-details/notifications';
+import LogDialog from '../common/dialogs/log';
 
 const refreshDeviceLength = 10000;
 let timer;
@@ -39,19 +43,19 @@ let timer;
 export const ExpandedDevice = ({
   abortDeployment,
   applyDeviceConfig,
+  alerts,
   decommissionDevice,
   defaultConfig,
   device,
   deviceConfigDeployment,
   docsVersion,
+  getDeviceAlerts,
   getDeviceLog,
   getDeviceAuth,
   getDeviceById,
   getDeviceConfig,
   getDeviceConnect,
   getSingleDeployment,
-  hasDeviceConfig,
-  hasDeviceConnect,
   isEnterprise,
   onClose,
   open,
@@ -60,12 +64,17 @@ export const ExpandedDevice = ({
   setDeviceConfig,
   setDeviceTags,
   setSnackbar,
-  showHelptips
+  showHelptips,
+  tenantCapabilities
 }) => {
-  const { status = DEVICE_STATES.accepted } = device;
-
+  const { status = DEVICE_STATES.accepted, updated_ts = '' } = device;
   const [socketClosed, setSocketClosed] = useState(true);
   const [troubleshootType, setTroubleshootType] = useState();
+  const [monitorLog, setMonitorLog] = useState('');
+  const [yesterday, setYesterday] = useState(new Date());
+  const monitoring = useRef();
+
+  const { hasDeviceConfig, hasDeviceConnect, hasMonitor } = tenantCapabilities;
 
   useEffect(() => {
     if (!device.id) {
@@ -74,6 +83,13 @@ export const ExpandedDevice = ({
     clearInterval(timer);
     timer = setInterval(() => getDeviceInfo(device), refreshDeviceLength);
     getDeviceInfo(device);
+
+    const today = new Date();
+    const intervalName = `${DEVICE_ONLINE_CUTOFF.intervalName.charAt(0).toUpperCase()}${DEVICE_ONLINE_CUTOFF.intervalName.substring(1)}`;
+    const setter = `set${intervalName}s`;
+    const getter = `get${intervalName}s`;
+    today[setter](today[getter]() - DEVICE_ONLINE_CUTOFF.interval);
+    setYesterday(today);
     return () => {
       clearInterval(timer);
     };
@@ -88,6 +104,9 @@ export const ExpandedDevice = ({
       // Get full device identity details for single selected device
       getDeviceById(device.id);
       getDeviceConnect(device.id);
+      if (hasMonitor) {
+        getDeviceAlerts(device.id);
+      }
     }
   };
 
@@ -113,23 +132,34 @@ export const ExpandedDevice = ({
     setSnackbar('Link copied to clipboard');
   };
 
+  const onLogClick = (id, content) => {
+    // getDeviceMonitorLog(id);
+    setMonitorLog(content);
+  };
+
+  const scrollToMonitor = () => {
+    monitoring.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   const deviceIdentifier = device?.attributes?.name ?? device?.id ?? '-';
   const isAcceptedDevice = status === DEVICE_STATES.accepted;
+  const isOffline = useMemo(() => new Date(updated_ts) < yesterday, [updated_ts, yesterday]);
   return (
     <Drawer anchor="right" className="expandedDevice" open={open} onClose={onClose} PaperProps={{ style: { minWidth: '67vw' } }}>
-      <div className="flexbox center-aligned margin-bottom-small">
+      <div className="flexbox center-aligned">
         <h3>Device information for {deviceIdentifier}</h3>
         <IconButton onClick={copyLinkToClipboard}>
           <LinkIcon />
         </IconButton>
-        <div className="muted margin-left margin-right">
+        <div className={`${isOffline ? 'red' : 'muted'} margin-left margin-right`}>
           Last check-in: <RelativeTime updateTime={device.updated_ts} />
         </div>
         <IconButton style={{ marginLeft: 'auto' }} onClick={onClose} aria-label="close">
           <CloseIcon />
         </IconButton>
       </div>
-      <Divider style={{ marginBottom: theme.spacing(3) }} />
+      <DeviceNotifications alerts={alerts} device={device} isOffline={isOffline} onClick={scrollToMonitor} />
+      <Divider style={{ marginBottom: theme.spacing(3), marginTop: theme.spacing(2) }} />
       <DeviceIdentity device={device} setSnackbar={setSnackbar} />
       <AuthStatus
         device={device}
@@ -160,6 +190,9 @@ export const ExpandedDevice = ({
           showHelptips={showHelptips}
         />
       )}
+      {isAcceptedDevice && hasMonitor && (
+        <DeviceMonitoring alerts={alerts} device={device} innerRef={monitoring} isOffline={isOffline} onLogClick={onLogClick} />
+      )}
       {isAcceptedDevice && hasDeviceConnect && (
         <DeviceConnection
           device={device}
@@ -187,6 +220,7 @@ export const ExpandedDevice = ({
         setSocketClosed={setSocketClosed}
         type={troubleshootType}
       />
+      {monitorLog && <LogDialog logData={monitorLog} onClose={() => setMonitorLog('')} type="monitorLog" />}
     </Drawer>
   );
 };
@@ -195,6 +229,7 @@ const actionCreators = {
   abortDeployment,
   applyDeviceConfig,
   decommissionDevice,
+  getDeviceAlerts,
   getDeviceLog,
   getDeviceAuth,
   getDeviceById,
@@ -208,20 +243,21 @@ const actionCreators = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const { hasDeviceConfig, hasDeviceConnect } = getTenantCapabilities(state);
+  const tenantCapabilities = getTenantCapabilities(state);
   const device = state.devices.byId[ownProps.deviceId] || {};
   const { config = {} } = device;
   const { deployment_id: configDeploymentId } = config;
+  const alerts = state.monitor.alerts.byDeviceId[ownProps.deviceId] || [];
   return {
+    alerts: alerts.slice(0, 20),
     defaultConfig: state.users.globalSettings.defaultDeviceConfig,
     device,
     deviceConfigDeployment: state.deployments.byId[configDeploymentId] || {},
     docsVersion: getDocsVersion(state),
-    hasDeviceConnect,
-    hasDeviceConfig,
     isEnterprise: getIsEnterprise(state),
     onboardingComplete: state.onboarding.complete,
-    showHelptips: state.users.showHelptips
+    showHelptips: state.users.showHelptips,
+    tenantCapabilities
   };
 };
 
