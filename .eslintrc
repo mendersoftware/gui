@@ -5,7 +5,7 @@
     "node": true,
     "jest": true
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:import/errors", "plugin:import/warnings"],
+  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:import/errors", "plugin:import/warnings", "plugin:sonarjs/recommended"],
   "settings": {
     "import/resolver": {
       "node": {
@@ -24,7 +24,7 @@
   "globals": {
     "mender_environment": "readonly"
   },
-  "plugins": ["react", "prettier"],
+  "plugins": ["react", "prettier", "sonarjs"],
   "rules": {
     "prettier/prettier": 2,
     "consistent-this": ["error", "self"],
@@ -49,6 +49,8 @@
     "react/static-property-placement": 2,
     "react/style-prop-object": 2,
     "react/void-dom-elements-no-children": 2,
-    "react/jsx-no-target-blank": 2
+    "react/jsx-no-target-blank": 2,
+    "sonarjs/cognitive-complexity": 0,
+    "sonarjs/no-nested-template-literals": 0
   }
 }

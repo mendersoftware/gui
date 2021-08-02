@@ -109,16 +109,6 @@ const userReducer = (state = initialState, action) => {
       };
     }
     case UserConstants.CREATED_ROLE:
-      return {
-        ...state,
-        rolesById: {
-          ...state.rolesById,
-          [action.roleId]: {
-            ...state.rolesById[action.roleId],
-            ...action.role
-          }
-        }
-      };
     case UserConstants.UPDATED_ROLE:
       return {
         ...state,

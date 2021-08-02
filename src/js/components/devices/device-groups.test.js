@@ -62,12 +62,14 @@ describe('DeviceGroups Component', () => {
     ]);
   });
 
+  const devicesPath = '/devices/asd';
+  const devicesSearch = '?some=thing&different=thing&entirely=different';
   it('uses working utilties - generateBrowserLocation', () => {
     const { pathname, search } = generateBrowserLocation(
       DEVICE_STATES.pending,
       [{ key: 'some', value: 'thing' }],
       'testgroup',
-      { pathname: '/devices/asd', search: '?some=thing&different=thing&entirely=different' },
+      { pathname: devicesPath, search: devicesSearch },
       false
     );
     expect(pathname).toEqual('/devices/pending');
@@ -79,7 +81,7 @@ describe('DeviceGroups Component', () => {
       DEVICE_STATES.pending,
       [{ key: 'some', value: 'thing' }],
       'testgroup',
-      { pathname: '/devices/asd', search: '?some=thing&different=thing&entirely=different' },
+      { pathname: devicesPath, search: devicesSearch },
       true
     );
     expect(pathname).toEqual('/devices/pending');
@@ -91,7 +93,7 @@ describe('DeviceGroups Component', () => {
       DEVICE_STATES.pending,
       [{ key: 'some', value: 'thing' }],
       UNGROUPED_GROUP.id,
-      { pathname: '/devices/asd', search: '?some=thing&different=thing&entirely=different' },
+      { pathname: devicesPath, search: devicesSearch },
       true
     );
     expect(search).toEqual('');

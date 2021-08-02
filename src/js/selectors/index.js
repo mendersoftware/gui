@@ -52,7 +52,7 @@ export const getIsEnterprise = createSelector(
 export const getUserRoles = createSelector(
   [getCurrentUser, getRolesById, getIsEnterprise, getFeatures, getOrganization],
   (currentUser, rolesById, isEnterprise, { isHosted, hasMultitenancy }, { plan = 'os' }) => {
-    let isAdmin = false || !(hasMultitenancy || isEnterprise || (isHosted && plan !== 'os'));
+    let isAdmin = !(hasMultitenancy || isEnterprise || (isHosted && plan !== 'os'));
     let allowUserManagement = isAdmin;
     let isGroupRestricted = false;
     if (currentUser.roles) {

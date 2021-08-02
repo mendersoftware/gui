@@ -50,6 +50,7 @@ const releaseReducer = (state = initialState, action) => {
     case ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT:
     case ReleaseConstants.ARTIFACTS_SET_ARTIFACT_URL:
     case ReleaseConstants.UPDATED_ARTIFACT:
+    case ReleaseConstants.RECEIVE_RELEASE:
       return {
         ...state,
         byId: {
@@ -66,17 +67,6 @@ const releaseReducer = (state = initialState, action) => {
         byId: action.releases
       };
     }
-    case ReleaseConstants.RECEIVE_RELEASE:
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [action.release.Name]: {
-            ...state.byId[action.release.Name],
-            ...action.release
-          }
-        }
-      };
     case ReleaseConstants.RELEASE_REMOVED: {
       let byId = state.byId;
       delete byId[action.release];

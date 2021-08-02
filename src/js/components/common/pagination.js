@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { FirstPage as FirstPageIcon, LastPage as LastPageIcon, KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons';
 import { IconButton, TablePagination, TextField } from '@material-ui/core';
 
-import { DEVICE_LIST_MAXIMUM_LENGTH } from '../../constants/deviceConstants';
+import { DEVICE_LIST_DEFAULTS, DEVICE_LIST_MAXIMUM_LENGTH } from '../../constants/deviceConstants';
 
 const defaultRowsPerPageOptions = [10, 20, DEVICE_LIST_MAXIMUM_LENGTH];
+const { perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 const paginationIndex = 1;
 
-export const TablePaginationActions = ({ count, page = 0, onChangePage, rowsPerPage = 20 }) => {
+export const TablePaginationActions = ({ count, page = 0, onChangePage, rowsPerPage = defaultPerPage }) => {
   const [pageNo, setPageNo] = useState(page + paginationIndex);
 
   useEffect(() => {

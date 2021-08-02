@@ -5,13 +5,15 @@ import { Checkbox } from '@material-ui/core';
 
 import { Settings as SettingsIcon, Sort as SortIcon } from '@material-ui/icons';
 
-import { DEVICE_SORTING_OPTIONS, DEVICE_STATES } from '../../constants/deviceConstants';
+import { DEVICE_LIST_DEFAULTS, DEVICE_SORTING_OPTIONS, DEVICE_STATES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import ExpandedDevice from './expanded-device';
 import DeviceListItem from './devicelistitem';
 import { deepCompare } from '../../helpers';
+
+const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
 export const DeviceList = props => {
   const [expandedDeviceId, setExpandedDeviceId] = useState();
@@ -36,8 +38,8 @@ export const DeviceList = props => {
   } = props;
 
   const {
-    page: pageNo = 1,
-    perPage: pageLength = 20,
+    page: pageNo = defaultPage,
+    perPage: pageLength = defaultPerPage,
     selection: selectedRows,
     sort: { direction: sortDown = DEVICE_SORTING_OPTIONS.desc, columns = [] }
   } = deviceListState;
@@ -140,15 +142,13 @@ export const DeviceList = props => {
 };
 
 const areEqual = (prevProps, nextProps) => {
-  if (prevProps.pageTotal != nextProps.pageTotal) {
-    return false;
-  } else if (prevProps.pageLoading != nextProps.pageLoading) {
-    return false;
-  } else if (prevProps.idAttribute != nextProps.idAttribute) {
-    return false;
-  } else if (!deepCompare(prevProps.onboardingState, nextProps.onboardingState)) {
-    return false;
-  } else if (!deepCompare(prevProps.devices, nextProps.devices)) {
+  if (
+    prevProps.pageTotal != nextProps.pageTotal ||
+    prevProps.pageLoading != nextProps.pageLoading ||
+    prevProps.idAttribute != nextProps.idAttribute ||
+    !deepCompare(prevProps.onboardingState, nextProps.onboardingState) ||
+    !deepCompare(prevProps.devices, nextProps.devices)
+  ) {
     return false;
   }
   return deepCompare(prevProps.deviceListState, nextProps.deviceListState);

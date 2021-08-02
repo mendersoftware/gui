@@ -1,6 +1,8 @@
 import reducer, { initialState } from './appReducer';
 import * as AppConstants from '../constants/appConstants';
 
+const snackbarMessage = 'Run the tests';
+
 describe('app reducer', () => {
   it('should return the initial state', async () => {
     expect(reducer(undefined, {})).toEqual(initialState);
@@ -10,21 +12,21 @@ describe('app reducer', () => {
     expect(
       reducer(undefined, {
         type: AppConstants.SET_SNACKBAR,
-        snackbar: { open: true, message: 'Run the tests' }
+        snackbar: { open: true, message: snackbarMessage }
       }).snackbar
     ).toEqual({
       open: true,
-      message: 'Run the tests'
+      message: snackbarMessage
     });
 
     expect(
       reducer(initialState, {
         type: AppConstants.SET_SNACKBAR,
-        snackbar: { open: true, message: 'Run the tests' }
+        snackbar: { open: true, message: snackbarMessage }
       }).snackbar
     ).toEqual({
       open: true,
-      message: 'Run the tests'
+      message: snackbarMessage
     });
   });
 

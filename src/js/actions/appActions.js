@@ -16,6 +16,7 @@ import { getUserOrganization } from './organizationActions';
 
 const cookies = new Cookies();
 
+export const commonErrorFallback = 'Please check your connection.';
 export const commonErrorHandler = (err, errorContext, dispatch, fallback, mightBeAuthRelated = false) => {
   const errMsg = extractErrorMessage(err, fallback);
   if (mightBeAuthRelated || getToken()) {

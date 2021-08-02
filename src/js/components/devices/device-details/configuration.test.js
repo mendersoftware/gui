@@ -38,6 +38,7 @@ describe('Configuration Component', () => {
   beforeEach(() => {
     store = mockStore({ ...defaultState });
   });
+  const reportedTime = '2019-01-01T09:25:01.000Z';
   it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
@@ -47,8 +48,8 @@ describe('Configuration Component', () => {
             config: {
               configured: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
               reported: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
-              updated_ts: '2019-01-01T09:25:00.000Z',
-              reported_ts: '2019-01-01T09:25:01.000Z'
+              updated_ts: defaultState.devices.byId.a1.updated_ts,
+              reported_ts: reportedTime
             }
           }}
           abortDeployment={jest.fn}
@@ -73,8 +74,8 @@ describe('Configuration Component', () => {
       config: {
         configured: {},
         reported: {},
-        updated_ts: '2019-01-01T09:25:00.000Z',
-        reported_ts: '2019-01-01T09:25:01.000Z'
+        updated_ts: defaultState.devices.byId.a1.updated_ts,
+        reported_ts: reportedTime
       }
     };
     let ui = (
@@ -115,8 +116,8 @@ describe('Configuration Component', () => {
     device.config = {
       configured: { test: true, something: 'else', aNumber: 42 },
       reported: { test: true, something: 'else', aNumber: 42 },
-      updated_ts: '2019-01-01T09:25:00.000Z',
-      reported_ts: '2019-01-01T09:25:01.000Z'
+      updated_ts: defaultState.devices.byId.a1.updated_ts,
+      reported_ts: reportedTime
     };
     ui = (
       <Provider store={store}>
