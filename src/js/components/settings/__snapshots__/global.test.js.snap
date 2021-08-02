@@ -35,7 +35,7 @@ exports[`GlobalSettings Component renders correctly 1`] = `
       class="MuiFormControl-root"
     >
       <label
-        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
         data-shrink="true"
         id="device-id"
       >
@@ -50,13 +50,15 @@ exports[`GlobalSettings Component renders correctly 1`] = `
           role="button"
           tabindex="0"
         >
-          Device ID
+          <span>
+            ​
+          </span>
         </div>
         <input
           aria-hidden="true"
           class="MuiSelect-nativeInput"
           tabindex="-1"
-          value="Device ID"
+          value=""
         />
         <svg
           aria-hidden="true"
@@ -70,7 +72,7 @@ exports[`GlobalSettings Component renders correctly 1`] = `
         </svg>
       </div>
       <div
-        class="MuiFormHelperText-root info MuiFormHelperText-filled"
+        class="MuiFormHelperText-root info"
       >
         <div
           class="margin-top-small margin-bottom-small"

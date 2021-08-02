@@ -431,10 +431,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
                 class=\\"MuiTableCell-root MuiTableCell-head\\"
                 scope=\\"col\\"
                 style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
-                tooltip=\\"Device ID\\"
-              >
-                Device ID
-              </th>
+              />
               <th
                 class=\\"MuiTableCell-root MuiTableCell-head\\"
                 scope=\\"col\\"
@@ -496,7 +493,9 @@ Devices that are in the middle of the deployment at the time of abort will finis
                   href=\\"/devices/id=a1\\"
                   style=\\"font-weight: 500;\\"
                 >
-                  a1
+                  <div>
+                    a1
+                  </div>
                 </a>
               </td>
               <td

@@ -9,6 +9,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { toggleHelptips } from '../../actions/userActions';
 import { getDocsVersion } from '../../selectors';
 import ConfigurationObject from '../common/configurationobject';
+import MenderTooltip from '../common/mendertooltip';
 
 const actionCreators = { setSnackbar, toggleHelptips };
 const mapStateToProps = (state, ownProps) => {
@@ -278,3 +279,18 @@ const ConfigureAddOnTipComponent = ({ docsVersion }) => (
 );
 
 export const ConfigureAddOnTip = connect(mapStateToProps, actionCreators)(ConfigureAddOnTipComponent);
+
+export const NameTagTip = () => (
+  <MenderTooltip
+    arrow
+    title={
+      <>
+        The <i>Name</i> tag will be available as a device indentifier too.
+      </>
+    }
+  >
+    <div className="tooltip help" style={{ top: '15%', left: '85%' }}>
+      <HelpIcon />
+    </div>
+  </MenderTooltip>
+);

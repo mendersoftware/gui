@@ -29,7 +29,7 @@ export const initialState = {
   filters: [
     // { key: 'device_type', value: 'raspberry', operator: '$eq', scope: 'inventory' }
   ],
-  filteringAttributes: { identityAttributes: [], inventoryAttributes: [] },
+  filteringAttributes: { identityAttributes: [], inventoryAttributes: [], tagAttributes: [] },
   filteringAttributesLimit: 10,
   total: 0,
   limit: 0,

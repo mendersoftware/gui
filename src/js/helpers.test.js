@@ -291,7 +291,8 @@ describe('mapDeviceAttributes function', () => {
   const defaultAttributes = {
     inventory: { device_type: '', artifact_name: '' },
     identity: {},
-    system: {}
+    system: {},
+    tags: {}
   };
   it('works with empty attributes', async () => {
     expect(mapDeviceAttributes()).toEqual(defaultAttributes);

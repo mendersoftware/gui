@@ -14,7 +14,8 @@ import {
   getDeviceById,
   getDeviceConfig,
   getDeviceConnect,
-  setDeviceConfig
+  setDeviceConfig,
+  setDeviceTags
 } from '../../actions/deviceActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
@@ -27,6 +28,7 @@ import TroubleshootDialog from './troubleshootdialog';
 import AuthStatus from './device-details/authstatus';
 import DeviceConfiguration from './device-details/configuration';
 import DeviceInventory from './device-details/deviceinventory';
+import DeviceTags from './device-details/devicetags';
 import DeviceIdentity from './device-details/identity';
 import DeviceConnection from './device-details/connection';
 import InstalledSoftware from './device-details/installedsoftware';
@@ -56,6 +58,7 @@ export const ExpandedDevice = ({
   refreshDevices,
   saveGlobalSettings,
   setDeviceConfig,
+  setDeviceTags,
   setSnackbar,
   showHelptips
 }) => {
@@ -135,6 +138,7 @@ export const ExpandedDevice = ({
         disableBottomBorder={!isAcceptedDevice}
         showHelptips={showHelptips}
       />
+      <DeviceTags device={device} setSnackbar={setSnackbar} setDeviceTags={setDeviceTags} showHelptips={showHelptips} />
       {isAcceptedDevice && (
         <>
           <InstalledSoftware device={device} docsVersion={docsVersion} setSnackbar={setSnackbar} />
@@ -199,6 +203,7 @@ const actionCreators = {
   getSingleDeployment,
   saveGlobalSettings,
   setDeviceConfig,
+  setDeviceTags,
   setSnackbar
 };
 

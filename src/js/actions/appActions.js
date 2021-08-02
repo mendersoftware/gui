@@ -12,7 +12,7 @@ import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import { getDeviceAttributes, getDeviceById, getDevicesByStatus, getDeviceLimit, getDynamicGroups, getGroups } from './deviceActions';
 import { getDeploymentsByStatus } from './deploymentActions';
 import { getReleases } from './releaseActions';
-import { saveUserSettings, getGlobalSettings, getRoles } from './userActions';
+import { saveUserSettings, getGlobalSettings, getRoles, saveGlobalSettings } from './userActions';
 import { getUserOrganization } from './organizationActions';
 
 const cookies = new Cookies();
@@ -83,7 +83,22 @@ export const initializeAppData = () => (dispatch, getState) => {
     if (cookies.get('_ga') && typeof hasTrackingEnabled === 'undefined') {
       settings.trackingConsentGiven = true;
     }
-    return Promise.resolve(dispatch(saveUserSettings(settings)));
+    dispatch(saveUserSettings(settings));
+    // the following is used as a migration and initialization of the stored identity attribute
+    // changing the default device attribute to the first non-deviceId attribute, unless a stored
+    // id attribute setting exists
+    const identityOptions = state.devices.filteringAttributes.identityAttributes.filter(attribute => !['id', 'Device ID', 'status'].includes(attribute));
+    const { id_attribute } = state.users.globalSettings;
+    if (!id_attribute && identityOptions.length) {
+      dispatch(saveGlobalSettings({ id_attribute: { attribute: identityOptions[0], scope: 'identity' } }));
+    } else if (typeof id_attribute === 'string') {
+      let attribute = id_attribute;
+      if (attribute === 'Device ID') {
+        attribute = 'id';
+      }
+      dispatch(saveGlobalSettings({ id_attribute: { attribute, scope: 'identity' } }));
+    }
+    return Promise.resolve();
   });
 };
 

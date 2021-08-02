@@ -91,11 +91,10 @@ exports[`PreauthDialog Component renders correctly 1`] = `
         </h4>
         <div>
           <div
-            class="key-value-container flexbox"
+            class="key-value-container relative"
           >
             <div
               class="MuiFormControl-root"
-              style="margin-right: 15px; margin-top: 10px;"
             >
               <div
                 class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -111,7 +110,6 @@ exports[`PreauthDialog Component renders correctly 1`] = `
             </div>
             <div
               class="MuiFormControl-root"
-              style="margin-top: 10px;"
             >
               <div
                 class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
@@ -125,32 +123,42 @@ exports[`PreauthDialog Component renders correctly 1`] = `
                 />
               </div>
             </div>
-            <span
-              style="min-width: 44px;"
-            />
+            <span />
           </div>
-          <button
-            class="MuiButtonBase-root MuiFab-root MuiFab-sizeSmall Mui-disabled MuiFab-secondary Mui-disabled"
-            disabled=""
-            style="margin-top: 10px; margin-bottom: 10px;"
-            tabindex="-1"
-            type="button"
+          <div
+            class="key-value-container"
           >
-            <span
-              class="MuiFab-label"
+            <div
+              style="min-width: 240px;"
             >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root"
-                focusable="false"
-                viewBox="0 0 24 24"
+              <button
+                class="MuiButtonBase-root MuiFab-root MuiFab-sizeSmall Mui-disabled MuiFab-secondary Mui-disabled"
+                disabled=""
+                style="margin-bottom: 10px;"
+                tabindex="-1"
+                type="button"
               >
-                <path
-                  d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
-                />
-              </svg>
-            </span>
-          </button>
+                <span
+                  class="MuiFab-label"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+            <div
+              style="min-width: 240px;"
+            />
+            <div />
+          </div>
         </div>
       </div>
       <div

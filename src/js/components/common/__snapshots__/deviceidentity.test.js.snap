@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeviceIdentityDisplay Component renders correctly 1`] = `
+<div>
+  a1
+</div>
+`;

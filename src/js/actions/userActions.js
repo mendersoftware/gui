@@ -181,40 +181,42 @@ export const disableUser2fa = (userId = OWN_USER_ID) => dispatch =>
     .then(() => Promise.resolve(dispatch(getUser(userId))));
 
 export const getRoles = () => (dispatch, getState) =>
-  GeneralApi.get(`${useradmApiUrl}/roles`).then(({ data: roles }) => {
-    const rolesState = getState().users.rolesById;
-    const rolesById = roles.reduce((accu, role) => {
-      const { allowUserManagement, groups } = role.permissions.reduce(
-        (accu, permission) => {
-          if (permission.action === rolesByName.deploymentCreation.action && permission.object.type === rolesByName.deploymentCreation.object.type) {
-            accu.groups.push(permission.object.value);
-          }
-          if (
-            role.name === rolesByName.admin ||
-            (permission.action == rolesByName.userManagement.action &&
-              permission.object.type == rolesByName.userManagement.object.type &&
-              permission.object.value == rolesByName.userManagement.object.value)
-          ) {
-            accu.allowUserManagement = true;
-          }
-          return accu;
-        },
-        { allowUserManagement: false, groups: [] }
-      );
-      accu[role.name] = {
-        ...emptyRole,
-        ...rolesState[role.name],
-        groups,
-        description: rolesState[role.name] && rolesState[role.name].description ? rolesState[role.name].description : role.description,
-        editable: rolesState[role.name] && typeof rolesState[role.name].editable !== 'undefined' ? rolesState[role.name].editable : true,
-        title: rolesState[role.name] && rolesState[role.name].title ? rolesState[role.name].title : role.name,
-        permissions: role.permissions,
-        allowUserManagement: allowUserManagement
-      };
-      return accu;
-    }, {});
-    return dispatch({ type: UserConstants.RECEIVED_ROLES, rolesById });
-  });
+  GeneralApi.get(`${useradmApiUrl}/roles`)
+    .then(({ data: roles }) => {
+      const rolesState = getState().users.rolesById;
+      const rolesById = roles.reduce((accu, role) => {
+        const { allowUserManagement, groups } = role.permissions.reduce(
+          (accu, permission) => {
+            if (permission.action === rolesByName.deploymentCreation.action && permission.object.type === rolesByName.deploymentCreation.object.type) {
+              accu.groups.push(permission.object.value);
+            }
+            if (
+              role.name === rolesByName.admin ||
+              (permission.action == rolesByName.userManagement.action &&
+                permission.object.type == rolesByName.userManagement.object.type &&
+                permission.object.value == rolesByName.userManagement.object.value)
+            ) {
+              accu.allowUserManagement = true;
+            }
+            return accu;
+          },
+          { allowUserManagement: false, groups: [] }
+        );
+        accu[role.name] = {
+          ...emptyRole,
+          ...rolesState[role.name],
+          groups,
+          description: rolesState[role.name] && rolesState[role.name].description ? rolesState[role.name].description : role.description,
+          editable: rolesState[role.name] && typeof rolesState[role.name].editable !== 'undefined' ? rolesState[role.name].editable : true,
+          title: rolesState[role.name] && rolesState[role.name].title ? rolesState[role.name].title : role.name,
+          permissions: role.permissions,
+          allowUserManagement: allowUserManagement
+        };
+        return accu;
+      }, {});
+      return dispatch({ type: UserConstants.RECEIVED_ROLES, rolesById });
+    })
+    .catch(() => console.log('Role retrieval failed - likely accessing a non-RBAC backend'));
 
 const transformRoleDataToRole = roleData => {
   let permissions = roleData.groups.reduce(

@@ -6,7 +6,7 @@ export const initialState = {
   jwtToken: null,
   qrCode: null,
   globalSettings: {
-    id_attribute: 'Device ID',
+    id_attribute: undefined,
     previousFilters: [],
     previousPhases: [],
     retries: 0

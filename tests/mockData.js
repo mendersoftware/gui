@@ -171,7 +171,8 @@ export const defaultState = {
     },
     filteringAttributes: {
       identityAttributes: ['mac'],
-      inventoryAttributes: ['artifact_name']
+      inventoryAttributes: ['artifact_name'],
+      tagAttributes: []
     },
     filteringAttributesLimit: 10,
     filters: [],
@@ -318,7 +319,7 @@ export const defaultState = {
       [userId]: { email: 'a2@b.com', id: userId, created_ts: '2019-01-01T12:30:00.000Z' }
     },
     currentUser: 'a1',
-    globalSettings: { '2fa': 'enabled', id_attribute: 'Device ID', previousFilters: [] },
+    globalSettings: { '2fa': 'enabled', id_attribute: undefined, previousFilters: [] },
     jwtToken: null,
     qrCode: null,
     rolesById: {
