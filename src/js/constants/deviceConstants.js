@@ -49,7 +49,10 @@ module.exports = {
     Shell: 'shell',
     Stop: 'stop'
   },
-
+  DEVICE_LIST_DEFAULTS: {
+    page: 1,
+    perPage: 20
+  },
   DEVICE_LIST_MAXIMUM_LENGTH: 50,
   DEVICE_FILTERING_OPTIONS: {
     $eq: { title: 'equals', shortform: '=' },

@@ -7,13 +7,11 @@ import { saveGlobalSettings } from '../actions/userActions';
 import { auditLogsApiUrl } from '../actions/organizationActions';
 import GeneralApi, { headerNames, MAX_PAGE_SIZE } from '../api/general-api';
 import AppConstants from '../constants/appConstants';
-import DeviceConstants, { DEVICE_STATES } from '../constants/deviceConstants';
+import DeviceConstants, { DEVICE_STATES, DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
 
 import { deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
 
-// default per page until pagination and counting integrated
-const defaultPerPage = 20;
-const defaultPage = 1;
+const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
 const apiUrl = '/api/management/v1';
 const apiUrlV2 = '/api/management/v2';
