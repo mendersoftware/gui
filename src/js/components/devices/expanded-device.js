@@ -140,7 +140,7 @@ export const ExpandedDevice = ({
 
   const deviceIdentifier = device?.attributes?.name ?? device?.id ?? '-';
   const isAcceptedDevice = status === DEVICE_STATES.accepted;
-  const isOffline = useMemo(() => new Date(updated_ts) < yesterday, [updated_ts]);
+  const isOffline = useMemo(() => new Date(updated_ts) < yesterday, [updated_ts, yesterday]);
   return (
     <Drawer anchor="right" className="expandedDevice" open={open} onClose={onClose} PaperProps={{ style: { minWidth: '67vw' } }}>
       <div className="flexbox center-aligned">
