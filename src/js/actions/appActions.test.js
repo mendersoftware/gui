@@ -190,7 +190,18 @@ describe('app actions', () => {
         deploymentId: defaultState.deployments.byId.d2.id
       },
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice },
-      { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice }
+      { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice },
+      { type: UserConstants.SET_SHOW_HELP, show: true },
+      {
+        type: UserConstants.SET_GLOBAL_SETTINGS,
+        settings: {
+          ...defaultState.users.globalSettings,
+          [defaultState.users.currentUser]: {
+            ...defaultState.users.globalSettings[defaultState.users.currentUser],
+            showHelptips: true
+          }
+        }
+      }
     ];
     await store.dispatch(initializeAppData());
     const storeActions = store.getActions();

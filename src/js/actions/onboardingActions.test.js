@@ -136,6 +136,16 @@ describe('onboarding actions', () => {
         }
       },
       { type: UserConstants.SET_SHOW_HELP, show: true },
+      {
+        type: UserConstants.SET_GLOBAL_SETTINGS,
+        settings: {
+          ...defaultState.users.globalSettings,
+          [defaultState.users.currentUser]: {
+            ...defaultState.users.globalSettings[defaultState.users.currentUser],
+            showHelptips: true
+          }
+        }
+      },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true }
     ];
     const storeActions = store.getActions();
@@ -184,6 +194,16 @@ describe('onboarding actions', () => {
         }
       },
       { type: UserConstants.SET_SHOW_HELP, show: true },
+      {
+        type: UserConstants.SET_GLOBAL_SETTINGS,
+        settings: {
+          ...defaultState.users.globalSettings,
+          [defaultState.users.currentUser]: {
+            ...defaultState.users.globalSettings[defaultState.users.currentUser],
+            showHelptips: true
+          }
+        }
+      },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP_DIALOG, show: false },
       { type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: true },
