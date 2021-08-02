@@ -88,11 +88,11 @@ exports[`Helptooltips Components renders Connect(AuthButtonComponent) correctly 
       style="white-space: normal;"
     >
       <h3>
-        Authorize devices
+        Authorize a device
       </h3>
       <hr />
       <p>
-        Expand this section to view the authentication options for this device. You can decide whether to accept it, reject it, or just dismiss this device for now.
+        View the details of any authentication requests for this device. You can decide whether to accept it, reject it, or just dismiss this device for now.
       </p>
       <p>
         See the documentation for more on

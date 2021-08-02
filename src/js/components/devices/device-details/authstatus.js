@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Chip, Icon } from '@material-ui/core';
+import { Button, Chip, Icon } from '@material-ui/core';
 import { Block as BlockIcon, Check as CheckIcon, CheckCircle as CheckCircleIcon } from '@material-ui/icons';
 
 import pendingIcon from '../../../../assets/img/pending_status.png';
@@ -8,6 +8,8 @@ import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import DeviceDataCollapse from './devicedatacollapse';
 import Authsets from './authsets/authsets';
 import { AuthButton } from '../../helptips/helptooltips';
+import theme from '../../../themes/mender-theme';
+import Confirm from '../../common/confirm';
 
 const iconStyle = { margin: 12 };
 
@@ -19,8 +21,8 @@ const states = {
   preauthorized: <CheckIcon style={iconStyle} />
 };
 
-export const AuthStatus = ({ decommission, device, deviceListRefresh, disableBottomBorder, showHelptips }) => {
-  const [open, setOpen] = useState(false);
+export const AuthStatus = ({ decommission, device, deviceListRefresh, showHelptips }) => {
+  const [confirmDecommission, setConfirmDecomission] = useState(false);
 
   const { auth_sets = [], status = DEVICE_STATES.accepted } = device;
 
@@ -36,10 +38,22 @@ export const AuthStatus = ({ decommission, device, deviceListRefresh, disableBot
 
   return (
     <DeviceDataCollapse
-      disableBottomBorder={disableBottomBorder}
-      header={!open && <a onClick={setOpen}>show more</a>}
-      isOpen={open}
-      onClick={setOpen}
+      header={
+        <>
+          <Authsets open={open} decommission={decommission} device={device} deviceListRefresh={deviceListRefresh} showHelptips={showHelptips} />
+          {![DEVICE_STATES.preauth, DEVICE_STATES.pending].includes(device.status) && (
+            <div className="flexbox" style={{ justifyContent: 'flex-end', marginTop: theme.spacing(2) }}>
+              {confirmDecommission ? (
+                <Confirm action={() => decommission(device.id)} cancel={() => setConfirmDecomission(false)} type="decommissioning" />
+              ) : (
+                <Button color="secondary" onClick={setConfirmDecomission}>
+                  Decommission device
+                </Button>
+              )}
+            </div>
+          )}
+        </>
+      }
       title={
         <div className="flexbox center-aligned">
           <h4>Authentication status</h4>
@@ -53,10 +67,7 @@ export const AuthStatus = ({ decommission, device, deviceListRefresh, disableBot
           )}
         </div>
       }
-    >
-      <Authsets decommission={decommission} device={device} deviceListRefresh={deviceListRefresh} showHelptips={showHelptips} />
-      <a onClick={() => setOpen(false)}>show less</a>
-    </DeviceDataCollapse>
+    ></DeviceDataCollapse>
   );
 };
 

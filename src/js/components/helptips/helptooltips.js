@@ -68,11 +68,10 @@ const AuthButtonComponent = ({ docsVersion, highlightHelp, toggleHelptips }) => 
     </div>
     <ReactTooltip id="auth-button-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
       <div style={{ whiteSpace: 'normal' }}>
-        <h3>Authorize devices</h3>
+        <h3>Authorize a device</h3>
         <hr />
         <p>
-          Expand this section to view the authentication options for this device. You can decide whether to accept it, reject it, or just dismiss this device
-          for now.
+          View the details of any authentication requests for this device. You can decide whether to accept it, reject it, or just dismiss this device for now.
         </p>
         <p>
           See the documentation for more on{' '}

@@ -6,6 +6,7 @@ import AuthsetListItem from './authsetlistitem';
 
 export const AuthsetList = ({ device, showHelptips, ...remainingProps }) => {
   const [expandRow, setExpandRow] = useState();
+  const [open, setOpen] = useState(false);
   const { auth_sets: authsets = [], status = DEVICE_STATES.accepted } = device;
 
   let groupedAuthsets = authsets.reduce(
@@ -23,12 +24,26 @@ export const AuthsetList = ({ device, showHelptips, ...remainingProps }) => {
     { active: [], inactive: [] }
   );
 
-  const orderedAuthsets = [...groupedAuthsets.active, ...groupedAuthsets.inactive];
+  const activeAuthsets = groupedAuthsets.active;
+  const inactiveAuthsets = groupedAuthsets.inactive;
+
+  const getAuthsetList = authsets => {
+    return authsets.map(authset => (
+      <AuthsetListItem
+        authset={authset}
+        device={device}
+        isExpanded={expandRow === authset.id}
+        key={`authset-${authset.id}`}
+        onExpand={setExpandRow}
+        {...remainingProps}
+      />
+    ));
+  };
 
   return (
     <div className="authsets">
       <div className="header">
-        {['', 'Status', 'Public key', 'Time of request', 'Actions'].map((headerName, index) => (
+        {['Status', 'Public key', 'Time of request', 'Actions'].map((headerName, index) => (
           <div className="columnHeader" key={`columnHeader-${index}`}>
             {headerName}
           </div>
@@ -36,16 +51,12 @@ export const AuthsetList = ({ device, showHelptips, ...remainingProps }) => {
       </div>
       <div className="body" style={{ position: 'relative' }}>
         {showHelptips && <AuthExplainButton />}
-        {orderedAuthsets.map(authset => (
-          <AuthsetListItem
-            authset={authset}
-            device={device}
-            isExpanded={expandRow === authset.id}
-            key={`authset-${authset.id}`}
-            onExpand={setExpandRow}
-            {...remainingProps}
-          />
-        ))}
+        {getAuthsetList(activeAuthsets)}
+        {open && getAuthsetList(inactiveAuthsets)}
+        <div className="margin-top-small">
+          {!!inactiveAuthsets.length &&
+            (!open ? <a onClick={setOpen}>show {inactiveAuthsets.length} more</a> : <a onClick={() => setOpen(false)}>show less</a>)}
+        </div>
       </div>
     </div>
   );

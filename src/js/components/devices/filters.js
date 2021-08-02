@@ -10,7 +10,6 @@ import { saveGlobalSettings } from '../../actions/userActions';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import MenderTooltip from '../common/mendertooltip';
 import FilterItem from './filteritem';
-
 import { DEVICE_FILTERING_OPTIONS } from '../../constants/deviceConstants';
 import { deepCompare } from '../../helpers';
 

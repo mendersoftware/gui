@@ -5,7 +5,7 @@ exports[`AuthStatus Component renders correctly 1`] = `
   class="margin-bottom "
 >
   <div
-    class="clickable flexbox space-between"
+    class=" flexbox space-between"
     style="align-items: flex-start;"
   >
     <div
@@ -47,35 +47,151 @@ exports[`AuthStatus Component renders correctly 1`] = `
     <div
       class="flexbox centered"
     >
+      <div
+        style="height: 48px; width: 48px;"
+      />
+    </div>
+  </div>
+  <div>
+    <div
+      style="min-width: 700px; margin-bottom: 16px; background-color: rgb(247, 247, 247); border: 1px solid rgb(224, 224, 224); padding: 16px;"
+    >
+      <div>
+        Authentication sets
+      </div>
+      <div
+        class="authsets"
+      >
+        <div
+          class="header"
+        >
+          <div
+            class="columnHeader"
+          >
+            Status
+          </div>
+          <div
+            class="columnHeader"
+          >
+            Public key
+          </div>
+          <div
+            class="columnHeader"
+          >
+            Time of request
+          </div>
+          <div
+            class="columnHeader"
+          >
+            Actions
+          </div>
+        </div>
+        <div
+          class="body"
+          style="position: relative;"
+        >
+          <div
+            class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+          >
+            <div
+              aria-disabled="false"
+              aria-expanded="false"
+              class="MuiButtonBase-root MuiAccordionSummary-root"
+              role="button"
+              style="cursor: default;"
+              tabindex="0"
+            >
+              <div
+                class="MuiAccordionSummary-content"
+              >
+                <div
+                  class="capitalized"
+                >
+                  Active
+                </div>
+                <div
+                  class="capitalized"
+                >
+                  accepted
+                </div>
+                <a>
+                  show key
+                </a>
+                <time
+                  datetime="2019-01-01T06:25:00+00:00"
+                >
+                  2019-01-01 06:25
+                </time>
+                <div
+                  class="action-buttons flexbox"
+                >
+                  <div>
+                    Accept
+                  </div>
+                  <a>
+                    Reject
+                  </a>
+                  <a>
+                    Dismiss
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div
+              class="MuiCollapse-container MuiCollapse-hidden"
+              style="min-height: 0px;"
+            >
+              <div
+                class="MuiCollapse-wrapper"
+              >
+                <div
+                  class="MuiCollapse-wrapperInner"
+                >
+                  <div
+                    role="region"
+                  >
+                    <div
+                      class="MuiAccordionDetails-root"
+                    >
+                      <div
+                        style="flex-grow: 1;"
+                      />
+                      <p
+                        class="bold expanded"
+                      >
+                         Are you sure you want to continue?
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="margin-top-small"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="flexbox"
+      style="justify-content: flex-end; margin-top: 16px;"
+    >
       <button
-        class="MuiButtonBase-root MuiIconButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
         tabindex="0"
         type="button"
       >
         <span
-          class="MuiIconButton-label"
+          class="MuiButton-label"
         >
-          <svg
-            aria-hidden="true"
-            class="MuiSvgIcon-root"
-            focusable="false"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
-            />
-          </svg>
+          Decommission device
         </span>
         <span
           class="MuiTouchRipple-root"
         />
       </button>
     </div>
-  </div>
-  <div>
-    <a>
-      show more
-    </a>
   </div>
   <hr
     class="MuiDivider-root"

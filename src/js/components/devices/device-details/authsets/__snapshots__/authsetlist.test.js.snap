@@ -9,9 +9,6 @@ exports[`AuthsetList Component renders correctly 1`] = `
   >
     <div
       class="columnHeader"
-    />
-    <div
-      class="columnHeader"
     >
       Status
     </div>
@@ -34,6 +31,10 @@ exports[`AuthsetList Component renders correctly 1`] = `
   <div
     class="body"
     style="position: relative;"
-  />
+  >
+    <div
+      class="margin-top-small"
+    />
+  </div>
 </div>
 `;
