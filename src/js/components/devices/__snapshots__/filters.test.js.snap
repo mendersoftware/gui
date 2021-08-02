@@ -22,7 +22,7 @@ exports[`Filters Component renders correctly 1`] = `
         </div>
         <div>
           <div
-            class="flexbox center-aligned"
+            class="flexbox center-aligned relative"
           >
             <div
               aria-expanded="false"

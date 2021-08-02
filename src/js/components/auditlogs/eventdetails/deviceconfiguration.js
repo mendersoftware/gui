@@ -44,7 +44,7 @@ const mapStateToProps = (state, ownProps) => {
   const deviceId = item.object.id;
   return {
     device: state.devices.byId[deviceId],
-    idAttribute: getIdAttribute(state)
+    idAttribute: getIdAttribute(state).attribute
   };
 };
 

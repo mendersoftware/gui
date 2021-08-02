@@ -126,5 +126,6 @@ module.exports = {
     disconnected: 'disconnected',
     unknown: 'unknown'
   },
+  DEVICE_ONLINE_CUTOFF: { interval: 24, intervalName: 'hour' },
   UNGROUPED_GROUP: { id: '*|=ungrouped=|*', name: 'Unassigned' }
 };

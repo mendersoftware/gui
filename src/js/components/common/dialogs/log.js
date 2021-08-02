@@ -13,6 +13,10 @@ const dialogTypes = {
   'configUpdateLog': {
     title: 'Config update log for device',
     filename: 'updateLog'
+  },
+  'monitorLog': {
+    title: 'Alert log for device',
+    filename: 'monitorLog'
   }
 };
 

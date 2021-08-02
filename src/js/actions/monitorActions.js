@@ -8,8 +8,8 @@ export const monitorApiUrlv1 = `${apiUrlv1}/devicemonitor`;
 const defaultPerPage = 20;
 const defaultPage = 1;
 
-export const getAlertsForDevice = (id, config = {}) => dispatch => {
-  const { page = defaultPage, perPage = defaultPerPage, issuedBefore, issuedAfter, sortAscending } = config;
+export const getDeviceAlerts = (id, config = {}) => dispatch => {
+  const { page = defaultPage, perPage = defaultPerPage, issuedBefore, issuedAfter, sortAscending = false } = config;
   const issued_after = issuedAfter ? `&issued_after=${issuedAfter}` : '';
   const issued_before = issuedBefore ? `&issued_before=${issuedBefore}` : '';
   return Api.get(`${monitorApiUrlv1}/devices/${id}/alerts?page=${page}&per_page=${perPage}${issued_after}${issued_before}&sort_ascending=${sortAscending}`)
@@ -18,7 +18,7 @@ export const getAlertsForDevice = (id, config = {}) => dispatch => {
       Promise.resolve(
         dispatch({
           type: MonitorConstants.RECEIVE_DEVICE_ALERTS,
-          device: id,
+          deviceId: id,
           alerts: res.data
         })
       )

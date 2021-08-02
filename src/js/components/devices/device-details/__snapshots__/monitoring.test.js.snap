@@ -1,0 +1,162 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeviceMonitoring Component renders correctly 1`] = `
+<div
+  class="margin-bottom "
+>
+  <div
+    class="clickable flexbox space-between"
+    style="align-items: flex-start;"
+  >
+    <div
+      class="flexbox center-aligned"
+    >
+      <h4
+        class="margin-right"
+      >
+        Monitoring
+      </h4>
+      <time
+        class="text-muted"
+        datetime="2019-01-01T09:25:00+00:00"
+      >
+        2019-01-01 09:25
+      </time>
+    </div>
+    <div
+      class="flexbox centered"
+    >
+      <button
+        class="MuiButtonBase-root MuiIconButton-root"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiIconButton-label"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+            />
+          </svg>
+        </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
+      </button>
+    </div>
+  </div>
+  <div>
+    <div
+      class="flexbox center-aligned padding-small device-detail-notification  red column-data "
+      style="margin-bottom: 8px; padding-bottom: 12px; padding-top: 12px;"
+    >
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root red"
+        focusable="false"
+        style="margin-right: 16px;"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+        />
+      </svg>
+      <div
+        class="flexbox center-aligned"
+      >
+        <div
+          class="key text-muted margin-right-small"
+        >
+          <b>
+            Device offline
+          </b>
+        </div>
+        Last check-in over 
+        24
+         
+        hours
+         ago
+      </div>
+    </div>
+  </div>
+  <div
+    class="MuiCollapse-container fadeIn"
+    style="min-height: 0px; height: 0px; transition-duration: 0ms;"
+  >
+    <div
+      class="MuiCollapse-wrapper"
+    >
+      <div
+        class="MuiCollapse-wrapperInner"
+      >
+        <h4
+          class="text-muted"
+        >
+          Triggered alerts
+        </h4>
+        <div
+          class="monitoring-alert column-data"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root red"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+            />
+          </svg>
+          <div
+            class="key text-muted"
+          >
+            <b>
+              SSH Daemon is not running
+            </b>
+          </div>
+          <div>
+            CRITICAL
+          </div>
+          <time
+            datetime="2021-07-23T12:22:36+00:00"
+          >
+            2021-07-23 12:22
+          </time>
+          <div>
+            Jul 22 10:40:56 raspberrypi sshd[32031]: pam_unix(sshd:session): session closed for user root
+          </div>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              view log
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <a
+          class="margin-top-small"
+        >
+          show less
+        </a>
+      </div>
+    </div>
+  </div>
+  <hr
+    class="MuiDivider-root"
+    style="margin-top: 24px;"
+  />
+</div>
+`;

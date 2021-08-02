@@ -27,6 +27,15 @@ const refreshDeviceLength = 10000;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 let timer;
 
+const idAttributeTitleMap = {
+  id: 'Device ID',
+  name: 'Name'
+};
+
+const sortingNotes = {
+  name: 'Sorting by Name will only work properly with devices that already have a device name defined'
+};
+
 export const Authorized = props => {
   const {
     acceptedCount,
@@ -212,9 +221,9 @@ export const Authorized = props => {
   };
 
   const onSortChange = attribute => {
-    let changedSortCol = attribute.name === 'Device ID' ? 'id' : attribute.name;
+    let changedSortCol = attribute.name;
     let changedSortDown = sortDown === DEVICE_SORTING_OPTIONS.desc ? DEVICE_SORTING_OPTIONS.asc : DEVICE_SORTING_OPTIONS.desc;
-    if (changedSortCol !== sortCol && attribute.name !== 'Device ID') {
+    if (changedSortCol !== sortCol) {
       changedSortDown = DEVICE_SORTING_OPTIONS.desc;
     }
     setDeviceListState({ sort: { direction: changedSortDown, columns: [{ column: changedSortCol, scope: attribute.scope }] } });
@@ -230,9 +239,9 @@ export const Authorized = props => {
   const EmptyState = currentSelectedState.emptyState;
   const columnHeaders = [
     {
-      title: idAttribute,
+      title: idAttributeTitleMap[idAttribute.attribute] ?? idAttribute.attribute,
       customize: openSettingsDialog,
-      attribute: { name: idAttribute, scope: 'identity' },
+      attribute: { name: idAttribute.attribute, scope: idAttribute.scope },
       sortable: true
     },
     ...currentSelectedState.defaultHeaders
@@ -325,6 +334,7 @@ export const Authorized = props => {
               pageLoading={pageLoading}
               pageTotal={deviceCount}
               refreshDevices={getDevices}
+              sortingNotes={sortingNotes}
             />
             {showHelptips && <ExpandDevice />}
           </div>

@@ -205,7 +205,7 @@ describe('overall device information retrieval', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     const receivedAttributes = storeActions.find(item => item.type === DeviceConstants.SET_FILTER_ATTRIBUTES).attributes;
-    expect(Object.keys(receivedAttributes)).toHaveLength(2);
+    expect(Object.keys(receivedAttributes)).toHaveLength(3);
     Object.entries(receivedAttributes).forEach(([key, value]) => {
       expect(key).toBeTruthy();
       expect(value).toBeTruthy();

@@ -17,11 +17,7 @@ describe('Authsets Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
-        <Authsets
-          device={{ id: 'a1', status: 'accepted', attributes: [], auth_sets: [] }}
-          id_attribute={defaultState.users.globalSettings.id_attribute}
-          open={true}
-        />
+        <Authsets device={{ id: 'a1', status: 'accepted', attributes: [], auth_sets: [] }} open={true} />
       </Provider>
     );
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];

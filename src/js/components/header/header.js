@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
@@ -27,7 +27,7 @@ import DeploymentNotifications from './deploymentnotifications';
 import TrialNotification from './trialnotification';
 import OfferHeader from './offerheader';
 
-import { colors } from '../../themes/mender-theme';
+import menderTheme, { colors } from '../../themes/mender-theme';
 import logo from '../../../assets/img/headerlogo.png';
 import enterpriseLogo from '../../../assets/img/headerlogo-enterprise.png';
 import UserConstants from '../../constants/userConstants';
@@ -37,29 +37,51 @@ const menuButtonColor = colors.grey;
 // Change this when a new feature/offer is introduced
 const currentOffer = {
   name: 'add-ons',
-  expires: '2021-06-30',
+  expires: '2021-12-30',
   trial: true,
   os: true,
   professional: true,
   enterprise: true
 };
 
-export class Header extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      anchorEl: null,
-      gettingUser: false,
-      loggingOut: false
-    };
-    this.cookies = new Cookies();
-  }
+const cookies = new Cookies();
 
-  componentDidUpdate() {
-    const sessionId = getToken();
-    const { firstLoginAfterSignup, hasTrackingEnabled, organization, setFirstLoginAfterSignup, user } = this.props;
-    if ((!sessionId || !user?.id || !user.email.length) && !this.state.gettingUser && !this.state.loggingOut) {
-      return this._updateUsername();
+export const Header = ({
+  acceptedDevices,
+  allowUserManagement,
+  announcement,
+  demo,
+  deviceLimit,
+  docsVersion,
+  firstLoginAfterSignup,
+  getOnboardingState,
+  getUser,
+  hasTrackingEnabled,
+  initializeAppData,
+  inProgress,
+  isEnterprise,
+  isHosted,
+  logoutUser,
+  multitenancy,
+  organization,
+  pendingDevices,
+  setFirstLoginAfterSignup,
+  setHideAnnouncement,
+  showHelptips,
+  toggleHelptips,
+  user
+}) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [gettingUser, setGettingUser] = useState(false);
+  const [hasOfferCookie, setHasOfferCookie] = useState(false);
+
+  const sessionId = getToken();
+
+  useEffect(() => {
+    if ((!sessionId || !user?.id || !user.email.length) && !gettingUser && !loggingOut) {
+      updateUsername();
+      return;
     }
     Tracking.setTrackingEnabled(hasTrackingEnabled);
     if (hasTrackingEnabled && user.id && organization.id) {
@@ -69,150 +91,125 @@ export class Header extends React.Component {
         setFirstLoginAfterSignup(false);
       }
     }
-  }
+  }, [sessionId, user.id, user.email, gettingUser, loggingOut]);
 
-  componentDidMount() {
-    this._updateUsername();
-    this._offerBannerCookie();
-  }
+  useEffect(() => {
+    // updateUsername();
+    const showOfferCookie = cookies.get('offer') === currentOffer.name;
+    setHasOfferCookie(showOfferCookie);
+  }, []);
 
-  _updateUsername() {
+  const updateUsername = () => {
     const userId = decodeSessionToken(getToken());
-    if (this.state.gettingUser || !userId) {
+    if (gettingUser || !userId) {
       return;
     }
-    const self = this;
-    self.setState({ gettingUser: true });
+    setGettingUser(true);
     // get current user
     return (
-      self.props
-        .getUser(UserConstants.OWN_USER_ID)
-        .then(self.props.initializeAppData)
+      getUser(UserConstants.OWN_USER_ID)
+        .then(initializeAppData)
         // this is allowed to fail if no user information are available
         .catch(err => console.log(extractErrorMessage(err)))
-        .then(self.props.getOnboardingState)
-        .finally(() => self.setState({ gettingUser: false }))
+        .then(getOnboardingState)
+        .finally(() => setGettingUser(false))
     );
-  }
+  };
 
-  _offerBannerCookie() {
-    const self = this;
-    const offerCookie = this.cookies.get('offer') === currentOffer.name;
-    self.setState({ offerCookie: offerCookie });
-  }
+  const onLogoutClick = () => {
+    setGettingUser(false);
+    setLoggingOut(true);
+    setAnchorEl(null);
+    logoutUser();
+  };
 
-  onLogoutClick() {
-    this.setState({ gettingUser: false, loggingOut: true, anchorEl: null });
-    this.props.logoutUser();
-  }
+  const setHideOffer = () => {
+    cookies.set('offer', currentOffer.name, { path: '/', maxAge: 2629746 });
+    setHasOfferCookie(true);
+  };
 
-  setHideOffer() {
-    const self = this;
-    this.cookies.set('offer', currentOffer.name, { path: '/', maxAge: 2629746 });
-    self._offerBannerCookie();
-  }
-
-  render() {
-    const self = this;
-    const { anchorEl } = self.state;
-    const {
-      acceptedDevices,
-      allowUserManagement,
-      announcement,
-      demo,
-      deviceLimit,
-      docsVersion,
-      setHideAnnouncement,
-      inProgress,
-      isEnterprise,
-      isHosted,
-      multitenancy,
-      organization,
-      pendingDevices,
-      showHelptips,
-      toggleHelptips,
-      user
-    } = self.props;
-
-    const showOffer =
-      isHosted &&
-      moment().isBefore(currentOffer.expires) &&
-      (organization && organization.trial ? currentOffer.trial : currentOffer[organization.plan]) &&
-      !self.state.offerCookie;
-    return (
-      <Toolbar
-        id="fixedHeader"
-        className={showOffer ? 'header banner' : 'header'}
-        style={{ backgroundColor: '#fff', minHeight: 'unset', paddingLeft: 32, paddingRight: 40 }}
-      >
-        {showOffer && <OfferHeader docsVersion={docsVersion} organization={organization} onHide={() => self.setHideOffer()} />}
-        <div className="flexbox">
-          <Link to="/">
-            <img id="logo" src={isEnterprise ? enterpriseLogo : logo} />
-          </Link>
-          {demo && <DemoNotification docsVersion={docsVersion} />}
-          {!!announcement && <Announcement announcement={announcement} onHide={setHideAnnouncement} />}
-          {organization?.trial && <TrialNotification expiration={organization.trial_expiration} />}
-          <div style={{ flexGrow: '1' }}></div>
-          <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
-          <DeploymentNotifications inprogress={inProgress} />
-          <Button
-            className="header-dropdown"
-            style={{ fontSize: '14px', fill: 'rgb(0, 0, 0)', textTransform: 'none' }}
-            onClick={e => self.setState({ anchorEl: e.currentTarget })}
-          >
-            <AccountCircleIcon style={{ marginRight: '8px', top: '5px', fontSize: '20px', color: menuButtonColor }} />
-            {user.email}
-            {anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-          </Button>
-          <Menu
-            anchorEl={anchorEl}
-            getContentAnchorEl={null}
-            onClose={() => self.setState({ anchorEl: null })}
-            open={Boolean(anchorEl)}
-            anchorOrigin={{
-              vertical: 'center',
-              horizontal: 'center'
-            }}
-            transformOrigin={{
-              vertical: 'bottom',
-              horizontal: 'center'
-            }}
-          >
-            <MenuItem component={Link} to="/settings">
-              Settings
+  const showOffer =
+    isHosted &&
+    moment().isBefore(currentOffer.expires) &&
+    (organization && organization.trial ? currentOffer.trial : currentOffer[organization.plan]) &&
+    !hasOfferCookie;
+  return (
+    <Toolbar
+      id="fixedHeader"
+      className={showOffer ? 'header banner' : 'header'}
+      style={{
+        minHeight: 'unset',
+        paddingLeft: menderTheme.spacing(4),
+        paddingRight: menderTheme.spacing(5)
+      }}
+    >
+      {showOffer && <OfferHeader docsVersion={docsVersion} onHide={setHideOffer} />}
+      <div className="flexbox">
+        <Link to="/">
+          <img id="logo" src={isEnterprise ? enterpriseLogo : logo} />
+        </Link>
+        {demo && <DemoNotification docsVersion={docsVersion} />}
+        {!!announcement && <Announcement announcement={announcement} onHide={setHideAnnouncement} />}
+        {organization?.trial && <TrialNotification expiration={organization.trial_expiration} />}
+        <div style={{ flexGrow: '1' }}></div>
+        <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
+        <DeploymentNotifications inprogress={inProgress} />
+        <Button
+          className="header-dropdown"
+          style={{ fontSize: 14, marginLeft: menderTheme.spacing(0.5), textTransform: 'none' }}
+          onClick={e => setAnchorEl(e.currentTarget)}
+          startIcon={<AccountCircleIcon style={{ color: menuButtonColor }} />}
+          endIcon={anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+        >
+          {user.email}
+        </Button>
+        <Menu
+          anchorEl={anchorEl}
+          getContentAnchorEl={null}
+          onClose={() => setAnchorEl(null)}
+          open={Boolean(anchorEl)}
+          anchorOrigin={{
+            vertical: 'center',
+            horizontal: 'center'
+          }}
+          transformOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center'
+          }}
+        >
+          <MenuItem component={Link} to="/settings">
+            Settings
+          </MenuItem>
+          <MenuItem component={Link} to="/settings/my-profile">
+            My profile
+          </MenuItem>
+          {multitenancy && (
+            <MenuItem component={Link} to="/settings/organization-and-billing">
+              My organization
             </MenuItem>
-            <MenuItem component={Link} to="/settings/my-profile">
-              My profile
+          )}
+          {allowUserManagement && (
+            <MenuItem component={Link} to="/settings/user-management">
+              User management
             </MenuItem>
-            {multitenancy && (
-              <MenuItem component={Link} to="/settings/organization-and-billing">
-                My organization
-              </MenuItem>
-            )}
-            {allowUserManagement && (
-              <MenuItem component={Link} to="/settings/user-management">
-                User management
-              </MenuItem>
-            )}
-            <MenuItem onClick={toggleHelptips}>{showHelptips ? 'Hide help tooltips' : 'Show help tooltips'}</MenuItem>
-            <MenuItem component={Link} to="/help/get-started">
-              Help
-            </MenuItem>
-            <MenuItem onClick={() => self.onLogoutClick()}>
-              <ListItemText primary="Log out" />
-              <ListItemSecondaryAction>
-                <IconButton>
-                  <ExitIcon style={{ color: menuButtonColor, fill: menuButtonColor }} />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </MenuItem>
-          </Menu>
-        </div>
-      </Toolbar>
-    );
-  }
-}
+          )}
+          <MenuItem onClick={toggleHelptips}>{showHelptips ? 'Hide help tooltips' : 'Show help tooltips'}</MenuItem>
+          <MenuItem component={Link} to="/help/get-started">
+            Help
+          </MenuItem>
+          <MenuItem onClick={onLogoutClick}>
+            <ListItemText primary="Log out" />
+            <ListItemSecondaryAction>
+              <IconButton>
+                <ExitIcon style={{ color: menuButtonColor, fill: menuButtonColor }} />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </MenuItem>
+        </Menu>
+      </div>
+    </Toolbar>
+  );
+};
 
 const actionCreators = {
   getOnboardingState,

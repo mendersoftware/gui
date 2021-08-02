@@ -7,12 +7,12 @@ import { getDeviceAttributes } from '../../actions/deviceActions';
 import { changeNotificationSetting } from '../../actions/monitorActions';
 import { getGlobalSettings, saveGlobalSettings } from '../../actions/userActions';
 import { alertChannels } from '../../constants/monitorConstants';
-import { getDocsVersion, getUserRoles, getTenantCapabilities } from '../../selectors';
+import { getDocsVersion, getIdAttribute, getUserRoles, getTenantCapabilities } from '../../selectors';
 
 const maxWidth = 750;
 
 export const IdAttributeSelection = ({ attributes, dialog, docsVersion, onCloseClick, onSaveClick, selectedAttribute = '' }) => {
-  const [attributeSelection, setAttributeSelection] = useState(selectedAttribute);
+  const [attributeSelection, setAttributeSelection] = useState('name');
 
   useEffect(() => {
     setAttributeSelection(selectedAttribute);
@@ -20,9 +20,7 @@ export const IdAttributeSelection = ({ attributes, dialog, docsVersion, onCloseC
 
   const changed = selectedAttribute !== attributeSelection;
 
-  const onChangeIdAttribute = ({ target: { value } }) => {
-    setAttributeSelection(value);
-  };
+  const onChangeIdAttribute = ({ target: { value } }) => setAttributeSelection(value);
 
   const undoChanges = e => {
     setAttributeSelection(selectedAttribute);
@@ -31,7 +29,7 @@ export const IdAttributeSelection = ({ attributes, dialog, docsVersion, onCloseC
     }
   };
 
-  const saveSettings = e => onSaveClick(e, attributeSelection);
+  const saveSettings = e => onSaveClick(e, { attribute: attributeSelection, scope: attributes.find(({ value }) => value === attributeSelection).scope });
 
   return (
     <div className="flexbox space-between" style={{ alignItems: 'flex-start', maxWidth }}>
@@ -95,7 +93,7 @@ export const GlobalSettingsDialog = ({
       <h2 className="margin-top-small">Global settings</h2>
       <p className="info" style={{ marginBottom: 30 }}>
         <InfoOutlinedIcon fontSize="small" style={{ verticalAlign: 'middle', margin: '0 6px 4px 0' }} />
-        {`These settings apply to all users, so changes made here may affect other users' experience.`}
+        These settings apply to all users, so changes made here may affect other users&apos; experience.
       </p>
       <IdAttributeSelection
         attributes={attributes}
@@ -136,6 +134,7 @@ export const GlobalSettingsContainer = ({
   isAdmin,
   notificationChannelSettings,
   saveGlobalSettings,
+  selectedAttribute,
   settings
 }) => {
   const [updatedSettings, setUpdatedSettings] = useState({ ...settings });
@@ -165,7 +164,6 @@ export const GlobalSettingsContainer = ({
     });
   };
 
-  const selectedAttribute = settings.id_attribute;
   if (dialog) {
     return (
       <IdAttributeSelection
@@ -199,10 +197,13 @@ const mapStateToProps = state => {
   const attributes = state.devices.filteringAttributes.identityAttributes.slice(0, state.devices.filteringAttributesLimit);
   const id_attributes = attributes.reduce(
     (accu, value) => {
-      accu.push({ value, label: value });
+      accu.push({ value, label: value, scope: 'identity' });
       return accu;
     },
-    [{ value: 'Device ID', label: 'Device ID' }]
+    [
+      { value: 'name', label: 'Name', scope: 'tags' },
+      { value: 'id', label: 'Device ID', scope: 'identity' }
+    ]
   );
   return {
     // limit the selection of the available attribute to AVAILABLE_ATTRIBUTE_LIMIT
@@ -212,6 +213,7 @@ const mapStateToProps = state => {
     devicesCount: Object.keys(state.devices.byId).length,
     docsVersion: getDocsVersion(state),
     notificationChannelSettings: state.monitor.settings.global.channels,
+    selectedAttribute: getIdAttribute(state).attribute,
     settings: state.users.globalSettings
   };
 };

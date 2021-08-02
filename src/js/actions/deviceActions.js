@@ -10,6 +10,7 @@ import AppConstants from '../constants/appConstants';
 import DeviceConstants, { DEVICE_STATES, DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
 
 import { deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
+import { getIdAttribute } from '../selectors';
 
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
@@ -27,7 +28,8 @@ const defaultAttributes = [
   { scope: 'inventory', attribute: 'device_type' },
   { scope: 'inventory', attribute: 'rootfs-image.version' },
   { scope: 'system', attribute: 'created_ts' },
-  { scope: 'system', attribute: 'updated_ts' }
+  { scope: 'system', attribute: 'updated_ts' },
+  { scope: 'tags', attribute: 'name' }
 ];
 
 export const getGroups = () => (dispatch, getState) =>
@@ -143,25 +145,27 @@ const mapFiltersToTerms = filters =>
 const mapTermsToFilters = terms => terms.map(term => ({ scope: term.scope, key: term.attribute, operator: term.type, value: term.value }));
 
 export const getDynamicGroups = () => (dispatch, getState) =>
-  GeneralApi.get(`${inventoryApiUrlV2}/filters?per_page=${MAX_PAGE_SIZE}`).then(({ data: filters }) => {
-    const state = getState().devices.groups.byId;
-    const groups = (filters || []).reduce((accu, filter) => {
-      accu[filter.name] = {
-        deviceIds: [],
-        total: 0,
-        ...state[filter.name],
-        id: filter.id,
-        filters: mapTermsToFilters(filter.terms)
-      };
-      return accu;
-    }, {});
-    return Promise.resolve(
-      dispatch({
-        type: DeviceConstants.RECEIVE_DYNAMIC_GROUPS,
-        groups
-      })
-    );
-  });
+  GeneralApi.get(`${inventoryApiUrlV2}/filters?per_page=${MAX_PAGE_SIZE}`)
+    .then(({ data: filters }) => {
+      const state = getState().devices.groups.byId;
+      const groups = (filters || []).reduce((accu, filter) => {
+        accu[filter.name] = {
+          deviceIds: [],
+          total: 0,
+          ...state[filter.name],
+          id: filter.id,
+          filters: mapTermsToFilters(filter.terms)
+        };
+        return accu;
+      }, {});
+      return Promise.resolve(
+        dispatch({
+          type: DeviceConstants.RECEIVE_DYNAMIC_GROUPS,
+          groups
+        })
+      );
+    })
+    .catch(() => console.log('Dynamic group retrieval failed - likely accessing a non-enterprise backend'));
 
 export const addDynamicGroup = (groupName, filterPredicates) => (dispatch, getState) =>
   GeneralApi.post(`${inventoryApiUrlV2}/filters`, { name: groupName, terms: mapFiltersToTerms(filterPredicates) })
@@ -258,13 +262,16 @@ export const selectDevice = (deviceId, status) => dispatch => {
 const reduceReceivedDevices = (devices, ids, state, status) =>
   devices.reduce(
     (accu, device) => {
-      const stateDevice = state.devices.byId[device.id];
-      const { identity, inventory, system } = mapDeviceAttributes(device.attributes);
-      device.attributes = stateDevice ? { ...stateDevice.attributes, ...inventory } : inventory;
-      device.identity_data = stateDevice ? { ...stateDevice.identity_data, ...identity } : identity;
+      const stateDevice = state.devices.byId[device.id] || {};
+      const { attributes: storedAttributes = {}, identity_data: storedIdentity = {}, tags: storedTags = {} } = stateDevice;
+      const { identity, inventory, system = {}, tags } = mapDeviceAttributes(device.attributes);
+      const { created_ts = device.created_ts || stateDevice.created_ts, updated_ts = device.updated_ts || stateDevice.updated_ts } = system;
+      device.attributes = { ...storedAttributes, ...inventory };
+      device.tags = { ...storedTags, ...tags };
+      device.identity_data = { ...storedIdentity, ...identity };
       device.status = status ? status : device.status || identity.status;
-      device.created_ts = system.created_ts ? system.created_ts : device.created_ts || stateDevice.created_ts;
-      device.updated_ts = system.updated_ts ? system.updated_ts : device.updated_ts || stateDevice.updated_ts;
+      device.created_ts = created_ts;
+      device.updated_ts = updated_ts;
       accu.devicesById[device.id] = { ...stateDevice, ...device };
       accu.ids.push(device.id);
       return accu;
@@ -304,7 +311,7 @@ export const getAllGroupDevices = (group, shouldIncludeAllStates) => (dispatch, 
   if (!group || (!!group && (!getState().devices.groups.byId[group] || getState().devices.groups.byId[group].filters.length))) {
     return Promise.resolve();
   }
-  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getState().users.globalSettings.id_attribute || 'id' }];
+  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
   let filters = [{ key: 'group', value: group, operator: '$eq', scope: 'system' }];
   if (!shouldIncludeAllStates) {
     filters.push({ key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' });
@@ -350,7 +357,7 @@ export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
     ...getState().devices.groups.byId[group].filters,
     { key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' }
   ]);
-  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getState().users.globalSettings.id_attribute || 'id' }];
+  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
     GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, { page, per_page: perPage, filters, attributes }).then(res => {
       const state = getState();
@@ -386,15 +393,13 @@ export const setDeviceFilters = filters => (dispatch, getState) => {
   return Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters }));
 };
 
-export const getDeviceById = id => dispatch =>
+export const getDeviceById = id => (dispatch, getState) =>
   GeneralApi.get(`${inventoryApiUrl}/devices/${id}`)
     .then(res => {
-      const device = { ...res.data, attributes: mapDeviceAttributes(res.data.attributes).inventory };
+      const device = reduceReceivedDevices([res.data], [], getState()).devicesById[id];
+      device.etag = res.headers.etag;
       delete device.updated_ts;
-      dispatch({
-        type: DeviceConstants.RECEIVE_DEVICE,
-        device
-      });
+      dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device });
       return Promise.resolve(device);
     })
     .catch(err => {
@@ -486,7 +491,7 @@ export const getDevicesByStatus = (status, options = {}) => (dispatch, getState)
   if (typeof group === 'string' && !applicableFilters.length) {
     applicableFilters = [{ key: 'group', value: group, operator: '$eq', scope: 'system' }];
   }
-  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getState().users.globalSettings.id_attribute || 'id' }];
+  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
   const effectiveFilters = status ? [...applicableFilters, { key: 'status', value: status, operator: '$eq', scope: 'identity' }] : applicableFilters;
   return GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
     page,
@@ -549,7 +554,7 @@ export const getDevicesByStatus = (status, options = {}) => (dispatch, getState)
 };
 
 export const getAllDevicesByStatus = status => (dispatch, getState) => {
-  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getState().users.globalSettings.id_attribute || 'id' }];
+  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = 1, devices = []) =>
     GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
       page,
@@ -590,7 +595,7 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
 const ATTRIBUTE_LIST_CUTOFF = 100;
 export const getDeviceAttributes = () => dispatch =>
   GeneralApi.get(`${inventoryApiUrlV2}/filters/attributes`).then(({ data }) => {
-    const { inventory: inventoryAttributes, identity: identityAttributes } = (data || []).slice(0, ATTRIBUTE_LIST_CUTOFF).reduce(
+    const { inventory: inventoryAttributes, identity: identityAttributes, tags: tagAttributes } = (data || []).slice(0, ATTRIBUTE_LIST_CUTOFF).reduce(
       (accu, item) => {
         if (!accu[item.scope]) {
           accu[item.scope] = [];
@@ -598,11 +603,11 @@ export const getDeviceAttributes = () => dispatch =>
         accu[item.scope].push(item.name);
         return accu;
       },
-      { inventory: [], identity: [] }
+      { inventory: [], identity: [], tags: [] }
     );
     return dispatch({
       type: DeviceConstants.SET_FILTER_ATTRIBUTES,
-      attributes: { identityAttributes, inventoryAttributes }
+      attributes: { identityAttributes, inventoryAttributes, tagAttributes }
     });
   });
 
@@ -804,3 +809,16 @@ export const applyDeviceConfig = (deviceId, configDeploymentConfiguration, isDef
       }
       return Promise.all(tasks);
     });
+
+export const setDeviceTags = (deviceId, tags) => dispatch =>
+  // to prevent tag set failures, retrieve the device & use the freshest etag we can get
+  Promise.resolve(dispatch(getDeviceById(deviceId))).then(device => {
+    const headers = device.etag ? { 'If-Match': device.etag } : {};
+    return GeneralApi.put(
+      `${inventoryApiUrl}/devices/${deviceId}/tags`,
+      Object.entries(tags).map(([name, value]) => ({ name, value })),
+      { headers }
+    )
+      .catch(err => commonErrorHandler(err, `There was an error setting tags for device ${deviceId}.`, dispatch, 'Please check your connection.'))
+      .then(() => Promise.resolve(dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device: { ...device, tags } })));
+  });

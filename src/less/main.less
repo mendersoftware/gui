@@ -526,7 +526,8 @@ ul.link-list {
   padding-top: 2 * @defaultGutterWidth;
   min-height: 60vh;
   overflow: hidden;
-  > div, ul {
+  > div,
+  ul {
     overflow: auto;
   }
   &.with-sub-panels {
@@ -537,7 +538,8 @@ ul.link-list {
 
 .flexbox {
   display: flex;
-  &.center-aligned, &.centered {
+  &.center-aligned,
+  &.centered {
     align-items: center;
   }
   &.centered {
@@ -560,10 +562,9 @@ ul.link-list {
   column-gap: 2 * @defaultGutterWidth;
   &.column-data {
     max-width: 25 * @defaultGutterWidth;
-    row-gap: @defaultGutterWidth;
+    row-gap: 5px;
     &.compact {
       grid-template-columns: max-content 1fr;
-      row-gap: 5px;
     }
     &.multiple {
       grid-template-columns: 1fr 1fr;
@@ -1278,10 +1279,15 @@ div:focus {
   outline: none !important;
 }
 
-.key-value-container button {
-  margin-left: 8px;
-  height: 100%;
-  align-self: center;
+.key-value-container {
+  display: grid;
+  grid-template-columns: max-content max-content 65px;
+  column-gap: @defaultGutterWidth;
+  align-items: center;
+  justify-items: baseline;
+  > div {
+    margin-top: 10px;
+  }
 }
 
 /* Log in */
@@ -1380,7 +1386,8 @@ div:focus {
     border-color: @lightgrey;
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
   }
-  &.muted, &.muted:hover {
+  &.muted,
+  &.muted:hover {
     cursor: default;
     box-shadow: none;
   }
@@ -1393,8 +1400,8 @@ div:focus {
   color: @linkgreen;
   font-size: 12px;
   svg {
-    width: .7em;
-    height: .7em;
+    width: 0.7em;
+    height: 0.7em;
     vertical-align: middle;
     margin-left: 4px;
     margin-right: 2px;
@@ -1428,7 +1435,11 @@ div:focus {
 
 /* tables */
 
-.mender-list-item, .auditlogs-list-item, .deviceListRow, .deviceListItem, .deployment-item {
+.mender-list-item,
+.auditlogs-list-item,
+.deviceListRow,
+.deviceListItem,
+.deployment-item {
   border-bottom: 1px solid @bordercolor;
   height: 3 * @defaultGutterWidth;
   min-height: 3 * @defaultGutterWidth;
@@ -1436,13 +1447,6 @@ div:focus {
   &:last-of-type {
     border-bottom: transparent;
   }
-}
-
-// table expanding
-.bordered {
-  border: 1px solid @lightgrey;
-  margin-top: 10px;
-  padding: 5px 20px;
 }
 
 .deviceList {
@@ -1504,7 +1508,7 @@ div:focus {
       }
     }
     &.columns-6 {
-      @columns-6: 1.5fr 1fr minmax(350px, 1.5fr) 1fr 1fr 1.5fr;
+      @columns-6: minmax(300px, 1fr) 1fr minmax(300px, 1fr) 0.75fr 0.75fr 1fr;
       grid-template-columns: @columns-6;
       &.selectable {
         grid-template-columns: @row-selector-width @columns-6;
@@ -1532,10 +1536,6 @@ div:focus {
     .device-actions {
       position: relative;
       width: 100%;
-    }
-    .device-inventory.bordered,
-    .device-connect.bordered {
-      padding-bottom: 20px;
     }
     .device-inventory .report-list {
       width: 45%;
@@ -1574,6 +1574,20 @@ div:focus {
 .expandedDevice {
   padding-left: 48px;
   padding-right: 35px;
+  .device-detail-notification {
+    &.red,
+    &.green {
+      color: @text;
+    }
+    &.bordered {
+      border: 1px solid @bordercolor;
+      background: fade(@grey, 15%);
+      &.red {
+        border-color: @red;
+        background: fade(@mendermaroon, 7.5%);
+      }
+    }
+  }
 }
 
 .inventory-text {
@@ -1598,6 +1612,15 @@ div:focus {
       white-space: initial;
     }
   }
+}
+
+.monitoring-alert {
+  display: grid;
+  grid-template-columns: min-content 0.875fr 100px min-content 1fr max-content;
+  column-gap: @defaultGutterWidth;
+  align-items: center;
+  margin: 0 @defaultGutterWidth;
+  max-width: 900px;
 }
 
 .grouplist div span {

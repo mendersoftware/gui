@@ -2,18 +2,29 @@ import React, { useEffect, useState } from 'react';
 
 import { MenuItem, Select, TextField } from '@material-ui/core';
 
+import MenderTooltip from '../common/mendertooltip';
+
 let timer;
 
-export const QuickFilter = ({ attributes, filters, onChange }) => {
+const filterNotifications = {
+  name: 'This will only apply to devices that have a device name configured'
+};
+
+export const QuickFilter = ({ attributes, attributeSetting = { attribute: 'name', scope: 'tags' }, filters, onChange }) => {
   const [filterValue, setFilterValue] = useState('');
-  const [selectedAttribute, setSelectedAttribute] = useState('id');
+  const [selectedAttribute, setSelectedAttribute] = useState(attributeSetting.attribute);
+
+  useEffect(() => {
+    setSelectedAttribute(attributeSetting.attribute);
+  }, [attributeSetting.attribute]);
 
   useEffect(() => {
     if (!(filterValue && selectedAttribute)) {
       return;
     }
     clearTimeout(timer);
-    timer = setTimeout(() => onChange(filterValue, selectedAttribute), 700);
+    const selectedScope = attributes.find(attribute => attribute.key === selectedAttribute)?.scope;
+    timer = setTimeout(() => onChange(filterValue, selectedAttribute, selectedScope), 700);
     return () => {
       clearTimeout(timer);
     };
@@ -34,6 +45,16 @@ export const QuickFilter = ({ attributes, filters, onChange }) => {
 
   const onSelectionChange = ({ target: { value } }) => setSelectedAttribute(value);
 
+  const input = <TextField placeholder="Filter" className="search" value={filterValue} onChange={onSearchChange} style={{ marginLeft: 30, marginTop: 0 }} />;
+
+  const filterInput = filterNotifications[selectedAttribute] ? (
+    <MenderTooltip arrow title={filterNotifications[selectedAttribute]}>
+      {input}
+    </MenderTooltip>
+  ) : (
+    input
+  );
+
   return (
     <div>
       Quick find Device
@@ -44,7 +65,7 @@ export const QuickFilter = ({ attributes, filters, onChange }) => {
           </MenuItem>
         ))}
       </Select>
-      <TextField placeholder="Filter" className="search" value={filterValue} onChange={onSearchChange} style={{ marginLeft: 30, marginTop: 0 }} />
+      {filterInput}
     </div>
   );
 };

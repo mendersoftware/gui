@@ -25,7 +25,7 @@ export const getDemoDeviceAddress = createSelector([getDevicesList, getOnboardin
   return getDemoDeviceAddressHelper(devices, approach, demoArtifactPort);
 });
 
-export const getIdAttribute = createSelector([getGlobalSettings], ({ id_attribute = 'Device ID' }) => id_attribute);
+export const getIdAttribute = createSelector([getGlobalSettings], ({ id_attribute = {} }) => id_attribute);
 
 export const getLimitMaxed = createSelector([getAcceptedDevices, getDeviceLimit], ({ total: acceptedDevices = 0 }, deviceLimit) =>
   Boolean(deviceLimit && deviceLimit <= acceptedDevices)

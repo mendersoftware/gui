@@ -15,11 +15,18 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsM
 
   useEffect(() => {
     const newInputs = Object.keys(input).length
-      ? Object.entries(input).map(([key, value]) => ({ helptip: inputHelpTipsMap[key], key, ref: createRef(), value }))
+      ? Object.entries(input).map(([key, value]) => ({ helptip: inputHelpTipsMap[key.toLowerCase()], key, ref: createRef(), value }))
       : [{ ...emptyInput, ref: createRef() }];
     inputRefs.current = newInputs.map((_, i) => inputRefs.current[i] ?? createRef());
     setInputs(newInputs);
   }, [reset]);
+
+  const onClearClick = () => {
+    const changedInputs = [{ ...emptyInput }];
+    setInputs(changedInputs);
+    const inputObject = reducePairs(changedInputs);
+    onInputChange(inputObject);
+  };
 
   const updateInputs = (key, index, event) => {
     let changedInputs = [...inputs];
@@ -28,8 +35,9 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsM
     } = event;
     changedInputs[index][key] = value;
     changedInputs[index].helptip = null;
-    if (inputHelpTipsMap[changedInputs[index].key]) {
-      changedInputs[index].helptip = inputHelpTipsMap[changedInputs[index].key];
+    const normalizedKey = changedInputs[index].key.toLowerCase();
+    if (inputHelpTipsMap[normalizedKey]) {
+      changedInputs[index].helptip = inputHelpTipsMap[normalizedKey];
     }
     setInputs(changedInputs);
     const inputObject = reducePairs(changedInputs);
@@ -75,12 +83,12 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsM
         const Helptip = inputs[index].helptip?.component;
         const ref = inputRefs.current[index];
         return (
-          <div className="key-value-container flexbox" key={index}>
-            <FormControl disabled={disabled} error={hasError} style={{ marginRight: 15, marginTop: 10 }}>
+          <div className="key-value-container relative" key={index}>
+            <FormControl disabled={disabled} error={hasError}>
               <Input value={input.key} placeholder="Key" inputRef={ref} onChange={e => updateInputs('key', index, e)} type="text" />
               {hasError && <FormHelperText>{errortext || error}</FormHelperText>}
             </FormControl>
-            <FormControl disabled={disabled} error={hasError} style={{ marginTop: 10 }}>
+            <FormControl disabled={disabled} error={hasError}>
               <Input value={`${input.value}`} placeholder="Value" onChange={e => updateInputs('value', index, e)} type="text" />
             </FormControl>
             {inputs.length > 1 && !hasRemovalDisabled ? (
@@ -88,21 +96,33 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsM
                 <ClearIcon fontSize="small" />
               </IconButton>
             ) : (
-              <span style={{ minWidth: 44 }} />
+              <span />
             )}
             {showHelptips && Helptip && ref.current && <Helptip anchor={getHelptipPosition(ref)} {...inputs[index].helptip.props} />}
           </div>
         );
       })}
-      <Fab
-        disabled={disabled || !inputs[inputs.length - 1].key || !inputs[inputs.length - 1].value}
-        style={{ marginTop: 10, marginBottom: 10 }}
-        color="secondary"
-        size="small"
-        onClick={addKeyValue}
-      >
-        <ContentAddIcon />
-      </Fab>
+      <div className="key-value-container">
+        <div style={{ minWidth: theme.spacing(30) }}>
+          <Fab
+            disabled={disabled || !inputs[inputs.length - 1].key || !inputs[inputs.length - 1].value}
+            style={{ marginBottom: 10 }}
+            color="secondary"
+            size="small"
+            onClick={addKeyValue}
+          >
+            <ContentAddIcon />
+          </Fab>
+        </div>
+        <div style={{ minWidth: theme.spacing(30) }} />
+        {inputs.length > 1 ? (
+          <a className="margin-left-small" onClick={onClearClick}>
+            clear all
+          </a>
+        ) : (
+          <div />
+        )}
+      </div>
     </div>
   );
 };

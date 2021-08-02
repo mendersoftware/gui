@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 
 // material ui
 import { IconButton, MenuItem, Select, TextField, FormHelperText } from '@material-ui/core';
-import { HighlightOff as HighlightOffIcon } from '@material-ui/icons';
+import { Help as HelpIcon, HighlightOff as HighlightOffIcon } from '@material-ui/icons';
 import { Autocomplete, createFilterOptions } from '@material-ui/lab';
 
 import { DEVICE_FILTERING_OPTIONS } from '../../constants/deviceConstants';
 
 import { emptyFilter, getFilterLabelByKey } from './filters';
+import MenderTooltip from '../common/mendertooltip';
+import theme from '../../themes/mender-theme';
 
 const optionsFilter = createFilterOptions();
 
@@ -21,6 +23,17 @@ const filterOptionsByPlan = {
 };
 
 const defaultScope = 'inventory';
+
+const filterNotificationLocation = { top: theme.spacing(2.5), left: theme.spacing(-1.5) };
+const filterNotifications = {
+  name: (
+    <MenderTooltip arrow placement="bottom" title="Filtering by name is limited to devices with a previously defined name.">
+      <div className="tooltip help" style={filterNotificationLocation}>
+        <HelpIcon />
+      </div>
+    </MenderTooltip>
+  )
+};
 
 export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => {
   const [key, setKey] = useState(filter.key || ''); // this refers to the selected filter with key as the id
@@ -100,7 +113,8 @@ export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => 
   const showValue = typeof (filterOptions[operator] || {}).value === 'undefined';
   return (
     <>
-      <div className="flexbox center-aligned">
+      <div className="flexbox center-aligned relative">
+        {filterNotifications[key]}
         <Autocomplete
           autoComplete
           autoHighlight

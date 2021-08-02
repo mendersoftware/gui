@@ -199,23 +199,21 @@ const actionCreators = {
 
 const mapStateToProps = (state, ownProps) => {
   const { plan = 'os' } = state.organization.organization;
+  const deviceNameAttribute = { key: 'name', value: 'Name', scope: 'tags', category: 'tags', priority: 1 };
   const deviceIdAttribute = { key: 'id', value: 'Device ID', scope: 'identity', category: 'identity', priority: 1 };
-  let attributes = [
+  const attributes = [
+    ...state.users.globalSettings.previousFilters.map(item => ({
+      ...item,
+      value: deviceIdAttribute.key === item.key ? deviceIdAttribute.value : item.key,
+      category: 'recently used',
+      priority: 0
+    })),
+    deviceNameAttribute,
     deviceIdAttribute,
-    ...state.devices.filteringAttributes.identityAttributes.map(item => ({ key: item, value: item, scope: 'identity', category: 'identity', priority: 1 }))
+    ...state.devices.filteringAttributes.identityAttributes.map(item => ({ key: item, value: item, scope: 'identity', category: 'identity', priority: 1 })),
+    ...state.devices.filteringAttributes.inventoryAttributes.map(item => ({ key: item, value: item, scope: 'inventory', category: 'inventory', priority: 2 })),
+    ...state.devices.filteringAttributes.tagAttributes.map(item => ({ key: item, value: item, scope: 'tags', category: 'tags', priority: 3 }))
   ];
-  if (!ownProps.identityOnly) {
-    attributes = [
-      ...state.users.globalSettings.previousFilters.map(item => ({
-        ...item,
-        value: deviceIdAttribute.key === item.key ? deviceIdAttribute.value : item.key,
-        category: 'recently used',
-        priority: 0
-      })),
-      ...attributes,
-      ...state.devices.filteringAttributes.inventoryAttributes.map(item => ({ key: item, value: item, scope: 'inventory', category: 'inventory', priority: 2 }))
-    ];
-  }
   const selectedGroup = state.devices.groups.selectedGroup;
   const groupFilters = state.devices.groups.byId[selectedGroup]?.filters ?? [];
   return {

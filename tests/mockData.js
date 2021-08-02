@@ -171,7 +171,8 @@ export const defaultState = {
     },
     filteringAttributes: {
       identityAttributes: ['mac'],
-      inventoryAttributes: ['artifact_name']
+      inventoryAttributes: ['artifact_name'],
+      tagAttributes: []
     },
     filteringAttributesLimit: 10,
     filters: [],
@@ -200,7 +201,23 @@ export const defaultState = {
   },
   monitor: {
     alerts: {
-      byDeviceId: {}
+      byDeviceId: {
+        a1: [
+          {
+            id: '31346239-3839-6262-2d63-3365622d3437',
+            name: 'SSH Daemon is not running',
+            device_id: 'a1',
+            level: 'CRITICAL',
+            subject: {
+              name: 'sshd',
+              type: 'systemd',
+              status: 'not-running',
+              details: 'Jul 22 10:40:56 raspberrypi sshd[32031]: pam_unix(sshd:session): session closed for user root'
+            },
+            timestamp: '2021-07-23T12:22:36Z'
+          }
+        ]
+      }
     },
     settings: {
       global: {
@@ -318,7 +335,7 @@ export const defaultState = {
       [userId]: { email: 'a2@b.com', id: userId, created_ts: '2019-01-01T12:30:00.000Z' }
     },
     currentUser: 'a1',
-    globalSettings: { '2fa': 'enabled', id_attribute: 'Device ID', previousFilters: [] },
+    globalSettings: { '2fa': 'enabled', id_attribute: undefined, previousFilters: [] },
     jwtToken: null,
     qrCode: null,
     rolesById: {

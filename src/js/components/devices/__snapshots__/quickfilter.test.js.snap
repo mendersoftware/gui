@@ -19,7 +19,7 @@ exports[`QuickFilter Component renders correctly 1`] = `
       aria-hidden="true"
       class="MuiSelect-nativeInput"
       tabindex="-1"
-      value="id"
+      value="name"
     />
     <svg
       aria-hidden="true"
@@ -35,6 +35,7 @@ exports[`QuickFilter Component renders correctly 1`] = `
   <div
     class="MuiFormControl-root MuiTextField-root search"
     style="margin-left: 30px; margin-top: 0px;"
+    title="This will only apply to devices that have a device name configured"
   >
     <div
       class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"

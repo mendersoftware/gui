@@ -67,7 +67,8 @@ describe('app actions', () => {
             'network_interfaces',
             'os',
             'rootfs_type'
-          ]
+          ],
+          tagAttributes: []
         }
       },
       {
@@ -101,6 +102,7 @@ describe('app actions', () => {
               return accu;
             }, {}),
             identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
+            tags: {},
             updated_ts: inventoryDevice.updated_ts
           }
         }
@@ -124,6 +126,7 @@ describe('app actions', () => {
             }, {}),
             identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
             status: 'pending',
+            tags: {},
             updated_ts: inventoryDevice.updated_ts
           }
         }
@@ -190,7 +193,19 @@ describe('app actions', () => {
         deploymentId: defaultState.deployments.byId.d2.id
       },
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice },
-      { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice }
+      { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice },
+      { type: UserConstants.SET_SHOW_HELP, show: true },
+      {
+        type: UserConstants.SET_GLOBAL_SETTINGS,
+        settings: {
+          ...defaultState.users.globalSettings,
+          [defaultState.users.currentUser]: {
+            ...defaultState.users.globalSettings[defaultState.users.currentUser],
+            showHelptips: true
+          }
+        }
+      },
+      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings, id_attribute: { attribute: 'mac', scope: 'identity' } } }
     ];
     await store.dispatch(initializeAppData());
     const storeActions = store.getActions();

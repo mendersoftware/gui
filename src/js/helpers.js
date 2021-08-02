@@ -352,7 +352,7 @@ export const mapDeviceAttributes = (attributes = []) =>
       };
       return accu;
     },
-    { inventory: { device_type: '', artifact_name: '' }, identity: {}, system: {} }
+    { inventory: { device_type: '', artifact_name: '' }, identity: {}, system: {}, tags: {} }
   );
 
 export const getFormattedSize = bytes => {

@@ -224,7 +224,7 @@ const mapStateToProps = state => {
     deviceCount: allDevices.length,
     devicesById: state.devices.byId,
     deployment,
-    idAttribute: getIdAttribute(state),
+    idAttribute: getIdAttribute(state).attribute,
     isEnterprise: getIsEnterprise(state),
     isHosted: state.app.features.isHosted,
     release:

@@ -66,12 +66,12 @@ export const logoutUser = reason => (dispatch, getState) => {
   if (getState().releases.uploadProgress) {
     return Promise.reject();
   }
+  let tasks = [dispatch({ type: UserConstants.USER_LOGOUT })];
   return GeneralApi.post(`${useradmApiUrl}/auth/logout`).finally(() => {
-    let tasks = [dispatch({ type: UserConstants.USER_LOGOUT })];
+    clearAllRetryTimers(setSnackbar);
     if (reason) {
       tasks.push(dispatch(setSnackbar(reason)));
     }
-    clearAllRetryTimers(setSnackbar);
     logout();
     return Promise.all(tasks);
   });
@@ -126,19 +126,9 @@ export const getUserList = () => dispatch =>
     .catch(err => commonErrorHandler(err, `Users couldn't be loaded.`, dispatch, commonErrorFallback));
 
 export const getUser = id => dispatch =>
-  GeneralApi.get(`${useradmApiUrl}/users/${id}`).then(({ data: user }) => {
-    let tasks = [dispatch({ type: UserConstants.RECEIVED_USER, user }), dispatch(setHideAnnouncement(false, user.id))];
-    // checks if user id is set and if cookie for helptips exists for that user
-    const userCookie = cookies.get(user.id);
-    if (typeof userCookie === 'undefined' || typeof userCookie.help === 'undefined') {
-      // if no user cookie set, do so via togglehelptips
-      tasks.push(dispatch(toggleHelptips()));
-    } else {
-      // got user cookie but help value not set
-      tasks.push(dispatch(setShowHelptips(userCookie.help)));
-    }
-    return Promise.all([...tasks, user]);
-  });
+  GeneralApi.get(`${useradmApiUrl}/users/${id}`).then(({ data: user }) =>
+    Promise.all([dispatch({ type: UserConstants.RECEIVED_USER, user }), dispatch(setHideAnnouncement(false, user.id)), user])
+  );
 
 const actions = {
   create: {
@@ -191,40 +181,42 @@ export const disableUser2fa = (userId = OWN_USER_ID) => dispatch =>
     .then(() => Promise.resolve(dispatch(getUser(userId))));
 
 export const getRoles = () => (dispatch, getState) =>
-  GeneralApi.get(`${useradmApiUrl}/roles`).then(({ data: roles }) => {
-    const rolesState = getState().users.rolesById;
-    const rolesById = roles.reduce((accu, role) => {
-      const { allowUserManagement, groups } = role.permissions.reduce(
-        (accu, permission) => {
-          if (permission.action === rolesByName.deploymentCreation.action && permission.object.type === rolesByName.deploymentCreation.object.type) {
-            accu.groups.push(permission.object.value);
-          }
-          if (
-            role.name === rolesByName.admin ||
-            (permission.action == rolesByName.userManagement.action &&
-              permission.object.type == rolesByName.userManagement.object.type &&
-              permission.object.value == rolesByName.userManagement.object.value)
-          ) {
-            accu.allowUserManagement = true;
-          }
-          return accu;
-        },
-        { allowUserManagement: false, groups: [] }
-      );
-      accu[role.name] = {
-        ...emptyRole,
-        ...rolesState[role.name],
-        groups,
-        description: rolesState[role.name] && rolesState[role.name].description ? rolesState[role.name].description : role.description,
-        editable: rolesState[role.name] && typeof rolesState[role.name].editable !== 'undefined' ? rolesState[role.name].editable : true,
-        title: rolesState[role.name] && rolesState[role.name].title ? rolesState[role.name].title : role.name,
-        permissions: role.permissions,
-        allowUserManagement: allowUserManagement
-      };
-      return accu;
-    }, {});
-    return dispatch({ type: UserConstants.RECEIVED_ROLES, rolesById });
-  });
+  GeneralApi.get(`${useradmApiUrl}/roles`)
+    .then(({ data: roles }) => {
+      const rolesState = getState().users.rolesById;
+      const rolesById = roles.reduce((accu, role) => {
+        const { allowUserManagement, groups } = role.permissions.reduce(
+          (accu, permission) => {
+            if (permission.action === rolesByName.deploymentCreation.action && permission.object.type === rolesByName.deploymentCreation.object.type) {
+              accu.groups.push(permission.object.value);
+            }
+            if (
+              role.name === rolesByName.admin ||
+              (permission.action == rolesByName.userManagement.action &&
+                permission.object.type == rolesByName.userManagement.object.type &&
+                permission.object.value == rolesByName.userManagement.object.value)
+            ) {
+              accu.allowUserManagement = true;
+            }
+            return accu;
+          },
+          { allowUserManagement: false, groups: [] }
+        );
+        accu[role.name] = {
+          ...emptyRole,
+          ...rolesState[role.name],
+          groups,
+          description: rolesState[role.name] && rolesState[role.name].description ? rolesState[role.name].description : role.description,
+          editable: rolesState[role.name] && typeof rolesState[role.name].editable !== 'undefined' ? rolesState[role.name].editable : true,
+          title: rolesState[role.name] && rolesState[role.name].title ? rolesState[role.name].title : role.name,
+          permissions: role.permissions,
+          allowUserManagement: allowUserManagement
+        };
+        return accu;
+      }, {});
+      return dispatch({ type: UserConstants.RECEIVED_ROLES, rolesById });
+    })
+    .catch(() => console.log('Role retrieval failed - likely accessing a non-RBAC backend'));
 
 const transformRoleDataToRole = roleData => {
   let permissions = roleData.groups.reduce(
@@ -322,7 +314,7 @@ export const get2FAQRCode = () => dispatch =>
   Onboarding
 */
 export const setShowHelptips = show => (dispatch, getState) => {
-  let tasks = [dispatch({ type: UserConstants.SET_SHOW_HELP, show })];
+  let tasks = [dispatch({ type: UserConstants.SET_SHOW_HELP, show }), dispatch(saveUserSettings({ showHelptips: show }))];
   if (!getOnboardingState(getState()).complete) {
     tasks.push(dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show }));
   }
@@ -330,15 +322,8 @@ export const setShowHelptips = show => (dispatch, getState) => {
 };
 
 export const toggleHelptips = () => (dispatch, getState) => {
-  const state = getState();
-  const user = getCurrentUser(state);
-  if (user.id) {
-    // if current user id available from store
-    let userCookie = cookies.get(user.id) || {};
-    userCookie.help = !userCookie.help;
-    cookies.set(user.id, JSON.stringify(userCookie));
-    return dispatch(setShowHelptips(userCookie.help));
-  }
+  const showHelptips = getUserSettings(getState()).showHelptips;
+  return dispatch(setShowHelptips(!showHelptips));
 };
 
 export const setShowConnectingDialog = show => dispatch => dispatch({ type: UserConstants.SET_SHOW_CONNECT_DEVICE, show: Boolean(show) });
