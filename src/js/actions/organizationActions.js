@@ -124,3 +124,8 @@ export const sendSupportMessage = content => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/contact/support`, content)
     .catch(err => commonErrorHandler(err, 'There was an error sending your request', dispatch, commonErrorFallback))
     .then(() => Promise.resolve(dispatch(setSnackbar('Your request was sent successfully', 5000, ''))));
+
+export const requestPlanChange = (tenantId, content) => dispatch =>
+  Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/plan`, content)
+    .catch(err => commonErrorHandler(err, 'There was an error sending your request', dispatch, commonErrorFallback))
+    .then(() => Promise.resolve(dispatch(setSnackbar('Your request was sent successfully', 5000, ''))));

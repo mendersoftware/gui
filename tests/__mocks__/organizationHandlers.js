@@ -34,6 +34,16 @@ export const organizationHandlers = [
     }
     return res(ctx.status(200));
   }),
+  rest.post(`${tenantadmApiUrlv2}/tenants/:tenantId/plan`, ({ params: { tenantId }, body }, res, ctx) => {
+    const expectedKeys = ['current_plan', 'requested_plan', 'current_addons', 'requested_addons', 'user_message'];
+    if (tenantId != defaultState.organization.organization.id || !Object.keys(body).every(key => expectedKeys.includes(key))) {
+      return res(ctx.status(544));
+    }
+    if (body.requested_plan && !Object.values(PLANS).some(item => item.name === body.requested_plan)) {
+      return res(ctx.status(545));
+    }
+    return res(ctx.status(200));
+  }),
   rest.post(`${tenantadmApiUrlv2}/contact/support`, ({ body: { subject, body } }, res, ctx) => {
     if (!(subject && body)) {
       return res(ctx.status(543));
