@@ -1,10 +1,11 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TablePaginationActions } from './pagination';
 
 describe('Loader Component', () => {
   it('works as expected', async () => {
+    jest.useFakeTimers();
     const changeListener = jest.fn();
     const ui = <TablePaginationActions count={42} page={0} onChangePage={changeListener} />;
     const { rerender } = render(ui);
@@ -12,7 +13,10 @@ describe('Loader Component', () => {
     expect(screen.getByText('/ 3')).toBeInTheDocument();
     expect(screen.getAllByRole('button')[0]).toBeDisabled();
     expect(screen.getAllByRole('button')[1]).toBeDisabled();
-    userEvent.click(screen.getAllByRole('button')[2]);
+    await act(async () => {
+      userEvent.click(screen.getAllByRole('button')[2]);
+      jest.advanceTimersByTime(400);
+    });
     expect(changeListener).toHaveBeenCalledTimes(1);
     expect(screen.getByDisplayValue(2)).toBeInTheDocument();
     rerender(<TablePaginationActions count={42} page={1} onChangePage={changeListener} />);
@@ -20,13 +24,19 @@ describe('Loader Component', () => {
     expect(screen.getAllByRole('button')[1]).not.toBeDisabled();
     expect(screen.getAllByRole('button')[2]).not.toBeDisabled();
     expect(screen.getAllByRole('button')[3]).not.toBeDisabled();
-    userEvent.click(screen.getAllByRole('button')[3]);
+    await act(async () => {
+      userEvent.click(screen.getAllByRole('button')[3]);
+      jest.advanceTimersByTime(400);
+    });
     expect(changeListener).toHaveBeenCalledTimes(2);
     rerender(<TablePaginationActions count={42} page={2} onChangePage={changeListener} />);
     expect(screen.getByDisplayValue(3)).toBeInTheDocument();
     expect(screen.getAllByRole('button')[2]).toBeDisabled();
     expect(screen.getAllByRole('button')[3]).toBeDisabled();
-    userEvent.click(screen.getAllByRole('button')[0]);
+    await act(async () => {
+      userEvent.click(screen.getAllByRole('button')[0]);
+      jest.advanceTimersByTime(400);
+    });
     expect(changeListener).toHaveBeenCalledTimes(3);
     rerender(<TablePaginationActions count={42} page={0} onChangePage={changeListener} />);
     expect(screen.getByDisplayValue(1)).toBeInTheDocument();
@@ -38,5 +48,6 @@ describe('Loader Component', () => {
     fireEvent.change(input, { target: { value: -76 } });
     fireEvent.keyUp(input, { key: 'Enter' });
     expect(screen.getByDisplayValue(1)).toBeInTheDocument();
+    jest.useRealTimers();
   });
 });
