@@ -30,10 +30,11 @@ export const ArtifactInformation = ({ customDeviceTypes, deviceTypes = [], name,
 
   // to allow device types to automatically be selected on entered ',' we have to filter the input and transform any completed device types (followed by a ',')
   // while also checking for duplicates and allowing complete resets of the input
-  const onTextInputChange = (value, reason) => {
+  const onTextInputChange = (inputValue, reason) => {
+    const value = inputValue || '';
     if (reason === 'clear') {
       return updateCreation({ customDeviceTypes: '', selectedDeviceTypes: [] });
-    } else if (reason === 'reset' || !value || !selectedDeviceTypes.length) {
+    } else if (reason === 'reset') {
       return;
     }
     const lastIndex = value.lastIndexOf(',');

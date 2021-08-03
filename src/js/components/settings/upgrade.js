@@ -6,7 +6,7 @@ import { InfoOutlined as InfoOutlinedIcon, LocalOffer as LocalOfferIcon } from '
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeviceLimit } from '../../actions/deviceActions';
-import { cancelUpgrade, completeUpgrade, getUserOrganization, sendSupportMessage, startUpgrade } from '../../actions/organizationActions';
+import { cancelUpgrade, completeUpgrade, getUserOrganization, requestPlanChange, startUpgrade } from '../../actions/organizationActions';
 import Loader from '../common/loader';
 import { PLANS } from '../../constants/appConstants';
 import AddOnSelection from './addonselection';
@@ -63,7 +63,7 @@ export const Upgrade = ({
   getUserOrganization,
   history,
   org,
-  sendSupportMessage,
+  requestPlanChange,
   setSnackbar,
   startUpgrade
 }) => {
@@ -113,19 +113,14 @@ export const Upgrade = ({
       }, [])
       .join(', ');
 
-  const onSendMessage = (message, addons = addOns) => {
-    const content = {
-      subject: 'Subscription change request',
-      body: `
-      Current plan: ${PLANS[org.plan || 'os'].name}
-      Requested plan: ${PLANS[updatedPlan].name}
-      Current addons: ${addOnsToString(org.addons) || '-'}
-      Requested addons: ${addOnsToString(addons) || '-'}
-      User Message: ${message}
-      `
-    };
-    sendSupportMessage(content);
-  };
+  const onSendRequest = (message, addons = addOns) =>
+    requestPlanChange(org.id, {
+      current_plan: PLANS[org.plan || 'os'].name,
+      requested_plan: PLANS[updatedPlan].name,
+      current_addons: addOnsToString(org.addons) || '-',
+      requested_addons: addOnsToString(addons) || '-',
+      user_message: message
+    });
 
   const { plan: currentPlan = 'os', trial: isTrial = true } = org;
   const { description, title } = isTrial ? upgradeNotes.trial : upgradeNotes.default;
@@ -179,13 +174,13 @@ export const Upgrade = ({
         </>
       )}
       {(!isTrial || updatedPlan === PLANS.enterprise.value) && (
-        <QuoteRequestForm addOns={addOns} currentPlan={currentPlan} isTrial={isTrial} updatedPlan={updatedPlan} onSendMessage={onSendMessage} />
+        <QuoteRequestForm addOns={addOns} currentPlan={currentPlan} isTrial={isTrial} updatedPlan={updatedPlan} onSendMessage={onSendRequest} />
       )}
     </div>
   );
 };
 
-const actionCreators = { cancelUpgrade, completeUpgrade, getDeviceLimit, getUserOrganization, sendSupportMessage, setSnackbar, startUpgrade };
+const actionCreators = { cancelUpgrade, completeUpgrade, getDeviceLimit, getUserOrganization, requestPlanChange, setSnackbar, startUpgrade };
 
 const mapStateToProps = state => {
   return {

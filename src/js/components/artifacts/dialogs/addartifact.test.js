@@ -90,11 +90,14 @@ describe('AddArtifact Component', () => {
     userEvent.type(screen.getByPlaceholderText(placeholderText), 'some/path');
     await waitFor(() => expect(screen.getByText(/Destination has to be an absolute path/i)).toBeInTheDocument());
     userEvent.click(screen.getByPlaceholderText(placeholderText));
+    userEvent.clear(screen.getByPlaceholderText(placeholderText));
     userEvent.type(screen.getByPlaceholderText(placeholderText), '/some/path');
+    // await waitFor(() => rerender(ui));
     userEvent.click(screen.getByRole('button', { name: /next/i }));
     await waitFor(() => expect(screen.getByRole('textbox', { name: /device types compatible/i })).toBeInTheDocument());
     userEvent.type(screen.getByRole('textbox', { name: /device types compatible/i }), 'something');
     userEvent.type(screen.getByRole('textbox', { name: /release name/i }), 'some release');
+    await waitFor(() => rerender(ui));
     userEvent.click(screen.getByRole('button', { name: /upload/i }));
     expect(uploadMock).toHaveBeenCalled();
   });
