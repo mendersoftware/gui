@@ -8,8 +8,12 @@ import { unionizeStrings } from '../../../helpers';
 import Tracking from '../../../tracking';
 
 const steps = [
-  { title: 'File Upload', component: ArtifactUpload },
-  { title: 'Artifact information', component: ArtifactInformationForm }
+  { title: 'File Upload', component: ArtifactUpload, validator: ({ fileSelected, isValidDestination }) => !(isValidDestination && fileSelected) },
+  {
+    title: 'Artifact information',
+    component: ArtifactInformationForm,
+    validator: ({ name, selectedDeviceTypes }) => !(selectedDeviceTypes.length && name.length)
+  }
 ];
 
 export const AddArtifactDialog = ({
@@ -30,7 +34,7 @@ export const AddArtifactDialog = ({
   const [customDeviceTypes, setCustomDeviceTypes] = useState('');
   const [destination, setDestination] = useState(!onboardingState.complete ? '/var/www/localhost/htdocs' : '');
   const [file, setFile] = useState();
-  const [name, setName] = useState();
+  const [name, setName] = useState('');
   const [selectedDeviceTypes, setSelectedDeviceTypes] = useState([]);
   const { name: filename = '' } = file || {};
 
@@ -96,22 +100,25 @@ export const AddArtifactDialog = ({
   const ComponentToShow = steps[activeStep].component;
   const fileSelected = file && (destination.length > 0 || filename.endsWith('.mender'));
   const finalStep = activeStep === steps.length - 1 || (file && filename.endsWith('.mender'));
+  const isValidDestination = destination.length ? /^(?:\/|[a-z]+:\/\/)/.test(destination) : true;
+  const disableProgress = steps[activeStep].validator({ selectedDeviceTypes, isValidDestination, fileSelected, name });
   return (
     <Dialog open={true} fullWidth={true} maxWidth="sm">
       <DialogTitle>Upload an Artifact</DialogTitle>
       <DialogContent className="dialog-content margin-top margin-left margin-right margin-bottom">
         <ComponentToShow
           advanceOnboarding={advanceOnboarding}
-          deviceTypes={deviceTypes}
-          onboardingState={onboardingState}
-          releases={releases}
-          setSnackbar={setSnackbar}
-          updateCreation={onUpdateCreation}
           customDeviceTypes={customDeviceTypes}
           destination={destination}
+          deviceTypes={deviceTypes}
           file={file}
+          isValidDestination={isValidDestination}
           name={name}
+          onboardingState={onboardingState}
+          releases={releases}
           selectedDeviceTypes={selectedDeviceTypes}
+          setSnackbar={setSnackbar}
+          updateCreation={onUpdateCreation}
         />
       </DialogContent>
       <DialogActions>
@@ -122,7 +129,7 @@ export const AddArtifactDialog = ({
           </Button>
         )}
         <div style={{ flexGrow: 1 }} />
-        <Button variant="contained" color="primary" disabled={!fileSelected} onClick={() => (finalStep ? onUpload() : onNextClick())}>
+        <Button variant="contained" color="primary" disabled={disableProgress} onClick={() => (finalStep ? onUpload() : onNextClick())}>
           {finalStep ? 'Upload' : 'Next'}
         </Button>
       </DialogActions>
