@@ -27,7 +27,7 @@ export const DetailInformation = ({ title, details }) => {
 };
 
 export const DeviceDetails = ({ device, idAttribute, onClose }) => {
-  const { name, device_type, artifact_name } = device.attributes;
+  const { name, device_type: deviceTypes, artifact_name } = device.attributes;
   const usesId = !idAttribute || idAttribute === 'id' || idAttribute === 'Device ID';
   const nameContainer = name ? { Name: name } : {};
   const deviceDetails = {
@@ -38,7 +38,7 @@ export const DeviceDetails = ({ device, idAttribute, onClose }) => {
         <LaunchIcon className="margin-left-small link-color" fontSize="small" />
       </Link>
     ),
-    'Device type': device_type,
+    'Device type': deviceTypes,
     'System software version': device['rootfs-image.version'] || artifact_name || '-',
     ' ': (
       <Link to={`/auditlog?object_type=device&object_id=${device.id}&start_date=${BEGINNING_OF_TIME}`} onClick={onClose}>

@@ -19,7 +19,8 @@ const stateTitleMap = {
 const DeploymentDeviceListItem = ({ created: deploymentCreationDate, device, idAttribute, viewLog, retries: maxRetries }) => {
   const { attempts, attributes = {}, created, finished, id = 'id', log, retries, substate, status } = device;
 
-  const softwareName = attributes['rootfs-image.version'] || attributes.artifact_name;
+  const { artifact_name, device_type: deviceTypes = [], ['rootfs-image.version']: rootfsImageVersion } = attributes;
+  const softwareName = rootfsImageVersion || artifact_name;
   const encodedArtifactName = encodeURIComponent(softwareName);
   const currentArtifactLink = softwareName ? (
     <Link style={{ fontWeight: '500' }} to={`/releases/${encodedArtifactName}`}>
@@ -42,7 +43,7 @@ const DeploymentDeviceListItem = ({ created: deploymentCreationDate, device, idA
           <DeviceIdentityDisplay device={device} idAttribute={idAttribute} isEditable={false} />
         </Link>
       </TableCell>
-      <TableCell>{attributes.device_type || '-'}</TableCell>
+      <TableCell>{deviceTypes.length ? deviceTypes.join(',') : '-'}</TableCell>
       <TableCell>{currentArtifactLink}</TableCell>
       <TableCell>{created ? <Time value={formatTime(created)} format="YYYY-MM-DD HH:mm" /> : '-'}</TableCell>
       <TableCell>{finished ? <Time value={formatTime(finished)} format="YYYY-MM-DD HH:mm" /> : '-'}</TableCell>

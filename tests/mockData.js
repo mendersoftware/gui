@@ -100,7 +100,7 @@ export const defaultState = {
       a1: {
         id: 'a1',
         attributes: {
-          device_type: 'raspberrypi4',
+          device_type: ['raspberrypi4'],
           ipv4_wlan0: '192.168.10.141/24'
         },
         identity_data: { mac: 'dc:a6:32:12:ad:bf' },
@@ -122,7 +122,7 @@ export const defaultState = {
         id: 'b1',
         attributes: {
           ipv4_wlan0: '192.168.10.141/24',
-          device_type: 'qemux86-64'
+          device_type: ['qemux86-64']
         },
         identity_data: { mac: 'dc:a6:32:12:ad:bf' },
         status: 'accepted',
@@ -143,7 +143,7 @@ export const defaultState = {
         id: 'c1',
         auth_sets: [],
         attributes: {
-          device_type: 'qemux86-128'
+          device_type: ['qemux86-128']
         }
       }
     },
