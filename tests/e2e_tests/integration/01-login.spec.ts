@@ -16,10 +16,10 @@ test.describe('Login', () => {
       // enter valid username and password
       await page.waitForSelector('[name=email]');
       await page.click('[name=email]');
-      await page.type('[name=email]', username);
+      await page.fill('[name=email]', username);
       await page.waitForSelector('[name=password]');
       await page.focus('[name=password]');
-      await page.type('[name=password]', password);
+      await page.fill('[name=password]', password);
       await page.click(`:is(button:has-text('Log in'))`);
       // confirm we have logged in successfully
       await page.waitForSelector('text=License information');
@@ -63,10 +63,10 @@ test.describe('Login', () => {
       // enter valid username and invalid password
       await page.waitForSelector('[name=email]');
       await page.click('[name=email]');
-      await page.type('[name=email]', username);
+      await page.fill('[name=email]', username);
       await page.waitForSelector('[name=password]');
       await page.click('[name=password]');
-      await page.type('[name=password]', 'lewrongpassword');
+      await page.fill('[name=password]', 'lewrongpassword');
       await page.click(`:is(button:has-text('Log in'))`);
 
       // still on /login page plus an error is displayed
@@ -86,10 +86,10 @@ test.describe('Login', () => {
       // enter valid username and password
       await page.waitForSelector('[name=email]');
       await page.click('[name=email]');
-      await page.type('[name=email]', username);
+      await page.fill('[name=email]', username);
       await page.waitForSelector('[name=password]');
       await page.click('[name=password]');
-      await page.type('[name=password]', password);
+      await page.fill('[name=password]', password);
       await page.check('[type=checkbox]', { force: true });
       await page.click(`:is(button:has-text('Log in'))`);
 

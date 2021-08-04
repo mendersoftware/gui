@@ -1,4 +1,4 @@
-image: node:15.11.0-alpine
+image: node:16-alpine
 
 stages:
   - pre-test
@@ -23,7 +23,7 @@ test:lint:
   stage: test
   except:
     - master
-    - /^saas-[a-zA-Z0-9.]+$/
+    - /^(staging|saas-[a-zA-Z0-9.]+)$/
   needs: []
   cache:
     key: ${CI_COMMIT_REF_SLUG}
@@ -91,9 +91,9 @@ test:acceptance:enterprise:
 
 test:unit:
   stage: test
+  image: node:14-alpine
   except:
     - /^(staging|saas-[a-zA-Z0-9.]+)$/
-  image: node:14-alpine
   needs: []
   cache:
     key: ${CI_COMMIT_REF_SLUG}
