@@ -4,6 +4,7 @@ import { FirstPage as FirstPageIcon, LastPage as LastPageIcon, KeyboardArrowLeft
 import { IconButton, TablePagination, TextField } from '@material-ui/core';
 
 import { DEVICE_LIST_DEFAULTS, DEVICE_LIST_MAXIMUM_LENGTH } from '../../constants/deviceConstants';
+import { useDebounce } from '../../utils/debouncehook';
 
 const defaultRowsPerPageOptions = [10, 20, DEVICE_LIST_MAXIMUM_LENGTH];
 const { perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
@@ -16,12 +17,14 @@ export const TablePaginationActions = ({ count, page = 0, onChangePage, rowsPerP
     setPageNo(page + paginationIndex);
   }, [page, rowsPerPage, count]);
 
+  const debouncedPage = useDebounce(pageNo, 300);
+
   useEffect(() => {
-    const newPage = Math.min(Math.max(paginationIndex, pageNo), Math.ceil(count / rowsPerPage));
+    const newPage = Math.min(Math.max(paginationIndex, debouncedPage), Math.ceil(count / rowsPerPage));
     if (newPage !== page + paginationIndex) {
       onChangePage(newPage);
     }
-  }, [pageNo]);
+  }, [debouncedPage]);
 
   const onChange = event => {
     const input = event.target.value;
