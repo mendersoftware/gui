@@ -20,13 +20,14 @@ test.describe('Settings', () => {
       await page.waitForSelector('.StripeElement iframe');
       const frameHandle = await page.$('.StripeElement iframe');
       const stripeFrame = await frameHandle.contentFrame();
-      await stripeFrame.type('[name="cardnumber"]', '4242424242424242');
-      await stripeFrame.type('[name="exp-date"]', '1232');
-      await stripeFrame.type('[name="cvc"]', '123');
-      await stripeFrame.type('[name="postal"]', '12345');
+      await stripeFrame.fill('[name="cardnumber"]', '4242424242424242');
+      await stripeFrame.fill('[name="exp-date"]', '1232');
+      await stripeFrame.fill('[name="cvc"]', '123');
+      await stripeFrame.fill('[name="postal"]', '12345');
       await page.click(`button:has-text('Sign up')`);
-      await page.waitForSelector('Your upgrade was successful', { timeout: 10000 });
-      await page.waitForSelector('Organization name', { timeout: 10000 });
+      await page.waitForSelector('text=/Card confirmed./i', { timeout: 10000 });
+      await page.waitForSelector('text=/Your upgrade was successful/i', { timeout: 15000 });
+      await page.waitForSelector('text=/Organization name/i', { timeout: 10000 });
     });
     test('allows higher device limits once upgraded', async ({ baseUrl, environment, loggedInPage: page }) => {
       test.skip(environment !== 'staging');
@@ -74,7 +75,7 @@ test.describe('Settings', () => {
       console.log(qrData.get('secret'));
       const qrToken = await generateOtp(qrData.get('secret'));
       console.log('Generated otp:', qrToken);
-      await page.type('#token2fa', qrToken);
+      await page.fill('#token2fa', qrToken);
       await page.click(`css=button >> text=Verify`);
       await page.waitForSelector(`css=ol >> text=Verified`);
       await page.click(`css=button >> text=Save`);
@@ -90,11 +91,11 @@ test.describe('Settings', () => {
       await page.goto(`${baseUrl}ui/`);
       expect(await page.isVisible(`button :has-text('Log in')`)).toBeTruthy();
       // enter valid username and password
-      await page.type('[name=email]', username);
-      await page.type('[name=password]', password);
+      await page.fill('[name=email]', username);
+      await page.fill('[name=password]', password);
       await page.click(`button :has-text('Log in')`);
       await page.waitForTimeout(1000);
-      await page.type('[name=token2fa]', '123456');
+      await page.fill('[name=token2fa]', '123456');
       await page.click(`button :has-text('Log in')`);
       // still on /login page plus an error is displayed
       expect(await page.isVisible(`button :has-text('Log in')`)).toBeTruthy();
@@ -103,11 +104,11 @@ test.describe('Settings', () => {
     test('allows turning 2fa off again', async ({ baseUrl, environment, page, password, username }) => {
       test.skip(environment !== 'staging');
       await page.goto(`${baseUrl}ui/#/login`);
-      await page.type('[name=email]', username);
-      await page.type('[name=password]', password);
+      await page.fill('[name=email]', username);
+      await page.fill('[name=password]', password);
       await page.click(`button :has-text('Log in')`);
       const newToken = await generateOtp();
-      await page.type('[name=token2fa]', newToken);
+      await page.fill('[name=token2fa]', newToken);
       await page.click(`button :has-text('Log in')`);
       await page.waitForSelector('text=License information');
       await page.goto(`${baseUrl}ui/#/settings/my-account`);
@@ -117,8 +118,8 @@ test.describe('Settings', () => {
     test('allows logging in without 2fa after deactivation', async ({ baseUrl, environment, page, password, username }) => {
       test.skip(environment !== 'staging');
       await page.goto(`${baseUrl}ui/#/login`);
-      await page.type('[name=email]', username);
-      await page.type('[name=password]', password);
+      await page.fill('[name=email]', username);
+      await page.fill('[name=password]', password);
       await page.click(`:is(button:has-text('Log in'))`);
       await page.goto(`${baseUrl}ui/#/settings`);
       await page.waitForSelector('text=License information');
@@ -157,7 +158,7 @@ test.describe('Settings', () => {
       await page.click(`:is(button:has-text('Generate'))`);
       expect(await page.$eval('[name=password]', (el: HTMLInputElement) => el.value)).toBeTruthy();
       await page.click('[name=password]', { clickCount: 3 });
-      await page.type('[name=password]', replacementPassword);
+      await page.fill('[name=password]', replacementPassword);
       const typedPassword = await page.$eval('[name=password]', (el: HTMLInputElement) => el.value);
       expect(typedPassword === replacementPassword);
       await page.click(`button:has-text('Save')`);
@@ -184,11 +185,11 @@ test.describe('Settings', () => {
       await page.goto(`${baseUrl}ui/#/settings/my-account`);
       await page.click('#change_password');
 
-      await page.type('[name=password]', password);
+      await page.fill('[name=password]', password);
       const typedPassword = await page.$eval('[name=password]', (el: HTMLInputElement) => el.value);
       if (typedPassword !== password) {
         await page.click('[name=password]', { clickCount: 3 });
-        await page.type('[name=password]', password);
+        await page.fill('[name=password]', password);
       }
       await page.click(`:is(button:has-text('Save'))`);
       await page.waitForSelector('text=/user has been updated/i', { timeout: 10000 });

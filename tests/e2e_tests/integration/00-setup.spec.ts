@@ -36,23 +36,21 @@ test.describe('Test setup', () => {
       expect(await page.isVisible('text=/Sign up/i')).toBeTruthy();
       await page.click(`text=/Sign up/i`);
       console.log(`creating user with username: ${username} and password: ${password}`);
-      await page.type('[id=email]', username);
-      await page.type('[id=password_new]', password);
-      await page.$eval('[id=password_new]', (el: HTMLInputElement) => (el.value = ''));
-      await page.type('[id=password_new]', password);
-      await page.type('[id=password_confirmation]', password);
+      await page.fill('[id=email]', username);
+      await page.fill('[id=password_new]', password);
+      await page.fill('[id=password_new]', '');
+      await page.fill('[id=password_new]', password);
+      await page.fill('[id=password_confirmation]', password);
 
       await page.click(`button:has-text('Sign up')`);
       await page.waitForSelector(`button:has-text('Complete')`);
-      await page.type('[id=name]', 'CI test corp');
+      await page.fill('[id=name]', 'CI test corp');
       await page.check('[id=tos]');
-      let recaptcha;
-      for (let frame of await page.frames()) {
-        recaptcha = await frame.$('#recaptcha-anchor');
-        if (recaptcha) {
-          break;
-        }
-      }
+      const frameHandle = await page.waitForSelector('iframe[title="reCAPTCHA"]');
+      await page.waitForTimeout(300);
+      const recaptchaFrame = await frameHandle.contentFrame();
+      await recaptchaFrame.waitForSelector('#recaptcha-anchor');
+      const recaptcha = await recaptchaFrame.$('#recaptcha-anchor');
       await recaptcha.click();
       await page.waitForTimeout(2000);
       await page.click(`button:has-text('Complete')`);
