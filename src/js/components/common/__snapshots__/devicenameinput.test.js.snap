@@ -3,13 +3,13 @@
 exports[`DeviceNameInput Component renders correctly 1`] = `
 <div
   class="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-adornedEnd"
-  style="font-size: 0.8125rem;"
+  style="color: rgba(0, 0, 0, 0.8); font-size: 0.8125rem;"
 >
   <input
     class="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled MuiInputBase-inputAdornedEnd"
     disabled=""
     id="a1-id-input"
-    placeholder="a1"
+    placeholder="a1..."
     type="text"
     value=""
   />

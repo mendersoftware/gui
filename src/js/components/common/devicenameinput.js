@@ -65,13 +65,13 @@ export const DeviceNameInput = ({ device, isHovered, setSnackbar, setDeviceTags,
 
   const onInputClick = e => e.stopPropagation();
 
-  const textColorStyle = name ? { color: menderTheme.palette.text.primary } : {};
+  const textColorStyle = name ? { color: menderTheme.palette.text.primary } : { color: menderTheme.palette.text.main };
   return (
     <Input
       id={`${device.id}-id-input`}
       disabled={!isEditing}
       value={value}
-      placeholder={id.substring(0, 6)}
+      placeholder={`${id.substring(0, 6)}...`}
       onClick={onInputClick}
       onChange={({ target: { value } }) => setValue(value)}
       style={{ ...style, ...textColorStyle, fontSize: '0.8125rem' }}
