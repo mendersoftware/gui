@@ -23,7 +23,7 @@ test:lint:
   stage: test
   except:
     - master
-    - /^saas-[a-zA-Z0-9.]+$/
+    - /^(staging|saas-[a-zA-Z0-9.]+)$/
   needs: []
   cache:
     key: ${CI_COMMIT_REF_SLUG}
