@@ -159,7 +159,7 @@ test:prep:
     expire_in: 30 days
 
 test:staging-deployment:
-  image: mcr.microsoft.com/playwright:v1.11.0
+  image: mcr.microsoft.com/playwright:v1.13.1
   stage: .post
   services:
     - docker:19.03.5-dind

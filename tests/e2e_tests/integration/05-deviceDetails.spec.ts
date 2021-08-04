@@ -21,7 +21,8 @@ test.describe('Device details', () => {
     await page.click(`.leftNav :text('Devices')`);
     await page.click(`.deviceListItem`);
     // the deviceconnect connection might not be established right away
-    await page.waitForSelector('text=/Remote Terminal session/i', { timeout: 10000 });
+    const terminalLaunchButton = await page.waitForSelector('text=/Remote Terminal session/i', { timeout: 10000 });
+    await terminalLaunchButton.scrollIntoViewIfNeeded();
     await page.click(`css=.expandedDevice >> text=Remote Terminal session`);
     await page.waitForSelector(`text=Connection with the device established`, { timeout: 10000 });
     expect(await page.isVisible('.terminal.xterm canvas')).toBeTruthy();
