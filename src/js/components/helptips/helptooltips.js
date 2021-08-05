@@ -182,7 +182,8 @@ const DeviceSupportTipComponent = ({ docsVersion }) => (
 export const DeviceSupportTip = connect(mapStateToProps, actionCreators)(DeviceSupportTipComponent);
 
 const ConfigureTimezoneTipComponent = ({ anchor, device, toggleHelptips }) => {
-  if (!['qemux86-64', 'raspberry', 'rpi'].some(type => device.attributes?.device_type?.startsWith(type))) {
+  const { attributes = {} } = device;
+  if (!['qemux86-64', 'raspberry', 'rpi'].some(type => attributes.device_type?.some(deviceType => deviceType.startsWith(type)))) {
     return null;
   }
   return (
@@ -210,7 +211,8 @@ const ConfigureTimezoneTipComponent = ({ anchor, device, toggleHelptips }) => {
 export const ConfigureTimezoneTip = connect(mapStateToProps, actionCreators)(ConfigureTimezoneTipComponent);
 
 const ConfigureRaspberryLedComponent = ({ anchor, device, setSnackbar, toggleHelptips }) => {
-  if (!['raspberry', 'rpi'].some(type => device.attributes?.device_type?.startsWith(type))) {
+  const { attributes = {} } = device;
+  if (!['raspberry', 'rpi'].some(type => attributes.device_type?.some(deviceType => deviceType.startsWith(type)))) {
     return null;
   }
   return (

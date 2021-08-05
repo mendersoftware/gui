@@ -202,10 +202,13 @@ const actionCreators = {
 
 const mapStateToProps = state => {
   const deviceTypes = state.devices.byStatus.accepted.deviceIds.slice(0, 200).reduce((accu, item) => {
-    const { device_type: deviceType = '' } = state.devices.byId[item] ? state.devices.byId[item].attributes : {};
-    if (deviceType.length > 0) {
-      accu[deviceType] = accu[deviceType] ? accu[deviceType] + 1 : 1;
-    }
+    const { device_type: deviceTypes = [] } = state.devices.byId[item] ? state.devices.byId[item].attributes : {};
+    accu = deviceTypes.reduce((deviceTypeAccu, deviceType) => {
+      if (deviceType.length > 1) {
+        deviceTypeAccu[deviceType] = deviceTypeAccu[deviceType] ? deviceTypeAccu[deviceType] + 1 : 1;
+      }
+      return deviceTypeAccu;
+    }, accu);
     return accu;
   }, {});
   return {

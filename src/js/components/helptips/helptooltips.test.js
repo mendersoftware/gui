@@ -39,7 +39,7 @@ describe('Helptooltips Components', () => {
             ...defaultState.devices.byId.a1,
             attributes: {
               ...defaultState.devices.byId.a1.attributes,
-              device_type: 'raspberrypi12'
+              device_type: ['raspberrypi12']
             }
           }
         }

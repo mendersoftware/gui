@@ -85,7 +85,7 @@ const acceptedDevicesRoute = {
     {
       title: 'Device type',
       attribute: { name: 'device_type', scope: 'inventory' },
-      render: device => (device.attributes && device.attributes.device_type ? device.attributes.device_type : '-'),
+      render: ({ attributes = {} }) => (attributes.device_type?.length ? attributes.device_type.join(',') : '-'),
       sortable: true
     },
     {

@@ -86,7 +86,7 @@ export const SoftwareDevices = ({
   let groupLink = '/devices';
   if (device && device.attributes) {
     // If single device, don't show incompatible releases
-    releaseItems = releaseItems.filter(rel => rel.device_types_compatible.some(type => type === device.attributes.device_type));
+    releaseItems = releaseItems.filter(rel => rel.device_types_compatible.some(type => device.attributes.device_type.includes(type)));
     groupLink = `${groupLink}?id=${device.id}`;
   } else {
     groupLink = group && group !== allDevices ? `${groupLink}?group=${group}` : groupLink;
@@ -129,7 +129,7 @@ export const SoftwareDevices = ({
   return (
     <div style={{ overflow: 'visible', minHeight: '300px', marginTop: '15px' }}>
       {!releaseItems.length ? (
-        <p className="info" style={{ marginTop: '0' }}>
+        <p className="info flexbox center-aligned">
           <ErrorOutlineIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }} />
           There are no {releases.length ? 'compatible ' : ''}artifacts available. <Link to="/artifacts">Upload one to the repository</Link> to get started.
         </p>
