@@ -29,6 +29,7 @@ cat >/var/www/mender-gui/dist/env.js <<EOF
       hasAuditlogs: "$HAVE_AUDITLOGS",
       hasDeviceConfig: "$HAVE_DEVICECONFIG",
       hasDeviceConnect: "$HAVE_DEVICECONNECT",
+      hasMonitor: "$HAVE_MONITOR",
       hasMultitenancy: "$HAVE_MULTITENANT",
       isEnterprise: "$HAVE_ENTERPRISE",
       isHosted: "$MENDER_HOSTED"
