@@ -42,6 +42,15 @@ describe('app actions', () => {
   });
 
   it('should try to get all required app information', async () => {
+    const attributeReducer = (accu, item) => {
+      if (item.scope === 'inventory') {
+        accu[item.name] = item.value;
+        if (item.name === 'device_type') {
+          accu[item.name] = [].concat(item.value);
+        }
+      }
+      return accu;
+    };
     const store = mockStore({ ...defaultState });
     // eslint-disable-next-line no-unused-vars
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
@@ -95,12 +104,7 @@ describe('app actions', () => {
         devicesById: {
           a1: {
             ...defaultState.devices.byId.a1,
-            attributes: inventoryDevice.attributes.reduce((accu, item) => {
-              if (item.scope === 'inventory') {
-                accu[item.name] = item.value;
-              }
-              return accu;
-            }, {}),
+            attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
             identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
             tags: {},
             updated_ts: inventoryDevice.updated_ts
@@ -118,12 +122,7 @@ describe('app actions', () => {
         devicesById: {
           a1: {
             ...defaultState.devices.byId.a1,
-            attributes: inventoryDevice.attributes.reduce((accu, item) => {
-              if (item.scope === 'inventory') {
-                accu[item.name] = item.value;
-              }
-              return accu;
-            }, {}),
+            attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
             identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
             status: 'pending',
             tags: {},

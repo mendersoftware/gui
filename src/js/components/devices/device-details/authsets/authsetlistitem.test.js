@@ -26,7 +26,7 @@ gnr0OSIDwEL31l+12DbAQ9+ANv6TLpWNfLpX0E6IStkZAgMBAAE=
     };
     const device = {
       id: 'a7503dcc-afb6-4926-897e-3b1346d1600f',
-      attributes: { device_type: '', artifact_name: '' },
+      attributes: { device_type: [], artifact_name: '' },
       updated_ts: '2020-09-21T12:42:38.751Z',
       identity_data: { mac: '24:7d:30:90:21:a8', status: 'accepted' },
       status: 'accepted',

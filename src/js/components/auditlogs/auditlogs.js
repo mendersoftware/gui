@@ -115,7 +115,7 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
     User: Object.values(users),
     Device: []
   };
-  let detailOptions = typeOptionsMap[type];
+  let detailOptions = typeOptionsMap[type] ?? [];
 
   return (
     <div className="fadeIn margin-left flexbox column" style={{ marginRight: '5%' }}>

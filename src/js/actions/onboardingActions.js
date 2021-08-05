@@ -28,9 +28,9 @@ export const getOnboardingState = () => (dispatch, getState) => {
     const releases = Object.values(store.releases.byId);
     const pastDeployments = store.deployments.byStatus.finished.deploymentIds;
     const deviceType =
-      acceptedDevices.length && store.devices.byId[acceptedDevices[0]].hasOwnProperty('attributes')
+      onboardingState.deviceType || (acceptedDevices.length && store.devices.byId[acceptedDevices[0]].hasOwnProperty('attributes'))
         ? store.devices.byId[acceptedDevices[0]].attributes.device_type
-        : null;
+        : [];
     const progress = applyOnboardingFallbacks(onboardingState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments));
     const state = {
       complete: !!(
@@ -43,8 +43,8 @@ export const getOnboardingState = () => (dispatch, getState) => {
         store.onboarding.disable
       ),
       showTips: onboardingState.showTips != null ? onboardingState.showTips : true,
-      deviceType: onboardingState.deviceType || store.onboarding.deviceType || deviceType,
-      approach: onboardingState.approach || ((deviceType || '').startsWith('qemu') ? 'virtual' : 'physical') || store.onboarding.approach,
+      deviceType,
+      approach: onboardingState.approach || (deviceType.some(type => type.startsWith('qemu')) ? 'virtual' : 'physical') || store.onboarding.approach,
       artifactIncluded: onboardingState.artifactIncluded || store.onboarding.artifactIncluded,
       progress
     };
