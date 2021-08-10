@@ -22,7 +22,7 @@ import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_ONLINE_CUTOFF, DEVICE_STATES } from '../../constants/deviceConstants';
 import ForwardingLink from '../common/forwardlink';
 import RelativeTime from '../common/relative-time';
-import { getDocsVersion, getIsEnterprise, getTenantCapabilities } from '../../selectors';
+import { getDocsVersion, getIsEnterprise, getTenantCapabilities, getUserRoles } from '../../selectors';
 import theme from '../../themes/mender-theme';
 import Tracking from '../../tracking';
 import TroubleshootDialog from './troubleshootdialog';
@@ -65,7 +65,8 @@ export const ExpandedDevice = ({
   setDeviceTags,
   setSnackbar,
   showHelptips,
-  tenantCapabilities
+  tenantCapabilities,
+  userRoles
 }) => {
   const { status = DEVICE_STATES.accepted, updated_ts = '' } = device;
   const [socketClosed, setSocketClosed] = useState(true);
@@ -200,6 +201,7 @@ export const ExpandedDevice = ({
           startTroubleshoot={launchTroubleshoot}
           socketClosed={socketClosed}
           style={{ marginRight: theme.spacing(2) }}
+          userRoles={userRoles}
         />
       )}
       <Divider style={{ marginTop: theme.spacing(3), marginBottom: theme.spacing(2) }} />
@@ -219,6 +221,7 @@ export const ExpandedDevice = ({
         onSocketClose={() => setTimeout(() => setSocketClosed(true), 5000)}
         setSocketClosed={setSocketClosed}
         type={troubleshootType}
+        userRoles={userRoles}
       />
       {monitorLog && <LogDialog logData={monitorLog} onClose={() => setMonitorLog('')} type="monitorLog" />}
     </Drawer>
@@ -243,7 +246,6 @@ const actionCreators = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const tenantCapabilities = getTenantCapabilities(state);
   const device = state.devices.byId[ownProps.deviceId] || {};
   const { config = {} } = device;
   const { deployment_id: configDeploymentId } = config;
@@ -257,7 +259,8 @@ const mapStateToProps = (state, ownProps) => {
     isEnterprise: getIsEnterprise(state),
     onboardingComplete: state.onboarding.complete,
     showHelptips: state.users.showHelptips,
-    tenantCapabilities
+    tenantCapabilities: getTenantCapabilities(state),
+    userRoles: getUserRoles(state)
   };
 };
 

@@ -55,6 +55,8 @@ export const getUserRoles = createSelector(
     let isAdmin = !(hasMultitenancy || isEnterprise || (isHosted && plan !== 'os'));
     let allowUserManagement = isAdmin;
     let isGroupRestricted = false;
+    let hasWriteAccess = isAdmin;
+    let canTroubleshoot = isAdmin;
     if (currentUser.roles) {
       isAdmin = currentUser.roles.some(role => role === rolesByName.admin);
       allowUserManagement =
@@ -70,8 +72,10 @@ export const getUserRoles = createSelector(
       isGroupRestricted =
         !isAdmin &&
         currentUser.roles.some(role => rolesById[role]?.permissions.some(permission => permission.object.type === rolesByName.groupAccess.object.type));
+      hasWriteAccess = isAdmin || currentUser.roles.some(role => role === rolesByName.readOnly);
+      canTroubleshoot = isAdmin || currentUser.roles.some(role => role === rolesByName.terminalAccess);
     }
-    return { allowUserManagement, isAdmin, isGroupRestricted };
+    return { allowUserManagement, canTroubleshoot, hasWriteAccess, isAdmin, isGroupRestricted };
   }
 );
 
