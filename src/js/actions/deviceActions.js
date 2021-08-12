@@ -21,6 +21,7 @@ export const deviceConnect = `${apiUrl}/deviceconnect`;
 export const inventoryApiUrl = `${apiUrl}/inventory`;
 export const inventoryApiUrlV2 = `${apiUrlV2}/inventory`;
 export const deviceConfig = `${apiUrl}/deviceconfig/configurations/device`;
+export const reportingApiUrl = `${apiUrl}/reporting`;
 
 const defaultAttributes = [
   { scope: 'identity', attribute: 'status' },
@@ -31,6 +32,10 @@ const defaultAttributes = [
   { scope: 'system', attribute: 'updated_ts' },
   { scope: 'tags', attribute: 'name' }
 ];
+
+const getSearchEndpoint = hasReporting => {
+  return hasReporting ? `${reportingApiUrl}/devices/search` : `${inventoryApiUrlV2}/filters/search`;
+};
 
 export const getGroups = () => (dispatch, getState) =>
   GeneralApi.get(`${inventoryApiUrl}/groups`).then(res => {
@@ -317,7 +322,7 @@ export const getAllGroupDevices = (group, shouldIncludeAllStates) => (dispatch, 
     filters.push({ key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' });
   }
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
-    GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
+    GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
       page,
       per_page: perPage,
       filters: mapFiltersToTerms(filters),
@@ -359,7 +364,7 @@ export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
   ]);
   const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
-    GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, { page, per_page: perPage, filters, attributes }).then(res => {
+    GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), { page, per_page: perPage, filters, attributes }).then(res => {
       const state = getState();
       const deviceAccu = reduceReceivedDevices(res.data, devices, state);
       dispatch({
@@ -439,8 +444,8 @@ const deriveInactiveDevices = deviceIds => (dispatch, getState) => {
 /*
     Device Auth + admission
   */
-export const getDeviceCount = status => dispatch =>
-  GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
+export const getDeviceCount = status => (dispatch, getState) =>
+  GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
     page: 1,
     per_page: 1,
     filters: mapFiltersToTerms([{ key: 'status', value: status, operator: '$eq', scope: 'identity' }]),
@@ -493,7 +498,7 @@ export const getDevicesByStatus = (status, options = {}) => (dispatch, getState)
   }
   const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
   const effectiveFilters = status ? [...applicableFilters, { key: 'status', value: status, operator: '$eq', scope: 'identity' }] : applicableFilters;
-  return GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
+  return GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
     page,
     per_page: perPage,
     filters: mapFiltersToTerms(effectiveFilters),
@@ -556,7 +561,7 @@ export const getDevicesByStatus = (status, options = {}) => (dispatch, getState)
 export const getAllDevicesByStatus = status => (dispatch, getState) => {
   const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = 1, devices = []) =>
-    GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
+    GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
       page,
       per_page: perPage,
       filters: mapFiltersToTerms([{ key: 'status', value: status, operator: '$eq', scope: 'identity' }]),
