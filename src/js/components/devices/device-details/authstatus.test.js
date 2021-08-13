@@ -1,25 +1,36 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 import AuthStatus from './authstatus';
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 
+const mockStore = configureStore([thunk]);
+
 describe('AuthStatus Component', () => {
+  let store;
+  beforeEach(() => {
+    store = mockStore({ ...defaultState });
+  });
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <AuthStatus
-        device={{
-          ...defaultState.devices.byId.a1,
+      <Provider store={store}>
+        <AuthStatus
+          device={{
+            ...defaultState.devices.byId.a1,
 
-          auth_sets: [
-            ...defaultState.devices.byId.a1.auth_sets,
-            {
-              ...defaultState.devices.byId.a1.auth_sets[0],
-              status: 'pending'
-            }
-          ]
-        }}
-        toggleAuthsets={jest.fn}
-      />
+            auth_sets: [
+              ...defaultState.devices.byId.a1.auth_sets,
+              {
+                ...defaultState.devices.byId.a1.auth_sets[0],
+                status: 'pending'
+              }
+            ]
+          }}
+          toggleAuthsets={jest.fn}
+        />
+      </Provider>
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
