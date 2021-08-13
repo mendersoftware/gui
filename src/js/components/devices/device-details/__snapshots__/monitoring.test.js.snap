@@ -128,29 +128,17 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
           >
             2021-07-23 12:22
           </time>
-          <div>
-            Jul 22 10:40:56 raspberrypi sshd[32031]: pam_unix(sshd:session): session closed for user root
-          </div>
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiButton-label"
-            >
-              view log
-            </span>
-            <span
-              class="MuiTouchRipple-root"
-            />
-          </button>
+          <a>
+            view log
+          </a>
         </div>
-        <a
+        <div
           class="margin-top-small"
         >
-          show less
-        </a>
+          <a>
+            show less
+          </a>
+        </div>
       </div>
     </div>
   </div>

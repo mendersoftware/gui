@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import Time from 'react-time';
 
-import { Button } from '@material-ui/core';
-
 import DeviceDataCollapse from './devicedatacollapse';
 import { DeviceOfflineHeaderNotification, NoAlertsHeaderNotification, severityMap } from './notifications';
 
@@ -14,10 +12,7 @@ const MonitoringAlert = ({ alert: { id, level, name, subject, timestamp }, onLog
     </div>
     <div>{level}</div>
     <Time value={timestamp} format="YYYY-MM-DD HH:mm" />
-    <div>{subject.details}</div>
-    <Button variant="text" onClick={() => onLogClick(id, subject.details)}>
-      view log
-    </Button>
+    {subject.details ? <a onClick={() => onLogClick(id, subject.details)}>view log</a> : null}
   </div>
 );
 
@@ -50,9 +45,9 @@ export const DeviceMonitoring = ({ alerts, device, innerRef, isOffline, onLogCli
       {alerts.map(alert => (
         <MonitoringAlert alert={alert} key={alert.id} onLogClick={onLogClick} />
       ))}
-      <a className="margin-top-small" onClick={toggleOpen}>
-        show less
-      </a>
+      <div className="margin-top-small">
+        <a onClick={toggleOpen}>show less</a>
+      </div>
     </DeviceDataCollapse>
   );
 };
