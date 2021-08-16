@@ -97,7 +97,7 @@ export const DeviceTypeSelectionStep = ({ docsVersion, hasConvertedImage, onboar
       {hasConvertedImage && (
         <div className="margin-top">
           <p>
-            We prepared an image, fully integrated with Mender for you to start with. You can find it in the{' '}
+            We prepared an image, ready for Mender, for you to start with. You can find it in the{' '}
             <a href={`https://docs.mender.io/${docsVersion}get-started/preparation/prepare-a-raspberry-pi-device`} target="_blank" rel="noopener noreferrer">
               Prepare a Raspberry Pi device
             </a>{' '}
