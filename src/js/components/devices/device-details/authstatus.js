@@ -20,8 +20,6 @@ const states = {
 };
 
 export const AuthStatus = ({ decommission, device, deviceListRefresh, disableBottomBorder, showHelptips }) => {
-  const [open, setOpen] = useState(false);
-
   const { auth_sets = [], status = DEVICE_STATES.accepted } = device;
 
   let hasPending = '';
@@ -31,6 +29,7 @@ export const AuthStatus = ({ decommission, device, deviceListRefresh, disableBot
     }, hasPending);
   }
 
+  const [open, setOpen] = useState(status === 'pending' || hasPending);
   const statusIcon = states[status] ? states[status] : states.default;
   const requestNotification = !!hasPending && <Chip size="small" label="new request" color="primary" />;
 
