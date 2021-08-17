@@ -85,9 +85,9 @@ export const getTenantCapabilities = createSelector(
     { hasAuditlogs, hasDeviceConfig: isDeviceConfigEnabled, hasDeviceConnect: isDeviceConnectEnabled, hasMonitor: isMonitorEnabled, isHosted },
     { addons = [] }
   ) => {
-    const hasDeviceConfig = (!isHosted && isDeviceConfigEnabled) || addons.some(addon => addon.name === 'configure' && Boolean(addon.enabled));
-    const hasDeviceConnect = (!isHosted && isDeviceConnectEnabled) || addons.some(addon => addon.name === 'troubleshoot' && Boolean(addon.enabled));
-    const hasMonitor = (!isHosted && isMonitorEnabled) || addons.some(addon => addon.name === 'monitor' && Boolean(addon.enabled));
+    const hasDeviceConfig = isDeviceConfigEnabled && (!isHosted || addons.some(addon => addon.name === 'configure' && Boolean(addon.enabled)));
+    const hasDeviceConnect = isDeviceConnectEnabled && (!isHosted || addons.some(addon => addon.name === 'troubleshoot' && Boolean(addon.enabled)));
+    const hasMonitor = isMonitorEnabled && (!isHosted || addons.some(addon => addon.name === 'monitor' && Boolean(addon.enabled)));
     return { hasAuditlogs, hasDeviceConfig, hasDeviceConnect, hasMonitor };
   }
 );
