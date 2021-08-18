@@ -50,17 +50,14 @@ describe('UserManagement Component', () => {
     userEvent.click(screen.getByRole('button', { name: /cancel/i }));
     const user = screen.getByText(defaultState.users.byId[userId].email).parentElement;
     userEvent.click(within(user).getByRole('button', { name: /edit/i }));
-    userEvent.click(screen.getByRole('button', { name: /change password/i }));
-    const passwordGeneration = screen.getByRole('button', { name: /generate/i });
-    userEvent.click(passwordGeneration);
-    expect(copyCheck).toHaveBeenCalled();
-    userEvent.click(within(passwordGeneration.parentElement).getByRole('button', { name: /cancel/i }));
     const input = screen.getByDisplayValue(defaultState.users.byId[userId].email);
     userEvent.clear(input);
     userEvent.type(input, 'test@test');
     expect(screen.getByText(/enter a valid email address/i)).toBeInTheDocument();
     userEvent.type(input, '.com');
     expect(screen.queryByText(/enter a valid email address/i)).not.toBeInTheDocument();
+    userEvent.click(screen.getByRole('checkbox', { name: /reset the password/i }));
+    userEvent.click(screen.getByRole('checkbox', { name: /reset the password/i }));
     userEvent.click(screen.getByRole('button', { name: /Save changes/i }));
   });
 
