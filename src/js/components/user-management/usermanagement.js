@@ -6,7 +6,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mate
 import UserList from './userlist';
 import UserForm from './userform';
 import { setSnackbar } from '../../actions/appActions';
-import { createUser, editUser, getUserList, removeUser } from '../../actions/userActions';
+import { createUser, editUser, getUserList, passwordResetStart, removeUser } from '../../actions/userActions';
 import { getCurrentUser, getIsEnterprise, getUserRoles } from '../../selectors';
 
 const actions = {
@@ -54,15 +54,28 @@ export class UserManagement extends React.Component {
     this.setState({ editDialog: false, removeDialog: false });
   }
 
-  submit(userData, type, id) {
+  submit(userData, type, id, passwordResetEmail) {
     const self = this;
-    let request = null;
-    if (id) {
-      request = self.props[actions[type]](id, userData);
+    const { passwordResetStart } = self.props;
+    if (userData) {
+      let request = null;
+      if (id) {
+        request = self.props[actions[type]](id, userData);
+      } else {
+        request = self.props[actions[type]](userData);
+      }
+      return request.then(() => {
+        if (passwordResetEmail) {
+          passwordResetStart(passwordResetEmail);
+        }
+        self.dialogDismiss();
+      });
     } else {
-      request = self.props[actions[type]](userData);
+      if (passwordResetEmail) {
+        passwordResetStart(passwordResetEmail);
+      }
+      return self.dialogDismiss();
     }
-    return request.then(() => self.dialogDismiss());
   }
 
   render() {
@@ -113,7 +126,7 @@ export class UserManagement extends React.Component {
   }
 }
 
-const actionCreators = { createUser, editUser, getUserList, removeUser, setSnackbar };
+const actionCreators = { createUser, editUser, getUserList, passwordResetStart, removeUser, setSnackbar };
 
 const mapStateToProps = state => {
   const { isAdmin } = getUserRoles(state);
