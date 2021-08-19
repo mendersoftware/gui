@@ -37,6 +37,10 @@ const getSearchEndpoint = hasReporting => {
   return hasReporting ? `${reportingApiUrl}/devices/search` : `${inventoryApiUrlV2}/filters/search`;
 };
 
+const getAttrsEndpoint = hasReporting => {
+  return hasReporting ? `${reportingApiUrl}/devices/search/attributes` : `${inventoryApiUrlV2}/filters/attributes`;
+};
+
 export const getGroups = () => (dispatch, getState) =>
   GeneralApi.get(`${inventoryApiUrl}/groups`).then(res => {
     const state = getState().devices.groups.byId;
@@ -598,8 +602,8 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
 };
 
 const ATTRIBUTE_LIST_CUTOFF = 100;
-export const getDeviceAttributes = () => dispatch =>
-  GeneralApi.get(`${inventoryApiUrlV2}/filters/attributes`).then(({ data }) => {
+export const getDeviceAttributes = () => (dispatch, getState) =>
+  GeneralApi.get(getAttrsEndpoint(getState().app.features.hasReporting)).then(({ data }) => {
     const { inventory: inventoryAttributes, identity: identityAttributes, tags: tagAttributes } = (data || []).slice(0, ATTRIBUTE_LIST_CUTOFF).reduce(
       (accu, item) => {
         if (!accu[item.scope]) {
