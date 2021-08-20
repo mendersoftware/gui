@@ -1,7 +1,6 @@
 import React from 'react';
 import pluralize from 'pluralize';
 import {
-  Button,
   Checkbox,
   Dialog,
   DialogActions,
@@ -16,10 +15,10 @@ import {
 } from '@material-ui/core';
 
 import Form from '../common/forms/form';
+import FormCheckbox from '../common/forms/formcheckbox';
 import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
 import { rolesByName } from '../../constants/userConstants';
-import { colors } from '../../themes/mender-theme';
 import { deepCompare } from '../../helpers';
 
 import { OAuth2Providers } from './oauth2providers';
@@ -68,7 +67,11 @@ export default class UserForm extends React.Component {
 
   onSubmit(data) {
     const { submit, user } = this.props;
-    const { hadRoleChanges, isCreation, selectedRoles } = this.state;
+    const { hadRoleChanges, isCreation } = this.state;
+    if (!isCreation && !hadRoleChanges && data.email == user.email) {
+      return submit(null, 'edit', user.id, data.password_reset ? data.email : null);
+    }
+    const { selectedRoles } = this.state;
     let submissionData = Object.assign({}, data, hadRoleChanges ? { roles: selectedRoles.map(role => role.id) } : {});
     delete submissionData['password_new'];
     submissionData['password'] = data.password_new;
@@ -78,7 +81,7 @@ export default class UserForm extends React.Component {
       }
       return accu;
     }, {});
-    return !isCreation ? submit(submissionData, 'edit', user.id) : submit(submissionData, 'create');
+    return !isCreation ? submit(submissionData, 'edit', user.id, data.password_reset ? data.email : null) : submit(submissionData, 'create');
   }
 
   render() {
@@ -129,29 +132,22 @@ export default class UserForm extends React.Component {
                   He can connect to {provider.name} to update his login settings.
                 </div>
               </div>
-            ) : editPass ? (
+            ) : null}
+            {isCreation ? (
               <PasswordInput
-                className="edit-pass margin-top-small"
+                className="edit-pass"
                 id="password_new"
                 label="Password"
-                create={editPass}
+                create={true}
                 validations={`isLength:8,isNot:${user.email}`}
-                disabled={!editPass}
-                onClear={() => self.setState({ editPass: !editPass })}
-                edit={isCreation ? false : true}
-                required={isCreation}
+                edit={false}
+                required={true}
                 autocomplete="off"
               />
-            ) : (
-              <Button
-                color="primary"
-                id="change"
-                style={{ marginTop: 15, backgroundColor: colors.expansionBackground }}
-                onClick={() => self.setState({ editPass: !editPass })}
-              >
-                Change password
-              </Button>
-            )}
+            ) : null}
+            {!isOAuth2 && !isCreation ? (
+              <FormCheckbox id="password_reset" label="Send an email to the user containing a link to reset the password" checked={false} />
+            ) : null}
             {isEnterprise && isAdmin ? (
               <div id="roles-form-container">
                 <FormControl id="roles-form">
