@@ -45,6 +45,7 @@ export const initialState = {
     hasDeviceConfig: stringToBoolean(menderEnvironment.features.hasDeviceConfig),
     hasDeviceConnect: stringToBoolean(menderEnvironment.features.hasDeviceConnect),
     hasMonitor: stringToBoolean(menderEnvironment.features.hasMonitor),
+    hasReporting: stringToBoolean(menderEnvironment.features.hasReporting),
     isHosted: stringToBoolean(menderEnvironment.features.isHosted) || window.location.hostname === 'hosted.mender.io',
     isEnterprise: stringToBoolean(menderEnvironment.features.isEnterprise),
     isDemoMode: stringToBoolean(menderEnvironment.isDemoMode)

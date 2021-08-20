@@ -8,22 +8,32 @@ import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
 import EnterpriseNotification from '../common/enterpriseNotification';
 
+import { setSnackbar } from '../../actions/appActions';
 import { editUser, saveGlobalSettings, saveUserSettings } from '../../actions/userActions';
 import { getCurrentUser, getIsEnterprise, getUserSettings } from '../../selectors';
 import { OAuth2Providers } from './oauth2providers';
 import TwoFactorAuthSetup from './twofactorauthsetup';
 import UserConstants from '../../constants/userConstants';
 
-export const SelfUserManagement = ({ canHave2FA, currentUser, editUser, hasTracking, hasTrackingConsent, isEnterprise, saveUserSettings }) => {
+export const SelfUserManagement = ({ canHave2FA, currentUser, editUser, hasTracking, hasTrackingConsent, isEnterprise, saveUserSettings, setSnackbar }) => {
   const [editEmail, setEditEmail] = useState(false);
   const [editPass, setEditPass] = useState(false);
   const [emailFormId, setEmailFormId] = useState(new Date());
 
-  const editSubmit = userData =>
-    editUser(UserConstants.OWN_USER_ID, userData).then(() => {
-      setEditEmail(false);
-      setEditPass(false);
-    });
+  const editSubmit = userData => {
+    if (userData.password != userData.password_confirmation) {
+      setSnackbar(`The passwords don't match`);
+    } else {
+      const data = {
+        current_password: userData.current_password,
+        password: userData.password
+      };
+      editUser(UserConstants.OWN_USER_ID, data).then(() => {
+        setEditEmail(false);
+        setEditPass(false);
+      });
+    }
+  };
 
   const handleEmail = () => {
     let uniqueId = emailFormId;
@@ -83,25 +93,21 @@ export const SelfUserManagement = ({ canHave2FA, currentUser, editUser, hasTrack
             </Button>
           </form>
         ) : (
-          <Form
-            onSubmit={editSubmit}
-            handleCancel={handlePass}
-            submitLabel="Save"
-            submitButtonId="submit_pass"
-            buttonColor="secondary"
-            showButtons={editPass}
-            className="margin-top flexbox space-between"
-          >
-            <PasswordInput
-              className="edit-pass"
-              id="password"
-              label="Password"
-              create={editPass}
-              validations={`isLength:8,isNot:${email}`}
-              disabled={!editPass}
-              edit={false}
-            />
-          </Form>
+          <>
+            <h3 className="margin-top margin-bottom-none">Change password</h3>
+            <Form
+              onSubmit={editSubmit}
+              handleCancel={handlePass}
+              submitLabel="Save"
+              submitButtonId="submit_pass"
+              buttonColor="secondary"
+              showButtons={editPass}
+            >
+              <PasswordInput id="current_password" label="Current password *" validations={`isLength:8,isNot:${email}`} required={true} />
+              <PasswordInput className="edit-pass" id="password" label="Password *" validations={`isLength:8,isNot:${email}`} required={true} create={true} />
+              <PasswordInput id="password_confirmation" label="Confirm password *" validations={`isLength:8,isNot:${email}`} required={true} />
+            </Form>
+          </>
         ))}
       {!isOAuth2 ? (
         canHave2FA ? (
@@ -134,7 +140,7 @@ export const SelfUserManagement = ({ canHave2FA, currentUser, editUser, hasTrack
   );
 };
 
-const actionCreators = { editUser, saveGlobalSettings, saveUserSettings };
+const actionCreators = { editUser, saveGlobalSettings, saveUserSettings, setSnackbar };
 
 const mapStateToProps = state => {
   const { plan = 'os' } = state.organization.organization;

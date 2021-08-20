@@ -46,10 +46,11 @@ describe('TroubleshootDialog Component', () => {
   });
 
   it('renders correctly', async () => {
+    const userRoles = { canTroubleshoot: true, hasWriteAccess: true };
     const { baseElement } = render(
       <MemoryRouter>
         <Provider store={store}>
-          <TroubleshootDialog onCancel={jest.fn} onSocketClose={jest.fn} open={true} />
+          <TroubleshootDialog onCancel={jest.fn} onSocketClose={jest.fn} open={true} userRoles={userRoles} />
         </Provider>
       </MemoryRouter>
     );

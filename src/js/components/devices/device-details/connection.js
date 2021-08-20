@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Time from 'react-time';
 import ReactTooltip from 'react-tooltip';
 
@@ -11,19 +11,6 @@ import { DEVICE_CONNECT_STATES } from '../../../constants/deviceConstants';
 import DeviceDataCollapse from './devicedatacollapse';
 
 const buttonStyle = { textTransform: 'none', textAlign: 'left' };
-
-const troubleshootingTools = {
-  terminal: {
-    title: 'Launch a new Remote Terminal session',
-    icon: (
-      <SvgIcon fontSize="inherit">
-        <path d={ConsoleIcon} />
-      </SvgIcon>
-    )
-  },
-  transfer: { title: 'Launch File Transfer', icon: <ImportExportIcon /> }
-};
-
 export const PortForwardLink = ({ docsVersion }) => (
   <>
     <a
@@ -84,7 +71,44 @@ export const DeviceDisconnectedNote = ({ docsVersion, lastConnectionTs, style })
   </DeviceConnectionNote>
 );
 
-export const DeviceConnection = ({ device, docsVersion = '', startTroubleshoot, socketClosed, style }) => {
+export const TroubleshootButton = ({ disabled, item, onClick }) => (
+  <Button onClick={() => onClick(item.key)} disabled={disabled} startIcon={item.icon} style={{ marginRight: theme.spacing(2) }}>
+    <Typography variant="subtitle2" style={buttonStyle}>
+      {item.title}
+    </Typography>
+  </Button>
+);
+
+const troubleshootingTools = [
+  {
+    key: 'terminal',
+    title: 'Launch a new Remote Terminal session',
+    icon: (
+      <SvgIcon fontSize="inherit">
+        <path d={ConsoleIcon} />
+      </SvgIcon>
+    ),
+    needsWriteAccess: true,
+    needsTroubleshoot: true
+  },
+  { key: 'transfer', title: 'Launch File Transfer', icon: <ImportExportIcon />, needsWriteAccess: false, needsTroubleshoot: false },
+  { key: 'portForward', component: PortForwardLink, needsWriteAccess: false, needsTroubleshoot: true }
+];
+
+export const DeviceConnection = ({ device, docsVersion = '', startTroubleshoot, socketClosed, style, userRoles }) => {
+  const [availableTabs, setAvailableTabs] = useState(troubleshootingTools);
+
+  useEffect(() => {
+    const allowedTabs = troubleshootingTools.reduce((accu, tab) => {
+      if ((tab.needsWriteAccess && !userRoles.hasWriteAccess) || (tab.needsTroubleshoot && !userRoles.canTroubleshoot)) {
+        return accu;
+      }
+      accu.push(tab);
+      return accu;
+    }, []);
+    setAvailableTabs(allowedTabs);
+  }, [userRoles]);
+
   const { connect_status = DEVICE_CONNECT_STATES.unknown, connect_updated_ts } = device;
   return (
     <DeviceDataCollapse
@@ -96,27 +120,13 @@ export const DeviceConnection = ({ device, docsVersion = '', startTroubleshoot, 
             <DeviceDisconnectedNote docsVersion={docsVersion} lastConnectionTs={connect_updated_ts} style={buttonStyle} />
           )}
           {connect_status === DEVICE_CONNECT_STATES.connected &&
-            Object.entries(troubleshootingTools)
-              .reverse()
-              .reduce(
-                (accu, [type, item]) => {
-                  accu.unshift(
-                    <Button
-                      key={type}
-                      onClick={() => startTroubleshoot(type)}
-                      disabled={!socketClosed}
-                      startIcon={item.icon}
-                      style={{ marginRight: theme.spacing(2) }}
-                    >
-                      <Typography variant="subtitle2" style={buttonStyle}>
-                        {item.title}
-                      </Typography>
-                    </Button>
-                  );
-                  return accu;
-                },
-                [<PortForwardLink key="port-forward" docsVersion={docsVersion} />]
-              )}
+            availableTabs.map(item => {
+              let Component = TroubleshootButton;
+              if (item.component) {
+                Component = item.component;
+              }
+              return <Component key={item.key} docsVersion={docsVersion} onClick={startTroubleshoot} disabled={!socketClosed} item={item} />;
+            })}
         </div>
       }
       isAddOn
