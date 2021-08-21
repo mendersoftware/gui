@@ -138,8 +138,8 @@ const filterProcessors = {
   $lte: val => Number(val) || val,
   $in: val => ('' + val).split(',').map(i => i.trim()),
   $nin: val => ('' + val).split(',').map(i => i.trim()),
-  $exists: () => 1,
-  $nexists: () => 0
+  $exists: () => true,
+  $nexists: () => false
 };
 const filterAliases = {
   $nexists: '$exists'
