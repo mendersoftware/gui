@@ -91,7 +91,7 @@
     "less-loader": "^10.0.1",
     "lint-staged": "^11.1.1",
     "mini-css-extract-plugin": "^2.1.0",
-    "msw": "^0.33.2",
+    "msw": "^0.35.0",
     "eslint-plugin-sonarjs": "^0.9.1",
     "postcss": "^8.3.6",
     "postcss-loader": "^6.1.1",
