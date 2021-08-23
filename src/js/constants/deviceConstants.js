@@ -94,13 +94,13 @@ module.exports = {
     $exists: {
       title: 'exists',
       shortform: 'exists',
-      value: '1',
+      value: true,
       help: `The "exists" operator matches if the selected field's value has a value. No value needs to be provided for this operator.`
     },
     $nexists: {
       title: `doesn't exist`,
       shortform: `doesn't exist`,
-      value: '1',
+      value: true,
       help: `The "doesn't exist" operator matches if the selected field's value has no value. No value needs to be provided for this operator.`
     },
     $regex: {
