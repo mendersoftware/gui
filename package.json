@@ -12,7 +12,7 @@
     "@mdi/js": "^5.9.55",
     "@reduxjs/toolkit": "^1.6.1",
     "@stripe/react-stripe-js": "^1.4.1",
-    "@stripe/stripe-js": "^1.16.0",
+    "@stripe/stripe-js": "^1.17.1",
     "axios": "^0.21.1",
     "buffer": "^6.0.3",
     "copy-to-clipboard": "^3.3.1",
@@ -28,7 +28,7 @@
     "pluralize": "^8.0.0",
     "process": "^0.11.10",
     "react": "~16.14.0",
-    "react-big-calendar": "^0.33.6",
+    "react-big-calendar": "^0.35.0",
     "react-copy-to-clipboard": "^5.0.3",
     "react-dom": "~16.14.0",
     "react-dropzone": "^11.3.4",
@@ -99,7 +99,7 @@
     "redux-mock-store": "^1.5.4",
     "util": "^0.12.4",
     "webpack": "^5.47.1",
-    "webpack-cli": "^4.7.2",
+    "webpack-cli": "^4.8.0",
     "yarn": "^1.22.11"
   },
   "browserslist": [
