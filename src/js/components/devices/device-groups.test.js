@@ -50,13 +50,13 @@ describe('DeviceGroups Component', () => {
   it('uses working utilties - convertQueryToFilterAndGroup', () => {
     const { groupName, filters } = convertQueryToFilterAndGroup(
       '?some=thing&group=testgroup&id=someId&mac=donalds&existing=filter',
-      defaultState.devices.filteringAttributes,
+      { ...defaultState.devices.filteringAttributes, identityAttributes: [...defaultState.devices.filteringAttributes.identityAttributes, 'id'] },
       [{ key: 'existing', operator: '$wat', scope: 'special', value: 'filter' }]
     );
     expect(groupName).toEqual('testgroup');
     expect(filters).toEqual([
-      { key: 'id', operator: '$eq', scope: 'identity', value: 'someId' },
       { key: 'some', operator: '$eq', scope: 'inventory', value: 'thing' },
+      { key: 'id', operator: '$eq', scope: 'identity', value: 'someId' },
       { key: 'mac', operator: '$eq', scope: 'identity', value: 'donalds' },
       { key: 'existing', operator: '$wat', scope: 'special', value: 'filter' }
     ]);
