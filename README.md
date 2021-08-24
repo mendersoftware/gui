@@ -30,7 +30,7 @@ documentation](https://github.com/mendersoftware/mender/blob/master/CONTRIBUTING
 
 ## Development
 
-In order to develop the GUI code to contribute, it is required to [nodejs](https://nodejs.org) and [npm](https://github.com/gulpjs/gulp) installed, followed
+In order to develop the GUI code to contribute, it is required to [nodejs](https://nodejs.org) and [npm](https://github.com/npm/cli) installed, followed
 by an execution of `npm install` to install all the dependencies in package.json. Work on the files in 'src'. Running `npm run watch` will watch for your
 changes as you develop and build as you go.
 The `watch` command is intended to build however the content should be served from within the regular container running in your local mender setup.
