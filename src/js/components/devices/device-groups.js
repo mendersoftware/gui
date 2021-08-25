@@ -149,12 +149,7 @@ export const convertQueryToFilterAndGroup = (query, filteringAttributes, current
     groupName = queryParams.get('group');
     queryParams.delete('group');
   }
-  let filters = [];
-  if (queryParams.has('id')) {
-    filters.push({ ...emptyFilter, scope: 'identity', key: 'id', value: queryParams.get('id') });
-    queryParams.delete('id');
-  }
-  filters = [...queryParams.entries()].reduce((accu, filterPair) => {
+  const filters = [...queryParams.entries()].reduce((accu, filterPair) => {
     const scope = Object.entries(filteringAttributes).reduce(
       (accu, [attributesType, attributes]) => {
         if (currentFilters.some(filter => filter.key === filterPair[0])) {
@@ -170,7 +165,7 @@ export const convertQueryToFilterAndGroup = (query, filteringAttributes, current
     );
     accu.push({ ...emptyFilter, ...scope, key: filterPair[0], value: filterPair[1] });
     return accu;
-  }, filters);
+  }, []);
   return { filters, groupName };
 };
 
@@ -502,17 +497,18 @@ const mapStateToProps = state => {
     groupCount = state.devices.groups.byId[selectedGroup].total;
     groupFilters = state.devices.groups.byId[selectedGroup].filters || [];
   }
-  let identityAttributes = [
+  const identityAttributes = [
     { key: 'name', value: 'Name', scope: 'tags', category: 'tags', priority: 1 },
     { key: 'id', value: 'Device ID', scope: 'identity', category: 'identity', priority: 1 },
     ...state.devices.filteringAttributes.identityAttributes.map(item => ({ key: item, value: item, scope: 'identity', category: 'identity', priority: 1 }))
   ];
+  const filteringAttributes = { ...state.devices.filteringAttributes, identityAttributes: [...state.devices.filteringAttributes.identityAttributes, 'id'] };
   return {
     acceptedCount: state.devices.byStatus.accepted.total || 0,
     deviceLimit: state.devices.limit,
     deviceListState: state.devices.deviceList,
     docsVersion: getDocsVersion(state),
-    filteringAttributes: state.devices.filteringAttributes,
+    filteringAttributes,
     filters: state.devices.filters || [],
     groups: Object.keys(state.devices.groups.byId).sort(),
     groupsById: state.devices.groups.byId,
