@@ -36,7 +36,24 @@ const monitorReducer = (state = initialState, action) => {
           ...state.alerts,
           byDeviceId: {
             ...state.alerts.byDeviceId,
-            [action.deviceId]: action.alerts
+            [action.deviceId]: {
+              ...state.alerts.byDeviceId[action.deviceId],
+              alerts: action.alerts
+            }
+          }
+        }
+      };
+    case MonitorConstants.RECEIVE_LATEST_DEVICE_ALERTS:
+      return {
+        ...state,
+        alerts: {
+          ...state.alerts,
+          byDeviceId: {
+            ...state.alerts.byDeviceId,
+            [action.deviceId]: {
+              ...state.alerts.byDeviceId[action.deviceId],
+              latest: action.alerts
+            }
           }
         }
       };

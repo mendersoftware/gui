@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 import { defaultState } from '../../../tests/mockData';
 import AppConstants from '../constants/appConstants';
 import MonitorConstants from '../constants/monitorConstants';
-import { changeNotificationSetting, getDeviceAlerts } from './monitorActions';
+import { changeNotificationSetting, getDeviceAlerts, getLatestDeviceAlerts } from './monitorActions';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -22,6 +22,24 @@ describe('monitor actions', () => {
       }
     ];
     const request = store.dispatch(getDeviceAlerts(defaultState.devices.byId.a1.id));
+    expect(request).resolves.toBeTruthy();
+    await request.then(() => {
+      const storeActions = store.getActions();
+      expect(storeActions).toHaveLength(expectedActions.length);
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    });
+  });
+  it('should handle device based latest alert retrieval', async () => {
+    const store = mockStore({ ...defaultState });
+    expect(store.getActions()).toHaveLength(0);
+    const expectedActions = [
+      {
+        type: MonitorConstants.RECEIVE_LATEST_DEVICE_ALERTS,
+        deviceId: defaultState.devices.byId.a1.id,
+        alerts: []
+      }
+    ];
+    const request = store.dispatch(getLatestDeviceAlerts(defaultState.devices.byId.a1.id));
     expect(request).resolves.toBeTruthy();
     await request.then(() => {
       const storeActions = store.getActions();

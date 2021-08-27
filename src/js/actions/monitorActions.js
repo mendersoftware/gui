@@ -12,14 +12,26 @@ export const getDeviceAlerts = (id, config = {}) => dispatch => {
   const { page = defaultPage, perPage = defaultPerPage, issuedBefore, issuedAfter, sortAscending = false } = config;
   const issued_after = issuedAfter ? `&issued_after=${issuedAfter}` : '';
   const issued_before = issuedBefore ? `&issued_before=${issuedBefore}` : '';
-  return Api.get(
-    `${monitorApiUrlv1}/devices/${id}/alerts/latest?page=${page}&per_page=${perPage}${issued_after}${issued_before}&sort_ascending=${sortAscending}`
-  )
+  return Api.get(`${monitorApiUrlv1}/devices/${id}/alerts?page=${page}&per_page=${perPage}${issued_after}${issued_before}&sort_ascending=${sortAscending}`)
     .catch(err => commonErrorHandler(err, `Retrieving device alerts for device ${id} failed:`, dispatch))
     .then(res =>
       Promise.resolve(
         dispatch({
           type: MonitorConstants.RECEIVE_DEVICE_ALERTS,
+          deviceId: id,
+          alerts: res.data
+        })
+      )
+    );
+};
+
+export const getLatestDeviceAlerts = id => dispatch => {
+  return Api.get(`${monitorApiUrlv1}/devices/${id}/alerts/latest`)
+    .catch(err => commonErrorHandler(err, `Retrieving device alerts for device ${id} failed:`, dispatch))
+    .then(res =>
+      Promise.resolve(
+        dispatch({
+          type: MonitorConstants.RECEIVE_LATEST_DEVICE_ALERTS,
           deviceId: id,
           alerts: res.data
         })
