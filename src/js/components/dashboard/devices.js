@@ -131,7 +131,7 @@ export const Devices = props => {
           onClick={clickHandle}
         />
         <RedirectionWidget
-          target="/devices"
+          target="/devices/accepted"
           content="Learn how to connect a device"
           buttonContent="Connect a device"
           onClick={() => setShowConnectingDialog(true)}

@@ -116,11 +116,7 @@ export const Authorized = props => {
   }, [pendingCount, onboardingState.complete]);
 
   useEffect(() => {
-    if (!selectedGroup) {
-      return;
-    }
     setShowFilters(false);
-    handlePageChange(1);
   }, [selectedGroup]);
 
   useEffect(() => {

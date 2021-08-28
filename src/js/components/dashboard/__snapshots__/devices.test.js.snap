@@ -147,9 +147,9 @@ exports[`Devices Component renders correctly 1`] = `
               style={
                 Object {
                   "color": "#009e73",
-                  "height": "14px",
-                  "marginRight": "10px",
-                  "width": "14px",
+                  "height": 14,
+                  "marginRight": 10,
+                  "width": 14,
                 }
               }
               viewBox="0 0 24 24"
@@ -219,7 +219,7 @@ exports[`Devices Component renders correctly 1`] = `
       <a
         aria-disabled={false}
         className="MuiButtonBase-root MuiButton-root MuiButton-text"
-        href="/devices"
+        href="/devices/accepted"
         onBlur={[Function]}
         onClick={[Function]}
         onDragLeave={[Function]}

@@ -15,7 +15,7 @@ const DemoNotification = ({ docsVersion = 'development/' }) => (
         Mender is currently running in <b>demo mode</b>.
       </p>
       <p>
-        <a href={`https://docs.mender.io/${docsVersion}server-installation/production-installation`} target="_blank" rel="noopener noreferrer">
+        <a href={`https://docs.mender.io/${docsVersion}server-installation/production-installation-with-kubernetes`} target="_blank" rel="noopener noreferrer">
           See the documentation for help switching to production mode
         </a>
         .

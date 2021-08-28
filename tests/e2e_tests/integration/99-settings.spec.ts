@@ -147,7 +147,7 @@ test.describe('Settings', () => {
       await page.goto(`${baseUrl}ui/#/settings/my-account`);
       await page.click('#change_email');
     });
-    test('allows changing the password', async ({ baseUrl, context, loggedInPage: page, username }) => {
+    test('allows changing the password', async ({ baseUrl, context, loggedInPage: page, username, password }) => {
       // test.use({ storageState: 'storage.json' });
       await page.goto(`${baseUrl}ui/#/settings/my-account`);
       await page.click('#change_password');
@@ -155,11 +155,16 @@ test.describe('Settings', () => {
       expect(await page.$eval('[name=password]', (el: HTMLInputElement) => el.value)).toBeFalsy();
       await page.click(`:is(button:has-text('Generate'))`);
       await page.click(`:is(button:has-text('Generate'))`);
+      await page.click('[name=current_password]', { clickCount: 3 });
+      await page.fill('[name=current_password]', password);
+      const typedCurrentPassword = await page.$eval('[name=current_password]', (el: HTMLInputElement) => el.value);
+      expect(typedCurrentPassword === password);
       expect(await page.$eval('[name=password]', (el: HTMLInputElement) => el.value)).toBeTruthy();
       await page.click('[name=password]', { clickCount: 3 });
       await page.type('[name=password]', replacementPassword);
       const typedPassword = await page.$eval('[name=password]', (el: HTMLInputElement) => el.value);
       expect(typedPassword === replacementPassword);
+      await page.fill('[name=password_confirmation]', replacementPassword);
       await page.click(`button:has-text('Save')`);
       await page.waitForSelector('text=/user has been updated/i', { timeout: 10000 });
       await page.click(`:is(.header-dropdown:has-text('${username}'))`);
@@ -190,6 +195,10 @@ test.describe('Settings', () => {
         await page.click('[name=password]', { clickCount: 3 });
         await page.type('[name=password]', password);
       }
+      await page.click('[name=password_confirmation]');
+      await page.fill('[name=password_confirmation]', password);
+      await page.click('[name=current_password]');
+      await page.fill('[name=current_password]', replacementPassword);
       await page.click(`:is(button:has-text('Save'))`);
       await page.waitForSelector('text=/user has been updated/i', { timeout: 10000 });
       await page.waitForTimeout(3000);
