@@ -6,7 +6,7 @@ import pluralize from 'pluralize';
 import { Button } from '@material-ui/core';
 import { CheckCircle, ErrorRounded, Pause, PlayArrow, Warning as WarningIcon } from '@material-ui/icons';
 
-import { deploymentDisplayStates, installationSubstatesMap, pauseMap } from '../../../constants/deploymentConstants';
+import { deploymentDisplayStates, deploymentSubstates, installationSubstatesMap, pauseMap } from '../../../constants/deploymentConstants';
 import { getDeploymentState, groupDeploymentStats, statCollector } from '../../../helpers';
 import Confirm from '../../common/confirm';
 import theme, { colors } from '../../../themes/mender-theme';
@@ -14,7 +14,7 @@ import inprogressImage from '../../../../assets/img/pending_status.png';
 
 momentDurationFormatSetup(moment);
 
-const shortCircuitIndicators = ['already-installed', 'noartifact'];
+const shortCircuitIndicators = [deploymentSubstates.alreadyInstalled, deploymentSubstates.noartifact];
 
 const substateIconMap = {
   finished: { state: 'finished', icon: <CheckCircle fontSize="small" /> },
