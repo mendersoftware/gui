@@ -6,7 +6,7 @@ import pluralize from 'pluralize';
 import { Button } from '@material-ui/core';
 import { CheckCircle, ErrorRounded, Pause, PlayArrow, Warning as WarningIcon } from '@material-ui/icons';
 
-import { deploymentDisplayStates, installationSubstatesMap, pauseMap } from '../../../constants/deploymentConstants';
+import { deploymentDisplayStates, deploymentSubstates, installationSubstatesMap, pauseMap } from '../../../constants/deploymentConstants';
 import { getDeploymentState, groupDeploymentStats, statCollector } from '../../../helpers';
 import Confirm from '../../common/confirm';
 import theme, { colors } from '../../../themes/mender-theme';
@@ -14,7 +14,7 @@ import inprogressImage from '../../../../assets/img/pending_status.png';
 
 momentDurationFormatSetup(moment);
 
-const shortCircuitIndicators = ['already-installed', 'noartifact'];
+const shortCircuitIndicators = [deploymentSubstates.alreadyInstalled, deploymentSubstates.noartifact];
 
 const substateIconMap = {
   finished: { state: 'finished', icon: <CheckCircle fontSize="small" /> },
@@ -34,13 +34,12 @@ const phaseDelimiterStyle = {
   position: 'absolute'
 };
 
-const PhaseDelimiter = ({ compact, delimiterStyle, index, isActive, isFinal, status, substate, stepTotalWidth }) => {
+const PhaseDelimiter = ({ compact, delimiterStyle, index, isActive, status, substate, stepTotalWidth }) => {
   const offset = `${stepTotalWidth * (index + 1) - stepTotalWidth / 2}%`;
   const width = `${stepTotalWidth}%`;
-  let borderColor = isActive ? colors.textColor : colors.borderColor;
-  borderColor = isFinal ? 'transparent' : borderColor;
+  const borderColor = isActive ? colors.textColor : colors.borderColor;
   const border = <div style={{ borderLeft: `${borderColor} ${delimiterStyle} 1px`, height: '100%', zIndex: 1 }} />;
-  const icon = substateIconMap[status] && !isFinal ? substateIconMap[status].icon : <div />;
+  const icon = substateIconMap[status] ? substateIconMap[status].icon : <div />;
   return (
     <div style={{ ...phaseDelimiterStyle, gridTemplateRows: `${compact ? 45 : stepHeight.compact}px 1.25rem min-content`, left: offset, width }}>
       {border}
@@ -70,20 +69,22 @@ const ProgressChart = ({ deployment = {}, showDetails, style }) => {
     return status;
   };
 
+  const currentPauseState = Object.keys(pauseMap)
+    .reverse()
+    .find(key => stats[key] > 0);
   const { displayablePhases } = Object.values(installationSubstatesMap).reduce(
     (accu, substate, index) => {
       let successes = statCollector(substate.successIndicators, stats);
-      successes = Math.min(totalDeviceCount, successes + accu.shortCutSuccesses);
       let failures = statCollector(substate.failureIndicators, stats);
-      if (index) {
-        // make sure to only include "final" stats from completed deployment substates if there are non-final stats/
-        // the substate is actually running
-        if (accu.displayablePhases[index - 1].failures + accu.displayablePhases[index - 1].success === totalDeviceCount) {
-          failures = accu.displayablePhases[index - 1].failures;
-        } else {
-          failures = 0;
-        }
+      if (
+        !currentPauseState ||
+        index <= Object.keys(pauseMap).indexOf(currentPauseState) ||
+        (index && accu.displayablePhases[index - 1].failures + accu.displayablePhases[index - 1].success === totalDeviceCount)
+      ) {
+        failures = accu.displayablePhases[index - 1]?.failures || failures;
+        successes = successes + accu.shortCutSuccesses;
       }
+      successes = Math.min(totalDeviceCount, successes);
       failures = Math.min(totalDeviceCount - successes, failures);
       const successWidth = `${(successes / totalDeviceCount) * 100 || 0}%`;
       const failureWidth = `${(failures / totalDeviceCount) * 100 || 0}%`;
@@ -122,21 +123,22 @@ const ProgressChart = ({ deployment = {}, showDetails, style }) => {
                   </div>
                 )}
               </div>
-              <PhaseDelimiter
-                compact={!showDetails}
-                isActive={phase.status === substateIconMap.inprogress.state}
-                isFinal={index === displayablePhases.length - 1}
-                substate={phase.substate.done}
-                status={phase.status}
-                stepTotalWidth={stepTotalWidth}
-                index={index}
-                delimiterStyle="solid"
-              />
+              {index !== displayablePhases.length - 1 && (
+                <PhaseDelimiter
+                  compact={!showDetails}
+                  isActive={phase.status === substateIconMap.inprogress.state}
+                  substate={phase.substate.done}
+                  status={phase.status}
+                  stepTotalWidth={stepTotalWidth}
+                  index={index}
+                  delimiterStyle="solid"
+                />
+              )}
             </React.Fragment>
           );
         })}
         <div className="progress-step progress-step-total" style={{ height }}>
-          <div className="progress-bar" style={fullWidthStyle}></div>
+          <div className="progress-bar" style={{ width: '110%' }}></div>
         </div>
       </div>
     </>
