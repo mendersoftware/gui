@@ -70,20 +70,22 @@ const ProgressChart = ({ deployment = {}, showDetails, style }) => {
     return status;
   };
 
+  const currentPauseState = Object.keys(pauseMap)
+    .reverse()
+    .find(key => stats[key] > 0);
   const { displayablePhases } = Object.values(installationSubstatesMap).reduce(
     (accu, substate, index) => {
       let successes = statCollector(substate.successIndicators, stats);
-      successes = Math.min(totalDeviceCount, successes + accu.shortCutSuccesses);
       let failures = statCollector(substate.failureIndicators, stats);
-      if (index) {
-        // make sure to only include "final" stats from completed deployment substates if there are non-final stats/
-        // the substate is actually running
-        if (accu.displayablePhases[index - 1].failures + accu.displayablePhases[index - 1].success === totalDeviceCount) {
-          failures = accu.displayablePhases[index - 1].failures;
-        } else {
-          failures = 0;
-        }
+      if (
+        !currentPauseState ||
+        index <= Object.keys(pauseMap).indexOf(currentPauseState) ||
+        (index && accu.displayablePhases[index - 1].failures + accu.displayablePhases[index - 1].success === totalDeviceCount)
+      ) {
+        failures = accu.displayablePhases[index - 1]?.failures || failures;
+        successes = successes + accu.shortCutSuccesses;
       }
+      successes = Math.min(totalDeviceCount, successes);
       failures = Math.min(totalDeviceCount - successes, failures);
       const successWidth = `${(successes / totalDeviceCount) * 100 || 0}%`;
       const failureWidth = `${(failures / totalDeviceCount) * 100 || 0}%`;
