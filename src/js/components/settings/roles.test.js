@@ -30,7 +30,7 @@ describe('Roles Component', () => {
     const createRoleMock = jest.fn();
     const editRoleMock = jest.fn();
     const removeRoleMock = jest.fn();
-    const groups = Object.keys(defaultState.devices.groups.byId);
+    const groups = defaultState.devices.groups.byId;
     const roles = Object.entries(defaultState.users.rolesById).map(([id, role]) => ({ id, ...role }));
 
     const ui = (
@@ -57,7 +57,7 @@ describe('Roles Component', () => {
     userEvent.type(within(collapse).getByLabelText(/Description/i), 'something');
     expect(within(collapse).getByRole('button', { name: /submit/i })).toBeDisabled();
     userEvent.click(within(collapse).getByLabelText(/manage other users/));
-    userEvent.click(within(collapse).getByLabelText(groups[0]));
+    userEvent.click(within(collapse).getByLabelText(Object.keys(groups)[0]));
     expect(within(collapse).getByRole('button', { name: /submit/i })).not.toBeDisabled();
     await userEvent.click(within(collapse).getByRole('button', { name: /submit/i }));
     expect(editRoleMock).toHaveBeenCalledWith({
