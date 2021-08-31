@@ -95,42 +95,46 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
       <div
         class="MuiCollapse-wrapperInner"
       >
-        <h4
-          class="text-muted"
-        >
-          Triggered alerts
-        </h4>
         <div
-          class="monitoring-alert column-data"
+          class="margin-bottom"
         >
-          <svg
-            aria-hidden="true"
-            class="MuiSvgIcon-root red"
-            focusable="false"
-            viewBox="0 0 24 24"
+          <h4
+            class="text-muted"
           >
-            <path
-              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
-            />
-          </svg>
+            Triggered alerts
+          </h4>
           <div
-            class="key text-muted"
+            class="monitoring-alert column-data"
           >
-            <b>
-              SSH Daemon is not running
-            </b>
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root red"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+              />
+            </svg>
+            <div
+              class="key text-muted"
+            >
+              <b>
+                SSH Daemon is not running
+              </b>
+            </div>
+            <div>
+              CRITICAL
+            </div>
+            <time
+              datetime="2021-07-23T12:22:36+00:00"
+            >
+              2021-07-23 12:22
+            </time>
+            <a>
+              view log
+            </a>
           </div>
-          <div>
-            CRITICAL
-          </div>
-          <time
-            datetime="2021-07-23T12:22:36+00:00"
-          >
-            2021-07-23 12:22
-          </time>
-          <a>
-            view log
-          </a>
         </div>
         <div
           class="margin-top-small"

@@ -4,6 +4,9 @@ import { monitorApiUrlv1 } from '../../src/js/actions/monitorActions';
 import { alertChannels } from '../../src/js/constants/monitorConstants';
 
 export const monitorHandlers = [
+  rest.get(`${monitorApiUrlv1}/devices/:id/alerts`, (req, res, ctx) => {
+    return res(ctx.json([]));
+  }),
   rest.get(`${monitorApiUrlv1}/devices/:id/alerts/latest`, (req, res, ctx) => {
     return res(ctx.json([]));
   }),
