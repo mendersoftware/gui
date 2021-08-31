@@ -125,6 +125,10 @@
       "/node_modules/",
       "/themes/"
     ],
+    "coverageReporters": [
+      "lcov",
+      "cobertura"
+    ],
     "setupFiles": [
       "jest-canvas-mock"
     ],
