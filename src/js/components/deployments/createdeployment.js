@@ -64,9 +64,8 @@ export const CreateDialog = props => {
   } = props;
 
   const [activeStep, setActiveStep] = useState(0);
-  const [steps, setSteps] = useState(deploymentSteps);
   const [releaseSelectionLocked] = useState(Boolean(deploymentObject.release));
-
+  const [steps, setSteps] = useState(deploymentSteps);
   const [hasNewRetryDefault, setHasNewRetryDefault] = useState(false);
   const deploymentRef = useRef();
 
@@ -191,7 +190,7 @@ export const CreateDialog = props => {
         />
       </DialogContent>
       <DialogActions className="margin-left margin-right">
-        <Button key="schedule-action-button-1" onClick={closeWizard} style={{ marginRight: '10px', display: 'inline-block' }}>
+        <Button onClick={closeWizard} style={{ marginRight: 10 }}>
           Cancel
         </Button>
         <Button disabled={activeStep === 0} onClick={() => setActiveStep(activeStep - 1)}>
