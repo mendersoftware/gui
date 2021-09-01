@@ -185,11 +185,7 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
         </button>
         <a
           class="flexbox centered margin-left"
-          currentitem="false"
-          data-for="port-forward-tip"
-          data-tip="true"
           href="https://docs.mender.io/add-ons/port-forward"
-          id="port-forward-link"
           rel="noopener noreferrer"
           target="_blank"
         >
@@ -205,25 +201,6 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
             />
           </svg>
         </a>
-        <div
-          class="__react_component_tooltip place-bottom type-dark"
-          data-id="tooltip"
-          id="port-forward-tip"
-        >
-          <div
-            style="white-space: normal;"
-          >
-            <h3>
-              Port forwarding
-            </h3>
-            <p>
-              Port forwarding allows you to troubleshoot or use services on or via the device, without opening any ports on the device itself.
-            </p>
-            <p>
-              To enable port forwarding you will need to install and configure the necessary software on the device and your workstation. Follow the link to learn more.
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -397,11 +374,7 @@ exports[`tiny DeviceConnection components renders PortForwardLink correctly 1`] 
 <div>
   <a
     class="flexbox centered margin-left"
-    currentitem="false"
-    data-for="port-forward-tip"
-    data-tip="true"
     href="https://docs.mender.io/add-ons/port-forward"
-    id="port-forward-link"
     rel="noopener noreferrer"
     target="_blank"
   >
@@ -417,24 +390,5 @@ exports[`tiny DeviceConnection components renders PortForwardLink correctly 1`] 
       />
     </svg>
   </a>
-  <div
-    class="__react_component_tooltip place-bottom type-dark"
-    data-id="tooltip"
-    id="port-forward-tip"
-  >
-    <div
-      style="white-space: normal;"
-    >
-      <h3>
-        Port forwarding
-      </h3>
-      <p>
-        Port forwarding allows you to troubleshoot or use services on or via the device, without opening any ports on the device itself.
-      </p>
-      <p>
-        To enable port forwarding you will need to install and configure the necessary software on the device and your workstation. Follow the link to learn more.
-      </p>
-    </div>
-  </div>
 </div>
 `;

@@ -60,20 +60,16 @@ exports[`MyOrganization Component renders correctly 1`] = `
           <span
             class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
-            <div>
-              <span
+            <div
+              class="flexbox center-aligned"
+            >
+              <div
                 style="padding-right: 10px;"
               >
                 Organization token
-              </span>
+              </div>
               <div
-                class="tooltip info"
-                currentitem="false"
-                data-event="click focus"
-                data-for="token-help"
-                data-tip="true"
-                id="token-info"
-                style="position: relative; display: inline; top: 6px;"
+                class=""
               >
                 <svg
                   aria-hidden="true"
@@ -85,20 +81,6 @@ exports[`MyOrganization Component renders correctly 1`] = `
                     d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
                   />
                 </svg>
-              </div>
-              <div
-                class="__react_component_tooltip place-top type-dark"
-                data-id="tooltip"
-                id="token-help"
-              >
-                <h3>
-                  Organization token
-                </h3>
-                <p
-                  style="color: rgb(222, 207, 217); margin: 1em 0px;"
-                >
-                  This token is unique for your organization and ensures that only devices that you own are able to connect to your account.
-                </p>
               </div>
             </div>
           </span>
@@ -407,20 +389,16 @@ exports[`smaller components renders DeviceLimitExpansionNotification correctly 1
 `;
 
 exports[`smaller components renders OrgHeader correctly 1`] = `
-<div>
-  <span
+<div
+  class="flexbox center-aligned"
+>
+  <div
     style="padding-right: 10px;"
   >
     Organization token
-  </span>
+  </div>
   <div
-    class="tooltip info"
-    currentitem="false"
-    data-event="click focus"
-    data-for="token-help"
-    data-tip="true"
-    id="token-info"
-    style="position: relative; display: inline; top: 6px;"
+    class=""
   >
     <svg
       aria-hidden="true"
@@ -432,20 +410,6 @@ exports[`smaller components renders OrgHeader correctly 1`] = `
         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
       />
     </svg>
-  </div>
-  <div
-    class="__react_component_tooltip place-top type-dark"
-    data-id="tooltip"
-    id="token-help"
-  >
-    <h3>
-      Organization token
-    </h3>
-    <p
-      style="color: rgb(222, 207, 217); margin: 1em 0px;"
-    >
-      This token is unique for your organization and ensures that only devices that you own are able to connect to your account.
-    </p>
   </div>
 </div>
 `;

@@ -106,8 +106,6 @@ a.warning:hover {
 }
 
 .box-sizing (@type: border-box) {
-  -webkit-box-sizing: @type;
-  -moz-box-sizing: @type;
   box-sizing: @type;
 }
 
@@ -419,6 +417,7 @@ ul.link-list {
 #trialVersion,
 #announcement {
   font-size: 14px;
+  height: 100%;
   max-height: 56px;
   min-width: 164px;
   overflow: hidden;
@@ -696,6 +695,16 @@ ul.link-list {
   z-index: 1000;
   color: @placeholder;
   border: white 1px solid;
+  &.top,
+  &.bottom {
+    .animation(bouncedownup 1.3s infinite);
+  }
+  &.left {
+    .animation(bouncerightleft 1.3s infinite);
+  }
+  &.right {
+    .animation(bounceleftright 1.3s infinite);
+  }
 }
 
 .dialog-content {
@@ -725,68 +734,32 @@ ul.link-list {
       margin-bottom: 2 * @defaultGutterWidth;
     }
   }
-  .react-tooltip {
-    width: 300px;
-  }
 }
 
 .onboard-tip {
   pointer-events: auto;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
   position: absolute;
-  z-index: 1500;
-
+  z-index: 1600;
   a {
     color: @placeholder;
     text-decoration: underline;
   }
-  .onboard-icon {
-    &.top,
-    &.bottom {
-      .animation(bouncedownup 1.3s infinite);
-    }
-    &.left {
-      .animation(bouncerightleft 1.3s infinite);
-    }
-    &.right {
-      .animation(bounceleftright 1.3s infinite);
-    }
+}
+.MuiTooltip-tooltip .content {
+  > div:first-of-type {
+    padding-top: @defaultGutterWidth;
+    padding-bottom: 10px;
   }
-
-  .__react_component_tooltip.content {
-    background-color: @linkgreen;
-    font-size: 14px;
-    color: @placeholder;
-    margin: 0;
-    width: 350px;
-    padding: 12px 18px;
-    text-align: left;
-    &.top {
-      margin-top: @defaultGutterWidth;
-    }
-    &.bottom {
-      margin-top: -1 * @defaultGutterWidth;
-    }
-    &.right {
-      margin-left: -1 * @defaultGutterWidth;
-    }
-    &.left {
-      margin-left: @defaultGutterWidth;
-    }
-    > div:first-of-type {
-      padding-top: @defaultGutterWidth;
-      padding-bottom: 10px;
-    }
-    .flexbox {
-      justify-content: space-between;
-    }
-    .centered {
-      justify-content: center;
-    }
-    .button {
-      color: @text;
-      text-decoration: inherit;
-    }
+  .flexbox {
+    justify-content: space-between;
+  }
+  .centered {
+    justify-content: center;
+  }
+  .button {
+    color: @text;
+    text-decoration: inherit;
   }
 }
 .onboard-snack {
@@ -904,47 +877,6 @@ ul.link-list {
   }
   .link {
     font-size: small;
-  }
-}
-
-.react-tooltip {
-  background-color: @mendermaroon !important;
-  pointer-events: auto !important;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
-  text-align: left;
-  max-width: 600px;
-  color: @textsecondary !important;
-  &.info {
-    max-width: 300px;
-    color: @textmuted !important;
-    background-color: @placeholder !important;
-    &.place-top:after {
-      border-top-color: @placeholder !important;
-    }
-  }
-  p {
-    font-size: 14px;
-  }
-
-  a {
-    color: @linksecondary;
-  }
-
-  hr {
-    margin-bottom: @defaultGutterWidth;
-  }
-
-  &.place-bottom:after {
-    border-bottom-color: @mendermaroon !important;
-  }
-  &.place-right:after {
-    border-right-color: @mendermaroon !important;
-  }
-  &.place-left:after {
-    border-left-color: @mendermaroon !important;
-  }
-  &.place-top:after {
-    border-top-color: @mendermaroon !important;
   }
 }
 
@@ -2316,7 +2248,7 @@ span.day {
   }
 }
 
-@keyframes bouncerightleft {
+@keyframes bounceleftright {
   0% {
     left: 0;
     animation-timing-function: ease-out;
@@ -2369,57 +2301,33 @@ span.day {
 
 /* LESS MIXINS */
 .flip-horizontal {
-  -moz-transform: scale(-1, 1);
-  -webkit-transform: scale(-1, 1);
-  -o-transform: scale(-1, 1);
-  -ms-transform: scale(-1, 1);
   transform: scale(-1, 1);
 }
 
 .scale (@factor) {
-  -webkit-transform: scale(@factor);
-  -moz-transform: scale(@factor);
-  -ms-transform: scale(@factor);
-  -o-transform: scale(@factor);
+  transform: scale(@factor);
 }
 
 .transition (@transition) {
-  -webkit-transition: @transition;
-  -moz-transition: @transition;
-  -ms-transition: @transition;
-  -o-transition: @transition;
+  transition: @transition;
 }
 
 .animation (@animation) {
-  -webkit-animation: @animation;
-  -moz-animation: @animation;
-  -ms-animation: @animation;
-  -o-animation: @animation;
+  animation: @animation;
 }
 
 .opacity (@opacity: 0.5) {
-  -webkit-opacity: @opacity;
-  -moz-opacity: @opacity;
   opacity: @opacity;
 }
 
 .rotateX (@deg) {
-  -webkit-transform: rotateX(@deg);
-  -moz-transform: rotateX(@deg);
-  -ms-transform: rotateX(@deg);
-  -o-transform: rotateX(@deg);
+  transform: rotateX(@deg);
 }
 .rotateY (@deg) {
-  -webkit-transform: rotateY(@deg);
-  -moz-transform: rotateY(@deg);
-  -ms-transform: rotateY(@deg);
-  -o-transform: rotateY(@deg);
+  transform: rotateY(@deg);
 }
 .rotate (@deg) {
-  -webkit-transform: rotate(@deg);
-  -moz-transform: rotate(@deg);
-  -ms-transform: rotate(@deg);
-  -o-transform: rotate(@deg);
+  transform: rotate(@deg);
 }
 
 @keyframes highlight {

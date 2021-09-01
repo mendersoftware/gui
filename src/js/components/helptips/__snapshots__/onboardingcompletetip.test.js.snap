@@ -1,110 +1,116 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`OnboardingCompleteTip Component renders correctly 1`] = `
-<div
-  class="onboard-tip"
->
-  <a
-    class="tooltip onboard-icon"
-    currentitem="false"
-    data-event="click focus"
-    data-event-off="dblclick"
-    data-for="onboarding-complete-tip"
-    data-tip="true"
-  >
-    <svg
-      aria-hidden="true"
-      class="MuiSvgIcon-root"
-      focusable="false"
-      viewBox="0 0 24 24"
-    >
-      <path
-        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-      />
-    </svg>
-  </a>
-  <div
-    class="__react_component_tooltip show place-bottom type-light allow_click content"
-    data-id="tooltip"
-    id="onboarding-complete-tip"
-    style="left: 0px; top: 0px;"
-  >
-    <p>
-      Great work! You updated your device with the new Release!
-    </p>
-    <p>
-      Your device is now running the updated version of the software. At
-      <div
-        class="flexbox centered"
-        style="margin: 5px 0px;"
-      >
-        <a
-          aria-disabled="false"
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained button"
-          href="http://192.168.10.141:85/index.html?source=http%3A%2F%2Ftest.com"
-          tabindex="0"
-          target="_blank"
-        >
-          <span
-            class="MuiButton-label"
-          >
-            Go to http://192.168.10.141:85
-          </span>
-          <span
-            class="MuiTouchRipple-root"
-          />
-        </a>
-      </div>
-      you should now see "Hello world" in place of the webpage you saw previously. If you continue to see the webpage you saw previously you might have to refresh the page.
-    </p>
-    <p>
-      You've now got a good foundation in how to use Mender. Look for more help hints in the UI as you go along.
-    </p>
-    What next?
-    <div>
-      Proceed to one of the following tutorials (listed in recommended order):
-      <ol>
-        <li>
-          <a
-            href="https://docs.mender.io/get-started/deploy-a-system-update"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Deploy a system update
-          </a>
-        </li>
-        <li>
-          <a
-            href="https://docs.mender.io/get-started/deploy-a-container-update"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Deploy a container update
-          </a>
-        </li>
-      </ol>
-    </div>
+<body>
+  <div>
     <div
-      class="flexbox"
+      aria-describedby="onboarding-finished"
+      class="tooltip onboard-icon onboard-tip"
     >
-      <div
-        style="flex-grow: 1;"
-      />
-      <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
-        tabindex="0"
-        type="button"
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root"
+        focusable="false"
+        viewBox="0 0 24 24"
       >
-        <span
-          class="MuiButton-label"
-        >
-          Close
-        </span>
-        <span
-          class="MuiTouchRipple-root"
+        <path
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
         />
-      </button>
+      </svg>
     </div>
   </div>
-</div>
+  <div
+    class="MuiTooltip-popper WithStyles(ForwardRef(Tooltip))-popper-3 MuiTooltip-popperInteractive"
+    id="onboarding-finished"
+    role="tooltip"
+    style="position: absolute; top: 0px; left: 0px; margin-left: -30px; margin-top: -20px;"
+    x-placement="bottom"
+  >
+    <div
+      class="MuiTooltip-tooltip WithStyles(ForwardRef(Tooltip))-tooltip-2 MuiTooltip-tooltipPlacementBottom"
+      style="opacity: 1; transform: scale(1, 1); transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,transform 133ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
+    >
+      <div
+        class="content"
+      >
+        <p>
+          Great work! You updated your device with the new Release!
+        </p>
+        <p>
+          Your device is now running the updated version of the software. At
+          <div
+            class="flexbox centered"
+            style="margin: 5px 0px;"
+          >
+            <a
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiButton-root MuiButton-contained button"
+              href="http://192.168.10.141:85/index.html?source=http%3A%2F%2Ftest.com"
+              tabindex="0"
+              target="_blank"
+            >
+              <span
+                class="MuiButton-label"
+              >
+                Go to http://192.168.10.141:85
+              </span>
+              <span
+                class="MuiTouchRipple-root"
+              />
+            </a>
+          </div>
+          you should now see "Hello world" in place of the webpage you saw previously. If you continue to see the webpage you saw previously you might have to refresh the page.
+        </p>
+        <p>
+          You've now got a good foundation in how to use Mender. Look for more help hints in the UI as you go along.
+        </p>
+        What next?
+        <div>
+          Proceed to one of the following tutorials (listed in recommended order):
+          <ol>
+            <li>
+              <a
+                href="https://docs.mender.io/get-started/deploy-a-system-update"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Deploy a system update
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://docs.mender.io/get-started/deploy-a-container-update"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Deploy a container update
+              </a>
+            </li>
+          </ol>
+        </div>
+        <div
+          class="flexbox"
+        >
+          <div
+            style="flex-grow: 1;"
+          />
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              Close
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
 `;

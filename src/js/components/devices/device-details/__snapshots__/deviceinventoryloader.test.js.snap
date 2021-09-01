@@ -8,13 +8,7 @@ exports[`CreateGroup Component renders correctly 1`] = `
     class="waiting-inventory"
   >
     <div
-      class="tooltip info"
-      currentitem="false"
-      data-event="click focus"
-      data-for="inventory-wait"
-      data-tip="true"
-      id="inventory-info"
-      style="top: 8px; right: 8px;"
+      class=""
     >
       <svg
         aria-hidden="true"
@@ -26,30 +20,6 @@ exports[`CreateGroup Component renders correctly 1`] = `
           d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
         />
       </svg>
-    </div>
-    <div
-      class="__react_component_tooltip place-left type-dark"
-      data-id="tooltip"
-      id="inventory-wait"
-    >
-      <h3>
-        Waiting for inventory data
-      </h3>
-      <p>
-        Inventory data not yet received from the device - this can take up to 30 minutes with default installation.
-      </p>
-      <p>
-        Also see the documentation for
-         
-        <a
-          href="https://docs.mender.io/client-installation/configuration-file/polling-intervals"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Polling intervals
-        </a>
-        .
-      </p>
     </div>
     <p>
       Waiting for inventory data from the device

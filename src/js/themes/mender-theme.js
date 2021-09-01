@@ -17,6 +17,7 @@ export const colors = {
   borderColor: '#e0e0e0',
   expansionBackground: '#f7f7f7',
   disabledColor: 'rgba(0, 0, 0, 0.54)',
+  placeholder: '#e7e7e7',
   errorStyleColor: '#ab1000',
   successStyleColor: green,
   red: '#8f0d0d',

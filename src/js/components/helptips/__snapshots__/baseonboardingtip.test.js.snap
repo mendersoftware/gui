@@ -1,46 +1,57 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`BaseOnboardingTip Component renders correctly 1`] = `
-<div
-  class="onboard-tip"
-  style="left: -14px; top: 1px; overflow: initial;"
->
-  <a
-    class="tooltip onboard-icon bottom"
-    currentitem="false"
-    data-event="click focus"
-    data-event-off="dblclick"
-    data-for="onboard-tip-test"
-    data-tip="true"
-  >
-    <svg
-      aria-hidden="true"
-      class="MuiSvgIcon-root"
-      focusable="false"
-      viewBox="0 0 24 24"
-    >
-      <path
-        d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
-      />
-    </svg>
-  </a>
-  <div
-    class="__react_component_tooltip show place-bottom type-light allow_click content bottom"
-    data-id="tooltip"
-    id="onboard-tip-test"
-    style="left: 0px; top: 0px;"
-  >
-    <div />
+<body>
+  <div>
     <div
-      class="flexbox"
+      class="onboard-tip"
+      style="left: -14px; top: 1px; overflow: initial;"
     >
       <div
-        style="flex-grow: 1;"
-      />
-      <a>
-        Dismiss
-      </a>
+        class="tooltip onboard-icon bottom"
+      >
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
+          />
+        </svg>
+      </div>
+    </div>
+    <div
+      class="MuiTooltip-popper WithStyles(ForwardRef(Tooltip))-popper-3 MuiTooltip-popperInteractive"
+      id="test"
+      role="tooltip"
+      style="position: fixed; top: 0px; left: 0px;"
+      x-placement="bottom"
+    >
+      <div
+        class="MuiTooltip-tooltip WithStyles(ForwardRef(Tooltip))-tooltip-2 MuiTooltip-tooltipPlacementBottom"
+        style="opacity: 1; transform: scale(1, 1); transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,transform 133ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
+      >
+        <div
+          class="content"
+        >
+          <div>
+            Testcontent
+          </div>
+          <div
+            class="flexbox"
+          >
+            <div
+              style="flex-grow: 1;"
+            />
+            <a>
+              Dismiss
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</body>
 `;

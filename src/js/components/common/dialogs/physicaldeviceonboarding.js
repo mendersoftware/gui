@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import ReactTooltip from 'react-tooltip';
 
 import { TextField } from '@material-ui/core';
 import { Autocomplete, createFilterOptions } from '@material-ui/lab';
@@ -11,6 +10,8 @@ import { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType } fro
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDebConfigurationCode, versionCompare } from '../../../helpers';
 import { getDocsVersion, getIsEnterprise, getOnboardingState } from '../../../selectors';
+import { MenderTooltipClickable } from '../mendertooltip';
+import menderTheme from '../../../themes/mender-theme';
 
 const filter = createFilterOptions();
 
@@ -31,7 +32,27 @@ export const DeviceTypeSelectionStep = ({ docsVersion, hasConvertedImage, onboar
     <div className="flexbox column">
       <b>1. Enter your device type</b>
       <p>Setting this attribute on the device ensures that the device will only receive updates for compatible software releases.</p>
-      <div className="flexbox centered">
+      {shouldShowOnboardingTip && (
+        <MenderTooltipClickable
+          placement="bottom"
+          style={{ marginTop: menderTheme.spacing(-3) }}
+          title={
+            <div>
+              <p>
+                If you don&apos;t see your exact device on the list, choose <i>Generic ARMv6 or newer</i> to continue the tutorial for now.
+              </p>
+              <p>
+                (Note: if your device is <i>not</i> based on ARMv6 or newer, the tutorial won&apos;t work - instead, go back and use the virtual device)
+              </p>
+            </div>
+          }
+        >
+          <div className="tooltip help">
+            <HelpIcon />
+          </div>
+        </MenderTooltipClickable>
+      )}
+      <div className="flexbox centered margin-top">
         <Autocomplete
           id="device-type-selection"
           autoSelect
@@ -69,31 +90,7 @@ export const DeviceTypeSelectionStep = ({ docsVersion, hasConvertedImage, onboar
           value={selection}
         />
       </div>
-      {shouldShowOnboardingTip && (
-        <>
-          <div id="onboard-connect-1" className="tooltip help" data-tip data-for="physical-device-type-tip" data-event="click focus">
-            <HelpIcon />
-          </div>
-          <ReactTooltip
-            id="physical-device-type-tip"
-            globalEventOff="click"
-            place="bottom"
-            type="light"
-            effect="solid"
-            className="react-tooltip"
-            style={{ maxWidth: 300 }}
-          >
-            <div>
-              <p>
-                If you don&apos;t see your exact device on the list, choose <i>Generic ARMv6 or newer</i> to continue the tutorial for now.
-              </p>
-              <p>
-                (Note: if your device is <i>not</i> based on ARMv6 or newer, the tutorial won&apos;t work - instead, go back and use the virtual device)
-              </p>
-            </div>
-          </ReactTooltip>
-        </>
-      )}
+
       {hasConvertedImage && (
         <div className="margin-top">
           <p>

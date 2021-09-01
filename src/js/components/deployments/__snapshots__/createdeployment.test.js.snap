@@ -348,7 +348,7 @@ exports[`CreateDeployment Component renders correctly 1`] = `
       >
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-text"
-          style="margin-right: 10px; display: inline-block;"
+          style="margin-right: 10px;"
           tabindex="0"
           type="button"
         >
