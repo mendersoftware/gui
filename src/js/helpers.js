@@ -2,6 +2,7 @@ import React from 'react';
 import jwtDecode from 'jwt-decode';
 import md5 from 'md5';
 import pluralize from 'pluralize';
+import { getToken } from './auth';
 
 import { DEVICE_FILTERING_OPTIONS } from './constants/deviceConstants';
 import {
@@ -507,9 +508,14 @@ ${enterpriseSettings}`;
   } else {
     connectionInstructions = `${demoSettings}`;
   }
+  let installScriptArgs = `--demo`;
+  if (isHosted) {
+    const jwtToken = getToken();
+    installScriptArgs = `${installScriptArgs} --commercial --jwt-token "${jwtToken}"`;
+  }
   const debInstallationCode = `wget -q -O- https://get.mender.io/${
     isPreRelease && window.location.hostname.includes('staging') ? 'staging' : ''
-  } | sudo bash -s -- --demo`;
+  } | sudo bash -s -- ${installScriptArgs}`;
   return `${debInstallationCode} && \\
 sudo bash -c 'DEVICE_TYPE="${deviceType}" && \\${
     tenantToken
