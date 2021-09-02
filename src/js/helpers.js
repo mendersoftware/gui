@@ -488,7 +488,7 @@ export const standardizePhases = phases =>
     return standardizedPhase;
   });
 
-export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token, deviceType = 'generic-armv6', isPreRelease) => {
+export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, tenantToken, deviceType = 'generic-armv6', isPreRelease) => {
   let connectionInstructions = ``;
   let demoSettings = `  --quiet --demo ${ipAddress ? `--server-ip ${ipAddress}` : ''}`;
   const setupConfirmation = `echo "Running mender setup for ${window.location.hostname}" && \\`;
@@ -512,9 +512,9 @@ ${enterpriseSettings}`;
   } | sudo bash -s -- --demo`;
   return `${debInstallationCode} && \\
 sudo bash -c 'DEVICE_TYPE="${deviceType}" && \\${
-    token
+    tenantToken
       ? `
-TENANT_TOKEN="${token}" && \\`
+TENANT_TOKEN="${tenantToken}" && \\`
       : ''
   }
 ${setupConfirmation}
@@ -605,7 +605,7 @@ export const extractSoftwareInformation = (capabilities = {}, softwareTitleMap =
     return accu;
   }, {});
 };
-export const getDemoDeviceCreationCommand = token =>
-  token
-    ? `TENANT_TOKEN='${token}'\ndocker run -it -p ${onboardingReducerState.demoArtifactPort}:${onboardingReducerState.demoArtifactPort} -e SERVER_URL='https://${window.location.hostname}' \\\n-e TENANT_TOKEN=$TENANT_TOKEN --pull=always mendersoftware/mender-client-qemu`
+export const getDemoDeviceCreationCommand = tenantToken =>
+  tenantToken
+    ? `TENANT_TOKEN='${tenantToken}'\ndocker run -it -p ${onboardingReducerState.demoArtifactPort}:${onboardingReducerState.demoArtifactPort} -e SERVER_URL='https://${window.location.hostname}' \\\n-e TENANT_TOKEN=$TENANT_TOKEN --pull=always mendersoftware/mender-client-qemu`
     : './demo --client up';

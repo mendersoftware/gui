@@ -28,7 +28,7 @@ describe('PhysicalDeviceOnboarding Component', () => {
             onboardingState={{ complete: false, showTips: true, showHelptips: true }}
             onSelect={jest.fn}
             selection="raspberrypi7"
-            token="testtoken"
+            tenantToken="testtoken"
           />
         );
         const view = baseElement.parentElement;
