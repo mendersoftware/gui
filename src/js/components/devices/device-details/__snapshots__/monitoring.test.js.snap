@@ -132,7 +132,8 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
               2021-07-23 12:22
             </time>
             <a>
-              view log
+              view 
+              details
             </a>
           </div>
         </div>
