@@ -9,7 +9,7 @@ export const emptyRole = { allowUserManagement: false, id: '', description: '', 
 export const RoleDefinition = ({ adding, editing, stateGroups, onCancel, onSubmit, selectedRole = emptyRole }) => {
   const [allowUserManagement, setAllowUserManagement] = useState(selectedRole.allowUserManagement);
   const [description, setDescription] = useState(selectedRole.description);
-  const [groups, setGroups] = useState(stateGroups.map(group => ({ name: group, selected: selectedRole.groups.includes(group) })));
+  const [groups, setGroups] = useState([]);
   const [id, setId] = useState(selectedRole.id);
   const [nameError, setNameError] = useState(false);
 
@@ -17,7 +17,13 @@ export const RoleDefinition = ({ adding, editing, stateGroups, onCancel, onSubmi
     const { allowUserManagement: roleAllowUserManagement = false, id = '', description: roleDescription = '', groups: selectedRoleGroups = [] } = selectedRole;
     setAllowUserManagement(roleAllowUserManagement);
     setDescription(roleDescription);
-    setGroups(stateGroups.map(group => ({ name: group, selected: selectedRoleGroups.includes(group) })));
+    const filteredStateGroups = Object.entries(stateGroups).reduce((accu, [name, groupInfo]) => {
+      if (!groupInfo.filters.length) {
+        accu.push(name);
+      }
+      return accu;
+    }, []);
+    setGroups(filteredStateGroups.map(group => ({ name: group, selected: selectedRoleGroups.includes(group) })));
     setId(id);
   }, [stateGroups, selectedRole]);
 

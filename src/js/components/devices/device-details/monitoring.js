@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Time from 'react-time';
 
 import DeviceDataCollapse from './devicedatacollapse';
@@ -16,8 +16,18 @@ const MonitoringAlert = ({ alert: { id, level, name, subject, timestamp }, onLog
   </div>
 );
 
-export const DeviceMonitoring = ({ alerts, device, innerRef, isOffline, onLogClick }) => {
-  const [open, setOpen] = useState(true);
+export const DeviceMonitoring = ({ alerts, device, getAlerts, innerRef, isOffline, latestAlerts, onLogClick }) => {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setOpen(!!latestAlerts.length);
+  }, [latestAlerts.length]);
+
+  useEffect(() => {
+    if (open) {
+      getAlerts(device.id);
+    }
+  }, [open]);
 
   const { updated_ts = '' } = device;
 
@@ -27,13 +37,14 @@ export const DeviceMonitoring = ({ alerts, device, innerRef, isOffline, onLogCli
     <DeviceDataCollapse
       header={
         <>
-          {!alerts.length && <NoAlertsHeaderNotification />}
+          {!latestAlerts.length && <NoAlertsHeaderNotification />}
+          {!!latestAlerts.length && !open && <MonitoringAlert alert={latestAlerts[0]} onLogClick={onLogClick} />}
           {isOffline && <DeviceOfflineHeaderNotification />}
           {!open && <a onClick={toggleOpen}>show more</a>}
         </>
       }
       isOpen={open}
-      onClick={setOpen}
+      onClick={toggleOpen}
       title={
         <div className="flexbox center-aligned" ref={innerRef}>
           <h4 className="margin-right">Monitoring</h4>
@@ -41,10 +52,18 @@ export const DeviceMonitoring = ({ alerts, device, innerRef, isOffline, onLogCli
         </div>
       }
     >
-      <h4 className="text-muted">Triggered alerts</h4>
-      {alerts.map(alert => (
-        <MonitoringAlert alert={alert} key={alert.id} onLogClick={onLogClick} />
-      ))}
+      {alerts.length ? (
+        <div className="margin-bottom">
+          <h4 className="text-muted">Triggered alerts</h4>
+          {alerts.map(alert => (
+            <MonitoringAlert alert={alert} key={alert.id} onLogClick={onLogClick} />
+          ))}
+        </div>
+      ) : (
+        <p className="text-muted margin-left-large margin-bottom" style={{ fontSize: 'larger' }}>
+          There are currently no issues reported
+        </p>
+      )}
       <div className="margin-top-small">
         <a onClick={toggleOpen}>show less</a>
       </div>

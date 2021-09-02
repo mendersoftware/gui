@@ -152,21 +152,12 @@ exports[`PhaseProgress Component renders correctly 1`] = `
           </div>
         </div>
         <div
-          style="display: grid; row-gap: 4px; place-items: center; position: absolute; grid-template-rows: 45px 1.25rem min-content; left: 87.5%; width: 25%;"
-        >
-          <div
-            style="border-left: 1px solid transparent; height: 100%; z-index: 1;"
-          />
-          <div />
-          <div />
-        </div>
-        <div
           class="progress-step progress-step-total"
           style="height: 100%;"
         >
           <div
             class="progress-bar"
-            style="width: 100%;"
+            style="width: 110%;"
           />
         </div>
       </div>
@@ -345,24 +336,11 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
         </div>
       </div>
       <div
-        style="display: grid; row-gap: 4px; place-items: center; position: absolute; grid-template-rows: 20px 1.25rem min-content; left: 87.5%; width: 25%;"
-      >
-        <div
-          style="border-left: 1px solid transparent; height: 100%; z-index: 1;"
-        />
-        <div />
-        <div
-          class="capitalized slightly-smaller"
-        >
-          committed
-        </div>
-      </div>
-      <div
         class="progress-step progress-step-total"
       >
         <div
           class="progress-bar"
-          style="width: 100%;"
+          style="width: 110%;"
         />
       </div>
     </div>

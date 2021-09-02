@@ -17,7 +17,7 @@ export const RoleManagement = ({ createRole, editRole, getDynamicGroups, getGrou
   const [role, setRole] = useState(emptyRole);
 
   useEffect(() => {
-    if (!groups.length) {
+    if (!Object.keys(groups).length) {
       getDynamicGroups();
       getGroups();
       getRoles();
@@ -76,7 +76,7 @@ export const RoleManagement = ({ createRole, editRole, getDynamicGroups, getGrou
               <TableCell>{role.groups.length ? role.groups.join(', ') : 'All devices'}</TableCell>
               <TableCell>{role.description || '-'}</TableCell>
               <TableCell>
-                {role.editable && <Button onClick={() => onEditRole(role)}>Edit</Button>}
+                {role.editable && !role.groups.some(group => groups[group]?.filters.length) && <Button onClick={() => onEditRole(role)}>Edit</Button>}
                 {role.editable && <Button onClick={() => onRemoveRole(role.id)}>Remove</Button>}
               </TableCell>
             </TableRow>
@@ -96,7 +96,7 @@ const mapStateToProps = state => {
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
-    groups: Object.keys(groups),
+    groups,
     roles: Object.entries(state.users.rolesById).map(([id, role]) => ({ id, ...role }))
   };
 };

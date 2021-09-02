@@ -110,8 +110,8 @@ test:unit:
       - coverage
       - logs
     reports:
-      junit:
-        - junit.xml
+      cobertura: coverage/cobertura-coverage.xml
+      junit: junit.xml
     when: always
 
 test:docs-links:

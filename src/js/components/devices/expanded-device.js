@@ -17,7 +17,7 @@ import {
   setDeviceConfig,
   setDeviceTags
 } from '../../actions/deviceActions';
-import { getDeviceAlerts } from '../../actions/monitorActions';
+import { getDeviceAlerts, getLatestDeviceAlerts } from '../../actions/monitorActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_ONLINE_CUTOFF, DEVICE_STATES } from '../../constants/deviceConstants';
 import ForwardingLink from '../common/forwardlink';
@@ -55,8 +55,10 @@ export const ExpandedDevice = ({
   getDeviceById,
   getDeviceConfig,
   getDeviceConnect,
+  getLatestDeviceAlerts,
   getSingleDeployment,
   isEnterprise,
+  latestAlerts,
   onClose,
   open,
   refreshDevices,
@@ -106,7 +108,7 @@ export const ExpandedDevice = ({
       getDeviceById(device.id);
       getDeviceConnect(device.id);
       if (hasMonitor) {
-        getDeviceAlerts(device.id);
+        getLatestDeviceAlerts(device.id);
       }
     }
   };
@@ -159,7 +161,7 @@ export const ExpandedDevice = ({
           <CloseIcon />
         </IconButton>
       </div>
-      <DeviceNotifications alerts={alerts} device={device} isOffline={isOffline} onClick={scrollToMonitor} />
+      <DeviceNotifications alerts={latestAlerts} device={device} isOffline={isOffline} onClick={scrollToMonitor} />
       <Divider style={{ marginBottom: theme.spacing(3), marginTop: theme.spacing(2) }} />
       <DeviceIdentity device={device} setSnackbar={setSnackbar} />
       <AuthStatus
@@ -192,7 +194,15 @@ export const ExpandedDevice = ({
         />
       )}
       {isAcceptedDevice && hasMonitor && (
-        <DeviceMonitoring alerts={alerts} device={device} innerRef={monitoring} isOffline={isOffline} onLogClick={onLogClick} />
+        <DeviceMonitoring
+          alerts={alerts}
+          device={device}
+          getAlerts={getDeviceAlerts}
+          innerRef={monitoring}
+          isOffline={isOffline}
+          latestAlerts={latestAlerts}
+          onLogClick={onLogClick}
+        />
       )}
       {isAcceptedDevice && hasDeviceConnect && (
         <DeviceConnection
@@ -238,6 +248,7 @@ const actionCreators = {
   getDeviceById,
   getDeviceConfig,
   getDeviceConnect,
+  getLatestDeviceAlerts,
   getSingleDeployment,
   saveGlobalSettings,
   setDeviceConfig,
@@ -249,7 +260,7 @@ const mapStateToProps = (state, ownProps) => {
   const device = state.devices.byId[ownProps.deviceId] || {};
   const { config = {} } = device;
   const { deployment_id: configDeploymentId } = config;
-  const alerts = state.monitor.alerts.byDeviceId[ownProps.deviceId] || [];
+  const { alerts = [], latest = [] } = state.monitor.alerts.byDeviceId[ownProps.deviceId] || {};
   return {
     alerts: alerts.slice(0, 20),
     defaultConfig: state.users.globalSettings.defaultDeviceConfig,
@@ -257,6 +268,7 @@ const mapStateToProps = (state, ownProps) => {
     deviceConfigDeployment: state.deployments.byId[configDeploymentId] || {},
     docsVersion: getDocsVersion(state),
     isEnterprise: getIsEnterprise(state),
+    latestAlerts: latest.slice(0, 20),
     onboardingComplete: state.onboarding.complete,
     showHelptips: state.users.showHelptips,
     tenantCapabilities: getTenantCapabilities(state),
