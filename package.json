@@ -39,7 +39,6 @@
     "react-router-dom": "^5.2.1",
     "react-time": "^4.3.0",
     "react-tooltip": "^3.11.6",
-    "recompose": "^0.30.0",
     "redux-devtools-extension": "^2.13.9",
     "stream-browserify": "^3.0.0",
     "universal-cookie": "^4.0.4",

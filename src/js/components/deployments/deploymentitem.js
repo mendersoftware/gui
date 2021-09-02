@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { compose, setDisplayName } from 'recompose';
 
 // material ui
 import { Button, IconButton, Tooltip } from '@material-ui/core';
@@ -20,25 +19,21 @@ export const deploymentTypeClasses = {
   scheduled: 'scheduled-item'
 };
 
-export const DeploymentDeviceCount = compose(setDisplayName('DeploymentDeviceCount'))(({ className, deployment }) => (
+export const DeploymentDeviceCount = ({ className, deployment }) => (
   <div className={className} key="DeploymentDeviceCount">
     {Math.max(deployment.device_count, deployment.max_devices || 0)}
   </div>
-));
-export const DeploymentDeviceGroup = compose(setDisplayName('DeploymentDeviceGroup'))(props => {
+);
+export const DeploymentDeviceGroup = props => {
   const {
     deployment: { name, type = DEPLOYMENT_TYPES.software, devices = {} }
   } = props;
   const deploymentName = type === DEPLOYMENT_TYPES.configuration ? Object.keys(devices).join(', ') : name;
   return <div key="DeploymentDeviceGroup">{deploymentName || name}</div>;
-});
-export const DeploymentEndTime = compose(setDisplayName('DeploymentEndTime'))(({ deployment }) => (
-  <RelativeTime key="DeploymentEndTime" updateTime={deployment.finished} shouldCount="none" />
-));
-export const DeploymentPhases = compose(setDisplayName('DeploymentPhases'))(({ deployment }) => (
-  <div key="DeploymentPhases">{deployment.phases ? deployment.phases.length : '-'}</div>
-));
-export const DeploymentProgress = compose(setDisplayName('DeploymentProgress'))(({ deployment }) => {
+};
+export const DeploymentEndTime = ({ deployment }) => <RelativeTime key="DeploymentEndTime" updateTime={deployment.finished} shouldCount="none" />;
+export const DeploymentPhases = ({ deployment }) => <div key="DeploymentPhases">{deployment.phases ? deployment.phases.length : '-'}</div>;
+export const DeploymentProgress = ({ deployment }) => {
   const { phases = [], update_control_map } = deployment;
   const status = getDeploymentState(deployment);
   if (status === 'queued') {
@@ -47,21 +42,17 @@ export const DeploymentProgress = compose(setDisplayName('DeploymentProgress'))(
     return <ProgressDisplay key="DeploymentProgress" deployment={deployment} status={status} />;
   }
   return <PhaseProgressDisplay key="DeploymentProgress" deployment={deployment} status={status} />;
-});
-export const DeploymentRelease = compose(setDisplayName('DeploymentRelease'))(props => {
+};
+export const DeploymentRelease = props => {
   const {
     deployment: { artifact_name, type = DEPLOYMENT_TYPES.software }
   } = props;
   const deploymentRelease = type === DEPLOYMENT_TYPES.configuration ? type : artifact_name;
   return <div key="DeploymentRelease">{deploymentRelease}</div>;
-});
-export const DeploymentStartTime = compose(setDisplayName('DeploymentStartTime'))(({ direction = 'both', started }) => (
-  <RelativeTime key="DeploymentStartTime" updateTime={started} shouldCount={direction} />
-));
+};
+export const DeploymentStartTime = ({ direction = 'both', started }) => <RelativeTime key="DeploymentStartTime" updateTime={started} shouldCount={direction} />;
 
-export const DeploymentStatus = compose(setDisplayName('DeploymentStatus'))(({ deployment }) => (
-  <DeploymentStats key="DeploymentStatus" vertical={false} deployment={deployment} />
-));
+export const DeploymentStatus = ({ deployment }) => <DeploymentStats key="DeploymentStatus" vertical={false} deployment={deployment} />;
 
 export const DeploymentItem = ({ abort: abortDeployment, columnHeaders, deployment, isEnterprise, openReport, type }) => {
   const [abort, setAbort] = useState(null);
@@ -79,18 +70,15 @@ export const DeploymentItem = ({ abort: abortDeployment, columnHeaders, deployme
   return (
     <div className={`deployment-item ${deploymentTypeClasses[type]}`}>
       {!!confirmation && confirmation}
-      {columnHeaders.map((column, i) => (
-        <div className={column.class} key={`deploy-item-${i}`}>
-          {column.title && <span className="deployment-item-title text-muted">{column.title}</span>}
-          {column.renderer({
-            ...self.props,
-            className: column.class || '',
-            deployment,
-            started,
-            ...column.props
-          })}
-        </div>
-      ))}
+      {columnHeaders.map((column, i) => {
+        const ColumnComponent = column.renderer;
+        return (
+          <div className={column.class} key={`deploy-item-${i}`}>
+            {column.title && <span className="deployment-item-title text-muted">{column.title}</span>}
+            <ColumnComponent {...self.props} className={column.class || ''} deployment={deployment} started={started} {...column.props} />
+          </div>
+        );
+      })}
       <Button
         variant="contained"
         onClick={() => openReport(type, deployment.id)}
