@@ -47,6 +47,7 @@ export const DeviceMonitoring = ({ alerts, device, getAlerts, innerRef, isOfflin
           {!open && <a onClick={toggleOpen}>show more</a>}
         </>
       }
+      isAddOn
       isOpen={open}
       onClick={toggleOpen}
       title={
