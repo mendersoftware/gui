@@ -67,7 +67,7 @@
     "axios-mock-adapter": "^1.20.0",
     "babel-jest": "~27.1.0",
     "child_process": "^1.0.2",
-    "clean-webpack-plugin": "^3.0.0",
+    "clean-webpack-plugin": "^4.0.0",
     "core-js": "^3.17.2",
     "css-loader": "^6.2.0",
     "esbuild-loader": "^2.15.1",
