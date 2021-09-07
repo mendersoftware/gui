@@ -65,7 +65,6 @@ USER=mender-demo@example.com
 PASSWORD=mysecretpassword!123
 
 run_tests() {
-    cat ${INTEGRATION_PATH}/certs/api-gateway/cert.crt ${INTEGRATION_PATH}/certs/storage-proxy/cert.crt > ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/cert.crt
     COMPOSE_CMD+=$TEST_COMPOSE
     $COMPOSE_CMD build && $COMPOSE_CMD up -d
     declare retries=5
@@ -88,7 +87,7 @@ run_tests() {
         # starting it is easier when done in the test suite
         $COMPOSE_CMD rm -fsv mender-client
         docker run --name connect-client -d --network=gui-tests_mender \
-            -v ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/cert.crt:/certs/hosted.pem \
+            -v ${INTEGRATION_PATH}/cert/cert.crt:/certs/hosted.pem \
             -v ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender-test.json:/etc/mender/mender.conf \
             -v ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender-connect.json:/etc/mender/mender-connect.conf \
             -v ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/artifact_info:/etc/mender/artifact_info \
