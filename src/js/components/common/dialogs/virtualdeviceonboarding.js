@@ -6,12 +6,12 @@ import { getDemoDeviceCreationCommand } from '../../../helpers';
 import { getDocsVersion } from '../../../selectors';
 import CopyCode from '../copy-code';
 
-export const VirtualDeviceOnboarding = ({ docsVersion, isHosted, setOnboardingApproach, token }) => {
+export const VirtualDeviceOnboarding = ({ docsVersion, isHosted, setOnboardingApproach, tenantToken }) => {
   useEffect(() => {
     setOnboardingApproach('virtual');
   }, []);
 
-  const codeToCopy = getDemoDeviceCreationCommand(token);
+  const codeToCopy = getDemoDeviceCreationCommand(tenantToken);
 
   return (
     <div>
@@ -58,7 +58,7 @@ const mapStateToProps = state => {
   return {
     docsVersion: getDocsVersion(state),
     isHosted: state.app.features.isHosted,
-    token: state.organization.organization.tenant_token
+    tenantToken: state.organization.organization.tenant_token
   };
 };
 
