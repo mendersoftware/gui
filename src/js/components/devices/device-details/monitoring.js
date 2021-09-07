@@ -42,7 +42,7 @@ export const DeviceMonitoring = ({ alerts, device, getAlerts, innerRef, isOfflin
       header={
         <>
           {!latestAlerts.length && <NoAlertsHeaderNotification />}
-          {!!latestAlerts.length && !open && <MonitoringAlert alert={latestAlerts[0]} onDetailsClick={onDetailsClick} />}
+          {!open && latestAlerts.map(alert => <MonitoringAlert alert={alert} key={alert.id} onDetailsClick={onDetailsClick} />)}
           {isOffline && <DeviceOfflineHeaderNotification />}
           {!open && <a onClick={toggleOpen}>show more</a>}
         </>
