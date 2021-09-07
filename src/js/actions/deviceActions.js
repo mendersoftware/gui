@@ -7,7 +7,7 @@ import { saveGlobalSettings } from '../actions/userActions';
 import { auditLogsApiUrl } from '../actions/organizationActions';
 import GeneralApi, { headerNames, MAX_PAGE_SIZE } from '../api/general-api';
 import AppConstants from '../constants/appConstants';
-import DeviceConstants, { DEVICE_STATES, DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
+import DeviceConstants, { DEVICE_ISSUE_OPTIONS, DEVICE_LIST_DEFAULTS, DEVICE_STATES } from '../constants/deviceConstants';
 
 import { deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
 import { getIdAttribute } from '../selectors';
@@ -33,7 +33,7 @@ const defaultAttributes = [
   { scope: 'tags', attribute: 'name' }
 ];
 
-const getSearchEndpoint = hasReporting => {
+export const getSearchEndpoint = hasReporting => {
   return hasReporting ? `${reportingApiUrl}/devices/search` : `${inventoryApiUrlV2}/filters/search`;
 };
 
@@ -493,19 +493,45 @@ export const setDeviceListState = selectionState => (dispatch, getState) =>
     })
   );
 
-// get devices from inventory
-export const getDevicesByStatus = (status, options = {}) => (dispatch, getState) => {
-  const { page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false, group, sortOptions = [], trackSelectionState = false } = options;
-  let applicableFilters = getState().devices.filters || [];
+const convertIssueOptionsToFilters = issuesSelection =>
+  issuesSelection.map(item => {
+    if (typeof DEVICE_ISSUE_OPTIONS[item].filterRule.value === 'function') {
+      return { ...DEVICE_ISSUE_OPTIONS[item].filterRule, value: DEVICE_ISSUE_OPTIONS[item].filterRule.value() };
+    }
+    return DEVICE_ISSUE_OPTIONS[item].filterRule;
+  });
+
+export const convertDeviceListStateToFilters = ({ filters = [], group, selectedIssues = [], status }) => {
+  let applicableFilters = [...filters];
   if (typeof group === 'string' && !applicableFilters.length) {
     applicableFilters = [{ key: 'group', value: group, operator: '$eq', scope: 'system' }];
   }
-  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
+  const nonMonitorFilters = applicableFilters.filter(
+    filter => !Object.values(DEVICE_ISSUE_OPTIONS).some(({ filterRule }) => filterRule.scope === filter.scope && filterRule.key === filter.key)
+  );
+  const deviceIssueFilters = convertIssueOptionsToFilters(selectedIssues);
+  applicableFilters = [...nonMonitorFilters, ...deviceIssueFilters];
   const effectiveFilters = status ? [...applicableFilters, { key: 'status', value: status, operator: '$eq', scope: 'identity' }] : applicableFilters;
+  return { applicableFilters: nonMonitorFilters, filterTerms: mapFiltersToTerms(effectiveFilters) };
+};
+
+// get devices from inventory
+export const getDevicesByStatus = (status, options = {}) => (dispatch, getState) => {
+  const {
+    group,
+    selectedIssues = [],
+    page = defaultPage,
+    perPage = defaultPerPage,
+    shouldSelectDevices = false,
+    sortOptions = [],
+    trackSelectionState = false
+  } = options;
+  const { applicableFilters, filterTerms } = convertDeviceListStateToFilters({ filters: getState().devices.filters, group, selectedIssues, status });
+  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
   return GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
     page,
     per_page: perPage,
-    filters: mapFiltersToTerms(effectiveFilters),
+    filters: filterTerms,
     sort: sortOptions,
     attributes
   })

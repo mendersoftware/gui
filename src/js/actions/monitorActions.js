@@ -1,6 +1,7 @@
-import { commonErrorHandler, setSnackbar } from './appActions';
-import Api from '../api/general-api';
+import { commonErrorFallback, commonErrorHandler, setSnackbar } from './appActions';
+import Api, { headerNames } from '../api/general-api';
 import MonitorConstants from '../constants/monitorConstants';
+import { convertDeviceListStateToFilters, getSearchEndpoint } from './deviceActions';
 
 const apiUrlv1 = '/api/management/v1';
 export const monitorApiUrlv1 = `${apiUrlv1}/devicemonitor`;
@@ -38,6 +39,35 @@ export const getLatestDeviceAlerts = (id, config = {}) => dispatch => {
         })
       )
     );
+};
+
+export const getIssueCountsByType = (type, options = {}) => (dispatch, getState) => {
+  const state = getState();
+  const { filters = state.devices.filters, group, status } = options;
+  const { applicableFilters: nonMonitorFilters, filterTerms } = convertDeviceListStateToFilters({
+    filters,
+    group,
+    selectedIssues: [type],
+    status
+  });
+  return Api.post(getSearchEndpoint(state.app.features.hasReporting), {
+    page: 1,
+    per_page: 1,
+    filters: filterTerms,
+    attributes: [{ scope: 'identity', attribute: 'status' }]
+  })
+    .catch(err => commonErrorHandler(err, `Retrieving issue counts failed:`, dispatch, commonErrorFallback))
+    .then(res => {
+      const total = nonMonitorFilters.length ? state.monitor.issueCounts.byType[type].total : Number(res.headers[headerNames.total]);
+      const filtered = nonMonitorFilters.length ? Number(res.headers[headerNames.total]) : total;
+      return Promise.resolve(
+        dispatch({
+          counts: { filtered, total },
+          issueType: type,
+          type: MonitorConstants.RECEIVE_DEVICE_ISSUE_COUNTS
+        })
+      );
+    });
 };
 
 export const changeNotificationSetting = (enabled, channel = MonitorConstants.alertChannels.email) => dispatch => {

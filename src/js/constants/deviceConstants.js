@@ -109,6 +109,35 @@ module.exports = {
       help: `The "regular expression" operator matches the selected field's value with a Perl compatible regular expression (PCRE), automatically anchored by ^. If the regular expression is not valid, the filter will produce no results. If you need to specify options and flags, you can provide the full regex in the format of /regex/flags, for example.`
     }
   },
+  DEVICE_ISSUE_OPTIONS: {
+    offline: {
+      key: 'offline',
+      needsReporting: true,
+      filterRule: {
+        scope: 'system',
+        key: 'updated_ts',
+        operator: '$lt',
+        value: () => {
+          const yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1);
+          return yesterday.toISOString();
+        }
+      },
+      title: 'Offline devices'
+    },
+    monitoring: {
+      key: 'monitoring',
+      needsReporting: false,
+      filterRule: { scope: 'monitoring', key: 'alerts', operator: '$eq', value: true },
+      title: 'Devices reporting monitoring issues'
+    },
+    authRequests: {
+      key: 'authRequests',
+      needsReporting: true,
+      filterRule: { scope: 'monitoring', key: 'auth_requests', operator: '$gt', value: 1 },
+      title: 'Devices with new authentication requests'
+    }
+  },
   DEVICE_SORTING_OPTIONS: {
     asc: 'asc',
     desc: 'desc'

@@ -16,6 +16,7 @@ export const initialState = {
     deviceIds: [],
     page: 1,
     perPage: 20,
+    selectedIssues: [],
     selection: [],
     sort: {
       direction: DeviceConstants.DEVICE_SORTING_OPTIONS.desc,
