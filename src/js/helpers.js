@@ -2,6 +2,7 @@ import React from 'react';
 import jwtDecode from 'jwt-decode';
 import md5 from 'md5';
 import pluralize from 'pluralize';
+import { getToken } from './auth';
 
 import { DEVICE_FILTERING_OPTIONS } from './constants/deviceConstants';
 import {
@@ -488,7 +489,7 @@ export const standardizePhases = phases =>
     return standardizedPhase;
   });
 
-export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token, deviceType = 'generic-armv6', isPreRelease) => {
+export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, tenantToken, deviceType = 'generic-armv6', isPreRelease) => {
   let connectionInstructions = ``;
   let demoSettings = `  --quiet --demo ${ipAddress ? `--server-ip ${ipAddress}` : ''}`;
   const setupConfirmation = `echo "Running mender setup for ${window.location.hostname}" && \\`;
@@ -507,14 +508,19 @@ ${enterpriseSettings}`;
   } else {
     connectionInstructions = `${demoSettings}`;
   }
+  let installScriptArgs = `--demo`;
+  if (isHosted) {
+    const jwtToken = getToken();
+    installScriptArgs = `${installScriptArgs} --commercial --jwt-token "${jwtToken}"`;
+  }
   const debInstallationCode = `wget -q -O- https://get.mender.io/${
     isPreRelease && window.location.hostname.includes('staging') ? 'staging' : ''
-  } | sudo bash -s -- --demo`;
+  } | sudo bash -s -- ${installScriptArgs}`;
   return `${debInstallationCode} && \\
 sudo bash -c 'DEVICE_TYPE="${deviceType}" && \\${
-    token
+    tenantToken
       ? `
-TENANT_TOKEN="${token}" && \\`
+TENANT_TOKEN="${tenantToken}" && \\`
       : ''
   }
 ${setupConfirmation}
@@ -605,7 +611,7 @@ export const extractSoftwareInformation = (capabilities = {}, softwareTitleMap =
     return accu;
   }, {});
 };
-export const getDemoDeviceCreationCommand = token =>
-  token
-    ? `TENANT_TOKEN='${token}'\ndocker run -it -p ${onboardingReducerState.demoArtifactPort}:${onboardingReducerState.demoArtifactPort} -e SERVER_URL='https://${window.location.hostname}' \\\n-e TENANT_TOKEN=$TENANT_TOKEN --pull=always mendersoftware/mender-client-qemu`
+export const getDemoDeviceCreationCommand = tenantToken =>
+  tenantToken
+    ? `TENANT_TOKEN='${tenantToken}'\ndocker run -it -p ${onboardingReducerState.demoArtifactPort}:${onboardingReducerState.demoArtifactPort} -e SERVER_URL='https://${window.location.hostname}' \\\n-e TENANT_TOKEN=$TENANT_TOKEN --pull=always mendersoftware/mender-client-qemu`
     : './demo --client up';
