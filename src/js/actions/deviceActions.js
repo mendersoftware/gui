@@ -321,15 +321,16 @@ export const getAllGroupDevices = (group, shouldIncludeAllStates) => (dispatch, 
     return Promise.resolve();
   }
   const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
-  let filters = [{ key: 'group', value: group, operator: '$eq', scope: 'system' }];
-  if (!shouldIncludeAllStates) {
-    filters.push({ key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' });
-  }
+  const { filterTerms } = convertDeviceListStateToFilters({
+    filters: [],
+    group,
+    status: shouldIncludeAllStates ? undefined : DeviceConstants.DEVICE_STATES.accepted
+  });
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
     GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
       page,
       per_page: perPage,
-      filters: mapFiltersToTerms(filters),
+      filters: filterTerms,
       attributes
     }).then(res => {
       const state = getState();
@@ -362,10 +363,10 @@ export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
   if (!!group && (!getState().devices.groups.byId[group] || !getState().devices.groups.byId[group].filters.length)) {
     return Promise.resolve();
   }
-  const filters = mapFiltersToTerms([
-    ...getState().devices.groups.byId[group].filters,
-    { key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' }
-  ]);
+  const { filterTerms: filters } = convertDeviceListStateToFilters({
+    filters: getState().devices.groups.byId[group].filters,
+    status: DeviceConstants.DEVICE_STATES.accepted
+  });
   const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
     GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), { page, per_page: perPage, filters, attributes }).then(res => {
@@ -375,7 +376,7 @@ export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
         type: DeviceConstants.RECEIVE_DEVICES,
         devicesById: deviceAccu.devicesById
       });
-      const total = Number(res.headers['x-total-count']);
+      const total = Number(res.headers[headerNames.total]);
       if (total > deviceAccu.ids.length) {
         return getAllDevices(perPage, page + 1, deviceAccu.ids);
       }
