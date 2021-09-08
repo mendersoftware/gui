@@ -34,8 +34,8 @@ import DeviceIdentity from './device-details/identity';
 import DeviceConnection from './device-details/connection';
 import InstalledSoftware from './device-details/installedsoftware';
 import DeviceMonitoring from './device-details/monitoring';
+import MonitorDetailsDialog from './device-details/monitordetailsdialog';
 import DeviceNotifications from './device-details/notifications';
-import LogDialog from '../common/dialogs/log';
 
 const refreshDeviceLength = 10000;
 let timer;
@@ -73,7 +73,7 @@ export const ExpandedDevice = ({
   const { status = DEVICE_STATES.accepted, updated_ts = '' } = device;
   const [socketClosed, setSocketClosed] = useState(true);
   const [troubleshootType, setTroubleshootType] = useState();
-  const [monitorLog, setMonitorLog] = useState('');
+  const [monitorDetails, setMonitorDetails] = useState();
   const [yesterday, setYesterday] = useState(new Date());
   const monitoring = useRef();
 
@@ -133,11 +133,6 @@ export const ExpandedDevice = ({
     const location = window.location.href.substring(0, window.location.href.indexOf('/devices') + '/devices'.length);
     copy(`${location}?id=${device.id}`);
     setSnackbar('Link copied to clipboard');
-  };
-
-  const onLogClick = (id, content) => {
-    // getDeviceMonitorLog(id);
-    setMonitorLog(content);
   };
 
   const scrollToMonitor = () => {
@@ -201,7 +196,7 @@ export const ExpandedDevice = ({
           innerRef={monitoring}
           isOffline={isOffline}
           latestAlerts={latestAlerts}
-          onLogClick={onLogClick}
+          onDetailsClick={setMonitorDetails}
         />
       )}
       {isAcceptedDevice && hasDeviceConnect && (
@@ -233,7 +228,7 @@ export const ExpandedDevice = ({
         type={troubleshootType}
         userRoles={userRoles}
       />
-      {monitorLog && <LogDialog logData={monitorLog} onClose={() => setMonitorLog('')} type="monitorLog" />}
+      {monitorDetails && <MonitorDetailsDialog alert={monitorDetails} onClose={() => setMonitorDetails()} />}
     </Drawer>
   );
 };

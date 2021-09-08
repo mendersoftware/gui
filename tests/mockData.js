@@ -212,7 +212,7 @@ export const defaultState = {
               name: 'sshd',
               type: 'systemd',
               status: 'not-running',
-              details: 'Jul 22 10:40:56 raspberrypi sshd[32031]: pam_unix(sshd:session): session closed for user root'
+              details: { description: 'Jul 22 10:40:56 raspberrypi sshd[32031]: pam_unix(sshd:session): session closed for user root' }
             },
             timestamp: '2021-07-23T12:22:36Z'
           }

@@ -25,8 +25,9 @@ export const getDeviceAlerts = (id, config = {}) => dispatch => {
     );
 };
 
-export const getLatestDeviceAlerts = id => dispatch => {
-  return Api.get(`${monitorApiUrlv1}/devices/${id}/alerts/latest`)
+export const getLatestDeviceAlerts = (id, config = {}) => dispatch => {
+  const { page = defaultPage, perPage = 10 } = config;
+  return Api.get(`${monitorApiUrlv1}/devices/${id}/alerts/latest?page=${page}&per_page=${perPage}`)
     .catch(err => commonErrorHandler(err, `Retrieving device alerts for device ${id} failed:`, dispatch))
     .then(res =>
       Promise.resolve(

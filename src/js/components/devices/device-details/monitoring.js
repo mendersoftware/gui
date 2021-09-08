@@ -4,19 +4,23 @@ import Time from 'react-time';
 import DeviceDataCollapse from './devicedatacollapse';
 import { DeviceOfflineHeaderNotification, NoAlertsHeaderNotification, severityMap } from './notifications';
 
-const MonitoringAlert = ({ alert: { id, level, name, subject, timestamp }, onLogClick }) => (
-  <div className="monitoring-alert column-data">
-    {severityMap[level].listIcon}
-    <div className="key text-muted">
-      <b>{name}</b>
+const MonitoringAlert = ({ alert, onDetailsClick }) => {
+  const { description, lines_before = [], lines_after = [], line_matching = '' } = alert.subject.details;
+  const lines = [...lines_before, line_matching, ...lines_after].filter(i => i);
+  return (
+    <div className="monitoring-alert column-data">
+      {severityMap[alert.level].listIcon}
+      <div className="key text-muted">
+        <b>{alert.name}</b>
+      </div>
+      <div>{alert.level}</div>
+      <Time value={alert.timestamp} format="YYYY-MM-DD HH:mm" />
+      {(lines.length || description) && <a onClick={() => onDetailsClick(alert)}>view {lines.length ? 'log' : 'details'}</a>}
     </div>
-    <div>{level}</div>
-    <Time value={timestamp} format="YYYY-MM-DD HH:mm" />
-    {subject.details ? <a onClick={() => onLogClick(id, subject.details)}>view log</a> : null}
-  </div>
-);
+  );
+};
 
-export const DeviceMonitoring = ({ alerts, device, getAlerts, innerRef, isOffline, latestAlerts, onLogClick }) => {
+export const DeviceMonitoring = ({ alerts, device, getAlerts, innerRef, isOffline, latestAlerts, onDetailsClick }) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -38,11 +42,12 @@ export const DeviceMonitoring = ({ alerts, device, getAlerts, innerRef, isOfflin
       header={
         <>
           {!latestAlerts.length && <NoAlertsHeaderNotification />}
-          {!!latestAlerts.length && !open && <MonitoringAlert alert={latestAlerts[0]} onLogClick={onLogClick} />}
+          {!open && latestAlerts.map(alert => <MonitoringAlert alert={alert} key={alert.id} onDetailsClick={onDetailsClick} />)}
           {isOffline && <DeviceOfflineHeaderNotification />}
           {!open && <a onClick={toggleOpen}>show more</a>}
         </>
       }
+      isAddOn
       isOpen={open}
       onClick={toggleOpen}
       title={
@@ -56,7 +61,7 @@ export const DeviceMonitoring = ({ alerts, device, getAlerts, innerRef, isOfflin
         <div className="margin-bottom">
           <h4 className="text-muted">Triggered alerts</h4>
           {alerts.map(alert => (
-            <MonitoringAlert alert={alert} key={alert.id} onLogClick={onLogClick} />
+            <MonitoringAlert alert={alert} key={alert.id} onDetailsClick={onDetailsClick} />
           ))}
         </div>
       ) : (
