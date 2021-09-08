@@ -509,6 +509,9 @@ ${enterpriseSettings}`;
     connectionInstructions = `${demoSettings}`;
   }
   let installScriptArgs = `--demo`;
+  if (isPreRelease) {
+    installScriptArgs = `${installScriptArgs} -c experimental`;
+  }
   if (isHosted) {
     const jwtToken = getToken();
     installScriptArgs = `${installScriptArgs} --commercial --jwt-token "${jwtToken}"`;
