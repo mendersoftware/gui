@@ -502,8 +502,9 @@ ${enterpriseSettings} \\
   --update-poll 5 \\
   --inventory-poll 5`;
     } else {
-      connectionInstructions = `${demoSettings} \\
-${enterpriseSettings}`;
+      connectionInstructions = `${enterpriseSettings} \\
+  --server-url https://${window.location.hostname} \\
+  --server-cert=""`;
     }
   } else {
     connectionInstructions = `${demoSettings}`;
