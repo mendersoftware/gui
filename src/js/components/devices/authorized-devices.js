@@ -149,7 +149,9 @@ export const Authorized = props => {
     timer = setInterval(getDevices, refreshDeviceLength);
     getDevices();
     availableIssueOptions.map(({ key }) => getIssueCountsByType(key, { filters, group: selectedGroup, state: selectedState }));
-    getIssueCountsByType(DEVICE_ISSUE_OPTIONS.authRequests.key, { filters: [] });
+    availableIssueOptions.includes(DEVICE_ISSUE_OPTIONS.authRequests.key)
+      ? getIssueCountsByType(DEVICE_ISSUE_OPTIONS.authRequests.key, { filters: [] })
+      : undefined;
   }, [filters, pageNo, pageLength, selectedGroup, selectedIssues, selectedState, sortCol, sortDown, sortScope, deviceRefreshTrigger]);
 
   const availableIssueOptions = useMemo(
