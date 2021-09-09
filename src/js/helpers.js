@@ -489,7 +489,7 @@ export const standardizePhases = phases =>
     return standardizedPhase;
   });
 
-export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, tenantToken, deviceType = 'generic-armv6', isPreRelease) => {
+export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, tenantToken, deviceType = 'generic-armv6', isPreRelease, currentUser) => {
   let connectionInstructions = ``;
   let demoSettings = `  --quiet --demo ${ipAddress ? `--server-ip ${ipAddress}` : ''}`;
   const setupConfirmation = `echo "Running mender setup for ${window.location.hostname}" && \\`;
@@ -515,7 +515,9 @@ ${enterpriseSettings} \\
   }
   if (isHosted) {
     const jwtToken = getToken();
-    installScriptArgs = `${installScriptArgs} --commercial --jwt-token "${jwtToken}"`;
+    installScriptArgs = `${installScriptArgs} --commercial --auth hosted --jwt-token "${jwtToken}"`;
+  } else if (isEnterprise) {
+    installScriptArgs = `${installScriptArgs} --commercial --auth on-prem --username "${currentUser}"`;
   }
   let scriptUrl = `https://get.mender.io`;
   if (isPreRelease) {

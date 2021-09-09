@@ -10,7 +10,7 @@ import CopyCode from '../copy-code';
 import { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType } from '../../../actions/onboardingActions';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDebConfigurationCode, versionCompare } from '../../../helpers';
-import { getDocsVersion, getIsEnterprise, getOnboardingState } from '../../../selectors';
+import { getDocsVersion, getIsEnterprise, getOnboardingState, getCurrentUser } from '../../../selectors';
 
 const filter = createFilterOptions();
 
@@ -110,8 +110,8 @@ export const DeviceTypeSelectionStep = ({ docsVersion, hasConvertedImage, onboar
   );
 };
 
-export const InstallationStep = ({ advanceOnboarding, ipAddress, isHosted, isEnterprise, tenantToken, selection, isPreRelease }) => {
-  const codeToCopy = getDebConfigurationCode(ipAddress, isHosted, isEnterprise, tenantToken, selection, isPreRelease);
+export const InstallationStep = ({ advanceOnboarding, ipAddress, isHosted, isEnterprise, tenantToken, selection, isPreRelease, currentUser }) => {
+  const codeToCopy = getDebConfigurationCode(ipAddress, isHosted, isEnterprise, tenantToken, selection, isPreRelease, currentUser);
   return (
     <div>
       <b>2. Log into your device and install the Mender client</b>
@@ -188,7 +188,8 @@ const mapStateToProps = state => {
     isHosted: state.app.features.isHosted,
     isPreRelease: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
     onboardingState: getOnboardingState(state),
-    tenantToken: state.organization.organization.tenant_token
+    tenantToken: state.organization.organization.tenant_token,
+    currentUser: getCurrentUser(state)
   };
 };
 
