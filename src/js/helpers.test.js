@@ -102,7 +102,7 @@ describe('versionCompare function', () => {
 describe('getDebConfigurationCode function', () => {
   let code;
   beforeEach(() => {
-    code = getDebConfigurationCode('192.168.7.41', false, true, 'token', 'raspberrypi3');
+    code = getDebConfigurationCode('192.168.7.41', false, false, null, 'raspberrypi3');
   });
   it('should not contain any template string leftovers', async () => {
     expect(code).not.toMatch(/\$\{([^}]+)\}/);
@@ -111,12 +111,10 @@ describe('getDebConfigurationCode function', () => {
     expect(code).toMatch(
       `wget -q -O- https://get.mender.io | sudo bash -s -- --demo && \\
 sudo bash -c 'DEVICE_TYPE="raspberrypi3" && \\
-TENANT_TOKEN="token" && \\
 echo "Running mender setup for localhost" && \\
 mender setup \\
   --device-type $DEVICE_TYPE \\
-  --quiet --demo --server-ip 192.168.7.41 \\
-  --tenant-token $TENANT_TOKEN && \\
+  --quiet --demo --server-ip 192.168.7.41 && \\
 systemctl restart mender-client && \\
 (cat > /etc/mender/mender-connect.conf << EOF
 {
@@ -134,6 +132,8 @@ echo "Done!"'
     code = getDebConfigurationCode('192.168.7.41', false, false, null, 'raspberrypi3');
     expect(code).not.toMatch(/tenant/);
     expect(code).not.toMatch(/token/);
+    expect(code).not.toMatch(/TENANT/);
+    expect(code).not.toMatch(/TOKEN/);
   });
   const oldHostname = window.location.hostname;
   const postTestCleanUp = () => {
@@ -229,6 +229,41 @@ mender setup \\
   --retry-poll 30 \\
   --update-poll 5 \\
   --inventory-poll 5 && \\
+systemctl restart mender-client && \\
+(cat > /etc/mender/mender-connect.conf << EOF
+{
+  "ServerCertificate": "/usr/share/doc/mender-client/examples/demo.crt",
+  "User": "pi",
+  "ShellCommand": "/bin/bash"
+}
+EOF
+) && systemctl restart mender-connect && \\
+echo "Done!"'
+`
+      );
+    });
+  });
+  describe('configuring devices for fancy.enterprise.on.prem', () => {
+    beforeEach(() => {
+      window.location = {
+        ...window.location,
+        hostname: 'fancy.enterprise.on.prem'
+      };
+    });
+    afterEach(postTestCleanUp);
+
+    it('should contain sane information for enterprise on-prem calls', async () => {
+      code = getDebConfigurationCode(undefined, false, true, 'token', 'raspberrypi3');
+      expect(code).toMatch(
+        `wget -q -O- https://get.mender.io | sudo bash -s -- --demo && \\
+sudo bash -c 'DEVICE_TYPE="raspberrypi3" && \\
+TENANT_TOKEN="token" && \\
+echo "Running mender setup for fancy.enterprise.on.prem" && \\
+mender setup \\
+  --device-type $DEVICE_TYPE \\
+  --tenant-token $TENANT_TOKEN \\
+  --server-url https://fancy.enterprise.on.prem \\
+  --server-cert="" && \\
 systemctl restart mender-client && \\
 (cat > /etc/mender/mender-connect.conf << EOF
 {
