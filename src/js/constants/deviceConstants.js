@@ -128,13 +128,13 @@ module.exports = {
     monitoring: {
       key: 'monitoring',
       needsReporting: false,
-      filterRule: { scope: 'monitoring', key: 'alerts', operator: '$eq', value: true },
+      filterRule: { scope: 'monitor', key: 'alerts', operator: '$eq', value: true },
       title: 'Devices reporting monitoring issues'
     },
     authRequests: {
       key: 'authRequests',
       needsReporting: true,
-      filterRule: { scope: 'monitoring', key: 'auth_requests', operator: '$gt', value: 1 },
+      filterRule: { scope: 'monitor', key: 'auth_requests', operator: '$gt', value: 1 },
       title: 'Devices with new authentication requests'
     }
   },
