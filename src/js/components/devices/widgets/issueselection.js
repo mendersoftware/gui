@@ -47,9 +47,7 @@ const DeviceIssuesSelection = ({ onChange, onSelectAll, options, selection }) =>
 
   const onClearClick = () => onChange({ target: { value: [] } });
 
-  const onToggleAllClick = ({ target: { checked } }) => {
-    onSelectAll(!checked);
-  };
+  const onToggleAllClick = ({ target: { checked } }) => onSelectAll(checked);
 
   return (
     <Select
