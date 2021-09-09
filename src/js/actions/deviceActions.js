@@ -28,6 +28,7 @@ const defaultAttributes = [
   { scope: 'inventory', attribute: 'artifact_name' },
   { scope: 'inventory', attribute: 'device_type' },
   { scope: 'inventory', attribute: 'rootfs-image.version' },
+  { scope: 'monitor', attribute: 'alerts' },
   { scope: 'system', attribute: 'created_ts' },
   { scope: 'system', attribute: 'updated_ts' },
   { scope: 'tags', attribute: 'name' }
@@ -272,11 +273,12 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
   devices.reduce(
     (accu, device) => {
       const stateDevice = state.devices.byId[device.id] || {};
-      const { attributes: storedAttributes = {}, identity_data: storedIdentity = {}, tags: storedTags = {} } = stateDevice;
-      const { identity, inventory, system = {}, tags } = mapDeviceAttributes(device.attributes);
+      const { attributes: storedAttributes = {}, identity_data: storedIdentity = {}, monitor: storedMonitor = {}, tags: storedTags = {} } = stateDevice;
+      const { identity, inventory, monitor, system = {}, tags } = mapDeviceAttributes(device.attributes);
       const { created_ts = device.created_ts || stateDevice.created_ts, updated_ts = device.updated_ts || stateDevice.updated_ts } = system;
       device.attributes = { ...storedAttributes, ...inventory };
       device.tags = { ...storedTags, ...tags };
+      device.monitor = { ...storedMonitor, ...monitor };
       device.identity_data = { ...storedIdentity, ...identity };
       device.status = status ? status : device.status || identity.status;
       device.created_ts = created_ts;

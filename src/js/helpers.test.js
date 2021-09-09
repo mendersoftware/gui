@@ -291,6 +291,7 @@ describe('mapDeviceAttributes function', () => {
   const defaultAttributes = {
     inventory: { device_type: [], artifact_name: '' },
     identity: {},
+    monitor: {},
     system: {},
     tags: {}
   };
