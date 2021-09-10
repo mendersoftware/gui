@@ -8,8 +8,16 @@ import { Autorenew as AutorenewIcon, Delete as DeleteIcon, FilterList as FilterL
 
 import { setSnackbar } from '../../actions/appActions';
 import { deleteAuthset, getDevicesByStatus, setDeviceFilters, setDeviceListState, updateDevicesAuth } from '../../actions/deviceActions';
+import { getIssueCountsByType } from '../../actions/monitorActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
-import { DEVICE_LIST_DEFAULTS, DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_SORTING_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import {
+  DEVICE_LIST_DEFAULTS,
+  DEVICE_LIST_MAXIMUM_LENGTH,
+  DEVICE_ISSUE_OPTIONS,
+  DEVICE_SORTING_OPTIONS,
+  DEVICE_STATES,
+  UNGROUPED_GROUP
+} from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { duplicateFilter, isEmpty } from '../../helpers';
 import { getIdAttribute, getOnboardingState, getTenantCapabilities } from '../../selectors';
@@ -22,6 +30,7 @@ import DeviceList from './devicelist';
 import DeviceQuickActions from './devicequickactions';
 import Filters from './filters';
 import theme from '../../themes/mender-theme';
+import DeviceIssuesSelection from './widgets/issueselection';
 
 const refreshDeviceLength = 10000;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
@@ -49,9 +58,13 @@ export const Authorized = props => {
     devices,
     filters,
     getDevicesByStatus,
+    getIssueCountsByType,
     groupFilters,
+    hasMonitor,
+    hasReporting,
     highlightHelp,
     idAttribute,
+    issueCounts,
     limitMaxed,
     onboardingState,
     onGroupClick,
@@ -79,6 +92,7 @@ export const Authorized = props => {
   const {
     page: pageNo = defaultPage,
     perPage: pageLength = defaultPerPage,
+    selectedIssues = [],
     selection: selectedRows,
     sort: { direction: sortDown = DEVICE_SORTING_OPTIONS.desc, columns = [] },
     state: selectedState
@@ -134,7 +148,23 @@ export const Authorized = props => {
     clearInterval(timer);
     timer = setInterval(getDevices, refreshDeviceLength);
     getDevices();
-  }, [filters, pageNo, pageLength, selectedGroup, selectedState, sortCol, sortDown, sortScope, deviceRefreshTrigger]);
+    availableIssueOptions.map(({ key }) => getIssueCountsByType(key, { filters, group: selectedGroup, state: selectedState }));
+    availableIssueOptions.includes(DEVICE_ISSUE_OPTIONS.authRequests.key)
+      ? getIssueCountsByType(DEVICE_ISSUE_OPTIONS.authRequests.key, { filters: [] })
+      : undefined;
+  }, [filters, pageNo, pageLength, selectedGroup, selectedIssues, selectedState, sortCol, sortDown, sortScope, deviceRefreshTrigger]);
+
+  const availableIssueOptions = useMemo(
+    () =>
+      Object.values(DEVICE_ISSUE_OPTIONS).reduce((accu, { key, needsReporting, title }) => {
+        if (needsReporting && !hasReporting) {
+          return accu;
+        }
+        accu.push({ count: issueCounts[key].filtered, key, title });
+        return accu;
+      }, []),
+    [hasReporting, issueCounts]
+  );
 
   const sortingAlternatives = Object.values(states)
     .reduce((accu, item) => [...accu, ...item.defaultHeaders], [])
@@ -158,6 +188,7 @@ export const Authorized = props => {
     getDevicesByStatus(applicableSelectedState, {
       page: pageNo,
       perPage: pageLength,
+      selectedIssues,
       shouldSelectDevices: true,
       group: selectedGroup,
       sortOptions: sortBy
@@ -235,6 +266,23 @@ export const Authorized = props => {
     setDeviceListState({ state: newState, page: 1 });
   };
 
+  const onDeviceIssuesSelectionChange = ({ target: { value: selectedIssues } }) => {
+    setDeviceListState({ selectedIssues, page: 1 });
+  };
+
+  const onSelectAllIssues = shouldSelectAll => {
+    const selectedIssues = shouldSelectAll
+      ? Object.entries(DEVICE_ISSUE_OPTIONS).reduce((accu, [key, { needsReporting }]) => {
+          if (needsReporting && !hasReporting) {
+            return accu;
+          }
+          accu.push(key);
+          return accu;
+        }, [])
+      : [];
+    setDeviceListState({ selectedIssues, page: 1 });
+  };
+
   const currentSelectedState = states[selectedState] ?? states.devices;
   const EmptyState = currentSelectedState.emptyState;
   const columnHeaders = [
@@ -303,6 +351,14 @@ export const Authorized = props => {
                 </Button>
               </div>
             )}
+            {hasMonitor && (
+              <DeviceIssuesSelection
+                onChange={onDeviceIssuesSelectionChange}
+                onSelectAll={onSelectAllIssues}
+                options={availableIssueOptions}
+                selection={selectedIssues}
+              />
+            )}
             {selectedGroup && !isUngroupedGroup && (
               <p className="info flexbox centered" style={{ marginLeft: theme.spacing(2) }}>
                 {!groupFilters.length ? <LockOutlined fontSize="small" /> : <AutorenewIcon fontSize="small" />}
@@ -368,6 +424,7 @@ const actionCreators = {
   advanceOnboarding,
   deleteAuthset,
   getDevicesByStatus,
+  getIssueCountsByType,
   setDeviceFilters,
   setDeviceListState,
   setSnackbar,
@@ -375,7 +432,7 @@ const actionCreators = {
 };
 
 const mapStateToProps = state => {
-  const { hasDeviceConfig } = getTenantCapabilities(state);
+  const { hasMonitor } = getTenantCapabilities(state);
   let devices = state.devices.deviceList.deviceIds.slice(0, DEVICE_LIST_MAXIMUM_LENGTH);
   let deviceCount = state.devices.deviceList.total;
   let selectedGroup;
@@ -401,8 +458,10 @@ const mapStateToProps = state => {
     deviceCount,
     filters: state.devices.filters || [],
     groupFilters,
-    hasDeviceConfig,
+    hasMonitor,
+    hasReporting: state.app.features.hasReporting,
     idAttribute: getIdAttribute(state),
+    issueCounts: state.monitor.issueCounts.byType,
     onboardingState: getOnboardingState(state),
     pendingCount: state.devices.byStatus.pending.total || 0,
     selectedGroup,

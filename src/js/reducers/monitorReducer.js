@@ -1,8 +1,16 @@
 import MonitorConstants from '../constants/monitorConstants';
+import { DEVICE_ISSUE_OPTIONS } from '../constants/deviceConstants';
 
 export const initialState = {
   alerts: {
     byDeviceId: {}
+  },
+  issueCounts: {
+    byType: {
+      [DEVICE_ISSUE_OPTIONS.authRequests.key]: { filtered: 0, total: 0 },
+      [DEVICE_ISSUE_OPTIONS.monitoring.key]: { filtered: 0, total: 0 },
+      [DEVICE_ISSUE_OPTIONS.offline.key]: { filtered: 0, total: 0 }
+    }
   },
   settings: {
     global: {
@@ -54,6 +62,17 @@ const monitorReducer = (state = initialState, action) => {
               ...state.alerts.byDeviceId[action.deviceId],
               latest: action.alerts
             }
+          }
+        }
+      };
+    case MonitorConstants.RECEIVE_DEVICE_ISSUE_COUNTS:
+      return {
+        ...state,
+        issueCounts: {
+          ...state.issueCounts,
+          byType: {
+            ...state.issueCounts.byType,
+            [action.issueType]: action.counts
           }
         }
       };
