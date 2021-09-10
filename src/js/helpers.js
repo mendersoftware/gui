@@ -72,39 +72,6 @@ export const getDeploymentState = deployment => {
   return status;
 };
 
-export function statusToPercentage(state, intervals) {
-  var time;
-  var minutes = intervals / 3;
-  switch (state) {
-    case 'pending':
-    case 'noartifact':
-      return 0;
-
-    case 'downloading':
-      // increase slightly over time to show progress
-      time = minutes < 15 && intervals < 69 ? 0 + intervals : 69;
-      return time;
-
-    case 'pause_before_installing':
-    case 'installing':
-      return 70;
-
-    case 'pause_before_committing':
-    case 'pause_before_rebooting':
-    case 'rebooting':
-      time = minutes < 18 && 75 + intervals < 99 ? 75 + intervals : 99;
-      return time;
-
-    case 'aborted':
-    case 'already-installed':
-    case 'failure':
-    case 'success':
-      return 100;
-    default:
-      return 0;
-  }
-}
-
 export function decodeSessionToken(token) {
   try {
     var decoded = jwtDecode(token);
