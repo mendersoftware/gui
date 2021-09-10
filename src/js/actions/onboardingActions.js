@@ -27,7 +27,7 @@ export const getOnboardingState = () => (dispatch, getState) => {
     const pendingDevices = store.devices.byStatus[DEVICE_STATES.pending].deviceIds;
     const releases = Object.values(store.releases.byId);
     const pastDeployments = store.deployments.byStatus.finished.deploymentIds;
-    let { deviceType = [] } = onboardingState;
+    let deviceType = onboardingState.deviceType ?? [];
     deviceType =
       !deviceType.length && acceptedDevices.length && store.devices.byId[acceptedDevices[0]].hasOwnProperty('attributes')
         ? store.devices.byId[acceptedDevices[0]].attributes.device_type

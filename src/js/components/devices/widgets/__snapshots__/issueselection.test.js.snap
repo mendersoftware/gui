@@ -1,0 +1,123 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeviceIssuesSelection Component renders EmptySelection correctly 1`] = `
+<li
+  aria-disabled="false"
+  class="MuiButtonBase-root MuiListItem-root MuiMenuItem-root MuiMenuItem-gutters MuiListItem-gutters MuiListItem-button"
+  role="menuitem"
+  style="font-size: 13px; padding-right: 24px;"
+  tabindex="-1"
+  value=""
+>
+  <span
+    aria-disabled="false"
+    class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-5 MuiCheckbox-root MuiCheckbox-colorSecondary MuiCheckbox-indeterminate MuiIconButton-colorSecondary"
+    style="margin-left: -12px;"
+  >
+    <span
+      class="MuiIconButton-label"
+    >
+      <input
+        class="PrivateSwitchBase-input-8"
+        data-indeterminate="true"
+        type="checkbox"
+        value=""
+      />
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z"
+        />
+      </svg>
+    </span>
+    <span
+      class="MuiTouchRipple-root"
+    />
+  </span>
+  Show only devices requiring attention
+  <span
+    class="MuiTouchRipple-root"
+  />
+</li>
+`;
+
+exports[`DeviceIssuesSelection Component renders correctly 1`] = `
+<div>
+  <div
+    class="MuiInputBase-root MuiInput-root margin-left"
+    style="font-size: 13px; margin-left: 8px;"
+  >
+    <div
+      aria-haspopup="listbox"
+      class="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
+      role="button"
+      style="padding: 0px;"
+      tabindex="0"
+    >
+      <li
+        aria-disabled="false"
+        class="MuiButtonBase-root MuiListItem-root MuiMenuItem-root MuiMenuItem-gutters MuiListItem-gutters MuiListItem-button"
+        role="menuitem"
+        style="font-size: 13px; padding-right: 24px;"
+        tabindex="-1"
+        value=""
+      >
+        <span
+          aria-disabled="false"
+          class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorSecondary PrivateSwitchBase-checked-2 Mui-checked MuiIconButton-colorSecondary"
+          style="margin-left: -12px;"
+        >
+          <span
+            class="MuiIconButton-label"
+          >
+            <input
+              checked=""
+              class="PrivateSwitchBase-input-4"
+              data-indeterminate="false"
+              type="checkbox"
+              value=""
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+              />
+            </svg>
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </span>
+        Offline devices
+        <span
+          class="MuiTouchRipple-root"
+        />
+      </li>
+    </div>
+    <input
+      aria-hidden="true"
+      class="MuiSelect-nativeInput"
+      tabindex="-1"
+      value="offline"
+    />
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiSelect-icon"
+      focusable="false"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M7 10l5 5 5-5z"
+      />
+    </svg>
+  </div>
+</div>
+`;

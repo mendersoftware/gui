@@ -106,6 +106,7 @@ describe('app actions', () => {
             ...defaultState.devices.byId.a1,
             attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
             identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
+            monitor: {},
             tags: {},
             updated_ts: inventoryDevice.updated_ts
           }
@@ -124,6 +125,7 @@ describe('app actions', () => {
             ...defaultState.devices.byId.a1,
             attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
             identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
+            monitor: {},
             status: 'pending',
             tags: {},
             updated_ts: inventoryDevice.updated_ts

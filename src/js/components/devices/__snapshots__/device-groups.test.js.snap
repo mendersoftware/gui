@@ -64,72 +64,77 @@ exports[`DeviceGroups Component renders correctly 1`] = `
       </div>
     </div>
     <div
-      class=\\"flexbox column center-aligned padding-small device-addition-widget\\"
+      class=\\"flexbox\\"
+      style=\\"align-items: baseline;\\"
     >
       <div
-        class=\\"MuiButtonGroup-root muted\\"
-        role=\\"group\\"
+        class=\\"flexbox column center-aligned padding-small device-addition-widget\\"
       >
-        <button
-          class=\\"MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlined\\"
-          style=\\"text-transform: none;\\"
-          tabindex=\\"0\\"
-          type=\\"button\\"
+        <div
+          class=\\"MuiButtonGroup-root muted\\"
+          role=\\"group\\"
         >
-          <span
-            class=\\"MuiButton-label\\"
+          <button
+            class=\\"MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlined\\"
+            style=\\"text-transform: none;\\"
+            tabindex=\\"0\\"
+            type=\\"button\\"
           >
-            Connect a new device
-          </span>
-          <span
-            class=\\"MuiTouchRipple-root\\"
-          />
-        </button>
-        <button
-          class=\\"MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlined MuiButton-outlinedSizeSmall MuiButton-sizeSmall\\"
-          style=\\"text-transform: none;\\"
-          tabindex=\\"0\\"
-          type=\\"button\\"
-        >
-          <span
-            class=\\"MuiButton-label\\"
-          >
-            <svg
-              aria-hidden=\\"true\\"
-              class=\\"MuiSvgIcon-root\\"
-              focusable=\\"false\\"
-              viewBox=\\"0 0 24 24\\"
+            <span
+              class=\\"MuiButton-label\\"
             >
-              <path
-                d=\\"M7 10l5 5 5-5z\\"
-              />
-            </svg>
-          </span>
-          <span
-            class=\\"MuiTouchRipple-root\\"
-          />
-        </button>
-      </div>
-      <a
-        class=\\"flexbox centered\\"
-        href=\\"https://docs.mender.io/development/client-installation/overview\\"
-        rel=\\"noopener noreferrer\\"
-        style=\\"margin-top: 8px;\\"
-        target=\\"_blank\\"
-      >
-        Learn how to connect devices
-        <svg
-          aria-hidden=\\"true\\"
-          class=\\"MuiSvgIcon-root\\"
-          focusable=\\"false\\"
-          style=\\"font-size: 10pt; margin-left: 8px; margin-bottom: -2px;\\"
-          viewBox=\\"0 0 24 24\\"
+              Connect a new device
+            </span>
+            <span
+              class=\\"MuiTouchRipple-root\\"
+            />
+          </button>
+          <button
+            class=\\"MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlined MuiButton-outlinedSizeSmall MuiButton-sizeSmall\\"
+            style=\\"text-transform: none;\\"
+            tabindex=\\"0\\"
+            type=\\"button\\"
+          >
+            <span
+              class=\\"MuiButton-label\\"
+            >
+              <svg
+                aria-hidden=\\"true\\"
+                class=\\"MuiSvgIcon-root\\"
+                focusable=\\"false\\"
+                viewBox=\\"0 0 24 24\\"
+              >
+                <path
+                  d=\\"M7 10l5 5 5-5z\\"
+                />
+              </svg>
+            </span>
+            <span
+              class=\\"MuiTouchRipple-root\\"
+            />
+          </button>
+        </div>
+        <a
+          class=\\"flexbox centered\\"
+          href=\\"https://docs.mender.io/development/client-installation/overview\\"
+          rel=\\"noopener noreferrer\\"
+          style=\\"margin-top: 8px;\\"
+          target=\\"_blank\\"
         >
-          <path
-            d=\\"M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z\\"
-          />
-        </svg>
-      </a>
+          Learn how to connect devices
+          <svg
+            aria-hidden=\\"true\\"
+            class=\\"MuiSvgIcon-root\\"
+            focusable=\\"false\\"
+            style=\\"font-size: 10pt; margin-left: 8px; margin-bottom: -2px;\\"
+            viewBox=\\"0 0 24 24\\"
+          >
+            <path
+              d=\\"M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z\\"
+            />
+          </svg>
+        </a>
+      </div>
     </div>
   </div>
   <div

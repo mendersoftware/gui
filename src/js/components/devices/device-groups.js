@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
+import { AddCircle as AddIcon } from '@material-ui/icons';
 
 import AuthorizedDevices from './authorized-devices';
 import CreateGroup from './create-group';
@@ -29,7 +30,7 @@ import { setShowConnectingDialog } from '../../actions/userActions';
 import { getDocsVersion, getIsEnterprise, getLimitMaxed } from '../../selectors';
 import CreateGroupExplainer from './create-group-explainer';
 import Global from '../settings/global';
-import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { DEVICE_ISSUE_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { emptyFilter } from './filters';
 import PreauthDialog, { DeviceLimitWarning } from './preauth-dialog';
 import {
@@ -45,6 +46,7 @@ import {
 import DeviceAdditionWidget from './deviceadditionwidget';
 import QuickFilter from './quickfilter';
 import DeviceStatusNotification from './devicestatusnotification';
+import pluralize from 'pluralize';
 
 const defaultHeaders = {
   deviceCreationTime: {
@@ -200,6 +202,7 @@ export const DeviceGroups = ({
   acceptedCount,
   addDynamicGroup,
   addStaticGroup,
+  authRequestCount,
   deviceLimit,
   deviceListState,
   docsVersion,
@@ -212,6 +215,7 @@ export const DeviceGroups = ({
   groupFilters,
   groups,
   groupsById,
+  hasReporting,
   history,
   identityAttributes,
   isEnterprise,
@@ -395,6 +399,11 @@ export const DeviceGroups = ({
     selectGroup(groupName);
   };
 
+  const onShowAuthRequestDevicesClick = () => {
+    setDeviceFilters([]);
+    setDeviceListState({ selectedIssues: [DEVICE_ISSUE_OPTIONS.authRequests.key], page: 1 });
+  };
+
   const toggleGroupRemoval = () => setRemoveGroup(!removeGroup);
 
   return (
@@ -404,7 +413,15 @@ export const DeviceGroups = ({
           <h3 style={{ minWidth: 300, marginTop: 0 }}>Devices</h3>
           <QuickFilter attributes={identityAttributes} attributeSetting={selectedAttribute} filters={filters} onChange={onFilterDevices} />
         </div>
-        <DeviceAdditionWidget docsVersion={docsVersion} onConnectClick={setShowConnectingDialog} onPreauthClick={setOpenPreauth} />
+        <div className="flexbox" style={{ alignItems: 'baseline' }}>
+          {hasReporting && !!authRequestCount && (
+            <a className="flexbox center-aligned margin-right-small" onClick={onShowAuthRequestDevicesClick}>
+              <AddIcon fontSize="small" style={{ marginRight: 6 }} />
+              {authRequestCount} new device authentication {pluralize('request', authRequestCount)}
+            </a>
+          )}
+          <DeviceAdditionWidget docsVersion={docsVersion} onConnectClick={setShowConnectingDialog} onPreauthClick={setOpenPreauth} />
+        </div>
       </div>
       <div className="tab-container with-sub-panels" style={{ padding: 0, height: '100%' }}>
         <div className="leftFixed">
@@ -505,6 +522,7 @@ const mapStateToProps = state => {
   const filteringAttributes = { ...state.devices.filteringAttributes, identityAttributes: [...state.devices.filteringAttributes.identityAttributes, 'id'] };
   return {
     acceptedCount: state.devices.byStatus.accepted.total || 0,
+    authRequestCount: state.monitor.issueCounts.byType[DEVICE_ISSUE_OPTIONS.authRequests.key].total,
     deviceLimit: state.devices.limit,
     deviceListState: state.devices.deviceList,
     docsVersion: getDocsVersion(state),
@@ -514,6 +532,7 @@ const mapStateToProps = state => {
     groupsById: state.devices.groups.byId,
     groupCount,
     groupFilters,
+    hasReporting: state.app.features.hasReporting,
     identityAttributes,
     isEnterprise: getIsEnterprise(state),
     limitMaxed: getLimitMaxed(state),

@@ -7,7 +7,7 @@ import { saveGlobalSettings } from '../actions/userActions';
 import { auditLogsApiUrl } from '../actions/organizationActions';
 import GeneralApi, { headerNames, MAX_PAGE_SIZE } from '../api/general-api';
 import AppConstants from '../constants/appConstants';
-import DeviceConstants, { DEVICE_STATES, DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
+import DeviceConstants, { DEVICE_ISSUE_OPTIONS, DEVICE_LIST_DEFAULTS, DEVICE_STATES } from '../constants/deviceConstants';
 
 import { deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
 import { getIdAttribute } from '../selectors';
@@ -28,12 +28,13 @@ const defaultAttributes = [
   { scope: 'inventory', attribute: 'artifact_name' },
   { scope: 'inventory', attribute: 'device_type' },
   { scope: 'inventory', attribute: 'rootfs-image.version' },
+  { scope: 'monitor', attribute: 'alerts' },
   { scope: 'system', attribute: 'created_ts' },
   { scope: 'system', attribute: 'updated_ts' },
   { scope: 'tags', attribute: 'name' }
 ];
 
-const getSearchEndpoint = hasReporting => {
+export const getSearchEndpoint = hasReporting => {
   return hasReporting ? `${reportingApiUrl}/devices/search` : `${inventoryApiUrlV2}/filters/search`;
 };
 
@@ -272,11 +273,12 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
   devices.reduce(
     (accu, device) => {
       const stateDevice = state.devices.byId[device.id] || {};
-      const { attributes: storedAttributes = {}, identity_data: storedIdentity = {}, tags: storedTags = {} } = stateDevice;
-      const { identity, inventory, system = {}, tags } = mapDeviceAttributes(device.attributes);
+      const { attributes: storedAttributes = {}, identity_data: storedIdentity = {}, monitor: storedMonitor = {}, tags: storedTags = {} } = stateDevice;
+      const { identity, inventory, monitor, system = {}, tags } = mapDeviceAttributes(device.attributes);
       const { created_ts = device.created_ts || stateDevice.created_ts, updated_ts = device.updated_ts || stateDevice.updated_ts } = system;
       device.attributes = { ...storedAttributes, ...inventory };
       device.tags = { ...storedTags, ...tags };
+      device.monitor = { ...storedMonitor, ...monitor };
       device.identity_data = { ...storedIdentity, ...identity };
       device.status = status ? status : device.status || identity.status;
       device.created_ts = created_ts;
@@ -321,15 +323,16 @@ export const getAllGroupDevices = (group, shouldIncludeAllStates) => (dispatch, 
     return Promise.resolve();
   }
   const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
-  let filters = [{ key: 'group', value: group, operator: '$eq', scope: 'system' }];
-  if (!shouldIncludeAllStates) {
-    filters.push({ key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' });
-  }
+  const { filterTerms } = convertDeviceListStateToFilters({
+    filters: [],
+    group,
+    status: shouldIncludeAllStates ? undefined : DeviceConstants.DEVICE_STATES.accepted
+  });
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
     GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
       page,
       per_page: perPage,
-      filters: mapFiltersToTerms(filters),
+      filters: filterTerms,
       attributes
     }).then(res => {
       const state = getState();
@@ -362,10 +365,10 @@ export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
   if (!!group && (!getState().devices.groups.byId[group] || !getState().devices.groups.byId[group].filters.length)) {
     return Promise.resolve();
   }
-  const filters = mapFiltersToTerms([
-    ...getState().devices.groups.byId[group].filters,
-    { key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' }
-  ]);
+  const { filterTerms: filters } = convertDeviceListStateToFilters({
+    filters: getState().devices.groups.byId[group].filters,
+    status: DeviceConstants.DEVICE_STATES.accepted
+  });
   const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
     GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), { page, per_page: perPage, filters, attributes }).then(res => {
@@ -375,7 +378,7 @@ export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
         type: DeviceConstants.RECEIVE_DEVICES,
         devicesById: deviceAccu.devicesById
       });
-      const total = Number(res.headers['x-total-count']);
+      const total = Number(res.headers[headerNames.total]);
       if (total > deviceAccu.ids.length) {
         return getAllDevices(perPage, page + 1, deviceAccu.ids);
       }
@@ -493,19 +496,45 @@ export const setDeviceListState = selectionState => (dispatch, getState) =>
     })
   );
 
-// get devices from inventory
-export const getDevicesByStatus = (status, options = {}) => (dispatch, getState) => {
-  const { page = defaultPage, perPage = defaultPerPage, shouldSelectDevices = false, group, sortOptions = [], trackSelectionState = false } = options;
-  let applicableFilters = getState().devices.filters || [];
+const convertIssueOptionsToFilters = issuesSelection =>
+  issuesSelection.map(item => {
+    if (typeof DEVICE_ISSUE_OPTIONS[item].filterRule.value === 'function') {
+      return { ...DEVICE_ISSUE_OPTIONS[item].filterRule, value: DEVICE_ISSUE_OPTIONS[item].filterRule.value() };
+    }
+    return DEVICE_ISSUE_OPTIONS[item].filterRule;
+  });
+
+export const convertDeviceListStateToFilters = ({ filters = [], group, selectedIssues = [], status }) => {
+  let applicableFilters = [...filters];
   if (typeof group === 'string' && !applicableFilters.length) {
     applicableFilters = [{ key: 'group', value: group, operator: '$eq', scope: 'system' }];
   }
-  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
+  const nonMonitorFilters = applicableFilters.filter(
+    filter => !Object.values(DEVICE_ISSUE_OPTIONS).some(({ filterRule }) => filterRule.scope === filter.scope && filterRule.key === filter.key)
+  );
+  const deviceIssueFilters = convertIssueOptionsToFilters(selectedIssues);
+  applicableFilters = [...nonMonitorFilters, ...deviceIssueFilters];
   const effectiveFilters = status ? [...applicableFilters, { key: 'status', value: status, operator: '$eq', scope: 'identity' }] : applicableFilters;
+  return { applicableFilters: nonMonitorFilters, filterTerms: mapFiltersToTerms(effectiveFilters) };
+};
+
+// get devices from inventory
+export const getDevicesByStatus = (status, options = {}) => (dispatch, getState) => {
+  const {
+    group,
+    selectedIssues = [],
+    page = defaultPage,
+    perPage = defaultPerPage,
+    shouldSelectDevices = false,
+    sortOptions = [],
+    trackSelectionState = false
+  } = options;
+  const { applicableFilters, filterTerms } = convertDeviceListStateToFilters({ filters: getState().devices.filters, group, selectedIssues, status });
+  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
   return GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
     page,
     per_page: perPage,
-    filters: mapFiltersToTerms(effectiveFilters),
+    filters: filterTerms,
     sort: sortOptions,
     attributes
   })

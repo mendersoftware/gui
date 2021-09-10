@@ -212,11 +212,18 @@ export const defaultState = {
               name: 'sshd',
               type: 'systemd',
               status: 'not-running',
-              details: 'Jul 22 10:40:56 raspberrypi sshd[32031]: pam_unix(sshd:session): session closed for user root'
+              details: { description: 'Jul 22 10:40:56 raspberrypi sshd[32031]: pam_unix(sshd:session): session closed for user root' }
             },
             timestamp: '2021-07-23T12:22:36Z'
           }
         ]
+      }
+    },
+    issueCounts: {
+      byType: {
+        [DeviceConstants.DEVICE_ISSUE_OPTIONS.authRequests.key]: { filtered: 0, total: 0 },
+        [DeviceConstants.DEVICE_ISSUE_OPTIONS.monitoring.key]: { filtered: 3, total: 0 },
+        [DeviceConstants.DEVICE_ISSUE_OPTIONS.offline.key]: { filtered: 0, total: 0 }
       }
     },
     settings: {

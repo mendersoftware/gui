@@ -2,9 +2,11 @@ import React from 'react';
 import pluralize from 'pluralize';
 
 import { Box, Chip, Tooltip } from '@material-ui/core';
-import { Error as ErrorIcon } from '@material-ui/icons';
+import { Error as ErrorIcon, ReportProblemOutlined } from '@material-ui/icons';
+import { withStyles } from '@material-ui/styles';
 
 import { DEVICE_STATES } from '../../constants/deviceConstants';
+import theme from '../../themes/mender-theme';
 
 const statusTypes = {
   default: { severity: 'none', notification: {} },
@@ -13,6 +15,12 @@ const statusTypes = {
     notification: {
       [DEVICE_STATES.accepted]: `This device has a new auth request. This can happen if the device's public key changes. Click on the row to see more details`,
       [DEVICE_STATES.pending]: `This device has a new auth request. Inspect its identity details, then check it to accept it.`
+    }
+  },
+  monitor: {
+    severity: 'warning',
+    notification: {
+      default: `This device has reported an issue. Click on the row to see more details`
     }
   },
   offline: {
@@ -28,7 +36,15 @@ const NumberIcon = props => (
   </Box>
 );
 
-const DeviceStatus = ({ device: { auth_sets = [], status: deviceStatus } }) => {
+const WarningIcon = withStyles({
+  root: {
+    width: 14,
+    height: 14,
+    color: theme.palette.grey[600]
+  }
+})(ReportProblemOutlined);
+
+const DeviceStatus = ({ device: { auth_sets = [], monitor = {}, status: deviceStatus } }) => {
   let notification = statusTypes.default.notification[deviceStatus] ?? '';
   let label;
   let icon = <ErrorIcon />;
@@ -37,12 +53,15 @@ const DeviceStatus = ({ device: { auth_sets = [], status: deviceStatus } }) => {
   if (pendingAuthSetsCount) {
     icon = <NumberIcon value={pendingAuthSetsCount} />;
     notification = statusTypes.authRequests.notification[deviceStatus] ?? statusTypes.authRequests.notification[DEVICE_STATES.accepted];
-    label = <div className="uppercased">new {pluralize('request', pendingAuthSetsCount)}</div>;
+    label = `new ${pluralize('request', pendingAuthSetsCount)}`;
+  } else if (Object.keys(monitor).length) {
+    icon = <WarningIcon style={{ marginLeft: 5 }} />;
+    notification = statusTypes.monitor.notification.default;
+    label = 'monitoring';
   }
-
   return label ? (
     <Tooltip title={notification} placement="bottom">
-      <Chip variant="outlined" size="small" icon={icon} label={label} className="deviceStatus" />
+      <Chip variant="outlined" size="small" icon={icon} label={<div className="uppercased">{label}</div>} className="deviceStatus" />
     </Tooltip>
   ) : (
     <div>{deviceStatus}</div>

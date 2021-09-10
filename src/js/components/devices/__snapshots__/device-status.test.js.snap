@@ -18,8 +18,7 @@ exports[`DeviceStatus Component renders correctly 1`] = `
     <div
       class="uppercased"
     >
-      new 
-      request
+      new request
     </div>
   </span>
 </div>

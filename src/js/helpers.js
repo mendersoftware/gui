@@ -356,7 +356,7 @@ export const mapDeviceAttributes = (attributes = []) =>
       }
       return accu;
     },
-    { inventory: { device_type: [], artifact_name: '' }, identity: {}, system: {}, tags: {} }
+    { inventory: { device_type: [], artifact_name: '' }, identity: {}, monitor: {}, system: {}, tags: {} }
   );
 
 export const getFormattedSize = bytes => {
@@ -509,13 +509,18 @@ ${enterpriseSettings}`;
     connectionInstructions = `${demoSettings}`;
   }
   let installScriptArgs = `--demo`;
+  if (isPreRelease) {
+    installScriptArgs = `${installScriptArgs} -c experimental`;
+  }
   if (isHosted) {
     const jwtToken = getToken();
     installScriptArgs = `${installScriptArgs} --commercial --jwt-token "${jwtToken}"`;
   }
-  const debInstallationCode = `wget -q -O- https://get.mender.io/${
-    isPreRelease && window.location.hostname.includes('staging') ? 'staging' : ''
-  } | sudo bash -s -- ${installScriptArgs}`;
+  let scriptUrl = `https://get.mender.io`;
+  if (isPreRelease) {
+    scriptUrl = `${scriptUrl}/staging`;
+  }
+  const debInstallationCode = `wget -q -O- ${scriptUrl} | sudo bash -s -- ${installScriptArgs}`;
   return `${debInstallationCode} && \\
 sudo bash -c 'DEVICE_TYPE="${deviceType}" && \\${
     tenantToken
