@@ -490,24 +490,6 @@ export const standardizePhases = phases =>
   });
 
 export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, tenantToken, deviceType = 'generic-armv6', isPreRelease) => {
-  let connectionInstructions = ``;
-  let demoSettings = `  --quiet --demo ${ipAddress ? `--server-ip ${ipAddress}` : ''}`;
-  const setupConfirmation = `echo "Running mender setup for ${window.location.hostname}" && \\`;
-  if (isEnterprise || isHosted) {
-    const enterpriseSettings = `  --tenant-token $TENANT_TOKEN`;
-    if (isHosted) {
-      connectionInstructions = `  --quiet --hosted-mender \\
-${enterpriseSettings} \\
-  --retry-poll 30 \\
-  --update-poll 5 \\
-  --inventory-poll 5`;
-    } else {
-      connectionInstructions = `${demoSettings} \\
-${enterpriseSettings}`;
-    }
-  } else {
-    connectionInstructions = `${demoSettings}`;
-  }
   let installScriptArgs = `--demo`;
   if (isPreRelease) {
     installScriptArgs = `${installScriptArgs} -c experimental`;
@@ -516,33 +498,19 @@ ${enterpriseSettings}`;
     const jwtToken = getToken();
     installScriptArgs = `${installScriptArgs} --commercial --jwt-token "${jwtToken}"`;
   }
+  let menderSetupArgs = `--quiet --device-type "${deviceType}"`;
+  if (isHosted) {
+    menderSetupArgs = `${menderSetupArgs} --demo --hosted-mender --tenant-token "${tenantToken}"`;
+  } else if (isEnterprise) {
+    menderSetupArgs = `${menderSetupArgs} --retry-poll 30 --update-poll 5 --inventory-poll 5 --server-url https://${window.location.hostname} --server-cert="" --tenant-token "${tenantToken}"`;
+  } else {
+    menderSetupArgs = `${menderSetupArgs} --demo${ipAddress ? ` --server-ip ${ipAddress}` : ''}`;
+  }
   let scriptUrl = `https://get.mender.io`;
   if (isPreRelease) {
     scriptUrl = `${scriptUrl}/staging`;
   }
-  const debInstallationCode = `wget -q -O- ${scriptUrl} | sudo bash -s -- ${installScriptArgs}`;
-  return `${debInstallationCode} && \\
-sudo bash -c 'DEVICE_TYPE="${deviceType}" && \\${
-    tenantToken
-      ? `
-TENANT_TOKEN="${tenantToken}" && \\`
-      : ''
-  }
-${setupConfirmation}
-mender setup \\
-  --device-type $DEVICE_TYPE \\
-${connectionInstructions} && \\
-systemctl restart mender-client && \\
-(cat > /etc/mender/mender-connect.conf << EOF
-{
-  "ServerCertificate": "/usr/share/doc/mender-client/examples/demo.crt",
-  "User": "pi",
-  "ShellCommand": "/bin/bash"
-}
-EOF
-) && systemctl restart mender-connect && \\
-echo "Done!"'
-`;
+  return `wget -q -O- ${scriptUrl} | sudo bash -s -- ${installScriptArgs} -- ${menderSetupArgs}`;
 };
 
 export const getSnackbarMessage = (skipped, done) => {

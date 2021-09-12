@@ -33,6 +33,7 @@ import {
   versionCompare
 } from './helpers';
 import { defaultState, token, undefineds, userId } from '../../tests/mockData';
+import Cookies from 'universal-cookie';
 
 const deploymentCreationTime = defaultState.deployments.byId.d1.created;
 
@@ -102,38 +103,20 @@ describe('versionCompare function', () => {
 describe('getDebConfigurationCode function', () => {
   let code;
   beforeEach(() => {
-    code = getDebConfigurationCode('192.168.7.41', false, true, 'token', 'raspberrypi3');
+    code = getDebConfigurationCode('192.168.7.41', false, false, null, 'raspberrypi3');
   });
   it('should not contain any template string leftovers', async () => {
     expect(code).not.toMatch(/\$\{([^}]+)\}/);
   });
   it('should return a sane result', async () => {
-    expect(code).toMatch(
-      `wget -q -O- https://get.mender.io | sudo bash -s -- --demo && \\
-sudo bash -c 'DEVICE_TYPE="raspberrypi3" && \\
-TENANT_TOKEN="token" && \\
-echo "Running mender setup for localhost" && \\
-mender setup \\
-  --device-type $DEVICE_TYPE \\
-  --quiet --demo --server-ip 192.168.7.41 \\
-  --tenant-token $TENANT_TOKEN && \\
-systemctl restart mender-client && \\
-(cat > /etc/mender/mender-connect.conf << EOF
-{
-  "ServerCertificate": "/usr/share/doc/mender-client/examples/demo.crt",
-  "User": "pi",
-  "ShellCommand": "/bin/bash"
-}
-EOF
-) && systemctl restart mender-connect && \\
-echo "Done!"'
-`
-    );
+    expect(code).toMatch(`wget -q -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type "raspberrypi3" --demo --server-ip 192.168.7.41`);
   });
   it('should not contain tenant information for OS calls', async () => {
     code = getDebConfigurationCode('192.168.7.41', false, false, null, 'raspberrypi3');
     expect(code).not.toMatch(/tenant/);
     expect(code).not.toMatch(/token/);
+    expect(code).not.toMatch(/TENANT/);
+    expect(code).not.toMatch(/TOKEN/);
   });
   const oldHostname = window.location.hostname;
   const postTestCleanUp = () => {
@@ -148,34 +131,17 @@ echo "Done!"'
         ...window.location,
         hostname: 'hosted.mender.io'
       };
+      jest.clearAllMocks();
+      const cookies = new Cookies();
+      cookies.get.mockReturnValue('omnomnom');
+      cookies.set.mockReturnValueOnce();
     });
     afterEach(postTestCleanUp);
 
     it('should contain sane information for hosted calls', async () => {
       code = getDebConfigurationCode(undefined, true, false, 'token', 'raspberrypi3');
       expect(code).toMatch(
-        `wget -q -O- https://get.mender.io | sudo bash -s -- --demo --commercial --jwt-token "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjZTNkMGY4Yy1hZWRlLTQwMzAtYjM5MS03ZDUwMjBlYjg3M2UiLCJzdWIiOiJhMzBhNzgwYi1iODQzLTUzNDQtODBlMy0wZmQ5NWE0ZjZmYzMiLCJleHAiOjE2MDY4MTUzNjksImlhdCI6MTYwNjIxMDU2OSwibWVuZGVyLnRlbmFudCI6IjVmODVjMTdiY2U2MmI3ZmE3ZjVmNzA0MCIsIm1lbmRlci51c2VyIjp0cnVlLCJpc3MiOiJNZW5kZXIgVXNlcnMiLCJzY3AiOiJtZW5kZXIuKiIsIm1lbmRlci5wbGFuIjoicHJvZmVzc2lvbmFsIiwibmJmIjoxNjA2MjEwNTY5fQ.qVgYdCzLTf8OdK9uUctqqaY_HWkIiwpekuGvuGQAXCEgOv4bRNDlZRN_ZRSbxQoARG3pquhScbQrjBV9tcF4irTUPlTn3yrsXNO17DpcbTVeKRkb88RDtIKiRw3orVZ_GlIb-ckTQ5dS-Nqlyyf3Fmrhca-gwt6m_xv2UrmJK6eYYTMfggdRRWb-4u7mEkBI_pHPMTQrT8kJ2BeX-vHgazH9AoH0k85LHtFZQXD7pXHlDZRnLxJXukncwMGDmF17374gavYAIyDIzcC8sEBMDnVXgpikeA1sauzirqix6mAVs6XmxdQO7aF0wfXO1_PTYUA3Nk1oQfMYNlEI3U9uLRJRZIq2L8fmrrBryhstKd4y0KlBbGAQrx8NtRkgajjd1ljMfPBUEZrb7uSerVjneiO-aIBO76CuH0zdklphIjpGJeogkBhe8pAYNggp1XsZHgpZfl7IE5faKaDkMGnutaea--Czor6bhqUNCuY4tR0cpQJbNwy6LS9o1CFy4Log" && \\
-sudo bash -c 'DEVICE_TYPE="raspberrypi3" && \\
-TENANT_TOKEN="token" && \\
-echo "Running mender setup for hosted.mender.io" && \\
-mender setup \\
-  --device-type $DEVICE_TYPE \\
-  --quiet --hosted-mender \\
-  --tenant-token $TENANT_TOKEN \\
-  --retry-poll 30 \\
-  --update-poll 5 \\
-  --inventory-poll 5 && \\
-systemctl restart mender-client && \\
-(cat > /etc/mender/mender-connect.conf << EOF
-{
-  "ServerCertificate": "/usr/share/doc/mender-client/examples/demo.crt",
-  "User": "pi",
-  "ShellCommand": "/bin/bash"
-}
-EOF
-) && systemctl restart mender-connect && \\
-echo "Done!"'
-`
+        `wget -q -O- https://get.mender.io | sudo bash -s -- --demo --commercial --jwt-token "omnomnom" -- --quiet --device-type "raspberrypi3" --demo --hosted-mender --tenant-token "token"`
       );
     });
   });
@@ -185,61 +151,37 @@ echo "Done!"'
         ...window.location,
         hostname: 'staging.hosted.mender.io'
       };
+      jest.clearAllMocks();
+      const cookies = new Cookies();
+      cookies.get.mockReturnValue('omnomnom');
+      cookies.set.mockReturnValueOnce();
     });
     afterEach(postTestCleanUp);
 
-    it('should contain sane information for staging calls', async () => {
-      code = getDebConfigurationCode(undefined, true, false, 'token', 'raspberrypi3');
-      expect(code).toMatch(
-        `wget -q -O- https://get.mender.io | sudo bash -s -- --demo --commercial --jwt-token "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjZTNkMGY4Yy1hZWRlLTQwMzAtYjM5MS03ZDUwMjBlYjg3M2UiLCJzdWIiOiJhMzBhNzgwYi1iODQzLTUzNDQtODBlMy0wZmQ5NWE0ZjZmYzMiLCJleHAiOjE2MDY4MTUzNjksImlhdCI6MTYwNjIxMDU2OSwibWVuZGVyLnRlbmFudCI6IjVmODVjMTdiY2U2MmI3ZmE3ZjVmNzA0MCIsIm1lbmRlci51c2VyIjp0cnVlLCJpc3MiOiJNZW5kZXIgVXNlcnMiLCJzY3AiOiJtZW5kZXIuKiIsIm1lbmRlci5wbGFuIjoicHJvZmVzc2lvbmFsIiwibmJmIjoxNjA2MjEwNTY5fQ.qVgYdCzLTf8OdK9uUctqqaY_HWkIiwpekuGvuGQAXCEgOv4bRNDlZRN_ZRSbxQoARG3pquhScbQrjBV9tcF4irTUPlTn3yrsXNO17DpcbTVeKRkb88RDtIKiRw3orVZ_GlIb-ckTQ5dS-Nqlyyf3Fmrhca-gwt6m_xv2UrmJK6eYYTMfggdRRWb-4u7mEkBI_pHPMTQrT8kJ2BeX-vHgazH9AoH0k85LHtFZQXD7pXHlDZRnLxJXukncwMGDmF17374gavYAIyDIzcC8sEBMDnVXgpikeA1sauzirqix6mAVs6XmxdQO7aF0wfXO1_PTYUA3Nk1oQfMYNlEI3U9uLRJRZIq2L8fmrrBryhstKd4y0KlBbGAQrx8NtRkgajjd1ljMfPBUEZrb7uSerVjneiO-aIBO76CuH0zdklphIjpGJeogkBhe8pAYNggp1XsZHgpZfl7IE5faKaDkMGnutaea--Czor6bhqUNCuY4tR0cpQJbNwy6LS9o1CFy4Log" && \\
-sudo bash -c 'DEVICE_TYPE="raspberrypi3" && \\
-TENANT_TOKEN="token" && \\
-echo "Running mender setup for staging.hosted.mender.io" && \\
-mender setup \\
-  --device-type $DEVICE_TYPE \\
-  --quiet --hosted-mender \\
-  --tenant-token $TENANT_TOKEN \\
-  --retry-poll 30 \\
-  --update-poll 5 \\
-  --inventory-poll 5 && \\
-systemctl restart mender-client && \\
-(cat > /etc/mender/mender-connect.conf << EOF
-{
-  "ServerCertificate": "/usr/share/doc/mender-client/examples/demo.crt",
-  "User": "pi",
-  "ShellCommand": "/bin/bash"
-}
-EOF
-) && systemctl restart mender-connect && \\
-echo "Done!"'
-`
-      );
-    });
     it('should contain sane information for staging preview calls', async () => {
       code = getDebConfigurationCode(undefined, true, false, 'token', 'raspberrypi3', true);
       expect(code).toMatch(
-        `wget -q -O- https://get.mender.io/staging | sudo bash -s -- --demo -c experimental --commercial --jwt-token "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjZTNkMGY4Yy1hZWRlLTQwMzAtYjM5MS03ZDUwMjBlYjg3M2UiLCJzdWIiOiJhMzBhNzgwYi1iODQzLTUzNDQtODBlMy0wZmQ5NWE0ZjZmYzMiLCJleHAiOjE2MDY4MTUzNjksImlhdCI6MTYwNjIxMDU2OSwibWVuZGVyLnRlbmFudCI6IjVmODVjMTdiY2U2MmI3ZmE3ZjVmNzA0MCIsIm1lbmRlci51c2VyIjp0cnVlLCJpc3MiOiJNZW5kZXIgVXNlcnMiLCJzY3AiOiJtZW5kZXIuKiIsIm1lbmRlci5wbGFuIjoicHJvZmVzc2lvbmFsIiwibmJmIjoxNjA2MjEwNTY5fQ.qVgYdCzLTf8OdK9uUctqqaY_HWkIiwpekuGvuGQAXCEgOv4bRNDlZRN_ZRSbxQoARG3pquhScbQrjBV9tcF4irTUPlTn3yrsXNO17DpcbTVeKRkb88RDtIKiRw3orVZ_GlIb-ckTQ5dS-Nqlyyf3Fmrhca-gwt6m_xv2UrmJK6eYYTMfggdRRWb-4u7mEkBI_pHPMTQrT8kJ2BeX-vHgazH9AoH0k85LHtFZQXD7pXHlDZRnLxJXukncwMGDmF17374gavYAIyDIzcC8sEBMDnVXgpikeA1sauzirqix6mAVs6XmxdQO7aF0wfXO1_PTYUA3Nk1oQfMYNlEI3U9uLRJRZIq2L8fmrrBryhstKd4y0KlBbGAQrx8NtRkgajjd1ljMfPBUEZrb7uSerVjneiO-aIBO76CuH0zdklphIjpGJeogkBhe8pAYNggp1XsZHgpZfl7IE5faKaDkMGnutaea--Czor6bhqUNCuY4tR0cpQJbNwy6LS9o1CFy4Log" && \\
-sudo bash -c 'DEVICE_TYPE="raspberrypi3" && \\
-TENANT_TOKEN="token" && \\
-echo "Running mender setup for staging.hosted.mender.io" && \\
-mender setup \\
-  --device-type $DEVICE_TYPE \\
-  --quiet --hosted-mender \\
-  --tenant-token $TENANT_TOKEN \\
-  --retry-poll 30 \\
-  --update-poll 5 \\
-  --inventory-poll 5 && \\
-systemctl restart mender-client && \\
-(cat > /etc/mender/mender-connect.conf << EOF
-{
-  "ServerCertificate": "/usr/share/doc/mender-client/examples/demo.crt",
-  "User": "pi",
-  "ShellCommand": "/bin/bash"
-}
-EOF
-) && systemctl restart mender-connect && \\
-echo "Done!"'
-`
+        `wget -q -O- https://get.mender.io/staging | sudo bash -s -- --demo -c experimental --commercial --jwt-token "omnomnom" -- --quiet --device-type "raspberrypi3" --demo --hosted-mender --tenant-token "token"`
+      );
+    });
+  });
+  describe('configuring devices for fancy.enterprise.on.prem', () => {
+    beforeEach(() => {
+      window.location = {
+        ...window.location,
+        hostname: 'fancy.enterprise.on.prem'
+      };
+      jest.clearAllMocks();
+      const cookies = new Cookies();
+      cookies.get.mockReturnValue('omnomnom');
+      cookies.set.mockReturnValueOnce();
+    });
+    afterEach(postTestCleanUp);
+
+    it('should contain sane information for enterprise on-prem calls', async () => {
+      code = getDebConfigurationCode(undefined, false, true, 'token', 'raspberrypi3');
+      expect(code).toMatch(
+        `wget -q -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type "raspberrypi3" --retry-poll 30 --update-poll 5 --inventory-poll 5 --server-url https://fancy.enterprise.on.prem --server-cert="" --tenant-token "token"`
       );
     });
   });
