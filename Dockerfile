@@ -1,11 +1,11 @@
-FROM node:16.8.0-alpine AS build
+FROM node:16.9.0-alpine AS build
 WORKDIR /usr/src/app
 COPY package-lock.json package.json ./
 RUN npm ci
 COPY . ./
 RUN npm run build
 
-FROM nginx:1.21.1-alpine
+FROM nginx:1.21.3-alpine
 EXPOSE 8080
 RUN mkdir -p /var/www/mender-gui/dist
 WORKDIR /var/www/mender-gui/dist
