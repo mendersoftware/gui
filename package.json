@@ -60,7 +60,7 @@
     "@babel/preset-react": "^7.14.5",
     "@testing-library/dom": "^8.2.0",
     "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^12.0.0",
+    "@testing-library/react": "^12.1.0",
     "@testing-library/user-event": "^13.2.1",
     "assert": "^2.0.0",
     "autoprefixer": "^10.3.4",
