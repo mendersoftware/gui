@@ -6,8 +6,11 @@ window.mender_environment = {
   features: {
     hasMultitenancy: true
   },
+  integrationVersion: 'saas-123.34',
+  menderVersion: 'next',
+  metaMenderVersion: 'saas-123.34',
   services: {
-    deploymentsVersion: null,
+    deploymentsVersion: '1.2.3',
     deviceauthVersion: null,
     inventoryVersion: null
   }
