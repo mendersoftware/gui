@@ -29,6 +29,8 @@ const menderEnvironment = {
   ...mender_environment
 };
 
+const getComparisonCompatibleVersion = version => (isNaN(version.charAt(0)) && version !== 'next' ? 'master' : version);
+
 export const initialState = {
   cancelSource: undefined,
   demoArtifactLink: 'https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender',
@@ -46,7 +48,7 @@ export const initialState = {
     hasDeviceConnect: stringToBoolean(menderEnvironment.features.hasDeviceConnect),
     hasMonitor: stringToBoolean(menderEnvironment.features.hasMonitor),
     hasReporting: stringToBoolean(menderEnvironment.features.hasReporting),
-    isHosted: stringToBoolean(menderEnvironment.features.isHosted) || window.location.hostname === 'hosted.mender.io',
+    isHosted: stringToBoolean(menderEnvironment.features.isHosted) || window.location.hostname.includes('hosted.mender.io'),
     isEnterprise: stringToBoolean(menderEnvironment.features.isEnterprise),
     isDemoMode: stringToBoolean(menderEnvironment.isDemoMode)
   },
@@ -59,8 +61,8 @@ export const initialState = {
   uploading: false,
   uploadProgress: 0,
   versionInformation: {
-    Integration: isNaN(menderEnvironment.integrationVersion.charAt(0)) ? 'master' : menderEnvironment.integrationVersion,
-    'Mender-Client': isNaN(menderEnvironment.menderVersion.charAt(0)) ? 'master' : menderEnvironment.menderVersion,
+    Integration: getComparisonCompatibleVersion(menderEnvironment.integrationVersion),
+    'Mender-Client': getComparisonCompatibleVersion(menderEnvironment.menderVersion),
     'Mender-Artifact': menderEnvironment.menderArtifactVersion,
     'Meta-Mender': menderEnvironment.metaMenderVersion,
     Deployments: menderEnvironment.services.deploymentsVersion,
