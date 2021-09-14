@@ -81,6 +81,13 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
       class="progress-chart detailed"
     >
       <div
+        class="progress-step progress-step-total"
+      >
+        <div
+          class="progress-bar"
+        />
+      </div>
+      <div
         class="progress-step"
         style="flex-grow: 1;"
       >
@@ -90,8 +97,7 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
           Phase 1
         </div>
         <div
-          class="flexbox"
-          style="width: 100%;"
+          class="flexbox progress-bar"
         >
           <div
             class="progress-bar green"
@@ -102,14 +108,6 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
             style="width: 0%;"
           />
         </div>
-      </div>
-      <div
-        class="progress-step progress-step-total"
-      >
-        <div
-          class="progress-bar"
-          style="width: 100%;"
-        />
       </div>
     </div>
   </div>
