@@ -25,7 +25,6 @@ import {
   mapDeviceAttributes,
   preformatWithRequestID,
   standardizePhases,
-  statusToPercentage,
   stringToBoolean,
   tryMapDeployments,
   unionizeStrings,
@@ -400,49 +399,6 @@ describe('preformatWithRequestID function', () => {
     const expectedText = 'short text';
     expect(preformatWithRequestID({ data: { request_id: 'someUuidLikeLongerText' } }, expectedText)).toEqual('short text [Request ID: someUuid]');
     expect(preformatWithRequestID(undefined, expectedText)).toEqual(expectedText);
-  });
-});
-describe('statusToPercentage function', () => {
-  it('should not crash for improper values', async () => {
-    ['0', 0, null, undefined, this].map(state =>
-      [0, 42, 100, undefined, null].map(returnValue => {
-        const result = statusToPercentage(state, returnValue);
-        return expect(typeof result).toBe('number');
-      })
-    );
-  });
-  it('always results in 100% for finished states', async () => {
-    ['aborted', 'already-installed', 'failure', 'success'].map(state => {
-      return [0, 42, 100, undefined, null].map(returnValue => expect(statusToPercentage(state, returnValue)).toEqual(100));
-    });
-  });
-  it('always results in 0% for not started states', async () => {
-    ['pending', 'noartifact'].map(state => {
-      return [0, 42, 100, undefined, null].map(returnValue => expect(statusToPercentage(state, returnValue)).toEqual(0));
-    });
-  });
-  it('always results in 70% when installing', async () => {
-    ['installing'].map(state => {
-      return [0, 42, 100, undefined, null].map(returnValue => expect(statusToPercentage(state, returnValue)).toEqual(70));
-    });
-  });
-  it('returns slightly increased percentage while downloading', async () => {
-    const state = 'downloading';
-    expect(statusToPercentage(state, 0)).toEqual(0);
-    expect(statusToPercentage(state, 1)).toEqual(1);
-    expect(statusToPercentage(state, 42)).toEqual(42);
-    expect(statusToPercentage(state, 100)).toEqual(69);
-    expect(statusToPercentage(state, undefined)).toEqual(69);
-    expect(statusToPercentage(state, null)).toEqual(0);
-  });
-  it('returns slightly increased percentage while rebooting', async () => {
-    const state = 'rebooting';
-    expect(statusToPercentage(state, 0)).toEqual(75);
-    expect(statusToPercentage(state, 1)).toEqual(76);
-    expect(statusToPercentage(state, 42)).toEqual(99);
-    expect(statusToPercentage(state, 100)).toEqual(99);
-    expect(statusToPercentage(state, undefined)).toEqual(99);
-    expect(statusToPercentage(state, null)).toEqual(75);
   });
 });
 
