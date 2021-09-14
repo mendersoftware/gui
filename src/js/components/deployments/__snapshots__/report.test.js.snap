@@ -784,6 +784,13 @@ Devices that are in the middle of the deployment at the time of abort will finis
           class=\\"progress-chart detailed\\"
         >
           <div
+            class=\\"progress-step progress-step-total\\"
+          >
+            <div
+              class=\\"progress-bar\\"
+            />
+          </div>
+          <div
             class=\\"progress-step\\"
             style=\\"flex-grow: 1;\\"
           >
@@ -793,8 +800,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
               Phase 1
             </div>
             <div
-              class=\\"flexbox\\"
-              style=\\"width: 100%;\\"
+              class=\\"flexbox progress-bar\\"
             >
               <div
                 class=\\"progress-bar green\\"
@@ -805,14 +811,6 @@ Devices that are in the middle of the deployment at the time of abort will finis
                 style=\\"width: 0%;\\"
               />
             </div>
-          </div>
-          <div
-            class=\\"progress-step progress-step-total\\"
-          >
-            <div
-              class=\\"progress-bar\\"
-              style=\\"width: 100%;\\"
-            />
           </div>
         </div>
       </div>
