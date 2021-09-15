@@ -24,6 +24,7 @@ let artifactTimer;
 export const Artifacts = props => {
   const {
     getReleases,
+    history,
     match,
     onboardingState,
     releases,
@@ -46,19 +47,11 @@ export const Artifacts = props => {
       return;
     }
     if (selectedRelease) {
-      window.location.replace(`#/releases/${selectedRelease.Name}`);
+      history.replace(`/releases/${selectedRelease.Name}`);
       return;
     }
     selectRelease(releases[0]);
   }, [releases.length, selectedRelease]);
-
-  useEffect(() => {
-    if (!match.params.artifactVersion) {
-      return;
-    }
-    // selected artifacts
-    selectRelease(match.params.artifactVersion);
-  }, [match.params.artifactVersion]);
 
   useEffect(() => {
     const { artifactVersion } = match.params;
@@ -68,6 +61,11 @@ export const Artifacts = props => {
       setDoneLoading(true);
     }
     artifactTimer = setInterval(onGetReleases, refreshArtifactsLength);
+    if (match.params.artifactVersion) {
+      selectRelease(match.params.artifactVersion);
+    } else if (selectedRelease) {
+      history.replace(`/releases/${selectedRelease.Name}`);
+    }
     return () => {
       clearInterval(artifactTimer);
     };
