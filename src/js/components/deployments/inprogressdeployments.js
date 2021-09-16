@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { Refresh as RefreshIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getDeploymentsByStatus, selectDeployment } from '../../actions/deploymentActions';
+import { getDeploymentsByStatus, selectDeployment, setDeploymentsState } from '../../actions/deploymentActions';
 import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { tryMapDeployments } from '../../helpers';
@@ -15,184 +15,169 @@ import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils
 import Loader from '../common/loader';
 import DeploymentsList from './deploymentslist';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
+import useWindowSize from '../../utils/resizehook';
 
-const DEFAULT_PENDING_INPROGRESS_COUNT = 10;
 export const minimalRefreshDeploymentsLength = 2000;
 
-const deploymentStatusMap = {
-  finished: 'past',
-  inprogress: 'progress',
-  pending: 'pending'
-};
+let dynamicTimer;
 
-export class Progress extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      currentRefreshDeploymentLength: refreshDeploymentsLength,
-      doneLoading: !!props.progress.length || !!props.pending.length,
-      progressPage: 1,
-      progressPerPage: DEFAULT_PENDING_INPROGRESS_COUNT,
-      pendingPage: 1,
-      pendingPerPage: DEFAULT_PENDING_INPROGRESS_COUNT
+export const Progress = props => {
+  const {
+    abort,
+    createClick,
+    getDeploymentsByStatus,
+    onboardingState,
+    pastDeploymentsCount,
+    pending,
+    pendingState,
+    progress,
+    progressState,
+    setDeploymentsState,
+    setSnackbar
+  } = props;
+  const { page: progressPage, perPage: progressPerPage, total: progressCount } = progressState;
+  const { page: pendingPage, perPage: pendingPerPage, total: pendingCount } = pendingState;
+
+  const [currentRefreshDeploymentLength, setCurrentRefreshDeploymentLength] = useState(refreshDeploymentsLength);
+  const [doneLoading, setDoneLoading] = useState(!!progress.length || !!pending.length);
+  // eslint-disable-next-line no-unused-vars
+  const size = useWindowSize();
+
+  const inprogressRef = useRef();
+
+  useEffect(() => {
+    clearTimeout(dynamicTimer);
+    setupDeploymentsRefresh(minimalRefreshDeploymentsLength);
+    return () => {
+      clearTimeout(dynamicTimer);
+      clearAllRetryTimers(setSnackbar);
     };
-  }
+  }, []);
 
-  handleResize() {
-    setTimeout(() => {
-      this.setState({ height: window.innerHeight, width: window.innerWidth });
-    }, 500);
-  }
+  useEffect(() => {
+    clearTimeout(dynamicTimer);
+    setupDeploymentsRefresh(minimalRefreshDeploymentsLength);
+    return () => {
+      clearTimeout(dynamicTimer);
+    };
+  }, [pendingCount]);
 
-  componentDidMount() {
-    const self = this;
-    clearTimeout(self.dynamicTimer);
-    self.setupDeploymentsRefresh(minimalRefreshDeploymentsLength);
-    window.addEventListener('resize', this.handleResize.bind(this));
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.pendingCount < this.props.pendingCount && Math.abs(this.props.pendingCount - prevProps.pendingCount) === 1) {
-      clearTimeout(this.dynamicTimer);
-      this.setupDeploymentsRefresh(minimalRefreshDeploymentsLength);
-    }
-  }
-
-  componentWillUnmount() {
-    clearTimeout(this.dynamicTimer);
-    clearAllRetryTimers(this.props.setSnackbar);
-    window.removeEventListener('resize', this.handleResize.bind(this));
-  }
-
-  setupDeploymentsRefresh(refreshLength = this.state.currentRefreshDeploymentLength) {
-    const self = this;
+  const setupDeploymentsRefresh = (refreshLength = currentRefreshDeploymentLength) => {
     let tasks = [
-      self.refreshDeployments(self.state.progressPage, self.state.progressPerPage, DEPLOYMENT_STATES.inprogress),
-      self.refreshDeployments(self.state.pendingPage, self.state.pendingPerPage, DEPLOYMENT_STATES.pending)
+      refreshDeployments(progressPage, progressPerPage, DEPLOYMENT_STATES.inprogress),
+      refreshDeployments(pendingPage, pendingPerPage, DEPLOYMENT_STATES.pending)
     ];
-    if (!self.props.onboardingState.complete && !self.props.pastDeploymentsCount) {
-      tasks.push(self.refreshDeployments(1, 1, DEPLOYMENT_STATES.finished));
+    if (!onboardingState.complete && !pastDeploymentsCount) {
+      // retrieve past deployments outside of the regular refresh cycle to not change the selection state for past deployments
+      getDeploymentsByStatus(DEPLOYMENT_STATES.finished, 1, 1, undefined, undefined, undefined, undefined, false);
     }
     return Promise.all(tasks).then(() => {
       const currentRefreshDeploymentLength = Math.min(refreshDeploymentsLength, refreshLength * 2);
-      self.setState({ currentRefreshDeploymentLength });
-      clearTimeout(self.dynamicTimer);
-      self.dynamicTimer = setTimeout(() => self.setupDeploymentsRefresh(), currentRefreshDeploymentLength);
+      setCurrentRefreshDeploymentLength(currentRefreshDeploymentLength);
+      clearTimeout(dynamicTimer);
+      dynamicTimer = setTimeout(setupDeploymentsRefresh, currentRefreshDeploymentLength);
     });
-  }
+  };
 
-  // // deploymentStatus = <inprogress|pending>
-  refreshDeployments(page, perPage, deploymentStatus) {
-    const self = this;
-    const mappedDeploymentStatus = deploymentStatusMap[deploymentStatus];
-    return self.setState({ [`${mappedDeploymentStatus}Page`]: page, [`${mappedDeploymentStatus}PerPage`]: perPage }, () =>
-      Promise.resolve(self.props.getDeploymentsByStatus(deploymentStatus, page, perPage))
-        .then(deploymentsAction => {
-          clearRetryTimer(deploymentStatus, self.props.setSnackbar);
-          if (deploymentsAction && deploymentsAction[0].total && !deploymentsAction[0].deploymentIds.length) {
-            return self.refreshDeployments(...arguments);
-          }
-        })
-        .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, self.props.setSnackbar))
-        .finally(() => self.setState({ doneLoading: true }))
+  // deploymentStatus = <inprogress|pending>
+  const refreshDeployments = (page, perPage, deploymentStatus) => {
+    setDeploymentsState({ [deploymentStatus]: { page, perPage } });
+    return getDeploymentsByStatus(deploymentStatus, page, perPage)
+      .then(deploymentsAction => {
+        clearRetryTimer(deploymentStatus, setSnackbar);
+        const { total, deploymentIds } = deploymentsAction[deploymentsAction.length - 1];
+        if (total && !deploymentIds.length) {
+          return refreshDeployments(page, perPage, deploymentStatus);
+        }
+      })
+      .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, setSnackbar))
+      .finally(() => setDoneLoading(true));
+  };
+
+  const abortDeployment = id =>
+    abort(id).then(() =>
+      Promise.all([
+        refreshDeployments(progressPage, progressPerPage, DEPLOYMENT_STATES.inprogress),
+        refreshDeployments(pendingPage, pendingPerPage, DEPLOYMENT_STATES.pending)
+      ])
     );
+
+  let onboardingComponent = null;
+  if (!onboardingState.complete && inprogressRef.current) {
+    const anchor = { left: inprogressRef.current.offsetWidth - theme.spacing(12), top: inprogressRef.current.offsetTop + inprogressRef.current.offsetHeight };
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_INPROGRESS, onboardingState, { anchor });
   }
 
-  abortDeployment(id) {
-    const self = this;
-    self.props
-      .abort(id)
-      .then(() =>
-        Promise.all([
-          self.refreshDeployments(self.state.progressPage, self.state.progressPerPage, DEPLOYMENT_STATES.inprogress),
-          self.refreshDeployments(self.state.pendingPage, self.state.pendingPerPage, DEPLOYMENT_STATES.pending)
-        ])
-      );
-  }
-
-  render() {
-    const self = this;
-
-    const { createClick, onboardingState, pending, pendingCount, progress, progressCount } = self.props;
-    const { doneLoading, pendingPage, pendingPerPage, progressPage, progressPerPage } = self.state;
-
-    let onboardingComponent = null;
-    if (!self.props.onboardingState.complete && this.inprogressRef) {
-      const anchor = { left: this.inprogressRef.offsetWidth - theme.spacing(12), top: this.inprogressRef.offsetTop + this.inprogressRef.offsetHeight };
-      onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_INPROGRESS, onboardingState, { anchor });
-    }
-
-    return doneLoading ? (
-      <div className="fadeIn">
-        {!!progress.length && (
-          <div className="margin-left">
-            <h4 className="dashboard-header margin-top-large margin-right">
-              <span>In progress now</span>
-            </h4>
-            <div ref={ref => (this.inprogressRef = ref)}>
-              <DeploymentsList
-                {...self.props}
-                abort={id => self.abortDeployment(id)}
-                count={progressCount || progress.length}
-                items={progress}
-                listClass="margin-right-small"
-                page={progressPage}
-                pageSize={progressPerPage}
-                onChangeRowsPerPage={perPage => self.refreshDeployments(1, perPage, DEPLOYMENT_STATES.inprogress)}
-                onChangePage={page => self.refreshDeployments(page, progressPerPage, DEPLOYMENT_STATES.inprogress)}
-                type="progress"
-              />
-            </div>
-          </div>
-        )}
-        {!!onboardingComponent && onboardingComponent}
-        {!!(pendingCount && pending.length) && (
-          <div className="deployments-pending margin-top margin-bottom-large">
-            <h4 className="dashboard-header margin-small margin-top">
-              <span>Pending</span>
-            </h4>
+  return doneLoading ? (
+    <div className="fadeIn">
+      {!!progress.length && (
+        <div className="margin-left">
+          <h4 className="dashboard-header margin-top-large margin-right">
+            <span>In progress now</span>
+          </h4>
+          <div ref={inprogressRef}>
             <DeploymentsList
-              {...self.props}
-              abort={id => self.abortDeployment(id)}
-              componentClass="margin-left-small"
-              count={pendingCount || pending.length}
-              items={pending}
-              page={pendingPage}
-              pageSize={pendingPerPage}
-              onChangeRowsPerPage={perPage => self.refreshDeployments(1, perPage, DEPLOYMENT_STATES.pending)}
-              onChangePage={page => self.refreshDeployments(page, pendingPerPage, DEPLOYMENT_STATES.pending)}
-              type="pending"
+              {...props}
+              abort={abortDeployment}
+              count={progressCount}
+              items={progress}
+              listClass="margin-right-small"
+              page={progressPage}
+              pageSize={progressPerPage}
+              onChangeRowsPerPage={perPage => refreshDeployments(1, perPage, DEPLOYMENT_STATES.inprogress)}
+              onChangePage={page => refreshDeployments(page, progressPerPage, DEPLOYMENT_STATES.inprogress)}
+              type="progress"
             />
           </div>
-        )}
-        {!(progressCount || progress.length || pendingCount || pending.length) && (
-          <div className="dashboard-placeholder">
-            <p>Pending and ongoing deployments will appear here. </p>
-            <p>
-              <a onClick={createClick}>Create a deployment</a> to get started
-            </p>
-            <RefreshIcon style={{ transform: 'rotateY(-180deg)', fill: '#e3e3e3', width: 111, height: 111 }} />
-          </div>
-        )}
-      </div>
-    ) : (
-      <Loader show={doneLoading} />
-    );
-  }
-}
+        </div>
+      )}
+      {!!onboardingComponent && onboardingComponent}
+      {!!pending.length && (
+        <div className="deployments-pending margin-top margin-bottom-large">
+          <h4 className="dashboard-header margin-small margin-top">
+            <span>Pending</span>
+          </h4>
+          <DeploymentsList
+            {...props}
+            abort={abortDeployment}
+            componentClass="margin-left-small"
+            count={pendingCount}
+            items={pending}
+            page={pendingPage}
+            pageSize={pendingPerPage}
+            onChangeRowsPerPage={perPage => refreshDeployments(1, perPage, DEPLOYMENT_STATES.pending)}
+            onChangePage={page => refreshDeployments(page, pendingPerPage, DEPLOYMENT_STATES.pending)}
+            type="pending"
+          />
+        </div>
+      )}
+      {!(progressCount || pendingCount) && (
+        <div className="dashboard-placeholder">
+          <p>Pending and ongoing deployments will appear here. </p>
+          <p>
+            <a onClick={createClick}>Create a deployment</a> to get started
+          </p>
+          <RefreshIcon style={{ transform: 'rotateY(-180deg)', fill: '#e3e3e3', width: 111, height: 111 }} />
+        </div>
+      )}
+    </div>
+  ) : (
+    <Loader show={doneLoading} />
+  );
+};
 
-const actionCreators = { getDeploymentsByStatus, setSnackbar, selectDeployment };
+const actionCreators = { getDeploymentsByStatus, setDeploymentsState, setSnackbar, selectDeployment };
 
 const mapStateToProps = state => {
   const progress = state.deployments.selectionState.inprogress.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   const pending = state.deployments.selectionState.pending.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   return {
     onboardingState: getOnboardingState(state),
-    pastDeploymentsCount: state.deployments.byStatus.finished.deploymentIds.length || state.deployments.byStatus.finished.total,
+    pastDeploymentsCount: state.deployments.byStatus.finished.total,
     pending,
-    pendingCount: state.deployments.byStatus.pending.total,
+    pendingState: state.deployments.selectionState.pending,
     progress,
-    progressCount: state.deployments.byStatus.inprogress.total
+    progressState: state.deployments.selectionState.inprogress
   };
 };
 
