@@ -14,8 +14,7 @@ export const initialState = {
   selectedDevice: null,
   deviceList: {
     deviceIds: [],
-    page: 1,
-    perPage: 20,
+    ...DeviceConstants.DEVICE_LIST_DEFAULTS,
     selectedIssues: [],
     selection: [],
     sort: {
