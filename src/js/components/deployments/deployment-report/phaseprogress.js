@@ -138,7 +138,7 @@ const ProgressChart = ({ deployment = {}, showDetails, style }) => {
           );
         })}
         <div className="progress-step progress-step-total" style={{ height }}>
-          <div className="progress-bar" style={{ width: '110%' }}></div>
+          <div className="progress-bar" style={{ position: 'initial', width: '110%' }}></div>
         </div>
       </div>
     </>
