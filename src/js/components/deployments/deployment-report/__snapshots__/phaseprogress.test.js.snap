@@ -157,7 +157,7 @@ exports[`PhaseProgress Component renders correctly 1`] = `
         >
           <div
             class="progress-bar"
-            style="width: 110%;"
+            style="position: initial; width: 110%;"
           />
         </div>
       </div>
@@ -340,7 +340,7 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
       >
         <div
           class="progress-bar"
-          style="width: 110%;"
+          style="position: initial; width: 110%;"
         />
       </div>
     </div>
