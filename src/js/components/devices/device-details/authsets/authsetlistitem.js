@@ -67,12 +67,15 @@ export const getConfirmationMessage = (status, device, authset) => {
   return message;
 };
 
+const LF = '\n';
+
 const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loading, onExpand, total }) => {
   const [showKey, setShowKey] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState('');
   const [newStatus, setNewStatus] = useState('');
   const [copied, setCopied] = useState(false);
   const [keyHash, setKeyHash] = useState('');
+  const [endKey, setEndKey] = useState('');
 
   useEffect(() => {
     if (!isExpanded) {
@@ -94,6 +97,9 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
     } else {
       setKeyHash('SHA calculation is not supported by this browser');
     }
+    // to ensure the pubkey is copied with the new line at the end we have to double it at the end, as one of the endings gets trimmed in the process of copying
+    const key = authset.pubkey.endsWith(LF) ? `${authset.pubkey}${LF}` : authset.pubkey;
+    setEndKey(key);
   }, [authset.pubkey]);
 
   const onShowKey = show => {
@@ -147,12 +153,12 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
   if (showKey) {
     content = [
       <div key="content">
-        <CopyToClipboard text={authset.pubkey} onCopy={onCopied}>
+        <CopyToClipboard text={endKey} onCopy={onCopied}>
           <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
             <CopyPasteIcon />
           </IconButton>
         </CopyToClipboard>
-        <code className="pre-line">{authset.pubkey}</code>
+        <code className="pre-line">{endKey}</code>
         {copied && <p className="green fadeIn">Copied key to clipboard.</p>}
         <Divider style={{ marginTop: theme.spacing(), marginBottom: theme.spacing() }} />
         <div title="SHA256">
