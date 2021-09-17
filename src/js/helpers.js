@@ -72,39 +72,6 @@ export const getDeploymentState = deployment => {
   return status;
 };
 
-export function statusToPercentage(state, intervals) {
-  var time;
-  var minutes = intervals / 3;
-  switch (state) {
-    case 'pending':
-    case 'noartifact':
-      return 0;
-
-    case 'downloading':
-      // increase slightly over time to show progress
-      time = minutes < 15 && intervals < 69 ? 0 + intervals : 69;
-      return time;
-
-    case 'pause_before_installing':
-    case 'installing':
-      return 70;
-
-    case 'pause_before_committing':
-    case 'pause_before_rebooting':
-    case 'rebooting':
-      time = minutes < 18 && 75 + intervals < 99 ? 75 + intervals : 99;
-      return time;
-
-    case 'aborted':
-    case 'already-installed':
-    case 'failure':
-    case 'success':
-      return 100;
-    default:
-      return 0;
-  }
-}
-
 export function decodeSessionToken(token) {
   try {
     var decoded = jwtDecode(token);
@@ -490,19 +457,24 @@ export const standardizePhases = phases =>
   });
 
 export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, tenantToken, deviceType = 'generic-armv6', isPreRelease) => {
+  let envVars = ``;
   let installScriptArgs = `--demo`;
   if (isPreRelease) {
     installScriptArgs = `${installScriptArgs} -c experimental`;
   }
   if (isHosted) {
     const jwtToken = getToken();
-    installScriptArgs = `${installScriptArgs} --commercial --jwt-token "${jwtToken}"`;
+    envVars = `${envVars}JWT_TOKEN="${jwtToken}"\n`;
+    installScriptArgs = `${installScriptArgs} --commercial --jwt-token $JWT_TOKEN`;
   }
   let menderSetupArgs = `--quiet --device-type "${deviceType}"`;
-  if (isHosted) {
-    menderSetupArgs = `${menderSetupArgs} --demo --hosted-mender --tenant-token "${tenantToken}"`;
-  } else if (isEnterprise) {
-    menderSetupArgs = `${menderSetupArgs} --retry-poll 30 --update-poll 5 --inventory-poll 5 --server-url https://${window.location.hostname} --server-cert="" --tenant-token "${tenantToken}"`;
+  if (isHosted || isEnterprise) {
+    envVars = `${envVars}TENANT_TOKEN="${tenantToken}"\n`;
+    if (isHosted) {
+      menderSetupArgs = `${menderSetupArgs} --demo --hosted-mender --tenant-token $TENANT_TOKEN`;
+    } else {
+      menderSetupArgs = `${menderSetupArgs} --retry-poll 30 --update-poll 5 --inventory-poll 5 --server-url https://${window.location.hostname} --server-cert="" --tenant-token $TENANT_TOKEN`;
+    }
   } else {
     menderSetupArgs = `${menderSetupArgs} --demo${ipAddress ? ` --server-ip ${ipAddress}` : ''}`;
   }
@@ -510,7 +482,7 @@ export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, tenan
   if (isPreRelease) {
     scriptUrl = `${scriptUrl}/staging`;
   }
-  return `wget -q -O- ${scriptUrl} | sudo bash -s -- ${installScriptArgs} -- ${menderSetupArgs}`;
+  return `${envVars}wget -q -O- ${scriptUrl} | sudo bash -s -- ${installScriptArgs} -- ${menderSetupArgs}`;
 };
 
 export const getSnackbarMessage = (skipped, done) => {

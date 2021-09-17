@@ -5,7 +5,7 @@ import Time from 'react-time';
 // material ui
 import { Button, LinearProgress, TableCell, TableRow } from '@material-ui/core';
 
-import { formatTime, statusToPercentage } from '../../../helpers';
+import { formatTime } from '../../../helpers';
 import DeviceIdentityDisplay from '../../common/deviceidentity';
 
 const stateTitleMap = {
@@ -16,7 +16,15 @@ const stateTitleMap = {
   'pause-before-committing': 'Paused before committing'
 };
 
-const DeploymentDeviceListItem = ({ created: deploymentCreationDate, device, idAttribute, viewLog, retries: maxRetries }) => {
+const determinedStateMap = {
+  'noartifact': 0,
+  'aborted': 100,
+  'already-installed': 100,
+  'failure': 100,
+  'success': 100
+};
+
+const DeploymentDeviceListItem = ({ device, idAttribute, viewLog, retries: maxRetries }) => {
   const { attempts, attributes = {}, created, finished, id = 'id', log, retries, substate, status } = device;
 
   const { artifact_name, device_type: deviceTypes = [], ['rootfs-image.version']: rootfsImageVersion } = attributes;
@@ -32,14 +40,14 @@ const DeploymentDeviceListItem = ({ created: deploymentCreationDate, device, idA
 
   const statusTitle = stateTitleMap[status] || status;
 
-  const intervalsSinceStart = Math.floor((Date.now() - Date.parse(deploymentCreationDate)) / (1000 * 20));
-  const devicePercentage = statusToPercentage(status, intervalsSinceStart);
+  const devicePercentage = determinedStateMap[status];
+
   const progressColor = statusTitle && (statusTitle.toLowerCase() === 'failure' || statusTitle.toLowerCase() === 'aborted') ? 'secondary' : 'primary';
 
   return (
     <TableRow>
       <TableCell>
-        <Link style={{ fontWeight: '500' }} to={`/devices/id=${id}`}>
+        <Link style={{ fontWeight: '500' }} to={`/devices?id=${id}`}>
           <DeviceIdentityDisplay device={device} idAttribute={idAttribute} isEditable={false} />
         </Link>
       </TableCell>
@@ -63,8 +71,7 @@ const DeploymentDeviceListItem = ({ created: deploymentCreationDate, device, idA
         )}
         {!['pending', 'decommissioned', 'already-installed'].includes(status.toLowerCase()) && (
           <div style={{ position: 'absolute', bottom: 0, width: '100%' }}>
-            <div style={{ textAlign: 'end', color: '#aaaaaa' }}>{`${devicePercentage}%`}</div>
-            <LinearProgress color={progressColor} variant="determinate" value={devicePercentage} />
+            <LinearProgress color={progressColor} value={devicePercentage} variant={devicePercentage !== undefined ? 'determinate' : 'indeterminate'} />
           </div>
         )}
       </TableCell>

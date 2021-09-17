@@ -135,12 +135,22 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
                     class="progress-chart "
                   >
                     <div
+                      class="progress-step progress-step-total"
+                    >
+                      <div
+                        class="progress-bar"
+                      />
+                    </div>
+                    <div
                       class="progress-step"
                       style="flex-grow: 1;"
                     >
                       <div
-                        class="flexbox"
-                        style="width: 100%;"
+                        class="progress-bar"
+                        style="width: 100%; background-color: rgb(170, 170, 170);"
+                      />
+                      <div
+                        class="flexbox progress-bar"
                       >
                         <div
                           class="progress-bar green"
@@ -151,22 +161,10 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
                           style="width: 0%;"
                         />
                       </div>
-                      <div
-                        class="progress-bar"
-                        style="width: 100%; background-color: rgb(170, 170, 170);"
-                      />
-                    </div>
-                    <div
-                      class="progress-step progress-step-total"
-                    >
-                      <div
-                        class="progress-bar"
-                        style="width: 100%;"
-                      />
                     </div>
                   </div>
                   <div
-                    class="flexbox space-between centered muted"
+                    class="flexbox center-aligned muted"
                     style="justify-content: flex-end;"
                   >
                     0 failures
@@ -175,6 +173,9 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
                 <div
                   class="flexbox space-between muted"
                 >
+                  <div>
+                    Devices in progress
+                  </div>
                   <div>
                     Current phase: 1 of 1
                   </div>

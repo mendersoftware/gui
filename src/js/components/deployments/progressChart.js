@@ -68,6 +68,9 @@ export const ProgressChart = ({ currentPhase, currentProgressCount, phases, show
 
   return (
     <div className={`progress-chart ${showPhaseNumber ? 'detailed' : ''}`}>
+      <div className="progress-step progress-step-total">
+        <div className="progress-bar"></div>
+      </div>
       {displayablePhases.map((phase, index) => {
         let style = { width: `${phase.batch_size}%` };
         if (index === phases.length - 1) {
@@ -76,17 +79,14 @@ export const ProgressChart = ({ currentPhase, currentProgressCount, phases, show
         return (
           <div key={`deployment-phase-${index}`} className="progress-step" style={style}>
             {showPhaseNumber && <div className="progress-step-number text-muted">{`Phase ${index + 1}`}</div>}
-            <div className="flexbox" style={{ width: '100%' }}>
+            {!!phase.progressWidth && <div className="progress-bar" style={{ width: `${phase.progressWidth}%`, backgroundColor: '#aaa' }} />}
+            <div className="flexbox progress-bar" style={{ backgroundColor: 'initial' }}>
               <div className="progress-bar green" style={{ width: `${phase.successWidth}%` }} />
               <div className="progress-bar warning" style={{ width: `${phase.failureWidth}%` }} />
             </div>
-            {!!phase.progressWidth && <div className="progress-bar" style={{ width: `${phase.progressWidth}%`, backgroundColor: '#aaa' }} />}
           </div>
         );
       })}
-      <div className="progress-step progress-step-total">
-        <div className="progress-bar" style={{ width: '100%' }}></div>
-      </div>
     </div>
   );
 };
@@ -144,20 +144,22 @@ export const ProgressDisplay = ({ className = '', deployment, status }) => {
           totalFailureCount={totalFailureCount}
           totalSuccessCount={totalSuccessCount}
         />
-        <div className={`flexbox space-between centered ${totalFailureCount ? 'warning' : 'muted'}`} style={{ justifyContent: 'flex-end' }}>
+        <div className={`flexbox center-aligned ${totalFailureCount ? 'warning' : 'muted'}`} style={{ justifyContent: 'flex-end' }}>
           {!!totalFailureCount && <WarningIcon style={{ fontSize: 16, marginRight: 10 }} />}
           {`${totalFailureCount} ${pluralize('failure', totalFailureCount)}`}
         </div>
       </div>
       <div className="flexbox space-between muted">
-        <div>{`Current phase: ${currentPhaseIndex + 1} of ${phases.length}`}</div>
-        {phases.length > currentPhaseIndex + 1 && (
+        <div>Devices in progress</div>
+        {phases.length > 1 && phases.length > currentPhaseIndex + 1 ? (
           <div>
             <span>Time until next phase: </span>
             <Tooltip title={<Time value={nextPhaseStart.toDate()} format="YYYY-MM-DD HH:mm" />} placement="top">
               <span>{`${duration.format('d [days] hh [h] mm [m] ss [s]')}`}</span>
             </Tooltip>
           </div>
+        ) : (
+          <div>{`Current phase: ${currentPhaseIndex + 1} of ${phases.length}`}</div>
         )}
       </div>
     </div>
