@@ -67,9 +67,6 @@ export const getGroups = () => (dispatch, getState) =>
     ]);
   });
 
-export const initializeGroupsDevices = () => (dispatch, getState) =>
-  Promise.all(Object.keys(getState().devices.groups.byId).map(group => dispatch(getGroupDevices(group, { perPage: 1 }))));
-
 export const addDevicesToGroup = (group, deviceIds) => dispatch =>
   GeneralApi.patch(`${inventoryApiUrl}/groups/${group}/devices`, deviceIds).then(() =>
     Promise.resolve(

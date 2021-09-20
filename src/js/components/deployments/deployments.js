@@ -4,7 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 
 import { Button, Tab, Tabs } from '@material-ui/core';
 
-import { getGroups, getDynamicGroups, initializeGroupsDevices } from '../../actions/deviceActions';
+import { getGroups, getDynamicGroups } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, selectDeployment, setDeploymentsState } from '../../actions/deploymentActions';
@@ -68,12 +68,11 @@ export const Deployments = ({
   const tabsRef = useRef();
 
   useEffect(() => {
-    let tasks = [getGroups()];
+    getGroups();
     if (isEnterprise) {
-      tasks.push(getDynamicGroups());
+      getDynamicGroups();
     }
-    Promise.all(tasks).then(initializeGroupsDevices).catch(console.log);
-    let startDate = today;
+
     const params = new URLSearchParams(location.search);
     let reportType = 'active';
     let deploymentObject = {};
@@ -115,6 +114,7 @@ export const Deployments = ({
       deploymentDeviceIds,
       phases: [{ batch_size: 100, start_ts: undefined, delay: 0 }],
       release,
+      deploymentDeviceCount: deploymentDeviceIds.length,
       ...updateControlMap
     };
     setDeploymentObject(deploymentObject);
@@ -224,7 +224,6 @@ const actionCreators = {
   advanceOnboarding,
   getGroups,
   getDynamicGroups,
-  initializeGroupsDevices,
   selectDeployment,
   setDeploymentsState,
   setSnackbar

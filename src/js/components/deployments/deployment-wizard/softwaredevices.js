@@ -58,9 +58,7 @@ export const SoftwareDevices = ({
       if (state.device) {
         deviceIds = [state.device.id];
         deviceCount = deviceIds.length;
-      } else if (state.group !== allDevices) {
-        deviceCount = groups[state.group].total;
-      } else {
+      } else if (state.group === allDevices) {
         deviceCount = acceptedDeviceCount;
         advanceOnboarding(onboardingSteps.SCHEDULING_ALL_DEVICES_SELECTION);
       }

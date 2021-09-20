@@ -10,6 +10,7 @@ import Review from './deployment-wizard/review';
 import RolloutOptions from './deployment-wizard/rolloutoptions';
 
 import { createDeployment } from '../../actions/deploymentActions';
+import { getGroupDevices } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { PLANS } from '../../constants/appConstants';
@@ -43,9 +44,11 @@ export const getPhaseStartTime = (phases, index, startDate) => {
 
 export const CreateDialog = props => {
   const {
+    acceptedDeviceCount,
     advanceOnboarding,
     createDeployment,
     deploymentObject,
+    getGroupDevices,
     globalSettings,
     groups,
     isEnterprise,
@@ -75,6 +78,19 @@ export const CreateDialog = props => {
     }, []);
     setSteps(steps);
   }, [isEnterprise, isHosted, plan]);
+
+  useEffect(() => {
+    if (!deploymentObject.group) {
+      return;
+    }
+    if (deploymentObject.group === allDevices) {
+      setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: acceptedDeviceCount });
+      return;
+    }
+    const selectedGroup = groups[deploymentObject.group];
+    const request = selectedGroup.total ? Promise.resolve({ group: selectedGroup }) : getGroupDevices(deploymentObject.group, { perPage: 1 });
+    request.then(({ group: { total: deploymentDeviceCount } }) => setDeploymentObject({ ...deploymentObject, deploymentDeviceCount }));
+  }, [deploymentObject.group]);
 
   const cleanUpDeploymentsStatus = () => {
     const location = window.location.hash.substring(0, window.location.hash.indexOf('?'));
@@ -187,7 +203,7 @@ export const CreateDialog = props => {
   );
 };
 
-const actionCreators = { advanceOnboarding, createDeployment, saveGlobalSettings };
+const actionCreators = { advanceOnboarding, createDeployment, getGroupDevices, saveGlobalSettings };
 
 export const mapStateToProps = state => {
   const { plan = PLANS.os.value } = state.organization.organization;
