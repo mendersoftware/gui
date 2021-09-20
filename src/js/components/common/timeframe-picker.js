@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
@@ -41,4 +41,8 @@ export const TimeframePicker = ({ classNames, endDate, onChange, startDate, toni
   );
 };
 
-export default TimeframePicker;
+const areEqual = (prevProps, nextProps) => {
+  return !(prevProps.classNames != nextProps.classNames || prevProps.endDate != nextProps.endDate || prevProps.startDate != nextProps.startDate);
+};
+
+export default memo(TimeframePicker, areEqual);
