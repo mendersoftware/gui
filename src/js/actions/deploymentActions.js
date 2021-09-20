@@ -67,7 +67,7 @@ export const getDeploymentsByStatus = (
           deployments,
           deploymentIds,
           status,
-          total: Number(res.headers[headerNames.total])
+          total: !(startDate || endDate || group || type) ? total : getState().deployments.byStatus[status].total
         })
       ]
     );
