@@ -8,6 +8,7 @@ import { getGroups, getDynamicGroups } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, selectDeployment, setDeploymentsState } from '../../actions/deploymentActions';
+import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getIsEnterprise, getOnboardingState } from '../../selectors';
 
@@ -40,8 +41,6 @@ const routes = {
 
 export const defaultRefreshDeploymentsLength = 30000;
 
-const today = new Date(new Date().setHours(0, 0, 0));
-
 export const Deployments = ({
   abortDeployment,
   advanceOnboarding,
@@ -49,7 +48,6 @@ export const Deployments = ({
   getDynamicGroups,
   getGroups,
   history,
-  initializeGroupsDevices,
   isEnterprise,
   location,
   match,
@@ -62,7 +60,6 @@ export const Deployments = ({
   setSnackbar
 }) => {
   const [deploymentObject, setDeploymentObject] = useState({});
-  const [startDate, setStartDate] = useState();
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
   const tabsRef = useRef();
@@ -73,6 +70,7 @@ export const Deployments = ({
       getDynamicGroups();
     }
 
+    let finishedState = {};
     const params = new URLSearchParams(location.search);
     let reportType = 'active';
     let deploymentObject = {};
@@ -89,20 +87,20 @@ export const Deployments = ({
           setTimeout(() => setDeploymentsState({ general: { dialogOpen: true } }), 400);
         }
       } else if (params.get('from')) {
-        startDate = new Date(params.get('from'));
+        const startDate = new Date(params.get('from'));
         startDate.setHours(0, 0, 0);
+        finishedState = { startDate: startDate.toISOString() };
       }
     }
     setDeploymentObject(deploymentObject);
     const dialogOpen = Boolean(params.get('open')) && !params.get('id');
-    setStartDate(startDate);
     let state = selectionState.state;
     if (match.params.tab) {
       state = updateActive(match.params.tab);
     } else {
       history.replace(state);
     }
-    setDeploymentsState({ general: { state, showCreationDialog: dialogOpen } });
+    setDeploymentsState({ general: { state, showCreationDialog: dialogOpen }, [DEPLOYMENT_STATES.finished]: finishedState });
   }, []);
 
   const retryDeployment = (deployment, deploymentDeviceIds) => {
@@ -203,7 +201,7 @@ export const Deployments = ({
             Create a deployment
           </Button>
         </div>
-        <ComponentToShow abort={onAbortDeployment} createClick={onCreationShow} openReport={showReport} startDate={startDate} />
+        <ComponentToShow abort={onAbortDeployment} createClick={onCreationShow} openReport={showReport} />
       </div>
       <Report abort={onAbortDeployment} onClose={closeReport} open={reportDialog} retry={retryDeployment} type={reportType} />
       {createDialog && (
