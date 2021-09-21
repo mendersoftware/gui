@@ -9,6 +9,13 @@ export const monitorApiUrlv1 = `${apiUrlv1}/devicemonitor`;
 const defaultPerPage = 20;
 const defaultPage = 1;
 
+const cutoffLength = 75;
+const ellipsis = '...';
+
+const longTextTrimmer = text => (text.length >= cutoffLength + ellipsis.length ? `${text.substring(0, cutoffLength + ellipsis.length)}${ellipsis}` : text);
+
+const sanitizeDeviceAlerts = alerts => alerts.map(alert => ({ ...alert, fullName: alert.name, name: longTextTrimmer(alert.name) }));
+
 export const getDeviceAlerts = (id, config = {}) => dispatch => {
   const { page = defaultPage, perPage = defaultPerPage, issuedBefore, issuedAfter, sortAscending = false } = config;
   const issued_after = issuedAfter ? `&issued_after=${issuedAfter}` : '';
@@ -20,7 +27,7 @@ export const getDeviceAlerts = (id, config = {}) => dispatch => {
         dispatch({
           type: MonitorConstants.RECEIVE_DEVICE_ALERTS,
           deviceId: id,
-          alerts: res.data
+          alerts: sanitizeDeviceAlerts(res.data)
         })
       )
     );
@@ -35,7 +42,7 @@ export const getLatestDeviceAlerts = (id, config = {}) => dispatch => {
         dispatch({
           type: MonitorConstants.RECEIVE_LATEST_DEVICE_ALERTS,
           deviceId: id,
-          alerts: res.data
+          alerts: sanitizeDeviceAlerts(res.data)
         })
       )
     );
