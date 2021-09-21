@@ -181,7 +181,7 @@ export const Deployments = ({
 
   let onboardingComponent = null;
   // the pastCount prop is needed to trigger the rerender as the change in past deployments would otherwise not be noticed on this view
-  if (pastCount && tabsRef.current) {
+  if (pastCount && tabsRef.current && !reportDialog) {
     const tabs = tabsRef.current.getElementsByClassName('MuiTab-root');
     const finishedTab = tabs[tabs.length - 1];
     onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST, onboardingState, {
