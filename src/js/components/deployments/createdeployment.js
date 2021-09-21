@@ -55,9 +55,15 @@ export class CreateDialog extends React.Component {
   }
 
   componentDidMount() {
-    const { deploymentObject, isEnterprise, isHosted, plan, selectDevice } = this.props;
+    const { acceptedDeviceCount, deploymentObject, groups, isEnterprise, isHosted, plan, selectDevice } = this.props;
     if (Object.keys(deploymentObject).length) {
-      this.setState({ deploymentObject });
+      let deviceCount = deploymentObject.deploymentDeviceIds.length ? { deploymentDeviceCount: deploymentObject.deploymentDeviceIds.length } : {};
+      if (deploymentObject.group === allDevices) {
+        deviceCount.deploymentDeviceCount = acceptedDeviceCount;
+      } else if (groups[deploymentObject.group].total) {
+        deviceCount.deploymentDeviceCount = groups[deploymentObject.group].total;
+      }
+      this.setState({ deploymentObject: { ...deploymentObject, ...deviceCount } });
       if (deploymentObject.deploymentDeviceIds.length === 1 && deploymentObject.deploymentDeviceIds[0] === deploymentObject.group) {
         selectDevice(deploymentObject.deploymentDeviceIds[0]);
       }
