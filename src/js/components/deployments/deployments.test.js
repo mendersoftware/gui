@@ -9,10 +9,12 @@ import configureStore from 'redux-mock-store';
 import Deployments from './deployments';
 import { allDevices } from './createdeployment';
 import GeneralApi from '../../api/general-api';
+import { getConfiguredStore } from './../../reducers';
 import { defaultState, mockDate, undefineds } from '../../../../tests/mockData';
 import { selectMaterialUiSelectOption } from '../../../../tests/setupTests';
 
 const mockStore = configureStore([thunk]);
+const defaultLocationProps = { location: { search: 'from=2019-01-01' }, match: {} };
 
 describe('Deployments Component', () => {
   let mockState = {
@@ -51,7 +53,7 @@ describe('Deployments Component', () => {
     const { baseElement } = render(
       <MemoryRouter>
         <Provider store={store}>
-          <Deployments location={{ search: 'from=2019-01-01' }} match={{}} />
+          <Deployments {...defaultLocationProps} />
         </Provider>
       </MemoryRouter>
     );
@@ -61,7 +63,8 @@ describe('Deployments Component', () => {
   });
 
   it('works as expected', async () => {
-    const store = mockStore({
+    // const store = mockStore({
+    const preloadedState = {
       ...mockState,
       deployments: {
         ...mockState.deployments,
@@ -79,14 +82,26 @@ describe('Deployments Component', () => {
         },
         selectedDeployment: defaultState.deployments.byId.d1.id,
         selectionState: {
-          ...defaultState.deployments.selectionState
+          ...defaultState.deployments.selectionState,
+          inprogress: { ...defaultState.deployments.selectionState.inprogress, selection: ['d1'] },
+          pending: { ...defaultState.deployments.selectionState.pending, selection: ['d2'] }
+        }
+      },
+      releases: {
+        ...defaultState.releases,
+        byId: {
+          ...defaultState.releases.byId,
+          test: {
+            ...defaultState.releases.byId.a1
+          }
         }
       }
-    });
+    };
+    const store = getConfiguredStore({ preloadedState });
     const ui = (
       <MemoryRouter>
         <Provider store={store}>
-          <Deployments />
+          <Deployments {...defaultLocationProps} />
         </Provider>
       </MemoryRouter>
     );
@@ -94,23 +109,27 @@ describe('Deployments Component', () => {
     userEvent.click(screen.getByRole('tab', { name: /Finished/i }));
     userEvent.click(screen.getByRole('tab', { name: /Scheduled/i }));
     userEvent.click(screen.getByRole('tab', { name: /Active/i }));
-    userEvent.click(screen.getByRole('button', { name: /Create a deployment/i }));
+    await act(async () => userEvent.click(screen.getByRole('button', { name: /Create a deployment/i })));
+    await waitFor(() => rerender(ui));
     await waitFor(() => expect(screen.getByText(/Cancel/i)).toBeInTheDocument());
     userEvent.click(screen.getByRole('button', { name: /Cancel/i }));
     await waitFor(() => rerender(ui));
-    const deployment = screen.getByText(/test deployment 2/i).parentElement.parentElement;
+    // screen.debug(undefined, 2000000);
+    const inprogressDeployments = screen.getByText(/in progress now/i).parentElement.parentElement;
+    const deployment = within(inprogressDeployments).getByText(/test deployment 2/i).parentElement.parentElement;
     userEvent.click(within(deployment).getByRole('button', { name: /Abort/i }));
     jest.advanceTimersByTime(200);
     await waitFor(() => expect(screen.getByText(/Confirm abort/i)).toBeInTheDocument());
     userEvent.click(document.querySelector('#confirmAbort'));
-    userEvent.click(within(deployment).getByRole('button', { name: /View details/i }));
+    await act(async () => userEvent.click(within(deployment).getByRole('button', { name: /View details/i })));
+    await waitFor(() => rerender(ui));
     await waitFor(() => screen.queryByText(/Deployment details/i), { timeout: 2500 });
     expect(screen.getByText(/Deployment details/i)).toBeInTheDocument();
     userEvent.click(screen.getByRole('button', { name: /Close/i }));
   }, 30000);
 
   it('allows navigating the deployment creation dialog', async () => {
-    const store = mockStore({
+    const preloadedState = {
       ...mockState,
       app: {
         ...mockState,
@@ -119,11 +138,12 @@ describe('Deployments Component', () => {
           isEnterprise: false
         }
       }
-    });
+    };
+    const store = getConfiguredStore({ preloadedState });
     const ui = (
       <MemoryRouter>
         <Provider store={store}>
-          <Deployments location={{ search: 'from=2019-01-01' }} match={{}} />
+          <Deployments {...defaultLocationProps} />
         </Provider>
       </MemoryRouter>
     );
@@ -144,7 +164,6 @@ describe('Deployments Component', () => {
     await waitFor(() => rerender(ui));
     expect(groupSelect).toHaveValue(allDevices);
     userEvent.click(screen.getAllByText('Next')[0]);
-    store.clearActions();
     const post = jest.spyOn(GeneralApi, 'post');
     await act(async () => await userEvent.click(screen.getByText('Create')));
     await jest.runAllTicks();
@@ -159,12 +178,13 @@ describe('Deployments Component', () => {
       phases: undefined,
       update_control_map: undefined
     });
-
-    expect(screen.getByText(/Pending/i)).toBeInTheDocument();
-  });
+    await jest.runAllTicks();
+    await waitFor(() => rerender(ui));
+    expect(screen.queryByText(/Cancel/i)).not.toBeInTheDocument();
+  }, 15000);
 
   it('allows navigating the enterprise deployment creation dialog', async () => {
-    const store = mockStore({
+    const preloadedState = {
       ...mockState,
       app: {
         ...mockState,
@@ -198,11 +218,12 @@ describe('Deployments Component', () => {
           previousPhases: [[{ batch_size: 30, delay: 5, delayUnit: 'days' }, { batch_size: 70 }]]
         }
       }
-    });
+    };
+    const store = getConfiguredStore({ preloadedState });
     const ui = (
       <MemoryRouter>
         <Provider store={store}>
-          <Deployments location={{ search: 'from=2019-01-01' }} match={{}} />
+          <Deployments {...defaultLocationProps} />
         </Provider>
       </MemoryRouter>
     );
@@ -239,7 +260,6 @@ describe('Deployments Component', () => {
     // extra explicit here as the general date mocking seems to be ignored by the moment/ date combination
     jest.setSystemTime(mockDate);
     const post = jest.spyOn(GeneralApi, 'post');
-    store.clearActions();
     await act(async () => await userEvent.click(screen.getByText('Create')));
     const secondBatchDate = new Date(new Date(mockDate).setMinutes(mockDate.getMinutes() + 30));
     const thirdBatchDate = new Date(new Date(secondBatchDate).setDate(secondBatchDate.getDate() + 25));
@@ -260,29 +280,20 @@ describe('Deployments Component', () => {
       retries: 1,
       update_control_map: undefined
     });
-
-    const storeActions = store.getActions();
-    const expectedActions = [
-      { type: 'SET_ONBOARDING_PROGRESS', value: 'deployments-inprogress' },
-      {
-        type: 'SET_GLOBAL_SETTINGS',
-        settings: {
-          '2fa': 'enabled',
-          id_attribute: undefined,
-          previousFilters: [],
-          previousPhases: [[{ batch_size: 30, delay: 5, delayUnit: 'days' }, { batch_size: 70 }]],
-          a1: {
-            onboarding: {
-              complete: false,
-              demoArtifactPort: 85,
-              progress: 'deployments-inprogress',
-              showConnectDeviceDialog: false
-            }
-          }
+    expect(post).toHaveBeenCalledWith('/api/management/v1/useradm/settings', {
+      '2fa': 'enabled',
+      id_attribute: undefined,
+      previousFilters: [],
+      previousPhases: [[{ batch_size: 30, delay: 5, delayUnit: 'days' }, { batch_size: 70 }]],
+      a1: {
+        onboarding: {
+          complete: false,
+          demoArtifactPort: 85,
+          progress: 'deployments-inprogress',
+          showConnectDeviceDialog: false
         }
       }
-    ];
-    expectedActions.map((action, index) => Object.keys(action).map(key => expect(storeActions[index][key]).toEqual(action[key])));
+    });
     await jest.runAllTicks();
     await waitFor(() => rerender(ui));
     expect(screen.getByText(/Pending/i)).toBeInTheDocument();

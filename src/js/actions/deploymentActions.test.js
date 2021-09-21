@@ -158,7 +158,7 @@ describe('deployment actions', () => {
         ...defaultResponseActions.receiveInprogress,
         deployments: defaultState.deployments.byId,
         deploymentIds: Object.keys(defaultState.deployments.byId),
-        total: Object.keys(defaultState.deployments.byId).length
+        total: defaultState.deployments.byStatus.inprogress.total
       },
       defaultResponseActions.selectMultiple,
       { ...defaultResponseActions.stats, deploymentId: defaultState.deployments.byId.d1.id, stats: defaultState.deployments.byId.d1.stats },

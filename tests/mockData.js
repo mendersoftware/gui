@@ -98,13 +98,21 @@ export const defaultState = {
     deploymentDeviceLimit: 500,
     selectedDeployment: 'd1',
     selectionState: {
-      finished: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, selection: ['d1'] },
-      inprogress: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, selection: ['d1'] },
-      pending: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, selection: ['d2'] },
-      scheduled: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, selection: ['d2'] },
+      finished: {
+        ...DeviceConstants.DEVICE_LIST_DEFAULTS,
+        selection: ['d1'],
+        endDate: undefined,
+        search: '',
+        total: 1,
+        type: ''
+      },
+      inprogress: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, selection: ['d1'], total: 1 },
+      pending: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, selection: ['d2'], total: 1 },
+      scheduled: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, selection: ['d2'], total: 1 },
       general: {
-        state: 'inprogress',
-        dialogOpen: false,
+        state: '/deployments/active',
+        showCreationDialog: false,
+        showReportDialog: false,
         reportType: null
       }
     }
