@@ -233,6 +233,7 @@ export const DeviceGroups = ({
   setDeviceListState,
   setShowConnectingDialog,
   setSnackbar,
+  showDeviceConnectionDialog,
   showHelptips,
   updateDynamicGroup
 }) => {
@@ -447,6 +448,7 @@ export const DeviceGroups = ({
             onPreauthClick={setOpenPreauth}
             openSettingsDialog={openSettingsDialog}
             removeDevicesFromGroup={onRemoveDevicesFromGroup}
+            showsDialog={showDeviceConnectionDialog || removeGroup || modifyGroupDialog || createGroupExplanation || openIdDialog || openPreauth}
             states={routes}
           />
         </div>
@@ -539,6 +541,7 @@ const mapStateToProps = state => {
     pendingCount: state.devices.byStatus.pending.total || 0,
     selectedAttribute: state.users.globalSettings.id_attribute,
     selectedGroup,
+    showDeviceConnectionDialog: state.users.showConnectDeviceDialog,
     showHelptips: state.users.showHelptips
   };
 };
