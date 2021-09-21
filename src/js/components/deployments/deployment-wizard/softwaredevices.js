@@ -39,9 +39,7 @@ export const SoftwareDevices = ({
   hasPending,
   onboardingState,
   releases,
-  selectedDevice,
-  selectedGroup,
-  selectedRelease,
+  releaseSelectionLocked,
   setDeploymentSettings
 }) => {
   // eslint-disable-next-line no-unused-vars
@@ -70,6 +68,8 @@ export const SoftwareDevices = ({
     }
     setDeploymentSettings({ ...deploymentObject, [property]: value, deploymentDeviceIds: deviceIds, deploymentDeviceCount: deviceCount });
   };
+
+  const onReleaseSelectionChange = (e, item) => deploymentSettingsUpdate(item, 'release');
 
   const { deploymentDeviceCount, deploymentDeviceIds = [], device, group = null, release: deploymentRelease = null } = deploymentObject;
   const releaseDeviceTypes = (deploymentRelease && deploymentRelease.device_types_compatible) ?? [];
@@ -120,7 +120,7 @@ export const SoftwareDevices = ({
       };
       onboardingComponent = getOnboardingComponentFor(
         onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES,
-        { ...onboardingState, selectedDevice, selectedGroup, selectedRelease: deploymentRelease },
+        { ...onboardingState, selectedDevice: device, selectedGroup: group, selectedRelease: deploymentRelease },
         { anchor: buttonAnchor, place: 'bottom' },
         onboardingComponent
       );
@@ -188,8 +188,8 @@ export const SoftwareDevices = ({
           </div>
           <h4 style={styles.selectionTitle}>Select a Release to deploy</h4>
           <div ref={releaseRef} style={styles.selection}>
-            {selectedRelease ? (
-              <TextField value={selectedRelease} label="Release" disabled={true} style={styles.infoStyle} />
+            {releaseSelectionLocked ? (
+              <TextField value={deploymentRelease} label="Release" disabled={true} style={styles.infoStyle} />
             ) : (
               <Autocomplete
                 id="deployment-release-selection"
@@ -199,7 +199,7 @@ export const SoftwareDevices = ({
                 getOptionLabel={option => (typeof option === 'string' ? option : option.Name)}
                 handleHomeEndKeys
                 options={releaseItems}
-                onChange={(e, item) => deploymentSettingsUpdate(item, 'release')}
+                onChange={onReleaseSelectionChange}
                 renderInput={params => <TextField {...params} placeholder="Select a Release" InputProps={{ ...params.InputProps }} style={styles.textField} />}
                 value={deploymentRelease}
               />
