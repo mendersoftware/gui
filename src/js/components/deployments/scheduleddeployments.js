@@ -8,7 +8,7 @@ import { Button } from '@material-ui/core';
 import { CalendarToday as CalendarTodayIcon, List as ListIcon, Refresh as RefreshIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getDeploymentsByStatus, selectDeployment } from '../../actions/deploymentActions';
+import { getDeploymentsByStatus, selectDeployment, setDeploymentsState } from '../../actions/deploymentActions';
 import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { tryMapDeployments } from '../../helpers';
 import { getIsEnterprise } from '../../selectors';
@@ -48,11 +48,10 @@ let timer;
 
 export const Scheduled = props => {
   const [calendarEvents, setCalendarEvents] = useState([]);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(20);
   const [tabIndex, setTabIndex] = useState(tabs.list.index);
 
-  const { abort, createClick, getDeploymentsByStatus, isEnterprise, items, openReport, setSnackbar } = props;
+  const { abort, createClick, getDeploymentsByStatus, isEnterprise, items, openReport, scheduledState, setDeploymentsState, setSnackbar } = props;
+  const { page, perPage, total: count } = scheduledState;
 
   useEffect(() => {
     if (!isEnterprise) {
@@ -100,12 +99,12 @@ export const Scheduled = props => {
   }, [tabIndex]);
 
   const refreshDeployments = (changedPage = page, changedPerPage = perPage) => {
-    setPage(changedPage);
-    setPerPage(changedPerPage);
+    setDeploymentsState({ [DEPLOYMENT_STATES.scheduled]: { page: changedPage, perPage: changedPerPage } });
     return getDeploymentsByStatus(DEPLOYMENT_STATES.scheduled, changedPage, changedPerPage)
       .then(deploymentsAction => {
         clearRetryTimer(type, setSnackbar);
-        if (deploymentsAction && deploymentsAction[0].total && !deploymentsAction[0].deploymentIds.length) {
+        const { total, deploymentIds } = deploymentsAction[deploymentsAction.length - 1];
+        if (total && !deploymentIds.length) {
           return refreshDeployments(changedPage, changedPerPage);
         }
       })
@@ -131,7 +130,7 @@ export const Scheduled = props => {
               </Button>
             ))}
           </div>
-          {tabIndex === tabs.list.index && <DeploymentsList {...props} abort={abortDeployment} count={0} headers={headers} type={type} />}
+          {tabIndex === tabs.list.index && <DeploymentsList {...props} abort={abortDeployment} count={count} headers={headers} type={type} />}
           {tabIndex === tabs.calendar.index && (
             <Calendar
               localizer={localizer}
@@ -165,15 +164,16 @@ export const Scheduled = props => {
   );
 };
 
-const actionCreators = { getDeploymentsByStatus, setSnackbar, selectDeployment };
+const actionCreators = { getDeploymentsByStatus, setSnackbar, setDeploymentsState, selectDeployment };
 
 const mapStateToProps = state => {
-  const scheduled = state.deployments.byStatus.scheduled.selectedDeploymentIds.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
+  const scheduled = state.deployments.selectionState.scheduled.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   const { plan = 'os' } = state.organization.organization;
   return {
     // TODO: isEnterprise is misleading here, but is passed down to the DeploymentListItem, this should be renamed
     isEnterprise: getIsEnterprise(state) || plan !== 'os',
-    items: scheduled
+    items: scheduled,
+    scheduledState: state.deployments.selectionState.scheduled
   };
 };
 

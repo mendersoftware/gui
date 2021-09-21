@@ -26,9 +26,16 @@ describe('Deployments Component', () => {
         ...defaultState.deployments,
         byId: {},
         byStatus: {
-          finished: { deploymentIds: [], selectedDeploymentIds: [], total: 0 },
-          inprogress: { deploymentIds: [], selectedDeploymentIds: [], total: 0 },
-          pending: { deploymentIds: [], selectedDeploymentIds: [], total: 0 }
+          ...defaultState.deployments.byStatus,
+          finished: { deploymentIds: [], total: 0 },
+          inprogress: { deploymentIds: [], total: 0 },
+          pending: { deploymentIds: [], total: 0 }
+        },
+        selectionState: {
+          ...defaultState.deployments.selectionState,
+          finished: { ...defaultState.deployments.selectionState.finished, selection: [] },
+          inprogress: { ...defaultState.deployments.selectionState.inprogress, selection: [] },
+          pending: { ...defaultState.deployments.selectionState.pending, selection: [] }
         }
       }
     });

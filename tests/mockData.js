@@ -90,13 +90,24 @@ export const defaultState = {
       }
     },
     byStatus: {
-      finished: { deploymentIds: ['d1'], selectedDeploymentIds: ['d1'], total: 1 },
-      inprogress: { deploymentIds: ['d1'], selectedDeploymentIds: ['d1'], total: 1 },
-      pending: { deploymentIds: ['d2'], selectedDeploymentIds: ['d2'], total: 1 },
-      scheduled: { deploymentIds: ['d2'], selectedDeploymentIds: ['d2'], total: 1 }
+      finished: { deploymentIds: ['d1'], total: 1 },
+      inprogress: { deploymentIds: ['d1'], total: 1 },
+      pending: { deploymentIds: ['d2'], total: 1 },
+      scheduled: { deploymentIds: ['d2'], total: 1 }
     },
     deploymentDeviceLimit: 500,
-    selectedDeployment: 'd1'
+    selectedDeployment: 'd1',
+    selectionState: {
+      finished: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, selection: ['d1'] },
+      inprogress: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, selection: ['d1'] },
+      pending: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, selection: ['d2'] },
+      scheduled: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, selection: ['d2'] },
+      general: {
+        state: 'inprogress',
+        dialogOpen: false,
+        reportType: null
+      }
+    }
   },
   devices: {
     byId: {

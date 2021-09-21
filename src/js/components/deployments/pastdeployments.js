@@ -22,6 +22,7 @@ import useWindowSize from '../../utils/resizehook';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
 import { DeploymentStatus } from './deploymentitem';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
+import { tryMapDeployments } from '../../helpers';
 
 const today = new Date(new Date().setHours(0, 0, 0));
 const tonight = new Date(new Date().setHours(23, 59, 59, 999));
@@ -255,7 +256,7 @@ export const Past = props => {
 const actionCreators = { advanceOnboarding, getDeploymentsByStatus, setSnackbar, selectDeployment };
 
 const mapStateToProps = state => {
-  const past = state.deployments.byStatus.finished.selectedDeploymentIds.map(id => state.deployments.byId[id]);
+  const past = state.deployments.selectionState.finished.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
