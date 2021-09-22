@@ -61,7 +61,8 @@ describe('SelfUserManagement Component', () => {
     userEvent.type(screen.getByPlaceholderText(/Verification code/i), '56');
     expect(screen.getByRole('button', { name: /Verify/i })).not.toBeDisabled();
     expect(screen.queryByText(/Must be at least 6 characters long/i)).not.toBeInTheDocument();
-    act(() => userEvent.click(screen.getByRole('button', { name: /Verify/i })));
+    await act(async () => userEvent.click(screen.getByRole('button', { name: /Verify/i })));
+    jest.runAllTicks();
     await waitFor(() => rerender(ui));
     await waitFor(() => expect(screen.queryByText(/Verifying/)).not.toBeInTheDocument(), { timeout: 1500 });
     userEvent.click(screen.getByRole('button', { name: /Save/i }));
