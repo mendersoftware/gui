@@ -9,13 +9,14 @@ import raspberryPi4 from '../../../../assets/img/raspberrypi4.jpg';
 
 import { advanceOnboarding } from '../../../actions/onboardingActions';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
-import { getDocsVersion } from '../../../selectors';
+import { getDocsVersion, getTenantCapabilities } from '../../../selectors';
+import theme from '../../../themes/mender-theme';
 import { DeviceSupportTip } from '../../helptips/helptooltips';
 
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
 
-const DeviceConnectionExplainer = ({ docsVersion, setOnDevice, setVirtualDevice }) => (
+const DeviceConnectionExplainer = ({ docsVersion, hasMonitor, setOnDevice, setVirtualDevice }) => (
   <div>
     <div>
       <p>
@@ -37,11 +38,17 @@ const DeviceConnectionExplainer = ({ docsVersion, setOnDevice, setVirtualDevice 
       </div>
     </div>
     <div className="flexbox centered column">
-      <span>
-        <b>Don&apos;t have a Raspberry Pi?</b> You can use our Docker-run virtual device to go through the same tutorial.
-      </span>
       <div>
-        <img src={docker} style={{ height: '40px', verticalAlign: 'middle', marginRight: '8px' }} />
+        <b>Don&apos;t have a Raspberry Pi?</b> You can use our Docker-run virtual device to go through the same tutorial.
+        {hasMonitor && (
+          <div>
+            If you want to evaluate our commercial components such as mender-monitor, please use a physical device instead as the virtual client does not
+            support these components at this time.
+          </div>
+        )}
+      </div>
+      <div>
+        <img src={docker} style={{ height: theme.spacing(5), verticalAlign: 'middle', marginRight: theme.spacing() }} />
         <a onClick={() => setVirtualDevice(true)}>Prepare a virtual device for now</a>
       </div>
     </div>
@@ -72,7 +79,7 @@ const DeviceConnectionExplainer = ({ docsVersion, setOnDevice, setVirtualDevice 
   </div>
 );
 
-export const DeviceConnectionDialog = ({ advanceOnboarding, docsVersion, onboardingDeviceType, onboardingComplete, onCancel, pendingCount }) => {
+export const DeviceConnectionDialog = ({ advanceOnboarding, docsVersion, hasMonitor, onboardingDeviceType, onboardingComplete, onCancel, pendingCount }) => {
   const [onDevice, setOnDevice] = useState(false);
   const [progress, setProgress] = useState(1);
   const [virtualDevice, setVirtualDevice] = useState(false);
@@ -92,7 +99,7 @@ export const DeviceConnectionDialog = ({ advanceOnboarding, docsVersion, onboard
     setProgress(progress + 1);
   };
 
-  let content = <DeviceConnectionExplainer docsVersion={docsVersion} setOnDevice={setOnDevice} setVirtualDevice={setVirtualDevice} />;
+  let content = <DeviceConnectionExplainer docsVersion={docsVersion} hasMonitor={hasMonitor} setOnDevice={setOnDevice} setVirtualDevice={setVirtualDevice} />;
   if (onDevice) {
     content = <PhysicalDeviceOnboarding progress={progress} />;
   } else if (virtualDevice) {
@@ -140,6 +147,7 @@ const actionCreators = { advanceOnboarding };
 const mapStateToProps = state => {
   return {
     docsVersion: getDocsVersion(state),
+    hasMonitor: getTenantCapabilities(state).hasMonitor,
     pendingCount: state.devices.byStatus.pending.total,
     onboardingComplete: state.onboarding.complete,
     onboardingDeviceType: state.onboarding.deviceType
