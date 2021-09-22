@@ -7,6 +7,7 @@ import { ArrowRightAlt as ArrowRightAltIcon, Sort as SortIcon } from '@material-
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import EventDetailsDrawer from './eventdetailsdrawer';
+import { SORTING_OPTIONS } from '../../constants/appConstants';
 
 export const defaultRowsPerPage = 20;
 
@@ -108,7 +109,7 @@ export const AuditLogsList = ({ count, items, loading, locationChange, onChangeP
               style={column.sortable ? {} : { cursor: 'initial' }}
             >
               {column.title}
-              {column.sortable ? <SortIcon className={`sortIcon selected ${(sortDirection === 'desc').toString()}`} /> : null}
+              {column.sortable ? <SortIcon className={`sortIcon selected ${(sortDirection === SORTING_OPTIONS.desc).toString()}`} /> : null}
             </div>
           ))}
           <div />

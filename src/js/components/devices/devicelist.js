@@ -5,7 +5,8 @@ import { Checkbox } from '@material-ui/core';
 
 import { Settings as SettingsIcon, Sort as SortIcon } from '@material-ui/icons';
 
-import { DEVICE_LIST_DEFAULTS, DEVICE_SORTING_OPTIONS, DEVICE_STATES } from '../../constants/deviceConstants';
+import { SORTING_OPTIONS } from '../../constants/appConstants';
+import { DEVICE_LIST_DEFAULTS, DEVICE_STATES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
@@ -43,7 +44,7 @@ export const DeviceList = props => {
     page: pageNo = defaultPage,
     perPage: pageLength = defaultPerPage,
     selection: selectedRows,
-    sort: { direction: sortDown = DEVICE_SORTING_OPTIONS.desc, columns = [] }
+    sort: { direction: sortDown = SORTING_OPTIONS.desc, columns = [] }
   } = deviceListState;
 
   const { column: sortCol } = columns.length ? columns[0] : {};
@@ -103,9 +104,7 @@ export const DeviceList = props => {
             <div className="columnHeader" key={`columnHeader-${index}`} style={item.style} onClick={() => onSort(item.attribute ? item.attribute : {})}>
               {item.title}
               {item.sortable && (
-                <SortIcon
-                  className={`sortIcon ${sortCol === item.attribute.name ? 'selected' : ''} ${(sortDown === DEVICE_SORTING_OPTIONS.desc).toString()}`}
-                />
+                <SortIcon className={`sortIcon ${sortCol === item.attribute.name ? 'selected' : ''} ${(sortDown === SORTING_OPTIONS.desc).toString()}`} />
               )}
               {item.customize && <SettingsIcon onClick={item.customize} style={{ fontSize: 16, marginLeft: 'auto' }} />}
             </div>

@@ -4,6 +4,7 @@ import { commonErrorFallback, commonErrorHandler, setSnackbar } from './appActio
 import Api, { headerNames } from '../api/general-api';
 import OrganizationConstants from '../constants/organizationConstants';
 import { getTenantCapabilities } from '../selectors';
+import { SORTING_OPTIONS } from '../constants/appConstants';
 
 const cookies = new Cookies();
 const apiUrlv1 = '/api/management/v1';
@@ -84,7 +85,7 @@ export const completeUpgrade = (tenantId, plan) => dispatch =>
     .catch(err => commonErrorHandler(err, `There was an error upgrading your account:`, dispatch))
     .then(() => Promise.resolve(dispatch(getUserOrganization())));
 
-export const getAuditLogs = (page, perPage, startDate, endDate, userId, type, detail, sort = 'desc') => (dispatch, getState) => {
+export const getAuditLogs = (page, perPage, startDate, endDate, userId, type, detail, sort = SORTING_OPTIONS.desc) => (dispatch, getState) => {
   const { hasAuditlogs } = getTenantCapabilities(getState());
   if (!hasAuditlogs) {
     return Promise.resolve();
@@ -105,7 +106,7 @@ export const getAuditLogs = (page, perPage, startDate, endDate, userId, type, de
     .catch(err => commonErrorHandler(err, `There was an error retrieving audit logs:`, dispatch));
 };
 
-export const getAuditLogsCsvLink = (startDate, endDate, userId, type, detail, sort = 'desc') => () => {
+export const getAuditLogsCsvLink = (startDate, endDate, userId, type, detail, sort = SORTING_OPTIONS.desc) => () => {
   const createdAfter = endDate ? `&created_after=${Math.round(Date.parse(startDate) / 1000)}` : '';
   const createdBefore = startDate ? `&created_before=${Math.round(Date.parse(endDate) / 1000)}` : '';
   const typeSearch = type ? `&object_type=${type}` : '';

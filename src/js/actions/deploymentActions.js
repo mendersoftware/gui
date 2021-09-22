@@ -3,6 +3,7 @@ import { DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
 import GeneralApi, { headerNames } from '../api/general-api';
 import { commonErrorHandler, setSnackbar } from '../actions/appActions';
 import { startTimeSort } from '../helpers';
+import { SORTING_OPTIONS } from '../constants/appConstants';
 
 const apiUrl = '/api/management/v1';
 const apiUrlV2 = '/api/management/v2';
@@ -27,11 +28,6 @@ const transformDeployments = (deployments, deploymentsById) =>
     { deployments: {}, deploymentIds: [] }
   );
 
-const SORTING_DIRECTIONS = {
-  asc: 'asc',
-  desc: 'desc'
-};
-
 /*Deployments */
 export const getDeploymentsByStatus = (
   status,
@@ -42,7 +38,7 @@ export const getDeploymentsByStatus = (
   group,
   type,
   shouldSelect = true,
-  sort = SORTING_DIRECTIONS.desc
+  sort = SORTING_OPTIONS.desc
 ) => (dispatch, getState) => {
   const created_after = startDate ? `&created_after=${startDate}` : '';
   const created_before = endDate ? `&created_before=${endDate}` : '';

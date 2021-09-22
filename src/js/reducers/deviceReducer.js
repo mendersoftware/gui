@@ -1,3 +1,4 @@
+import { SORTING_OPTIONS } from '../constants/appConstants';
 import * as DeviceConstants from '../constants/deviceConstants';
 import { duplicateFilter } from '../helpers';
 
@@ -18,7 +19,7 @@ export const initialState = {
     selectedIssues: [],
     selection: [],
     sort: {
-      direction: DeviceConstants.DEVICE_SORTING_OPTIONS.desc,
+      direction: SORTING_OPTIONS.desc,
       columns: [
         // { column: null, scope: null }
       ]

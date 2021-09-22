@@ -23,6 +23,7 @@ import DeploymentsList, { defaultHeaders } from './deploymentslist';
 import { DeploymentStatus } from './deploymentitem';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
 import { tryMapDeployments } from '../../helpers';
+import { SORTING_OPTIONS } from '../../constants/appConstants';
 
 const tonight = new Date(new Date().setHours(23, 59, 59, 999));
 
@@ -34,10 +35,6 @@ let timer;
 let inputDelayTimer;
 
 const BEGINNING_OF_TIME = '2016-01-01T00:00:00.000Z';
-const SORTING_DIRECTIONS = {
-  asc: 'asc',
-  desc: 'desc'
-};
 
 export const Past = props => {
   const {
@@ -61,7 +58,7 @@ export const Past = props => {
   useEffect(() => {
     const roundedStartDate = Math.round(Date.parse(startDate || BEGINNING_OF_TIME) / 1000);
     const roundedEndDate = Math.round(Date.parse(endDate) / 1000);
-    getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, deviceGroup, deploymentType, true, SORTING_DIRECTIONS.desc).then(
+    getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, deviceGroup, deploymentType, true, SORTING_OPTIONS.desc).then(
       deploymentsAction => {
         const deploymentsList = deploymentsAction ? Object.values(deploymentsAction[0].deployments) : [];
         if (deploymentsList.length) {
