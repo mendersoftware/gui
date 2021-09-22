@@ -77,6 +77,7 @@ export const Authorized = props => {
     setDeviceFilters,
     setDeviceListState,
     showHelptips,
+    showsDialog,
     states = {},
     updateDevicesAuth
   } = props;
@@ -396,7 +397,7 @@ export const Authorized = props => {
           </div>
         ) : (
           <>
-            {devicePendingTip ? (
+            {devicePendingTip && !showsDialog ? (
               devicePendingTip
             ) : (
               <EmptyState allCount={allCount} filters={filters} highlightHelp={highlightHelp} limitMaxed={limitMaxed} onClick={onPreauthClick} />
