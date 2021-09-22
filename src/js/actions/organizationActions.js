@@ -115,6 +115,11 @@ export const getAuditLogsCsvLink = (startDate, endDate, userId, type, detail, so
   return Promise.resolve(`${auditLogsApiUrl}/logs/export?limit=20000${createdAfter}${createdBefore}${userSearch}${typeSearch}${objectSearch}&sort=${sort}`);
 };
 
+export const setAuditlogsState = selectionState => (dispatch, getState) =>
+  Promise.resolve(
+    dispatch({ type: OrganizationConstants.SET_AUDITLOG_STATE, state: { ...getState().organization.auditlog.selectionState, ...selectionState } })
+  );
+
 /*
   Tenant management + Hosted Mender
 */

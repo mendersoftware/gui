@@ -7,39 +7,35 @@ import { Autocomplete } from '@material-ui/lab';
 
 import historyImage from '../../../assets/img/history.png';
 
-import { getAuditLogs, getAuditLogsCsvLink } from '../../actions/organizationActions';
+import { getAuditLogs, getAuditLogsCsvLink, setAuditlogsState } from '../../actions/organizationActions';
 import { getUserList } from '../../actions/userActions';
+import { SORTING_OPTIONS } from '../../constants/appConstants';
+import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
 import Loader from '../common/loader';
 import TimeframePicker from '../common/timeframe-picker';
 import TimerangePicker from '../common/timerange-picker';
-import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
-import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import AuditLogsList, { defaultRowsPerPage } from './auditlogslist';
-
-const today = new Date(new Date().setHours(0, 0, 0));
-const tonight = new Date(new Date().setHours(23, 59, 59));
 
 const detailsMap = {
   Deployment: 'to device group',
   User: 'email'
 };
 
-export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserList, groups, users, ...props }) => {
+export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserList, groups, selectionState, setAuditlogsState, users, ...props }) => {
   const history = useHistory();
   const [csvLoading, setCsvLoading] = useState(false);
-  const [detail, setDetail] = useState('');
-  const [endDate, setEndDate] = useState(tonight);
   const [filterReset, setFilterReset] = useState(false);
   const [loading, setLoading] = useState(true);
   const [locationChange, setLocationChange] = useState(true);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(defaultRowsPerPage);
-  const [sorting, setSorting] = useState('desc');
-  const [startDate, setStartDate] = useState(today);
-  const [type, setType] = useState('');
-  const [user, setUser] = useState('');
+  const [toggleActiveRange, setToggleActiveRange] = useState(false);
+  const [date] = useState({ today: new Date(new Date().setHours(0, 0, 0)).toISOString(), tonight: new Date(new Date().setHours(23, 59, 59)).toISOString() });
+  const { today, tonight } = date;
+
+  const { detail, page, perPage, endDate, user, sorting, startDate, total, type } = selectionState;
 
   useEffect(() => {
+    setToggleActiveRange(endDate || startDate);
     getUserList();
     trackLocationChange(history.location);
     history.listen(trackLocationChange);
@@ -56,24 +52,29 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
     }
     const params = new URLSearchParams(location.search);
     const { title: type = '' } = AUDIT_LOGS_TYPES.find(typeObject => typeObject.value === params.get('object_type')) || {};
-    setPage(params.get('page') || 1);
-    setPerPage(params.get('per_page') || defaultRowsPerPage);
-    setType(type);
-    setDetail(params.get('object_id') || '');
-    setUser(params.get('user_id') || '');
-    setSorting(params.get('sort') || 'desc');
-    setStartDate(params.get('start_date') ?? today);
-    setEndDate(params.get('end_date') ?? tonight);
+    let state = {
+      page: params.get('page') || 1,
+      perPage: params.get('per_page') || defaultRowsPerPage,
+      type,
+      detail: params.get('object_id') || '',
+      user: params.get('user_id') || '',
+      sorting: params.get('sort') || SORTING_OPTIONS.desc,
+      startDate: params.get('start_date') ?? today,
+      endDate: params.get('end_date') ?? tonight
+    };
+    setAuditlogsState(state);
     setLocationChange(!locationChange);
   };
 
   const reset = () => {
-    setPage(1);
-    setStartDate(today);
-    setEndDate(tonight);
-    setUser('');
-    setType('');
-    setDetail('');
+    setAuditlogsState({
+      page: 1,
+      type: '',
+      detail: '',
+      user: '',
+      startDate: today,
+      endDate: tonight
+    });
     setFilterReset(!filterReset);
     history.push('/auditlog');
   };
@@ -88,13 +89,15 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
     detailFilter
   ) => {
     detailFilter = !detailFilter && typeof detailFilter === 'string' ? '' : detailFilter || detail;
-    setPage(currentPage);
-    setPerPage(currentPerPage);
-    setStartDate(currentStartDate);
-    setEndDate(currentEndDate);
-    setUser(userFilter);
-    setType(typeFilter);
-    setDetail(detailFilter);
+    setAuditlogsState({
+      page: currentPage,
+      perPage: currentPerPage,
+      type: typeFilter,
+      detail: detailFilter,
+      user: userFilter,
+      startDate: currentStartDate?.toISOString ? currentStartDate.toISOString() : currentStartDate,
+      endDate: currentEndDate?.toISOString ? currentEndDate.toISOString() : currentEndDate
+    });
   };
 
   const createCsvDownload = () => {
@@ -109,6 +112,8 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
       setCsvLoading(false);
     });
   };
+
+  const onChangeSorting = () => setAuditlogsState({ sorting: sorting === SORTING_OPTIONS.desc ? SORTING_OPTIONS.asc : SORTING_OPTIONS.desc });
 
   const typeOptionsMap = {
     Deployment: groups,
@@ -174,7 +179,7 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
           style={{ marginRight: 15, marginTop: 16 }}
         />
         <div />
-        <TimerangePicker onChange={(start, end) => refresh(1, perPage, start, end)} reset={filterReset} />
+        <TimerangePicker onChange={(start, end) => refresh(1, perPage, start, end)} reset={filterReset} toggleActive={toggleActiveRange} />
         <div style={{ gridColumnStart: 2, gridColumnEnd: 4 }}>
           <TimeframePicker
             classNames="margin-left margin-right inline-block"
@@ -192,11 +197,11 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
       </div>
       <div className="flexbox center-aligned" style={{ justifyContent: 'flex-end' }}>
         <Loader show={csvLoading} />
-        <Button variant="contained" color="secondary" disabled={csvLoading || !events.length} onClick={createCsvDownload} style={{ marginLeft: 15 }}>
+        <Button variant="contained" color="secondary" disabled={csvLoading || !total} onClick={createCsvDownload} style={{ marginLeft: 15 }}>
           Download results as csv
         </Button>
       </div>
-      {!!events.length && (
+      {!!total && (
         <AuditLogsList
           {...props}
           items={events}
@@ -204,13 +209,12 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
           locationChange={locationChange}
           onChangePage={refresh}
           onChangeRowsPerPage={newPerPage => refresh(1, newPerPage)}
-          onChangeSorting={() => setSorting(sorting === 'desc' ? 'asc' : 'desc')}
-          page={page}
-          perPage={perPage}
-          sortDirection={sorting}
+          onChangeSorting={onChangeSorting}
+          selectionState={selectionState}
+          setAuditlogsState={setAuditlogsState}
         />
       )}
-      {!(loading || events.length) && (
+      {!(loading || total) && (
         <div className="dashboard-placeholder">
           <p>No log entries were found.</p>
           <p>Try adjusting the filters.</p>
@@ -221,14 +225,14 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
   );
 };
 
-const actionCreators = { getAuditLogs, getAuditLogsCsvLink, getUserList };
+const actionCreators = { getAuditLogs, getAuditLogsCsvLink, getUserList, setAuditlogsState };
 
 const mapStateToProps = state => {
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
-    count: state.organization.eventsTotal || state.organization.events.length,
-    events: state.organization.events,
+    events: state.organization.auditlog.events,
+    selectionState: state.organization.auditlog.selectionState,
     groups: ['All devices', ...Object.keys(groups).sort()],
     users: state.users.byId
   };

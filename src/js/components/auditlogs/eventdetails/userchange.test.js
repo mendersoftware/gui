@@ -5,7 +5,7 @@ import UserChange from './userchange';
 
 describe('UserChange Component', () => {
   it('renders correctly', async () => {
-    const { baseElement } = render(<UserChange item={defaultState.organization.events[0]} />);
+    const { baseElement } = render(<UserChange item={defaultState.organization.auditlog.events[0]} />);
 
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();

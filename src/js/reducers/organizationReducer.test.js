@@ -8,10 +8,14 @@ describe('organization reducer', () => {
   });
 
   it('should handle RECEIVE_AUDIT_LOGS', async () => {
-    expect(reducer(undefined, { type: OrganizationConstants.RECEIVE_AUDIT_LOGS, events: defaultState.organization.events, total: 2 }).eventsTotal).toEqual(2);
-    expect(reducer(initialState, { type: OrganizationConstants.RECEIVE_AUDIT_LOGS, events: defaultState.organization.events, total: 4 }).eventsTotal).toEqual(
-      4
-    );
+    expect(
+      reducer(undefined, { type: OrganizationConstants.RECEIVE_AUDIT_LOGS, events: defaultState.organization.auditlog.events, total: 2 }).auditlog
+        .selectionState.total
+    ).toEqual(2);
+    expect(
+      reducer(initialState, { type: OrganizationConstants.RECEIVE_AUDIT_LOGS, events: defaultState.organization.auditlog.events, total: 4 }).auditlog
+        .selectionState.total
+    ).toEqual(4);
   });
   it('should handle RECEIVE_CURRENT_CARD', async () => {
     expect(reducer(undefined, { type: OrganizationConstants.RECEIVE_CURRENT_CARD, card: defaultState.organization.card }).card).toEqual(

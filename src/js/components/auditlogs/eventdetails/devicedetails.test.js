@@ -8,7 +8,7 @@ describe('DeviceDetails Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
       <MemoryRouter>
-        <DeviceDetails device={defaultState.devices.byId.a1} item={defaultState.organization.events[2]} onClose={jest.fn} />
+        <DeviceDetails device={defaultState.devices.byId.a1} item={defaultState.organization.auditlog.events[2]} onClose={jest.fn} />
       </MemoryRouter>
     );
 

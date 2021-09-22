@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Time from 'react-time';
 import { Link } from 'react-router-dom';
 
@@ -90,12 +90,14 @@ const auditLogColumns = [
   { title: 'Time', sortable: true, render: TimeWrapper }
 ];
 
-export const AuditLogsList = ({ count, items, loading, locationChange, onChangePage, onChangeRowsPerPage, onChangeSorting, page, perPage, sortDirection }) => {
-  const [selectedItem, setSelectedItem] = useState();
+export const AuditLogsList = ({ items, loading, locationChange, onChangePage, onChangeRowsPerPage, onChangeSorting, selectionState, setAuditlogsState }) => {
+  const { page, perPage, selectedIssue: selectedItem, sorting: sortDirection, total: count } = selectionState;
 
   useEffect(() => {
-    setSelectedItem();
+    setAuditlogsState({ selectedIssue: undefined });
   }, [locationChange]);
+
+  const onIssueSelection = selectedIssue => setAuditlogsState({ selectedIssue });
 
   return (
     !!items.length && (
@@ -121,7 +123,7 @@ export const AuditLogsList = ({ count, items, loading, locationChange, onChangeP
               <div
                 className={`auditlogs-list-item ${allowsExpansion ? 'clickable' : ''}`}
                 key={`event-${item.time}`}
-                onClick={() => (allowsExpansion ? setSelectedItem(item) : undefined)}
+                onClick={() => onIssueSelection(allowsExpansion ? item : undefined)}
               >
                 {auditLogColumns.map((column, index) => column.render(item, index))}
                 {allowsExpansion ? (
@@ -137,7 +139,7 @@ export const AuditLogsList = ({ count, items, loading, locationChange, onChangeP
         </div>
         <Loader show={loading} />
         <Pagination count={count} rowsPerPage={perPage} onChangeRowsPerPage={onChangeRowsPerPage} page={page} onChangePage={onChangePage} />
-        <EventDetailsDrawer mapChangeToContent={mapChangeToContent} eventItem={selectedItem} open={Boolean(selectedItem)} onClose={() => setSelectedItem()} />
+        <EventDetailsDrawer mapChangeToContent={mapChangeToContent} eventItem={selectedItem} open={Boolean(selectedItem)} onClose={() => onIssueSelection()} />
       </div>
     )
   );

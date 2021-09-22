@@ -21,15 +21,13 @@ describe('Auditlogs Component', () => {
       <MemoryRouter>
         <Provider store={store}>
           <AuditLogsList
-            count={defaultState.organization.eventsTotal}
-            items={defaultState.organization.events}
+            items={defaultState.organization.auditlog.events}
             loading={false}
-            page={1}
             onChangeRowsPerPage={jest.fn}
             onChangePage={jest.fn}
             onChangeSorting={jest.fn}
-            perPage={20}
-            sortDirection="desc"
+            selectionState={defaultState.organization.auditlog.selectionState}
+            setAuditlogsState={jest.fn}
           />
         </Provider>
       </MemoryRouter>

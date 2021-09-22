@@ -227,8 +227,8 @@ describe('organization actions', () => {
     const expectedActions = [
       {
         type: OrganizationConstants.RECEIVE_AUDIT_LOGS,
-        events: defaultState.organization.events,
-        total: defaultState.organization.eventsTotal
+        events: defaultState.organization.auditlog.events,
+        total: defaultState.organization.auditlog.selectionState.total
       }
     ];
     const request = store.dispatch(getAuditLogs());
