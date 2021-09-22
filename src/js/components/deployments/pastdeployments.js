@@ -25,8 +25,6 @@ import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './d
 import { tryMapDeployments } from '../../helpers';
 import { SORTING_OPTIONS } from '../../constants/appConstants';
 
-const tonight = new Date(new Date().setHours(23, 59, 59, 999));
-
 const headers = [...defaultHeaders.slice(0, defaultHeaders.length - 1), { title: 'Status', renderer: DeploymentStatus }];
 
 const type = DEPLOYMENT_STATES.finished;
@@ -52,6 +50,7 @@ export const Past = props => {
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
   const [timeRangeToggle, setTimeRangeToggle] = useState(false);
+  const [tonight] = useState(new Date(new Date().setHours(23, 59, 59)).toISOString());
   const deploymentsRef = useRef();
   const { endDate, page, perPage, search: deviceGroup, startDate, total: count, type: deploymentType } = pastSelectionState;
 
