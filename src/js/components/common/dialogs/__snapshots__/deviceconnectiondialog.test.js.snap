@@ -119,12 +119,12 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
           <div
             class="flexbox centered column"
           >
-            <span>
+            <div>
               <b>
                 Don't have a Raspberry Pi?
               </b>
                You can use our Docker-run virtual device to go through the same tutorial.
-            </span>
+            </div>
             <div>
               <img
                 src="docker.png"
