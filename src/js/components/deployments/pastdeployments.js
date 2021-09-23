@@ -161,9 +161,18 @@ export const Past = props => {
     inputDelayTimer = setTimeout(() => refreshPast(...args), 700);
   };
 
-  const onGroupFilterChange = (e, value) => onFilterUpdate(1, perPage, startDate, endDate, value);
+  const onGroupFilterChange = (e, value) => {
+    if (!e) {
+      return;
+    }
+    setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { search: value } });
+    onFilterUpdate(1, perPage, startDate, endDate, value);
+  };
 
   const onTypeFilterChange = (e, value) => {
+    if (!e) {
+      return;
+    }
     setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { type: value } });
     onFilterUpdate(1, perPage, startDate, endDate, deviceGroup, value);
   };

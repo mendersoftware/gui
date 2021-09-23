@@ -22,6 +22,8 @@ const detailsMap = {
   User: 'email'
 };
 
+let inputDelayTimer;
+
 export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserList, groups, selectionState, setAuditlogsState, users, ...props }) => {
   const history = useHistory();
   const [csvLoading, setCsvLoading] = useState(false);
@@ -38,13 +40,9 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
     setToggleActiveRange(endDate || startDate);
     getUserList();
     trackLocationChange(history.location);
+    refresh();
     history.listen(trackLocationChange);
   }, []);
-
-  useEffect(() => {
-    setLoading(true);
-    getAuditLogs(page, perPage, startDate, endDate, user?.id || user, `${type}`.toLowerCase(), detail?.id || detail, sorting).then(() => setLoading(false));
-  }, [page, perPage, endDate, startDate, user, type, detail, sorting]);
 
   const trackLocationChange = location => {
     if (!location.search) {
@@ -80,24 +78,26 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
   };
 
   const refresh = (
-    currentPage,
+    currentPage = page,
     currentPerPage = perPage,
     currentStartDate = startDate,
     currentEndDate = endDate,
     userFilter = user,
     typeFilter = type,
-    detailFilter
+    detailFilter = detail,
+    currentSorting = sorting
   ) => {
-    detailFilter = !detailFilter && typeof detailFilter === 'string' ? '' : detailFilter || detail;
-    setAuditlogsState({
-      page: currentPage,
-      perPage: currentPerPage,
-      type: typeFilter,
-      detail: detailFilter,
-      user: userFilter,
-      startDate: currentStartDate?.toISOString ? currentStartDate.toISOString() : currentStartDate,
-      endDate: currentEndDate?.toISOString ? currentEndDate.toISOString() : currentEndDate
-    });
+    setLoading(true);
+    getAuditLogs(
+      currentPage,
+      currentPerPage,
+      currentStartDate,
+      currentEndDate,
+      userFilter?.id || userFilter,
+      `${typeFilter}`.toLowerCase(),
+      detailFilter?.id || detailFilter,
+      currentSorting
+    ).then(() => setLoading(false));
   };
 
   const createCsvDownload = () => {
@@ -113,7 +113,57 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
     });
   };
 
-  const onChangeSorting = () => setAuditlogsState({ sorting: sorting === SORTING_OPTIONS.desc ? SORTING_OPTIONS.asc : SORTING_OPTIONS.desc });
+  const onChangeSorting = () => {
+    const currentSorting = sorting === SORTING_OPTIONS.desc ? SORTING_OPTIONS.asc : SORTING_OPTIONS.desc;
+    setAuditlogsState({ page: 1, sorting: currentSorting });
+    refresh(page, perPage, startDate, endDate, user, type, detail, currentSorting);
+  };
+
+  const onFilterUpdate = (...args) => {
+    clearTimeout(inputDelayTimer);
+    inputDelayTimer = setTimeout(() => refresh(...args), 700);
+  };
+
+  const onUserFilterChange = (e, value, reason) => {
+    if (!e || reason === 'blur') {
+      return;
+    }
+    setAuditlogsState({ page: 1, user: value });
+    onFilterUpdate(1, perPage, startDate, endDate, value);
+  };
+
+  const onTypeFilterChange = (e, value) => {
+    if (!e) {
+      return;
+    }
+    setAuditlogsState({ page: 1, type: value });
+    onFilterUpdate(1, perPage, startDate, endDate, user, value, '');
+  };
+
+  const onDetailFilterChange = (e, value) => {
+    if (!e) {
+      return;
+    }
+    setAuditlogsState({ detail: value, page: 1 });
+    onFilterUpdate(1, perPage, startDate, endDate, user, type, value);
+  };
+
+  const onTimeFilterChange = (currentStartDate = startDate, currentEndDate = endDate) => {
+    setAuditlogsState({
+      page: 1,
+      startDate: currentStartDate?.toISOString ? currentStartDate.toISOString() : currentStartDate,
+      endDate: currentEndDate?.toISOString ? currentEndDate.toISOString() : currentEndDate
+    });
+    refresh(1, perPage, currentStartDate, currentEndDate);
+  };
+
+  const onChangePagination = (page, currentPerPage = perPage) => {
+    setAuditlogsState({
+      page,
+      perPage: currentPerPage
+    });
+    refresh(1, perPage);
+  };
 
   const typeOptionsMap = {
     Deployment: groups,
@@ -134,7 +184,7 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
           getOptionLabel={option => option.email || option}
           handleHomeEndKeys
           options={Object.values(users)}
-          onChange={(e, value, reason) => (reason !== 'blur' ? refresh(1, perPage, startDate, endDate, value) : null)}
+          onChange={onUserFilterChange}
           value={user}
           renderInput={params => (
             <TextField
@@ -156,7 +206,7 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
           getOptionLabel={option => option.title || option}
           handleHomeEndKeys
           inputValue={type}
-          onInputChange={(e, value) => refresh(1, perPage, startDate, endDate, user, value, '')}
+          onInputChange={onTypeFilterChange}
           options={AUDIT_LOGS_TYPES}
           renderInput={params => (
             <TextField {...params} label="Filter by change" placeholder="Type" InputLabelProps={{ shrink: true }} InputProps={{ ...params.InputProps }} />
@@ -172,18 +222,18 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
           getOptionLabel={option => option.email || option}
           handleHomeEndKeys
           inputValue={detail}
-          onInputChange={(e, value) => refresh(1, perPage, startDate, endDate, user, type, value)}
+          onInputChange={onDetailFilterChange}
           options={detailOptions}
           renderInput={params => <TextField {...params} placeholder={detailsMap[type] || '-'} InputProps={{ ...params.InputProps }} />}
           renderOption={option => option.email || option}
           style={{ marginRight: 15, marginTop: 16 }}
         />
         <div />
-        <TimerangePicker onChange={(start, end) => refresh(1, perPage, start, end)} reset={filterReset} toggleActive={toggleActiveRange} />
+        <TimerangePicker onChange={onTimeFilterChange} reset={filterReset} toggleActive={toggleActiveRange} />
         <div style={{ gridColumnStart: 2, gridColumnEnd: 4 }}>
           <TimeframePicker
             classNames="margin-left margin-right inline-block"
-            onChange={(startDate, endDate) => refresh(1, perPage, startDate, endDate)}
+            onChange={onTimeFilterChange}
             endDate={endDate}
             startDate={startDate}
             tonight={tonight}
@@ -207,8 +257,8 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
           items={events}
           loading={loading}
           locationChange={locationChange}
-          onChangePage={refresh}
-          onChangeRowsPerPage={newPerPage => refresh(1, newPerPage)}
+          onChangePage={onChangePagination}
+          onChangeRowsPerPage={newPerPage => onChangePagination(1, newPerPage)}
           onChangeSorting={onChangeSorting}
           selectionState={selectionState}
           setAuditlogsState={setAuditlogsState}

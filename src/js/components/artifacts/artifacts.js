@@ -6,7 +6,6 @@ import { Button } from '@material-ui/core';
 import { CloudUpload, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import { cancelFileUpload, setSnackbar } from '../../actions/appActions';
-import { setDeviceListState } from '../../actions/deviceActions';
 import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
 import { createArtifact, getReleases, removeArtifact, selectRelease, showRemoveArtifactDialog, uploadArtifact } from '../../actions/releaseActions';
 import { onboardingSteps } from '../../constants/onboardingConstants';
@@ -170,7 +169,6 @@ const actionCreators = {
   createArtifact,
   getReleases,
   removeArtifact,
-  setDeviceListState,
   selectRelease,
   setShowCreateArtifactDialog,
   setSnackbar,
