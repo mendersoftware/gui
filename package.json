@@ -126,7 +126,8 @@
     ],
     "coverageReporters": [
       "lcov",
-      "cobertura"
+      "cobertura",
+      "text"
     ],
     "setupFiles": [
       "jest-canvas-mock"
@@ -139,7 +140,7 @@
       "<rootDir>/src/**/__tests__/**/*.js",
       "<rootDir>/src/**/*.{spec,test}.js"
     ],
-    "timers": "modern",
+    "timers": "fake",
     "transform": {
       "^.+\\.[j|t]sx?$": "babel-jest",
       "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/tests/assetsTransformer.js"

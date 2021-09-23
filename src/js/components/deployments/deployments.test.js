@@ -120,7 +120,7 @@ describe('Deployments Component', () => {
     userEvent.click(within(deployment).getByRole('button', { name: /Abort/i }));
     jest.advanceTimersByTime(200);
     await waitFor(() => expect(screen.getByText(/Confirm abort/i)).toBeInTheDocument());
-    userEvent.click(document.querySelector('#confirmAbort'));
+    await act(async () => userEvent.click(document.querySelector('#confirmAbort').nextElementSibling));
     await act(async () => userEvent.click(within(deployment).getByRole('button', { name: /View details/i })));
     await waitFor(() => rerender(ui));
     await waitFor(() => screen.queryByText(/Deployment details/i), { timeout: 2500 });
