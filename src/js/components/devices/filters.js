@@ -38,6 +38,7 @@ export const Filters = ({
   plan,
   previousFilters,
   resetIdFilter,
+  saveGlobalSettings,
   selectedGroup,
   setDeviceFilters
 }) => {
