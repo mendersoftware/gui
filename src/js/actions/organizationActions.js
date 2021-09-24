@@ -100,7 +100,8 @@ export const getAuditLogs = (page, perPage, startDate, endDate, userId, type, de
     `${auditLogsApiUrl}/logs?page=${page}&per_page=${perPage}${createdAfter}${createdBefore}${userSearch}${typeSearch}${objectSearch}&sort=${sort}`
   )
     .then(res => {
-      const total = Number(res.headers[headerNames.total]);
+      let total = res.headers[headerNames.total];
+      total = Number(total || res.data.length);
       return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_AUDIT_LOGS, events: res.data, total }));
     })
     .catch(err => commonErrorHandler(err, `There was an error retrieving audit logs:`, dispatch));

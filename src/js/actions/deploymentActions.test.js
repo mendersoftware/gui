@@ -2,7 +2,15 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { defaultState } from '../../../tests/mockData';
 
-import { abortDeployment, createDeployment, getDeploymentsByStatus, getDeviceLog, selectDeployment, updateDeploymentControlMap } from './deploymentActions';
+import {
+  abortDeployment,
+  createDeployment,
+  getDeploymentsByStatus,
+  getDeviceLog,
+  selectDeployment,
+  setDeploymentsState,
+  updateDeploymentControlMap
+} from './deploymentActions';
 import AppConstants from '../constants/appConstants';
 import DeploymentConstants from '../constants/deploymentConstants';
 
@@ -198,5 +206,30 @@ describe('deployment actions', () => {
       expect(storeActions.length).toEqual(expectedActions.length);
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
+  });
+  it('should allow deployment state tracking', async () => {
+    const store = mockStore({ ...defaultState });
+    await store.dispatch(
+      setDeploymentsState({ general: { showCreationDialog: true }, [DeploymentConstants.DEPLOYMENT_STATES.finished]: { something: 'new' } })
+    );
+    const expectedActions = [
+      {
+        type: DeploymentConstants.SET_DEPLOYMENTS_STATE,
+        state: {
+          ...defaultState.deployments.selectionState,
+          finished: {
+            ...defaultState.deployments.selectionState.finished,
+            something: 'new'
+          },
+          general: {
+            ...defaultState.deployments.selectionState.general,
+            showCreationDialog: true
+          }
+        }
+      }
+    ];
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
 });

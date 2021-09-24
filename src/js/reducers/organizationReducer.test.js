@@ -17,6 +17,11 @@ describe('organization reducer', () => {
         .selectionState.total
     ).toEqual(4);
   });
+  it('should handle SET_AUDITLOG_STATE', async () => {
+    const newState = { something: 'new' };
+    expect(reducer(undefined, { type: OrganizationConstants.SET_AUDITLOG_STATE, state: newState }).auditlog.selectionState).toEqual(newState);
+    expect(reducer(initialState, { type: OrganizationConstants.SET_AUDITLOG_STATE, state: newState }).auditlog.selectionState).toEqual(newState);
+  });
   it('should handle RECEIVE_CURRENT_CARD', async () => {
     expect(reducer(undefined, { type: OrganizationConstants.RECEIVE_CURRENT_CARD, card: defaultState.organization.card }).card).toEqual(
       defaultState.organization.card

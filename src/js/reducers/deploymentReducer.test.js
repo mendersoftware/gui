@@ -64,6 +64,11 @@ describe('device reducer', () => {
     expect(reducer(undefined, { type: DeploymentConstants.SELECT_DEPLOYMENT, deploymentId: 'a1' }).selectedDeployment).toEqual('a1');
     expect(reducer(initialState, { type: DeploymentConstants.SELECT_DEPLOYMENT, deploymentId: 'a1' }).selectedDeployment).toEqual('a1');
   });
+  it('should handle SET_DEPLOYMENTS_STATE', async () => {
+    const newState = { something: 'new' };
+    expect(reducer(undefined, { type: DeploymentConstants.SET_DEPLOYMENTS_STATE, state: newState }).selectionState).toEqual(newState);
+    expect(reducer(initialState, { type: DeploymentConstants.SET_DEPLOYMENTS_STATE, state: newState }).selectionState).toEqual(newState);
+  });
   it('should handle REMOVE_DEPLOYMENT', async () => {
     let state = reducer(undefined, { type: DeploymentConstants.RECEIVE_DEPLOYMENT, deployment: defaultState.deployments.byId.d1 });
     expect(reducer(state, { type: DeploymentConstants.REMOVE_DEPLOYMENT, deploymentId: defaultState.deployments.byId.d1.id }).byId).toEqual({});
