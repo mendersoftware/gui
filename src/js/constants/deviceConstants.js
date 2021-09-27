@@ -156,5 +156,12 @@ module.exports = {
     unknown: 'unknown'
   },
   DEVICE_ONLINE_CUTOFF: { interval: 24, intervalName: 'hour' },
+  ATTRIBUTE_SCOPES: {
+    inventory: 'inventory',
+    identity: 'identity',
+    monitor: 'monitor',
+    system: 'system',
+    tags: 'tags'
+  },
   UNGROUPED_GROUP: { id: '*|=ungrouped=|*', name: 'Unassigned' }
 };

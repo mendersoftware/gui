@@ -4,7 +4,7 @@ import md5 from 'md5';
 import pluralize from 'pluralize';
 import { getToken } from './auth';
 
-import { DEVICE_FILTERING_OPTIONS } from './constants/deviceConstants';
+import { ATTRIBUTE_SCOPES, DEVICE_FILTERING_OPTIONS } from './constants/deviceConstants';
 import {
   DEPLOYMENT_STATES,
   defaultStats,
@@ -311,14 +311,14 @@ export const tryMapDeployments = (accu, id) => {
 export const mapDeviceAttributes = (attributes = []) =>
   attributes.reduce(
     (accu, attribute) => {
-      if (!(attribute.value && attribute.name)) {
+      if (!(attribute.value && attribute.name) && attribute.scope === ATTRIBUTE_SCOPES.inventory) {
         return accu;
       }
-      accu[attribute.scope || 'inventory'] = {
-        ...accu[attribute.scope || 'inventory'],
+      accu[attribute.scope || ATTRIBUTE_SCOPES.inventory] = {
+        ...accu[attribute.scope || ATTRIBUTE_SCOPES.inventory],
         [attribute.name]: attribute.value
       };
-      if (attribute.name === 'device_type' && attribute.scope === 'inventory') {
+      if (attribute.name === 'device_type' && attribute.scope === ATTRIBUTE_SCOPES.inventory) {
         accu.inventory.device_type = [].concat(attribute.value);
       }
       return accu;
