@@ -21,7 +21,7 @@
   "homepage": "https://mender.io",
   "devDependencies": {
     "@nuintun/qrcode": "^3.0.1",
-    "@playwright/test": "1.14.1",
+    "@playwright/test": "1.15.0",
     "axios": "^0.21.4",
     "dayjs": "^1.10.7",
     "jwt-decode": "^3.1.2",
