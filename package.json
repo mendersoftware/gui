@@ -30,7 +30,7 @@
     "react-big-calendar": "^0.35.0",
     "react-copy-to-clipboard": "^5.0.4",
     "react-dom": "~16.14.0",
-    "react-dropzone": "^11.4.0",
+    "react-dropzone": "^11.4.2",
     "react-ga": "^3.3.0",
     "react-google-recaptcha": "^2.1.0",
     "react-idle-timer": "^4.6.4",
