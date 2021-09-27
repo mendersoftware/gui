@@ -54,7 +54,7 @@ const DeviceStatus = ({ device: { auth_sets = [], monitor = {}, status: deviceSt
     icon = <NumberIcon value={pendingAuthSetsCount} />;
     notification = statusTypes.authRequests.notification[deviceStatus] ?? statusTypes.authRequests.notification[DEVICE_STATES.accepted];
     label = `new ${pluralize('request', pendingAuthSetsCount)}`;
-  } else if (Object.keys(monitor).length) {
+  } else if (Object.values(monitor).some(i => i)) {
     icon = <WarningIcon style={{ marginLeft: 5 }} />;
     notification = statusTypes.monitor.notification.default;
     label = 'monitoring';
