@@ -21,11 +21,10 @@ exports[`Login Component renders correctly 1`] = `
   <div
     style="display: flex; justify-content: center;"
   >
-    <a
-      aria-disabled="false"
+    <button
       class="MuiButtonBase-root MuiButton-root MuiButton-contained oauth-provider"
-      href="/api/management/v1/useradm/oauth2/github"
       tabindex="0"
+      type="button"
     >
       <span
         class="MuiButton-label"
@@ -49,12 +48,11 @@ exports[`Login Component renders correctly 1`] = `
       <span
         class="MuiTouchRipple-root"
       />
-    </a>
-    <a
-      aria-disabled="false"
+    </button>
+    <button
       class="MuiButtonBase-root MuiButton-root MuiButton-contained oauth-provider"
-      href="/api/management/v1/useradm/oauth2/google"
       tabindex="0"
+      type="button"
     >
       <span
         class="MuiButton-label"
@@ -78,7 +76,7 @@ exports[`Login Component renders correctly 1`] = `
       <span
         class="MuiTouchRipple-root"
       />
-    </a>
+    </button>
   </div>
   <h4
     class="dashboard-header margin-top-large"
