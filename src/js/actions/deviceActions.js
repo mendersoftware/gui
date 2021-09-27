@@ -309,7 +309,7 @@ export const getGroupDevices = (group, options = {}) => (dispatch, getState) => 
         group: {
           filters: [],
           ...stateGroup,
-          deviceIds: deviceAccu.ids.length === total || deviceAccu.ids.length > stateGroup.deviceIds ? deviceAccu.ids : stateGroup.deviceIds,
+          deviceIds: deviceAccu.ids.length === total || deviceAccu.ids.length > stateGroup?.deviceIds ? deviceAccu.ids : stateGroup.deviceIds,
           total
         },
         groupName: group
