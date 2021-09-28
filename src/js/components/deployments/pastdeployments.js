@@ -118,8 +118,8 @@ export const Past = props => {
   ) => {
     setDeploymentsState({
       [DEPLOYMENT_STATES.finished]: {
-        startDate: currentStartDate?.toISOString ? currentStartDate.toISOString() : currentStartDate,
-        endDate: currentEndDate?.toISOString ? currentEndDate.toISOString() : currentEndDate,
+        startDate: currentStartDate,
+        endDate: currentEndDate,
         page: currentPage,
         perPage: currentPerPage,
         search: currentDeviceGroup,
@@ -182,7 +182,7 @@ export const Past = props => {
   return (
     <div className="fadeIn margin-left margin-top-large">
       <div className="datepicker-container">
-        <TimerangePicker onChange={onTimeFilterChange} toggleActive={timeRangeToggle} />
+        <TimerangePicker endDate={endDate} onChange={onTimeFilterChange} startDate={startDate} />
         <TimeframePicker
           classNames="margin-left margin-right inline-block"
           onChange={onTimeFilterChange}

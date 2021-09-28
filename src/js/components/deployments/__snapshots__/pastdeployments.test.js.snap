@@ -18,7 +18,7 @@ exports[`PastDeployments Component renders correctly 1`] = `
       >
         <li>
           <a
-            class=""
+            class="active"
           >
             Today
           </a>

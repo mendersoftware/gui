@@ -27,17 +27,15 @@ let inputDelayTimer;
 export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserList, groups, selectionState, setAuditlogsState, users, ...props }) => {
   const history = useHistory();
   const [csvLoading, setCsvLoading] = useState(false);
-  const [filterReset, setFilterReset] = useState(false);
   const [loading, setLoading] = useState(true);
   const [locationChange, setLocationChange] = useState(true);
-  const [toggleActiveRange, setToggleActiveRange] = useState(false);
+  const [filterReset, setFilterReset] = useState(false);
   const [date] = useState({ today: new Date(new Date().setHours(0, 0, 0)).toISOString(), tonight: new Date(new Date().setHours(23, 59, 59)).toISOString() });
   const { today, tonight } = date;
 
   const { detail, page, perPage, endDate, user, sorting, startDate, total, type } = selectionState;
 
   useEffect(() => {
-    setToggleActiveRange(endDate || startDate);
     getUserList();
     trackLocationChange(history.location);
     refresh();
@@ -149,11 +147,7 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
   };
 
   const onTimeFilterChange = (currentStartDate = startDate, currentEndDate = endDate) => {
-    setAuditlogsState({
-      page: 1,
-      startDate: currentStartDate?.toISOString ? currentStartDate.toISOString() : currentStartDate,
-      endDate: currentEndDate?.toISOString ? currentEndDate.toISOString() : currentEndDate
-    });
+    setAuditlogsState({ page: 1, startDate: currentStartDate, endDate: currentEndDate });
     refresh(1, perPage, currentStartDate, currentEndDate);
   };
 
@@ -229,7 +223,7 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
           style={{ marginRight: 15, marginTop: 16 }}
         />
         <div />
-        <TimerangePicker onChange={onTimeFilterChange} reset={filterReset} toggleActive={toggleActiveRange} />
+        <TimerangePicker endDate={endDate} onChange={onTimeFilterChange} startDate={startDate} />
         <div style={{ gridColumnStart: 2, gridColumnEnd: 4 }}>
           <TimeframePicker
             classNames="margin-left margin-right inline-block"
