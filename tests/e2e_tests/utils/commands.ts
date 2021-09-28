@@ -171,7 +171,7 @@ export const compareImages = (expectedPath, actualPath, options = { threshold: 0
   if (!fs.existsSync(diffPath)) {
     fs.mkdirSync(diffPath);
   }
-  fs.writeFileSync(path.join(diffPath, 'diff.png'), PNG.sync.write(diff));
+  fs.writeFileSync(path.join(diffPath, `diff-${Date.now()}.png`), PNG.sync.write(diff));
   const pass = usePercentage ? (numDiffPixels / (width * height)) * 100 < threshold : numDiffPixels < threshold;
   return { pass, numDiffPixels };
 };
