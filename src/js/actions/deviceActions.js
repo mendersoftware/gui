@@ -730,7 +730,7 @@ export const getDevicesWithAuth = devices => dispatch =>
           tasks.push(Promise.resolve(receivedDevices));
           return Promise.all(tasks);
         })
-        .catch(err => console.log(`Error: ${err}`))
+        .catch(err => commonErrorHandler(err, `Error: ${err}`, dispatch))
     : Promise.resolve([[], []]);
 
 const maybeUpdateDevicesByStatus = (deviceId, authId) => (dispatch, getState) => {
