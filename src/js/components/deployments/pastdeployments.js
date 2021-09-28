@@ -35,30 +35,21 @@ let inputDelayTimer;
 const BEGINNING_OF_TIME = '2016-01-01T00:00:00.000Z';
 
 export const Past = props => {
-  const {
-    advanceOnboarding,
-    createClick,
-    getDeploymentsByStatus,
-    groups,
-    loading,
-    onboardingState,
-    past,
-    pastSelectionState,
-    setDeploymentsState,
-    setSnackbar
-  } = props;
+  const { advanceOnboarding, createClick, getDeploymentsByStatus, groups, onboardingState, past, pastSelectionState, setDeploymentsState, setSnackbar } = props;
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
   const [timeRangeToggle, setTimeRangeToggle] = useState(false);
   const [tonight] = useState(new Date(new Date().setHours(23, 59, 59)).toISOString());
+  const [loading, setLoading] = useState(false);
   const deploymentsRef = useRef();
   const { endDate, page, perPage, search: deviceGroup, startDate, total: count, type: deploymentType } = pastSelectionState;
 
   useEffect(() => {
     const roundedStartDate = Math.round(Date.parse(startDate || BEGINNING_OF_TIME) / 1000);
     const roundedEndDate = Math.round(Date.parse(endDate) / 1000);
-    getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, deviceGroup, deploymentType, true, SORTING_OPTIONS.desc).then(
-      deploymentsAction => {
+    setLoading(true);
+    getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, deviceGroup, deploymentType, true, SORTING_OPTIONS.desc)
+      .then(deploymentsAction => {
         const deploymentsList = deploymentsAction ? Object.values(deploymentsAction[0].deployments) : [];
         if (deploymentsList.length) {
           let newStartDate = new Date(deploymentsList[deploymentsList.length - 1].created);
@@ -66,8 +57,8 @@ export const Past = props => {
           setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { startDate: newStartDate.toISOString() } });
           setTimeRangeToggle(!timeRangeToggle);
         }
-      }
-    );
+      })
+      .finally(() => setLoading(false));
     return () => {
       clearAllRetryTimers(setSnackbar);
     };

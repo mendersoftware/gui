@@ -39,7 +39,7 @@ export const Progress = props => {
   const { page: pendingPage, perPage: pendingPerPage, total: pendingCount } = pendingState;
 
   const [currentRefreshDeploymentLength, setCurrentRefreshDeploymentLength] = useState(refreshDeploymentsLength);
-  const [doneLoading, setDoneLoading] = useState(!!progress.length || !!pending.length);
+  const [doneLoading, setDoneLoading] = useState(!!(progressCount || pendingCount));
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
 
@@ -71,12 +71,14 @@ export const Progress = props => {
       // retrieve past deployments outside of the regular refresh cycle to not change the selection state for past deployments
       getDeploymentsByStatus(DEPLOYMENT_STATES.finished, 1, 1, undefined, undefined, undefined, undefined, false);
     }
-    return Promise.all(tasks).then(() => {
-      const currentRefreshDeploymentLength = Math.min(refreshDeploymentsLength, refreshLength * 2);
-      setCurrentRefreshDeploymentLength(currentRefreshDeploymentLength);
-      clearTimeout(dynamicTimer);
-      dynamicTimer = setTimeout(setupDeploymentsRefresh, currentRefreshDeploymentLength);
-    });
+    return Promise.all(tasks)
+      .then(() => {
+        const currentRefreshDeploymentLength = Math.min(refreshDeploymentsLength, refreshLength * 2);
+        setCurrentRefreshDeploymentLength(currentRefreshDeploymentLength);
+        clearTimeout(dynamicTimer);
+        dynamicTimer = setTimeout(setupDeploymentsRefresh, currentRefreshDeploymentLength);
+      })
+      .finally(() => setDoneLoading(true));
   };
 
   // deploymentStatus = <inprogress|pending>

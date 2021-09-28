@@ -151,6 +151,10 @@ describe('Deployments Component', () => {
     userEvent.click(screen.getByRole('tab', { name: /Finished/i }));
     userEvent.click(screen.getByRole('button', { name: /Create a deployment/i }));
     const releaseId = Object.keys(defaultState.releases.byId)[0];
+    await waitFor(() => rerender(ui));
+    await waitFor(() => {
+      expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument();
+    });
     expect(screen.queryByText(releaseId)).not.toBeInTheDocument();
     const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
     userEvent.click(releaseSelect);
@@ -228,8 +232,14 @@ describe('Deployments Component', () => {
       </MemoryRouter>
     );
     const { rerender } = render(ui);
-    userEvent.click(screen.getByRole('button', { name: /Create a deployment/i }));
+    act(() => userEvent.click(screen.getByRole('tab', { name: /Finished/i })));
+    act(() => userEvent.click(screen.getByRole('tab', { name: /Active/i })));
+    await act(async () => userEvent.click(screen.getByRole('button', { name: /Create a deployment/i })));
     const releaseId = Object.keys(defaultState.releases.byId)[0];
+    await waitFor(() => rerender(ui));
+    await waitFor(() => {
+      expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument();
+    });
     expect(screen.queryByText(releaseId)).not.toBeInTheDocument();
     const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
     userEvent.click(releaseSelect);
@@ -294,8 +304,5 @@ describe('Deployments Component', () => {
         }
       }
     });
-    await jest.runAllTicks();
-    await waitFor(() => rerender(ui));
-    expect(screen.getByText(/Pending/i)).toBeInTheDocument();
   }, 15000);
 });
