@@ -8,7 +8,7 @@ import DeploymentDeviceListItem from './deploymentdevicelistitem';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
 
 const headerStyle = { position: 'sticky', top: 0, background: 'white', zIndex: 1 };
-const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
+const { page: defaultPage } = DEVICE_LIST_DEFAULTS;
 
 export const DeploymentDeviceList = ({
   deployment,
@@ -17,11 +17,12 @@ export const DeploymentDeviceList = ({
   getDeviceById,
   idAttribute,
   refreshTrigger,
+  selectedDeviceIds,
   selectedDevices,
   viewLog
 }) => {
   const [currentPage, setCurrentPage] = useState(defaultPage);
-  const [perPage, setPerPage] = useState(defaultPerPage);
+  const [perPage, setPerPage] = useState(10);
   const { created = new Date().toISOString(), device_count = 0, retries, totalDeviceCount: totalDevices } = deployment;
   const totalDeviceCount = totalDevices ?? device_count;
 
@@ -39,7 +40,7 @@ export const DeploymentDeviceList = ({
     }, []);
     // get device artifact, inventory and identity details not listed in schedule data
     lackingData.map(deviceId => Promise.all([getDeviceById(deviceId), getDeviceAuth(deviceId)]));
-  }, [selectedDevices]);
+  }, [selectedDeviceIds]);
 
   useEffect(() => {
     if (deployment.id) {

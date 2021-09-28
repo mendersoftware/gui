@@ -156,13 +156,13 @@ exports[`ProgressDeviceList Component renders correctly 1`] = `
           role=\\"button\\"
           tabindex=\\"0\\"
         >
-          20
+          10
         </div>
         <input
           aria-hidden=\\"true\\"
           class=\\"MuiSelect-nativeInput\\"
           tabindex=\\"-1\\"
-          value=\\"20\\"
+          value=\\"10\\"
         />
         <svg
           aria-hidden=\\"true\\"

@@ -243,6 +243,7 @@ const mapStateToProps = state => {
       deployment.artifact_name && state.releases.byId[deployment.artifact_name]
         ? state.releases.byId[deployment.artifact_name]
         : { device_types_compatible: [] },
+    selectedDeviceIds: state.deployments.selectedDeviceIds,
     selectedDevices
   };
 };
