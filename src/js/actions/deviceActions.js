@@ -413,11 +413,23 @@ export const getDeviceById = id => (dispatch, getState) =>
     })
     .catch(err => {
       const errMsg = extractErrorMessage(err);
-      if (errMsg.startsWith('Device not found')) {
+      if (errMsg.includes('Not Found')) {
         console.log(`${id} does not have any inventory information`);
-        return;
+        const device = reduceReceivedDevices(
+          [
+            {
+              id,
+              attributes: [
+                { name: 'status', value: 'decomissioned', scope: 'identity' },
+                { name: 'decomissioned', value: 'true', scope: 'inventory' }
+              ]
+            }
+          ],
+          [],
+          getState()
+        ).devicesById[id];
+        dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device });
       }
-      return err;
     });
 
 const deriveInactiveDevices = deviceIds => (dispatch, getState) => {
