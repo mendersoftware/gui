@@ -46,7 +46,7 @@ const LogLine = ({ beExplicit, line, prefix }) => {
     <React.Fragment key={line_number}>
       <div className="log-line margin-right" onMouseLeave={toggleHovering} onMouseOver={setHovering}>
         {prefix ? prefix : <div />}
-        <code className={`align-right ${beExplicit ? 'red' : ''}`}>{line_number}</code>
+        {line_number !== undefined ? <code className={`align-right ${beExplicit ? 'red' : ''}`}>{line_number}</code> : <div />}
         <code className={beExplicit ? 'red' : ''}>{data}</code>
         {hovering && <CopyButton text={data} onCopy={onCopied} />}
       </div>
@@ -100,7 +100,7 @@ const LogContent = ({ lines_before = [], lines_after = [], line_matching = '' })
   </>
 );
 
-const DescriptionContent = ({ description }) => <LogLine line={{ line_number: 1, data: description }} />;
+const DescriptionContent = ({ description }) => <LogLine line={{ data: description }} />;
 
 const detailTypes = {
   log: {
@@ -146,9 +146,11 @@ export const MonitorDetailsDialog = ({ alert, onClose }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Close</Button>
-        <Button variant="contained" color="primary" onClick={exportLog}>
-          Export log
-        </Button>
+        {!!lines.length && (
+          <Button variant="contained" color="primary" onClick={exportLog}>
+            Export log
+          </Button>
+        )}
       </DialogActions>
     </Dialog>
   );
