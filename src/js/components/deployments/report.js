@@ -21,7 +21,7 @@ import { getDeviceLog, getSingleDeployment, updateDeploymentControlMap } from '.
 import { getAuditLogs } from '../../actions/organizationActions';
 import { getRelease } from '../../actions/releaseActions';
 import { deploymentStatesToSubstates, DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
-import { getIdAttribute, getIsEnterprise } from '../../selectors';
+import { getIdAttribute, getIsEnterprise, getUserRoles } from '../../selectors';
 import theme from '../../themes/mender-theme';
 import ConfigurationObject from '../common/configurationobject';
 import LogDialog from '../common/dialogs/log';
@@ -68,6 +68,7 @@ export const DeploymentReport = props => {
     getDeviceLog,
     getRelease,
     getSingleDeployment,
+    isAdmin,
     isEnterprise,
     open,
     onClose,
@@ -91,7 +92,7 @@ export const DeploymentReport = props => {
     if ((deployment.type === DEPLOYMENT_TYPES.software || !release.device_types_compatible.length) && deployment.artifact_name) {
       getRelease(deployment.artifact_name);
     }
-    if (isEnterprise) {
+    if (isEnterprise && isAdmin) {
       getAuditLogs(1, 100, undefined, undefined, undefined, 'deployment', deployment.name);
     }
     refreshDeployment();
@@ -220,6 +221,7 @@ const mapStateToProps = state => {
   const allDevices = sortDeploymentDevices(Object.values(devices)).map(device => ({ ...state.devices.byId[device.id], ...device }));
   const deployment = state.deployments.byId[state.deployments.selectedDeployment] || {};
   const { actor = {} } = state.organization.auditlog.events.find(event => event.object.id === state.deployments.selectedDeployment) || {};
+  const { isAdmin } = getUserRoles(state);
   return {
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
     allDevices,
@@ -228,6 +230,7 @@ const mapStateToProps = state => {
     devicesById: state.devices.byId,
     deployment,
     idAttribute: getIdAttribute(state).attribute,
+    isAdmin,
     isEnterprise: getIsEnterprise(state),
     isHosted: state.app.features.isHosted,
     release:
