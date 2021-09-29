@@ -75,7 +75,7 @@ exports[`PortForward Component renders correctly 1`] = `
       </div>
       <div>
         <a
-          href="/auditlog?object_type=device&object_id=a1&start_date=2020-01-01T00:00:00.000Z"
+          href="/auditlog?object_type=device&object_id=a1&start_date=2016-01-01T00:00:00.000Z"
         >
           List all log entries for this device
         </a>
