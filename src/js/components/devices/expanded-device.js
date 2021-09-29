@@ -77,7 +77,7 @@ export const ExpandedDevice = ({
   const [yesterday, setYesterday] = useState(new Date());
   const monitoring = useRef();
 
-  const { hasDeviceConfig, hasDeviceConnect, hasMonitor } = tenantCapabilities;
+  const { hasAuditlogs, hasDeviceConfig, hasDeviceConnect, hasMonitor } = tenantCapabilities;
 
   useEffect(() => {
     if (!device.id) {
@@ -203,8 +203,9 @@ export const ExpandedDevice = ({
         <DeviceConnection
           device={device}
           docsVersion={docsVersion}
-          startTroubleshoot={launchTroubleshoot}
+          hasAuditlogs={hasAuditlogs}
           socketClosed={socketClosed}
+          startTroubleshoot={launchTroubleshoot}
           style={{ marginRight: theme.spacing(2) }}
           userRoles={userRoles}
         />

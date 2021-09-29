@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Time from 'react-time';
 import ReactTooltip from 'react-tooltip';
 
 import { Button, Typography, SvgIcon } from '@material-ui/core';
-import { mdiConsole as ConsoleIcon } from '@mdi/js';
 import { ImportExport as ImportExportIcon, InfoOutlined as InfoIcon, Launch as LaunchIcon } from '@material-ui/icons';
+import { mdiConsole as ConsoleIcon } from '@mdi/js';
 
-import theme from '../../../themes/mender-theme';
+import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
 import { DEVICE_CONNECT_STATES } from '../../../constants/deviceConstants';
+import theme from '../../../themes/mender-theme';
 import DeviceDataCollapse from './devicedatacollapse';
 
 const buttonStyle = { textTransform: 'none', textAlign: 'left' };
@@ -95,7 +97,7 @@ const troubleshootingTools = [
   { key: 'portForward', component: PortForwardLink, needsWriteAccess: false, needsTroubleshoot: true }
 ];
 
-export const DeviceConnection = ({ device, docsVersion = '', startTroubleshoot, socketClosed, style, userRoles }) => {
+export const DeviceConnection = ({ device, docsVersion = '', hasAuditlogs, socketClosed, startTroubleshoot, style, userRoles }) => {
   const [availableTabs, setAvailableTabs] = useState(troubleshootingTools);
 
   useEffect(() => {
@@ -127,6 +129,11 @@ export const DeviceConnection = ({ device, docsVersion = '', startTroubleshoot, 
               }
               return <Component key={item.key} docsVersion={docsVersion} onClick={startTroubleshoot} disabled={!socketClosed} item={item} />;
             })}
+          {hasAuditlogs && userRoles.isAdmin && connect_status !== DEVICE_CONNECT_STATES.unknown && (
+            <Link className="flexbox center-aligned margin-left" to={`/auditlog?object_type=device&object_id=${device.id}&start_date=${BEGINNING_OF_TIME}`}>
+              List all log entries for this device
+            </Link>
+          )}
         </div>
       }
       isAddOn
