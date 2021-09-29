@@ -117,7 +117,7 @@ export default class DistributionReport extends React.Component {
                   labelComponent={
                     <VictoryLabel
                       text={({ datum }) => datum.y.toString() + ' (' + (Math.round((datum.y * 1000) / (total || 1)) / 10.0).toString() + '%)'}
-                      dy={8}
+                      textAnchor={({ datum }) => (datum.startAngle < 0 ? 'end' : 'start')}
                     />
                   }
                   radius={75}
