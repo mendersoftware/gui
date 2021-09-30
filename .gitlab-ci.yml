@@ -47,7 +47,6 @@ test:lint:
       - screenshots
       - logs
       - junit
-    when: on_failure
     reports:
       junit:
         - junit/results.xml

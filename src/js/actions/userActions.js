@@ -7,7 +7,7 @@ import AppConstants from '../constants/appConstants';
 import OnboardingConstants from '../constants/onboardingConstants';
 import UserConstants, { OWN_USER_ID, twoFAStates } from '../constants/userConstants';
 import { getCurrentUser, getOnboardingState, getUserSettings } from '../selectors';
-import { logout } from '../auth';
+import { cleanUp, logout } from '../auth';
 import { extractErrorMessage, hashString, preformatWithRequestID } from '../helpers';
 import { clearAllRetryTimers } from '../utils/retrytimer';
 
@@ -33,10 +33,7 @@ const handleLoginError = (err, has2FA) => dispatch => {
 export const loginUser = userData => dispatch =>
   UsersApi.postLogin(`${useradmApiUrl}/auth/login`, userData)
     .catch(err => {
-      cookies.remove('noExpiry', { path: '/' });
-      cookies.remove('noExpiry', { path: '/ui' });
-      cookies.remove('JWT', { path: '/' });
-      cookies.remove('JWT', { path: '/ui' });
+      cleanUp();
       return Promise.resolve(dispatch(handleLoginError(err, userData['token2fa'])));
     })
     .then(res => {
