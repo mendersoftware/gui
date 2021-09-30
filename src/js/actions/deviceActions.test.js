@@ -27,7 +27,6 @@ import {
   getGroupDevices,
   getGroups,
   getSessionDetails,
-  initializeGroupsDevices,
   preauthDevice,
   removeDevicesFromGroup,
   removeDynamicGroup,
@@ -456,40 +455,6 @@ describe('static grouping related actions', () => {
       { type: DeviceConstants.RECEIVE_GROUP_DEVICES, group: { filters: [], deviceIds: [defaultState.devices.byId.a1.id], total: 1 }, groupName }
     ];
     await store.dispatch(getAllGroupDevices(groupName));
-    const storeActions = store.getActions();
-    expect(storeActions.length).toEqual(expectedActions.length);
-    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
-  });
-  it('should allow static group initialization', async () => {
-    const store = mockStore({ ...defaultState });
-    const groupName = 'testGroup';
-    // eslint-disable-next-line no-unused-vars
-    const { attributes, updated_ts, ...expectedDevice } = defaultState.devices.byId.a1;
-    const expectedActions = [
-      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: { ...expectedDevice, attributes } } },
-      {
-        type: DeviceConstants.SET_ACCEPTED_DEVICES,
-        deviceIds: [defaultState.devices.byId.a1.id],
-        status: DeviceConstants.DEVICE_STATES.accepted,
-        total: null
-      },
-      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: {} },
-      // these are the devices retrieved for the dynamic test group -> the mock backend won't serve them, thus an empty array...
-      {
-        type: DeviceConstants.SET_ACCEPTED_DEVICES,
-        deviceIds: [],
-        status: DeviceConstants.DEVICE_STATES.accepted,
-        total: null
-      },
-      { type: DeviceConstants.RECEIVE_GROUP_DEVICES, group: defaultState.devices.groups.byId.testGroupDynamic, groupName: 'testGroupDynamic' },
-      { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: { ...expectedDevice, updated_ts } },
-      {
-        type: DeviceConstants.RECEIVE_GROUP_DEVICES,
-        group: { filters: [], deviceIds: defaultState.devices.groups.byId[groupName].deviceIds, total: defaultState.devices.groups.byId[groupName].total },
-        groupName
-      }
-    ];
-    await store.dispatch(initializeGroupsDevices());
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

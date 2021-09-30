@@ -4,11 +4,11 @@ import { Link, withRouter } from 'react-router-dom';
 
 import { Button, Tab, Tabs } from '@material-ui/core';
 
-import { getGroups, getDynamicGroups, initializeGroupsDevices, selectDevice } from '../../actions/deviceActions';
+import { getGroups, getDynamicGroups } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
-import { selectRelease } from '../../actions/releaseActions';
 import { setSnackbar } from '../../actions/appActions';
-import { abortDeployment, selectDeployment } from '../../actions/deploymentActions';
+import { abortDeployment, selectDeployment, setDeploymentsState } from '../../actions/deploymentActions';
+import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getIsEnterprise, getOnboardingState } from '../../selectors';
 
@@ -41,65 +41,66 @@ const routes = {
 
 export const defaultRefreshDeploymentsLength = 30000;
 
-const today = new Date(new Date().setHours(0, 0, 0));
-
 export const Deployments = ({
   abortDeployment,
   advanceOnboarding,
+  devicesById,
   getDynamicGroups,
   getGroups,
   history,
-  initializeGroupsDevices,
   isEnterprise,
   location,
   match,
   onboardingState,
   pastCount,
+  releases,
   selectDeployment,
-  selectDevice,
-  selectRelease,
+  selectionState,
+  setDeploymentsState,
   setSnackbar
 }) => {
   const [deploymentObject, setDeploymentObject] = useState({});
-  const [createDialog, setCreateDialog] = useState(false);
-  const [reportDialog, setReportDialog] = useState(false);
-  const [reportType, setReportType] = useState();
-  const [startDate, setStartDate] = useState();
-  const [tabIndex, setTabIndex] = useState(routes.active.route);
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
   const tabsRef = useRef();
 
   useEffect(() => {
-    let tasks = [getGroups(), selectRelease(), selectDevice()];
+    getGroups();
     if (isEnterprise) {
-      tasks.push(getDynamicGroups());
+      getDynamicGroups();
     }
-    Promise.all(tasks).then(initializeGroupsDevices).catch(console.log);
-    let startDate = today;
+
+    let finishedState = {};
     const params = new URLSearchParams(location.search);
     let reportType = 'active';
+    let deploymentObject = {};
     if (match) {
       reportType = match.params.tab;
       if (params.get('open')) {
         if (params.get('id')) {
           showReport(reportType, params.get('id'));
         } else if (params.get('release')) {
-          selectRelease(params.get('release'));
+          deploymentObject.release = { ...releases[params.get('release')] };
         } else if (params.get('deviceId')) {
-          selectDevice(params.get('deviceId'));
+          deploymentObject.device = { ...devicesById[params.get('deviceId')] };
         } else {
-          setTimeout(() => setCreateDialog(true), 400);
+          setTimeout(() => setDeploymentsState({ general: { dialogOpen: true } }), 400);
         }
       } else if (params.get('from')) {
-        startDate = new Date(params.get('from'));
+        const startDate = new Date(params.get('from'));
         startDate.setHours(0, 0, 0);
+        finishedState = { startDate: startDate.toISOString() };
       }
     }
-    setCreateDialog(Boolean(params.get('open')) && !params.get('id'));
-    setReportType(reportType);
-    setStartDate(startDate);
-    setTabIndex(updateActive());
+    setDeploymentObject(deploymentObject);
+    const dialogOpen = Boolean(params.get('open')) && !params.get('id');
+    let state = selectionState.state;
+    if (match.params.tab) {
+      state = updateActive(match.params.tab);
+    } else {
+      history.replace(state);
+    }
+    setDeploymentsState({ general: { state, showCreationDialog: dialogOpen }, [DEPLOYMENT_STATES.finished]: finishedState });
   }, []);
 
   const retryDeployment = (deployment, deploymentDeviceIds) => {
@@ -111,28 +112,26 @@ export const Deployments = ({
       deploymentDeviceIds,
       phases: [{ batch_size: 100, start_ts: undefined, delay: 0 }],
       release,
+      deploymentDeviceCount: deploymentDeviceIds.length,
       ...updateControlMap
     };
     setDeploymentObject(deploymentObject);
-    setCreateDialog(true);
-    setReportDialog(false);
+    setDeploymentsState({ general: { showCreationDialog: true, showReportDialog: false } });
   };
 
   const onScheduleSubmit = () => {
-    setCreateDialog(false);
-    setReportDialog(false);
+    setDeploymentsState({ general: { showCreationDialog: false, showReportDialog: false } });
     setDeploymentObject({});
     // successfully retrieved new deployment
     if (getCurrentRoute().title !== routes.active.title) {
       history.push(routes.active.route);
-      changeTab(routes.active.route);
+      changeTab(undefined, routes.active.route);
     }
   };
 
   const onAbortDeployment = id =>
     abortDeployment(id).then(() => {
-      setCreateDialog(false);
-      setReportDialog(false);
+      setDeploymentsState({ general: { showCreationDialog: false, showReportDialog: false } });
       return Promise.resolve();
     });
 
@@ -150,8 +149,8 @@ export const Deployments = ({
     return routes.active;
   };
 
-  const changeTab = tabIndex => {
-    setTabIndex(tabIndex);
+  const changeTab = (_, tabIndex) => {
+    setDeploymentsState({ general: { state: tabIndex } });
     setSnackbar('');
     if (pastCount && !onboardingState.complete) {
       advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST);
@@ -162,23 +161,19 @@ export const Deployments = ({
     if (!onboardingState.complete) {
       advanceOnboarding(onboardingSteps.DEPLOYMENTS_INPROGRESS);
     }
-    selectDeployment(deploymentId).then(() => {
-      setCreateDialog(false);
-      setReportType(reportType);
-      setReportDialog(true);
-    });
+    selectDeployment(deploymentId).then(() => setDeploymentsState({ general: { reportType, showCreationDialog: false, showReportDialog: true } }));
   };
 
-  const closeReport = () => {
-    setReportDialog(false);
-    selectDeployment();
-  };
+  const closeReport = () => selectDeployment().then(() => setDeploymentsState({ general: { reportType: undefined, showReportDialog: false } }));
 
   const onCreationDismiss = () => {
-    setCreateDialog(false);
+    setDeploymentsState({ general: { showCreationDialog: false } });
     setDeploymentObject({});
   };
 
+  const onCreationShow = () => setDeploymentsState({ general: { showCreationDialog: true } });
+
+  const { reportType, showCreationDialog: createDialog, showReportDialog: reportDialog, state } = selectionState;
   let onboardingComponent = null;
   // the pastCount prop is needed to trigger the rerender as the change in past deployments would otherwise not be noticed on this view
   if (pastCount && tabsRef.current && !reportDialog) {
@@ -191,24 +186,32 @@ export const Deployments = ({
       }
     });
   }
-  const ComponentToShow = getCurrentRoute().component;
+
+  const ComponentToShow = Object.values(routes).find(route => route.route === state).component;
   return (
     <>
       <div className="margin-left-small margin-top" style={{ maxWidth: '80vw' }}>
         <div className="flexbox space-between">
-          <Tabs value={tabIndex} onChange={(e, newTabIndex) => changeTab(newTabIndex)} ref={tabsRef}>
+          <Tabs value={state} onChange={changeTab} ref={tabsRef}>
             {Object.values(routes).map(route => (
               <Tab component={Link} key={route.route} label={route.title} to={route.route} value={route.route} />
             ))}
           </Tabs>
-          <Button color="secondary" variant="contained" onClick={() => setCreateDialog(true)} style={{ height: '100%' }}>
+          <Button color="secondary" variant="contained" onClick={onCreationShow} style={{ height: '100%' }}>
             Create a deployment
           </Button>
         </div>
-        <ComponentToShow abort={onAbortDeployment} createClick={() => setCreateDialog(true)} openReport={showReport} startDate={startDate} />
+        <ComponentToShow abort={onAbortDeployment} createClick={onCreationShow} openReport={showReport} />
       </div>
       <Report abort={onAbortDeployment} onClose={closeReport} open={reportDialog} retry={retryDeployment} type={reportType} />
-      {createDialog && <CreateDialog onDismiss={onCreationDismiss} deploymentObject={deploymentObject} onScheduleSubmit={onScheduleSubmit} />}
+      {createDialog && (
+        <CreateDialog
+          onDismiss={onCreationDismiss}
+          deploymentObject={deploymentObject}
+          onScheduleSubmit={onScheduleSubmit}
+          setDeploymentObject={setDeploymentObject}
+        />
+      )}
       {onboardingComponent}
     </>
   );
@@ -219,18 +222,19 @@ const actionCreators = {
   advanceOnboarding,
   getGroups,
   getDynamicGroups,
-  initializeGroupsDevices,
-  selectDevice,
   selectDeployment,
-  selectRelease,
+  setDeploymentsState,
   setSnackbar
 };
 
 const mapStateToProps = state => {
   return {
+    devicesById: state.devices.byId,
     isEnterprise: getIsEnterprise(state),
     onboardingState: getOnboardingState(state),
     pastCount: state.deployments.byStatus.finished.total,
+    releases: state.releases.byId,
+    selectionState: state.deployments.selectionState.general,
     settings: state.users.globalSettings
   };
 };

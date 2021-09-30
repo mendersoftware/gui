@@ -94,24 +94,7 @@ exports[`Deployments Component renders correctly 1`] = `
     </button>
   </div>
   <div
-    class="loaderContainer shrunk"
-  >
-    <div
-      class="  loader"
-    >
-      <span
-        class="dot dot_1"
-      />
-      <span
-        class="dot dot_2"
-      />
-      <span
-        class="dot dot_3"
-      />
-      <span
-        class="dot dot_4"
-      />
-    </div>
-  </div>
+    class="fadeIn"
+  />
 </div>
 `;

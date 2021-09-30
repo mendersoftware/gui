@@ -51,7 +51,7 @@ export const organizationHandlers = [
     return res(ctx.status(200));
   }),
   rest.get(`${auditLogsApiUrl}/logs`, (req, res, ctx) => {
-    return res(ctx.set(headerNames.total, defaultState.organization.events.length), ctx.json(defaultState.organization.events));
+    return res(ctx.set(headerNames.total, defaultState.organization.auditlog.events.length), ctx.json(defaultState.organization.auditlog.events));
   }),
   rest.get(`${auditLogsApiUrl}/logs/export`, (req, res, ctx) => {
     return res(

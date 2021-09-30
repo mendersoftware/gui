@@ -26,7 +26,13 @@ describe('ScheduledDeployments Component', () => {
         ...defaultState.deployments,
         byStatus: {
           ...defaultState.deployments.byStatus,
-          scheduled: { deploymentIds: [], selectedDeploymentIds: [], total: 0 }
+          scheduled: { deploymentIds: [], total: 0 }
+        },
+        selectionState: {
+          ...defaultState.deployments.selectionState,
+          scheduled: {
+            selection: []
+          }
         }
       }
     });

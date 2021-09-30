@@ -9,6 +9,10 @@ module.exports = {
   SET_ANNOUNCEMENT: 'SET_ANNOUNCEMENT',
   SET_FIRST_LOGIN_AFTER_SIGNUP: 'SET_FIRST_LOGIN_AFTER_SIGNUP',
   UPLOAD_PROGRESS: 'UPLOAD_PROGRESS',
+  SORTING_OPTIONS: {
+    asc: 'asc',
+    desc: 'desc'
+  },
   PLANS: {
     os: {
       name: 'Basic',

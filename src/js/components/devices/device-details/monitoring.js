@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import Time from 'react-time';
 
+import theme from '../../../themes/mender-theme';
 import DeviceDataCollapse from './devicedatacollapse';
 import { DeviceOfflineHeaderNotification, NoAlertsHeaderNotification, severityMap } from './notifications';
 
-const MonitoringAlert = ({ alert, onDetailsClick }) => {
+const MonitoringAlert = ({ alert, onDetailsClick, style }) => {
   const { description, lines_before = [], lines_after = [], line_matching = '' } = alert.subject.details;
   const lines = [...lines_before, line_matching, ...lines_after].filter(i => i);
   return (
-    <div className="monitoring-alert column-data">
+    <div className="monitoring-alert column-data" style={style}>
       {severityMap[alert.level].listIcon}
       <div className="key text-muted">
         <b>{alert.name}</b>
@@ -42,7 +43,10 @@ export const DeviceMonitoring = ({ alerts, device, getAlerts, innerRef, isOfflin
       header={
         <>
           {!latestAlerts.length && <NoAlertsHeaderNotification />}
-          {!open && latestAlerts.map(alert => <MonitoringAlert alert={alert} key={alert.id} onDetailsClick={onDetailsClick} />)}
+          {!open &&
+            latestAlerts.map(alert => (
+              <MonitoringAlert alert={alert} key={alert.id} onDetailsClick={onDetailsClick} style={{ marginBottom: theme.spacing() }} />
+            ))}
           {isOffline && <DeviceOfflineHeaderNotification />}
           {!open && <a onClick={toggleOpen}>show more</a>}
         </>

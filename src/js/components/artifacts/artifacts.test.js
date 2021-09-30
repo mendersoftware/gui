@@ -52,9 +52,6 @@ describe('Artifacts Component', () => {
       </MemoryRouter>
     );
     const { rerender } = render(ui);
-    act(() => userEvent.click(screen.getByRole('button', { name: /upload/i })));
-    await waitFor(() => rerender(ui));
-    act(() => userEvent.click(screen.getByRole('button', { name: /cancel/i })));
     act(() => jest.advanceTimersByTime(1000));
     await waitFor(() => rerender(ui));
     expect(screen.queryByDisplayValue(defaultState.releases.byId.a1.Artifacts[0].description)).toBeInTheDocument();

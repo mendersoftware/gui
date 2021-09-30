@@ -44,7 +44,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
         Time
         <svg
           aria-hidden=\\"true\\"
-          class=\\"MuiSvgIcon-root sortIcon selected true\\"
+          class=\\"MuiSvgIcon-root sortIcon selected false\\"
           focusable=\\"false\\"
           viewBox=\\"0 0 24 24\\"
         >

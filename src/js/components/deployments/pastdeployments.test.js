@@ -16,10 +16,10 @@ describe('PastDeployments Component', () => {
       deployments: {
         ...defaultState.deployments,
         byId: {},
-        byStatus: {
-          ...defaultState.deployments.byStatus,
+        selectionState: {
+          ...defaultState.deployments.selectionState,
           finished: {
-            selectedDeploymentIds: []
+            selection: []
           }
         }
       }

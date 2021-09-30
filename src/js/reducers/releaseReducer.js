@@ -68,9 +68,8 @@ const releaseReducer = (state = initialState, action) => {
       };
     }
     case ReleaseConstants.RELEASE_REMOVED: {
-      let byId = state.byId;
-      delete byId[action.release];
-
+      // eslint-disable-next-line no-unused-vars
+      const { [action.release]: toBeRemoved, ...byId } = state.byId;
       return {
         ...state,
         byId,

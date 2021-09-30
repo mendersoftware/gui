@@ -286,11 +286,7 @@ exports[`MonitorLogDialog Component renders correctly for description only 1`] =
           class="log-line margin-right"
         >
           <div />
-          <code
-            class="align-right "
-          >
-            1
-          </code>
+          <div />
           <code
             class=""
           />
@@ -326,20 +322,6 @@ exports[`MonitorLogDialog Component renders correctly for description only 1`] =
             class="MuiButton-label"
           >
             Close
-          </span>
-          <span
-            class="MuiTouchRipple-root"
-          />
-        </button>
-        <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
-          tabindex="0"
-          type="button"
-        >
-          <span
-            class="MuiButton-label"
-          >
-            Export log
           </span>
           <span
             class="MuiTouchRipple-root"

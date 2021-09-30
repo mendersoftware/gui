@@ -1,17 +1,30 @@
 import DeploymentConstants from '../constants/deploymentConstants';
+import DeviceConstants from '../constants/deviceConstants';
 
 export const initialState = {
   byId: {
     // [id]: { stats, devices: { [deploymentId]: { id, log } } }
   },
   byStatus: {
-    finished: { deploymentIds: [], selectedDeploymentIds: [], total: 0 },
-    inprogress: { deploymentIds: [], selectedDeploymentIds: [], total: 0 },
-    pending: { deploymentIds: [], selectedDeploymentIds: [], total: 0 },
-    scheduled: { deploymentIds: [], selectedDeploymentIds: [], total: 0 }
+    finished: { deploymentIds: [], total: 0 },
+    inprogress: { deploymentIds: [], total: 0 },
+    pending: { deploymentIds: [], total: 0 },
+    scheduled: { deploymentIds: [], total: 0 }
   },
   deploymentDeviceLimit: 5000,
-  selectedDeployment: null
+  selectedDeployment: null,
+  selectionState: {
+    finished: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, endDate: undefined, search: '', selection: [], startDate: undefined, total: 0, type: '' },
+    inprogress: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, perPage: DeploymentConstants.DEFAULT_PENDING_INPROGRESS_COUNT, selection: [], total: 0 },
+    pending: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, perPage: DeploymentConstants.DEFAULT_PENDING_INPROGRESS_COUNT, selection: [], total: 0 },
+    scheduled: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, selection: [], total: 0 },
+    general: {
+      state: '/deployments/active',
+      showCreationDialog: false,
+      showReportDialog: false,
+      reportType: null // DeploymentConstants.DEPLOYMENT_TYPES.configuration|DeploymentConstants.DEPLOYMENT_TYPES.software
+    }
+  }
 };
 
 const deploymentReducer = (state = initialState, action) => {
@@ -88,11 +101,12 @@ const deploymentReducer = (state = initialState, action) => {
     case DeploymentConstants.SELECT_FINISHED_DEPLOYMENTS:
       return {
         ...state,
-        byStatus: {
-          ...state.byStatus,
+        selectionState: {
+          ...state.selectionState,
           [action.status]: {
-            ...state.byStatus[action.status],
-            selectedDeploymentIds: action.deploymentIds
+            ...state.selectionState[action.status],
+            selection: action.deploymentIds,
+            total: action.total
           }
         }
       };
@@ -100,6 +114,11 @@ const deploymentReducer = (state = initialState, action) => {
       return {
         ...state,
         selectedDeployment: action.deploymentId
+      };
+    case DeploymentConstants.SET_DEPLOYMENTS_STATE:
+      return {
+        ...state,
+        selectionState: action.state
       };
     default:
       return state;

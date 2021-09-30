@@ -64,7 +64,7 @@ describe('SelfUserManagement Component', () => {
     await act(async () => userEvent.click(screen.getByRole('button', { name: /Verify/i })));
     jest.runAllTicks();
     await waitFor(() => rerender(ui));
-    await waitFor(() => expect(screen.queryByText(/Verifying/)).not.toBeInTheDocument(), { timeout: 1500 });
+    await waitFor(() => expect(screen.queryByText(/Verifying/)).not.toBeInTheDocument(), { timeout: 5000 });
     userEvent.click(screen.getByRole('button', { name: /Save/i }));
-  }, 10000);
+  }, 15000);
 });

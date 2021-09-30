@@ -12,7 +12,17 @@ const mockStore = configureStore([thunk]);
 describe('InProgressDeployments Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({ ...defaultState });
+    store = mockStore({
+      ...defaultState,
+      deployments: {
+        ...defaultState.deployments,
+        selectionState: {
+          ...defaultState.deployments.selectionState,
+          inprogress: { ...defaultState.deployments.selectionState.inprogress, selection: ['d1'] },
+          pending: { ...defaultState.deployments.selectionState.pending, selection: ['d2'] }
+        }
+      }
+    });
   });
 
   it('renders correctly', async () => {

@@ -63,6 +63,14 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
     setRefresh(!refresh);
   };
 
+  const onOAuthClick = ({ target: { textContent } }) => {
+    const providerId = OAuth2Providers.find(provider => provider.name === textContent).id;
+    const oauthTimeout = new Date();
+    oauthTimeout.setDate(oauthTimeout.getDate() + 7);
+    window.localStorage.setItem('oauth', `${oauthTimeout.getTime()}`);
+    window.location.replace(`/api/management/v1/useradm/oauth2/${providerId}`);
+  };
+
   let twoFAAnchor = {};
   if (twoFARef.current) {
     twoFAAnchor = {
@@ -81,13 +89,7 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
           <div className="flexbox centered margin-bottom">Log in with:</div>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             {OAuth2Providers.map(provider => (
-              <Button
-                className="oauth-provider"
-                variant="contained"
-                key={provider.id}
-                href={`/api/management/v1/useradm/oauth2/${provider.id}`}
-                startIcon={provider.icon}
-              >
+              <Button className="oauth-provider" variant="contained" key={provider.id} onClick={onOAuthClick} startIcon={provider.icon}>
                 {provider.name}
               </Button>
             ))}

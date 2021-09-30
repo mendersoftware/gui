@@ -19,7 +19,7 @@ describe('FileTransfer Component', () => {
     const { baseElement } = render(
       <MemoryRouter>
         <Provider store={store}>
-          <FileTransfer item={{ ...defaultState.organization.events[2], meta: { path: ['/dev/null'] } }} />
+          <FileTransfer item={{ ...defaultState.organization.auditlog.events[2], meta: { path: ['/dev/null'] } }} />
         </Provider>
       </MemoryRouter>
     );

@@ -49,7 +49,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             >
               <button
                 aria-label=\\"Clear\\"
-                class=\\"MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty\\"
+                class=\\"MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator\\"
                 tabindex=\\"-1\\"
                 title=\\"Clear\\"
                 type=\\"button\\"
@@ -312,6 +312,12 @@ exports[`Auditlogs Component renders correctly 1`] = `
           
         </div>
       </div>
+      <span
+        class=\\"link margin-bottom-small\\"
+        style=\\"align-self: flex-end;\\"
+      >
+        clear filter
+      </span>
     </div>
     <div
       class=\\"flexbox center-aligned\\"
@@ -395,7 +401,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
           Time
           <svg
             aria-hidden=\\"true\\"
-            class=\\"MuiSvgIcon-root sortIcon selected true\\"
+            class=\\"MuiSvgIcon-root sortIcon selected false\\"
             focusable=\\"false\\"
             viewBox=\\"0 0 24 24\\"
           >

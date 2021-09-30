@@ -7,7 +7,7 @@ import { Autocomplete } from '@material-ui/lab';
 
 import historyImage from '../../../assets/img/history.png';
 import { setSnackbar } from '../../actions/appActions';
-import { getDeploymentsByStatus, selectDeployment } from '../../actions/deploymentActions';
+import { getDeploymentsByStatus, selectDeployment, setDeploymentsState } from '../../actions/deploymentActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
@@ -22,9 +22,8 @@ import useWindowSize from '../../utils/resizehook';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
 import { DeploymentStatus } from './deploymentitem';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
-
-const today = new Date(new Date().setHours(0, 0, 0));
-const tonight = new Date(new Date().setHours(23, 59, 59, 999));
+import { tryMapDeployments } from '../../helpers';
+import { SORTING_OPTIONS } from '../../constants/appConstants';
 
 const headers = [...defaultHeaders.slice(0, defaultHeaders.length - 1), { title: 'Status', renderer: DeploymentStatus }];
 
@@ -34,50 +33,32 @@ let timer;
 let inputDelayTimer;
 
 const BEGINNING_OF_TIME = '2016-01-01T00:00:00.000Z';
-const SORTING_DIRECTIONS = {
-  asc: 'asc',
-  desc: 'desc'
-};
 
 export const Past = props => {
-  const {
-    advanceOnboarding,
-    count,
-    createClick,
-    getDeploymentsByStatus,
-    groups,
-    loading,
-    onboardingState,
-    past,
-    setSnackbar,
-    startDate: startDateProp = today,
-    endDate: endDateProp = tonight
-  } = props;
-  const [deviceGroup, setDeviceGroup] = useState('');
-  const [endDate, setEndDate] = useState(endDateProp);
-  const [startDate, setStartDate] = useState(startDateProp);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(20);
+  const { advanceOnboarding, createClick, getDeploymentsByStatus, groups, onboardingState, past, pastSelectionState, setDeploymentsState, setSnackbar } = props;
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
   const [timeRangeToggle, setTimeRangeToggle] = useState(false);
-  const [deploymentType, setDeploymentType] = useState('');
+  const [tonight] = useState(new Date(new Date().setHours(23, 59, 59)).toISOString());
+  const [loading, setLoading] = useState(false);
   const deploymentsRef = useRef();
+  const { endDate, page, perPage, search: deviceGroup, startDate, total: count, type: deploymentType } = pastSelectionState;
 
   useEffect(() => {
-    const roundedStartDate = Math.round(Date.parse(BEGINNING_OF_TIME) / 1000);
+    const roundedStartDate = Math.round(Date.parse(startDate || BEGINNING_OF_TIME) / 1000);
     const roundedEndDate = Math.round(Date.parse(endDate) / 1000);
-    getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, deviceGroup, deploymentType, true, SORTING_DIRECTIONS.desc).then(
-      deploymentsAction => {
+    setLoading(true);
+    getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, deviceGroup, deploymentType, true, SORTING_OPTIONS.desc)
+      .then(deploymentsAction => {
         const deploymentsList = deploymentsAction ? Object.values(deploymentsAction[0].deployments) : [];
         if (deploymentsList.length) {
           let newStartDate = new Date(deploymentsList[deploymentsList.length - 1].created);
           newStartDate.setHours(0, 0, 0, 0);
-          setStartDate(newStartDate);
+          setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { startDate: newStartDate.toISOString() } });
           setTimeRangeToggle(!timeRangeToggle);
         }
-      }
-    );
+      })
+      .finally(() => setLoading(false));
     return () => {
       clearAllRetryTimers(setSnackbar);
     };
@@ -92,25 +73,26 @@ export const Past = props => {
   }, [page, perPage, startDate, endDate, deviceGroup, deploymentType]);
 
   useEffect(() => {
-    if (past.length && !onboardingState.complete) {
-      const pastDeploymentsFailed = past.reduce(
-        (accu, item) =>
-          item.status === 'failed' ||
-          (item.stats && item.stats.noartifact + item.stats.failure + item.stats['already-installed'] + item.stats.aborted > 0) ||
-          accu,
-        false
-      );
-      if (pastDeploymentsFailed) {
-        advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE);
-      } else {
-        advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION);
-      }
-      setTimeout(() => {
-        let notification = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION, onboardingState);
-        notification = getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED_NOTIFICATION, onboardingState, {}, notification);
-        !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
-      }, 400);
+    if (!past.length || onboardingState.complete) {
+      return;
     }
+    const pastDeploymentsFailed = past.reduce(
+      (accu, item) =>
+        item.status === 'failed' ||
+        (item.stats && item.stats.noartifact + item.stats.failure + item.stats['already-installed'] + item.stats.aborted > 0) ||
+        accu,
+      false
+    );
+    if (pastDeploymentsFailed) {
+      advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE);
+    } else {
+      advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION);
+    }
+    setTimeout(() => {
+      let notification = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION, onboardingState);
+      notification = getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED_NOTIFICATION, onboardingState, {}, notification);
+      !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
+    }, 400);
   }, [past, onboardingState.complete]);
 
   /*
@@ -125,18 +107,23 @@ export const Past = props => {
     currentDeviceGroup = deviceGroup,
     currentType = deploymentType
   ) => {
-    setPage(currentPage);
-    setPerPage(currentPerPage);
-    setEndDate(currentEndDate);
-    setStartDate(currentStartDate);
-    setDeviceGroup(currentDeviceGroup);
-    setDeploymentType(currentType);
+    setDeploymentsState({
+      [DEPLOYMENT_STATES.finished]: {
+        startDate: currentStartDate,
+        endDate: currentEndDate,
+        page: currentPage,
+        perPage: currentPerPage,
+        search: currentDeviceGroup,
+        type: currentType
+      }
+    });
     const roundedStartDate = Math.round(Date.parse(currentStartDate) / 1000);
     const roundedEndDate = Math.round(Date.parse(currentEndDate) / 1000);
     return getDeploymentsByStatus(type, currentPage, currentPerPage, roundedStartDate, roundedEndDate, currentDeviceGroup, currentType)
       .then(deploymentsAction => {
         clearRetryTimer(type, setSnackbar);
-        if (deploymentsAction && deploymentsAction[0].total && !deploymentsAction[0].deploymentIds.length) {
+        const { total, deploymentIds } = deploymentsAction[deploymentsAction.length - 1];
+        if (total && !deploymentIds.length) {
           return refreshPast(currentPage, currentPerPage, currentStartDate, currentEndDate, currentDeviceGroup);
         }
       })
@@ -166,12 +153,18 @@ export const Past = props => {
   };
 
   const onGroupFilterChange = (e, value) => {
-    setDeviceGroup(value);
+    if (!e) {
+      return;
+    }
+    setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { search: value } });
     onFilterUpdate(1, perPage, startDate, endDate, value);
   };
 
   const onTypeFilterChange = (e, value) => {
-    setDeploymentType(value);
+    if (!e) {
+      return;
+    }
+    setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { type: value } });
     onFilterUpdate(1, perPage, startDate, endDate, deviceGroup, value);
   };
 
@@ -180,7 +173,7 @@ export const Past = props => {
   return (
     <div className="fadeIn margin-left margin-top-large">
       <div className="datepicker-container">
-        <TimerangePicker onChange={onTimeFilterChange} toggleActive={timeRangeToggle} />
+        <TimerangePicker endDate={endDate} onChange={onTimeFilterChange} startDate={startDate} />
         <TimeframePicker
           classNames="margin-left margin-right inline-block"
           onChange={onTimeFilterChange}
@@ -226,7 +219,7 @@ export const Past = props => {
             <DeploymentsList
               {...props}
               componentClass="margin-left-small"
-              count={count || past.length}
+              count={count}
               headers={headers}
               items={past}
               page={page}
@@ -252,17 +245,17 @@ export const Past = props => {
   );
 };
 
-const actionCreators = { advanceOnboarding, getDeploymentsByStatus, setSnackbar, selectDeployment };
+const actionCreators = { advanceOnboarding, getDeploymentsByStatus, setDeploymentsState, setSnackbar, selectDeployment };
 
 const mapStateToProps = state => {
-  const past = state.deployments.byStatus.finished.selectedDeploymentIds.map(id => state.deployments.byId[id]);
+  const past = state.deployments.selectionState.finished.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
-    count: state.deployments.byStatus.finished.total,
     groups: ['All devices', ...Object.keys(groups)],
     onboardingState: getOnboardingState(state),
-    past
+    past,
+    pastSelectionState: state.deployments.selectionState.finished
   };
 };
 

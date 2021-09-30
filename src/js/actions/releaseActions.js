@@ -48,7 +48,15 @@ export const getArtifactUrl = id => (dispatch, getState) =>
     if (!release || index === -1) {
       return dispatch(getReleases());
     }
-    release.Artifacts[index].url = response.data.uri;
+    const releaseArtifacts = [...release.Artifacts];
+    releaseArtifacts[index] = {
+      ...releaseArtifacts[index],
+      url: response.data.uri
+    };
+    release = {
+      ...release,
+      Artifacts: releaseArtifacts
+    };
     return dispatch({ type: ReleaseConstants.ARTIFACTS_SET_ARTIFACT_URL, release });
   });
 
@@ -71,7 +79,7 @@ export const createArtifact = (meta, file) => dispatch => {
     dispatch({ type: AppConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0, cancelSource }),
     GeneralApi.upload(`${deploymentsApiUrl}/artifacts/generate`, formData, e => progress(e, dispatch), cancelSource.token)
   ])
-    .then(() => Promise.all([dispatch(selectRelease(meta.name)), dispatch(setSnackbar('Upload successful', 5000))]))
+    .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', 5000))))
     .catch(err => {
       if (axios.isCancel(err)) {
         return dispatch(setSnackbar('The artifact generation has been cancelled', 5000));
@@ -82,7 +90,7 @@ export const createArtifact = (meta, file) => dispatch => {
 };
 
 export const uploadArtifact = (meta, file) => dispatch => {
-  var formData = new FormData();
+  let formData = new FormData();
   formData.append('size', file.size);
   formData.append('description', meta.description);
   formData.append('artifact', file);
@@ -123,8 +131,9 @@ export const removeArtifact = id => (dispatch, getState) =>
     .then(() => {
       const state = getState();
       let { release, index } = findArtifactIndexInRelease(state.releases.byId, id);
-      release.Artifacts.splice(index, 1);
-      if (!release.Artifacts.length) {
+      const releaseArtifacts = [...release.Artifacts];
+      releaseArtifacts.splice(index, 1);
+      if (!releaseArtifacts.length) {
         return dispatch({ type: ReleaseConstants.RELEASE_REMOVED, release: release.Name });
       }
       return Promise.all([dispatch(setSnackbar('Artifact was removed', 5000, '')), dispatch({ type: ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT, release })]);
@@ -148,7 +157,8 @@ export const selectArtifact = artifact => (dispatch, getState) => {
   }
 };
 
-export const selectRelease = release => dispatch => dispatch({ type: ReleaseConstants.SELECTED_RELEASE, release: release ? release.Name || release : null });
+export const selectRelease = release => dispatch =>
+  Promise.resolve(dispatch({ type: ReleaseConstants.SELECTED_RELEASE, release: release ? release.Name || release : null }));
 
 export const showRemoveArtifactDialog = showRemoveDialog => dispatch => dispatch({ type: ReleaseConstants.SHOW_REMOVE_DIALOG, showRemoveDialog });
 

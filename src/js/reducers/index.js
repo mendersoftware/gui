@@ -28,8 +28,10 @@ const sessionReducer = (state, action) => {
   return rootReducer(state, action);
 };
 
-const store = configureStore({
-  reducer: sessionReducer
-});
+export const getConfiguredStore = config =>
+  configureStore({
+    reducer: sessionReducer,
+    ...config
+  });
 
-export default store;
+export default getConfiguredStore();

@@ -67,7 +67,7 @@ export const AddArtifactDialog = ({
       }
       // track in GA
       Tracking.event({ category: 'artifacts', action: 'create' });
-      return setTimeout(onUploadFinished, 1000);
+      return setTimeout(() => onUploadFinished(meta.name), 1000);
     });
   };
 
