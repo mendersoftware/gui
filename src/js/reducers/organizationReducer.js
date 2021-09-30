@@ -1,3 +1,5 @@
+import { SORTING_OPTIONS } from '../constants/appConstants';
+import { DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
 import OrganizationConstants from '../constants/organizationConstants';
 
 export const initialState = {
@@ -6,11 +8,23 @@ export const initialState = {
     expiration: { month: 1, year: 2020 },
     brand: ''
   },
-  events: [],
-  eventsTotal: 2,
   intentId: null,
   organization: {
     // id, name, status, tenant_token, plan
+  },
+  auditlog: {
+    events: [],
+    selectionState: {
+      ...DEVICE_LIST_DEFAULTS,
+      detail: '',
+      endDate: undefined,
+      selectedIssue: undefined,
+      sorting: SORTING_OPTIONS.desc,
+      startDate: undefined,
+      total: 0,
+      type: '',
+      user: ''
+    }
   }
 };
 
@@ -19,8 +33,22 @@ const organizationReducer = (state = initialState, action) => {
     case OrganizationConstants.RECEIVE_AUDIT_LOGS:
       return {
         ...state,
-        events: action.events,
-        eventsTotal: action.total
+        auditlog: {
+          ...state.auditlog,
+          events: action.events,
+          selectionState: {
+            ...state.auditlog.selectionState,
+            total: action.total
+          }
+        }
+      };
+    case OrganizationConstants.SET_AUDITLOG_STATE:
+      return {
+        ...state,
+        auditlog: {
+          ...state.auditlog,
+          selectionState: action.state
+        }
       };
     case OrganizationConstants.RECEIVE_CURRENT_CARD:
       return {

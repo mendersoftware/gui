@@ -81,11 +81,14 @@ export const DeploymentReport = props => {
   const rolloutSchedule = useRef();
 
   useEffect(() => {
+    if (!open) {
+      return;
+    }
     clearInterval(timer);
     if (!(deployment.finished || deployment.status === DEPLOYMENT_STATES.finished)) {
       timer = past ? null : setInterval(refreshDeployment, 5000);
     }
-    if (deployment.type === DEPLOYMENT_TYPES.software || !release.device_types_compatible.length) {
+    if ((deployment.type === DEPLOYMENT_TYPES.software || !release.device_types_compatible.length) && deployment.artifact_name) {
       getRelease(deployment.artifact_name);
     }
     if (isEnterprise) {
@@ -95,7 +98,7 @@ export const DeploymentReport = props => {
     return () => {
       clearInterval(timer);
     };
-  }, [deployment.id]);
+  }, [deployment.id, open]);
 
   useEffect(() => {
     const { device_count, stats = {} } = deployment;
@@ -216,7 +219,7 @@ const mapStateToProps = state => {
   const devices = state.deployments.byId[state.deployments.selectedDeployment]?.devices || {};
   const allDevices = sortDeploymentDevices(Object.values(devices)).map(device => ({ ...state.devices.byId[device.id], ...device }));
   const deployment = state.deployments.byId[state.deployments.selectedDeployment] || {};
-  const { actor = {} } = state.organization.events.find(event => event.object.id === state.deployments.selectedDeployment) || {};
+  const { actor = {} } = state.organization.auditlog.events.find(event => event.object.id === state.deployments.selectedDeployment) || {};
   return {
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
     allDevices,

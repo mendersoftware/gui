@@ -1,28 +1,29 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import moment from 'moment';
 import MomentUtils from '@date-io/moment';
 
 const pickerStyle = { width: 160, margin: 7.5, marginTop: 0 };
 
 export const TimeframePicker = ({ classNames, endDate, onChange, startDate, tonight }) => {
   const handleChangeStartDate = date => {
-    let currentEndDate = endDate;
+    let currentEndDate = moment(endDate);
     if (date > currentEndDate) {
       currentEndDate = date;
-      currentEndDate._isAMomentObject ? currentEndDate.endOf('day') : currentEndDate.setHours(23, 59, 59);
+      currentEndDate.endOf('day');
     }
-    date._isAMomentObject ? date.startOf('day') : date.setHours(0, 0, 0, 0);
-    onChange(date, currentEndDate);
+    date.startOf('day');
+    onChange(date.toISOString(), currentEndDate.toISOString());
   };
 
   const handleChangeEndDate = date => {
-    let currentStartDate = startDate;
+    let currentStartDate = moment(startDate);
     if (date < currentStartDate) {
       currentStartDate = date;
-      currentStartDate._isAMomentObject ? currentStartDate.startOf('day') : currentStartDate.setHours(0, 0, 0, 0);
+      currentStartDate.startOf('day');
     }
-    date._isAMomentObject ? date.endOf('day') : date.setHours(23, 59, 59);
-    onChange(currentStartDate, date);
+    date.endOf('day');
+    onChange(currentStartDate.toISOString(), date.toISOString());
   };
 
   return (
@@ -41,4 +42,8 @@ export const TimeframePicker = ({ classNames, endDate, onChange, startDate, toni
   );
 };
 
-export default TimeframePicker;
+const areEqual = (prevProps, nextProps) => {
+  return !(prevProps.classNames != nextProps.classNames || prevProps.endDate != nextProps.endDate || prevProps.startDate != nextProps.startDate);
+};
+
+export default memo(TimeframePicker, areEqual);

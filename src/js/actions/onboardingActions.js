@@ -133,7 +133,7 @@ const setOnboardingState = state => dispatch =>
     dispatch(setOnboardingArtifactIncluded(state.artifactIncluded)),
     dispatch(setShowOnboardingHelp(state.showTips, false)),
     dispatch(setOnboardingProgress(state.progress)),
-    dispatch(setShowCreateArtifactDialog(state.showArtifactCreation)),
+    dispatch(setShowCreateArtifactDialog(state.showArtifactCreation && !state.complete && state.showTips)),
     dispatch(saveUserSettings({ onboarding: state }))
   ]);
 

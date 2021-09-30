@@ -10,7 +10,7 @@ describe('DeviceConfiguration Component', () => {
       <MemoryRouter>
         <DeviceConfiguration
           device={defaultState.devices.byId.a1}
-          item={{ ...defaultState.organization.events[2], change: '{"something":"here"}' }}
+          item={{ ...defaultState.organization.auditlog.events[2], change: '{"something":"here"}' }}
           onClose={jest.fn}
         />
       </MemoryRouter>

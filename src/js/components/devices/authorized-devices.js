@@ -10,14 +10,8 @@ import { setSnackbar } from '../../actions/appActions';
 import { deleteAuthset, getDevicesByStatus, setDeviceFilters, setDeviceListState, updateDevicesAuth } from '../../actions/deviceActions';
 import { getIssueCountsByType } from '../../actions/monitorActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
-import {
-  DEVICE_LIST_DEFAULTS,
-  DEVICE_LIST_MAXIMUM_LENGTH,
-  DEVICE_ISSUE_OPTIONS,
-  DEVICE_SORTING_OPTIONS,
-  DEVICE_STATES,
-  UNGROUPED_GROUP
-} from '../../constants/deviceConstants';
+import { SORTING_OPTIONS } from '../../constants/appConstants';
+import { DEVICE_LIST_DEFAULTS, DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { duplicateFilter, isEmpty } from '../../helpers';
 import { getIdAttribute, getOnboardingState, getTenantCapabilities } from '../../selectors';
@@ -95,7 +89,7 @@ export const Authorized = props => {
     perPage: pageLength = defaultPerPage,
     selectedIssues = [],
     selection: selectedRows,
-    sort: { direction: sortDown = DEVICE_SORTING_OPTIONS.desc, columns = [] },
+    sort: { direction: sortDown = SORTING_OPTIONS.desc, columns = [] },
     state: selectedState
   } = deviceListState;
 
@@ -254,9 +248,9 @@ export const Authorized = props => {
 
   const onSortChange = attribute => {
     let changedSortCol = attribute.name;
-    let changedSortDown = sortDown === DEVICE_SORTING_OPTIONS.desc ? DEVICE_SORTING_OPTIONS.asc : DEVICE_SORTING_OPTIONS.desc;
+    let changedSortDown = sortDown === SORTING_OPTIONS.desc ? SORTING_OPTIONS.asc : SORTING_OPTIONS.desc;
     if (changedSortCol !== sortCol) {
-      changedSortDown = DEVICE_SORTING_OPTIONS.desc;
+      changedSortDown = SORTING_OPTIONS.desc;
     }
     setDeviceListState({ sort: { direction: changedSortDown, columns: [{ column: changedSortCol, scope: attribute.scope }] } });
   };

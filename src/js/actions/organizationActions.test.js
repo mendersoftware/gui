@@ -17,7 +17,8 @@ import {
   requestPlanChange,
   sendSupportMessage,
   startCardUpdate,
-  startUpgrade
+  startUpgrade,
+  setAuditlogsState
 } from './organizationActions';
 
 const middlewares = [thunk];
@@ -227,8 +228,8 @@ describe('organization actions', () => {
     const expectedActions = [
       {
         type: OrganizationConstants.RECEIVE_AUDIT_LOGS,
-        events: defaultState.organization.events,
-        total: defaultState.organization.eventsTotal
+        events: defaultState.organization.auditlog.events,
+        total: defaultState.organization.auditlog.selectionState.total
       }
     ];
     const request = store.dispatch(getAuditLogs());
@@ -239,7 +240,22 @@ describe('organization actions', () => {
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
-
+  it('should allow deployment state tracking', async () => {
+    const store = mockStore({ ...defaultState });
+    await store.dispatch(setAuditlogsState({ page: 1, sorting: 'something' }));
+    const expectedActions = [
+      {
+        type: OrganizationConstants.SET_AUDITLOG_STATE,
+        state: {
+          ...defaultState.organization.auditlog.selectionState,
+          sorting: 'something'
+        }
+      }
+    ];
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
   it('should handle csv information download', async () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);

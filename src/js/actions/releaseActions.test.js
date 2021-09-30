@@ -101,7 +101,6 @@ describe('release actions', () => {
     const expectedActions = [
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Generating artifact' } },
       { type: AppConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 },
-      { type: ReleaseConstants.SELECTED_RELEASE, release: 'createdRelease' },
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Upload successful' } },
       { type: AppConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 }
     ];

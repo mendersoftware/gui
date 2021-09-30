@@ -138,10 +138,6 @@ module.exports = {
       title: 'Devices with new authentication requests'
     }
   },
-  DEVICE_SORTING_OPTIONS: {
-    asc: 'asc',
-    desc: 'desc'
-  },
   // we can't include the dismiss state with the rest since this would include dismissed devices in several queries
   DEVICE_DISMISSAL_STATE: 'dismiss',
   DEVICE_STATES: {

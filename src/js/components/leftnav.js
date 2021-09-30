@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { connect } from 'react-redux';
-import { Link, NavLink, withRouter } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import copy from 'copy-to-clipboard';
 
 // material ui
@@ -124,4 +124,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, actionCreators)(LeftNav));
+export default connect(mapStateToProps, actionCreators)(LeftNav);

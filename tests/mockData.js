@@ -1,5 +1,6 @@
 import { rolesByName } from '../src/js/constants/userConstants';
 import DeviceConstants from '../src/js/constants/deviceConstants';
+import { SORTING_OPTIONS } from '../src/js/constants/appConstants';
 
 export const undefineds = /undefined|\[object Object\]/;
 window.mender_environment = {
@@ -90,13 +91,32 @@ export const defaultState = {
       }
     },
     byStatus: {
-      finished: { deploymentIds: ['d1'], selectedDeploymentIds: ['d1'], total: 1 },
-      inprogress: { deploymentIds: ['d1'], selectedDeploymentIds: ['d1'], total: 1 },
-      pending: { deploymentIds: ['d2'], selectedDeploymentIds: ['d2'], total: 1 },
-      scheduled: { deploymentIds: ['d2'], selectedDeploymentIds: ['d2'], total: 1 }
+      finished: { deploymentIds: ['d1'], total: 1 },
+      inprogress: { deploymentIds: ['d1'], total: 1 },
+      pending: { deploymentIds: ['d2'], total: 1 },
+      scheduled: { deploymentIds: ['d2'], total: 1 }
     },
     deploymentDeviceLimit: 500,
-    selectedDeployment: 'd1'
+    selectedDeployment: 'd1',
+    selectionState: {
+      finished: {
+        ...DeviceConstants.DEVICE_LIST_DEFAULTS,
+        selection: ['d1'],
+        endDate: undefined,
+        search: '',
+        total: 1,
+        type: ''
+      },
+      inprogress: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, selection: ['d1'], total: 1 },
+      pending: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, selection: ['d2'], total: 1 },
+      scheduled: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, selection: ['d2'], total: 1 },
+      general: {
+        state: '/deployments/active',
+        showCreationDialog: false,
+        showReportDialog: false,
+        reportType: null
+      }
+    }
   },
   devices: {
     byId: {
@@ -164,7 +184,7 @@ export const defaultState = {
       perPage: 20,
       selection: [],
       sort: {
-        direction: DeviceConstants.DEVICE_SORTING_OPTIONS.desc,
+        direction: SORTING_OPTIONS.desc,
         columns: [
           // { column: null, scope: null }
         ]
@@ -241,62 +261,67 @@ export const defaultState = {
       last4: '7890',
       expiration: { month: 1, year: 2024 }
     },
-    events: [
-      {
-        actor: {
-          id: 'string',
-          type: 'user',
-          email: 'string@example.com'
+    auditlog: {
+      events: [
+        {
+          actor: {
+            id: 'string',
+            type: 'user',
+            email: 'string@example.com'
+          },
+          time: '2019-01-01T12:10:22.667Z',
+          action: 'create',
+          object: {
+            id: 'string',
+            type: 'user',
+            user: {
+              email: 'user@acme.com'
+            }
+          },
+          change: 'change1'
         },
-        time: '2019-01-01T12:10:22.667Z',
-        action: 'create',
-        object: {
-          id: 'string',
-          type: 'user',
-          user: {
-            email: 'user@acme.com'
-          }
+        {
+          actor: {
+            id: 'string',
+            type: 'user',
+            email: 'string',
+            identity_data: 'string'
+          },
+          time: '2019-01-01T12:16:22.667Z',
+          action: 'create',
+          object: {
+            id: 'string',
+            type: 'deployment',
+            deployment: {
+              name: 'production',
+              artifact_name: 'Application 0.0.1'
+            }
+          },
+          change: 'change2'
         },
-        change: 'change1'
-      },
-      {
-        actor: {
-          id: 'string',
-          type: 'user',
-          email: 'string',
-          identity_data: 'string'
-        },
-        time: '2019-01-01T12:16:22.667Z',
-        action: 'create',
-        object: {
-          id: 'string',
-          type: 'deployment',
-          deployment: {
-            name: 'production',
-            artifact_name: 'Application 0.0.1'
-          }
-        },
-        change: 'change2'
-      },
-      {
-        actor: {
-          id: 'string',
-          type: 'user',
-          email: 'string@example.com'
-        },
-        time: '2019-01-01T12:10:22.669Z',
-        action: 'open_terminal',
-        meta: {
-          session_id: ['abd313a8-ee88-48ab-9c99-fbcd80048e6e']
-        },
-        object: {
-          id: 'a1',
-          type: 'device'
-        },
-        change: 'change3'
+        {
+          actor: {
+            id: 'string',
+            type: 'user',
+            email: 'string@example.com'
+          },
+          time: '2019-01-01T12:10:22.669Z',
+          action: 'open_terminal',
+          meta: {
+            session_id: ['abd313a8-ee88-48ab-9c99-fbcd80048e6e']
+          },
+          object: {
+            id: 'a1',
+            type: 'device'
+          },
+          change: 'change3'
+        }
+      ],
+      selectionState: {
+        ...DeviceConstants.DEVICE_LIST_DEFAULTS,
+        total: 3
       }
-    ],
-    eventsTotal: 3,
+    },
     intentId: 'testIntent',
     organization: {
       id: 1,
