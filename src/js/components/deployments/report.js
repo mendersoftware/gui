@@ -78,7 +78,6 @@ export const DeploymentReport = props => {
     updateDeploymentControlMap
   } = props;
   const [deviceId, setDeviceId] = useState('');
-  const [deviceListRefreshTrigger, setDeviceListRefreshTrigger] = useState(false);
   const rolloutSchedule = useRef();
 
   useEffect(() => {
@@ -125,7 +124,6 @@ export const DeploymentReport = props => {
     if (!deployment.id) {
       return;
     }
-    setDeviceListRefreshTrigger(!deviceListRefreshTrigger);
     return getSingleDeployment(deployment.id);
   };
 
@@ -206,7 +204,7 @@ export const DeploymentReport = props => {
           <span>Status</span>
         </h4>
         <DeploymentStatus deployment={deployment} />
-        <DeviceList {...props} refreshTrigger={deviceListRefreshTrigger} viewLog={viewLog} />
+        <DeviceList {...props} viewLog={viewLog} />
         <RolloutSchedule deployment={deployment} onUpdateControlChange={onUpdateControlChange} onAbort={abort} innerRef={rolloutSchedule} />
         {Boolean(deviceId.length) && <LogDialog logData={logData} onClose={() => setDeviceId('')} />}
       </div>

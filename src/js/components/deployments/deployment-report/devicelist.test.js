@@ -1,7 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { prettyDOM } from '@testing-library/dom';
-import { render } from '@testing-library/react';
+import { cleanup, render, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
@@ -16,8 +16,10 @@ describe('ProgressDeviceList Component', () => {
     store = mockStore({ ...defaultState });
   });
 
+  afterEach(cleanup);
+
   it('renders correctly', async () => {
-    const { baseElement } = render(
+    const ui = (
       <MemoryRouter>
         <Provider store={store}>
           <ProgressDeviceList
@@ -30,7 +32,10 @@ describe('ProgressDeviceList Component', () => {
         </Provider>
       </MemoryRouter>
     );
-    const view = prettyDOM(baseElement.firstChild.firstChild, 100000, { highlight: false })
+    const { asFragment, rerender } = render(ui);
+    jest.advanceTimersByTime(5000);
+    waitFor(() => rerender(ui));
+    const view = prettyDOM(asFragment().childNodes[1], 100000, { highlight: false })
       .replace(/id="mui-[0-9]*"/g, '')
       .replace(/aria-labelledby="(mui-[0-9]* *)*"/g, '')
       .replace(/\\/g, '');

@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react';
 // material ui
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 
+import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
+import Loader from '../../common/loader';
 import Pagination from '../../common/pagination';
 import DeploymentDeviceListItem from './deploymentdevicelistitem';
-import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
 
 const headerStyle = { position: 'sticky', top: 0, background: 'white', zIndex: 1 };
 const { page: defaultPage } = DEVICE_LIST_DEFAULTS;
@@ -16,18 +17,18 @@ export const DeploymentDeviceList = ({
   getDeviceAuth,
   getDeviceById,
   idAttribute,
-  refreshTrigger,
   selectedDeviceIds,
   selectedDevices,
   viewLog
 }) => {
   const [currentPage, setCurrentPage] = useState(defaultPage);
+  const [loadingDone, setLoadingDone] = useState(false);
   const [perPage, setPerPage] = useState(10);
   const { created = new Date().toISOString(), device_count = 0, retries, totalDeviceCount: totalDevices } = deployment;
   const totalDeviceCount = totalDevices ?? device_count;
 
   useEffect(() => {
-    setCurrentPage(1);
+    setCurrentPage(defaultPage);
   }, [perPage]);
 
   useEffect(() => {
@@ -43,38 +44,48 @@ export const DeploymentDeviceList = ({
   }, [selectedDeviceIds]);
 
   useEffect(() => {
-    if (deployment.id) {
-      getDeploymentDevices(deployment.id, { page: currentPage, perPage });
+    if (!(deployment.id && loadingDone)) {
+      return;
     }
-  }, [currentPage, deployment.status, deployment.stats, refreshTrigger]);
+    getDeploymentDevices(deployment.id, { page: currentPage, perPage });
+  }, [currentPage, deployment.status, deployment.stats, loadingDone]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoadingDone(true);
+    }, 1000);
+  }, []);
 
   return (
-    !!totalDeviceCount && (
-      <div>
-        <Table style={{ minHeight: '10vh', maxHeight: '40vh', overflowX: 'auto' }}>
-          <TableHead>
-            <TableRow>
-              <TableCell style={headerStyle} tooltip={idAttribute}>
-                {idAttribute}
-              </TableCell>
-              {['Device type', 'Current software', 'Started', 'Finished', 'Attempts', 'Deployment status', ''].map((content, index) =>
-                content != 'Attempts' || retries ? (
-                  <TableCell key={`device-list-header-${index + 1}`} style={headerStyle} tooltip={content}>
-                    {content}
-                  </TableCell>
-                ) : null
-              )}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {selectedDevices.map(device => (
-              <DeploymentDeviceListItem key={device.id} created={created} device={device} idAttribute={idAttribute} viewLog={viewLog} retries={retries} />
-            ))}
-          </TableBody>
-        </Table>
-        <Pagination count={totalDeviceCount} rowsPerPage={perPage} onChangePage={setCurrentPage} onChangeRowsPerPage={setPerPage} page={currentPage} />
-      </div>
-    )
+    <>
+      <Loader show={!loadingDone} />
+      {!!totalDeviceCount && (
+        <div>
+          <Table style={{ minHeight: '10vh', maxHeight: '40vh', overflowX: 'auto' }}>
+            <TableHead>
+              <TableRow>
+                <TableCell style={headerStyle} tooltip={idAttribute}>
+                  {idAttribute}
+                </TableCell>
+                {['Device type', 'Current software', 'Started', 'Finished', 'Attempts', 'Deployment status', ''].map((content, index) =>
+                  content != 'Attempts' || retries ? (
+                    <TableCell key={`device-list-header-${index + 1}`} style={headerStyle} tooltip={content}>
+                      {content}
+                    </TableCell>
+                  ) : null
+                )}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {selectedDevices.map(device => (
+                <DeploymentDeviceListItem key={device.id} created={created} device={device} idAttribute={idAttribute} viewLog={viewLog} retries={retries} />
+              ))}
+            </TableBody>
+          </Table>
+          <Pagination count={totalDeviceCount} rowsPerPage={perPage} onChangePage={setCurrentPage} onChangeRowsPerPage={setPerPage} page={currentPage} />
+        </div>
+      )}
+    </>
   );
 };
 
