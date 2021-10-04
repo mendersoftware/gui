@@ -179,12 +179,10 @@ const deviceReducer = (state = initialState, action) => {
         byStatus: {
           ...state.byStatus,
           active: {
-            deviceIds: action.activeDeviceIds,
-            total: action.activeDeviceIds.length
+            total: action.activeDeviceTotal
           },
           inactive: {
-            deviceIds: action.inactiveDeviceIds,
-            total: action.inactiveDeviceIds.length
+            total: action.inactiveDeviceTotal
           }
         }
       };

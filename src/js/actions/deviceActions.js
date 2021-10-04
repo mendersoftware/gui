@@ -440,8 +440,8 @@ const deriveInactiveDevices = deviceIds => (dispatch, getState) => {
   );
   return dispatch({
     type: DeviceConstants.SET_INACTIVE_DEVICES,
-    inactiveDeviceIds: devices.inactive,
-    activeDeviceIds: devices.active
+    activeDeviceTotal: devices.active.length,
+    inactiveDeviceTotal: devices.inactive.length
   });
 };
 
@@ -587,6 +587,34 @@ export const getDevicesByStatus = (status, options = {}) => (dispatch, getState)
     })
     .catch(err => commonErrorHandler(err, `${status} devices couldn't be loaded.`, dispatch, commonErrorFallback));
 };
+
+export const getActiveDevices = currentTime => dispatch =>
+  Promise.all([
+    GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
+      page: 1,
+      per_page: 1,
+      filters: mapFiltersToTerms([
+        { key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' },
+        { key: 'updated_ts', value: currentTime, operator: '$gte', scope: 'system' }
+      ])
+    }),
+    GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
+      page: 1,
+      per_page: 1,
+      filters: mapFiltersToTerms([
+        { key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' },
+        { key: 'updated_ts', value: currentTime, operator: '$lt', scope: 'system' }
+      ])
+    })
+  ]).then(results => {
+    const activeDeviceTotal = Number(results[0].headers[headerNames.total]);
+    const inactiveDeviceTotal = Number(results[1].headers[headerNames.total]);
+    return dispatch({
+      type: DeviceConstants.SET_INACTIVE_DEVICES,
+      inactiveDeviceTotal,
+      activeDeviceTotal
+    });
+  });
 
 export const getAllDevicesByStatus = status => (dispatch, getState) => {
   const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
