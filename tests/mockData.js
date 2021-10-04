@@ -40,7 +40,7 @@ export const defaultState = {
       d1: {
         id: 'd1',
         name: 'test deployment',
-        artifact_name: 'test',
+        artifact_name: 'r1',
         artifacts: ['123'],
         created: '2019-01-01T12:30:00.000Z',
         device_count: 1,
@@ -66,7 +66,7 @@ export const defaultState = {
       d2: {
         id: 'd2',
         name: 'test deployment 2',
-        artifact_name: 'test',
+        artifact_name: 'r1',
         artifacts: ['123'],
         created: '2019-01-01T12:25:00.000Z',
         device_count: 1,
@@ -334,8 +334,8 @@ export const defaultState = {
   releases: {
     artifactProgress: 0,
     byId: {
-      a1: {
-        Name: 'a1',
+      r1: {
+        Name: 'r1',
         Artifacts: [
           {
             id: 'art1',

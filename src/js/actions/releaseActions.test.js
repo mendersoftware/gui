@@ -25,8 +25,8 @@ describe('release actions', () => {
   it('should retrieve a single release by name', async () => {
     const store = mockStore({ ...defaultState });
     store.clearActions();
-    const expectedActions = [{ type: ReleaseConstants.RECEIVE_RELEASE, release: defaultState.releases.byId.a1 }];
-    await store.dispatch(getRelease('a1'));
+    const expectedActions = [{ type: ReleaseConstants.RECEIVE_RELEASE, release: defaultState.releases.byId.r1 }];
+    await store.dispatch(getRelease(defaultState.releases.byId.r1.Name));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
@@ -48,10 +48,10 @@ describe('release actions', () => {
       {
         type: ReleaseConstants.ARTIFACTS_SET_ARTIFACT_URL,
         release: {
-          ...defaultState.releases.byId.a1,
+          ...defaultState.releases.byId.r1,
           Artifacts: [
             {
-              ...defaultState.releases.byId.a1.Artifacts[0],
+              ...defaultState.releases.byId.r1.Artifacts[0],
               url: 'https://testlocation.com/artifact.mender'
             }
           ]
@@ -67,8 +67,8 @@ describe('release actions', () => {
   it('should select an artifact by name', async () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
-      { type: ReleaseConstants.SELECTED_ARTIFACT, artifact: defaultState.releases.byId.a1.Artifacts[0] },
-      { type: ReleaseConstants.SELECTED_RELEASE, release: 'a1' }
+      { type: ReleaseConstants.SELECTED_ARTIFACT, artifact: defaultState.releases.byId.r1.Artifacts[0] },
+      { type: ReleaseConstants.SELECTED_RELEASE, release: defaultState.releases.byId.r1.Name }
     ];
     await store.dispatch(selectArtifact('art1'));
     const storeActions = store.getActions();
@@ -115,13 +115,13 @@ describe('release actions', () => {
       {
         type: ReleaseConstants.UPDATED_ARTIFACT,
         release: {
-          ...defaultState.releases.byId.a1,
-          Artifacts: [{ ...defaultState.releases.byId.a1.Artifacts[0], description: 'something new' }]
+          ...defaultState.releases.byId.r1,
+          Artifacts: [{ ...defaultState.releases.byId.r1.Artifacts[0], description: 'something new' }]
         }
       },
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Artifact details were updated successfully.' } }
     ];
-    await store.dispatch(editArtifact(defaultState.releases.byId.a1.Artifacts[0].id, { description: 'something new' }));
+    await store.dispatch(editArtifact(defaultState.releases.byId.r1.Artifacts[0].id, { description: 'something new' }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
@@ -141,7 +141,7 @@ describe('release actions', () => {
   });
   it('should remove an artifact by name', async () => {
     const store = mockStore({ ...defaultState });
-    const expectedActions = [{ type: ReleaseConstants.RELEASE_REMOVED, release: 'a1' }];
+    const expectedActions = [{ type: ReleaseConstants.RELEASE_REMOVED, release: defaultState.releases.byId.r1.Name }];
     await store.dispatch(removeArtifact('art1'));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
