@@ -16,7 +16,7 @@ import { saveGlobalSettings } from '../../actions/userActions';
 import { PLANS } from '../../constants/appConstants';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getIsEnterprise, getOnboardingState } from '../../selectors';
+import { getDocsVersion, getIsEnterprise, getOnboardingState } from '../../selectors';
 
 import Tracking from '../../tracking';
 import { deepCompare, standardizePhases, validatePhases } from '../../helpers';
@@ -212,6 +212,7 @@ export const mapStateToProps = state => {
   return {
     acceptedDeviceCount: state.devices.byStatus.accepted.total,
     createdGroup: Object.values(state.devices.groups.byId)[1],
+    docsVersion: getDocsVersion(state),
     globalSettings: state.users.globalSettings,
     groups,
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
