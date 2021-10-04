@@ -21,8 +21,8 @@ const defaultLinkProps = {
   rel: 'noopener noreferrer'
 };
 
-export const DeploymentOverview = ({ allDevices, creator, deployment, onScheduleClick }) => {
-  const { artifact_name, devices = {}, filter, stats = {}, status } = deployment;
+export const DeploymentOverview = ({ creator, deployment, onScheduleClick }) => {
+  const { artifact_name, devices = {}, filter, stats = {}, status, totalDeviceCount } = deployment;
 
   const finished = deployment.finished || status === DEPLOYMENT_STATES.finished;
 
@@ -86,7 +86,7 @@ export const DeploymentOverview = ({ allDevices, creator, deployment, onSchedule
               {!!stats.success && (
                 <div>
                   <b className="green">
-                    {stats.success === allDevices.length && <span>All </span>}
+                    {stats.success === totalDeviceCount && <span>All </span>}
                     {stats.success}
                   </b>{' '}
                   {pluralize('devices', stats.success)} updated successfully

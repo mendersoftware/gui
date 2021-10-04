@@ -407,39 +407,6 @@ export const validatePhases = (phases, deploymentDeviceCount, hasFilter) => {
 export const getPhaseDeviceCount = (numberDevices = 1, batchSize, remainder, isLastPhase) =>
   isLastPhase ? Math.ceil((numberDevices / 100) * (batchSize || remainder)) : Math.floor((numberDevices / 100) * (batchSize || remainder));
 
-export const sortDeploymentDevices = devices => {
-  const newList = {
-    aborted: [],
-    decommissioned: [],
-    'already-installed': [],
-    downloading: [],
-    failure: [],
-    installing: [],
-    noartifact: [],
-    pending: [],
-    rebooting: [],
-    success: [],
-    pause_before_committing: [],
-    pause_before_installing: [],
-    pause_before_rebooting: []
-  };
-  devices.map(device => (newList.hasOwnProperty(device.status) ? newList[device.status].push(device) : newList.decommissioned.push(device)));
-  return newList.failure.concat(
-    newList.pause_before_committing,
-    newList.pause_before_installing,
-    newList.pause_before_rebooting,
-    newList.downloading,
-    newList.installing,
-    newList.rebooting,
-    newList.pending,
-    newList.success,
-    newList.aborted,
-    newList.noartifact,
-    newList['already-installed'],
-    newList.decommissioned
-  );
-};
-
 export const startTimeSort = (a, b) => (b.created > a.created) - (b.created < a.created);
 
 export const standardizePhases = phases =>

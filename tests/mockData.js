@@ -98,6 +98,7 @@ export const defaultState = {
     },
     deploymentDeviceLimit: 500,
     selectedDeployment: 'd1',
+    selectedDeviceIds: [],
     selectionState: {
       finished: {
         ...DeviceConstants.DEVICE_LIST_DEFAULTS,

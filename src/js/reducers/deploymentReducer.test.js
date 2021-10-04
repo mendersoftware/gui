@@ -33,7 +33,27 @@ describe('device reducer', () => {
       reducer(initialState, { type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICE_LOG, deployment: defaultState.deployments.byId.d1 }).byId.d1.devices.a1.id
     ).toEqual(devices.a1.id);
   });
-
+  it('should handle RECEIVE_DEPLOYMENT_DEVICES', async () => {
+    const { devices, id } = defaultState.deployments.byId.d1;
+    expect(
+      reducer(undefined, {
+        type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICES,
+        deploymentId: id,
+        devices,
+        selectedDeviceIds: [devices.a1.id],
+        totalDeviceCount: 500
+      }).byId.d1.totalDeviceCount
+    ).toEqual(500);
+    expect(
+      reducer(defaultState.deployments, {
+        type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICES,
+        deploymentId: id,
+        devices,
+        selectedDeviceIds: [devices.a1.id],
+        totalDeviceCount: 500
+      }).byId.d1.stats
+    ).toEqual(defaultState.deployments.byId.d1.stats);
+  });
   it('should handle RECEIVE_<deploymentstatus>_DEPLOYMENTS', async () => {
     Object.values(DeploymentConstants.DEPLOYMENT_STATES).forEach(status => {
       expect(
