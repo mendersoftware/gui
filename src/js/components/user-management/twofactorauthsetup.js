@@ -43,6 +43,8 @@ export const TwoFactorAuthSetup = ({
           setShowEmailVerification(true);
           setQrExpanded(false);
         })
+        // we have to explicitly call this, to not send the returned promise as user to activate 2fa for
+        .then(() => enableUser2fa())
         .then(get2FAQRCode);
     }
   }, [activationCode]);
