@@ -160,12 +160,10 @@ describe('device reducer', () => {
     expect(reducer(initialState, { type: DeviceConstants.RECEIVE_DEVICES, devicesById: defaultState.devices.byId }).byId).toEqual(defaultState.devices.byId);
   });
   it('should handle SET_INACTIVE_DEVICES', async () => {
-    expect(
-      reducer(undefined, { type: DeviceConstants.SET_INACTIVE_DEVICES, activeDeviceIds: ['a1'], inactiveDeviceIds: ['b1'] }).byStatus.active.total
-    ).toBeTruthy();
-    expect(
-      reducer(initialState, { type: DeviceConstants.SET_INACTIVE_DEVICES, activeDeviceIds: ['a1'], inactiveDeviceIds: ['b1'] }).byStatus.inactive.total
-    ).toEqual(1);
+    expect(reducer(undefined, { type: DeviceConstants.SET_INACTIVE_DEVICES, activeDeviceTotal: 1, inactiveDeviceTotal: 1 }).byStatus.active.total).toBeTruthy();
+    expect(reducer(initialState, { type: DeviceConstants.SET_INACTIVE_DEVICES, activeDeviceTotal: 1, inactiveDeviceTotal: 1 }).byStatus.inactive.total).toEqual(
+      1
+    );
   });
   it('should handle SET_<authstatus>_DEVICES', async () => {
     Object.values(DeviceConstants.DEVICE_STATES).forEach(status => {

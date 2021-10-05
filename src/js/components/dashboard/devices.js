@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
-import { getAllDevicesByStatus, getDeviceCount } from '../../actions/deviceActions';
+import { getActiveDevices, getAllDevicesByStatus, getDeviceCount } from '../../actions/deviceActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getOnboardingState } from '../../selectors';
+import { getIsEnterprise, getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import AcceptedDevices from './widgets/accepteddevices';
@@ -15,7 +15,7 @@ import RedirectionWidget from './widgets/redirectionwidget';
 
 export const Devices = props => {
   const [deltaActivity, setDeltaActivity] = useState(0);
-  const [loading, setLoading] = useState();
+  const [loading, setLoading] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
   const anchor = useRef();
@@ -27,8 +27,10 @@ export const Devices = props => {
     advanceOnboarding,
     clickHandle,
     deploymentDeviceLimit,
+    getActiveDevices,
     getAllDevicesByStatus,
     getDeviceCount,
+    hasFullFiltering,
     inactiveDevicesCount,
     onboardingState,
     pendingDevicesCount,
@@ -44,11 +46,20 @@ export const Devices = props => {
   }, []);
 
   const refreshDevices = () => {
-    if (loading || acceptedDevicesCount > deploymentDeviceLimit) {
+    if (loading || (!hasFullFiltering && acceptedDevicesCount > deploymentDeviceLimit)) {
       return;
     }
     setLoading(true);
-    Promise.all([getAllDevicesByStatus(DEVICE_STATES.accepted), getDeviceCount(DEVICE_STATES.pending)])
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdaysIsoString = yesterday.toISOString();
+    let tasks = [getDeviceCount(DEVICE_STATES.pending)];
+    if (hasFullFiltering) {
+      tasks.push(getActiveDevices(yesterdaysIsoString));
+    } else {
+      tasks.push(getAllDevicesByStatus(DEVICE_STATES.accepted));
+    }
+    Promise.all(tasks)
       .then(() => {
         const deltaActivity = updateDeviceActivityHistory(activeDevicesCount);
         setDeltaActivity(deltaActivity);
@@ -142,13 +153,17 @@ export const Devices = props => {
   );
 };
 
-const actionCreators = { advanceOnboarding, getAllDevicesByStatus, getDeviceCount, setShowConnectingDialog };
+const actionCreators = { advanceOnboarding, getActiveDevices, getAllDevicesByStatus, getDeviceCount, setShowConnectingDialog };
 
 const mapStateToProps = state => {
+  const { plan } = state.organization.organization;
+  const isEnterprise = getIsEnterprise(state);
+  const hasFullFiltering = isEnterprise || plan === 'professional';
   return {
     activeDevicesCount: state.devices.byStatus.active.total,
     deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
+    hasFullFiltering,
     inactiveDevicesCount: state.devices.byStatus.inactive.total,
     onboardingState: getOnboardingState(state),
     pendingDevicesCount: state.devices.byStatus.pending.total,
