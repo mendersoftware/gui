@@ -38,10 +38,12 @@ export const TwoFactorAuthSetup = ({
   useEffect(() => {
     if (activationCode) {
       setIs2FAEnabled(true);
-      verifyEmailComplete(activationCode).catch(() => {
-        setShowEmailVerification(true);
-        setQrExpanded(false);
-      });
+      verifyEmailComplete(activationCode)
+        .catch(() => {
+          setShowEmailVerification(true);
+          setQrExpanded(false);
+        })
+        .then(get2FAQRCode);
     }
   }, [activationCode]);
 

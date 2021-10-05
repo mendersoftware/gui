@@ -14,13 +14,9 @@ test.describe('Auditlogs', () => {
     test.skip(!['enterprise', 'staging'].includes(environment));
     await page.click(`.leftNav :text('Devices')`);
     await page.click(`.deviceListItem`);
-    const isVisible = await page.isVisible(`text=/Remote Terminal session/i`, { timeout: 10000 });
-    if (!isVisible) {
-      await page.keyboard.press('Escape');
-      await page.click(`.deviceListItem`);
-    }
+    await page.mouse.wheel(0, 300);
     // the deviceconnect connection might not be established right away
-    const terminalLaunchButton = await page.waitForSelector('text=/Remote Terminal session/i');
+    const terminalLaunchButton = await page.waitForSelector('text=/Remote Terminal session/i', { timeout: 10000 });
     await terminalLaunchButton.scrollIntoViewIfNeeded();
     await page.click(`css=.expandedDevice >> text=Remote Terminal session`);
     await page.waitForSelector(`text=Connection with the device established`, { timeout: 10000 });

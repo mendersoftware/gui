@@ -608,7 +608,7 @@ describe('device retrieval ', () => {
         status: DeviceConstants.DEVICE_STATES.accepted,
         total: defaultState.devices.byStatus.accepted.total
       },
-      { type: DeviceConstants.SET_INACTIVE_DEVICES, activeDeviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.a1.id], inactiveDeviceIds: [] }
+      { type: DeviceConstants.SET_INACTIVE_DEVICES, activeDeviceTotal: 2, inactiveDeviceTotal: 0 }
     ];
     await store.dispatch(getAllDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted));
     const storeActions = store.getActions();
