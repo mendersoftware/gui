@@ -423,9 +423,10 @@ export const standardizePhases = phases =>
     return standardizedPhase;
   });
 
-export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, tenantToken, deviceType = 'generic-armv6', isPreRelease) => {
-  let envVars = ``;
-  let installScriptArgs = `--demo`;
+export const getDebConfigurationCode = ({ ipAddress, isDemoMode, isHosted, isEnterprise, tenantToken, deviceType = 'generic-armv6', isPreRelease }) => {
+  let envVars = '';
+  const demoFlag = '--demo';
+  let installScriptArgs = `${demoFlag}`;
   if (isPreRelease) {
     installScriptArgs = `${installScriptArgs} -c experimental`;
   }
@@ -442,14 +443,16 @@ export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, tenan
   if (isHosted || isEnterprise) {
     envVars = `${envVars}TENANT_TOKEN="${tenantToken}"\n`;
     if (isHosted) {
-      menderSetupArgs = `${menderSetupArgs} --demo --hosted-mender --tenant-token $TENANT_TOKEN`;
+      menderSetupArgs = `${menderSetupArgs} ${demoFlag} --hosted-mender --tenant-token $TENANT_TOKEN`;
     } else {
-      menderSetupArgs = `${menderSetupArgs} --retry-poll 30 --update-poll 5 --inventory-poll 5 ${serverLocation} --server-cert="" --tenant-token $TENANT_TOKEN`;
+      menderSetupArgs = `${menderSetupArgs} ${
+        isDemoMode ? demoFlag : '--retry-poll 30 --update-poll 5 --inventory-poll 5'
+      } ${serverLocation} --server-cert="" --tenant-token $TENANT_TOKEN`;
     }
   } else {
-    menderSetupArgs = `${menderSetupArgs} --demo ${serverLocation}`;
+    menderSetupArgs = `${menderSetupArgs} ${demoFlag} ${serverLocation}`;
   }
-  let scriptUrl = `https://get.mender.io`;
+  let scriptUrl = 'https://get.mender.io';
   if (isPreRelease) {
     scriptUrl = `${scriptUrl}/staging`;
   }
