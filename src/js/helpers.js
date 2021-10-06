@@ -456,7 +456,7 @@ export const standardizePhases = phases =>
     return standardizedPhase;
   });
 
-export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, tenantToken, deviceType = 'generic-armv6', isPreRelease) => {
+export const getDebConfigurationCode = ({ ipAddress, isHosted, isEnterprise, isDemoMode, tenantToken, deviceType = 'generic-armv6', isPreRelease }) => {
   let envVars = ``;
   let installScriptArgs = `--demo`;
   if (isPreRelease) {
@@ -470,13 +470,16 @@ export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, tenan
   let menderSetupArgs = `--quiet --device-type "${deviceType}"`;
   if (isHosted || isEnterprise) {
     envVars = `${envVars}TENANT_TOKEN="${tenantToken}"\n`;
-    if (isHosted) {
-      menderSetupArgs = `${menderSetupArgs} --demo --hosted-mender --tenant-token $TENANT_TOKEN`;
-    } else {
-      menderSetupArgs = `${menderSetupArgs} --retry-poll 30 --update-poll 5 --inventory-poll 5 --server-url https://${window.location.hostname} --server-cert="" --tenant-token $TENANT_TOKEN`;
-    }
-  } else {
+    menderSetupArgs = `${menderSetupArgs} --tenant-token $TENANT_TOKEN`;
+  }
+  if (isHosted) {
+    menderSetupArgs = `${menderSetupArgs} --demo --hosted-mender`;
+  } else if (isDemoMode) {
+    // Demo installation, either OS os Enterprise. Install demo cert and add IP to /etc/hosts
     menderSetupArgs = `${menderSetupArgs} --demo${ipAddress ? ` --server-ip ${ipAddress}` : ''}`;
+  } else {
+    // Production installation, either OS or Enterprise
+    menderSetupArgs = `${menderSetupArgs} --retry-poll 30 --update-poll 5 --inventory-poll 5 --server-url https://${window.location.hostname} --server-cert=""`;
   }
   let scriptUrl = `https://get.mender.io`;
   if (isPreRelease) {
