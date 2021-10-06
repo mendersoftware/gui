@@ -171,7 +171,7 @@ export const Terminal = ({
           }
         }
         case MessageTypes.Shell:
-          return term.write(byteArrayToString(body));
+          return term.write(new Uint8Array(body));
         case MessageTypes.Stop:
           return cleanupSocket();
         case MessageTypes.Ping: {
