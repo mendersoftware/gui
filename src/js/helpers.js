@@ -434,16 +434,20 @@ export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, tenan
     envVars = `${envVars}JWT_TOKEN="${jwtToken}"\n`;
     installScriptArgs = `${installScriptArgs} --commercial --jwt-token $JWT_TOKEN`;
   }
+  let serverLocation = ipAddress ? `--server-ip ${ipAddress}` : '';
+  if (!serverLocation && window.location.hostname !== 'localhost') {
+    serverLocation = `--server-url https://${window.location.hostname}`;
+  }
   let menderSetupArgs = `--quiet --device-type "${deviceType}"`;
   if (isHosted || isEnterprise) {
     envVars = `${envVars}TENANT_TOKEN="${tenantToken}"\n`;
     if (isHosted) {
       menderSetupArgs = `${menderSetupArgs} --demo --hosted-mender --tenant-token $TENANT_TOKEN`;
     } else {
-      menderSetupArgs = `${menderSetupArgs} --retry-poll 30 --update-poll 5 --inventory-poll 5 --server-url https://${window.location.hostname} --server-cert="" --tenant-token $TENANT_TOKEN`;
+      menderSetupArgs = `${menderSetupArgs} --retry-poll 30 --update-poll 5 --inventory-poll 5 ${serverLocation} --server-cert="" --tenant-token $TENANT_TOKEN`;
     }
   } else {
-    menderSetupArgs = `${menderSetupArgs} --demo${ipAddress ? ` --server-ip ${ipAddress}` : ''}`;
+    menderSetupArgs = `${menderSetupArgs} --demo ${serverLocation}`;
   }
   let scriptUrl = `https://get.mender.io`;
   if (isPreRelease) {
