@@ -107,8 +107,8 @@ export const DeviceTypeSelectionStep = ({ docsVersion, hasConvertedImage, onboar
   );
 };
 
-export const InstallationStep = ({ advanceOnboarding, ipAddress, isHosted, isEnterprise, tenantToken, selection, isPreRelease }) => {
-  const codeToCopy = getDebConfigurationCode(ipAddress, isHosted, isEnterprise, tenantToken, selection, isPreRelease);
+export const InstallationStep = ({ advanceOnboarding, selection, ...remainingProps }) => {
+  const codeToCopy = getDebConfigurationCode({ ...remainingProps, deviceType: selection });
   return (
     <div>
       <b>2. Log into your device and install the Mender client</b>
@@ -135,6 +135,7 @@ export const PhysicalDeviceOnboarding = ({
   ipAddress,
   isHosted,
   isEnterprise,
+  isDemoMode,
   isPreRelease,
   onboardingState,
   progress,
@@ -166,6 +167,7 @@ export const PhysicalDeviceOnboarding = ({
       ipAddress={ipAddress}
       isEnterprise={isEnterprise}
       isHosted={isHosted}
+      isDemoMode={isDemoMode}
       isPreRelease={isPreRelease}
       onboardingState={onboardingState}
       onSelect={onSelect}
@@ -183,6 +185,7 @@ const mapStateToProps = state => {
     ipAddress: state.app.hostAddress,
     isEnterprise: getIsEnterprise(state),
     isHosted: state.app.features.isHosted,
+    isDemoMode: state.app.features.isDemoMode,
     isPreRelease: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
     onboardingState: getOnboardingState(state),
     tenantToken: state.organization.organization.tenant_token
