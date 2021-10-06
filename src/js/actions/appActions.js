@@ -2,7 +2,7 @@ import Cookies from 'universal-cookie';
 
 import { getToken } from '../auth';
 import AppConstants from '../constants/appConstants';
-import { DEVICE_STATES } from '../constants/deviceConstants';
+import { DEVICE_ONLINE_CUTOFF, DEVICE_STATES } from '../constants/deviceConstants';
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { SET_SHOW_HELP } from '../constants/userConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
@@ -125,6 +125,16 @@ export const setFirstLoginAfterSignup = firstLoginAfterSignup => dispatch =>
     type: AppConstants.SET_FIRST_LOGIN_AFTER_SIGNUP,
     firstLoginAfterSignup: firstLoginAfterSignup
   });
+
+export const setYesterday = () => dispatch => {
+  const today = new Date();
+  const intervalName = `${DEVICE_ONLINE_CUTOFF.intervalName.charAt(0).toUpperCase()}${DEVICE_ONLINE_CUTOFF.intervalName.substring(1)}`;
+  const setter = `set${intervalName}s`;
+  const getter = `get${intervalName}s`;
+  today[setter](today[getter]() - DEVICE_ONLINE_CUTOFF.interval);
+
+  return Promise.resolve(dispatch({ type: AppConstants.SET_YESTERDAY, value: today.toISOString() }));
+};
 
 export const progress = (e, dispatch) => {
   const uploadProgress = (e.loaded / e.total) * 100;

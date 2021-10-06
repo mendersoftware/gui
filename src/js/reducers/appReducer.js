@@ -69,7 +69,8 @@ export const initialState = {
     Deviceauth: menderEnvironment.services.deviceauthVersion,
     Inventory: menderEnvironment.services.inventoryVersion,
     GUI: menderEnvironment.services.guiVersion || 'latest'
-  }
+  },
+  yesterday: undefined
 };
 
 const appReducer = (state = initialState, action) => {
@@ -88,6 +89,11 @@ const appReducer = (state = initialState, action) => {
       return {
         ...state,
         hostedAnnouncement: action.announcement
+      };
+    case AppConstants.SET_YESTERDAY:
+      return {
+        ...state,
+        yesterday: action.value
       };
     case AppConstants.UPLOAD_PROGRESS: {
       const cancelSource = action.inprogress ? action.cancelSource || state.cancelSource : undefined;

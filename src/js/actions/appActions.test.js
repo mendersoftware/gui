@@ -4,7 +4,7 @@ import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
 import { roles } from '../../../tests/__mocks__/userHandlers';
 import { defaultState } from '../../../tests/mockData';
 
-import { commonErrorHandler, initializeAppData, setSnackbar, setFirstLoginAfterSignup } from './appActions';
+import { commonErrorHandler, initializeAppData, setSnackbar, setFirstLoginAfterSignup, setYesterday } from './appActions';
 import AppConstants from '../constants/appConstants';
 import DeploymentConstants from '../constants/deploymentConstants';
 import DeviceConstants from '../constants/deviceConstants';
@@ -106,6 +106,7 @@ describe('app actions', () => {
             ...defaultState.devices.byId.a1,
             attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
             identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
+            isOffline: false,
             monitor: {},
             tags: {},
             updated_ts: inventoryDevice.updated_ts
@@ -125,6 +126,7 @@ describe('app actions', () => {
             ...defaultState.devices.byId.a1,
             attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
             identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
+            isOffline: false,
             monitor: {},
             status: 'pending',
             tags: {},
@@ -244,6 +246,14 @@ describe('app actions', () => {
       }
     ];
     await store.dispatch(setFirstLoginAfterSignup(true));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should calculate yesterdays timestamp', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [{ type: AppConstants.SET_YESTERDAY, value: '2018-12-31T13:00:00.900Z' }];
+    await store.dispatch(setYesterday());
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

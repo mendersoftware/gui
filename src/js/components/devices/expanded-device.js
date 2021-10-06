@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import copy from 'copy-to-clipboard';
 
@@ -19,7 +19,7 @@ import {
 } from '../../actions/deviceActions';
 import { getDeviceAlerts, getLatestDeviceAlerts } from '../../actions/monitorActions';
 import { saveGlobalSettings } from '../../actions/userActions';
-import { DEVICE_ONLINE_CUTOFF, DEVICE_STATES } from '../../constants/deviceConstants';
+import { DEVICE_STATES } from '../../constants/deviceConstants';
 import ForwardingLink from '../common/forwardlink';
 import RelativeTime from '../common/relative-time';
 import { getDocsVersion, getIsEnterprise, getTenantCapabilities, getUserRoles } from '../../selectors';
@@ -70,11 +70,10 @@ export const ExpandedDevice = ({
   tenantCapabilities,
   userRoles
 }) => {
-  const { status = DEVICE_STATES.accepted, updated_ts = '' } = device;
+  const { isOffline, status = DEVICE_STATES.accepted } = device;
   const [socketClosed, setSocketClosed] = useState(true);
   const [troubleshootType, setTroubleshootType] = useState();
   const [monitorDetails, setMonitorDetails] = useState();
-  const [yesterday, setYesterday] = useState(new Date());
   const monitoring = useRef();
 
   const { hasDeviceConfig, hasDeviceConnect, hasMonitor } = tenantCapabilities;
@@ -86,13 +85,6 @@ export const ExpandedDevice = ({
     clearInterval(timer);
     timer = setInterval(() => getDeviceInfo(device), refreshDeviceLength);
     getDeviceInfo(device);
-
-    const today = new Date();
-    const intervalName = `${DEVICE_ONLINE_CUTOFF.intervalName.charAt(0).toUpperCase()}${DEVICE_ONLINE_CUTOFF.intervalName.substring(1)}`;
-    const setter = `set${intervalName}s`;
-    const getter = `get${intervalName}s`;
-    today[setter](today[getter]() - DEVICE_ONLINE_CUTOFF.interval);
-    setYesterday(today);
     return () => {
       clearInterval(timer);
     };
@@ -141,7 +133,6 @@ export const ExpandedDevice = ({
 
   const deviceIdentifier = device?.attributes?.name ?? device?.id ?? '-';
   const isAcceptedDevice = status === DEVICE_STATES.accepted;
-  const isOffline = useMemo(() => new Date(updated_ts) < yesterday, [updated_ts, yesterday]);
   return (
     <Drawer anchor="right" className="expandedDevice" open={open} onClose={onClose} PaperProps={{ style: { minWidth: '67vw' } }}>
       <div className="flexbox center-aligned">
