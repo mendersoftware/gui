@@ -25,7 +25,7 @@ const statusTypes = {
   },
   offline: {
     severity: 'error',
-    notification: { [DEVICE_STATES.accepted]: 'This device has not communicated with the Mender backend for a while. Click on the row to see more details' }
+    notification: { default: 'This device has not communicated with the Mender backend for a while. Click on the row to see more details' }
   },
   updateFailed: { severity: 'warning', notification: {} }
 };
@@ -44,7 +44,7 @@ const WarningIcon = withStyles({
   }
 })(ReportProblemOutlined);
 
-const DeviceStatus = ({ device: { auth_sets = [], monitor = {}, status: deviceStatus } }) => {
+const DeviceStatus = ({ device: { auth_sets = [], isOffline, monitor = {}, status: deviceStatus } }) => {
   let notification = statusTypes.default.notification[deviceStatus] ?? '';
   let label;
   let icon = <ErrorIcon />;
@@ -58,6 +58,10 @@ const DeviceStatus = ({ device: { auth_sets = [], monitor = {}, status: deviceSt
     icon = <WarningIcon style={{ marginLeft: 5 }} />;
     notification = statusTypes.monitor.notification.default;
     label = 'monitoring';
+  } else if (isOffline) {
+    icon = <WarningIcon style={{ marginLeft: 5 }} />;
+    notification = statusTypes.offline.notification.default;
+    label = 'offline';
   }
   return label ? (
     <Tooltip title={notification} placement="bottom">
