@@ -65,7 +65,7 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
                 Release
               </span>
               <div>
-                test
+                r1
               </div>
             </div>
             <div>
@@ -286,7 +286,7 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
               Release
             </span>
             <div>
-              test
+              r1
             </div>
           </div>
           <div>

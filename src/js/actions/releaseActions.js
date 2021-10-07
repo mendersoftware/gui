@@ -11,21 +11,30 @@ import { customSort, duplicateFilter } from '../helpers';
 const apiUrl = '/api/management/v1';
 export const deploymentsApiUrl = `${apiUrl}/deployments`;
 
-const flattenRelease = release => {
-  release.Artifacts.sort(customSort(1, 'modified'));
-  const { descriptions, deviceTypes, latestModified = '' } = release.Artifacts.reduce(
+const flattenRelease = (release, stateRelease) => {
+  const updatedArtifacts = release.Artifacts.sort(customSort(1, 'modified'));
+  const { Artifacts, descriptions, deviceTypes, latestModified = '' } = updatedArtifacts.reduce(
     (accu, item) => {
       item.description ? accu.descriptions.push(item.description) : null;
       accu.deviceTypes.push(...item.device_types_compatible);
       accu.latestModified = accu.latestModified ? accu.latestModified : item.modified;
+      const stateArtifact = stateRelease.Artifacts?.find(releaseArtifact => releaseArtifact.id === item.id) || {};
+      accu.Artifacts.push({
+        ...stateArtifact,
+        ...item
+      });
       return accu;
     },
-    { descriptions: [], deviceTypes: [], latestModified: undefined }
+    { Artifacts: [], descriptions: [], deviceTypes: [], latestModified: undefined }
   );
-  release.descriptions = descriptions;
-  release.device_types_compatible = deviceTypes.filter(duplicateFilter);
-  release.latestModified = latestModified;
-  return release;
+  return {
+    ...stateRelease,
+    ...release,
+    Artifacts,
+    descriptions,
+    device_types_compatible: deviceTypes.filter(duplicateFilter),
+    latestModified
+  };
 };
 
 const findArtifactIndexInRelease = (releases, id) =>
@@ -163,11 +172,13 @@ export const selectRelease = release => dispatch =>
 export const showRemoveArtifactDialog = showRemoveDialog => dispatch => dispatch({ type: ReleaseConstants.SHOW_REMOVE_DIALOG, showRemoveDialog });
 
 /* Releases */
-export const getReleases = () => dispatch =>
+export const getReleases = () => (dispatch, getState) =>
   GeneralApi.get(`${deploymentsApiUrl}/deployments/releases`)
     .then(({ data: releases }) => {
+      const releasesById = getState().releases.byId;
       const flatReleases = releases.sort(customSort(1, 'Name')).reduce((accu, release) => {
-        accu[release.Name] = flattenRelease(release);
+        const stateRelease = releasesById[release.Name] || {};
+        accu[release.Name] = flattenRelease(release, stateRelease);
         return accu;
       }, {});
       return Promise.all([
@@ -177,7 +188,11 @@ export const getReleases = () => dispatch =>
     })
     .catch(err => commonErrorHandler(err, `Please check your connection`, dispatch));
 
-export const getRelease = name => dispatch =>
-  GeneralApi.get(`${deploymentsApiUrl}/deployments/releases?name=${name}`).then(({ data: releases }) =>
-    releases.length ? Promise.resolve(dispatch({ type: ReleaseConstants.RECEIVE_RELEASE, release: flattenRelease(releases[0]) })) : Promise.resolve(null)
-  );
+export const getRelease = name => (dispatch, getState) =>
+  GeneralApi.get(`${deploymentsApiUrl}/deployments/releases?name=${name}`).then(({ data: releases }) => {
+    if (releases.length) {
+      const stateRelease = getState().releases.byId[releases[0].Name] || {};
+      return Promise.resolve(dispatch({ type: ReleaseConstants.RECEIVE_RELEASE, release: flattenRelease(releases[0], stateRelease) }));
+    }
+    return Promise.resolve(null);
+  });

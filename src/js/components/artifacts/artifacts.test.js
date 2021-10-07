@@ -40,8 +40,8 @@ describe('Artifacts Component', () => {
       ...defaultState,
       releases: {
         ...defaultState.releases,
-        selectedArtifact: defaultState.releases.byId.a1.Artifacts[0],
-        selectedRelease: defaultState.releases.byId.a1.Name
+        selectedArtifact: defaultState.releases.byId.r1.Artifacts[0],
+        selectedRelease: defaultState.releases.byId.r1.Name
       }
     });
     const ui = (
@@ -54,11 +54,11 @@ describe('Artifacts Component', () => {
     const { rerender } = render(ui);
     act(() => jest.advanceTimersByTime(1000));
     await waitFor(() => rerender(ui));
-    expect(screen.queryByDisplayValue(defaultState.releases.byId.a1.Artifacts[0].description)).toBeInTheDocument();
+    expect(screen.queryByDisplayValue(defaultState.releases.byId.r1.Artifacts[0].description)).toBeInTheDocument();
     act(() => userEvent.click(screen.getByRole('button', { name: /Remove this artifact/i })));
     await waitFor(() => rerender(ui));
     const releaseRepoItem = document.body.querySelector('.release-repo');
-    act(() => userEvent.click(within(releaseRepoItem).getByText(defaultState.releases.byId.a1.Name)));
+    act(() => userEvent.click(within(releaseRepoItem).getByText(defaultState.releases.byId.r1.Name)));
     act(() => userEvent.click(screen.getByText(/Last modified/i)));
     await waitFor(() => rerender(ui));
     expect(screen.queryByText(/Filtered from/i)).not.toBeInTheDocument();
@@ -68,7 +68,7 @@ describe('Artifacts Component', () => {
     expect(document.body.querySelector('.repository-list > ul > div')).toBeFalsy();
     act(() => userEvent.clear(screen.getByPlaceholderText(/Filter/i)));
     await waitFor(() => rerender(ui));
-    act(() => userEvent.type(screen.getByPlaceholderText(/Filter/i), defaultState.releases.byId.a1.Name));
+    act(() => userEvent.type(screen.getByPlaceholderText(/Filter/i), defaultState.releases.byId.r1.Name));
     await waitFor(() => rerender(ui));
     expect(document.body.querySelector('.repository-list > ul > div')).toBeTruthy();
   });

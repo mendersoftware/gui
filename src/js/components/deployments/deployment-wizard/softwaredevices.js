@@ -187,7 +187,7 @@ export const SoftwareDevices = ({
           <h4 style={styles.selectionTitle}>Select a Release to deploy</h4>
           <div ref={releaseRef} style={styles.selection}>
             {releaseSelectionLocked ? (
-              <TextField value={deploymentRelease} label="Release" disabled={true} style={styles.infoStyle} />
+              <TextField value={deploymentRelease?.Name} label="Release" disabled={true} style={styles.infoStyle} />
             ) : (
               <Autocomplete
                 id="deployment-release-selection"
