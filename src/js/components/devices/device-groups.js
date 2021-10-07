@@ -9,7 +9,7 @@ import AuthorizedDevices from './authorized-devices';
 import CreateGroup from './create-group';
 import Groups from './groups';
 import RemoveGroup from './remove-group';
-import { setSnackbar } from '../../actions/appActions';
+import { setSnackbar, setYesterday } from '../../actions/appActions';
 import {
   addDynamicGroup,
   addStaticGroup,
@@ -232,6 +232,7 @@ export const DeviceGroups = ({
   setDeviceListState,
   setShowConnectingDialog,
   setSnackbar,
+  setYesterday,
   showDeviceConnectionDialog,
   showHelptips,
   updateDynamicGroup
@@ -261,6 +262,8 @@ export const DeviceGroups = ({
     }
     clearInterval(deviceTimer);
     deviceTimer = setInterval(getAllDeviceCounts, refreshLength);
+
+    setYesterday();
     setDeviceRefreshTrigger(!deviceRefreshTrigger);
     return () => {
       clearInterval(deviceTimer);
@@ -502,6 +505,7 @@ const actionCreators = {
   setDeviceListState,
   setShowConnectingDialog,
   setSnackbar,
+  setYesterday,
   updateDynamicGroup
 };
 

@@ -112,7 +112,8 @@ module.exports = {
   DEVICE_ISSUE_OPTIONS: {
     offline: {
       key: 'offline',
-      needsReporting: true,
+      needsFullFiltering: true,
+      needsReporting: false,
       filterRule: {
         scope: 'system',
         key: 'updated_ts',
@@ -127,12 +128,14 @@ module.exports = {
     },
     monitoring: {
       key: 'monitoring',
+      needsFullFiltering: false,
       needsReporting: false,
       filterRule: { scope: 'monitor', key: 'alerts', operator: '$eq', value: true },
       title: 'Devices reporting monitoring issues'
     },
     authRequests: {
       key: 'authRequests',
+      needsFullFiltering: false,
       needsReporting: true,
       filterRule: { scope: 'monitor', key: 'auth_requests', operator: '$gt', value: 1 },
       title: 'Devices with new authentication requests'
