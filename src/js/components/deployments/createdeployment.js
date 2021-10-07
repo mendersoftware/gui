@@ -12,6 +12,7 @@ import RolloutOptions from './deployment-wizard/rolloutoptions';
 import { createDeployment } from '../../actions/deploymentActions';
 import { getGroupDevices } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
+import { getReleases } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { PLANS } from '../../constants/appConstants';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
@@ -49,6 +50,7 @@ export const CreateDialog = props => {
     createDeployment,
     deploymentObject,
     getGroupDevices,
+    getReleases,
     globalSettings,
     groups,
     isEnterprise,
@@ -67,6 +69,10 @@ export const CreateDialog = props => {
 
   const [hasNewRetryDefault, setHasNewRetryDefault] = useState(false);
   const deploymentRef = useRef();
+
+  useEffect(() => {
+    getReleases();
+  }, []);
 
   useEffect(() => {
     const steps = deploymentSteps.reduce((accu, step) => {
@@ -203,7 +209,7 @@ export const CreateDialog = props => {
   );
 };
 
-const actionCreators = { advanceOnboarding, createDeployment, getGroupDevices, saveGlobalSettings };
+const actionCreators = { advanceOnboarding, createDeployment, getGroupDevices, getReleases, saveGlobalSettings };
 
 export const mapStateToProps = state => {
   const { plan = PLANS.os.value } = state.organization.organization;

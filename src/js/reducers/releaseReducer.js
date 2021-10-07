@@ -55,10 +55,7 @@ const releaseReducer = (state = initialState, action) => {
         ...state,
         byId: {
           ...state.byId,
-          [action.release.Name]: {
-            ...state.byId[action.release.Name],
-            ...action.release
-          }
+          [action.release.Name]: action.release
         }
       };
     case ReleaseConstants.RECEIVE_RELEASES: {

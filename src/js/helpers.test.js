@@ -424,7 +424,7 @@ describe('extractSoftware function', () => {
 describe('extractSoftwareInformation function', () => {
   it('works as expected', async () => {
     expect(
-      extractSoftwareInformation(defaultState.releases.byId.a1.Artifacts[0].artifact_provides, undefined, [
+      extractSoftwareInformation(defaultState.releases.byId.r1.Artifacts[0].artifact_provides, undefined, [
         'Software filesystem',
         'Software name',
         'Software version'

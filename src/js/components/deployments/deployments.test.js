@@ -92,7 +92,7 @@ describe('Deployments Component', () => {
         byId: {
           ...defaultState.releases.byId,
           test: {
-            ...defaultState.releases.byId.a1
+            ...defaultState.releases.byId.r1
           }
         }
       }
@@ -114,9 +114,8 @@ describe('Deployments Component', () => {
     await waitFor(() => expect(screen.getByText(/Cancel/i)).toBeInTheDocument());
     userEvent.click(screen.getByRole('button', { name: /Cancel/i }));
     await waitFor(() => rerender(ui));
-    // screen.debug(undefined, 2000000);
     const inprogressDeployments = screen.getByText(/in progress now/i).parentElement.parentElement;
-    const deployment = within(inprogressDeployments).getByText(/test deployment 2/i).parentElement.parentElement;
+    const deployment = within(inprogressDeployments).getAllByText(/test deployment/i)[0].parentElement.parentElement;
     userEvent.click(within(deployment).getByRole('button', { name: /Abort/i }));
     jest.advanceTimersByTime(200);
     await waitFor(() => expect(screen.getByText(/Confirm abort/i)).toBeInTheDocument());
@@ -155,8 +154,8 @@ describe('Deployments Component', () => {
     await waitFor(() => {
       expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument();
     });
-    expect(screen.queryByText(releaseId)).not.toBeInTheDocument();
     const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
+    expect(within(releaseSelect).queryByText(releaseId)).not.toBeInTheDocument();
     userEvent.click(releaseSelect);
     fireEvent.keyDown(releaseSelect, { key: 'ArrowDown' });
     fireEvent.keyDown(releaseSelect, { key: 'Enter' });
@@ -174,7 +173,7 @@ describe('Deployments Component', () => {
     await waitFor(() => rerender(ui));
     expect(post).toHaveBeenCalledWith('/api/management/v1/deployments/deployments', {
       all_devices: true,
-      artifact_name: defaultState.releases.byId.a1.Name,
+      artifact_name: defaultState.releases.byId.r1.Name,
       devices: undefined,
       filter_id: undefined,
       group: undefined,
@@ -240,8 +239,8 @@ describe('Deployments Component', () => {
     await waitFor(() => {
       expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument();
     });
-    expect(screen.queryByText(releaseId)).not.toBeInTheDocument();
     const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
+    expect(within(releaseSelect).queryByText(releaseId)).not.toBeInTheDocument();
     userEvent.click(releaseSelect);
     fireEvent.keyDown(releaseSelect, { key: 'ArrowDown' });
     fireEvent.keyDown(releaseSelect, { key: 'Enter' });
@@ -277,7 +276,7 @@ describe('Deployments Component', () => {
     await waitFor(() => rerender(ui));
     expect(post).toHaveBeenCalledWith('/api/management/v1/deployments/deployments', {
       all_devices: true,
-      artifact_name: defaultState.releases.byId.a1.Name,
+      artifact_name: defaultState.releases.byId.r1.Name,
       devices: undefined,
       filter_id: undefined,
       group: undefined,
@@ -292,9 +291,6 @@ describe('Deployments Component', () => {
     });
     expect(post).toHaveBeenCalledWith('/api/management/v1/useradm/settings', {
       '2fa': 'enabled',
-      id_attribute: undefined,
-      previousFilters: [],
-      previousPhases: [[{ batch_size: 30, delay: 5, delayUnit: 'days' }, { batch_size: 70 }]],
       a1: {
         onboarding: {
           complete: false,
@@ -302,7 +298,10 @@ describe('Deployments Component', () => {
           progress: 'deployments-inprogress',
           showConnectDeviceDialog: false
         }
-      }
+      },
+      id_attribute: undefined,
+      previousFilters: [],
+      previousPhases: [[{ batch_size: 30, delay: 5, delayUnit: 'days' }, { batch_size: 70 }]]
     });
   }, 15000);
 });

@@ -119,7 +119,7 @@ exports[`Artifacts Component renders correctly 1`] = `
                     <h6
                       class="MuiTypography-root MuiTypography-subtitle2"
                     >
-                      a1
+                      r1
                     </h6>
                     <p
                       class="MuiTypography-root muted MuiTypography-body2"
