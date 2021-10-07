@@ -6,7 +6,7 @@ import { setShowConnectingDialog } from '../../actions/userActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getIsEnterprise, getOnboardingState } from '../../selectors';
+import { getOnboardingState, getTenantCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import AcceptedDevices from './widgets/accepteddevices';
@@ -156,9 +156,7 @@ export const Devices = props => {
 const actionCreators = { advanceOnboarding, getActiveDevices, getAllDevicesByStatus, getDeviceCount, setShowConnectingDialog };
 
 const mapStateToProps = state => {
-  const { plan } = state.organization.organization;
-  const isEnterprise = getIsEnterprise(state);
-  const hasFullFiltering = isEnterprise || plan === 'professional';
+  const { hasFullFiltering } = getTenantCapabilities(state);
   return {
     activeDevicesCount: state.devices.byStatus.active.total,
     deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
