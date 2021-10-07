@@ -1,4 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
+import { PLANS } from '../constants/appConstants';
 import { rolesByName, twoFAStates } from '../constants/userConstants';
 import { getDemoDeviceAddress as getDemoDeviceAddressHelper } from '../helpers';
 
@@ -46,13 +47,13 @@ export const getDocsVersion = createSelector([getAppDocsVersion, getFeatures], (
 
 export const getIsEnterprise = createSelector(
   [getOrganization, getFeatures],
-  ({ plan = 'os' }, { isEnterprise, isHosted }) => isEnterprise || (isHosted && plan === 'enterprise')
+  ({ plan = PLANS.os.value }, { isEnterprise, isHosted }) => isEnterprise || (isHosted && plan === PLANS.enterprise.value)
 );
 
 export const getUserRoles = createSelector(
   [getCurrentUser, getRolesById, getIsEnterprise, getFeatures, getOrganization],
-  (currentUser, rolesById, isEnterprise, { isHosted, hasMultitenancy }, { plan = 'os' }) => {
-    let isAdmin = !(hasMultitenancy || isEnterprise || (isHosted && plan !== 'os'));
+  (currentUser, rolesById, isEnterprise, { isHosted, hasMultitenancy }, { plan = PLANS.os.value }) => {
+    let isAdmin = !(hasMultitenancy || isEnterprise || (isHosted && plan !== PLANS.os.value));
     let allowUserManagement = isAdmin;
     let isGroupRestricted = false;
     let hasWriteAccess = isAdmin;
@@ -80,14 +81,16 @@ export const getUserRoles = createSelector(
 );
 
 export const getTenantCapabilities = createSelector(
-  [getFeatures, getOrganization],
+  [getFeatures, getOrganization, getIsEnterprise],
   (
     { hasAuditlogs, hasDeviceConfig: isDeviceConfigEnabled, hasDeviceConnect: isDeviceConnectEnabled, hasMonitor: isMonitorEnabled, isHosted },
-    { addons = [] }
+    { addons = [], plan },
+    isEnterprise
   ) => {
     const hasDeviceConfig = isDeviceConfigEnabled && (!isHosted || addons.some(addon => addon.name === 'configure' && Boolean(addon.enabled)));
     const hasDeviceConnect = isDeviceConnectEnabled && (!isHosted || addons.some(addon => addon.name === 'troubleshoot' && Boolean(addon.enabled)));
     const hasMonitor = isMonitorEnabled && (!isHosted || addons.some(addon => addon.name === 'monitor' && Boolean(addon.enabled)));
-    return { hasAuditlogs, hasDeviceConfig, hasDeviceConnect, hasMonitor };
+    const hasFullFiltering = isEnterprise || plan === PLANS.professional.value;
+    return { hasAuditlogs, hasDeviceConfig, hasDeviceConnect, hasFullFiltering, hasMonitor };
   }
 );

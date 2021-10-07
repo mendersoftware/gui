@@ -54,6 +54,7 @@ export const Authorized = props => {
     getDevicesByStatus,
     getIssueCountsByType,
     groupFilters,
+    hasFullFiltering,
     hasMonitor,
     hasReporting,
     highlightHelp,
@@ -151,14 +152,14 @@ export const Authorized = props => {
 
   const availableIssueOptions = useMemo(
     () =>
-      Object.values(DEVICE_ISSUE_OPTIONS).reduce((accu, { key, needsReporting, title }) => {
-        if (needsReporting && !hasReporting) {
+      Object.values(DEVICE_ISSUE_OPTIONS).reduce((accu, { key, needsFullFiltering, needsReporting, title }) => {
+        if ((needsReporting && !hasReporting) || (needsFullFiltering && !hasFullFiltering)) {
           return accu;
         }
         accu.push({ count: issueCounts[key].filtered, key, title });
         return accu;
       }, []),
-    [hasReporting, issueCounts]
+    [hasFullFiltering, hasReporting, issueCounts]
   );
 
   const sortingAlternatives = Object.values(states)
@@ -427,7 +428,7 @@ const actionCreators = {
 };
 
 const mapStateToProps = state => {
-  const { hasMonitor } = getTenantCapabilities(state);
+  const { hasFullFiltering, hasMonitor } = getTenantCapabilities(state);
   let devices = state.devices.deviceList.deviceIds.slice(0, DEVICE_LIST_MAXIMUM_LENGTH);
   let deviceCount = state.devices.deviceList.total;
   let selectedGroup;
@@ -453,6 +454,7 @@ const mapStateToProps = state => {
     deviceCount,
     filters: state.devices.filters || [],
     groupFilters,
+    hasFullFiltering,
     hasMonitor,
     hasReporting: state.app.features.hasReporting,
     idAttribute: getIdAttribute(state),
