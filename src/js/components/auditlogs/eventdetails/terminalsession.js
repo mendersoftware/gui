@@ -8,6 +8,7 @@ import { getDeviceById, getSessionDetails } from '../../../actions/deviceActions
 import { getIdAttribute } from '../../../selectors';
 import theme from '../../../themes/mender-theme';
 import Loader from '../../common/loader';
+import LocaleFormatString from '../../common/timeformat';
 import DeviceDetails, { DetailInformation } from './devicedetails';
 import TerminalPlayer from './terminalplayer';
 
@@ -36,8 +37,8 @@ export const TerminalSession = ({ device, idAttribute, item, getDeviceById, getS
 
   const sessionMeta = {
     'Session ID': item.meta.session_id[0],
-    'Start time': <Time value={sessionDetails.start} format="YYYY-MM-DD HH:mm" />,
-    'End time': <Time value={sessionDetails.end} format="YYYY-MM-DD HH:mm" />,
+    'Start time': <Time value={sessionDetails.start} format={LocaleFormatString()} />,
+    'End time': <Time value={sessionDetails.end} format={LocaleFormatString()} />,
     'Duration': moment.duration(moment(sessionDetails.end).diff(sessionDetails.start)).format('*hh:*mm:ss:SSS'),
     User: item.actor.email
   };

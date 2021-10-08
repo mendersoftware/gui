@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
-import { Button, Switch, TextField } from '@material-ui/core';
+import { Button, FormControl, MenuItem, Select, Switch, TextField } from '@material-ui/core';
 
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
@@ -15,7 +16,17 @@ import { OAuth2Providers } from './oauth2providers';
 import TwoFactorAuthSetup from './twofactorauthsetup';
 import UserConstants from '../../constants/userConstants';
 
-export const SelfUserManagement = ({ canHave2FA, currentUser, editUser, hasTracking, hasTrackingConsent, isEnterprise, saveUserSettings, setSnackbar }) => {
+export const SelfUserManagement = ({
+  canHave2FA,
+  currentUser,
+  editUser,
+  hasTracking,
+  hasTrackingConsent,
+  isEnterprise,
+  saveUserSettings,
+  setSnackbar,
+  locale
+}) => {
   const [editEmail, setEditEmail] = useState(false);
   const [editPass, setEditPass] = useState(false);
   const [emailFormId, setEmailFormId] = useState(new Date());
@@ -136,6 +147,24 @@ export const SelfUserManagement = ({ canHave2FA, currentUser, editUser, hasTrack
           </p>
         </div>
       )}
+      <div className="flexbox space-between" style={{ alignItems: 'flex-start' }}>
+        <h2>Locale settings</h2>
+        <FormControl>
+          <Select
+            onChange={event => {
+              saveUserSettings({ 'locale': event.target.value });
+              console.log('Setting the user locale to: ' + event.target.value);
+              moment.locale(event.target.value);
+            }}
+            value={locale}
+          >
+            <MenuItem value={window.navigator.userLanguage || window.navigator.language}>Automatic</MenuItem>
+            <MenuItem value="en">Langlais</MenuItem>
+            <MenuItem value="de">Deutsche telekom</MenuItem>
+            <MenuItem value="es">Spanglish</MenuItem>
+          </Select>
+        </FormControl>
+      </div>
     </div>
   );
 };
@@ -145,12 +174,14 @@ const actionCreators = { editUser, saveGlobalSettings, saveUserSettings, setSnac
 const mapStateToProps = state => {
   const { plan = 'os' } = state.organization.organization;
   const isEnterprise = getIsEnterprise(state);
+  const { locale = 'automatic' } = getUserSettings(state);
   return {
     canHave2FA: isEnterprise || (state.app.features.isHosted && plan !== 'os'),
     currentUser: getCurrentUser(state),
     hasTracking: !!state.app.trackerCode,
     hasTrackingConsent: getUserSettings(state).trackingConsentGiven,
-    isEnterprise
+    isEnterprise,
+    locale
   };
 };
 

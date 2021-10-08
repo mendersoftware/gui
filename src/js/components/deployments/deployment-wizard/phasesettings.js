@@ -10,6 +10,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import { getPhaseStartTime } from '../createdeployment';
 import { getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
 import theme from '../../../themes/mender-theme';
+import LocaleFormatString from '../../common/timeformat';
 
 export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, filterId, numberDevices, setDeploymentSettings }) => {
   const { phases = [] } = deploymentObject;
@@ -122,7 +123,7 @@ export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, fil
           {!filterId && deviceCount < 1 && <div className="warning">Phases must have at least 1 device</div>}
         </TableCell>
         <TableCell>
-          <Time value={getPhaseStartTime(phases, index, startTime)} format="YYYY-MM-DD HH:mm" />
+          <Time value={getPhaseStartTime(phases, index, startTime)} format={LocaleFormatString()} />
         </TableCell>
         <TableCell>
           {phase.delay && index !== phases.length - 1 ? (

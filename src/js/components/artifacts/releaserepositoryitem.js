@@ -10,6 +10,7 @@ import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import { formatTime, FileSize } from '../../helpers';
 import { colors } from '../../themes/mender-theme';
 import SelectedArtifact from './selectedartifact';
+import LocaleFormatString from '../common/timeformat';
 
 export const ReleaseRepositoryItem = ({ artifact, expanded, index, itemRef, onEdit, onExpanded, onRowSelection }) => {
   useEffect(() => {
@@ -32,7 +33,7 @@ export const ReleaseRepositoryItem = ({ artifact, expanded, index, itemRef, onEd
           <Tooltip title={compatible} placement="top-start">
             <div className="text-overflow">{compatible}</div>
           </Tooltip>
-          <Time value={formatTime(artifact.modified)} format="YYYY-MM-DD HH:mm" />
+          <Time value={formatTime(artifact.modified)} format={LocaleFormatString()} />
           <div style={{ maxWidth: '100vw' }}>{artifactType}</div>
           <FileSize fileSize={artifact.size} />
           <IconButton className="expandButton">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>

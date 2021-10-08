@@ -4,6 +4,7 @@ import Time from 'react-time';
 import theme from '../../../themes/mender-theme';
 import DeviceDataCollapse from './devicedatacollapse';
 import { DeviceOfflineHeaderNotification, NoAlertsHeaderNotification, severityMap } from './notifications';
+import LocaleFormatString from '../../common/timeformat';
 
 const MonitoringAlert = ({ alert, onDetailsClick, style }) => {
   const { description, lines_before = [], lines_after = [], line_matching = '' } = alert.subject.details;
@@ -15,7 +16,7 @@ const MonitoringAlert = ({ alert, onDetailsClick, style }) => {
         <b>{alert.name}</b>
       </div>
       <div>{alert.level}</div>
-      <Time value={alert.timestamp} format="YYYY-MM-DD HH:mm" />
+      <Time value={alert.timestamp} format={LocaleFormatString()} />
       {(lines.length || description) && <a onClick={() => onDetailsClick(alert)}>view {lines.length ? 'log' : 'details'}</a>}
     </div>
   );
@@ -57,7 +58,7 @@ export const DeviceMonitoring = ({ alerts, device, getAlerts, innerRef, isOfflin
       title={
         <div className="flexbox center-aligned" ref={innerRef}>
           <h4 className="margin-right">Monitoring</h4>
-          <Time className="text-muted" value={updated_ts} format="YYYY-MM-DD HH:mm" />
+          <Time className="text-muted" value={updated_ts} format={LocaleFormatString()} />
         </div>
       }
     >

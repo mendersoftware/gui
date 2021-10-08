@@ -8,6 +8,7 @@ import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import EventDetailsDrawer from './eventdetailsdrawer';
 import { SORTING_OPTIONS } from '../../constants/appConstants';
+import LocaleFormatString from '../common/timeformat';
 
 export const defaultRowsPerPage = 20;
 
@@ -79,7 +80,7 @@ const ChangeDetailsDescriptor = (item, index) => {
   const Comp = mapChangeToContent(item).component;
   return <Comp key={`${item.time}-${index}`} item={item} />;
 };
-const TimeWrapper = (item, index) => <Time key={`${item.time}-${index}`} value={item.time} format="YYYY-MM-DD HH:mm" />;
+const TimeWrapper = (item, index) => <Time key={`${item.time}-${index}`} value={item.time} format={LocaleFormatString()} />;
 
 const auditLogColumns = [
   { title: 'User', sortable: false, render: UserDescriptor },

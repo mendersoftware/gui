@@ -5,6 +5,7 @@ import { ArrowDropDownCircleOutlined as ScrollDownIcon, CheckCircle as CheckIcon
 import pluralize from 'pluralize';
 import theme from '../../../themes/mender-theme';
 import { DEVICE_ONLINE_CUTOFF } from '../../../constants/deviceConstants';
+import LocaleFormatString from '../../common/timeformat';
 
 const severityIconStyle = { marginRight: theme.spacing(2) };
 const errorIcon = <ErrorIcon className="red" style={severityIconStyle} />;
@@ -45,7 +46,7 @@ const notificationSpaceStyle = { marginLeft: theme.spacing(), marginRight: theme
 
 export const LastConnection = ({ updated_ts }) => (
   <BaseNotification severity={monitoringSeverities.CRITICAL}>
-    Device has not connected to the server since <Time value={updated_ts} format="YYYY-MM-DD HH:mm" style={notificationSpaceStyle} />
+    Device has not connected to the server since <Time value={updated_ts} format={LocaleFormatString()} style={notificationSpaceStyle} />
   </BaseNotification>
 );
 

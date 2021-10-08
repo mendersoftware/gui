@@ -10,6 +10,7 @@ import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/dev
 import { formatTime } from '../../../../helpers';
 import theme from '../../../../themes/mender-theme';
 import Loader from '../../../common/loader';
+import LocaleFormatString from '../../../common/timeformat';
 
 const padder = <div key="padder" style={{ flexGrow: 1 }}></div>;
 
@@ -203,7 +204,7 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
         {authsetStatus}
         <div className="capitalized">{authset.status}</div>
         {key}
-        <Time value={formatTime(authset.ts)} format="YYYY-MM-DD HH:mm" />
+        <Time value={formatTime(authset.ts)} format={LocaleFormatString()} />
         {loading === authset.id ? (
           <div>
             Updating status <Loader table={true} waiting={true} show={true} style={{ height: '4px', marginLeft: '10px' }} />

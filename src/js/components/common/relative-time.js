@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import Time from 'react-time';
 import { Tooltip } from '@material-ui/core';
+import LocaleFormatString from './timeformat';
 
 const cutoff = -5 * 60;
 
@@ -22,7 +23,8 @@ export default class RelativeTime extends React.Component {
   render() {
     const { updateTime } = this.state;
     const { className, shouldCount = 'both' } = this.props;
-    let timeDisplay = updateTime ? <Time className={className} value={updateTime} format="YYYY-MM-DD HH:mm" /> : <div className={className}>-</div>;
+
+    let timeDisplay = updateTime ? <Time className={className} value={updateTime} format={LocaleFormatString()} /> : <div className={className}>-</div>;
     const diffSeconds = updateTime ? updateTime.diff(moment(), 'seconds') : 0;
     if (
       updateTime &&

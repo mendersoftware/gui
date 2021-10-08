@@ -11,6 +11,7 @@ import ExpandableAttribute from '../../common/expandable-attribute';
 import { getPhaseStartTime } from '../createdeployment';
 import ConfigurationObject from '../../common/configurationobject';
 import RolloutSteps from './rolloutsteps';
+import LocaleFormatString from '../../common/timeformat';
 
 export const RolloutSchedule = ({ deployment, deploymentDeviceCount, filterId, phases, start_time }) => {
   return (
@@ -30,7 +31,7 @@ export const RolloutSchedule = ({ deployment, deploymentDeviceCount, filterId, p
             <div className="flexbox column" key={startTime}>
               <Chip size="small" label={`Phase ${index + 1}`} />
               <div>
-                <Time value={startTime} format="YYYY-MM-DD HH:mm" />
+                <Time value={startTime} format={LocaleFormatString()} />
               </div>
               <div>{`${row.batch_size}%${deviceCountText}`}</div>
             </div>
@@ -65,10 +66,10 @@ const Review = ({ deployment = {}, deploymentObject = {}, docsVersion, filterId,
     { primary: 'Release', secondary: release.Name },
     { primary: 'Device types compatible', secondary: release.device_types_compatible.join(', ') },
     { primary: 'Number of attempts per device', secondary: retries },
-    { primary: 'Start time', secondary: <Time value={start_time} format="YYYY-MM-DD HH:mm" />, secondaryTypographyProps: { title: start_time } },
+    { primary: 'Start time', secondary: <Time value={start_time} format={LocaleFormatString()} />, secondaryTypographyProps: { title: start_time } },
     {
       primary: 'End time',
-      secondary: end_time ? <Time value={end_time} format="YYYY-MM-DD HH:mm" /> : '-',
+      secondary: end_time ? <Time value={end_time} format={LocaleFormatString()} /> : '-',
       secondaryTypographyProps: { title: end_time || '-' }
     }
   ];

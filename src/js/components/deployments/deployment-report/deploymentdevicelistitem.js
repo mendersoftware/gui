@@ -7,6 +7,7 @@ import { Button, LinearProgress, TableCell, TableRow } from '@material-ui/core';
 
 import { formatTime } from '../../../helpers';
 import DeviceIdentityDisplay from '../../common/deviceidentity';
+import LocaleFormatString from '../../common/timeformat';
 
 const stateTitleMap = {
   noartifact: 'No compatible artifact found',
@@ -53,8 +54,8 @@ const DeploymentDeviceListItem = ({ device, idAttribute, viewLog, retries: maxRe
       </TableCell>
       <TableCell>{deviceTypes.length ? deviceTypes.join(',') : '-'}</TableCell>
       <TableCell>{currentArtifactLink}</TableCell>
-      <TableCell>{created ? <Time value={formatTime(created)} format="YYYY-MM-DD HH:mm" /> : '-'}</TableCell>
-      <TableCell>{finished ? <Time value={formatTime(finished)} format="YYYY-MM-DD HH:mm" /> : '-'}</TableCell>
+      <TableCell>{created ? <Time value={formatTime(created)} format={LocaleFormatString()} /> : '-'}</TableCell>
+      <TableCell>{finished ? <Time value={formatTime(finished)} format={LocaleFormatString()} /> : '-'}</TableCell>
       {retries ? (
         <TableCell>
           {attempts || 1}/{(retries || maxRetries) + 1}

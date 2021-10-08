@@ -23,6 +23,7 @@ import { ConfigureAddOnTip, ConfigureRaspberryLedTip, ConfigureTimezoneTip } fro
 import Loader from '../../common/loader';
 import ConfigImportDialog from './configimportdialog';
 import DeviceDataCollapse from './devicedatacollapse';
+import LocaleFormatString from '../../common/timeformat';
 
 const buttonStyle = { marginLeft: 30 };
 const iconStyle = { margin: 12 };
@@ -49,7 +50,7 @@ export const ConfigUpToDateNote = ({ updated_ts = defaultReportTimeStamp }) => (
         Configuration up-to-date on the device
       </Typography>
       <Typography variant="caption" className="text-muted" style={textStyle}>
-        Updated: {<Time value={updated_ts} format="YYYY-MM-DD HH:mm" />}
+        Updated: {<Time value={updated_ts} format={LocaleFormatString()} />}
       </Typography>
     </div>
   </div>
@@ -59,7 +60,7 @@ export const ConfigEmptyNote = ({ updated_ts = '' }) => (
   <div className="flexbox column margin-small">
     <Typography variant="subtitle2">The device appears to either have an empty configuration or not to have reported a configuration yet.</Typography>
     <Typography variant="caption" className="text-muted" style={textStyle}>
-      Updated: {<Time value={updated_ts} format="YYYY-MM-DD HH:mm" />}
+      Updated: {<Time value={updated_ts} format={LocaleFormatString()} />}
     </Typography>
   </div>
 );

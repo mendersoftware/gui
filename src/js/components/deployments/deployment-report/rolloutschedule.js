@@ -10,6 +10,7 @@ import { ArrowForward } from '@material-ui/icons';
 import { formatTime, getPhaseDeviceCount, getRemainderPercent, groupDeploymentStats } from '../../../helpers';
 import theme, { colors } from '../../../themes/mender-theme';
 import { TwoColumnData } from '../../common/configurationobject';
+import LocaleFormatString from '../../common/timeformat';
 import { getPhaseStartTime } from '../createdeployment';
 import { ProgressChart } from '../progressChart';
 import { defaultColumnDataProps } from '../report';
@@ -48,7 +49,7 @@ export const RolloutSchedule = ({ deployment, innerRef, onAbort, onUpdateControl
   if (now.isSameOrAfter(currentPhaseStartTime)) {
     currentPhaseTime = currentPhaseIndex + 1;
   }
-  const endTime = finished ? <Time value={formatTime(finished)} format="YYYY-MM-DD HH:mm" /> : filterId ? 'N/A' : '-';
+  const endTime = finished ? <Time value={formatTime(finished)} format={LocaleFormatString()} /> : filterId ? 'N/A' : '-';
   return (
     <>
       <h4 className="dashboard-header margin-top-large" ref={innerRef}>
@@ -60,7 +61,7 @@ export const RolloutSchedule = ({ deployment, innerRef, onAbort, onUpdateControl
             <TwoColumnData
               {...defaultColumnDataProps}
               config={{
-                'Start time': <Time value={formatTime(creationTime)} format="YYYY-MM-DD HH:mm" />,
+                'Start time': <Time value={formatTime(creationTime)} format={LocaleFormatString()} />,
                 'Current phase': currentPhaseTime
               }}
             />
@@ -94,7 +95,7 @@ export const RolloutSchedule = ({ deployment, innerRef, onAbort, onUpdateControl
           const deviceCountText = !filterId ? ` (${deviceCount} ${pluralize('device', deviceCount)})` : '';
           const startTime = phase.start_ts ?? getPhaseStartTime(phases, index, start_time);
           const phaseObject = {
-            'Start time': <Time value={startTime} format="YYYY-MM-DD HH:mm" />,
+            'Start time': <Time value={startTime} format={LocaleFormatString()} />,
             'Batch size': <div className="text-muted">{`${phase.batch_size}%${deviceCountText}`}</div>
           };
           let phaseTitle = status !== DEPLOYMENT_STATES.scheduled ? <div className="text-muted">Complete</div> : null;

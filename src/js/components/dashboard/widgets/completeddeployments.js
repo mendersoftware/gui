@@ -3,6 +3,7 @@ import Time from 'react-time';
 
 // material ui
 import { BaseWidget } from './baseWidget';
+import LocaleFormatString from '../../common/timeformat';
 
 const headerStyle = { justifyContent: 'flex-end' };
 const countStyle = { fontSize: 36, marginRight: '1vw' };
@@ -19,7 +20,7 @@ export const CompletedDeployments = props => {
     counter: (
       <div className="completionInfo">
         <div>since last login on</div>
-        <Time value={cutoffDate} format="YYYY-MM-DD" />
+        <Time value={cutoffDate} format={LocaleFormatString(true)} />
       </div>
     ),
     targetLabel: 'View reports'

@@ -3,6 +3,7 @@ import Time from 'react-time';
 import { List, ListItem, ListItemText, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import { FileSize, getFormattedSize } from './../../helpers';
 import { colors } from '../../themes/mender-theme';
+import LocaleFormatString from '../common/timeformat';
 
 export const inlineHeadingStyle = { position: 'absolute', background: colors.expansionBackground, top: -35, padding: 10 };
 
@@ -69,7 +70,7 @@ export const ArtifactPayload = ({ index, payload: { files: payloadFiles, meta_da
                   <TableCell>{file.name}</TableCell>
                   <TableCell style={{ wordBreak: 'break-word' }}>{file.checksum}</TableCell>
                   <TableCell>
-                    <Time value={file.date} format="YYYY-MM-DD HH:mm" />
+                    <Time value={file.date} format={LocaleFormatString()} />
                   </TableCell>
                   <TableCell>
                     <FileSize fileSize={file.size} />

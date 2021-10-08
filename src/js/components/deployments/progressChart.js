@@ -9,6 +9,7 @@ import { RotateLeftOutlined, Warning as WarningIcon } from '@material-ui/icons';
 import { mdiDotsHorizontalCircleOutline as QueuedIcon, mdiSleep as SleepIcon } from '@mdi/js';
 
 import { groupDeploymentStats } from '../../helpers';
+import LocaleFormatString from '../common/timeformat';
 
 momentDurationFormatSetup(moment);
 
@@ -154,7 +155,7 @@ export const ProgressDisplay = ({ className = '', deployment, status }) => {
         {phases.length > 1 && phases.length > currentPhaseIndex + 1 ? (
           <div>
             <span>Time until next phase: </span>
-            <Tooltip title={<Time value={nextPhaseStart.toDate()} format="YYYY-MM-DD HH:mm" />} placement="top">
+            <Tooltip title={<Time value={nextPhaseStart.toDate()} format={LocaleFormatString()} />} placement="top">
               <span>{`${duration.format('d [days] hh [h] mm [m] ss [s]')}`}</span>
             </Tooltip>
           </div>
