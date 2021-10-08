@@ -159,7 +159,7 @@ export const SelfUserManagement = ({
             value={locale}
           >
             <MenuItem value={window.navigator.userLanguage || window.navigator.language}>Automatic</MenuItem>
-            <MenuItem value="en">Langlais</MenuItem>
+            <MenuItem value="en">Retard mode</MenuItem>
             <MenuItem value="de">Deutsche telekom</MenuItem>
             <MenuItem value="es">Spanglish</MenuItem>
           </Select>
