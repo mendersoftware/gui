@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Time from 'react-time';
 import ReactTooltip from 'react-tooltip';
 
 import { Button, Typography, SvgIcon } from '@material-ui/core';
@@ -9,7 +8,7 @@ import { ImportExport as ImportExportIcon, InfoOutlined as InfoIcon, Launch as L
 import theme from '../../../themes/mender-theme';
 import { DEVICE_CONNECT_STATES } from '../../../constants/deviceConstants';
 import DeviceDataCollapse from './devicedatacollapse';
-import LocaleFormatString from '../../common/timeformat';
+import LocaleTime from '../../common/localetime';
 
 const buttonStyle = { textTransform: 'none', textAlign: 'left' };
 export const PortForwardLink = ({ docsVersion }) => (
@@ -62,7 +61,7 @@ export const DeviceConnectionMissingNote = ({ style, docsVersion }) => (
 
 export const DeviceDisconnectedNote = ({ docsVersion, lastConnectionTs, style }) => (
   <DeviceConnectionNote style={style}>
-    The troubleshoot add-on is not currently connected on this device, it was last connected on <Time value={lastConnectionTs} format={LocaleFormatString()} />.
+    The troubleshoot add-on is not currently connected on this device, it was last connected on <LocaleTime value={lastConnectionTs} />.
     <br />
     Please{' '}
     <a target="_blank" rel="noopener noreferrer" href={`https://docs.mender.io/${docsVersion}add-ons/remote-terminal`}>

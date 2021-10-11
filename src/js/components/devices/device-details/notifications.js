@@ -1,11 +1,10 @@
 import React from 'react';
-import Time from 'react-time';
 
 import { ArrowDropDownCircleOutlined as ScrollDownIcon, CheckCircle as CheckIcon, Error as ErrorIcon, Help as HelpIcon } from '@material-ui/icons';
 import pluralize from 'pluralize';
 import theme from '../../../themes/mender-theme';
 import { DEVICE_ONLINE_CUTOFF } from '../../../constants/deviceConstants';
-import LocaleFormatString from '../../common/timeformat';
+import LocaleTime from '../../common/localetime';
 
 const severityIconStyle = { marginRight: theme.spacing(2) };
 const errorIcon = <ErrorIcon className="red" style={severityIconStyle} />;
@@ -46,7 +45,7 @@ const notificationSpaceStyle = { marginLeft: theme.spacing(), marginRight: theme
 
 export const LastConnection = ({ updated_ts }) => (
   <BaseNotification severity={monitoringSeverities.CRITICAL}>
-    Device has not connected to the server since <Time value={updated_ts} format={LocaleFormatString()} style={notificationSpaceStyle} />
+    Device has not connected to the server since <LocaleTime value={updated_ts} style={notificationSpaceStyle} />
   </BaseNotification>
 );
 

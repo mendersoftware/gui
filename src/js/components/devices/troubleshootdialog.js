@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Time from 'react-time';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
@@ -18,7 +17,7 @@ import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as Messa
 import theme, { colors } from '../../themes/mender-theme';
 import Terminal from './troubleshoot/terminal';
 import FileTransfer from './troubleshoot/filetransfer';
-import LocaleFormatString from '../common/timeformat';
+import LocaleTime from '../common/localetime';
 
 momentDurationFormatSetup(moment);
 const MessagePack = msgpack5();
@@ -202,7 +201,7 @@ export const TroubleshootDialog = ({
               <b>Session status:</b> {sessionId ? 'connected' : 'disconnected'}
             </div>
             <div>
-              <b>Connection start:</b> {startTime ? <Time value={startTime} format={LocaleFormatString()} /> : '-'}
+              <b>Connection start:</b> {startTime ? <LocaleTime value={startTime} /> : '-'}
             </div>
             <div>
               <b>Duration:</b> {`${duration.format('hh:mm:ss', { trim: false })}`}

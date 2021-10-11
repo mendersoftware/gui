@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Time from 'react-time';
 
 import { Button, Checkbox, FormControlLabel, Typography } from '@material-ui/core';
 import {
@@ -23,7 +22,7 @@ import { ConfigureAddOnTip, ConfigureRaspberryLedTip, ConfigureTimezoneTip } fro
 import Loader from '../../common/loader';
 import ConfigImportDialog from './configimportdialog';
 import DeviceDataCollapse from './devicedatacollapse';
-import LocaleFormatString from '../../common/timeformat';
+import LocaleTime from '../../common/localetime';
 
 const buttonStyle = { marginLeft: 30 };
 const iconStyle = { margin: 12 };
@@ -50,7 +49,7 @@ export const ConfigUpToDateNote = ({ updated_ts = defaultReportTimeStamp }) => (
         Configuration up-to-date on the device
       </Typography>
       <Typography variant="caption" className="text-muted" style={textStyle}>
-        Updated: {<Time value={updated_ts} format={LocaleFormatString()} />}
+        Updated: {<LocaleTime value={updated_ts} />}
       </Typography>
     </div>
   </div>
@@ -60,7 +59,7 @@ export const ConfigEmptyNote = ({ updated_ts = '' }) => (
   <div className="flexbox column margin-small">
     <Typography variant="subtitle2">The device appears to either have an empty configuration or not to have reported a configuration yet.</Typography>
     <Typography variant="caption" className="text-muted" style={textStyle}>
-      Updated: {<Time value={updated_ts} format={LocaleFormatString()} />}
+      Updated: {<LocaleTime value={updated_ts} />}
     </Typography>
   </div>
 );

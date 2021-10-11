@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import Time from 'react-time';
 import { Link } from 'react-router-dom';
 
 import { ArrowRightAlt as ArrowRightAltIcon, Sort as SortIcon } from '@material-ui/icons';
@@ -8,7 +7,7 @@ import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import EventDetailsDrawer from './eventdetailsdrawer';
 import { SORTING_OPTIONS } from '../../constants/appConstants';
-import LocaleFormatString from '../common/timeformat';
+import { LocaleTime } from '../common/localetime';
 
 export const defaultRowsPerPage = 20;
 
@@ -80,7 +79,7 @@ const ChangeDetailsDescriptor = (item, index) => {
   const Comp = mapChangeToContent(item).component;
   return <Comp key={`${item.time}-${index}`} item={item} />;
 };
-const TimeWrapper = (item, index) => <Time key={`${item.time}-${index}`} value={item.time} format={LocaleFormatString()} />;
+const TimeWrapper = (item, index) => <LocaleTime key={`${item.time}-${index}`} value={item.time} />;
 
 const auditLogColumns = [
   { title: 'User', sortable: false, render: UserDescriptor },

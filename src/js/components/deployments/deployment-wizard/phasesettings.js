@@ -1,6 +1,5 @@
 import React from 'react';
 import pluralize from 'pluralize';
-import Time from 'react-time';
 
 import Chip from '@material-ui/core/Chip';
 import AddIcon from '@material-ui/icons/Add';
@@ -10,7 +9,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import { getPhaseStartTime } from '../createdeployment';
 import { getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
 import theme from '../../../themes/mender-theme';
-import LocaleFormatString from '../../common/timeformat';
+import LocaleTime from '../../common/localetime';
 
 export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, filterId, numberDevices, setDeploymentSettings }) => {
   const { phases = [] } = deploymentObject;
@@ -123,7 +122,7 @@ export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, fil
           {!filterId && deviceCount < 1 && <div className="warning">Phases must have at least 1 device</div>}
         </TableCell>
         <TableCell>
-          <Time value={getPhaseStartTime(phases, index, startTime)} format={LocaleFormatString()} />
+          <LocaleTime value={getPhaseStartTime(phases, index, startTime)} />
         </TableCell>
         <TableCell>
           {phase.delay && index !== phases.length - 1 ? (

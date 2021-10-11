@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Time from 'react-time';
 import pluralize from 'pluralize';
 import isUUID from 'validator/lib/isUUID';
 
@@ -11,7 +10,7 @@ import successImage from '../../../../assets/img/largeSuccess.png';
 import failImage from '../../../../assets/img/largeFail.png';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../../constants/deploymentConstants';
 import { TwoColumnData } from '../../common/configurationobject';
-import LocaleFormatString from '../../common/timeformat';
+import { LocaleTime } from '../../common/localetime';
 import theme from '../../../themes/mender-theme';
 import { defaultColumnDataProps } from '../report';
 
@@ -66,7 +65,7 @@ export const DeploymentOverview = ({ creator, deployment, onScheduleClick }) => 
   const createdBy = creator ? { 'Created by': creator } : {};
   const deploymentInfo2 = {
     ...createdBy,
-    'Created at': <Time value={creationTime} format={LocaleFormatString()} />
+    'Created at': <LocaleTime value={creationTime} />
   };
 
   return (

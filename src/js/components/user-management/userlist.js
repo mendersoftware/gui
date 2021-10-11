@@ -1,6 +1,6 @@
 import React from 'react';
-import Time from 'react-time';
-import LocaleFormatString from '../common/timeformat';
+// import Time from 'react-time';
+import { LocaleTime } from '../common/localetime';
 
 // material ui
 import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
@@ -37,7 +37,7 @@ const UserList = ({ currentUser, editUser, isAdmin: isAdminCurrentUser, isEnterp
         <TableRow key={user.id || index} hover>
           <TableCell>{user.email}</TableCell>
           <TableCell>
-            <Time value={user.created_ts} format={LocaleFormatString()} />
+            <LocaleTime value={user.created_ts} />
           </TableCell>
           <TableCell>
             <RelativeTime updateTime={user.updated_ts} />

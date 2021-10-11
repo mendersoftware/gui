@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import Time from 'react-time';
 
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { TwoColumnData } from '../../common/configurationobject';
 import DeviceNameInput from '../../common/devicenameinput';
 import DeviceDataCollapse from './devicedatacollapse';
-import LocaleFormatString from '../../common/timeformat';
+import LocaleTime from '../../common/localetime';
 
 const style = { maxWidth: '80%', gridTemplateColumns: 'minmax(max-content, 150px) auto' };
 const previewStyle = { ...style, marginBottom: 5 };
@@ -39,7 +38,7 @@ export const DeviceIdentity = ({ device, setSnackbar }) => {
 
   let extendedContent = remainingIdentity;
   if (created_ts) {
-    const createdTime = <Time value={created_ts} format={LocaleFormatString()} />;
+    const createdTime = <LocaleTime value={created_ts} />;
     extendedContent[status === DEVICE_STATES.preauth ? 'Date added' : 'First request'] = createdTime;
   }
 

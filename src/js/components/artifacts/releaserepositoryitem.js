@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import Time from 'react-time';
 
 // material ui
 import { Accordion, AccordionDetails, AccordionSummary, IconButton, Tooltip } from '@material-ui/core';
@@ -10,7 +9,7 @@ import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import { formatTime, FileSize } from '../../helpers';
 import { colors } from '../../themes/mender-theme';
 import SelectedArtifact from './selectedartifact';
-import LocaleFormatString from '../common/timeformat';
+import LocaleTime from '../common/localetime';
 
 export const ReleaseRepositoryItem = ({ artifact, expanded, index, itemRef, onEdit, onExpanded, onRowSelection }) => {
   useEffect(() => {
@@ -33,7 +32,7 @@ export const ReleaseRepositoryItem = ({ artifact, expanded, index, itemRef, onEd
           <Tooltip title={compatible} placement="top-start">
             <div className="text-overflow">{compatible}</div>
           </Tooltip>
-          <Time value={formatTime(artifact.modified)} format={LocaleFormatString()} />
+          <LocaleTime value={formatTime(artifact.modified)} />
           <div style={{ maxWidth: '100vw' }}>{artifactType}</div>
           <FileSize fileSize={artifact.size} />
           <IconButton className="expandButton">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>

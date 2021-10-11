@@ -1,11 +1,16 @@
 import moment from 'moment';
+// import { getUserSettings } from '../../selectors';
 
-export function LocaleFormatString(stripTime = false) {
-  console.log(moment.locale());
+export function LocaleFormatString(stripTime) {
+  // Get the saved user locale
+  console.log('Current user locale: ' + moment.locale());
+  // const { locale = 'automatic' } = getUserSettings();
+  // console.log('Stored locale: ' + locale);
+  var curLocale = moment.localeData('de');
   if (stripTime) {
-    return moment().creationData().locale._longDateFormat.L;
+    return curLocale.longDateFormat('L');
   }
-  return moment().creationData().locale._longDateFormat.L + ' ' + moment().creationData().locale._longDateFormat.LT;
+  return curLocale.longDateFormat('L') + ' ' + curLocale.longDateFormat('LT');
 }
 
 export default LocaleFormatString;

@@ -1,13 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Time from 'react-time';
 
 // material ui
 import { Button, LinearProgress, TableCell, TableRow } from '@material-ui/core';
 
 import { formatTime } from '../../../helpers';
 import DeviceIdentityDisplay from '../../common/deviceidentity';
-import LocaleFormatString from '../../common/timeformat';
+import { LocaleTime } from '../../common/localetime';
 
 const stateTitleMap = {
   noartifact: 'No compatible artifact found',
@@ -54,8 +53,8 @@ const DeploymentDeviceListItem = ({ device, idAttribute, viewLog, retries: maxRe
       </TableCell>
       <TableCell>{deviceTypes.length ? deviceTypes.join(',') : '-'}</TableCell>
       <TableCell>{currentArtifactLink}</TableCell>
-      <TableCell>{created ? <Time value={formatTime(created)} format={LocaleFormatString()} /> : '-'}</TableCell>
-      <TableCell>{finished ? <Time value={formatTime(finished)} format={LocaleFormatString()} /> : '-'}</TableCell>
+      <TableCell>{created ? <LocaleTime value={formatTime(created)} /> : '-'}</TableCell>
+      <TableCell>{finished ? <LocaleTime value={formatTime(finished)} /> : '-'}</TableCell>
       {retries ? (
         <TableCell>
           {attempts || 1}/{(retries || maxRetries) + 1}

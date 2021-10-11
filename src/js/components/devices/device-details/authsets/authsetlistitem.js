@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Time from 'react-time';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 // material ui
@@ -10,7 +9,7 @@ import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/dev
 import { formatTime } from '../../../../helpers';
 import theme from '../../../../themes/mender-theme';
 import Loader from '../../../common/loader';
-import LocaleFormatString from '../../../common/timeformat';
+import LocaleTime from '../../../common/localetime';
 
 const padder = <div key="padder" style={{ flexGrow: 1 }}></div>;
 
@@ -204,7 +203,7 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
         {authsetStatus}
         <div className="capitalized">{authset.status}</div>
         {key}
-        <Time value={formatTime(authset.ts)} format={LocaleFormatString()} />
+        <LocaleTime value={formatTime(authset.ts)} />
         {loading === authset.id ? (
           <div>
             Updating status <Loader table={true} waiting={true} show={true} style={{ height: '4px', marginLeft: '10px' }} />

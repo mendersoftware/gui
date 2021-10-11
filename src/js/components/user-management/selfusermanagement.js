@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment';
 
 import { Button, FormControl, MenuItem, Select, Switch, TextField } from '@material-ui/core';
 
@@ -147,23 +146,25 @@ export const SelfUserManagement = ({
           </p>
         </div>
       )}
-      <div className="flexbox space-between" style={{ alignItems: 'flex-start' }}>
-        <h2>Locale settings</h2>
+      <div>
+        <p className="help-content">User Locale</p>
         <FormControl>
           <Select
             onChange={event => {
-              saveUserSettings({ 'locale': event.target.value });
               console.log('Setting the user locale to: ' + event.target.value);
-              moment.locale(event.target.value);
+              saveUserSettings({ 'locale': event.target.value });
             }}
             value={locale}
           >
             <MenuItem value={window.navigator.userLanguage || window.navigator.language}>Automatic</MenuItem>
-            <MenuItem value="en">Retard mode</MenuItem>
-            <MenuItem value="de">Deutsche telekom</MenuItem>
-            <MenuItem value="es">Spanglish</MenuItem>
+            <MenuItem value="en">English</MenuItem>
+            <MenuItem value="de">Deutsch</MenuItem>
+            <MenuItem value="es">Spanish</MenuItem>
           </Select>
         </FormControl>
+        <p className="info" style={{ width: '75%', margin: 0 }}>
+          Change the user locale settings for the time format shown.
+        </p>
       </div>
     </div>
   );
