@@ -13,6 +13,7 @@ import msgpack5 from 'msgpack5';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeviceFileDownloadLink, deviceFileUpload } from '../../actions/deviceActions';
+import { BEGINNING_OF_TIME } from '../../constants/appConstants';
 import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as MessageProtocols } from '../../constants/deviceConstants';
 
 import theme, { colors } from '../../themes/mender-theme';
@@ -21,8 +22,6 @@ import FileTransfer from './troubleshoot/filetransfer';
 
 momentDurationFormatSetup(moment);
 const MessagePack = msgpack5();
-
-const BEGINNING_OF_TIME = '2020-01-01T00:00:00.000Z';
 
 let socket = null;
 
