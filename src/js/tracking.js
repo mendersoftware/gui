@@ -1,3 +1,4 @@
+/* eslint-disable import/no-named-as-default-member */
 import ReactGA from 'react-ga';
 
 const cookieConsentCSS = 'https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css';
