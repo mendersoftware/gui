@@ -9,6 +9,7 @@ import historyImage from '../../../assets/img/history.png';
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, selectDeployment, setDeploymentsState } from '../../actions/deploymentActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
+import { BEGINNING_OF_TIME, SORTING_OPTIONS } from '../../constants/appConstants';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
@@ -23,7 +24,6 @@ import DeploymentsList, { defaultHeaders } from './deploymentslist';
 import { DeploymentStatus } from './deploymentitem';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
 import { tryMapDeployments } from '../../helpers';
-import { SORTING_OPTIONS } from '../../constants/appConstants';
 
 const headers = [...defaultHeaders.slice(0, defaultHeaders.length - 1), { title: 'Status', renderer: DeploymentStatus }];
 
@@ -31,8 +31,6 @@ const type = DEPLOYMENT_STATES.finished;
 
 let timer;
 let inputDelayTimer;
-
-const BEGINNING_OF_TIME = '2016-01-01T00:00:00.000Z';
 
 export const Past = props => {
   const { advanceOnboarding, createClick, getDeploymentsByStatus, groups, onboardingState, past, pastSelectionState, setDeploymentsState, setSnackbar } = props;

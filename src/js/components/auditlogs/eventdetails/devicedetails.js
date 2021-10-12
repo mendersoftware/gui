@@ -3,10 +3,9 @@ import { Link } from 'react-router-dom';
 
 import { Launch as LaunchIcon } from '@material-ui/icons';
 
-import theme, { colors } from '../../../themes/mender-theme';
 import DeviceIdentityDisplay from '../../common/deviceidentity';
-
-const BEGINNING_OF_TIME = '2020-01-01T00:00:00.000Z';
+import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
+import theme, { colors } from '../../../themes/mender-theme';
 
 export const DetailInformation = ({ title, details }) => {
   return (
