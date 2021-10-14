@@ -19,11 +19,11 @@ const styles = {
 };
 
 export const ScheduleRollout = props => {
-  const { setDeploymentSettings, deploymentObject = {}, disableSchedule, filterId, isEnterprise, plan, previousPhases = [] } = props;
+  const { setDeploymentSettings, deploymentObject = {}, disableSchedule, isEnterprise, plan, previousPhases = [] } = props;
 
   const [isPickerOpen, setIsPickerOpen] = useState(false);
 
-  const { deploymentDeviceCount = 0, deploymentDeviceIds = [], phases = [] } = deploymentObject;
+  const { deploymentDeviceCount = 0, deploymentDeviceIds = [], filterId, phases = [] } = deploymentObject;
 
   const handleStartTimeChange = value => {
     // if there is no existing phase, set phase and start time
