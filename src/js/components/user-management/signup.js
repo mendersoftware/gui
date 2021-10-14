@@ -56,7 +56,9 @@ export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setF
 
   const handleSignup = (formData, recaptcha) => {
     setLoading(true);
-    const credentials = oauthProvider ? { email, login: { [oauthProvider]: oauthId } } : { email, password };
+    const actualEmail = formData.email != null ? formData.email : email;
+    const credentials = oauthProvider ? { email: actualEmail, login: { [oauthProvider]: oauthId } } : { email: actualEmail, password };
+    console.log(credentials);
     const signup = {
       ...credentials,
       organization: formData.name,
@@ -98,7 +100,14 @@ export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setF
   const provider = OAuth2Providers.find(item => item.id === oauthProvider) || { id: '' };
   const steps = {
     1: <UserDataEntry setSnackbar={setSnackbar} data={{ email, password, password_confirmation: password }} onSubmit={handleStep1} />,
-    2: <OrgDataEntry setSnackbar={setSnackbar} data={{ name: organization, tos, marketing }} onSubmit={handleSignup} recaptchaSiteKey={recaptchaSiteKey} />,
+    2: (
+      <OrgDataEntry
+        setSnackbar={setSnackbar}
+        data={{ name: organization, email: email, tos, marketing }}
+        onSubmit={handleSignup}
+        recaptchaSiteKey={recaptchaSiteKey}
+      />
+    ),
     3: (
       <div className="align-center" style={{ minHeight: '50vh' }}>
         <h1>Sign up completed</h1>
