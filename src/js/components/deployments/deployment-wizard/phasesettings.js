@@ -11,8 +11,8 @@ import { getPhaseStartTime } from '../createdeployment';
 import { getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
 import theme from '../../../themes/mender-theme';
 
-export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, filterId, numberDevices, setDeploymentSettings }) => {
-  const { phases = [] } = deploymentObject;
+export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, numberDevices, setDeploymentSettings }) => {
+  const { filterId, phases = [] } = deploymentObject;
   const updateDelay = (value, index) => {
     let newPhases = phases;
     // value must be at least 1
