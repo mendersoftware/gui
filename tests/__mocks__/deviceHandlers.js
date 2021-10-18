@@ -86,6 +86,12 @@ export const deviceHandlers = [
     }
     return res(ctx.status(502));
   }),
+  rest.delete(`${inventoryApiUrl}/groups/:group`, ({ params: { group } }, res, ctx) => {
+    if (defaultState.devices.groups.byId[group]) {
+      return res(ctx.status(200));
+    }
+    return res(ctx.status(515));
+  }),
   rest.delete(`${inventoryApiUrl}/groups/:group/devices`, ({ params: { group }, body: deviceIds }, res, ctx) => {
     if (defaultState.devices.groups.byId[group] && deviceIds.every(id => !!defaultState.devices.byId[id])) {
       return res(ctx.status(200));

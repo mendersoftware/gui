@@ -111,8 +111,7 @@ export const addStaticGroup = (group, deviceIds) => (dispatch, getState) =>
     .catch(err => commonErrorHandler(err, `Group could not be updated:`, dispatch));
 
 export const removeStaticGroup = groupName => (dispatch, getState) => {
-  const { deviceIds } = getState().devices.groups.byId[groupName];
-  return Promise.resolve(dispatch(removeDevicesFromGroup(groupName, deviceIds))).then(() => {
+  return GeneralApi.delete(`${inventoryApiUrl}/groups/${groupName}`).then(() => {
     const selectedGroup = getState().devices.groups.selectedGroup === groupName ? undefined : getState().devices.groups.selectedGroup;
     // eslint-disable-next-line no-unused-vars
     const { [groupName]: removal, ...groups } = getState().devices.groups.byId;
