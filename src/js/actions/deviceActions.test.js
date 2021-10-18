@@ -398,8 +398,6 @@ describe('static grouping related actions', () => {
     const store = mockStore({ ...defaultState });
     const groupName = 'testGroup';
     const expectedActions = [
-      { type: DeviceConstants.REMOVE_FROM_GROUP, group: groupName, deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.b1.id] },
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The devices were removed from the group' } },
       { type: DeviceConstants.REMOVE_STATIC_GROUP, groups: {} },
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Group was removed successfully' } },
       { type: DeviceConstants.RECEIVE_GROUPS, groups: { testGroup: defaultState.devices.groups.byId.testGroup } },
