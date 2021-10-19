@@ -1,7 +1,8 @@
 import React from 'react';
 
 // material ui
-import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { ArrowRightAlt as ArrowRightAltIcon } from '@mui/icons-material';
 
 import Time, { RelativeTime } from '../../common/time';
 
@@ -13,7 +14,7 @@ const columnData = [
   { id: 'actions', disablePadding: false, label: 'Manage', enterpriseOnly: false }
 ];
 
-const UserList = ({ currentUser, editUser, isAdmin: isAdminCurrentUser, isEnterprise, removeUser, roles, users }) => (
+const UserList = ({ editUser, isEnterprise, roles, users }) => (
   <Table>
     <TableHead>
       <TableRow>
@@ -32,7 +33,7 @@ const UserList = ({ currentUser, editUser, isAdmin: isAdminCurrentUser, isEnterp
     </TableHead>
     <TableBody>
       {users.map((user, index) => (
-        <TableRow key={user.id || index} hover>
+        <TableRow className="clickable" key={user.id || index} hover onClick={() => editUser(user)}>
           <TableCell>{user.email}</TableCell>
           <TableCell>
             <Time value={user.created_ts} />
@@ -40,12 +41,11 @@ const UserList = ({ currentUser, editUser, isAdmin: isAdminCurrentUser, isEnterp
           <TableCell>
             <RelativeTime updateTime={user.updated_ts} />
           </TableCell>
-          {isEnterprise && <TableCell>{(user.roles || []).map(role => (roles.find(currentRole => currentRole.id === role) || {}).title).join(', ')}</TableCell>}
+          {isEnterprise && <TableCell>{(user.roles || []).map(roleId => roles[roleId]?.title).join(', ')}</TableCell>}
           <TableCell>
-            <Button onClick={() => editUser(user)} style={{ marginLeft: -10 }}>
-              Edit
-            </Button>
-            {currentUser.id !== user.id && isAdminCurrentUser ? <Button onClick={() => removeUser(user)}>Remove</Button> : null}
+            <div className="bold flexbox center-aligned link-color margin-right-small uppercased" style={{ whiteSpace: 'nowrap' }}>
+              view details <ArrowRightAltIcon />
+            </div>
           </TableCell>
         </TableRow>
       ))}
