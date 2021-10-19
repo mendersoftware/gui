@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 // material ui
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
-import UserList from './userlist';
-import UserForm from './userform';
 import { setSnackbar } from '../../../actions/appActions';
 import { createUser, editUser, getUserList, passwordResetStart, removeUser } from '../../../actions/userActions';
 import { getCurrentUser, getIsEnterprise, getUserRoles } from '../../../selectors';
+import UserList from './userlist';
+import UserForm from './userform';
+import { UserDefinition } from './userdefinition';
 
 const actions = {
   create: 'createUser',
@@ -15,116 +16,102 @@ const actions = {
   remove: 'removeUser'
 };
 
-export class UserManagement extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      editDialog: false,
-      removeDialog: false,
-      user: {}
-    };
-  }
+export const UserManagement = props => {
+  const { currentUser, getUserList, isAdmin, passwordResetStart, roles, setSnackbar, users } = props;
+  const [showCreate, setShowCreate] = useState(false);
+  const [removeDialog, setRemoveDialog] = useState(false);
+  const [user, setUser] = useState({});
 
-  componentDidMount() {
-    this.props.getUserList();
-  }
+  useEffect(() => {
+    getUserList();
+  }, []);
 
-  componentDidUpdate(prevProps) {
-    const changed =
-      prevProps.currentUser.id !== this.props.currentUser.id ||
-      prevProps.users.some(
-        (user, index) => this.props.users[index] && (user.id !== this.props.users[index].id || user.email !== this.props.users[index].email)
-      );
-    if (changed) {
-      this.props.getUserList();
-    }
-  }
+  useEffect(() => {
+    getUserList();
+  }, [currentUser.id, users.length]);
 
-  _openEdit(user) {
-    this.props.setSnackbar('');
-    this.setState({ user, editDialog: true, removeDialog: false });
-  }
+  const openEdit = user => {
+    setUser(user);
+    setRemoveDialog(false);
+    setSnackbar('');
+  };
 
-  _openRemove(user) {
-    this.props.setSnackbar('');
-    this.setState({ user, editDialog: false, removeDialog: true });
-  }
+  const openRemove = () => {
+    setSnackbar('');
+    setRemoveDialog(true);
+  };
 
-  dialogDismiss() {
-    this.setState({ editDialog: false, removeDialog: false });
-  }
+  const dialogDismiss = () => {
+    setUser({});
+    setShowCreate(false);
+    setRemoveDialog(false);
+  };
 
-  submit(userData, type, id, passwordResetEmail) {
-    const self = this;
-    const { passwordResetStart } = self.props;
+  const submit = (userData, type, id, passwordResetEmail) => {
     if (userData) {
       let request = null;
       if (id) {
-        request = self.props[actions[type]](id, userData);
+        request = props[actions[type]](id, userData);
       } else {
-        request = self.props[actions[type]](userData);
+        request = props[actions[type]](userData);
       }
       return request.then(() => {
         if (passwordResetEmail) {
           passwordResetStart(passwordResetEmail);
         }
-        self.dialogDismiss();
+        dialogDismiss();
       });
     } else {
       if (passwordResetEmail) {
         passwordResetStart(passwordResetEmail);
       }
-      return self.dialogDismiss();
+      return dialogDismiss();
     }
-  }
+  };
 
-  render() {
-    const self = this;
-    const { editDialog, removeDialog, user } = self.state;
-    return (
-      <div>
-        <div className="flexbox centered space-between" style={{ marginLeft: '20px' }}>
-          <h2>Users</h2>
-          <Button variant="contained" color="primary" onClick={() => self._openEdit({})}>
-            Create new user
-          </Button>
-        </div>
-
-        <UserList {...self.props} editUser={user => self._openEdit(user)} removeUser={user => self._openRemove(user)} />
-        {editDialog && (
-          <UserForm
-            {...self.props}
-            closeDialog={() => self.dialogDismiss()}
-            handleRolesChange={event => self.handleRolesChange(event.target.value)}
-            submit={(...args) => self.submit(...args)}
-            user={user}
-          />
-        )}
-
-        {removeDialog && (
-          <Dialog open={true}>
-            <DialogTitle>Remove user?</DialogTitle>
-            <DialogContent style={{ overflow: 'hidden' }}>
-              Are you sure you want to remove the user with email{' '}
-              <b>
-                <i>{user.email}</i>
-              </b>
-              ?
-            </DialogContent>
-            <DialogActions>
-              <Button style={{ marginRight: '10px' }} onClick={() => self.dialogDismiss()}>
-                Cancel
-              </Button>
-              <Button variant="contained" color="primary" onClick={() => self.submit(user, 'remove', user.id)}>
-                Remove user
-              </Button>
-            </DialogActions>
-          </Dialog>
-        )}
+  return (
+    <div>
+      <div className="flexbox centered space-between" style={{ marginLeft: '20px' }}>
+        <h2>Users</h2>
+        <Button variant="contained" color="primary" onClick={setShowCreate}>
+          Create new user
+        </Button>
       </div>
-    );
-  }
-}
+
+      <UserList {...props} editUser={openEdit} />
+      {showCreate && <UserForm {...props} closeDialog={dialogDismiss} submit={submit} />}
+      <UserDefinition
+        currentUser={currentUser}
+        isAdminCurrentUser={isAdmin}
+        onRemove={openRemove}
+        onCancel={dialogDismiss}
+        onSubmit={submit}
+        roles={roles}
+        selectedUser={user}
+      />
+      {removeDialog && (
+        <Dialog open>
+          <DialogTitle>Remove user?</DialogTitle>
+          <DialogContent style={{ overflow: 'hidden' }}>
+            Are you sure you want to remove the user with email{' '}
+            <b>
+              <i>{user.email}</i>
+            </b>
+            ?
+          </DialogContent>
+          <DialogActions>
+            <Button style={{ marginRight: 10 }} onClick={dialogDismiss}>
+              Cancel
+            </Button>
+            <Button variant="contained" color="primary" onClick={() => submit(user, 'remove', user.id)}>
+              Remove user
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
+    </div>
+  );
+};
 
 const actionCreators = { createUser, editUser, getUserList, passwordResetStart, removeUser, setSnackbar };
 
@@ -134,7 +121,7 @@ const mapStateToProps = state => {
     currentUser: getCurrentUser(state),
     isAdmin,
     isEnterprise: getIsEnterprise(state),
-    roles: Object.entries(state.users.rolesById).map(([id, role]) => ({ id, ...role })),
+    roles: state.users.rolesById,
     snackbar: state.app.snackbar,
     users: Object.values(state.users.byId)
   };
