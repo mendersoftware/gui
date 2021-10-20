@@ -5,7 +5,7 @@ import Form from '../../common/forms/form';
 import TextInput from '../../common/forms/textinput';
 import FormCheckbox from '../../common/forms/formcheckbox';
 
-export const OrgDataEntry = ({ data: { name, email, tos, marketing }, onSubmit, recaptchaSiteKey = '', setSnackbar }) => {
+export const OrgDataEntry = ({ data: { name, email, emailVerified, tos, marketing }, onSubmit, recaptchaSiteKey = '', setSnackbar }) => {
   const [recaptcha, setRecaptcha] = useState('');
 
   const handleSubmit = formData => {
@@ -32,7 +32,7 @@ export const OrgDataEntry = ({ data: { name, email, tos, marketing }, onSubmit, 
           value={name}
           validations="isLength:1"
         />
-        {email != null || <TextInput hint="Email *" label="Email *" id="email" required={true} validations="isLength:1,isEmail" value={email} />}
+        {!emailVerified && <TextInput hint="Email *" label="Email *" id="email" required={true} validations="isLength:1,isEmail" value={email} />}
         <FormCheckbox
           id="tos"
           label={
