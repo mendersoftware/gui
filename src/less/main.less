@@ -2173,24 +2173,23 @@ span.day {
 .repository {
   min-height: 400px;
   height: 100%;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1.5 * @defaultLeftBarWidth 1fr;
   .leftFixed {
-    min-width: 1.5 * @defaultLeftBarWidth;
+    display: grid;
+    grid-template-rows: 1fr max-content;
   }
   .repository-list {
+    display: grid;
+    grid-template-rows: min-content min-content min-content 1fr;
     border-right: 1px solid @lightergrey;
-    flex-grow: 1;
     width: 100%;
     > div.margin-bottom-small {
       height: 85px;
     }
-    > ul {
-      overflow: auto;
-    }
   }
   .release-repo {
     overflow: auto;
-    width: 100%;
   }
 }
 .release-repo > .flexbox:first-of-type {

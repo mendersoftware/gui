@@ -11,7 +11,6 @@ import {
   removeArtifact,
   selectArtifact,
   selectRelease,
-  showRemoveArtifactDialog,
   uploadArtifact
 } from './releaseActions';
 import AppConstants from '../constants/appConstants';
@@ -79,19 +78,6 @@ describe('release actions', () => {
     const store = mockStore({ ...defaultState });
     await store.dispatch(selectRelease('test'));
     const expectedActions = [{ type: ReleaseConstants.SELECTED_RELEASE, release: 'test' }];
-    const storeActions = store.getActions();
-    expect(storeActions.length).toEqual(expectedActions.length);
-    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
-  });
-  it('should pass on artifact removal dialog visibility', async () => {
-    const store = mockStore({ ...defaultState });
-    await store.dispatch(showRemoveArtifactDialog(true));
-    const expectedActions = [
-      {
-        type: ReleaseConstants.SHOW_REMOVE_DIALOG,
-        showRemoveDialog: true
-      }
-    ];
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

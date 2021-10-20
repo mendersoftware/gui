@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import GeneralApi from '../api/general-api';
+import GeneralApi, { headerNames } from '../api/general-api';
 import { commonErrorHandler, progress, setSnackbar } from '../actions/appActions';
 import AppConstants from '../constants/appConstants';
 import ReleaseConstants from '../constants/releaseConstants';
@@ -13,29 +13,28 @@ export const deploymentsApiUrl = `${apiUrl}/deployments`;
 
 const flattenRelease = (release, stateRelease) => {
   const updatedArtifacts = release.Artifacts.sort(customSort(1, 'modified'));
-  const { Artifacts, descriptions, deviceTypes, latestModified = '' } = updatedArtifacts.reduce(
+  const { Artifacts, deviceTypes, modified } = updatedArtifacts.reduce(
     (accu, item) => {
-      item.description ? accu.descriptions.push(item.description) : null;
       accu.deviceTypes.push(...item.device_types_compatible);
-      accu.latestModified = accu.latestModified ? accu.latestModified : item.modified;
       const stateArtifact = stateRelease.Artifacts?.find(releaseArtifact => releaseArtifact.id === item.id) || {};
+      accu.modified = accu.modified ? accu.modified : item.modified;
       accu.Artifacts.push({
         ...stateArtifact,
         ...item
       });
       return accu;
     },
-    { Artifacts: [], descriptions: [], deviceTypes: [], latestModified: undefined }
+    { Artifacts: [], deviceTypes: [], modified: undefined }
   );
-  return {
-    ...stateRelease,
-    ...release,
-    Artifacts,
-    descriptions,
-    device_types_compatible: deviceTypes.filter(duplicateFilter),
-    latestModified
-  };
+  return { ...stateRelease, ...release, Artifacts, device_types_compatible: deviceTypes.filter(duplicateFilter), modified };
 };
+
+const reduceReceivedReleases = (releases, stateReleasesById) =>
+  releases.reduce((accu, release) => {
+    const stateRelease = stateReleasesById[release.Name] || {};
+    accu[release.Name] = flattenRelease(release, stateRelease);
+    return accu;
+  }, {});
 
 const findArtifactIndexInRelease = (releases, id) =>
   Object.values(releases).reduce(
@@ -169,24 +168,151 @@ export const selectArtifact = artifact => (dispatch, getState) => {
 export const selectRelease = release => dispatch =>
   Promise.resolve(dispatch({ type: ReleaseConstants.SELECTED_RELEASE, release: release ? release.Name || release : null }));
 
-export const showRemoveArtifactDialog = showRemoveDialog => dispatch => dispatch({ type: ReleaseConstants.SHOW_REMOVE_DIALOG, showRemoveDialog });
+export const setReleasesListState = selectionState => (dispatch, getState) =>
+  Promise.resolve(
+    dispatch({
+      type: ReleaseConstants.SET_RELEASES_LIST_STATE,
+      value: {
+        ...getState().releases.releasesList,
+        ...selectionState,
+        sort: {
+          ...getState().releases.releasesList.sort,
+          ...selectionState.sort
+        }
+      }
+    })
+  );
 
 /* Releases */
-export const getReleases = () => (dispatch, getState) =>
-  GeneralApi.get(`${deploymentsApiUrl}/deployments/releases`)
-    .then(({ data: releases }) => {
-      const releasesById = getState().releases.byId;
-      const flatReleases = releases.sort(customSort(1, 'Name')).reduce((accu, release) => {
-        const stateRelease = releasesById[release.Name] || {};
-        accu[release.Name] = flattenRelease(release, stateRelease);
-        return accu;
-      }, {});
-      return Promise.all([
-        dispatch({ type: ReleaseConstants.RECEIVE_RELEASES, releases: flatReleases }),
-        dispatch({ type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: !!releases.length })
-      ]);
-    })
+const searchAttributes = ['name', 'device_type', 'description'];
+
+function* generateReleaseSearchQuery(search) {
+  if (!search) {
+    return;
+  }
+  yield `&${searchAttributes[0]}=${search}`;
+  yield `&${searchAttributes[1]}=${search}`;
+  yield `&${searchAttributes[2]}=${search}`;
+}
+
+const releaseListRetrieval = (config, queryGenerator) => {
+  const { page, perPage, sort = {} } = config;
+  const { attribute, direction } = sort;
+
+  const perPageQuery = perPage ? `&per_page=${perPage}` : '';
+  const sorting = attribute ? `&sort=${attribute}:${direction}`.toLowerCase() : '';
+  return GeneralApi.get(`${deploymentsApiUrl}/deployments/releases/list?page=${page}${perPageQuery}${queryGenerator.next().value}${sorting}`);
+};
+
+const zipReleaseLists = (stateReleaseIds, newReleases, offset) =>
+  newReleases.reduce(
+    (accu, release, index) => {
+      accu[index + offset] = release.Name || release;
+      return accu;
+    },
+    [...stateReleaseIds]
+  );
+
+export const getReleases = (passedConfig = {}) => (dispatch, getState) => {
+  let config = { ...getState().releases.releasesList, ...passedConfig };
+  const { page, perPage, searchTerm = '', visibleSection = {} } = config;
+  const queryGenerator = generateReleaseSearchQuery(searchTerm);
+
+  const releaseListProcessing = props => {
+    if (!props) {
+      return Promise.resolve();
+    }
+    const { data: releases, headers } = props;
+    const total = Number(headers[headerNames.total]);
+    const state = getState().releases;
+    const flatReleases = reduceReceivedReleases(releases, state.byId);
+    const combinedReleases = { ...state.byId, ...flatReleases };
+    const flattenedReleases = Object.values(flatReleases).sort(customSort(config.sort.direction === AppConstants.SORTING_OPTIONS.desc, config.sort.attribute));
+    const releaseIds = visibleSection.start
+      ? zipReleaseLists(state.releasesList.releaseIds, flattenedReleases, page * perPage)
+      : flattenedReleases.map(item => item.Name);
+    let tasks = [
+      dispatch({ type: ReleaseConstants.RECEIVE_RELEASES, releases: combinedReleases }),
+      dispatch(
+        setReleasesListState({
+          releaseIds,
+          searchTotal: searchTerm.length ? total : state.releasesList.searchTotal,
+          total: searchTerm ? state.releasesList.total : total
+        })
+      )
+    ];
+    if (!getState().onboarding.complete) {
+      tasks.push(dispatch({ type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: !!Object.keys(combinedReleases).length }));
+    }
+    tasks.push(flatReleases);
+    return Promise.all(tasks);
+  };
+
+  const maybeTriggerRetrieval = results => {
+    if (!results || Object.keys(results[results.length - 1]).length) {
+      if (results && Object.keys(results[results.length - 1]).length) {
+        const nextGeneratorResult = queryGenerator.next().value ?? '';
+        const index = searchAttributes.findIndex(attribute => nextGeneratorResult.includes(attribute));
+        const searchAttribute = index > 0 ? searchAttributes[index - 1] : searchAttributes[searchAttributes.length - 1];
+        dispatch(setReleasesListState({ searchAttribute }));
+      }
+      return Promise.resolve();
+    }
+    return releaseListRetrieval(config, queryGenerator);
+  };
+
+  return releaseListRetrieval(config, queryGenerator) // first we look for name matches
+    .then(releaseListProcessing)
+    .then(maybeTriggerRetrieval) // if none found, we look for device_type matches
+    .then(releaseListProcessing)
+    .then(maybeTriggerRetrieval) // if none found, we look for description matches
+    .then(releaseListProcessing)
     .catch(err => commonErrorHandler(err, `Please check your connection`, dispatch));
+};
+
+const possiblePageSizes = [10, 20, 50, 100, 250, 500];
+const getBestPageSize = itemCount =>
+  possiblePageSizes.reduce(
+    (accu, pageSize) => {
+      const distance = Math.abs(1 - Math.max(itemCount, 1) / pageSize);
+      if (accu.distance > distance && pageSize >= itemCount) {
+        return { pageSize, distance };
+      }
+      return accu;
+    },
+    { pageSize: possiblePageSizes[0], distance: possiblePageSizes[possiblePageSizes.length - 1] }
+  ).pageSize;
+
+export const refreshReleases = config => (dispatch, getState) => {
+  const storedConfig = { ...getState().releases.releasesList, ...config };
+  const { searchAttribute, searchTerm, visibleSection } = storedConfig;
+  const { start, end } = visibleSection;
+
+  const queryGenerator = {
+    next: () => ({ value: searchTerm ? `&${searchAttribute}=${searchTerm}` : '' })
+  };
+
+  const perPage = getBestPageSize(end - start);
+  const page = Math.max(Math.floor(start / perPage) + (start % perPage ? 0 : 1), 1);
+  const offset = (page - 1) * perPage;
+  const refreshAllReleases = ({ page: currentPage, ...refreshConfig }, generator, releases = {}) => {
+    return releaseListRetrieval({ ...refreshConfig, page: currentPage }, generator).then(({ data: retrievedReleases }) => {
+      const flatReleases = reduceReceivedReleases(retrievedReleases, getState().releases.byId);
+      dispatch({ type: ReleaseConstants.RECEIVE_RELEASES, releases: { ...getState().releases.byId, ...flatReleases } });
+      const combinedReleases = { ...releases, ...flatReleases };
+      if (currentPage * perPage > end) {
+        return Promise.resolve(combinedReleases);
+      }
+      return refreshAllReleases({ ...refreshConfig, page: currentPage + 1 }, generator, combinedReleases);
+    });
+  };
+
+  return refreshAllReleases({ ...storedConfig, page, perPage }, queryGenerator).then(refreshedReleasesById => {
+    const releaseIds = zipReleaseLists(getState().releases.releasesList.releaseIds, Object.values(refreshedReleasesById), offset);
+    const currentPage = Math.floor(releaseIds.length / storedConfig.perPage);
+    return Promise.resolve(dispatch(setReleasesListState({ page: currentPage, releaseIds })));
+  });
+};
 
 export const getRelease = name => (dispatch, getState) =>
   GeneralApi.get(`${deploymentsApiUrl}/deployments/releases?name=${name}`).then(({ data: releases }) => {

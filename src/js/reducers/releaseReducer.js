@@ -1,4 +1,6 @@
-import * as ReleaseConstants from '../constants/releaseConstants';
+import { SORTING_OPTIONS } from '../constants/appConstants';
+import DeviceConstants from '../constants/deviceConstants';
+import ReleaseConstants from '../constants/releaseConstants';
 
 export const initialState = {
   /*
@@ -31,11 +33,23 @@ export const initialState = {
           url: '' // optional
         }
       ],
-      descriptions,
+      modified: ''
       device_types_compatible,
       Name: ''
     }
     */
+  },
+  releasesList: {
+    ...DeviceConstants.DEVICE_LIST_DEFAULTS,
+    releaseIds: [],
+    sort: {
+      direction: SORTING_OPTIONS.desc,
+      attribute: 'modified'
+    },
+    searchTerm: '',
+    searchTotal: 0,
+    total: 0,
+    visibleSection: { start: 0, end: 0 }
   },
   /*
    * Return single release with corresponding Artifacts
@@ -88,7 +102,8 @@ const releaseReducer = (state = initialState, action) => {
         ...state,
         selectedRelease: action.release
       };
-
+    case ReleaseConstants.SET_RELEASES_LIST_STATE:
+      return { ...state, releasesList: action.value };
     default:
       return state;
   }

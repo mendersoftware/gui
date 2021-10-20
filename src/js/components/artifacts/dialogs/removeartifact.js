@@ -2,8 +2,8 @@ import React from 'react';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 
-const RemoveArtifactDialog = ({ artifact, open, onCancel, onRemove }) => (
-  <Dialog open={open}>
+const RemoveArtifactDialog = ({ artifact, onCancel, onRemove }) => (
+  <Dialog open>
     <DialogTitle>Remove this artifact?</DialogTitle>
     <DialogContent>
       Are you sure you want to remove <i>{artifact}</i>?
