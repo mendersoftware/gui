@@ -8,6 +8,7 @@ import { Button } from '@material-ui/core';
 import { setFirstLoginAfterSignup, setSnackbar } from '../../actions/appActions';
 import { createOrganizationTrial } from '../../actions/organizationActions';
 import { loginUser } from '../../actions/userActions';
+import { stringToBoolean } from '../../helpers';
 
 import Loader from '../common/loader';
 import UserDataEntry from './signup-steps/userdata-entry';
@@ -19,6 +20,7 @@ const cookies = new Cookies();
 export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setFirstLoginAfterSignup, recaptchaSiteKey, setSnackbar, match }) => {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
+  const [emailVerified, setEmailVerified] = useState(false);
   const [loading, setLoading] = useState(false);
   const [oauthProvider, setOauthProvider] = useState(undefined);
   const [oauthId, setOauthId] = useState(undefined);
@@ -37,6 +39,7 @@ export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setF
       setOauthProvider(usedOauthProvider);
       setOauthId(cookies.get('externalID'));
       setEmail(cookies.get('email'));
+      setEmailVerified(stringToBoolean(cookies.get('emailVerified')));
       setStep(2);
     }
   }, []);
@@ -51,14 +54,17 @@ export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setF
   const handleStep1 = formData => {
     setEmail(formData.email);
     setPassword(formData.password_new);
+    setEmailVerified(true);
     setStep(2);
   };
 
   const handleSignup = (formData, recaptcha) => {
     setLoading(true);
-    const credentials = oauthProvider ? { email, login: { [oauthProvider]: oauthId } } : { email, password };
+    const actualEmail = formData.email != null ? formData.email : email;
+    const credentials = oauthProvider ? { email: actualEmail, login: { [oauthProvider]: oauthId } } : { email: actualEmail, password };
     const signup = {
       ...credentials,
+      emailVerified: emailVerified,
       organization: formData.name,
       plan: 'enterprise',
       tos: formData.tos,
@@ -98,7 +104,14 @@ export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setF
   const provider = OAuth2Providers.find(item => item.id === oauthProvider) || { id: '' };
   const steps = {
     1: <UserDataEntry setSnackbar={setSnackbar} data={{ email, password, password_confirmation: password }} onSubmit={handleStep1} />,
-    2: <OrgDataEntry setSnackbar={setSnackbar} data={{ name: organization, tos, marketing }} onSubmit={handleSignup} recaptchaSiteKey={recaptchaSiteKey} />,
+    2: (
+      <OrgDataEntry
+        setSnackbar={setSnackbar}
+        data={{ name: organization, email, emailVerified, tos, marketing }}
+        onSubmit={handleSignup}
+        recaptchaSiteKey={recaptchaSiteKey}
+      />
+    ),
     3: (
       <div className="align-center" style={{ minHeight: '50vh' }}>
         <h1>Sign up completed</h1>
