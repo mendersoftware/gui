@@ -31,22 +31,22 @@ const headerStyle = {
   justifyContent: 'flex-end'
 };
 
-let timer;
-
 export const Deployments = ({ clickHandle, finishedCount, inprogressCount, onboardingState, pendingCount, setSnackbar, styles }) => {
   const [lastDeploymentCheck, setLastDeploymentCheck] = useState();
   const [loading, setLoading] = useState(true);
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
   const deploymentsRef = useRef();
+  const timer = useRef();
 
   useEffect(() => {
     clearAllRetryTimers(setSnackbar);
-    timer = setInterval(getDeployments, refreshDeploymentsLength);
+    clearInterval(timer.current);
+    timer.current = setInterval(getDeployments, refreshDeploymentsLength);
     getDeployments();
     setLastDeploymentCheck(updateDeploymentCutoff(new Date()));
     return () => {
-      clearInterval(timer);
+      clearInterval(timer.current);
       clearAllRetryTimers(setSnackbar);
     };
   }, []);

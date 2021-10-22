@@ -95,6 +95,7 @@ export const TroubleshootDialog = ({
     }
     if (socketInitialized) {
       setStartTime(new Date());
+      clearInterval(timer.current);
       timer.current = setInterval(() => setElapsed(moment()), 500);
     } else {
       clearInterval(timer.current);
