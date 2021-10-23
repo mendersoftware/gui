@@ -61,6 +61,7 @@ module.exports = (env, argv) => {
     },
     output: {
       filename: '[name].[contenthash].min.js',
+      hashFunction: 'xxhash64',
       path: path.resolve(__dirname, 'dist'),
       publicPath: '/ui/'
     },
