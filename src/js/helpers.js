@@ -440,13 +440,13 @@ export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, isDem
     menderSetupArgs = `${menderSetupArgs} --tenant-token $TENANT_TOKEN`;
   }
   if (isHosted) {
-    menderSetupArgs = `${menderSetupArgs} --demo --hosted-mender`;
+    menderSetupArgs = `${menderSetupArgs} --hosted-mender`;
   } else if (isDemoMode) {
     // Demo installation, either OS os Enterprise. Install demo cert and add IP to /etc/hosts
-    menderSetupArgs = `${menderSetupArgs} --demo${ipAddress ? ` --server-ip ${ipAddress}` : ''}`;
+    menderSetupArgs = `${menderSetupArgs} --demo-server${ipAddress ? ` --server-ip ${ipAddress}` : ''}`;
   } else {
     // Production installation, either OS or Enterprise
-    menderSetupArgs = `${menderSetupArgs} --retry-poll 30 --update-poll 5 --inventory-poll 5 --server-url https://${window.location.hostname} --server-cert=""`;
+    menderSetupArgs = `${menderSetupArgs} --server-url https://${window.location.hostname} --server-cert=""`;
   }
   let scriptUrl = `https://get.mender.io`;
   if (isPreRelease) {
