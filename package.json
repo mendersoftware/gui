@@ -80,7 +80,7 @@
     "jest": "^27.3.0",
     "jest-canvas-mock": "^2.3.1",
     "jest-junit": "^13.0.0",
-    "jest-resolve": "~27.3.0",
+    "jest-resolve": "~27.3.1",
     "jest-watch-typeahead": "1.0.0",
     "less": "^4.1.2",
     "less-loader": "^10.1.0",
