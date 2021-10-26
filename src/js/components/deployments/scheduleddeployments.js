@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -44,11 +44,10 @@ const tabs = {
 
 const type = DEPLOYMENT_STATES.scheduled;
 
-let timer;
-
 export const Scheduled = props => {
   const [calendarEvents, setCalendarEvents] = useState([]);
   const [tabIndex, setTabIndex] = useState(tabs.list.index);
+  const timer = useRef();
 
   const { abort, createClick, getDeploymentsByStatus, isEnterprise, items, openReport, scheduledState, setDeploymentsState, setSnackbar } = props;
   const { page, perPage, total: count } = scheduledState;
@@ -67,10 +66,10 @@ export const Scheduled = props => {
     if (!isEnterprise) {
       return;
     }
-    clearInterval(timer);
-    timer = setInterval(refreshDeployments, refreshDeploymentsLength);
+    clearInterval(timer.current);
+    timer.current = setInterval(refreshDeployments, refreshDeploymentsLength);
     return () => {
-      clearInterval(timer);
+      clearInterval(timer.current);
     };
   }, [isEnterprise, page, perPage]);
 

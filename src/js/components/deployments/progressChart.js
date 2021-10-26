@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 import Time from 'react-time';
@@ -98,18 +98,18 @@ export const DeploymentStatusNotification = ({ status }) => (
   </div>
 );
 
-let timer;
 export const ProgressDisplay = ({ className = '', deployment, status }) => {
   const [time, setTime] = useState(new Date());
+  const timer = useRef();
 
   const { created, device_count, id, phases: deploymentPhases = [], max_devices } = deployment;
   const { inprogress: currentProgressCount, successes: totalSuccessCount, failures: totalFailureCount } = groupDeploymentStats(deployment);
   const totalDeviceCount = Math.max(device_count, max_devices || 0);
 
   useEffect(() => {
-    timer = setInterval(updateTime, 1000);
+    timer.current = setInterval(updateTime, 1000);
     return () => {
-      clearInterval(timer);
+      clearInterval(timer.current);
     };
   }, []);
 

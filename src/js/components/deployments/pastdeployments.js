@@ -29,9 +29,6 @@ const headers = [...defaultHeaders.slice(0, defaultHeaders.length - 1), { title:
 
 const type = DEPLOYMENT_STATES.finished;
 
-let timer;
-let inputDelayTimer;
-
 export const Past = props => {
   const { advanceOnboarding, createClick, getDeploymentsByStatus, groups, onboardingState, past, pastSelectionState, setDeploymentsState, setSnackbar } = props;
   // eslint-disable-next-line no-unused-vars
@@ -40,6 +37,8 @@ export const Past = props => {
   const [tonight] = useState(new Date(new Date().setHours(23, 59, 59)).toISOString());
   const [loading, setLoading] = useState(false);
   const deploymentsRef = useRef();
+  const timer = useRef();
+  const inputDelayTimer = useRef();
   const { endDate, page, perPage, search: deviceGroup, startDate, total: count, type: deploymentType } = pastSelectionState;
 
   useEffect(() => {
@@ -63,10 +62,10 @@ export const Past = props => {
   }, []);
 
   useEffect(() => {
-    clearInterval(timer);
-    timer = setInterval(refreshPast, refreshDeploymentsLength);
+    clearInterval(timer.current);
+    timer.current = setInterval(refreshPast, refreshDeploymentsLength);
     return () => {
-      clearInterval(timer);
+      clearInterval(timer.current);
     };
   }, [page, perPage, startDate, endDate, deviceGroup, deploymentType]);
 
@@ -146,8 +145,8 @@ export const Past = props => {
   }
 
   const onFilterUpdate = (...args) => {
-    clearTimeout(inputDelayTimer);
-    inputDelayTimer = setTimeout(() => refreshPast(...args), 700);
+    clearTimeout(inputDelayTimer.current);
+    inputDelayTimer.current = setTimeout(() => refreshPast(...args), 700);
   };
 
   const onGroupFilterChange = (e, value) => {

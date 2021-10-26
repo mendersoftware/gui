@@ -28,7 +28,6 @@ import DeviceIssuesSelection from './widgets/issueselection';
 
 const refreshDeviceLength = 10000;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
-let timer;
 
 const idAttributeTitleMap = {
   id: 'Device ID',
@@ -81,6 +80,7 @@ export const Authorized = props => {
   const [showFilters, setShowFilters] = useState(false);
   const deviceListRef = useRef();
   const authorizeRef = useRef();
+  const timer = useRef();
 
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
@@ -102,7 +102,7 @@ export const Authorized = props => {
       setDeviceFilters(groupFilters);
     }
     return () => {
-      clearInterval(timer);
+      clearInterval(timer.current);
       clearAllRetryTimers(setSnackbar);
     };
   }, []);
@@ -141,8 +141,8 @@ export const Authorized = props => {
       return;
     }
     onSelectionChange([]);
-    clearInterval(timer);
-    timer = setInterval(getDevices, refreshDeviceLength);
+    clearInterval(timer.current);
+    timer.current = setInterval(getDevices, refreshDeviceLength);
     getDevices();
     availableIssueOptions.map(({ key }) => getIssueCountsByType(key, { filters, group: selectedGroup, state: selectedState }));
     availableIssueOptions.includes(DEVICE_ISSUE_OPTIONS.authRequests.key)
@@ -385,7 +385,6 @@ export const Authorized = props => {
               onSort={onSortChange}
               pageLoading={pageLoading}
               pageTotal={deviceCount}
-              refreshDevices={getDevices}
               sortingNotes={sortingNotes}
             />
             {showHelptips && <ExpandDevice />}

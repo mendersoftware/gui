@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
@@ -194,7 +194,6 @@ export const generateBrowserLocation = (selectedState, filters, selectedGroup, l
   return { pathname, search };
 };
 
-let deviceTimer;
 const refreshLength = 10000;
 
 export const DeviceGroups = ({
@@ -246,6 +245,7 @@ export const DeviceGroups = ({
   const [removeGroup, setRemoveGroup] = useState(false);
   const [tmpDevices, setTmpDevices] = useState([]);
   const [isReconciling, setIsReconciling] = useState(false);
+  const deviceTimer = useRef();
 
   const { state: selectedState } = deviceListState;
 
@@ -260,13 +260,12 @@ export const DeviceGroups = ({
     if (pathname !== history.location.pathname || history.location.search !== `?${search}`) {
       history.replace({ pathname, search }); // lgtm [js/client-side-unvalidated-url-redirection]
     }
-    clearInterval(deviceTimer);
-    deviceTimer = setInterval(getAllDeviceCounts, refreshLength);
+    deviceTimer.current = setInterval(getAllDeviceCounts, refreshLength);
 
     setYesterday();
     setDeviceRefreshTrigger(!deviceRefreshTrigger);
     return () => {
-      clearInterval(deviceTimer);
+      clearInterval(deviceTimer.current);
     };
   }, []);
 
@@ -275,7 +274,7 @@ export const DeviceGroups = ({
   }, [groupCount]);
 
   useEffect(() => {
-    if (!deviceTimer) {
+    if (!deviceTimer.current) {
       return;
     }
     const { pathname, search } = generateBrowserLocation(selectedState, filters, selectedGroup, history.location);
@@ -285,7 +284,7 @@ export const DeviceGroups = ({
   }, [selectedState, filters, selectedGroup]);
 
   useEffect(() => {
-    if (!deviceTimer) {
+    if (!deviceTimer.current) {
       return;
     }
     const { filters: filterQuery = '', status = '' } = match.params;

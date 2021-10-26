@@ -19,8 +19,6 @@ import useWindowSize from '../../utils/resizehook';
 
 export const minimalRefreshDeploymentsLength = 2000;
 
-let dynamicTimer;
-
 export const Progress = props => {
   const {
     abort,
@@ -44,21 +42,22 @@ export const Progress = props => {
   const size = useWindowSize();
 
   const inprogressRef = useRef();
+  const dynamicTimer = useRef();
 
   useEffect(() => {
-    clearTimeout(dynamicTimer);
+    clearTimeout(dynamicTimer.current);
     setupDeploymentsRefresh(minimalRefreshDeploymentsLength);
     return () => {
-      clearTimeout(dynamicTimer);
+      clearTimeout(dynamicTimer.current);
       clearAllRetryTimers(setSnackbar);
     };
   }, []);
 
   useEffect(() => {
-    clearTimeout(dynamicTimer);
+    clearTimeout(dynamicTimer.current);
     setupDeploymentsRefresh(minimalRefreshDeploymentsLength);
     return () => {
-      clearTimeout(dynamicTimer);
+      clearTimeout(dynamicTimer.current);
     };
   }, [pendingCount]);
 
@@ -75,8 +74,8 @@ export const Progress = props => {
       .then(() => {
         const currentRefreshDeploymentLength = Math.min(refreshDeploymentsLength, refreshLength * 2);
         setCurrentRefreshDeploymentLength(currentRefreshDeploymentLength);
-        clearTimeout(dynamicTimer);
-        dynamicTimer = setTimeout(setupDeploymentsRefresh, currentRefreshDeploymentLength);
+        clearTimeout(dynamicTimer.current);
+        dynamicTimer.current = setTimeout(setupDeploymentsRefresh, currentRefreshDeploymentLength);
       })
       .finally(() => setDoneLoading(true));
   };

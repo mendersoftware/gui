@@ -38,7 +38,6 @@ import MonitorDetailsDialog from './device-details/monitordetailsdialog';
 import DeviceNotifications from './device-details/notifications';
 
 const refreshDeviceLength = 10000;
-let timer;
 
 export const ExpandedDevice = ({
   abortDeployment,
@@ -75,6 +74,7 @@ export const ExpandedDevice = ({
   const [troubleshootType, setTroubleshootType] = useState();
   const [monitorDetails, setMonitorDetails] = useState();
   const monitoring = useRef();
+  const timer = useRef();
 
   const { hasAuditlogs, hasDeviceConfig, hasDeviceConnect, hasMonitor } = tenantCapabilities;
 
@@ -82,11 +82,11 @@ export const ExpandedDevice = ({
     if (!device.id) {
       return;
     }
-    clearInterval(timer);
-    timer = setInterval(() => getDeviceInfo(device), refreshDeviceLength);
+    clearInterval(timer.current);
+    timer.current = setInterval(() => getDeviceInfo(device), refreshDeviceLength);
     getDeviceInfo(device);
     return () => {
-      clearInterval(timer);
+      clearInterval(timer.current);
     };
   }, [device.id, device.status]);
 
