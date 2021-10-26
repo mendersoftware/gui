@@ -32,13 +32,13 @@ export const Artifacts = props => {
     selectedRelease,
     selectRelease,
     setShowCreateArtifactDialog,
-    showCreateArtifactDialog,
     showRemoveArtifactDialog,
     showRemoveDialog
   } = props;
 
   const [doneLoading, setDoneLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState();
+  const [showAddArtifactDialog, setShowAddArtifactDialog] = useState(false);
   const uploadButtonRef = useRef();
 
   useEffect(() => {
@@ -92,12 +92,12 @@ export const Artifacts = props => {
     if (releases.length) {
       advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP);
     }
-    setShowCreateArtifactDialog(true);
+    setShowAddArtifactDialog(true);
   };
 
   const onFileUploadClick = selectedFile => {
     setSelectedFile(selectedFile);
-    setShowCreateArtifactDialog(true);
+    setShowAddArtifactDialog(true);
   };
 
   const onRemoveArtifact = artifact => removeArtifact(artifact.id).finally(() => showRemoveArtifactDialog(false));
@@ -138,9 +138,9 @@ export const Artifacts = props => {
             <InfoIcon fontSize="small" />
             Upload an Artifact to an existing or new Release
           </p>
-          {!!uploadArtifactOnboardingComponent && !showCreateArtifactDialog && uploadArtifactOnboardingComponent}
+          {!!uploadArtifactOnboardingComponent && !showAddArtifactDialog && uploadArtifactOnboardingComponent}
         </div>
-        <ReleaseRepository refreshArtifacts={onGetReleases} loading={!doneLoading} onUpload={onFileUploadClick} release={selectedRelease} />
+        <ReleaseRepository refreshArtifacts={onGetReleases} loading={!doneLoading} onUpload={onFileUploadClick} />
       </div>
       {showRemoveDialog && (
         <RemoveArtifactDialog
@@ -150,11 +150,11 @@ export const Artifacts = props => {
           onRemove={() => onRemoveArtifact(selectedArtifact || selectedRelease.Artifacts[0])}
         />
       )}
-      {showCreateArtifactDialog && (
+      {showAddArtifactDialog && (
         <AddArtifactDialog
           {...props}
-          onCancel={() => setShowCreateArtifactDialog(false)}
-          onUploadStarted={() => setShowCreateArtifactDialog(false)}
+          onCancel={() => setShowAddArtifactDialog(false)}
+          onUploadStarted={() => setShowAddArtifactDialog(false)}
           onUploadFinished={onUploadFinished}
           selectedFile={selectedFile}
         />
@@ -194,7 +194,6 @@ const mapStateToProps = state => {
     releases: Object.values(state.releases.byId),
     selectedArtifact: state.releases.selectedArtifact,
     selectedRelease: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null,
-    showCreateArtifactDialog: state.onboarding.showCreateArtifactDialog,
     showRemoveDialog: state.releases.showRemoveDialog
   };
 };

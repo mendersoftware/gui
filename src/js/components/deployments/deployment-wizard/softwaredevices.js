@@ -91,7 +91,7 @@ export const SoftwareDevices = ({
   }
 
   let onboardingComponent = null;
-  if (releaseRef.current && groupRef.current && deploymentAnchor) {
+  if (releaseRef.current && groupRef.current && deploymentAnchor.current) {
     const anchor = { top: releaseRef.current.offsetTop + releaseRef.current.offsetHeight / 3, left: releaseRef.current.offsetWidth };
     const groupAnchor = { top: groupRef.current.offsetTop + groupRef.current.offsetHeight / 3, left: groupRef.current.offsetWidth };
     onboardingComponent = getOnboardingComponentFor(onboardingSteps.SCHEDULING_ALL_DEVICES_SELECTION, onboardingState, { anchor: groupAnchor, place: 'right' });
@@ -113,8 +113,8 @@ export const SoftwareDevices = ({
     }
     if (hasDevices && deploymentDeviceCount && deploymentRelease) {
       const buttonAnchor = {
-        top: deploymentAnchor.offsetTop - deploymentAnchor.offsetHeight,
-        left: deploymentAnchor.offsetLeft + deploymentAnchor.offsetWidth / 2
+        top: deploymentAnchor.current.offsetTop - deploymentAnchor.current.offsetHeight,
+        left: deploymentAnchor.current.offsetLeft + deploymentAnchor.current.offsetWidth / 2
       };
       onboardingComponent = getOnboardingComponentFor(
         onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES,
