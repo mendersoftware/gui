@@ -7,7 +7,7 @@ import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import EventDetailsDrawer from './eventdetailsdrawer';
 import { SORTING_OPTIONS } from '../../constants/appConstants';
-import { LocaleTime } from '../common/localetime';
+import LocaleTime from '../common/localetime';
 
 export const defaultRowsPerPage = 20;
 

@@ -8,7 +8,7 @@ import { RotateLeftOutlined, Warning as WarningIcon } from '@material-ui/icons';
 import { mdiDotsHorizontalCircleOutline as QueuedIcon, mdiSleep as SleepIcon } from '@mdi/js';
 
 import { groupDeploymentStats } from '../../helpers';
-import { LocaleTime } from '../common/localetime';
+import LocaleTime from '../common/localetime';
 
 momentDurationFormatSetup(moment);
 

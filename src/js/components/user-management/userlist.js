@@ -1,6 +1,6 @@
 import React from 'react';
 // import Time from 'react-time';
-import { LocaleTime } from '../common/localetime';
+import LocaleTime from '../common/localetime';
 
 // material ui
 import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';

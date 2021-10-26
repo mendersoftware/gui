@@ -10,7 +10,7 @@ import successImage from '../../../../assets/img/largeSuccess.png';
 import failImage from '../../../../assets/img/largeFail.png';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../../constants/deploymentConstants';
 import { TwoColumnData } from '../../common/configurationobject';
-import { LocaleTime } from '../../common/localetime';
+import LocaleTime from '../../common/localetime';
 import theme from '../../../themes/mender-theme';
 import { defaultColumnDataProps } from '../report';
 

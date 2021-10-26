@@ -6,7 +6,7 @@ import { Button, LinearProgress, TableCell, TableRow } from '@material-ui/core';
 
 import { formatTime } from '../../../helpers';
 import DeviceIdentityDisplay from '../../common/deviceidentity';
-import { LocaleTime } from '../../common/localetime';
+import LocaleTime from '../../common/localetime';
 
 const stateTitleMap = {
   noartifact: 'No compatible artifact found',
