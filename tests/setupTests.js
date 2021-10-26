@@ -50,6 +50,7 @@ beforeAll(async () => {
     hostname: TEST_LOCATION,
     replace: jest.fn()
   };
+  delete window.navigator.userLanguage;
   window.navigator.userLanguage = 'en';
   delete window.sessionStorage;
   window.sessionStorage = {
