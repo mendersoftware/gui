@@ -62,8 +62,7 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
                   <div
                     class="flexbox center-aligned"
                   >
-                    Remote terminal
-                     
+                    Remote terminal 
                     <svg
                       aria-hidden="true"
                       class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit"

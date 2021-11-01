@@ -6,7 +6,7 @@ import Time from 'react-time';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, SvgIcon, Tab, Tabs } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@material-ui/core';
 import { mdiConsole as ConsoleIcon } from '@mdi/js';
 
 import msgpack5 from 'msgpack5';
@@ -15,8 +15,8 @@ import { setSnackbar } from '../../actions/appActions';
 import { getDeviceFileDownloadLink, deviceFileUpload } from '../../actions/deviceActions';
 import { BEGINNING_OF_TIME } from '../../constants/appConstants';
 import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as MessageProtocols } from '../../constants/deviceConstants';
-
 import theme, { colors } from '../../themes/mender-theme';
+import MaterialDesignIcon from '../common/materialdesignicon';
 import Terminal from './troubleshoot/terminal';
 import FileTransfer from './troubleshoot/filetransfer';
 
@@ -28,12 +28,7 @@ let socket = null;
 const ConnectionIndicator = isConnected => {
   return (
     <div className="flexbox center-aligned">
-      Remote terminal{' '}
-      {
-        <SvgIcon fontSize="inherit" style={{ color: isConnected ? colors.green : colors.red, marginLeft: theme.spacing() }}>
-          <path d={ConsoleIcon} />
-        </SvgIcon>
-      }
+      Remote terminal {<MaterialDesignIcon path={ConsoleIcon} style={{ color: isConnected ? colors.green : colors.red, marginLeft: theme.spacing() }} />}
     </div>
   );
 };

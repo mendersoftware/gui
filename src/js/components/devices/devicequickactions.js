@@ -1,7 +1,6 @@
 import React, { forwardRef, memo, useMemo, useState } from 'react';
 import pluralize from 'pluralize';
 
-import { SvgIcon } from '@material-ui/core';
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
 import {
   AddCircle as AddCircleIcon,
@@ -12,6 +11,7 @@ import {
 } from '@material-ui/icons';
 import { mdiTrashCanOutline as TrashCan } from '@mdi/js';
 
+import MaterialDesignIcon from '../common/materialdesignicon';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { deepCompare } from '../../helpers';
 
@@ -47,11 +47,7 @@ const defaultActions = {
     action: ({ onAddDevicesToGroup, selection }) => onAddDevicesToGroup(selection)
   },
   removeFromGroup: {
-    icon: (
-      <SvgIcon fontSize="inherit">
-        <path d={TrashCan} />
-      </SvgIcon>
-    ),
+    icon: <MaterialDesignIcon path={TrashCan} />,
     key: 'group-remove',
     title: pluralized => `Remove selected ${pluralized} from this group`,
     action: ({ onRemoveDevicesFromGroup, selection }) => onRemoveDevicesFromGroup(selection)

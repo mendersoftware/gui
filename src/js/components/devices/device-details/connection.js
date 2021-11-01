@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import Time from 'react-time';
 import ReactTooltip from 'react-tooltip';
 
-import { Button, Typography, SvgIcon } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 import { ImportExport as ImportExportIcon, InfoOutlined as InfoIcon, Launch as LaunchIcon } from '@material-ui/icons';
 import { mdiConsole as ConsoleIcon } from '@mdi/js';
 
+import MaterialDesignIcon from '../../common/materialdesignicon';
 import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
 import { DEVICE_CONNECT_STATES } from '../../../constants/deviceConstants';
 import theme from '../../../themes/mender-theme';
@@ -85,11 +86,7 @@ const troubleshootingTools = [
   {
     key: 'terminal',
     title: 'Launch a new Remote Terminal session',
-    icon: (
-      <SvgIcon fontSize="inherit">
-        <path d={ConsoleIcon} />
-      </SvgIcon>
-    ),
+    icon: <MaterialDesignIcon path={ConsoleIcon} />,
     needsWriteAccess: true,
     needsTroubleshoot: true
   },
