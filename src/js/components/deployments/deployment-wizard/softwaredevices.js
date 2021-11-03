@@ -12,6 +12,7 @@ import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 import useWindowSize from '../../../utils/resizehook';
 import { allDevices } from '../createdeployment';
 import theme from '../../../themes/mender-theme';
+import AsyncAutocomplete from '../../common/asyncautocomplete';
 
 export const styles = {
   infoStyle: {
@@ -33,6 +34,7 @@ export const SoftwareDevices = ({
   createdGroup,
   deploymentAnchor,
   deploymentObject = {},
+  getReleases,
   groups,
   hasDevices,
   hasDynamicGroups,
@@ -67,7 +69,9 @@ export const SoftwareDevices = ({
     setDeploymentSettings({ ...deploymentObject, [property]: value, deploymentDeviceIds: deviceIds, deploymentDeviceCount: deviceCount });
   };
 
-  const onReleaseSelectionChange = (e, item) => deploymentSettingsUpdate(item, 'release');
+  const onReleaseSelectionChange = release => deploymentSettingsUpdate(release, 'release');
+
+  const onReleaseInputChange = inputValue => getReleases({ page: 1, perPage: 100, searchTerm: inputValue, searchOnly: true });
 
   const { deploymentDeviceCount, deploymentDeviceIds = [], device, group = null, release: deploymentRelease = null } = deploymentObject;
   const releaseDeviceTypes = (deploymentRelease && deploymentRelease.device_types_compatible) ?? [];
@@ -189,17 +193,16 @@ export const SoftwareDevices = ({
             {releaseSelectionLocked ? (
               <TextField value={deploymentRelease?.Name} label="Release" disabled={true} style={styles.infoStyle} />
             ) : (
-              <Autocomplete
+              <AsyncAutocomplete
                 id="deployment-release-selection"
-                autoSelect
-                autoHighlight
-                filterSelectedOptions
-                getOptionLabel={option => (typeof option === 'string' ? option : option.Name)}
-                handleHomeEndKeys
+                initialValue={deploymentRelease?.Name}
+                labelAttribute="Name"
+                placeholder="Select a Release"
+                selectionAttribute="Name"
                 options={releaseItems}
-                onChange={onReleaseSelectionChange}
-                renderInput={params => <TextField {...params} placeholder="Select a Release" InputProps={{ ...params.InputProps }} style={styles.textField} />}
-                value={deploymentRelease}
+                onChange={onReleaseInputChange}
+                onChangeSelection={onReleaseSelectionChange}
+                styles={styles}
               />
             )}
             {releaseDeviceTypes.length ? (

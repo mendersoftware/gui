@@ -201,7 +201,8 @@ const releaseListRetrieval = (config, queryGenerator) => {
 
   const perPageQuery = perPage ? `&per_page=${perPage}` : '';
   const sorting = attribute ? `&sort=${attribute}:${direction}`.toLowerCase() : '';
-  return GeneralApi.get(`${deploymentsApiUrl}/deployments/releases/list?page=${page}${perPageQuery}${queryGenerator.next().value}${sorting}`);
+  const searchQuery = queryGenerator.next().value ?? '';
+  return GeneralApi.get(`${deploymentsApiUrl}/deployments/releases/list?page=${page}${perPageQuery}${searchQuery}${sorting}`);
 };
 
 const zipReleaseLists = (stateReleaseIds, newReleases, offset) =>
@@ -215,7 +216,8 @@ const zipReleaseLists = (stateReleaseIds, newReleases, offset) =>
 
 export const getReleases = (passedConfig = {}) => (dispatch, getState) => {
   let config = { ...getState().releases.releasesList, ...passedConfig };
-  const { page, perPage, searchTerm = '', visibleSection = {} } = config;
+  const { page, perPage, searchOnly, searchTerm = '', visibleSection = {} } = config;
+  config = searchOnly ? { ...config, sort: { attribute: 'Name', direction: AppConstants.SORTING_OPTIONS.asc } } : config;
   const queryGenerator = generateReleaseSearchQuery(searchTerm);
 
   const releaseListProcessing = props => {
@@ -223,24 +225,28 @@ export const getReleases = (passedConfig = {}) => (dispatch, getState) => {
       return Promise.resolve();
     }
     const { data: releases, headers } = props;
-    const total = Number(headers[headerNames.total]);
     const state = getState().releases;
+    const total = Number(headers[headerNames.total]);
     const flatReleases = reduceReceivedReleases(releases, state.byId);
     const combinedReleases = { ...state.byId, ...flatReleases };
     const flattenedReleases = Object.values(flatReleases).sort(customSort(config.sort.direction === AppConstants.SORTING_OPTIONS.desc, config.sort.attribute));
-    const releaseIds = visibleSection.start
-      ? zipReleaseLists(state.releasesList.releaseIds, flattenedReleases, page * perPage)
-      : flattenedReleases.map(item => item.Name);
-    let tasks = [
-      dispatch({ type: ReleaseConstants.RECEIVE_RELEASES, releases: combinedReleases }),
-      dispatch(
-        setReleasesListState({
-          releaseIds,
-          searchTotal: searchTerm.length ? total : state.releasesList.searchTotal,
-          total: searchTerm ? state.releasesList.total : total
-        })
-      )
-    ];
+    let tasks = [dispatch({ type: ReleaseConstants.RECEIVE_RELEASES, releases: combinedReleases })];
+    if (searchOnly) {
+      tasks.push(dispatch(setReleasesListState({ searchedIds: flattenedReleases.map(item => item.Name) })));
+    } else {
+      const releaseIds = visibleSection.start
+        ? zipReleaseLists(state.releasesList.releaseIds, flattenedReleases, page * perPage)
+        : flattenedReleases.map(item => item.Name);
+      tasks.push(
+        dispatch(
+          setReleasesListState({
+            releaseIds,
+            searchTotal: searchTerm.length ? total : state.releasesList.searchTotal,
+            total: searchTerm ? state.releasesList.total : total
+          })
+        )
+      );
+    }
     if (!getState().onboarding.complete) {
       tasks.push(dispatch({ type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: !!Object.keys(combinedReleases).length }));
     }
@@ -250,7 +256,7 @@ export const getReleases = (passedConfig = {}) => (dispatch, getState) => {
 
   const maybeTriggerRetrieval = results => {
     if (!results || Object.keys(results[results.length - 1]).length) {
-      if (results && Object.keys(results[results.length - 1]).length) {
+      if (results && Object.keys(results[results.length - 1]).length && searchTerm) {
         const nextGeneratorResult = queryGenerator.next().value ?? '';
         const index = searchAttributes.findIndex(attribute => nextGeneratorResult.includes(attribute));
         const searchAttribute = index > 0 ? searchAttributes[index - 1] : searchAttributes[searchAttributes.length - 1];

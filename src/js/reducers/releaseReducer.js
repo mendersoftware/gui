@@ -41,6 +41,7 @@ export const initialState = {
   },
   releasesList: {
     ...DeviceConstants.DEVICE_LIST_DEFAULTS,
+    searchedIds: [],
     releaseIds: [],
     sort: {
       direction: SORTING_OPTIONS.desc,

@@ -63,7 +63,6 @@ describe('Deployments Component', () => {
   });
 
   it('works as expected', async () => {
-    // const store = mockStore({
     const preloadedState = {
       ...mockState,
       deployments: {
