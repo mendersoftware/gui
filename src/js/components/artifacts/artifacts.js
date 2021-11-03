@@ -73,7 +73,6 @@ export const Artifacts = props => {
   useEffect(() => {
     const { artifactVersion } = match.params;
     setReleasesListState({ visibleSection: [] });
-    setDoneLoading(!!releases.length);
     if (artifactVersion) {
       selectRelease(decodeURIComponent(artifactVersion));
     }

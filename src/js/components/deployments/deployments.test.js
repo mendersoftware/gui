@@ -41,10 +41,22 @@ describe('Deployments Component', () => {
         inprogress: { ...defaultState.deployments.selectionState.inprogress, selection: [] },
         pending: { ...defaultState.deployments.selectionState.pending, selection: [] }
       }
+    },
+    releases: {
+      ...defaultState.releases,
+      releasesList: {
+        ...defaultState.releases.releasesList,
+        releaseIds: []
+      }
     }
   };
 
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
   afterEach(() => {
+    jest.useRealTimers();
     jest.clearAllMocks();
   });
 
@@ -148,16 +160,16 @@ describe('Deployments Component', () => {
     const { rerender } = render(ui);
     userEvent.click(screen.getByRole('tab', { name: /Finished/i }));
     userEvent.click(screen.getByRole('button', { name: /Create a deployment/i }));
-    const releaseId = Object.keys(defaultState.releases.byId)[0];
+    const releaseId = 'release-10';
     await waitFor(() => rerender(ui));
-    await waitFor(() => {
-      expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument();
-    });
+    await act(async () => jest.advanceTimersByTime(1000));
+    await waitFor(() => expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument(), { timeout: 3000 });
     const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
     expect(within(releaseSelect).queryByText(releaseId)).not.toBeInTheDocument();
     userEvent.click(releaseSelect);
     fireEvent.keyDown(releaseSelect, { key: 'ArrowDown' });
     fireEvent.keyDown(releaseSelect, { key: 'Enter' });
+    await act(async () => jest.advanceTimersByTime(1000));
     expect(releaseSelect).toHaveValue(releaseId);
     const groupSelect = screen.getByPlaceholderText(/Select a device group/i);
     userEvent.click(groupSelect);
@@ -165,14 +177,14 @@ describe('Deployments Component', () => {
 
     await waitFor(() => rerender(ui));
     expect(groupSelect).toHaveValue(allDevices);
-    userEvent.click(screen.getAllByText('Next')[0]);
+    userEvent.click(screen.getByRole('button', { name: 'Next' }));
     const post = jest.spyOn(GeneralApi, 'post');
-    await act(async () => await userEvent.click(screen.getByText('Create')));
+    await act(async () => await userEvent.click(screen.getByRole('button', { name: 'Create' })));
     await jest.runAllTicks();
     await waitFor(() => rerender(ui));
     expect(post).toHaveBeenCalledWith('/api/management/v1/deployments/deployments', {
       all_devices: true,
-      artifact_name: defaultState.releases.byId.r1.Name,
+      artifact_name: releaseId,
       devices: undefined,
       filter_id: undefined,
       group: undefined,
@@ -183,7 +195,7 @@ describe('Deployments Component', () => {
     await jest.runAllTicks();
     await waitFor(() => rerender(ui));
     expect(screen.queryByText(/Cancel/i)).not.toBeInTheDocument();
-  }, 15000);
+  }, 20000);
 
   it('allows navigating the enterprise deployment creation dialog', async () => {
     const preloadedState = {
@@ -233,16 +245,17 @@ describe('Deployments Component', () => {
     act(() => userEvent.click(screen.getByRole('tab', { name: /Finished/i })));
     act(() => userEvent.click(screen.getByRole('tab', { name: /Active/i })));
     await act(async () => userEvent.click(screen.getByRole('button', { name: /Create a deployment/i })));
-    const releaseId = Object.keys(defaultState.releases.byId)[0];
+    const releaseId = 'release-10';
     await waitFor(() => rerender(ui));
-    await waitFor(() => {
-      expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument();
-    });
+    await act(async () => jest.advanceTimersByTime(1000));
+    await waitFor(() => expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument(), { timeout: 3000 });
     const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
     expect(within(releaseSelect).queryByText(releaseId)).not.toBeInTheDocument();
     userEvent.click(releaseSelect);
     fireEvent.keyDown(releaseSelect, { key: 'ArrowDown' });
     fireEvent.keyDown(releaseSelect, { key: 'Enter' });
+    expect(releaseSelect).toHaveValue(releaseId);
+    await act(async () => jest.advanceTimersByTime(1000));
     const groupSelect = screen.getByPlaceholderText(/Select a device group/i);
     userEvent.click(groupSelect);
     fireEvent.keyDown(groupSelect, { key: 'Enter' });
@@ -273,9 +286,24 @@ describe('Deployments Component', () => {
     const thirdBatchDate = new Date(new Date(secondBatchDate).setDate(secondBatchDate.getDate() + 25));
     await jest.runAllTicks();
     await waitFor(() => rerender(ui));
+    expect(post).toHaveBeenCalledWith('/api/management/v1/useradm/settings', {
+      '2fa': 'enabled',
+      a1: {
+        onboarding: {
+          artifactIncluded: true,
+          complete: false,
+          demoArtifactPort: 85,
+          progress: 'deployments-inprogress',
+          showConnectDeviceDialog: false
+        }
+      },
+      id_attribute: undefined,
+      previousFilters: [],
+      previousPhases: [[{ batch_size: 30, delay: 5, delayUnit: 'days' }, { batch_size: 70 }]]
+    });
     expect(post).toHaveBeenCalledWith('/api/management/v1/deployments/deployments', {
       all_devices: true,
-      artifact_name: defaultState.releases.byId.r1.Name,
+      artifact_name: releaseId,
       devices: undefined,
       filter_id: undefined,
       group: undefined,
@@ -288,19 +316,5 @@ describe('Deployments Component', () => {
       retries: 1,
       update_control_map: undefined
     });
-    expect(post).toHaveBeenCalledWith('/api/management/v1/useradm/settings', {
-      '2fa': 'enabled',
-      a1: {
-        onboarding: {
-          complete: false,
-          demoArtifactPort: 85,
-          progress: 'deployments-inprogress',
-          showConnectDeviceDialog: false
-        }
-      },
-      id_attribute: undefined,
-      previousFilters: [],
-      previousPhases: [[{ batch_size: 30, delay: 5, delayUnit: 'days' }, { batch_size: 70 }]]
-    });
-  }, 15000);
+  }, 20000);
 });

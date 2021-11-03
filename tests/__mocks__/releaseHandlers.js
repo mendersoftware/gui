@@ -31,7 +31,7 @@ export const releaseHandlers = [
     if (searchParams.get('device_type')) {
       return res(ctx.json([]));
     }
-    if (page == 42) {
+    if (page == 42 && !searchParams.get('name')) {
       return res(ctx.set(headerNames.total, 1), ctx.json([defaultState.releases.byId.r1]));
     }
     const sort = searchParams.get('sort');
@@ -43,7 +43,6 @@ export const releaseHandlers = [
     if (searchParams.get('description') || searchParams.get('name')) {
       return res(ctx.set(headerNames.total, 1234), ctx.json(releaseListSection));
     }
-
     return res(ctx.set(headerNames.total, releasesList.length), ctx.json(releaseListSection));
   })
 ];

@@ -97,7 +97,7 @@ export const ReleasesList = ({ loading, onSelect, releasesListState, releases, s
 
   const isItemLoaded = index => !!releases[index]?.Name;
 
-  const itemCount = searchTerm ? searchTotal : total;
+  const itemCount = (searchTerm ? searchTotal : total) || releases.length;
   return (
     <div className="repository-list flexbox column">
       <div className="flexbox center-aligned">

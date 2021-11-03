@@ -71,7 +71,7 @@ export const CreateDialog = props => {
   const deploymentRef = useRef();
 
   useEffect(() => {
-    getReleases({ page: 1 });
+    getReleases({ page: 1, perPage: 100, searchOnly: true });
   }, []);
 
   useEffect(() => {
