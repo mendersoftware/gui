@@ -7,14 +7,12 @@ exports[`Artifacts Component renders correctly 1`] = `
   >
     <div
       class="flexbox column leftFixed"
-      style="align-items: flex-start;"
     >
       <div
-        class="repository-list flexbox column overflow-hidden"
+        class="repository-list flexbox column"
       >
         <div
           class="flexbox center-aligned"
-          style="min-height: min-content;"
         >
           <h3>
             Releases
@@ -36,10 +34,10 @@ exports[`Artifacts Component renders correctly 1`] = `
             </div>
           </div>
         </div>
+        <div />
         <div
           class="MuiButtonGroup-root muted"
           role="group"
-          style="min-height: min-content;"
         >
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlined MuiButton-outlinedSizeSmall MuiButton-sizeSmall"
@@ -95,60 +93,31 @@ exports[`Artifacts Component renders correctly 1`] = `
             />
           </button>
         </div>
-        <ul
-          class="MuiList-root MuiList-padding"
+        <div
+          class="relative"
         >
           <div
-            aria-disabled="false"
-            class="MuiButtonBase-root MuiListItem-root repository-list-item active MuiListItem-gutters MuiListItem-button"
-            role="button"
-            tabindex="0"
+            style="overflow: visible; height: 0px; width: 0px;"
+          />
+          <div
+            class="resize-triggers"
           >
             <div
-              class="MuiListItemText-root"
+              class="expand-trigger"
             >
-              <span
-                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-              >
-                <div
-                  class="flexbox"
-                >
-                  <div
-                    class="inline-block"
-                  >
-                    <h6
-                      class="MuiTypography-root MuiTypography-subtitle2"
-                    >
-                      r1
-                    </h6>
-                    <p
-                      class="MuiTypography-root muted MuiTypography-body2"
-                    >
-                      1 Artifact
-                    </p>
-                  </div>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
-                    />
-                  </svg>
-                </div>
-              </span>
+              <div
+                style="width: 1px; height: 1px;"
+              />
             </div>
-            <span
-              class="MuiTouchRipple-root"
+            <div
+              class="contract-trigger"
             />
           </div>
-        </ul>
+        </div>
       </div>
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
-        style="margin-top: 30px; min-height: min-content; min-width: 164px;"
+        style="margin-top: 30px; min-width: 164px; justify-self: left;"
         tabindex="0"
         type="button"
       >

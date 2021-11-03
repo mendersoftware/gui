@@ -7,6 +7,8 @@ import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Artifacts from './artifacts';
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { setReleasesListState } from '../../actions/releaseActions';
+import { getConfiguredStore } from '../../reducers';
 
 const mockStore = configureStore([thunk]);
 
@@ -36,7 +38,7 @@ describe('Artifacts Component', () => {
   });
 
   it('works as expected', async () => {
-    store = mockStore({
+    const store = getConfiguredStore({
       ...defaultState,
       releases: {
         ...defaultState.releases,
@@ -63,6 +65,7 @@ describe('Artifacts Component', () => {
     await waitFor(() => rerender(ui));
     expect(screen.queryByText(/Filtered from/i)).not.toBeInTheDocument();
     act(() => userEvent.type(screen.getByPlaceholderText(/Filter/i), 'b1'));
+    store.dispatch(setReleasesListState({ searchTotal: 1, total: 50 }));
     await waitFor(() => rerender(ui));
     expect(screen.queryByText(/Filtered from/i)).toBeInTheDocument();
     expect(document.body.querySelector('.repository-list > ul > div')).toBeFalsy();

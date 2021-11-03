@@ -51,7 +51,7 @@ describe('app actions', () => {
       }
       return accu;
     };
-    const store = mockStore({ ...defaultState });
+    const store = mockStore({ ...defaultState, releases: { ...defaultState.releases, releasesList: { ...defaultState.releases.releasesList, page: 42 } } });
     // eslint-disable-next-line no-unused-vars
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
@@ -161,6 +161,16 @@ describe('app actions', () => {
         groupName: DeviceConstants.UNGROUPED_GROUP.id,
         group: { deviceIds: [], total: 0, filters: [{ key: 'group', value: ['testGroup'], operator: '$nin', scope: 'system' }] }
       },
+      { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
+      {
+        type: ReleaseConstants.SET_RELEASES_LIST_STATE,
+        value: {
+          ...defaultState.releases.releasesList,
+          releaseIds: [defaultState.releases.byId.r1.Name],
+          page: 42
+        }
+      },
+      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
       { type: DeviceConstants.SET_DEVICE_LIMIT, limit: 500 },
       {
         type: UserConstants.RECEIVED_ROLES,
@@ -173,8 +183,6 @@ describe('app actions', () => {
           return accu;
         }, {})
       },
-      { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
-      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
       {
         type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS,
         stats: { ...defaultState.deployments.byId.d1.stats },

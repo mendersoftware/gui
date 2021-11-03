@@ -18,12 +18,12 @@ export const deploymentHandlers = [
     const release = defaultState.releases.byId[releaseName] || {};
     if (releaseName) {
       // eslint-disable-next-line no-unused-vars
-      const { descriptions, device_types_compatible, ...remainder } = release;
+      const { device_types_compatible, ...remainder } = release;
       return Object.keys(remainder).length ? res(ctx.status(200), ctx.json([remainder])) : res(ctx.status(520));
     }
     const releases = Object.values(defaultState.releases.byId).map(stateRelease => {
       // eslint-disable-next-line no-unused-vars
-      const { descriptions, device_types_compatible, ...remainder } = stateRelease;
+      const { device_types_compatible, ...remainder } = stateRelease;
       return remainder;
     });
     return res(ctx.json(releases));
