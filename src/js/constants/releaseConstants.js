@@ -1,3 +1,5 @@
+const defaultVisibleSection = { start: 0, end: 0 };
+
 module.exports = {
   ARTIFACT_GENERATION_TYPE: {
     SINGLE_FILE: 'single_file'
@@ -12,5 +14,6 @@ module.exports = {
   SHOW_REMOVE_DIALOG: 'SHOW_REMOVE_DIALOG',
   SELECTED_ARTIFACT: 'SELECTED_ARTIFACT',
   SELECTED_RELEASE: 'SELECTED_RELEASE',
-  SET_RELEASES_LIST_STATE: 'SET_RELEASES_LIST_STATE'
+  SET_RELEASES_LIST_STATE: 'SET_RELEASES_LIST_STATE',
+  defaultVisibleSection
 };

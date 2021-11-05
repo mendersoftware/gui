@@ -36,7 +36,8 @@ describe('release actions', () => {
     const expectedActions = [
       { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
       { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList, releaseIds: ['release-1'], total: 5000 } },
-      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true }
+      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
+      { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList, searchAttribute: 'name' } }
     ];
     await store.dispatch(getReleases({ perPage: 1, sort: { direction: 'asc', attribute: 'Name' } }));
     const storeActions = store.getActions();
@@ -46,9 +47,13 @@ describe('release actions', () => {
   it('should retrieve a search filtered list of releases', async () => {
     const store = mockStore({
       ...defaultState,
-      releases: { ...defaultState.releases, releasesList: { ...defaultState.releases.releasesList, visibleSection: { start: 4, end: 8 } } }
+      releases: {
+        ...defaultState.releases,
+        releasesList: { ...defaultState.releases.releasesList, searchAttribute: 'name' }
+      }
     });
     const expectedActions = [
+      { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
       { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
       {
         type: ReleaseConstants.SET_RELEASES_LIST_STATE,
@@ -56,7 +61,7 @@ describe('release actions', () => {
           ...defaultState.releases.releasesList,
           releaseIds: [
             defaultState.releases.byId.r1.Name,
-            ...Array.from({ length: 19 }),
+            ...Array.from({ length: 9 }),
             'release-99',
             'release-989',
             'release-988',
@@ -66,15 +71,22 @@ describe('release actions', () => {
             'release-984',
             'release-983',
             'release-982',
-            'release-981'
-          ],
-          searchTotal: 1234
+            'release-981',
+            'release-980',
+            'release-98',
+            'release-979',
+            'release-978',
+            'release-977',
+            'release-976',
+            'release-975',
+            'release-974',
+            'release-973',
+            'release-972'
+          ]
         }
-      },
-      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
-      { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList, searchAttribute: 'name' } }
+      }
     ];
-    await store.dispatch(getReleases({ page: 2, perPage: 10, searchTerm: 'something' }));
+    await store.dispatch(getReleases({ searchTerm: 'something', visibleSection: { start: 24, end: 28 } }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

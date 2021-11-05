@@ -216,7 +216,10 @@ const zipReleaseLists = (stateReleaseIds, newReleases, offset) =>
 
 export const getReleases = (passedConfig = {}) => (dispatch, getState) => {
   let config = { ...getState().releases.releasesList, ...passedConfig };
-  const { page, perPage, searchOnly, searchTerm = '', visibleSection = {} } = config;
+  const { searchAttribute, searchOnly, searchTerm = '' } = config;
+  if (passedConfig.visibleSection?.start && searchAttribute) {
+    return Promise.resolve(dispatch(refreshReleases(passedConfig)));
+  }
   config = searchOnly ? { ...config, sort: { attribute: 'Name', direction: AppConstants.SORTING_OPTIONS.asc } } : config;
   const queryGenerator = generateReleaseSearchQuery(searchTerm);
 
@@ -234,13 +237,10 @@ export const getReleases = (passedConfig = {}) => (dispatch, getState) => {
     if (searchOnly) {
       tasks.push(dispatch(setReleasesListState({ searchedIds: flattenedReleases.map(item => item.Name) })));
     } else {
-      const releaseIds = visibleSection.start
-        ? zipReleaseLists(state.releasesList.releaseIds, flattenedReleases, page * perPage)
-        : flattenedReleases.map(item => item.Name);
       tasks.push(
         dispatch(
           setReleasesListState({
-            releaseIds,
+            releaseIds: flattenedReleases.map(item => item.Name),
             searchTotal: searchTerm.length ? total : state.releasesList.searchTotal,
             total: searchTerm ? state.releasesList.total : total
           })
@@ -256,11 +256,11 @@ export const getReleases = (passedConfig = {}) => (dispatch, getState) => {
 
   const maybeTriggerRetrieval = results => {
     if (!results || Object.keys(results[results.length - 1]).length) {
-      if (results && Object.keys(results[results.length - 1]).length && searchTerm) {
+      if (results && Object.keys(results[results.length - 1]).length && !searchAttribute) {
         const nextGeneratorResult = queryGenerator.next().value ?? '';
         const index = searchAttributes.findIndex(attribute => nextGeneratorResult.includes(attribute));
         const searchAttribute = index > 0 ? searchAttributes[index - 1] : searchAttributes[searchAttributes.length - 1];
-        dispatch(setReleasesListState({ searchAttribute }));
+        dispatch(setReleasesListState({ searchAttribute: searchTerm ? searchAttribute : searchAttributes[0] }));
       }
       return Promise.resolve();
     }

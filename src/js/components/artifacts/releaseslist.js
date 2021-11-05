@@ -10,7 +10,9 @@ import { ArrowDropDown as ArrowDropDownIcon, KeyboardArrowRight as KeyboardArrow
 
 import Loader from '../common/loader';
 import { SORTING_OPTIONS } from '../../constants/appConstants';
+import { defaultVisibleSection } from '../../constants/releaseConstants';
 import { useDebounce } from '../../utils/debouncehook';
+import useWindowSize from '../../utils/resizehook';
 
 const sortingOptions = {
   Name: 'Name',
@@ -47,9 +49,12 @@ const listItemSize = 63;
 
 export const ReleasesList = ({ loading, onSelect, releasesListState, releases, selectedRelease, setReleasesListState }) => {
   const [anchorEl, setAnchorEl] = useState();
-  const [visibleSection, setVisibleSection] = useState({});
+  const [visibleSection, setVisibleSection] = useState({ ...defaultVisibleSection });
   const [refreshTrigger, setRefreshTrigger] = useState(false);
   const outerRef = useRef();
+  const [currentVisibleSection, setCurrentVisibleSection] = useState({ ...defaultVisibleSection });
+
+  const size = useWindowSize();
 
   const {
     searchTerm,
@@ -64,9 +69,14 @@ export const ReleasesList = ({ loading, onSelect, releasesListState, releases, s
     setReleasesListState({ visibleSection: debouncedVisibleSection });
   }, [refreshTrigger, debouncedVisibleSection]);
 
-  const searchUpdated = ({ target: { value } }) => {
-    setReleasesListState({ page: 1, searchTerm: value, visibleSection: {} });
-  };
+  useEffect(() => {
+    setCurrentVisibleSection(visibleSection);
+  }, [size.height, outerRef.current]);
+
+  const onSetReleaseListState = changedState =>
+    setReleasesListState({ page: 1, releaseIds: [], visibleSection: { ...currentVisibleSection }, ...changedState });
+
+  const searchUpdated = ({ target: { value } }) => onSetReleaseListState({ searchTerm: value, searchAttribute: undefined });
 
   const handleToggle = event => {
     const anchor = anchorEl ? null : event?.currentTarget.parentElement;
@@ -74,13 +84,13 @@ export const ReleasesList = ({ loading, onSelect, releasesListState, releases, s
   };
 
   const handleSortSelection = ({ target }) => {
-    setReleasesListState({ page: 1, sort: { attribute: target.getAttribute('value') }, visibleSection: {} });
+    onSetReleaseListState({ sort: { attribute: target.getAttribute('value') } });
     handleToggle();
   };
 
   const handleSortDirection = () => {
     const changedDirection = direction === SORTING_OPTIONS.asc ? SORTING_OPTIONS.desc : SORTING_OPTIONS.asc;
-    setReleasesListState({ page: 1, sort: { direction: changedDirection }, visibleSection: {} });
+    onSetReleaseListState({ sort: { direction: changedDirection } });
     handleToggle();
   };
 

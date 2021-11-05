@@ -7,15 +7,7 @@ import { CloudUpload, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import { cancelFileUpload, setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
-import {
-  createArtifact,
-  getReleases,
-  refreshReleases,
-  removeArtifact,
-  selectRelease,
-  setReleasesListState,
-  uploadArtifact
-} from '../../actions/releaseActions';
+import { createArtifact, getReleases, removeArtifact, selectRelease, setReleasesListState, uploadArtifact } from '../../actions/releaseActions';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
@@ -23,6 +15,7 @@ import AddArtifactDialog from './dialogs/addartifact';
 import ReleaseRepository from './releaserepository';
 import ReleasesList from './releaseslist';
 import { useDebounce } from '../../utils/debouncehook';
+import { defaultVisibleSection } from '../../constants/releaseConstants';
 
 const refreshArtifactsLength = 60000;
 
@@ -32,7 +25,6 @@ export const Artifacts = props => {
     history,
     match,
     onboardingState,
-    refreshReleases,
     releases,
     releasesListState,
     selectedRelease,
@@ -48,7 +40,7 @@ export const Artifacts = props => {
   const artifactTimer = useRef();
 
   const { searchTerm, sort = {}, visibleSection = {} } = releasesListState;
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const debouncedSearchTerm = useDebounce(searchTerm, 700);
 
   useEffect(() => {
     clearInterval(artifactTimer.current);
@@ -72,25 +64,23 @@ export const Artifacts = props => {
 
   useEffect(() => {
     const { artifactVersion } = match.params;
-    setReleasesListState({ visibleSection: [] });
+    setReleasesListState({ visibleSection: { ...defaultVisibleSection } });
     if (artifactVersion) {
       selectRelease(decodeURIComponent(artifactVersion));
     }
     return () => {
-      setReleasesListState({ visibleSection: [] });
+      setReleasesListState({ visibleSection: { ...defaultVisibleSection } });
       clearInterval(artifactTimer.current);
     };
   }, []);
 
-  const onGetReleases = artifactVersion => {
-    const request = visibleSection.start ? refreshReleases({ visibleSection }) : getReleases();
-    request.finally(() => {
+  const onGetReleases = artifactVersion =>
+    getReleases({ visibleSection }).finally(() => {
       if (artifactVersion) {
         selectRelease(artifactVersion);
       }
       setDoneLoading(true);
     });
-  };
 
   const onUploadClick = () => {
     if (releases.length) {
@@ -169,7 +159,6 @@ const actionCreators = {
   cancelFileUpload,
   createArtifact,
   getReleases,
-  refreshReleases,
   removeArtifact,
   selectRelease,
   setReleasesListState,

@@ -50,7 +50,7 @@ export const initialState = {
     searchTerm: '',
     searchTotal: 0,
     total: 0,
-    visibleSection: { start: 0, end: 0 }
+    visibleSection: { ...ReleaseConstants.defaultVisibleSection }
   },
   /*
    * Return single release with corresponding Artifacts
