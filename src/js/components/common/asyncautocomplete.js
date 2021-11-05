@@ -32,9 +32,7 @@ export const AsyncAutocomplete = ({
 
   useEffect(() => {
     const selection = options.find(option => option[selectionAttribute] === debouncedValue);
-    if (selection) {
-      onChangeSelection(selection);
-    }
+    onChangeSelection(selection);
   }, [options]);
 
   const onInputChange = (e, value, reason) => {

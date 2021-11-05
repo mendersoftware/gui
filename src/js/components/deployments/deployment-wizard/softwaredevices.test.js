@@ -13,6 +13,7 @@ describe('SoftwareDevices Component', () => {
           groups={defaultState.devices.groups.byId}
           hasDynamicGroups={true}
           releases={Object.values(defaultState.releases.byId)}
+          setDeploymentSettings={jest.fn}
         />
       </MemoryRouter>
     );
