@@ -1,0 +1,149 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IntegrationConfiguration Component renders correctly 1`] = `
+<h3
+  class="margin-bottom-none"
+>
+  Azure IoT Hub
+</h3>
+`;
+
+exports[`Integrations Component renders correctly 1`] = `
+<div>
+  <h2
+    class="margin-top-small"
+  >
+    Integrations
+  </h2>
+  <h3
+    class="margin-bottom-none"
+  >
+    Azure IoT Hub
+  </h3>
+  <div
+    class="flexbox space-between relative"
+    style="align-items: flex-end; max-width: 750px;"
+  >
+    <div
+      class="MuiFormControl-root MuiTextField-root"
+      style="min-width: 500px;"
+    >
+      <label
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink Mui-disabled Mui-disabled MuiFormLabel-filled"
+        data-shrink="true"
+      >
+        Azure IoT Hub connection string
+      </label>
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl"
+      >
+        <input
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled"
+          disabled=""
+          type="text"
+          value="something"
+        />
+      </div>
+    </div>
+    <div
+      class="flexbox"
+    >
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-text"
+        style="margin-right: 10px;"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiButton-label"
+        >
+          Edit
+        </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
+      </button>
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-text"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiButton-label"
+        >
+          Delete
+        </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
+      </button>
+    </div>
+  </div>
+  <h3
+    class="margin-bottom-none"
+  >
+    AWS IoT core
+  </h3>
+  <div
+    class="flexbox space-between relative"
+    style="align-items: flex-end; max-width: 750px;"
+  >
+    <div
+      class="MuiFormControl-root MuiTextField-root"
+      style="min-width: 500px;"
+    >
+      <label
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink Mui-disabled Mui-disabled MuiFormLabel-filled"
+        data-shrink="true"
+      >
+        AWS IoT core connection string
+      </label>
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl"
+      >
+        <input
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled"
+          disabled=""
+          type="text"
+          value="something else"
+        />
+      </div>
+    </div>
+    <div
+      class="flexbox"
+    >
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-text"
+        style="margin-right: 10px;"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiButton-label"
+        >
+          Edit
+        </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
+      </button>
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-text"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiButton-label"
+        >
+          Delete
+        </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
+      </button>
+    </div>
+  </div>
+</div>
+`;
