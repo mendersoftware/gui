@@ -71,7 +71,7 @@ export const CreateDialog = props => {
   const deploymentRef = useRef();
 
   useEffect(() => {
-    getReleases();
+    getReleases({ page: 1, perPage: 100, searchOnly: true });
   }, []);
 
   useEffect(() => {
@@ -231,7 +231,9 @@ export const mapStateToProps = state => {
     plan,
     previousPhases: state.users.globalSettings.previousPhases,
     previousRetries: state.users.globalSettings.retries || 0,
-    releases: Object.values(state.releases.byId)
+    releases: (state.releases.releasesList.searchedIds.length ? state.releases.releasesList.searchedIds : state.releases.releasesList.releaseIds).map(
+      id => state.releases.byId[id]
+    )
   };
 };
 

@@ -355,10 +355,21 @@ export const defaultState = {
           }
         ],
         device_types_compatible: ['qemux86-64'],
-        descriptions: ['test description'],
-        latestModified: '2020-09-10T12:16:22.667Z',
+        modified: '2020-09-10T12:16:22.667Z',
         metaData: {}
       }
+    },
+    releasesList: {
+      ...DeviceConstants.DEVICE_LIST_DEFAULTS,
+      searchedIds: [],
+      releaseIds: ['r1'],
+      sort: {
+        direction: SORTING_OPTIONS.desc,
+        attribute: 'Name'
+      },
+      searchTerm: '',
+      searchTotal: 0,
+      total: 1
     },
     selectedArtifact: null,
     selectedRelease: null,
@@ -391,3 +402,9 @@ export const defaultState = {
     showHelptips: true
   }
 };
+
+export const releasesList = Array.from({ length: 5000 }, (x, i) => ({
+  ...defaultState.releases.byId.r1,
+  Name: `release-${i + 1}`,
+  modified: i
+}));

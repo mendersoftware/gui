@@ -8,7 +8,7 @@ import { Sort as SortIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
-import { editArtifact, uploadArtifact, selectArtifact, selectRelease } from '../../actions/releaseActions';
+import { editArtifact, removeArtifact, selectArtifact, selectRelease, uploadArtifact } from '../../actions/releaseActions';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { customSort } from '../../helpers';
 import { getOnboardingState } from '../../selectors';
@@ -16,6 +16,7 @@ import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import { ExpandArtifact } from '../helptips/helptooltips';
 import ForwardingLink from '../common/forwardlink';
+import RemoveArtifactDialog from './dialogs/removeartifact';
 import Loader from '../common/loader';
 import ReleaseRepositoryItem from './releaserepositoryitem';
 
@@ -38,6 +39,7 @@ export const ReleaseRepository = ({
   refreshArtifacts,
   release,
   releases,
+  removeArtifact,
   selectArtifact,
   selectedArtifact,
   selectRelease,
@@ -48,6 +50,7 @@ export const ReleaseRepository = ({
   const [sortCol, setSortCol] = useState('modified');
   const [sortDown, setSortDown] = useState(true);
   const [wasSelectedRecently, setWasSelectedRecently] = useState(false);
+  const [showRemoveDialog, setShowRemoveArtifactDialog] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
   // eslint-disable-next-line no-unused-vars
@@ -116,6 +119,8 @@ export const ReleaseRepository = ({
 
   const onExpansion = () => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), 500);
 
+  const onRemoveArtifact = artifact => removeArtifact(artifact.id).finally(() => setShowRemoveArtifactDialog(false));
+
   const artifacts = release.Artifacts ?? [];
   const items = artifacts.sort(customSort(sortDown, sortCol)).map((pkg, index) => {
     const expanded = !!(selectedArtifact && selectedArtifact.id === pkg.id);
@@ -125,12 +130,13 @@ export const ReleaseRepository = ({
         artifact={pkg}
         expanded={expanded}
         index={index}
+        itemRef={repoItemAnchor}
         onEdit={editArtifactData}
         onRowSelection={() => onRowSelection(pkg)}
         // this will be run after expansion + collapse and both need some time to fully settle
         // otherwise the measurements are off
         onExpanded={onExpansion}
-        itemRef={repoItemAnchor}
+        showRemoveArtifactDialog={setShowRemoveArtifactDialog}
       />
     );
   });
@@ -244,12 +250,19 @@ export const ReleaseRepository = ({
             )}
           </div>
         )}
+        {showRemoveDialog && (
+          <RemoveArtifactDialog
+            artifact={selectedArtifact.name}
+            onCancel={() => setShowRemoveArtifactDialog(false)}
+            onRemove={() => onRemoveArtifact(selectedArtifact)}
+          />
+        )}
       </div>
     </div>
   );
 };
 
-const actionCreators = { advanceOnboarding, editArtifact, selectArtifact, setSnackbar, selectRelease, uploadArtifact };
+const actionCreators = { advanceOnboarding, editArtifact, removeArtifact, selectArtifact, setSnackbar, selectRelease, uploadArtifact };
 
 const mapStateToProps = state => {
   return {

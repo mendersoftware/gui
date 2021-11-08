@@ -7,18 +7,17 @@ import { CloudUpload, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import { cancelFileUpload, setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
-import { createArtifact, getReleases, removeArtifact, selectRelease, showRemoveArtifactDialog, uploadArtifact } from '../../actions/releaseActions';
+import { createArtifact, getReleases, removeArtifact, selectRelease, setReleasesListState, uploadArtifact } from '../../actions/releaseActions';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import AddArtifactDialog from './dialogs/addartifact';
-import RemoveArtifactDialog from './dialogs/removeartifact';
 import ReleaseRepository from './releaserepository';
 import ReleasesList from './releaseslist';
+import { useDebounce } from '../../utils/debouncehook';
+import { defaultVisibleSection } from '../../constants/releaseConstants';
 
-const refreshArtifactsLength = 30000; //60000
-
-let artifactTimer;
+const refreshArtifactsLength = 60000;
 
 export const Artifacts = props => {
   const {
@@ -27,26 +26,37 @@ export const Artifacts = props => {
     match,
     onboardingState,
     releases,
-    removeArtifact,
-    selectedArtifact,
+    releasesListState,
     selectedRelease,
     selectRelease,
-    setShowCreateArtifactDialog,
-    showRemoveArtifactDialog,
-    showRemoveDialog
+    setReleasesListState,
+    setShowCreateArtifactDialog
   } = props;
 
-  const [doneLoading, setDoneLoading] = useState(false);
+  const [doneLoading, setDoneLoading] = useState(!!releases.length);
   const [selectedFile, setSelectedFile] = useState();
   const [showAddArtifactDialog, setShowAddArtifactDialog] = useState(false);
   const uploadButtonRef = useRef();
+  const artifactTimer = useRef();
+
+  const { searchTerm, sort = {}, visibleSection = {} } = releasesListState;
+  const debouncedSearchTerm = useDebounce(searchTerm, 700);
+
+  useEffect(() => {
+    clearInterval(artifactTimer.current);
+    artifactTimer.current = setInterval(onGetReleases, refreshArtifactsLength);
+    onGetReleases();
+    return () => {
+      clearInterval(artifactTimer.current);
+    };
+  }, [debouncedSearchTerm, sort.attribute, sort.direction, visibleSection.start]);
 
   useEffect(() => {
     if (!releases.length) {
       return;
     }
     if (selectedRelease) {
-      history.replace(`/releases/${selectedRelease.Name}`);
+      history.replace(`/releases/${encodeURIComponent(selectedRelease.Name)}`);
       return;
     }
     selectRelease(releases[0]);
@@ -54,34 +64,18 @@ export const Artifacts = props => {
 
   useEffect(() => {
     const { artifactVersion } = match.params;
-    if (!releases.length) {
-      onGetReleases(artifactVersion);
-    } else {
-      setDoneLoading(true);
-    }
-    artifactTimer = setInterval(onGetReleases, refreshArtifactsLength);
-    if (match.params.artifactVersion) {
-      selectRelease(match.params.artifactVersion);
-    } else if (selectedRelease) {
-      history.replace(`/releases/${selectedRelease.Name}`);
+    setReleasesListState({ visibleSection: { ...defaultVisibleSection } });
+    if (artifactVersion) {
+      selectRelease(decodeURIComponent(artifactVersion));
     }
     return () => {
-      clearInterval(artifactTimer);
+      setReleasesListState({ visibleSection: { ...defaultVisibleSection } });
+      clearInterval(artifactTimer.current);
     };
   }, []);
 
-  const onFilterReleases = releases => {
-    let selectedRelease = { ...props.selectedRelease };
-    if (releases && !releases.find(item => selectedRelease && selectedRelease.Name === item.Name)) {
-      selectedRelease = releases.length ? releases[0] : null;
-    }
-    if (selectedRelease != props.selectedRelease) {
-      selectRelease(selectedRelease);
-    }
-  };
-
   const onGetReleases = artifactVersion =>
-    getReleases().finally(() => {
+    getReleases({ visibleSection }).finally(() => {
       if (artifactVersion) {
         selectRelease(artifactVersion);
       }
@@ -99,8 +93,6 @@ export const Artifacts = props => {
     setSelectedFile(selectedFile);
     setShowAddArtifactDialog(true);
   };
-
-  const onRemoveArtifact = artifact => removeArtifact(artifact.id).finally(() => showRemoveArtifactDialog(false));
 
   let uploadArtifactOnboardingComponent = null;
   if (!onboardingState.complete && uploadButtonRef.current) {
@@ -122,14 +114,21 @@ export const Artifacts = props => {
   return (
     <>
       <div className="repository">
-        <div className="flexbox column leftFixed" style={{ alignItems: 'flex-start' }}>
-          <ReleasesList releases={releases} selectedRelease={selectedRelease} onSelect={selectRelease} onFilter={onFilterReleases} loading={!doneLoading} />
+        <div className="flexbox column leftFixed">
+          <ReleasesList
+            loading={!doneLoading}
+            releases={releases}
+            releasesListState={releasesListState}
+            selectedRelease={selectedRelease}
+            setReleasesListState={setReleasesListState}
+            onSelect={selectRelease}
+          />
           <Button
             buttonRef={uploadButtonRef}
             color="secondary"
             onClick={onUploadClick}
             startIcon={<CloudUpload fontSize="small" />}
-            style={{ marginTop: 30, minHeight: 'min-content', minWidth: 164 }}
+            style={{ marginTop: 30, minWidth: 164, justifySelf: 'left' }}
             variant="contained"
           >
             Upload
@@ -142,14 +141,6 @@ export const Artifacts = props => {
         </div>
         <ReleaseRepository refreshArtifacts={onGetReleases} loading={!doneLoading} onUpload={onFileUploadClick} />
       </div>
-      {showRemoveDialog && (
-        <RemoveArtifactDialog
-          artifact={selectedArtifact.name}
-          open={showRemoveDialog}
-          onCancel={() => showRemoveArtifactDialog(false)}
-          onRemove={() => onRemoveArtifact(selectedArtifact || selectedRelease.Artifacts[0])}
-        />
-      )}
       {showAddArtifactDialog && (
         <AddArtifactDialog
           {...props}
@@ -170,9 +161,9 @@ const actionCreators = {
   getReleases,
   removeArtifact,
   selectRelease,
+  setReleasesListState,
   setShowCreateArtifactDialog,
   setSnackbar,
-  showRemoveArtifactDialog,
   uploadArtifact
 };
 
@@ -191,9 +182,10 @@ const mapStateToProps = state => {
     deviceTypes: Object.keys(deviceTypes),
     onboardingState: getOnboardingState(state),
     pastCount: state.deployments.byStatus.finished.total,
-    releases: Object.values(state.releases.byId),
+    releases: state.releases.releasesList.releaseIds.map(id => state.releases.byId[id]),
     selectedArtifact: state.releases.selectedArtifact,
-    selectedRelease: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null,
+    selectedRelease: state.releases.byId[state.releases.selectedRelease],
+    releasesListState: state.releases.releasesList,
     showRemoveDialog: state.releases.showRemoveDialog
   };
 };

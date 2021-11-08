@@ -17,7 +17,6 @@ exports[`TerminalSession Component renders correctly 1`] = `
         <div
           class="terminal xterm"
           dir="ltr"
-          role="document"
           tabindex="0"
         >
           <div

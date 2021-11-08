@@ -7,6 +7,7 @@ import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Artifacts from './artifacts';
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { getConfiguredStore } from '../../reducers';
 
 const mockStore = configureStore([thunk]);
 
@@ -15,10 +16,12 @@ describe('Artifacts Component', () => {
   beforeEach(() => {
     store = mockStore({ ...defaultState });
     jest.useFakeTimers();
+    jest.mock('react-virtualized-auto-sizer', () => ({ children }) => children({ height: 800, width: 390 }));
   });
 
   afterEach(() => {
     jest.useRealTimers();
+    jest.unmock('react-virtualized-auto-sizer');
   });
 
   it('renders correctly', async () => {
@@ -36,14 +39,22 @@ describe('Artifacts Component', () => {
   });
 
   it('works as expected', async () => {
-    store = mockStore({
+    const preloadedState = {
       ...defaultState,
       releases: {
         ...defaultState.releases,
+        releasesList: {
+          ...defaultState.releases.releasesList,
+          visibleSection: {
+            start: 1,
+            end: 14
+          }
+        },
         selectedArtifact: defaultState.releases.byId.r1.Artifacts[0],
         selectedRelease: defaultState.releases.byId.r1.Name
       }
-    });
+    };
+    const store = getConfiguredStore({ preloadedState });
     const ui = (
       <MemoryRouter>
         <Provider store={store}>
@@ -52,10 +63,12 @@ describe('Artifacts Component', () => {
       </MemoryRouter>
     );
     const { rerender } = render(ui);
-    act(() => jest.advanceTimersByTime(1000));
+    await act(async () => jest.advanceTimersByTime(1000));
     await waitFor(() => rerender(ui));
     expect(screen.queryByDisplayValue(defaultState.releases.byId.r1.Artifacts[0].description)).toBeInTheDocument();
     act(() => userEvent.click(screen.getByRole('button', { name: /Remove this artifact/i })));
+    await waitFor(() => rerender(ui));
+    act(() => userEvent.click(screen.getByRole('button', { name: /Cancel/i })));
     await waitFor(() => rerender(ui));
     const releaseRepoItem = document.body.querySelector('.release-repo');
     act(() => userEvent.click(within(releaseRepoItem).getByText(defaultState.releases.byId.r1.Name)));
@@ -65,11 +78,5 @@ describe('Artifacts Component', () => {
     act(() => userEvent.type(screen.getByPlaceholderText(/Filter/i), 'b1'));
     await waitFor(() => rerender(ui));
     expect(screen.queryByText(/Filtered from/i)).toBeInTheDocument();
-    expect(document.body.querySelector('.repository-list > ul > div')).toBeFalsy();
-    act(() => userEvent.clear(screen.getByPlaceholderText(/Filter/i)));
-    await waitFor(() => rerender(ui));
-    act(() => userEvent.type(screen.getByPlaceholderText(/Filter/i), defaultState.releases.byId.r1.Name));
-    await waitFor(() => rerender(ui));
-    expect(document.body.querySelector('.repository-list > ul > div')).toBeTruthy();
   });
 });

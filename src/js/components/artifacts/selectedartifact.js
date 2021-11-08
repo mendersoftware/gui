@@ -15,7 +15,7 @@ import {
   ExitToApp as ExitToAppIcon
 } from '@material-ui/icons';
 
-import { getArtifactUrl, showRemoveArtifactDialog } from '../../actions/releaseActions';
+import { getArtifactUrl } from '../../actions/releaseActions';
 import { extractSoftwareInformation } from '../../helpers';
 import { colors } from '../../themes/mender-theme';
 import ArtifactPayload from './artifactPayload';
@@ -187,7 +187,7 @@ export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExp
         Download Artifact
       </Button>
       <div className="margin-left inline">
-        <Button onClick={() => showRemoveArtifactDialog(true)} startIcon={<CancelIcon className="red auth" />}>
+        <Button onClick={showRemoveArtifactDialog} startIcon={<CancelIcon className="red auth" />}>
           Remove this Artifact?
         </Button>
       </div>
@@ -195,6 +195,6 @@ export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExp
   );
 };
 
-const actionCreators = { getArtifactUrl, showRemoveArtifactDialog };
+const actionCreators = { getArtifactUrl };
 
 export default connect(null, actionCreators)(SelectedArtifact);
