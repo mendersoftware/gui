@@ -11,7 +11,7 @@ import { formatTime, FileSize } from '../../helpers';
 import { colors } from '../../themes/mender-theme';
 import SelectedArtifact from './selectedartifact';
 
-export const ReleaseRepositoryItem = ({ artifact, expanded, index, itemRef, onEdit, onExpanded, onRowSelection }) => {
+export const ReleaseRepositoryItem = ({ artifact, expanded, index, itemRef, onEdit, onExpanded, onRowSelection, showRemoveArtifactDialog }) => {
   useEffect(() => {
     onExpanded();
   }, []);
@@ -38,7 +38,9 @@ export const ReleaseRepositoryItem = ({ artifact, expanded, index, itemRef, onEd
           <IconButton className="expandButton">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>
         </AccordionSummary>
         <AccordionDetails>
-          {expanded && <SelectedArtifact artifact={artifact} editArtifact={(id, description) => onEdit(id, description)} onExpansion={onExpanded} />}
+          {expanded && (
+            <SelectedArtifact artifact={artifact} editArtifact={onEdit} onExpansion={onExpanded} showRemoveArtifactDialog={showRemoveArtifactDialog} />
+          )}
         </AccordionDetails>
       </Accordion>
     </div>

@@ -1,6 +1,6 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { defaultState } from '../../../tests/mockData';
+import { defaultState, releasesList } from '../../../tests/mockData';
 
 import {
   createArtifact,
@@ -8,10 +8,10 @@ import {
   getArtifactUrl,
   getRelease,
   getReleases,
+  refreshReleases,
   removeArtifact,
   selectArtifact,
   selectRelease,
-  showRemoveArtifactDialog,
   uploadArtifact
 } from './releaseActions';
 import AppConstants from '../constants/appConstants';
@@ -35,13 +35,127 @@ describe('release actions', () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
       { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
-      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED }
+      { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList, releaseIds: ['release-1'], total: 5000 } },
+      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
+      { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList, searchAttribute: 'name' } }
     ];
-    await store.dispatch(getReleases());
+    await store.dispatch(getReleases({ perPage: 1, sort: { direction: 'asc', attribute: 'Name' } }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
+  it('should retrieve a search filtered list of releases', async () => {
+    const store = mockStore({
+      ...defaultState,
+      releases: {
+        ...defaultState.releases,
+        releasesList: { ...defaultState.releases.releasesList, searchAttribute: 'name' }
+      }
+    });
+    const expectedActions = [
+      { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
+      { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
+      {
+        type: ReleaseConstants.SET_RELEASES_LIST_STATE,
+        value: {
+          ...defaultState.releases.releasesList,
+          releaseIds: [
+            defaultState.releases.byId.r1.Name,
+            ...Array.from({ length: 9 }),
+            'release-99',
+            'release-989',
+            'release-988',
+            'release-987',
+            'release-986',
+            'release-985',
+            'release-984',
+            'release-983',
+            'release-982',
+            'release-981',
+            'release-980',
+            'release-98',
+            'release-979',
+            'release-978',
+            'release-977',
+            'release-976',
+            'release-975',
+            'release-974',
+            'release-973',
+            'release-972'
+          ]
+        }
+      }
+    ];
+    await store.dispatch(getReleases({ searchTerm: 'something', visibleSection: { start: 24, end: 28 } }));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should retrieve a deployment creation search filtered list of releases', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [
+      { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
+      {
+        type: ReleaseConstants.SET_RELEASES_LIST_STATE,
+        value: {
+          ...defaultState.releases.releasesList,
+          searchedIds: [
+            'release-1',
+            'release-10',
+            'release-100',
+            'release-1000',
+            'release-1001',
+            'release-1002',
+            'release-1003',
+            'release-1004',
+            'release-1005',
+            'release-1006'
+          ]
+        }
+      },
+      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
+      { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList, searchAttribute: 'name' } }
+    ];
+    await store.dispatch(getReleases({ perPage: 10, searchOnly: true, searchTerm: 'something' }));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+
+  it('should refresh a list of releases', async () => {
+    const sectionLength = 78;
+    const expectedPageSize = 100;
+    const start = 321;
+    const startIndex = Math.floor(start / expectedPageSize) * expectedPageSize;
+    const expectedWindowLength = Math.ceil(sectionLength / expectedPageSize) * expectedPageSize;
+    const releaseIds = [
+      defaultState.releases.byId.r1.Name,
+      ...Array.from({ length: startIndex - 1 }),
+      ...releasesList.slice(startIndex, startIndex + expectedWindowLength).map(item => item.Name)
+    ];
+    const expectedActions = [
+      { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
+      {
+        type: ReleaseConstants.SET_RELEASES_LIST_STATE,
+        value: {
+          ...defaultState.releases.releasesList,
+          page: 20,
+          releaseIds
+        }
+      }
+    ];
+    const store = mockStore({
+      ...defaultState,
+      releases: { ...defaultState.releases, releasesList: { ...defaultState.releases.releasesList, visibleSection: { start: 4, end: 8 } } }
+    });
+    await store.dispatch(
+      refreshReleases({ visibleSection: { start: startIndex, end: startIndex + sectionLength }, sort: { attribute: 'modified', direction: 'asc' } })
+    );
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+
   it('should retrieve the download url for an artifact', async () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
@@ -79,19 +193,6 @@ describe('release actions', () => {
     const store = mockStore({ ...defaultState });
     await store.dispatch(selectRelease('test'));
     const expectedActions = [{ type: ReleaseConstants.SELECTED_RELEASE, release: 'test' }];
-    const storeActions = store.getActions();
-    expect(storeActions.length).toEqual(expectedActions.length);
-    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
-  });
-  it('should pass on artifact removal dialog visibility', async () => {
-    const store = mockStore({ ...defaultState });
-    await store.dispatch(showRemoveArtifactDialog(true));
-    const expectedActions = [
-      {
-        type: ReleaseConstants.SHOW_REMOVE_DIALOG,
-        showRemoveDialog: true
-      }
-    ];
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

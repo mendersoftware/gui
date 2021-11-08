@@ -2,11 +2,10 @@
 
 exports[`ReleasesList Component renders correctly 1`] = `
 <div
-  class="repository-list flexbox column overflow-hidden"
+  class="repository-list flexbox column"
 >
   <div
     class="flexbox center-aligned"
-    style="min-height: min-content;"
   >
     <h3>
       Releases
@@ -28,10 +27,10 @@ exports[`ReleasesList Component renders correctly 1`] = `
       </div>
     </div>
   </div>
+  <div />
   <div
     class="MuiButtonGroup-root muted"
     role="group"
-    style="min-height: min-content;"
   >
     <button
       class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlined MuiButton-outlinedSizeSmall MuiButton-sizeSmall"
@@ -48,7 +47,7 @@ exports[`ReleasesList Component renders correctly 1`] = `
         >
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root sortIcon true"
+            class="MuiSvgIcon-root sortIcon false"
             focusable="false"
             viewBox="0 0 24 24"
           >
@@ -90,10 +89,8 @@ exports[`ReleasesList Component renders correctly 1`] = `
   <p
     class="margin-top muted align-center margin-right"
   >
-    There are no Releases yet
+    There are no Releases 
+    yet
   </p>
-  <ul
-    class="MuiList-root MuiList-padding"
-  />
 </div>
 `;

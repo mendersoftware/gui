@@ -36,7 +36,7 @@ describe('ExpandedDevice Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
-        <ExpandedDevice device={{ id: 'a1', status: 'accepted', attributes: [], auth_sets: [] }} attrs={[]} getReleases={jest.fn()} />
+        <ExpandedDevice device={{ id: 'a1', status: 'accepted', attributes: [], auth_sets: [] }} attrs={[]} />
       </Provider>
     );
     const view = baseElement.firstChild.firstChild;

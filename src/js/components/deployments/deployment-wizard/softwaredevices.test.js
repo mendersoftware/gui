@@ -9,12 +9,11 @@ describe('SoftwareDevices Component', () => {
     const { baseElement } = render(
       <MemoryRouter>
         <SoftwareDevices
-          group={null}
+          getReleases={jest.fn}
           groups={defaultState.devices.groups.byId}
-          deploymentDeviceIds={[]}
           hasDynamicGroups={true}
-          release={{ Name: 'a1', device_types_compatible: [] }}
           releases={Object.values(defaultState.releases.byId)}
+          setDeploymentSettings={jest.fn}
         />
       </MemoryRouter>
     );
