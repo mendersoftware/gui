@@ -14,6 +14,7 @@ export const defaultRowsPerPage = 20;
 const ArtifactLink = ({ item }) => <Link to={`/releases/${item.object.artifact.name}`}>View artifact</Link>;
 const DeploymentLink = ({ item }) => <Link to={`/deployments/finished?open=true&id=${item.object.id}`}>View deployment</Link>;
 const DeviceLink = ({ item }) => <Link to={`/devices?id=${item.object.id}`}>View device</Link>;
+const DeviceRejectedLink = ({ item }) => <Link to={`/devices/rejected?id=${item.object.id}`}>View device</Link>;
 const TerminalSessionLink = () => <a>View session log</a>;
 const UserChange = ({ item: { change = '-' } }) => {
   const formatChange = change => {
@@ -39,8 +40,12 @@ const fallbackFormatter = data => {
 
 const changeMap = {
   default: { component: 'div', actionFormatter: fallbackFormatter, title: 'defaultTitle' },
-  artifact: { actionFormatter: data => `uploaded ${decodeURIComponent(data.artifact.name)}`, component: ArtifactLink },
-  deployment: { actionFormatter: data => `to ${decodeURIComponent(data.deployment.name)}`, component: DeploymentLink },
+  artifact: { actionFormatter: data => decodeURIComponent(data.artifact.name), component: ArtifactLink },
+  deployment: { actionFormatter: data => decodeURIComponent(data.deployment.name), component: DeploymentLink },
+  deviceDecommissioned: { actionFormatter: data => decodeURIComponent(data.id), component: 'div' },
+  deviceRejected: { actionFormatter: data => decodeURIComponent(data.id), component: DeviceRejectedLink },
+  deviceGeneral: { actionFormatter: data => decodeURIComponent(data.id), component: DeviceLink },
+  deviceTerminalSession: { actionFormatter: data => decodeURIComponent(data.id), component: TerminalSessionLink },
   user: { component: UserChange, actionFormatter: data => data.user.email }
 };
 
@@ -49,9 +54,13 @@ const mapChangeToContent = item => {
   if (content) {
     return content;
   } else if (item.object.type === 'device' && item.action.includes('terminal')) {
-    content = { actionFormatter: data => decodeURIComponent(data.id), component: TerminalSessionLink };
+    content = changeMap.deviceTerminalSession;
+  } else if (item.object.type === 'device' && item.action.includes('reject')) {
+    content = changeMap.deviceRejected;
+  } else if (item.object.type === 'device' && item.action.includes('decommission')) {
+    content = changeMap.deviceDecommissioned;
   } else if (item.object.type === 'device') {
-    content = { actionFormatter: data => decodeURIComponent(data.id), component: DeviceLink };
+    content = changeMap.deviceGeneral;
   } else {
     content = changeMap.default;
   }
@@ -63,7 +72,7 @@ const actorMap = {
   device: 'id'
 };
 
-const UserDescriptor = (item, index) => <div key={`${item.time}-${index}`}>{item.actor[actorMap[item.actor.type]]}</div>;
+const UserDescriptor = (item, index) => <div key={`${item.time}-${index} `}>{item.actor[actorMap[item.actor.type]]}</div>;
 const ActionDescriptor = (item, index) => (
   <div className="uppercased" key={`${item.time}-${index}`}>
     {item.action}

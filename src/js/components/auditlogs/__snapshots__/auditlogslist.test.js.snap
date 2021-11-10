@@ -121,7 +121,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
           deployment
         </div>
         <div>
-          to production
+          production
         </div>
         <a
           href=\\"/deployments/finished?open=true&id=string\\"
