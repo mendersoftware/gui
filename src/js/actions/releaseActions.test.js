@@ -242,7 +242,10 @@ describe('release actions', () => {
   });
   it('should remove an artifact by name', async () => {
     const store = mockStore({ ...defaultState });
-    const expectedActions = [{ type: ReleaseConstants.RELEASE_REMOVED, release: defaultState.releases.byId.r1.Name }];
+    const expectedActions = [
+      { type: ReleaseConstants.RELEASE_REMOVED, release: defaultState.releases.byId.r1.Name },
+      { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList, releaseIds: [], total: 0 } }
+    ];
     await store.dispatch(removeArtifact('art1'));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
