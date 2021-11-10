@@ -142,7 +142,18 @@ export const removeArtifact = id => (dispatch, getState) =>
       const releaseArtifacts = [...release.Artifacts];
       releaseArtifacts.splice(index, 1);
       if (!releaseArtifacts.length) {
-        return dispatch({ type: ReleaseConstants.RELEASE_REMOVED, release: release.Name });
+        const { releasesList } = state.releases;
+        const releaseIds = releasesList.releaseIds.filter(id => release.Name !== id);
+        return Promise.all([
+          dispatch({ type: ReleaseConstants.RELEASE_REMOVED, release: release.Name }),
+          dispatch(
+            setReleasesListState({
+              releaseIds,
+              searchTotal: releasesList.searchTerm ? releasesList.searchTotal - 1 : releasesList.searchTotal,
+              total: releasesList.total - 1
+            })
+          )
+        ]);
       }
       return Promise.all([dispatch(setSnackbar('Artifact was removed', 5000, '')), dispatch({ type: ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT, release })]);
     })

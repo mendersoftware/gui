@@ -158,18 +158,18 @@ describe('Deployments Component', () => {
       </MemoryRouter>
     );
     const { rerender } = render(ui);
-    userEvent.click(screen.getByRole('tab', { name: /Finished/i }));
-    userEvent.click(screen.getByRole('button', { name: /Create a deployment/i }));
+    await act(async () => userEvent.click(screen.getByRole('tab', { name: /Finished/i })));
+    await act(async () => userEvent.click(screen.getByRole('button', { name: /Create a deployment/i })));
     const releaseId = 'release-10';
     await waitFor(() => rerender(ui));
-    await act(async () => jest.advanceTimersByTime(1000));
+    jest.advanceTimersByTime(1000);
     await waitFor(() => expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument(), { timeout: 3000 });
     const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
     expect(within(releaseSelect).queryByText(releaseId)).not.toBeInTheDocument();
     userEvent.click(releaseSelect);
     fireEvent.keyDown(releaseSelect, { key: 'ArrowDown' });
     fireEvent.keyDown(releaseSelect, { key: 'Enter' });
-    await act(async () => jest.advanceTimersByTime(1000));
+    jest.advanceTimersByTime(1000);
     expect(releaseSelect).toHaveValue(releaseId);
     const groupSelect = screen.getByPlaceholderText(/Select a device group/i);
     userEvent.click(groupSelect);
@@ -180,7 +180,7 @@ describe('Deployments Component', () => {
     userEvent.click(screen.getByRole('button', { name: 'Next' }));
     const post = jest.spyOn(GeneralApi, 'post');
     await act(async () => await userEvent.click(screen.getByRole('button', { name: 'Create' })));
-    await jest.runAllTicks();
+    jest.runAllTicks();
     await waitFor(() => rerender(ui));
     expect(post).toHaveBeenCalledWith('/api/management/v1/deployments/deployments', {
       all_devices: true,
@@ -242,20 +242,18 @@ describe('Deployments Component', () => {
       </MemoryRouter>
     );
     const { rerender } = render(ui);
-    act(() => userEvent.click(screen.getByRole('tab', { name: /Finished/i })));
-    act(() => userEvent.click(screen.getByRole('tab', { name: /Active/i })));
+    await act(async () => userEvent.click(screen.getByRole('tab', { name: /Finished/i })));
     await act(async () => userEvent.click(screen.getByRole('button', { name: /Create a deployment/i })));
     const releaseId = 'release-10';
+    jest.runAllTicks();
+    jest.advanceTimersByTime(1000);
     await waitFor(() => rerender(ui));
-    await act(async () => jest.advanceTimersByTime(1000));
     await waitFor(() => expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument(), { timeout: 3000 });
     const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
-    expect(within(releaseSelect).queryByText(releaseId)).not.toBeInTheDocument();
     userEvent.click(releaseSelect);
     fireEvent.keyDown(releaseSelect, { key: 'ArrowDown' });
     fireEvent.keyDown(releaseSelect, { key: 'Enter' });
-    expect(releaseSelect).toHaveValue(releaseId);
-    await act(async () => jest.advanceTimersByTime(1000));
+    jest.advanceTimersByTime(1000);
     const groupSelect = screen.getByPlaceholderText(/Select a device group/i);
     userEvent.click(groupSelect);
     fireEvent.keyDown(groupSelect, { key: 'Enter' });
@@ -280,20 +278,20 @@ describe('Deployments Component', () => {
 
     // extra explicit here as the general date mocking seems to be ignored by the moment/ date combination
     jest.setSystemTime(mockDate);
-    const post = jest.spyOn(GeneralApi, 'post');
-    await act(async () => await userEvent.click(screen.getByText('Create')));
     const secondBatchDate = new Date(new Date(mockDate).setMinutes(mockDate.getMinutes() + 30));
     const thirdBatchDate = new Date(new Date(secondBatchDate).setDate(secondBatchDate.getDate() + 25));
-    await jest.runAllTicks();
+    const post = jest.spyOn(GeneralApi, 'post');
+    await act(async () => userEvent.click(screen.getByText('Create')));
+    jest.runAllTicks();
+    jest.advanceTimersByTime(1000);
     await waitFor(() => rerender(ui));
     expect(post).toHaveBeenCalledWith('/api/management/v1/useradm/settings', {
       '2fa': 'enabled',
       a1: {
         onboarding: {
-          artifactIncluded: true,
           complete: false,
           demoArtifactPort: 85,
-          progress: 'deployments-inprogress',
+          progress: 'deployments-past-completed',
           showConnectDeviceDialog: false
         }
       },
