@@ -231,9 +231,8 @@ export const mapStateToProps = state => {
     plan,
     previousPhases: state.users.globalSettings.previousPhases,
     previousRetries: state.users.globalSettings.retries || 0,
-    releases: (state.releases.releasesList.searchedIds.length ? state.releases.releasesList.searchedIds : state.releases.releasesList.releaseIds).map(
-      id => state.releases.byId[id]
-    )
+    releases: state.releases.releasesList.searchedIds,
+    releasesById: state.releases.byId
   };
 };
 
