@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useMemo, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 import pluralize from 'pluralize';
@@ -28,6 +28,16 @@ export const styles = {
   }
 };
 
+const ReleasesWarning = ({ lacksReleases }) => (
+  <div className={`flexbox ${lacksReleases ? 'center-aligned' : 'centered'}`}>
+    <ErrorOutlineIcon fontSize="small" style={{ marginRight: 4, top: 4, color: 'rgb(171, 16, 0)' }} />
+    <p className="info">
+      There are no {lacksReleases ? 'compatible ' : ''}artifacts available.{lacksReleases ? <br /> : ' '}
+      <Link to="/artifacts">Upload one to the repository</Link> to get started.
+    </p>
+  </div>
+);
+
 export const SoftwareDevices = ({
   acceptedDeviceCount,
   advanceOnboarding,
@@ -41,6 +51,7 @@ export const SoftwareDevices = ({
   hasPending,
   onboardingState,
   releases,
+  releasesById,
   releaseSelectionLocked,
   setDeploymentSettings
 }) => {
@@ -48,6 +59,7 @@ export const SoftwareDevices = ({
   const size = useWindowSize();
   const groupRef = useRef();
   const releaseRef = useRef();
+  const [isLoadingReleases, setIsLoadingReleases] = useState(!releases.length);
 
   const deploymentSettingsUpdate = (value, property) => {
     const state = { ...deploymentObject, [property]: value };
@@ -69,9 +81,16 @@ export const SoftwareDevices = ({
     setDeploymentSettings({ ...deploymentObject, [property]: value, deploymentDeviceIds: deviceIds, deploymentDeviceCount: deviceCount });
   };
 
-  const onReleaseSelectionChange = release => deploymentSettingsUpdate(release, 'release');
+  const onReleaseSelectionChange = release => {
+    if (release !== deploymentObject.release) {
+      deploymentSettingsUpdate(release, 'release');
+    }
+  };
 
-  const onReleaseInputChange = inputValue => getReleases({ page: 1, perPage: 100, searchTerm: inputValue, searchOnly: true });
+  const onReleaseInputChange = inputValue => {
+    setIsLoadingReleases(!releases.length);
+    return getReleases({ page: 1, perPage: 100, searchTerm: inputValue, searchOnly: true }).finally(() => setIsLoadingReleases(false));
+  };
 
   const { deploymentDeviceCount, deploymentDeviceIds = [], device, group = null, release: deploymentRelease = null } = deploymentObject;
   const releaseDeviceTypes = (deploymentRelease && deploymentRelease.device_types_compatible) ?? [];
@@ -84,15 +103,18 @@ export const SoftwareDevices = ({
   );
 
   const groupItems = [allDevices, ...Object.keys(groups)];
-  let releaseItems = releases;
-  let groupLink = '/devices';
-  if (device && device.attributes) {
-    // If single device, don't show incompatible releases
-    releaseItems = releaseItems.filter(rel => rel.device_types_compatible.some(type => device.attributes.device_type.includes(type)));
-    groupLink = `${groupLink}?id=${device.id}`;
-  } else {
-    groupLink = group && group !== allDevices ? `${groupLink}?group=${group}` : groupLink;
-  }
+  let { groupLink, releaseItems } = useMemo(() => {
+    let groupLink = '/devices';
+    let releaseItems = releases.map(rel => releasesById[rel]);
+    if (device && device.attributes) {
+      // If single device, don't show incompatible releases
+      releaseItems = releaseItems.filter(rel => rel.device_types_compatible.some(type => device.attributes.device_type.includes(type)));
+      groupLink = `${groupLink}?id=${device.id}`;
+    } else {
+      groupLink = group && group !== allDevices ? `${groupLink}?group=${group}` : groupLink;
+    }
+    return { groupLink, releaseItems };
+  }, [releases, device, group]);
 
   let onboardingComponent = null;
   if (releaseRef.current && groupRef.current && deploymentAnchor.current) {
@@ -110,7 +132,7 @@ export const SoftwareDevices = ({
     if (!deploymentRelease) {
       onboardingComponent = getOnboardingComponentFor(
         onboardingSteps.SCHEDULING_ARTIFACT_SELECTION,
-        { ...onboardingState, selectedRelease: releases[0] || {} },
+        { ...onboardingState, selectedRelease: releasesById[releases[0]] || {} },
         { anchor, place: 'right' },
         onboardingComponent
       );
@@ -128,13 +150,11 @@ export const SoftwareDevices = ({
       );
     }
   }
+  const hasReleases = !!Object.keys(releasesById).length;
   return (
     <div style={{ overflow: 'visible', minHeight: '300px', marginTop: '15px' }}>
-      {!releaseItems.length ? (
-        <p className="info flexbox center-aligned">
-          <ErrorOutlineIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }} />
-          There are no {releases.length ? 'compatible ' : ''}artifacts available. <Link to="/artifacts">Upload one to the repository</Link> to get started.
-        </p>
+      {!hasReleases ? (
+        <ReleasesWarning />
       ) : (
         <form className="flexbox column margin margin-top-none">
           <h4 style={styles.selectionTitle}>Select a device group to target</h4>
@@ -202,14 +222,19 @@ export const SoftwareDevices = ({
                 options={releaseItems}
                 onChange={onReleaseInputChange}
                 onChangeSelection={onReleaseSelectionChange}
+                isLoading={isLoadingReleases}
                 styles={styles}
               />
             )}
-            {releaseDeviceTypes.length ? (
-              <p className="info" style={{ marginBottom: 0 }}>
-                This Release is compatible with {devicetypesInfo}.
-              </p>
-            ) : null}
+            {!releaseItems.length && hasReleases ? (
+              <ReleasesWarning lacksReleases />
+            ) : (
+              !!releaseDeviceTypes.length && (
+                <p className="info" style={{ marginBottom: 0 }}>
+                  This Release is compatible with {devicetypesInfo}.
+                </p>
+              )
+            )}
           </div>
           <p className="info icon">
             <InfoOutlinedIcon fontSize="small" style={{ verticalAlign: 'middle', margin: '0 6px 4px 0' }} />

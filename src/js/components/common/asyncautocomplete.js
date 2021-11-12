@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { CircularProgress, TextField } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { useDebounce } from '../../utils/debouncehook';
+import Loader from './loader';
+import theme from '../../themes/mender-theme';
+
+const loaderStyle = { marginTop: theme.spacing(-4) };
 
 export const AsyncAutocomplete = ({
   id,
   initialValue = '',
+  isLoading,
   label,
   placeholder,
   styles,
@@ -17,7 +22,7 @@ export const AsyncAutocomplete = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState(initialValue);
-  const loading = open && options.length === 0;
+  const loading = open && isLoading;
 
   const debouncedValue = useDebounce(inputValue, 300);
 
@@ -70,7 +75,7 @@ export const AsyncAutocomplete = ({
             ...params.InputProps,
             endAdornment: (
               <>
-                {loading && <CircularProgress color="inherit" />}
+                {loading && <Loader show small table style={loaderStyle} />}
                 {params.InputProps.endAdornment}
               </>
             )
