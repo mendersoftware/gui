@@ -6,13 +6,16 @@ import { defaultState, undefineds } from '../../../../../tests/mockData';
 
 describe('SoftwareDevices Component', () => {
   it('renders correctly', async () => {
+    const getReleasesMock = jest.fn();
+    getReleasesMock.mockResolvedValue();
     const { baseElement } = render(
       <MemoryRouter>
         <SoftwareDevices
-          getReleases={jest.fn}
+          getReleases={getReleasesMock}
           groups={defaultState.devices.groups.byId}
           hasDynamicGroups={true}
-          releases={Object.values(defaultState.releases.byId)}
+          releases={Object.keys(defaultState.releases.byId)}
+          releasesById={defaultState.releases.byId}
           setDeploymentSettings={jest.fn}
         />
       </MemoryRouter>

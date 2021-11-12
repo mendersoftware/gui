@@ -147,7 +147,7 @@ export const SchedulingGroupSelection = ({ createdGroup }) => <div>{`Select the 
 
 export const SchedulingReleaseToDevices = ({ selectedDevice, selectedGroup, selectedRelease }) => (
   <div>{`Create the deployment! This will deploy the ${selectedRelease.Name} Artifact to ${
-    selectedDevice ? selectedDevice : selectedGroup || 'All devices'
+    selectedDevice ? selectedDevice.id : selectedGroup || 'All devices'
   }`}</div>
 );
 

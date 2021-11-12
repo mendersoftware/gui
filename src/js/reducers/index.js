@@ -9,6 +9,7 @@ import onboardingReducer from './onboardingReducer';
 import releaseReducer from './releaseReducer';
 import userReducer from './userReducer';
 import { USER_LOGOUT } from '../constants/userConstants';
+import { SET_SNACKBAR, UPLOAD_PROGRESS } from '../constants/appConstants';
 
 const rootReducer = combineReducers({
   app: appReducer,
@@ -30,8 +31,19 @@ const sessionReducer = (state, action) => {
 
 export const getConfiguredStore = config =>
   configureStore({
+    ...config,
     reducer: sessionReducer,
-    ...config
+    middleware: getDefaultMiddleware =>
+      getDefaultMiddleware({
+        immutableCheck: {
+          ignoredPaths: ['app.cancelSource.token']
+        },
+        serializableCheck: {
+          ignoredActions: [SET_SNACKBAR, UPLOAD_PROGRESS],
+          ignoredActionPaths: ['cancelSource.token', 'snackbar'],
+          ignoredPaths: ['app.cancelSource.token', 'app.snackbar']
+        }
+      })
   });
 
 export default getConfiguredStore();
