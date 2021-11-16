@@ -201,7 +201,7 @@ export const Deployments = ({
             Create a deployment
           </Button>
         </div>
-        <ComponentToShow abort={onAbortDeployment} createClick={onCreationShow} openReport={showReport} />
+        <ComponentToShow abort={onAbortDeployment} createClick={onCreationShow} openReport={showReport} isShowingDetails={reportDialog} />
       </div>
       <Report abort={onAbortDeployment} onClose={closeReport} open={reportDialog} retry={retryDeployment} type={reportType} />
       {createDialog && (
@@ -212,7 +212,7 @@ export const Deployments = ({
           setDeploymentObject={setDeploymentObject}
         />
       )}
-      {onboardingComponent}
+      {!reportDialog && onboardingComponent}
     </>
   );
 };

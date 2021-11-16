@@ -125,7 +125,7 @@ export const onboardingSteps = {
     progress: 2
   },
   [stepNames.DEPLOYMENTS_PAST]: {
-    condition: { extra: () => !window.location.hash.includes(DEPLOYMENT_STATES.finished) },
+    condition: { min: stepNames.DEPLOYMENTS_INPROGRESS, extra: () => !window.location.hash.includes(DEPLOYMENT_STATES.finished) },
     component: DeploymentsPast,
     progress: 3
   },
@@ -188,7 +188,7 @@ export const onboardingSteps = {
     specialComponent: <WelcomeSnackTip progress={4} />
   },
   [stepNames.ONBOARDING_CANCELED]: {
-    condition: () => true,
+    condition: { extra: () => true },
     specialComponent: <div />,
     progress: 3
   }
@@ -196,15 +196,12 @@ export const onboardingSteps = {
 
 const getOnboardingStepCompleted = (id, progress, complete, showHelptips, showTips) => {
   const keys = Object.keys(onboardingSteps);
-  const { min = id, max = id, extra } = Object.entries(onboardingSteps).reduce(
-    (accu, [key, value]) => {
-      if (key === id) {
-        return value.condition;
-      }
-      return accu;
-    },
-    { min: '' }
-  );
+  const { min = id, max = id, extra } = Object.entries(onboardingSteps).reduce((accu, [key, value]) => {
+    if (key === id) {
+      return value.condition;
+    }
+    return accu;
+  }, {});
   const progressIndex = keys.findIndex(step => step === progress);
   return (
     !complete &&

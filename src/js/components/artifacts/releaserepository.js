@@ -220,7 +220,7 @@ export const ReleaseRepository = ({
               variant="contained"
               buttonRef={creationRef}
               component={ForwardingLink}
-              to={`/deployments?open=true&release=${release.Name}`}
+              to={`/deployments/active?open=true&release=${release.Name}`}
               style={{ marginLeft: 20 }}
               onClick={() => onCreateDeploymentFrom(release)}
             >

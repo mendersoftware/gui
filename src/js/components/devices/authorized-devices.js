@@ -75,6 +75,7 @@ export const Authorized = props => {
     states = {},
     updateDevicesAuth
   } = props;
+  const [expandedDeviceId, setExpandedDeviceId] = useState();
   const [isInitialized, setIsInitialized] = useState(!!props.devices.length);
   const [pageLoading, setPageLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
@@ -379,12 +380,14 @@ export const Authorized = props => {
             <DeviceList
               {...props}
               columnHeaders={columnHeaders}
+              expandedDeviceId={expandedDeviceId}
               onChangeRowsPerPage={onPageLengthChange}
               onPageChange={handlePageChange}
               onSelect={onSelectionChange}
               onSort={onSortChange}
               pageLoading={pageLoading}
               pageTotal={deviceCount}
+              setExpandedDeviceId={setExpandedDeviceId}
               sortingNotes={sortingNotes}
             />
             {showHelptips && <ExpandDevice />}
@@ -401,7 +404,7 @@ export const Authorized = props => {
       ) : (
         <div />
       )}
-      {onboardingComponent ? onboardingComponent : null}
+      {!expandedDeviceId && onboardingComponent ? onboardingComponent : null}
       {!!selectedRows.length && (
         <DeviceQuickActions
           actionCallbacks={{ onAddDevicesToGroup, onAuthorizationChange, onDeviceDismiss, onRemoveDevicesFromGroup }}

@@ -219,7 +219,8 @@ export const mapStateToProps = state => {
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
     acceptedDeviceCount: state.devices.byStatus.accepted.total,
-    createdGroup: Object.keys(state.devices.groups.byId)[0],
+    // we need to use group 1 here, as group 0 will be the ungrouped group placeholder
+    createdGroup: Object.keys(state.devices.groups.byId)[1],
     docsVersion: getDocsVersion(state),
     globalSettings: state.users.globalSettings,
     groups,
