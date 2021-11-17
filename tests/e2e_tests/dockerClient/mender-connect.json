@@ -1,6 +1,5 @@
 {
   "ShellCommand": "/bin/bash",
   "User": "root",
-  "ServerCertificate": "/certs/hosted.pem",
   "Terminal": { "Height": 24, "Width": 128 }
 }
