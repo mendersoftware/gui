@@ -4,9 +4,13 @@ import pluralize from 'pluralize';
 import { Box, Chip, Tooltip } from '@material-ui/core';
 import { Error as ErrorIcon, ReportProblemOutlined } from '@material-ui/icons';
 import { withStyles } from '@material-ui/styles';
+import { mdiAws as AWS, mdiMicrosoftAzure as Azure, mdiGoogleCloud as GCP } from '@mdi/js';
 
-import { DEVICE_STATES } from '../../constants/deviceConstants';
+import MaterialDesignIcon from '../common/materialdesignicon';
+import { DEVICE_STATES, EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
 import theme from '../../themes/mender-theme';
+
+const providerIconStyle = { fontSize: '1.25rem', marginLeft: theme.spacing(0.5) };
 
 const statusTypes = {
   default: { severity: 'none', notification: {} },
@@ -15,6 +19,17 @@ const statusTypes = {
     notification: {
       [DEVICE_STATES.accepted]: `This device has a new auth request. This can happen if the device's public key changes. Click on the row to see more details`,
       [DEVICE_STATES.pending]: `This device has a new auth request. Inspect its identity details, then check it to accept it.`
+    }
+  },
+  connected: {
+    severity: 'default',
+    providers: {
+      [EXTERNAL_PROVIDER.amazon.key]: { icon: <MaterialDesignIcon path={AWS} style={providerIconStyle} /> },
+      [EXTERNAL_PROVIDER.azure.key]: { icon: <MaterialDesignIcon path={Azure} style={providerIconStyle} /> },
+      [EXTERNAL_PROVIDER.google.key]: { icon: <MaterialDesignIcon path={GCP} style={{ ...providerIconStyle, fontSize: '1rem' }} /> }
+    },
+    notification: {
+      [DEVICE_STATES.accepted]: 'This device was authorized externally. Click on the row to see more details'
     }
   },
   monitor: {
@@ -44,7 +59,7 @@ const WarningIcon = withStyles({
   }
 })(ReportProblemOutlined);
 
-const DeviceStatus = ({ device: { auth_sets = [], isOffline, monitor = {}, status: deviceStatus } }) => {
+const DeviceStatus = ({ device: { auth_sets = [], external = {}, isOffline, monitor = {}, status: deviceStatus } }) => {
   let notification = statusTypes.default.notification[deviceStatus] ?? '';
   let label;
   let icon = <ErrorIcon />;
@@ -58,6 +73,10 @@ const DeviceStatus = ({ device: { auth_sets = [], isOffline, monitor = {}, statu
     icon = <WarningIcon style={{ marginLeft: 5 }} />;
     notification = statusTypes.monitor.notification.default;
     label = 'monitoring';
+  } else if (external.provider) {
+    icon = statusTypes.connected.providers[external.provider].icon ?? statusTypes.connected.providers.azure.icon;
+    notification = statusTypes.connected.notification[deviceStatus] ?? statusTypes.connected.notification[DEVICE_STATES.accepted];
+    label = 'accepted';
   } else if (isOffline) {
     icon = <WarningIcon style={{ marginLeft: 5 }} />;
     notification = statusTypes.offline.notification.default;
