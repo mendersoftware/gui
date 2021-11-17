@@ -41,7 +41,7 @@ exports[`DeviceConnection Component renders correctly 1`] = `
         style="flex-direction: row;"
       >
         <div
-          class="flexbox text-muted"
+          class="flexbox text-muted "
         >
           <svg
             aria-hidden="true"
@@ -271,7 +271,7 @@ exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
         style="flex-direction: row;"
       >
         <div
-          class="flexbox text-muted"
+          class="flexbox text-muted "
         >
           <svg
             aria-hidden="true"
@@ -316,7 +316,7 @@ exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
 exports[`tiny DeviceConnection components renders DeviceConnectionMissingNote correctly 1`] = `
 <div>
   <div
-    class="flexbox text-muted"
+    class="flexbox text-muted "
   >
     <svg
       aria-hidden="true"
@@ -353,7 +353,7 @@ exports[`tiny DeviceConnection components renders DeviceConnectionMissingNote co
 exports[`tiny DeviceConnection components renders DeviceDisconnectedNote correctly 1`] = `
 <div>
   <div
-    class="flexbox text-muted"
+    class="flexbox text-muted "
   >
     <svg
       aria-hidden="true"

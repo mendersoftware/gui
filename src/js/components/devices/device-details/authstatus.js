@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 
-import { Chip, Icon } from '@material-ui/core';
+import { Button, Chip, Icon } from '@material-ui/core';
 import { Block as BlockIcon, Check as CheckIcon, CheckCircle as CheckCircleIcon } from '@material-ui/icons';
 
 import pendingIcon from '../../../../assets/img/pending_status.png';
-import { DEVICE_STATES } from '../../../constants/deviceConstants';
+import { DEVICE_STATES, EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
+import { TwoColumnData } from '../../common/configurationobject';
+import MaterialDesignIcon from '../../common/materialdesignicon';
+import { AuthButton } from '../../helptips/helptooltips';
 import DeviceDataCollapse from './devicedatacollapse';
 import Authsets from './authsets/authsets';
-import { AuthButton } from '../../helptips/helptooltips';
+import { DeviceConnectionNote } from './connection';
 
 const iconStyle = { margin: 12 };
 
@@ -19,9 +22,8 @@ const states = {
   preauthorized: <CheckIcon style={iconStyle} />
 };
 
-export const AuthStatus = ({ decommission, device, deviceListRefresh, disableBottomBorder, showHelptips }) => {
-  const { auth_sets = [], status = DEVICE_STATES.accepted } = device;
-
+export const AuthStatus = ({ decommission, device, deviceListRefresh, disableBottomBorder, setShowExternalConnectionDialog, setSnackbar, showHelptips }) => {
+  const { auth_sets = [], external, isOffline, status = DEVICE_STATES.accepted } = device;
   let hasPending = '';
   if (status === DEVICE_STATES.accepted && auth_sets.length > 1) {
     hasPending = auth_sets.reduce((accu, set) => {
@@ -29,14 +31,18 @@ export const AuthStatus = ({ decommission, device, deviceListRefresh, disableBot
     }, hasPending);
   }
 
-  const [open, setOpen] = useState(status === 'pending' || hasPending);
-  const statusIcon = states[status] ? states[status] : states.default;
+  const [open, setOpen] = useState(status === 'pending' || hasPending || !!external);
+
+  let statusIcon = states[status] ? states[status] : states.default;
+  if (external) {
+    statusIcon = <MaterialDesignIcon path={EXTERNAL_PROVIDER[external.provider].icon} style={{ marginLeft: 4 }} />;
+  }
   const requestNotification = !!hasPending && <Chip size="small" label="new request" color="primary" />;
 
   return (
     <DeviceDataCollapse
       disableBottomBorder={disableBottomBorder}
-      header={!open && <a onClick={setOpen}>show more</a>}
+      header={!open && !external && <a onClick={setOpen}>show more</a>}
       isOpen={open}
       onClick={setOpen}
       title={
@@ -53,8 +59,25 @@ export const AuthStatus = ({ decommission, device, deviceListRefresh, disableBot
         </div>
       }
     >
-      <Authsets decommission={decommission} device={device} deviceListRefresh={deviceListRefresh} showHelptips={showHelptips} />
-      <a onClick={() => setOpen(false)}>show less</a>
+      {external ? (
+        <>
+          <TwoColumnData config={{ 'Device connection string': external.connectionString }} setSnackbar={setSnackbar} />
+          {isOffline && (
+            <div>
+              <DeviceConnectionNote className="margin-small">
+                Devices authenticated through {EXTERNAL_PROVIDER[external.provider].title} must have the Mender Client installed before they will connect to the
+                Mender server.
+              </DeviceConnectionNote>
+              <Button onClick={() => setShowExternalConnectionDialog(true)}>Learn how to connect this device</Button>
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          <Authsets decommission={decommission} device={device} deviceListRefresh={deviceListRefresh} showHelptips={showHelptips} />
+          <a onClick={() => setOpen(false)}>show less</a>
+        </>
+      )}
     </DeviceDataCollapse>
   );
 };
