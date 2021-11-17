@@ -178,7 +178,6 @@ test:staging-deployment:
     - curl -fsSL https://get.docker.com | sh
     - mv mender-stress-test-client tests/e2e_tests/ && cd tests/e2e_tests
     - curl -o fixtures/mender-demo-artifact.mender "https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender"
-    - touch hosted.pem && true | openssl s_client -connect staging.hosted.mender.io:443 2>/dev/null | openssl x509 > hosted.pem
     - docker pull mendersoftware/mender-client-docker-addons:master
   script:
     - npm ci --cache .npm --prefer-offline
