@@ -50,6 +50,7 @@ test:lint:
     reports:
       junit:
         - junit/results.xml
+    when: on_failure
 
 test:acceptance:
   extends: .template:test:acceptance
