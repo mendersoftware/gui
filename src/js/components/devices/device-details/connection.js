@@ -41,8 +41,8 @@ export const PortForwardLink = ({ docsVersion }) => (
   </>
 );
 
-export const DeviceConnectionNote = ({ children, className = '', style = {} }) => (
-  <div className={`flexbox text-muted ${className}`}>
+const DeviceConnectionNote = ({ children, style }) => (
+  <div className="flexbox text-muted">
     <InfoIcon fontSize="small" style={{ marginRight: theme.spacing() }} />
     <Typography variant="body1" style={style}>
       {children}

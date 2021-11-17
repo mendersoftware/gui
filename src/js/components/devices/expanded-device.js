@@ -36,7 +36,6 @@ import InstalledSoftware from './device-details/installedsoftware';
 import DeviceMonitoring from './device-details/monitoring';
 import MonitorDetailsDialog from './device-details/monitordetailsdialog';
 import DeviceNotifications from './device-details/notifications';
-import ExternalDeviceConnectionDialog from './dialogs/externaldeviceconnectiondialog';
 
 const refreshDeviceLength = 10000;
 
@@ -70,11 +69,10 @@ export const ExpandedDevice = ({
   tenantCapabilities,
   userRoles
 }) => {
-  const { external, isOffline, status = DEVICE_STATES.accepted } = device;
+  const { isOffline, status = DEVICE_STATES.accepted } = device;
   const [socketClosed, setSocketClosed] = useState(true);
   const [troubleshootType, setTroubleshootType] = useState();
   const [monitorDetails, setMonitorDetails] = useState();
-  const [showExternalConnectionDialog, setShowExternalConnectionDialog] = useState(false);
   const monitoring = useRef();
   const timer = useRef();
 
@@ -157,8 +155,6 @@ export const ExpandedDevice = ({
         decommission={onDecommissionDevice}
         deviceListRefresh={refreshDevices}
         disableBottomBorder={!isAcceptedDevice}
-        setShowExternalConnectionDialog={setShowExternalConnectionDialog}
-        setSnackbar={setSnackbar}
         showHelptips={showHelptips}
       />
       <DeviceTags device={device} setSnackbar={setSnackbar} setDeviceTags={setDeviceTags} showHelptips={showHelptips} />
@@ -203,13 +199,6 @@ export const ExpandedDevice = ({
           startTroubleshoot={launchTroubleshoot}
           style={{ marginRight: theme.spacing(2) }}
           userRoles={userRoles}
-        />
-      )}
-      {showExternalConnectionDialog && (
-        <ExternalDeviceConnectionDialog
-          connectionString={external.connection}
-          provider={external.provider}
-          onClose={() => setShowExternalConnectionDialog(false)}
         />
       )}
       <Divider style={{ marginTop: theme.spacing(3), marginBottom: theme.spacing(2) }} />
