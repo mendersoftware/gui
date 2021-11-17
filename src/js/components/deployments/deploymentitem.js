@@ -21,7 +21,7 @@ export const deploymentTypeClasses = {
 
 export const DeploymentDeviceCount = ({ className, deployment }) => (
   <div className={className} key="DeploymentDeviceCount">
-    {Math.max(deployment.device_count, deployment.max_devices || 0)}
+    {Math.max(deployment.device_count || 0, deployment.max_devices || 0)}
   </div>
 );
 export const DeploymentDeviceGroup = props => {
