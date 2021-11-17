@@ -71,7 +71,10 @@ export const CreateDialog = props => {
   const deploymentRef = useRef();
 
   useEffect(() => {
-    getReleases({ page: 1, perPage: 100, searchOnly: true });
+    const searchConfig = deploymentObject.device?.attributes.device_type
+      ? { searchAttribute: 'device_type', searchTerm: deploymentObject.device.attributes.device_type[0] }
+      : {};
+    getReleases({ page: 1, perPage: 100, searchOnly: true, ...searchConfig });
   }, []);
 
   useEffect(() => {
