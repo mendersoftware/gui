@@ -9,7 +9,7 @@ const loaderStyle = { marginTop: theme.spacing(-4) };
 
 export const AsyncAutocomplete = ({
   id,
-  initialValue = '',
+  initialValue,
   isLoading,
   label,
   placeholder,
@@ -27,6 +27,9 @@ export const AsyncAutocomplete = ({
   const debouncedValue = useDebounce(inputValue, 300);
 
   useEffect(() => {
+    if (debouncedValue === undefined) {
+      return;
+    }
     const selection = options.find(option => option[selectionAttribute] === debouncedValue);
     if (selection) {
       onChangeSelection(selection);
@@ -57,7 +60,7 @@ export const AsyncAutocomplete = ({
       getOptionLabel={option => option[labelAttribute]}
       getOptionSelected={(option, value) => option[selectionAttribute] === value[selectionAttribute]}
       id={id}
-      inputValue={inputValue}
+      inputValue={inputValue || ''}
       loading={loading}
       onClose={() => setOpen(false)}
       onInputChange={onInputChange}

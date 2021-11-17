@@ -197,9 +197,12 @@ export const setReleasesListState = selectionState => (dispatch, getState) =>
 /* Releases */
 const searchAttributes = ['name', 'device_type', 'description'];
 
-function* generateReleaseSearchQuery(search) {
+function* generateReleaseSearchQuery(search, searchAttribute) {
   if (!search) {
     return;
+  }
+  if (searchAttribute) {
+    return `&${searchAttribute}=${search}`;
   }
   yield `&${searchAttributes[0]}=${search}`;
   yield `&${searchAttributes[1]}=${search}`;
@@ -232,7 +235,7 @@ export const getReleases = (passedConfig = {}) => (dispatch, getState) => {
     return Promise.resolve(dispatch(refreshReleases(passedConfig)));
   }
   config = searchOnly ? { ...config, sort: { attribute: 'Name', direction: AppConstants.SORTING_OPTIONS.asc } } : config;
-  const queryGenerator = generateReleaseSearchQuery(searchTerm);
+  const queryGenerator = generateReleaseSearchQuery(searchTerm, passedConfig.searchAttribute);
 
   const releaseListProcessing = props => {
     if (!props) {

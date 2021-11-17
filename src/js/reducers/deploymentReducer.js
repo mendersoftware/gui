@@ -47,6 +47,14 @@ const deploymentReducer = (state = initialState, action) => {
             deploymentIds: [...state.byStatus.pending.deploymentIds, action.deploymentId],
             total: state.byStatus.pending.total + 1
           }
+        },
+        selectionState: {
+          ...state.selectionState,
+          pending: {
+            ...state.selectionState.pending,
+            selection: [action.deploymentId, ...state.selectionState.pending.selection],
+            total: state.selectionState.pending.total + 1
+          }
         }
       };
     case DeploymentConstants.REMOVE_DEPLOYMENT: {

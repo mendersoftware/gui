@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef } from 'react';
+import React, { useMemo, useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import pluralize from 'pluralize';
@@ -60,6 +60,10 @@ export const SoftwareDevices = ({
   const groupRef = useRef();
   const releaseRef = useRef();
   const [isLoadingReleases, setIsLoadingReleases] = useState(!releases.length);
+
+  useEffect(() => {
+    setIsLoadingReleases(!releases.length);
+  }, [releases.length]);
 
   const deploymentSettingsUpdate = (value, property) => {
     const state = { ...deploymentObject, [property]: value };
