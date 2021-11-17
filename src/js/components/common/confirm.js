@@ -28,6 +28,10 @@ const confirmationType = {
   deploymentAbort: {
     loading: 'Aborting...',
     message: 'This will abort the deployment and attempt to roll back all devices. Confirm abort?'
+  },
+  integrationRemoval: {
+    loading: 'Removing...',
+    message: 'Remove the ingration. Are you sure?'
   }
 };
 
