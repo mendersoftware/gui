@@ -70,8 +70,7 @@ export const startDockerClient = async (baseUrl, token) => {
   // NB! to run the tests against a running local Mender backend, uncomment & adjust the following
   // const localNetwork = ['--network', 'menderintegration_mender'];
   const localNetwork = baseUrl.includes('docker.mender.io')
-    ? ['--network', 'gui-tests_mender', '-v', `${process.env.INTEGRATION_PATH}/cert/cert.crt:/certs/hosted.pem`]
-    : ['-v', `${projectRoot}/hosted.pem:/certs/hosted.pem`];
+    ? ['--network', 'gui-tests_mender'] : [];
   let args = [
     'run',
     '--name',
