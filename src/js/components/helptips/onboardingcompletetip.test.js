@@ -31,7 +31,7 @@ describe('OnboardingCompleteTip Component', () => {
         <OnboardingCompleteTip targetUrl="https://test.com" />
       </Provider>
     );
-    const view = baseElement.firstChild.firstChild;
+    const view = baseElement;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });

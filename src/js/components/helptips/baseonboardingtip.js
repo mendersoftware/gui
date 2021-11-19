@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import ReactTooltip from 'react-tooltip';
 
 import {
   ArrowUpward as ArrowUpwardIcon,
@@ -13,6 +12,7 @@ import {
 import { setShowDismissOnboardingTipsDialog } from '../../actions/onboardingActions';
 
 import Tracking from '../../tracking';
+import { OnboardingTooltip } from '../common/mendertooltip';
 
 const iconWidth = 30;
 
@@ -52,58 +52,73 @@ export const orientations = {
   }
 };
 
-class BaseOnboardingTipComponent extends React.PureComponent {
-  componentDidMount() {
-    Tracking.event({ category: 'onboarding', action: this.props.id });
-    ReactTooltip.show(this.tipRef);
-  }
-  componentDidUpdate() {
-    ReactTooltip.show(this.tipRef);
-  }
-  show() {
-    ReactTooltip.show(this.tipRef);
-  }
-  hide() {
-    ReactTooltip.hide(this.tipRef);
-  }
-  render() {
-    const { anchor, component, place = 'top', progress, progressTotal = 3, id = 1, setShowDismissOnboardingTipsDialog, ...others } = this.props;
-    const orientation = orientations[place];
-    const style = orientation.offsetStyle({ left: anchor.left, top: anchor.top, overflow: 'initial' });
-    const tipId = `onboard-tip-${id}`;
-    return (
-      <div className="onboard-tip" style={style}>
-        <a
-          className={`tooltip onboard-icon ${orientation.placement}`}
-          data-tip
-          data-for={tipId}
-          data-event="click focus"
-          data-event-off="dblclick"
-          ref={ref => (this.tipRef = ref)}
-        >
-          {orientation.arrow}
-        </a>
-        <ReactTooltip
-          id={tipId}
-          place={orientation.placement}
-          type="light"
-          effect="solid"
-          className={`content ${orientation.placement}`}
-          clickable={true}
-          resizeHide={false}
-          style={orientation.contentStyle}
-        >
+export const OnboardingIndicator = React.forwardRef(({ className = '', orientation, style = {}, toggle }, ref) => {
+  const { arrow, placement } = orientation;
+
+  return (
+    <div className={className} onClick={toggle} ref={ref} style={style}>
+      <div className={`tooltip onboard-icon ${placement}`}>{arrow}</div>
+    </div>
+  );
+});
+OnboardingIndicator.displayName = 'OnboardingIndicator';
+
+const BaseOnboardingTipComponent = ({
+  anchor,
+  component,
+  place = 'top',
+  progress,
+  progressTotal = 3,
+  id = '1',
+  setShowDismissOnboardingTipsDialog,
+  ...others
+}) => {
+  const [open, setOpen] = useState(true);
+
+  useEffect(() => {
+    Tracking.event({ category: 'onboarding', action: id });
+    setOpen(true);
+  }, []);
+
+  const toggle = () => setOpen(!open);
+
+  const hide = () => setOpen(false);
+
+  const orientation = orientations[place];
+  const style = orientation.offsetStyle({ left: anchor.left, top: anchor.top, overflow: 'initial' });
+
+  return (
+    <OnboardingTooltip
+      disableFocusListener
+      disableHoverListener
+      disableTouchListener
+      id={id}
+      interactive
+      onClose={hide}
+      open={open}
+      placement={orientation.placement}
+      PopperProps={{
+        disablePortal: true,
+        popperOptions: {
+          positionFixed: true,
+          modifiers: { preventOverflow: { boundariesElement: 'window' } }
+        }
+      }}
+      title={
+        <div className="content">
           {React.cloneElement(component, others)}
           <div className="flexbox">
             {progress ? <div>{`Progress: step ${progress} of ${progressTotal}`}</div> : null}
             <div style={{ flexGrow: 1 }} />
             <a onClick={() => setShowDismissOnboardingTipsDialog(true)}>Dismiss</a>
           </div>
-        </ReactTooltip>
-      </div>
-    );
-  }
-}
+        </div>
+      }
+    >
+      <OnboardingIndicator className="onboard-tip" orientation={orientation} style={style} toggle={toggle} />
+    </OnboardingTooltip>
+  );
+};
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({ setShowDismissOnboardingTipsDialog }, dispatch);

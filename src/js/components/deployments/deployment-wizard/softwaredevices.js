@@ -33,7 +33,7 @@ const ReleasesWarning = ({ lacksReleases }) => (
     <ErrorOutlineIcon fontSize="small" style={{ marginRight: 4, top: 4, color: 'rgb(171, 16, 0)' }} />
     <p className="info">
       There are no {lacksReleases ? 'compatible ' : ''}artifacts available.{lacksReleases ? <br /> : ' '}
-      <Link to="/artifacts">Upload one to the repository</Link> to get started.
+      <Link to="/releases">Upload one to the repository</Link> to get started.
     </p>
   </div>
 );

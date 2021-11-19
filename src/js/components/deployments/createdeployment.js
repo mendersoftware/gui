@@ -64,9 +64,8 @@ export const CreateDialog = props => {
   } = props;
 
   const [activeStep, setActiveStep] = useState(0);
-  const [steps, setSteps] = useState(deploymentSteps);
   const [releaseSelectionLocked] = useState(Boolean(deploymentObject.release));
-
+  const [steps, setSteps] = useState(deploymentSteps);
   const [hasNewRetryDefault, setHasNewRetryDefault] = useState(false);
   const deploymentRef = useRef();
 
@@ -191,7 +190,7 @@ export const CreateDialog = props => {
         />
       </DialogContent>
       <DialogActions className="margin-left margin-right">
-        <Button key="schedule-action-button-1" onClick={closeWizard} style={{ marginRight: '10px', display: 'inline-block' }}>
+        <Button onClick={closeWizard} style={{ marginRight: 10 }}>
           Cancel
         </Button>
         <Button disabled={activeStep === 0} onClick={() => setActiveStep(activeStep - 1)}>
@@ -220,7 +219,8 @@ export const mapStateToProps = state => {
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
     acceptedDeviceCount: state.devices.byStatus.accepted.total,
-    createdGroup: Object.keys(state.devices.groups.byId)[0],
+    // we need to use group 1 here, as group 0 will be the ungrouped group placeholder
+    createdGroup: Object.keys(state.devices.groups.byId)[1],
     docsVersion: getDocsVersion(state),
     globalSettings: state.users.globalSettings,
     groups,

@@ -2,16 +2,11 @@
 
 exports[`DemoNotification Component renders correctly 1`] = `
 <div
-  class="flexbox centered"
-  id="demoBox"
+  class=""
 >
-  <a
-    currentitem="false"
-    data-event="click focus"
-    data-for="demo-mode"
-    data-offset="{'bottom': 15}"
-    data-tip="true"
-    id="demo-info"
+  <div
+    class="flexbox centered"
+    id="demoBox"
   >
     <svg
       aria-hidden="true"
@@ -24,33 +19,9 @@ exports[`DemoNotification Component renders correctly 1`] = `
         d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
       />
     </svg>
-    Demo mode
-  </a>
-  <div
-    class="__react_component_tooltip place-bottom type-dark"
-    data-id="tooltip"
-    id="demo-mode"
-  >
-    <h3>
+    <a>
       Demo mode
-    </h3>
-    <p>
-      Mender is currently running in 
-      <b>
-        demo mode
-      </b>
-      .
-    </p>
-    <p>
-      <a
-        href="https://docs.mender.io/development/server-installation/production-installation-with-kubernetes"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        See the documentation for help switching to production mode
-      </a>
-      .
-    </p>
+    </a>
   </div>
 </div>
 `;

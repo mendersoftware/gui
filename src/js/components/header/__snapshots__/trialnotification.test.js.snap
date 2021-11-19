@@ -6,57 +6,24 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
   id="trialVersion"
 >
   <div
-    class="muted margin-right-small"
-    currentitem="false"
-    data-event="click focus"
-    data-for="trial-version"
-    data-offset="{'bottom': 15, 'right': 60}"
-    data-tip="true"
+    class=""
   >
-    <svg
-      aria-hidden="true"
-      class="MuiSvgIcon-root"
-      focusable="false"
-      style="margin-right: 2px; height: 16px; vertical-align: bottom;"
-      viewBox="0 0 24 24"
+    <div
+      class="muted margin-right-small"
     >
-      <path
-        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-      />
-    </svg>
-    Trial plan
-  </div>
-  <div
-    class="__react_component_tooltip place-bottom type-dark"
-    data-id="tooltip"
-    id="trial-version"
-  >
-    <h3>
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root"
+        focusable="false"
+        style="margin-right: 2px; height: 16px; vertical-align: bottom;"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+        />
+      </svg>
       Trial plan
-    </h3>
-    <p>
-      You're using the trial version of Mender – it's free for up to 10 devices for 12 months.
-    </p>
-    <p>
-      <a
-        href="/settings/upgrade"
-      >
-        Upgrade to a plan
-      </a>
-       to add more devices and continue using Mender after the trial expires.
-    </p>
-    <p>
-      Or compare the plans at
-       
-      <a
-        href="https://mender.io/plans/pricing"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        mender.io/plans/pricing
-      </a>
-      .
-    </p>
+    </div>
   </div>
   <a
     aria-disabled="false"
@@ -98,57 +65,24 @@ exports[`DeviceNotifications Component renders correctly with an expiration date
   id="trialVersion"
 >
   <div
-    class="muted margin-right-small"
-    currentitem="false"
-    data-event="click focus"
-    data-for="trial-version"
-    data-offset="{'bottom': 15, 'right': 60}"
-    data-tip="true"
+    class=""
   >
-    <svg
-      aria-hidden="true"
-      class="MuiSvgIcon-root"
-      focusable="false"
-      style="margin-right: 2px; height: 16px; vertical-align: bottom;"
-      viewBox="0 0 24 24"
+    <div
+      class="muted margin-right-small"
     >
-      <path
-        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-      />
-    </svg>
-    Trial plan
-  </div>
-  <div
-    class="__react_component_tooltip place-bottom type-dark"
-    data-id="tooltip"
-    id="trial-version"
-  >
-    <h3>
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root"
+        focusable="false"
+        style="margin-right: 2px; height: 16px; vertical-align: bottom;"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+        />
+      </svg>
       Trial plan
-    </h3>
-    <p>
-      You're using the trial version of Mender – it's free for up to 10 devices for 12 months.
-    </p>
-    <p>
-      <a
-        href="/settings/upgrade"
-      >
-        Upgrade to a plan
-      </a>
-       to add more devices and continue using Mender after the trial expires.
-    </p>
-    <p>
-      Or compare the plans at
-       
-      <a
-        href="https://mender.io/plans/pricing"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        mender.io/plans/pricing
-      </a>
-      .
-    </p>
+    </div>
   </div>
   <a
     aria-disabled="false"

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Time from 'react-time';
-import ReactTooltip from 'react-tooltip';
 
 import { Button, Typography, SvgIcon } from '@material-ui/core';
 import { ImportExport as ImportExportIcon, InfoOutlined as InfoIcon, Launch as LaunchIcon } from '@material-ui/icons';
@@ -11,23 +10,13 @@ import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
 import { DEVICE_CONNECT_STATES } from '../../../constants/deviceConstants';
 import theme from '../../../themes/mender-theme';
 import DeviceDataCollapse from './devicedatacollapse';
+import MenderTooltip from '../../common/mendertooltip';
 
 const buttonStyle = { textTransform: 'none', textAlign: 'left' };
 export const PortForwardLink = ({ docsVersion }) => (
-  <>
-    <a
-      id="port-forward-link"
-      data-tip
-      data-for="port-forward-tip"
-      href={`https://docs.mender.io/${docsVersion}add-ons/port-forward`}
-      className="flexbox centered margin-left"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      Enable port forwarding
-      <LaunchIcon className="margin-left-small" fontSize="small" />
-    </a>
-    <ReactTooltip id="port-forward-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+  <MenderTooltip
+    arrow
+    title={
       <div style={{ whiteSpace: 'normal' }}>
         <h3>Port forwarding</h3>
         <p>Port forwarding allows you to troubleshoot or use services on or via the device, without opening any ports on the device itself.</p>
@@ -36,8 +25,13 @@ export const PortForwardLink = ({ docsVersion }) => (
           more.
         </p>
       </div>
-    </ReactTooltip>
-  </>
+    }
+  >
+    <a href={`https://docs.mender.io/${docsVersion}add-ons/port-forward`} className="flexbox centered margin-left" target="_blank" rel="noopener noreferrer">
+      Enable port forwarding
+      <LaunchIcon className="margin-left-small" fontSize="small" />
+    </a>
+  </MenderTooltip>
 );
 
 const DeviceConnectionNote = ({ children, style }) => (

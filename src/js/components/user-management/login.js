@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
-import ReactTooltip from 'react-tooltip';
 
 import { Button } from '@material-ui/core';
 import { Help as HelpIcon } from '@material-ui/icons';
@@ -20,6 +19,7 @@ import FormCheckbox from '../common/forms/formcheckbox';
 
 import { OAuth2Providers } from './oauth2providers';
 import { getCurrentUser } from '../../selectors';
+import { MenderTooltipClickable } from '../common/mendertooltip';
 
 const cookies = new Cookies();
 
@@ -75,7 +75,7 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
   if (twoFARef.current) {
     twoFAAnchor = {
       right: -120,
-      top: twoFARef.current.parentElement.parentElement.offsetTop + twoFARef.current.parentElement.offsetHeight / 2
+      top: twoFARef.current.parentElement.parentElement.offsetTop + twoFARef.current.parentElement.parentElement.offsetHeight / 2
     };
   }
 
@@ -129,15 +129,20 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
       {isHosted && (
         <>
           {twoFARef.current && (
-            <div>
-              <div id="onboard-6" className="tooltip info" data-tip data-for="2fa-tip" data-event="click focus" style={twoFAAnchor}>
-                <HelpIcon />
-              </div>
-              <ReactTooltip id="2fa-tip" globalEventOff="click" place="right" effect="solid" className="react-tooltip info" style={{ maxWidth: 300 }}>
-                Two Factor Authentication is enabled for your account. If you haven&apos;t set up a 3rd party authentication app with a verification code,
-                please contact an administrator.
-              </ReactTooltip>
-            </div>
+            <MenderTooltipClickable
+              disableHoverListener={false}
+              placement="right"
+              className="absolute"
+              style={twoFAAnchor}
+              title={
+                <div style={{ maxWidth: 300 }}>
+                  Two Factor Authentication is enabled for your account. If you haven&apos;t set up a 3rd party authentication app with a verification code,
+                  please contact an administrator.
+                </div>
+              }
+            >
+              <HelpIcon />
+            </MenderTooltipClickable>
           )}
           <div className="margin-top text-muted">
             <div className="flexbox centered">
