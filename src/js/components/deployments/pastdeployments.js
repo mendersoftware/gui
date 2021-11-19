@@ -30,7 +30,18 @@ const headers = [...defaultHeaders.slice(0, defaultHeaders.length - 1), { title:
 const type = DEPLOYMENT_STATES.finished;
 
 export const Past = props => {
-  const { advanceOnboarding, createClick, getDeploymentsByStatus, groups, onboardingState, past, pastSelectionState, setDeploymentsState, setSnackbar } = props;
+  const {
+    advanceOnboarding,
+    createClick,
+    getDeploymentsByStatus,
+    groups,
+    isShowingDetails,
+    onboardingState,
+    past,
+    pastSelectionState,
+    setDeploymentsState,
+    setSnackbar
+  } = props;
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
   const [timeRangeToggle, setTimeRangeToggle] = useState(false);
@@ -138,7 +149,7 @@ export const Past = props => {
     onboardingComponent = getOnboardingComponentFor(
       onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE,
       onboardingState,
-      { anchor: { left, top: anchor.top } },
+      { anchor: { left, top: detailsButtons[0].parentElement.offsetTop + detailsButtons[0].parentElement.offsetHeight } },
       onboardingComponent
     );
     onboardingComponent = getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED, onboardingState, { anchor }, onboardingComponent);
@@ -210,7 +221,7 @@ export const Past = props => {
       <div className="deploy-table-contain">
         <Loader show={loading} />
         {/* TODO: fix status retrieval for past deployments to decide what to show here - */}
-        {!loading && !!past.length && !!onboardingComponent && onboardingComponent}
+        {!loading && !!past.length && !!onboardingComponent && !isShowingDetails && onboardingComponent}
         {!!past.length && (
           <RootRef rootRef={deploymentsRef}>
             <DeploymentsList

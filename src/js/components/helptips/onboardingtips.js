@@ -1,8 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import ReactTooltip from 'react-tooltip';
 
 import { IconButton } from '@material-ui/core';
 import { ArrowUpward as ArrowUpwardIcon, Close as CloseIcon, Schedule as HelpIcon } from '@material-ui/icons';
@@ -10,6 +9,7 @@ import { ArrowUpward as ArrowUpwardIcon, Close as CloseIcon, Schedule as HelpIco
 import { setSnackbar } from '../../actions/appActions';
 import { setShowDismissOnboardingTipsDialog } from '../../actions/onboardingActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
+import { MenderTooltipClickable } from '../common/mendertooltip';
 
 const WelcomeSnackTipComponent = ({ progress, setSnackbar }) => {
   const onClose = () => setSnackbar('');
@@ -61,29 +61,33 @@ const mapDispatchToProps = dispatch => {
 
 export const WelcomeSnackTip = connect(null, mapDispatchToProps)(WelcomeSnackTipComponent);
 
-const DevicePendingTipComponent = ({ setShowConnectingDialog, setShowDismissOnboardingTipsDialog }) => {
-  const tipRef = useRef(null);
-  useEffect(() => {
-    ReactTooltip.show(tipRef.current);
-  }, []);
-
-  return (
-    <div className="onboard-tip" style={{ left: '50%', top: '50%' }}>
-      <a className="tooltip onboard-icon" data-tip data-for="pending-device-onboarding-tip" data-event="click focus" data-event-off="dblclick" ref={tipRef}>
+const DevicePendingTipComponent = ({ setShowConnectingDialog, setShowDismissOnboardingTipsDialog }) => (
+  <div style={{ display: 'grid', placeItems: 'center' }}>
+    <MenderTooltipClickable
+      onboarding
+      interactive
+      title={
+        <>
+          <p>It may take a few moments before your device appears.</p>
+          <b className="clickable" onClick={() => setShowConnectingDialog(true)}>
+            Open the tutorial
+          </b>{' '}
+          again or <Link to="/help/get-started">go to the help pages</Link> if you have problems.
+          <div className="flexbox">
+            <div style={{ flexGrow: 1 }} />
+            <b className="clickable" onClick={() => setShowDismissOnboardingTipsDialog(true)}>
+              Dismiss
+            </b>
+          </div>
+        </>
+      }
+    >
+      <div className="onboard-icon">
         <HelpIcon />
-      </a>
-      <ReactTooltip id="pending-device-onboarding-tip" place="bottom" type="light" effect="solid" className="content" clickable={true}>
-        <p>It may take a few moments before your device appears.</p>
-        <a onClick={() => setShowConnectingDialog(true)}>Open the tutorial</a> again or <Link to="/help/get-started">go to the help pages</Link> if you have
-        problems.
-        <div className="flexbox">
-          <div style={{ flexGrow: 1 }} />
-          <a onClick={() => setShowDismissOnboardingTipsDialog(true)}>Dismiss</a>
-        </div>
-      </ReactTooltip>
-    </div>
-  );
-};
+      </div>
+    </MenderTooltipClickable>
+  </div>
+);
 
 const mappedActionCreators = dispatch => {
   return bindActionCreators({ setShowConnectingDialog, setShowDismissOnboardingTipsDialog }, dispatch);

@@ -49,45 +49,20 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
             <p>
               We'll walk you through the steps to connect a Raspberry Pi and deploy your first update.
             </p>
-            <div>
-              <div
-                class="tooltip help"
-                currentitem="false"
-                data-event="click focus"
-                data-for="deb-package-tip"
-                data-tip="true"
-                id="deb-package-help"
-                style="top: 22%; left: 88%;"
+            <div
+              class="tooltip help"
+              style="top: 22%; left: 88%;"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
               >
-                <svg
-                  aria-hidden="true"
-                  class="MuiSvgIcon-root"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
-                  />
-                </svg>
-              </div>
-              <div
-                class="__react_component_tooltip place-bottom type-dark"
-                data-id="tooltip"
-                id="deb-package-tip"
-              >
-                <p>
-                  The steps in the guide should work on most operating systems in the Debian family (e.g. Debian, Ubuntu, Raspberry Pi OS) and devices based on ARMv6 or newer (e.g. Raspberry Pi 2/3/4, Beaglebone). Visit
-                   
-                  <a
-                    href="https://docs.mender.io/development/overview/device-support"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    our documentation
-                  </a>
-                  for more information about device support.
-                </p>
-              </div>
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+                />
+              </svg>
             </div>
             <div
               class="flexbox centered column os-list"

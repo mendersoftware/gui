@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import ReactTooltip from 'react-tooltip';
 import { Link } from 'react-router-dom';
 
 // material ui
@@ -18,26 +17,25 @@ import ExpandableAttribute from '../common/expandable-attribute';
 import CancelRequestDialog from './dialogs/cancelrequest';
 import OrganizationSettingsItem, { maxWidth, padding } from './organizationsettingsitem';
 import OrganizationPaymentSettings from './organizationpaymentsettings';
+import { MenderTooltipClickable } from '../common/mendertooltip';
 
 export const OrgHeader = () => (
-  <div>
-    <span style={{ paddingRight: 10 }}>Organization token</span>
-    <div
-      id="token-info"
-      className="tooltip info"
-      data-tip
-      style={{ position: 'relative', display: 'inline', top: '6px' }}
-      data-for="token-help"
-      data-event="click focus"
+  <div className="flexbox center-aligned">
+    <div style={{ paddingRight: 10 }}>Organization token</div>
+    <MenderTooltipClickable
+      disableHoverListener={false}
+      placement="top"
+      title={
+        <>
+          <h3>Organization token</h3>
+          <p style={{ color: colors.tooltipText, margin: '1em 0' }}>
+            This token is unique for your organization and ensures that only devices that you own are able to connect to your account.
+          </p>
+        </>
+      }
     >
       <InfoIcon />
-    </div>
-    <ReactTooltip id="token-help" globalEventOff="click" place="top" type="light" effect="solid" style={{}} className="react-tooltip">
-      <h3>Organization token</h3>
-      <p style={{ color: colors.tooltipText, margin: '1em 0' }}>
-        This token is unique for your organization and ensures that only devices that you own are able to connect to your account.
-      </p>
-    </ReactTooltip>
+    </MenderTooltipClickable>
   </div>
 );
 

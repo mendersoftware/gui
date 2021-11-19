@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
 
 // material ui
 import { Checkbox } from '@material-ui/core';
@@ -18,12 +18,11 @@ import MenderTooltip from '../common/mendertooltip';
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
 export const DeviceList = props => {
-  const [expandedDeviceId, setExpandedDeviceId] = useState();
-
   const {
     advanceOnboarding,
     className = '',
     columnHeaders,
+    expandedDeviceId,
     sortingNotes,
     devices,
     deviceListState,
@@ -36,6 +35,7 @@ export const DeviceList = props => {
     onSort,
     pageLoading,
     pageTotal,
+    setExpandedDeviceId,
     setSnackbar,
     showPagination = true
   } = props;
@@ -157,6 +157,7 @@ const areEqual = (prevProps, nextProps) => {
   if (
     prevProps.pageTotal != nextProps.pageTotal ||
     prevProps.pageLoading != nextProps.pageLoading ||
+    prevProps.expandedDeviceId != nextProps.expandedDeviceId ||
     prevProps.idAttribute != nextProps.idAttribute ||
     !deepCompare(prevProps.onboardingState, nextProps.onboardingState) ||
     !deepCompare(prevProps.devices, nextProps.devices)

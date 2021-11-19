@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { IconButton } from '@material-ui/core';
 import { Clear as ClearIcon } from '@material-ui/icons';
@@ -20,7 +20,9 @@ export const DistributionReport = ({ attribute, devices, group, groups, onClick,
 
   useEffect(() => {
     initializeDistributionData();
-  }, [groups, groups[group]?.deviceIds.length]);
+  }, [group, groups, groups[group]?.deviceIds.length]);
+
+  const total = useMemo(() => distribution.reduce((prev, item) => prev + item.y, 0), [distribution]);
 
   const initializeDistributionData = () => {
     const relevantDevices = group && groups[group] ? groups[group].deviceIds.map(id => devices[id]) : Object.values(devices);
@@ -46,8 +48,7 @@ export const DistributionReport = ({ attribute, devices, group, groups, onClick,
     setDistribution(distribution.reverse());
   };
 
-  const onSliceClick = (e, { datum }) => {
-    const thing = datum.x;
+  const onSliceClick = (e, { datum: { x: thing } }) => {
     if (thing != seriesOther) {
       const groupFilters = groups[group]?.filters?.length ? groups[group].filters : [];
       const filters = [...groupFilters, { key: attribute, value: thing, operator: '$eq', scope: 'inventory' }];
@@ -58,7 +59,8 @@ export const DistributionReport = ({ attribute, devices, group, groups, onClick,
 
   const toggleRemoving = () => setRemoving(!removing);
 
-  const total = distribution.reduce((prev, item) => prev + item.y, 0);
+  const formatLabel = ({ datum }) => `${datum.y.toString()} (${(Math.round((datum.y * 1000) / (total || 1)) / 10.0).toString()}%)`;
+
   return (
     <div className="margin-right margin-bottom widget chart-widget" style={style}>
       {removing ? (
@@ -78,10 +80,9 @@ export const DistributionReport = ({ attribute, devices, group, groups, onClick,
                 parent: { display: 'flex', alignSelf: 'center', height: 'initial', width: 'initial' }
               }}
               data={distribution}
-              width={300}
+              width={360}
               height={228}
             >
-              <VictoryLegend x={30} y={150} width={320} height={65} orientation="horizontal" itemsPerRow={2} gutter={15} rowGutter={-10} />
               <VictoryPie
                 endAngle={90}
                 events={[
@@ -92,15 +93,11 @@ export const DistributionReport = ({ attribute, devices, group, groups, onClick,
                     }
                   }
                 ]}
-                labelComponent={
-                  <VictoryLabel
-                    text={({ datum }) => datum.y.toString() + ' (' + (Math.round((datum.y * 1000) / (total || 1)) / 10.0).toString() + '%)'}
-                    textAnchor={({ datum }) => (datum.startAngle < 0 ? 'end' : 'start')}
-                  />
-                }
+                labelComponent={<VictoryLabel text={formatLabel} textAnchor={({ datum }) => (datum.startAngle < 0 ? 'end' : 'start')} />}
                 radius={75}
                 startAngle={-90}
               />
+              <VictoryLegend x={30} y={150} width={320} height={65} orientation="horizontal" itemsPerRow={2} gutter={15} rowGutter={-10} />
             </VictoryGroup>
           ) : groups[group]?.filters.length && !groups[group]?.deviceIds.length ? (
             <p className="muted flexbox centered" style={{ height: '100%' }}>

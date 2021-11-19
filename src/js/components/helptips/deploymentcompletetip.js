@@ -1,7 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import ReactTooltip from 'react-tooltip';
 
 import Button from '@material-ui/core/Button';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
@@ -13,6 +12,7 @@ import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getDemoDeviceAddress } from '../../selectors';
 import Tracking from '../../tracking';
 import Loader from '../common/loader';
+import { MenderTooltipClickable } from '../common/mendertooltip';
 
 export const DeploymentCompleteTip = ({
   advanceOnboarding,
@@ -23,10 +23,7 @@ export const DeploymentCompleteTip = ({
   setOnboardingComplete,
   url
 }) => {
-  const tipRef = useRef(null);
-
   useEffect(() => {
-    ReactTooltip.show(tipRef.current);
     getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted).then(tasks => tasks[tasks.length - 1].deviceAccu.ids.map(getDeviceById));
     Tracking.event({ category: 'onboarding', action: onboardingSteps.DEPLOYMENTS_PAST_COMPLETED });
   }, []);
@@ -41,19 +38,26 @@ export const DeploymentCompleteTip = ({
   };
 
   return (
-    <div className="onboard-tip" style={anchor}>
-      <a className="tooltip onboard-icon" data-tip data-for="deployment-complete-tip" data-event="click focus" data-event-off="dblclick" ref={tipRef}>
-        <CheckCircleIcon />
-      </a>
-      <ReactTooltip id="deployment-complete-tip" place="bottom" type="light" effect="solid" className="content" clickable={true}>
-        <p>Fantastic! You completed your first deployment!</p>
-        <p>Your deployment is finished and your device is now running the updated software!</p>
-        <div className="flexbox centered">{!url ? <Loader show={true} /> : <Button variant="contained" onClick={onClick}>{`Go to ${url}`}</Button>}</div>
-        <p>and you should see the demo web application actually being run on the device.</p>
-        <p>NOTE: if you have local network restrictions, you may need to check them if you have difficulty loading the page.</p>
-        <a onClick={onClick}>Visit the web app running your device</a>
-      </ReactTooltip>
-    </div>
+    <MenderTooltipClickable
+      className="tooltip onboard-icon onboard-tip"
+      id={onboardingSteps.DEPLOYMENTS_PAST_COMPLETED}
+      onboarding
+      startOpen
+      style={anchor}
+      PopperProps={{ style: { marginLeft: -30, marginTop: -20 } }}
+      title={
+        <div className="content">
+          <p>Fantastic! You completed your first deployment!</p>
+          <p>Your deployment is finished and your device is now running the updated software!</p>
+          <div className="flexbox centered">{!url ? <Loader show={true} /> : <Button variant="contained" onClick={onClick}>{`Go to ${url}`}</Button>}</div>
+          <p>and you should see the demo web application actually being run on the device.</p>
+          <p>NOTE: if you have local network restrictions, you may need to check them if you have difficulty loading the page.</p>
+          <a onClick={onClick}>Visit the web app running your device</a>
+        </div>
+      }
+    >
+      <CheckCircleIcon />
+    </MenderTooltipClickable>
   );
 };
 
