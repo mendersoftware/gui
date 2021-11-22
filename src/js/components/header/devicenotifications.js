@@ -12,6 +12,7 @@ const DeviceNotifications = ({ total, limit, pending }) => {
   const warning = limit && limit <= total;
   return (
     <MenderTooltipClickable
+      className="header-section"
       disabled={!limit}
       disableHoverListener={false}
       enterDelay={500}
@@ -37,20 +38,19 @@ const DeviceNotifications = ({ total, limit, pending }) => {
         </>
       }
     >
-      <div className="header-section">
+      <>
         <Link to="/devices" className={warning ? 'warning' : approaching ? 'approaching' : ''}>
           <span>{total.toLocaleString()}</span>
-          {limit ? <span>/{limit.toLocaleString()}</span> : null}
+          {limit ? <span id="limit">/{limit.toLocaleString()}</span> : null}
 
           <DeveloperBoardIcon style={{ margin: '0 7px 0 10px', fontSize: '20px' }} />
         </Link>
-
         {pending ? (
           <Link to="/devices/pending" style={{ marginLeft: '7px' }} className={limit && limit < pending + total ? 'warning' : null}>
             {pending.toLocaleString()} pending
           </Link>
         ) : null}
-      </div>
+      </>
     </MenderTooltipClickable>
   );
 };
