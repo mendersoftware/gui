@@ -12,7 +12,7 @@ test.describe('Settings', () => {
     test('allows upgrading to Professional', async ({ environment, loggedInPage: page }) => {
       test.skip(environment !== 'staging');
       await page.waitForTimeout(1000);
-      const wasUpgraded = await page.isVisible(`css=#limit a.inline span >> text=250`);
+      const wasUpgraded = await page.isVisible(`css=#limit >> text=250`);
       if (wasUpgraded) {
         test.skip('looks like the account was upgraded already, continue with the remaining tests');
       }
@@ -32,8 +32,8 @@ test.describe('Settings', () => {
     });
     test('allows higher device limits once upgraded', async ({ baseUrl, environment, loggedInPage: page }) => {
       test.skip(environment !== 'staging');
-      await page.waitForSelector(`css=#limit a.inline span >> text=250`, { timeout: 2000 });
-      expect(await page.isVisible(`css=#limit a.inline span >> text=250`)).toBeTruthy();
+      await page.waitForSelector(`css=#limit >> text=250`, { timeout: 2000 });
+      expect(await page.isVisible(`css=#limit >> text=250`)).toBeTruthy();
       const token = await tenantTokenRetrieval(baseUrl, page);
       await startClient(baseUrl, token, 50);
       await page.goto(`${baseUrl}ui/#/devices`);
