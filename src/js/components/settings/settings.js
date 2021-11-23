@@ -11,12 +11,52 @@ import { Elements } from '@stripe/react-stripe-js';
 import { getCurrentUser, getIsEnterprise, getUserRoles } from '../../selectors';
 import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
+import Global from './global';
+import Integrations from './integrations';
 import Organization from './organization';
 import Roles from './roles';
-import Global from './global';
 import Upgrade from './upgrade';
 
 let stripePromise = null;
+
+const sectionMap = {
+  'global-settings': { admin: false, enterprise: false, multitenancy: false, userManagement: false, component: <Global />, text: () => 'Global settings' },
+  'my-profile': { admin: false, enterprise: false, multitenancy: false, userManagement: false, component: <SelfUserManagement />, text: () => 'My profile' },
+  'organization-and-billing': {
+    admin: false,
+    enterprise: false,
+    multitenancy: true,
+    userManagement: false,
+    component: <Organization />,
+    text: () => 'Organization and billing'
+  },
+  'user-management': {
+    admin: false,
+    enterprise: false,
+    multitenancy: false,
+    userManagement: true,
+    component: <UserManagement />,
+    text: () => 'User management'
+  },
+  'role-management': { admin: true, enterprise: true, multitenancy: false, userManagement: false, component: <Roles />, text: () => 'Roles' },
+  'integrations': {
+    admin: true,
+    enterprise: false,
+    multitenancy: false,
+    userManagement: false,
+    component: <Integrations />,
+    text: () => 'Integrations'
+  },
+  upgrade: {
+    admin: false,
+    enterprise: false,
+    multitenancy: true,
+    trial: false,
+    userManagement: false,
+    component: <Upgrade history={history} />,
+    text: ({ trial }) => (trial ? 'Upgrade to a plan' : 'Upgrades and add-ons')
+  }
+};
 
 export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, history, isAdmin, isEnterprise, match, stripeAPIKey, trial }) => {
   const [loadingFinished, setLoadingFinished] = useState(!stripeAPIKey);
@@ -38,30 +78,6 @@ export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, hi
       Promise.race([stripePromise, notStripePromise]).then(result => setLoadingFinished(result !== notStripePromise));
     }
   }, []);
-
-  const sectionMap = {
-    'global-settings': { admin: false, enterprise: false, multitenancy: false, userManagement: false, component: <Global />, text: 'Global settings' },
-    'my-profile': { admin: false, enterprise: false, multitenancy: false, userManagement: false, component: <SelfUserManagement />, text: 'My profile' },
-    'organization-and-billing': {
-      admin: false,
-      enterprise: false,
-      multitenancy: true,
-      userManagement: false,
-      component: <Organization />,
-      text: 'Organization and billing'
-    },
-    'user-management': { admin: false, enterprise: false, multitenancy: false, userManagement: true, component: <UserManagement />, text: 'User management' },
-    'role-management': { admin: true, enterprise: true, multitenancy: false, userManagement: false, component: <Roles />, text: 'Roles' },
-    upgrade: {
-      admin: false,
-      enterprise: false,
-      multitenancy: true,
-      trial: false,
-      userManagement: false,
-      component: <Upgrade history={history} />,
-      text: trial ? 'Upgrade to a plan' : 'Upgrades and add-ons'
-    }
-  };
 
   const checkDenyAccess = item =>
     (currentUser && item.admin && !isAdmin) ||
@@ -86,7 +102,7 @@ export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, hi
           if (!checkDenyAccess(item)) {
             accu.push(
               <ListItem component={NavLink} className="navLink settingsNav" to={`/settings/${key}`} key={key}>
-                <ListItemText>{item.text}</ListItemText>
+                <ListItemText>{item.text({ trial })}</ListItemText>
                 {key === 'upgrade' ? (
                   <ListItemIcon>
                     <PaymentIcon />

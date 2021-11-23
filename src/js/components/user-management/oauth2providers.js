@@ -1,34 +1,23 @@
 import React from 'react';
 
-import { SvgIcon } from '@material-ui/core';
 import { mdiGithub, mdiGoogle, mdiMicrosoft } from '@mdi/js';
+
+import MaterialDesignIcon from '../common/materialdesignicon';
 
 export const OAuth2Providers = [
   {
     id: 'github',
     name: 'Github',
-    icon: (
-      <SvgIcon fontSize="inherit">
-        <path d={mdiGithub} />
-      </SvgIcon>
-    )
+    icon: <MaterialDesignIcon path={mdiGithub} />
   },
   {
     id: 'google',
     name: 'Google',
-    icon: (
-      <SvgIcon fontSize="inherit">
-        <path d={mdiGoogle} />
-      </SvgIcon>
-    )
+    icon: <MaterialDesignIcon path={mdiGoogle} />
   },
   {
     id: 'microsoft',
     name: 'Microsoft',
-    icon: (
-      <SvgIcon fontSize="inherit">
-        <path d={mdiMicrosoft} />
-      </SvgIcon>
-    )
+    icon: <MaterialDesignIcon path={mdiMicrosoft} />
   }
 ];

@@ -7,12 +7,15 @@ import OrganizationConstants from '../constants/organizationConstants';
 import {
   cancelRequest,
   cancelUpgrade,
+  changeIntegration,
   confirmCardUpdate,
   completeUpgrade,
   createOrganizationTrial,
+  deleteIntegration,
   getAuditLogs,
   getAuditLogsCsvLink,
   getCurrentCard,
+  getIntegrationFor,
   getUserOrganization,
   requestPlanChange,
   sendSupportMessage,
@@ -265,6 +268,73 @@ describe('organization actions', () => {
       const storeActions = store.getActions();
       expect(storeActions).toHaveLength(0);
       expect(link).toEqual('/api/management/v1/auditlogs/logs/export?limit=20000&sort=desc');
+    });
+  });
+  it('should allow configuring external device providers', async () => {
+    const store = mockStore({
+      ...defaultState,
+      organization: {
+        ...defaultState.organization,
+        externalDeviceIntegrations: [{ provider: 'aws', something: 'new' }]
+      }
+    });
+    expect(store.getActions()).toHaveLength(0);
+    const expectedActions = [
+      {
+        type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
+        value: [
+          { provider: 'aws', something: 'new' },
+          { provider: 'azure', connectionString: 'something_else' }
+        ]
+      }
+    ];
+    const request = store.dispatch(changeIntegration({ provider: 'azure' }));
+    expect(request).resolves.toBeTruthy();
+    await request.then(() => {
+      const storeActions = store.getActions();
+      expect(storeActions).toHaveLength(expectedActions.length);
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    });
+  });
+  it('should allow retrieving external device providers', async () => {
+    const store = mockStore({
+      ...defaultState,
+      organization: {
+        ...defaultState.organization,
+        externalDeviceIntegrations: [
+          { provider: 'azure', something: 'something' },
+          { provider: 'aws', something: 'new' }
+        ]
+      }
+    });
+    expect(store.getActions()).toHaveLength(0);
+    const expectedActions = [
+      {
+        type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
+        value: [
+          { provider: 'azure', something: 'something', connectionString: 'something_else' },
+          { provider: 'aws', something: 'new' }
+        ]
+      }
+    ];
+    const request = store.dispatch(getIntegrationFor({ provider: 'azure' }));
+    expect(request).resolves.toBeTruthy();
+    await request.then(() => {
+      const storeActions = store.getActions();
+      expect(storeActions).toHaveLength(expectedActions.length);
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    });
+  });
+  it('should allow deleting external device provider configurations', async () => {
+    const store = mockStore({ ...defaultState, externalDeviceIntegrations: [{ provider: 'azure' }] });
+    expect(store.getActions()).toHaveLength(0);
+    const expectedActions = [{ type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: [] }];
+    const request = store.dispatch(deleteIntegration({ provider: 'azure' }));
+    expect(request).resolves.toBeTruthy();
+    await request.then(() => {
+      const storeActions = store.getActions();
+      expect(storeActions).toHaveLength(expectedActions.length);
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
 });
