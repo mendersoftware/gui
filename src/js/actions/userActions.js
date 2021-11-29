@@ -167,15 +167,19 @@ export const editUser = (userId, userData) => dispatch =>
     .then(() => Promise.all([dispatch({ type: UserConstants.UPDATED_USER, userId, user: userData }), dispatch(setSnackbar(actions.edit.successMessage))]))
     .catch(err => userActionErrorHandler(err, 'edit', dispatch));
 
-export const enableUser2fa = (userId = OWN_USER_ID) => dispatch =>
-  GeneralApi.post(`${useradmApiUrl}/users/${userId}/2fa/enable`)
-    .catch(err => commonErrorHandler(err, `There was an error enabling Two Factor authentication for the user.`, dispatch))
-    .then(() => Promise.resolve(dispatch(getUser(userId))));
+export const enableUser2fa =
+  (userId = OWN_USER_ID) =>
+  dispatch =>
+    GeneralApi.post(`${useradmApiUrl}/users/${userId}/2fa/enable`)
+      .catch(err => commonErrorHandler(err, `There was an error enabling Two Factor authentication for the user.`, dispatch))
+      .then(() => Promise.resolve(dispatch(getUser(userId))));
 
-export const disableUser2fa = (userId = OWN_USER_ID) => dispatch =>
-  GeneralApi.post(`${useradmApiUrl}/users/${userId}/2fa/disable`)
-    .catch(err => commonErrorHandler(err, `There was an error disabling Two Factor authentication for the user.`, dispatch))
-    .then(() => Promise.resolve(dispatch(getUser(userId))));
+export const disableUser2fa =
+  (userId = OWN_USER_ID) =>
+  dispatch =>
+    GeneralApi.post(`${useradmApiUrl}/users/${userId}/2fa/disable`)
+      .catch(err => commonErrorHandler(err, `There was an error disabling Two Factor authentication for the user.`, dispatch))
+      .then(() => Promise.resolve(dispatch(getUser(userId))));
 
 export const getRoles = () => (dispatch, getState) =>
   GeneralApi.get(`${useradmApiUrl}/roles`)
@@ -263,32 +267,34 @@ export const getGlobalSettings = () => dispatch =>
     return Promise.resolve(dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings }));
   });
 
-export const saveGlobalSettings = (settings, beOptimistic = false, notify = false) => (dispatch, getState) => {
-  if (!window.sessionStorage.getItem('settings-initialized') && !beOptimistic) {
-    return;
-  }
-  let updatedSettings = { ...getState().users.globalSettings, ...settings };
-  if (getCurrentUser(getState()).verified) {
-    updatedSettings['2fa'] = twoFAStates.enabled;
-  } else {
-    delete updatedSettings['2fa'];
-  }
-  let tasks = [dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: updatedSettings })];
-  return GeneralApi.post(`${useradmApiUrl}/settings`, updatedSettings)
-    .then(() => {
-      if (notify) {
-        tasks.push(dispatch(setSnackbar('Settings saved successfully')));
-      }
-      return Promise.all(tasks);
-    })
-    .catch(err => {
-      if (beOptimistic) {
-        return Promise.all([tasks]);
-      }
-      console.log(err);
-      return commonErrorHandler(err, `The settings couldn't be saved.`, dispatch);
-    });
-};
+export const saveGlobalSettings =
+  (settings, beOptimistic = false, notify = false) =>
+  (dispatch, getState) => {
+    if (!window.sessionStorage.getItem('settings-initialized') && !beOptimistic) {
+      return;
+    }
+    let updatedSettings = { ...getState().users.globalSettings, ...settings };
+    if (getCurrentUser(getState()).verified) {
+      updatedSettings['2fa'] = twoFAStates.enabled;
+    } else {
+      delete updatedSettings['2fa'];
+    }
+    let tasks = [dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: updatedSettings })];
+    return GeneralApi.post(`${useradmApiUrl}/settings`, updatedSettings)
+      .then(() => {
+        if (notify) {
+          tasks.push(dispatch(setSnackbar('Settings saved successfully')));
+        }
+        return Promise.all(tasks);
+      })
+      .catch(err => {
+        if (beOptimistic) {
+          return Promise.all([tasks]);
+        }
+        console.log(err);
+        return commonErrorHandler(err, `The settings couldn't be saved.`, dispatch);
+      });
+  };
 
 export const saveUserSettings = settings => (dispatch, getState) => {
   if (!getState().users.currentUser) {

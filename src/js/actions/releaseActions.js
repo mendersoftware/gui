@@ -228,67 +228,71 @@ const zipReleaseLists = (stateReleaseIds, newReleases, offset) =>
     [...stateReleaseIds]
   );
 
-export const getReleases = (passedConfig = {}) => (dispatch, getState) => {
-  let config = { ...getState().releases.releasesList, ...passedConfig };
-  const { searchAttribute, searchOnly, searchTerm = '' } = config;
-  if (passedConfig.visibleSection?.start && searchAttribute) {
-    return Promise.resolve(dispatch(refreshReleases(passedConfig)));
-  }
-  config = searchOnly ? { ...config, sort: { attribute: 'Name', direction: AppConstants.SORTING_OPTIONS.asc } } : config;
-  const queryGenerator = generateReleaseSearchQuery(searchTerm, passedConfig.searchAttribute);
+export const getReleases =
+  (passedConfig = {}) =>
+  (dispatch, getState) => {
+    let config = { ...getState().releases.releasesList, ...passedConfig };
+    const { searchAttribute, searchOnly, searchTerm = '' } = config;
+    if (passedConfig.visibleSection?.start && searchAttribute) {
+      return Promise.resolve(dispatch(refreshReleases(passedConfig)));
+    }
+    config = searchOnly ? { ...config, sort: { attribute: 'Name', direction: AppConstants.SORTING_OPTIONS.asc } } : config;
+    const queryGenerator = generateReleaseSearchQuery(searchTerm, passedConfig.searchAttribute);
 
-  const releaseListProcessing = props => {
-    if (!props) {
-      return Promise.resolve();
-    }
-    const { data: releases, headers } = props;
-    const state = getState().releases;
-    const total = Number(headers[headerNames.total]);
-    const flatReleases = reduceReceivedReleases(releases, state.byId);
-    const combinedReleases = { ...state.byId, ...flatReleases };
-    const flattenedReleases = Object.values(flatReleases).sort(customSort(config.sort.direction === AppConstants.SORTING_OPTIONS.desc, config.sort.attribute));
-    let tasks = [dispatch({ type: ReleaseConstants.RECEIVE_RELEASES, releases: combinedReleases })];
-    if (searchOnly) {
-      tasks.push(dispatch(setReleasesListState({ searchedIds: flattenedReleases.map(item => item.Name) })));
-    } else {
-      tasks.push(
-        dispatch(
-          setReleasesListState({
-            releaseIds: flattenedReleases.map(item => item.Name),
-            searchTotal: searchTerm.length ? total : state.releasesList.searchTotal,
-            total: searchTerm ? state.releasesList.total : total
-          })
-        )
-      );
-    }
-    if (!getState().onboarding.complete) {
-      tasks.push(dispatch({ type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: !!Object.keys(combinedReleases).length }));
-    }
-    tasks.push(flatReleases);
-    return Promise.all(tasks);
-  };
-
-  const maybeTriggerRetrieval = results => {
-    if (!results || Object.keys(results[results.length - 1]).length) {
-      if (results && Object.keys(results[results.length - 1]).length && !searchAttribute) {
-        const nextGeneratorResult = queryGenerator.next().value ?? '';
-        const index = searchAttributes.findIndex(attribute => nextGeneratorResult.includes(attribute));
-        const searchAttribute = index > 0 ? searchAttributes[index - 1] : searchAttributes[searchAttributes.length - 1];
-        dispatch(setReleasesListState({ searchAttribute: searchTerm ? searchAttribute : searchAttributes[0] }));
+    const releaseListProcessing = props => {
+      if (!props) {
+        return Promise.resolve();
       }
-      return Promise.resolve();
-    }
-    return releaseListRetrieval(config, queryGenerator);
-  };
+      const { data: releases, headers } = props;
+      const state = getState().releases;
+      const total = Number(headers[headerNames.total]);
+      const flatReleases = reduceReceivedReleases(releases, state.byId);
+      const combinedReleases = { ...state.byId, ...flatReleases };
+      const flattenedReleases = Object.values(flatReleases).sort(
+        customSort(config.sort.direction === AppConstants.SORTING_OPTIONS.desc, config.sort.attribute)
+      );
+      let tasks = [dispatch({ type: ReleaseConstants.RECEIVE_RELEASES, releases: combinedReleases })];
+      if (searchOnly) {
+        tasks.push(dispatch(setReleasesListState({ searchedIds: flattenedReleases.map(item => item.Name) })));
+      } else {
+        tasks.push(
+          dispatch(
+            setReleasesListState({
+              releaseIds: flattenedReleases.map(item => item.Name),
+              searchTotal: searchTerm.length ? total : state.releasesList.searchTotal,
+              total: searchTerm ? state.releasesList.total : total
+            })
+          )
+        );
+      }
+      if (!getState().onboarding.complete) {
+        tasks.push(dispatch({ type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: !!Object.keys(combinedReleases).length }));
+      }
+      tasks.push(flatReleases);
+      return Promise.all(tasks);
+    };
 
-  return releaseListRetrieval(config, queryGenerator) // first we look for name matches
-    .then(releaseListProcessing)
-    .then(maybeTriggerRetrieval) // if none found, we look for device_type matches
-    .then(releaseListProcessing)
-    .then(maybeTriggerRetrieval) // if none found, we look for description matches
-    .then(releaseListProcessing)
-    .catch(err => commonErrorHandler(err, `Please check your connection`, dispatch));
-};
+    const maybeTriggerRetrieval = results => {
+      if (!results || Object.keys(results[results.length - 1]).length) {
+        if (results && Object.keys(results[results.length - 1]).length && !searchAttribute) {
+          const nextGeneratorResult = queryGenerator.next().value ?? '';
+          const index = searchAttributes.findIndex(attribute => nextGeneratorResult.includes(attribute));
+          const searchAttribute = index > 0 ? searchAttributes[index - 1] : searchAttributes[searchAttributes.length - 1];
+          dispatch(setReleasesListState({ searchAttribute: searchTerm ? searchAttribute : searchAttributes[0] }));
+        }
+        return Promise.resolve();
+      }
+      return releaseListRetrieval(config, queryGenerator);
+    };
+
+    return releaseListRetrieval(config, queryGenerator) // first we look for name matches
+      .then(releaseListProcessing)
+      .then(maybeTriggerRetrieval) // if none found, we look for device_type matches
+      .then(releaseListProcessing)
+      .then(maybeTriggerRetrieval) // if none found, we look for description matches
+      .then(releaseListProcessing)
+      .catch(err => commonErrorHandler(err, `Please check your connection`, dispatch));
+  };
 
 const possiblePageSizes = [10, 20, 50, 100, 250, 500];
 const getBestPageSize = itemCount =>
