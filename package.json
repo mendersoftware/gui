@@ -87,7 +87,7 @@
     "jest-watch-typeahead": "1.0.0",
     "less": "^4.1.2",
     "less-loader": "^10.2.0",
-    "lint-staged": "^12.1.1",
+    "lint-staged": "^12.1.2",
     "mini-css-extract-plugin": "^2.4.5",
     "msw": "^0.35.0",
     "postcss": "^8.4.4",
