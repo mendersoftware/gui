@@ -90,7 +90,7 @@
     "lint-staged": "^12.1.1",
     "mini-css-extract-plugin": "^2.4.5",
     "msw": "^0.35.0",
-    "postcss": "^8.3.11",
+    "postcss": "^8.4.4",
     "postcss-loader": "^6.2.0",
     "prettier": "^2.2.1",
     "redux-mock-store": "^1.5.4",
