@@ -68,26 +68,22 @@ module.exports = {
     $gt: {
       title: '>',
       shortform: '>',
-      help:
-        'The "greater than" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
+      help: 'The "greater than" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
     },
     $gte: {
       title: '>=',
       shortform: '>=',
-      help:
-        'The "greater than or equal" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
+      help: 'The "greater than or equal" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
     },
     $lt: {
       title: '<',
       shortform: '<',
-      help:
-        'The "lesser than" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
+      help: 'The "lesser than" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
     },
     $lte: {
       title: '<=',
       shortform: '<=',
-      help:
-        'The "lesser than or equal" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
+      help: 'The "lesser than or equal" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
     },
     $in: {
       title: 'in',

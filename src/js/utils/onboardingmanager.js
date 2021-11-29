@@ -196,7 +196,11 @@ export const onboardingSteps = {
 
 const getOnboardingStepCompleted = (id, progress, complete, showHelptips, showTips) => {
   const keys = Object.keys(onboardingSteps);
-  const { min = id, max = id, extra } = Object.entries(onboardingSteps).reduce((accu, [key, value]) => {
+  const {
+    min = id,
+    max = id,
+    extra
+  } = Object.entries(onboardingSteps).reduce((accu, [key, value]) => {
     if (key === id) {
       return value.condition;
     }

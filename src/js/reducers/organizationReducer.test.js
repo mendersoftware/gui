@@ -47,8 +47,7 @@ describe('organization reducer', () => {
   it('should handle RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS', async () => {
     expect(reducer(undefined, { type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: [] }).externalDeviceIntegrations).toEqual([]);
     expect(reducer(initialState, { type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: [12, 23] }).externalDeviceIntegrations).toEqual([
-      12,
-      23
+      12, 23
     ]);
   });
 });
