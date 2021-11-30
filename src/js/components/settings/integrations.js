@@ -76,14 +76,15 @@ export const Integrations = ({ integrations, changeIntegration, deleteIntegratio
   const [currentValue, setCurrentValue] = useState('');
 
   useEffect(() => {
-    setAvailableIntegrations(
-      Object.values(EXTERNAL_PROVIDER).reduce((accu, provider) => {
-        if (provider.enabled && !integrations.some(integration => integration.provider == provider.provider)) {
-          accu.push(provider);
-        }
-        return accu;
-      }, [])
-    );
+    const available = Object.values(EXTERNAL_PROVIDER).reduce((accu, provider) => {
+      if (provider.enabled && !integrations.some(integration => integration.provider == provider.provider)) {
+        accu.push(provider);
+      }
+      return accu;
+    }, []);
+    if (!available.every(integration => availableIntegrations.some(availableIntegration => availableIntegration.provider === integration.provider))) {
+      setAvailableIntegrations(available);
+    }
     setConfiguredIntegrations(integrations);
   }, [integrations]);
 
