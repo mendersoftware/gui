@@ -71,22 +71,21 @@ describe('user reducer', () => {
     ).toEqual('test@mender.io');
   });
   it('should handle RECEIVED_ROLES', async () => {
-    const roles = reducer(undefined, { type: UserConstants.RECEIVED_ROLES, rolesById: { ...defaultState.users.rolesById } }).rolesById;
+    const roles = reducer(undefined, { type: UserConstants.RECEIVED_ROLES, value: { ...defaultState.users.rolesById } }).rolesById;
     Object.entries(defaultState.users.rolesById).forEach(([key, role]) => expect(roles[key]).toEqual(role));
     expect(
       reducer(
-        { ...initialState, rolesById: { thingsRole: { test: 'test' } } },
-        { type: UserConstants.RECEIVED_ROLES, rolesById: { ...defaultState.users.rolesById } }
+        { ...initialState, rolesById: { ...defaultState.users.rolesById, thingsRole: { test: 'test' } } },
+        { type: UserConstants.RECEIVED_ROLES, value: { ...defaultState.users.rolesById } }
       ).rolesById.thingsRole
-    ).toBeTruthy();
+    ).toBeFalsy();
   });
   it('should handle REMOVED_ROLE', async () => {
-    expect(reducer(undefined, { type: UserConstants.REMOVED_ROLE, roleId: defaultState.users.rolesById.test.title }).rolesById.test).toBeFalsy();
+    // eslint-disable-next-line no-unused-vars
+    const { [defaultState.users.rolesById.test.title]: removedRole, ...rolesById } = defaultState.users.rolesById;
+    expect(reducer(undefined, { type: UserConstants.REMOVED_ROLE, value: defaultState.users.rolesById.test.title }).rolesById.test).toBeFalsy();
     expect(
-      reducer(
-        { ...initialState, rolesById: { ...defaultState.users.rolesById } },
-        { type: UserConstants.REMOVED_ROLE, roleId: defaultState.users.rolesById.test.title }
-      ).rolesById.test
+      reducer({ ...initialState, rolesById: { ...defaultState.users.rolesById } }, { type: UserConstants.REMOVED_ROLE, value: rolesById }).rolesById.test
     ).toBeFalsy();
   });
   it('should handle CREATED_ROLE', async () => {
