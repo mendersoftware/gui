@@ -9,6 +9,7 @@ import { ArrowUpward as ArrowUpwardIcon, Close as CloseIcon, Schedule as HelpIco
 import { setShowDismissOnboardingTipsDialog } from '../../actions/onboardingActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { MenderTooltipClickable } from '../common/mendertooltip';
+import { ALL_DEVICES } from '../../constants/deviceConstants';
 
 export const WelcomeSnackTip = React.forwardRef(({ progress, setSnackbar }, ref) => {
   const onClose = () => setSnackbar('');
@@ -144,7 +145,7 @@ export const SchedulingGroupSelection = ({ createdGroup }) => <div>{`Select the 
 
 export const SchedulingReleaseToDevices = ({ selectedDevice, selectedGroup, selectedRelease }) => (
   <div>{`Create the deployment! This will deploy the ${selectedRelease.Name} Artifact to ${
-    selectedDevice ? selectedDevice.id : selectedGroup || 'All devices'
+    selectedDevice ? selectedDevice.id : selectedGroup || ALL_DEVICES
   }`}</div>
 );
 

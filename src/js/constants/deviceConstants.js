@@ -213,5 +213,6 @@ module.exports = {
     system: 'system',
     tags: 'tags'
   },
+  ALL_DEVICES: 'All devices',
   UNGROUPED_GROUP: { id: '*|=ungrouped=|*', name: 'Unassigned' }
 };

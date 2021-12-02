@@ -9,11 +9,11 @@ import { advanceOnboarding } from '../../actions/onboardingActions';
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, selectDeployment, setDeploymentsState } from '../../actions/deploymentActions';
 import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
-import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getIsEnterprise, getOnboardingState } from '../../selectors';
 
-import CreateDialog, { allDevices } from './createdeployment';
+import CreateDialog from './createdeployment';
 import Progress from './inprogressdeployments';
 import Past from './pastdeployments';
 import Report from './report';
@@ -107,7 +107,7 @@ export const Deployments = ({
     const { artifact_name, name, update_control_map = {} } = deployment;
     const release = releases[artifact_name];
     const updateControlMap = isEnterprise ? { update_control_map: { states: update_control_map.states || {} } } : {};
-    const targetDevicesConfig = name === allDevices || groupsById[name] ? { group: name } : { device: devicesById[name] };
+    const targetDevicesConfig = name === ALL_DEVICES || groupsById[name] ? { group: name } : { device: devicesById[name] };
     const deploymentObject = {
       deploymentDeviceIds,
       phases: [{ batch_size: 100, start_ts: undefined, delay: 0 }],

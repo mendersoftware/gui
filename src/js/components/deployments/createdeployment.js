@@ -15,14 +15,13 @@ import { advanceOnboarding } from '../../actions/onboardingActions';
 import { getReleases } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { PLANS } from '../../constants/appConstants';
-import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getDocsVersion, getIsEnterprise, getOnboardingState } from '../../selectors';
 
 import Tracking from '../../tracking';
 import { deepCompare, standardizePhases, validatePhases } from '../../helpers';
 
-export const allDevices = 'All devices';
 const MAX_PREVIOUS_PHASES_COUNT = 5;
 
 const deploymentSteps = [
@@ -89,7 +88,11 @@ export const CreateDialog = props => {
   }, [isEnterprise, isHosted, plan]);
 
   useEffect(() => {
-    if (deploymentObject.group === allDevices) {
+    if (!deploymentObject.group) {
+      setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: deploymentObject.device ? 1 : 0 });
+      return;
+    }
+    if (deploymentObject.group === ALL_DEVICES) {
       setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: acceptedDeviceCount });
       return;
     }
@@ -123,9 +126,9 @@ export const CreateDialog = props => {
       artifact_name: release.Name,
       devices: (filterId || group) && !device ? undefined : deploymentDeviceIds,
       filter_id: filterId,
-      all_devices: !filterId && group === allDevices,
-      group: group === allDevices || device ? undefined : group,
-      name: device?.id || (group ? decodeURIComponent(group) : 'All devices'),
+      all_devices: !filterId && group === ALL_DEVICES,
+      group: group === ALL_DEVICES || device ? undefined : group,
+      name: device?.id || (group ? decodeURIComponent(group) : ALL_DEVICES),
       phases: phases
         ? phases.map((phase, i, origPhases) => {
             phase.start_ts = getPhaseStartTime(origPhases, i, startTime);

@@ -13,7 +13,7 @@ import { getIssueCountsByType } from '../../actions/monitorActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { saveUserSettings, updateUserColumnSettings } from '../../actions/userActions';
 import { SORTING_OPTIONS } from '../../constants/appConstants';
-import { DEVICE_LIST_DEFAULTS, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { ALL_DEVICES, DEVICE_ISSUE_OPTIONS, DEVICE_LIST_DEFAULTS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { duplicateFilter, isEmpty } from '../../helpers';
 import {
@@ -365,7 +365,7 @@ export const Authorized = props => {
 
   const EmptyState = currentSelectedState.emptyState;
 
-  const groupLabel = selectedGroup ? decodeURIComponent(selectedGroup) : 'All devices';
+  const groupLabel = selectedGroup ? decodeURIComponent(selectedGroup) : ALL_DEVICES;
 
   let onboardingComponent;
   const devicePendingTip = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING_START, onboardingState);
