@@ -1,4 +1,4 @@
-import * as UserConstants from '../constants/userConstants';
+import UserConstants from '../constants/userConstants';
 
 export const initialState = {
   byId: {},
@@ -82,22 +82,17 @@ const userReducer = (state = initialState, action) => {
           }
         }
       };
+    case UserConstants.RECEIVED_PERMISSION_SETS:
+      return {
+        ...state,
+        permissionSetsById: action.value
+      };
     case UserConstants.RECEIVED_ROLES:
+    case UserConstants.REMOVED_ROLE:
       return {
         ...state,
-        rolesById: {
-          ...state.rolesById,
-          ...action.rolesById
-        }
+        rolesById: action.value
       };
-    case UserConstants.REMOVED_ROLE: {
-      let rolesById = state.rolesById;
-      delete rolesById[action.roleId];
-      return {
-        ...state,
-        rolesById
-      };
-    }
     case UserConstants.CREATED_ROLE:
     case UserConstants.UPDATED_ROLE:
       return {
