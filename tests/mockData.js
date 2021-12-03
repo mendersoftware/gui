@@ -323,6 +323,7 @@ export const defaultState = {
         total: 3
       }
     },
+    externalDeviceIntegrations: [],
     intentId: 'testIntent',
     organization: {
       id: 1,

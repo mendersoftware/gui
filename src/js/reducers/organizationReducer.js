@@ -25,7 +25,8 @@ export const initialState = {
       type: '',
       user: ''
     }
-  }
+  },
+  externalDeviceIntegrations: []
 };
 
 const organizationReducer = (state = initialState, action) => {
@@ -66,6 +67,11 @@ const organizationReducer = (state = initialState, action) => {
         organization: {
           ...action.organization
         }
+      };
+    case OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS:
+      return {
+        ...state,
+        externalDeviceIntegrations: action.value
       };
     default:
       return state;

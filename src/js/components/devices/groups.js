@@ -31,7 +31,11 @@ export const GroupItem = ({ changeGroup, groupname, selectedGroup, name }) => (
 );
 
 export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, selectedGroup, showHelptips }) => {
-  const { dynamic: dynamicGroups, static: staticGroups, ungrouped } = Object.entries(groups)
+  const {
+    dynamic: dynamicGroups,
+    static: staticGroups,
+    ungrouped
+  } = Object.entries(groups)
     .sort((a, b) => a[0].localeCompare(b[0]))
     .reduce(
       (accu, [groupname, group], index) => {

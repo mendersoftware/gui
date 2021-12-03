@@ -16,7 +16,12 @@ describe('Artifacts Component', () => {
   beforeEach(() => {
     store = mockStore({ ...defaultState });
     jest.useFakeTimers();
-    jest.mock('react-virtualized-auto-sizer', () => ({ children }) => children({ height: 800, width: 390 }));
+    jest.mock(
+      'react-virtualized-auto-sizer',
+      () =>
+        ({ children }) =>
+          children({ height: 800, width: 390 })
+    );
   });
 
   afterEach(() => {

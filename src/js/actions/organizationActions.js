@@ -5,6 +5,7 @@ import Api, { headerNames } from '../api/general-api';
 import OrganizationConstants from '../constants/organizationConstants';
 import { getTenantCapabilities } from '../selectors';
 import { SORTING_OPTIONS } from '../constants/appConstants';
+import { EXTERNAL_PROVIDER } from '../constants/deviceConstants';
 
 const cookies = new Cookies();
 const apiUrlv1 = '/api/management/v1';
@@ -87,36 +88,40 @@ export const completeUpgrade = (tenantId, plan) => dispatch =>
     .catch(err => commonErrorHandler(err, `There was an error upgrading your account:`, dispatch))
     .then(() => Promise.resolve(dispatch(getUserOrganization())));
 
-export const getAuditLogs = (page, perPage, startDate, endDate, userId, type, detail, sort = SORTING_OPTIONS.desc) => (dispatch, getState) => {
-  const { hasAuditlogs } = getTenantCapabilities(getState());
-  if (!hasAuditlogs) {
-    return Promise.resolve();
-  }
-  const createdAfter = startDate ? `&created_after=${Math.round(Date.parse(startDate) / 1000)}` : '';
-  const createdBefore = endDate ? `&created_before=${Math.round(Date.parse(endDate) / 1000)}` : '';
-  const typeSearch = type ? `&object_type=${type}` : '';
-  const userSearch = userId ? `&actor_id=${userId}` : '';
-  const queryParameter = type && detail ? OrganizationConstants.AUDIT_LOGS_TYPES.find(typeObject => typeObject.value === type).queryParameter : '';
-  const objectSearch = detail ? `&${queryParameter}=${encodeURIComponent(detail)}` : '';
-  return Api.get(
-    `${auditLogsApiUrl}/logs?page=${page}&per_page=${perPage}${createdAfter}${createdBefore}${userSearch}${typeSearch}${objectSearch}&sort=${sort}`
-  )
-    .then(res => {
-      let total = res.headers[headerNames.total];
-      total = Number(total || res.data.length);
-      return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_AUDIT_LOGS, events: res.data, total }));
-    })
-    .catch(err => commonErrorHandler(err, `There was an error retrieving audit logs:`, dispatch));
-};
+export const getAuditLogs =
+  (page, perPage, startDate, endDate, userId, type, detail, sort = SORTING_OPTIONS.desc) =>
+  (dispatch, getState) => {
+    const { hasAuditlogs } = getTenantCapabilities(getState());
+    if (!hasAuditlogs) {
+      return Promise.resolve();
+    }
+    const createdAfter = startDate ? `&created_after=${Math.round(Date.parse(startDate) / 1000)}` : '';
+    const createdBefore = endDate ? `&created_before=${Math.round(Date.parse(endDate) / 1000)}` : '';
+    const typeSearch = type ? `&object_type=${type}` : '';
+    const userSearch = userId ? `&actor_id=${userId}` : '';
+    const queryParameter = type && detail ? OrganizationConstants.AUDIT_LOGS_TYPES.find(typeObject => typeObject.value === type).queryParameter : '';
+    const objectSearch = detail ? `&${queryParameter}=${encodeURIComponent(detail)}` : '';
+    return Api.get(
+      `${auditLogsApiUrl}/logs?page=${page}&per_page=${perPage}${createdAfter}${createdBefore}${userSearch}${typeSearch}${objectSearch}&sort=${sort}`
+    )
+      .then(res => {
+        let total = res.headers[headerNames.total];
+        total = Number(total || res.data.length);
+        return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_AUDIT_LOGS, events: res.data, total }));
+      })
+      .catch(err => commonErrorHandler(err, `There was an error retrieving audit logs:`, dispatch));
+  };
 
-export const getAuditLogsCsvLink = (startDate, endDate, userId, type, detail, sort = SORTING_OPTIONS.desc) => () => {
-  const createdAfter = endDate ? `&created_after=${Math.round(Date.parse(startDate) / 1000)}` : '';
-  const createdBefore = startDate ? `&created_before=${Math.round(Date.parse(endDate) / 1000)}` : '';
-  const typeSearch = type ? `&object_type=${type}` : '';
-  const userSearch = userId ? `&actor_id=${userId}` : '';
-  const objectSearch = detail ? `&object_id=${encodeURIComponent(detail)}` : '';
-  return Promise.resolve(`${auditLogsApiUrl}/logs/export?limit=20000${createdAfter}${createdBefore}${userSearch}${typeSearch}${objectSearch}&sort=${sort}`);
-};
+export const getAuditLogsCsvLink =
+  (startDate, endDate, userId, type, detail, sort = SORTING_OPTIONS.desc) =>
+  () => {
+    const createdAfter = endDate ? `&created_after=${Math.round(Date.parse(startDate) / 1000)}` : '';
+    const createdBefore = startDate ? `&created_before=${Math.round(Date.parse(endDate) / 1000)}` : '';
+    const typeSearch = type ? `&object_type=${type}` : '';
+    const userSearch = userId ? `&actor_id=${userId}` : '';
+    const objectSearch = detail ? `&object_id=${encodeURIComponent(detail)}` : '';
+    return Promise.resolve(`${auditLogsApiUrl}/logs/export?limit=20000${createdAfter}${createdBefore}${userSearch}${typeSearch}${objectSearch}&sort=${sort}`);
+  };
 
 export const setAuditlogsState = selectionState => (dispatch, getState) =>
   Promise.resolve(
@@ -138,3 +143,40 @@ export const requestPlanChange = (tenantId, content) => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/plan`, content)
     .catch(err => commonErrorHandler(err, 'There was an error sending your request', dispatch, commonErrorFallback))
     .then(() => Promise.resolve(dispatch(setSnackbar('Your request was sent successfully', 5000, ''))));
+
+const integrationApiBase = '/api/management';
+
+export const changeIntegration = integration => dispatch =>
+  Api.put(`${integrationApiBase}${EXTERNAL_PROVIDER[integration.provider].managementUrl}`, { connection_string: integration.connectionString })
+    .catch(err => commonErrorHandler(err, 'There was an error configuring the integration', dispatch, commonErrorFallback))
+    .then(() => Promise.resolve(dispatch(getIntegrationFor(integration))));
+
+export const deleteIntegration = integration => (dispatch, getState) =>
+  Api.put(`${integrationApiBase}${EXTERNAL_PROVIDER[integration.provider].managementUrl}`, { connection_string: '' })
+    .catch(err => commonErrorHandler(err, 'There was an error removing the integration', dispatch, commonErrorFallback))
+    .then(() => {
+      const integrations = getState().organization.externalDeviceIntegrations.filter(item => integration.provider !== item.provider);
+      return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: integrations }));
+    });
+
+export const getIntegrationFor = integration => (dispatch, getState) =>
+  Api.get(`${integrationApiBase}${EXTERNAL_PROVIDER[integration.provider].managementUrl}`)
+    .catch(err => commonErrorHandler(err, 'There was an error retrieving the integration', dispatch, commonErrorFallback))
+    .then(({ data }) => {
+      const { found, integrations } = getState().organization.externalDeviceIntegrations.reduce(
+        (accu, item) => {
+          if (integration.provider === item.provider && data.connection_string) {
+            accu.integrations.push({ ...item, ...data, connectionString: data.connection_string });
+            accu.found = true;
+          } else {
+            accu.integrations.push(item);
+          }
+          return accu;
+        },
+        { integrations: [], found: false }
+      );
+      if (!found && data.connection_string) {
+        integrations.push({ ...integration, ...data, connectionString: data.connection_string });
+      }
+      return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: integrations }));
+    });

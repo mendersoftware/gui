@@ -4,29 +4,22 @@ import momentDurationFormatSetup from 'moment-duration-format';
 import Time from 'react-time';
 import pluralize from 'pluralize';
 
-import { SvgIcon, Tooltip } from '@material-ui/core';
+import { Tooltip } from '@material-ui/core';
 import { RotateLeftOutlined, Warning as WarningIcon } from '@material-ui/icons';
 import { mdiDotsHorizontalCircleOutline as QueuedIcon, mdiSleep as SleepIcon } from '@mdi/js';
 
 import { groupDeploymentStats } from '../../helpers';
+import MaterialDesignIcon from '../common/materialdesignicon';
 
 momentDurationFormatSetup(moment);
 
 const statusMap = {
   complete: {
-    icon: (
-      <SvgIcon fontSize="inherit">
-        <path d={SleepIcon} />
-      </SvgIcon>
-    ),
+    icon: <MaterialDesignIcon path={SleepIcon} />,
     description: () => 'Complete, awaiting new devices'
   },
   queued: {
-    icon: (
-      <SvgIcon fontSize="inherit">
-        <path d={QueuedIcon} />
-      </SvgIcon>
-    ),
+    icon: <MaterialDesignIcon path={QueuedIcon} />,
     description: () => 'Queued to start'
   },
   paused: { icon: <RotateLeftOutlined fontSize="inherit" />, description: window => `Paused until next window ${window}` }

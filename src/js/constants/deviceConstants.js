@@ -1,3 +1,5 @@
+const { mdiAws: AWS, mdiMicrosoftAzure: Azure, mdiGoogleCloud: GCP } = require('@mdi/js');
+
 module.exports = {
   SELECT_GROUP: 'SELECT_GROUP',
   SELECT_DEVICE: 'SELECT_DEVICE',
@@ -34,6 +36,12 @@ module.exports = {
 
   SET_DEVICE_LIMIT: 'SET_DEVICE_LIMIT',
 
+  EXTERNAL_PROVIDER: {
+    amazon: { article: 'an', icon: AWS, title: 'AWS IoT core', provider: 'amazon', managementUrl: '/v1/aws-iot-manager/settings', enabled: false },
+    azure: { article: 'an', icon: Azure, title: 'Azure IoT Hub', provider: 'azure', managementUrl: '/v1/azure-iot-manager/settings', enabled: true },
+    google: { article: 'a', icon: GCP, title: 'Cloud IoT Core', provider: 'google', managementUrl: '/v1/gcp-iot-manager/settings', enabled: false }
+  },
+
   // see https://github.com/mendersoftware/go-lib-micro/tree/master/ws
   //     for the description of proto_header and the consts
   // *Note*: this needs to be aligned with mender-connect and deviceconnect.
@@ -60,26 +68,22 @@ module.exports = {
     $gt: {
       title: '>',
       shortform: '>',
-      help:
-        'The "greater than" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
+      help: 'The "greater than" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
     },
     $gte: {
       title: '>=',
       shortform: '>=',
-      help:
-        'The "greater than or equal" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
+      help: 'The "greater than or equal" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
     },
     $lt: {
       title: '<',
       shortform: '<',
-      help:
-        'The "lesser than" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
+      help: 'The "lesser than" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
     },
     $lte: {
       title: '<=',
       shortform: '<=',
-      help:
-        'The "lesser than or equal" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
+      help: 'The "lesser than or equal" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
     },
     $in: {
       title: 'in',
