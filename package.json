@@ -164,12 +164,12 @@
     "test": "node test.js",
     "watch": "webpack --watch --mode development --entry ./src/js/main.js"
   },
-  "author": "Michael Clelland",
-  "license": "ISC",
+  "author": "Northern.tech AS",
+  "license": "Apache",
   "bugs": {
-    "url": "https://github.com/mendersoftware/gui/issues"
+    "url": "https://tracker.mender.io/projects/MEN"
   },
-  "homepage": "https://github.com/mendersoftware/gui#readme",
+  "homepage": "https://mender.io/",
   "lint-staged": {
     "*.js": "eslint --cache --fix"
   }
