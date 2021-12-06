@@ -11,7 +11,7 @@
     "@mdi/js": "^6.5.95",
     "@reduxjs/toolkit": "^1.6.2",
     "@stripe/react-stripe-js": "^1.6.0",
-    "@stripe/stripe-js": "^1.21.1",
+    "@stripe/stripe-js": "^1.21.2",
     "axios": "^0.24.0",
     "buffer": "^6.0.3",
     "copy-to-clipboard": "^3.3.1",
