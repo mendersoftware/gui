@@ -16,6 +16,7 @@ import { getLatestDeviceAlerts } from './monitorActions';
 const { DEVICE_STATES, DEVICE_LIST_DEFAULTS } = DeviceConstants;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
+const apiBase = '/api/management';
 const apiUrl = '/api/management/v1';
 const apiUrlV2 = '/api/management/v2';
 export const deviceAuthV2 = `${apiUrlV2}/devauth`;
@@ -932,3 +933,47 @@ export const setDeviceTags = (deviceId, tags) => dispatch =>
       .catch(err => commonErrorHandler(err, `There was an error setting tags for device ${deviceId}.`, dispatch, 'Please check your connection.'))
       .then(() => Promise.resolve(dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device: { ...device, tags } })));
   });
+
+export const getDeviceTwin = (deviceId, integrationProvider) => (dispatch, getState) =>
+  GeneralApi.get(`${apiBase}${DeviceConstants.EXTERNAL_PROVIDER[integrationProvider].managementUrl}/devices/${deviceId}/twin`)
+    .catch(err => commonErrorHandler(err, `There was an error getting the device twin for device ${deviceId}.`, dispatch))
+    .then(({ data }) =>
+      Promise.resolve(
+        dispatch({
+          type: DeviceConstants.RECEIVE_DEVICE,
+          device: {
+            ...getState().devices.byId[deviceId],
+            twinsByProvider: {
+              ...getState().devices.byId[deviceId].twinsByProvider,
+              [integrationProvider]: {
+                ...data.properties,
+                updated_ts: data.lastActivityTime
+              }
+            }
+          }
+        })
+      )
+    );
+
+export const setDeviceTwin = (deviceId, integrationProvider, settings) => (dispatch, getState) =>
+  GeneralApi.put(`${apiBase}${DeviceConstants.EXTERNAL_PROVIDER[integrationProvider].managementUrl}/devices/${deviceId}/twin`, settings)
+    .catch(err => commonErrorHandler(err, `There was an error updating the device twin for device ${deviceId}.`, dispatch))
+    .then(() => {
+      const { twinsByProvider = {} } = getState().devices.byId[deviceId];
+      const { [integrationProvider]: currentState = {} } = twinsByProvider;
+      return Promise.resolve(
+        dispatch({
+          type: DeviceConstants.RECEIVE_DEVICE,
+          device: {
+            ...getState().devices.byId[deviceId],
+            twinsByProvider: {
+              ...twinsByProvider,
+              [integrationProvider]: {
+                ...currentState,
+                desired: settings
+              }
+            }
+          }
+        })
+      );
+    });

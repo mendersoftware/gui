@@ -7,7 +7,7 @@ import { Close as CloseIcon, Link as LinkIcon, Replay as ReplayIcon } from '@mat
 
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../actions/deploymentActions';
-import { applyDeviceConfig, decommissionDevice, getDeviceInfo, setDeviceConfig, setDeviceTags } from '../../actions/deviceActions';
+import { applyDeviceConfig, decommissionDevice, getDeviceInfo, setDeviceConfig, setDeviceTags, setDeviceTwin } from '../../actions/deviceActions';
 import { getDeviceAlerts } from '../../actions/monitorActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
@@ -27,6 +27,7 @@ import InstalledSoftware from './device-details/installedsoftware';
 import DeviceMonitoring from './device-details/monitoring';
 import MonitorDetailsDialog from './device-details/monitordetailsdialog';
 import DeviceNotifications from './device-details/notifications';
+import DeviceTwin from './device-details/devicetwin';
 
 const refreshDeviceLength = 10000;
 
@@ -43,6 +44,7 @@ export const ExpandedDevice = ({
   getDeviceLog,
   getDeviceInfo,
   getSingleDeployment,
+  hasExternalIntegration,
   isEnterprise,
   latestAlerts,
   onClose,
@@ -51,6 +53,7 @@ export const ExpandedDevice = ({
   saveGlobalSettings,
   setDeviceConfig,
   setDeviceTags,
+  setDeviceTwin,
   setSnackbar,
   showHelptips,
   tenantCapabilities,
@@ -130,6 +133,7 @@ export const ExpandedDevice = ({
         showHelptips={showHelptips}
       />
       <DeviceTags device={device} setSnackbar={setSnackbar} setDeviceTags={setDeviceTags} showHelptips={showHelptips} />
+      {hasExternalIntegration && <DeviceTwin device={device} setDeviceTwin={setDeviceTwin} />}
       {isAcceptedDevice && (
         <>
           <InstalledSoftware device={device} docsVersion={docsVersion} setSnackbar={setSnackbar} />
@@ -208,6 +212,7 @@ const actionCreators = {
   saveGlobalSettings,
   setDeviceConfig,
   setDeviceTags,
+  setDeviceTwin,
   setSnackbar
 };
 
@@ -222,6 +227,7 @@ const mapStateToProps = (state, ownProps) => {
     device,
     deviceConfigDeployment: state.deployments.byId[configDeploymentId] || {},
     docsVersion: getDocsVersion(state),
+    hasExternalIntegration: state.organization.externalDeviceIntegrations.some(integration => integration.connectionString),
     isEnterprise: getIsEnterprise(state),
     latestAlerts: latest.slice(0, 20),
     onboardingComplete: state.onboarding.complete,

@@ -242,6 +242,17 @@ export const deviceHandlers = [
       );
     }
     return res(ctx.status(512));
-  })
+  }),
+  rest.get(`/api/management${DeviceConstants.EXTERNAL_PROVIDER.azure.managementUrl}/devices/:deviceId/twin`, ({ params: { deviceId } }, res, ctx) => {
+    if (defaultState.devices.byId[deviceId]) {
+      return res(ctx.status(200), ctx.json({ deployment_id: defaultState.deployments.byId.d1.id }));
+    }
+    return res(ctx.status(515));
+  }),
+  rest.put(`/api/management${DeviceConstants.EXTERNAL_PROVIDER.azure.managementUrl}/devices/:deviceId/twin`, ({ params: { deviceId }, body }, res, ctx) => {
+    if (defaultState.devices.byId[deviceId] && body) {
+      return res(ctx.status(200), ctx.json({ deployment_id: defaultState.deployments.byId.d1.id }));
+    }
+    return res(ctx.status(516));
   })
 ];

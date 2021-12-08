@@ -24,6 +24,7 @@ import {
   getDeviceLimit,
   getDevicesByStatus,
   getDevicesWithAuth,
+  getDeviceTwin,
   getDynamicGroups,
   getGroupDevices,
   getGroups,
@@ -38,6 +39,7 @@ import {
   setDeviceFilters,
   setDeviceListState,
   setDeviceTags,
+  setDeviceTwin,
   updateDeviceAuth,
   updateDevicesAuth,
   updateDynamicGroup
@@ -721,5 +723,24 @@ describe('troubleshooting related actions', () => {
     const result = await store.dispatch(getSessionDetails(sessionId, defaultState.devices.byId.a1.id, defaultState.users.currentUser, undefined, endDate));
 
     expect(result).toMatchObject({ start: new Date(endDate), end: new Date(endDate) });
+  });
+});
+
+describe('device twin related actions', () => {
+  it('should allow retrieving twin data from azure', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE, device: defaultState.devices.byId.a1 }];
+    await store.dispatch(getDeviceTwin(defaultState.devices.byId.a1.id, DeviceConstants.EXTERNAL_PROVIDER.azure.provider));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should allow configuring twin data on azure', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE, device: defaultState.devices.byId.a1 }];
+    await store.dispatch(setDeviceTwin(defaultState.devices.byId.a1.id, DeviceConstants.EXTERNAL_PROVIDER.azure.provider, { something: 'asdl' }));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
 });

@@ -2391,3 +2391,32 @@ span.day {
     height: 0;
   }
 }
+
+.monaco-editor .margin {
+  margin: unset;
+}
+.monaco-diff-editor {
+  .editor.original {
+    right: 0 !important;
+    left: unset !important;
+  }
+  .editor.modified {
+    left: 0 !important;
+    width: unset !important;
+    box-shadow: unset !important;
+  }
+  .margin {
+    margin: unset;
+  }
+  .diffOverview {
+    .diffOverviewRuler.original {
+      left: 15px !important;
+    }
+    .diffOverviewRuler.modified {
+      right: 15px !important;
+    }
+  }
+}
+.twin-editing .editor.modified .monaco-editor-background {
+  background-color: @placeholder;
+}

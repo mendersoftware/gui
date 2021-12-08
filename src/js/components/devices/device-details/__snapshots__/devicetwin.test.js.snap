@@ -1,0 +1,125 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeviceTwin Component renders correctly 1`] = `
+<div
+  class="margin-bottom "
+>
+  <div
+    class="clickable flexbox space-between"
+    style="align-items: flex-start;"
+  >
+    <h4
+      class="margin-bottom-small"
+    >
+      Device Twin
+    </h4>
+    <div
+      class="flexbox centered"
+    >
+      <button
+        class="MuiButtonBase-root MuiIconButton-root"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiIconButton-label"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+            />
+          </svg>
+        </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
+      </button>
+    </div>
+  </div>
+  <div>
+    <a>
+      show more
+    </a>
+  </div>
+  <hr
+    class="MuiDivider-root"
+    style="margin-top: 24px;"
+  />
+</div>
+`;
+
+exports[`DeviceTwin Component renders sub component TwinSyncStatus correctly 1`] = `
+<div
+  class="padding"
+  style="min-height: 75px; display: grid; grid-template-columns: min-content 300px max-content; align-items: center; background: rgb(245, 245, 245);"
+>
+  <svg
+    aria-hidden="true"
+    class="MuiSvgIcon-root green"
+    focusable="false"
+    viewBox="0 0 24 24"
+  >
+    <path
+      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z"
+    />
+  </svg>
+  <div>
+    No difference between desired and reported configuration
+  </div>
+  <div
+    class="text-muted slightly-smaller"
+    style="align-content: flex-end; margin-bottom: -10px;"
+  >
+    Last synced: 
+    <time
+      datetime="2019-01-01T09:25:00+00:00"
+    >
+      2019-01-01 09:25
+    </time>
+  </div>
+</div>
+`;
+
+exports[`DeviceTwin Component renders sub component TwinSyncStatus correctly 2`] = `
+<div
+  class="padding"
+  style="min-height: 75px; display: grid; grid-template-columns: min-content 300px max-content; align-items: center; background: rgb(245, 245, 245);"
+>
+  <svg
+    aria-hidden="true"
+    class="MuiSvgIcon-root"
+    focusable="false"
+    viewBox="0 0 24 24"
+  >
+    <path
+      d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4 0-2.05 1.53-3.76 3.56-3.97l1.07-.11.5-.95C8.08 7.14 9.94 6 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5 1.53.11c1.56.1 2.78 1.41 2.78 2.96 0 1.65-1.35 3-3 3zM8 13h2.55v3h2.9v-3H16l-4-4z"
+    />
+  </svg>
+  <div>
+    <b>
+      Found 
+      1
+       
+      difference
+    </b>
+     
+    between desired and reported configuration
+  </div>
+  <div
+    class="text-muted slightly-smaller"
+    style="align-content: flex-end; margin-bottom: -10px;"
+  >
+    Last synced: 
+    <time
+      datetime="2019-01-01T09:25:00+00:00"
+    >
+      2019-01-01 09:25
+    </time>
+  </div>
+</div>
+`;
