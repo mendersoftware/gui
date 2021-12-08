@@ -7,9 +7,10 @@ import { defaultState } from '../../../tests/mockData';
 import { commonErrorHandler, initializeAppData, setSnackbar, setFirstLoginAfterSignup, setYesterday } from './appActions';
 import AppConstants from '../constants/appConstants';
 import DeploymentConstants from '../constants/deploymentConstants';
-import DeviceConstants from '../constants/deviceConstants';
+import DeviceConstants, { EXTERNAL_PROVIDER } from '../constants/deviceConstants';
 import ReleaseConstants from '../constants/releaseConstants';
 import OnboardingConstants from '../constants/onboardingConstants';
+import OrganizationConstants from '../constants/organizationConstants';
 import UserConstants from '../constants/userConstants';
 
 const middlewares = [thunk];
@@ -51,7 +52,12 @@ describe('app actions', () => {
       }
       return accu;
     };
-    const store = mockStore({ ...defaultState, releases: { ...defaultState.releases, releasesList: { ...defaultState.releases.releasesList, page: 42 } } });
+    const store = mockStore({
+      ...defaultState,
+      app: { ...defaultState.app, features: { ...defaultState.app.features, isHosted: true } },
+      users: { ...defaultState.users, globalSettings: { ...defaultState.users.globalSettings, id_attribute: { attribute: 'mac', scope: 'identity' } } },
+      releases: { ...defaultState.releases, releasesList: { ...defaultState.releases.releasesList, page: 42 } }
+    });
     // eslint-disable-next-line no-unused-vars
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
@@ -183,6 +189,11 @@ describe('app actions', () => {
           return accu;
         }, {})
       },
+      { type: OrganizationConstants.SET_ORGANIZATION, organization: defaultState.organization.organization },
+      {
+        type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
+        value: [{ ...EXTERNAL_PROVIDER.azure, connectionString: 'something_else', connection_string: 'something_else' }]
+      },
       {
         type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS,
         stats: { ...defaultState.deployments.byId.d1.stats },
@@ -210,13 +221,13 @@ describe('app actions', () => {
         type: UserConstants.SET_GLOBAL_SETTINGS,
         settings: {
           ...defaultState.users.globalSettings,
+          id_attribute: { attribute: 'mac', scope: 'identity' },
           [defaultState.users.currentUser]: {
             ...defaultState.users.globalSettings[defaultState.users.currentUser],
             showHelptips: true
           }
         }
-      },
-      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings, id_attribute: { attribute: 'mac', scope: 'identity' } } }
+      }
     ];
     await store.dispatch(initializeAppData());
     const storeActions = store.getActions();
