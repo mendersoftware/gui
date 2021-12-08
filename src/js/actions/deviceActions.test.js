@@ -20,6 +20,7 @@ import {
   getDeviceById,
   getDeviceConfig,
   getDeviceCount,
+  getDeviceInfo,
   getDeviceLimit,
   getDevicesByStatus,
   getDevicesWithAuth,
@@ -551,6 +552,19 @@ describe('device retrieval ', () => {
     const { attributes, id } = defaultState.devices.byId.a1;
     const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE, device: { attributes, id } }];
     await store.dispatch(getDeviceById(defaultState.devices.byId.a1.id));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should allow single device retrieval from detailed sources', async () => {
+    const store = mockStore({ ...defaultState });
+    const { attributes, updated_ts, id, ...expectedDevice } = defaultState.devices.byId.a1;
+    const expectedActions = [
+      { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: { ...expectedDevice, id } },
+      { type: DeviceConstants.RECEIVE_DEVICE, device: { attributes, id } },
+      { type: DeviceConstants.RECEIVE_DEVICE_CONNECT, device: { status: 'connected', updated_ts } }
+    ];
+    await store.dispatch(getDeviceInfo(defaultState.devices.byId.a1.id));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

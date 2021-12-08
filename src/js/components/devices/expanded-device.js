@@ -7,17 +7,8 @@ import { Close as CloseIcon, Link as LinkIcon, Replay as ReplayIcon } from '@mat
 
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../actions/deploymentActions';
-import {
-  applyDeviceConfig,
-  decommissionDevice,
-  getDeviceAuth,
-  getDeviceById,
-  getDeviceConfig,
-  getDeviceConnect,
-  setDeviceConfig,
-  setDeviceTags
-} from '../../actions/deviceActions';
-import { getDeviceAlerts, getLatestDeviceAlerts } from '../../actions/monitorActions';
+import { applyDeviceConfig, decommissionDevice, getDeviceInfo, setDeviceConfig, setDeviceTags } from '../../actions/deviceActions';
+import { getDeviceAlerts } from '../../actions/monitorActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import ForwardingLink from '../common/forwardlink';
@@ -50,11 +41,7 @@ export const ExpandedDevice = ({
   docsVersion,
   getDeviceAlerts,
   getDeviceLog,
-  getDeviceAuth,
-  getDeviceById,
-  getDeviceConfig,
-  getDeviceConnect,
-  getLatestDeviceAlerts,
+  getDeviceInfo,
   getSingleDeployment,
   isEnterprise,
   latestAlerts,
@@ -83,27 +70,12 @@ export const ExpandedDevice = ({
       return;
     }
     clearInterval(timer.current);
-    timer.current = setInterval(() => getDeviceInfo(device), refreshDeviceLength);
-    getDeviceInfo(device);
+    timer.current = setInterval(() => getDeviceInfo(device.id), refreshDeviceLength);
+    getDeviceInfo(device.id);
     return () => {
       clearInterval(timer.current);
     };
   }, [device.id, device.status]);
-
-  const getDeviceInfo = device => {
-    getDeviceAuth(device.id);
-    if (hasDeviceConfig && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(device.status)) {
-      getDeviceConfig(device.id);
-    }
-    if (device.status === DEVICE_STATES.accepted) {
-      // Get full device identity details for single selected device
-      getDeviceById(device.id);
-      getDeviceConnect(device.id);
-      if (hasMonitor) {
-        getLatestDeviceAlerts(device.id);
-      }
-    }
-  };
 
   const onDecommissionDevice = device_id => {
     // close dialog!
@@ -231,11 +203,7 @@ const actionCreators = {
   decommissionDevice,
   getDeviceAlerts,
   getDeviceLog,
-  getDeviceAuth,
-  getDeviceById,
-  getDeviceConfig,
-  getDeviceConnect,
-  getLatestDeviceAlerts,
+  getDeviceInfo,
   getSingleDeployment,
   saveGlobalSettings,
   setDeviceConfig,

@@ -10,7 +10,8 @@ import AppConstants from '../constants/appConstants';
 import DeviceConstants from '../constants/deviceConstants';
 
 import { deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
-import { getIdAttribute } from '../selectors';
+import { getIdAttribute, getTenantCapabilities } from '../selectors';
+import { getLatestDeviceAlerts } from './monitorActions';
 
 const { DEVICE_STATES, DEVICE_LIST_DEFAULTS } = DeviceConstants;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
@@ -435,6 +436,30 @@ export const getDeviceById = id => (dispatch, getState) =>
         dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device });
       }
     });
+
+export const getDeviceInfo = deviceId => (dispatch, getState) => {
+  const device = getState().devices.byId[deviceId];
+  const { hasDeviceConfig, hasMonitor } = getTenantCapabilities(getState());
+  let tasks = [dispatch(getDeviceAuth(deviceId))];
+  if (hasDeviceConfig && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(device.status)) {
+    tasks.push(dispatch(getDeviceConfig(deviceId)));
+  }
+  tasks = getState().organization.externalDeviceIntegrations.reduce((accu, integration) => {
+    if (integration.connectionString) {
+      tasks.push(dispatch(getDeviceTwin(deviceId, integration.provider)));
+    }
+    return accu;
+  }, tasks);
+  if (device.status === DEVICE_STATES.accepted) {
+    // Get full device identity details for single selected device
+    tasks.push(dispatch(getDeviceById(deviceId)));
+    tasks.push(dispatch(getDeviceConnect(deviceId)));
+    if (hasMonitor) {
+      tasks.push(dispatch(getLatestDeviceAlerts(deviceId)));
+    }
+  }
+  return Promise.all(tasks);
+};
 
 const deriveInactiveDevices = deviceIds => (dispatch, getState) => {
   const yesterday = new Date();
