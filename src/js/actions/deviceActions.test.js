@@ -37,6 +37,7 @@ import {
   setDeviceConfig,
   setDeviceFilters,
   setDeviceListState,
+  setDeviceTags,
   updateDeviceAuth,
   updateDevicesAuth,
   updateDynamicGroup
@@ -693,6 +694,19 @@ describe('device config ', () => {
       }
     ];
     await store.dispatch(applyDeviceConfig(defaultState.devices.byId.a1.id), { something: 'asdl' });
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+
+  it('should allow setting device tags', async () => {
+    const store = mockStore({ ...defaultState });
+    const { attributes, id } = defaultState.devices.byId.a1;
+    const expectedActions = [
+      { type: DeviceConstants.RECEIVE_DEVICE, device: { attributes, id } },
+      { type: DeviceConstants.RECEIVE_DEVICE, device: { attributes, id, tags: { something: 'asdl' } } }
+    ];
+    await store.dispatch(setDeviceTags(defaultState.devices.byId.a1.id, { something: 'asdl' }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
