@@ -8,6 +8,7 @@ import { SORTING_OPTIONS } from '../constants/appConstants';
 import { EXTERNAL_PROVIDER } from '../constants/deviceConstants';
 
 const cookies = new Cookies();
+const apiBase = '/api/management';
 const apiUrlv1 = '/api/management/v1';
 const apiUrlv2 = '/api/management/v2';
 export const auditLogsApiUrl = `${apiUrlv1}/auditlogs`;
@@ -144,15 +145,15 @@ export const requestPlanChange = (tenantId, content) => dispatch =>
     .catch(err => commonErrorHandler(err, 'There was an error sending your request', dispatch, commonErrorFallback))
     .then(() => Promise.resolve(dispatch(setSnackbar('Your request was sent successfully', 5000, ''))));
 
-const integrationApiBase = '/api/management';
+const integrationApiBase = apiBase;
 
 export const changeIntegration = integration => dispatch =>
-  Api.put(`${integrationApiBase}${EXTERNAL_PROVIDER[integration.provider].managementUrl}`, { connection_string: integration.connectionString })
+  Api.put(`${integrationApiBase}${EXTERNAL_PROVIDER[integration.provider].managementUrl}/settings`, { connection_string: integration.connectionString })
     .catch(err => commonErrorHandler(err, 'There was an error configuring the integration', dispatch, commonErrorFallback))
     .then(() => Promise.resolve(dispatch(getIntegrationFor(integration))));
 
 export const deleteIntegration = integration => (dispatch, getState) =>
-  Api.put(`${integrationApiBase}${EXTERNAL_PROVIDER[integration.provider].managementUrl}`, { connection_string: '' })
+  Api.put(`${integrationApiBase}${EXTERNAL_PROVIDER[integration.provider].managementUrl}/settings`, {})
     .catch(err => commonErrorHandler(err, 'There was an error removing the integration', dispatch, commonErrorFallback))
     .then(() => {
       const integrations = getState().organization.externalDeviceIntegrations.filter(item => integration.provider !== item.provider);
@@ -160,7 +161,7 @@ export const deleteIntegration = integration => (dispatch, getState) =>
     });
 
 export const getIntegrationFor = integration => (dispatch, getState) =>
-  Api.get(`${integrationApiBase}${EXTERNAL_PROVIDER[integration.provider].managementUrl}`)
+  Api.get(`${integrationApiBase}${EXTERNAL_PROVIDER[integration.provider].managementUrl}/settings`)
     .catch(err => commonErrorHandler(err, 'There was an error retrieving the integration', dispatch, commonErrorFallback))
     .then(({ data }) => {
       const { found, integrations } = getState().organization.externalDeviceIntegrations.reduce(

@@ -69,18 +69,36 @@ export const organizationHandlers = [
     `)
     );
   }),
-  rest.get(`/api/management${EXTERNAL_PROVIDER.azure.managementUrl}`, (req, res, ctx) => {
+  rest.get(`/api/management${EXTERNAL_PROVIDER.azure.managementUrl}/settings`, (req, res, ctx) => {
     return res(ctx.json({ connection_string: 'something_else' }));
   }),
-  rest.put(`/api/management${EXTERNAL_PROVIDER.azure.managementUrl}`, ({ body }, res, ctx) => {
+  rest.put(`/api/management${EXTERNAL_PROVIDER.azure.managementUrl}/settings`, ({ body }, res, ctx) => {
     if (!body) {
       return res(ctx.status(547));
     }
     return res(ctx.status(200));
   }),
-  rest.delete(`/api/management${EXTERNAL_PROVIDER.azure.managementUrl}`, ({ body }, res, ctx) => {
+  rest.delete(`/api/management${EXTERNAL_PROVIDER.azure.managementUrl}/settings`, ({ body }, res, ctx) => {
     if (!body) {
       return res(ctx.status(548));
+    }
+    return res(ctx.status(200));
+  }),
+  rest.get(`/api/management${EXTERNAL_PROVIDER.amazon.managementUrl}/settings`, (req, res, ctx) => {
+    return res(ctx.status(200));
+  }),
+  rest.put(`/api/management${EXTERNAL_PROVIDER.amazon.managementUrl}/settings`, ({ body }, res, ctx) => {
+    if (!body) {
+      return res(ctx.status(548));
+    }
+    return res(ctx.status(200));
+  }),
+  rest.get(`/api/management${EXTERNAL_PROVIDER.google.managementUrl}/settings`, (req, res, ctx) => {
+    return res(ctx.status(200));
+  }),
+  rest.put(`/api/management${EXTERNAL_PROVIDER.google.managementUrl}/settings`, ({ body }, res, ctx) => {
+    if (!body) {
+      return res(ctx.status(549));
     }
     return res(ctx.status(200));
   })
