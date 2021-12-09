@@ -169,7 +169,7 @@ export const ExpandArtifact = connect(mapStateToProps, actionCreators)(ExpandArt
 const DeviceSupportTipComponent = ({ docsVersion }) => (
   <MenderTooltipClickable
     className="tooltip help"
-    style={{ top: '22%', left: '88%' }}
+    style={{ bottom: '2.5%', left: '88%' }}
     title={
       <p>
         The steps in the guide should work on most operating systems in the Debian family (e.g. Debian, Ubuntu, Raspberry Pi OS) and devices based on ARMv6 or

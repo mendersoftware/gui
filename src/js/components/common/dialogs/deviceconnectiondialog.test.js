@@ -35,10 +35,10 @@ describe('DeviceConnectionDialog Component', () => {
         </Provider>
       </MemoryRouter>
     );
-    userEvent.click(screen.getByText(/connect my Raspberry/i));
+    userEvent.click(screen.getByText(/get started/i));
     expect(screen.getByText(/Enter your device type/i)).toBeInTheDocument();
     userEvent.click(screen.getByRole('button', { name: /back/i }));
-    userEvent.click(screen.getByText(/Prepare a virtual device/i));
+    userEvent.click(screen.getByText(/Try a virtual device/i));
     expect(screen.getByText(/run the following command to start the virtual device/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Waiting for device/i })).toBeInTheDocument();
   });

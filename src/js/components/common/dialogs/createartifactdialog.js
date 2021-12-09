@@ -25,7 +25,7 @@ export const CreateArtifactDialog = ({ advanceOnboarding, history, setShowCreate
     <Dialog open={showCreateArtifactDialog} fullWidth={true} maxWidth="sm">
       <DialogTitle>Creating a new Release</DialogTitle>
       <DialogContent className="onboard-dialog dialog-content">
-        <div>
+        <>
           Now we&apos;ll make an update to the webserver demo running on your device, using a new Release that you will create yourself.
           <p>
             On your workstation, create a new <i>index.html</i> file with the simple contents &apos;Hello world&apos;. This will be the new web page after you
@@ -33,7 +33,7 @@ export const CreateArtifactDialog = ({ advanceOnboarding, history, setShowCreate
           </p>
           <CopyCode code={file_modification} withDescription={true} />
           <p>When you have done that, click &apos;Next&apos;</p>
-        </div>
+        </>
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setShowCreateArtifactDialog(false)}>Cancel</Button>
