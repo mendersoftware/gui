@@ -35,6 +35,21 @@ const filterNotifications = {
   )
 };
 
+const getOptionLabel = option => option.value || option.key || option;
+
+const FilterOption = option => {
+  const content = getOptionLabel(option);
+  if (option.category !== 'recently used') {
+    return content;
+  }
+  return (
+    <div className="flexbox center-aligned space-between" style={{ width: '100%' }}>
+      <div>{content}</div>
+      <div className="text-muted slightly-smaller">({option.scope})</div>
+    </div>
+  );
+};
+
 export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => {
   const [key, setKey] = useState(filter.key || ''); // this refers to the selected filter with key as the id
   const [value, setValue] = useState(filter.value || ''); // while this is the value that is applied with the filter
@@ -134,8 +149,9 @@ export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => 
             }
             return filtered;
           }}
+          getOptionLabel={getOptionLabel}
           groupBy={option => option.category}
-          getOptionLabel={option => option.value || option.key || option}
+          renderOption={FilterOption}
           id="filter-selection"
           includeInputInList={true}
           onChange={(e, changedValue) => {
