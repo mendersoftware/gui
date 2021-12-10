@@ -14,6 +14,7 @@ import {
 } from './deploymentActions';
 import AppConstants from '../constants/appConstants';
 import DeploymentConstants from '../constants/deploymentConstants';
+import UserConstants from '../constants/userConstants';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -106,7 +107,19 @@ describe('deployment actions', () => {
     expect(abortedDeployment).rejects.toBeTruthy();
   });
   it('should allow creating deployments without filter or group', async () => {
-    const store = mockStore({ ...defaultState });
+    const store = mockStore({
+      ...defaultState,
+      deployments: {
+        ...defaultState.deployments,
+        byStatus: {
+          ...defaultState.deployments.byStatus,
+          finished: { ...defaultState.deployments.byStatus.finished, total: 0 },
+          inprogress: { ...defaultState.deployments.byStatus.inprogress, total: 0 },
+          pending: { ...defaultState.deployments.byStatus.pending, total: 0 },
+          scheduled: { ...defaultState.deployments.byStatus.scheduled, total: 0 }
+        }
+      }
+    });
     const expectedActions = [
       defaultResponseActions.creation,
       {
@@ -116,6 +129,7 @@ describe('deployment actions', () => {
           autoHideDuration: 8000
         }
       },
+      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings, hasDeployments: true } },
       defaultResponseActions.receive,
       defaultResponseActions.stats
     ];
@@ -181,7 +195,7 @@ describe('deployment actions', () => {
       { ...defaultResponseActions.stats, deploymentId: defaultState.deployments.byId.d2.id, stats: defaultState.deployments.byId.d2.stats }
     ];
     return store
-      .dispatch(getDeploymentsByStatus('inprogress', null, null, new Date(), new Date(), Object.keys(defaultState.devices.groups.byId)[0], undefined, true))
+      .dispatch(getDeploymentsByStatus('inprogress', null, null, undefined, undefined, Object.keys(defaultState.devices.groups.byId)[0], 'configuration', true))
       .then(() => {
         const storeActions = store.getActions();
         expect(storeActions.length).toEqual(expectedActions.length);

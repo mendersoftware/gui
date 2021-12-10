@@ -4,6 +4,8 @@ import GeneralApi, { headerNames } from '../api/general-api';
 import { commonErrorHandler, setSnackbar } from '../actions/appActions';
 import { startTimeSort } from '../helpers';
 import { SORTING_OPTIONS } from '../constants/appConstants';
+import Tracking from '../tracking';
+import { saveGlobalSettings } from './userActions';
 
 const apiUrl = '/api/management/v1';
 const apiUrlV2 = '/api/management/v2';
@@ -67,7 +69,16 @@ export const getDeploymentsByStatus =
     });
   };
 
-export const createDeployment = newDeployment => dispatch => {
+const isWithinFirstMonth = expirationDate => {
+  if (!expirationDate) {
+    return false;
+  }
+  const endOfFirstMonth = new Date(expirationDate);
+  endOfFirstMonth.setMonth(endOfFirstMonth.getMonth() - 11);
+  return endOfFirstMonth > new Date();
+};
+
+export const createDeployment = newDeployment => (dispatch, getState) => {
   let request;
   if (newDeployment.filter_id) {
     request = GeneralApi.post(`${deploymentsApiUrlV2}/deployments`, newDeployment);
@@ -76,6 +87,9 @@ export const createDeployment = newDeployment => dispatch => {
   } else {
     request = GeneralApi.post(`${deploymentsApiUrl}/deployments`, newDeployment);
   }
+  const totalDeploymentCount = Object.values(getState().deployments.byStatus).reduce((accu, item) => accu + item.total, 0);
+  const { hasDeployments } = getState().users.globalSettings;
+  const { trial_expiration } = getState().organization.organization;
   return request
     .catch(err => commonErrorHandler(err, 'Error creating deployment.', dispatch))
     .then(data => {
@@ -86,7 +100,7 @@ export const createDeployment = newDeployment => dispatch => {
         devices: newDeployment.devices ? newDeployment.devices.map(id => ({ id, status: 'pending' })) : [],
         stats: {}
       };
-      return Promise.all([
+      let tasks = [
         dispatch({
           type: DeploymentConstants.CREATE_DEPLOYMENT,
           deployment,
@@ -94,7 +108,18 @@ export const createDeployment = newDeployment => dispatch => {
         }),
         dispatch(getSingleDeployment(deploymentId)),
         dispatch(setSnackbar('Deployment created successfully', 8000))
-      ]);
+      ];
+      if (!totalDeploymentCount) {
+        if (!hasDeployments) {
+          Tracking.event({ category: 'deployments', action: 'create_initial_deployment' });
+          if (isWithinFirstMonth(trial_expiration)) {
+            Tracking.event({ category: 'deployments', action: 'create_initial_deployment_first_month' });
+          }
+          tasks.push(dispatch(saveGlobalSettings({ hasDeployments: true })));
+        }
+        Tracking.event({ category: 'deployments', action: 'create_initial_deployment_user' });
+      }
+      return Promise.all(tasks);
     });
 };
 
