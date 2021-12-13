@@ -1,6 +1,7 @@
-import { rolesByName } from '../src/js/constants/userConstants';
+import { defaultPermissionSets, emptyRole, emptyUiPermissions, rolesById, rolesByName, uiPermissionsById } from '../src/js/constants/userConstants';
 import DeviceConstants from '../src/js/constants/deviceConstants';
 import { SORTING_OPTIONS } from '../src/js/constants/appConstants';
+import { roles as rbacRoles } from '../tests/__mocks__/userHandlers';
 
 export const undefineds = /undefined|\[object Object\]/;
 window.mender_environment = {
@@ -392,18 +393,17 @@ export const defaultState = {
     jwtToken: null,
     qrCode: null,
     rolesById: {
-      RBAC_ROLE_PERMIT_ALL: { title: 'Admin', allowUserManagement: true, groups: [], description: 'Full access', editable: false, permissions: [] },
-      RBAC_ROLE_OBSERVER: {
-        title: 'Read Access',
-        allowUserManagement: false,
-        groups: [],
-        description:
-          'Intended for team leaders or limited tech support accounts, this role can see all Devices, Artifacts and Deployment reports but not make any changes.',
-        editable: false,
-        permissions: []
-      },
-      RBAC_ROLE_CI: { title: 'Releases Manager', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
-      test: { title: 'test', description: 'test description', groups: ['testgroup'], editable: true }
+      ...rolesById,
+      test: {
+        ...emptyRole,
+        title: 'test',
+        description: 'test description',
+        editable: true,
+        uiPermissions: {
+          ...emptyUiPermissions,
+          groups: { testGroup: [uiPermissionsById.read.value] }
+        }
+      }
     },
     showHelptips: true
   }
@@ -414,3 +414,197 @@ export const releasesList = Array.from({ length: 5000 }, (x, i) => ({
   Name: `release-${i + 1}`,
   modified: i
 }));
+
+export const permissionSets = [
+  {
+    name: defaultPermissionSets.Basic.value,
+    object: '',
+    description: 'Set containing basic permissions.',
+    permissions: [
+      { action: 'http', object: { type: 'any', value: '^/api/management/v1/useradm/settings$' } },
+      { action: 'http', object: { type: 'any', value: '^/api/management/v1/useradm/users/me$' } },
+      { action: 'http', object: { type: 'any', value: '^/api/management/1.0/auth/verify$' } },
+      { action: 'http', object: { type: 'PUT', value: '^/api/management/v1/useradm/2faverify$' } },
+      { action: 'http', object: { type: 'POST', value: '^/api/management/v1/useradm/users/me/2fa/(enable|disable)$' } },
+      { action: 'http', object: { type: 'GET', value: '^/api/management/(v[1-9])/useradm/roles' } },
+      { action: 'http', object: { type: 'GET', value: '^/api/management/(v[1-9])/tenantadm/user/tenant' } }
+    ]
+  },
+  {
+    name: defaultPermissionSets.ManageReleases.value,
+    action: 'Manage',
+    object: 'Releases',
+    description: 'Set of permissions which allows user to manage releases',
+    permissions: [
+      { action: 'http', object: { type: 'GET', value: '^/api/management/v1/deployments/artifacts' } },
+      { action: 'http', object: { type: 'GET', value: '^/api/management/v1/deployments/artifacts/[^/]+' } },
+      { action: 'http', object: { type: 'PUT', value: '^/api/management/v1/deployments/artifacts/[^/]+' } },
+      { action: 'http', object: { type: 'DELETE', value: '^/api/management/v1/deployments/artifacts/[^/]+' } },
+      { action: 'http', object: { type: 'GET', value: '^/api/management/v1/deployments/artifacts/[^/]+/download' } }
+    ]
+  },
+  {
+    name: defaultPermissionSets.ReadUsers.value,
+    action: 'Read',
+    object: 'User management',
+    description: 'Set of permissions which allows user to view other users',
+    permissions: [{ action: 'http', object: { type: 'GET', value: '^/api/management/(v[1-9])/useradm/' } }]
+  },
+  {
+    name: defaultPermissionSets.ManageUsers.value,
+    action: 'Manage',
+    object: 'User management',
+    description: 'Set of permissions which allows user manage other user accounts',
+    permissions: [{ action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/useradm/' } }]
+  },
+  {
+    name: defaultPermissionSets.ReadAuditLogs.value,
+    action: 'Read',
+    object: 'System audit log',
+    description: 'Set of permissions which allows user to view system audit log',
+    permissions: [{ action: 'http', object: { type: 'GET', value: '^/api/management/(v[1-9]|0.1.0)/auditlogs/logs' } }]
+  },
+  {
+    name: defaultPermissionSets.DeployToDevices.value,
+    action: 'Deploy',
+    object: 'Device groups',
+    description: 'Set of permissions which allows user to deploy to devices',
+    permissions: [{ action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/(deployments|deviceconfig)/' } }],
+    supported_scope_types: ['DeviceGroups']
+  },
+  {
+    name: defaultPermissionSets.ConnectToDevices.value,
+    action: 'Connect',
+    object: 'Device groups',
+    description: 'Set of permissions which allows user to use remote terminal and file transfer',
+    permissions: [
+      { action: 'http', object: { type: 'GET', value: '^/api/management/(v[1-9]|0.1.0)/deviceconnect/devices/[^/]+/connect$' } },
+      { action: 'http', object: { type: 'GET', value: '^/api/management/(v[1-9]|0.1.0)/deviceconnect/devices/[^/]+/download\\?path=[^\u0026]+$' } },
+      { action: 'http', object: { type: 'PUT', value: '^/api/management/(v[1-9]|0.1.0)/deviceconnect/devices/[^/]+/upload$' } }
+    ],
+    supported_scope_types: ['DeviceGroups']
+  },
+  {
+    name: defaultPermissionSets.SuperUser.value,
+    action: 'Any',
+    object: 'Any',
+    description: 'Set of permissions which allows user to do anything',
+    permissions: [{ action: 'any', object: { type: 'any', value: 'any' } }]
+  },
+  {
+    name: defaultPermissionSets.UploadArtifacts.value,
+    action: 'Upload',
+    object: 'Artifacts',
+    description: 'Set of permissions which allows user to upload artifacts',
+    permissions: [
+      { action: 'http', object: { type: 'POST', value: '^/api/management/v1/deployments/artifacts' } },
+      { action: 'http', object: { type: 'POST', value: '^/api/management/v1/deployments/artifacts/generate' } }
+    ]
+  },
+  {
+    name: defaultPermissionSets.ReadDevices.value,
+    action: 'Read',
+    object: 'Device groups',
+    description: 'Set of permissions which allows user to view devices',
+    permissions: [
+      { action: 'http', object: { type: 'POST', value: '^/api/management/v2/inventory/filters/search' } },
+      { action: 'http', object: { type: 'POST', value: '^/api/management/v1/reporting/devices/search' } },
+      { action: 'http', object: { type: 'GET', value: '^/api/management/(v[1-9])/(deployments|devauth|inventory|deviceconfig|devicemonitor)/' } },
+      { action: 'http', object: { type: 'GET', value: '^/api/management/(v[1-9]|0.1.0)/deviceconnect/devices/[^/]+$' } }
+    ],
+    supported_scope_types: ['DeviceGroups']
+  },
+  {
+    name: defaultPermissionSets.ManageDevices.value,
+    action: 'Manage',
+    object: 'Device groups',
+    description: 'Set of permissions which allows user to manage devices',
+    permissions: [
+      { action: 'http', object: { type: 'POST', value: '^/api/management/(v[1-9])/(devauth|inventory)/' } },
+      { action: 'http', object: { type: 'PUT', value: '^/api/management/(v[1-9])/(devauth|inventory)/' } },
+      { action: 'http', object: { type: 'DELETE', value: '^/api/management/(v[1-9])/(devauth|inventory)/' } }
+    ],
+    supported_scope_types: ['DeviceGroups']
+  },
+  {
+    name: defaultPermissionSets.ReadReleases.value,
+    action: 'Read',
+    object: 'Releases',
+    description: 'Set of permissions which allows user to view releases',
+    permissions: [
+      { action: 'http', object: { type: 'GET', value: '^/api/management/v1/deployments/artifacts' } },
+      { action: 'http', object: { type: 'GET', value: '^/api/management/v1/deployments/artifacts/[^/]+' } },
+      { action: 'http', object: { type: 'GET', value: '^/api/management/v1/deployments/artifacts/[^/]+/download' } }
+    ]
+  }
+];
+
+const expectedParsedRoles = {
+  '141sasd': {
+    editable: true,
+    isCustom: undefined,
+    uiPermissions: {
+      ...emptyUiPermissions,
+      groups: { bestgroup: [uiPermissionsById.connect.value, uiPermissionsById.read.value] },
+      userManagement: [uiPermissionsById.manage.value]
+    }
+  },
+  asdasd: {
+    editable: false,
+    isCustom: true,
+    uiPermissions: { ...emptyUiPermissions, userManagement: [uiPermissionsById.read.value, uiPermissionsById.manage.value] }
+  },
+  dyn: {
+    editable: false,
+    isCustom: true,
+    uiPermissions: {
+      ...emptyUiPermissions,
+      deployments: [uiPermissionsById.deploy.value],
+      groups: { dyn: [uiPermissionsById.read.value, uiPermissionsById.deploy.value] }
+    }
+  },
+  kljlkk: { editable: true, isCustom: false, uiPermissions: { ...emptyUiPermissions, groups: { bestgroup: [uiPermissionsById.connect.value] } } },
+  yyyyy: {
+    editable: true,
+    isCustom: undefined,
+    uiPermissions: { ...emptyUiPermissions, groups: { dockerclient: [uiPermissionsById.manage.value] }, releases: [uiPermissionsById.manage.value] }
+  }
+};
+
+export const receivedRoles = rbacRoles.reduce(
+  (accu, role) => {
+    const { name, description, ...roleRemainder } = role;
+    if (name.startsWith('RBAC')) {
+      accu[name] = {
+        ...defaultState.users.rolesById[name],
+        ...roleRemainder,
+        name,
+        editable: false,
+        isCustom: false,
+        description: defaultState.users.rolesById[name].description ? defaultState.users.rolesById[name].description : description
+      };
+    } else {
+      const result = expectedParsedRoles[name] ?? {};
+      accu[name] = {
+        ...emptyRole,
+        ...role,
+        ...result,
+        title: name
+      };
+    }
+    return accu;
+  },
+  { ...defaultState.users.rolesById }
+);
+
+export const receivedPermissionSets = permissionSets.reduce((accu, set) => {
+  const result = defaultPermissionSets[set.name]?.result ?? {};
+  accu[set.name] = {
+    ...set,
+    result: {
+      ...emptyUiPermissions,
+      ...result
+    }
+  };
+  return accu;
+}, {});

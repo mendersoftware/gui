@@ -1,19 +1,65 @@
 import { rest } from 'msw';
 
-import { defaultState, token, userId as defaultUserId } from '../mockData';
-import { useradmApiUrl } from '../../src/js/constants/userConstants';
+import { defaultState, permissionSets, token, userId as defaultUserId } from '../mockData';
+import { defaultPermissionSets, useradmApiUrl, useradmApiUrlv2 } from '../../src/js/constants/userConstants';
 
 export const roles = [
-  { name: 'RBAC_ROLE_PERMIT_ALL', description: 'Full access', permissions: [{ action: 'any', object: { type: 'any', value: 'any' } }] },
-  { name: 'RBAC_ROLE_CI', description: '', permissions: [] },
-  { name: 'test', description: 'test description', permissions: [{ action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: 'testgroup' } }] },
+  {
+    name: 'dyn',
+    description: '',
+    permissions: [
+      { action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: 'dyn' } },
+      { action: 'VIEW_DEVICE', object: { type: 'DEVICE_GROUP', value: 'dyn' } }
+    ]
+  },
+  { name: 'asdasd', description: '123', permissions: [{ action: 'http', object: { type: 'any', value: '/api/management/v1/useradm/.*' } }] },
+  {
+    name: '141sasd',
+    description: '1313adg',
+    permission_sets_with_scope: [
+      { name: defaultPermissionSets.ReadDevices.value, scope: { type: 'DeviceGroups', value: ['bestgroup'] } },
+      { name: defaultPermissionSets.ConnectToDevices.value, scope: { type: 'DeviceGroups', value: ['bestgroup'] } },
+      { name: defaultPermissionSets.ManageUsers.value }
+    ]
+  },
+  {
+    name: 'kljlkk',
+    description: 'lkl',
+    permission_sets_with_scope: [{ name: defaultPermissionSets.ConnectToDevices.value, scope: { type: 'DeviceGroups', value: ['bestgroup'] } }]
+  },
+  {
+    name: 'yyyyy',
+    description: 'asd',
+    permission_sets_with_scope: [
+      { name: defaultPermissionSets.ManageDevices.value, scope: { type: 'DeviceGroups', value: ['dockerclient'] } },
+      { name: defaultPermissionSets.ManageReleases.value }
+    ]
+  },
+  {
+    name: 'RBAC_ROLE_DEPLOYMENTS_MANAGER',
+    description: 'Intended for users responsible for managing deployments, this role can create and abort deployments',
+    permission_sets_with_scope: [{ name: defaultPermissionSets.DeployToDevices.value }]
+  },
+  {
+    name: 'RBAC_ROLE_REMOTE_TERMINAL',
+    description: `Intended for tech support accounts, this role can access the devices' Remote Terminal.`,
+    permission_sets_with_scope: [{ name: defaultPermissionSets.ConnectToDevices.value }]
+  },
+  { name: 'RBAC_ROLE_PERMIT_ALL', description: '', permission_sets_with_scope: [{ name: defaultPermissionSets.SuperUser.value }] },
   {
     name: 'RBAC_ROLE_OBSERVER',
     description:
       'Intended for team leaders or limited tech support accounts, this role can see all Devices, Artifacts and Deployment reports but not make any changes.',
-    permissions: [
-      { action: 'http', object: { type: 'GET', value: '^/api/management/(v[1-9]|0.1.0)/(devauth|inventory|deployments|useradm|tenantadm)/' } },
-      { action: 'http', object: { type: 'POST', value: '^/api/management/v2/inventory/filters/search' } }
+    permission_sets_with_scope: [{ name: defaultPermissionSets.ReadReleases.value }, { name: defaultPermissionSets.ReadDevices.value }]
+  },
+  {
+    name: 'RBAC_ROLE_CI',
+    description:
+      'Intended for automation accounts building software (e.g. CI/CD systems), this role can only manage Artifacts, including upload new Artifacts and delete Artifacts. It does not have access to Devices or Deployments.',
+    permission_sets_with_scope: [
+      { name: defaultPermissionSets.ReadReleases.value },
+      { name: defaultPermissionSets.ManageReleases.value },
+      { name: defaultPermissionSets.UploadArtifacts.value }
     ]
   }
 ];
@@ -90,6 +136,28 @@ export const userHandlers = [
     }
     return res(ctx.status(569));
   }),
+  rest.get(`${useradmApiUrlv2}/roles`, (req, res, ctx) => res(ctx.json(roles))),
+  rest.post(`${useradmApiUrlv2}/roles`, ({ body: { name, permission_sets_with_scope } }, res, ctx) => {
+    if (
+      !!name &&
+      permission_sets_with_scope.every(permission => permission.name && permissionSets.find(permissionSet => permissionSet.name === permission.name))
+    ) {
+      return res(ctx.status(200));
+    }
+    return res(ctx.status(572));
+  }),
+  rest.put(`${useradmApiUrlv2}/roles/:roleId`, ({ params: { roleId }, body: { description, name, permission_sets_with_scope } }, res, ctx) => {
+    if (defaultState.users.rolesById[roleId] && [description, name, permission_sets_with_scope].some(value => value)) {
+      return res(ctx.status(200));
+    }
+    return res(ctx.status(573));
+  }),
+  rest.delete(`${useradmApiUrlv2}/roles/:roleId`, ({ params: { roleId } }, res, ctx) => {
+    if (defaultState.users.rolesById[roleId]) {
+      return res(ctx.status(200));
+    }
+    return res(ctx.status(574));
+  }),
   rest.get(`${useradmApiUrl}/settings`, (req, res, ctx) => res(ctx.json(defaultState.users.globalSettings))),
   rest.post(`${useradmApiUrl}/settings`, (req, res, ctx) => res(ctx.status(200))),
   rest.get(`${useradmApiUrl}/2faqr`, (req, res, ctx) => res(ctx.json({ qr: btoa('test') }))),
@@ -104,5 +172,13 @@ export const userHandlers = [
       return res(ctx.status(200));
     }
     return res(ctx.status(571));
-  })
+  }),
+  rest.post(`${useradmApiUrl}/auth/verify-email/start`, (req, res, ctx) => res(ctx.status(200))),
+  rest.post(`${useradmApiUrl}/auth/verify-email/complete`, ({ body: { secret_hash } }, res, ctx) => {
+    if (secret_hash === 'superSecret') {
+      return res(ctx.status(200));
+    }
+    return res(ctx.status(576));
+  }),
+  rest.get(`${useradmApiUrlv2}/permission_sets`, (req, res, ctx) => res(ctx.json(permissionSets)))
 ];
