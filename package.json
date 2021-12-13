@@ -9,7 +9,7 @@
     "@material-ui/lab": "4.0.0-alpha.58",
     "@material-ui/pickers": "^3.3.10",
     "@mdi/js": "^6.5.95",
-    "@reduxjs/toolkit": "^1.6.2",
+    "@reduxjs/toolkit": "^1.7.0",
     "@stripe/react-stripe-js": "^1.6.0",
     "@stripe/stripe-js": "^1.21.2",
     "axios": "^0.24.0",
