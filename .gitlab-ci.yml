@@ -64,7 +64,8 @@ test:acceptance:
   script:
     - docker load -i image.tar
     - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:pr
-    - git clone --no-tags --depth=1 --single-branch https://github.com/mendersoftware/integration.git
+    - git clone --no-tags --depth=1 --single-branch --branch=3.1.x
+      https://github.com/mendersoftware/integration.git
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run
     - docker rmi $DOCKER_REPOSITORY:pr
 
@@ -85,7 +86,8 @@ test:acceptance:enterprise:
   script:
     - docker load -i image.tar
     - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:pr
-    - git clone --no-tags --depth=1 --single-branch https://github.com/mendersoftware/integration.git
+    - git clone --no-tags --depth=1 --single-branch --branch=3.1.x
+      https://github.com/mendersoftware/integration.git
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run --enterprise
     - docker rmi $DOCKER_REPOSITORY:pr
 
