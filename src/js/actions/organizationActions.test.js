@@ -280,6 +280,7 @@ describe('organization actions', () => {
     });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The integration was set up successfully' } },
       {
         type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
         value: [
@@ -328,7 +329,10 @@ describe('organization actions', () => {
   it('should allow deleting external device provider configurations', async () => {
     const store = mockStore({ ...defaultState, externalDeviceIntegrations: [{ provider: 'azure' }] });
     expect(store.getActions()).toHaveLength(0);
-    const expectedActions = [{ type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: [] }];
+    const expectedActions = [
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The integration was removed successfully' } },
+      { type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: [] }
+    ];
     const request = store.dispatch(deleteIntegration({ provider: 'azure' }));
     expect(request).resolves.toBeTruthy();
     await request.then(() => {

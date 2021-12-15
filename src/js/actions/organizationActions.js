@@ -150,14 +150,17 @@ const integrationApiBase = apiBase;
 export const changeIntegration = integration => dispatch =>
   Api.put(`${integrationApiBase}${EXTERNAL_PROVIDER[integration.provider].managementUrl}/settings`, { connection_string: integration.connectionString })
     .catch(err => commonErrorHandler(err, 'There was an error configuring the integration', dispatch, commonErrorFallback))
-    .then(() => Promise.resolve(dispatch(getIntegrationFor(integration))));
+    .then(() => Promise.all([dispatch(setSnackbar('The integration was set up successfully')), dispatch(getIntegrationFor(integration))]));
 
 export const deleteIntegration = integration => (dispatch, getState) =>
   Api.put(`${integrationApiBase}${EXTERNAL_PROVIDER[integration.provider].managementUrl}/settings`, {})
     .catch(err => commonErrorHandler(err, 'There was an error removing the integration', dispatch, commonErrorFallback))
     .then(() => {
       const integrations = getState().organization.externalDeviceIntegrations.filter(item => integration.provider !== item.provider);
-      return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: integrations }));
+      return Promise.all([
+        dispatch(setSnackbar('The integration was removed successfully')),
+        dispatch({ type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: integrations })
+      ]);
     });
 
 export const getIntegrationFor = integration => (dispatch, getState) =>
