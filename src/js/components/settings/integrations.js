@@ -86,6 +86,7 @@ export const Integrations = ({ integrations, changeIntegration, deleteIntegratio
       setAvailableIntegrations(available);
     }
     setConfiguredIntegrations(integrations);
+    setIsCreating(!!integrations.length);
   }, [integrations]);
 
   useEffect(() => {
