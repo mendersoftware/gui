@@ -26,7 +26,7 @@ exports[`Integrations Component renders correctly 1`] = `
   >
     <div
       class="MuiFormControl-root MuiTextField-root"
-      style="min-width: 500px;"
+      style="min-width: 500px; word-break: break-all;"
     >
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink Mui-disabled Mui-disabled MuiFormLabel-filled"
@@ -35,14 +35,23 @@ exports[`Integrations Component renders correctly 1`] = `
         Azure IoT Hub connection string
       </label>
       <div
-        class="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl"
+        class="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl MuiInputBase-multiline MuiInput-multiline"
       >
-        <input
+        <textarea
           aria-invalid="false"
-          class="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled"
+          class="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled MuiInputBase-inputMultiline MuiInput-inputMultiline"
           disabled=""
-          type="text"
-          value="something"
+          rows="1"
+          style="height: 0px; overflow: hidden;"
+        >
+          something
+        </textarea>
+        <textarea
+          aria-hidden="true"
+          class="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled MuiInputBase-inputMultiline MuiInput-inputMultiline"
+          readonly=""
+          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); width: 100%;"
+          tabindex="-1"
         />
       </div>
     </div>
@@ -91,7 +100,7 @@ exports[`Integrations Component renders correctly 1`] = `
   >
     <div
       class="MuiFormControl-root MuiTextField-root"
-      style="min-width: 500px;"
+      style="min-width: 500px; word-break: break-all;"
     >
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink Mui-disabled Mui-disabled MuiFormLabel-filled"
@@ -100,14 +109,23 @@ exports[`Integrations Component renders correctly 1`] = `
         AWS IoT core connection string
       </label>
       <div
-        class="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl"
+        class="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl MuiInputBase-multiline MuiInput-multiline"
       >
-        <input
+        <textarea
           aria-invalid="false"
-          class="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled"
+          class="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled MuiInputBase-inputMultiline MuiInput-inputMultiline"
           disabled=""
-          type="text"
-          value="something else"
+          rows="1"
+          style="height: 0px; overflow: hidden;"
+        >
+          something else
+        </textarea>
+        <textarea
+          aria-hidden="true"
+          class="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled MuiInputBase-inputMultiline MuiInput-inputMultiline"
+          readonly=""
+          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); width: 100%;"
+          tabindex="-1"
         />
       </div>
     </div>

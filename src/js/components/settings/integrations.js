@@ -33,9 +33,10 @@ export const IntegrationConfiguration = ({ integration, onCancel, onDelete, onSa
           disabled={!isEditing}
           InputLabelProps={{ shrink: !!connectionConfig }}
           label={`${EXTERNAL_PROVIDER[provider].title} connection string`}
+          multiline
           onChange={updateConnectionConfig}
+          style={{ minWidth: 500, wordBreak: 'break-all' }}
           value={connectionConfig}
-          style={{ minWidth: 500 }}
         />
         <div className="flexbox">
           {isEditing ? (
