@@ -145,7 +145,7 @@ exports[`Filters Component renders correctly 1`] = `
         style="align-items: flex-end;"
       >
         <p
-          class="info icon"
+          class="info icon "
         >
           <svg
             aria-hidden="true"

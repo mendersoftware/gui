@@ -2,7 +2,7 @@
 
 exports[`EnterpriseNotification Component renders correctly 1`] = `
 <p
-  class="info icon"
+  class="info icon "
 >
   <svg
     aria-hidden="true"

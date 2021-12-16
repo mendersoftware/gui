@@ -165,7 +165,7 @@ exports[`SoftwareDevices Component renders correctly 1`] = `
       </div>
     </div>
     <p
-      class="info icon"
+      class="info icon "
     >
       <svg
         aria-hidden="true"

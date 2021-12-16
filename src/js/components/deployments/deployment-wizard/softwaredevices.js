@@ -5,7 +5,7 @@ import pluralize from 'pluralize';
 
 import { TextField, Tooltip } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
-import { ErrorOutline as ErrorOutlineIcon, InfoOutlined as InfoOutlinedIcon } from '@material-ui/icons';
+import { ErrorOutline as ErrorOutlineIcon } from '@material-ui/icons';
 
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
@@ -13,6 +13,7 @@ import useWindowSize from '../../../utils/resizehook';
 import { allDevices } from '../createdeployment';
 import theme from '../../../themes/mender-theme';
 import AsyncAutocomplete from '../../common/asyncautocomplete';
+import InfoHint from '../../common/info-hint';
 
 export const styles = {
   infoStyle: {
@@ -240,10 +241,7 @@ export const SoftwareDevices = ({
               )
             )}
           </div>
-          <p className="info icon">
-            <InfoOutlinedIcon fontSize="small" style={{ verticalAlign: 'middle', margin: '0 6px 4px 0' }} />
-            The deployment will skip any devices in the group that are already on the target Release version, or that have an incompatible device type.
-          </p>
+          <InfoHint content="The deployment will skip any devices in the group that are already on the target Release version, or that have an incompatible device type." />
         </form>
       )}
     </div>

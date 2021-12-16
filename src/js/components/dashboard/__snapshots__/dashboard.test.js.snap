@@ -204,7 +204,7 @@ exports[`Dashboard Component renders correctly 1`] = `
       class="flexbox centered"
     >
       <p
-        class="info icon"
+        class="info icon "
       >
         <svg
           aria-hidden="true"
