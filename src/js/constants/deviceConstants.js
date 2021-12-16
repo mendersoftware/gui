@@ -1,3 +1,5 @@
+const React = require('react');
+
 const { mdiAws: AWS, mdiMicrosoftAzure: Azure, mdiGoogleCloud: GCP } = require('@mdi/js');
 const iotManagerBaseURL = '/v1/iot-manager';
 
@@ -38,9 +40,47 @@ module.exports = {
   SET_DEVICE_LIMIT: 'SET_DEVICE_LIMIT',
 
   EXTERNAL_PROVIDER: {
-    amazon: { article: 'an', icon: AWS, title: 'AWS IoT core', provider: 'amazon', managementUrl: iotManagerBaseURL, enabled: false },
-    azure: { article: 'an', icon: Azure, title: 'Azure IoT Hub', provider: 'azure', managementUrl: iotManagerBaseURL, enabled: true },
-    google: { article: 'a', icon: GCP, title: 'Cloud IoT Core', provider: 'google', managementUrl: iotManagerBaseURL, enabled: false }
+    amazon: {
+      article: 'an',
+      icon: AWS,
+      title: 'AWS IoT core',
+      provider: 'amazon',
+      managementUrl: iotManagerBaseURL,
+      enabled: false,
+      configHint: <>For help finding your AWS IoT core connection string, check the AWS IoT documentation.</>
+    },
+    azure: {
+      article: 'an',
+      icon: Azure,
+      title: 'Azure IoT Hub',
+      provider: 'azure',
+      managementUrl: iotManagerBaseURL,
+      enabled: true,
+      configHint: (
+        <>
+          For help finding your Azure IoT Hub connection string, look under &apos;Shared access policies&apos; in the Microsoft Azure UI as described{' '}
+          {
+            <a
+              href="https://devblogs.microsoft.com/iotdev/understand-different-connection-strings-in-azure-iot-hub/#iothubconn"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              here
+            </a>
+          }
+          .
+        </>
+      )
+    },
+    google: {
+      article: 'a',
+      icon: GCP,
+      title: 'Cloud IoT Core',
+      provider: 'google',
+      managementUrl: iotManagerBaseURL,
+      enabled: false,
+      configHint: <>For help finding your Cloud IoT core connection string, check the Cloud IoT documentation.</>
+    }
   },
 
   // see https://github.com/mendersoftware/go-lib-micro/tree/master/ws

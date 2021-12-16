@@ -89,6 +89,32 @@ exports[`Integrations Component renders correctly 1`] = `
       </button>
     </div>
   </div>
+  <p
+    class="info icon "
+    style="max-width: 750px;"
+  >
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+      focusable="false"
+      style="vertical-align: middle; margin: 0px 6px 4px 0px;"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+      />
+    </svg>
+    For help finding your Azure IoT Hub connection string, look under 'Shared access policies' in the Microsoft Azure UI as described
+     
+    <a
+      href="https://devblogs.microsoft.com/iotdev/understand-different-connection-strings-in-azure-iot-hub/#iothubconn"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      here
+    </a>
+    .
+  </p>
   <h3
     class="margin-bottom-none"
   >
@@ -163,5 +189,22 @@ exports[`Integrations Component renders correctly 1`] = `
       </button>
     </div>
   </div>
+  <p
+    class="info icon "
+    style="max-width: 750px;"
+  >
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+      focusable="false"
+      style="vertical-align: middle; margin: 0px 6px 4px 0px;"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+      />
+    </svg>
+    For help finding your AWS IoT core connection string, check the AWS IoT documentation.
+  </p>
 </div>
 `;

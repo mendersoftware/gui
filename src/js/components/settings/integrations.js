@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+
 import { Button, MenuItem, Select, TextField } from '@material-ui/core';
 
 import { changeIntegration, deleteIntegration, getIntegrationFor } from '../../actions/organizationActions';
 import { EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
 import Confirm from '../common/confirm';
+import InfoHint from '../common/info-hint';
 
 const maxWidth = 750;
 
@@ -25,14 +27,15 @@ export const IntegrationConfiguration = ({ integration, onCancel, onDelete, onSa
 
   const updateConnectionConfig = ({ target: { value = '' } }) => setConnectionConfig(value);
 
+  const { configHint, title } = EXTERNAL_PROVIDER[provider];
   return (
     <>
-      <h3 className="margin-bottom-none">{EXTERNAL_PROVIDER[provider].title}</h3>
+      <h3 className="margin-bottom-none">{title}</h3>
       <div className="flexbox space-between relative" style={{ alignItems: 'flex-end', maxWidth }}>
         <TextField
           disabled={!isEditing}
           InputLabelProps={{ shrink: !!connectionConfig }}
-          label={`${EXTERNAL_PROVIDER[provider].title} connection string`}
+          label={`${title} connection string`}
           multiline
           onChange={updateConnectionConfig}
           style={{ minWidth: 500, wordBreak: 'break-all' }}
@@ -61,6 +64,7 @@ export const IntegrationConfiguration = ({ integration, onCancel, onDelete, onSa
           <Confirm type="integrationRemoval" classes="confirmation-overlay" action={onDeleteConfirm} cancel={() => setIsDeleting(false)} style={{}} />
         )}
       </div>
+      <InfoHint content={configHint} style={{ maxWidth }} />
     </>
   );
 };
