@@ -34,6 +34,922 @@ exports[`AuthsetList Component renders correctly 1`] = `
   <div
     class="body"
     style="position: relative;"
-  />
+  >
+    <div
+      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+    >
+      <div
+        aria-disabled="false"
+        aria-expanded="false"
+        class="MuiButtonBase-root MuiAccordionSummary-root"
+        role="button"
+        style="cursor: default;"
+        tabindex="0"
+      >
+        <div
+          class="MuiAccordionSummary-content"
+        >
+          <div
+            class="MuiChip-root MuiChip-colorPrimary MuiChip-sizeSmall"
+            style="justify-self: flex-start;"
+          >
+            <span
+              class="MuiChip-label MuiChip-labelSmall"
+            >
+              new
+            </span>
+          </div>
+          <div
+            class="capitalized"
+          >
+            pending
+          </div>
+          <a>
+            show key
+          </a>
+          <time
+            datetime="2020-09-21T12:48:34+00:00"
+          >
+            2020-09-21 12:48
+          </time>
+          <div
+            class="action-buttons flexbox"
+          >
+            <a>
+              Accept
+            </a>
+            <a>
+              Reject
+            </a>
+            <a>
+              Dismiss
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiCollapse-container MuiCollapse-hidden"
+        style="min-height: 0px;"
+      >
+        <div
+          class="MuiCollapse-wrapper"
+        >
+          <div
+            class="MuiCollapse-wrapperInner"
+          >
+            <div
+              role="region"
+            >
+              <div
+                class="MuiAccordionDetails-root"
+              >
+                <div
+                  style="flex-grow: 1;"
+                />
+                <p
+                  class="bold expanded"
+                >
+                   Are you sure you want to continue?
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+    >
+      <div
+        aria-disabled="false"
+        aria-expanded="false"
+        class="MuiButtonBase-root MuiAccordionSummary-root"
+        role="button"
+        style="cursor: default;"
+        tabindex="0"
+      >
+        <div
+          class="MuiAccordionSummary-content"
+        >
+          <div
+            class="MuiChip-root MuiChip-colorPrimary MuiChip-sizeSmall"
+            style="justify-self: flex-start;"
+          >
+            <span
+              class="MuiChip-label MuiChip-labelSmall"
+            >
+              new
+            </span>
+          </div>
+          <div
+            class="capitalized"
+          >
+            pending
+          </div>
+          <a>
+            show key
+          </a>
+          <time
+            datetime="2020-09-21T12:43:34+00:00"
+          >
+            2020-09-21 12:43
+          </time>
+          <div
+            class="action-buttons flexbox"
+          >
+            <a>
+              Accept
+            </a>
+            <a>
+              Reject
+            </a>
+            <a>
+              Dismiss
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiCollapse-container MuiCollapse-hidden"
+        style="min-height: 0px;"
+      >
+        <div
+          class="MuiCollapse-wrapper"
+        >
+          <div
+            class="MuiCollapse-wrapperInner"
+          >
+            <div
+              role="region"
+            >
+              <div
+                class="MuiAccordionDetails-root"
+              >
+                <div
+                  style="flex-grow: 1;"
+                />
+                <p
+                  class="bold expanded"
+                >
+                   Are you sure you want to continue?
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+    >
+      <div
+        aria-disabled="false"
+        aria-expanded="false"
+        class="MuiButtonBase-root MuiAccordionSummary-root"
+        role="button"
+        style="cursor: default;"
+        tabindex="0"
+      >
+        <div
+          class="MuiAccordionSummary-content"
+        >
+          <div
+            class="MuiChip-root MuiChip-colorPrimary MuiChip-sizeSmall"
+            style="justify-self: flex-start;"
+          >
+            <span
+              class="MuiChip-label MuiChip-labelSmall"
+            >
+              new
+            </span>
+          </div>
+          <div
+            class="capitalized"
+          >
+            pending
+          </div>
+          <a>
+            show key
+          </a>
+          <time
+            datetime="2020-09-21T12:38:34+00:00"
+          >
+            2020-09-21 12:38
+          </time>
+          <div
+            class="action-buttons flexbox"
+          >
+            <a>
+              Accept
+            </a>
+            <a>
+              Reject
+            </a>
+            <a>
+              Dismiss
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiCollapse-container MuiCollapse-hidden"
+        style="min-height: 0px;"
+      >
+        <div
+          class="MuiCollapse-wrapper"
+        >
+          <div
+            class="MuiCollapse-wrapperInner"
+          >
+            <div
+              role="region"
+            >
+              <div
+                class="MuiAccordionDetails-root"
+              >
+                <div
+                  style="flex-grow: 1;"
+                />
+                <p
+                  class="bold expanded"
+                >
+                   Are you sure you want to continue?
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+    >
+      <div
+        aria-disabled="false"
+        aria-expanded="false"
+        class="MuiButtonBase-root MuiAccordionSummary-root"
+        role="button"
+        style="cursor: default;"
+        tabindex="0"
+      >
+        <div
+          class="MuiAccordionSummary-content"
+        >
+          <div
+            class="capitalized"
+          >
+            Active
+          </div>
+          <div
+            class="capitalized"
+          >
+            accepted
+          </div>
+          <a>
+            show key
+          </a>
+          <time
+            datetime="2020-09-21T12:47:34+00:00"
+          >
+            2020-09-21 12:47
+          </time>
+          <div
+            class="action-buttons flexbox"
+          >
+            <div>
+              Accept
+            </div>
+            <a>
+              Reject
+            </a>
+            <a>
+              Dismiss
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiCollapse-container MuiCollapse-hidden"
+        style="min-height: 0px;"
+      >
+        <div
+          class="MuiCollapse-wrapper"
+        >
+          <div
+            class="MuiCollapse-wrapperInner"
+          >
+            <div
+              role="region"
+            >
+              <div
+                class="MuiAccordionDetails-root"
+              >
+                <div
+                  style="flex-grow: 1;"
+                />
+                <p
+                  class="bold expanded"
+                >
+                   Are you sure you want to continue?
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+    >
+      <div
+        aria-disabled="false"
+        aria-expanded="false"
+        class="MuiButtonBase-root MuiAccordionSummary-root"
+        role="button"
+        style="cursor: default;"
+        tabindex="0"
+      >
+        <div
+          class="MuiAccordionSummary-content"
+        >
+          <div
+            class="capitalized"
+          >
+            Active
+          </div>
+          <div
+            class="capitalized"
+          >
+            accepted
+          </div>
+          <a>
+            show key
+          </a>
+          <time
+            datetime="2020-09-21T12:42:34+00:00"
+          >
+            2020-09-21 12:42
+          </time>
+          <div
+            class="action-buttons flexbox"
+          >
+            <div>
+              Accept
+            </div>
+            <a>
+              Reject
+            </a>
+            <a>
+              Dismiss
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiCollapse-container MuiCollapse-hidden"
+        style="min-height: 0px;"
+      >
+        <div
+          class="MuiCollapse-wrapper"
+        >
+          <div
+            class="MuiCollapse-wrapperInner"
+          >
+            <div
+              role="region"
+            >
+              <div
+                class="MuiAccordionDetails-root"
+              >
+                <div
+                  style="flex-grow: 1;"
+                />
+                <p
+                  class="bold expanded"
+                >
+                   Are you sure you want to continue?
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+    >
+      <div
+        aria-disabled="false"
+        aria-expanded="false"
+        class="MuiButtonBase-root MuiAccordionSummary-root"
+        role="button"
+        style="cursor: default;"
+        tabindex="0"
+      >
+        <div
+          class="MuiAccordionSummary-content"
+        >
+          <div
+            class="capitalized"
+          >
+            Active
+          </div>
+          <div
+            class="capitalized"
+          >
+            accepted
+          </div>
+          <a>
+            show key
+          </a>
+          <time
+            datetime="2020-09-21T12:37:34+00:00"
+          >
+            2020-09-21 12:37
+          </time>
+          <div
+            class="action-buttons flexbox"
+          >
+            <div>
+              Accept
+            </div>
+            <a>
+              Reject
+            </a>
+            <a>
+              Dismiss
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiCollapse-container MuiCollapse-hidden"
+        style="min-height: 0px;"
+      >
+        <div
+          class="MuiCollapse-wrapper"
+        >
+          <div
+            class="MuiCollapse-wrapperInner"
+          >
+            <div
+              role="region"
+            >
+              <div
+                class="MuiAccordionDetails-root"
+              >
+                <div
+                  style="flex-grow: 1;"
+                />
+                <p
+                  class="bold expanded"
+                >
+                   Are you sure you want to continue?
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+    >
+      <div
+        aria-disabled="false"
+        aria-expanded="false"
+        class="MuiButtonBase-root MuiAccordionSummary-root"
+        role="button"
+        style="cursor: default;"
+        tabindex="0"
+      >
+        <div
+          class="MuiAccordionSummary-content"
+        >
+          <div />
+          <div
+            class="capitalized"
+          >
+            rejected
+          </div>
+          <a>
+            show key
+          </a>
+          <time
+            datetime="2020-09-21T12:50:34+00:00"
+          >
+            2020-09-21 12:50
+          </time>
+          <div
+            class="action-buttons flexbox"
+          >
+            <a>
+              Accept
+            </a>
+            <div>
+              Reject
+            </div>
+            <a>
+              Dismiss
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiCollapse-container MuiCollapse-hidden"
+        style="min-height: 0px;"
+      >
+        <div
+          class="MuiCollapse-wrapper"
+        >
+          <div
+            class="MuiCollapse-wrapperInner"
+          >
+            <div
+              role="region"
+            >
+              <div
+                class="MuiAccordionDetails-root"
+              >
+                <div
+                  style="flex-grow: 1;"
+                />
+                <p
+                  class="bold expanded"
+                >
+                   Are you sure you want to continue?
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+    >
+      <div
+        aria-disabled="false"
+        aria-expanded="false"
+        class="MuiButtonBase-root MuiAccordionSummary-root"
+        role="button"
+        style="cursor: default;"
+        tabindex="0"
+      >
+        <div
+          class="MuiAccordionSummary-content"
+        >
+          <div />
+          <div
+            class="capitalized"
+          >
+            preauth
+          </div>
+          <a>
+            show key
+          </a>
+          <time
+            datetime="2020-09-21T12:49:34+00:00"
+          >
+            2020-09-21 12:49
+          </time>
+          <div
+            class="action-buttons flexbox"
+          >
+            <a>
+              Accept
+            </a>
+            <a>
+              Reject
+            </a>
+            <a>
+              Dismiss
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiCollapse-container MuiCollapse-hidden"
+        style="min-height: 0px;"
+      >
+        <div
+          class="MuiCollapse-wrapper"
+        >
+          <div
+            class="MuiCollapse-wrapperInner"
+          >
+            <div
+              role="region"
+            >
+              <div
+                class="MuiAccordionDetails-root"
+              >
+                <div
+                  style="flex-grow: 1;"
+                />
+                <p
+                  class="bold expanded"
+                >
+                   Are you sure you want to continue?
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+    >
+      <div
+        aria-disabled="false"
+        aria-expanded="false"
+        class="MuiButtonBase-root MuiAccordionSummary-root"
+        role="button"
+        style="cursor: default;"
+        tabindex="0"
+      >
+        <div
+          class="MuiAccordionSummary-content"
+        >
+          <div />
+          <div
+            class="capitalized"
+          >
+            rejected
+          </div>
+          <a>
+            show key
+          </a>
+          <time
+            datetime="2020-09-21T12:45:34+00:00"
+          >
+            2020-09-21 12:45
+          </time>
+          <div
+            class="action-buttons flexbox"
+          >
+            <a>
+              Accept
+            </a>
+            <div>
+              Reject
+            </div>
+            <a>
+              Dismiss
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiCollapse-container MuiCollapse-hidden"
+        style="min-height: 0px;"
+      >
+        <div
+          class="MuiCollapse-wrapper"
+        >
+          <div
+            class="MuiCollapse-wrapperInner"
+          >
+            <div
+              role="region"
+            >
+              <div
+                class="MuiAccordionDetails-root"
+              >
+                <div
+                  style="flex-grow: 1;"
+                />
+                <p
+                  class="bold expanded"
+                >
+                   Are you sure you want to continue?
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+    >
+      <div
+        aria-disabled="false"
+        aria-expanded="false"
+        class="MuiButtonBase-root MuiAccordionSummary-root"
+        role="button"
+        style="cursor: default;"
+        tabindex="0"
+      >
+        <div
+          class="MuiAccordionSummary-content"
+        >
+          <div />
+          <div
+            class="capitalized"
+          >
+            preauth
+          </div>
+          <a>
+            show key
+          </a>
+          <time
+            datetime="2020-09-21T12:44:34+00:00"
+          >
+            2020-09-21 12:44
+          </time>
+          <div
+            class="action-buttons flexbox"
+          >
+            <a>
+              Accept
+            </a>
+            <a>
+              Reject
+            </a>
+            <a>
+              Dismiss
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiCollapse-container MuiCollapse-hidden"
+        style="min-height: 0px;"
+      >
+        <div
+          class="MuiCollapse-wrapper"
+        >
+          <div
+            class="MuiCollapse-wrapperInner"
+          >
+            <div
+              role="region"
+            >
+              <div
+                class="MuiAccordionDetails-root"
+              >
+                <div
+                  style="flex-grow: 1;"
+                />
+                <p
+                  class="bold expanded"
+                >
+                   Are you sure you want to continue?
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+    >
+      <div
+        aria-disabled="false"
+        aria-expanded="false"
+        class="MuiButtonBase-root MuiAccordionSummary-root"
+        role="button"
+        style="cursor: default;"
+        tabindex="0"
+      >
+        <div
+          class="MuiAccordionSummary-content"
+        >
+          <div />
+          <div
+            class="capitalized"
+          >
+            rejected
+          </div>
+          <a>
+            show key
+          </a>
+          <time
+            datetime="2020-09-21T12:40:34+00:00"
+          >
+            2020-09-21 12:40
+          </time>
+          <div
+            class="action-buttons flexbox"
+          >
+            <a>
+              Accept
+            </a>
+            <div>
+              Reject
+            </div>
+            <a>
+              Dismiss
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiCollapse-container MuiCollapse-hidden"
+        style="min-height: 0px;"
+      >
+        <div
+          class="MuiCollapse-wrapper"
+        >
+          <div
+            class="MuiCollapse-wrapperInner"
+          >
+            <div
+              role="region"
+            >
+              <div
+                class="MuiAccordionDetails-root"
+              >
+                <div
+                  style="flex-grow: 1;"
+                />
+                <p
+                  class="bold expanded"
+                >
+                   Are you sure you want to continue?
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+    >
+      <div
+        aria-disabled="false"
+        aria-expanded="false"
+        class="MuiButtonBase-root MuiAccordionSummary-root"
+        role="button"
+        style="cursor: default;"
+        tabindex="0"
+      >
+        <div
+          class="MuiAccordionSummary-content"
+        >
+          <div />
+          <div
+            class="capitalized"
+          >
+            preauth
+          </div>
+          <a>
+            show key
+          </a>
+          <time
+            datetime="2020-09-21T12:39:34+00:00"
+          >
+            2020-09-21 12:39
+          </time>
+          <div
+            class="action-buttons flexbox"
+          >
+            <a>
+              Accept
+            </a>
+            <a>
+              Reject
+            </a>
+            <a>
+              Dismiss
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiCollapse-container MuiCollapse-hidden"
+        style="min-height: 0px;"
+      >
+        <div
+          class="MuiCollapse-wrapper"
+        >
+          <div
+            class="MuiCollapse-wrapperInner"
+          >
+            <div
+              role="region"
+            >
+              <div
+                class="MuiAccordionDetails-root"
+              >
+                <div
+                  style="flex-grow: 1;"
+                />
+                <p
+                  class="bold expanded"
+                >
+                   Are you sure you want to continue?
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AuthsetList Component renders correctly 1`] = `
+exports[`AuthsetListItem Component renders correctly 1`] = `
 <div
   class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 Mui-expanded WithStyles(ForwardRef(Accordion))-expanded-2 MuiPaper-elevation1"
 >
