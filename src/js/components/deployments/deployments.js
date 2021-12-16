@@ -12,7 +12,7 @@ import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getIsEnterprise, getOnboardingState } from '../../selectors';
 
-import CreateDialog from './createdeployment';
+import CreateDialog, { allDevices } from './createdeployment';
 import Progress from './inprogressdeployments';
 import Past from './pastdeployments';
 import Report from './report';
@@ -104,15 +104,16 @@ export const Deployments = ({
   }, []);
 
   const retryDeployment = (deployment, deploymentDeviceIds) => {
-    const { artifact_name, device_types_compatible = [], name, update_control_map = {} } = deployment;
-    const release = { Name: artifact_name, device_types_compatible };
+    const { artifact_name, groups = [], name, update_control_map = {} } = deployment;
+    const release = releases[artifact_name];
     const updateControlMap = isEnterprise ? { update_control_map: { states: update_control_map.states || {} } } : {};
+    const targetDevicesConfig = name === allDevices || groups.some(groupName => groupName) ? { group: name } : { device: devicesById[name] };
     const deploymentObject = {
-      group: name,
       deploymentDeviceIds,
       phases: [{ batch_size: 100, start_ts: undefined, delay: 0 }],
       release,
       deploymentDeviceCount: deploymentDeviceIds.length,
+      ...targetDevicesConfig,
       ...updateControlMap
     };
     setDeploymentObject(deploymentObject);
