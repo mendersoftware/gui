@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import PhysicalDeviceOnboarding, { DeviceTypeSelectionStep, InstallationStep } from './physicaldeviceonboarding';
+import PhysicalDeviceOnboarding, { ConvertedImageNote, DeviceTypeSelectionStep, ExternalProviderConnector, InstallationStep } from './physicaldeviceonboarding';
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
@@ -15,11 +15,12 @@ describe('PhysicalDeviceOnboarding Component', () => {
   });
 
   describe('tiny onboarding tips', () => {
-    [DeviceTypeSelectionStep, InstallationStep].forEach(async Component => {
+    [DeviceTypeSelectionStep, InstallationStep, ConvertedImageNote, ExternalProviderConnector].forEach(async Component => {
       it(`renders ${Component.displayName || Component.name} correctly`, () => {
         const { baseElement } = render(
           <Component
             advanceOnboarding={jest.fn}
+            connectionString="test"
             docsVersion={''}
             hasConvertedImage={true}
             ipAddress="test.address"
@@ -32,7 +33,7 @@ describe('PhysicalDeviceOnboarding Component', () => {
             tenantToken="testtoken"
           />
         );
-        const view = baseElement.parentElement;
+        const view = baseElement.firstChild;
         expect(view).toMatchSnapshot();
         expect(view).toEqual(expect.not.stringMatching(undefineds));
       });
@@ -45,7 +46,7 @@ describe('PhysicalDeviceOnboarding Component', () => {
         <PhysicalDeviceOnboarding progress={1} />
       </Provider>
     );
-    const view = baseElement.parentElement.parentElement;
+    const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });

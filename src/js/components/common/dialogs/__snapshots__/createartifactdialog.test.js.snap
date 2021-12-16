@@ -37,61 +37,59 @@ exports[`CreateArtifactDialog Component renders correctly 1`] = `
       <div
         class="MuiDialogContent-root onboard-dialog dialog-content"
       >
-        <div>
-          Now we'll make an update to the webserver demo running on your device, using a new Release that you will create yourself.
-          <p>
-            On your workstation, create a new 
-            <i>
-              index.html
-            </i>
-             file with the simple contents 'Hello world'. This will be the new web page after you update the application, so you'll be able to easily see when your device has received the update. Copy and run the command to create the file:
-          </p>
-          <div
-            class="code"
+        Now we'll make an update to the webserver demo running on your device, using a new Release that you will create yourself.
+        <p>
+          On your workstation, create a new 
+          <i>
+            index.html
+          </i>
+           file with the simple contents 'Hello world'. This will be the new web page after you update the application, so you'll be able to easily see when your device has received the update. Copy and run the command to create the file:
+        </p>
+        <div
+          class="code"
+        >
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text"
+            style="float: right; margin: -20px 0px 0px 10px;"
+            tabindex="0"
+            type="button"
           >
-            <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-text"
-              style="float: right; margin: -20px 0px 0px 10px;"
-              tabindex="0"
-              type="button"
-            >
-              <span
-                class="MuiButton-label"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeMedium"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"
-                    />
-                  </svg>
-                </span>
-                Copy to clipboard
-              </span>
-              <span
-                class="MuiTouchRipple-root"
-              />
-            </button>
             <span
-              style="white-space: pre-wrap; word-break: break-word;"
+              class="MuiButton-label"
             >
-              cat &gt;index.html &lt;&lt;EOF
+              <span
+                class="MuiButton-startIcon MuiButton-iconSizeMedium"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"
+                  />
+                </svg>
+              </span>
+              Copy to clipboard
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+          <span
+            style="white-space: pre-wrap; word-break: break-word;"
+          >
+            cat &gt;index.html &lt;&lt;EOF
 Hello World!
 EOF
 
-            </span>
-          </div>
-          <p />
-          <p>
-            When you have done that, click 'Next'
-          </p>
+          </span>
         </div>
+        <p />
+        <p>
+          When you have done that, click 'Next'
+        </p>
       </div>
       <div
         class="MuiDialogActions-root MuiDialogActions-spacing"

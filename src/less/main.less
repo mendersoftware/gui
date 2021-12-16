@@ -708,7 +708,7 @@ ul.link-list {
 }
 
 .dialog-content {
-  margin: 30px;
+  margin: 2 * @defaultGutterWidth;
   min-height: 30vh;
 }
 
@@ -721,18 +721,19 @@ ul.link-list {
 
 .onboard-dialog {
   display: flex;
-  > div {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+  flex-direction: column;
+  .rpi-quickstart {
+    background-color: @lightergrey;
+    border-radius: 5px;
   }
-  .os-list {
-    margin-bottom: 2 * @defaultGutterWidth;
-    img {
-      height: 80px;
-      margin: @defaultGutterWidth;
-      margin-bottom: 2 * @defaultGutterWidth;
-    }
+  .two-columns > div {
+    border: 1px solid @lightergrey;
+    border-radius: 5px;
+  }
+  .os-list img {
+    height: 80px;
+    margin: @defaultGutterWidth;
+    mix-blend-mode: darken;
   }
 }
 

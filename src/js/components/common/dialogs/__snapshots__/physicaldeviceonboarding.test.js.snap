@@ -1,1459 +1,432 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PhysicalDeviceOnboarding Component renders correctly 1`] = `null`;
-
-exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders DeviceTypeSelectionStep correctly 1`] = `
-<html>
-  <head>
-    <style
-      data-jss=""
-      data-meta="MuiSvgIcon"
+exports[`PhysicalDeviceOnboarding Component renders correctly 1`] = `
+<div>
+  <h4>
+    Enter your device type
+  </h4>
+  <p>
+    Setting this attribute on the device ensures that the device will only receive updates for compatible software releases.
+  </p>
+  <div
+    aria-expanded="false"
+    class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon"
+    role="combobox"
+    style="max-width: 300px;"
+  >
+    <div
+      class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+      style="margin-top: 0px;"
     >
-      
-.MuiSvgIcon-root {
-  fill: currentColor;
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  font-size: 1.5rem;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  flex-shrink: 0;
-  user-select: none;
-}
-.MuiSvgIcon-colorPrimary {
-  color: #3f51b5;
-}
-.MuiSvgIcon-colorSecondary {
-  color: #f50057;
-}
-.MuiSvgIcon-colorAction {
-  color: rgba(0, 0, 0, 0.54);
-}
-.MuiSvgIcon-colorError {
-  color: #f44336;
-}
-.MuiSvgIcon-colorDisabled {
-  color: rgba(0, 0, 0, 0.26);
-}
-.MuiSvgIcon-fontSizeInherit {
-  font-size: inherit;
-}
-.MuiSvgIcon-fontSizeSmall {
-  font-size: 1.25rem;
-}
-.MuiSvgIcon-fontSizeLarge {
-  font-size: 2.1875rem;
-}
-
-    </style>
-    <style
-      data-jss=""
-      data-meta="MuiTouchRipple"
-    >
-      
-.MuiTouchRipple-root {
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 0;
-  overflow: hidden;
-  position: absolute;
-  border-radius: inherit;
-  pointer-events: none;
-}
-.MuiTouchRipple-ripple {
-  opacity: 0;
-  position: absolute;
-}
-.MuiTouchRipple-rippleVisible {
-  opacity: 0.3;
-  animation: MuiTouchRipple-keyframes-enter 550ms cubic-bezier(0.4, 0, 0.2, 1);
-  transform: scale(1);
-}
-.MuiTouchRipple-ripplePulsate {
-  animation-duration: 200ms;
-}
-.MuiTouchRipple-child {
-  width: 100%;
-  height: 100%;
-  display: block;
-  opacity: 1;
-  border-radius: 50%;
-  background-color: currentColor;
-}
-.MuiTouchRipple-childLeaving {
-  opacity: 0;
-  animation: MuiTouchRipple-keyframes-exit 550ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-.MuiTouchRipple-childPulsate {
-  top: 0;
-  left: 0;
-  position: absolute;
-  animation: MuiTouchRipple-keyframes-pulsate 2500ms cubic-bezier(0.4, 0, 0.2, 1) 200ms infinite;
-}
-@keyframes MuiTouchRipple-keyframes-enter {
-  0% {
-    opacity: 0.1;
-    transform: scale(0);
-  }
-  100% {
-    opacity: 0.3;
-    transform: scale(1);
-  }
-}
-@keyframes MuiTouchRipple-keyframes-exit {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-@keyframes MuiTouchRipple-keyframes-pulsate {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(0.92);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-    </style>
-    <style
-      data-jss=""
-      data-meta="MuiButtonBase"
-    >
-      
-.MuiButtonBase-root {
-  color: inherit;
-  border: 0;
-  cursor: pointer;
-  margin: 0;
-  display: inline-flex;
-  outline: 0;
-  padding: 0;
-  position: relative;
-  align-items: center;
-  user-select: none;
-  border-radius: 0;
-  vertical-align: middle;
-  -moz-appearance: none;
-  justify-content: center;
-  text-decoration: none;
-  background-color: transparent;
-  -webkit-appearance: none;
-  -webkit-tap-highlight-color: transparent;
-}
-.MuiButtonBase-root::-moz-focus-inner {
-  border-style: none;
-}
-.MuiButtonBase-root.Mui-disabled {
-  cursor: default;
-  pointer-events: none;
-}
-@media print {
-  .MuiButtonBase-root {
-    color-adjust: exact;
-  }
-}
-
-    </style>
-    <style
-      data-jss=""
-      data-meta="MuiIconButton"
-    >
-      
-.MuiIconButton-root {
-  flex: 0 0 auto;
-  color: rgba(0, 0, 0, 0.54);
-  padding: 12px;
-  overflow: visible;
-  font-size: 1.5rem;
-  text-align: center;
-  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border-radius: 50%;
-}
-.MuiIconButton-root:hover {
-  background-color: rgba(0, 0, 0, 0.04);
-}
-.MuiIconButton-root.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-  background-color: transparent;
-}
-@media (hover: none) {
-  .MuiIconButton-root:hover {
-    background-color: transparent;
-  }
-}
-.MuiIconButton-edgeStart {
-  margin-left: -12px;
-}
-.MuiIconButton-sizeSmall.MuiIconButton-edgeStart {
-  margin-left: -3px;
-}
-.MuiIconButton-edgeEnd {
-  margin-right: -12px;
-}
-.MuiIconButton-sizeSmall.MuiIconButton-edgeEnd {
-  margin-right: -3px;
-}
-.MuiIconButton-colorInherit {
-  color: inherit;
-}
-.MuiIconButton-colorPrimary {
-  color: #3f51b5;
-}
-.MuiIconButton-colorPrimary:hover {
-  background-color: rgba(63, 81, 181, 0.04);
-}
-@media (hover: none) {
-  .MuiIconButton-colorPrimary:hover {
-    background-color: transparent;
-  }
-}
-.MuiIconButton-colorSecondary {
-  color: #f50057;
-}
-.MuiIconButton-colorSecondary:hover {
-  background-color: rgba(245, 0, 87, 0.04);
-}
-@media (hover: none) {
-  .MuiIconButton-colorSecondary:hover {
-    background-color: transparent;
-  }
-}
-.MuiIconButton-sizeSmall {
-  padding: 3px;
-  font-size: 1.125rem;
-}
-.MuiIconButton-label {
-  width: 100%;
-  display: flex;
-  align-items: inherit;
-  justify-content: inherit;
-}
-
-    </style>
-    <style
-      data-jss=""
-      data-meta="MuiInputBase"
-    >
-      
-@keyframes mui-auto-fill {}
-@keyframes mui-auto-fill-cancel {}
-.MuiInputBase-root {
-  color: rgba(0, 0, 0, 0.87);
-  cursor: text;
-  display: inline-flex;
-  position: relative;
-  font-size: 1rem;
-  box-sizing: border-box;
-  align-items: center;
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-  font-weight: 400;
-  line-height: 1.1876em;
-  letter-spacing: 0.00938em;
-}
-.MuiInputBase-root.Mui-disabled {
-  color: rgba(0, 0, 0, 0.38);
-  cursor: default;
-}
-.MuiInputBase-multiline {
-  padding: 6px 0 7px;
-}
-.MuiInputBase-multiline.MuiInputBase-marginDense {
-  padding-top: 3px;
-}
-.MuiInputBase-fullWidth {
-  width: 100%;
-}
-.MuiInputBase-input {
-  font: inherit;
-  color: currentColor;
-  width: 100%;
-  border: 0;
-  height: 1.1876em;
-  margin: 0;
-  display: block;
-  padding: 6px 0 7px;
-  min-width: 0;
-  background: none;
-  box-sizing: content-box;
-  animation-name: mui-auto-fill-cancel;
-  letter-spacing: inherit;
-  animation-duration: 10ms;
-  -webkit-tap-highlight-color: transparent;
-}
-.MuiInputBase-input::-webkit-input-placeholder {
-  color: currentColor;
-  opacity: 0.42;
-  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-}
-.MuiInputBase-input::-moz-placeholder {
-  color: currentColor;
-  opacity: 0.42;
-  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-}
-.MuiInputBase-input:-ms-input-placeholder {
-  color: currentColor;
-  opacity: 0.42;
-  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-}
-.MuiInputBase-input::-ms-input-placeholder {
-  color: currentColor;
-  opacity: 0.42;
-  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-}
-.MuiInputBase-input:focus {
-  outline: 0;
-}
-.MuiInputBase-input:invalid {
-  box-shadow: none;
-}
-.MuiInputBase-input::-webkit-search-decoration {
-  -webkit-appearance: none;
-}
-.MuiInputBase-input.Mui-disabled {
-  opacity: 1;
-}
-.MuiInputBase-input:-webkit-autofill {
-  animation-name: mui-auto-fill;
-  animation-duration: 5000s;
-}
-label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input::-webkit-input-placeholder {
-  opacity: 0 !important;
-}
-label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input::-moz-placeholder {
-  opacity: 0 !important;
-}
-label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input:-ms-input-placeholder {
-  opacity: 0 !important;
-}
-label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input::-ms-input-placeholder {
-  opacity: 0 !important;
-}
-label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input:focus::-webkit-input-placeholder {
-  opacity: 0.42;
-}
-label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input:focus::-moz-placeholder {
-  opacity: 0.42;
-}
-label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input:focus:-ms-input-placeholder {
-  opacity: 0.42;
-}
-label[data-shrink=false] + .MuiInputBase-formControl .MuiInputBase-input:focus::-ms-input-placeholder {
-  opacity: 0.42;
-}
-.MuiInputBase-inputMarginDense {
-  padding-top: 3px;
-}
-.MuiInputBase-inputMultiline {
-  height: auto;
-  resize: none;
-  padding: 0;
-}
-.MuiInputBase-inputTypeSearch {
-  -moz-appearance: textfield;
-  -webkit-appearance: textfield;
-}
-
-    </style>
-    <style
-      data-jss=""
-      data-meta="MuiFormControl"
-    >
-      
-.MuiFormControl-root {
-  border: 0;
-  margin: 0;
-  display: inline-flex;
-  padding: 0;
-  position: relative;
-  min-width: 0;
-  flex-direction: column;
-  vertical-align: top;
-}
-.MuiFormControl-marginNormal {
-  margin-top: 16px;
-  margin-bottom: 8px;
-}
-.MuiFormControl-marginDense {
-  margin-top: 8px;
-  margin-bottom: 4px;
-}
-.MuiFormControl-fullWidth {
-  width: 100%;
-}
-
-    </style>
-    <style
-      data-jss=""
-      data-meta="MuiFormLabel"
-    >
-      
-.MuiFormLabel-root {
-  color: rgba(0, 0, 0, 0.54);
-  padding: 0;
-  font-size: 1rem;
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: 0.00938em;
-}
-.MuiFormLabel-root.Mui-focused {
-  color: #3f51b5;
-}
-.MuiFormLabel-root.Mui-disabled {
-  color: rgba(0, 0, 0, 0.38);
-}
-.MuiFormLabel-root.Mui-error {
-  color: #f44336;
-}
-.MuiFormLabel-colorSecondary.Mui-focused {
-  color: #f50057;
-}
-.MuiFormLabel-asterisk.Mui-error {
-  color: #f44336;
-}
-
-    </style>
-    <style
-      data-jss=""
-      data-meta="MuiInput"
-    >
-      
-.MuiInput-root {
-  position: relative;
-}
-label + .MuiInput-formControl {
-  margin-top: 16px;
-}
-.MuiInput-colorSecondary.MuiInput-underline:after {
-  border-bottom-color: #f50057;
-}
-.MuiInput-underline:after {
-  left: 0;
-  right: 0;
-  bottom: 0;
-  content: "";
-  position: absolute;
-  transform: scaleX(0);
-  transition: transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  border-bottom: 2px solid #3f51b5;
-  pointer-events: none;
-}
-.MuiInput-underline.Mui-focused:after {
-  transform: scaleX(1);
-}
-.MuiInput-underline.Mui-error:after {
-  transform: scaleX(1);
-  border-bottom-color: #f44336;
-}
-.MuiInput-underline:before {
-  left: 0;
-  right: 0;
-  bottom: 0;
-  content: "\\00a0";
-  position: absolute;
-  transition: border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.42);
-  pointer-events: none;
-}
-.MuiInput-underline:hover:not(.Mui-disabled):before {
-  border-bottom: 2px solid rgba(0, 0, 0, 0.87);
-}
-.MuiInput-underline.Mui-disabled:before {
-  border-bottom-style: dotted;
-}
-@media (hover: none) {
-  .MuiInput-underline:hover:not(.Mui-disabled):before {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
-  }
-}
-
-    </style>
-    <style
-      data-jss=""
-      data-meta="MuiInputLabel"
-    >
-      
-.MuiInputLabel-root {
-  display: block;
-  transform-origin: top left;
-}
-.MuiInputLabel-formControl {
-  top: 0;
-  left: 0;
-  position: absolute;
-  transform: translate(0, 24px) scale(1);
-}
-.MuiInputLabel-marginDense {
-  transform: translate(0, 21px) scale(1);
-}
-.MuiInputLabel-shrink {
-  transform: translate(0, 1.5px) scale(0.75);
-  transform-origin: top left;
-}
-.MuiInputLabel-animated {
-  transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-}
-.MuiInputLabel-filled {
-  z-index: 1;
-  transform: translate(12px, 20px) scale(1);
-  pointer-events: none;
-}
-.MuiInputLabel-filled.MuiInputLabel-marginDense {
-  transform: translate(12px, 17px) scale(1);
-}
-.MuiInputLabel-filled.MuiInputLabel-shrink {
-  transform: translate(12px, 10px) scale(0.75);
-}
-.MuiInputLabel-filled.MuiInputLabel-shrink.MuiInputLabel-marginDense {
-  transform: translate(12px, 7px) scale(0.75);
-}
-.MuiInputLabel-outlined {
-  z-index: 1;
-  transform: translate(14px, 20px) scale(1);
-  pointer-events: none;
-}
-.MuiInputLabel-outlined.MuiInputLabel-marginDense {
-  transform: translate(14px, 12px) scale(1);
-}
-.MuiInputLabel-outlined.MuiInputLabel-shrink {
-  transform: translate(14px, -6px) scale(0.75);
-}
-
-    </style>
-    <style
-      data-jss=""
-      data-meta="MuiTextField"
-    >
-      
-
-
-    </style>
-    <style
-      data-jss=""
-      data-meta="MuiTooltip"
-    >
-      
-.MuiTooltip-popper {
-  z-index: 1500;
-  pointer-events: none;
-}
-.MuiTooltip-popperInteractive {
-  pointer-events: auto;
-}
-.MuiTooltip-popperArrow[x-placement*="bottom"] .MuiTooltip-arrow {
-  top: 0;
-  left: 0;
-  margin-top: -0.71em;
-  margin-left: 4px;
-  margin-right: 4px;
-}
-.MuiTooltip-popperArrow[x-placement*="top"] .MuiTooltip-arrow {
-  left: 0;
-  bottom: 0;
-  margin-left: 4px;
-  margin-right: 4px;
-  margin-bottom: -0.71em;
-}
-.MuiTooltip-popperArrow[x-placement*="right"] .MuiTooltip-arrow {
-  left: 0;
-  width: 0.71em;
-  height: 1em;
-  margin-top: 4px;
-  margin-left: -0.71em;
-  margin-bottom: 4px;
-}
-.MuiTooltip-popperArrow[x-placement*="left"] .MuiTooltip-arrow {
-  right: 0;
-  width: 0.71em;
-  height: 1em;
-  margin-top: 4px;
-  margin-right: -0.71em;
-  margin-bottom: 4px;
-}
-.MuiTooltip-popperArrow[x-placement*="left"] .MuiTooltip-arrow::before {
-  transform-origin: 0 0;
-}
-.MuiTooltip-popperArrow[x-placement*="right"] .MuiTooltip-arrow::before {
-  transform-origin: 100% 100%;
-}
-.MuiTooltip-popperArrow[x-placement*="top"] .MuiTooltip-arrow::before {
-  transform-origin: 100% 0;
-}
-.MuiTooltip-popperArrow[x-placement*="bottom"] .MuiTooltip-arrow::before {
-  transform-origin: 0 100%;
-}
-.MuiTooltip-tooltip {
-  color: #fff;
-  padding: 4px 8px;
-  font-size: 0.625rem;
-  max-width: 300px;
-  word-wrap: break-word;
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-  font-weight: 500;
-  line-height: 1.4em;
-  border-radius: 4px;
-  background-color: rgba(97, 97, 97, 0.9);
-}
-.MuiTooltip-tooltipArrow {
-  margin: 0;
-  position: relative;
-}
-.MuiTooltip-arrow {
-  color: rgba(97, 97, 97, 0.9);
-  width: 1em;
-  height: 0.71em;
-  overflow: hidden;
-  position: absolute;
-  box-sizing: border-box;
-}
-.MuiTooltip-arrow::before {
-  width: 100%;
-  height: 100%;
-  margin: auto;
-  content: "";
-  display: block;
-  transform: rotate(45deg);
-  background-color: currentColor;
-}
-.MuiTooltip-touch {
-  padding: 8px 16px;
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.14286em;
-}
-.MuiTooltip-tooltipPlacementLeft {
-  margin: 0 24px ;
-  transform-origin: right center;
-}
-@media (min-width:600px) {
-  .MuiTooltip-tooltipPlacementLeft {
-    margin: 0 14px;
-  }
-}
-.MuiTooltip-tooltipPlacementRight {
-  margin: 0 24px;
-  transform-origin: left center;
-}
-@media (min-width:600px) {
-  .MuiTooltip-tooltipPlacementRight {
-    margin: 0 14px;
-  }
-}
-.MuiTooltip-tooltipPlacementTop {
-  margin: 24px 0;
-  transform-origin: center bottom;
-}
-@media (min-width:600px) {
-  .MuiTooltip-tooltipPlacementTop {
-    margin: 14px 0;
-  }
-}
-.MuiTooltip-tooltipPlacementBottom {
-  margin: 24px 0;
-  transform-origin: center top;
-}
-@media (min-width:600px) {
-  .MuiTooltip-tooltipPlacementBottom {
-    margin: 14px 0;
-  }
-}
-
-    </style>
-    <style
-      data-jss=""
-      data-meta="WithStyles(ForwardRef(Tooltip))"
-    >
-      
-.WithStyles\\(ForwardRef\\(Tooltip\\)\\)-arrow-1 {
-  color: #5d0f43;
-}
-.WithStyles\\(ForwardRef\\(Tooltip\\)\\)-tooltip-2 {
-  info: [object Object];
-  color: #DECFD9;
-  font-size: small;
-  max-width: 600px;
-  box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
-  background-color: #5d0f43;
-}
-
-    </style>
-    <style
-      data-jss=""
-      data-meta="MuiAutocomplete"
-    >
-      
-.MuiAutocomplete-root.Mui-focused .MuiAutocomplete-clearIndicatorDirty {
-  visibility: visible;
-}
-@media (pointer: fine) {
-  .MuiAutocomplete-root:hover .MuiAutocomplete-clearIndicatorDirty {
-    visibility: visible;
-  }
-}
-.MuiAutocomplete-fullWidth {
-  width: 100%;
-}
-.MuiAutocomplete-tag {
-  margin: 3px;
-  max-width: calc(100% - 6px);
-}
-.MuiAutocomplete-tagSizeSmall {
-  margin: 2px;
-  max-width: calc(100% - 4px);
-}
-.MuiAutocomplete-inputRoot {
-  flex-wrap: wrap;
-}
-.MuiAutocomplete-hasPopupIcon .MuiAutocomplete-inputRoot, .MuiAutocomplete-hasClearIcon .MuiAutocomplete-inputRoot {
-  padding-right: 30px;
-}
-.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon .MuiAutocomplete-inputRoot {
-  padding-right: 56px;
-}
-.MuiAutocomplete-inputRoot .MuiAutocomplete-input {
-  width: 0;
-  min-width: 30px;
-}
-.MuiAutocomplete-inputRoot[class*="MuiInput-root"] {
-  padding-bottom: 1px;
-}
-.MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] {
-  padding: 9px;
-}
-.MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"][class*="MuiOutlinedInput-marginDense"] {
-  padding: 6px;
-}
-.MuiAutocomplete-inputRoot[class*="MuiFilledInput-root"] {
-  padding-top: 19px;
-  padding-left: 8px;
-}
-.MuiAutocomplete-inputRoot[class*="MuiFilledInput-root"][class*="MuiFilledInput-marginDense"] {
-  padding-bottom: 1px;
-}
-.MuiAutocomplete-inputRoot[class*="MuiFilledInput-root"][class*="MuiFilledInput-marginDense"] .MuiAutocomplete-input {
-  padding: 4.5px 4px;
-}
-.MuiAutocomplete-hasPopupIcon .MuiAutocomplete-inputRoot[class*="MuiFilledInput-root"], .MuiAutocomplete-hasClearIcon .MuiAutocomplete-inputRoot[class*="MuiFilledInput-root"] {
-  padding-right: 39px;
-}
-.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon .MuiAutocomplete-inputRoot[class*="MuiFilledInput-root"] {
-  padding-right: 65px;
-}
-.MuiAutocomplete-inputRoot[class*="MuiFilledInput-root"] .MuiAutocomplete-input {
-  padding: 9px 4px;
-}
-.MuiAutocomplete-inputRoot[class*="MuiFilledInput-root"] .MuiAutocomplete-endAdornment {
-  right: 9px;
-}
-.MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"][class*="MuiOutlinedInput-marginDense"] .MuiAutocomplete-input {
-  padding: 4.5px 4px;
-}
-.MuiAutocomplete-hasPopupIcon .MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"], .MuiAutocomplete-hasClearIcon .MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] {
-  padding-right: 39px;
-}
-.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon .MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] {
-  padding-right: 65px;
-}
-.MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input {
-  padding: 9.5px 4px;
-}
-.MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child {
-  padding-left: 6px;
-}
-.MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] .MuiAutocomplete-endAdornment {
-  right: 9px;
-}
-.MuiAutocomplete-inputRoot[class*="MuiInput-root"][class*="MuiInput-marginDense"] .MuiAutocomplete-input {
-  padding: 4px 4px 5px;
-}
-.MuiAutocomplete-inputRoot[class*="MuiInput-root"][class*="MuiInput-marginDense"] .MuiAutocomplete-input:first-child {
-  padding: 3px 0 6px;
-}
-.MuiAutocomplete-inputRoot[class*="MuiInput-root"] .MuiAutocomplete-input {
-  padding: 4px;
-}
-.MuiAutocomplete-inputRoot[class*="MuiInput-root"] .MuiAutocomplete-input:first-child {
-  padding: 6px 0;
-}
-.MuiAutocomplete-input {
-  opacity: 0;
-  flex-grow: 1;
-  text-overflow: ellipsis;
-}
-.MuiAutocomplete-inputFocused {
-  opacity: 1;
-}
-.MuiAutocomplete-endAdornment {
-  top: calc(50% - 14px);
-  right: 0;
-  position: absolute;
-}
-.MuiAutocomplete-clearIndicator {
-  padding: 4px;
-  visibility: hidden;
-  margin-right: -2px;
-}
-.MuiAutocomplete-popupIndicator {
-  padding: 2px;
-  margin-right: -2px;
-}
-.MuiAutocomplete-popupIndicatorOpen {
-  transform: rotate(180deg);
-}
-.MuiAutocomplete-popper {
-  z-index: 1300;
-}
-.MuiAutocomplete-popperDisablePortal {
-  position: absolute;
-}
-.MuiAutocomplete-paper {
-  margin: 4px 0;
-  overflow: hidden;
-  font-size: 1rem;
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0.00938em;
-}
-.MuiAutocomplete-listbox {
-  margin: 0;
-  padding: 8px 0;
-  overflow: auto;
-  list-style: none;
-  max-height: 40vh;
-}
-.MuiAutocomplete-loading {
-  color: rgba(0, 0, 0, 0.54);
-  padding: 14px 16px;
-}
-.MuiAutocomplete-noOptions {
-  color: rgba(0, 0, 0, 0.54);
-  padding: 14px 16px;
-}
-.MuiAutocomplete-option {
-  cursor: pointer;
-  display: flex;
-  outline: 0;
-  box-sizing: border-box;
-  min-height: 48px;
-  align-items: center;
-  padding-top: 6px;
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-bottom: 6px;
-  justify-content: flex-start;
-  -webkit-tap-highlight-color: transparent;
-}
-@media (min-width:600px) {
-  .MuiAutocomplete-option {
-    min-height: auto;
-  }
-}
-.MuiAutocomplete-option[aria-selected="true"] {
-  background-color: rgba(0, 0, 0, 0.08);
-}
-.MuiAutocomplete-option[data-focus="true"] {
-  background-color: rgba(0, 0, 0, 0.04);
-}
-.MuiAutocomplete-option:active {
-  background-color: rgba(0, 0, 0, 0.08);
-}
-.MuiAutocomplete-option[aria-disabled="true"] {
-  opacity: 0.38;
-  pointer-events: none;
-}
-.MuiAutocomplete-groupLabel {
-  top: -8px;
-  background-color: #fff;
-}
-.MuiAutocomplete-groupUl {
-  padding: 0;
-}
-.MuiAutocomplete-groupUl .MuiAutocomplete-option {
-  padding-left: 24px;
-}
-
-    </style>
-  </head>
-  <body>
-    <div>
-      <div
-        class="flexbox column"
+      <label
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+        data-shrink="false"
+        for="device-type-selection"
+        id="device-type-selection-label"
       >
-        <b>
-          1. Enter your device type
-        </b>
-        <p>
-          Setting this attribute on the device ensures that the device will only receive updates for compatible software releases.
-        </p>
+        Device type
+      </label>
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+      >
+        <input
+          aria-autocomplete="list"
+          aria-invalid="false"
+          autocapitalize="none"
+          autocomplete="off"
+          class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
+          id="device-type-selection"
+          placeholder="Choose a device type"
+          spellcheck="false"
+          type="text"
+          value=""
+        />
         <div
-          class=""
-          style="margin-top: -24px;"
-        >
-          <div
-            class="tooltip help"
-          >
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
-              />
-            </svg>
-          </div>
-        </div>
-        <div
-          class="flexbox centered margin-top"
-        >
-          <div
-            aria-expanded="false"
-            class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon"
-            role="combobox"
-          >
-            <div
-              class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
-              style="margin-top: 0px;"
-            >
-              <label
-                class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
-                data-shrink="true"
-                for="device-type-selection"
-                id="device-type-selection-label"
-              >
-                Device type
-              </label>
-              <div
-                class="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
-              >
-                <input
-                  aria-autocomplete="list"
-                  aria-invalid="false"
-                  autocapitalize="none"
-                  autocomplete="off"
-                  class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
-                  id="device-type-selection"
-                  placeholder="Choose a device type"
-                  spellcheck="false"
-                  type="text"
-                  value="raspberrypi7"
-                />
-                <div
-                  class="MuiAutocomplete-endAdornment"
-                >
-                  <button
-                    aria-label="Clear"
-                    class="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty"
-                    tabindex="-1"
-                    title="Clear"
-                    type="button"
-                  >
-                    <span
-                      class="MuiIconButton-label"
-                    >
-                      <svg
-                        aria-hidden="true"
-                        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                        focusable="false"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-                        />
-                      </svg>
-                    </span>
-                    <span
-                      class="MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="margin-top"
-        >
-          <p>
-            We prepared an image, ready for Mender, for you to start with. You can find it in the
-             
-            <a
-              href="https://docs.mender.io/get-started/preparation/prepare-a-raspberry-pi-device"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Prepare a Raspberry Pi device
-            </a>
-             
-            documentation, which also contains instructions for initial device setup.Once you're done flashing you can go ahead and proceed to the next step.
-          </p>
-        </div>
-      </div>
-    </div>
-  </body>
-</html>
-`;
-
-exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders InstallationStep correctly 1`] = `
-<html>
-  <head>
-    <style
-      data-jss=""
-      data-meta="MuiSvgIcon"
-    >
-      
-.MuiSvgIcon-root {
-  fill: currentColor;
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  font-size: 1.5rem;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  flex-shrink: 0;
-  user-select: none;
-}
-.MuiSvgIcon-colorPrimary {
-  color: #3f51b5;
-}
-.MuiSvgIcon-colorSecondary {
-  color: #f50057;
-}
-.MuiSvgIcon-colorAction {
-  color: rgba(0, 0, 0, 0.54);
-}
-.MuiSvgIcon-colorError {
-  color: #f44336;
-}
-.MuiSvgIcon-colorDisabled {
-  color: rgba(0, 0, 0, 0.26);
-}
-.MuiSvgIcon-fontSizeInherit {
-  font-size: inherit;
-}
-.MuiSvgIcon-fontSizeSmall {
-  font-size: 1.25rem;
-}
-.MuiSvgIcon-fontSizeLarge {
-  font-size: 2.1875rem;
-}
-
-    </style>
-    <style
-      data-jss=""
-      data-meta="MuiTouchRipple"
-    >
-      
-.MuiTouchRipple-root {
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 0;
-  overflow: hidden;
-  position: absolute;
-  border-radius: inherit;
-  pointer-events: none;
-}
-.MuiTouchRipple-ripple {
-  opacity: 0;
-  position: absolute;
-}
-.MuiTouchRipple-rippleVisible {
-  opacity: 0.3;
-  animation: MuiTouchRipple-keyframes-enter 550ms cubic-bezier(0.4, 0, 0.2, 1);
-  transform: scale(1);
-}
-.MuiTouchRipple-ripplePulsate {
-  animation-duration: 200ms;
-}
-.MuiTouchRipple-child {
-  width: 100%;
-  height: 100%;
-  display: block;
-  opacity: 1;
-  border-radius: 50%;
-  background-color: currentColor;
-}
-.MuiTouchRipple-childLeaving {
-  opacity: 0;
-  animation: MuiTouchRipple-keyframes-exit 550ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-.MuiTouchRipple-childPulsate {
-  top: 0;
-  left: 0;
-  position: absolute;
-  animation: MuiTouchRipple-keyframes-pulsate 2500ms cubic-bezier(0.4, 0, 0.2, 1) 200ms infinite;
-}
-@keyframes MuiTouchRipple-keyframes-enter {
-  0% {
-    opacity: 0.1;
-    transform: scale(0);
-  }
-  100% {
-    opacity: 0.3;
-    transform: scale(1);
-  }
-}
-@keyframes MuiTouchRipple-keyframes-exit {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-@keyframes MuiTouchRipple-keyframes-pulsate {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(0.92);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-    </style>
-    <style
-      data-jss=""
-      data-meta="MuiButtonBase"
-    >
-      
-.MuiButtonBase-root {
-  color: inherit;
-  border: 0;
-  cursor: pointer;
-  margin: 0;
-  display: inline-flex;
-  outline: 0;
-  padding: 0;
-  position: relative;
-  align-items: center;
-  user-select: none;
-  border-radius: 0;
-  vertical-align: middle;
-  -moz-appearance: none;
-  justify-content: center;
-  text-decoration: none;
-  background-color: transparent;
-  -webkit-appearance: none;
-  -webkit-tap-highlight-color: transparent;
-}
-.MuiButtonBase-root::-moz-focus-inner {
-  border-style: none;
-}
-.MuiButtonBase-root.Mui-disabled {
-  cursor: default;
-  pointer-events: none;
-}
-@media print {
-  .MuiButtonBase-root {
-    color-adjust: exact;
-  }
-}
-
-    </style>
-    <style
-      data-jss=""
-      data-meta="MuiButton"
-    >
-      
-.MuiButton-root {
-  color: rgba(0, 0, 0, 0.87);
-  padding: 6px 16px;
-  font-size: 0.875rem;
-  min-width: 64px;
-  box-sizing: border-box;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-  font-weight: 500;
-  line-height: 1.75;
-  border-radius: 4px;
-  letter-spacing: 0.02857em;
-  text-transform: uppercase;
-}
-.MuiButton-root:hover {
-  text-decoration: none;
-  background-color: rgba(0, 0, 0, 0.04);
-}
-.MuiButton-root.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-}
-@media (hover: none) {
-  .MuiButton-root:hover {
-    background-color: transparent;
-  }
-}
-.MuiButton-root:hover.Mui-disabled {
-  background-color: transparent;
-}
-.MuiButton-label {
-  width: 100%;
-  display: inherit;
-  align-items: inherit;
-  justify-content: inherit;
-}
-.MuiButton-text {
-  padding: 6px 8px;
-}
-.MuiButton-textPrimary {
-  color: #3f51b5;
-}
-.MuiButton-textPrimary:hover {
-  background-color: rgba(63, 81, 181, 0.04);
-}
-@media (hover: none) {
-  .MuiButton-textPrimary:hover {
-    background-color: transparent;
-  }
-}
-.MuiButton-textSecondary {
-  color: #f50057;
-}
-.MuiButton-textSecondary:hover {
-  background-color: rgba(245, 0, 87, 0.04);
-}
-@media (hover: none) {
-  .MuiButton-textSecondary:hover {
-    background-color: transparent;
-  }
-}
-.MuiButton-outlined {
-  border: 1px solid rgba(0, 0, 0, 0.23);
-  padding: 5px 15px;
-}
-.MuiButton-outlined.Mui-disabled {
-  border: 1px solid rgba(0, 0, 0, 0.12);
-}
-.MuiButton-outlinedPrimary {
-  color: #3f51b5;
-  border: 1px solid rgba(63, 81, 181, 0.5);
-}
-.MuiButton-outlinedPrimary:hover {
-  border: 1px solid #3f51b5;
-  background-color: rgba(63, 81, 181, 0.04);
-}
-@media (hover: none) {
-  .MuiButton-outlinedPrimary:hover {
-    background-color: transparent;
-  }
-}
-.MuiButton-outlinedSecondary {
-  color: #f50057;
-  border: 1px solid rgba(245, 0, 87, 0.5);
-}
-.MuiButton-outlinedSecondary:hover {
-  border: 1px solid #f50057;
-  background-color: rgba(245, 0, 87, 0.04);
-}
-.MuiButton-outlinedSecondary.Mui-disabled {
-  border: 1px solid rgba(0, 0, 0, 0.26);
-}
-@media (hover: none) {
-  .MuiButton-outlinedSecondary:hover {
-    background-color: transparent;
-  }
-}
-.MuiButton-contained {
-  color: rgba(0, 0, 0, 0.87);
-  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  background-color: #e0e0e0;
-}
-.MuiButton-contained:hover {
-  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
-  background-color: #d5d5d5;
-}
-.MuiButton-contained.Mui-focusVisible {
-  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
-}
-.MuiButton-contained:active {
-  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
-}
-.MuiButton-contained.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-  box-shadow: none;
-  background-color: rgba(0, 0, 0, 0.12);
-}
-@media (hover: none) {
-  .MuiButton-contained:hover {
-    box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-    background-color: #e0e0e0;
-  }
-}
-.MuiButton-contained:hover.Mui-disabled {
-  background-color: rgba(0, 0, 0, 0.12);
-}
-.MuiButton-containedPrimary {
-  color: #fff;
-  background-color: #3f51b5;
-}
-.MuiButton-containedPrimary:hover {
-  background-color: #303f9f;
-}
-@media (hover: none) {
-  .MuiButton-containedPrimary:hover {
-    background-color: #3f51b5;
-  }
-}
-.MuiButton-containedSecondary {
-  color: #fff;
-  background-color: #f50057;
-}
-.MuiButton-containedSecondary:hover {
-  background-color: #c51162;
-}
-@media (hover: none) {
-  .MuiButton-containedSecondary:hover {
-    background-color: #f50057;
-  }
-}
-.MuiButton-disableElevation {
-  box-shadow: none;
-}
-.MuiButton-disableElevation:hover {
-  box-shadow: none;
-}
-.MuiButton-disableElevation.Mui-focusVisible {
-  box-shadow: none;
-}
-.MuiButton-disableElevation:active {
-  box-shadow: none;
-}
-.MuiButton-disableElevation.Mui-disabled {
-  box-shadow: none;
-}
-.MuiButton-colorInherit {
-  color: inherit;
-  border-color: currentColor;
-}
-.MuiButton-textSizeSmall {
-  padding: 4px 5px;
-  font-size: 0.8125rem;
-}
-.MuiButton-textSizeLarge {
-  padding: 8px 11px;
-  font-size: 0.9375rem;
-}
-.MuiButton-outlinedSizeSmall {
-  padding: 3px 9px;
-  font-size: 0.8125rem;
-}
-.MuiButton-outlinedSizeLarge {
-  padding: 7px 21px;
-  font-size: 0.9375rem;
-}
-.MuiButton-containedSizeSmall {
-  padding: 4px 10px;
-  font-size: 0.8125rem;
-}
-.MuiButton-containedSizeLarge {
-  padding: 8px 22px;
-  font-size: 0.9375rem;
-}
-.MuiButton-fullWidth {
-  width: 100%;
-}
-.MuiButton-startIcon {
-  display: inherit;
-  margin-left: -4px;
-  margin-right: 8px;
-}
-.MuiButton-startIcon.MuiButton-iconSizeSmall {
-  margin-left: -2px;
-}
-.MuiButton-endIcon {
-  display: inherit;
-  margin-left: 8px;
-  margin-right: -4px;
-}
-.MuiButton-endIcon.MuiButton-iconSizeSmall {
-  margin-right: -2px;
-}
-.MuiButton-iconSizeSmall &gt; *:first-child {
-  font-size: 18px;
-}
-.MuiButton-iconSizeMedium &gt; *:first-child {
-  font-size: 20px;
-}
-.MuiButton-iconSizeLarge &gt; *:first-child {
-  font-size: 22px;
-}
-
-    </style>
-  </head>
-  <body>
-    <div>
-      <div>
-        <b>
-          2. Log into your device and install the Mender client
-        </b>
-        <p>
-          Copy & paste and run this command 
-          <b>
-            on your device
-          </b>
-          :
-        </p>
-        <div
-          class="code"
+          class="MuiAutocomplete-endAdornment"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text"
-            style="float: right; margin: -20px 0px 0px 10px;"
-            tabindex="0"
+            aria-label="Clear"
+            class="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty"
+            tabindex="-1"
+            title="Clear"
             type="button"
           >
             <span
-              class="MuiButton-label"
+              class="MuiIconButton-label"
             >
-              <span
-                class="MuiButton-startIcon MuiButton-iconSizeMedium"
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                focusable="false"
+                viewBox="0 0 24 24"
               >
-                <svg
-                  aria-hidden="true"
-                  class="MuiSvgIcon-root"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"
-                  />
-                </svg>
-              </span>
-              Copy to clipboard
+                <path
+                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                />
+              </svg>
             </span>
             <span
               class="MuiTouchRipple-root"
             />
           </button>
-          <span
-            style="white-space: pre-wrap; word-break: break-word;"
-          >
-            JWT_TOKEN="eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjZTNkMGY4Yy1hZWRlLTQwMzAtYjM5MS03ZDUwMjBlYjg3M2UiLCJzdWIiOiJhMzBhNzgwYi1iODQzLTUzNDQtODBlMy0wZmQ5NWE0ZjZmYzMiLCJleHAiOjE2MDY4MTUzNjksImlhdCI6MTYwNjIxMDU2OSwibWVuZGVyLnRlbmFudCI6IjVmODVjMTdiY2U2MmI3ZmE3ZjVmNzA0MCIsIm1lbmRlci51c2VyIjp0cnVlLCJpc3MiOiJNZW5kZXIgVXNlcnMiLCJzY3AiOiJtZW5kZXIuKiIsIm1lbmRlci5wbGFuIjoicHJvZmVzc2lvbmFsIiwibmJmIjoxNjA2MjEwNTY5fQ.qVgYdCzLTf8OdK9uUctqqaY_HWkIiwpekuGvuGQAXCEgOv4bRNDlZRN_ZRSbxQoARG3pquhScbQrjBV9tcF4irTUPlTn3yrsXNO17DpcbTVeKRkb88RDtIKiRw3orVZ_GlIb-ckTQ5dS-Nqlyyf3Fmrhca-gwt6m_xv2UrmJK6eYYTMfggdRRWb-4u7mEkBI_pHPMTQrT8kJ2BeX-vHgazH9AoH0k85LHtFZQXD7pXHlDZRnLxJXukncwMGDmF17374gavYAIyDIzcC8sEBMDnVXgpikeA1sauzirqix6mAVs6XmxdQO7aF0wfXO1_PTYUA3Nk1oQfMYNlEI3U9uLRJRZIq2L8fmrrBryhstKd4y0KlBbGAQrx8NtRkgajjd1ljMfPBUEZrb7uSerVjneiO-aIBO76CuH0zdklphIjpGJeogkBhe8pAYNggp1XsZHgpZfl7IE5faKaDkMGnutaea--Czor6bhqUNCuY4tR0cpQJbNwy6LS9o1CFy4Log"
-TENANT_TOKEN="testtoken"
-wget -q -O- https://get.mender.io | sudo bash -s -- --demo --commercial --jwt-token $JWT_TOKEN -- --quiet --device-type "raspberrypi7" --tenant-token $TENANT_TOKEN --demo --hosted-mender
-          </span>
         </div>
-        <p />
-        <p>
-          This downloads the Mender client on the device, sets the configuration and starts the client.
-        </p>
-        <p>
-          Once the client has started, your device will attempt to connect to the server. It will then appear in your Pending devices tab and you can continue.
-        </p>
       </div>
     </div>
-  </body>
-</html>
+  </div>
+  <h4
+    class="margin-top-large"
+  >
+    Integrate with other services
+  </h4>
+  <label
+    class="MuiFormControlLabel-root"
+    style="margin-top: 0px;"
+  >
+    <span
+      aria-disabled="false"
+      class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-11 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
+    >
+      <span
+        class="MuiIconButton-label"
+      >
+        <input
+          class="PrivateSwitchBase-input-14"
+          data-indeterminate="false"
+          id="azure-link"
+          name="azure-link"
+          type="checkbox"
+          value=""
+        />
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+          />
+        </svg>
+      </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
+    </span>
+    <span
+      class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+    >
+      Link a Microsoft Azure IoT Hub account
+    </span>
+  </label>
+</div>
+`;
+
+exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders ConvertedImageNote correctly 1`] = `
+<div>
+  <p>
+    We prepared an image, ready for Mender, for you to start with. You can find it in the
+     
+    <a
+      href="https://docs.mender.io/get-started/preparation/prepare-a-raspberry-pi-device"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      Prepare a Raspberry Pi device
+    </a>
+     
+    documentation, which also contains instructions for initial device setup.Once you're done flashing you can go ahead and proceed to the next step.
+  </p>
+</div>
+`;
+
+exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders DeviceTypeSelectionStep correctly 1`] = `
+<div>
+  <h4>
+    Enter your device type
+  </h4>
+  <p>
+    Setting this attribute on the device ensures that the device will only receive updates for compatible software releases.
+  </p>
+  <div
+    aria-expanded="false"
+    class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon"
+    role="combobox"
+    style="max-width: 300px;"
+  >
+    <div
+      class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+      style="margin-top: 0px;"
+    >
+      <label
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+        data-shrink="true"
+        for="device-type-selection"
+        id="device-type-selection-label"
+      >
+        Device type
+      </label>
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+      >
+        <input
+          aria-autocomplete="list"
+          aria-invalid="false"
+          autocapitalize="none"
+          autocomplete="off"
+          class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
+          id="device-type-selection"
+          placeholder="Choose a device type"
+          spellcheck="false"
+          type="text"
+          value="raspberrypi7"
+        />
+        <div
+          class="MuiAutocomplete-endAdornment"
+        >
+          <button
+            aria-label="Clear"
+            class="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty"
+            tabindex="-1"
+            title="Clear"
+            type="button"
+          >
+            <span
+              class="MuiIconButton-label"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class=""
+    style="margin-top: -24px;"
+  >
+    <div
+      class="tooltip help"
+    >
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+        />
+      </svg>
+    </div>
+  </div>
+  <p>
+    We prepared an image, ready for Mender, for you to start with. You can find it in the
+     
+    <a
+      href="https://docs.mender.io/get-started/preparation/prepare-a-raspberry-pi-device"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      Prepare a Raspberry Pi device
+    </a>
+     
+    documentation, which also contains instructions for initial device setup.Once you're done flashing you can go ahead and proceed to the next step.
+  </p>
+  <h4
+    class="margin-top-large"
+  >
+    Integrate with other services
+  </h4>
+  <label
+    class="MuiFormControlLabel-root"
+    style="margin-top: 0px;"
+  >
+    <span
+      aria-disabled="false"
+      class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-3 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
+    >
+      <span
+        class="MuiIconButton-label"
+      >
+        <input
+          class="PrivateSwitchBase-input-6"
+          data-indeterminate="false"
+          id="azure-link"
+          name="azure-link"
+          type="checkbox"
+          value=""
+        />
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+          />
+        </svg>
+      </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
+    </span>
+    <span
+      class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+    >
+      Link a Microsoft Azure IoT Hub account
+    </span>
+  </label>
+</div>
+`;
+
+exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders ExternalProviderConnector correctly 1`] = `
+<div>
+  <h4
+    class="margin-top-large"
+  >
+    Integrate with other services
+  </h4>
+  <label
+    class="MuiFormControlLabel-root"
+    style="margin-top: 0px;"
+  >
+    <span
+      aria-disabled="false"
+      class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-7 MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-checked-8 Mui-checked MuiIconButton-colorPrimary"
+    >
+      <span
+        class="MuiIconButton-label"
+      >
+        <input
+          checked=""
+          class="PrivateSwitchBase-input-10"
+          data-indeterminate="false"
+          id="azure-link"
+          name="azure-link"
+          type="checkbox"
+          value=""
+        />
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+          />
+        </svg>
+      </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
+    </span>
+    <span
+      class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+    >
+      Link a Microsoft Azure IoT Hub account
+    </span>
+  </label>
+  <div
+    class="MuiFormControl-root MuiTextField-root"
+    style="margin-top: 0px; max-width: 300px;"
+  >
+    <label
+      class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+      data-shrink="true"
+    >
+      Azure IoT Hub connection string
+    </label>
+    <div
+      class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+    >
+      <input
+        aria-invalid="false"
+        class="MuiInputBase-input MuiInput-input"
+        type="text"
+        value="test"
+      />
+    </div>
+  </div>
+  <span
+    class="info"
+  >
+    Devices accepted in Mender will be automatically created in Azure IoT Hub, and will send application and telemetry data there.
+  </span>
+</div>
+`;
+
+exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders InstallationStep correctly 1`] = `
+<div>
+  <h4>
+    Log into your device and install the Mender client
+  </h4>
+  <p>
+    Copy & paste and run this command 
+    <b>
+      on your device
+    </b>
+    :
+  </p>
+  <div
+    class="code"
+  >
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-text"
+      style="float: right; margin: -20px 0px 0px 10px;"
+      tabindex="0"
+      type="button"
+    >
+      <span
+        class="MuiButton-label"
+      >
+        <span
+          class="MuiButton-startIcon MuiButton-iconSizeMedium"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"
+            />
+          </svg>
+        </span>
+        Copy to clipboard
+      </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
+    </button>
+    <span
+      style="white-space: pre-wrap; word-break: break-word;"
+    >
+      JWT_TOKEN="eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjZTNkMGY4Yy1hZWRlLTQwMzAtYjM5MS03ZDUwMjBlYjg3M2UiLCJzdWIiOiJhMzBhNzgwYi1iODQzLTUzNDQtODBlMy0wZmQ5NWE0ZjZmYzMiLCJleHAiOjE2MDY4MTUzNjksImlhdCI6MTYwNjIxMDU2OSwibWVuZGVyLnRlbmFudCI6IjVmODVjMTdiY2U2MmI3ZmE3ZjVmNzA0MCIsIm1lbmRlci51c2VyIjp0cnVlLCJpc3MiOiJNZW5kZXIgVXNlcnMiLCJzY3AiOiJtZW5kZXIuKiIsIm1lbmRlci5wbGFuIjoicHJvZmVzc2lvbmFsIiwibmJmIjoxNjA2MjEwNTY5fQ.qVgYdCzLTf8OdK9uUctqqaY_HWkIiwpekuGvuGQAXCEgOv4bRNDlZRN_ZRSbxQoARG3pquhScbQrjBV9tcF4irTUPlTn3yrsXNO17DpcbTVeKRkb88RDtIKiRw3orVZ_GlIb-ckTQ5dS-Nqlyyf3Fmrhca-gwt6m_xv2UrmJK6eYYTMfggdRRWb-4u7mEkBI_pHPMTQrT8kJ2BeX-vHgazH9AoH0k85LHtFZQXD7pXHlDZRnLxJXukncwMGDmF17374gavYAIyDIzcC8sEBMDnVXgpikeA1sauzirqix6mAVs6XmxdQO7aF0wfXO1_PTYUA3Nk1oQfMYNlEI3U9uLRJRZIq2L8fmrrBryhstKd4y0KlBbGAQrx8NtRkgajjd1ljMfPBUEZrb7uSerVjneiO-aIBO76CuH0zdklphIjpGJeogkBhe8pAYNggp1XsZHgpZfl7IE5faKaDkMGnutaea--Czor6bhqUNCuY4tR0cpQJbNwy6LS9o1CFy4Log"
+TENANT_TOKEN="testtoken"
+wget -q -O- https://get.mender.io | sudo bash -s -- --demo --commercial --jwt-token $JWT_TOKEN -- --quiet --device-type "raspberrypi7" --tenant-token $TENANT_TOKEN --demo --hosted-mender
+    </span>
+  </div>
+  <p />
+  <p>
+    This downloads the Mender client on the device, sets the configuration and starts the client.
+  </p>
+  <p>
+    Once the client has started, your device will attempt to connect to the server. It will then appear in your Pending devices tab and you can continue.
+  </p>
+</div>
 `;
