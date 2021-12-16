@@ -1,18 +1,20 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import Time from 'react-time';
 
 import { Button } from '@material-ui/core';
 import { CheckCircleOutlined, CloudUploadOutlined as CloudUpload } from '@material-ui/icons';
 
 import Editor, { DiffEditor, loader } from '@monaco-editor/react';
 
-import DeviceDataCollapse from './devicedatacollapse';
 import pluralize from 'pluralize';
-import { Link } from 'react-router-dom';
-import Time from 'react-time/lib/Time';
-import theme from '../../../themes/mender-theme';
-import Loader from '../../common/loader';
-import { deepCompare, isEmpty } from '../../../helpers';
+
 import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
+import { deepCompare, isEmpty } from '../../../helpers';
+import theme from '../../../themes/mender-theme';
+import InfoHint from '../../common/info-hint';
+import Loader from '../../common/loader';
+import DeviceDataCollapse from './devicedatacollapse';
 
 loader.config({ paths: { vs: '/ui/vs' } });
 
@@ -56,6 +58,26 @@ export const TwinSyncStatus = ({ diffCount, updateTime }) =>
     </div>
   );
 
+export const TwinError = ({ providerTitle, twinError }) => (
+  <InfoHint
+    content={
+      <>
+        {twinError}
+        <br />
+        Please check your connection string in the <Link to="/settings/integrations">Integration settings</Link>, and check that the device exists in your{' '}
+        {providerTitle}
+      </>
+    }
+  />
+);
+
+export const Title = ({ providerTitle }) => (
+  <div className="flexbox center-aligned">
+    <h4 className="margin-right">{providerTitle} Device Twin</h4>
+    <Link to="/settings/integrations">Integration settings</Link>
+  </div>
+);
+
 const editorProps = {
   height: 500,
   defaultLanguage: 'json',
@@ -92,7 +114,7 @@ export const DeviceTwin = ({ device, setDeviceTwin }) => {
   const editorRef = useRef(null);
 
   const { [externalProvider.provider]: deviceTwin = {} } = device.twinsByProvider ?? {};
-  const { desired: configuredTwin, reported: reportedTwin, updated_ts: updateTime = device.created_ts } = deviceTwin;
+  const { desired: configuredTwin = {}, reported: reportedTwin = {}, twinError, updated_ts: updateTime = device.created_ts } = deviceTwin;
 
   useEffect(() => {
     const textContent = JSON.stringify(configuredTwin, undefined, indentation) ?? '';
@@ -148,12 +170,26 @@ export const DeviceTwin = ({ device, setDeviceTwin }) => {
   const onEditClick = () => setIsEditing(true);
 
   return (
-    <DeviceDataCollapse header={!open && <a onClick={setOpen}>show more</a>} isOpen={open} onClick={setOpen} title="Device Twin">
+    <DeviceDataCollapse
+      header={
+        !open &&
+        (twinError ? (
+          <TwinError providerTitle={externalProvider.title} twinError={twinError} />
+        ) : (
+          <div className="flexbox column">
+            {!diffCount && <NoDiffStatus updateTime={updateTime} />}
+            <a className="margin-top-small" onClick={setOpen}>
+              show more
+            </a>
+          </div>
+        ))
+      }
+      isOpen={open}
+      onClick={setOpen}
+      title={<Title providerTitle={externalProvider.title} />}
+    >
       <div className={`flexbox column ${isEditing ? 'twin-editing' : ''}`} style={{ maxWidth: isSync ? 800 : 'initial' }}>
-        <div className="flexbox center-aligned">
-          <h4 className="margin-right">{externalProvider.title} Device Twin</h4>
-          <Link to="/settings/integrations">Integration settings</Link>
-        </div>
+        <Title providerTitle={externalProvider.title} />
         {!isEmpty(reported) && <TwinSyncStatus diffCount={diffCount} updateTime={updateTime} />}
         {!(isEmpty(reported) && isEmpty(configured)) && !isSync ? (
           <>

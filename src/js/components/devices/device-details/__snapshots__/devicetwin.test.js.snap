@@ -8,11 +8,21 @@ exports[`DeviceTwin Component renders correctly 1`] = `
     class="clickable flexbox space-between"
     style="align-items: flex-start;"
   >
-    <h4
-      class="margin-bottom-small"
+    <div
+      class="flexbox center-aligned"
     >
-      Device Twin
-    </h4>
+      <h4
+        class="margin-right"
+      >
+        Azure IoT Hub
+         Device Twin
+      </h4>
+      <a
+        href="/settings/integrations"
+      >
+        Integration settings
+      </a>
+    </div>
     <div
       class="flexbox centered"
     >
@@ -42,15 +52,96 @@ exports[`DeviceTwin Component renders correctly 1`] = `
     </div>
   </div>
   <div>
-    <a>
-      show more
-    </a>
+    <div
+      class="flexbox column"
+    >
+      <div
+        class="padding"
+        style="min-height: 75px; display: grid; grid-template-columns: min-content 300px max-content; align-items: center; background: rgb(245, 245, 245);"
+      >
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root green"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z"
+          />
+        </svg>
+        <div>
+          No difference between desired and reported configuration
+        </div>
+        <div
+          class="text-muted slightly-smaller"
+          style="align-content: flex-end; margin-bottom: -10px;"
+        >
+          Last synced: 
+          <time
+            datetime="2019-01-01T06:25:00+00:00"
+          >
+            2019-01-01 06:25
+          </time>
+        </div>
+      </div>
+      <a
+        class="margin-top-small"
+      >
+        show more
+      </a>
+    </div>
   </div>
   <hr
     class="MuiDivider-root"
     style="margin-top: 24px;"
   />
 </div>
+`;
+
+exports[`DeviceTwin Component renders sub component Title correctly 1`] = `
+<div
+  class="flexbox center-aligned"
+>
+  <h4
+    class="margin-right"
+  >
+    Test
+     Device Twin
+  </h4>
+  <a
+    href="/settings/integrations"
+  >
+    Integration settings
+  </a>
+</div>
+`;
+
+exports[`DeviceTwin Component renders sub component TwinError correctly 1`] = `
+<p
+  class="info icon "
+>
+  <svg
+    aria-hidden="true"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+    focusable="false"
+    style="vertical-align: middle; margin: 0px 6px 4px 0px;"
+    viewBox="0 0 24 24"
+  >
+    <path
+      d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+    />
+  </svg>
+  <br />
+  Please check your connection string in the 
+  <a
+    href="/settings/integrations"
+  >
+    Integration settings
+  </a>
+  , and check that the device exists in your
+   
+  Test
+</p>
 `;
 
 exports[`DeviceTwin Component renders sub component TwinSyncStatus correctly 1`] = `

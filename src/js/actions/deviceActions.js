@@ -934,10 +934,16 @@ export const setDeviceTags = (deviceId, tags) => dispatch =>
       .then(() => Promise.resolve(dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device: { ...device, tags } })));
   });
 
-export const getDeviceTwin = (deviceId, integrationProvider) => (dispatch, getState) =>
-  GeneralApi.get(`${apiBase}${DeviceConstants.EXTERNAL_PROVIDER[integrationProvider].managementUrl}/devices/${deviceId}/twin`)
-    .catch(err => commonErrorHandler(err, `There was an error getting the device twin for device ${deviceId}.`, dispatch))
-    .then(({ data }) =>
+export const getDeviceTwin = (deviceId, integrationProvider) => (dispatch, getState) => {
+  let providerResult = {};
+  return GeneralApi.get(`${apiBase}${DeviceConstants.EXTERNAL_PROVIDER[integrationProvider].managementUrl}/devices/${deviceId}/twin`)
+    .then(({ data }) => {
+      providerResult = { ...data.properties, updated_ts: data.lastActivityTime };
+    })
+    .catch(err => {
+      providerResult = { twinError: `There was an error getting the device twin for device ${deviceId}. ${err}` };
+    })
+    .finally(() =>
       Promise.resolve(
         dispatch({
           type: DeviceConstants.RECEIVE_DEVICE,
@@ -945,15 +951,13 @@ export const getDeviceTwin = (deviceId, integrationProvider) => (dispatch, getSt
             ...getState().devices.byId[deviceId],
             twinsByProvider: {
               ...getState().devices.byId[deviceId].twinsByProvider,
-              [integrationProvider]: {
-                ...data.properties,
-                updated_ts: data.lastActivityTime
-              }
+              [integrationProvider]: providerResult
             }
           }
         })
       )
     );
+};
 
 export const setDeviceTwin = (deviceId, integrationProvider, settings) => (dispatch, getState) =>
   GeneralApi.put(`${apiBase}${DeviceConstants.EXTERNAL_PROVIDER[integrationProvider].managementUrl}/devices/${deviceId}/twin`, settings)
