@@ -8,7 +8,8 @@ import PaymentIcon from '@material-ui/icons/Payment';
 
 import { Elements } from '@stripe/react-stripe-js';
 
-import { getCurrentUser, getIsEnterprise, getUserRoles } from '../../selectors';
+import { versionCompare } from '../../helpers';
+import { getCurrentUser, getIsEnterprise, getTenantCapabilities, getUserRoles } from '../../selectors';
 import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
 import Global from './global';
@@ -20,45 +21,36 @@ import Upgrade from './upgrade';
 let stripePromise = null;
 
 const sectionMap = {
-  'global-settings': { admin: false, enterprise: false, multitenancy: false, userManagement: false, component: <Global />, text: () => 'Global settings' },
-  'my-profile': { admin: false, enterprise: false, multitenancy: false, userManagement: false, component: <SelfUserManagement />, text: () => 'My profile' },
+  'global-settings': { component: <Global />, text: () => 'Global settings', canAccess: () => true },
+  'my-profile': { component: <SelfUserManagement />, text: () => 'My profile', canAccess: () => true },
   'organization-and-billing': {
-    admin: false,
-    enterprise: false,
-    multitenancy: true,
-    userManagement: false,
     component: <Organization />,
-    text: () => 'Organization and billing'
+    text: () => 'Organization and billing',
+    canAccess: ({ hasMultitenancy }) => hasMultitenancy
   },
   'user-management': {
-    admin: false,
-    enterprise: false,
-    multitenancy: false,
-    userManagement: true,
     component: <UserManagement />,
-    text: () => 'User management'
+    text: () => 'User management',
+    canAccess: ({ userRoles: { allowUserManagement } }) => allowUserManagement
   },
-  'role-management': { admin: true, enterprise: true, multitenancy: false, userManagement: false, component: <Roles />, text: () => 'Roles' },
+  'role-management': {
+    component: <Roles />,
+    text: () => 'Roles',
+    canAccess: ({ currentUser, isEnterprise, userRoles: { isAdmin } }) => currentUser && isAdmin && isEnterprise
+  },
   'integrations': {
-    admin: true,
-    enterprise: false,
-    multitenancy: false,
-    userManagement: false,
     component: <Integrations />,
-    text: () => 'Integrations'
+    text: () => 'Integrations',
+    canAccess: ({ userRoles: { isAdmin }, version }) => isAdmin && versionCompare(version, '3.2') > -1
   },
   upgrade: {
-    admin: false,
-    enterprise: false,
-    multitenancy: true,
-    trial: false,
-    userManagement: false,
     component: <Upgrade history={history} />,
-    text: ({ trial }) => (trial ? 'Upgrade to a plan' : 'Upgrades and add-ons')
+    text: ({ isTrial }) => (isTrial ? 'Upgrade to a plan' : 'Upgrades and add-ons'),
+    canAccess: ({ hasMultitenancy }) => hasMultitenancy
   }
 };
 
-export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, history, isAdmin, isEnterprise, match, stripeAPIKey, trial }) => {
+export const Settings = ({ currentUser, hasMultitenancy, isEnterprise, isTrial, history, match, stripeAPIKey, tenantCapabilities, userRoles, version }) => {
   const [loadingFinished, setLoadingFinished] = useState(!stripeAPIKey);
 
   useEffect(() => {
@@ -79,12 +71,7 @@ export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, hi
     }
   }, []);
 
-  const checkDenyAccess = item =>
-    (currentUser && item.admin && !isAdmin) ||
-    (item.multitenancy && !hasMultitenancy) ||
-    (item.enterprise && !isEnterprise) ||
-    (item.userManagement && !allowUserManagement) ||
-    (item.trial && !trial);
+  const checkDenyAccess = item => !item.canAccess({ currentUser, hasMultitenancy, isEnterprise, isTrial, tenantCapabilities, userRoles, version });
 
   const getCurrentSection = (sections, section = match.params.section) => {
     if (!sections.hasOwnProperty(section) || checkDenyAccess(sections[section])) {
@@ -102,7 +89,7 @@ export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, hi
           if (!checkDenyAccess(item)) {
             accu.push(
               <ListItem component={NavLink} className="navLink settingsNav" to={`/settings/${key}`} key={key}>
-                <ListItemText>{item.text({ trial })}</ListItemText>
+                <ListItemText>{item.text({ isTrial })}</ListItemText>
                 {key === 'upgrade' ? (
                   <ListItemIcon>
                     <PaymentIcon />
@@ -122,18 +109,16 @@ export const Settings = ({ allowUserManagement, currentUser, hasMultitenancy, hi
 };
 
 const mapStateToProps = state => {
-  const { plan = 'os', trial = false } = state.organization.organization;
-  const { allowUserManagement, isAdmin } = getUserRoles(state);
+  const { trial: isTrial = false } = state.organization.organization;
   return {
-    allowUserManagement,
     currentUser: getCurrentUser(state),
-    isAdmin,
-    isHosted: state.app.features.isHosted,
-    isEnterprise: getIsEnterprise(state),
     hasMultitenancy: state.app.features.hasMultitenancy,
-    plan,
+    isEnterprise: getIsEnterprise(state),
+    isTrial,
     stripeAPIKey: state.app.stripeAPIKey,
-    trial
+    tenantCapabilities: getTenantCapabilities(state),
+    userRoles: getUserRoles(state),
+    version: state.app.versionInformation.Integration
   };
 };
 
