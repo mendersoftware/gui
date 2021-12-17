@@ -24,11 +24,7 @@ export const SelfUserManagement = ({ canHave2FA, currentUser, editUser, hasTrack
     if (userData.password != userData.password_confirmation) {
       setSnackbar(`The passwords don't match`);
     } else {
-      const data = {
-        current_password: userData.current_password,
-        password: userData.password
-      };
-      editUser(UserConstants.OWN_USER_ID, data).then(() => {
+      editUser(UserConstants.OWN_USER_ID, userData).then(() => {
         setEditEmail(false);
         setEditPass(false);
       });
@@ -73,14 +69,14 @@ export const SelfUserManagement = ({ canHave2FA, currentUser, editUser, hasTrack
           uniqueId={emailFormId}
         >
           <TextInput
-            hint="Email"
-            label="Email"
-            id="email"
             disabled={false}
-            value={email}
-            validations="isLength:1,isEmail"
-            focus={true}
+            focus
+            hint="Email"
+            id="email"
             InputLabelProps={{ shrink: !!email }}
+            label="Email"
+            validations="isLength:1,isEmail"
+            value={email}
           />
         </Form>
       )}
