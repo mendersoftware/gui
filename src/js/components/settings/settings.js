@@ -44,7 +44,7 @@ const sectionMap = {
     canAccess: ({ userRoles: { isAdmin }, version }) => isAdmin && versionCompare(version, '3.2') > -1
   },
   upgrade: {
-    component: <Upgrade history={history} />,
+    component: <Upgrade />,
     text: ({ isTrial }) => (isTrial ? 'Upgrade to a plan' : 'Upgrades and add-ons'),
     canAccess: ({ hasMultitenancy }) => hasMultitenancy
   }
