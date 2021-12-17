@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Time from 'react-time';
 
 import { Button } from '@material-ui/core';
-import { CheckCircleOutlined, CloudUploadOutlined as CloudUpload } from '@material-ui/icons';
+import { CheckCircleOutlined, CloudUploadOutlined as CloudUpload, Refresh as RefreshIcon } from '@material-ui/icons';
 
 import Editor, { DiffEditor, loader } from '@monaco-editor/react';
 
@@ -98,14 +98,16 @@ const editorProps = {
     readOnly: true
   }
 };
+const maxWidth = 800;
 
 const externalProvider = EXTERNAL_PROVIDER.azure;
 const indentation = 4; // number of spaces, tab based indentation won't show in the editor, but be converted to 4 spaces
 
-export const DeviceTwin = ({ device, setDeviceTwin }) => {
+export const DeviceTwin = ({ device, getDeviceTwin, setDeviceTwin }) => {
   const [configured, setConfigured] = useState('');
   const [diffCount, setDiffCount] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [open, setOpen] = useState(false);
   const [reported, setReported] = useState('');
@@ -167,7 +169,16 @@ export const DeviceTwin = ({ device, setDeviceTwin }) => {
     setIsEditing(false);
   };
 
+  const onRefreshClick = () => {
+    setIsRefreshing(true);
+    getDeviceTwin(device.id, externalProvider.provider).finally(() => setTimeout(() => setIsRefreshing(false), 500));
+  };
+
   const onEditClick = () => setIsEditing(true);
+
+  const onExpandClick = twinError ? undefined : () => setOpen(true);
+
+  const widthStyle = { maxWidth: isSync ? maxWidth : 'initial' };
 
   return (
     <DeviceDataCollapse
@@ -185,47 +196,48 @@ export const DeviceTwin = ({ device, setDeviceTwin }) => {
         ))
       }
       isOpen={open}
-      onClick={setOpen}
+      onClick={onExpandClick}
       title={<Title providerTitle={externalProvider.title} />}
     >
-      <div className={`flexbox column ${isEditing ? 'twin-editing' : ''}`} style={{ maxWidth: isSync ? 800 : 'initial' }}>
-        <Title providerTitle={externalProvider.title} />
-        {!isEmpty(reported) && <TwinSyncStatus diffCount={diffCount} updateTime={updateTime} />}
-        {!(isEmpty(reported) && isEmpty(configured)) && !isSync ? (
-          <>
-            <div className="two-columns">
-              <h4>Desired configuration</h4>
-              <h4>Reported configuration</h4>
-            </div>
-            <DiffEditor
-              {...editorProps}
-              original={reported}
-              modified={configured}
-              onMount={handleDiffEditorDidMount}
-              options={{
-                ...editorProps.options,
-                readOnly: !isEditing
-              }}
-            />
-          </>
-        ) : (
-          <>
-            <h4>{!reported || isEditing ? 'Desired' : 'Reported'} configuration</h4>
-            <Editor
-              {...editorProps}
-              options={{
-                ...editorProps.options,
-                readOnly: !isEditing
-              }}
-              className="editor modified"
-              onMount={handleEditorDidMount}
-              value={reported || configured}
-              onChange={setUpdated}
-            />
-          </>
-        )}
-        {!!errorMessage && <p className="warning">{errorMessage}</p>}
-        <div className={`${isSync ? '' : 'two-columns'} margin-top`}>
+      <div className={`flexbox column ${isEditing ? 'twin-editing' : ''}`}>
+        <div style={widthStyle}>
+          {!isEmpty(reported) && <TwinSyncStatus diffCount={diffCount} updateTime={updateTime} />}
+          {!(isEmpty(reported) && isEmpty(configured)) && !isSync ? (
+            <>
+              <div className="two-columns">
+                <h4>Desired configuration</h4>
+                <h4>Reported configuration</h4>
+              </div>
+              <DiffEditor
+                {...editorProps}
+                original={reported}
+                modified={configured}
+                onMount={handleDiffEditorDidMount}
+                options={{
+                  ...editorProps.options,
+                  readOnly: !isEditing
+                }}
+              />
+            </>
+          ) : (
+            <>
+              <h4>{!reported || isEditing ? 'Desired' : 'Reported'} configuration</h4>
+              <Editor
+                {...editorProps}
+                options={{
+                  ...editorProps.options,
+                  readOnly: !isEditing
+                }}
+                className="editor modified"
+                onMount={handleEditorDidMount}
+                value={reported || configured}
+                onChange={setUpdated}
+              />
+            </>
+          )}
+          {!!errorMessage && <p className="warning">{errorMessage}</p>}
+        </div>
+        <div className="two-columns margin-top" style={isSync ? { gridTemplateColumns: `${maxWidth}px 1fr` } : widthStyle}>
           <div className="flexbox" style={{ alignItems: 'flex-start', justifyContent: 'flex-end' }}>
             {isEditing ? (
               <>
@@ -240,7 +252,14 @@ export const DeviceTwin = ({ device, setDeviceTwin }) => {
               </Button>
             )}
           </div>
-          <div />
+          <div className="flexbox" style={{ justifyContent: 'flex-end' }}>
+            <Loader show={isRefreshing} small table />
+            {!isEditing && (
+              <Button onClick={onRefreshClick} startIcon={<RefreshIcon />}>
+                Refresh
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </DeviceDataCollapse>

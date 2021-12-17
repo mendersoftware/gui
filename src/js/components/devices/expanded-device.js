@@ -7,7 +7,15 @@ import { Close as CloseIcon, Link as LinkIcon, Replay as ReplayIcon } from '@mat
 
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../actions/deploymentActions';
-import { applyDeviceConfig, decommissionDevice, getDeviceInfo, setDeviceConfig, setDeviceTags, setDeviceTwin } from '../../actions/deviceActions';
+import {
+  applyDeviceConfig,
+  decommissionDevice,
+  getDeviceInfo,
+  getDeviceTwin,
+  setDeviceConfig,
+  setDeviceTags,
+  setDeviceTwin
+} from '../../actions/deviceActions';
 import { getDeviceAlerts } from '../../actions/monitorActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
@@ -43,6 +51,7 @@ export const ExpandedDevice = ({
   getDeviceAlerts,
   getDeviceLog,
   getDeviceInfo,
+  getDeviceTwin,
   getSingleDeployment,
   hasExternalIntegration,
   isEnterprise,
@@ -133,7 +142,7 @@ export const ExpandedDevice = ({
         showHelptips={showHelptips}
       />
       <DeviceTags device={device} setSnackbar={setSnackbar} setDeviceTags={setDeviceTags} showHelptips={showHelptips} />
-      {hasExternalIntegration && <DeviceTwin device={device} setDeviceTwin={setDeviceTwin} />}
+      {hasExternalIntegration && <DeviceTwin device={device} getDeviceTwin={getDeviceTwin} setDeviceTwin={setDeviceTwin} />}
       {isAcceptedDevice && (
         <>
           <InstalledSoftware device={device} docsVersion={docsVersion} setSnackbar={setSnackbar} />
@@ -208,6 +217,7 @@ const actionCreators = {
   getDeviceAlerts,
   getDeviceLog,
   getDeviceInfo,
+  getDeviceTwin,
   getSingleDeployment,
   saveGlobalSettings,
   setDeviceConfig,
