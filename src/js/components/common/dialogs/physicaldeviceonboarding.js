@@ -66,9 +66,11 @@ export const DeviceTypeSelectionStep = ({
   onSelect,
   providerConnectionString,
   selection = '',
-  setConnectionString
+  setConnectionString,
+  version
 }) => {
   const shouldShowOnboardingTip = !onboardingState.complete && onboardingState.showTips && onboardingState.showHelptips;
+  const hasExternalIntegrationSupport = versionCompare(version, '3.2') > -1;
   return (
     <>
       <h4>Enter your device type</h4>
@@ -132,7 +134,7 @@ export const DeviceTypeSelectionStep = ({
         </MenderTooltipClickable>
       )}
       {hasConvertedImage && <ConvertedImageNote docsVersion={docsVersion} />}
-      <ExternalProviderConnector connectionString={providerConnectionString} setConnectionString={setConnectionString} />
+      {hasExternalIntegrationSupport && <ExternalProviderConnector connectionString={providerConnectionString} setConnectionString={setConnectionString} />}
     </>
   );
 };
@@ -173,7 +175,8 @@ export const PhysicalDeviceOnboarding = ({
   progress,
   setOnboardingApproach,
   setOnboardingDeviceType,
-  tenantToken
+  tenantToken,
+  version
 }) => {
   const [selection, setSelection] = useState('');
   const [connectionString, setConnectionString] = useState(azureConnectionString);
@@ -183,7 +186,8 @@ export const PhysicalDeviceOnboarding = ({
   }, []);
 
   useEffect(() => {
-    if (progress > 1 && !!connectionString) {
+    const hasExternalIntegrationSupport = versionCompare(version, '3.2') > -1;
+    if (hasExternalIntegrationSupport && progress > 1 && !!connectionString && connectionString !== azureConnectionString) {
       changeIntegration({ ...EXTERNAL_PROVIDER.azure, connectionString });
     }
   }, [progress]);
@@ -217,6 +221,7 @@ export const PhysicalDeviceOnboarding = ({
       setConnectionString={setConnectionString}
       selection={selection}
       tenantToken={tenantToken}
+      version={version}
     />
   );
 };
@@ -235,7 +240,8 @@ const mapStateToProps = state => {
     isDemoMode: state.app.features.isDemoMode,
     isPreRelease: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
     onboardingState: getOnboardingState(state),
-    tenantToken: state.organization.organization.tenant_token
+    tenantToken: state.organization.organization.tenant_token,
+    version: state.app.versionInformation.Integration
   };
 };
 
