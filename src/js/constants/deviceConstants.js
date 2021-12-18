@@ -1,4 +1,5 @@
 const { mdiAws: AWS, mdiMicrosoftAzure: Azure, mdiGoogleCloud: GCP } = require('@mdi/js');
+const iotManagerBaseURL = '/v1/iot-manager';
 
 module.exports = {
   SELECT_GROUP: 'SELECT_GROUP',
@@ -37,9 +38,9 @@ module.exports = {
   SET_DEVICE_LIMIT: 'SET_DEVICE_LIMIT',
 
   EXTERNAL_PROVIDER: {
-    amazon: { article: 'an', icon: AWS, title: 'AWS IoT core', provider: 'amazon', managementUrl: '/v1/aws-iot-manager/settings', enabled: false },
-    azure: { article: 'an', icon: Azure, title: 'Azure IoT Hub', provider: 'azure', managementUrl: '/v1/azure-iot-manager/settings', enabled: true },
-    google: { article: 'a', icon: GCP, title: 'Cloud IoT Core', provider: 'google', managementUrl: '/v1/gcp-iot-manager/settings', enabled: false }
+    amazon: { article: 'an', icon: AWS, title: 'AWS IoT core', provider: 'amazon', managementUrl: iotManagerBaseURL + '/settings', enabled: false },
+    azure: { article: 'an', icon: Azure, title: 'Azure IoT Hub', provider: 'azure', managementUrl: iotManagerBaseURL + '/settings', enabled: true },
+    google: { article: 'a', icon: GCP, title: 'Cloud IoT Core', provider: 'google', managementUrl: iotManagerBaseURL + '/settings', enabled: false }
   },
 
   // see https://github.com/mendersoftware/go-lib-micro/tree/master/ws
