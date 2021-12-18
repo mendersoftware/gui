@@ -4,7 +4,7 @@ import AuthsetListItem, { getConfirmationMessage } from './authsetlistitem';
 import { undefineds } from '../../../../../../tests/mockData';
 import { DEVICE_STATES } from '../../../../constants/deviceConstants';
 
-describe('AuthsetList Component', () => {
+describe('AuthsetListItem Component', () => {
   it('renders correctly', async () => {
     const authset = {
       id: '123',

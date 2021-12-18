@@ -89,7 +89,7 @@ export const CreateDialog = props => {
 
   useEffect(() => {
     if (!deploymentObject.group) {
-      setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: 0 });
+      setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: deploymentObject.device ? 1 : 0 });
       return;
     }
     if (deploymentObject.group === allDevices) {

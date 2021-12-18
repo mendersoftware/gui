@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { DEVICE_STATES } from '../../../../constants/deviceConstants';
+import { customSort } from '../../../../helpers';
 import { AuthExplainButton } from '../../../helptips/helptooltips';
 import AuthsetListItem from './authsetlistitem';
 
@@ -14,16 +15,20 @@ export const AuthsetList = ({ device, showHelptips, ...remainingProps }) => {
       if (authset.status === status) {
         accu.active.push(authset);
       } else if (authset.status === DEVICE_STATES.pending) {
-        accu.active.unshift(authset);
+        accu.pending.push(authset);
       } else {
         accu.inactive.push(authset);
       }
       return accu;
     },
-    { active: [], inactive: [] }
+    { active: [], inactive: [], pending: [] }
   );
 
-  const orderedAuthsets = [...groupedAuthsets.active, ...groupedAuthsets.inactive];
+  const orderedAuthsets = [
+    ...groupedAuthsets.pending.sort(customSort(true, 'ts')),
+    ...groupedAuthsets.active.sort(customSort(true, 'ts')),
+    ...groupedAuthsets.inactive.sort(customSort(true, 'ts'))
+  ];
 
   return (
     <div className="authsets">

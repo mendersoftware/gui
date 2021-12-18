@@ -162,9 +162,14 @@ export const removeUser = userId => dispatch =>
     )
     .catch(err => userActionErrorHandler(err, 'remove', dispatch));
 
-export const editUser = (userId, userData) => dispatch =>
+export const editUser = (userId, userData) => (dispatch, getState) =>
   GeneralApi.put(`${useradmApiUrl}/users/${userId}`, userData)
-    .then(() => Promise.all([dispatch({ type: UserConstants.UPDATED_USER, userId, user: userData }), dispatch(setSnackbar(actions.edit.successMessage))]))
+    .then(() =>
+      Promise.all([
+        dispatch({ type: UserConstants.UPDATED_USER, userId: userId === UserConstants.OWN_USER_ID ? getState().users.currentUser : userId, user: userData }),
+        dispatch(setSnackbar(actions.edit.successMessage))
+      ])
+    )
     .catch(err => userActionErrorHandler(err, 'edit', dispatch));
 
 export const enableUser2fa =

@@ -91,7 +91,7 @@ exports[`Helptooltips Components renders Connect(ConfigureTimezoneTipComponent) 
 exports[`Helptooltips Components renders Connect(DeviceSupportTipComponent) correctly 1`] = `
 <div
   class="tooltip help"
-  style="top: 22%; left: 88%;"
+  style="bottom: 2.5%; left: 88%;"
 >
   <svg
     aria-hidden="true"

@@ -38,89 +38,87 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
         class="MuiDialogContent-root onboard-dialog"
         style="margin: 0px 30px;"
       >
-        <div>
-          <div>
-            <p>
-              You can connect almost any device and Linux OS with Mender, but to make things simple during evaluation we recommend you use a Raspberry Pi as a test device.
-            </p>
-            <h3>
-              Get started quickly with a Raspberry Pi
-            </h3>
-            <p>
-              We'll walk you through the steps to connect a Raspberry Pi and deploy your first update.
-            </p>
-            <div
-              class="tooltip help"
-              style="top: 22%; left: 88%;"
-            >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root"
-                focusable="false"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
-                />
-              </svg>
-            </div>
-            <div
-              class="flexbox centered column os-list"
-            >
-              <div>
-                <img
-                  src="raspberrypi.png"
-                />
-                <img
-                  src="raspberrypi4.jpg"
-                />
-              </div>
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-contained"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-label"
-                >
-                  Prepare and connect my Raspberry Pi
-                </span>
-                <span
-                  class="MuiTouchRipple-root"
-                />
-              </button>
-            </div>
-          </div>
+        <p>
+          You can connect almost any device and Linux OS with Mender, but to make things simple during evaluation we recommend you use a Raspberry Pi as a test device.
+        </p>
+        <div
+          class="padding-small padding-top-none rpi-quickstart"
+        >
+          <h3>
+            Raspberry Pi quick start
+          </h3>
+          <p>
+            We'll walk you through the steps to connect a Raspberry Pi and deploy your first update with Mender.
+          </p>
           <div
-            class="flexbox centered column"
+            class="flexbox column centered"
           >
-            <div>
-              <b>
-                Don't have a Raspberry Pi?
-              </b>
-               You can use our Docker-run virtual device to go through the same tutorial.
+            <div
+              class="flexbox centered os-list"
+            >
+              <img
+                src="raspberrypi.png"
+              />
+              <img
+                src="raspberrypi4.jpg"
+              />
             </div>
-            <div>
+            <button
+              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
+              tabindex="0"
+              type="button"
+            >
+              <span
+                class="MuiButton-label"
+              >
+                Get Started
+              </span>
+              <span
+                class="MuiTouchRipple-root"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="two-columns margin-top"
+        >
+          <div
+            class="padding-small padding-top-none"
+          >
+            <div
+              class="flexbox center-aligned"
+            >
+              <h3>
+                Use a virtual device
+              </h3>
               <img
                 src="docker.png"
-                style="height: 40px; vertical-align: middle; margin-right: 8px;"
+                style="height: 40px; margin-left: 16px;"
               />
-              <a>
-                Prepare a virtual device for now
-              </a>
             </div>
-          </div>
-          <div>
-            <h3>
-              Connecting other devices
-            </h3>
-            <p>
-              For other devices, we provide documentation to integrate with Mender.
+            <p
+              class="margin-top-none"
+            >
+              Don't have a Raspberry Pi?
             </p>
+            <p>
+              You can use our Docker-run virtual device to go through the same tutorial.
+            </p>
+            <a>
+              Try a virtual device
+            </a>
+          </div>
+          <div
+            class="padding-small padding-top-none"
+          >
+            <h3>
+              Other devices
+            </h3>
+            <div>
+              See the documentation to integrate the following with Mender:
+            </div>
             <ul>
               <li>
-                Learn how to integrate devices with
-                 
                 <a
                   href="https://docs.mender.io/development/system-updates-debian-family"
                   rel="noopener noreferrer"
@@ -128,9 +126,8 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
                 >
                   Debian family
                 </a>
-                 
-                or
-                 
+              </li>
+              <li>
                 <a
                   href="https://docs.mender.io/development/system-updates-yocto-project"
                   rel="noopener noreferrer"
@@ -139,21 +136,34 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
                   Yocto OSes
                 </a>
               </li>
-              <li>
-                Or visit
-                 
-                <a
-                  href="https://hub.mender.io/c/board-integrations"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Board Integrations
-                </a>
-                 
-                on Mender Hub and search for your device and OS.
-              </li>
             </ul>
+            Or visit
+             
+            <a
+              href="https://hub.mender.io/c/board-integrations"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Mender Hub
+            </a>
+             
+            and search integrations for your device and OS.
           </div>
+        </div>
+        <div
+          class="tooltip help"
+          style="bottom: 2.5%; left: 88%;"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+            />
+          </svg>
         </div>
       </div>
       <div
