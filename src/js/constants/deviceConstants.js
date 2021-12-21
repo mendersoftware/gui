@@ -1,7 +1,6 @@
 const React = require('react');
 
 const { mdiAws: AWS, mdiMicrosoftAzure: Azure, mdiGoogleCloud: GCP } = require('@mdi/js');
-const iotManagerBaseURL = '/v1/iot-manager';
 
 module.exports = {
   SELECT_GROUP: 'SELECT_GROUP',
@@ -45,7 +44,6 @@ module.exports = {
       icon: AWS,
       title: 'AWS IoT core',
       provider: 'amazon',
-      managementUrl: iotManagerBaseURL,
       enabled: false,
       configHint: <>For help finding your AWS IoT core connection string, check the AWS IoT documentation.</>
     },
@@ -54,7 +52,6 @@ module.exports = {
       icon: Azure,
       title: 'Azure IoT Hub',
       provider: 'azure',
-      managementUrl: iotManagerBaseURL,
       enabled: true,
       configHint: (
         <>
@@ -77,7 +74,6 @@ module.exports = {
       icon: GCP,
       title: 'Cloud IoT Core',
       provider: 'google',
-      managementUrl: iotManagerBaseURL,
       enabled: false,
       configHint: <>For help finding your Cloud IoT core connection string, check the Cloud IoT documentation.</>
     }

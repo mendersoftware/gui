@@ -1,16 +1,14 @@
 import DeploymentConstants from '../constants/deploymentConstants';
 import { DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
-import GeneralApi, { headerNames } from '../api/general-api';
+import GeneralApi, { apiUrl, headerNames } from '../api/general-api';
 import { commonErrorHandler, setSnackbar } from '../actions/appActions';
 import { startTimeSort } from '../helpers';
 import { SORTING_OPTIONS } from '../constants/appConstants';
 import Tracking from '../tracking';
 import { saveGlobalSettings } from './userActions';
 
-const apiUrl = '/api/management/v1';
-const apiUrlV2 = '/api/management/v2';
-export const deploymentsApiUrl = `${apiUrl}/deployments`;
-export const deploymentsApiUrlV2 = `${apiUrlV2}/deployments`;
+export const deploymentsApiUrl = `${apiUrl.v1}/deployments`;
+export const deploymentsApiUrlV2 = `${apiUrl.v2}/deployments`;
 
 // default per page until pagination and counting integrated
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;

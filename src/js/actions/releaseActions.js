@@ -1,15 +1,12 @@
 import axios from 'axios';
 
-import GeneralApi, { headerNames } from '../api/general-api';
 import { commonErrorHandler, progress, setSnackbar } from '../actions/appActions';
+import GeneralApi, { headerNames } from '../api/general-api';
 import AppConstants from '../constants/appConstants';
-import ReleaseConstants from '../constants/releaseConstants';
 import OnboardingConstants from '../constants/onboardingConstants';
-
+import ReleaseConstants from '../constants/releaseConstants';
 import { customSort, duplicateFilter } from '../helpers';
-
-const apiUrl = '/api/management/v1';
-export const deploymentsApiUrl = `${apiUrl}/deployments`;
+import { deploymentsApiUrl } from './deploymentActions';
 
 const flattenRelease = (release, stateRelease) => {
   const updatedArtifacts = release.Artifacts.sort(customSort(1, 'modified'));

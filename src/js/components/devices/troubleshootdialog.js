@@ -19,6 +19,7 @@ import theme, { colors } from '../../themes/mender-theme';
 import MaterialDesignIcon from '../common/materialdesignicon';
 import Terminal from './troubleshoot/terminal';
 import FileTransfer from './troubleshoot/filetransfer';
+import { apiUrl } from '../../api/general-api';
 
 momentDurationFormatSetup(moment);
 const MessagePack = msgpack5();
@@ -104,7 +105,7 @@ export const TroubleshootDialog = ({
     if (!(open || socketInitialized) || socketInitialized) {
       return;
     }
-    socket = userRoles.canTroubleshoot ? new WebSocket(`wss://${window.location.host}/api/management/v1/deviceconnect/devices/${deviceId}/connect`) : undefined;
+    socket = userRoles.canTroubleshoot ? new WebSocket(`wss://${window.location.host}${apiUrl.v1}/deviceconnect/devices/${deviceId}/connect`) : undefined;
 
     return () => {
       onSendMessage({ typ: MessageTypes.Stop });
@@ -127,7 +128,7 @@ export const TroubleshootDialog = ({
       onSendMessage({ typ: MessageTypes.Stop, body: {}, props: {} });
     } else {
       setSocketInitialized(false);
-      socket = new WebSocket(`wss://${window.location.host}/api/management/v1/deviceconnect/devices/${deviceId}/connect`);
+      socket = new WebSocket(`wss://${window.location.host}${apiUrl.v1}/deviceconnect/devices/${deviceId}/connect`);
     }
   };
 

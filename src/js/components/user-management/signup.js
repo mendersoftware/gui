@@ -8,6 +8,7 @@ import { Button } from '@material-ui/core';
 import { setFirstLoginAfterSignup, setSnackbar } from '../../actions/appActions';
 import { createOrganizationTrial } from '../../actions/organizationActions';
 import { loginUser } from '../../actions/userActions';
+import { useradmApiUrl } from '../../constants/userConstants';
 import { stringToBoolean } from '../../helpers';
 
 import Loader from '../common/loader';
@@ -120,7 +121,7 @@ export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setF
           <br />
           you can now log in.
         </h2>
-        <Button variant="contained" color="secondary" href={`/api/management/v1/useradm/oauth2/${provider.id.toLowerCase()}`} startIcon={provider.icon}>
+        <Button variant="contained" color="secondary" href={`${useradmApiUrl}/oauth2/${provider.id.toLowerCase()}`} startIcon={provider.icon}>
           {provider.name}
         </Button>
       </div>

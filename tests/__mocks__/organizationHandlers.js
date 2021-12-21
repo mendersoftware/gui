@@ -1,10 +1,10 @@
 import { rest } from 'msw';
 
 import { defaultState } from '../mockData';
-import { auditLogsApiUrl, tenantadmApiUrlv1, tenantadmApiUrlv2 } from '../../src/js/actions/organizationActions';
 import { PLANS } from '../../src/js/constants/appConstants';
+import { iotManagerBaseURL } from '../../src/js/actions/deviceActions';
+import { auditLogsApiUrl, tenantadmApiUrlv1, tenantadmApiUrlv2 } from '../../src/js/actions/organizationActions';
 import { headerNames } from '../../src/js/api/general-api';
-import { EXTERNAL_PROVIDER } from '../../src/js/constants/deviceConstants';
 
 export const organizationHandlers = [
   rest.get(`${tenantadmApiUrlv1}/user/tenant`, (req, res, ctx) => res(ctx.json(defaultState.organization.organization))),
@@ -69,36 +69,18 @@ export const organizationHandlers = [
     `)
     );
   }),
-  rest.get(`/api/management${EXTERNAL_PROVIDER.azure.managementUrl}/settings`, (req, res, ctx) => {
+  rest.get(`${iotManagerBaseURL}/settings`, (req, res, ctx) => {
     return res(ctx.json({ connection_string: 'something_else' }));
   }),
-  rest.put(`/api/management${EXTERNAL_PROVIDER.azure.managementUrl}/settings`, ({ body }, res, ctx) => {
+  rest.put(`${iotManagerBaseURL}/settings`, ({ body }, res, ctx) => {
     if (!body) {
       return res(ctx.status(547));
     }
     return res(ctx.status(200));
   }),
-  rest.delete(`/api/management${EXTERNAL_PROVIDER.azure.managementUrl}/settings`, ({ body }, res, ctx) => {
+  rest.delete(`${iotManagerBaseURL}/settings`, ({ body }, res, ctx) => {
     if (!body) {
       return res(ctx.status(548));
-    }
-    return res(ctx.status(200));
-  }),
-  rest.get(`/api/management${EXTERNAL_PROVIDER.amazon.managementUrl}/settings`, (req, res, ctx) => {
-    return res(ctx.status(200));
-  }),
-  rest.put(`/api/management${EXTERNAL_PROVIDER.amazon.managementUrl}/settings`, ({ body }, res, ctx) => {
-    if (!body) {
-      return res(ctx.status(548));
-    }
-    return res(ctx.status(200));
-  }),
-  rest.get(`/api/management${EXTERNAL_PROVIDER.google.managementUrl}/settings`, (req, res, ctx) => {
-    return res(ctx.status(200));
-  }),
-  rest.put(`/api/management${EXTERNAL_PROVIDER.google.managementUrl}/settings`, ({ body }, res, ctx) => {
-    if (!body) {
-      return res(ctx.status(549));
     }
     return res(ctx.status(200));
   })

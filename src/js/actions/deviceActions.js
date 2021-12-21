@@ -5,7 +5,7 @@ import { commonErrorFallback, commonErrorHandler, progress, setSnackbar } from '
 import { getSingleDeployment } from '../actions/deploymentActions';
 import { saveGlobalSettings } from '../actions/userActions';
 import { auditLogsApiUrl } from '../actions/organizationActions';
-import GeneralApi, { headerNames, MAX_PAGE_SIZE } from '../api/general-api';
+import GeneralApi, { apiUrl, headerNames, MAX_PAGE_SIZE } from '../api/general-api';
 import AppConstants from '../constants/appConstants';
 import DeviceConstants from '../constants/deviceConstants';
 
@@ -16,15 +16,13 @@ import { getLatestDeviceAlerts } from './monitorActions';
 const { DEVICE_STATES, DEVICE_LIST_DEFAULTS } = DeviceConstants;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
-const apiBase = '/api/management';
-const apiUrl = '/api/management/v1';
-const apiUrlV2 = '/api/management/v2';
-export const deviceAuthV2 = `${apiUrlV2}/devauth`;
-export const deviceConnect = `${apiUrl}/deviceconnect`;
-export const inventoryApiUrl = `${apiUrl}/inventory`;
-export const inventoryApiUrlV2 = `${apiUrlV2}/inventory`;
-export const deviceConfig = `${apiUrl}/deviceconfig/configurations/device`;
-export const reportingApiUrl = `${apiUrl}/reporting`;
+export const deviceAuthV2 = `${apiUrl.v2}/devauth`;
+export const deviceConnect = `${apiUrl.v1}/deviceconnect`;
+export const inventoryApiUrl = `${apiUrl.v1}/inventory`;
+export const inventoryApiUrlV2 = `${apiUrl.v2}/inventory`;
+export const deviceConfig = `${apiUrl.v1}/deviceconfig/configurations/device`;
+export const reportingApiUrl = `${apiUrl.v1}/reporting`;
+export const iotManagerBaseURL = `${apiUrl.v1}/iot-manager`;
 
 const defaultAttributes = [
   { scope: 'identity', attribute: 'status' },
@@ -936,7 +934,7 @@ export const setDeviceTags = (deviceId, tags) => dispatch =>
 
 export const getDeviceTwin = (deviceId, integrationProvider) => (dispatch, getState) => {
   let providerResult = {};
-  return GeneralApi.get(`${apiBase}${DeviceConstants.EXTERNAL_PROVIDER[integrationProvider].managementUrl}/devices/${deviceId}/twin`)
+  return GeneralApi.get(`${iotManagerBaseURL}/devices/${deviceId}/twin`)
     .then(({ data }) => {
       providerResult = { ...data.properties, updated_ts: data.lastActivityTime };
     })
@@ -960,7 +958,7 @@ export const getDeviceTwin = (deviceId, integrationProvider) => (dispatch, getSt
 };
 
 export const setDeviceTwin = (deviceId, integrationProvider, settings) => (dispatch, getState) =>
-  GeneralApi.put(`${apiBase}${DeviceConstants.EXTERNAL_PROVIDER[integrationProvider].managementUrl}/devices/${deviceId}/twin`, settings)
+  GeneralApi.put(`${iotManagerBaseURL}/devices/${deviceId}/twin`, settings)
     .catch(err => commonErrorHandler(err, `There was an error updating the device twin for device ${deviceId}.`, dispatch))
     .then(() => {
       const { twinsByProvider = {} } = getState().devices.byId[deviceId];

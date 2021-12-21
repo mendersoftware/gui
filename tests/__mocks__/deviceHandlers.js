@@ -1,7 +1,7 @@
 import { rest } from 'msw';
 
 import { defaultState } from '../mockData';
-import { deviceAuthV2, deviceConfig, deviceConnect, inventoryApiUrl, inventoryApiUrlV2 } from '../../src/js/actions/deviceActions';
+import { deviceAuthV2, deviceConfig, deviceConnect, inventoryApiUrl, inventoryApiUrlV2, iotManagerBaseURL } from '../../src/js/actions/deviceActions';
 import { headerNames } from '../../src/js/api/general-api';
 import DeviceConstants from '../../src/js/constants/deviceConstants';
 
@@ -243,13 +243,13 @@ export const deviceHandlers = [
     }
     return res(ctx.status(512));
   }),
-  rest.get(`/api/management${DeviceConstants.EXTERNAL_PROVIDER.azure.managementUrl}/devices/:deviceId/twin`, ({ params: { deviceId } }, res, ctx) => {
+  rest.get(`${iotManagerBaseURL}/devices/:deviceId/twin`, ({ params: { deviceId } }, res, ctx) => {
     if (defaultState.devices.byId[deviceId]) {
       return res(ctx.status(200), ctx.json({ deployment_id: defaultState.deployments.byId.d1.id }));
     }
     return res(ctx.status(515));
   }),
-  rest.put(`/api/management${DeviceConstants.EXTERNAL_PROVIDER.azure.managementUrl}/devices/:deviceId/twin`, ({ params: { deviceId }, body }, res, ctx) => {
+  rest.put(`${iotManagerBaseURL}/devices/:deviceId/twin`, ({ params: { deviceId }, body }, res, ctx) => {
     if (defaultState.devices.byId[deviceId] && body) {
       return res(ctx.status(200), ctx.json({ deployment_id: defaultState.deployments.byId.d1.id }));
     }
