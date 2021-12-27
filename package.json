@@ -68,7 +68,7 @@
     "babel-jest": "~27.4.5",
     "child_process": "^1.0.2",
     "clean-webpack-plugin": "^4.0.0",
-    "core-js": "^3.20.0",
+    "core-js": "^3.20.1",
     "css-loader": "^6.5.1",
     "esbuild-loader": "^2.18.0",
     "eslint": "^8.5.0",
