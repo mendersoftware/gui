@@ -5,7 +5,7 @@ import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
 
 import theme from '../../../themes/mender-theme';
 
-export const DeviceDataCollapse = ({ children, className = '', disableBottomBorder, header, isAddOn, isOpen, onClick, title }) => {
+export const DeviceDataCollapse = ({ children, className = '', disableBottomBorder, header, isAddOn, isOpen, onClick, shouldUnmount = true, title }) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export const DeviceDataCollapse = ({ children, className = '', disableBottomBord
         </div>
       </div>
       <div>{header}</div>
-      <Collapse className={open ? 'fadeIn' : 'fadeOut'} in={open} timeout="auto" unmountOnExit>
+      <Collapse className={open ? 'fadeIn' : 'fadeOut'} in={open} timeout="auto" unmountOnExit={shouldUnmount}>
         {children}
       </Collapse>
       {!disableBottomBorder && <Divider style={{ marginTop: theme.spacing(3) }} />}

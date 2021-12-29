@@ -42,8 +42,24 @@ const NoDiffStatus = ({ updateTime }) => (
   </div>
 );
 
-export const TwinSyncStatus = ({ diffCount, updateTime }) =>
-  !diffCount ? (
+export const TwinError = ({ providerTitle, twinError }) => (
+  <InfoHint
+    content={
+      <>
+        {twinError}
+        <br />
+        Please check your connection string in the <Link to="/settings/integrations">Integration settings</Link>, and check that the device exists in your{' '}
+        {providerTitle}
+      </>
+    }
+  />
+);
+
+export const TwinSyncStatus = ({ diffCount, providerTitle, twinError, updateTime }) => {
+  if (twinError) {
+    return <TwinError providerTitle={providerTitle} twinError={twinError} />;
+  }
+  return !diffCount ? (
     <NoDiffStatus updateTime={updateTime} />
   ) : (
     <div className="padding" style={diffStatusStyle}>
@@ -57,19 +73,7 @@ export const TwinSyncStatus = ({ diffCount, updateTime }) =>
       <LastSyncNote updateTime={updateTime} />
     </div>
   );
-
-export const TwinError = ({ providerTitle, twinError }) => (
-  <InfoHint
-    content={
-      <>
-        {twinError}
-        <br />
-        Please check your connection string in the <Link to="/settings/integrations">Integration settings</Link>, and check that the device exists in your{' '}
-        {providerTitle}
-      </>
-    }
-  />
-);
+};
 
 export const Title = ({ providerTitle }) => (
   <div className="flexbox center-aligned">
@@ -109,6 +113,7 @@ export const DeviceTwin = ({ device, getDeviceTwin, setDeviceTwin }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [initialized, setInitialized] = useState(false);
   const [open, setOpen] = useState(false);
   const [reported, setReported] = useState('');
   const [updated, setUpdated] = useState('');
@@ -144,6 +149,7 @@ export const DeviceTwin = ({ device, getDeviceTwin, setDeviceTwin }) => {
   const onDidUpdateDiff = () => {
     const changes = editorRef.current.editor.getLineChanges();
     setDiffCount(changes.length);
+    setInitialized(true);
   };
 
   const onApplyClick = () => {
@@ -183,26 +189,29 @@ export const DeviceTwin = ({ device, getDeviceTwin, setDeviceTwin }) => {
   return (
     <DeviceDataCollapse
       header={
-        !open &&
-        (twinError ? (
-          <TwinError providerTitle={externalProvider.title} twinError={twinError} />
-        ) : (
-          <div className="flexbox column">
-            {!diffCount && <NoDiffStatus updateTime={updateTime} />}
-            <a className="margin-top-small" onClick={setOpen}>
-              show more
-            </a>
-          </div>
-        ))
+        <div className="flexbox column">
+          {initialized ? (
+            <>
+              <TwinSyncStatus diffCount={diffCount} providerTitle={externalProvider.title} twinError={twinError} updateTime={updateTime} />
+              {!twinError && !open && (
+                <a className="margin-top-small" onClick={setOpen}>
+                  show more
+                </a>
+              )}
+            </>
+          ) : (
+            <Loader show={!initialized} />
+          )}
+        </div>
       }
       isOpen={open}
       onClick={onExpandClick}
+      shouldUnmount={false}
       title={<Title providerTitle={externalProvider.title} />}
     >
       <div className={`flexbox column ${isEditing ? 'twin-editing' : ''}`}>
         <div style={widthStyle}>
-          {!isEmpty(reported) && <TwinSyncStatus diffCount={diffCount} updateTime={updateTime} />}
-          {!(isEmpty(reported) && isEmpty(configured)) && !isSync ? (
+          {!initialized || (!(isEmpty(reported) && isEmpty(configured)) && !isSync) ? (
             <>
               <div className="two-columns">
                 <h4>Desired configuration</h4>
