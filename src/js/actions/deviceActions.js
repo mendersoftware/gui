@@ -445,7 +445,7 @@ export const getDeviceInfo = deviceId => (dispatch, getState) => {
   }
   tasks = getState().organization.externalDeviceIntegrations.reduce((accu, integration) => {
     if (integration.connectionString) {
-      tasks.push(dispatch(getDeviceTwin(deviceId, integration.provider)));
+      tasks.push(dispatch(getDeviceTwin(deviceId, integration)));
     }
     return accu;
   }, tasks);
@@ -932,9 +932,9 @@ export const setDeviceTags = (deviceId, tags) => dispatch =>
       .then(() => Promise.resolve(dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device: { ...device, tags } })));
   });
 
-export const getDeviceTwin = (deviceId, integrationProvider) => (dispatch, getState) => {
+export const getDeviceTwin = (deviceId, integration) => (dispatch, getState) => {
   let providerResult = {};
-  return GeneralApi.get(`${iotManagerBaseURL}/devices/${deviceId}/twin`)
+  return GeneralApi.get(`${iotManagerBaseURL}/devices/${deviceId}/state/${integration.id}`)
     .then(({ data }) => {
       providerResult = { ...data.properties, updated_ts: data.lastActivityTime };
     })
@@ -949,7 +949,7 @@ export const getDeviceTwin = (deviceId, integrationProvider) => (dispatch, getSt
             ...getState().devices.byId[deviceId],
             twinsByProvider: {
               ...getState().devices.byId[deviceId].twinsByProvider,
-              [integrationProvider]: providerResult
+              [integration.provider]: providerResult
             }
           }
         })
@@ -957,12 +957,12 @@ export const getDeviceTwin = (deviceId, integrationProvider) => (dispatch, getSt
     );
 };
 
-export const setDeviceTwin = (deviceId, integrationProvider, settings) => (dispatch, getState) =>
-  GeneralApi.put(`${iotManagerBaseURL}/devices/${deviceId}/twin`, settings)
+export const setDeviceTwin = (deviceId, integration, settings) => (dispatch, getState) =>
+  GeneralApi.put(`${iotManagerBaseURL}/devices/${deviceId}/state/${integration.id}`, settings)
     .catch(err => commonErrorHandler(err, `There was an error updating the device twin for device ${deviceId}.`, dispatch))
     .then(() => {
       const { twinsByProvider = {} } = getState().devices.byId[deviceId];
-      const { [integrationProvider]: currentState = {} } = twinsByProvider;
+      const { [integration.provider]: currentState = {} } = twinsByProvider;
       return Promise.resolve(
         dispatch({
           type: DeviceConstants.RECEIVE_DEVICE,
@@ -970,7 +970,7 @@ export const setDeviceTwin = (deviceId, integrationProvider, settings) => (dispa
             ...getState().devices.byId[deviceId],
             twinsByProvider: {
               ...twinsByProvider,
-              [integrationProvider]: {
+              [integration.provider]: {
                 ...currentState,
                 desired: settings
               }

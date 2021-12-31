@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { Button, MenuItem, Select, TextField } from '@material-ui/core';
 
-import { changeIntegration, deleteIntegration, getIntegrationFor } from '../../actions/organizationActions';
+import { changeIntegration, createIntegration, deleteIntegration, getIntegrationFor } from '../../actions/organizationActions';
 import { EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
 import Confirm from '../common/confirm';
 import InfoHint from '../common/info-hint';
@@ -74,7 +74,7 @@ const emptyIntegration = {
   provider: ''
 };
 
-export const Integrations = ({ integrations, changeIntegration, deleteIntegration, getIntegrationFor }) => {
+export const Integrations = ({ integrations, changeIntegration, createIntegration, deleteIntegration, getIntegrationFor }) => {
   const [availableIntegrations, setAvailableIntegrations] = useState([]);
   const [configuredIntegrations, setConfiguredIntegrations] = useState([]);
   const [isCreating, setIsCreating] = useState(false);
@@ -111,7 +111,11 @@ export const Integrations = ({ integrations, changeIntegration, deleteIntegratio
   };
 
   const onSaveClick = integration => {
-    changeIntegration(integration);
+    if (integration.id) {
+      changeIntegration(integration);
+    } else {
+      createIntegration(integration);
+    }
     setCurrentValue('');
     return setIsCreating(isCreating && !integration.connectionString ? false : isCreating);
   };
@@ -142,7 +146,7 @@ export const Integrations = ({ integrations, changeIntegration, deleteIntegratio
   );
 };
 
-const actionCreators = { changeIntegration, deleteIntegration, getIntegrationFor };
+const actionCreators = { changeIntegration, createIntegration, deleteIntegration, getIntegrationFor };
 
 const mapStateToProps = state => {
   return {

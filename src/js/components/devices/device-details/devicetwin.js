@@ -104,10 +104,10 @@ const editorProps = {
 };
 const maxWidth = 800;
 
-const externalProvider = EXTERNAL_PROVIDER.azure;
+const externalProvider = EXTERNAL_PROVIDER['iot-hub'];
 const indentation = 4; // number of spaces, tab based indentation won't show in the editor, but be converted to 4 spaces
 
-export const DeviceTwin = ({ device, getDeviceTwin, setDeviceTwin }) => {
+export const DeviceTwin = ({ device, getDeviceTwin, integration, setDeviceTwin }) => {
   const [configured, setConfigured] = useState('');
   const [diffCount, setDiffCount] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
@@ -153,9 +153,11 @@ export const DeviceTwin = ({ device, getDeviceTwin, setDeviceTwin }) => {
   };
 
   const onApplyClick = () => {
-    let update = {};
+    let update = {
+      desired: {}
+    };
     try {
-      update = JSON.parse(updated);
+      update.desired = JSON.parse(updated);
     } catch (error) {
       setErrorMessage('There was an error parsing the device twin changes, please ensure that it is valid JSON.');
       return;
@@ -163,7 +165,7 @@ export const DeviceTwin = ({ device, getDeviceTwin, setDeviceTwin }) => {
     editorRef.current.modifiedEditor.getAction('editor.action.formatDocument').run();
     setUpdated(JSON.stringify(update, undefined, 4));
     setErrorMessage('');
-    setDeviceTwin(device.id, externalProvider.provider, update).then(() => {
+    setDeviceTwin(device.id, integration, update).then(() => {
       setIsEditing(false);
     });
   };
@@ -177,7 +179,7 @@ export const DeviceTwin = ({ device, getDeviceTwin, setDeviceTwin }) => {
 
   const onRefreshClick = () => {
     setIsRefreshing(true);
-    getDeviceTwin(device.id, externalProvider.provider).finally(() => setTimeout(() => setIsRefreshing(false), 500));
+    getDeviceTwin(device.id, integration).finally(() => setTimeout(() => setIsRefreshing(false), 500));
   };
 
   const onEditClick = () => setIsEditing(true);

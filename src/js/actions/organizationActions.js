@@ -142,13 +142,27 @@ export const requestPlanChange = (tenantId, content) => dispatch =>
     .catch(err => commonErrorHandler(err, 'There was an error sending your request', dispatch, commonErrorFallback))
     .then(() => Promise.resolve(dispatch(setSnackbar('Your request was sent successfully', 5000, ''))));
 
-export const changeIntegration = integration => dispatch =>
-  Api.put(`${iotManagerBaseURL}/settings`, { connection_string: integration.connectionString })
-    .catch(err => commonErrorHandler(err, 'There was an error configuring the integration', dispatch, commonErrorFallback))
+const integrationProviderIoTHub = 'iot-hub';
+const integrationCredentialsSas = 'sas';
+
+export const createIntegration = integration => dispatch =>
+  Api.post(`${iotManagerBaseURL}/integrations`, {
+    provider: integrationProviderIoTHub,
+    credentials: { type: integrationCredentialsSas, connection_string: integration.connectionString }
+  })
+    .catch(err => commonErrorHandler(err, 'There was an error creating the integration', dispatch, commonErrorFallback))
     .then(() => Promise.all([dispatch(setSnackbar('The integration was set up successfully')), dispatch(getIntegrationFor(integration))]));
 
+export const changeIntegration = integration => dispatch =>
+  Api.put(`${iotManagerBaseURL}/integrations/${integration.id}`, {
+    provider: integrationProviderIoTHub,
+    credentials: { type: integrationCredentialsSas, connection_string: integration.connectionString }
+  })
+    .catch(err => commonErrorHandler(err, 'There was an error updating the integration', dispatch, commonErrorFallback))
+    .then(() => Promise.all([dispatch(setSnackbar('The integration was updated successfully')), dispatch(getIntegrationFor(integration))]));
+
 export const deleteIntegration = integration => (dispatch, getState) =>
-  Api.put(`${iotManagerBaseURL}/settings`, {})
+  Api.delete(`${iotManagerBaseURL}/integrations/${integration.id}`, {})
     .catch(err => commonErrorHandler(err, 'There was an error removing the integration', dispatch, commonErrorFallback))
     .then(() => {
       const integrations = getState().organization.externalDeviceIntegrations.filter(item => integration.provider !== item.provider);
@@ -159,23 +173,29 @@ export const deleteIntegration = integration => (dispatch, getState) =>
     });
 
 export const getIntegrationFor = integration => (dispatch, getState) =>
-  Api.get(`${iotManagerBaseURL}/settings`)
+  Api.get(`${iotManagerBaseURL}/integrations`)
     .catch(err => commonErrorHandler(err, 'There was an error retrieving the integration', dispatch, commonErrorFallback))
     .then(({ data }) => {
-      const { found, integrations } = getState().organization.externalDeviceIntegrations.reduce(
-        (accu, item) => {
-          if (integration.provider === item.provider && data.connection_string) {
-            accu.integrations.push({ ...item, ...data, connectionString: data.connection_string });
-            accu.found = true;
-          } else {
-            accu.integrations.push(item);
-          }
-          return accu;
-        },
-        { integrations: [], found: false }
-      );
-      if (!found && data.connection_string) {
-        integrations.push({ ...integration, ...data, connectionString: data.connection_string });
-      }
+      var integrations = getState().organization.externalDeviceIntegrations;
+      data.forEach(dataItem => {
+        const { integrations: integrationsReduced, found } = integrations.reduce(
+          (accu, item) => {
+            data.forEach(dataItem => {
+              if (integration.provider === item.provider && dataItem.credentials?.connection_string) {
+                accu.integrations.push({ ...item, ...dataItem, connectionString: dataItem.credentials?.connection_string });
+                accu.found = true;
+              } else {
+                accu.integrations.push(item);
+              }
+            });
+            return accu;
+          },
+          { integrations: [], found: false }
+        );
+        integrations = integrationsReduced;
+        if (!found && dataItem.credentials?.connection_string) {
+          integrations.push({ ...integration, ...dataItem, connectionString: dataItem.credentials?.connection_string });
+        }
+      });
       return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: integrations }));
     });

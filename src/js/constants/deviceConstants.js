@@ -47,11 +47,11 @@ module.exports = {
       enabled: false,
       configHint: <>For help finding your AWS IoT core connection string, check the AWS IoT documentation.</>
     },
-    azure: {
+    'iot-hub': {
       article: 'an',
       icon: Azure,
       title: 'Azure IoT Hub',
-      provider: 'azure',
+      provider: 'iot-hub',
       enabled: true,
       configHint: (
         <>

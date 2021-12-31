@@ -7,7 +7,7 @@ import HelpIcon from '@material-ui/icons/Help';
 
 import CopyCode from '../copy-code';
 import { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType } from '../../../actions/onboardingActions';
-import { changeIntegration } from '../../../actions/organizationActions';
+import { createIntegration } from '../../../actions/organizationActions';
 import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDebConfigurationCode, versionCompare } from '../../../helpers';
@@ -164,7 +164,7 @@ const steps = {
 export const PhysicalDeviceOnboarding = ({
   advanceOnboarding,
   azureConnectionString,
-  changeIntegration,
+  createIntegration,
   docsVersion,
   ipAddress,
   isHosted,
@@ -188,7 +188,7 @@ export const PhysicalDeviceOnboarding = ({
   useEffect(() => {
     const hasExternalIntegrationSupport = versionCompare(version, '3.2') > -1;
     if (hasExternalIntegrationSupport && progress > 1 && !!connectionString && connectionString !== azureConnectionString) {
-      changeIntegration({ ...EXTERNAL_PROVIDER.azure, connectionString });
+      createIntegration({ ...EXTERNAL_PROVIDER.azure, connectionString });
     }
   }, [progress]);
 
@@ -226,7 +226,7 @@ export const PhysicalDeviceOnboarding = ({
   );
 };
 
-const actionCreators = { advanceOnboarding, changeIntegration, setOnboardingApproach, setOnboardingDeviceType };
+const actionCreators = { advanceOnboarding, createIntegration, setOnboardingApproach, setOnboardingDeviceType };
 
 const mapStateToProps = state => {
   const { connectionString: azureConnectionString = '' } =

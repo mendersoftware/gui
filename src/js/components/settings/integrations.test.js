@@ -4,7 +4,7 @@ import { IntegrationConfiguration, Integrations } from './integrations';
 import { undefineds } from '../../../../tests/mockData';
 
 const integrations = [
-  { key: 'azure', provider: 'azure', connectionString: 'something' },
+  { key: 'iot-hub', provider: 'iot-hub', connectionString: 'something' },
   { key: 'amazon', provider: 'amazon', connectionString: 'something else' }
 ];
 

@@ -53,7 +53,7 @@ export const ExpandedDevice = ({
   getDeviceInfo,
   getDeviceTwin,
   getSingleDeployment,
-  hasExternalIntegration,
+  integration,
   isEnterprise,
   latestAlerts,
   onClose,
@@ -142,7 +142,7 @@ export const ExpandedDevice = ({
         showHelptips={showHelptips}
       />
       <DeviceTags device={device} setSnackbar={setSnackbar} setDeviceTags={setDeviceTags} showHelptips={showHelptips} />
-      {hasExternalIntegration && <DeviceTwin device={device} getDeviceTwin={getDeviceTwin} setDeviceTwin={setDeviceTwin} />}
+      {integration && <DeviceTwin device={device} integration={integration} getDeviceTwin={getDeviceTwin} setDeviceTwin={setDeviceTwin} />}
       {isAcceptedDevice && (
         <>
           <InstalledSoftware device={device} docsVersion={docsVersion} setSnackbar={setSnackbar} />
@@ -237,7 +237,7 @@ const mapStateToProps = (state, ownProps) => {
     device,
     deviceConfigDeployment: state.deployments.byId[configDeploymentId] || {},
     docsVersion: getDocsVersion(state),
-    hasExternalIntegration: state.organization.externalDeviceIntegrations.some(integration => integration.connectionString),
+    integration: state.organization.externalDeviceIntegrations.find(integration => integration.connectionString),
     isEnterprise: getIsEnterprise(state),
     latestAlerts: latest.slice(0, 20),
     onboardingComplete: state.onboarding.complete,

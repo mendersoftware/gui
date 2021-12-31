@@ -285,11 +285,11 @@ describe('organization actions', () => {
         type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
         value: [
           { provider: 'aws', something: 'new' },
-          { provider: 'azure', connectionString: 'something_else' }
+          { provider: 'iot-hub', connectionString: 'something_else' }
         ]
       }
     ];
-    const request = store.dispatch(changeIntegration({ provider: 'azure' }));
+    const request = store.dispatch(changeIntegration({ provider: 'iot-hub' }));
     expect(request).resolves.toBeTruthy();
     await request.then(() => {
       const storeActions = store.getActions();
@@ -303,7 +303,7 @@ describe('organization actions', () => {
       organization: {
         ...defaultState.organization,
         externalDeviceIntegrations: [
-          { provider: 'azure', something: 'something' },
+          { provider: 'iot-hub', something: 'something' },
           { provider: 'aws', something: 'new' }
         ]
       }
@@ -313,12 +313,12 @@ describe('organization actions', () => {
       {
         type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
         value: [
-          { provider: 'azure', something: 'something', connectionString: 'something_else' },
+          { provider: 'iot-hub', something: 'something', connectionString: 'something_else' },
           { provider: 'aws', something: 'new' }
         ]
       }
     ];
-    const request = store.dispatch(getIntegrationFor({ provider: 'azure' }));
+    const request = store.dispatch(getIntegrationFor({ provider: 'iot-hub' }));
     expect(request).resolves.toBeTruthy();
     await request.then(() => {
       const storeActions = store.getActions();
@@ -327,13 +327,13 @@ describe('organization actions', () => {
     });
   });
   it('should allow deleting external device provider configurations', async () => {
-    const store = mockStore({ ...defaultState, externalDeviceIntegrations: [{ provider: 'azure' }] });
+    const store = mockStore({ ...defaultState, externalDeviceIntegrations: [{ provider: 'iot-hub' }] });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The integration was removed successfully' } },
       { type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: [] }
     ];
-    const request = store.dispatch(deleteIntegration({ provider: 'azure' }));
+    const request = store.dispatch(deleteIntegration({ provider: 'iot-hub' }));
     expect(request).resolves.toBeTruthy();
     await request.then(() => {
       const storeActions = store.getActions();
