@@ -36,7 +36,9 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
         <p>
           Great work! You updated your device with the new Release!
         </p>
-        <p>
+        <div
+          class="margin-bottom-small margin-top-small"
+        >
           Your device is now running the updated version of the software. At
           <div
             class="flexbox centered"
@@ -60,7 +62,7 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
             </a>
           </div>
           you should now see "Hello world" in place of the webpage you saw previously. If you continue to see the webpage you saw previously you might have to refresh the page.
-        </p>
+        </div>
         <p>
           You've now got a good foundation in how to use Mender. Look for more help hints in the UI as you go along.
         </p>

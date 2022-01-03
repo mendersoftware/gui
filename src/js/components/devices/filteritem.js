@@ -104,7 +104,7 @@ export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => 
 
   const updateFilterOperator = ({ target: { value: changedOperator } }) => {
     const operator = DEVICE_FILTERING_OPTIONS[changedOperator] || {};
-    const opValue = operator.value ?? operator.value ?? value ?? '';
+    const opValue = operator.value ?? value ?? '';
     setOperator(changedOperator);
     setValue(opValue);
   };

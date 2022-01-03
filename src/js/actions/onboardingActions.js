@@ -149,7 +149,7 @@ export const advanceOnboarding = stepId => (dispatch, getState) => {
   const stepIndex = steps.findIndex(step => step === stepId);
   // if there is no progress set yet, the onboarding state deduction hasn't happened
   // and the subsequent settings persistence would overwrite what we stored
-  if (progress > stepIndex || progress === null) {
+  if (progress > stepIndex || getState().onboarding.progress === null) {
     return;
   }
   const madeProgress = steps[stepIndex + 1];

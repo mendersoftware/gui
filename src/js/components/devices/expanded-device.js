@@ -115,7 +115,7 @@ export const ExpandedDevice = ({
     monitoring.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const deviceIdentifier = device?.attributes?.name ?? device?.id ?? '-';
+  const deviceIdentifier = device.attributes?.name ?? device.id ?? '-';
   const isAcceptedDevice = status === DEVICE_STATES.accepted;
   return (
     <Drawer anchor="right" className="expandedDevice" open={open} onClose={onClose} PaperProps={{ style: { minWidth: '67vw' } }}>
