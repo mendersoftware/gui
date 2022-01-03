@@ -243,13 +243,13 @@ export const deviceHandlers = [
     }
     return res(ctx.status(512));
   }),
-  rest.get(`${iotManagerBaseURL}/devices/:deviceId/twin`, ({ params: { deviceId } }, res, ctx) => {
+  rest.get(`${iotManagerBaseURL}/devices/:deviceId/state`, ({ params: { deviceId } }, res, ctx) => {
     if (defaultState.devices.byId[deviceId]) {
       return res(ctx.status(200), ctx.json({ deployment_id: defaultState.deployments.byId.d1.id }));
     }
     return res(ctx.status(515));
   }),
-  rest.put(`${iotManagerBaseURL}/devices/:deviceId/twin`, ({ params: { deviceId }, body }, res, ctx) => {
+  rest.put(`${iotManagerBaseURL}/devices/:deviceId/state/:integrationId`, ({ params: { deviceId }, body }, res, ctx) => {
     if (defaultState.devices.byId[deviceId] && body) {
       return res(ctx.status(200), ctx.json({ deployment_id: defaultState.deployments.byId.d1.id }));
     }

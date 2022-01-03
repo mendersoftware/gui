@@ -2,7 +2,7 @@ import Cookies from 'universal-cookie';
 
 import { getToken } from '../auth';
 import AppConstants from '../constants/appConstants';
-import { DEVICE_ONLINE_CUTOFF, DEVICE_STATES, EXTERNAL_PROVIDER } from '../constants/deviceConstants';
+import { DEVICE_ONLINE_CUTOFF, DEVICE_STATES } from '../constants/deviceConstants';
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { SET_SHOW_HELP } from '../constants/userConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
@@ -13,7 +13,7 @@ import { getDeviceAttributes, getDeviceById, getDevicesByStatus, getDeviceLimit,
 import { getDeploymentsByStatus } from './deploymentActions';
 import { getReleases } from './releaseActions';
 import { saveUserSettings, getGlobalSettings, getRoles, saveGlobalSettings } from './userActions';
-import { getIntegrationFor, getUserOrganization } from './organizationActions';
+import { getIntegrations, getUserOrganization } from './organizationActions';
 
 const cookies = new Cookies();
 
@@ -38,6 +38,7 @@ export const initializeAppData = () => (dispatch, getState) => {
     dispatch(getDevicesByStatus(DEVICE_STATES.rejected)),
     dispatch(getDynamicGroups()),
     dispatch(getGroups()),
+    dispatch(getIntegrations()),
     dispatch(getReleases()),
     dispatch(getDeviceLimit()),
     dispatch(getRoles())
@@ -46,12 +47,6 @@ export const initializeAppData = () => (dispatch, getState) => {
   if (multitenancy) {
     tasks.push(dispatch(getUserOrganization()));
   }
-  tasks = Object.values(EXTERNAL_PROVIDER).reduce((accu, provider) => {
-    if (provider.enabled) {
-      accu.push(dispatch(getIntegrationFor(provider)));
-    }
-    return accu;
-  }, tasks);
   return Promise.all(tasks).then(() => {
     const state = getState();
     const user = getCurrentUser(state);

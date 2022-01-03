@@ -11,6 +11,7 @@ describe('DeviceTwin Component', () => {
       <MemoryRouter>
         <DeviceTwin
           device={{ ...defaultState.devices.byId.a1, twinsByProvider: { something: 'test', other: 'misc', ab: 12, nest: { here: 'some' } } }}
+          integrations={[]}
           setDeviceTwin={jest.fn}
         />
       </MemoryRouter>

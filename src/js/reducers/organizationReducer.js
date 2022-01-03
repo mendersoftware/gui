@@ -27,7 +27,7 @@ export const initialState = {
     }
   },
   externalDeviceIntegrations: [
-    // { provider, connectionString }
+    // { <connection_string|x509|...>, id, provider }
   ]
 };
 

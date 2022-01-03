@@ -2,6 +2,11 @@ const React = require('react');
 
 const { mdiAws: AWS, mdiMicrosoftAzure: Azure, mdiGoogleCloud: GCP } = require('@mdi/js');
 
+const credentialTypes = {
+  sas: 'sas',
+  x509: 'x509'
+};
+
 module.exports = {
   SELECT_GROUP: 'SELECT_GROUP',
   SELECT_DEVICE: 'SELECT_DEVICE',
@@ -41,6 +46,8 @@ module.exports = {
   EXTERNAL_PROVIDER: {
     amazon: {
       article: 'an',
+      credentialsType: credentialTypes.x509,
+      credentialsAttribute: 'connection_string',
       icon: AWS,
       title: 'AWS IoT core',
       provider: 'amazon',
@@ -49,6 +56,8 @@ module.exports = {
     },
     'iot-hub': {
       article: 'an',
+      credentialsType: credentialTypes.sas,
+      credentialsAttribute: 'connection_string',
       icon: Azure,
       title: 'Azure IoT Hub',
       provider: 'iot-hub',
@@ -71,6 +80,8 @@ module.exports = {
     },
     google: {
       article: 'a',
+      credentialsType: credentialTypes.x509,
+      credentialsAttribute: 'value',
       icon: GCP,
       title: 'Cloud IoT Core',
       provider: 'google',

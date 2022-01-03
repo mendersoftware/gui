@@ -167,6 +167,13 @@ describe('app actions', () => {
         groupName: DeviceConstants.UNGROUPED_GROUP.id,
         group: { deviceIds: [], total: 0, filters: [{ key: 'group', value: ['testGroup'], operator: '$nin', scope: 'system' }] }
       },
+      {
+        type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
+        value: [
+          { connection_string: 'something_else', id: 1, provider: EXTERNAL_PROVIDER['iot-hub'].provider },
+          { id: 2, provider: 'aws', something: 'new' }
+        ]
+      },
       { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
       {
         type: ReleaseConstants.SET_RELEASES_LIST_STATE,
@@ -190,10 +197,6 @@ describe('app actions', () => {
         }, {})
       },
       { type: OrganizationConstants.SET_ORGANIZATION, organization: defaultState.organization.organization },
-      {
-        type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
-        value: [{ ...EXTERNAL_PROVIDER.azure, connectionString: 'something_else', connection_string: 'something_else' }]
-      },
       {
         type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS,
         stats: { ...defaultState.deployments.byId.d1.stats },

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { Button, MenuItem, Select, TextField } from '@material-ui/core';
 
-import { changeIntegration, createIntegration, deleteIntegration, getIntegrationFor } from '../../actions/organizationActions';
+import { changeIntegration, createIntegration, deleteIntegration, getIntegrations } from '../../actions/organizationActions';
 import { EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
 import Confirm from '../common/confirm';
 import InfoHint from '../common/info-hint';
@@ -11,7 +11,8 @@ import InfoHint from '../common/info-hint';
 const maxWidth = 750;
 
 export const IntegrationConfiguration = ({ integration, onCancel, onDelete, onSave }) => {
-  const { connectionString = '', provider } = integration;
+  const { provider } = integration;
+  const connectionString = integration[EXTERNAL_PROVIDER[provider].credentialsAttribute] || '';
   const [connectionConfig, setConnectionConfig] = useState(connectionString);
   const [isEditing, setIsEditing] = useState(!connectionString);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -23,7 +24,7 @@ export const IntegrationConfiguration = ({ integration, onCancel, onDelete, onSa
   const onDeleteClick = () => setIsDeleting(true);
   const onDeleteConfirm = () => onDelete(integration);
   const onEditClick = () => setIsEditing(true);
-  const onSaveClick = () => onSave({ ...integration, connectionString: connectionConfig });
+  const onSaveClick = () => onSave({ ...integration, [EXTERNAL_PROVIDER[provider].credentialsAttribute]: connectionConfig });
 
   const updateConnectionConfig = ({ target: { value = '' } }) => setConnectionConfig(value);
 
@@ -69,12 +70,7 @@ export const IntegrationConfiguration = ({ integration, onCancel, onDelete, onSa
   );
 };
 
-const emptyIntegration = {
-  connectionString: '',
-  provider: ''
-};
-
-export const Integrations = ({ integrations, changeIntegration, createIntegration, deleteIntegration, getIntegrationFor }) => {
+export const Integrations = ({ integrations = [], changeIntegration, createIntegration, deleteIntegration, getIntegrations }) => {
   const [availableIntegrations, setAvailableIntegrations] = useState([]);
   const [configuredIntegrations, setConfiguredIntegrations] = useState([]);
   const [isCreating, setIsCreating] = useState(false);
@@ -95,12 +91,12 @@ export const Integrations = ({ integrations, changeIntegration, createIntegratio
   }, [integrations]);
 
   useEffect(() => {
-    availableIntegrations.map(integration => (integration.connectionString ? undefined : getIntegrationFor(integration)));
+    getIntegrations();
   }, [availableIntegrations]);
 
-  const onConfigureIntegration = ({ target: { value: provider } }) => {
+  const onConfigureIntegration = ({ target: { value: provider = '' } }) => {
     setCurrentValue(provider);
-    setConfiguredIntegrations([{ ...emptyIntegration, provider }, ...configuredIntegrations]);
+    setConfiguredIntegrations([{ id: 'new', provider }, ...configuredIntegrations]);
     setIsCreating(true);
   };
 
@@ -134,23 +130,17 @@ export const Integrations = ({ integrations, changeIntegration, createIntegratio
         </Select>
       )}
       {configuredIntegrations.map(integration => (
-        <IntegrationConfiguration
-          key={integration.connectionString}
-          integration={integration}
-          onCancel={onCancelClick}
-          onDelete={deleteIntegration}
-          onSave={onSaveClick}
-        />
+        <IntegrationConfiguration key={integration.id} integration={integration} onCancel={onCancelClick} onDelete={deleteIntegration} onSave={onSaveClick} />
       ))}
     </div>
   );
 };
 
-const actionCreators = { changeIntegration, createIntegration, deleteIntegration, getIntegrationFor };
+const actionCreators = { changeIntegration, createIntegration, deleteIntegration, getIntegrations };
 
 const mapStateToProps = state => {
   return {
-    integrations: state.organization.externalDeviceIntegrations ?? []
+    integrations: state.organization.externalDeviceIntegrations
   };
 };
 

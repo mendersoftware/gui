@@ -565,6 +565,7 @@ describe('device retrieval ', () => {
     const expectedActions = [
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: { ...expectedDevice, id } },
       { type: DeviceConstants.RECEIVE_DEVICE, device: { attributes, id } },
+      { type: DeviceConstants.RECEIVE_DEVICE, device: expectedDevice },
       { type: DeviceConstants.RECEIVE_DEVICE_CONNECT, device: { status: 'connected', updated_ts } }
     ];
     await store.dispatch(getDeviceInfo(defaultState.devices.byId.a1.id));
@@ -730,7 +731,7 @@ describe('device twin related actions', () => {
   it('should allow retrieving twin data from azure', async () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE, device: defaultState.devices.byId.a1 }];
-    await store.dispatch(getDeviceTwin(defaultState.devices.byId.a1.id, DeviceConstants.EXTERNAL_PROVIDER.azure.provider));
+    await store.dispatch(getDeviceTwin(defaultState.devices.byId.a1.id, DeviceConstants.EXTERNAL_PROVIDER['iot-hub'].provider));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
@@ -738,7 +739,7 @@ describe('device twin related actions', () => {
   it('should allow configuring twin data on azure', async () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE, device: defaultState.devices.byId.a1 }];
-    await store.dispatch(setDeviceTwin(defaultState.devices.byId.a1.id, DeviceConstants.EXTERNAL_PROVIDER.azure.provider, { something: 'asdl' }));
+    await store.dispatch(setDeviceTwin(defaultState.devices.byId.a1.id, DeviceConstants.EXTERNAL_PROVIDER['iot-hub'].provider, { something: 'asdl' }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
