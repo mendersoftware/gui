@@ -267,6 +267,8 @@ export const DeviceConfiguration = ({
     setShowConfigImport(true);
   };
 
+  const onAbortClick = () => setIsAborting(!isAborting);
+
   const hasDeviceConfig = !isEmpty(reported);
   let footer = hasDeviceConfig ? <ConfigUpToDateNote updated_ts={reported_ts} /> : <ConfigEmptyNote updated_ts={device.updated_ts} />;
   if (isEditingConfig) {
@@ -292,10 +294,10 @@ export const DeviceConfiguration = ({
         {updateFailed ? (
           <ConfigUpdateFailureActions hasLog={hasLog} setShowLog={onShowLog} onSubmit={onSubmit} onCancel={onCancel} />
         ) : isAborting ? (
-          <Confirm cancel={() => setIsAborting(!isAborting)} action={onCancel} type="abort" classes="margin-left-large" />
+          <Confirm cancel={onAbortClick} action={onCancel} type="abort" classes="margin-left-large" />
         ) : (
           <>
-            <Button color="secondary" onClick={() => setIsAborting(!isAborting)} startIcon={<BlockIcon fontSize="small" />} style={buttonStyle}>
+            <Button color="secondary" onClick={onAbortClick} startIcon={<BlockIcon fontSize="small" />} style={buttonStyle}>
               Abort update
             </Button>
             <Button color="secondary" component={Link} to={`/deployments/${deployment.status || 'active'}?open=true&id=${deployment_id}`} style={buttonStyle}>

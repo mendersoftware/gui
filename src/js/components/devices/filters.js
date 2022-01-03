@@ -225,7 +225,7 @@ const mapStateToProps = (state, ownProps) => {
     isHosted: state.app.features.isHosted,
     isEnterprise: state.app.features.isEnterprise,
     plan,
-    previousFilters: state.users.globalSettings.previousFilters || [],
+    previousFilters: state.users.globalSettings.previousFilters,
     selectedGroup
   };
 };

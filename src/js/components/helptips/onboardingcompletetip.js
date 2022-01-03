@@ -34,7 +34,7 @@ export const OnboardingCompleteTip = ({ anchor, docsVersion, getDeviceById, getD
       title={
         <div className="content">
           <p>Great work! You updated your device with the new Release!</p>
-          <p>
+          <div className="margin-bottom-small margin-top-small">
             Your device is now running the updated version of the software. At
             <div className="flexbox centered" style={{ margin: '5px 0' }}>
               {!url ? (
@@ -50,7 +50,7 @@ export const OnboardingCompleteTip = ({ anchor, docsVersion, getDeviceById, getD
             </div>
             you should now see &quot;Hello world&quot; in place of the webpage you saw previously. If you continue to see the webpage you saw previously you
             might have to refresh the page.
-          </p>
+          </div>
           <p>You&apos;ve now got a good foundation in how to use Mender. Look for more help hints in the UI as you go along.</p>
           What next?
           <div>

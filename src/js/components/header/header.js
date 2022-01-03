@@ -131,10 +131,7 @@ export const Header = ({
   };
 
   const showOffer =
-    isHosted &&
-    moment().isBefore(currentOffer.expires) &&
-    (organization && organization.trial ? currentOffer.trial : currentOffer[organization.plan]) &&
-    !hasOfferCookie;
+    isHosted && moment().isBefore(currentOffer.expires) && (organization.trial ? currentOffer.trial : currentOffer[organization.plan]) && !hasOfferCookie;
   return (
     <Toolbar
       id="fixedHeader"
@@ -152,7 +149,7 @@ export const Header = ({
         </Link>
         {demo && <DemoNotification docsVersion={docsVersion} />}
         {!!announcement && <Announcement announcement={announcement} onHide={setHideAnnouncement} />}
-        {organization?.trial && <TrialNotification expiration={organization.trial_expiration} />}
+        {organization.trial && <TrialNotification expiration={organization.trial_expiration} />}
         <div style={{ flexGrow: '1' }}></div>
         <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
         <DeploymentNotifications inprogress={inProgress} />

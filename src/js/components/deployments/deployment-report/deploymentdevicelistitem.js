@@ -24,7 +24,7 @@ const determinedStateMap = {
   'success': 100
 };
 
-const DeploymentDeviceListItem = ({ device, idAttribute, viewLog, retries: maxRetries }) => {
+const DeploymentDeviceListItem = ({ device, idAttribute, viewLog }) => {
   const { attempts, attributes = {}, created, finished, id = 'id', log, retries, substate, status } = device;
 
   const { artifact_name, device_type: deviceTypes = [], ['rootfs-image.version']: rootfsImageVersion } = attributes;
@@ -57,7 +57,7 @@ const DeploymentDeviceListItem = ({ device, idAttribute, viewLog, retries: maxRe
       <TableCell>{finished ? <Time value={formatTime(finished)} /> : '-'}</TableCell>
       {retries ? (
         <TableCell>
-          {attempts || 1}/{(retries || maxRetries) + 1}
+          {attempts || 1}/{retries + 1}
         </TableCell>
       ) : null}
       <TableCell style={{ paddingRight: '0px', position: 'relative', minWidth: 200 }}>

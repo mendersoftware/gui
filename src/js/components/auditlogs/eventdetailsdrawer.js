@@ -57,7 +57,7 @@ export const EventDetailsDrawer = ({ eventItem = {}, onClose, open }) => {
   const theme = useTheme();
   const { title, content: Component } = mapChangeToContent(eventItem);
   return (
-    <Drawer className={`${eventItem ? 'fadeIn' : 'fadeOut'}`} anchor="right" open={open} onClose={onClose}>
+    <Drawer className={`${open ? 'fadeIn' : 'fadeOut'}`} anchor="right" open={open} onClose={onClose}>
       <div className="flexbox space-between margin-top-small margin-bottom">
         <b className="capitalized">{title}</b>
         <HelpOutlineIcon />

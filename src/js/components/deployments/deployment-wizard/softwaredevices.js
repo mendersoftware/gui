@@ -234,7 +234,7 @@ export const SoftwareDevices = ({
                 styles={hardCodedStyle}
               />
             )}
-            {!releaseItems.length && hasReleases ? (
+            {!releaseItems.length ? (
               <ReleasesWarning lacksReleases />
             ) : (
               !!releaseDeviceTypes.length && (
