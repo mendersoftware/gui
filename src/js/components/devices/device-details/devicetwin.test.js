@@ -22,14 +22,14 @@ describe('DeviceTwin Component', () => {
   });
 
   // ordered like this to trigger empty state + diff count state
-  [TwinSyncStatus, TwinSyncStatus, Title, TwinError].forEach((Component, index) => {
+  [TwinSyncStatus, TwinSyncStatus, TwinSyncStatus, Title, TwinError].forEach((Component, index) => {
     it(`renders sub component ${Component.displayName || Component.name} correctly`, () => {
       const { baseElement } = render(
         <MemoryRouter>
-          <Component diffCount={index} providerTitle="Test" updateTime={defaultState.devices.byId.a1.updated_ts} />
+          <Component diffCount={index} twinError={index > 1 ? 'twinError' : ''} providerTitle="Test" updateTime={defaultState.devices.byId.a1.updated_ts} />
         </MemoryRouter>
       );
-      const view = baseElement.firstChild.firstChild;
+      const view = baseElement.lastChild.firstChild;
       expect(view).toMatchSnapshot();
       expect(view).toEqual(expect.not.stringMatching(undefineds));
     });
