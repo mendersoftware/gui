@@ -120,7 +120,7 @@ export const DeviceTwin = ({ device, getDeviceTwin, integrations, setDeviceTwin 
   const [isSync, setIsSync] = useState(true);
   const editorRef = useRef(null);
 
-  const integration = integrations.find(integration => integration.provider === externalProvider);
+  const integration = integrations.find(integration => integration.provider === externalProvider.provider);
 
   const { [externalProvider.provider]: deviceTwin = {} } = device.twinsByProvider ?? {};
   const { desired: configuredTwin = {}, reported: reportedTwin = {}, twinError, updated_ts: updateTime = device.created_ts } = deviceTwin;
@@ -230,7 +230,7 @@ export const DeviceTwin = ({ device, getDeviceTwin, integrations, setDeviceTwin 
             </>
           ) : (
             <>
-              <h4>{!reported || isEditing ? 'Desired' : 'Reported'} configuration</h4>
+              <h4>{!deviceTwin.reported || isEditing ? 'Desired' : 'Reported'} configuration</h4>
               <Editor
                 {...editorProps}
                 options={{
