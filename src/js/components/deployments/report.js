@@ -190,7 +190,7 @@ export const DeploymentReport = props => {
         </div>
       </div>
       <Divider />
-      <div className="deployment-report">
+      <div>
         <DeploymentPhaseNotification deployment={deployment} onReviewClick={scrollToBottom} />
         <DeploymentOverview creator={creator} deployment={deployment} onScheduleClick={scrollToBottom} />
         {isConfigurationDeployment && (

@@ -76,9 +76,6 @@ body {
   color: @red;
 }
 
-.text-color {
-  color: @text!important;
-}
 .text-muted {
   color: @textmuted;
 }
@@ -98,12 +95,6 @@ a.warning:hover {
 .lightestgrey {
   background-color: @lightestgrey;
 }
-.lightgrey {
-  background-color: @lightgrey;
-}
-.grey {
-  background-color: @grey;
-}
 
 .box-sizing (@type: border-box) {
   box-sizing: @type;
@@ -112,15 +103,6 @@ a.warning:hover {
 ul.unstyled {
   list-style: none;
   padding-left: 0;
-}
-
-.auto {
-  display: block;
-  margin: auto;
-}
-
-.invisible {
-  visibility: hidden;
 }
 
 time {
@@ -134,10 +116,6 @@ body {
   font-size: 13px;
   margin: 0;
   color: @text;
-}
-
-.italic {
-  font-style: italic;
 }
 
 .bold {
@@ -216,12 +194,6 @@ ul.link-list {
   text-overflow: ellipsis;
 }
 
-.break-word {
-  white-space: normal;
-  word-break: break-word;
-  word-wrap: break-word;
-}
-
 .break-all {
   white-space: normal;
   word-break: break-all;
@@ -230,9 +202,6 @@ ul.link-list {
 
 .hidden {
   display: none !important;
-}
-.transparent {
-  opacity: 0;
 }
 
 .relative {
@@ -333,14 +302,6 @@ ul.link-list {
   display: inline;
 }
 
-.block {
-  display: block;
-}
-
-.align-left {
-  text-align: left;
-}
-
 .align-right {
   text-align: right;
 }
@@ -355,10 +316,6 @@ ul.link-list {
 
 .muted {
   opacity: 0.4;
-}
-
-.hoverText:hover > hr {
-  border-bottom: 2px solid @bordercolor !important;
 }
 
 .fadeIn {
@@ -584,34 +541,8 @@ ul.link-list {
   row-gap: 5px;
 }
 
-.overflow-hidden {
-  overflow: hidden;
-}
-
-.allow-overflow {
-  overflow: visible;
-}
-
-.align-top {
-  display: inline-block;
-  vertical-align: top;
-}
-
-.align-middle {
-  vertical-align: middle;
-}
-
-.align-bottom {
-  vertical-align: bottom;
-}
-
 .leftFixed {
   position: relative;
-  .innerBlock {
-    width: 100%;
-    margin-right: -1 * @defaultLeftBarWidth;
-    padding-top: 20px;
-  }
 }
 
 .rightFluid {
@@ -925,12 +856,6 @@ ul.link-list {
   }
 }
 
-.top-right {
-  position: absolute !important;
-  top: 0;
-  right: 0;
-}
-
 .widget {
   width: 50%;
   min-height: 175px;
@@ -1039,23 +964,6 @@ table thead.clickable tr > th:first-child {
 }
 
 /* report view */
-
-.report-list,
-.list-item {
-  vertical-align: top;
-  &.list-item-large {
-    width: 60%;
-  }
-  ul {
-    display: flex;
-    flex-wrap: wrap;
-    & > div {
-      flex: 0 45%;
-      margin-right: 2 * @defaultGutterWidth;
-    }
-  }
-}
-
 .list-horizontal-flex {
   display: flex;
   flex-direction: row;
@@ -1464,14 +1372,9 @@ div:focus {
     &:hover {
       background: @lightestgrey;
     }
-    .device-identity,
-    .device-connect,
     .device-actions {
       position: relative;
       width: 100%;
-    }
-    .device-inventory .report-list {
-      width: 45%;
     }
     .deviceStatus {
       border-color: @verylightgrey;
@@ -1632,20 +1535,6 @@ div.waiting-inventory {
   }
 }
 
-input.fileInput {
-  outline: none;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: solid 1px @bordercolor;
-  padding: 7px 0;
-  font-size: 16px;
-  font-family: Lato, sans-serif;
-  color: rgba(0, 0, 0, 0.8);
-
-  .placeholder({color: rgba(0, 0, 0, 0.3) ;});
-}
-
 /* Dashboard */
 
 .dashboard-placeholder {
@@ -1678,29 +1567,6 @@ input.fileInput {
     color: @verylightgrey;
     font-size: small;
   }
-  .statusText {
-    min-width: 100px;
-  }
-  .activity {
-    border-style: solid;
-    border-width: 1px;
-    border-color: @placeholder;
-    border-radius: 2px;
-    padding: @defaultGutterWidth;
-    max-width: 60vw;
-    margin-bottom: 3.5vh;
-    h4 {
-      color: @verylightgrey;
-      text-transform: capitalize;
-      margin: 0;
-    }
-  }
-}
-
-span.month,
-span.day {
-  display: block;
-  text-align: center;
 }
 
 .heading-lined {
@@ -1732,69 +1598,17 @@ span.day {
     padding: 10px @defaultGutterWidth 10px 0;
     top: -19px;
   }
-
-  h2,
-  h3 {
-    margin: 8px 0;
-  }
-
-  .dashboard-number {
-    margin-left: 10px;
-    color: @grey;
-  }
-
-  svg {
-    vertical-align: middle;
-    margin: 0px 10px 4px 0;
-  }
 }
 
 .report-container {
   display: grid;
   grid-template-columns: 2fr 2fr 1fr;
   grid-column-gap: 2 * @defaultGutterWidth;
-  .deploymentInfo {
-    margin-top: 30px;
-    font-size: 14px;
-    flex-grow: 1;
-    > div {
-      margin-bottom: 10px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-
-  .progressLabel {
-    color: @grey;
-    margin-right: 5px;
-    margin-bottom: 0;
-    width: 100px;
-    display: inline-block;
-  }
-
-  .skipped-text {
-    color: @grey;
-    text-align: center;
-    font-size: 12px;
-    margin-top: 12px;
-  }
 }
 
 .deploy-table-contain {
   margin-bottom: 4 * @defaultGutterWidth;
   margin-top: 2 * @defaultGutterWidth;
-}
-
-.fail {
-  color: @red;
-
-  > div {
-    background-color: #f6f1f1;
-  }
-
-  div {
-    color: @red !important;
-  }
 }
 
 /* Deployments */
@@ -1991,18 +1805,6 @@ span.day {
   }
 }
 
-// deployment progress report
-.deployment-report {
-  .MuiTab-textColorInherit {
-    color: @verylightgrey;
-  }
-  .MuiTab-root {
-    height: 100%;
-    min-height: 0px;
-    min-width: fit-content;
-  }
-}
-
 .statusLarge {
   > img {
     vertical-align: top;
@@ -2040,10 +1842,6 @@ span.day {
 .progressStatus {
   background-color: @lightestgrey;
   padding: @defaultGutterWidth 4 * @defaultGutterWidth @defaultGutterWidth;
-  #progressStatus {
-    text-align: center;
-    vertical-align: top;
-  }
 }
 
 .substate {
@@ -2054,11 +1852,6 @@ span.day {
   white-space: normal;
   word-wrap: break-word;
   margin-left: 5px;
-}
-
-.substateText {
-  color: @verylightgrey;
-  word-break: break-word;
 }
 
 // Past deployments
@@ -2117,16 +1910,10 @@ span.day {
     grid-template-rows: min-content min-content min-content 1fr;
     border-right: 1px solid @lightergrey;
     width: 100%;
-    > div.margin-bottom-small {
-      height: 85px;
-    }
   }
   .release-repo {
     overflow: auto;
   }
-}
-.release-repo > .flexbox:first-of-type {
-  padding-top: @defaultGutterWidth;
 }
 
 .repository-list-item {
