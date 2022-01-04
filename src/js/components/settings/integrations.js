@@ -17,8 +17,16 @@ export const IntegrationConfiguration = ({ integration, onCancel, onDelete, onSa
   const [isEditing, setIsEditing] = useState(!connectionString);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  useEffect(() => {
+    const { credentials = {}, provider } = integration;
+    const connectionString = credentials[EXTERNAL_PROVIDER[provider].credentialsAttribute] || '';
+    setConnectionConfig(connectionString);
+    setIsEditing(false);
+  }, [integration]);
+
   const onCancelClick = () => {
     setIsEditing(false);
+    setConnectionConfig(connectionString);
     onCancel(integration);
   };
   const onDeleteClick = () => setIsDeleting(true);
@@ -84,13 +92,20 @@ export const Integrations = ({ integrations = [], changeIntegration, createInteg
   const [currentValue, setCurrentValue] = useState('');
 
   useEffect(() => {
-    const available = Object.values(EXTERNAL_PROVIDER).reduce((accu, provider) => {
-      if (provider.enabled && !integrations.some(integration => integration.provider == provider.provider)) {
-        accu.push(provider);
-      }
-      return accu;
-    }, []);
-    if (!available.every(integration => availableIntegrations.some(availableIntegration => availableIntegration.provider === integration.provider))) {
+    const { available, needsUpdate } = Object.values(EXTERNAL_PROVIDER).reduce(
+      (accu, provider) => {
+        const hasIntegrationConfigured = integrations.some(integration => integration.provider == provider.provider);
+        if (provider.enabled && !hasIntegrationConfigured) {
+          accu.available.push(provider);
+        }
+        if (hasIntegrationConfigured && availableIntegrations.some(availableIntegration => availableIntegration.provider === provider.provider)) {
+          accu.needsUpdate = true;
+        }
+        return accu;
+      },
+      { available: [], needsUpdate: !(availableIntegrations.length || integrations.length) }
+    );
+    if (needsUpdate) {
       setAvailableIntegrations(available);
     }
     setConfiguredIntegrations(integrations);
@@ -99,7 +114,7 @@ export const Integrations = ({ integrations = [], changeIntegration, createInteg
 
   useEffect(() => {
     getIntegrations();
-  }, [availableIntegrations]);
+  }, []);
 
   const onConfigureIntegration = ({ target: { value: provider = '' } }) => {
     setCurrentValue(provider);
@@ -114,10 +129,10 @@ export const Integrations = ({ integrations = [], changeIntegration, createInteg
   };
 
   const onSaveClick = integration => {
-    if (integration.id) {
-      changeIntegration(integration);
-    } else {
+    if (integration.id === 'new') {
       createIntegration(integration);
+    } else {
+      changeIntegration(integration);
     }
     setCurrentValue('');
     return setIsCreating(isCreating && !integration.connectionString ? false : isCreating);
