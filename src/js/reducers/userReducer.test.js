@@ -82,8 +82,8 @@ describe('user reducer', () => {
   });
   it('should handle REMOVED_ROLE', async () => {
     // eslint-disable-next-line no-unused-vars
-    const { [defaultState.users.rolesById.test.title]: removedRole, ...rolesById } = defaultState.users.rolesById;
-    expect(reducer(undefined, { type: UserConstants.REMOVED_ROLE, value: defaultState.users.rolesById.test.title }).rolesById.test).toBeFalsy();
+    const { [defaultState.users.rolesById.test.name]: removedRole, ...rolesById } = defaultState.users.rolesById;
+    expect(reducer(undefined, { type: UserConstants.REMOVED_ROLE, value: defaultState.users.rolesById.test.name }).rolesById.test).toBeFalsy();
     expect(
       reducer({ ...initialState, rolesById: { ...defaultState.users.rolesById } }, { type: UserConstants.REMOVED_ROLE, value: rolesById }).rolesById.test
     ).toBeFalsy();
@@ -109,11 +109,11 @@ describe('user reducer', () => {
   });
   it('should handle UPDATED_ROLE', async () => {
     expect(
-      reducer(undefined, { type: UserConstants.UPDATED_ROLE, roleId: 'RBAC_ROLE_CI', role: { description: newDescription } }).rolesById.RBAC_ROLE_CI.title
+      reducer(undefined, { type: UserConstants.UPDATED_ROLE, roleId: 'RBAC_ROLE_CI', role: { description: newDescription } }).rolesById.RBAC_ROLE_CI.name
     ).toEqual('Releases Manager');
     expect(
       reducer({ ...initialState }, { type: UserConstants.UPDATED_ROLE, roleId: 'RBAC_ROLE_CI', role: { description: newDescription } }).rolesById.RBAC_ROLE_CI
-        .title
+        .name
     ).toEqual('Releases Manager');
   });
   it('should handle SET_CUSTOM_COLUMNS', async () => {

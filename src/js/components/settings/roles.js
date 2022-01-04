@@ -64,7 +64,7 @@ export const RoleManagement = ({ createRole, editRole, getDynamicGroups, getGrou
         <TableBody>
           {roles.map((role, index) => (
             <TableRow className="clickable" key={role.id || index} hover onClick={() => onEditRole(role)}>
-              <TableCell>{role.title}</TableCell>
+              <TableCell>{role.name}</TableCell>
               <TableCell>{role.description || '-'}</TableCell>
               <TableCell>
                 <div className="bold flexbox center-aligned link-color margin-right-small uppercased" style={{ whiteSpace: 'nowrap' }}>

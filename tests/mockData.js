@@ -397,7 +397,7 @@ export const defaultState = {
       ...rolesById,
       test: {
         ...emptyRole,
-        title: 'test',
+        name: 'test',
         description: 'test description',
         editable: true,
         uiPermissions: {
@@ -580,7 +580,6 @@ export const receivedRoles = rbacRoles.reduce(
       accu[name] = {
         ...defaultState.users.rolesById[name],
         ...roleRemainder,
-        name,
         editable: false,
         isCustom: false,
         description: defaultState.users.rolesById[name].description ? defaultState.users.rolesById[name].description : description
@@ -591,7 +590,7 @@ export const receivedRoles = rbacRoles.reduce(
         ...emptyRole,
         ...role,
         ...result,
-        title: name
+        name
       };
     }
     return accu;

@@ -356,7 +356,7 @@ export const normalizeRbacRoles = (roles, rolesById, permissionSets) =>
         description: roleState.description ? roleState.description : role.description,
         editable: !defaultRolesById[role.name] && !isCustom && (typeof roleState.editable !== 'undefined' ? roleState.editable : true),
         isCustom,
-        title: roleState.title ? roleState.title : role.name,
+        name: roleState.name ? roleState.name : role.name,
         uiPermissions: normalizedPermissions
       };
       return accu;
@@ -441,7 +441,7 @@ const transformGroupRoleDataToScopedPermissionsSets = areaPermissions => {
 const transformRoleDataToRole = (roleData, roleState = {}) => {
   const role = { ...roleState, ...roleData };
   // eslint-disable-next-line no-unused-vars
-  const { description = '', groups, source, title, ...remainder } = role;
+  const { description = '', groups, source, name, ...remainder } = role;
   const permissionSetsWithScope = Object.entries(remainder).reduce((accu, [area, areaPermissions]) => {
     if (!Array.isArray(areaPermissions)) {
       return accu;
@@ -462,7 +462,7 @@ const transformRoleDataToRole = (roleData, roleState = {}) => {
     permissionSetsWithScope,
     role: {
       ...emptyRole,
-      title,
+      name,
       description: description ? description : roleState.description,
       uiPermissions: { ...emptyUiPermissions, ...remainder, groups: groupsUiPermissions }
     }
@@ -472,18 +472,18 @@ const transformRoleDataToRole = (roleData, roleState = {}) => {
 export const createRole = roleData => dispatch => {
   const { permissionSetsWithScope, role } = transformRoleDataToRole(roleData);
   return GeneralApi.post(`${useradmApiUrlv2}/roles`, {
-    name: roleData.title,
+    name: role.name,
     description: role.description,
     permission_sets_with_scope: permissionSetsWithScope
   })
-    .then(() => Promise.all([dispatch({ type: UserConstants.CREATED_ROLE, role, roleId: roleData.title }), dispatch(getRoles())]))
+    .then(() => Promise.all([dispatch({ type: UserConstants.CREATED_ROLE, role, roleId: role.name }), dispatch(getRoles())]))
     .catch(err => commonErrorHandler(err, `There was an error creating the role:`, dispatch));
 };
 
 export const editRole = roleData => (dispatch, getState) => {
-  const { permissionSetsWithScope, role } = transformRoleDataToRole(roleData, getState().users.rolesById[roleData.title]);
-  return GeneralApi.put(`${useradmApiUrlv2}/roles/${role.title}`, { description: role.description, permission_sets_with_scope: permissionSetsWithScope })
-    .then(() => Promise.all([dispatch({ type: UserConstants.UPDATED_ROLE, role, roleId: role.title }), dispatch(getRoles())]))
+  const { permissionSetsWithScope, role } = transformRoleDataToRole(roleData, getState().users.rolesById[roleData.name]);
+  return GeneralApi.put(`${useradmApiUrlv2}/roles/${role.name}`, { description: role.description, permission_sets_with_scope: permissionSetsWithScope })
+    .then(() => Promise.all([dispatch({ type: UserConstants.UPDATED_ROLE, role, roleId: role.name }), dispatch(getRoles())]))
     .catch(err => commonErrorHandler(err, `There was an error editing the role:`, dispatch));
 };
 
