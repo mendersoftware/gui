@@ -11,8 +11,8 @@ import InfoHint from '../common/info-hint';
 const maxWidth = 750;
 
 export const IntegrationConfiguration = ({ integration, onCancel, onDelete, onSave }) => {
-  const { provider } = integration;
-  const connectionString = integration[EXTERNAL_PROVIDER[provider].credentialsAttribute] || '';
+  const { credentials = {}, provider } = integration;
+  const connectionString = credentials[EXTERNAL_PROVIDER[provider].credentialsAttribute] || '';
   const [connectionConfig, setConnectionConfig] = useState(connectionString);
   const [isEditing, setIsEditing] = useState(!connectionString);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -24,7 +24,14 @@ export const IntegrationConfiguration = ({ integration, onCancel, onDelete, onSa
   const onDeleteClick = () => setIsDeleting(true);
   const onDeleteConfirm = () => onDelete(integration);
   const onEditClick = () => setIsEditing(true);
-  const onSaveClick = () => onSave({ ...integration, [EXTERNAL_PROVIDER[provider].credentialsAttribute]: connectionConfig });
+  const onSaveClick = () =>
+    onSave({
+      ...integration,
+      credentials: {
+        type: EXTERNAL_PROVIDER[provider].credentialsType,
+        [EXTERNAL_PROVIDER[provider].credentialsAttribute]: connectionConfig
+      }
+    });
 
   const updateConnectionConfig = ({ target: { value = '' } }) => setConnectionConfig(value);
 

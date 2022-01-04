@@ -155,11 +155,9 @@ export const DeviceTwin = ({ device, getDeviceTwin, integrations, setDeviceTwin 
   };
 
   const onApplyClick = () => {
-    let update = {
-      desired: {}
-    };
+    let update = {};
     try {
-      update.desired = JSON.parse(updated);
+      update = JSON.parse(updated);
     } catch (error) {
       setErrorMessage('There was an error parsing the device twin changes, please ensure that it is valid JSON.');
       return;
@@ -167,9 +165,7 @@ export const DeviceTwin = ({ device, getDeviceTwin, integrations, setDeviceTwin 
     editorRef.current.modifiedEditor.getAction('editor.action.formatDocument').run();
     setUpdated(JSON.stringify(update, undefined, 4));
     setErrorMessage('');
-    setDeviceTwin(device.id, integration, update).then(() => {
-      setIsEditing(false);
-    });
+    setDeviceTwin(device.id, integration, update).then(() => setIsEditing(false));
   };
 
   const onCancelClick = () => {

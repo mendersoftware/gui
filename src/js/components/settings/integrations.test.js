@@ -2,10 +2,19 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { IntegrationConfiguration, Integrations } from './integrations';
 import { undefineds } from '../../../../tests/mockData';
+import { EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
 
 const integrations = [
-  { id: 'iot-hub', provider: 'iot-hub', connection_string: 'something' },
-  { id: 'amazon', provider: 'amazon', connection_string: 'something else' }
+  {
+    id: 'iot-hub',
+    provider: 'iot-hub',
+    credentials: { type: EXTERNAL_PROVIDER['iot-hub'].credentialsType, [EXTERNAL_PROVIDER['iot-hub'].credentialsAttribute]: 'something' }
+  },
+  {
+    id: 'amazon',
+    provider: 'amazon',
+    credentials: { type: EXTERNAL_PROVIDER.amazon.credentialsType, [EXTERNAL_PROVIDER.amazon.credentialsAttribute]: 'something else' }
+  }
 ];
 
 describe('IntegrationConfiguration Component', () => {

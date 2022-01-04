@@ -2,7 +2,6 @@ import Cookies from 'universal-cookie';
 
 import Api, { apiUrl, headerNames } from '../api/general-api';
 import { SORTING_OPTIONS } from '../constants/appConstants';
-import { EXTERNAL_PROVIDER } from '../constants/deviceConstants';
 import OrganizationConstants from '../constants/organizationConstants';
 import { getTenantCapabilities } from '../selectors';
 import { commonErrorFallback, commonErrorHandler, setSnackbar } from './appActions';
@@ -144,24 +143,12 @@ export const requestPlanChange = (tenantId, content) => dispatch =>
     .then(() => Promise.resolve(dispatch(setSnackbar('Your request was sent successfully', 5000, ''))));
 
 export const createIntegration = integration => dispatch =>
-  Api.post(`${iotManagerBaseURL}/integrations`, {
-    provider: integration.provider,
-    credentials: {
-      type: EXTERNAL_PROVIDER[integration.provider].credentialsType,
-      [EXTERNAL_PROVIDER[integration.provider].credentialsAttribute]: integration[EXTERNAL_PROVIDER[integration.provider].credentialsAttribute]
-    }
-  })
+  Api.post(`${iotManagerBaseURL}/integrations`, { provider: integration.provider, credentials: integration.credentials })
     .catch(err => commonErrorHandler(err, 'There was an error creating the integration', dispatch, commonErrorFallback))
     .then(() => Promise.all([dispatch(setSnackbar('The integration was set up successfully')), dispatch(getIntegrations())]));
 
 export const changeIntegration = integration => dispatch =>
-  Api.put(`${iotManagerBaseURL}/integrations/${integration.id}`, {
-    provider: integration.provider,
-    credentials: {
-      type: EXTERNAL_PROVIDER[integration.provider].credentialsType,
-      [EXTERNAL_PROVIDER[integration.provider].credentialsAttribute]: integration[EXTERNAL_PROVIDER[integration.provider].credentialsAttribute]
-    }
-  })
+  Api.put(`${iotManagerBaseURL}/integrations/${integration.id}/credentials`, integration.credentials)
     .catch(err => commonErrorHandler(err, 'There was an error updating the integration', dispatch, commonErrorFallback))
     .then(() => Promise.all([dispatch(setSnackbar('The integration was updated successfully')), dispatch(getIntegrations())]));
 

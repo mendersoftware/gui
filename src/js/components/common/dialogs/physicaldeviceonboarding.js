@@ -229,8 +229,9 @@ export const PhysicalDeviceOnboarding = ({
 const actionCreators = { advanceOnboarding, createIntegration, setOnboardingApproach, setOnboardingDeviceType };
 
 const mapStateToProps = state => {
-  const { [EXTERNAL_PROVIDER['iot-hub'].credentialsAttribute]: azureConnectionString = '' } =
+  const { credentials = {} } =
     state.organization.externalDeviceIntegrations.find(integration => integration.provider === EXTERNAL_PROVIDER.azure.provider) ?? {};
+  const { [EXTERNAL_PROVIDER['iot-hub'].credentialsAttribute]: azureConnectionString = '' } = credentials;
   return {
     azureConnectionString,
     docsVersion: getDocsVersion(state),
