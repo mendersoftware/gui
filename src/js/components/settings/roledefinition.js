@@ -128,7 +128,7 @@ const uiPermissionCompare = (existingPermissions, changedPermissions) => {
 export const RoleDefinition = ({ adding, editing, stateGroups, onCancel, onSubmit, removeRole, selectedRole = { ...emptyRole } }) => {
   const [description, setDescription] = useState(selectedRole.description);
   const [groups, setGroups] = useState([]);
-  const [name, setName] = useState(selectedRole.title);
+  const [name, setName] = useState(selectedRole.name);
   const [nameError, setNameError] = useState(false);
 
   const [releasesPermissions, setReleasesPermissions] = useState([]);
@@ -138,10 +138,10 @@ export const RoleDefinition = ({ adding, editing, stateGroups, onCancel, onSubmi
   const theme = useTheme();
 
   useEffect(() => {
-    const { title = '', description: roleDescription = '' } = selectedRole;
+    const { name: roleName = '', description: roleDescription = '' } = selectedRole;
     const { auditlog, groups: roleGroups = {}, releases, userManagement } = { ...emptyUiPermissions, ...selectedRole.uiPermissions };
-    const disableEdit = editing && Boolean(rolesById[title] || !selectedRole.editable);
-    setName(title);
+    const disableEdit = editing && Boolean(rolesById[roleName] || !selectedRole.editable);
+    setName(roleName);
     setDescription(roleDescription);
     setUserManagementPermissions(userManagement.map(permissionMapper));
     setReleasesPermissions(releases.map(permissionMapper));
@@ -249,7 +249,7 @@ export const RoleDefinition = ({ adding, editing, stateGroups, onCancel, onSubmi
         !name ||
         nameError ||
         !(userManagementPermissions.length || filteredGroups.length) ||
-        (Object.entries({ description, title: name }).every(([key, value]) => selectedRole[key] === value) &&
+        (Object.entries({ description, name }).every(([key, value]) => selectedRole[key] === value) &&
           uiPermissionCompare(selectedRole.uiPermissions, changedPermissions))
     );
   }, [auditlogPermissions, description, disableEdit, groupSelections, name, nameError, releasesPermissions, userManagementPermissions]);

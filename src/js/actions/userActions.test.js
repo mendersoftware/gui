@@ -38,7 +38,7 @@ import UserConstants, { emptyRole, uiPermissionsById } from '../constants/userCo
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-const defaultRole = { ...emptyRole, title: 'test', description: 'test description' };
+const defaultRole = { ...emptyRole, name: 'test', description: 'test description' };
 const settings = { test: true };
 
 /* eslint-disable sonarjs/no-identical-functions */
@@ -303,7 +303,7 @@ describe('user actions', () => {
   it('should allow role creation', async () => {
     jest.clearAllMocks();
     const expectedActions = [
-      { type: UserConstants.CREATED_ROLE, role: defaultRole, roleId: defaultRole.title },
+      { type: UserConstants.CREATED_ROLE, role: defaultRole, roleId: defaultRole.name },
       { type: UserConstants.RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
       { type: UserConstants.RECEIVED_ROLES, value: receivedRoles }
     ];
@@ -318,7 +318,7 @@ describe('user actions', () => {
     const expectedActions = [
       {
         type: UserConstants.UPDATED_ROLE,
-        roleId: defaultRole.title,
+        roleId: defaultRole.name,
         role: {
           ...defaultRole,
           uiPermissions: {
@@ -331,7 +331,7 @@ describe('user actions', () => {
       { type: UserConstants.RECEIVED_ROLES, value: receivedRoles }
     ];
     const store = mockStore({ ...defaultState });
-    await store.dispatch(editRole({ title: defaultRole.title, groups: [{ group: 'testGroup', uiPermissions: [uiPermissionsById.manage.value] }] }));
+    await store.dispatch(editRole({ name: defaultRole.name, groups: [{ group: 'testGroup', uiPermissions: [uiPermissionsById.manage.value] }] }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

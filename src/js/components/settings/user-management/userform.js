@@ -78,12 +78,12 @@ export const UserRolesSelect = ({ currentUser, onSelect, roles, user }) => {
         value={selectedRoleIds}
         required
         onChange={onInputChange}
-        renderValue={selected => selected.map(role => roles[role].title).join(', ')}
+        renderValue={selected => selected.map(role => roles[role].name).join(', ')}
       >
         {editableRoles.map(role => (
           <MenuItem id={role.id} key={role.id} value={role.id}>
             <Checkbox id={`${role.id}-checkbox`} checked={role.enabled} />
-            <ListItemText id={`${role.id}-text`} primary={role.title} />
+            <ListItemText id={`${role.id}-text`} primary={role.name} />
           </MenuItem>
         ))}
       </Select>

@@ -237,7 +237,7 @@ const emptyUiPermissions = Object.freeze({
 });
 
 const emptyRole = Object.freeze({
-  title: undefined,
+  name: undefined,
   description: '',
   permissions: [],
   uiPermissions: Object.freeze({ ...emptyUiPermissions })
@@ -247,7 +247,7 @@ const permissionMapper = permission => permission.value;
 
 const rolesById = Object.freeze({
   [staticRolesByName.admin]: {
-    title: 'Admin',
+    name: 'Admin',
     value: staticRolesByName.admin,
     description: 'Full access',
     permissions: [], // permissions refers to the values returned from the backend
@@ -261,7 +261,7 @@ const rolesById = Object.freeze({
     }
   },
   [staticRolesByName.readOnly]: {
-    title: 'Read Access',
+    name: 'Read Access',
     value: staticRolesByName.readOnly,
     description: '',
     permissions: [],
@@ -273,7 +273,7 @@ const rolesById = Object.freeze({
     }
   },
   [staticRolesByName.ci]: {
-    title: 'Releases Manager',
+    name: 'Releases Manager',
     value: staticRolesByName.ci,
     description: '',
     permissions: [],
@@ -283,7 +283,7 @@ const rolesById = Object.freeze({
     }
   },
   [staticRolesByName.deploymentsManager]: {
-    title: 'Deployments Manager',
+    name: 'Deployments Manager',
     value: staticRolesByName.deploymentsManager,
     description: '',
     permissions: [],
@@ -294,7 +294,7 @@ const rolesById = Object.freeze({
     }
   },
   [staticRolesByName.terminalAccess]: {
-    title: 'Troubleshooting',
+    name: 'Troubleshooting',
     value: staticRolesByName.terminalAccess,
     description: 'Access to the troubleshooting features: Remote Terminal, File Transfer, Port Forwarding',
     permissions: [],

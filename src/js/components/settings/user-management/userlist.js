@@ -41,7 +41,7 @@ const UserList = ({ editUser, isEnterprise, roles, users }) => (
           <TableCell>
             <RelativeTime updateTime={user.updated_ts} />
           </TableCell>
-          {isEnterprise && <TableCell>{(user.roles || []).map(roleId => roles[roleId]?.title).join(', ')}</TableCell>}
+          {isEnterprise && <TableCell>{(user.roles || []).map(roleId => roles[roleId]?.name).join(', ')}</TableCell>}
           <TableCell>
             <div className="bold flexbox center-aligned link-color margin-right-small uppercased" style={{ whiteSpace: 'nowrap' }}>
               view details <ArrowRightAltIcon />
