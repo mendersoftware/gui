@@ -441,15 +441,24 @@ const transformGroupRoleDataToScopedPermissionsSets = areaPermissions => {
 const transformRoleDataToRole = (roleData, roleState = {}) => {
   const role = { ...roleState, ...roleData };
   // eslint-disable-next-line no-unused-vars
-  const { description = '', groups, source, name, ...remainder } = role;
-  const permissionSetsWithScope = Object.entries(remainder).reduce((accu, [area, areaPermissions]) => {
-    if (!Array.isArray(areaPermissions)) {
+  const { description = '', groups, name } = role;
+  // eslint-disable-next-line no-unused-vars
+  const { groups: emptyGroups, ...remainder } = emptyUiPermissions;
+
+  const sourceSets = roleData.source?.permission_sets_with_scope?.filter(permissionSet => permissionSet.scope?.type !== uiPermissionsByArea.groups.scope);
+  const { permissionSetsWithScope, roleUiPermissions } = Object.keys(remainder).reduce(
+    (accu, area) => {
+      const areaPermissions = role[area];
+      if (!Array.isArray(areaPermissions)) {
+        return accu;
+      }
+      accu.roleUiPermissions[area] = areaPermissions;
+      const mappedPermissions = areaPermissions.map(uiPermission => ({ name: uiPermissionsById[uiPermission].permissionSets[area] }));
+      accu.permissionSetsWithScope.push(...mappedPermissions);
       return accu;
-    }
-    const mappedPermissions = areaPermissions.map(uiPermission => ({ name: uiPermissionsById[uiPermission].permissionSets[area] }));
-    accu.push(...mappedPermissions);
-    return accu;
-  }, roleData.source?.permission_sets_with_scope || [{ name: defaultPermissionSets.Basic.value }]);
+    },
+    { permissionSetsWithScope: sourceSets || [{ name: defaultPermissionSets.Basic.value }], roleUiPermissions: {} }
+  );
   const groupPermissions = transformGroupRoleDataToScopedPermissionsSets(groups);
   permissionSetsWithScope.push(...groupPermissions);
   const groupsUiPermissions = groups.reduce((accu, { group, uiPermissions }) => {
@@ -464,7 +473,7 @@ const transformRoleDataToRole = (roleData, roleState = {}) => {
       ...emptyRole,
       name,
       description: description ? description : roleState.description,
-      uiPermissions: { ...emptyUiPermissions, ...remainder, groups: groupsUiPermissions }
+      uiPermissions: { ...emptyUiPermissions, ...roleUiPermissions, groups: groupsUiPermissions }
     }
   };
 };
@@ -482,7 +491,11 @@ export const createRole = roleData => dispatch => {
 
 export const editRole = roleData => (dispatch, getState) => {
   const { permissionSetsWithScope, role } = transformRoleDataToRole(roleData, getState().users.rolesById[roleData.name]);
-  return GeneralApi.put(`${useradmApiUrlv2}/roles/${role.name}`, { description: role.description, permission_sets_with_scope: permissionSetsWithScope })
+  return GeneralApi.put(`${useradmApiUrlv2}/roles/${role.name}`, {
+    description: role.description,
+    name: role.name,
+    permission_sets_with_scope: permissionSetsWithScope
+  })
     .then(() => Promise.all([dispatch({ type: UserConstants.UPDATED_ROLE, role, roleId: role.name }), dispatch(getRoles())]))
     .catch(err => commonErrorHandler(err, `There was an error editing the role:`, dispatch));
 };
