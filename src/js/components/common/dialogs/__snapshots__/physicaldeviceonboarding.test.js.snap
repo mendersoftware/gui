@@ -9,115 +9,90 @@ exports[`PhysicalDeviceOnboarding Component renders correctly 1`] = `
     Setting this attribute on the device ensures that the device will only receive updates for compatible software releases.
   </p>
   <div
-    aria-expanded="false"
-    class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon"
-    role="combobox"
-    style="max-width: 300px;"
+    style="display: grid; grid-template-columns: max-content 50px 150px; justify-items: center;"
   >
     <div
-      class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
-      style="margin-top: 0px;"
+      aria-expanded="false"
+      class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon"
+      role="combobox"
+      style="max-width: 300px;"
     >
-      <label
-        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-        data-shrink="false"
-        for="device-type-selection"
-        id="device-type-selection-label"
-      >
-        Device type
-      </label>
       <div
-        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+        class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+        style="margin-top: 0px;"
       >
-        <input
-          aria-autocomplete="list"
-          aria-invalid="false"
-          autocapitalize="none"
-          autocomplete="off"
-          class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
-          id="device-type-selection"
-          placeholder="Choose a device type"
-          spellcheck="false"
-          type="text"
-          value=""
-        />
-        <div
-          class="MuiAutocomplete-endAdornment"
+        <label
+          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+          data-shrink="false"
+          for="device-type-selection"
+          id="device-type-selection-label"
         >
-          <button
-            aria-label="Clear"
-            class="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty"
-            tabindex="-1"
-            title="Clear"
-            type="button"
+          Device type
+        </label>
+        <div
+          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+        >
+          <input
+            aria-autocomplete="list"
+            aria-invalid="false"
+            autocapitalize="none"
+            autocomplete="off"
+            class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
+            id="device-type-selection"
+            placeholder="Choose a device type"
+            spellcheck="false"
+            type="text"
+            value=""
+          />
+          <div
+            class="MuiAutocomplete-endAdornment"
           >
-            <span
-              class="MuiIconButton-label"
+            <button
+              aria-label="Clear"
+              class="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty"
+              tabindex="-1"
+              title="Clear"
+              type="button"
             >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                focusable="false"
-                viewBox="0 0 24 24"
+              <span
+                class="MuiIconButton-label"
               >
-                <path
-                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-                />
-              </svg>
-            </span>
-            <span
-              class="MuiTouchRipple-root"
-            />
-          </button>
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                  />
+                </svg>
+              </span>
+              <span
+                class="MuiTouchRipple-root"
+              />
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <h4
-    class="margin-top-large"
-  >
-    Integrate with other services
-  </h4>
-  <label
-    class="MuiFormControlLabel-root"
-    style="margin-top: 0px;"
-  >
-    <span
-      aria-disabled="false"
-      class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-11 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
+    <div />
+    <div
+      class="clickable flexbox muted"
+      style="align-items: end; margin-bottom: 3px;"
     >
-      <span
-        class="MuiIconButton-label"
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root"
+        focusable="false"
+        viewBox="0 0 24 24"
       >
-        <input
-          class="PrivateSwitchBase-input-14"
-          data-indeterminate="false"
-          id="azure-link"
-          name="azure-link"
-          type="checkbox"
-          value=""
+        <path
+          d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
         />
-        <svg
-          aria-hidden="true"
-          class="MuiSvgIcon-root"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
-          />
-        </svg>
-      </span>
-      <span
-        class="MuiTouchRipple-root"
-      />
-    </span>
-    <span
-      class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
-    >
-      Link a Microsoft Azure IoT Hub account
-    </span>
-  </label>
+      </svg>
+    </div>
+  </div>
 </div>
 `;
 
@@ -148,76 +123,96 @@ exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders DeviceT
     Setting this attribute on the device ensures that the device will only receive updates for compatible software releases.
   </p>
   <div
-    aria-expanded="false"
-    class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon"
-    role="combobox"
-    style="max-width: 300px;"
+    style="display: grid; grid-template-columns: max-content 50px 150px; justify-items: center;"
   >
     <div
-      class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
-      style="margin-top: 0px;"
+      aria-expanded="false"
+      class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon"
+      role="combobox"
+      style="max-width: 300px;"
     >
-      <label
-        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
-        data-shrink="true"
-        for="device-type-selection"
-        id="device-type-selection-label"
-      >
-        Device type
-      </label>
       <div
-        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+        class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+        style="margin-top: 0px;"
       >
-        <input
-          aria-autocomplete="list"
-          aria-invalid="false"
-          autocapitalize="none"
-          autocomplete="off"
-          class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
-          id="device-type-selection"
-          placeholder="Choose a device type"
-          spellcheck="false"
-          type="text"
-          value="raspberrypi7"
-        />
-        <div
-          class="MuiAutocomplete-endAdornment"
+        <label
+          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
+          data-shrink="true"
+          for="device-type-selection"
+          id="device-type-selection-label"
         >
-          <button
-            aria-label="Clear"
-            class="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty"
-            tabindex="-1"
-            title="Clear"
-            type="button"
+          Device type
+        </label>
+        <div
+          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+        >
+          <input
+            aria-autocomplete="list"
+            aria-invalid="false"
+            autocapitalize="none"
+            autocomplete="off"
+            class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
+            id="device-type-selection"
+            placeholder="Choose a device type"
+            spellcheck="false"
+            type="text"
+            value="raspberrypi7"
+          />
+          <div
+            class="MuiAutocomplete-endAdornment"
           >
-            <span
-              class="MuiIconButton-label"
+            <button
+              aria-label="Clear"
+              class="MuiButtonBase-root MuiIconButton-root MuiAutocomplete-clearIndicator MuiAutocomplete-clearIndicatorDirty"
+              tabindex="-1"
+              title="Clear"
+              type="button"
             >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-                focusable="false"
-                viewBox="0 0 24 24"
+              <span
+                class="MuiIconButton-label"
               >
-                <path
-                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-                />
-              </svg>
-            </span>
-            <span
-              class="MuiTouchRipple-root"
-            />
-          </button>
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                  />
+                </svg>
+              </span>
+              <span
+                class="MuiTouchRipple-root"
+              />
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div
-    class=""
-    style="margin-top: -24px;"
-  >
     <div
-      class="tooltip help"
+      class="flexbox"
+      style="align-items: end;"
+    >
+      <div
+        class="tooltip help"
+        style="margin-left: 0px; position: initial;"
+      >
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+          />
+        </svg>
+      </div>
+    </div>
+    <div
+      class="clickable flexbox muted"
+      style="align-items: end; margin-bottom: 3px;"
     >
       <svg
         aria-hidden="true"
@@ -226,7 +221,7 @@ exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders DeviceT
         viewBox="0 0 24 24"
       >
         <path
-          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+          d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
         />
       </svg>
     </div>
@@ -244,128 +239,71 @@ exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders DeviceT
      
     documentation, which also contains instructions for initial device setup.Once you're done flashing you can go ahead and proceed to the next step.
   </p>
-  <h4
-    class="margin-top-large"
-  >
-    Integrate with other services
-  </h4>
-  <label
-    class="MuiFormControlLabel-root"
-    style="margin-top: 0px;"
-  >
-    <span
-      aria-disabled="false"
-      class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-3 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
-    >
-      <span
-        class="MuiIconButton-label"
-      >
-        <input
-          class="PrivateSwitchBase-input-6"
-          data-indeterminate="false"
-          id="azure-link"
-          name="azure-link"
-          type="checkbox"
-          value=""
-        />
-        <svg
-          aria-hidden="true"
-          class="MuiSvgIcon-root"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
-          />
-        </svg>
-      </span>
-      <span
-        class="MuiTouchRipple-root"
-      />
-    </span>
-    <span
-      class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
-    >
-      Link a Microsoft Azure IoT Hub account
-    </span>
-  </label>
 </div>
 `;
 
-exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders ExternalProviderConnector correctly 1`] = `
+exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders DeviceTypeTip correctly 1`] = `
 <div>
-  <h4
-    class="margin-top-large"
-  >
-    Integrate with other services
-  </h4>
-  <label
-    class="MuiFormControlLabel-root"
-    style="margin-top: 0px;"
-  >
-    <span
-      aria-disabled="false"
-      class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-7 MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-checked-8 Mui-checked MuiIconButton-colorPrimary"
-    >
-      <span
-        class="MuiIconButton-label"
-      >
-        <input
-          checked=""
-          class="PrivateSwitchBase-input-10"
-          data-indeterminate="false"
-          id="azure-link"
-          name="azure-link"
-          type="checkbox"
-          value=""
-        />
-        <svg
-          aria-hidden="true"
-          class="MuiSvgIcon-root"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-          />
-        </svg>
-      </span>
-      <span
-        class="MuiTouchRipple-root"
-      />
-    </span>
-    <span
-      class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
-    >
-      Link a Microsoft Azure IoT Hub account
-    </span>
-  </label>
   <div
-    class="MuiFormControl-root MuiTextField-root"
-    style="margin-top: 0px; max-width: 300px;"
+    class="flexbox"
+    style="align-items: end;"
   >
-    <label
-      class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
-      data-shrink="true"
-    >
-      Azure IoT Hub connection string
-    </label>
     <div
-      class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+      class="tooltip help"
+      style="margin-left: 0px; position: initial;"
     >
-      <input
-        aria-invalid="false"
-        class="MuiInputBase-input MuiInput-input"
-        type="text"
-        value="test"
-      />
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+        />
+      </svg>
     </div>
   </div>
-  <span
-    class="info"
+</div>
+`;
+
+exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders ExternalProviderTip correctly 1`] = `
+<div>
+  <div
+    class="clickable flexbox muted"
+    style="align-items: end; margin-bottom: 3px;"
   >
-    Devices accepted in Mender will be automatically created in Azure IoT Hub, and will send application and telemetry data there.
-  </span>
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
+      focusable="false"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+      />
+    </svg>
+  </div>
+</div>
+`;
+
+exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders ExternalProviderTip correctly 2`] = `
+<div>
+  <div
+    class="clickable flexbox muted"
+    style="align-items: end; margin-bottom: 3px;"
+  >
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root"
+      focusable="false"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+      />
+    </svg>
+  </div>
 </div>
 `;
 

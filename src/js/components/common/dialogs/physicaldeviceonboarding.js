@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-import { Checkbox, FormControlLabel, TextField } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
+import { Help as HelpIcon, InfoOutlined as InfoIcon } from '@material-ui/icons';
 import { Autocomplete, createFilterOptions } from '@material-ui/lab';
-import HelpIcon from '@material-ui/icons/Help';
 
 import CopyCode from '../copy-code';
 import { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType } from '../../../actions/onboardingActions';
-import { createIntegration } from '../../../actions/organizationActions';
 import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDebConfigurationCode, versionCompare } from '../../../helpers';
 import { getDocsVersion, getIsEnterprise, getOnboardingState } from '../../../selectors';
-import menderTheme from '../../../themes/mender-theme';
 import { MenderTooltipClickable } from '../mendertooltip';
 
 const filter = createFilterOptions();
@@ -32,41 +31,66 @@ export const ConvertedImageNote = ({ docsVersion }) => (
   </p>
 );
 
-export const ExternalProviderConnector = ({ connectionString, setConnectionString }) => {
-  const [checked, setChecked] = useState(!!connectionString);
-  return (
-    <>
-      <h4 className="margin-top-large">Integrate with other services</h4>
-      <FormControlLabel
-        control={<Checkbox id="azure-link" name="azure-link" onChange={(e, checked) => setChecked(checked)} color="primary" checked={checked} />}
-        label="Link a Microsoft Azure IoT Hub account"
-        style={{ marginTop: 0 }}
-      />
-      {checked && (
-        <>
-          <TextField
-            label="Azure IoT Hub connection string"
-            onChange={({ target: { value } }) => setConnectionString(value)}
-            style={{ marginTop: 0, maxWidth: 300 }}
-            value={connectionString}
-          />
-          <span className="info">
-            Devices accepted in Mender will be automatically created in Azure IoT Hub, and will send application and telemetry data there.
-          </span>
-        </>
-      )}
-    </>
-  );
-};
+const IntegrationsLink = () => (
+  <Link to="/settings/integrations" target="_blank">
+    Integration settings
+  </Link>
+);
+
+export const ExternalProviderTip = ({ hasExternalIntegration, integrationProvider }) => (
+  <MenderTooltipClickable
+    className="clickable flexbox muted"
+    placement="bottom"
+    style={{ alignItems: 'end', marginBottom: 3 }}
+    title={
+      <div style={{ maxWidth: 350 }}>
+        {hasExternalIntegration ? (
+          <p>
+            Devices added here will be automatically integrated with the <i>{EXTERNAL_PROVIDER[integrationProvider].title}</i> you set in the{' '}
+            <IntegrationsLink />.
+          </p>
+        ) : (
+          <p>
+            To connect your devices with <i>{EXTERNAL_PROVIDER[integrationProvider].title}</i>, go to <IntegrationsLink /> and set up the integration.
+          </p>
+        )}
+      </div>
+    }
+  >
+    <InfoIcon />
+  </MenderTooltipClickable>
+);
+
+export const DeviceTypeTip = () => (
+  <MenderTooltipClickable
+    className="flexbox"
+    placement="bottom"
+    style={{ alignItems: 'end' }}
+    title={
+      <>
+        <p>
+          If you don&apos;t see your exact device on the list, choose <i>Generic ARMv6 or newer</i> to continue the tutorial for now.
+        </p>
+        <p>
+          (Note: if your device is <i>not</i> based on ARMv6 or newer, the tutorial won&apos;t work - instead, go back and use the virtual device)
+        </p>
+      </>
+    }
+  >
+    <div className="tooltip help" style={{ marginLeft: 0, position: 'initial' }}>
+      <HelpIcon />
+    </div>
+  </MenderTooltipClickable>
+);
 
 export const DeviceTypeSelectionStep = ({
   docsVersion,
   hasConvertedImage,
+  hasExternalIntegration,
+  integrationProvider,
   onboardingState,
   onSelect,
-  providerConnectionString,
   selection = '',
-  setConnectionString,
   version
 }) => {
   const shouldShowOnboardingTip = !onboardingState.complete && onboardingState.showTips && onboardingState.showHelptips;
@@ -76,65 +100,48 @@ export const DeviceTypeSelectionStep = ({
       <h4>Enter your device type</h4>
       <p>Setting this attribute on the device ensures that the device will only receive updates for compatible software releases.</p>
 
-      <Autocomplete
-        id="device-type-selection"
-        autoSelect
-        autoHighlight
-        filterSelectedOptions
-        freeSolo
-        getOptionLabel={option => {
-          // Value selected with enter, right from the input
-          if (typeof option === 'string') {
-            return option;
-          }
-          if (option.key === 'custom' && option.value === selection) {
-            return option.value;
-          }
-          return option.title;
-        }}
-        handleHomeEndKeys
-        includeInputInList
-        filterOptions={(options, params) => {
-          const filtered = filter(options, params);
-          if (filtered.length !== 1 && params.inputValue !== '') {
-            filtered.push({
-              value: params.inputValue,
-              key: 'custom',
-              title: `Use "${params.inputValue}"`
-            });
-          }
-          return filtered;
-        }}
-        options={types}
-        onChange={onSelect}
-        renderInput={params => (
-          <TextField {...params} label="Device type" placeholder="Choose a device type" InputProps={{ ...params.InputProps }} style={{ marginTop: 0 }} />
-        )}
-        style={{ maxWidth: 300 }}
-        value={selection}
-      />
-      {shouldShowOnboardingTip && (
-        <MenderTooltipClickable
-          placement="bottom"
-          style={{ marginTop: menderTheme.spacing(-3) }}
-          title={
-            <div>
-              <p>
-                If you don&apos;t see your exact device on the list, choose <i>Generic ARMv6 or newer</i> to continue the tutorial for now.
-              </p>
-              <p>
-                (Note: if your device is <i>not</i> based on ARMv6 or newer, the tutorial won&apos;t work - instead, go back and use the virtual device)
-              </p>
-            </div>
-          }
-        >
-          <div className="tooltip help">
-            <HelpIcon />
-          </div>
-        </MenderTooltipClickable>
-      )}
+      <div style={{ display: 'grid', gridTemplateColumns: 'max-content 50px 150px', justifyItems: 'center' }}>
+        <Autocomplete
+          id="device-type-selection"
+          autoSelect
+          autoHighlight
+          filterSelectedOptions
+          freeSolo
+          getOptionLabel={option => {
+            // Value selected with enter, right from the input
+            if (typeof option === 'string') {
+              return option;
+            }
+            if (option.key === 'custom' && option.value === selection) {
+              return option.value;
+            }
+            return option.title;
+          }}
+          handleHomeEndKeys
+          includeInputInList
+          filterOptions={(options, params) => {
+            const filtered = filter(options, params);
+            if (filtered.length !== 1 && params.inputValue !== '') {
+              filtered.push({
+                value: params.inputValue,
+                key: 'custom',
+                title: `Use "${params.inputValue}"`
+              });
+            }
+            return filtered;
+          }}
+          options={types}
+          onChange={onSelect}
+          renderInput={params => (
+            <TextField {...params} label="Device type" placeholder="Choose a device type" InputProps={{ ...params.InputProps }} style={{ marginTop: 0 }} />
+          )}
+          style={{ maxWidth: 300 }}
+          value={selection}
+        />
+        {shouldShowOnboardingTip ? <DeviceTypeTip /> : <div />}
+        {hasExternalIntegrationSupport && <ExternalProviderTip hasExternalIntegration={hasExternalIntegration} integrationProvider={integrationProvider} />}
+      </div>
       {hasConvertedImage && <ConvertedImageNote docsVersion={docsVersion} />}
-      {hasExternalIntegrationSupport && <ExternalProviderConnector connectionString={providerConnectionString} setConnectionString={setConnectionString} />}
     </>
   );
 };
@@ -163,9 +170,9 @@ const steps = {
 
 export const PhysicalDeviceOnboarding = ({
   advanceOnboarding,
-  azureConnectionString,
-  createIntegration,
   docsVersion,
+  hasExternalIntegration,
+  integrationProvider,
   ipAddress,
   isHosted,
   isEnterprise,
@@ -179,18 +186,10 @@ export const PhysicalDeviceOnboarding = ({
   version
 }) => {
   const [selection, setSelection] = useState('');
-  const [connectionString, setConnectionString] = useState(azureConnectionString);
 
   useEffect(() => {
     setOnboardingApproach('physical');
   }, []);
-
-  useEffect(() => {
-    const hasExternalIntegrationSupport = versionCompare(version, '3.2') > -1;
-    if (hasExternalIntegrationSupport && progress > 1 && !!connectionString && connectionString !== azureConnectionString) {
-      createIntegration({ ...EXTERNAL_PROVIDER.azure, connectionString });
-    }
-  }, [progress]);
 
   const onSelect = (e, deviceType, reason) => {
     if (reason === 'select-option') {
@@ -208,9 +207,10 @@ export const PhysicalDeviceOnboarding = ({
   return (
     <ComponentToShow
       advanceOnboarding={advanceOnboarding}
-      providerConnectionString={connectionString}
+      hasExternalIntegration={hasExternalIntegration}
       docsVersion={docsVersion}
       hasConvertedImage={hasConvertedImage}
+      integrationProvider={integrationProvider}
       ipAddress={ipAddress}
       isEnterprise={isEnterprise}
       isHosted={isHosted}
@@ -218,7 +218,6 @@ export const PhysicalDeviceOnboarding = ({
       isPreRelease={isPreRelease}
       onboardingState={onboardingState}
       onSelect={onSelect}
-      setConnectionString={setConnectionString}
       selection={selection}
       tenantToken={tenantToken}
       version={version}
@@ -226,15 +225,16 @@ export const PhysicalDeviceOnboarding = ({
   );
 };
 
-const actionCreators = { advanceOnboarding, createIntegration, setOnboardingApproach, setOnboardingDeviceType };
+const actionCreators = { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType };
 
 const mapStateToProps = state => {
-  const { credentials = {} } =
-    state.organization.externalDeviceIntegrations.find(integration => integration.provider === EXTERNAL_PROVIDER.azure.provider) ?? {};
+  const integrationProvider = EXTERNAL_PROVIDER['iot-hub'].provider;
+  const { credentials = {} } = state.organization.externalDeviceIntegrations.find(integration => integration.provider === integrationProvider) ?? {};
   const { [EXTERNAL_PROVIDER['iot-hub'].credentialsAttribute]: azureConnectionString = '' } = credentials;
   return {
-    azureConnectionString,
     docsVersion: getDocsVersion(state),
+    hasExternalIntegration: azureConnectionString,
+    integrationProvider,
     ipAddress: state.app.hostAddress,
     isEnterprise: getIsEnterprise(state),
     isHosted: state.app.features.isHosted,
