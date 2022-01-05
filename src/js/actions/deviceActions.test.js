@@ -648,11 +648,17 @@ describe('device retrieval ', () => {
   });
 });
 
+const deviceConfig = {
+  configured: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
+  reported: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
+  updated_ts: defaultState.devices.byId.a1.updated_ts,
+  reported_ts: '2019-01-01T09:25:01.000Z'
+};
+
 describe('device config ', () => {
   it('should allow single device config retrieval', async () => {
     const store = mockStore({ ...defaultState });
-    const { attributes, id } = defaultState.devices.byId.a1;
-    const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE_CONFIG, device: { attributes, id } }];
+    const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE_CONFIG, device: { config: deviceConfig, id: defaultState.devices.byId.a1.id } }];
     await store.dispatch(getDeviceConfig(defaultState.devices.byId.a1.id));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
@@ -669,8 +675,7 @@ describe('device config ', () => {
 
   it('should allow single device config update', async () => {
     const store = mockStore({ ...defaultState });
-    const { attributes, id } = defaultState.devices.byId.a1;
-    const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE_CONFIG, device: { attributes, id } }];
+    const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE_CONFIG, device: { config: deviceConfig, id: defaultState.devices.byId.a1.id } }];
     await store.dispatch(setDeviceConfig(defaultState.devices.byId.a1.id), { something: 'asdl' });
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);

@@ -719,7 +719,7 @@ export const getDeviceConnect = id => dispatch =>
     let tasks = [
       dispatch({
         type: DeviceConstants.RECEIVE_DEVICE_CONNECT,
-        device: data
+        device: { connect_status: data.status, connect_updated_ts: data.updated_ts, id }
       })
     ];
     tasks.push(Promise.resolve(data));
@@ -873,17 +873,13 @@ export const decommissionDevice = (deviceId, authId) => dispatch =>
     .catch(err => commonErrorHandler(err, 'There was a problem decommissioning the device:', dispatch))
     .then(() => Promise.resolve(dispatch(maybeUpdateDevicesByStatus(deviceId, authId))));
 
-export const getDeviceConfig = deviceId => (dispatch, getState) =>
+export const getDeviceConfig = deviceId => dispatch =>
   GeneralApi.get(`${deviceConfig}/${deviceId}`)
     .then(({ data }) => {
-      const device = {
-        ...getState().devices.byId[deviceId],
-        config: data
-      };
       let tasks = [
         dispatch({
           type: DeviceConstants.RECEIVE_DEVICE_CONFIG,
-          device
+          device: { id: deviceId, config: data }
         })
       ];
       tasks.push(Promise.resolve(data));
