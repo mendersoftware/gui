@@ -1,5 +1,6 @@
 import { SORTING_OPTIONS } from '../constants/appConstants';
-import * as DeviceConstants from '../constants/deviceConstants';
+import DeviceConstants from '../constants/deviceConstants';
+import MonitorConstants from '../constants/monitorConstants';
 import { duplicateFilter } from '../helpers';
 
 export const initialState = {
@@ -259,7 +260,8 @@ const deviceReducer = (state = initialState, action) => {
         }
       };
     }
-    case DeviceConstants.RECEIVE_DEVICE_CONFIG: {
+    case DeviceConstants.RECEIVE_DEVICE_CONFIG:
+    case MonitorConstants.RECEIVE_DEVICE_MONITOR_CONFIG: {
       const { device } = action;
       return {
         ...state,
