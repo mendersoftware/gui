@@ -11,7 +11,7 @@ import DeviceConstants from '../constants/deviceConstants';
 
 import { deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
 import { getIdAttribute, getTenantCapabilities } from '../selectors';
-import { getLatestDeviceAlerts } from './monitorActions';
+import { getDeviceMonitorConfig, getLatestDeviceAlerts } from './monitorActions';
 
 const { DEVICE_STATES, DEVICE_LIST_DEFAULTS } = DeviceConstants;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
@@ -449,6 +449,7 @@ export const getDeviceInfo = deviceId => (dispatch, getState) => {
     tasks.push(dispatch(getDeviceConnect(deviceId)));
     if (hasMonitor) {
       tasks.push(dispatch(getLatestDeviceAlerts(deviceId)));
+      tasks.push(dispatch(getDeviceMonitorConfig(deviceId)));
     }
   }
   return Promise.all(tasks);

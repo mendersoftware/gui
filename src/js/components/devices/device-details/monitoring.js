@@ -2,8 +2,21 @@ import React, { useEffect, useState } from 'react';
 import Time from 'react-time';
 
 import theme from '../../../themes/mender-theme';
+import { DeviceConnectionNote } from './connection';
 import DeviceDataCollapse from './devicedatacollapse';
 import { DeviceOfflineHeaderNotification, NoAlertsHeaderNotification, severityMap } from './notifications';
+
+export const DeviceMonitorsMissingNote = ({ docsVersion }) => (
+  <DeviceConnectionNote>
+    No alert monitor is currently configured for this device.
+    <br />
+    Please{' '}
+    <a target="_blank" rel="noopener noreferrer" href={`https://docs.mender.io/${docsVersion}add-ons/monitor`}>
+      see the documentation
+    </a>{' '}
+    for a description on how to configure different kinds of monitors.
+  </DeviceConnectionNote>
+);
 
 const MonitoringAlert = ({ alert, onDetailsClick, style }) => {
   const { description, lines_before = [], lines_after = [], line_matching = '' } = alert.subject.details;
@@ -21,7 +34,7 @@ const MonitoringAlert = ({ alert, onDetailsClick, style }) => {
   );
 };
 
-export const DeviceMonitoring = ({ alerts, device, getAlerts, innerRef, isOffline, latestAlerts, onDetailsClick }) => {
+export const DeviceMonitoring = ({ alerts, device, docsVersion, getAlerts, innerRef, isOffline, latestAlerts, onDetailsClick }) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -34,22 +47,26 @@ export const DeviceMonitoring = ({ alerts, device, getAlerts, innerRef, isOfflin
     }
   }, [open]);
 
-  const { updated_ts = '' } = device;
+  const { monitors = [], updated_ts = '' } = device;
 
-  const toggleOpen = () => setOpen(!open);
+  const toggleOpen = monitors.length ? () => setOpen(!open) : undefined;
 
   return (
     <DeviceDataCollapse
       header={
-        <>
-          {!latestAlerts.length && <NoAlertsHeaderNotification />}
-          {!open &&
-            latestAlerts.map(alert => (
-              <MonitoringAlert alert={alert} key={alert.id} onDetailsClick={onDetailsClick} style={{ marginBottom: theme.spacing() }} />
-            ))}
-          {isOffline && <DeviceOfflineHeaderNotification />}
-          {!open && <a onClick={toggleOpen}>show more</a>}
-        </>
+        !monitors.length ? (
+          <DeviceMonitorsMissingNote docsVersion={docsVersion} />
+        ) : (
+          <>
+            {!latestAlerts.length && <NoAlertsHeaderNotification />}
+            {!open &&
+              latestAlerts.map(alert => (
+                <MonitoringAlert alert={alert} key={alert.id} onDetailsClick={onDetailsClick} style={{ marginBottom: theme.spacing() }} />
+              ))}
+            {isOffline && <DeviceOfflineHeaderNotification />}
+            {!open && <a onClick={toggleOpen}>show more</a>}
+          </>
+        )
       }
       isAddOn
       isOpen={open}
@@ -57,7 +74,7 @@ export const DeviceMonitoring = ({ alerts, device, getAlerts, innerRef, isOfflin
       title={
         <div className="flexbox center-aligned" ref={innerRef}>
           <h4 className="margin-right">Monitoring</h4>
-          <Time className="text-muted" value={updated_ts} format="YYYY-MM-DD HH:mm" />
+          {!!monitors.length && <Time className="text-muted" value={updated_ts} format="YYYY-MM-DD HH:mm" />}
         </div>
       }
     >

@@ -35,7 +35,7 @@ export const PortForwardLink = ({ docsVersion }) => (
   </MenderTooltip>
 );
 
-const DeviceConnectionNote = ({ children, style }) => (
+export const DeviceConnectionNote = ({ children, style = buttonStyle }) => (
   <div className="flexbox text-muted">
     <InfoIcon fontSize="small" style={{ marginRight: theme.spacing() }} />
     <Typography variant="body1" style={style}>
@@ -44,8 +44,8 @@ const DeviceConnectionNote = ({ children, style }) => (
   </div>
 );
 
-export const DeviceConnectionMissingNote = ({ style, docsVersion }) => (
-  <DeviceConnectionNote style={style}>
+export const DeviceConnectionMissingNote = ({ docsVersion }) => (
+  <DeviceConnectionNote>
     The troubleshoot add-on does not seem to be enabled on this device.
     <br />
     Please{' '}
@@ -56,8 +56,8 @@ export const DeviceConnectionMissingNote = ({ style, docsVersion }) => (
   </DeviceConnectionNote>
 );
 
-export const DeviceDisconnectedNote = ({ docsVersion, lastConnectionTs, style }) => (
-  <DeviceConnectionNote style={style}>
+export const DeviceDisconnectedNote = ({ docsVersion, lastConnectionTs }) => (
+  <DeviceConnectionNote>
     The troubleshoot add-on is not currently connected on this device, it was last connected on <Time value={lastConnectionTs} format="YYYY-MM-DD HH:mm" />.
     <br />
     Please{' '}
@@ -108,10 +108,8 @@ export const DeviceConnection = ({ device, docsVersion = '', hasAuditlogs, socke
       disableBottomBorder
       header={
         <div className="flexbox" style={{ flexDirection: 'row', ...style }}>
-          {connect_status === DEVICE_CONNECT_STATES.unknown && <DeviceConnectionMissingNote docsVersion={docsVersion} style={buttonStyle} />}
-          {connect_status === DEVICE_CONNECT_STATES.disconnected && (
-            <DeviceDisconnectedNote docsVersion={docsVersion} lastConnectionTs={connect_updated_ts} style={buttonStyle} />
-          )}
+          {connect_status === DEVICE_CONNECT_STATES.unknown && <DeviceConnectionMissingNote docsVersion={docsVersion} />}
+          {connect_status === DEVICE_CONNECT_STATES.disconnected && <DeviceDisconnectedNote docsVersion={docsVersion} lastConnectionTs={connect_updated_ts} />}
           {connect_status === DEVICE_CONNECT_STATES.connected &&
             availableTabs.map(item => {
               let Component = TroubleshootButton;

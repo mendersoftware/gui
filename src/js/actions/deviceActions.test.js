@@ -566,7 +566,7 @@ describe('device retrieval ', () => {
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: { ...expectedDevice, id } },
       { type: DeviceConstants.RECEIVE_DEVICE, device: { attributes, id } },
       { type: DeviceConstants.RECEIVE_DEVICE, device: expectedDevice },
-      { type: DeviceConstants.RECEIVE_DEVICE_CONNECT, device: { status: 'connected', updated_ts } }
+      { type: DeviceConstants.RECEIVE_DEVICE_CONNECT, device: { connect_status: 'connected', connect_updated_ts: updated_ts, id } }
     ];
     await store.dispatch(getDeviceInfo(defaultState.devices.byId.a1.id));
     const storeActions = store.getActions();
