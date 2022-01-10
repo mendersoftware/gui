@@ -26,7 +26,9 @@ export const initialState = {
       user: ''
     }
   },
-  externalDeviceIntegrations: []
+  externalDeviceIntegrations: [
+    // { <connection_string|x509|...>, id, provider }
+  ]
 };
 
 const organizationReducer = (state = initialState, action) => {

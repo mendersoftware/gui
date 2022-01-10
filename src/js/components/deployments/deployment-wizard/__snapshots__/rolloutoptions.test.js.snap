@@ -235,7 +235,7 @@ exports[`RolloutOptions Component renders correctly 1`] = `
         </p>
       </div>
       <p
-        class="info icon"
+        class="info icon "
       >
         <svg
           aria-hidden="true"

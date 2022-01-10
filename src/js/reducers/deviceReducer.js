@@ -3,7 +3,12 @@ import * as DeviceConstants from '../constants/deviceConstants';
 import { duplicateFilter } from '../helpers';
 
 export const initialState = {
-  byId: {},
+  byId: {
+    // [deviceId]: {
+    //   ...,
+    //   twinsByProvider: { [external.provider]: twinData }
+    // }
+  },
   byStatus: {
     [DeviceConstants.DEVICE_STATES.accepted]: { deviceIds: [], total: 0 },
     active: { deviceIds: [], total: 0 },

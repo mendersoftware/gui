@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 
 import { defaultState } from '../../../tests/mockData';
 import AppConstants from '../constants/appConstants';
+import { EXTERNAL_PROVIDER } from '../constants/deviceConstants';
 import OrganizationConstants from '../constants/organizationConstants';
 import {
   cancelRequest,
@@ -10,12 +11,13 @@ import {
   changeIntegration,
   confirmCardUpdate,
   completeUpgrade,
+  createIntegration,
   createOrganizationTrial,
   deleteIntegration,
   getAuditLogs,
   getAuditLogsCsvLink,
   getCurrentCard,
-  getIntegrationFor,
+  getIntegrations,
   getUserOrganization,
   requestPlanChange,
   sendSupportMessage,
@@ -26,6 +28,11 @@ import {
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
+
+const expectedDeviceProviders = [
+  { id: 1, provider: EXTERNAL_PROVIDER['iot-hub'].provider, something: 'something', connection_string: 'something_else' },
+  { id: 2, provider: 'aws', something: 'new' }
+];
 
 /* eslint-disable sonarjs/no-identical-functions */
 describe('organization actions', () => {
@@ -270,25 +277,53 @@ describe('organization actions', () => {
       expect(link).toEqual('/api/management/v1/auditlogs/logs/export?limit=20000&sort=desc');
     });
   });
+  it('should allow initializing external device providers', async () => {
+    const store = mockStore({
+      ...defaultState,
+      organization: {
+        ...defaultState.organization,
+        externalDeviceIntegrations: [
+          { id: 1, something: 'something' },
+          { id: 2, provider: 'aws', something: 'new' }
+        ]
+      }
+    });
+    expect(store.getActions()).toHaveLength(0);
+    const expectedActions = [
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The integration was set up successfully' } },
+      {
+        type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
+        value: expectedDeviceProviders
+      }
+    ];
+    const request = store.dispatch(createIntegration({ connection_string: 'testString', provider: 'iot-hub' }));
+    expect(request).resolves.toBeTruthy();
+    await request.then(() => {
+      const storeActions = store.getActions();
+      expect(storeActions).toHaveLength(expectedActions.length);
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    });
+  });
   it('should allow configuring external device providers', async () => {
     const store = mockStore({
       ...defaultState,
       organization: {
         ...defaultState.organization,
-        externalDeviceIntegrations: [{ provider: 'aws', something: 'new' }]
+        externalDeviceIntegrations: [
+          { id: 1, something: 'something' },
+          { id: 2, provider: 'aws', something: 'new' }
+        ]
       }
     });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The integration was updated successfully' } },
       {
         type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
-        value: [
-          { provider: 'aws', something: 'new' },
-          { provider: 'azure', connectionString: 'something_else' }
-        ]
+        value: expectedDeviceProviders
       }
     ];
-    const request = store.dispatch(changeIntegration({ provider: 'azure' }));
+    const request = store.dispatch(changeIntegration({ connection_string: 'testString2', id: 1, provider: 'iot-hub' }));
     expect(request).resolves.toBeTruthy();
     await request.then(() => {
       const storeActions = store.getActions();
@@ -302,8 +337,8 @@ describe('organization actions', () => {
       organization: {
         ...defaultState.organization,
         externalDeviceIntegrations: [
-          { provider: 'azure', something: 'something' },
-          { provider: 'aws', something: 'new' }
+          { id: 1, something: 'something' },
+          { id: 2, provider: 'aws', something: 'new' }
         ]
       }
     });
@@ -311,13 +346,10 @@ describe('organization actions', () => {
     const expectedActions = [
       {
         type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
-        value: [
-          { provider: 'azure', something: 'something', connectionString: 'something_else' },
-          { provider: 'aws', something: 'new' }
-        ]
+        value: expectedDeviceProviders
       }
     ];
-    const request = store.dispatch(getIntegrationFor({ provider: 'azure' }));
+    const request = store.dispatch(getIntegrations());
     expect(request).resolves.toBeTruthy();
     await request.then(() => {
       const storeActions = store.getActions();
@@ -326,10 +358,13 @@ describe('organization actions', () => {
     });
   });
   it('should allow deleting external device provider configurations', async () => {
-    const store = mockStore({ ...defaultState, externalDeviceIntegrations: [{ provider: 'azure' }] });
+    const store = mockStore({ ...defaultState, externalDeviceIntegrations: [{ id: 1, something: 'something' }] });
     expect(store.getActions()).toHaveLength(0);
-    const expectedActions = [{ type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: [] }];
-    const request = store.dispatch(deleteIntegration({ provider: 'azure' }));
+    const expectedActions = [
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The integration was removed successfully' } },
+      { type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: [] }
+    ];
+    const request = store.dispatch(deleteIntegration({ id: 1 }));
     expect(request).resolves.toBeTruthy();
     await request.then(() => {
       const storeActions = store.getActions();

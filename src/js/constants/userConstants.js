@@ -1,5 +1,6 @@
-const apiUrl = '/api/management/v1';
-const useradmApiUrl = `${apiUrl}/useradm`;
+const { apiUrl } = require('../api/general-api');
+
+const useradmApiUrl = `${apiUrl.v1}/useradm`;
 
 const staticRolesByName = {
   admin: 'RBAC_ROLE_PERMIT_ALL',

@@ -3,6 +3,7 @@ import React from 'react';
 import { Button } from '@material-ui/core';
 
 import headerLogo from '../../../../assets/img/headerlogo.png';
+import { useradmApiUrl } from '../../../constants/userConstants';
 import Form from '../../common/forms/form';
 import TextInput from '../../common/forms/textinput';
 import PasswordInput from '../../common/forms/passwordinput';
@@ -42,13 +43,7 @@ export class UserDataEntry extends React.Component {
         <div className="flexbox centered margin-bottom">Sign up with:</div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           {OAuth2Providers.map(provider => (
-            <Button
-              className="oauth-provider"
-              variant="contained"
-              key={provider.id}
-              href={`/api/management/v1/useradm/oauth2/${provider.id}`}
-              startIcon={provider.icon}
-            >
+            <Button className="oauth-provider" variant="contained" key={provider.id} href={`${useradmApiUrl}/oauth2/${provider.id}`} startIcon={provider.icon}>
               {provider.name}
             </Button>
           ))}

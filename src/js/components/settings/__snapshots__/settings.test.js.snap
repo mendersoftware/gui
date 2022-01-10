@@ -173,7 +173,7 @@ exports[`Settings Component renders correctly 1`] = `
         </button>
       </form>
       <p
-        class="info icon"
+        class="info icon "
       >
         <svg
           aria-hidden="true"

@@ -1,5 +1,11 @@
+const React = require('react');
+
 const { mdiAws: AWS, mdiMicrosoftAzure: Azure, mdiGoogleCloud: GCP } = require('@mdi/js');
-const iotManagerBaseURL = '/v1/iot-manager';
+
+const credentialTypes = {
+  sas: 'sas',
+  x509: 'x509'
+};
 
 module.exports = {
   SELECT_GROUP: 'SELECT_GROUP',
@@ -38,9 +44,50 @@ module.exports = {
   SET_DEVICE_LIMIT: 'SET_DEVICE_LIMIT',
 
   EXTERNAL_PROVIDER: {
-    amazon: { article: 'an', icon: AWS, title: 'AWS IoT core', provider: 'amazon', managementUrl: iotManagerBaseURL + '/settings', enabled: false },
-    azure: { article: 'an', icon: Azure, title: 'Azure IoT Hub', provider: 'azure', managementUrl: iotManagerBaseURL + '/settings', enabled: true },
-    google: { article: 'a', icon: GCP, title: 'Cloud IoT Core', provider: 'google', managementUrl: iotManagerBaseURL + '/settings', enabled: false }
+    amazon: {
+      article: 'an',
+      credentialsType: credentialTypes.x509,
+      credentialsAttribute: 'connection_string',
+      icon: AWS,
+      title: 'AWS IoT core',
+      provider: 'amazon',
+      enabled: false,
+      configHint: <>For help finding your AWS IoT core connection string, check the AWS IoT documentation.</>
+    },
+    'iot-hub': {
+      article: 'an',
+      credentialsType: credentialTypes.sas,
+      credentialsAttribute: 'connection_string',
+      icon: Azure,
+      title: 'Azure IoT Hub',
+      provider: 'iot-hub',
+      enabled: true,
+      configHint: (
+        <>
+          For help finding your Azure IoT Hub connection string, look under &apos;Shared access policies&apos; in the Microsoft Azure UI as described{' '}
+          {
+            <a
+              href="https://devblogs.microsoft.com/iotdev/understand-different-connection-strings-in-azure-iot-hub/#iothubconn"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              here
+            </a>
+          }
+          .
+        </>
+      )
+    },
+    google: {
+      article: 'a',
+      credentialsType: credentialTypes.x509,
+      credentialsAttribute: 'value',
+      icon: GCP,
+      title: 'Cloud IoT Core',
+      provider: 'google',
+      enabled: false,
+      configHint: <>For help finding your Cloud IoT core connection string, check the Cloud IoT documentation.</>
+    }
   },
 
   // see https://github.com/mendersoftware/go-lib-micro/tree/master/ws

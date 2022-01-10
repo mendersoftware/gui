@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -69,6 +70,12 @@ module.exports = (env, argv) => {
       new CleanWebpackPlugin({
         cleanOnceBeforeBuildPatterns: ['**/*', '!env.js'],
         cleanAfterEveryBuildPatterns: ['!assets/fonts/*', '!assets/img/*']
+      }),
+      new CopyWebpackPlugin({
+        patterns: [
+          { from: 'node_modules/monaco-editor/min/vs/', to: 'vs' },
+          argv.mode !== 'production' && { from: 'node_modules/monaco-editor/min-maps/vs/', to: 'min-maps/vs' }
+        ].filter(Boolean)
       }),
       new webpack.ProvidePlugin({
         process: 'process/browser',

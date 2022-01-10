@@ -9,17 +9,18 @@ import { Help as HelpIcon } from '@material-ui/icons';
 import loginLogo from '../../../assets/img/loginlogo.png';
 import { setSnackbar } from '../../actions/appActions';
 import { loginUser, logoutUser } from '../../actions/userActions';
-
 import { getToken } from '../../auth';
+import { useradmApiUrl } from '../../constants/userConstants';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
+import { getCurrentUser } from '../../selectors';
+
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
 import FormCheckbox from '../common/forms/formcheckbox';
+import { MenderTooltipClickable } from '../common/mendertooltip';
 
 import { OAuth2Providers } from './oauth2providers';
-import { getCurrentUser } from '../../selectors';
-import { MenderTooltipClickable } from '../common/mendertooltip';
 
 const cookies = new Cookies();
 
@@ -68,7 +69,7 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
     const oauthTimeout = new Date();
     oauthTimeout.setDate(oauthTimeout.getDate() + 7);
     window.localStorage.setItem('oauth', `${oauthTimeout.getTime()}`);
-    window.location.replace(`/api/management/v1/useradm/oauth2/${providerId}`);
+    window.location.replace(`${useradmApiUrl}/oauth2/${providerId}`);
   };
 
   let twoFAAnchor = {};
