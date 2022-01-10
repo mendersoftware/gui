@@ -1,4 +1,4 @@
-image: node:16-alpine
+image: node:17-alpine
 
 stages:
   - pre-test
@@ -26,7 +26,9 @@ test:lint:
     - /^(staging|saas-[a-zA-Z0-9.]+)$/
   needs: []
   cache:
-    key: ${CI_COMMIT_REF_SLUG}
+    key:
+      files:
+        - package-lock.json
     paths:
       - .npm/
   script:
@@ -96,14 +98,17 @@ test:unit:
     - /^(staging|saas-[a-zA-Z0-9.]+)$/
   needs: []
   cache:
-    key: ${CI_COMMIT_REF_SLUG}
+    key:
+      files:
+        - package-lock.json
     paths:
       - .npm/
   script:
+    - npm i -g npm
     - npm ci --cache .npm --prefer-offline
     - npm run test -- --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
   after_script:
-    - mkdir logs && cp /root/.npm/_logs/* logs/
+    - mkdir logs && cp .npm/_logs/* logs/
   artifacts:
     expire_in: 2w
     paths:
@@ -159,12 +164,14 @@ test:prep:
     expire_in: 30 days
 
 test:staging-deployment:
-  image: mcr.microsoft.com/playwright:v1.15.1
+  image: mcr.microsoft.com/playwright:v1.17.1
   stage: .post
   services:
     - docker:19.03.5-dind
   cache:
-    key: ${CI_COMMIT_REF_SLUG}
+    key:
+      files:
+        - tests/e2e_tests/package-lock.json
     paths:
       - .npm/
   dependencies:
