@@ -1,13 +1,12 @@
 import { commonErrorFallback, commonErrorHandler, setSnackbar } from './appActions';
-import Api, { headerNames } from '../api/general-api';
+import Api, { apiUrl, headerNames } from '../api/general-api';
+import DeviceConstants from '../constants/deviceConstants';
 import MonitorConstants from '../constants/monitorConstants';
 import { convertDeviceListStateToFilters, getSearchEndpoint } from './deviceActions';
 
-const apiUrlv1 = '/api/management/v1';
-export const monitorApiUrlv1 = `${apiUrlv1}/devicemonitor`;
+export const monitorApiUrlv1 = `${apiUrl.v1}/devicemonitor`;
 
-const defaultPerPage = 20;
-const defaultPage = 1;
+const { page: defaultPage, perPage: defaultPerPage } = DeviceConstants.DEVICE_LIST_DEFAULTS;
 
 const cutoffLength = 75;
 const ellipsis = '...';

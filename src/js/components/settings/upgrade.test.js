@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
@@ -50,11 +51,13 @@ describe('Upgrade Component', () => {
     }));
     const stripe = loadStripe();
     const { baseElement } = render(
-      <Provider store={store}>
-        <Elements stripe={stripe}>
-          <Upgrade />
-        </Elements>
-      </Provider>
+      <MemoryRouter>
+        <Provider store={store}>
+          <Elements stripe={stripe}>
+            <Upgrade />
+          </Elements>
+        </Provider>
+      </MemoryRouter>
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();

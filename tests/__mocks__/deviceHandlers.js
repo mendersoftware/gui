@@ -1,7 +1,7 @@
 import { rest } from 'msw';
 
 import { defaultState } from '../mockData';
-import { deviceAuthV2, deviceConfig, inventoryApiUrl, inventoryApiUrlV2 } from '../../src/js/actions/deviceActions';
+import { deviceAuthV2, deviceConfig, deviceConnect, inventoryApiUrl, inventoryApiUrlV2, iotManagerBaseURL } from '../../src/js/actions/deviceActions';
 import { headerNames } from '../../src/js/api/general-api';
 import DeviceConstants from '../../src/js/constants/deviceConstants';
 
@@ -118,6 +118,12 @@ export const deviceHandlers = [
     }
     return res(ctx.status(506));
   }),
+  rest.put(`${inventoryApiUrl}/devices/:deviceId/tags`, ({ params: { deviceId }, body: tags }, res, ctx) => {
+    if (!defaultState.devices.byId[deviceId] && !Array.isArray(tags) && !tags.every(item => item.name && item.value)) {
+      return res(ctx.status(506));
+    }
+    return res(ctx.json(tags));
+  }),
   rest.get(`${inventoryApiUrl}/groups`, (req, res, ctx) => {
     const groups = Object.entries(defaultState.devices.groups.byId).reduce((accu, [groupName, group]) => {
       if (!group.id) {
@@ -222,5 +228,31 @@ export const deviceHandlers = [
       return res(ctx.status(200), ctx.json({ deployment_id: defaultState.deployments.byId.d1.id }));
     }
     return res(ctx.status(514));
+  }),
+  rest.get(`${deviceConnect}/devices/:deviceId`, ({ params: { deviceId } }, res, ctx) => {
+    if (deviceId === 'testId') {
+      return res(ctx.status(404), ctx.json({ error: { status_code: 404 } }));
+    }
+    if (defaultState.devices.byId[deviceId]) {
+      return res(
+        ctx.json({
+          status: 'connected',
+          updated_ts: defaultState.devices.byId[deviceId].updated_ts
+        })
+      );
+    }
+    return res(ctx.status(512));
+  }),
+  rest.get(`${iotManagerBaseURL}/devices/:deviceId/state`, ({ params: { deviceId } }, res, ctx) => {
+    if (defaultState.devices.byId[deviceId]) {
+      return res(ctx.status(200), ctx.json({ deployment_id: defaultState.deployments.byId.d1.id }));
+    }
+    return res(ctx.status(515));
+  }),
+  rest.put(`${iotManagerBaseURL}/devices/:deviceId/state/:integrationId`, ({ params: { deviceId }, body }, res, ctx) => {
+    if (defaultState.devices.byId[deviceId] && body) {
+      return res(ctx.status(200), ctx.json({ deployment_id: defaultState.deployments.byId.d1.id }));
+    }
+    return res(ctx.status(516));
   })
 ];

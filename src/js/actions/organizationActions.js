@@ -1,18 +1,16 @@
 import Cookies from 'universal-cookie';
 
-import { commonErrorFallback, commonErrorHandler, setSnackbar } from './appActions';
-import Api, { headerNames } from '../api/general-api';
+import Api, { apiUrl, headerNames } from '../api/general-api';
+import { SORTING_OPTIONS } from '../constants/appConstants';
 import OrganizationConstants from '../constants/organizationConstants';
 import { getTenantCapabilities } from '../selectors';
-import { SORTING_OPTIONS } from '../constants/appConstants';
-import { EXTERNAL_PROVIDER } from '../constants/deviceConstants';
+import { commonErrorFallback, commonErrorHandler, setSnackbar } from './appActions';
+import { iotManagerBaseURL } from './deviceActions';
 
 const cookies = new Cookies();
-const apiUrlv1 = '/api/management/v1';
-const apiUrlv2 = '/api/management/v2';
-export const auditLogsApiUrl = `${apiUrlv1}/auditlogs`;
-export const tenantadmApiUrlv1 = `${apiUrlv1}/tenantadm`;
-export const tenantadmApiUrlv2 = `${apiUrlv2}/tenantadm`;
+export const auditLogsApiUrl = `${apiUrl.v1}/auditlogs`;
+export const tenantadmApiUrlv1 = `${apiUrl.v1}/tenantadm`;
+export const tenantadmApiUrlv2 = `${apiUrl.v2}/tenantadm`;
 
 export const cancelRequest = (tenantId, reason) => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/cancel`, { reason: reason }).then(() =>
@@ -144,39 +142,37 @@ export const requestPlanChange = (tenantId, content) => dispatch =>
     .catch(err => commonErrorHandler(err, 'There was an error sending your request', dispatch, commonErrorFallback))
     .then(() => Promise.resolve(dispatch(setSnackbar('Your request was sent successfully', 5000, ''))));
 
-const integrationApiBase = '/api/management';
+export const createIntegration = integration => dispatch =>
+  Api.post(`${iotManagerBaseURL}/integrations`, { provider: integration.provider, credentials: integration.credentials })
+    .catch(err => commonErrorHandler(err, 'There was an error creating the integration', dispatch, commonErrorFallback))
+    .then(() => Promise.all([dispatch(setSnackbar('The integration was set up successfully')), dispatch(getIntegrations())]));
 
 export const changeIntegration = integration => dispatch =>
-  Api.put(`${integrationApiBase}${EXTERNAL_PROVIDER[integration.provider].managementUrl}`, { connection_string: integration.connectionString })
-    .catch(err => commonErrorHandler(err, 'There was an error configuring the integration', dispatch, commonErrorFallback))
-    .then(() => Promise.resolve(dispatch(getIntegrationFor(integration))));
+  Api.put(`${iotManagerBaseURL}/integrations/${integration.id}/credentials`, integration.credentials)
+    .catch(err => commonErrorHandler(err, 'There was an error updating the integration', dispatch, commonErrorFallback))
+    .then(() => Promise.all([dispatch(setSnackbar('The integration was updated successfully')), dispatch(getIntegrations())]));
 
 export const deleteIntegration = integration => (dispatch, getState) =>
-  Api.put(`${integrationApiBase}${EXTERNAL_PROVIDER[integration.provider].managementUrl}`, { connection_string: '' })
+  Api.delete(`${iotManagerBaseURL}/integrations/${integration.id}`, {})
     .catch(err => commonErrorHandler(err, 'There was an error removing the integration', dispatch, commonErrorFallback))
     .then(() => {
       const integrations = getState().organization.externalDeviceIntegrations.filter(item => integration.provider !== item.provider);
-      return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: integrations }));
+      return Promise.all([
+        dispatch(setSnackbar('The integration was removed successfully')),
+        dispatch({ type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: integrations })
+      ]);
     });
 
-export const getIntegrationFor = integration => (dispatch, getState) =>
-  Api.get(`${integrationApiBase}${EXTERNAL_PROVIDER[integration.provider].managementUrl}`)
+export const getIntegrations = () => (dispatch, getState) =>
+  Api.get(`${iotManagerBaseURL}/integrations`)
     .catch(err => commonErrorHandler(err, 'There was an error retrieving the integration', dispatch, commonErrorFallback))
     .then(({ data }) => {
-      const { found, integrations } = getState().organization.externalDeviceIntegrations.reduce(
-        (accu, item) => {
-          if (integration.provider === item.provider && data.connection_string) {
-            accu.integrations.push({ ...item, ...data, connectionString: data.connection_string });
-            accu.found = true;
-          } else {
-            accu.integrations.push(item);
-          }
-          return accu;
-        },
-        { integrations: [], found: false }
-      );
-      if (!found && data.connection_string) {
-        integrations.push({ ...integration, ...data, connectionString: data.connection_string });
-      }
+      const existingIntegrations = getState().organization.externalDeviceIntegrations;
+      const integrations = data.reduce((accu, item) => {
+        const existingIntegration = existingIntegrations.find(integration => item.id === integration.id) ?? {};
+        const integration = { ...existingIntegration, ...item };
+        accu.push(integration);
+        return accu;
+      }, []);
       return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: integrations }));
     });

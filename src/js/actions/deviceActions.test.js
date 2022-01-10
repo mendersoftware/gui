@@ -20,9 +20,11 @@ import {
   getDeviceById,
   getDeviceConfig,
   getDeviceCount,
+  getDeviceInfo,
   getDeviceLimit,
   getDevicesByStatus,
   getDevicesWithAuth,
+  getDeviceTwin,
   getDynamicGroups,
   getGroupDevices,
   getGroups,
@@ -36,6 +38,8 @@ import {
   setDeviceConfig,
   setDeviceFilters,
   setDeviceListState,
+  setDeviceTags,
+  setDeviceTwin,
   updateDeviceAuth,
   updateDevicesAuth,
   updateDynamicGroup
@@ -555,6 +559,20 @@ describe('device retrieval ', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
+  it('should allow single device retrieval from detailed sources', async () => {
+    const store = mockStore({ ...defaultState });
+    const { attributes, updated_ts, id, ...expectedDevice } = defaultState.devices.byId.a1;
+    const expectedActions = [
+      { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: { ...expectedDevice, id } },
+      { type: DeviceConstants.RECEIVE_DEVICE, device: { attributes, id } },
+      { type: DeviceConstants.RECEIVE_DEVICE, device: expectedDevice },
+      { type: DeviceConstants.RECEIVE_DEVICE_CONNECT, device: { status: 'connected', updated_ts } }
+    ];
+    await store.dispatch(getDeviceInfo(defaultState.devices.byId.a1.id));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
   it('should allow retrieving multiple devices by status', async () => {
     const store = mockStore({ ...defaultState });
     // eslint-disable-next-line no-unused-vars
@@ -683,6 +701,19 @@ describe('device config ', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
+
+  it('should allow setting device tags', async () => {
+    const store = mockStore({ ...defaultState });
+    const { attributes, id } = defaultState.devices.byId.a1;
+    const expectedActions = [
+      { type: DeviceConstants.RECEIVE_DEVICE, device: { attributes, id } },
+      { type: DeviceConstants.RECEIVE_DEVICE, device: { attributes, id, tags: { something: 'asdl' } } }
+    ];
+    await store.dispatch(setDeviceTags(defaultState.devices.byId.a1.id, { something: 'asdl' }));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
 });
 
 describe('troubleshooting related actions', () => {
@@ -693,5 +724,24 @@ describe('troubleshooting related actions', () => {
     const result = await store.dispatch(getSessionDetails(sessionId, defaultState.devices.byId.a1.id, defaultState.users.currentUser, undefined, endDate));
 
     expect(result).toMatchObject({ start: new Date(endDate), end: new Date(endDate) });
+  });
+});
+
+describe('device twin related actions', () => {
+  it('should allow retrieving twin data from azure', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE, device: defaultState.devices.byId.a1 }];
+    await store.dispatch(getDeviceTwin(defaultState.devices.byId.a1.id, DeviceConstants.EXTERNAL_PROVIDER['iot-hub'].provider));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should allow configuring twin data on azure', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE, device: defaultState.devices.byId.a1 }];
+    await store.dispatch(setDeviceTwin(defaultState.devices.byId.a1.id, DeviceConstants.EXTERNAL_PROVIDER['iot-hub'].provider, { something: 'asdl' }));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
 });

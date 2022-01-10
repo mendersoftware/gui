@@ -1,8 +1,9 @@
 import { rest } from 'msw';
 
 import { defaultState } from '../mockData';
-import { auditLogsApiUrl, tenantadmApiUrlv1, tenantadmApiUrlv2 } from '../../src/js/actions/organizationActions';
 import { PLANS } from '../../src/js/constants/appConstants';
+import { iotManagerBaseURL } from '../../src/js/actions/deviceActions';
+import { auditLogsApiUrl, tenantadmApiUrlv1, tenantadmApiUrlv2 } from '../../src/js/actions/organizationActions';
 import { headerNames } from '../../src/js/api/general-api';
 import { EXTERNAL_PROVIDER } from '../../src/js/constants/deviceConstants';
 
@@ -69,18 +70,32 @@ export const organizationHandlers = [
     `)
     );
   }),
-  rest.get(`/api/management${EXTERNAL_PROVIDER.azure.managementUrl}`, (req, res, ctx) => {
-    return res(ctx.json({ connection_string: 'something_else' }));
+  rest.get(`${iotManagerBaseURL}/integrations`, (req, res, ctx) => {
+    return res(
+      ctx.json([
+        { connection_string: 'something_else', id: 1, provider: EXTERNAL_PROVIDER['iot-hub'].provider },
+        { id: 2, provider: 'aws', something: 'new' }
+      ])
+    );
   }),
-  rest.put(`/api/management${EXTERNAL_PROVIDER.azure.managementUrl}`, ({ body }, res, ctx) => {
-    if (!body) {
+  rest.post(`${iotManagerBaseURL}/integrations`, (req, res, ctx) => {
+    return res(ctx.json([{ connection_string: 'something_else', provider: EXTERNAL_PROVIDER['iot-hub'].provider }]));
+  }),
+  rest.put(`${iotManagerBaseURL}/integrations/:integrationId`, ({ params: { integrationId } }, res, ctx) => {
+    if (!integrationId) {
       return res(ctx.status(547));
     }
     return res(ctx.status(200));
   }),
-  rest.delete(`/api/management${EXTERNAL_PROVIDER.azure.managementUrl}`, ({ body }, res, ctx) => {
-    if (!body) {
+  rest.put(`${iotManagerBaseURL}/integrations/:integrationId/credentials`, ({ params: { integrationId } }, res, ctx) => {
+    if (!integrationId) {
       return res(ctx.status(548));
+    }
+    return res(ctx.status(200));
+  }),
+  rest.delete(`${iotManagerBaseURL}/integrations/:integrationId`, ({ params: { integrationId } }, res, ctx) => {
+    if (!integrationId) {
+      return res(ctx.status(549));
     }
     return res(ctx.status(200));
   })

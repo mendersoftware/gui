@@ -10,14 +10,13 @@ import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../action
 import {
   applyDeviceConfig,
   decommissionDevice,
-  getDeviceAuth,
-  getDeviceById,
-  getDeviceConfig,
-  getDeviceConnect,
+  getDeviceInfo,
+  getDeviceTwin,
   setDeviceConfig,
-  setDeviceTags
+  setDeviceTags,
+  setDeviceTwin
 } from '../../actions/deviceActions';
-import { getDeviceAlerts, getLatestDeviceAlerts } from '../../actions/monitorActions';
+import { getDeviceAlerts } from '../../actions/monitorActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import ForwardingLink from '../common/forwardlink';
@@ -36,6 +35,7 @@ import InstalledSoftware from './device-details/installedsoftware';
 import DeviceMonitoring from './device-details/monitoring';
 import MonitorDetailsDialog from './device-details/monitordetailsdialog';
 import DeviceNotifications from './device-details/notifications';
+import DeviceTwin from './device-details/devicetwin';
 
 const refreshDeviceLength = 10000;
 
@@ -50,12 +50,10 @@ export const ExpandedDevice = ({
   docsVersion,
   getDeviceAlerts,
   getDeviceLog,
-  getDeviceAuth,
-  getDeviceById,
-  getDeviceConfig,
-  getDeviceConnect,
-  getLatestDeviceAlerts,
+  getDeviceInfo,
+  getDeviceTwin,
   getSingleDeployment,
+  integrations,
   isEnterprise,
   latestAlerts,
   onClose,
@@ -64,6 +62,7 @@ export const ExpandedDevice = ({
   saveGlobalSettings,
   setDeviceConfig,
   setDeviceTags,
+  setDeviceTwin,
   setSnackbar,
   showHelptips,
   tenantCapabilities,
@@ -83,27 +82,12 @@ export const ExpandedDevice = ({
       return;
     }
     clearInterval(timer.current);
-    timer.current = setInterval(() => getDeviceInfo(device), refreshDeviceLength);
-    getDeviceInfo(device);
+    timer.current = setInterval(() => getDeviceInfo(device.id), refreshDeviceLength);
+    getDeviceInfo(device.id);
     return () => {
       clearInterval(timer.current);
     };
   }, [device.id, device.status]);
-
-  const getDeviceInfo = device => {
-    getDeviceAuth(device.id);
-    if (hasDeviceConfig && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(device.status)) {
-      getDeviceConfig(device.id);
-    }
-    if (device.status === DEVICE_STATES.accepted) {
-      // Get full device identity details for single selected device
-      getDeviceById(device.id);
-      getDeviceConnect(device.id);
-      if (hasMonitor) {
-        getLatestDeviceAlerts(device.id);
-      }
-    }
-  };
 
   const onDecommissionDevice = device_id => {
     // close dialog!
@@ -158,6 +142,7 @@ export const ExpandedDevice = ({
         showHelptips={showHelptips}
       />
       <DeviceTags device={device} setSnackbar={setSnackbar} setDeviceTags={setDeviceTags} showHelptips={showHelptips} />
+      {!!integrations.length && <DeviceTwin device={device} integrations={integrations} getDeviceTwin={getDeviceTwin} setDeviceTwin={setDeviceTwin} />}
       {isAcceptedDevice && (
         <>
           <InstalledSoftware device={device} docsVersion={docsVersion} setSnackbar={setSnackbar} />
@@ -231,15 +216,13 @@ const actionCreators = {
   decommissionDevice,
   getDeviceAlerts,
   getDeviceLog,
-  getDeviceAuth,
-  getDeviceById,
-  getDeviceConfig,
-  getDeviceConnect,
-  getLatestDeviceAlerts,
+  getDeviceInfo,
+  getDeviceTwin,
   getSingleDeployment,
   saveGlobalSettings,
   setDeviceConfig,
   setDeviceTags,
+  setDeviceTwin,
   setSnackbar
 };
 
@@ -254,6 +237,7 @@ const mapStateToProps = (state, ownProps) => {
     device,
     deviceConfigDeployment: state.deployments.byId[configDeploymentId] || {},
     docsVersion: getDocsVersion(state),
+    integrations: state.organization.externalDeviceIntegrations.filter(integration => integration.id),
     isEnterprise: getIsEnterprise(state),
     latestAlerts: latest.slice(0, 20),
     onboardingComplete: state.onboarding.complete,

@@ -5,23 +5,24 @@ import { commonErrorFallback, commonErrorHandler, progress, setSnackbar } from '
 import { getSingleDeployment } from '../actions/deploymentActions';
 import { saveGlobalSettings } from '../actions/userActions';
 import { auditLogsApiUrl } from '../actions/organizationActions';
-import GeneralApi, { headerNames, MAX_PAGE_SIZE } from '../api/general-api';
+import GeneralApi, { apiUrl, headerNames, MAX_PAGE_SIZE } from '../api/general-api';
 import AppConstants from '../constants/appConstants';
-import DeviceConstants, { DEVICE_ISSUE_OPTIONS, DEVICE_LIST_DEFAULTS, DEVICE_STATES } from '../constants/deviceConstants';
+import DeviceConstants from '../constants/deviceConstants';
 
 import { deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
-import { getIdAttribute } from '../selectors';
+import { getIdAttribute, getTenantCapabilities } from '../selectors';
+import { getLatestDeviceAlerts } from './monitorActions';
 
+const { DEVICE_STATES, DEVICE_LIST_DEFAULTS } = DeviceConstants;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
-const apiUrl = '/api/management/v1';
-const apiUrlV2 = '/api/management/v2';
-export const deviceAuthV2 = `${apiUrlV2}/devauth`;
-export const deviceConnect = `${apiUrl}/deviceconnect`;
-export const inventoryApiUrl = `${apiUrl}/inventory`;
-export const inventoryApiUrlV2 = `${apiUrlV2}/inventory`;
-export const deviceConfig = `${apiUrl}/deviceconfig/configurations/device`;
-export const reportingApiUrl = `${apiUrl}/reporting`;
+export const deviceAuthV2 = `${apiUrl.v2}/devauth`;
+export const deviceConnect = `${apiUrl.v1}/deviceconnect`;
+export const inventoryApiUrl = `${apiUrl.v1}/inventory`;
+export const inventoryApiUrlV2 = `${apiUrl.v2}/inventory`;
+export const deviceConfig = `${apiUrl.v1}/deviceconfig/configurations/device`;
+export const reportingApiUrl = `${apiUrl.v1}/reporting`;
+export const iotManagerBaseURL = `${apiUrl.v1}/iot-manager`;
 
 const defaultAttributes = [
   { scope: 'identity', attribute: 'status' },
@@ -294,9 +295,7 @@ export const getGroupDevices =
   (group, options = {}) =>
   (dispatch, getState) => {
     const { shouldIncludeAllStates, ...remainder } = options;
-    return Promise.resolve(
-      dispatch(getDevicesByStatus(shouldIncludeAllStates ? undefined : DeviceConstants.DEVICE_STATES.accepted, { ...remainder, group }))
-    ).then(results => {
+    return Promise.resolve(dispatch(getDevicesByStatus(shouldIncludeAllStates ? undefined : DEVICE_STATES.accepted, { ...remainder, group }))).then(results => {
       if (!group) {
         return Promise.resolve();
       }
@@ -328,7 +327,7 @@ export const getAllGroupDevices = (group, shouldIncludeAllStates) => (dispatch, 
   const { filterTerms } = convertDeviceListStateToFilters({
     filters: [],
     group,
-    status: shouldIncludeAllStates ? undefined : DeviceConstants.DEVICE_STATES.accepted
+    status: shouldIncludeAllStates ? undefined : DEVICE_STATES.accepted
   });
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
     GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
@@ -369,7 +368,7 @@ export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
   }
   const { filterTerms: filters } = convertDeviceListStateToFilters({
     filters: getState().devices.groups.byId[group].filters,
-    status: DeviceConstants.DEVICE_STATES.accepted
+    status: DEVICE_STATES.accepted
   });
   const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
@@ -437,6 +436,24 @@ export const getDeviceById = id => (dispatch, getState) =>
       }
     });
 
+export const getDeviceInfo = deviceId => (dispatch, getState) => {
+  const device = getState().devices.byId[deviceId];
+  const { hasDeviceConfig, hasMonitor } = getTenantCapabilities(getState());
+  let tasks = [dispatch(getDeviceAuth(deviceId)), dispatch(getDeviceTwin(deviceId))];
+  if (hasDeviceConfig && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(device.status)) {
+    tasks.push(dispatch(getDeviceConfig(deviceId)));
+  }
+  if (device.status === DEVICE_STATES.accepted) {
+    // Get full device identity details for single selected device
+    tasks.push(dispatch(getDeviceById(deviceId)));
+    tasks.push(dispatch(getDeviceConnect(deviceId)));
+    if (hasMonitor) {
+      tasks.push(dispatch(getLatestDeviceAlerts(deviceId)));
+    }
+  }
+  return Promise.all(tasks);
+};
+
 const deriveInactiveDevices = deviceIds => (dispatch, getState) => {
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
@@ -474,10 +491,10 @@ export const getDeviceCount = status => (dispatch, getState) =>
   }).then(response => {
     const count = Number(response.headers[headerNames.total]);
     switch (status) {
-      case DeviceConstants.DEVICE_STATES.accepted:
-      case DeviceConstants.DEVICE_STATES.pending:
-      case DeviceConstants.DEVICE_STATES.preauth:
-      case DeviceConstants.DEVICE_STATES.rejected:
+      case DEVICE_STATES.accepted:
+      case DEVICE_STATES.pending:
+      case DEVICE_STATES.preauth:
+      case DEVICE_STATES.rejected:
         return dispatch({ type: DeviceConstants[`SET_${status.toUpperCase()}_DEVICES_COUNT`], count, status });
       default:
         return dispatch({ type: DeviceConstants.SET_TOTAL_DEVICES, count });
@@ -485,7 +502,7 @@ export const getDeviceCount = status => (dispatch, getState) =>
   });
 
 export const getAllDeviceCounts = () => dispatch =>
-  Promise.all([DeviceConstants.DEVICE_STATES.accepted, DeviceConstants.DEVICE_STATES.pending].map(status => dispatch(getDeviceCount(status))));
+  Promise.all([DEVICE_STATES.accepted, DEVICE_STATES.pending].map(status => dispatch(getDeviceCount(status))));
 
 export const getDeviceLimit = () => dispatch =>
   GeneralApi.get(`${deviceAuthV2}/limits/max_devices`).then(res =>
@@ -512,10 +529,10 @@ export const setDeviceListState = selectionState => (dispatch, getState) =>
 
 const convertIssueOptionsToFilters = issuesSelection =>
   issuesSelection.map(item => {
-    if (typeof DEVICE_ISSUE_OPTIONS[item].filterRule.value === 'function') {
-      return { ...DEVICE_ISSUE_OPTIONS[item].filterRule, value: DEVICE_ISSUE_OPTIONS[item].filterRule.value() };
+    if (typeof DeviceConstants.DEVICE_ISSUE_OPTIONS[item].filterRule.value === 'function') {
+      return { ...DeviceConstants.DEVICE_ISSUE_OPTIONS[item].filterRule, value: DeviceConstants.DEVICE_ISSUE_OPTIONS[item].filterRule.value() };
     }
-    return DEVICE_ISSUE_OPTIONS[item].filterRule;
+    return DeviceConstants.DEVICE_ISSUE_OPTIONS[item].filterRule;
   });
 
 export const convertDeviceListStateToFilters = ({ filters = [], group, selectedIssues = [], status }) => {
@@ -524,7 +541,7 @@ export const convertDeviceListStateToFilters = ({ filters = [], group, selectedI
     applicableFilters = [{ key: 'group', value: group, operator: '$eq', scope: 'system' }];
   }
   const nonMonitorFilters = applicableFilters.filter(
-    filter => !Object.values(DEVICE_ISSUE_OPTIONS).some(({ filterRule }) => filterRule.scope === filter.scope && filterRule.key === filter.key)
+    filter => !Object.values(DeviceConstants.DEVICE_ISSUE_OPTIONS).some(({ filterRule }) => filterRule.scope === filter.scope && filterRule.key === filter.key)
   );
   const deviceIssueFilters = convertIssueOptionsToFilters(selectedIssues);
   applicableFilters = [...nonMonitorFilters, ...deviceIssueFilters];
@@ -613,7 +630,7 @@ export const getActiveDevices = currentTime => dispatch =>
       page: 1,
       per_page: 1,
       filters: mapFiltersToTerms([
-        { key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' },
+        { key: 'status', value: DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' },
         { key: 'updated_ts', value: currentTime, operator: '$gte', scope: 'system' }
       ])
     }),
@@ -621,7 +638,7 @@ export const getActiveDevices = currentTime => dispatch =>
       page: 1,
       per_page: 1,
       filters: mapFiltersToTerms([
-        { key: 'status', value: DeviceConstants.DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' },
+        { key: 'status', value: DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' },
         { key: 'updated_ts', value: currentTime, operator: '$lt', scope: 'system' }
       ])
     })
@@ -666,7 +683,7 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
           total: deviceAccu.ids.length
         })
       ];
-      if (status === DeviceConstants.DEVICE_STATES.accepted && deviceAccu.ids.length === total) {
+      if (status === DEVICE_STATES.accepted && deviceAccu.ids.length === total) {
         tasks.push(dispatch(deriveInactiveDevices(deviceAccu.ids)));
       }
       return Promise.all(tasks);
@@ -908,3 +925,51 @@ export const setDeviceTags = (deviceId, tags) => dispatch =>
       .catch(err => commonErrorHandler(err, `There was an error setting tags for device ${deviceId}.`, dispatch, 'Please check your connection.'))
       .then(() => Promise.resolve(dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device: { ...device, tags } })));
   });
+
+export const getDeviceTwin = deviceId => (dispatch, getState) => {
+  let providerResult = {};
+  return GeneralApi.get(`${iotManagerBaseURL}/devices/${deviceId}/state`)
+    .then(({ data }) => {
+      providerResult = data;
+    })
+    .catch(err => {
+      providerResult = { twinError: `There was an error getting the device twin for device ${deviceId}. ${err}` };
+    })
+    .finally(() =>
+      Promise.resolve(
+        dispatch({
+          type: DeviceConstants.RECEIVE_DEVICE,
+          device: {
+            ...getState().devices.byId[deviceId],
+            twinsByProvider: {
+              ...getState().devices.byId[deviceId].twinsByProvider,
+              ...providerResult
+            }
+          }
+        })
+      )
+    );
+};
+
+export const setDeviceTwin = (deviceId, integration, settings) => (dispatch, getState) =>
+  GeneralApi.put(`${iotManagerBaseURL}/devices/${deviceId}/state/${integration.id}`, { desired: settings })
+    .catch(err => commonErrorHandler(err, `There was an error updating the device twin for device ${deviceId}.`, dispatch))
+    .then(() => {
+      const { twinsByProvider = {} } = getState().devices.byId[deviceId];
+      const { [integration.provider]: currentState = {} } = twinsByProvider;
+      return Promise.resolve(
+        dispatch({
+          type: DeviceConstants.RECEIVE_DEVICE,
+          device: {
+            ...getState().devices.byId[deviceId],
+            twinsByProvider: {
+              ...twinsByProvider,
+              [integration.provider]: {
+                ...currentState,
+                desired: settings
+              }
+            }
+          }
+        })
+      );
+    });

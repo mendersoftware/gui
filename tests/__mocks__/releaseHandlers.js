@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 
-import { deploymentsApiUrl } from '../../src/js/actions/releaseActions';
+import { deploymentsApiUrl } from '../../src/js/actions/deploymentActions';
 import { headerNames } from '../../src/js/api/general-api';
 import { SORTING_OPTIONS } from '../../src/js/constants/appConstants';
 import { customSort } from '../../src/js/helpers';

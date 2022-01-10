@@ -1,41 +1,61 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+
 import { Button, MenuItem, Select, TextField } from '@material-ui/core';
 
-import { changeIntegration, deleteIntegration, getIntegrationFor } from '../../actions/organizationActions';
+import { changeIntegration, createIntegration, deleteIntegration, getIntegrations } from '../../actions/organizationActions';
 import { EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
 import Confirm from '../common/confirm';
+import InfoHint from '../common/info-hint';
 
 const maxWidth = 750;
 
 export const IntegrationConfiguration = ({ integration, onCancel, onDelete, onSave }) => {
-  const { connectionString = '', provider } = integration;
+  const { credentials = {}, provider } = integration;
+  const connectionString = credentials[EXTERNAL_PROVIDER[provider].credentialsAttribute] || '';
   const [connectionConfig, setConnectionConfig] = useState(connectionString);
   const [isEditing, setIsEditing] = useState(!connectionString);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  useEffect(() => {
+    const { credentials = {}, provider } = integration;
+    const connectionString = credentials[EXTERNAL_PROVIDER[provider].credentialsAttribute] || '';
+    setConnectionConfig(connectionString);
+    setIsEditing(false);
+  }, [integration]);
+
   const onCancelClick = () => {
     setIsEditing(false);
+    setConnectionConfig(connectionString);
     onCancel(integration);
   };
   const onDeleteClick = () => setIsDeleting(true);
   const onDeleteConfirm = () => onDelete(integration);
   const onEditClick = () => setIsEditing(true);
-  const onSaveClick = () => onSave({ ...integration, connectionString: connectionConfig });
+  const onSaveClick = () =>
+    onSave({
+      ...integration,
+      credentials: {
+        type: EXTERNAL_PROVIDER[provider].credentialsType,
+        [EXTERNAL_PROVIDER[provider].credentialsAttribute]: connectionConfig
+      }
+    });
 
   const updateConnectionConfig = ({ target: { value = '' } }) => setConnectionConfig(value);
 
+  const { configHint, title } = EXTERNAL_PROVIDER[provider];
   return (
     <>
-      <h3 className="margin-bottom-none">{EXTERNAL_PROVIDER[provider].title}</h3>
+      <h3 className="margin-bottom-none">{title}</h3>
       <div className="flexbox space-between relative" style={{ alignItems: 'flex-end', maxWidth }}>
         <TextField
           disabled={!isEditing}
           InputLabelProps={{ shrink: !!connectionConfig }}
-          label={`${EXTERNAL_PROVIDER[provider].title} connection string`}
+          label={`${title} connection string`}
+          multiline
           onChange={updateConnectionConfig}
+          style={{ minWidth: 500, wordBreak: 'break-all' }}
           value={connectionConfig}
-          style={{ minWidth: 500 }}
         />
         <div className="flexbox">
           {isEditing ? (
@@ -60,41 +80,45 @@ export const IntegrationConfiguration = ({ integration, onCancel, onDelete, onSa
           <Confirm type="integrationRemoval" classes="confirmation-overlay" action={onDeleteConfirm} cancel={() => setIsDeleting(false)} style={{}} />
         )}
       </div>
+      <InfoHint content={configHint} style={{ maxWidth }} />
     </>
   );
 };
 
-const emptyIntegration = {
-  connectionString: '',
-  provider: ''
-};
-
-export const Integrations = ({ integrations, changeIntegration, deleteIntegration, getIntegrationFor }) => {
+export const Integrations = ({ integrations = [], changeIntegration, createIntegration, deleteIntegration, getIntegrations }) => {
   const [availableIntegrations, setAvailableIntegrations] = useState([]);
   const [configuredIntegrations, setConfiguredIntegrations] = useState([]);
   const [isCreating, setIsCreating] = useState(false);
   const [currentValue, setCurrentValue] = useState('');
 
   useEffect(() => {
-    const available = Object.values(EXTERNAL_PROVIDER).reduce((accu, provider) => {
-      if (provider.enabled && !integrations.some(integration => integration.provider == provider.provider)) {
-        accu.push(provider);
-      }
-      return accu;
-    }, []);
-    if (!available.every(integration => availableIntegrations.some(availableIntegration => availableIntegration.provider === integration.provider))) {
+    const { available, needsUpdate } = Object.values(EXTERNAL_PROVIDER).reduce(
+      (accu, provider) => {
+        const hasIntegrationConfigured = integrations.some(integration => integration.provider == provider.provider);
+        if (provider.enabled && !hasIntegrationConfigured) {
+          accu.available.push(provider);
+        }
+        if (hasIntegrationConfigured && availableIntegrations.some(availableIntegration => availableIntegration.provider === provider.provider)) {
+          accu.needsUpdate = true;
+        }
+        return accu;
+      },
+      { available: [], needsUpdate: !(availableIntegrations.length || integrations.length) }
+    );
+    if (needsUpdate) {
       setAvailableIntegrations(available);
     }
     setConfiguredIntegrations(integrations);
+    setIsCreating(!!integrations.length);
   }, [integrations]);
 
   useEffect(() => {
-    availableIntegrations.map(integration => (integration.connectionString ? undefined : getIntegrationFor(integration)));
-  }, [availableIntegrations]);
+    getIntegrations();
+  }, []);
 
-  const onConfigureIntegration = ({ target: { value: provider } }) => {
+  const onConfigureIntegration = ({ target: { value: provider = '' } }) => {
     setCurrentValue(provider);
-    setConfiguredIntegrations([{ ...emptyIntegration, provider }, ...configuredIntegrations]);
+    setConfiguredIntegrations([{ id: 'new', provider }, ...configuredIntegrations]);
     setIsCreating(true);
   };
 
@@ -105,7 +129,11 @@ export const Integrations = ({ integrations, changeIntegration, deleteIntegratio
   };
 
   const onSaveClick = integration => {
-    changeIntegration(integration);
+    if (integration.id === 'new') {
+      createIntegration(integration);
+    } else {
+      changeIntegration(integration);
+    }
     setCurrentValue('');
     return setIsCreating(isCreating && !integration.connectionString ? false : isCreating);
   };
@@ -124,23 +152,17 @@ export const Integrations = ({ integrations, changeIntegration, deleteIntegratio
         </Select>
       )}
       {configuredIntegrations.map(integration => (
-        <IntegrationConfiguration
-          key={integration.connectionString}
-          integration={integration}
-          onCancel={onCancelClick}
-          onDelete={deleteIntegration}
-          onSave={onSaveClick}
-        />
+        <IntegrationConfiguration key={integration.id} integration={integration} onCancel={onCancelClick} onDelete={deleteIntegration} onSave={onSaveClick} />
       ))}
     </div>
   );
 };
 
-const actionCreators = { changeIntegration, deleteIntegration, getIntegrationFor };
+const actionCreators = { changeIntegration, createIntegration, deleteIntegration, getIntegrations };
 
 const mapStateToProps = state => {
   return {
-    integrations: state.organization.externalDeviceIntegrations ?? []
+    integrations: state.organization.externalDeviceIntegrations
   };
 };
 

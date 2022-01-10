@@ -321,12 +321,12 @@ export const DeviceGroups = ({
     if (isEnterprise) {
       tasks.push(getDynamicGroups());
     }
-    return Promise.all(tasks).catch(err => console.log(err));
+    return Promise.all(tasks).catch(console.log);
   };
 
   const removeCurrentGroup = () => {
     const request = groupFilters.length ? removeDynamicGroup(selectedGroup) : removeStaticGroup(selectedGroup);
-    return request.then(toggleGroupRemoval).catch(err => console.log(err));
+    return request.then(toggleGroupRemoval).catch(console.log);
   };
 
   // Edit groups from device selection
@@ -363,7 +363,7 @@ export const DeviceGroups = ({
     } else {
       request = removeDevicesFromGroup(selectedGroup, devices);
     }
-    return request.catch(err => console.log(err));
+    return request.catch(console.log);
   };
 
   const openSettingsDialog = e => {

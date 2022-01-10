@@ -13,7 +13,7 @@ import { getDeviceAttributes, getDeviceById, getDevicesByStatus, getDeviceLimit,
 import { getDeploymentsByStatus } from './deploymentActions';
 import { getReleases } from './releaseActions';
 import { saveUserSettings, getGlobalSettings, getRoles, saveGlobalSettings } from './userActions';
-import { getUserOrganization } from './organizationActions';
+import { getIntegrations, getUserOrganization } from './organizationActions';
 
 const cookies = new Cookies();
 
@@ -38,6 +38,7 @@ export const initializeAppData = () => (dispatch, getState) => {
     dispatch(getDevicesByStatus(DEVICE_STATES.rejected)),
     dispatch(getDynamicGroups()),
     dispatch(getGroups()),
+    dispatch(getIntegrations()),
     dispatch(getReleases()),
     dispatch(getDeviceLimit()),
     dispatch(getRoles())

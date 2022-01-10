@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import moment from 'moment';
 
 import { InfoOutlined as InfoOutlinedIcon, LocalOffer as LocalOfferIcon } from '@material-ui/icons';
@@ -189,4 +190,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, actionCreators)(Upgrade);
+export default withRouter(connect(mapStateToProps, actionCreators)(Upgrade));

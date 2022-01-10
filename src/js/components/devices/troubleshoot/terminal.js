@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FitAddon } from 'xterm-addon-fit';
 import { SearchAddon } from 'xterm-addon-search';
 import { WebLinksAddon } from 'xterm-addon-web-links';
-import { WebLinkProvider } from 'xterm-addon-web-links/out/WebLinkProvider';
 import msgpack5 from 'msgpack5';
 
 import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as MessageProtocols } from '../../../constants/deviceConstants';
@@ -14,7 +13,6 @@ const MessagePack = msgpack5();
 
 const fitAddon = new FitAddon();
 const searchAddon = new SearchAddon();
-const webLinksAddon = new WebLinksAddon();
 
 export const byteArrayToString = body => String.fromCharCode(...body);
 
@@ -35,6 +33,9 @@ export const options = {
 };
 
 let healthcheckTimeout = null;
+
+const pathCharacterSet = '(\\/[\\/\\w\\.\\-%~:+@]*)*([^:"\'\\s])';
+const pathClause = '(' + pathCharacterSet + ')?';
 
 export const Terminal = ({
   onDownloadClick,
@@ -96,11 +97,6 @@ export const Terminal = ({
     sendMessage(message);
     setDimensions({ rows, cols });
     term.focus();
-    term.registerLinkProvider(
-      new WebLinkProvider(term, /^\s*(\/.+)\b/, (e, link) => {
-        onDownloadClick(link);
-      })
-    );
     socket.onmessage = onSocketMessage;
   }, [socketInitialized, term]);
 
@@ -197,6 +193,8 @@ export const Terminal = ({
   };
 
   const onData = data => sendMessage({ typ: MessageTypes.Shell, body: data });
+
+  const webLinksAddon = new WebLinksAddon((e, link) => onDownloadClick(link), { urlRegex: pathClause }, true);
 
   return <XTerm ref={xtermRef} addons={[fitAddon, searchAddon, webLinksAddon]} options={options} onData={onData} {...xtermProps} />;
 };

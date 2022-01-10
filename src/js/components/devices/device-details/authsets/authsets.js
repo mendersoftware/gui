@@ -5,7 +5,7 @@ import pluralize from 'pluralize';
 // material ui
 import { Button } from '@material-ui/core';
 
-import { deleteAuthset, getDeviceAuth, updateDeviceAuth } from '../../../../actions/deviceActions';
+import { deleteAuthset, updateDeviceAuth } from '../../../../actions/deviceActions';
 import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { getLimitMaxed } from '../../../../selectors';
 import theme from '../../../../themes/mender-theme';
@@ -20,7 +20,6 @@ export const Authsets = ({
   device,
   deviceLimit,
   deviceListRefresh,
-  getDeviceAuth,
   limitMaxed,
   showHelptips,
   updateDeviceAuth
@@ -46,8 +45,6 @@ export const Authsets = ({
       // call API to update authset
       return (
         updateDeviceAuth(device_id, auth_id, status)
-          // refresh authset list
-          .then(() => getDeviceAuth(device_id))
           // on finish, change "loading" back to null
           .finally(postUpdateSteps)
       );
@@ -83,7 +80,7 @@ export const Authsets = ({
   );
 };
 
-const actionCreators = { deleteAuthset, getDeviceAuth, updateDeviceAuth };
+const actionCreators = { deleteAuthset, updateDeviceAuth };
 
 const mapStateToProps = (state, ownProps) => {
   const device = state.devices.byId[ownProps.device.id] || {};

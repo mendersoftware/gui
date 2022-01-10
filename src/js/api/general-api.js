@@ -8,6 +8,11 @@ export const headerNames = {
   total: 'x-total-count'
 };
 
+export const apiUrl = {
+  v1: '/api/management/v1',
+  v2: '/api/management/v2'
+};
+
 export const MAX_PAGE_SIZE = 500;
 
 const unauthorizedRedirect = error => {

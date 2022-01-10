@@ -1,9 +1,10 @@
 import React from 'react';
 
 import { Chip } from '@material-ui/core';
-import { Add as AddIcon, ArrowRight as ArrowRightIcon, InfoOutlined as InfoOutlinedIcon, PauseCircleOutline as PauseIcon } from '@material-ui/icons';
+import { Add as AddIcon, ArrowRight as ArrowRightIcon, PauseCircleOutline as PauseIcon } from '@material-ui/icons';
 
 import EnterpriseNotification from '../../common/enterpriseNotification';
+import InfoHint from '../../common/info-hint';
 import MenderTooltip from '../../common/mendertooltip';
 import theme, { colors } from './../../../themes/mender-theme';
 
@@ -136,11 +137,14 @@ export const RolloutStepsContainer = ({ className = '', disabled, docsVersion, i
     </div>
     {isEnterprise ? (
       disabled && (
-        <p className="info icon">
-          <InfoOutlinedIcon fontSize="small" style={{ verticalAlign: 'middle', margin: '0 6px 4px 0' }} />
-          This feature is not available on <b>phased deployments</b>. If you&apos;d like to set pause states between update steps, go back and adjust the
-          rollout schedule to a <b>single phase</b>.
-        </p>
+        <InfoHint
+          content={
+            <>
+              This feature is not available on <b>phased deployments</b>. If you&apos;d like to set pause states between update steps, go back and adjust the
+              rollout schedule to a <b>single phase</b>.
+            </>
+          }
+        />
       )
     ) : (
       <EnterpriseNotification isEnterprise={isEnterprise} benefit="granular control about update rollout to allow synchronization across your fleet" />

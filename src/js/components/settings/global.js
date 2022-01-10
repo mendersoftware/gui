@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Button, Checkbox, FormControl, FormControlLabel, FormHelperText, InputLabel, MenuItem, Select } from '@material-ui/core';
-import { InfoOutlined as InfoOutlinedIcon } from '@material-ui/icons';
 
 import { getDeviceAttributes } from '../../actions/deviceActions';
 import { changeNotificationSetting } from '../../actions/monitorActions';
 import { getGlobalSettings, saveGlobalSettings } from '../../actions/userActions';
 import { alertChannels } from '../../constants/monitorConstants';
 import { getDocsVersion, getIdAttribute, getUserRoles, getTenantCapabilities } from '../../selectors';
+import InfoHint from '../common/info-hint';
 
 const maxWidth = 750;
 
@@ -91,10 +91,7 @@ export const GlobalSettingsDialog = ({
   return (
     <div style={{ maxWidth }} className="margin-top-small">
       <h2 className="margin-top-small">Global settings</h2>
-      <p className="info" style={{ marginBottom: 30 }}>
-        <InfoOutlinedIcon fontSize="small" style={{ verticalAlign: 'middle', margin: '0 6px 4px 0' }} />
-        These settings apply to all users, so changes made here may affect other users&apos; experience.
-      </p>
+      <InfoHint content="These settings apply to all users, so changes made here may affect other users' experience." style={{ marginBottom: 30 }} />
       <IdAttributeSelection
         attributes={attributes}
         docsVersion={docsVersion}
