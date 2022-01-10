@@ -63,7 +63,7 @@
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "assert": "^2.0.0",
-    "autoprefixer": "^10.4.1",
+    "autoprefixer": "^10.4.2",
     "axios-mock-adapter": "^1.20.0",
     "babel-jest": "~27.4.5",
     "child_process": "^1.0.2",
