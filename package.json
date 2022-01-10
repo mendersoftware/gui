@@ -83,7 +83,7 @@
     "jest": "^27.4.7",
     "jest-canvas-mock": "^2.3.1",
     "jest-junit": "^13.0.0",
-    "jest-resolve": "~27.4.5",
+    "jest-resolve": "~27.4.6",
     "jest-watch-typeahead": "1.0.0",
     "less": "^4.1.2",
     "less-loader": "^10.2.0",
