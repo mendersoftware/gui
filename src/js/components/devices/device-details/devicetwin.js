@@ -122,7 +122,7 @@ export const DeviceTwin = ({ device, getDeviceTwin, integrations, setDeviceTwin 
 
   const integration = integrations.find(integration => integration.provider === externalProvider.provider);
 
-  const { [externalProvider.provider]: deviceTwin = {} } = device.twinsByProvider ?? {};
+  const { [integration.id]: deviceTwin = {} } = device.twinsByIntegration ?? {};
   const { desired: configuredTwin = {}, reported: reportedTwin = {}, twinError, updated_ts: updateTime = device.created_ts } = deviceTwin;
 
   useEffect(() => {

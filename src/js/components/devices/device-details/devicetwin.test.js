@@ -10,8 +10,8 @@ describe('DeviceTwin Component', () => {
     const { baseElement } = render(
       <MemoryRouter>
         <DeviceTwin
-          device={{ ...defaultState.devices.byId.a1, twinsByProvider: { something: 'test', other: 'misc', ab: 12, nest: { here: 'some' } } }}
-          integrations={[]}
+          device={{ ...defaultState.devices.byId.a1, twinsByIntegration: { a123: { something: 'test', other: 'misc', ab: 12, nest: { here: 'some' } } } }}
+          integrations={[{ id: 'a123', provider: 'iot-hub' }]}
           setDeviceTwin={jest.fn}
         />
       </MemoryRouter>

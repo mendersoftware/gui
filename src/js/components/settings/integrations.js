@@ -21,7 +21,7 @@ export const IntegrationConfiguration = ({ integration, onCancel, onDelete, onSa
     const { credentials = {}, provider } = integration;
     const connectionString = credentials[EXTERNAL_PROVIDER[provider].credentialsAttribute] || '';
     setConnectionConfig(connectionString);
-    setIsEditing(false);
+    setIsEditing(!connectionString);
   }, [integration]);
 
   const onCancelClick = () => {
