@@ -1,5 +1,6 @@
 import { SORTING_OPTIONS } from '../constants/appConstants';
-import * as DeviceConstants from '../constants/deviceConstants';
+import DeviceConstants from '../constants/deviceConstants';
+import MonitorConstants from '../constants/monitorConstants';
 import { duplicateFilter } from '../helpers';
 
 export const initialState = {
@@ -151,17 +152,7 @@ const deviceReducer = (state = initialState, action) => {
       return { ...state, deviceList: action.state };
     case DeviceConstants.SET_FILTER_ATTRIBUTES:
       return { ...state, filteringAttributes: action.attributes };
-    case DeviceConstants.RECEIVE_DEVICE:
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [action.device.id]: {
-            ...state.byId[action.device.id],
-            ...action.device
-          }
-        }
-      };
+
     case DeviceConstants.RECEIVE_DEVICES:
       return {
         ...state,
@@ -245,21 +236,10 @@ const deviceReducer = (state = initialState, action) => {
         }
       };
     }
-    case DeviceConstants.RECEIVE_DEVICE_CONNECT: {
-      const { status: connect_status, updated_ts: connect_updated_ts } = action.device;
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [action.device.device_id]: {
-            ...state.byId[action.device.device_id],
-            connect_status,
-            connect_updated_ts
-          }
-        }
-      };
-    }
-    case DeviceConstants.RECEIVE_DEVICE_CONFIG: {
+    case DeviceConstants.RECEIVE_DEVICE:
+    case DeviceConstants.RECEIVE_DEVICE_CONFIG:
+    case DeviceConstants.RECEIVE_DEVICE_CONNECT:
+    case MonitorConstants.RECEIVE_DEVICE_MONITOR_CONFIG: {
       const { device } = action;
       return {
         ...state,

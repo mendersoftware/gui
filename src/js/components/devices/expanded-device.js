@@ -168,6 +168,7 @@ export const ExpandedDevice = ({
         <DeviceMonitoring
           alerts={alerts}
           device={device}
+          docsVersion={docsVersion}
           getAlerts={getDeviceAlerts}
           innerRef={monitoring}
           isOffline={isOffline}
