@@ -111,9 +111,7 @@ export const ExpandedDevice = ({
     setSnackbar('Link copied to clipboard');
   };
 
-  const scrollToMonitor = () => {
-    monitoring.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  const scrollToMonitor = () => monitoring.current?.scrollIntoView({ behavior: 'smooth' });
 
   const deviceIdentifier = device?.attributes?.name ?? device?.id ?? '-';
   const isAcceptedDevice = status === DEVICE_STATES.accepted;
@@ -142,7 +140,9 @@ export const ExpandedDevice = ({
         showHelptips={showHelptips}
       />
       <DeviceTags device={device} setSnackbar={setSnackbar} setDeviceTags={setDeviceTags} showHelptips={showHelptips} />
-      {!!integrations.length && <DeviceTwin device={device} integrations={integrations} getDeviceTwin={getDeviceTwin} setDeviceTwin={setDeviceTwin} />}
+      {!!integrations.length && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(status) && (
+        <DeviceTwin device={device} integrations={integrations} getDeviceTwin={getDeviceTwin} setDeviceTwin={setDeviceTwin} />
+      )}
       {isAcceptedDevice && (
         <>
           <InstalledSoftware device={device} docsVersion={docsVersion} setSnackbar={setSnackbar} />
