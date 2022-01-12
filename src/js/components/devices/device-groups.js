@@ -408,6 +408,8 @@ export const DeviceGroups = ({
 
   const toggleGroupRemoval = () => setRemoveGroup(!removeGroup);
 
+  const refreshDevices = () => setDeviceRefreshTrigger(!deviceRefreshTrigger);
+
   return (
     <>
       <div className="flexbox space-between margin-right">
@@ -448,6 +450,7 @@ export const DeviceGroups = ({
             onGroupRemoval={toggleGroupRemoval}
             onPreauthClick={setOpenPreauth}
             openSettingsDialog={openSettingsDialog}
+            refreshDevices={refreshDevices}
             removeDevicesFromGroup={onRemoveDevicesFromGroup}
             showsDialog={showDeviceConnectionDialog || removeGroup || modifyGroupDialog || createGroupExplanation || openIdDialog || openPreauth}
             states={routes}
