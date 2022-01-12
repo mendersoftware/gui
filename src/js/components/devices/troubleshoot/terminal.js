@@ -34,8 +34,8 @@ export const options = {
 
 let healthcheckTimeout = null;
 
-const pathCharacterSet = '(\\/[\\/\\w\\.\\-%~:+@]*)*([^:"\'\\s])';
-const pathClause = '(' + pathCharacterSet + ')?';
+// only matching absolute paths, so: /here/there - but not ../here or ./here or here/there
+const unixPathRegex = new RegExp('(\\/([^\\0\\s!$`&*()\\[\\]+\'":;\\\\])+)');
 
 export const Terminal = ({
   onDownloadClick,
@@ -64,6 +64,19 @@ export const Terminal = ({
   };
 
   useEffect(() => {
+    if (!xtermRef.current?.terminal) {
+      return;
+    }
+    const webLinksAddon = new WebLinksAddon((e, link) => onDownloadClick(link), { urlRegex: unixPathRegex }, true);
+    xtermRef.current.terminal.loadAddon(webLinksAddon);
+    try {
+      fitAddon.fit();
+    } catch {
+      setSnackbar('Fit not possible, terminal not yet visible', 5000);
+    }
+  }, [xtermRef.current]);
+
+  useEffect(() => {
     if (!socket) {
       return;
     }
@@ -83,7 +96,6 @@ export const Terminal = ({
     return () => {
       observer.disconnect();
     };
-    // xtermRef.current = null;
   }, [socket]);
 
   useEffect(() => {
@@ -194,9 +206,7 @@ export const Terminal = ({
 
   const onData = data => sendMessage({ typ: MessageTypes.Shell, body: data });
 
-  const webLinksAddon = new WebLinksAddon((e, link) => onDownloadClick(link), { urlRegex: pathClause }, true);
-
-  return <XTerm ref={xtermRef} addons={[fitAddon, searchAddon, webLinksAddon]} options={options} onData={onData} {...xtermProps} />;
+  return <XTerm ref={xtermRef} addons={[fitAddon, searchAddon]} options={options} onData={onData} {...xtermProps} />;
 };
 
 export default Terminal;
