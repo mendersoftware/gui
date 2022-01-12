@@ -6,7 +6,7 @@ export const initialState = {
   byId: {
     // [deviceId]: {
     //   ...,
-    //   twinsByProvider: { [external.provider]: twinData }
+    //   twinsByIntegration: { [external.provider.id]: twinData }
     // }
   },
   byStatus: {

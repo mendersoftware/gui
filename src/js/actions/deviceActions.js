@@ -930,7 +930,7 @@ export const getDeviceTwin = deviceId => (dispatch, getState) => {
   let providerResult = {};
   return GeneralApi.get(`${iotManagerBaseURL}/devices/${deviceId}/state`)
     .then(({ data }) => {
-      providerResult = data;
+      providerResult = { ...data, twinError: '' };
     })
     .catch(err => {
       providerResult = { twinError: `There was an error getting the device twin for device ${deviceId}. ${err}` };
@@ -941,8 +941,8 @@ export const getDeviceTwin = deviceId => (dispatch, getState) => {
           type: DeviceConstants.RECEIVE_DEVICE,
           device: {
             ...getState().devices.byId[deviceId],
-            twinsByProvider: {
-              ...getState().devices.byId[deviceId].twinsByProvider,
+            twinsByIntegration: {
+              ...getState().devices.byId[deviceId].twinsByIntegration,
               ...providerResult
             }
           }
@@ -955,16 +955,16 @@ export const setDeviceTwin = (deviceId, integration, settings) => (dispatch, get
   GeneralApi.put(`${iotManagerBaseURL}/devices/${deviceId}/state/${integration.id}`, { desired: settings })
     .catch(err => commonErrorHandler(err, `There was an error updating the device twin for device ${deviceId}.`, dispatch))
     .then(() => {
-      const { twinsByProvider = {} } = getState().devices.byId[deviceId];
-      const { [integration.provider]: currentState = {} } = twinsByProvider;
+      const { twinsByIntegration = {} } = getState().devices.byId[deviceId];
+      const { [integration.id]: currentState = {} } = twinsByIntegration;
       return Promise.resolve(
         dispatch({
           type: DeviceConstants.RECEIVE_DEVICE,
           device: {
             ...getState().devices.byId[deviceId],
-            twinsByProvider: {
-              ...twinsByProvider,
-              [integration.provider]: {
+            twinsByIntegration: {
+              ...twinsByIntegration,
+              [integration.id]: {
                 ...currentState,
                 desired: settings
               }
