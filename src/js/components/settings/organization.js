@@ -11,7 +11,7 @@ import { Error as ErrorIcon, FileCopy as CopyPasteIcon, Info as InfoIcon, OpenIn
 import { cancelRequest, getUserOrganization } from '../../actions/organizationActions';
 import { ADDONS, PLANS } from '../../constants/appConstants';
 import { getIsEnterprise } from '../../selectors';
-import { colors } from '../../themes/mender-theme';
+import { colors } from '../../themes/Mender';
 import Alert from '../common/alert';
 import ExpandableAttribute from '../common/expandable-attribute';
 import CancelRequestDialog from './dialogs/cancelrequest';

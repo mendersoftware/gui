@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import copy from 'copy-to-clipboard';
 
 import { Button, Divider, Drawer, IconButton } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 import { Close as CloseIcon, Link as LinkIcon, Replay as ReplayIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
@@ -22,7 +23,6 @@ import { DEVICE_STATES } from '../../constants/deviceConstants';
 import ForwardingLink from '../common/forwardlink';
 import RelativeTime from '../common/relative-time';
 import { getDocsVersion, getIsEnterprise, getTenantCapabilities, getUserRoles } from '../../selectors';
-import theme from '../../themes/mender-theme';
 import Tracking from '../../tracking';
 import TroubleshootDialog from './troubleshootdialog';
 import AuthStatus from './device-details/authstatus';
@@ -68,6 +68,7 @@ export const ExpandedDevice = ({
   tenantCapabilities,
   userRoles
 }) => {
+  const theme = useTheme();
   const { isOffline, status = DEVICE_STATES.accepted } = device;
   const [socketClosed, setSocketClosed] = useState(true);
   const [troubleshootType, setTroubleshootType] = useState();

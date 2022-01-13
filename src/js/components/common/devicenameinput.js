@@ -3,15 +3,16 @@ import { connect } from 'react-redux';
 
 // material ui
 import { IconButton, Input, InputAdornment } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 import { Clear as ClearIcon, Check as CheckIcon, Edit as EditIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { setDeviceTags } from '../../actions/deviceActions';
-import menderTheme from '../../themes/mender-theme';
 
 const iconStyle = { fontSize: '1.25rem' };
 
 export const DeviceNameInput = ({ device, isHovered, setSnackbar, setDeviceTags, style = {} }) => {
+  const theme = useTheme();
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState('');
   const { id = '', tags = {} } = device;
@@ -65,7 +66,7 @@ export const DeviceNameInput = ({ device, isHovered, setSnackbar, setDeviceTags,
 
   const onInputClick = e => e.stopPropagation();
 
-  const textColorStyle = name ? { color: menderTheme.palette.text.primary } : { color: menderTheme.palette.text.main };
+  const textColorStyle = name ? { color: theme.palette.text.primary } : { color: theme.palette.text.main };
   return (
     <Input
       id={`${device.id}-id-input`}

@@ -17,7 +17,7 @@ import {
 
 import { getArtifactUrl } from '../../actions/releaseActions';
 import { extractSoftwareInformation } from '../../helpers';
-import { colors } from '../../themes/mender-theme';
+import { colors } from '../../themes/Mender';
 import ArtifactPayload from './artifactPayload';
 import ArtifactMetadataList from './artifactmetadatalist';
 

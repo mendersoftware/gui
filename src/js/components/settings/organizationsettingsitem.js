@@ -1,14 +1,17 @@
 import React from 'react';
 
 import { Divider, ListItem, ListItemText } from '@material-ui/core';
-
-import theme from '../../themes/mender-theme';
+import { useTheme } from '@material-ui/core/styles';
 
 const defaultItemProps = { alignItems: 'flex-start', disabled: true, divider: false };
 export const maxWidth = 500;
-export const padding = theme.spacing(2);
+/**
+ * @deprecated should be using `theme.spacing(2)` directly
+ */
+export const padding = 16;
 
 const OrganizationSettingsItem = ({ title, content: { action, description }, secondary, sideBarContent, notification }) => {
+  const theme = useTheme();
   const secondaryContent = secondary ? (
     secondary
   ) : (
@@ -36,7 +39,7 @@ const OrganizationSettingsItem = ({ title, content: { action, description }, sec
           secondary={<>{secondaryContent}</>}
           style={style}
         />
-        <Divider style={{ marginBottom: theme.spacing(), marginLeft: -1 * padding, width: maxWidth }} />
+        <Divider style={{ margin: theme.spacing('inherit', 'inherit', 1, -2), width: maxWidth }} />
         {notification}
       </ListItem>
       {sideBarContent}

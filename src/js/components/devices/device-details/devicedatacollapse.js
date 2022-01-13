@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
 import { Button, Collapse, Divider, IconButton } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
 
-import theme from '../../../themes/mender-theme';
-
 export const DeviceDataCollapse = ({ children, className = '', disableBottomBorder, header, isAddOn, isOpen, onClick, shouldUnmount = true, title }) => {
+  const theme = useTheme();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {

@@ -6,13 +6,14 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 
 import './../less/main.less';
-import theme from './themes/mender-theme';
+import { createTheme } from './themes/theme-manager';
 import App from './components/app';
 import store from './reducers';
 import ErrorBoundary from './errorboundary';
 
-export const Main = () =>
-  render(
+function AppProviders() {
+  const theme = createTheme();
+  return (
     <Provider store={store}>
       <MuiThemeProvider theme={theme}>
         <ErrorBoundary>
@@ -21,7 +22,11 @@ export const Main = () =>
           </Router>
         </ErrorBoundary>
       </MuiThemeProvider>
-    </Provider>,
-    document.getElementById('main') || document.createElement('div')
+    </Provider>
   );
+}
+
+export const Main = () => {
+  render(<AppProviders />, document.getElementById('main') || document.createElement('div'));
+};
 Main();

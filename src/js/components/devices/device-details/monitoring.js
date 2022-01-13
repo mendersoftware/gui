@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Time from 'react-time';
+import { useTheme } from '@material-ui/core/styles';
 
-import theme from '../../../themes/mender-theme';
 import { DeviceConnectionNote } from './connection';
 import DeviceDataCollapse from './devicedatacollapse';
 import { DeviceOfflineHeaderNotification, NoAlertsHeaderNotification, severityMap } from './notifications';
@@ -35,6 +35,7 @@ const MonitoringAlert = ({ alert, onDetailsClick, style }) => {
 };
 
 export const DeviceMonitoring = ({ alerts, device, docsVersion, getAlerts, innerRef, isOffline, latestAlerts, onDetailsClick }) => {
+  const theme = useTheme();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {

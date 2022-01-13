@@ -1,8 +1,9 @@
 import React from 'react';
 import Time from 'react-time';
 import { List, ListItem, ListItemText, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
+
 import { FileSize, getFormattedSize } from './../../helpers';
-import { colors } from '../../themes/mender-theme';
+import { colors } from '../../themes/Mender';
 
 export const inlineHeadingStyle = { position: 'absolute', background: colors.expansionBackground, top: -35, padding: 10 };
 

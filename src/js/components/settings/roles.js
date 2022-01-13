@@ -4,14 +4,15 @@ import { connect } from 'react-redux';
 // material ui
 import { Button, Chip, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import { Add as AddIcon } from '@material-ui/icons';
+import { useTheme } from '@material-ui/core/styles';
 
 import { getGroups, getDynamicGroups } from '../../actions/deviceActions';
 import { createRole, editRole, getRoles, removeRole } from '../../actions/userActions';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import RoleDefinition, { emptyRole } from './roledefinition';
-import theme from './../../themes/mender-theme';
 
 export const RoleManagement = ({ createRole, editRole, getDynamicGroups, getGroups, getRoles, groups, removeRole, roles }) => {
+  const theme = useTheme();
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState(false);
   const [role, setRole] = useState(emptyRole);

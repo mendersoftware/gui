@@ -16,7 +16,7 @@ import { onboardingSteps } from '../constants/onboardingConstants';
 import SharedSnackbar from '../components/common/sharedsnackbar';
 import ErrorBoundary from '../errorboundary';
 import { getOnboardingState } from '../selectors';
-import { colors } from '../themes/mender-theme';
+import { colors } from '../themes/Mender';
 import Tracking from '../tracking';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';

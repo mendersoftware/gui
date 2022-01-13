@@ -5,13 +5,13 @@ import pluralize from 'pluralize';
 import isUUID from 'validator/lib/isUUID';
 
 import { Chip } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 import { ArrowDropDownCircleOutlined as ScrollDownIcon, Launch as LaunchIcon } from '@material-ui/icons';
 
 import successImage from '../../../../assets/img/largeSuccess.png';
 import failImage from '../../../../assets/img/largeFail.png';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../../constants/deploymentConstants';
 import { TwoColumnData } from '../../common/configurationobject';
-import theme from '../../../themes/mender-theme';
 import { defaultColumnDataProps } from '../report';
 
 const defaultLinkProps = {
@@ -22,6 +22,7 @@ const defaultLinkProps = {
 };
 
 export const DeploymentOverview = ({ creator, deployment, onScheduleClick }) => {
+  const theme = useTheme();
   const { artifact_name, devices = {}, filter, stats = {}, status, totalDeviceCount } = deployment;
 
   const finished = deployment.finished || status === DEPLOYMENT_STATES.finished;

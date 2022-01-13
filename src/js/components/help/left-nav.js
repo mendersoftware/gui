@@ -3,9 +3,10 @@ import { NavLink } from 'react-router-dom';
 
 // material ui
 import { List, ListItem, ListSubheader, ListItemText } from '@material-ui/core';
-import theme from '../../themes/mender-theme';
+import { useTheme } from '@material-ui/core/styles';
 
 export const LeftNav = ({ isHosted, pages }) => {
+  const theme = useTheme();
   const [links, setLinks] = useState([]);
 
   useEffect(() => {

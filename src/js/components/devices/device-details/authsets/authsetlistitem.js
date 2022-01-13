@@ -4,11 +4,11 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 
 // material ui
 import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Chip, Divider, IconButton, withStyles } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 import { FileCopy as CopyPasteIcon } from '@material-ui/icons';
 
 import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { formatTime } from '../../../../helpers';
-import theme from '../../../../themes/mender-theme';
 import Loader from '../../../common/loader';
 
 const padder = <div key="padder" style={{ flexGrow: 1 }}></div>;
@@ -70,6 +70,7 @@ export const getConfirmationMessage = (status, device, authset) => {
 const LF = '\n';
 
 const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loading, onExpand, total }) => {
+  const theme = useTheme();
   const [showKey, setShowKey] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState('');
   const [newStatus, setNewStatus] = useState('');

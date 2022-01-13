@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 
 import { Button, ButtonGroup, Menu, MenuItem } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 import { ArrowDropDown as ArrowDropDownIcon, Launch as LaunchIcon } from '@material-ui/icons';
-import theme from '../../themes/mender-theme';
 
 const buttonStyle = { border: 'none', textTransform: 'none' };
 
 export const DeviceAdditionWidget = ({ docsVersion, onConnectClick, onPreauthClick }) => {
+  const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState();
   const [selectedIndex, setSelectedIndex] = useState(0);
 

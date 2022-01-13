@@ -3,15 +3,15 @@ import pluralize from 'pluralize';
 import Time from 'react-time';
 
 import Chip from '@material-ui/core/Chip';
+import { useTheme } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
-
 import { Table, TableBody, TableCell, TableHead, TableRow, Select, MenuItem, Input, InputAdornment, IconButton } from '@material-ui/core';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { getPhaseStartTime } from '../createdeployment';
 import { getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
-import theme from '../../../themes/mender-theme';
 
 export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, numberDevices, setDeploymentSettings }) => {
+  const theme = useTheme();
   const { filterId, phases = [] } = deploymentObject;
   const updateDelay = (value, index) => {
     let newPhases = phases;

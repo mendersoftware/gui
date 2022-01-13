@@ -11,7 +11,7 @@ import pluralize from 'pluralize';
 
 import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import { deepCompare, isEmpty } from '../../../helpers';
-import theme from '../../../themes/mender-theme';
+import theme from '../../../themes/Mender';
 import InfoHint from '../../common/info-hint';
 import Loader from '../../common/loader';
 import DeviceDataCollapse from './devicedatacollapse';

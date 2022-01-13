@@ -5,6 +5,7 @@ import Cookies from 'universal-cookie';
 import moment from 'moment';
 
 import { Button, IconButton, ListItemText, ListItemSecondaryAction, Menu, MenuItem, Toolbar } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 
 import {
   AccountCircle as AccountCircleIcon,
@@ -27,7 +28,7 @@ import DeploymentNotifications from './deploymentnotifications';
 import TrialNotification from './trialnotification';
 import OfferHeader from './offerheader';
 
-import menderTheme, { colors } from '../../themes/mender-theme';
+import { colors } from '../../themes/Mender';
 import logo from '../../../assets/img/headerlogo.png';
 import enterpriseLogo from '../../../assets/img/headerlogo-enterprise.png';
 import UserConstants from '../../constants/userConstants';
@@ -71,6 +72,7 @@ export const Header = ({
   toggleHelptips,
   user
 }) => {
+  const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
   const [loggingOut, setLoggingOut] = useState(false);
   const [gettingUser, setGettingUser] = useState(false);
@@ -139,8 +141,8 @@ export const Header = ({
       className={showOffer ? 'header banner' : 'header'}
       style={{
         minHeight: 'unset',
-        paddingLeft: menderTheme.spacing(4),
-        paddingRight: menderTheme.spacing(5)
+        paddingLeft: theme.spacing(4),
+        paddingRight: theme.spacing(5)
       }}
     >
       {showOffer && <OfferHeader docsVersion={docsVersion} onHide={setHideOffer} />}
@@ -156,7 +158,7 @@ export const Header = ({
         <DeploymentNotifications inprogress={inProgress} />
         <Button
           className="header-dropdown"
-          style={{ fontSize: 14, marginLeft: menderTheme.spacing(0.5), textTransform: 'none' }}
+          style={{ fontSize: 14, marginLeft: theme.spacing(0.5), textTransform: 'none' }}
           onClick={e => setAnchorEl(e.currentTarget)}
           startIcon={<AccountCircleIcon style={{ color: menuButtonColor }} />}
           endIcon={anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}

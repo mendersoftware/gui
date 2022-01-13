@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { Button } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 import { Edit as EditIcon } from '@material-ui/icons';
 
 import Tracking from '../../../tracking';
@@ -8,7 +9,6 @@ import ConfigurationObject from '../../common/configurationobject';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
 import { NameTagTip } from '../../helptips/helptooltips';
 import DeviceDataCollapse from './devicedatacollapse';
-import theme from '../../../themes/mender-theme';
 
 const configHelpTipsMap = {
   name: {
@@ -18,6 +18,7 @@ const configHelpTipsMap = {
 };
 
 export const DeviceTags = ({ device, setDeviceTags, setSnackbar, showHelptips }) => {
+  const theme = useTheme();
   const [changedTags, setChangedTags] = useState({});
   const [isEditDisabled, setIsEditDisabled] = useState(false);
   const [isEditing, setIsEditing] = useState(false);

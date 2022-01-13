@@ -1,7 +1,9 @@
-import pluralize from 'pluralize';
 import React from 'react';
+import pluralize from 'pluralize';
+import { useTheme } from '@material-ui/core/styles';
+
 import { DEVICE_STATES } from '../../constants/deviceConstants';
-import theme, { colors } from '../../themes/mender-theme';
+import { colors } from '../../themes/Mender';
 
 const stateActionMap = {
   [DEVICE_STATES.pending]: 'pending authorization',
@@ -11,6 +13,7 @@ const stateActionMap = {
 };
 
 export const DeviceStatusNotification = ({ deviceCount, onClick, state }) => {
+  const theme = useTheme();
   const pluralized = pluralize('device', deviceCount);
   return (
     <div className="clickable margin-top-small onboard" onClick={() => onClick(state)} style={{ background: colors.accent2Color, padding: theme.spacing(1.5) }}>

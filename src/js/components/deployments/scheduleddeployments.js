@@ -12,7 +12,7 @@ import { getDeploymentsByStatus, selectDeployment, setDeploymentsState } from '.
 import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { tryMapDeployments } from '../../helpers';
 import { getIsEnterprise } from '../../selectors';
-import { colors } from '../../themes/mender-theme';
+import { colors } from '../../themes/Mender';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';

@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 
 import { ClickAwayListener, Tooltip, withStyles } from '@material-ui/core';
 
-import theme, { colors } from '../../themes/mender-theme';
+import { colors } from '../../themes/Mender';
 
-export const MenderTooltip = withStyles({
+export const MenderTooltip = withStyles(({ palette, shadows }) => ({
   arrow: {
-    color: theme.palette.secondary.main
+    color: palette.secondary.main
   },
   tooltip: {
-    backgroundColor: theme.palette.secondary.main,
-    boxShadow: theme.shadows[1],
+    backgroundColor: palette.secondary.main,
+    boxShadow: shadows[1],
     color: colors.tooltipText,
     fontSize: 'small',
     maxWidth: 600,
@@ -20,7 +20,7 @@ export const MenderTooltip = withStyles({
       backgroundColor: colors.placeholder
     }
   }
-})(Tooltip);
+}))(Tooltip);
 
 export const MenderTooltipClickable = ({ children, onboarding, startOpen = false, ...remainingProps }) => {
   const [open, setOpen] = useState(startOpen || false);
@@ -62,7 +62,7 @@ export const MenderTooltipClickable = ({ children, onboarding, startOpen = false
 
 const iconWidth = 30;
 
-export const OnboardingTooltip = withStyles({
+export const OnboardingTooltip = withStyles(theme => ({
   arrow: {
     color: theme.palette.primary.main
   },
@@ -85,5 +85,5 @@ export const OnboardingTooltip = withStyles({
   popper: {
     opacity: 0.9
   }
-})(Tooltip);
+}))(Tooltip);
 export default MenderTooltip;

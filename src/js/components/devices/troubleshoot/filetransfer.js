@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 
 import { Button, IconButton, List, ListItem, ListItemText, TextField, Tooltip } from '@material-ui/core';
-
 import { FileCopy as CopyPasteIcon } from '@material-ui/icons';
-import FileUpload from '../../common/forms/fileupload';
+import { useTheme } from '@material-ui/core/styles';
 
-import theme from '../../../themes/mender-theme';
+import FileUpload from '../../common/forms/fileupload';
 
 const tabs = ['upload', 'download'];
 
 const columnStyle = { maxWidth: 400 };
 
 export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUpload, setFile, setDownloadPath, setSnackbar, setUploadPath, uploadPath }) => {
+  const theme = useTheme();
   const [currentTab, setCurrentTab] = useState(tabs[0]);
   const [isValidDestination, setIsValidDestination] = useState(true);
 

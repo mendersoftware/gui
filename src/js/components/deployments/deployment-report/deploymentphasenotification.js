@@ -1,10 +1,12 @@
 import React from 'react';
 
 import { Pause as PauseIcon, ArrowDropDownCircleOutlined as ScrollDownIcon } from '@material-ui/icons';
-import theme from '../../../themes/mender-theme';
+import { useTheme } from '@material-ui/core/styles';
+
 import { groupDeploymentStats } from '../../../helpers';
 
 export const DeploymentPhaseNotification = ({ className = '', deployment = {}, onReviewClick }) => {
+  const theme = useTheme();
   const { paused } = groupDeploymentStats(deployment);
   if (paused === 0) {
     return null;

@@ -7,6 +7,7 @@ import momentDurationFormatSetup from 'moment-duration-format';
 
 // material ui
 import { Button, Divider, Drawer, IconButton, Tooltip } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 import {
   Block as BlockIcon,
   CheckCircleOutline as CheckCircleOutlineIcon,
@@ -22,7 +23,6 @@ import { getAuditLogs } from '../../actions/organizationActions';
 import { getRelease } from '../../actions/releaseActions';
 import { deploymentStatesToSubstates, DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
 import { getIdAttribute, getIsEnterprise, getUserRoles } from '../../selectors';
-import theme from '../../themes/mender-theme';
 import ConfigurationObject from '../common/configurationobject';
 import LogDialog from '../common/dialogs/log';
 import DeploymentOverview from './deployment-report/overview';
@@ -78,6 +78,7 @@ export const DeploymentReport = props => {
     type,
     updateDeploymentControlMap
   } = props;
+  const theme = useTheme();
   const [deviceId, setDeviceId] = useState('');
   const rolloutSchedule = useRef();
 
