@@ -5,7 +5,7 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
   class="margin-bottom "
 >
   <div
-    class="clickable flexbox space-between"
+    class=" flexbox space-between"
     style="align-items: flex-start;"
   >
     <div
@@ -16,12 +16,6 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
       >
         Monitoring
       </h4>
-      <time
-        class="text-muted"
-        datetime="2019-01-01T09:25:00+00:00"
-      >
-        2019-01-01 09:25
-      </time>
     </div>
     <div
       class="flexbox centered"
@@ -39,63 +33,44 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
           Add-on
         </span>
       </button>
-      <button
-        class="MuiButtonBase-root MuiIconButton-root"
-        tabindex="0"
-        type="button"
-      >
-        <span
-          class="MuiIconButton-label"
-        >
-          <svg
-            aria-hidden="true"
-            class="MuiSvgIcon-root"
-            focusable="false"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-            />
-          </svg>
-        </span>
-        <span
-          class="MuiTouchRipple-root"
-        />
-      </button>
+      <div
+        style="height: 48px; width: 48px;"
+      />
     </div>
   </div>
   <div>
     <div
-      class="flexbox center-aligned padding-small device-detail-notification  red column-data "
-      style="margin-bottom: 8px; padding-bottom: 12px; padding-top: 12px;"
+      class="flexbox text-muted"
     >
       <svg
         aria-hidden="true"
-        class="MuiSvgIcon-root red"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
         focusable="false"
-        style="margin-right: 16px;"
+        style="margin-right: 8px;"
         viewBox="0 0 24 24"
       >
         <path
-          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+          d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
         />
       </svg>
-      <div
-        class="flexbox center-aligned"
+      <p
+        class="MuiTypography-root MuiTypography-body1"
+        style="text-transform: none; text-align: left;"
       >
-        <div
-          class="key text-muted margin-right-small"
-        >
-          <b>
-            Device offline
-          </b>
-        </div>
-        Last check-in over 
-        24
+        No alert monitor is currently configured for this device.
+        <br />
+        Please
          
-        hours
-         ago
-      </div>
+        <a
+          href="https://docs.mender.io/undefinedadd-ons/monitor"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          see the documentation
+        </a>
+         
+        for a description on how to configure different kinds of monitors.
+      </p>
     </div>
   </div>
   <div

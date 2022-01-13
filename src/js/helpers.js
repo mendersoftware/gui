@@ -452,7 +452,7 @@ export const getDebConfigurationCode = ({ ipAddress, isHosted, isEnterprise, isD
   if (isPreRelease) {
     scriptUrl = `${scriptUrl}/staging`;
   }
-  return `${envVars}wget -q -O- ${scriptUrl} | sudo bash -s -- ${installScriptArgs} -- ${menderSetupArgs}`;
+  return `${envVars}wget -O- ${scriptUrl} | sudo bash -s -- ${installScriptArgs} -- ${menderSetupArgs}`;
 };
 
 export const getSnackbarMessage = (skipped, done) => {

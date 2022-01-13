@@ -308,6 +308,7 @@ exports[`tiny DeviceConnection components renders DeviceConnectionMissingNote co
     </svg>
     <p
       class="MuiTypography-root MuiTypography-body1"
+      style="text-transform: none; text-align: left;"
     >
       The troubleshoot add-on does not seem to be enabled on this device.
       <br />
@@ -345,6 +346,7 @@ exports[`tiny DeviceConnection components renders DeviceDisconnectedNote correct
     </svg>
     <p
       class="MuiTypography-root MuiTypography-body1"
+      style="text-transform: none; text-align: left;"
     >
       The troubleshoot add-on is not currently connected on this device, it was last connected on 
       <time

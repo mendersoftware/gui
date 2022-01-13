@@ -82,6 +82,20 @@ export const getIssueCountsByType =
       });
   };
 
+export const getDeviceMonitorConfig = id => dispatch =>
+  Api.get(`${monitorApiUrlv1}/devices/${id}/config`)
+    .catch(err => commonErrorHandler(err, `Retrieving device monitor config for device ${id} failed:`, dispatch))
+    .then(({ data }) => {
+      let tasks = [
+        dispatch({
+          type: MonitorConstants.RECEIVE_DEVICE_MONITOR_CONFIG,
+          device: { id, monitors: data }
+        })
+      ];
+      tasks.push(Promise.resolve(data));
+      return Promise.all(tasks);
+    });
+
 export const changeNotificationSetting =
   (enabled, channel = MonitorConstants.alertChannels.email) =>
   dispatch => {
