@@ -107,6 +107,8 @@ const maxWidth = 800;
 const externalProvider = EXTERNAL_PROVIDER['iot-hub'];
 const indentation = 4; // number of spaces, tab based indentation won't show in the editor, but be converted to 4 spaces
 
+const stringifyTwin = twin => JSON.stringify(twin, undefined, indentation) ?? '';
+
 export const DeviceTwin = ({ device, getDeviceTwin, integrations, setDeviceTwin }) => {
   const [configured, setConfigured] = useState('');
   const [diffCount, setDiffCount] = useState(0);
@@ -126,12 +128,21 @@ export const DeviceTwin = ({ device, getDeviceTwin, integrations, setDeviceTwin 
   const { desired: configuredTwin = {}, reported: reportedTwin = {}, twinError, updated_ts: updateTime = device.created_ts } = deviceTwin;
 
   useEffect(() => {
-    const textContent = JSON.stringify(configuredTwin, undefined, indentation) ?? '';
+    const textContent = stringifyTwin(configuredTwin);
     setConfigured(textContent);
     setUpdated(textContent);
-    setReported(JSON.stringify(reportedTwin, undefined, indentation) ?? '');
-    setIsEditing;
+    setReported(stringifyTwin(reportedTwin));
   }, [open]);
+
+  useEffect(() => {
+    setReported(stringifyTwin(reportedTwin));
+    if (isEditing) {
+      return;
+    }
+    const textContent = stringifyTwin(configuredTwin);
+    setConfigured(textContent);
+    setUpdated(textContent);
+  }, [configuredTwin, reportedTwin, isEditing]);
 
   useEffect(() => {
     setIsSync(deepCompare(reported, configured));
@@ -163,13 +174,13 @@ export const DeviceTwin = ({ device, getDeviceTwin, integrations, setDeviceTwin 
       return;
     }
     editorRef.current.modifiedEditor.getAction('editor.action.formatDocument').run();
-    setUpdated(JSON.stringify(update, undefined, 4));
+    setUpdated(stringifyTwin(update));
     setErrorMessage('');
     setDeviceTwin(device.id, integration, update).then(() => setIsEditing(false));
   };
 
   const onCancelClick = () => {
-    const textContent = JSON.stringify(configuredTwin, undefined, indentation) ?? '';
+    const textContent = stringifyTwin(configuredTwin);
     setUpdated(textContent);
     editorRef.current.modifiedEditor.getModel().setValue(textContent);
     setIsEditing(false);
