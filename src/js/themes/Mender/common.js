@@ -50,7 +50,7 @@ palette['qualitative'] = qualitative;
 export const chartColorPalette = Object.values(generatedColors);
 
 /**
- * Where possible favour using materials theme.palette instead.
+ * Favor using materials' `theme.palette` instead due to themed support.
  */
 export const colors = {
   /**
@@ -80,6 +80,9 @@ export const colors = {
   tooltipText: '#DECFD9',
   alternateTextColor: 'white',
   canvasColor: 'white',
+  /**
+   * @deprecated use theme.palette.grey[500]
+   */
   borderColor: '#e0e0e0',
   /**
    * @deprecated use theme.palette.grey[400]
@@ -106,7 +109,7 @@ export const overrides = {
   MuiCssBaseline: {
     '@global': {
       body: {
-        fontSize: '0.8125rem'
+        fontSize: '0.8125rem' // 13px as from variables.less
       }
     }
   },
@@ -225,20 +228,8 @@ export const overrides = {
   },
   MuiListItemText: {
     root: {
-      fontSize: '0.8rem',
-      '&$primary': {
-        fontSize: '0.8rem'
-      },
       marginTop: 0,
       marginBottom: 0
-    }
-  },
-  MuiTypography: {
-    body1: {
-      fontSize: '0.8rem'
-    },
-    subtitle1: {
-      fontSize: '0.8rem'
     }
   },
   MuiTableCell: {

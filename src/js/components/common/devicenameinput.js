@@ -66,7 +66,6 @@ export const DeviceNameInput = ({ device, isHovered, setSnackbar, setDeviceTags,
 
   const onInputClick = e => e.stopPropagation();
 
-  const textColorStyle = name ? { color: theme.palette.text.primary } : { color: theme.palette.text.main };
   return (
     <Input
       id={`${device.id}-id-input`}
@@ -75,7 +74,7 @@ export const DeviceNameInput = ({ device, isHovered, setSnackbar, setDeviceTags,
       placeholder={`${id.substring(0, 6)}...`}
       onClick={onInputClick}
       onChange={({ target: { value } }) => setValue(value)}
-      style={{ ...style, ...textColorStyle, fontSize: '0.8125rem' }}
+      style={{ ...style, color: theme.palette.text.primary, fontSize: '0.8125rem' }}
       type="text"
       endAdornment={(isHovered || isEditing) && <InputAdornment position="end">{buttonArea}</InputAdornment>}
     />
