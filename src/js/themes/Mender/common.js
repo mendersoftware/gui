@@ -81,6 +81,9 @@ export const colors = {
   alternateTextColor: 'white',
   canvasColor: 'white',
   borderColor: '#e0e0e0',
+  /**
+   * @deprecated use theme.palette.grey[400]
+   */
   expansionBackground: '#f7f7f7',
   disabledColor: 'rgba(0, 0, 0, 0.54)',
   /**
@@ -125,7 +128,7 @@ export const overrides = {
         display: 'none'
       },
       padding: 0,
-      '&$expanded': {
+      '$expanded': {
         backgroundColor: colors.expansionBackground,
         margin: 'auto'
       }

@@ -18,7 +18,7 @@ const style = {
   },
   metadataListItem: {
     paddingBottom: '11px',
-    borderBottom: '1px solid #e0e0e0',
+    borderBottom: `1px solid ${colors.borderColor}`,
     marginRight: '2vw'
   },
   payloadHeader: { ...inlineHeadingStyle, background: '#e9e9e9' }

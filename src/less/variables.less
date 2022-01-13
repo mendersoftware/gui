@@ -1,27 +1,26 @@
 @path-fonts: '~/src/assets/fonts';
 
-// colors
+// Mui token map reference. Do not use directly but pull from theme.palette
+// If unmatched from theme.palette then copy from palette as the source of truth
+@MuiPalettePrimaryMain: #337a87;
+@MuiPaletteBrandMender: #015969;
+
+// legacy color definitions
 @red: #8f0d0d;
 @green: #009e73;
 @alertgreen: #679ba5;
 @alertpurple: #7d3f69;
-@bordercolor: #e0e0e0;
 @errorStyleColor: #ab1000;
-@linkgreen: #347a87;
+@linkgreen: @MuiPalettePrimaryMain;
 @linkhover: @alertgreen;
 @linksecondary: #669ba5;
-@lightestgrey: #f7f7f7;
-@lightergrey: #eaf4f3;
-@lightgrey: #d4e9e7;
-@verylightgrey: #aaaaaa;
-@grey: #c7c7c7;
-@placeholder: #e7e7e7;
-@mendergreen: #015969;
+
+@mendergreen: @MuiPaletteBrandMender;
 @mendermaroon: #5d0f43;
 @menderwarning: rgb(225, 0, 80);
-@text: #404041;
+@text: @MuiTextPrimary;
+@textmuted: @MuiTextHint;
 @textsecondary: #decfd9;
-@textmuted: rgba(0, 0, 0, 0.54);
 
 @defaultLeftBarWidth: 260px;
 @defaultGutterWidth: 15px;

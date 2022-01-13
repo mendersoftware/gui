@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 // material ui
 import { Button, Accordion, AccordionDetails, AccordionSummary, IconButton, Input, InputAdornment, List, ListItem, ListItemText } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 import {
   Add as AddIcon,
@@ -34,6 +35,15 @@ const styles = {
     padding: 0
   }
 };
+
+const useStyles = makeStyles(theme => ({
+  accordPanel1: {
+    background: theme.palette.grey[500],
+    borderTop: 'none',
+    padding: '0 15px',
+    margin: '30px 0'
+  }
+}));
 
 const softwareTitleMap = {
   'rootfs-image.version': { title: 'System filesystem', priority: 0 },
@@ -72,6 +82,7 @@ export const transformArtifactMetadata = (metadata = {}) => {
 };
 
 export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExpansion, showRemoveArtifactDialog }) => {
+  const classes = useStyles();
   const [descEdit, setDescEdit] = useState(false);
   const [description, setDescription] = useState(artifact.description);
   const [gettingUrl, setGettingUrl] = useState(false);
@@ -154,7 +165,7 @@ export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExp
         expanded={showPayloads}
         onChange={() => setShowPayloads(!showPayloads)}
         TransitionProps={{ onEntered: onExpansion, onExited: onExpansion }}
-        style={{ background: '#e9e9e9', borderTop: 'none', padding: '0 15px', margin: '30px 0' }}
+        className={classes.accordPanel1}
       >
         <AccordionSummary style={{ padding: 0 }}>
           <p>Artifact contents</p>
@@ -172,7 +183,7 @@ export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExp
           expanded={showProvidesDepends}
           onChange={() => setShowProvidesDepends(!showProvidesDepends)}
           TransitionProps={{ onEntered: onExpansion, onExited: onExpansion }}
-          style={{ background: '#e9e9e9', borderTop: 'none', padding: '0 15px', margin: '30px 0' }}
+          className={classes.accordPanel1}
         >
           <AccordionSummary style={{ padding: 0 }}>
             <p>Provides and Depends</p>

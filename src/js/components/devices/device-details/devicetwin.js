@@ -4,6 +4,7 @@ import Time from 'react-time';
 
 import { Button } from '@material-ui/core';
 import { CheckCircleOutlined, CloudUploadOutlined as CloudUpload, Refresh as RefreshIcon } from '@material-ui/icons';
+import { useTheme, makeStyles } from '@material-ui/core/styles';
 
 import Editor, { DiffEditor, loader } from '@monaco-editor/react';
 
@@ -11,22 +12,23 @@ import pluralize from 'pluralize';
 
 import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import { deepCompare, isEmpty } from '../../../helpers';
-import theme from '../../../themes/Mender';
 import InfoHint from '../../common/info-hint';
 import Loader from '../../common/loader';
 import DeviceDataCollapse from './devicedatacollapse';
 
 loader.config({ paths: { vs: '/ui/vs' } });
 
-const diffStatusStyle = {
-  minHeight: 75,
-  display: 'grid',
-  gridTemplateColumns: 'min-content 300px max-content',
-  gridColumnGap: theme.spacing(2),
-  alignItems: 'center',
-  background: theme.palette.grey[100],
-  width: 'min-content'
-};
+const diffStatusStyle = makeStyles(theme => ({
+  root: {
+    minHeight: 75,
+    display: 'grid',
+    gridTemplateColumns: 'min-content 300px max-content',
+    gridColumnGap: theme.spacing(2),
+    alignItems: 'center',
+    background: theme.palette.grey[100],
+    width: 'min-content'
+  }
+}));
 
 const LastSyncNote = ({ updateTime }) => (
   <div className="text-muted slightly-smaller" style={{ alignContent: 'flex-end', marginBottom: -10 }}>
@@ -34,13 +36,16 @@ const LastSyncNote = ({ updateTime }) => (
   </div>
 );
 
-const NoDiffStatus = ({ updateTime }) => (
-  <div className="padding" style={diffStatusStyle}>
-    <CheckCircleOutlined className="green" />
-    <div>No difference between desired and reported configuration</div>
-    <LastSyncNote updateTime={updateTime} />
-  </div>
-);
+const NoDiffStatus = ({ updateTime }) => {
+  const classes = diffStatusStyle();
+  return (
+    <div className={['padding', classes.root]}>
+      <CheckCircleOutlined className="green" />
+      <div>No difference between desired and reported configuration</div>
+      <LastSyncNote updateTime={updateTime} />
+    </div>
+  );
+};
 
 export const TwinError = ({ providerTitle, twinError }) => (
   <InfoHint
@@ -56,13 +61,14 @@ export const TwinError = ({ providerTitle, twinError }) => (
 );
 
 export const TwinSyncStatus = ({ diffCount, providerTitle, twinError, updateTime }) => {
+  const classes = diffStatusStyle();
   if (twinError) {
     return <TwinError providerTitle={providerTitle} twinError={twinError} />;
   }
   return !diffCount ? (
     <NoDiffStatus updateTime={updateTime} />
   ) : (
-    <div className="padding" style={diffStatusStyle}>
+    <div className={['padding', classes.root]}>
       <CloudUpload />
       <div>
         <b>
@@ -110,6 +116,7 @@ const indentation = 4; // number of spaces, tab based indentation won't show in 
 const stringifyTwin = twin => JSON.stringify(twin, undefined, indentation) ?? '';
 
 export const DeviceTwin = ({ device, getDeviceTwin, integrations, setDeviceTwin }) => {
+  const theme = useTheme();
   const [configured, setConfigured] = useState('');
   const [diffCount, setDiffCount] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
