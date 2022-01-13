@@ -8,6 +8,6 @@
 // // Light should not look any different to the leacy mender-theme, only implemented entirely via MUI
 // // Dev: Toggle `dark as` and `light as` exports to view themes
 // // TODO: Remove colors and chartColorPalette exports.
-export { colors, chartColorPalette, dark as createTheme } from './Mender';
+export { colors, chartColorPalette, light as createTheme } from './Mender';
 
 // // #### 3rd Party ####

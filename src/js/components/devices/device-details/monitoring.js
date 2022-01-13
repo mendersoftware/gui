@@ -23,7 +23,7 @@ const MonitoringAlert = ({ alert, onDetailsClick, style }) => {
   const lines = [...lines_before, line_matching, ...lines_after].filter(i => i);
   return (
     <div className="monitoring-alert column-data" style={style}>
-      {severityMap[alert.level].listIcon}
+      {severityMap[alert.level].icon}
       <div className="key text-muted">
         <b>{alert.name}</b>
       </div>

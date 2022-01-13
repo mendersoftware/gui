@@ -16,7 +16,7 @@ export const MenderTooltip = withStyles(({ palette, shadows }) => ({
     maxWidth: 600,
     info: {
       maxWidth: 300,
-      color: colors.mutedText,
+      color: palette.text.hint,
       backgroundColor: colors.placeholder
     }
   }

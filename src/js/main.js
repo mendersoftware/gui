@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 import './../less/main.less';
 import { createTheme } from './themes/theme-manager';
@@ -16,6 +17,7 @@ function AppProviders() {
   return (
     <Provider store={store}>
       <MuiThemeProvider theme={theme}>
+        <CssBaseline />
         <ErrorBoundary>
           <Router basename="/ui/#">
             <App />
