@@ -5,10 +5,10 @@ import { palette, typography, overrides } from './common';
 export const light = () => {
   const customTheme = {
     palette: {
-      type: 'light',
+      mode: 'light',
       ...palette,
       background: {
-        default: '#fafafa'
+        default: '#fff'
       }
     },
     typography,

@@ -100,6 +100,13 @@ export const typography = {
 };
 
 export const overrides = {
+  MuiCssBaseline: {
+    '@global': {
+      body: {
+        fontSize: '0.8125rem'
+      }
+    }
+  },
   MuiSnackbarContent: {
     action: {
       color: '#9E6F8E'
