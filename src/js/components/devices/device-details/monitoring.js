@@ -48,24 +48,25 @@ export const DeviceMonitoring = ({ alerts, device, docsVersion, getAlerts, inner
   }, [open]);
 
   const { monitors = [], updated_ts = '' } = device;
+  const hasMonitorsDefined = !!(monitors.length || alerts.length || latestAlerts.length);
 
-  const toggleOpen = monitors.length ? () => setOpen(!open) : undefined;
+  const toggleOpen = hasMonitorsDefined ? () => setOpen(!open) : undefined;
 
   return (
     <DeviceDataCollapse
       header={
-        !monitors.length ? (
-          <DeviceMonitorsMissingNote docsVersion={docsVersion} />
-        ) : (
+        hasMonitorsDefined || isOffline ? (
           <>
-            {!latestAlerts.length && <NoAlertsHeaderNotification />}
+            {hasMonitorsDefined && !latestAlerts.length && <NoAlertsHeaderNotification />}
             {!open &&
               latestAlerts.map(alert => (
                 <MonitoringAlert alert={alert} key={alert.id} onDetailsClick={onDetailsClick} style={{ marginBottom: theme.spacing() }} />
               ))}
             {isOffline && <DeviceOfflineHeaderNotification />}
-            {!open && <a onClick={toggleOpen}>show more</a>}
+            {!!(!isOffline || alerts.length || latestAlerts.length) && !open && <a onClick={toggleOpen}>show more</a>}
           </>
+        ) : (
+          <DeviceMonitorsMissingNote docsVersion={docsVersion} />
         )
       }
       isAddOn
