@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright:v1.17.1
+FROM mcr.microsoft.com/playwright:v1.17.2
 WORKDIR /e2e
 ENV CI=1
 RUN curl -SL --fail "https://mender.s3-accelerate.amazonaws.com/temp_master/core-image-full-cmdline-qemux86-64.ext4" \
