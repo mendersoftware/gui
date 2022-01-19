@@ -2,9 +2,7 @@ version: '2.1'
 
 services:
   mender-gui-tests-runner:
-    build:
-      dockerfile: Dockerfile.gui
-      context: ${GUI_REPOSITORY}/tests/e2e_tests
+    image: mendersoftware/mender-test-containers:gui-e2e-testing
     command: tail -f /dev/null
     environment:
       - TEST_ENVIRONMENT
@@ -24,11 +22,15 @@ services:
       - mender-create-artifact-worker
       - minio
     volumes:
-      - ${GUI_REPOSITORY}/screenshots:/e2e/test-results
-      # - ${GUI_REPOSITORY}/tests/e2e_tests/snapshots:/e2e/snapshots
-      - ${GUI_REPOSITORY}/videos:/e2e/videos
-      - ${GUI_REPOSITORY}/logs:/root/.npm/_logs
       - ${GUI_REPOSITORY}/junit:/e2e/junit
+      - ${GUI_REPOSITORY}/logs:/root/.npm/_logs
+      - ${GUI_REPOSITORY}/screenshots:/e2e/test-results
+      - ${GUI_REPOSITORY}/tests/e2e_tests/config.ts:/e2e/config.ts
+      - ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient:/e2e/dockerClient
+      - ${GUI_REPOSITORY}/tests/e2e_tests/fixtures:/e2e/fixtures
+      - ${GUI_REPOSITORY}/tests/e2e_tests/integration:/e2e/integration
+      - ${GUI_REPOSITORY}/tests/e2e_tests/utils:/e2e/utils
+      - ${GUI_REPOSITORY}/videos:/e2e/videos
 
   mender-client:
     image: mendersoftware/mender-client-docker-addons:master
