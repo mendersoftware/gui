@@ -164,7 +164,7 @@ test:prep:
     expire_in: 30 days
 
 test:staging-deployment:
-  image: mcr.microsoft.com/playwright:v1.17.1
+  image: mendersoftware/mender-test-containers:gui-e2e-testing
   stage: .post
   services:
     - docker:19.03.5-dind
