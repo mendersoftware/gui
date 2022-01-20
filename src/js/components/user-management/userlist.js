@@ -1,10 +1,9 @@
 import React from 'react';
-import Time from 'react-time';
 
 // material ui
 import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 
-import RelativeTime from '../common/relative-time';
+import Time, { RelativeTime } from '../common/time';
 
 const columnData = [
   { id: 'email', disablePadding: false, label: 'Email', enterpriseOnly: false },
@@ -36,7 +35,7 @@ const UserList = ({ currentUser, editUser, isAdmin: isAdminCurrentUser, isEnterp
         <TableRow key={user.id || index} hover>
           <TableCell>{user.email}</TableCell>
           <TableCell>
-            <Time value={user.created_ts} format="YYYY-MM-DD HH:mm" />
+            <Time value={user.created_ts} />
           </TableCell>
           <TableCell>
             <RelativeTime updateTime={user.updated_ts} />

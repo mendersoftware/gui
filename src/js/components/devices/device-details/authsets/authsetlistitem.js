@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Time from 'react-time';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 // material ui
@@ -11,6 +10,7 @@ import { FileCopy as CopyPasteIcon } from '@mui/icons-material';
 import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { formatTime } from '../../../../helpers';
 import Loader from '../../../common/loader';
+import Time from '../../../common/time';
 
 const padder = <div key="padder" style={{ flexGrow: 1 }}></div>;
 
@@ -205,7 +205,7 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
         {authsetStatus}
         <div className="capitalized">{authset.status}</div>
         {key}
-        <Time value={formatTime(authset.ts)} format="YYYY-MM-DD HH:mm" />
+        <Time value={formatTime(authset.ts)} />
         {loading === authset.id ? (
           <div>
             Updating status <Loader table={true} waiting={true} show={true} style={{ height: '4px', marginLeft: '10px' }} />

@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
-import Time from 'react-time';
 import pluralize from 'pluralize';
 
 import { Tooltip } from '@mui/material';
@@ -10,6 +9,7 @@ import { mdiDotsHorizontalCircleOutline as QueuedIcon, mdiSleep as SleepIcon } f
 
 import { groupDeploymentStats } from '../../helpers';
 import MaterialDesignIcon from '../common/materialdesignicon';
+import Time from '../common/time';
 
 momentDurationFormatSetup(moment);
 
@@ -147,7 +147,7 @@ export const ProgressDisplay = ({ className = '', deployment, status }) => {
         {phases.length > 1 && phases.length > currentPhaseIndex + 1 ? (
           <div>
             <span>Time until next phase: </span>
-            <Tooltip title={<Time value={nextPhaseStart.toDate()} format="YYYY-MM-DD HH:mm" />} placement="top">
+            <Tooltip title={<Time value={nextPhaseStart.toDate()} />} placement="top">
               <span>{`${duration.format('d [days] hh [h] mm [m] ss [s]')}`}</span>
             </Tooltip>
           </div>

@@ -1,5 +1,4 @@
 import React from 'react';
-import Time from 'react-time';
 import { Link } from 'react-router-dom';
 import pluralize from 'pluralize';
 
@@ -7,11 +6,11 @@ import { ArrowRightAlt as ArrowRightAltIcon } from '@mui/icons-material';
 import preauthImage from '../../../assets/img/preauthorize.png';
 
 import DeviceStatus from './device-status';
-import RelativeTime from '../common/relative-time';
+import Time, { RelativeTime } from '../common/time';
 
 export const RelativeDeviceTime = device => <RelativeTime updateTime={device.updated_ts} />;
 export const DeviceStatusHeading = device => <DeviceStatus device={device} />;
-export const DeviceCreationTime = device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-');
+export const DeviceCreationTime = device => (device.created_ts ? <Time value={device.created_ts} /> : '-');
 export const DeviceExpansion = () => (
   <div className="bold flexbox center-aligned link-color margin-right-small uppercased" style={{ whiteSpace: 'nowrap' }}>
     view details <ArrowRightAltIcon />

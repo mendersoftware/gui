@@ -1,5 +1,4 @@
 import React from 'react';
-import Time from 'react-time';
 import pluralize from 'pluralize';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
@@ -11,6 +10,7 @@ import { ArrowForward } from '@mui/icons-material';
 import { formatTime, getPhaseDeviceCount, getRemainderPercent, groupDeploymentStats } from '../../../helpers';
 import { colors } from '../../../themes/Mender';
 import { TwoColumnData } from '../../common/configurationobject';
+import Time from '../../common/time';
 import { getPhaseStartTime } from '../createdeployment';
 import { ProgressChart } from '../progressChart';
 import { defaultColumnDataProps } from '../report';
@@ -50,7 +50,7 @@ export const RolloutSchedule = ({ deployment, innerRef, onAbort, onUpdateControl
   if (now.isSameOrAfter(currentPhaseStartTime)) {
     currentPhaseTime = currentPhaseIndex + 1;
   }
-  const endTime = finished ? <Time value={formatTime(finished)} format="YYYY-MM-DD HH:mm" /> : filterId ? 'N/A' : '-';
+  const endTime = finished ? <Time value={formatTime(finished)} /> : filterId ? 'N/A' : '-';
   return (
     <>
       <h4 className="dashboard-header margin-top-large" ref={innerRef}>
@@ -62,7 +62,7 @@ export const RolloutSchedule = ({ deployment, innerRef, onAbort, onUpdateControl
             <TwoColumnData
               {...defaultColumnDataProps}
               config={{
-                'Start time': <Time value={formatTime(creationTime)} format="YYYY-MM-DD HH:mm" />,
+                'Start time': <Time value={formatTime(creationTime)} />,
                 'Current phase': currentPhaseTime
               }}
             />
@@ -96,7 +96,7 @@ export const RolloutSchedule = ({ deployment, innerRef, onAbort, onUpdateControl
           const deviceCountText = !filterId ? ` (${deviceCount} ${pluralize('device', deviceCount)})` : '';
           const startTime = phase.start_ts ?? getPhaseStartTime(phases, index, start_time);
           const phaseObject = {
-            'Start time': <Time value={startTime} format="YYYY-MM-DD HH:mm" />,
+            'Start time': <Time value={startTime} />,
             'Batch size': <div className="text-muted">{`${phase.batch_size}%${deviceCountText}`}</div>
           };
           let phaseTitle = status !== DEPLOYMENT_STATES.scheduled ? <div className="text-muted">Complete</div> : null;

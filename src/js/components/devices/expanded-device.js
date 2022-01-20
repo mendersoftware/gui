@@ -21,7 +21,7 @@ import { getDeviceAlerts, setAlertListState } from '../../actions/monitorActions
 import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import ForwardingLink from '../common/forwardlink';
-import RelativeTime from '../common/relative-time';
+import { RelativeTime } from '../common/time';
 import { getDocsVersion, getIsEnterprise, getTenantCapabilities, getUserRoles } from '../../selectors';
 import Tracking from '../../tracking';
 import TroubleshootDialog from './troubleshootdialog';

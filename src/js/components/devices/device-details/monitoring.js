@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import Time from 'react-time';
 import { useTheme } from '@mui/material/styles';
 
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
 import Pagination from '../../common/pagination';
 import { DeviceConnectionNote } from './connection';
+import Time from '../../common/time';
 import DeviceDataCollapse from './devicedatacollapse';
 import { DeviceOfflineHeaderNotification, NoAlertsHeaderNotification, severityMap } from './notifications';
 
@@ -32,7 +32,7 @@ const MonitoringAlert = ({ alert, onDetailsClick, style }) => {
         <b>{alert.name}</b>
       </div>
       <div>{alert.level}</div>
-      <Time value={alert.timestamp} format="YYYY-MM-DD HH:mm" />
+      <Time value={alert.timestamp} />
       {(lines.length || description) && <a onClick={() => onDetailsClick(alert)}>view {lines.length ? 'log' : 'details'}</a>}
     </div>
   );
@@ -102,7 +102,7 @@ export const DeviceMonitoring = ({
       title={
         <div className="flexbox center-aligned" ref={innerRef}>
           <h4 className="margin-right">Monitoring</h4>
-          {!!monitors.length && <Time className="text-muted" value={updated_ts} format="YYYY-MM-DD HH:mm" />}
+          {!!monitors.length && <Time className="text-muted" value={updated_ts} />}
         </div>
       }
     >

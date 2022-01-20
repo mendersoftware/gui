@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import Time from 'react-time';
 
 import { Button } from '@mui/material';
 import { CheckCircleOutlined, CloudUploadOutlined as CloudUpload, Refresh as RefreshIcon } from '@mui/icons-material';
@@ -16,6 +15,7 @@ import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import { deepCompare, isEmpty } from '../../../helpers';
 import InfoHint from '../../common/info-hint';
 import Loader from '../../common/loader';
+import Time from '../../common/time';
 import DeviceDataCollapse from './devicedatacollapse';
 
 loader.config({ paths: { vs: '/ui/vs' } });
@@ -34,7 +34,7 @@ const diffStatusStyle = makeStyles(theme => ({
 
 const LastSyncNote = ({ updateTime }) => (
   <div className="text-muted slightly-smaller" style={{ alignContent: 'flex-end', marginBottom: -10 }}>
-    Last synced: <Time value={updateTime} format="YYYY-MM-DD HH:mm" />
+    Last synced: <Time value={updateTime} />
   </div>
 );
 

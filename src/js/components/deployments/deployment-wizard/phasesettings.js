@@ -1,13 +1,13 @@
 import React from 'react';
 import pluralize from 'pluralize';
-import Time from 'react-time';
 
 import { Add as AddIcon, Cancel as CancelIcon } from '@mui/icons-material';
 import { Chip, Table, TableBody, TableCell, TableHead, TableRow, Select, MenuItem, Input, InputAdornment, IconButton } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
-import { getPhaseStartTime } from '../createdeployment';
 import { getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
+import Time from '../../common/time';
+import { getPhaseStartTime } from '../createdeployment';
 
 export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, numberDevices, setDeploymentSettings }) => {
   const theme = useTheme();
@@ -121,7 +121,7 @@ export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, num
           {!filterId && deviceCount < 1 && <div className="warning">Phases must have at least 1 device</div>}
         </TableCell>
         <TableCell>
-          <Time value={getPhaseStartTime(phases, index, startTime)} format="YYYY-MM-DD HH:mm" />
+          <Time value={getPhaseStartTime(phases, index, startTime)} />
         </TableCell>
         <TableCell>
           {phase.delay && index !== phases.length - 1 ? (

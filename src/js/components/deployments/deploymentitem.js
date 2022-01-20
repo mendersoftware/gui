@@ -6,7 +6,7 @@ import { CancelOutlined as CancelOutlinedIcon } from '@mui/icons-material';
 
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
 import Confirm from '../common/confirm';
-import RelativeTime from '../common/relative-time';
+import { RelativeTime } from '../common/time';
 import ProgressDisplay, { DeploymentStatusNotification } from './progressChart';
 import DeploymentStats from './deploymentstatus';
 import { PhaseProgressDisplay } from './deployment-report/phaseprogress';

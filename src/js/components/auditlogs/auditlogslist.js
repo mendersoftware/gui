@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import Time from 'react-time';
 import { Link } from 'react-router-dom';
 
 import { ArrowRightAlt as ArrowRightAltIcon, Sort as SortIcon } from '@mui/icons-material';
 
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
+import Time from '../common/time';
 import EventDetailsDrawer from './eventdetailsdrawer';
 import { SORTING_OPTIONS } from '../../constants/appConstants';
 
@@ -88,7 +88,7 @@ const ChangeDetailsDescriptor = (item, index) => {
   const Comp = mapChangeToContent(item).component;
   return <Comp key={`${item.time}-${index}`} item={item} />;
 };
-const TimeWrapper = (item, index) => <Time key={`${item.time}-${index}`} value={item.time} format="YYYY-MM-DD HH:mm" />;
+const TimeWrapper = (item, index) => <Time key={`${item.time}-${index}`} value={item.time} />;
 
 const auditLogColumns = [
   { title: 'User', sortable: false, render: UserDescriptor },

@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import Time from 'react-time';
 
 // material ui
 import { Accordion, AccordionDetails, AccordionSummary, IconButton, Tooltip } from '@mui/material';
@@ -7,6 +6,7 @@ import { ArrowDropDown as ArrowDropDownIcon, ArrowDropUp as ArrowDropUpIcon } fr
 
 import { formatTime, FileSize } from '../../helpers';
 import { colors } from '../../themes/Mender';
+import Time from '../common/time';
 import SelectedArtifact from './selectedartifact';
 
 export const ReleaseRepositoryItem = ({ artifact, expanded, index, itemRef, onEdit, onExpanded, onRowSelection, showRemoveArtifactDialog }) => {
@@ -30,7 +30,7 @@ export const ReleaseRepositoryItem = ({ artifact, expanded, index, itemRef, onEd
           <Tooltip title={compatible} placement="top-start">
             <div className="text-overflow">{compatible}</div>
           </Tooltip>
-          <Time value={formatTime(artifact.modified)} format="YYYY-MM-DD HH:mm" />
+          <Time value={formatTime(artifact.modified)} />
           <div style={{ maxWidth: '100vw' }}>{artifactType}</div>
           <FileSize fileSize={artifact.size} />
           <IconButton className="expandButton" size="large">

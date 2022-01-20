@@ -1,10 +1,11 @@
 import React from 'react';
-import Time from 'react-time';
+import pluralize from 'pluralize';
 
 import { ArrowDropDownCircleOutlined as ScrollDownIcon, CheckCircle as CheckIcon, Error as ErrorIcon, Help as HelpIcon } from '@mui/icons-material';
-import pluralize from 'pluralize';
 import { useTheme } from '@mui/material/styles';
+
 import { DEVICE_ONLINE_CUTOFF } from '../../../constants/deviceConstants';
+import Time from '../../common/time';
 
 const errorIcon = <ErrorIcon className="red" />;
 const successIcon = <CheckIcon className="green" />;
@@ -46,7 +47,7 @@ export const LastConnection = ({ updated_ts }) => {
 
   return (
     <BaseNotification severity={monitoringSeverities.CRITICAL}>
-      Device has not connected to the server since <Time value={updated_ts} format="YYYY-MM-DD HH:mm" style={{ margin: theme.spacing('inherit', 1) }} />
+      Device has not connected to the server since <Time value={updated_ts} style={{ margin: theme.spacing('inherit', 1) }} />
     </BaseNotification>
   );
 };

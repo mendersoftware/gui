@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Time from 'react-time';
 
 import { Button, Checkbox, FormControlLabel, Typography } from '@mui/material';
 import {
@@ -19,8 +18,9 @@ import ConfigurationObject from '../../common/configurationobject';
 import Confirm from '../../common/confirm';
 import LogDialog from '../../common/dialogs/log';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
-import { ConfigureAddOnTip, ConfigureRaspberryLedTip, ConfigureTimezoneTip } from '../../helptips/helptooltips';
 import Loader from '../../common/loader';
+import Time from '../../common/time';
+import { ConfigureAddOnTip, ConfigureRaspberryLedTip, ConfigureTimezoneTip } from '../../helptips/helptooltips';
 import ConfigImportDialog from './configimportdialog';
 import DeviceDataCollapse from './devicedatacollapse';
 
@@ -49,7 +49,7 @@ export const ConfigUpToDateNote = ({ updated_ts = defaultReportTimeStamp }) => (
         Configuration up-to-date on the device
       </Typography>
       <Typography variant="caption" className="text-muted" style={textStyle}>
-        Updated: {<Time value={updated_ts} format="YYYY-MM-DD HH:mm" />}
+        Updated: {<Time value={updated_ts} />}
       </Typography>
     </div>
   </div>
@@ -59,7 +59,7 @@ export const ConfigEmptyNote = ({ updated_ts = '' }) => (
   <div className="flexbox column margin-small">
     <Typography variant="subtitle2">The device appears to either have an empty configuration or not to have reported a configuration yet.</Typography>
     <Typography variant="caption" className="text-muted" style={textStyle}>
-      Updated: {<Time value={updated_ts} format="YYYY-MM-DD HH:mm" />}
+      Updated: {<Time value={updated_ts} />}
     </Typography>
   </div>
 );
