@@ -1,10 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
-import Time from 'react-time';
+
 import { Tooltip } from '@mui/material';
 
-const cutoff = -5 * 60;
+const defaultTimeFormat = 'YYYY-MM-DD HH:mm';
 
+// based on react-time - https://github.com/andreypopp/react-time - which unfortunately is no longer maintained
+
+export const Time = ({ value, relative, format = defaultTimeFormat, valueFormat, titleFormat = defaultTimeFormat, Component = 'time', ...remainingProps }) => {
+  if (!value) {
+    value = moment();
+  }
+  value = moment(value, valueFormat, true);
+
+  const machineReadable = value.format('YYYY-MM-DDTHH:mm:ssZ');
+  const humanReadable = relative ? value.fromNow() : value.format(format);
+  return (
+    <Component title={relative ? value.format(titleFormat) : null} {...remainingProps} dateTime={machineReadable}>
+      {humanReadable}
+    </Component>
+  );
+};
+
+const cutoff = -5 * 60;
 export const RelativeTime = ({ className, shouldCount = 'both', updateTime }) => {
   const [updatedTime, setUpdatedTime] = useState();
 
@@ -14,7 +32,7 @@ export const RelativeTime = ({ className, shouldCount = 'both', updateTime }) =>
     }
   }, [updateTime]);
 
-  let timeDisplay = updatedTime ? <Time className={className} value={updatedTime} format="YYYY-MM-DD HH:mm" /> : <div className={className}>-</div>;
+  let timeDisplay = updatedTime ? <Time className={className} value={updatedTime} /> : <div className={className}>-</div>;
   const diffSeconds = updatedTime ? updatedTime.diff(moment(), 'seconds') : 0;
   if (
     updatedTime &&
@@ -34,4 +52,4 @@ export const RelativeTime = ({ className, shouldCount = 'both', updateTime }) =>
   );
 };
 
-export default RelativeTime;
+export default Time;
