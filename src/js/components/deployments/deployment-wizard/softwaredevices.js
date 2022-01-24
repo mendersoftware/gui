@@ -14,7 +14,7 @@ import { allDevices } from '../createdeployment';
 import AsyncAutocomplete from '../../common/asyncautocomplete';
 import InfoHint from '../../common/info-hint';
 
-export const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({
   infoStyle: {
     minWidth: 400,
     borderBottom: 'none'
@@ -23,10 +23,13 @@ export const useStyles = makeStyles(theme => ({
   selectionTitle: {
     marginBottom: 0
   },
+}));
+
+const hardCodedStyle = {
   textField: {
     minWidth: 400
   }
-}));
+}
 
 const ReleasesWarning = ({ lacksReleases }) => (
   <div className={`flexbox ${lacksReleases ? 'center-aligned' : 'centered'}`}>
@@ -228,7 +231,7 @@ export const SoftwareDevices = ({
                 onChange={onReleaseInputChange}
                 onChangeSelection={onReleaseSelectionChange}
                 isLoading={isLoadingReleases}
-                styles={classes}
+                styles={hardCodedStyle}
               />
             )}
             {!releaseItems.length && hasReleases ? (
