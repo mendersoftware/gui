@@ -13,7 +13,8 @@ export const palette = {
     main: '#5d0f43'
   },
   error: {
-    main: '#ab1000'
+    main: '#ab1000',
+    dark: '#770b00' // hardcode same as darken to match less variables
   },
   success: {
     main: '#009e73'
@@ -23,6 +24,7 @@ export const palette = {
      * color matched from variables.less @text of #404041 but by opacity, same as main
      */
     primary: 'rgba(10, 10, 11, 0.78)',
+    secondary: '#cd9dbd',
     hint: 'rgba(0, 0, 0, 0.54)'
   },
   brand: {
@@ -77,6 +79,9 @@ export const colors = {
    * @deprecated use theme {@link palette.text.hint}
    */
   mutedText: palette.text.hint,
+  /**
+   * @deprecated Is not in use see {@link palette.text.secondary}
+   */
   tooltipText: '#DECFD9',
   alternateTextColor: 'white',
   canvasColor: 'white',

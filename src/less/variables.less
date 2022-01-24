@@ -4,13 +4,16 @@
 // If unmatched from theme.palette then copy from palette as the source of truth
 @MuiPalettePrimaryMain: #337a87;
 @MuiPaletteBrandMender: #015969;
+@MuiPaletteSucessMain: #009e73;
+@MuiPaletteErrorMain: #ab1000;
+@MuiPaletteErrorDark: #770b00;
 
 // legacy color definitions
-@red: #8f0d0d;
-@green: #009e73;
+@red: @MuiPaletteErrorDark;
+@green: @MuiPaletteSucessMain;
 @alertgreen: #679ba5;
 @alertpurple: #7d3f69;
-@errorStyleColor: #ab1000;
+@errorStyleColor: @MuiPaletteErrorMain;
 @linkgreen: @MuiPalettePrimaryMain;
 @linkhover: @alertgreen;
 @linksecondary: #669ba5;
@@ -20,7 +23,10 @@
 @menderwarning: rgb(225, 0, 80);
 @text: @MuiTextPrimary;
 @textmuted: @MuiTextHint;
-@textsecondary: #decfd9;
 
 @defaultLeftBarWidth: 260px;
 @defaultGutterWidth: 15px;
+
+
+// Not used
+// @textsecondary: #decfd9;

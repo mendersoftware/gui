@@ -28,7 +28,7 @@ export const OrgHeader = () => (
       title={
         <>
           <h3>Organization token</h3>
-          <p style={{ color: colors.tooltipText, margin: '1em 0' }}>
+          <p style={{ margin: '1em 0' }}>
             This token is unique for your organization and ensures that only devices that you own are able to connect to your account.
           </p>
         </>

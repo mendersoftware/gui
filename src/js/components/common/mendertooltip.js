@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 
 import { ClickAwayListener, Tooltip, withStyles } from '@material-ui/core';
 
-import { colors } from '../../themes/Mender';
-
 export const MenderTooltip = withStyles(({ palette, shadows }) => ({
   arrow: {
     color: palette.secondary.main
@@ -11,13 +9,13 @@ export const MenderTooltip = withStyles(({ palette, shadows }) => ({
   tooltip: {
     backgroundColor: palette.secondary.main,
     boxShadow: shadows[1],
-    color: colors.tooltipText,
+    color: palette.text.secondary,
     fontSize: 'small',
     maxWidth: 600,
     info: {
       maxWidth: 300,
       color: palette.text.hint,
-      backgroundColor: colors.placeholder
+      backgroundColor: palette.grey[500]
     }
   }
 }))(Tooltip);
@@ -69,13 +67,13 @@ export const OnboardingTooltip = withStyles(theme => ({
   tooltip: {
     backgroundColor: theme.palette.primary.main,
     boxShadow: theme.shadows[1],
-    color: colors.placeholder,
+    color: theme.palette.grey[500],
     fontSize: 14,
     maxWidth: 350,
     padding: '12px 18px',
     width: 350,
     '& a': {
-      color: colors.placeholder
+      color: theme.palette.grey[500]
     },
     '&.MuiTooltip-tooltipPlacementTop': { marginLeft: iconWidth, marginBottom: 0, marginTop: iconWidth + theme.spacing(1.5) },
     '&.MuiTooltip-tooltipPlacementRight': { marginTop: iconWidth / 2 },
