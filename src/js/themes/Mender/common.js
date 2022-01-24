@@ -1,6 +1,3 @@
-// import { useTheme as useThemeMui } from '@material-ui/core/styles';
-// const getContrastText = useThemeMui().palette.getContrastText;
-
 /**
  * @param qualitative if set is an ordered set of distinct colors availabe for programatic use.
  * @example Chart dataset colors
@@ -43,8 +40,7 @@ const generatedColors = {
 const qualitative = {};
 for (const [grp, col] of Object.entries(generatedColors)) {
   qualitative[grp] = {
-    main: col,
-    // contrastText: getContrastText(col)
+    main: col
   };
 }
 palette['qualitative'] = qualitative;
@@ -137,7 +133,6 @@ export const overrides = {
       },
       padding: 0,
       '$expanded': {
-        backgroundColor: colors.expansionBackground,
         margin: 'auto'
       }
     }
