@@ -15,7 +15,17 @@ import { OAuth2Providers } from './oauth2providers';
 import TwoFactorAuthSetup from './twofactorauthsetup';
 import UserConstants from '../../constants/userConstants';
 
-export const SelfUserManagement = ({ canHave2FA, currentUser, editUser, hasTracking, hasTrackingConsent, isEnterprise, saveUserSettings, setSnackbar }) => {
+export const SelfUserManagement = ({
+  canHave2FA,
+  currentUser,
+  editUser,
+  hasTracking,
+  hasTrackingConsent,
+  isEnterprise,
+  mode,
+  saveUserSettings,
+  setSnackbar
+}) => {
   const [editEmail, setEditEmail] = useState(false);
   const [editPass, setEditPass] = useState(false);
   const [emailFormId, setEmailFormId] = useState(new Date());
@@ -39,6 +49,11 @@ export const SelfUserManagement = ({ canHave2FA, currentUser, editUser, hasTrack
     }
     setEditEmail(!editEmail);
     setEmailFormId(uniqueId);
+  };
+
+  const toggleMode = () => {
+    const newMode = mode === 'dark' ? 'light' : 'dark';
+    saveUserSettings({ mode: newMode });
   };
 
   const handlePass = () => setEditPass(!editPass);
@@ -105,6 +120,10 @@ export const SelfUserManagement = ({ canHave2FA, currentUser, editUser, hasTrack
             </Form>
           </>
         ))}
+      <div className="clickable flexbox space-between margin-top" onClick={toggleMode}>
+        <p className="help-content">Enable dark theme</p>
+        <Switch checked={mode === 'dark'} />
+      </div>
       {!isOAuth2 ? (
         canHave2FA ? (
           <TwoFactorAuthSetup />
@@ -146,6 +165,7 @@ const mapStateToProps = state => {
     currentUser: getCurrentUser(state),
     hasTracking: !!state.app.trackerCode,
     hasTrackingConsent: getUserSettings(state).trackingConsentGiven,
+    mode: getUserSettings(state).mode,
     isEnterprise
   };
 };
