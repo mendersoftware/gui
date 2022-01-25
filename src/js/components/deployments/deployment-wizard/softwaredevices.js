@@ -22,14 +22,14 @@ const useStyles = makeStyles(theme => ({
   selection: { minWidth: 'min-content', maxWidth: theme.spacing(50), minHeight: 105 },
   selectionTitle: {
     marginBottom: 0
-  },
+  }
 }));
 
 const hardCodedStyle = {
   textField: {
     minWidth: 400
   }
-}
+};
 
 const ReleasesWarning = ({ lacksReleases }) => (
   <div className={`flexbox ${lacksReleases ? 'center-aligned' : 'centered'}`}>
