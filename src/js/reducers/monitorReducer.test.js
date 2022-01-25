@@ -60,4 +60,8 @@ describe('monitor reducer', () => {
       }).issueCounts.byType[DEVICE_ISSUE_OPTIONS.monitoring.key]
     ).toEqual({ total: 3 });
   });
+  it('should handle SET_ALERT_LIST_STATE', async () => {
+    expect(reducer(undefined, { type: MonitorConstants.SET_ALERT_LIST_STATE, value: { total: 3 } }).alerts.alertList).toEqual({ total: 3 });
+    expect(reducer(initialState, { type: MonitorConstants.SET_ALERT_LIST_STATE, value: 'something' }).alerts.alertList).toEqual('something');
+  });
 });
