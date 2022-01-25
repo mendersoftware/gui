@@ -88,15 +88,15 @@ export const CreateDialog = props => {
   }, [isEnterprise, isHosted, plan]);
 
   useEffect(() => {
-    if (!deploymentObject.group) {
-      setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: deploymentObject.device ? 1 : 0 });
-      return;
-    }
     if (deploymentObject.group === allDevices) {
       setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: acceptedDeviceCount });
       return;
     }
     const selectedGroup = groups[deploymentObject.group];
+    if (!deploymentObject.group || !selectedGroup) {
+      setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: deploymentObject.device ? 1 : 0 });
+      return;
+    }
     const request = selectedGroup.total ? Promise.resolve({ group: selectedGroup }) : getGroupDevices(deploymentObject.group, { perPage: 1 });
     request.then(({ group: { total: deploymentDeviceCount } }) => setDeploymentObject({ ...deploymentObject, deploymentDeviceCount }));
   }, [deploymentObject.group]);
@@ -220,8 +220,7 @@ export const mapStateToProps = state => {
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
     acceptedDeviceCount: state.devices.byStatus.accepted.total,
-    // we need to use group 1 here, as group 0 will be the ungrouped group placeholder
-    createdGroup: Object.keys(state.devices.groups.byId)[1],
+    createdGroup: Object.keys(groups),
     docsVersion: getDocsVersion(state),
     globalSettings: state.users.globalSettings,
     groups,
