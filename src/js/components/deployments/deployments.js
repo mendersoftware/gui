@@ -9,6 +9,7 @@ import { advanceOnboarding } from '../../actions/onboardingActions';
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, selectDeployment, setDeploymentsState } from '../../actions/deploymentActions';
 import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
+import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getIsEnterprise, getOnboardingState } from '../../selectors';
 
@@ -47,6 +48,7 @@ export const Deployments = ({
   devicesById,
   getDynamicGroups,
   getGroups,
+  groupsById,
   history,
   isEnterprise,
   location,
@@ -104,10 +106,10 @@ export const Deployments = ({
   }, []);
 
   const retryDeployment = (deployment, deploymentDeviceIds) => {
-    const { artifact_name, groups = [], name, update_control_map = {} } = deployment;
+    const { artifact_name, name, update_control_map = {} } = deployment;
     const release = releases[artifact_name];
     const updateControlMap = isEnterprise ? { update_control_map: { states: update_control_map.states || {} } } : {};
-    const targetDevicesConfig = name === allDevices || groups.some(groupName => groupName) ? { group: name } : { device: devicesById[name] };
+    const targetDevicesConfig = name === allDevices || groupsById[name] ? { group: name } : { device: devicesById[name] };
     const deploymentObject = {
       deploymentDeviceIds,
       phases: [{ batch_size: 100, start_ts: undefined, delay: 0 }],
@@ -229,8 +231,11 @@ const actionCreators = {
 };
 
 const mapStateToProps = state => {
+  // eslint-disable-next-line no-unused-vars
+  const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
     devicesById: state.devices.byId,
+    groupsById: groups,
     isEnterprise: getIsEnterprise(state),
     onboardingState: getOnboardingState(state),
     pastCount: state.deployments.byStatus.finished.total,

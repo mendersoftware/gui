@@ -1,12 +1,13 @@
 import { rest } from 'msw';
 
 import { monitorApiUrlv1 } from '../../src/js/actions/monitorActions';
+import { headerNames } from '../../src/js/api/general-api';
 import { alertChannels } from '../../src/js/constants/monitorConstants';
 import { defaultState } from '../mockData';
 
 export const monitorHandlers = [
   rest.get(`${monitorApiUrlv1}/devices/:id/alerts`, (req, res, ctx) => {
-    return res(ctx.json([]));
+    return res(ctx.set(headerNames.total, '1'), ctx.json([]));
   }),
   rest.get(`${monitorApiUrlv1}/devices/:id/alerts/latest`, (req, res, ctx) => {
     return res(ctx.json([]));

@@ -1,111 +1,162 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DeviceMonitoring Component renders correctly 1`] = `
-<div
-  class="margin-bottom "
+"<div
+  class=\\"margin-bottom \\"
 >
   <div
-    class=" flexbox space-between"
-    style="align-items: flex-start;"
+    class=\\"clickable flexbox space-between\\"
+    style=\\"align-items: flex-start;\\"
   >
     <div
-      class="flexbox center-aligned"
+      class=\\"flexbox center-aligned\\"
     >
       <h4
-        class="margin-right"
+        class=\\"margin-right\\"
       >
         Monitoring
       </h4>
     </div>
     <div
-      class="flexbox centered"
+      class=\\"flexbox centered\\"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained Mui-disabled Mui-disabled"
-        disabled=""
-        style="margin-right: 16px; font-weight: 900; font-size: smaller;"
-        tabindex="-1"
-        type="button"
+        class=\\"MuiButtonBase-root MuiButton-root MuiButton-contained Mui-disabled Mui-disabled\\"
+        disabled=\\"\\"
+        style=\\"margin-right: 16px; font-weight: 900; font-size: smaller;\\"
+        tabindex=\\"-1\\"
+        type=\\"button\\"
       >
         <span
-          class="MuiButton-label"
+          class=\\"MuiButton-label\\"
         >
           Add-on
         </span>
       </button>
-      <div
-        style="height: 48px; width: 48px;"
-      />
+      <button
+        class=\\"MuiButtonBase-root MuiIconButton-root\\"
+        tabindex=\\"0\\"
+        type=\\"button\\"
+      >
+        <span
+          class=\\"MuiIconButton-label\\"
+        >
+          <svg
+            aria-hidden=\\"true\\"
+            class=\\"MuiSvgIcon-root\\"
+            focusable=\\"false\\"
+            viewBox=\\"0 0 24 24\\"
+          >
+            <path
+              d=\\"M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z\\"
+            />
+          </svg>
+        </span>
+        <span
+          class=\\"MuiTouchRipple-root\\"
+        />
+      </button>
     </div>
   </div>
   <div>
     <div
-      class="flexbox text-muted"
+      class=\\"monitoring-alert column-data\\"
+      style=\\"margin-bottom: 8px;\\"
     >
       <svg
-        aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
-        focusable="false"
-        style="margin-right: 8px;"
-        viewBox="0 0 24 24"
+        aria-hidden=\\"true\\"
+        class=\\"MuiSvgIcon-root red\\"
+        focusable=\\"false\\"
+        viewBox=\\"0 0 24 24\\"
       >
         <path
-          d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+          d=\\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\\"
         />
       </svg>
-      <p
-        class="MuiTypography-root MuiTypography-body1"
-        style="text-transform: none; text-align: left;"
+      <div
+        class=\\"key text-muted\\"
       >
-        No alert monitor is currently configured for this device.
-        <br />
-        Please
-         
-        <a
-          href="https://docs.mender.io/undefinedadd-ons/monitor"
-          rel="noopener noreferrer"
-          target="_blank"
+        <b>
+          SSH Daemon is not running
+        </b>
+      </div>
+      <div>
+        CRITICAL
+      </div>
+      <time
+        datetime=\\"2021-07-23T12:22:36+00:00\\"
+      >
+        2021-07-23 12:22
+      </time>
+      <a>
+        view 
+        details
+      </a>
+    </div>
+    <div
+      class=\\"flexbox center-aligned padding-small device-detail-notification  red column-data \\"
+      style=\\"margin-bottom: 8px; padding-bottom: 12px; padding-top: 12px;\\"
+    >
+      <svg
+        aria-hidden=\\"true\\"
+        class=\\"MuiSvgIcon-root red\\"
+        focusable=\\"false\\"
+        style=\\"margin-right: 16px;\\"
+        viewBox=\\"0 0 24 24\\"
+      >
+        <path
+          d=\\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\\"
+        />
+      </svg>
+      <div
+        class=\\"flexbox center-aligned\\"
+      >
+        <div
+          class=\\"key text-muted margin-right-small\\"
         >
-          see the documentation
-        </a>
+          <b>
+            Device offline
+          </b>
+        </div>
+        Last check-in over 
+        24
          
-        for a description on how to configure different kinds of monitors.
-      </p>
+        hours
+         ago
+      </div>
     </div>
   </div>
   <div
-    class="MuiCollapse-container fadeIn"
-    style="min-height: 0px; height: 0px; transition-duration: 0ms;"
+    class=\\"MuiCollapse-container fadeIn\\"
+    style=\\"min-height: 0px; height: 0px; transition-duration: 0ms;\\"
   >
     <div
-      class="MuiCollapse-wrapper"
+      class=\\"MuiCollapse-wrapper\\"
     >
       <div
-        class="MuiCollapse-wrapperInner"
+        class=\\"MuiCollapse-wrapperInner\\"
       >
-        <div
-          class="margin-bottom"
-        >
+        <div>
           <h4
-            class="text-muted"
+            class=\\"text-muted\\"
           >
-            Triggered alerts
+            Alert history
           </h4>
           <div
-            class="monitoring-alert column-data"
+            class=\\"monitoring-alert column-data\\"
           >
             <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root red"
-              focusable="false"
-              viewBox="0 0 24 24"
+              aria-hidden=\\"true\\"
+              class=\\"MuiSvgIcon-root red\\"
+              focusable=\\"false\\"
+              viewBox=\\"0 0 24 24\\"
             >
               <path
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+                d=\\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\\"
               />
             </svg>
             <div
-              class="key text-muted"
+              class=\\"key text-muted\\"
             >
               <b>
                 SSH Daemon is not running
@@ -115,7 +166,7 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
               CRITICAL
             </div>
             <time
-              datetime="2021-07-23T12:22:36+00:00"
+              datetime=\\"2021-07-23T12:22:36+00:00\\"
             >
               2021-07-23 12:22
             </time>
@@ -126,18 +177,225 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
           </div>
         </div>
         <div
-          class="margin-top-small"
+          class=\\"flexbox margin-top\\"
         >
-          <a>
-            show less
-          </a>
+          <div
+            class=\\"MuiTablePagination-root flexbox margin-top margin-top-none\\"
+          >
+            <div
+              class=\\"MuiToolbar-root MuiToolbar-regular MuiTablePagination-toolbar MuiToolbar-gutters\\"
+            >
+              <div
+                class=\\"MuiTablePagination-spacer flexbox no-basis\\"
+              />
+              <p
+                class=\\"MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit\\"
+                
+              >
+                Rows
+              </p>
+              <div
+                class=\\"MuiInputBase-root MuiTablePagination-input MuiTablePagination-selectRoot\\"
+              >
+                <div
+                  aria-haspopup=\\"listbox\\"
+                  
+                  class=\\"MuiSelect-root MuiSelect-select MuiTablePagination-select MuiSelect-selectMenu MuiInputBase-input\\"
+                  
+                  role=\\"button\\"
+                  tabindex=\\"0\\"
+                >
+                  20
+                </div>
+                <input
+                  aria-hidden=\\"true\\"
+                  class=\\"MuiSelect-nativeInput\\"
+                  tabindex=\\"-1\\"
+                  value=\\"20\\"
+                />
+                <svg
+                  aria-hidden=\\"true\\"
+                  class=\\"MuiSvgIcon-root MuiSelect-icon MuiTablePagination-selectIcon\\"
+                  focusable=\\"false\\"
+                  viewBox=\\"0 0 24 24\\"
+                >
+                  <path
+                    d=\\"M7 10l5 5 5-5z\\"
+                  />
+                </svg>
+              </div>
+              <p
+                class=\\"MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit\\"
+              />
+              <div
+                class=\\"flexbox\\"
+              >
+                <button
+                  class=\\"MuiButtonBase-root MuiIconButton-root\\"
+                  tabindex=\\"0\\"
+                  type=\\"button\\"
+                >
+                  <span
+                    class=\\"MuiIconButton-label\\"
+                  >
+                    <svg
+                      aria-hidden=\\"true\\"
+                      class=\\"MuiSvgIcon-root\\"
+                      focusable=\\"false\\"
+                      viewBox=\\"0 0 24 24\\"
+                    >
+                      <path
+                        d=\\"M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z\\"
+                      />
+                    </svg>
+                  </span>
+                  <span
+                    class=\\"MuiTouchRipple-root\\"
+                  />
+                </button>
+                <button
+                  class=\\"MuiButtonBase-root MuiIconButton-root\\"
+                  tabindex=\\"0\\"
+                  type=\\"button\\"
+                >
+                  <span
+                    class=\\"MuiIconButton-label\\"
+                  >
+                    <svg
+                      aria-hidden=\\"true\\"
+                      class=\\"MuiSvgIcon-root\\"
+                      focusable=\\"false\\"
+                      viewBox=\\"0 0 24 24\\"
+                    >
+                      <path
+                        d=\\"M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z\\"
+                      />
+                    </svg>
+                  </span>
+                  <span
+                    class=\\"MuiTouchRipple-root\\"
+                  />
+                </button>
+                <div
+                  class=\\"flexbox\\"
+                  style=\\"align-items: baseline;\\"
+                >
+                  <div
+                    class=\\"MuiFormControl-root MuiTextField-root MuiFormControl-marginDense\\"
+                    style=\\"min-width: 30px; max-width: 3ch; margin-right: 10px;\\"
+                  >
+                    <div
+                      class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-marginDense MuiInput-marginDense\\"
+                    >
+                      <input
+                        aria-invalid=\\"false\\"
+                        class=\\"MuiInputBase-input MuiInput-input MuiInputBase-inputMarginDense MuiInput-inputMarginDense\\"
+                        type=\\"text\\"
+                        value=\\"2\\"
+                      />
+                    </div>
+                  </div>
+                  / 451
+                </div>
+                <button
+                  class=\\"MuiButtonBase-root MuiIconButton-root\\"
+                  tabindex=\\"0\\"
+                  type=\\"button\\"
+                >
+                  <span
+                    class=\\"MuiIconButton-label\\"
+                  >
+                    <svg
+                      aria-hidden=\\"true\\"
+                      class=\\"MuiSvgIcon-root\\"
+                      focusable=\\"false\\"
+                      viewBox=\\"0 0 24 24\\"
+                    >
+                      <path
+                        d=\\"M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z\\"
+                      />
+                    </svg>
+                  </span>
+                  <span
+                    class=\\"MuiTouchRipple-root\\"
+                  />
+                </button>
+                <button
+                  class=\\"MuiButtonBase-root MuiIconButton-root\\"
+                  tabindex=\\"0\\"
+                  type=\\"button\\"
+                >
+                  <span
+                    class=\\"MuiIconButton-label\\"
+                  >
+                    <svg
+                      aria-hidden=\\"true\\"
+                      class=\\"MuiSvgIcon-root\\"
+                      focusable=\\"false\\"
+                      viewBox=\\"0 0 24 24\\"
+                    >
+                      <path
+                        d=\\"M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z\\"
+                      />
+                    </svg>
+                  </span>
+                  <span
+                    class=\\"MuiTouchRipple-root\\"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
+        <a
+          class=\\"margin-top\\"
+        >
+          Hide alert history
+        </a>
       </div>
     </div>
   </div>
   <hr
-    class="MuiDivider-root"
-    style="margin-top: 24px;"
+    class=\\"MuiDivider-root\\"
+    style=\\"margin-top: 24px;\\"
   />
+</div>"
+`;
+
+exports[`tiny components renders DeviceMonitorsMissingNote correctly 1`] = `
+<div>
+  <div
+    class="flexbox text-muted"
+  >
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+      focusable="false"
+      style="margin-right: 8px;"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+      />
+    </svg>
+    <p
+      class="MuiTypography-root MuiTypography-body1"
+      style="text-transform: none; text-align: left;"
+    >
+      No alert monitor is currently configured for this device.
+      <br />
+      Please
+       
+      <a
+        href="https://docs.mender.io/add-ons/monitor"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        see the documentation
+      </a>
+       
+      for a description on how to configure different kinds of monitors.
+    </p>
+  </div>
 </div>
 `;

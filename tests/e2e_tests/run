@@ -61,7 +61,7 @@ PASSWORD=mysecretpassword!123
 
 run_tests() {
     COMPOSE_CMD+=$TEST_COMPOSE
-    $COMPOSE_CMD build && $COMPOSE_CMD up -d
+    $COMPOSE_CMD up -d
     declare retries=5
 
     if [[ $ENTERPRISE -eq 1 ]]; then

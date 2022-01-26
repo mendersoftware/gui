@@ -20,7 +20,8 @@ describe('monitor actions', () => {
         type: MonitorConstants.RECEIVE_DEVICE_ALERTS,
         deviceId: defaultState.devices.byId.a1.id,
         alerts: []
-      }
+      },
+      { type: MonitorConstants.SET_ALERT_LIST_STATE, value: { page: 1, perPage: 20, total: 1 } }
     ];
     const request = store.dispatch(getDeviceAlerts(defaultState.devices.byId.a1.id));
     expect(request).resolves.toBeTruthy();

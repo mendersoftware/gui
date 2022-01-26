@@ -15,6 +15,14 @@ const longTextTrimmer = text => (text.length >= cutoffLength + ellipsis.length ?
 
 const sanitizeDeviceAlerts = alerts => alerts.map(alert => ({ ...alert, fullName: alert.name, name: longTextTrimmer(alert.name) }));
 
+export const setAlertListState = selectionState => (dispatch, getState) =>
+  Promise.resolve(
+    dispatch({
+      type: MonitorConstants.SET_ALERT_LIST_STATE,
+      value: { ...getState().monitor.alerts.alertList, ...selectionState }
+    })
+  );
+
 export const getDeviceAlerts =
   (id, config = {}) =>
   dispatch => {
@@ -24,13 +32,14 @@ export const getDeviceAlerts =
     return Api.get(`${monitorApiUrlv1}/devices/${id}/alerts?page=${page}&per_page=${perPage}${issued_after}${issued_before}&sort_ascending=${sortAscending}`)
       .catch(err => commonErrorHandler(err, `Retrieving device alerts for device ${id} failed:`, dispatch))
       .then(res =>
-        Promise.resolve(
+        Promise.all([
           dispatch({
             type: MonitorConstants.RECEIVE_DEVICE_ALERTS,
             deviceId: id,
             alerts: sanitizeDeviceAlerts(res.data)
-          })
-        )
+          }),
+          dispatch(setAlertListState({ total: Number(res.headers[headerNames.total]) }))
+        ])
       );
   };
 

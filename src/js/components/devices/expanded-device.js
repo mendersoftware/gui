@@ -17,7 +17,7 @@ import {
   setDeviceTags,
   setDeviceTwin
 } from '../../actions/deviceActions';
-import { getDeviceAlerts } from '../../actions/monitorActions';
+import { getDeviceAlerts, setAlertListState } from '../../actions/monitorActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import ForwardingLink from '../common/forwardlink';
@@ -41,16 +41,17 @@ const refreshDeviceLength = 10000;
 
 export const ExpandedDevice = ({
   abortDeployment,
-  applyDeviceConfig,
+  alertListState,
   alerts,
+  applyDeviceConfig,
   decommissionDevice,
   defaultConfig,
   device,
   deviceConfigDeployment,
   docsVersion,
   getDeviceAlerts,
-  getDeviceLog,
   getDeviceInfo,
+  getDeviceLog,
   getDeviceTwin,
   getSingleDeployment,
   integrations,
@@ -60,6 +61,7 @@ export const ExpandedDevice = ({
   open,
   refreshDevices,
   saveGlobalSettings,
+  setAlertListState,
   setDeviceConfig,
   setDeviceTags,
   setDeviceTwin,
@@ -167,6 +169,7 @@ export const ExpandedDevice = ({
       )}
       {isAcceptedDevice && hasMonitor && (
         <DeviceMonitoring
+          alertListState={alertListState}
           alerts={alerts}
           device={device}
           docsVersion={docsVersion}
@@ -175,6 +178,7 @@ export const ExpandedDevice = ({
           isOffline={isOffline}
           latestAlerts={latestAlerts}
           onDetailsClick={setMonitorDetails}
+          setAlertListState={setAlertListState}
         />
       )}
       {isAcceptedDevice && hasDeviceConnect && (
@@ -222,6 +226,7 @@ const actionCreators = {
   getDeviceTwin,
   getSingleDeployment,
   saveGlobalSettings,
+  setAlertListState,
   setDeviceConfig,
   setDeviceTags,
   setDeviceTwin,
@@ -234,14 +239,15 @@ const mapStateToProps = (state, ownProps) => {
   const { deployment_id: configDeploymentId } = config;
   const { alerts = [], latest = [] } = state.monitor.alerts.byDeviceId[ownProps.deviceId] || {};
   return {
-    alerts: alerts.slice(0, 20),
+    alertListState: state.monitor.alerts.alertList,
+    alerts: alerts,
     defaultConfig: state.users.globalSettings.defaultDeviceConfig,
     device,
     deviceConfigDeployment: state.deployments.byId[configDeploymentId] || {},
     docsVersion: getDocsVersion(state),
     integrations: state.organization.externalDeviceIntegrations.filter(integration => integration.id),
     isEnterprise: getIsEnterprise(state),
-    latestAlerts: latest.slice(0, 20),
+    latestAlerts: latest,
     onboardingComplete: state.onboarding.complete,
     showHelptips: state.users.showHelptips,
     tenantCapabilities: getTenantCapabilities(state),
