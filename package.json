@@ -4,13 +4,19 @@
   "description": "Graphical user interface for Mender.",
   "dependencies": {
     "@date-io/moment": "^1.3.13",
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "4.0.0-alpha.58",
     "@material-ui/pickers": "^3.3.10",
     "@mdi/js": "^6.5.95",
-    "@reduxjs/toolkit": "^1.7.1",
     "@monaco-editor/react": "^4.3.1",
+    "@mui/icons-material": "^5.2.5",
+    "@mui/lab": "^5.0.0-alpha.64",
+    "@mui/material": "^5.2.8",
+    "@mui/styles": "^5.2.3",
+    "@reduxjs/toolkit": "^1.7.1",
     "@stripe/react-stripe-js": "^1.7.0",
     "@stripe/stripe-js": "^1.22.0",
     "axios": "^0.25.0",
@@ -42,6 +48,7 @@
     "react-window-infinite-loader": "^1.0.7",
     "redux-devtools-extension": "^2.13.9",
     "stream-browserify": "^3.0.0",
+    "tss-react": "^3.3.6",
     "universal-cookie": "^4.0.4",
     "validator": "^13.7.0",
     "victory": "^36.2.0",
@@ -59,6 +66,7 @@
     "@babel/plugin-transform-runtime": "^7.16.10",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
+    "@emotion/jest": "^11.7.1",
     "@testing-library/dom": "^8.11.2",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
@@ -141,6 +149,9 @@
     "setupFilesAfterEnv": [
       "<rootDir>/tests/setupTests.js"
     ],
+    "snapshotSerializers": [
+      "@emotion/jest/serializer"
+    ],
     "testEnvironment": "jest-environment-jsdom",
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.js",
@@ -167,6 +178,7 @@
     "disclaim": "yarn licenses generate-disclaimer > disclaimer.txt",
     "lint": "eslint src",
     "lint-fix": "eslint --fix src",
+    "serve": "./entrypoint.sh && webpack serve  --mode development --entry ./src/js/main.js",
     "test": "node test.js",
     "watch": "webpack --watch --mode development --entry ./src/js/main.js"
   },
