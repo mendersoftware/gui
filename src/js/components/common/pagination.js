@@ -10,7 +10,7 @@ const defaultRowsPerPageOptions = [10, 20, DEVICE_LIST_MAXIMUM_LENGTH];
 const { perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 const paginationIndex = 1;
 
-export const TablePaginationActions = ({ count, page = 0, onChangePage, rowsPerPage = defaultPerPage }) => {
+export const TablePaginationActions = ({ count, page = 0, onPageChange, rowsPerPage = defaultPerPage }) => {
   const [pageNo, setPageNo] = useState(page + paginationIndex);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export const TablePaginationActions = ({ count, page = 0, onChangePage, rowsPerP
   useEffect(() => {
     const newPage = Math.min(Math.max(paginationIndex, debouncedPage), Math.ceil(count / rowsPerPage));
     if (newPage !== page + paginationIndex) {
-      onChangePage(newPage);
+      onPageChange(newPage);
     }
   }, [debouncedPage]);
 

@@ -167,7 +167,6 @@ export const Header = ({
         </Button>
         <Menu
           anchorEl={anchorEl}
-          getContentAnchorEl={null}
           onClose={() => setAnchorEl(null)}
           open={Boolean(anchorEl)}
           anchorOrigin={{

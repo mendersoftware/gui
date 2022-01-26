@@ -124,7 +124,7 @@ export const Artifacts = props => {
             onSelect={selectRelease}
           />
           <Button
-            buttonRef={uploadButtonRef}
+            ref={uploadButtonRef}
             color="secondary"
             onClick={onUploadClick}
             startIcon={<CloudUpload fontSize="small" />}

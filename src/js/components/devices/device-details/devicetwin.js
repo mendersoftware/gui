@@ -4,8 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 import { CheckCircleOutlined, CloudUploadOutlined as CloudUpload, Refresh as RefreshIcon } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
-
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
 import Editor, { DiffEditor, loader } from '@monaco-editor/react';
 
@@ -20,7 +19,7 @@ import DeviceDataCollapse from './devicedatacollapse';
 
 loader.config({ paths: { vs: '/ui/vs' } });
 
-const diffStatusStyle = makeStyles(theme => ({
+const diffStatusStyle = makeStyles()(theme => ({
   root: {
     minHeight: 75,
     display: 'grid',

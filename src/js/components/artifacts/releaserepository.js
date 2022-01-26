@@ -218,7 +218,7 @@ export const ReleaseRepository = ({
             <Button
               color="primary"
               variant="contained"
-              buttonRef={creationRef}
+              ref={creationRef}
               component={ForwardingLink}
               to={`/deployments/active?open=true&release=${release.Name}`}
               style={{ marginLeft: 20 }}

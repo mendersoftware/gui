@@ -1,5 +1,4 @@
-import { unstable_createMuiStrictModeTheme as createTheme, adaptV4Theme } from '@mui/material';
-
+import { accordionClasses } from '@mui/material/Accordion';
 import { palette, typography, overrides } from './common';
 
 const variantPalette = {
@@ -22,35 +21,21 @@ const variantPalette = {
   }
 };
 
-export const light = () => {
-  const customTheme = {
-    palette: variantPalette,
-    typography,
-    overrides: {
-      ...overrides,
-      MuiCssBaseline: {
-        '@global': {
-          body: {
-            ...overrides.MuiCssBaseline['@global'].body,
-            /**
-             * Come Material v5 `enableColorScheme` on CssBaseLine to use theme.palette.background.default via theme.palette.mode
-             */
-            background: variantPalette.background.default
-          }
-        }
-      },
-      MuiAccordion: {
+export const light = {
+  palette: variantPalette,
+  typography,
+  components: {
+    ...overrides,
+    MuiAccordion: {
+      styleOverrides: {
         root: {
-          ...overrides.MuiAccordion.root,
-          '&$expanded': {
-            ...overrides.MuiAccordion.root['&$expanded'],
+          ...overrides.MuiAccordion.styleOverrides.root,
+          [`&.${accordionClasses.expanded}`]: {
+            ...overrides.MuiAccordion.styleOverrides.root[`&.${accordionClasses.expanded}`],
             backgroundColor: variantPalette.grey[400]
           }
         }
       }
     }
-  };
-
-  //Note this fills in the standard MUI theme with the custom options and includes anything left unchanged with the MUI defaults
-  return createTheme(adaptV4Theme(customTheme));
+  }
 };

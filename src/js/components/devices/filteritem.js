@@ -39,17 +39,17 @@ const filterNotifications = {
 
 const getOptionLabel = option => option.value || option.key || option;
 
-const FilterOption = option => {
-  const content = getOptionLabel(option);
-  if (option.category !== 'recently used') {
-    return content;
+const FilterOption = (props, option) => {
+  let content = getOptionLabel(option);
+  if (option.category === 'recently used') {
+    content = (
+      <div className="flexbox center-aligned space-between" style={{ width: '100%' }}>
+        <div>{content}</div>
+        <div className="text-muted slightly-smaller">({option.scope})</div>
+      </div>
+    );
   }
-  return (
-    <div className="flexbox center-aligned space-between" style={{ width: '100%' }}>
-      <div>{content}</div>
-      <div className="text-muted slightly-smaller">({option.scope})</div>
-    </div>
-  );
+  return <li {...props}>{content}</li>;
 };
 
 export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => {
@@ -166,7 +166,7 @@ export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => 
             updateFilterKey(key, scope);
           }}
           options={attributes.sort((a, b) => a.priority - b.priority)}
-          renderInput={params => <TextField {...params} label="Attribute" style={textFieldStyle} />}
+          renderInput={params => <TextField {...params} label="Attribute" style={textFieldStyle} variant="standard" />}
           key={reset}
           value={getFilterLabelByKey(key, attributes)}
         />

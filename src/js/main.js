@@ -4,11 +4,10 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import withStyles from '@mui/styles/withStyles';
 
 import './../less/main.less';
-import { createTheme } from './themes/theme-manager';
 import App from './components/app';
 import store from './reducers';
 import ErrorBoundary from './errorboundary';

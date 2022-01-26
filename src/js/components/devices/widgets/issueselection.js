@@ -30,8 +30,7 @@ const menuProps = {
   transformOrigin: {
     vertical: 'top',
     horizontal: 'left'
-  },
-  getContentAnchorEl: null
+  }
 };
 
 const DeviceIssuesSelection = ({ onChange, onSelectAll, options, selection }) => {

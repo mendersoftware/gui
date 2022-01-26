@@ -22,7 +22,7 @@ const UserList = ({ currentUser, editUser, isAdmin: isAdminCurrentUser, isEnterp
             return accu;
           }
           accu.push(
-            <TableCell key={column.id} padding={column.disablePadding ? 'none' : 'default'}>
+            <TableCell key={column.id} padding={column.disablePadding ? 'none' : 'normal'}>
               {column.label}
             </TableCell>
           );

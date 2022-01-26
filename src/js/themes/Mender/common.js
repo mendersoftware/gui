@@ -1,3 +1,8 @@
+import { listItemClasses } from '@mui/material/ListItem';
+import { formLabelClasses } from '@mui/material/FormLabel';
+import { accordionClasses } from '@mui/material/Accordion';
+import { accordionSummaryClasses } from '@mui/material/AccordionSummary';
+
 /**
  * @param qualitative if set is an ordered set of distinct colors availabe for programatic use.
  * @example Chart dataset colors
@@ -103,154 +108,196 @@ export const colors = {
 };
 
 export const typography = {
-  fontFamily: 'Lato, sans-serif'
+  fontFamily: 'Lato, sans-serif',
+  fontSize: 13 // will be transformed to rem automatically by mui
+};
+
+const componentProps = {
+  MuiTextField: {
+    defaultProps: {
+      variant: 'standard'
+    }
+  },
+  MuiSelect: {
+    defaultProps: {
+      autoWidth: true,
+      variant: 'standard'
+    }
+  }
 };
 
 export const overrides = {
-  MuiCssBaseline: {
-    '@global': {
-      body: {
-        fontSize: '0.8125rem' // 13px as from variables.less
+  ...componentProps,
+  MuiSnackbarContent: {
+    styleOverrides: {
+      action: {
+        color: '#9E6F8E'
       }
     }
   },
-  MuiSnackbarContent: {
-    action: {
-      color: '#9E6F8E'
-    }
-  },
   MuiTab: {
-    root: {
-      textTransform: 'none'
+    styleOverrides: {
+      root: {
+        textTransform: 'none'
+      }
     }
   },
   MuiAccordion: {
-    root: {
-      border: 'none',
-      boxShadow: 'none',
-      '&:before': {
-        display: 'none'
-      },
-      padding: 0,
-      '$expanded': {
-        margin: 'auto'
+    styleOverrides: {
+      root: {
+        border: 'none',
+        boxShadow: 'none',
+        '&:before': {
+          display: 'none'
+        },
+        padding: 0,
+        [`&.${accordionClasses.expanded}`]: {
+          backgroundColor: colors.expansionBackground,
+          margin: 'auto'
+        }
       }
     }
   },
   MuiAccordionSummary: {
-    root: {
-      marginBottom: 0,
-      height: 48,
-      '&$expanded': {
+    styleOverrides: {
+      root: {
+        marginBottom: 0,
         height: 48,
-        minHeight: 48
-      }
-    },
-    content: {
-      alignItems: 'center',
-      '&$expanded': {
-        margin: 0
+        [`&.${accordionSummaryClasses.expanded}`]: {
+          height: 48,
+          minHeight: 48
+        }
       },
-      '& > :last-child': {
-        paddingRight: 12
+      content: {
+        alignItems: 'center',
+        [`&.${accordionSummaryClasses.expanded}`]: {
+          margin: 0
+        },
+        '& > :last-child': {
+          paddingRight: 12
+        }
       }
     }
   },
   MuiAccordionDetails: {
-    root: {
-      flexDirection: 'column'
+    styleOverrides: {
+      root: {
+        flexDirection: 'column'
+      }
     }
   },
   MuiInput: {
-    underline: {
-      '&:before': {
-        borderBottom: '1px solid rgb(224, 224, 224)'
-      },
-      '&:hover:not($disabled):before': {
-        borderBottom: `2px solid ${colors.linkgreen} !important`
-      },
-      '&:after': {
-        borderBottom: `2px solid ${colors.linkgreen}`
+    styleOverrides: {
+      underline: {
+        '&:before': {
+          borderBottom: '1px solid rgb(224, 224, 224)'
+        },
+        '&:hover:not($disabled):before': {
+          borderBottom: `2px solid ${colors.linkgreen} !important`
+        },
+        '&:after': {
+          borderBottom: `2px solid ${colors.linkgreen}`
+        }
       }
     }
   },
   MuiFormLabel: {
-    root: {
-      color: palette.text.hint,
-      '&$focused': {
-        color: colors.linkgreen
+    styleOverrides: {
+      root: {
+        color: palette.text.hint,
+        [`&.${formLabelClasses.focused}`]: {
+          color: colors.linkgreen
+        }
       }
     }
   },
   MuiFormControl: {
-    root: {
-      marginTop: '18px',
-      minWidth: '240px'
+    styleOverrides: {
+      root: {
+        marginTop: '18px',
+        minWidth: '240px'
+      }
     }
   },
   MuiFormControlLabel: {
-    root: {
-      marginTop: '18px'
+    styleOverrides: {
+      root: {
+        marginTop: '18px'
+      }
     }
   },
   MuiIconButton: {
-    root: {
-      color: palette.text.hint,
-      fontSize: '1.2rem'
+    styleOverrides: {
+      root: {
+        color: palette.text.hint,
+        fontSize: '1.2rem'
+      }
     }
   },
   MuiButton: {
-    root: {
-      borderRadius: 2,
-      '&:hover': {
-        colors: palette.primary.main
+    styleOverrides: {
+      root: {
+        borderRadius: 2,
+        '&:hover': {
+          colors: palette.primary.main
+        }
+      },
+      text: {
+        padding: '10px 15px'
       }
-    },
-    text: {
-      padding: '10px 15px'
     }
   },
   MuiSvgIcon: {
-    root: {
-      iconButton: {
-        marginRight: '8px'
+    styleOverrides: {
+      root: {
+        iconButton: {
+          marginRight: '8px'
+        }
       }
     }
   },
   MuiListItem: {
-    root: {
-      '&$disabled': {
-        opacity: 1
-      },
-      paddingTop: 11,
-      paddingBottom: 11
+    styleOverrides: {
+      root: {
+        [`&.${listItemClasses.disabled}`]: {
+          opacity: 1
+        },
+        paddingTop: 11,
+        paddingBottom: 11
+      }
     }
   },
   MuiListItemText: {
-    root: {
-      marginTop: 0,
-      marginBottom: 0
+    styleOverrides: {
+      root: {
+        marginTop: 0,
+        marginBottom: 0
+      }
     }
   },
   MuiTableCell: {
-    root: {
-      padding: '0px 24px 0px 24px',
-      height: '48px'
-    },
-    head: {
-      height: '56px',
-      lineHeight: '1.15rem'
-    },
-    paddingCheckbox: {
-      padding: '0 0 0 6px',
-      width: '54px'
+    styleOverrides: {
+      root: {
+        padding: '0px 24px 0px 24px',
+        height: '48px'
+      },
+      head: {
+        height: '56px',
+        lineHeight: '1.15rem'
+      },
+      paddingCheckbox: {
+        padding: '0 0 0 6px',
+        width: '54px'
+      }
     }
   },
   MuiDrawer: {
-    paper: {
-      minWidth: '40vw',
-      maxWidth: '80vw',
-      padding: '30px 75px 5%'
+    styleOverrides: {
+      paper: {
+        minWidth: '40vw',
+        maxWidth: '80vw',
+        padding: '30px 75px 5%'
+      }
     }
   }
 };

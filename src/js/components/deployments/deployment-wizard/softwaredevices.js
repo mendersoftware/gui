@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import pluralize from 'pluralize';
 
 import { TextField, Tooltip, Autocomplete } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import { ErrorOutline as ErrorOutlineIcon } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
@@ -14,7 +14,7 @@ import { allDevices } from '../createdeployment';
 import AsyncAutocomplete from '../../common/asyncautocomplete';
 import InfoHint from '../../common/info-hint';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   infoStyle: {
     minWidth: 400,
     borderBottom: 'none'

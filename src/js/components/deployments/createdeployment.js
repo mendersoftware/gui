@@ -201,7 +201,7 @@ export const CreateDialog = props => {
         <Button
           variant="contained"
           color="primary"
-          buttonRef={deploymentRef}
+          ref={deploymentRef}
           disabled={disabled}
           onClick={finalStep ? () => onScheduleSubmitClick(deploymentSettings) : () => setActiveStep(activeStep + 1)}
         >

@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 
 // material ui
 import { Button, Accordion, AccordionDetails, AccordionSummary, IconButton, Input, InputAdornment, List, ListItem, ListItemText } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
-
 import {
   Add as AddIcon,
   Remove as RemoveIcon,
@@ -15,6 +13,7 @@ import {
   Edit as EditIcon,
   ExitToApp as ExitToAppIcon
 } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 
 import { getArtifactUrl } from '../../actions/releaseActions';
 import { extractSoftwareInformation } from '../../helpers';
@@ -36,7 +35,7 @@ const styles = {
   }
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   accordPanel1: {
     background: theme.palette.grey[500],
     borderTop: 'none',

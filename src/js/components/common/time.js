@@ -47,7 +47,7 @@ export const RelativeTime = ({ className, shouldCount = 'both', updateTime }) =>
   }
   return (
     <Tooltip title={updatedTime ? updatedTime.toLocaleString() : ''} arrow enterDelay={500}>
-      {timeDisplay}
+      <span>{timeDisplay}</span>
     </Tooltip>
   );
 };
