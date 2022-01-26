@@ -225,9 +225,11 @@ export const defaultState = {
   },
   monitor: {
     alerts: {
+      alertList: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, total: 0 },
       byDeviceId: {
         a1: [
           {
+            description: 'something',
             id: '31346239-3839-6262-2d63-3365622d3437',
             name: 'SSH Daemon is not running',
             device_id: 'a1',

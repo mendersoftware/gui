@@ -1,8 +1,9 @@
 import MonitorConstants from '../constants/monitorConstants';
-import { DEVICE_ISSUE_OPTIONS } from '../constants/deviceConstants';
+import { DEVICE_LIST_DEFAULTS, DEVICE_ISSUE_OPTIONS } from '../constants/deviceConstants';
 
 export const initialState = {
   alerts: {
+    alertList: { ...DEVICE_LIST_DEFAULTS, total: 0 },
     byDeviceId: {}
   },
   issueCounts: {
@@ -74,6 +75,14 @@ const monitorReducer = (state = initialState, action) => {
             ...state.issueCounts.byType,
             [action.issueType]: action.counts
           }
+        }
+      };
+    case MonitorConstants.SET_ALERT_LIST_STATE:
+      return {
+        ...state,
+        alerts: {
+          ...state.alerts,
+          alertList: action.value
         }
       };
 
