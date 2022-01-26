@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { InfoOutlined as InfoOutlinedIcon } from '@material-ui/icons';
+import { InfoOutlined as InfoOutlinedIcon } from '@mui/icons-material';
 
 const iconStyle = { verticalAlign: 'middle', margin: '0 6px 4px 0' };
 

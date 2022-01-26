@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 
 import { setFirstLoginAfterSignup, setSnackbar } from '../../actions/appActions';
 import { createOrganizationTrial } from '../../actions/organizationActions';

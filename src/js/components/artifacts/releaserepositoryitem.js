@@ -2,10 +2,8 @@ import React, { useEffect } from 'react';
 import Time from 'react-time';
 
 // material ui
-import { Accordion, AccordionDetails, AccordionSummary, IconButton, Tooltip } from '@material-ui/core';
-
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import { Accordion, AccordionDetails, AccordionSummary, IconButton, Tooltip } from '@mui/material';
+import { ArrowDropDown as ArrowDropDownIcon, ArrowDropUp as ArrowDropUpIcon } from '@mui/icons-material';
 
 import { formatTime, FileSize } from '../../helpers';
 import { colors } from '../../themes/Mender';
@@ -35,7 +33,9 @@ export const ReleaseRepositoryItem = ({ artifact, expanded, index, itemRef, onEd
           <Time value={formatTime(artifact.modified)} format="YYYY-MM-DD HH:mm" />
           <div style={{ maxWidth: '100vw' }}>{artifactType}</div>
           <FileSize fileSize={artifact.size} />
-          <IconButton className="expandButton">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>
+          <IconButton className="expandButton" size="large">
+            {expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+          </IconButton>
         </AccordionSummary>
         <AccordionDetails>
           {expanded && (

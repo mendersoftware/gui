@@ -2,11 +2,10 @@ import React from 'react';
 import pluralize from 'pluralize';
 import Time from 'react-time';
 
-import Chip from '@material-ui/core/Chip';
-import { useTheme } from '@material-ui/core/styles';
-import AddIcon from '@material-ui/icons/Add';
-import { Table, TableBody, TableCell, TableHead, TableRow, Select, MenuItem, Input, InputAdornment, IconButton } from '@material-ui/core';
-import CancelIcon from '@material-ui/icons/Cancel';
+import { Add as AddIcon, Cancel as CancelIcon } from '@mui/icons-material';
+import { Chip, Table, TableBody, TableCell, TableHead, TableRow, Select, MenuItem, Input, InputAdornment, IconButton } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+
 import { getPhaseStartTime } from '../createdeployment';
 import { getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
 
@@ -151,7 +150,7 @@ export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, num
         </TableCell>
         <TableCell>
           {index >= 1 ? (
-            <IconButton onClick={() => removePhase(index)}>
+            <IconButton onClick={() => removePhase(index)} size="large">
               <CancelIcon />
             </IconButton>
           ) : null}

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Time from 'react-time';
 import { Link } from 'react-router-dom';
 
-import { ArrowRightAlt as ArrowRightAltIcon, Sort as SortIcon } from '@material-ui/icons';
+import { ArrowRightAlt as ArrowRightAltIcon, Sort as SortIcon } from '@mui/icons-material';
 
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';

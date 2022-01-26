@@ -1,9 +1,9 @@
 import React from 'react';
 import Time from 'react-time';
 
-import { ArrowDropDownCircleOutlined as ScrollDownIcon, CheckCircle as CheckIcon, Error as ErrorIcon, Help as HelpIcon } from '@material-ui/icons';
+import { ArrowDropDownCircleOutlined as ScrollDownIcon, CheckCircle as CheckIcon, Error as ErrorIcon, Help as HelpIcon } from '@mui/icons-material';
 import pluralize from 'pluralize';
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@mui/material/styles';
 import { DEVICE_ONLINE_CUTOFF } from '../../../constants/deviceConstants';
 
 const errorIcon = <ErrorIcon className="red" />;

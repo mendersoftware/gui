@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
-import { Button, Accordion, AccordionDetails, AccordionSummary, IconButton, Input, InputAdornment, List, ListItem, ListItemText } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Button, Accordion, AccordionDetails, AccordionSummary, IconButton, Input, InputAdornment, List, ListItem, ListItemText } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 
 import {
   Add as AddIcon,
@@ -14,7 +14,7 @@ import {
   Check as CheckIcon,
   Edit as EditIcon,
   ExitToApp as ExitToAppIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 import { getArtifactUrl } from '../../actions/releaseActions';
 import { extractSoftwareInformation } from '../../helpers';
@@ -141,7 +141,7 @@ export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExp
                 onChange={e => setDescription(e.target.value)}
                 endAdornment={
                   <InputAdornment position="end">
-                    <IconButton style={styles.editButton} onClick={onToggleEditing}>
+                    <IconButton style={styles.editButton} onClick={onToggleEditing} size="large">
                       {descEdit ? <CheckIcon /> : <EditIcon />}
                     </IconButton>
                   </InputAdornment>

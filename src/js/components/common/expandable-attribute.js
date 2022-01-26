@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 // material ui
-import { ListItem, ListItemText, Tooltip } from '@material-ui/core';
+import { ListItem, ListItemText, Tooltip } from '@mui/material';
 
-import { FileCopyOutlined as CopyToClipboardIcon } from '@material-ui/icons';
+import { FileCopyOutlined as CopyToClipboardIcon } from '@mui/icons-material';
 
 import copy from 'copy-to-clipboard';
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Button, Dialog, DialogActions, DialogTitle, DialogContent } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogTitle, DialogContent } from '@mui/material';
 
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import GroupDefinition from './group-management/group-definition';
@@ -20,7 +20,7 @@ export const CreateGroup = ({ addListOfDevices, groups, isCreation, isCreationDy
   };
 
   return (
-    <Dialog disableBackdropClick disableEscapeKeyDown open={true} scroll="paper" fullWidth={true} maxWidth="sm">
+    <Dialog disableEscapeKeyDown open={true} scroll="paper" fullWidth={true} maxWidth="sm">
       <DialogTitle style={{ paddingBottom: '15px', marginBottom: 0 }}>{title}</DialogTitle>
       <DialogContent className="dialog">
         <GroupDefinition

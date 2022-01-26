@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 
 import headerLogo from '../../../../assets/img/headerlogo.png';
 import { useradmApiUrl } from '../../../constants/userConstants';

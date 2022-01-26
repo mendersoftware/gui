@@ -3,9 +3,10 @@ import Time from 'react-time';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 // material ui
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Chip, Divider, IconButton, withStyles } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
-import { FileCopy as CopyPasteIcon } from '@material-ui/icons';
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Chip, Divider, IconButton } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import withStyles from '@mui/styles/withStyles';
+import { FileCopy as CopyPasteIcon } from '@mui/icons-material';
 
 import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { formatTime } from '../../../../helpers';
@@ -155,7 +156,7 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
     content = [
       <div key="content">
         <CopyToClipboard text={endKey} onCopy={onCopied}>
-          <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
+          <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }} size="large">
             <CopyPasteIcon />
           </IconButton>
         </CopyToClipboard>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import Time from 'react-time';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 
 const cutoff = -5 * 60;
 
@@ -28,7 +28,7 @@ export const RelativeTime = ({ className, shouldCount = 'both', updateTime }) =>
     );
   }
   return (
-    <Tooltip title={updatedTime ? updatedTime.toLocaleString() : ''} arrow={true} enterDelay={500}>
+    <Tooltip title={updatedTime ? updatedTime.toLocaleString() : ''} arrow enterDelay={500}>
       {timeDisplay}
     </Tooltip>
   );

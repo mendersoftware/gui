@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
-import { IconButton } from '@material-ui/core';
-import { Clear as ClearIcon } from '@material-ui/icons';
+import { IconButton } from '@mui/material';
+import { Clear as ClearIcon } from '@mui/icons-material';
 import { VictoryGroup, VictoryLabel, VictoryLegend, VictoryPie } from 'victory';
 
 import Loader from '../../common/loader';
@@ -69,7 +69,7 @@ export const DistributionReport = ({ attribute, devices, group, groups, onClick,
         <>
           <div className="flexbox space-between margin-left-small">
             <h4>{group || 'All devices'}</h4>
-            <IconButton className="widgetRemover" onClick={toggleRemoving} style={{ alignSelf: 'flex-end' }}>
+            <IconButton className="widgetRemover" onClick={toggleRemoving} style={{ alignSelf: 'flex-end' }} size="large">
               <ClearIcon fontSize="small" />
             </IconButton>
           </div>

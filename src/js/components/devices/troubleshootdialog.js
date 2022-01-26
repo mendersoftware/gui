@@ -6,8 +6,8 @@ import Time from 'react-time';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { mdiConsole as ConsoleIcon } from '@mdi/js';
 
 import msgpack5 from 'msgpack5';

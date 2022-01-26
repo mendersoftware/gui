@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
-import { Button, Chip, Collapse } from '@material-ui/core';
-import { Add as AddIcon } from '@material-ui/icons';
+import { Button, Chip, Collapse } from '@mui/material';
+import { Add as AddIcon } from '@mui/icons-material';
 
 import { getDeviceAttributes, selectDevice as resetIdFilter, setDeviceFilters } from '../../actions/deviceActions';
 import { saveGlobalSettings } from '../../actions/userActions';

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-import { Button, IconButton, List, ListItem, ListItemText, TextField, Tooltip } from '@material-ui/core';
-import { FileCopy as CopyPasteIcon } from '@material-ui/icons';
-import { useTheme } from '@material-ui/core/styles';
+import { Button, IconButton, List, ListItem, ListItemText, TextField, Tooltip } from '@mui/material';
+import { FileCopy as CopyPasteIcon } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
 
 import FileUpload from '../../common/forms/fileupload';
 
@@ -84,7 +84,7 @@ export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUploa
                 value={uploadPath}
               />
               <Tooltip title="Paste" placement="top">
-                <IconButton style={{ alignSelf: 'flex-end' }} onClick={onPasteUploadClick}>
+                <IconButton style={{ alignSelf: 'flex-end' }} onClick={onPasteUploadClick} size="large">
                   <CopyPasteIcon />
                 </IconButton>
               </Tooltip>
@@ -118,7 +118,7 @@ export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUploa
                 style={columnStyle}
               />
               <Tooltip title="Paste" placement="top">
-                <IconButton style={{ alignSelf: 'flex-end' }} onClick={onPasteDownloadClick}>
+                <IconButton style={{ alignSelf: 'flex-end' }} onClick={onPasteDownloadClick} size="large">
                   <CopyPasteIcon />
                 </IconButton>
               </Tooltip>

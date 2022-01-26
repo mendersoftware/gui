@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Launch as LaunchIcon } from '@material-ui/icons';
-import { useTheme } from '@material-ui/core/styles';
+import { Launch as LaunchIcon } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
 import { colors } from '../../../themes/Mender';
 import DeviceIdentityDisplay from '../../common/deviceidentity';
 import { BEGINNING_OF_TIME } from '../../../constants/appConstants';

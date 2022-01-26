@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Pause as PauseIcon, ArrowDropDownCircleOutlined as ScrollDownIcon } from '@material-ui/icons';
-import { useTheme } from '@material-ui/core/styles';
+import { Pause as PauseIcon, ArrowDropDownCircleOutlined as ScrollDownIcon } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
 
 import { groupDeploymentStats } from '../../../helpers';
 

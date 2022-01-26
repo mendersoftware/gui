@@ -5,8 +5,8 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import InfiniteLoader from 'react-window-infinite-loader';
 
 // material ui
-import { Button, ButtonGroup, ListItem, ListItemText, Menu, MenuItem, TextField, Typography } from '@material-ui/core';
-import { ArrowDropDown as ArrowDropDownIcon, KeyboardArrowRight as KeyboardArrowRightIcon, Sort as SortIcon } from '@material-ui/icons';
+import { Button, ButtonGroup, ListItem, ListItemText, Menu, MenuItem, TextField, Typography } from '@mui/material';
+import { ArrowDropDown as ArrowDropDownIcon, KeyboardArrowRight as KeyboardArrowRightIcon, Sort as SortIcon } from '@mui/icons-material';
 
 import Loader from '../common/loader';
 import { SORTING_OPTIONS } from '../../constants/appConstants';

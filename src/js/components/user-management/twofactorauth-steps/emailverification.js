@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 
 import Form from '../../common/forms/form';
 import TextInput from '../../common/forms/textinput';

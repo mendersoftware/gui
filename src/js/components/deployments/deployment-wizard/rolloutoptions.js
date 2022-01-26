@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Checkbox, FormControl, FormControlLabel, FormGroup, MenuItem, Select } from '@material-ui/core';
+import { Checkbox, FormControl, FormControlLabel, FormGroup, MenuItem, Select } from '@mui/material';
 
 import RolloutSteps from './rolloutsteps';
 

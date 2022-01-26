@@ -1,8 +1,8 @@
 import React from 'react';
 
 // material ui
-import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@material-ui/core';
-import { InfoOutlined as InfoIcon } from '@material-ui/icons';
+import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
+import { InfoOutlined as InfoIcon } from '@mui/icons-material';
 
 import { AddGroup } from '../helptips/helptooltips';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';

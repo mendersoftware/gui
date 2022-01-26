@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
 // material ui
-import { IconButton, MenuItem, Select, TextField, FormHelperText } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
-import { Help as HelpIcon, HighlightOff as HighlightOffIcon } from '@material-ui/icons';
-import { Autocomplete, createFilterOptions } from '@material-ui/lab';
+import { Autocomplete, IconButton, MenuItem, Select, TextField, FormHelperText } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { Help as HelpIcon, HighlightOff as HighlightOffIcon } from '@mui/icons-material';
+import { createFilterOptions } from '@mui/material/useAutocomplete';
 
 import { DEVICE_FILTERING_OPTIONS } from '../../constants/deviceConstants';
 

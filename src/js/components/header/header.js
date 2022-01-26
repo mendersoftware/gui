@@ -4,15 +4,15 @@ import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import moment from 'moment';
 
-import { Button, IconButton, ListItemText, ListItemSecondaryAction, Menu, MenuItem, Toolbar } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
+import { Button, IconButton, ListItemText, ListItemSecondaryAction, Menu, MenuItem, Toolbar } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 import {
   AccountCircle as AccountCircleIcon,
   ArrowDropDown as ArrowDropDownIcon,
   ArrowDropUp as ArrowDropUpIcon,
   ExitToApp as ExitIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 import { initializeAppData, setFirstLoginAfterSignup, setSnackbar } from '../../actions/appActions';
 import { getOnboardingState } from '../../actions/onboardingActions';
@@ -202,7 +202,7 @@ export const Header = ({
           <MenuItem onClick={onLogoutClick}>
             <ListItemText primary="Log out" />
             <ListItemSecondaryAction>
-              <IconButton>
+              <IconButton size="large">
                 <ExitIcon style={{ color: menuButtonColor, fill: menuButtonColor }} />
               </IconButton>
             </ListItemSecondaryAction>

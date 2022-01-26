@@ -4,8 +4,8 @@ import { Link, NavLink } from 'react-router-dom';
 import copy from 'copy-to-clipboard';
 
 // material ui
-import { List, ListItem, ListItemText, Tooltip } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
+import { List, ListItem, ListItemText, Tooltip } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 import { setSnackbar } from '../actions/appActions';
 

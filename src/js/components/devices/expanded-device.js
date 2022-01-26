@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import copy from 'copy-to-clipboard';
 
-import { Button, Divider, Drawer, IconButton } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
-import { Close as CloseIcon, Link as LinkIcon, Replay as ReplayIcon } from '@material-ui/icons';
+import { Button, Divider, Drawer, IconButton } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { Close as CloseIcon, Link as LinkIcon, Replay as ReplayIcon } from '@mui/icons-material';
 
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../actions/deploymentActions';
@@ -122,13 +122,13 @@ export const ExpandedDevice = ({
     <Drawer anchor="right" className="expandedDevice" open={open} onClose={onClose} PaperProps={{ style: { minWidth: '67vw' } }}>
       <div className="flexbox center-aligned">
         <h3>Device information for {deviceIdentifier}</h3>
-        <IconButton onClick={copyLinkToClipboard}>
+        <IconButton onClick={copyLinkToClipboard} size="large">
           <LinkIcon />
         </IconButton>
         <div className={`${isOffline ? 'red' : 'muted'} margin-left margin-right`}>
           Last check-in: <RelativeTime updateTime={device.updated_ts} />
         </div>
-        <IconButton style={{ marginLeft: 'auto' }} onClick={onClose} aria-label="close">
+        <IconButton style={{ marginLeft: 'auto' }} onClick={onClose} aria-label="close" size="large">
           <CloseIcon />
         </IconButton>
       </div>

@@ -2,9 +2,11 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Time from 'react-time';
 
-import { Button } from '@material-ui/core';
-import { CheckCircleOutlined, CloudUploadOutlined as CloudUpload, Refresh as RefreshIcon } from '@material-ui/icons';
-import { useTheme, makeStyles } from '@material-ui/core/styles';
+import { Button } from '@mui/material';
+import { CheckCircleOutlined, CloudUploadOutlined as CloudUpload, Refresh as RefreshIcon } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 import Editor, { DiffEditor, loader } from '@monaco-editor/react';
 

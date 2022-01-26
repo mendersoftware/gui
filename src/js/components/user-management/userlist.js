@@ -2,7 +2,7 @@ import React from 'react';
 import Time from 'react-time';
 
 // material ui
-import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
+import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 
 import RelativeTime from '../common/relative-time';
 

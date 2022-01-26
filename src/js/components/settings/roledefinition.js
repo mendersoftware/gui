@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import validator from 'validator';
 
 // material ui
-import { Button, Checkbox, Collapse, FormControl, FormControlLabel, FormHelperText, TextField } from '@material-ui/core';
+import { Button, Checkbox, Collapse, FormControl, FormControlLabel, FormHelperText, TextField } from '@mui/material';
 
 export const emptyRole = { allowUserManagement: false, id: '', description: '', groups: [] };
 

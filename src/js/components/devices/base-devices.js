@@ -3,7 +3,7 @@ import Time from 'react-time';
 import { Link } from 'react-router-dom';
 import pluralize from 'pluralize';
 
-import { ArrowRightAlt as ArrowRightAltIcon } from '@material-ui/icons';
+import { ArrowRightAlt as ArrowRightAltIcon } from '@mui/icons-material';
 import preauthImage from '../../../assets/img/preauthorize.png';
 
 import DeviceStatus from './device-status';

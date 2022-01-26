@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
-import { AddCircle as AddIcon } from '@material-ui/icons';
+import { Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { AddCircle as AddIcon } from '@mui/icons-material';
 
 import AuthorizedDevices from './authorized-devices';
 import CreateGroup from './create-group';

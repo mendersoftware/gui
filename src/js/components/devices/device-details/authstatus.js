@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import { Chip, Icon } from '@material-ui/core';
-import { Block as BlockIcon, Check as CheckIcon, CheckCircle as CheckCircleIcon } from '@material-ui/icons';
+import { Chip, Icon } from '@mui/material';
+import { Block as BlockIcon, Check as CheckIcon, CheckCircle as CheckCircleIcon } from '@mui/icons-material';
 
 import pendingIcon from '../../../../assets/img/pending_status.png';
 import { DEVICE_STATES } from '../../../constants/deviceConstants';

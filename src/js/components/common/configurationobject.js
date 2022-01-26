@@ -3,8 +3,8 @@ import React, { Fragment, useState } from 'react';
 import copy from 'copy-to-clipboard';
 
 // material ui
-import { Tooltip } from '@material-ui/core';
-import { FileCopyOutlined as CopyToClipboardIcon } from '@material-ui/icons';
+import { Tooltip } from '@mui/material';
+import { FileCopyOutlined as CopyToClipboardIcon } from '@mui/icons-material';
 
 const ValueColumn = ({ value, setSnackbar }) => {
   const [tooltipVisible, setTooltipVisible] = useState(false);

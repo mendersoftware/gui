@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
-import { Button, Switch, TextField } from '@material-ui/core';
+import { Button, Switch, TextField } from '@mui/material';
 
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';

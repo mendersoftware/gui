@@ -5,8 +5,8 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
 
 // material ui
-import { Button, List, LinearProgress } from '@material-ui/core';
-import { Error as ErrorIcon, FileCopy as CopyPasteIcon, Info as InfoIcon, OpenInNew as OpenInNewIcon } from '@material-ui/icons';
+import { Button, List, LinearProgress } from '@mui/material';
+import { Error as ErrorIcon, FileCopy as CopyPasteIcon, Info as InfoIcon, OpenInNew as OpenInNewIcon } from '@mui/icons-material';
 
 import { cancelRequest, getUserOrganization } from '../../actions/organizationActions';
 import { ADDONS, PLANS } from '../../constants/appConstants';

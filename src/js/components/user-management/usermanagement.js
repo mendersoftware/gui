@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 // material ui
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
 import UserList from './userlist';
 import UserForm from './userform';

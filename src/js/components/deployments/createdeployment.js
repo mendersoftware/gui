@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Step, StepLabel, Stepper } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Step, StepLabel, Stepper } from '@mui/material';
 
 import SoftwareDevices from './deployment-wizard/softwaredevices';
 import ScheduleRollout from './deployment-wizard/schedulerollout';

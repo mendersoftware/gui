@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 
 // material ui
-import { Button, Tooltip, Typography } from '@material-ui/core';
-import { Sort as SortIcon } from '@material-ui/icons';
+import { Button, Tooltip, Typography } from '@mui/material';
+import { Sort as SortIcon } from '@mui/icons-material';
 
 import { setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';

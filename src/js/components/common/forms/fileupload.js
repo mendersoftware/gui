@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import Dropzone from 'react-dropzone';
 
 // material ui
-import { IconButton, TextField } from '@material-ui/core';
-import { Clear as ClearIcon, CloudUpload as FileIcon } from '@material-ui/icons';
+import { IconButton, TextField } from '@mui/material';
+import { Clear as ClearIcon, CloudUpload as FileIcon } from '@mui/icons-material';
 
 export const FileUpload = ({
   enableContentReading = true,
@@ -48,7 +48,7 @@ export const FileUpload = ({
   return filename ? (
     <div style={style}>
       <TextField id="keyfile" value={filename} disabled={true} style={{ color: 'rgba(0, 0, 0, 0.8)', borderBottom: '1px solid rgb(224, 224, 224)' }} />
-      <IconButton style={{ top: '6px' }} onClick={onClear}>
+      <IconButton style={{ top: '6px' }} onClick={onClear} size="large">
         <ClearIcon />
       </IconButton>
     </div>

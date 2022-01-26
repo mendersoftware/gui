@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 // material ui
-import { List, ListItem, ListSubheader, ListItemText } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
+import { List, ListItem, ListSubheader, ListItemText } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 export const LeftNav = ({ isHosted, pages }) => {
   const theme = useTheme();

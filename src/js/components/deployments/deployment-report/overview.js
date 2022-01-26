@@ -4,9 +4,9 @@ import Time from 'react-time';
 import pluralize from 'pluralize';
 import isUUID from 'validator/lib/isUUID';
 
-import { Chip } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
-import { ArrowDropDownCircleOutlined as ScrollDownIcon, Launch as LaunchIcon } from '@material-ui/icons';
+import { Chip } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { ArrowDropDownCircleOutlined as ScrollDownIcon, Launch as LaunchIcon } from '@mui/icons-material';
 
 import successImage from '../../../../assets/img/largeSuccess.png';
 import failImage from '../../../../assets/img/largeFail.png';

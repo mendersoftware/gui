@@ -6,7 +6,7 @@ import momentDurationFormatSetup from 'moment-duration-format';
 
 import { getDeviceById, getSessionDetails } from '../../../actions/deviceActions';
 import { getIdAttribute } from '../../../selectors';
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@mui/material/styles';
 import Loader from '../../common/loader';
 import DeviceDetails, { DetailInformation } from './devicedetails';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import Time from 'react-time';
-import { List, ListItem, ListItemText, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
+import { List, ListItem, ListItemText, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 
 import { FileSize, getFormattedSize } from './../../helpers';
 import { colors } from '../../themes/Mender';

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { getDeviceById } from '../../../actions/deviceActions';
 import { getIdAttribute } from '../../../selectors';
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@mui/material/styles';
 import Loader from '../../common/loader';
 import DeviceDetails, { DetailInformation } from './devicedetails';
 

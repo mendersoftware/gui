@@ -1,4 +1,4 @@
-import { unstable_createMuiStrictModeTheme as createTheme } from '@material-ui/core';
+import { unstable_createMuiStrictModeTheme as createTheme, adaptV4Theme } from '@mui/material';
 
 import { palette, typography, overrides } from './common';
 
@@ -58,5 +58,5 @@ export const dark = () => {
   };
 
   //Note this fills in the standard MUI theme with the custom options and includes anything left unchanged with the MUI defaults
-  return createTheme(customTheme);
+  return createTheme(adaptV4Theme(customTheme));
 };

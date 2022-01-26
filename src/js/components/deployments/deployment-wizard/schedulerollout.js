@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import { FormControl, ListSubheader, MenuItem, Select, Tooltip } from '@material-ui/core';
-import { InfoOutlined as InfoIcon } from '@material-ui/icons';
+import { FormControl, ListSubheader, MenuItem, Select, Tooltip } from '@mui/material';
+import { InfoOutlined as InfoIcon } from '@mui/icons-material';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 

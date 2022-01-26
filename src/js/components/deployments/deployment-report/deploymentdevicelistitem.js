@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Time from 'react-time';
 
 // material ui
-import { Button, LinearProgress, TableCell, TableRow } from '@material-ui/core';
+import { Button, LinearProgress, TableCell, TableRow } from '@mui/material';
 
 import { formatTime } from '../../../helpers';
 import DeviceIdentityDisplay from '../../common/deviceidentity';

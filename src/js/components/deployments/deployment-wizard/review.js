@@ -2,7 +2,7 @@ import React from 'react';
 import Time from 'react-time';
 import pluralize from 'pluralize';
 
-import { Chip, List, ListItem, ListItemText } from '@material-ui/core';
+import { Chip, List, ListItem, ListItemText } from '@mui/material';
 
 import { DEPLOYMENT_TYPES } from '../../../constants/deploymentConstants';
 import { formatTime, generateDeploymentGroupDetails, getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';

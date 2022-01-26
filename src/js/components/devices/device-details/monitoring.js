@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Time from 'react-time';
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@mui/material/styles';
 
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
 import Pagination from '../../common/pagination';

@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { Button } from '@material-ui/core';
-import { CloudUpload, InfoOutlined as InfoIcon } from '@material-ui/icons';
+import { Button } from '@mui/material';
+import { CloudUpload, InfoOutlined as InfoIcon } from '@mui/icons-material';
 
 import { cancelFileUpload, setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';

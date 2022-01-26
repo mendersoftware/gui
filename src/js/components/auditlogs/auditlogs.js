@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
-import { Button, TextField } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import { Button, TextField, Autocomplete } from '@mui/material';
 
 import historyImage from '../../../assets/img/history.png';
 

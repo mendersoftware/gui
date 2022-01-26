@@ -1,5 +1,5 @@
 import React from 'react';
-import { Announcement as AnnouncmentIcon, Close as CloseIcon } from '@material-ui/icons';
+import { Announcement as AnnouncmentIcon, Close as CloseIcon } from '@mui/icons-material';
 
 const OfferHeader = ({ docsVersion, onHide }) => (
   <div id="offerHeader" className="offerBox">

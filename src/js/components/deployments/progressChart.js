@@ -4,8 +4,8 @@ import momentDurationFormatSetup from 'moment-duration-format';
 import Time from 'react-time';
 import pluralize from 'pluralize';
 
-import { Tooltip } from '@material-ui/core';
-import { RotateLeftOutlined, Warning as WarningIcon } from '@material-ui/icons';
+import { Tooltip } from '@mui/material';
+import { RotateLeftOutlined, Warning as WarningIcon } from '@mui/icons-material';
 import { mdiDotsHorizontalCircleOutline as QueuedIcon, mdiSleep as SleepIcon } from '@mdi/js';
 
 import { groupDeploymentStats } from '../../helpers';

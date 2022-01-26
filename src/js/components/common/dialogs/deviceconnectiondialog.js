@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 import docker from '../../../../assets/img/docker.png';
 import raspberryPi from '../../../../assets/img/raspberrypi.png';

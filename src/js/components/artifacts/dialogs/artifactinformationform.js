@@ -1,9 +1,8 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-import { FormControl, Input, InputLabel, TextField, Tooltip } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
-import { InfoOutlined as InfoIcon } from '@material-ui/icons';
+import { FormControl, Input, InputLabel, TextField, Tooltip, Autocomplete } from '@mui/material';
+import { InfoOutlined as InfoIcon } from '@mui/icons-material';
 
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { duplicateFilter, unionizeStrings } from '../../../helpers';
@@ -106,7 +105,7 @@ export const ArtifactInformation = ({ customDeviceTypes, deviceTypes = [], name,
       <FormControl>
         <InputLabel htmlFor="release-name" style={{ alignItems: 'center', display: 'flex' }}>
           Release name
-          <Tooltip key="release-name-tip" title={<ReleaseTooltip />} placement="bottom" arrow={true} interactive leaveDelay={300}>
+          <Tooltip key="release-name-tip" title={<ReleaseTooltip />} placement="bottom" arrow leaveDelay={300}>
             <InfoIcon fontSize="small" classes={{ root: 'margin-left-small' }} />
           </Tooltip>
         </InputLabel>

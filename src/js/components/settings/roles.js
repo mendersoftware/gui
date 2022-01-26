@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
-import { Button, Chip, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
-import { Add as AddIcon } from '@material-ui/icons';
-import { useTheme } from '@material-ui/core/styles';
+import { Button, Chip, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Add as AddIcon } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
 
 import { getGroups, getDynamicGroups } from '../../actions/deviceActions';
 import { createRole, editRole, getRoles, removeRole } from '../../actions/userActions';

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { SvgIcon } from '@material-ui/core';
+import { SvgIcon } from '@mui/material';
 import { mdiImageBrokenVariant } from '@mdi/js';
 
 const MaterialDesignIcon = ({ path = mdiImageBrokenVariant, style = {} }) => (

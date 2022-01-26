@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
 
 // material ui
-import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@material-ui/core';
-import PaymentIcon from '@material-ui/icons/Payment';
+import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
+import PaymentIcon from '@mui/icons-material/Payment';
 
 import { Elements } from '@stripe/react-stripe-js';
 

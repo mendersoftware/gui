@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 // material ui
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
 import Loader from '../../common/loader';

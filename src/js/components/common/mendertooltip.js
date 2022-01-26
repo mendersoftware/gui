@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 
-import { ClickAwayListener, Tooltip, withStyles } from '@material-ui/core';
+import { ClickAwayListener, Tooltip } from '@mui/material';
+
+import withStyles from '@mui/styles/withStyles';
 
 export const MenderTooltip = withStyles(({ palette, shadows }) => ({
   arrow: {
@@ -43,7 +45,6 @@ export const MenderTooltipClickable = ({ children, onboarding, startOpen = false
     <ClickAwayListener onClickAway={hide}>
       <Component
         arrow={!onboarding}
-        interactive
         open={open}
         disableFocusListener
         disableHoverListener

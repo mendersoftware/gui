@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { MenuItem, Select, TextField } from '@material-ui/core';
+import { MenuItem, Select, TextField } from '@mui/material';
 
 import MenderTooltip from '../common/mendertooltip';
 

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 // material ui
-import { Button, IconButton, Tooltip } from '@material-ui/core';
-import { CancelOutlined as CancelOutlinedIcon } from '@material-ui/icons';
+import { Button, IconButton, Tooltip } from '@mui/material';
+import { CancelOutlined as CancelOutlinedIcon } from '@mui/icons-material';
 
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
 import Confirm from '../common/confirm';
@@ -88,7 +88,7 @@ export const DeploymentItem = ({ abort: abortDeployment, columnHeaders, deployme
       </Button>
       {type !== DEPLOYMENT_STATES.finished && (
         <Tooltip className="columnHeader" title="Abort" placement="top-start">
-          <IconButton onClick={() => toggleConfirm(id)}>
+          <IconButton onClick={() => toggleConfirm(id)} size="large">
             <CancelOutlinedIcon className="cancelButton muted" />
           </IconButton>
         </Tooltip>

@@ -1,4 +1,4 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme, adaptV4Theme } from '@mui/material/styles';
 
 const palette = {
   primary: {
@@ -75,175 +75,177 @@ export const colors = {
 export const chartColorPalette = [palette.secondary.main, '#a31773', '#00859e', '#14cfda', '#9bfff0', '#d5d5d5'];
 
 /**
- * Usage with `import { useTheme } from "@material-ui/core/styles"` within components
+ * Usage with `import { useTheme } from "@mui/material/styles"` within components
  */
 export const createMenderTheme = () =>
-  createMuiTheme({
-    palette: {
-      ...palette,
-      qualitative
-    },
-    colors: {
-      ...colors,
-      chartColorPalette
-    },
-    typography: {
-      fontFamily: 'Lato, sans-serif'
-    },
-    overrides: {
-      MuiSnackbarContent: {
-        action: {
-          color: '#9E6F8E'
-        }
+  createTheme(
+    adaptV4Theme({
+      palette: {
+        ...palette,
+        qualitative
       },
-      MuiTab: {
-        root: {
-          textTransform: 'none'
-        }
+      colors: {
+        ...colors,
+        chartColorPalette
       },
-      MuiAccordion: {
-        root: {
-          border: 'none',
-          boxShadow: 'none',
-          '&:before': {
-            display: 'none'
-          },
-          padding: 0,
-          '&$expanded': {
-            backgroundColor: colors.expansionBackground,
-            margin: 'auto'
+      typography: {
+        fontFamily: 'Lato, sans-serif'
+      },
+      overrides: {
+        MuiSnackbarContent: {
+          action: {
+            color: '#9E6F8E'
           }
-        }
-      },
-      MuiAccordionSummary: {
-        root: {
-          marginBottom: 0,
-          height: 48,
-          '&$expanded': {
+        },
+        MuiTab: {
+          root: {
+            textTransform: 'none'
+          }
+        },
+        MuiAccordion: {
+          root: {
+            border: 'none',
+            boxShadow: 'none',
+            '&:before': {
+              display: 'none'
+            },
+            padding: 0,
+            '&$expanded': {
+              backgroundColor: colors.expansionBackground,
+              margin: 'auto'
+            }
+          }
+        },
+        MuiAccordionSummary: {
+          root: {
+            marginBottom: 0,
             height: 48,
-            minHeight: 48
+            '&$expanded': {
+              height: 48,
+              minHeight: 48
+            }
+          },
+          content: {
+            alignItems: 'center',
+            '&$expanded': {
+              margin: 0
+            },
+            '& > :last-child': {
+              paddingRight: 12
+            }
           }
         },
-        content: {
-          alignItems: 'center',
-          '&$expanded': {
-            margin: 0
-          },
-          '& > :last-child': {
-            paddingRight: 12
-          }
-        }
-      },
-      MuiAccordionDetails: {
-        root: {
-          flexDirection: 'column'
-        }
-      },
-      MuiInput: {
-        underline: {
-          '&:before': {
-            borderBottom: '1px solid rgb(224, 224, 224)'
-          },
-          '&:hover:not($disabled):before': {
-            borderBottom: `2px solid ${colors.linkgreen} !important`
-          },
-          '&:after': {
-            borderBottom: `2px solid ${colors.linkgreen}`
-          }
-        }
-      },
-      MuiFormLabel: {
-        root: {
-          color: colors.mutedText,
-          '&$focused': {
-            color: colors.linkgreen
-          }
-        }
-      },
-      MuiFormControl: {
-        root: {
-          marginTop: '18px',
-          minWidth: '240px'
-        }
-      },
-      MuiFormControlLabel: {
-        root: {
-          marginTop: '18px'
-        }
-      },
-      MuiIconButton: {
-        root: {
-          color: colors.mutedText,
-          fontSize: '1.2rem'
-        }
-      },
-      MuiButton: {
-        root: {
-          borderRadius: 2,
-          '&:hover': {
-            colors: colors.mendergreen
+        MuiAccordionDetails: {
+          root: {
+            flexDirection: 'column'
           }
         },
-        text: {
-          padding: '10px 15px'
-        }
-      },
-      MuiSvgIcon: {
-        root: {
-          iconButton: {
-            marginRight: '8px'
+        MuiInput: {
+          underline: {
+            '&:before': {
+              borderBottom: '1px solid rgb(224, 224, 224)'
+            },
+            '&:hover:not($disabled):before': {
+              borderBottom: `2px solid ${colors.linkgreen} !important`
+            },
+            '&:after': {
+              borderBottom: `2px solid ${colors.linkgreen}`
+            }
           }
-        }
-      },
-      MuiListItem: {
-        root: {
-          '&$disabled': {
-            opacity: 1
+        },
+        MuiFormLabel: {
+          root: {
+            color: colors.mutedText,
+            '&$focused': {
+              color: colors.linkgreen
+            }
+          }
+        },
+        MuiFormControl: {
+          root: {
+            marginTop: '18px',
+            minWidth: '240px'
+          }
+        },
+        MuiFormControlLabel: {
+          root: {
+            marginTop: '18px'
+          }
+        },
+        MuiIconButton: {
+          root: {
+            color: colors.mutedText,
+            fontSize: '1.2rem'
+          }
+        },
+        MuiButton: {
+          root: {
+            borderRadius: 2,
+            '&:hover': {
+              colors: colors.mendergreen
+            }
           },
-          paddingTop: 11,
-          paddingBottom: 11
-        }
-      },
-      MuiListItemText: {
-        root: {
-          fontSize: '0.8rem',
-          '&$primary': {
+          text: {
+            padding: '10px 15px'
+          }
+        },
+        MuiSvgIcon: {
+          root: {
+            iconButton: {
+              marginRight: '8px'
+            }
+          }
+        },
+        MuiListItem: {
+          root: {
+            '&$disabled': {
+              opacity: 1
+            },
+            paddingTop: 11,
+            paddingBottom: 11
+          }
+        },
+        MuiListItemText: {
+          root: {
+            fontSize: '0.8rem',
+            '&$primary': {
+              fontSize: '0.8rem'
+            },
+            marginTop: 0,
+            marginBottom: 0
+          }
+        },
+        MuiTypography: {
+          body1: {
             fontSize: '0.8rem'
           },
-          marginTop: 0,
-          marginBottom: 0
-        }
-      },
-      MuiTypography: {
-        body1: {
-          fontSize: '0.8rem'
+          subtitle1: {
+            fontSize: '0.8rem'
+          }
         },
-        subtitle1: {
-          fontSize: '0.8rem'
-        }
-      },
-      MuiTableCell: {
-        root: {
-          padding: '0px 24px 0px 24px',
-          height: '48px'
+        MuiTableCell: {
+          root: {
+            padding: '0px 24px 0px 24px',
+            height: '48px'
+          },
+          head: {
+            height: '56px',
+            lineHeight: '1.15rem'
+          },
+          paddingCheckbox: {
+            padding: '0 0 0 6px',
+            width: '54px'
+          }
         },
-        head: {
-          height: '56px',
-          lineHeight: '1.15rem'
-        },
-        paddingCheckbox: {
-          padding: '0 0 0 6px',
-          width: '54px'
-        }
-      },
-      MuiDrawer: {
-        paper: {
-          minWidth: '40vw',
-          maxWidth: '80vw',
-          padding: '30px 75px 5%'
+        MuiDrawer: {
+          paper: {
+            minWidth: '40vw',
+            maxWidth: '80vw',
+            padding: '30px 75px 5%'
+          }
         }
       }
-    }
-  });
+    })
+  );
 
 export default createMenderTheme();

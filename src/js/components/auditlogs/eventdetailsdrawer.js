@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { Divider, Drawer } from '@material-ui/core';
-import { HelpOutline as HelpOutlineIcon } from '@material-ui/icons';
+import { Divider, Drawer } from '@mui/material';
+import { HelpOutline as HelpOutlineIcon } from '@mui/icons-material';
 
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@mui/material/styles';
 import DeviceConfiguration from './eventdetails/deviceconfiguration';
 import FileTransfer from './eventdetails/filetransfer';
 import PortForward from './eventdetails/portforward';

@@ -5,8 +5,8 @@ import { withRouter } from 'react-router-dom';
 import IdleTimer from 'react-idle-timer';
 import Cookies from 'universal-cookie';
 
-import { LinearProgress, IconButton, Tooltip } from '@material-ui/core';
-import { Cancel as CancelIcon } from '@material-ui/icons';
+import { LinearProgress, IconButton, Tooltip } from '@mui/material';
+import { Cancel as CancelIcon } from '@mui/icons-material';
 
 import { getToken, updateMaxAge, expirySet } from '../auth';
 import { cancelFileUpload, setSnackbar } from '../actions/appActions';
@@ -107,7 +107,7 @@ export const AppRoot = ({
           <p className="align-center">Upload in progress ({Math.round(uploadProgress)}%)</p>
           <LinearProgress variant="determinate" style={{ backgroundColor: colors.grey, gridColumn: 1, margin: '15px 0' }} value={uploadProgress} />
           <Tooltip title="Abort" placement="top">
-            <IconButton onClick={cancelFileUpload}>
+            <IconButton onClick={cancelFileUpload} size="large">
               <CancelIcon />
             </IconButton>
           </Tooltip>

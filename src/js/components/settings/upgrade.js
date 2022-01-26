@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import moment from 'moment';
 
-import { InfoOutlined as InfoOutlinedIcon, LocalOffer as LocalOfferIcon } from '@material-ui/icons';
+import { InfoOutlined as InfoOutlinedIcon, LocalOffer as LocalOfferIcon } from '@mui/icons-material';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeviceLimit } from '../../actions/deviceActions';

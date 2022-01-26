@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import pluralize from 'pluralize';
 
-import RefreshIcon from '@material-ui/icons/Refresh';
-import UpdateIcon from '@material-ui/icons/Update';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import UpdateIcon from '@mui/icons-material/Update';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus } from '../../actions/deploymentActions';

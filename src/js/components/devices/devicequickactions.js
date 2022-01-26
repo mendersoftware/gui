@@ -1,14 +1,14 @@
 import React, { forwardRef, memo, useMemo, useState } from 'react';
 import pluralize from 'pluralize';
 
-import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
+import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@mui/material';
 import {
   AddCircle as AddCircleIcon,
   CheckCircle as CheckCircleIcon,
   HeightOutlined as HeightOutlinedIcon,
   HighlightOffOutlined as HighlightOffOutlinedIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { mdiTrashCanOutline as TrashCan } from '@mdi/js';
 
 import MaterialDesignIcon from '../common/materialdesignicon';

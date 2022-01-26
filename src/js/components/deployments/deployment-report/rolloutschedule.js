@@ -4,9 +4,9 @@ import pluralize from 'pluralize';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
-import { Chip } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
-import { ArrowForward } from '@material-ui/icons';
+import { Chip } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { ArrowForward } from '@mui/icons-material';
 
 import { formatTime, getPhaseDeviceCount, getRemainderPercent, groupDeploymentStats } from '../../../helpers';
 import { colors } from '../../../themes/Mender';

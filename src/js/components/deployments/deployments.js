@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 
-import { Button, Tab, Tabs } from '@material-ui/core';
+import { Button, Tab, Tabs } from '@mui/material';
 
 import { getGroups, getDynamicGroups } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';

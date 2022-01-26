@@ -3,8 +3,9 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import { withStyles, MuiThemeProvider } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
+import withStyles from '@mui/styles/withStyles';
 
 import './../less/main.less';
 import { createTheme } from './themes/theme-manager';
@@ -27,14 +28,16 @@ function AppProviders() {
   const theme = createTheme();
   return (
     <Provider store={store}>
-      <MuiThemeProvider theme={theme}>
-        <WrappedBaseline />
-        <ErrorBoundary>
-          <Router basename="/ui/#">
-            <App />
-          </Router>
-        </ErrorBoundary>
-      </MuiThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <WrappedBaseline />
+          <ErrorBoundary>
+            <Router basename="/ui/#">
+              <App />
+            </Router>
+          </ErrorBoundary>
+        </ThemeProvider>
+      </StyledEngineProvider>
     </Provider>
   );
 }

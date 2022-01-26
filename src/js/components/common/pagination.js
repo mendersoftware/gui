@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-import { FirstPage as FirstPageIcon, LastPage as LastPageIcon, KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons';
-import { IconButton, TablePagination, TextField } from '@material-ui/core';
+import { FirstPage as FirstPageIcon, LastPage as LastPageIcon, KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
+import { IconButton, TablePagination, TextField } from '@mui/material';
 
 import { DEVICE_LIST_DEFAULTS, DEVICE_LIST_MAXIMUM_LENGTH } from '../../constants/deviceConstants';
 import { useDebounce } from '../../utils/debouncehook';
@@ -48,10 +48,10 @@ export const TablePaginationActions = ({ count, page = 0, onChangePage, rowsPerP
   const pages = Math.ceil(count / rowsPerPage);
   return (
     <div className="flexbox">
-      <IconButton onClick={() => setPageNo(paginationIndex)} disabled={pageNo === paginationIndex}>
+      <IconButton onClick={() => setPageNo(paginationIndex)} disabled={pageNo === paginationIndex} size="large">
         <FirstPageIcon />
       </IconButton>
-      <IconButton onClick={() => setPageNo(pageNo - 1)} disabled={pageNo === paginationIndex}>
+      <IconButton onClick={() => setPageNo(pageNo - 1)} disabled={pageNo === paginationIndex} size="large">
         <KeyboardArrowLeft />
       </IconButton>
       <div className="flexbox" style={{ alignItems: 'baseline' }}>
@@ -64,10 +64,14 @@ export const TablePaginationActions = ({ count, page = 0, onChangePage, rowsPerP
         />
         {`/ ${pages}`}
       </div>
-      <IconButton onClick={() => setPageNo(pageNo + 1)} disabled={pageNo >= Math.ceil(count / rowsPerPage)}>
+      <IconButton onClick={() => setPageNo(pageNo + 1)} disabled={pageNo >= Math.ceil(count / rowsPerPage)} size="large">
         <KeyboardArrowRight />
       </IconButton>
-      <IconButton onClick={() => setPageNo(Math.max(paginationIndex, Math.ceil(count / rowsPerPage)))} disabled={pageNo >= Math.ceil(count / rowsPerPage)}>
+      <IconButton
+        onClick={() => setPageNo(Math.max(paginationIndex, Math.ceil(count / rowsPerPage)))}
+        disabled={pageNo >= Math.ceil(count / rowsPerPage)}
+        size="large"
+      >
         <LastPageIcon />
       </IconButton>
     </div>
@@ -87,9 +91,9 @@ const Pagination = props => {
       labelDisplayedRows={() => ''}
       labelRowsPerPage="Rows"
       rowsPerPageOptions={defaultRowsPerPageOptions}
-      onChangeRowsPerPage={e => onChangeRowsPerPage(e.target.value)}
+      onRowsPerPageChange={e => onChangeRowsPerPage(e.target.value)}
       page={propsPage}
-      onChangePage={onChangePage}
+      onPageChange={onChangePage}
       ActionsComponent={TablePaginationActions}
       {...remainingProps}
     />

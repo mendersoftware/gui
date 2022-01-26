@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Divider, ListItem, ListItemText } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
+import { Divider, ListItem, ListItemText } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 const defaultItemProps = { alignItems: 'flex-start', disabled: true, divider: false };
 export const maxWidth = 500;

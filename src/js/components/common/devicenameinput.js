@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
-import { IconButton, Input, InputAdornment } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
-import { Clear as ClearIcon, Check as CheckIcon, Edit as EditIcon } from '@material-ui/icons';
+import { IconButton, Input, InputAdornment } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { Clear as ClearIcon, Check as CheckIcon, Edit as EditIcon } from '@mui/icons-material';
 
 import { setSnackbar } from '../../actions/appActions';
 import { setDeviceTags } from '../../actions/deviceActions';

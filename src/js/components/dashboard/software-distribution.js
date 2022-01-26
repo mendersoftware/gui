@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
-import { BarChart as BarChartIcon } from '@material-ui/icons';
+import { BarChart as BarChartIcon } from '@mui/icons-material';
 
 import ChartAdditionWidget from './widgets/chart-addition';
 import DistributionReport from './widgets/distribution';

@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Time from 'react-time';
 
-import { Button, Typography } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
-import { ImportExport as ImportExportIcon, InfoOutlined as InfoIcon, Launch as LaunchIcon } from '@material-ui/icons';
+import { Button, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { ImportExport as ImportExportIcon, InfoOutlined as InfoIcon, Launch as LaunchIcon } from '@mui/icons-material';
 import { mdiConsole as ConsoleIcon } from '@mdi/js';
 
 import MaterialDesignIcon from '../../common/materialdesignicon';

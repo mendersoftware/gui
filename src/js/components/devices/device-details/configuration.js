@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Time from 'react-time';
 
-import { Button, Checkbox, FormControlLabel, Typography } from '@material-ui/core';
+import { Button, Checkbox, FormControlLabel, Typography } from '@mui/material';
 import {
   Block as BlockIcon,
   CheckCircle as CheckCircleIcon,
@@ -10,7 +10,7 @@ import {
   Error as ErrorIcon,
   Refresh as RefreshIcon,
   SaveAlt as SaveAltIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { deepCompare, groupDeploymentStats, groupDeploymentDevicesStats, isEmpty } from '../../../helpers';

@@ -2,10 +2,10 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
-import { useTheme } from '@material-ui/core/styles';
-import { Button, MenuItem, Select } from '@material-ui/core';
+import { useTheme } from '@mui/material/styles';
+import { Button, MenuItem, Select } from '@mui/material';
 
-import { Autorenew as AutorenewIcon, Delete as DeleteIcon, FilterList as FilterListIcon, LockOutlined } from '@material-ui/icons';
+import { Autorenew as AutorenewIcon, Delete as DeleteIcon, FilterList as FilterListIcon, LockOutlined } from '@mui/icons-material';
 
 import { setSnackbar } from '../../actions/appActions';
 import { deleteAuthset, getDevicesByStatus, setDeviceFilters, setDeviceListState, updateDevicesAuth } from '../../actions/deviceActions';

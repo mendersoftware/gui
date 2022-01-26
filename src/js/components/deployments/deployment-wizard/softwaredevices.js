@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 
 import pluralize from 'pluralize';
 
-import { makeStyles, TextField, Tooltip } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
-import { ErrorOutline as ErrorOutlineIcon } from '@material-ui/icons';
+import { TextField, Tooltip, Autocomplete } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import { ErrorOutline as ErrorOutlineIcon } from '@mui/icons-material';
 
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';

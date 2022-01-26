@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
-import { Button } from '@material-ui/core';
-import { Help as HelpIcon } from '@material-ui/icons';
+import { Button } from '@mui/material';
+import { Help as HelpIcon } from '@mui/icons-material';
 
 import loginLogo from '../../../assets/img/loginlogo.png';
 import { setSnackbar } from '../../actions/appActions';

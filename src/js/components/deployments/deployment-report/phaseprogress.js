@@ -3,9 +3,9 @@ import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 import pluralize from 'pluralize';
 
-import { Button } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
-import { CheckCircle, ErrorRounded, Pause, PlayArrow, Warning as WarningIcon } from '@material-ui/icons';
+import { Button } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { CheckCircle, ErrorRounded, Pause, PlayArrow, Warning as WarningIcon } from '@mui/icons-material';
 
 import { deploymentDisplayStates, deploymentSubstates, installationSubstatesMap, pauseMap } from '../../../constants/deploymentConstants';
 import { getDeploymentState, groupDeploymentStats, statCollector } from '../../../helpers';

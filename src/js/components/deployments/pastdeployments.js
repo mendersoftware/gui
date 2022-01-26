@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
-import { RootRef, TextField } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import { Autocomplete, TextField } from '@mui/material';
 
 import historyImage from '../../../assets/img/history.png';
 import { setSnackbar } from '../../actions/appActions';
@@ -223,7 +222,7 @@ export const Past = props => {
         {/* TODO: fix status retrieval for past deployments to decide what to show here - */}
         {!loading && !!past.length && !!onboardingComponent && !isShowingDetails && onboardingComponent}
         {!!past.length && (
-          <RootRef rootRef={deploymentsRef}>
+          <>
             <DeploymentsList
               {...props}
               componentClass="margin-left-small"
@@ -237,7 +236,7 @@ export const Past = props => {
               showPagination
               type={type}
             />
-          </RootRef>
+          </>
         )}
         {!(loading || past.length) && (
           <div className="dashboard-placeholder">
