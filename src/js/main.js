@@ -5,6 +5,8 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
+import { LocalizationProvider } from '@mui/lab';
+import AdapterMoment from '@mui/lab/AdapterMoment';
 import withStyles from '@mui/styles/withStyles';
 
 import './../less/main.less';
@@ -29,12 +31,14 @@ function AppProviders() {
     <Provider store={store}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
-          <WrappedBaseline />
-          <ErrorBoundary>
-            <Router basename="/ui/#">
-              <App />
-            </Router>
-          </ErrorBoundary>
+          <LocalizationProvider dateAdapter={AdapterMoment}>
+            <WrappedBaseline />
+            <ErrorBoundary>
+              <Router basename="/ui/#">
+                <App />
+              </Router>
+            </ErrorBoundary>
+          </LocalizationProvider>
         </ThemeProvider>
       </StyledEngineProvider>
     </Provider>

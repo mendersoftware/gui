@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import moment from 'moment';
 
-import { FormControl, ListSubheader, MenuItem, Select, Tooltip } from '@mui/material';
+import { FormControl, ListSubheader, MenuItem, Select, TextField, Tooltip } from '@mui/material';
 import { InfoOutlined as InfoIcon } from '@mui/icons-material';
-import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
+import { DateTimePicker } from '@mui/lab';
 
 import PhaseSettings from './phasesettings';
 import EnterpriseNotification from '../../common/enterpriseNotification';
@@ -20,6 +20,8 @@ const styles = {
     width: 'min-content'
   }
 };
+
+const renderInput = params => <TextField {...params} />;
 
 export const ScheduleRollout = props => {
   const { setDeploymentSettings, deploymentObject = {}, disableSchedule, isEnterprise, plan, previousPhases = [] } = props;
@@ -101,6 +103,7 @@ export const ScheduleRollout = props => {
   );
 
   const canSchedule = isEnterprise || plan === 'professional';
+  const startTime = moment(start_time);
   return (
     <form className="flexbox column  margin margin-top-none" style={{ overflow: 'visible', minHeight: 300 }}>
       <div className="deployment-scheduling-view">
@@ -115,20 +118,19 @@ export const ScheduleRollout = props => {
         {isPickerOpen || start_time ? (
           <>
             <FormControl className="margin-bottom" style={styles.pickerStyle}>
-              <MuiPickersUtilsProvider utils={MomentUtils}>
-                <DateTimePicker
-                  ampm={false}
-                  open={isPickerOpen}
-                  onOpen={() => setIsPickerOpen(true)}
-                  onClose={() => setIsPickerOpen(false)}
-                  label={canSchedule ? 'Set the start time' : 'Starting at'}
-                  value={start_time}
-                  style={styles.textField}
-                  minDate={new Date()}
-                  disabled={!canSchedule}
-                  onChange={date => handleStartTimeChange(date.toISOString())}
-                />
-              </MuiPickersUtilsProvider>
+              <DateTimePicker
+                ampm={false}
+                open={isPickerOpen}
+                onOpen={() => setIsPickerOpen(true)}
+                onClose={() => setIsPickerOpen(false)}
+                label={canSchedule ? 'Set the start time' : 'Starting at'}
+                value={startTime}
+                style={styles.textField}
+                minDate={moment()}
+                disabled={!canSchedule}
+                onChange={date => handleStartTimeChange(date.toISOString())}
+                renderInput={renderInput}
+              />
             </FormControl>
             {deploymentTimeNotification}
           </>
