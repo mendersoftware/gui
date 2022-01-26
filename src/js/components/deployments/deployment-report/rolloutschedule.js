@@ -5,10 +5,11 @@ import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
 import { Chip } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 import { ArrowForward } from '@material-ui/icons';
 
 import { formatTime, getPhaseDeviceCount, getRemainderPercent, groupDeploymentStats } from '../../../helpers';
-import theme, { colors } from '../../../themes/mender-theme';
+import { colors } from '../../../themes/Mender';
 import { TwoColumnData } from '../../common/configurationobject';
 import { getPhaseStartTime } from '../createdeployment';
 import { ProgressChart } from '../progressChart';
@@ -21,6 +22,7 @@ momentDurationFormatSetup(moment);
 const maxPhaseWidth = 270;
 
 export const RolloutSchedule = ({ deployment, innerRef, onAbort, onUpdateControlChange }) => {
+  const theme = useTheme();
   const now = moment();
   const {
     created: creationTime = now.toISOString(),

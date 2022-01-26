@@ -5,8 +5,7 @@ import copy from 'copy-to-clipboard';
 
 // material ui
 import { List, ListItem, ListItemText, Tooltip } from '@material-ui/core';
-
-import theme, { colors } from '../themes/mender-theme';
+import { useTheme } from '@material-ui/core/styles';
 
 import { setSnackbar } from '../actions/appActions';
 
@@ -28,6 +27,7 @@ const listItemStyle = {
 
 export const LeftNav = ({ className, docsVersion, isAdmin, isEnterprise, onboardingState, setSnackbar, versionInformation }) => {
   const releasesRef = useRef();
+  const theme = useTheme();
 
   const onVersionClick = () => {
     copy(JSON.stringify(versionInformation));
@@ -39,7 +39,7 @@ export const LeftNav = ({ className, docsVersion, isAdmin, isEnterprise, onboard
       target="_blank"
       rel="noopener noreferrer"
       href={`https://docs.mender.io/${docsVersion}release-information/open-source-licenses`}
-      style={{ fontSize: '13px', position: 'relative', top: '6px', color: colors.linkgreen }}
+      style={{ fontSize: '13px', position: 'relative', top: '6px', color: theme.palette.primary.main }}
     >
       License information
     </a>
@@ -93,7 +93,7 @@ export const LeftNav = ({ className, docsVersion, isAdmin, isEnterprise, onboard
               ref={item.route === '/releases' ? releasesRef : null}
               to={item.route}
             >
-              <ListItemText primary={item.text} style={Object.assign({ textTransform: 'uppercase' })} />
+              <ListItemText primary={item.text} style={{ textTransform: 'uppercase' }} />
             </ListItem>
           );
           return accu;
@@ -102,10 +102,10 @@ export const LeftNav = ({ className, docsVersion, isAdmin, isEnterprise, onboard
       {onboardingComponent ? onboardingComponent : null}
       <List style={{ padding: '0', position: 'absolute', bottom: '30px', left: '0px', right: '0px' }}>
         <ListItem className="navLink leftNav" component={Link} style={listItemStyle.container} to="/help">
-          <ListItemText primary="Help" style={listItemStyle.font} />
+          <ListItemText primary="Help" />
         </ListItem>
         <ListItem style={{ ...listItemStyle.container, color: '#949495' }} disabled={true}>
-          <ListItemText primary={versionInfo} secondary={licenseLink} style={listItemStyle.font} />
+          <ListItemText primary={versionInfo} secondary={licenseLink} />
         </ListItem>
       </List>
     </div>

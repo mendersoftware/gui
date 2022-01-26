@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
+import { useTheme } from '@material-ui/core/styles';
 import { Button, MenuItem, Select } from '@material-ui/core';
 
 import { Autorenew as AutorenewIcon, Delete as DeleteIcon, FilterList as FilterListIcon, LockOutlined } from '@material-ui/icons';
@@ -23,7 +24,6 @@ import { ExpandDevice } from '../helptips/helptooltips';
 import DeviceList from './devicelist';
 import DeviceQuickActions from './devicequickactions';
 import Filters from './filters';
-import theme from '../../themes/mender-theme';
 import DeviceIssuesSelection from './widgets/issueselection';
 
 const refreshDeviceLength = 10000;
@@ -39,6 +39,7 @@ const sortingNotes = {
 };
 
 export const Authorized = props => {
+  const theme = useTheme();
   const {
     acceptedCount,
     addDevicesToGroup,
@@ -471,6 +472,7 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, actionCreators)(Authorized);
 
 const DeviceStateSelection = ({ onStateChange, selectedState, states }) => {
+  const theme = useTheme();
   const availableStates = useMemo(() => Object.values(states).filter(duplicateFilter), [states]);
 
   return (

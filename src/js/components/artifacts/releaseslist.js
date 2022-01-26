@@ -27,7 +27,7 @@ const ReleaseListItem = ({ data, index, style }) => {
   let isSelected = index === 0;
   isSelected = release && selectedRelease ? release.Name === selectedRelease.Name : isSelected;
   return (
-    <ListItem button className={`repository-list-item ${isSelected ? 'active' : ''}`} onClick={() => onSelect(release)} style={style}>
+    <ListItem button selected={isSelected} className="repository-list-item" onClick={() => onSelect(release)} style={style}>
       {!release?.Name ? (
         <Loader show />
       ) : (

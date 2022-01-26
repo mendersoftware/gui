@@ -5,7 +5,7 @@ import generator from 'generate-password';
 import { Button, FormControl, FormHelperText, IconButton, Input, InputAdornment, InputLabel } from '@material-ui/core';
 import { CheckCircle as CheckIcon, Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon } from '@material-ui/icons';
 
-import { colors } from '../../../themes/mender-theme';
+import { colors } from '../../../themes/Mender';
 
 export default class PasswordInput extends React.Component {
   constructor(props, context) {

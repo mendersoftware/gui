@@ -1,3 +1,4 @@
+@import 'variables_light'; // Can swap to dark to build a dev version while testing mui switching
 @import 'variables';
 @import 'fonts';
 @import 'loader';
@@ -9,7 +10,6 @@
 html,
 body {
   height: 100%;
-  background-color: #ffffff;
 }
 
 #app {
@@ -128,13 +128,6 @@ time {
 }
 
 /* Type */
-
-body {
-  font-family: Lato, sans-serif;
-  font-size: 13px;
-  margin: 0;
-  color: @text;
-}
 
 .italic {
   font-style: italic;
@@ -380,11 +373,10 @@ ul.link-list {
 /* Navigation */
 .navLink {
   transition: all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
-  color: #949495;
+  // color: #949495;
   &.leftNav.active {
-    background: white;
-    border-top: 1px solid #eaf4f3;
-    border-bottom: 1px solid #eaf4f3;
+    border-top: 1px solid @lightgrey;
+    border-bottom: 1px solid @lightgrey;
     transition: all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
   }
   &.leftNav:first-of-type {
@@ -397,10 +389,10 @@ ul.link-list {
 }
 
 .navLink.leftNav > div > span {
-  color: #949495;
+  color: @MuiTextHint;
 }
 .navLink.leftNav.active > div > span {
-  color: rgba(0, 0, 0, 0.87);
+  color: @MuiTextPrimary;
 }
 .navLink.leftNav:hover {
   background-color: rgba(0, 0, 0, 0.08);
@@ -850,7 +842,7 @@ ul.link-list {
   }
   .widgetHeader,
   .widgetFooter {
-    color: @verylightgrey;
+    color: @darkgrey;
     border-color: @placeholder;
     border-width: 1px;
     justify-content: center;
@@ -949,7 +941,7 @@ ul.link-list {
   border-width: 1px;
   border-radius: 5px;
   border-color: @lightgrey;
-  background: white;
+  background: @defaultBackground;
 }
 .filter-header {
   margin-bottom: -1px;
@@ -1248,7 +1240,7 @@ div:focus {
   }
 
   .MuiButton-contained.oauth-provider {
-    background-color: white;
+    background-color: @defaultBackground;
     color: @text;
     margin: 0 10px;
   }
@@ -1345,7 +1337,7 @@ div:focus {
   background-color: #337a87;
   border-radius: 4px;
   padding: 8px 12px;
-  color: #ffffff;
+  color: @defaultBackground;
   * {
     color: inherit;
     font-size: inherit;
@@ -1474,14 +1466,14 @@ div:focus {
       width: 45%;
     }
     .deviceStatus {
-      border-color: @verylightgrey;
-      color: @verylightgrey;
+      border-color: @darkgrey;
+      color: @darkgrey;
       font-size: 0.8em;
       line-height: 0.8em;
       .notificationCounter {
         width: 14px;
         height: 14px;
-        background-color: @verylightgrey;
+        background-color: @darkgrey;
         margin-left: 5px;
         margin-right: -5px;
         color: @lightestgrey;
@@ -1496,10 +1488,10 @@ div:focus {
 .device-addition-widget {
   border-radius: 5px;
   border: 1px solid @bordercolor;
-  color: @verylightgrey;
+  color: @darkgrey;
   padding-top: 0.5 * @defaultGutterWidth;
   a {
-    color: @verylightgrey;
+    color: @darkgrey;
     font-weight: normal;
   }
 }
@@ -1517,7 +1509,7 @@ div:focus {
       background: fade(@grey, 15%);
       &.red {
         border-color: @red;
-        background: fade(@mendermaroon, 7.5%);
+        background: rgba(var(--mui-secondary-main), 7.5%);
       }
     }
   }
@@ -1671,11 +1663,11 @@ input.fileInput {
       background: fade(@mendergreen, 7.5%);
     }
     &.pending {
-      background: fade(@mendermaroon, 7.5%);
+      background: rgba(var(--mui-secondary-main), 7.5%);
     }
   }
   .completionInfo {
-    color: @verylightgrey;
+    color: @darkgrey;
     font-size: small;
   }
   .statusText {
@@ -1690,7 +1682,7 @@ input.fileInput {
     max-width: 60vw;
     margin-bottom: 3.5vh;
     h4 {
-      color: @verylightgrey;
+      color: @darkgrey;
       text-transform: capitalize;
       margin: 0;
     }
@@ -1710,7 +1702,7 @@ span.day {
   align-items: center;
   span {
     position: absolute;
-    background: white;
+    background: @defaultBackground;
     padding: 0 @defaultGutterWidth;
     min-width: 6 * @defaultGutterWidth;
   }
@@ -1728,7 +1720,7 @@ span.day {
 
   span {
     position: absolute;
-    background: #ffffff;
+    background: @defaultBackground;
     padding: 10px @defaultGutterWidth 10px 0;
     top: -19px;
   }
@@ -1885,7 +1877,7 @@ span.day {
   }
   .progress-step {
     align-items: center;
-    border-right: 1px dashed @verylightgrey;
+    border-right: 1px dashed @darkgrey;
     z-index: 1;
     > .progress-bar {
       position: absolute;
@@ -1917,8 +1909,8 @@ span.day {
       height: 8px;
     }
     .progress-step-total .progress-bar {
-      background-color: white;
-      border: 1px solid @verylightgrey;
+      background-color: @defaultBackground;
+      border: 1px solid @darkgrey;
       border-radius: 2px;
       height: 12px;
       margin: -2px;
@@ -1994,7 +1986,7 @@ span.day {
 // deployment progress report
 .deployment-report {
   .MuiTab-textColorInherit {
-    color: @verylightgrey;
+    color: @darkgrey;
   }
   .MuiTab-root {
     height: 100%;
@@ -2050,14 +2042,14 @@ span.day {
   width: 64%;
   min-width: 200px;
   overflow: hidden;
-  color: @verylightgrey;
+  color: @darkgrey;
   white-space: normal;
   word-wrap: break-word;
   margin-left: 5px;
 }
 
 .substateText {
-  color: @verylightgrey;
+  color: @darkgrey;
   word-break: break-word;
 }
 
@@ -2368,7 +2360,7 @@ span.day {
   left: 230px;
   right: 2 * @defaultGutterWidth;
   bottom: 80px;
-  background-color: #ffffff;
+  background-color: @defaultBackground;
   border: 1px solid @lightergrey;
   border-radius: 4px;
   height: 4 * @defaultGutterWidth;

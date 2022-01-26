@@ -1,27 +1,35 @@
 @path-fonts: '~/src/assets/fonts';
 
-// colors
-@red: #8f0d0d;
-@green: #009e73;
+// Mui token map reference. Do not use directly but pull from theme.palette
+// If unmatched from theme.palette then copy from palette as the source of truth
+@MuiPaletteSecondaryLight: #7d3f68;
+@MuiPaletteBrandMender: #015969;
+@MuiPaletteSucessMain: #009e73;
+@MuiPaletteErrorMain: #ab1000;
+@MuiPaletteErrorDark: #770b00;
+
+// legacy color definitions
+@red: @MuiPaletteErrorDark;
+@green: @MuiPaletteSucessMain;
 @alertgreen: #679ba5;
-@alertpurple: #7d3f69;
-@bordercolor: #e0e0e0;
-@errorStyleColor: #ab1000;
-@linkgreen: #347a87;
+@alertpurple: @MuiPaletteSecondaryLight;
+@errorStyleColor: @MuiPaletteErrorMain;
+@linkgreen: var(--mui-primary-main);
 @linkhover: @alertgreen;
 @linksecondary: #669ba5;
-@lightestgrey: #f7f7f7;
-@lightergrey: #eaf4f3;
-@lightgrey: #d4e9e7;
-@verylightgrey: #aaaaaa;
-@grey: #c7c7c7;
-@placeholder: #e7e7e7;
-@mendergreen: #015969;
-@mendermaroon: #5d0f43;
+
+@mendergreen: @MuiPaletteBrandMender;
+@mendermaroon: var(--mui-secondary-main);
 @menderwarning: rgb(225, 0, 80);
-@text: #404041;
-@textsecondary: #decfd9;
-@textmuted: rgba(0, 0, 0, 0.54);
+@text: @MuiTextPrimary;
+@textmuted: @MuiTextHint;
 
 @defaultLeftBarWidth: 260px;
 @defaultGutterWidth: 15px;
+
+
+// Added
+@defaultBackground: @MuiBackgroundDefault;
+
+// Not used
+// @textsecondary: #decfd9;

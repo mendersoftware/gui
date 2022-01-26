@@ -11,7 +11,7 @@ import { Error as ErrorIcon, FileCopy as CopyPasteIcon, Info as InfoIcon, OpenIn
 import { cancelRequest, getUserOrganization } from '../../actions/organizationActions';
 import { ADDONS, PLANS } from '../../constants/appConstants';
 import { getIsEnterprise } from '../../selectors';
-import { colors } from '../../themes/mender-theme';
+import { colors } from '../../themes/Mender';
 import Alert from '../common/alert';
 import ExpandableAttribute from '../common/expandable-attribute';
 import CancelRequestDialog from './dialogs/cancelrequest';
@@ -28,7 +28,7 @@ export const OrgHeader = () => (
       title={
         <>
           <h3>Organization token</h3>
-          <p style={{ color: colors.tooltipText, margin: '1em 0' }}>
+          <p style={{ margin: '1em 0' }}>
             This token is unique for your organization and ensures that only devices that you own are able to connect to your account.
           </p>
         </>

@@ -3,15 +3,16 @@ import { connect } from 'react-redux';
 
 // material ui
 import { IconButton, Input, InputAdornment } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 import { Clear as ClearIcon, Check as CheckIcon, Edit as EditIcon } from '@material-ui/icons';
 
 import { setSnackbar } from '../../actions/appActions';
 import { setDeviceTags } from '../../actions/deviceActions';
-import menderTheme from '../../themes/mender-theme';
 
 const iconStyle = { fontSize: '1.25rem' };
 
 export const DeviceNameInput = ({ device, isHovered, setSnackbar, setDeviceTags, style = {} }) => {
+  const theme = useTheme();
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState('');
   const { id = '', tags = {} } = device;
@@ -65,7 +66,6 @@ export const DeviceNameInput = ({ device, isHovered, setSnackbar, setDeviceTags,
 
   const onInputClick = e => e.stopPropagation();
 
-  const textColorStyle = name ? { color: menderTheme.palette.text.primary } : { color: menderTheme.palette.text.main };
   return (
     <Input
       id={`${device.id}-id-input`}
@@ -74,7 +74,7 @@ export const DeviceNameInput = ({ device, isHovered, setSnackbar, setDeviceTags,
       placeholder={`${id.substring(0, 6)}...`}
       onClick={onInputClick}
       onChange={({ target: { value } }) => setValue(value)}
-      style={{ ...style, ...textColorStyle, fontSize: '0.8125rem' }}
+      style={{ ...style, color: theme.palette.text.primary, fontSize: '0.8125rem' }}
       type="text"
       endAdornment={(isHovered || isEditing) && <InputAdornment position="end">{buttonArea}</InputAdornment>}
     />

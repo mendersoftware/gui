@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom';
 import Time from 'react-time';
 
 import { Button, Typography } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 import { ImportExport as ImportExportIcon, InfoOutlined as InfoIcon, Launch as LaunchIcon } from '@material-ui/icons';
 import { mdiConsole as ConsoleIcon } from '@mdi/js';
 
 import MaterialDesignIcon from '../../common/materialdesignicon';
 import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
 import { DEVICE_CONNECT_STATES } from '../../../constants/deviceConstants';
-import theme from '../../../themes/mender-theme';
 import DeviceDataCollapse from './devicedatacollapse';
 import MenderTooltip from '../../common/mendertooltip';
 
@@ -35,14 +35,17 @@ export const PortForwardLink = ({ docsVersion }) => (
   </MenderTooltip>
 );
 
-export const DeviceConnectionNote = ({ children, style = buttonStyle }) => (
-  <div className="flexbox text-muted">
-    <InfoIcon fontSize="small" style={{ marginRight: theme.spacing() }} />
-    <Typography variant="body1" style={style}>
-      {children}
-    </Typography>
-  </div>
-);
+export const DeviceConnectionNote = ({ children, style = buttonStyle }) => {
+  const theme = useTheme();
+  return (
+    <div className="flexbox text-muted">
+      <InfoIcon fontSize="small" style={{ marginRight: theme.spacing() }} />
+      <Typography variant="body1" style={style}>
+        {children}
+      </Typography>
+    </div>
+  );
+};
 
 export const DeviceConnectionMissingNote = ({ docsVersion }) => (
   <DeviceConnectionNote>
@@ -68,13 +71,16 @@ export const DeviceDisconnectedNote = ({ docsVersion, lastConnectionTs }) => (
   </DeviceConnectionNote>
 );
 
-export const TroubleshootButton = ({ disabled, item, onClick }) => (
-  <Button onClick={() => onClick(item.key)} disabled={disabled} startIcon={item.icon} style={{ marginRight: theme.spacing(2) }}>
-    <Typography variant="subtitle2" style={buttonStyle}>
-      {item.title}
-    </Typography>
-  </Button>
-);
+export const TroubleshootButton = ({ disabled, item, onClick }) => {
+  const theme = useTheme();
+  return (
+    <Button onClick={() => onClick(item.key)} disabled={disabled} startIcon={item.icon} style={{ marginRight: theme.spacing(2) }}>
+      <Typography variant="subtitle2" style={buttonStyle}>
+        {item.title}
+      </Typography>
+    </Button>
+  );
+};
 
 const troubleshootingTools = [
   {

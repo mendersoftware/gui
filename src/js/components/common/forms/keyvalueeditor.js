@@ -1,13 +1,13 @@
 import React, { createRef, useEffect, useRef, useState } from 'react';
 
 import { Fab, FormControl, FormHelperText, IconButton, Input } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 import { Add as ContentAddIcon, Clear as ClearIcon } from '@material-ui/icons';
-
-import theme from '../../../themes/mender-theme';
 
 const emptyInput = { helptip: null, key: '', value: '' };
 
 export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsMap = {}, onInputChange, reset, showHelptips }) => {
+  const theme = useTheme();
   const [inputs, setInputs] = useState([{ ...emptyInput }]);
   const [error, setError] = useState('');
   // need to useRef here to get positioning of

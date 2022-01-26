@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 // material ui
 import { IconButton, MenuItem, Select, TextField, FormHelperText } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 import { Help as HelpIcon, HighlightOff as HighlightOffIcon } from '@material-ui/icons';
 import { Autocomplete, createFilterOptions } from '@material-ui/lab';
 
@@ -9,7 +10,6 @@ import { DEVICE_FILTERING_OPTIONS } from '../../constants/deviceConstants';
 
 import { emptyFilter, getFilterLabelByKey } from './filters';
 import MenderTooltip from '../common/mendertooltip';
-import theme from '../../themes/mender-theme';
 
 const optionsFilter = createFilterOptions();
 
@@ -24,15 +24,17 @@ const filterOptionsByPlan = {
 
 const defaultScope = 'inventory';
 
-const filterNotificationLocation = { top: theme.spacing(2.5), left: theme.spacing(-1.5) };
 const filterNotifications = {
-  name: (
-    <MenderTooltip arrow placement="bottom" title="Filtering by name is limited to devices with a previously defined name.">
-      <div className="tooltip help" style={filterNotificationLocation}>
-        <HelpIcon />
-      </div>
-    </MenderTooltip>
-  )
+  name() {
+    const theme = useTheme();
+    return (
+      <MenderTooltip arrow placement="bottom" title="Filtering by name is limited to devices with a previously defined name.">
+        <div className="tooltip help" style={{ top: theme.spacing(2.5), left: theme.spacing(-1.5) }}>
+          <HelpIcon />
+        </div>
+      </MenderTooltip>
+    );
+  }
 };
 
 const getOptionLabel = option => option.value || option.key || option;

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { Refresh as RefreshIcon } from '@material-ui/icons';
+import { useTheme } from '@material-ui/core/styles';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, selectDeployment, setDeploymentsState } from '../../actions/deploymentActions';
@@ -9,7 +10,6 @@ import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { tryMapDeployments } from '../../helpers';
 import { getOnboardingState } from '../../selectors';
-import theme from '../../themes/mender-theme';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
@@ -36,6 +36,7 @@ export const Progress = props => {
   const { page: progressPage, perPage: progressPerPage, total: progressCount } = progressState;
   const { page: pendingPage, perPage: pendingPerPage, total: pendingCount } = pendingState;
 
+  const theme = useTheme();
   const [currentRefreshDeploymentLength, setCurrentRefreshDeploymentLength] = useState(refreshDeploymentsLength);
   const [doneLoading, setDoneLoading] = useState(!!(progressCount || pendingCount));
   // eslint-disable-next-line no-unused-vars

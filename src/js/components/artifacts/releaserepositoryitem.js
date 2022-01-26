@@ -8,7 +8,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 
 import { formatTime, FileSize } from '../../helpers';
-import { colors } from '../../themes/mender-theme';
+import { colors } from '../../themes/Mender';
 import SelectedArtifact from './selectedartifact';
 
 export const ReleaseRepositoryItem = ({ artifact, expanded, index, itemRef, onEdit, onExpanded, onRowSelection, showRemoveArtifactDialog }) => {

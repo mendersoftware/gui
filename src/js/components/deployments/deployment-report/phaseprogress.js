@@ -4,12 +4,13 @@ import momentDurationFormatSetup from 'moment-duration-format';
 import pluralize from 'pluralize';
 
 import { Button } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 import { CheckCircle, ErrorRounded, Pause, PlayArrow, Warning as WarningIcon } from '@material-ui/icons';
 
 import { deploymentDisplayStates, deploymentSubstates, installationSubstatesMap, pauseMap } from '../../../constants/deploymentConstants';
 import { getDeploymentState, groupDeploymentStats, statCollector } from '../../../helpers';
 import Confirm from '../../common/confirm';
-import theme, { colors } from '../../../themes/mender-theme';
+import { colors } from '../../../themes/Mender';
 import inprogressImage from '../../../../assets/img/pending_status.png';
 
 momentDurationFormatSetup(moment);
@@ -151,6 +152,7 @@ const statusMap = {
 };
 
 export const PhaseProgressDisplay = ({ className = '', deployment, status }) => {
+  const theme = useTheme();
   const { failures } = groupDeploymentStats(deployment);
   return (
     <div className={`flexbox column progress-chart-container stepped-progress ${className}`}>
@@ -175,6 +177,7 @@ const confirmationStyle = {
 };
 
 export const PhaseProgress = ({ className = '', deployment = {}, onAbort, onUpdateControlChange }) => {
+  const theme = useTheme();
   const [shouldContinue, setShouldContinue] = useState(false);
   const [shouldAbort, setShouldAbort] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Time from 'react-time';
+import { useTheme } from '@material-ui/core/styles';
 
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
-import theme from '../../../themes/mender-theme';
 import Pagination from '../../common/pagination';
 import { DeviceConnectionNote } from './connection';
 import DeviceDataCollapse from './devicedatacollapse';
@@ -27,7 +27,7 @@ const MonitoringAlert = ({ alert, onDetailsClick, style }) => {
   const lines = [...lines_before, line_matching, ...lines_after].filter(i => i);
   return (
     <div className="monitoring-alert column-data" style={style}>
-      {severityMap[alert.level].listIcon}
+      {severityMap[alert.level].icon}
       <div className="key text-muted">
         <b>{alert.name}</b>
       </div>
@@ -39,7 +39,6 @@ const MonitoringAlert = ({ alert, onDetailsClick, style }) => {
 };
 
 const paginationCutoff = defaultPerPage;
-
 export const DeviceMonitoring = ({
   alertListState = {},
   alerts,
@@ -53,6 +52,7 @@ export const DeviceMonitoring = ({
   setAlertListState
 }) => {
   const { page: pageNo = defaultPage, perPage: pageLength = defaultPerPage, total: alertCount } = alertListState;
+  const theme = useTheme();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {

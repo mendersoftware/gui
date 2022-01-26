@@ -3,11 +3,13 @@ import { connect } from 'react-redux';
 
 import { getDeviceById } from '../../../actions/deviceActions';
 import { getIdAttribute } from '../../../selectors';
-import theme from '../../../themes/mender-theme';
+import { useTheme } from '@material-ui/core/styles';
 import Loader from '../../common/loader';
 import DeviceDetails, { DetailInformation } from './devicedetails';
 
 export const FileTransfer = ({ device, idAttribute, item, getDeviceById, onClose }) => {
+  const theme = useTheme();
+
   useEffect(() => {
     const { object } = item;
     if (!device) {

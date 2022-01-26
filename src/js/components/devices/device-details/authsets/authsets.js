@@ -4,11 +4,11 @@ import pluralize from 'pluralize';
 
 // material ui
 import { Button } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 
 import { deleteAuthset, updateDeviceAuth } from '../../../../actions/deviceActions';
 import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { getLimitMaxed } from '../../../../selectors';
-import theme from '../../../../themes/mender-theme';
 import Confirm from './../../../common/confirm';
 import { DeviceLimitWarning } from '../../preauth-dialog';
 import Authsetlist from './authsetlist';
@@ -24,6 +24,7 @@ export const Authsets = ({
   showHelptips,
   updateDeviceAuth
 }) => {
+  const theme = useTheme();
   const [confirmDecommission, setConfirmDecomission] = useState(false);
   const [loading, setLoading] = useState(false);
   const { auth_sets = [], status = DEVICE_STATES.accepted } = device;

@@ -8,7 +8,6 @@ import { AddGroup } from '../helptips/helptooltips';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 
 const styles = {
-  selectedGroup: { backgroundColor: '#e7e7e7' },
   subheader: { color: '#aaaaaa', height: 48 }
 };
 
@@ -20,12 +19,7 @@ export const GroupsSubheader = ({ heading }) => (
 );
 
 export const GroupItem = ({ changeGroup, groupname, selectedGroup, name }) => (
-  <ListItem
-    classes={{ root: 'grouplist' }}
-    button
-    style={name === selectedGroup || groupname === selectedGroup ? styles.selectedGroup : {}}
-    onClick={() => changeGroup(name)}
-  >
+  <ListItem classes={{ root: 'grouplist' }} button selected={name === selectedGroup || groupname === selectedGroup} onClick={() => changeGroup(name)}>
     <ListItemText primary={decodeURIComponent(name)} />
   </ListItem>
 );
@@ -59,7 +53,7 @@ export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, se
     <>
       <div className="muted margin-bottom-small">Groups</div>
       <List>
-        <ListItem classes={{ root: 'grouplist' }} button key="All" style={!selectedGroup ? styles.selectedGroup : {}} onClick={() => changeGroup()}>
+        <ListItem classes={{ root: 'grouplist' }} button key="All" selected={!selectedGroup} onClick={() => changeGroup()}>
           <ListItemText primary="All devices" />
         </ListItem>
         {!!dynamicGroups.length && <GroupsSubheader heading="Dynamic" />}

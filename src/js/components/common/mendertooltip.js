@@ -2,25 +2,23 @@ import React, { useState } from 'react';
 
 import { ClickAwayListener, Tooltip, withStyles } from '@material-ui/core';
 
-import theme, { colors } from '../../themes/mender-theme';
-
-export const MenderTooltip = withStyles({
+export const MenderTooltip = withStyles(({ palette, shadows }) => ({
   arrow: {
-    color: theme.palette.secondary.main
+    color: palette.secondary.main
   },
   tooltip: {
-    backgroundColor: theme.palette.secondary.main,
-    boxShadow: theme.shadows[1],
-    color: colors.tooltipText,
+    backgroundColor: palette.secondary.main,
+    boxShadow: shadows[1],
+    color: palette.text.secondary,
     fontSize: 'small',
     maxWidth: 600,
     info: {
       maxWidth: 300,
-      color: colors.mutedText,
-      backgroundColor: colors.placeholder
+      color: palette.text.hint,
+      backgroundColor: palette.grey[500]
     }
   }
-})(Tooltip);
+}))(Tooltip);
 
 export const MenderTooltipClickable = ({ children, onboarding, startOpen = false, ...remainingProps }) => {
   const [open, setOpen] = useState(startOpen || false);
@@ -62,20 +60,20 @@ export const MenderTooltipClickable = ({ children, onboarding, startOpen = false
 
 const iconWidth = 30;
 
-export const OnboardingTooltip = withStyles({
+export const OnboardingTooltip = withStyles(theme => ({
   arrow: {
     color: theme.palette.primary.main
   },
   tooltip: {
     backgroundColor: theme.palette.primary.main,
     boxShadow: theme.shadows[1],
-    color: colors.placeholder,
+    color: theme.palette.grey[500],
     fontSize: 14,
     maxWidth: 350,
     padding: '12px 18px',
     width: 350,
     '& a': {
-      color: colors.placeholder
+      color: theme.palette.grey[500]
     },
     '&.MuiTooltip-tooltipPlacementTop': { marginLeft: iconWidth, marginBottom: 0, marginTop: iconWidth + theme.spacing(1.5) },
     '&.MuiTooltip-tooltipPlacementRight': { marginTop: iconWidth / 2 },
@@ -85,5 +83,5 @@ export const OnboardingTooltip = withStyles({
   popper: {
     opacity: 0.9
   }
-})(Tooltip);
+}))(Tooltip);
 export default MenderTooltip;

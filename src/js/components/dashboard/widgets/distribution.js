@@ -6,7 +6,7 @@ import { VictoryGroup, VictoryLabel, VictoryLegend, VictoryPie } from 'victory';
 
 import Loader from '../../common/loader';
 import Confirm from '../../common/confirm';
-import { chartColorPalette } from '../../../themes/mender-theme';
+import { chartColorPalette } from '../../../themes/Mender';
 
 const seriesOther = '__OTHER__';
 

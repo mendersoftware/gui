@@ -10,7 +10,7 @@ import { blobToString, byteArrayToString } from '../../devices/troubleshoot/term
 import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as MessageProtocols } from '../../../constants/deviceConstants';
 import { CloudDownload, Pause, PlayArrow, Refresh } from '@material-ui/icons';
 import XTerm from '../../common/xterm';
-import { colors } from '../../../themes/mender-theme';
+import { colors } from '../../../themes/Mender';
 
 const MessagePack = msgpack5();
 const fitAddon = new FitAddon();

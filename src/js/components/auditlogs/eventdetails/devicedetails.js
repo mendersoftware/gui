@@ -2,12 +2,13 @@ import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Launch as LaunchIcon } from '@material-ui/icons';
-
+import { useTheme } from '@material-ui/core/styles';
+import { colors } from '../../../themes/Mender';
 import DeviceIdentityDisplay from '../../common/deviceidentity';
 import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
-import theme, { colors } from '../../../themes/mender-theme';
 
 export const DetailInformation = ({ title, details }) => {
+  const theme = useTheme();
   return (
     <div key={`${title}-details`} className="flexbox column margin-top-small">
       <b className="margin-bottom-small capitalized-start">{title} details</b>
