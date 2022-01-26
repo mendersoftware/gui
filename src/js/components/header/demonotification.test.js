@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 import DemoNotification from './demonotification';
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
 
 describe('DemoNotification Component', () => {
   it('renders correctly', async () => {

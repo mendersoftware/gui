@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 import DeviceInventoryLoader from './deviceinventoryloader';
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
 
 describe('CreateGroup Component', () => {
   it('renders correctly', async () => {

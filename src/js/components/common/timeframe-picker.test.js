@@ -1,11 +1,18 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import TimeframePicker from './timeframe-picker';
+import { LocalizationProvider } from '@mui/lab';
+import AdapterMoment from '@mui/lab/AdapterMoment';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import TimeframePicker from './timeframe-picker';
 
 describe('TimeframePicker Component', () => {
   it('renders correctly', async () => {
-    const { baseElement } = render(<TimeframePicker />);
+    const { baseElement } = render(
+      <LocalizationProvider dateAdapter={AdapterMoment}>
+        <TimeframePicker />
+      </LocalizationProvider>
+    );
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

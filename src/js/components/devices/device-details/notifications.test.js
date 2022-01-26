@@ -1,8 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 
-import DeviceNotifications, { LastConnection, ServiceNotification, NoAlertsHeaderNotification, DeviceOfflineHeaderNotification } from './notifications';
 import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import DeviceNotifications, { LastConnection, ServiceNotification, NoAlertsHeaderNotification, DeviceOfflineHeaderNotification } from './notifications';
 
 describe('tiny components', () => {
   [LastConnection, ServiceNotification, NoAlertsHeaderNotification, DeviceOfflineHeaderNotification].forEach(async Component => {

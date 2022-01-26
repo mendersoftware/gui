@@ -1,17 +1,18 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
+import { LocalizationProvider } from '@mui/lab';
+import AdapterMoment from '@mui/lab/AdapterMoment';
 
 import Deployments from './deployments';
 import { allDevices } from './createdeployment';
 import GeneralApi from '../../api/general-api';
 import { getConfiguredStore } from './../../reducers';
 import { defaultState, mockDate, undefineds } from '../../../../tests/mockData';
-import { selectMaterialUiSelectOption } from '../../../../tests/setupTests';
+import { render, selectMaterialUiSelectOption } from '../../../../tests/setupTests';
 
 const mockStore = configureStore([thunk]);
 const defaultLocationProps = { location: { search: 'from=2019-01-01' }, match: {} };
@@ -63,11 +64,9 @@ describe('Deployments Component', () => {
   it('renders correctly', async () => {
     const store = mockStore(mockState);
     const { baseElement } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <Deployments {...defaultLocationProps} />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <Deployments {...defaultLocationProps} />
+      </Provider>
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
@@ -110,11 +109,11 @@ describe('Deployments Component', () => {
     };
     const store = getConfiguredStore({ preloadedState });
     const ui = (
-      <MemoryRouter>
+      <LocalizationProvider dateAdapter={AdapterMoment}>
         <Provider store={store}>
           <Deployments {...defaultLocationProps} />
         </Provider>
-      </MemoryRouter>
+      </LocalizationProvider>
     );
     const { rerender } = render(ui);
     userEvent.click(screen.getByRole('tab', { name: /Finished/i }));
@@ -151,11 +150,11 @@ describe('Deployments Component', () => {
     };
     const store = getConfiguredStore({ preloadedState });
     const ui = (
-      <MemoryRouter>
+      <LocalizationProvider dateAdapter={AdapterMoment}>
         <Provider store={store}>
           <Deployments {...defaultLocationProps} />
         </Provider>
-      </MemoryRouter>
+      </LocalizationProvider>
     );
     const { rerender } = render(ui);
     await act(async () => userEvent.click(screen.getByRole('tab', { name: /Finished/i })));
@@ -235,11 +234,11 @@ describe('Deployments Component', () => {
     };
     const store = getConfiguredStore({ preloadedState });
     const ui = (
-      <MemoryRouter>
+      <LocalizationProvider dateAdapter={AdapterMoment}>
         <Provider store={store}>
           <Deployments {...defaultLocationProps} />
         </Provider>
-      </MemoryRouter>
+      </LocalizationProvider>
     );
     const { rerender } = render(ui);
     await act(async () => userEvent.click(screen.getByRole('tab', { name: /Finished/i })));

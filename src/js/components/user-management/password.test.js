@@ -1,12 +1,13 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import Password, { Password as PasswordComponent } from './password';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import Password, { Password as PasswordComponent } from './password';
 
 const mockStore = configureStore([thunk]);
 
@@ -18,11 +19,9 @@ describe('Password Component', () => {
 
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <Password />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <Password />
+      </Provider>
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
@@ -31,11 +30,7 @@ describe('Password Component', () => {
 
   it('works as intended', async () => {
     const submitCheck = jest.fn().mockResolvedValue();
-    const ui = (
-      <MemoryRouter>
-        <PasswordComponent passwordResetStart={submitCheck} />
-      </MemoryRouter>
-    );
+    const ui = <PasswordComponent passwordResetStart={submitCheck} />;
     const { rerender } = render(ui);
 
     userEvent.type(screen.queryByLabelText(/your email/i), 'something@example.com');

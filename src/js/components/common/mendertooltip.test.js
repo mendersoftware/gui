@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 import Tooltip from './mendertooltip';
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
 
 describe('Loader Component', () => {
   it('renders correctly', async () => {
@@ -11,6 +11,7 @@ describe('Loader Component', () => {
       </Tooltip>
     );
     const view = baseElement;
+    console.log(view.innerHTML);
     expect(view.innerHTML.includes('WithStyles(ForwardRef(Tooltip))')).toBeTruthy();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });

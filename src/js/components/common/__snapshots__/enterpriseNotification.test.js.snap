@@ -1,12 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`EnterpriseNotification Component renders correctly 1`] = `
+.emotion-0 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.25rem;
+}
+
 <p
   class="info icon "
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-0"
+    data-testid="InfoOutlinedIcon"
     focusable="false"
     style="vertical-align: middle; margin: 0px 6px 4px 0px;"
     viewBox="0 0 24 24"

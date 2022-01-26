@@ -1,16 +1,12 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
-import DeploymentNotifications from './deploymentnotifications';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import DeploymentNotifications from './deploymentnotifications';
 
 describe('DeploymentNotifications Component', () => {
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <MemoryRouter>
-        <DeploymentNotifications />
-      </MemoryRouter>
-    );
+    const { baseElement } = render(<DeploymentNotifications />);
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

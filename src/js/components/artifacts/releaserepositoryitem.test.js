@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import ReleaseRepositoryItem from './releaserepositoryitem';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import ReleaseRepositoryItem from './releaserepositoryitem';
 
 describe('ReleaseRepositoryItem Component', () => {
   it('renders correctly', async () => {

@@ -1,9 +1,9 @@
 import React from 'react';
 // eslint-disable-next-line import/default
 import router from 'react-router-dom';
-import { render } from '@testing-library/react';
-import { Main } from './main';
 import { undefineds } from '../../tests/mockData';
+import { render } from '../../tests/setupTests';
+import { Main } from './main';
 
 describe('Main Component', () => {
   it('renders correctly', async () => {

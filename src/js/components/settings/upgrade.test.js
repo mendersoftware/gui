@@ -1,13 +1,13 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
-import Upgrade, { PostUpgradeNote, PricingContactNote } from './upgrade';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import Upgrade, { PostUpgradeNote, PricingContactNote } from './upgrade';
 
 const mockStore = configureStore([thunk]);
 
@@ -51,13 +51,11 @@ describe('Upgrade Component', () => {
     }));
     const stripe = loadStripe();
     const { baseElement } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <Elements stripe={stripe}>
-            <Upgrade />
-          </Elements>
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <Elements stripe={stripe}>
+          <Upgrade />
+        </Elements>
+      </Provider>
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();

@@ -1,11 +1,11 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import ScheduledDeployments from './scheduleddeployments';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import ScheduledDeployments from './scheduleddeployments';
 
 const mockStore = configureStore([thunk]);
 
@@ -40,11 +40,9 @@ describe('ScheduledDeployments Component', () => {
 
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <ScheduledDeployments />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <ScheduledDeployments />
+      </Provider>
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();

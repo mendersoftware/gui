@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import RemoveArtifact from './removeartifact';
+
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import RemoveArtifact from './removeartifact';
 
 describe('RemoveArtifact Component', () => {
   it('renders correctly', async () => {

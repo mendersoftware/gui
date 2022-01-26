@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import ArtifactUpload from './artifactupload';
+
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import ArtifactUpload from './artifactupload';
 
 describe('ArtifactUpload Component', () => {
   it('renders correctly', async () => {

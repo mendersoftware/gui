@@ -1,13 +1,14 @@
 import React from 'react';
-import { MemoryRouter, Switch, Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Cookies from 'universal-cookie';
 import Signup from './signup';
 import { defaultState, token, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
 
 const mockStore = configureStore([thunk]);
 
@@ -19,11 +20,9 @@ describe('Signup Component', () => {
 
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <Signup match={{ params: { campaign: '' } }} />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <Signup match={{ params: { campaign: '' } }} />
+      </Provider>
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
@@ -32,16 +31,14 @@ describe('Signup Component', () => {
 
   it('allows signing up', async () => {
     const ui = (
-      <MemoryRouter>
-        <Provider store={store}>
-          <Signup location={{ state: { from: '' } }} match={{ params: {} }} />
-          <Switch>
-            <Route path="/">
-              <div>signed up</div>
-            </Route>
-          </Switch>
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <Signup location={{ state: { from: '' } }} match={{ params: {} }} />
+        <Switch>
+          <Route path="/">
+            <div>signed up</div>
+          </Route>
+        </Switch>
+      </Provider>
     );
     const { container, rerender } = render(ui);
     expect(screen.getByText('Sign up with:')).toBeInTheDocument();

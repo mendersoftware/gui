@@ -1,12 +1,12 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { screen, render, within, fireEvent, waitFor } from '@testing-library/react';
+import { screen, within, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Header from './header';
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
 import UserConstants from '../../constants/userConstants';
 
 const mockStore = configureStore([thunk]);
@@ -41,11 +41,9 @@ describe('Header Component', () => {
 
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <Header />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <Header />
+      </Provider>
     );
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();
@@ -54,11 +52,9 @@ describe('Header Component', () => {
 
   it('works as intended', async () => {
     const view = (
-      <MemoryRouter>
-        <Provider store={store}>
-          <Header />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <Header />
+      </Provider>
     );
     const { rerender } = render(view);
     const selectButton = screen.getByRole('button', { name: defaultState.users.byId[defaultState.users.currentUser].email });

@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import OrganizationSettingsItem from './organizationsettingsitem';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import OrganizationSettingsItem from './organizationsettingsitem';
 
 describe('OrganizationSettingsItem Component', () => {
   it('renders correctly', async () => {

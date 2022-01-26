@@ -1,11 +1,32 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`LeftNav Component renders correctly 1`] = `
+.emotion-0 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.emotion-1 {
+  box-sizing: border-box;
+  line-height: 48px;
+  list-style: none;
+  color: rgba(0, 0, 0, 0.6);
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
 <ul
-  class="MuiList-root leftFixed MuiList-padding"
+  class="MuiList-root MuiList-padding leftFixed emotion-0"
 >
   <li
-    class="MuiListSubheader-root MuiListSubheader-gutters"
+    class="MuiListSubheader-root MuiListSubheader-gutters emotion-1"
   >
     Help topics
   </li>

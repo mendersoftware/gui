@@ -1,8 +1,9 @@
 import React from 'react';
-import DeploymentItem from './deploymentitem';
-import { render } from '@testing-library/react';
-import { defaultHeaders as columnHeaders } from './deploymentslist';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import { defaultHeaders as columnHeaders } from './deploymentslist';
+import DeploymentItem from './deploymentitem';
 
 describe('DeploymentItem Component', () => {
   it('renders correctly', async () => {

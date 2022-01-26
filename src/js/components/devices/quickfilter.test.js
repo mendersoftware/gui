@@ -1,9 +1,9 @@
 import React from 'react';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import QuickFilter from './quickfilter';
-import { selectMaterialUiSelectOption } from '../../../../tests/setupTests';
 import { undefineds } from '../../../../tests/mockData';
+import { render, selectMaterialUiSelectOption } from '../../../../tests/setupTests';
 
 describe('QuickFilter Component', () => {
   it('renders correctly', async () => {

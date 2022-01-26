@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import DeviceIdentityDisplay from './deviceidentity';
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import DeviceIdentityDisplay from './deviceidentity';
 
 describe('DeviceIdentityDisplay Component', () => {
   it('renders correctly', async () => {

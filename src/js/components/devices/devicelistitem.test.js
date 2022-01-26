@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import DeviceListItem from './devicelistitem';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import DeviceListItem from './devicelistitem';
 
 describe('DeviceListItem Component', () => {
   it('renders correctly', async () => {

@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import ScheduleRollout from './schedulerollout';
+
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import ScheduleRollout from './schedulerollout';
 
 describe('ScheduleRollout Component', () => {
   it('renders correctly', async () => {

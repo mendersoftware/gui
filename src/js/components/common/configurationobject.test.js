@@ -1,6 +1,6 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
 import ConfigurationObject from './configurationobject';
 
 describe('ConfigurationObject Component', () => {

@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import QuoteRequestForm from './quoterequestform';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import QuoteRequestForm from './quoterequestform';
 
 describe('QuoteRequestForm component', () => {
   it(`renders correctly`, () => {

@@ -1,8 +1,10 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import KeyValueEditor from './keyvalueeditor';
+
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import KeyValueEditor from './keyvalueeditor';
 
 describe('KeyValueEditor Component', () => {
   it('renders correctly', async () => {

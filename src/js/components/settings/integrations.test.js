@@ -1,8 +1,9 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import { IntegrationConfiguration, Integrations } from './integrations';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
 import { EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
+import { IntegrationConfiguration, Integrations } from './integrations';
 
 const integrations = [
   {

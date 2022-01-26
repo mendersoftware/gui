@@ -1,8 +1,10 @@
 import React from 'react';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import FileUpload from './fileupload';
+
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import FileUpload from './fileupload';
 
 describe('FileUpload Component', () => {
   it('renders correctly', async () => {

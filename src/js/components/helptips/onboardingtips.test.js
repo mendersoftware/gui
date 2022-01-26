@@ -1,9 +1,9 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
+
+import { render } from '../../../../tests/setupTests';
 import {
   ApplicationUpdateReminderTip,
   ArtifactIncludedDeployOnboarding,
@@ -42,11 +42,9 @@ describe('OnboardingTips Components', () => {
   describe('DevicePendingTip', () => {
     it('renders correctly', async () => {
       const { baseElement } = render(
-        <MemoryRouter>
-          <Provider store={store}>
-            <DevicePendingTip />
-          </Provider>
-        </MemoryRouter>
+        <Provider store={store}>
+          <DevicePendingTip />
+        </Provider>
       );
       const view = baseElement.firstChild.firstChild;
       expect(view).toMatchSnapshot();
@@ -92,15 +90,13 @@ describe('OnboardingTips Components', () => {
     ].forEach(async Component => {
       it(`renders ${Component.displayName || Component.name} correctly`, () => {
         const { baseElement } = render(
-          <MemoryRouter>
-            <Component
-              createdGroup="testgroup"
-              demoArtifactLink="http://somewhere.com"
-              progress={3}
-              selectedRelease={{ Name: 'test', toString: () => 'test' }}
-              setShowCreateArtifactDialog={jest.fn}
-            />
-          </MemoryRouter>
+          <Component
+            createdGroup="testgroup"
+            demoArtifactLink="http://somewhere.com"
+            progress={3}
+            selectedRelease={{ Name: 'test', toString: () => 'test' }}
+            setShowCreateArtifactDialog={jest.fn}
+          />
         );
         const view = baseElement.firstChild.firstChild;
         expect(view).toMatchSnapshot();

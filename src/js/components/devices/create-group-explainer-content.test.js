@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import CreateGroupExplainerContent from './create-group-explainer-content';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import CreateGroupExplainerContent from './create-group-explainer-content';
 
 describe('CreateGroupExplainerContent Component', () => {
   it('renders correctly', async () => {

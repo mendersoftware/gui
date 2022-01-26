@@ -1,12 +1,12 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
-import { MemoryRouter } from 'react-router-dom';
 import thunk from 'redux-thunk';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
 import Configuration, { ConfigEditingActions, ConfigUpdateFailureActions, ConfigEmptyNote, ConfigUpdateNote, ConfigUpToDateNote } from './configuration';
 
 const mockStore = configureStore([thunk]);
@@ -79,19 +79,17 @@ describe('Configuration Component', () => {
       }
     };
     let ui = (
-      <MemoryRouter>
-        <Provider store={store}>
-          <Configuration
-            device={device}
-            abortDeployment={jest.fn}
-            applyDeviceConfig={applyMock}
-            getDeviceLog={jest.fn}
-            getSingleDeployment={jest.fn}
-            saveGlobalSettings={jest.fn}
-            setDeviceConfig={submitMock}
-          />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <Configuration
+          device={device}
+          abortDeployment={jest.fn}
+          applyDeviceConfig={applyMock}
+          getDeviceLog={jest.fn}
+          getSingleDeployment={jest.fn}
+          saveGlobalSettings={jest.fn}
+          setDeviceConfig={submitMock}
+        />
+      </Provider>
     );
     const { rerender } = render(ui);
     expect(screen.queryByRole('button', { name: /import configuration/i })).not.toBeInTheDocument();

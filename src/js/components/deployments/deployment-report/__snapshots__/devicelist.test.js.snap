@@ -3,22 +3,22 @@
 exports[`ProgressDeviceList Component renders correctly 1`] = `
 "<div>
   <table
-    class=\\"MuiTable-root\\"
+    class=\\"MuiTable-root css-rqglhn-MuiTable-root\\"
     style=\\"min-height: 10vh; max-height: 40vh; overflow-x: auto;\\"
   >
     <thead
-      class=\\"MuiTableHead-root\\"
+      class=\\"MuiTableHead-root css-15wwp11-MuiTableHead-root\\"
     >
       <tr
-        class=\\"MuiTableRow-root MuiTableRow-head\\"
+        class=\\"MuiTableRow-root MuiTableRow-head css-1q1u3t4-MuiTableRow-root\\"
       >
         <th
-          class=\\"MuiTableCell-root MuiTableCell-head\\"
+          class=\\"MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-1ygcj2i-MuiTableCell-root\\"
           scope=\\"col\\"
           style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
         />
         <th
-          class=\\"MuiTableCell-root MuiTableCell-head\\"
+          class=\\"MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-1ygcj2i-MuiTableCell-root\\"
           scope=\\"col\\"
           style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
           tooltip=\\"Device type\\"
@@ -26,7 +26,7 @@ exports[`ProgressDeviceList Component renders correctly 1`] = `
           Device type
         </th>
         <th
-          class=\\"MuiTableCell-root MuiTableCell-head\\"
+          class=\\"MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-1ygcj2i-MuiTableCell-root\\"
           scope=\\"col\\"
           style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
           tooltip=\\"Current software\\"
@@ -34,7 +34,7 @@ exports[`ProgressDeviceList Component renders correctly 1`] = `
           Current software
         </th>
         <th
-          class=\\"MuiTableCell-root MuiTableCell-head\\"
+          class=\\"MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-1ygcj2i-MuiTableCell-root\\"
           scope=\\"col\\"
           style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
           tooltip=\\"Started\\"
@@ -42,7 +42,7 @@ exports[`ProgressDeviceList Component renders correctly 1`] = `
           Started
         </th>
         <th
-          class=\\"MuiTableCell-root MuiTableCell-head\\"
+          class=\\"MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-1ygcj2i-MuiTableCell-root\\"
           scope=\\"col\\"
           style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
           tooltip=\\"Finished\\"
@@ -50,7 +50,7 @@ exports[`ProgressDeviceList Component renders correctly 1`] = `
           Finished
         </th>
         <th
-          class=\\"MuiTableCell-root MuiTableCell-head\\"
+          class=\\"MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-1ygcj2i-MuiTableCell-root\\"
           scope=\\"col\\"
           style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
           tooltip=\\"Deployment status\\"
@@ -58,7 +58,7 @@ exports[`ProgressDeviceList Component renders correctly 1`] = `
           Deployment status
         </th>
         <th
-          class=\\"MuiTableCell-root MuiTableCell-head\\"
+          class=\\"MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-1ygcj2i-MuiTableCell-root\\"
           scope=\\"col\\"
           style=\\"position: sticky; top: 0px; background: white; z-index: 1;\\"
           tooltip=\\"\\"
@@ -66,13 +66,13 @@ exports[`ProgressDeviceList Component renders correctly 1`] = `
       </tr>
     </thead>
     <tbody
-      class=\\"MuiTableBody-root\\"
+      class=\\"MuiTableBody-root css-apqrd9-MuiTableBody-root\\"
     >
       <tr
-        class=\\"MuiTableRow-root\\"
+        class=\\"MuiTableRow-root css-1q1u3t4-MuiTableRow-root\\"
       >
         <td
-          class=\\"MuiTableCell-root MuiTableCell-body\\"
+          class=\\"MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-1ex1afd-MuiTableCell-root\\"
         >
           <a
             href=\\"/devices?id=a1\\"
@@ -84,74 +84,75 @@ exports[`ProgressDeviceList Component renders correctly 1`] = `
           </a>
         </td>
         <td
-          class=\\"MuiTableCell-root MuiTableCell-body\\"
+          class=\\"MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-1ex1afd-MuiTableCell-root\\"
         >
           -
         </td>
         <td
-          class=\\"MuiTableCell-root MuiTableCell-body\\"
+          class=\\"MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-1ex1afd-MuiTableCell-root\\"
         >
           -
         </td>
         <td
-          class=\\"MuiTableCell-root MuiTableCell-body\\"
+          class=\\"MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-1ex1afd-MuiTableCell-root\\"
         >
           -
         </td>
         <td
-          class=\\"MuiTableCell-root MuiTableCell-body\\"
+          class=\\"MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-1ex1afd-MuiTableCell-root\\"
         >
           -
         </td>
         <td
-          class=\\"MuiTableCell-root MuiTableCell-body\\"
+          class=\\"MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-1ex1afd-MuiTableCell-root\\"
           style=\\"padding-right: 0px; position: relative; min-width: 200px;\\"
         >
           installing
           <div
             style=\\"position: absolute; bottom: 0px; width: 100%;\\"
           >
-            <div
-              class=\\"MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-indeterminate\\"
+            <span
+              class=\\"MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-indeterminate css-eglki6-MuiLinearProgress-root\\"
               role=\\"progressbar\\"
             >
-              <div
-                class=\\"MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Indeterminate\\"
+              <span
+                class=\\"MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Indeterminate css-5ir5xx-MuiLinearProgress-bar1\\"
               />
-              <div
-                class=\\"MuiLinearProgress-bar MuiLinearProgress-bar2Indeterminate MuiLinearProgress-barColorPrimary\\"
+              <span
+                class=\\"MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar2Indeterminate css-1r8wrcl-MuiLinearProgress-bar2\\"
               />
-            </div>
+            </span>
           </div>
         </td>
         <td
-          class=\\"MuiTableCell-root MuiTableCell-body\\"
+          class=\\"MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-1ex1afd-MuiTableCell-root\\"
         />
       </tr>
     </tbody>
   </table>
   <div
-    class=\\"MuiTablePagination-root flexbox margin-top \\"
+    class=\\"MuiTablePagination-root flexbox margin-top  css-jtlhu6-MuiTablePagination-root\\"
   >
     <div
-      class=\\"MuiToolbar-root MuiToolbar-regular MuiTablePagination-toolbar MuiToolbar-gutters\\"
+      class=\\"MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar css-11bfvty-MuiToolbar-root-MuiTablePagination-toolbar\\"
     >
       <div
-        class=\\"MuiTablePagination-spacer flexbox no-basis\\"
+        class=\\"flexbox no-basis MuiTablePagination-spacer css-1psng7p-MuiTablePagination-spacer\\"
       />
       <p
-        class=\\"MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit\\"
+        class=\\"MuiTablePagination-selectLabel css-pdct74-MuiTablePagination-selectLabel\\"
         
       >
         Rows
       </p>
       <div
-        class=\\"MuiInputBase-root MuiTablePagination-input MuiTablePagination-selectRoot\\"
+        class=\\"MuiInputBase-root MuiInputBase-colorPrimary css-16c50h-MuiInputBase-root-MuiTablePagination-select\\"
       >
         <div
+          aria-expanded=\\"false\\"
           aria-haspopup=\\"listbox\\"
           
-          class=\\"MuiSelect-root MuiSelect-select MuiTablePagination-select MuiSelect-selectMenu MuiInputBase-input\\"
+          class=\\"MuiTablePagination-select MuiSelect-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input\\"
           
           role=\\"button\\"
           tabindex=\\"0\\"
@@ -160,13 +161,14 @@ exports[`ProgressDeviceList Component renders correctly 1`] = `
         </div>
         <input
           aria-hidden=\\"true\\"
-          class=\\"MuiSelect-nativeInput\\"
+          class=\\"MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput\\"
           tabindex=\\"-1\\"
           value=\\"10\\"
         />
         <svg
           aria-hidden=\\"true\\"
-          class=\\"MuiSvgIcon-root MuiSelect-icon MuiTablePagination-selectIcon\\"
+          class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiTablePagination-selectIcon MuiSelect-icon MuiSelect-iconStandard css-pqjvzy-MuiSvgIcon-root-MuiSelect-icon\\"
+          data-testid=\\"ArrowDropDownIcon\\"
           focusable=\\"false\\"
           viewBox=\\"0 0 24 24\\"
         >
@@ -176,115 +178,118 @@ exports[`ProgressDeviceList Component renders correctly 1`] = `
         </svg>
       </div>
       <p
-        class=\\"MuiTypography-root MuiTablePagination-caption MuiTypography-body2 MuiTypography-colorInherit\\"
+        class=\\"MuiTablePagination-displayedRows css-levciy-MuiTablePagination-displayedRows\\"
       />
       <div
         class=\\"flexbox\\"
       >
         <button
-          class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+          class=\\"MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root\\"
           disabled=\\"\\"
           tabindex=\\"-1\\"
           type=\\"button\\"
         >
-          <span
-            class=\\"MuiIconButton-label\\"
+          <svg
+            aria-hidden=\\"true\\"
+            class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
+            data-testid=\\"FirstPageIcon\\"
+            focusable=\\"false\\"
+            viewBox=\\"0 0 24 24\\"
           >
-            <svg
-              aria-hidden=\\"true\\"
-              class=\\"MuiSvgIcon-root\\"
-              focusable=\\"false\\"
-              viewBox=\\"0 0 24 24\\"
-            >
-              <path
-                d=\\"M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z\\"
-              />
-            </svg>
-          </span>
+            <path
+              d=\\"M18.41 16.59 13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z\\"
+            />
+          </svg>
         </button>
         <button
-          class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+          class=\\"MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root\\"
           disabled=\\"\\"
           tabindex=\\"-1\\"
           type=\\"button\\"
         >
-          <span
-            class=\\"MuiIconButton-label\\"
+          <svg
+            aria-hidden=\\"true\\"
+            class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
+            data-testid=\\"KeyboardArrowLeftIcon\\"
+            focusable=\\"false\\"
+            viewBox=\\"0 0 24 24\\"
           >
-            <svg
-              aria-hidden=\\"true\\"
-              class=\\"MuiSvgIcon-root\\"
-              focusable=\\"false\\"
-              viewBox=\\"0 0 24 24\\"
-            >
-              <path
-                d=\\"M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z\\"
-              />
-            </svg>
-          </span>
+            <path
+              d=\\"M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z\\"
+            />
+          </svg>
         </button>
         <div
           class=\\"flexbox\\"
           style=\\"align-items: baseline;\\"
         >
           <div
-            class=\\"MuiFormControl-root MuiTextField-root MuiFormControl-marginDense\\"
+            class=\\"MuiFormControl-root MuiFormControl-marginDense MuiTextField-root css-4mzek5-MuiFormControl-root-MuiTextField-root\\"
             style=\\"min-width: 30px; max-width: 3ch; margin-right: 10px;\\"
           >
             <div
-              class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-marginDense MuiInput-marginDense\\"
+              class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root\\"
             >
               <input
                 aria-invalid=\\"false\\"
-                class=\\"MuiInputBase-input MuiInput-input MuiInputBase-inputMarginDense MuiInput-inputMarginDense\\"
+                class=\\"MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input\\"
+                
                 type=\\"text\\"
                 value=\\"1\\"
               />
+              <fieldset
+                aria-hidden=\\"true\\"
+                class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
+              >
+                <legend
+                  class=\\"css-nnbavb\\"
+                >
+                  <span
+                    class=\\"notranslate\\"
+                  >
+                    ​
+                  </span>
+                </legend>
+              </fieldset>
             </div>
           </div>
           / 1
         </div>
         <button
-          class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+          class=\\"MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root\\"
           disabled=\\"\\"
           tabindex=\\"-1\\"
           type=\\"button\\"
         >
-          <span
-            class=\\"MuiIconButton-label\\"
+          <svg
+            aria-hidden=\\"true\\"
+            class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
+            data-testid=\\"KeyboardArrowRightIcon\\"
+            focusable=\\"false\\"
+            viewBox=\\"0 0 24 24\\"
           >
-            <svg
-              aria-hidden=\\"true\\"
-              class=\\"MuiSvgIcon-root\\"
-              focusable=\\"false\\"
-              viewBox=\\"0 0 24 24\\"
-            >
-              <path
-                d=\\"M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z\\"
-              />
-            </svg>
-          </span>
+            <path
+              d=\\"M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z\\"
+            />
+          </svg>
         </button>
         <button
-          class=\\"MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled\\"
+          class=\\"MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root\\"
           disabled=\\"\\"
           tabindex=\\"-1\\"
           type=\\"button\\"
         >
-          <span
-            class=\\"MuiIconButton-label\\"
+          <svg
+            aria-hidden=\\"true\\"
+            class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
+            data-testid=\\"LastPageIcon\\"
+            focusable=\\"false\\"
+            viewBox=\\"0 0 24 24\\"
           >
-            <svg
-              aria-hidden=\\"true\\"
-              class=\\"MuiSvgIcon-root\\"
-              focusable=\\"false\\"
-              viewBox=\\"0 0 24 24\\"
-            >
-              <path
-                d=\\"M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z\\"
-              />
-            </svg>
-          </span>
+            <path
+              d=\\"M5.59 7.41 10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z\\"
+            />
+          </svg>
         </button>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import UserList from './userlist';
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import UserList from './userlist';
 
 describe('UserList Component', () => {
   it('renders correctly', async () => {

@@ -1,11 +1,10 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import App from './app';
 import { defaultState, undefineds } from '../../../tests/mockData';
+import { render } from '../../../tests/setupTests';
 
 const mockStore = configureStore([thunk]);
 
@@ -44,11 +43,9 @@ describe('App Component', () => {
       value: 'JWT=omnomnom'
     });
     const { baseElement } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <App />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <App />
+      </Provider>
     );
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
@@ -61,11 +58,9 @@ describe('App Component', () => {
       value: 'JWT=omnomnom'
     });
     render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <App />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <App />
+      </Provider>
     );
     jest.advanceTimersByTime(900500);
   });

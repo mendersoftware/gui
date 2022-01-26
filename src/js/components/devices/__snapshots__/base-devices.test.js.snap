@@ -13,6 +13,23 @@ exports[`smaller components renders AcceptedEmptyState correctly 1`] = `
 exports[`smaller components renders DeviceCreationTime correctly 1`] = `-`;
 
 exports[`smaller components renders DeviceExpansion correctly 1`] = `
+.emotion-0 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.5rem;
+}
+
 <div
   class="bold flexbox center-aligned link-color margin-right-small uppercased"
   style="white-space: nowrap;"
@@ -20,7 +37,8 @@ exports[`smaller components renders DeviceExpansion correctly 1`] = `
   view details 
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-0"
+    data-testid="ArrowRightAltIcon"
     focusable="false"
     viewBox="0 0 24 24"
   >
@@ -81,10 +99,13 @@ exports[`smaller components renders RejectedEmptyState correctly 1`] = `
 `;
 
 exports[`smaller components renders RelativeDeviceTime correctly 1`] = `
-<div
+<span
+  aria-label=""
   class=""
-  title=""
+  data-mui-internal-clone-element="true"
 >
-  -
-</div>
+  <div>
+    -
+  </div>
+</span>
 `;

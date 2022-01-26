@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 import FormCheckbox from './formcheckbox';
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
 
 describe('FormCheckbox Component', () => {
   it('renders correctly', async () => {

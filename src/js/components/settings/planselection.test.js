@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import PlanSelection from './planselection';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import PlanSelection from './planselection';
 
 describe('PlanSelection component', () => {
   it(`renders correctly`, () => {
