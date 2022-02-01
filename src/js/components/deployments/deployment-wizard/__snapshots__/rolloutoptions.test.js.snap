@@ -234,6 +234,233 @@ exports[`RolloutOptions Component renders correctly 1`] = `
           </a>
         </p>
       </div>
+    </div>
+    <h4>
+      Select the number of times each device will attempt to apply the update
+    </h4>
+    <div
+      class="MuiFormControl-root margin-bottom"
+      style="width: 400px;"
+    >
+      <div
+        class="MuiFormGroup-root MuiFormGroup-row"
+      >
+        <div
+          class="MuiInputBase-root MuiInput-root MuiInput-underline margin-right MuiInputBase-formControl MuiInput-formControl"
+          style="width: 150px;"
+        >
+          <div
+            aria-haspopup="listbox"
+            class="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
+            role="button"
+            tabindex="0"
+          >
+            <span>
+              ​
+            </span>
+          </div>
+          <input
+            aria-hidden="true"
+            class="MuiSelect-nativeInput"
+            tabindex="-1"
+            value=""
+          />
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSelect-icon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7 10l5 5 5-5z"
+            />
+          </svg>
+        </div>
+        <label
+          class="MuiFormControlLabel-root"
+          style="margin-top: 0px; margin-bottom: -15px;"
+        >
+          <span
+            aria-disabled="false"
+            class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-21 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+          >
+            <span
+              class="MuiIconButton-label"
+            >
+              <input
+                class="PrivateSwitchBase-input-24"
+                data-indeterminate="false"
+                type="checkbox"
+                value=""
+              />
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </span>
+          <span
+            class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+          >
+            Save as default
+          </span>
+        </label>
+      </div>
+    </div>
+  </form>
+</div>
+`;
+
+exports[`RolloutOptions Component renders correctly when enterprise is false 1`] = `
+<div>
+  <form
+    class="flexbox column margin margin-top-none"
+    style="overflow: visible; min-height: 300px;"
+  >
+    <h4
+      style="margin-bottom: 0px;"
+    >
+      Add pauses between update steps
+    </h4>
+    <div
+      class=""
+    >
+      <div
+        class="muted"
+      >
+        <div
+          class="flexbox margin-top margin-left-large margin-right-large"
+        >
+          <div
+            aria-disabled="true"
+            class="MuiChip-root MuiChip-outlined Mui-disabled"
+            style="min-width: 88px;"
+            title="The Artifact is downloaded (streamed) to the inactive partition."
+          >
+            <span
+              class="MuiChip-label"
+            >
+              Download
+            </span>
+          </div>
+          <div
+            class="flexbox column center-aligned"
+            style="min-width: 80px;"
+          >
+            <div
+              class="flexbox centered"
+              style="height: 32px; padding-left: 8px; width: 100%;"
+            >
+              <div
+                style="background-color: rgba(0, 0, 0, 0.3); height: 3px; width: 100%; margin-right: -8px;"
+              />
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                focusable="false"
+                style="color: rgba(0, 0, 0, 0.3);"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M10 17l5-5-5-5v10z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            aria-disabled="true"
+            class="MuiChip-root MuiChip-outlined Mui-disabled"
+            style="min-width: 88px;"
+          >
+            <span
+              class="MuiChip-label"
+            >
+              Install
+            </span>
+          </div>
+          <div
+            class="flexbox column center-aligned"
+            style="min-width: 80px;"
+          >
+            <div
+              class="flexbox centered"
+              style="height: 32px; padding-left: 8px; width: 100%;"
+            >
+              <div
+                style="background-color: rgba(0, 0, 0, 0.3); height: 3px; width: 100%; margin-right: -8px;"
+              />
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                focusable="false"
+                style="color: rgba(0, 0, 0, 0.3);"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M10 17l5-5-5-5v10z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            aria-disabled="true"
+            class="MuiChip-root MuiChip-outlined Mui-disabled"
+            style="min-width: 88px;"
+            title="The device will reboot and the installed update will be active when the device boots up again. As changes are not yet committed, the update is not persistent and the device will still roll back again on the next reboot."
+          >
+            <span
+              class="MuiChip-label"
+            >
+              Reboot
+            </span>
+          </div>
+          <div
+            class="flexbox column center-aligned"
+            style="min-width: 80px;"
+          >
+            <div
+              class="flexbox centered"
+              style="height: 32px; padding-left: 8px; width: 100%;"
+            >
+              <div
+                style="background-color: rgba(0, 0, 0, 0.3); height: 3px; width: 100%; margin-right: -8px;"
+              />
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+                focusable="false"
+                style="color: rgba(0, 0, 0, 0.3);"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M10 17l5-5-5-5v10z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            aria-disabled="true"
+            class="MuiChip-root MuiChip-outlined Mui-disabled"
+            style="min-width: 88px;"
+            title="If the update passes integrity checks, Mender will mark the update as successful and continue running from this partition. The commit makes the update persistent."
+          >
+            <span
+              class="MuiChip-label"
+            >
+              Commit
+            </span>
+          </div>
+        </div>
+      </div>
       <p
         class="info icon "
       >
@@ -306,13 +533,13 @@ exports[`RolloutOptions Component renders correctly 1`] = `
         >
           <span
             aria-disabled="false"
-            class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-3 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
+            class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-9 MuiCheckbox-root MuiCheckbox-colorSecondary MuiIconButton-colorSecondary"
           >
             <span
               class="MuiIconButton-label"
             >
               <input
-                class="PrivateSwitchBase-input-6"
+                class="PrivateSwitchBase-input-12"
                 data-indeterminate="false"
                 type="checkbox"
                 value=""
