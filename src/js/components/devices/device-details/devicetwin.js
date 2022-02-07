@@ -38,7 +38,7 @@ const LastSyncNote = ({ updateTime }) => (
 );
 
 const NoDiffStatus = ({ updateTime }) => {
-  const classes = diffStatusStyle();
+  const { classes } = diffStatusStyle();
   return (
     <div className={['padding', classes.root]}>
       <CheckCircleOutlined className="green" />

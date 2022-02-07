@@ -181,13 +181,7 @@ export const Past = props => {
     <div className="fadeIn margin-left margin-top-large">
       <div className="datepicker-container">
         <TimerangePicker endDate={endDate} onChange={onTimeFilterChange} startDate={startDate} />
-        <TimeframePicker
-          classNames="margin-left margin-right inline-block"
-          onChange={onTimeFilterChange}
-          endDate={endDate}
-          startDate={startDate}
-          tonight={tonight}
-        />
+        <TimeframePicker onChange={onTimeFilterChange} endDate={endDate} startDate={startDate} tonight={tonight} />
         <Autocomplete
           id="device-group-selection"
           autoHighlight

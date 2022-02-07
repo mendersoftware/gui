@@ -11,6 +11,7 @@ import ProgressDisplay, { DeploymentStatusNotification } from './progressChart';
 import DeploymentStats from './deploymentstatus';
 import { PhaseProgressDisplay } from './deployment-report/phaseprogress';
 import { getDeploymentState } from '../../helpers';
+import { makeStyles } from 'tss-react/mui';
 
 export const deploymentTypeClasses = {
   finished: 'past-item',
@@ -54,8 +55,22 @@ export const DeploymentStartTime = ({ direction = 'both', started }) => <Relativ
 
 export const DeploymentStatus = ({ deployment }) => <DeploymentStats key="DeploymentStatus" vertical={false} deployment={deployment} />;
 
+const useStyles = makeStyles()(theme => ({
+  detailsButton: {
+    backgroundColor: 'transparent',
+    color: theme.palette.text.primary,
+    justifySelf: 'center',
+    textTransform: 'none',
+    [`&:hover`]: {
+      backgroundColor: 'transparent',
+      color: theme.palette.text.primary
+    }
+  }
+}));
+
 export const DeploymentItem = ({ abort: abortDeployment, columnHeaders, deployment, isEnterprise, openReport, type }) => {
   const [abort, setAbort] = useState(null);
+  const { classes } = useStyles();
 
   const toggleConfirm = id => {
     setTimeout(() => setAbort(abort ? null : id), 150);
@@ -79,11 +94,7 @@ export const DeploymentItem = ({ abort: abortDeployment, columnHeaders, deployme
           </div>
         );
       })}
-      <Button
-        variant="contained"
-        onClick={() => openReport(type, deployment.id)}
-        style={{ justifySelf: 'center', backgroundColor: 'transparent', textTransform: 'none' }}
-      >
+      <Button className={classes.detailsButton} variant="contained" onClick={() => openReport(type, deployment.id)}>
         View details
       </Button>
       {type !== DEPLOYMENT_STATES.finished && (

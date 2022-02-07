@@ -166,7 +166,7 @@ export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => 
             updateFilterKey(key, scope);
           }}
           options={attributes.sort((a, b) => a.priority - b.priority)}
-          renderInput={params => <TextField {...params} label="Attribute" style={textFieldStyle} variant="standard" />}
+          renderInput={params => <TextField {...params} label="Attribute" style={textFieldStyle} />}
           key={reset}
           value={getFilterLabelByKey(key, attributes)}
         />

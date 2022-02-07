@@ -3,6 +3,7 @@ import pluralize from 'pluralize';
 
 import { ArrowDropDownCircleOutlined as ScrollDownIcon, CheckCircle as CheckIcon, Error as ErrorIcon, Help as HelpIcon } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import { DEVICE_ONLINE_CUTOFF } from '../../../constants/deviceConstants';
 import Time from '../../common/time';
@@ -25,18 +26,38 @@ export const severityMap = {
   [monitoringSeverities.UNKNOWN]: { className: '', icon: questionIcon }
 };
 
+const useStyles = makeStyles()(theme => ({
+  deviceDetailNotification: {
+    marginBottom: theme.spacing(),
+    padding: theme.spacing(1.5, 'inherit'),
+    '&.red, &.green': {
+      color: theme.palette.text.primary
+    },
+    '&.bordered': {
+      border: `1px solid ${theme.palette.grey[500]}`,
+      background: `fade(${theme.palette.grey[600]}, 15%)`,
+      '&.red': {
+        borderColor: theme.palette.error.main,
+        background: theme.palette.error.dark
+      }
+    },
+    '> span': {
+      marginRight: theme.spacing(2)
+    }
+  }
+}));
+
 export const BaseNotification = ({ bordered = true, className = '', children, severity, onClick }) => {
-  const theme = useTheme();
+  const { classes } = useStyles();
   const mappedSeverity = severityMap[severity] ?? severityMap.UNKNOWN;
   return (
     <div
-      className={`flexbox center-aligned padding-small device-detail-notification ${bordered ? 'bordered' : ''} ${mappedSeverity.className} ${className} ${
-        onClick ? 'clickable' : ''
-      }`}
-      style={{ marginBottom: theme.spacing(), padding: theme.spacing(1.5, 'inherit') }}
+      className={`flexbox center-aligned padding-small ${classes.deviceDetailNotification} ${bordered ? 'bordered' : ''} ${
+        mappedSeverity.className
+      } ${className} ${onClick ? 'clickable' : ''}`}
       onClick={onClick}
     >
-      <span style={{ marginRight: theme.spacing(2) }}>{mappedSeverity.icon}</span>
+      <span>{mappedSeverity.icon}</span>
       <div className="flexbox center-aligned">{children}</div>
     </div>
   );

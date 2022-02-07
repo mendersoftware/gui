@@ -10,9 +10,8 @@ describe('Loader Component', () => {
         <div>test</div>
       </Tooltip>
     );
-    const view = baseElement;
-    console.log(view.innerHTML);
-    expect(view.innerHTML.includes('WithStyles(ForwardRef(Tooltip))')).toBeTruthy();
+    const view = baseElement.lastChild;
+    expect(view.textContent).toContain('sudo it all');
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

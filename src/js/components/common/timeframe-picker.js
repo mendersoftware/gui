@@ -4,11 +4,9 @@ import moment from 'moment';
 import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/lab';
 
-const pickerStyle = { width: 160, margin: 7.5, marginTop: 0 };
+const renderInput = params => <TextField className="margin-top-none margin-left-small" {...params} />;
 
-const renderInput = params => <TextField {...params} />;
-
-export const TimeframePicker = ({ classNames, onChange, ...props }) => {
+export const TimeframePicker = ({ onChange, ...props }) => {
   const [tonight, setTonight] = useState(moment(props.tonight));
   const [endDate, setEndDate] = useState(moment(props.endDate));
   const [startDate, setStartDate] = useState(moment(props.startDate));
@@ -40,22 +38,30 @@ export const TimeframePicker = ({ classNames, onChange, ...props }) => {
   };
 
   return (
-    <div className={classNames}>
+    <>
       <DatePicker
         onChange={handleChangeStartDate}
         label="From"
+        inputFormat="MMMM Do"
         value={startDate}
         maxDate={props.endDate ? endDate : tonight}
         renderInput={renderInput}
-        style={pickerStyle}
       />
-      <DatePicker onChange={handleChangeEndDate} label="To" value={endDate} maxDate={tonight} renderInput={renderInput} style={pickerStyle} />
-    </div>
+      <DatePicker
+        className="margin-left-small"
+        onChange={handleChangeEndDate}
+        label="To"
+        inputFormat="MMMM Do"
+        value={endDate}
+        maxDate={tonight}
+        renderInput={renderInput}
+      />
+    </>
   );
 };
 
 const areEqual = (prevProps, nextProps) => {
-  return !(prevProps.classNames != nextProps.classNames || prevProps.endDate != nextProps.endDate || prevProps.startDate != nextProps.startDate);
+  return !(prevProps.endDate != nextProps.endDate || prevProps.startDate != nextProps.startDate);
 };
 
 export default memo(TimeframePicker, areEqual);

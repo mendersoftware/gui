@@ -223,14 +223,8 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
         />
         <div />
         <TimerangePicker endDate={endDate} onChange={onTimeFilterChange} startDate={startDate} />
-        <div style={{ gridColumnStart: 2, gridColumnEnd: 4 }}>
-          <TimeframePicker
-            classNames="margin-left margin-right inline-block"
-            onChange={onTimeFilterChange}
-            endDate={endDate}
-            startDate={startDate}
-            tonight={tonight}
-          />
+        <div style={{ gridColumnStart: 2, gridColumnEnd: 4, marginLeft: -7.5 }}>
+          <TimeframePicker onChange={onTimeFilterChange} endDate={endDate} startDate={startDate} tonight={tonight} />
         </div>
         {!!(user || type || detail || startDate !== today || endDate !== tonight) && (
           <span className="link margin-bottom-small" onClick={reset} style={{ alignSelf: 'flex-end' }}>

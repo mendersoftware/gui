@@ -5,7 +5,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
 
 // material ui
-import { Button, List, LinearProgress } from '@mui/material';
+import { Button, List, LinearProgress, useTheme } from '@mui/material';
 import { Error as ErrorIcon, FileCopy as CopyPasteIcon, Info as InfoIcon, OpenInNew as OpenInNewIcon } from '@mui/icons-material';
 
 import { cancelRequest, getUserOrganization } from '../../actions/organizationActions';
@@ -15,7 +15,7 @@ import { colors } from '../../themes/Mender';
 import Alert from '../common/alert';
 import ExpandableAttribute from '../common/expandable-attribute';
 import CancelRequestDialog from './dialogs/cancelrequest';
-import OrganizationSettingsItem, { maxWidth, padding } from './organizationsettingsitem';
+import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
 import OrganizationPaymentSettings from './organizationpaymentsettings';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 
@@ -92,6 +92,8 @@ export const Organization = ({ cancelRequest, currentPlan = 'os', getUserOrganiz
 
   const planName = PLANS[currentPlan].name;
 
+  const theme = useTheme();
+
   const enabledAddOns =
     org.addons?.reduce((accu, addon) => {
       if (addon.enabled) {
@@ -141,10 +143,10 @@ export const Organization = ({ cancelRequest, currentPlan = 'os', getUserOrganiz
               component="div"
               disableGutters
               dividerDisabled
-              style={{ width: maxWidth - 2 * padding }}
+              style={{ width: `calc(${maxWidth}px - ${theme.spacing(4)})` }}
               key="org_token"
               secondary={org.tenant_token}
-              textClasses={{ secondary: 'break-all inventory-text tenant-token-text' }}
+              textClasses={{ secondary: 'inventory-text tenant-token-text' }}
             />
           }
           sideBarContent={

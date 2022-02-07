@@ -120,6 +120,7 @@ describe('Configuration Component', () => {
     ui = (
       <Provider store={store}>
         <Configuration
+          deployment={{ ...defaultState.deployments.byId.d1, finished: device.config.updated_ts, status: 'finished' }}
           device={device}
           abortDeployment={jest.fn}
           applyDeviceConfig={applyMock}

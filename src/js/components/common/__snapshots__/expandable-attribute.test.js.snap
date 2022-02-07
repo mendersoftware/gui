@@ -67,8 +67,7 @@ exports[`ExpandableAttribute Component renders correctly 1`] = `
 
 <div>
   <li
-    class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-divider Mui-disabled emotion-0"
-    disabled=""
+    class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-divider emotion-0"
   >
     <div
       class="MuiListItemText-root emotion-1"
@@ -76,12 +75,10 @@ exports[`ExpandableAttribute Component renders correctly 1`] = `
       <div
         class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-2"
       >
-        <div>
-          <span
-            class="inventory-text"
-          />
-           
-        </div>
+        <span
+          class="inventory-text"
+        />
+         
       </div>
     </div>
   </li>

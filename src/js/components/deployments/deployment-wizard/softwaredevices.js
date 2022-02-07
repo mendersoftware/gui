@@ -58,7 +58,7 @@ export const SoftwareDevices = ({
   releaseSelectionLocked,
   setDeploymentSettings
 }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
   const groupRef = useRef();

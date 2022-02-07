@@ -3,6 +3,8 @@ import { formLabelClasses } from '@mui/material/FormLabel';
 import { accordionClasses } from '@mui/material/Accordion';
 import { accordionSummaryClasses } from '@mui/material/AccordionSummary';
 
+const secondaryText = 'rgba(0, 0, 0, 0.54)';
+
 /**
  * @param qualitative if set is an ordered set of distinct colors availabe for programatic use.
  * @example Chart dataset colors
@@ -26,8 +28,8 @@ export const palette = {
      * color matched from variables.less @text of #404041 but by opacity, same as main
      */
     primary: 'rgba(10, 10, 11, 0.78)',
-    secondary: '#cd9dbd',
-    hint: 'rgba(0, 0, 0, 0.54)'
+    secondary: secondaryText,
+    hint: secondaryText
   },
   brand: {
     mender: '#015969'
@@ -94,7 +96,10 @@ export const colors = {
    * @deprecated use theme.palette.grey[400]
    */
   expansionBackground: '#f7f7f7',
-  disabledColor: 'rgba(0, 0, 0, 0.54)',
+  /**
+   * @deprecated use theme.palette.text.secondary
+   */
+  disabledColor: secondaryText,
   /**
    * @deprecated use theme {@link palette.error.main}
    */
@@ -107,12 +112,27 @@ export const colors = {
   green: '#009e73'
 };
 
+const round = value => Math.round(value * 1e4) / 1e4;
+const htmlFontSize = 16;
+const fontSize = 13;
+const coef = fontSize / 14;
+const pxToRem = size => `${round((size / htmlFontSize) * coef)}rem`;
+
 export const typography = {
   fontFamily: 'Lato, sans-serif',
-  fontSize: 13 // will be transformed to rem automatically by mui
+  fontSize, // will be transformed to rem automatically by mui
+  body1: {
+    lineHeight: 1.5
+  },
+  pxToRem
 };
 
 const componentProps = {
+  MuiFormControl: {
+    defaultProps: {
+      variant: 'standard'
+    }
+  },
   MuiTextField: {
     defaultProps: {
       variant: 'standard'
@@ -128,6 +148,13 @@ const componentProps = {
 
 export const overrides = {
   ...componentProps,
+  MuiCheckbox: {
+    styleOverrides: {
+      root: {
+        color: palette.text.primary
+      }
+    }
+  },
   MuiSnackbarContent: {
     styleOverrides: {
       action: {
@@ -212,6 +239,7 @@ export const overrides = {
     }
   },
   MuiFormControl: {
+    ...componentProps.MuiFormControl,
     styleOverrides: {
       root: {
         marginTop: '18px',
@@ -238,6 +266,7 @@ export const overrides = {
     styleOverrides: {
       root: {
         borderRadius: 2,
+        fontSize: 14,
         '&:hover': {
           colors: palette.primary.main
         }
@@ -259,11 +288,11 @@ export const overrides = {
   MuiListItem: {
     styleOverrides: {
       root: {
+        paddingTop: 11,
+        paddingBottom: 11,
         [`&.${listItemClasses.disabled}`]: {
           opacity: 1
-        },
-        paddingTop: 11,
-        paddingBottom: 11
+        }
       }
     }
   },

@@ -96,7 +96,7 @@ export const AppRoot = ({
           <>
             <IdleTimer element={document} onAction={updateMaxAge} onIdle={onIdle} timeout={timeout} />
             <Header history={history} />
-            <LeftNav className="leftFixed leftNav" />
+            <LeftNav />
             <div className="rightFluid container">
               <ErrorBoundary>{privateRoutes}</ErrorBoundary>
             </div>

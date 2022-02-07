@@ -3,12 +3,8 @@ import React from 'react';
 import { Divider, ListItem, ListItemText } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
-const defaultItemProps = { alignItems: 'flex-start', disabled: true, divider: false };
+const defaultItemProps = { alignItems: 'flex-start' };
 export const maxWidth = 500;
-/**
- * @deprecated should be using `theme.spacing(2)` directly
- */
-export const padding = 16;
 
 const OrganizationSettingsItem = ({ title, content: { action, description }, secondary, sideBarContent, notification }) => {
   const theme = useTheme();
@@ -30,8 +26,8 @@ const OrganizationSettingsItem = ({ title, content: { action, description }, sec
   );
   const style = { display: 'grid', width: '100%', marginBottom: secondary ? 0 : theme.spacing() };
   return (
-    <div className="margin-top-small org-settings-item">
-      <ListItem {...defaultItemProps} classes={{ root: 'flexbox column' }}>
+    <li className="margin-top-small org-settings-item">
+      <ListItem {...defaultItemProps} component="div" classes={{ root: 'flexbox column' }}>
         <ListItemText
           classes={{ secondary: secondary ? '' : 'two-columns' }}
           primary={title}
@@ -43,7 +39,7 @@ const OrganizationSettingsItem = ({ title, content: { action, description }, sec
         {notification}
       </ListItem>
       {sideBarContent}
-    </div>
+    </li>
   );
 };
 
