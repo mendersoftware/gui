@@ -111,16 +111,20 @@ describe('Configuration Component', () => {
     await waitFor(() => rerender(ui));
     expect(submitMock).toHaveBeenLastCalledWith(defaultState.devices.byId.a1.id, { testKey: 'testValue' });
     expect(applyMock).toHaveBeenLastCalledWith(defaultState.devices.byId.a1.id, { retries: 0 }, true, { testKey: 'testValue' });
-    device.config = {
-      configured: { test: true, something: 'else', aNumber: 42 },
-      reported: { test: true, something: 'else', aNumber: 42 },
-      updated_ts: defaultState.devices.byId.a1.updated_ts,
-      reported_ts: reportedTime
+    device = {
+      ...device,
+      config: {
+        configured: { test: true, something: 'else', aNumber: 42 },
+        deployment_id: defaultState.deployments.byId.d1.id,
+        reported: { test: true, something: 'else', aNumber: 42 },
+        updated_ts: defaultState.devices.byId.a1.updated_ts,
+        reported_ts: reportedTime
+      }
     };
     ui = (
       <Provider store={store}>
         <Configuration
-          deployment={{ ...defaultState.deployments.byId.d1, finished: device.config.updated_ts, status: 'finished' }}
+          deployment={{ ...defaultState.deployments.byId.d1, created: device.config.updated_ts, finished: device.config.updated_ts, status: 'finished' }}
           device={device}
           abortDeployment={jest.fn}
           applyDeviceConfig={applyMock}
@@ -139,7 +143,10 @@ describe('Configuration Component', () => {
 
     expect(screen.getByText(/aNumber/i)).toBeInTheDocument();
     userEvent.click(screen.getByRole('button', { name: /edit/i }));
-    await waitFor(() => rerender(ui));
+    while (screen.queryByRole('button', { name: /edit/i })) {
+      userEvent.click(screen.getByRole('button', { name: /edit/i }));
+      await waitFor(() => rerender(ui));
+    }
     userEvent.type(screen.getByDisplayValue('something'), 'testKey');
     userEvent.type(screen.getByDisplayValue('else'), 'testValue');
     act(() => userEvent.click(screen.getByRole('button', { name: /Cancel/i })));

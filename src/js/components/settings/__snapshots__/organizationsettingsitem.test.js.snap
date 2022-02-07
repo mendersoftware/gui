@@ -83,12 +83,11 @@ exports[`OrganizationSettingsItem Component renders correctly 1`] = `
   border-bottom-width: thin;
 }
 
-<div
+<li
   class="margin-top-small org-settings-item"
 >
-  <li
-    class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding Mui-disabled MuiListItem-alignItemsFlexStart emotion-0"
-    disabled=""
+  <div
+    class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-0"
   >
     <div
       class="MuiListItemText-root MuiListItemText-multiline emotion-1"
@@ -121,6 +120,6 @@ exports[`OrganizationSettingsItem Component renders correctly 1`] = `
       style="width: 500px;"
     />
     upgrade now!
-  </li>
-</div>
+  </div>
+</li>
 `;

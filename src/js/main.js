@@ -31,21 +31,19 @@ const cssVariables = ({ palette: p }) => ({
 
 export const WrappedBaseline = withStyles(cssVariables)(CssBaseline);
 
-function AppProviders() {
-  return (
-    <Provider store={store}>
-      <CacheProvider value={cache}>
-        <LocalizationProvider dateAdapter={AdapterMoment}>
-          <ErrorBoundary>
-            <Router basename="/ui/#">
-              <App />
-            </Router>
-          </ErrorBoundary>
-        </LocalizationProvider>
-      </CacheProvider>
-    </Provider>
-  );
-}
+export const AppProviders = () => (
+  <Provider store={store}>
+    <CacheProvider value={cache}>
+      <LocalizationProvider dateAdapter={AdapterMoment}>
+        <ErrorBoundary>
+          <Router basename="/ui/#">
+            <App />
+          </Router>
+        </ErrorBoundary>
+      </LocalizationProvider>
+    </CacheProvider>
+  </Provider>
+);
 
 export const Main = () => {
   render(<AppProviders />, document.getElementById('main') || document.createElement('div'));

@@ -235,8 +235,7 @@ exports[`Review deployment Component renders correctly 1`] = `
       style="margin-bottom: -15px;"
     >
       <li
-        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding Mui-disabled emotion-1"
-        disabled=""
+        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-1"
       >
         <div
           class="MuiListItemText-root MuiListItemText-multiline emotion-2"
@@ -249,12 +248,10 @@ exports[`Review deployment Component renders correctly 1`] = `
           <div
             class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-4"
           >
-            <div>
-              <span
-                class="inventory-text"
-              />
-               
-            </div>
+            <span
+              class="inventory-text"
+            />
+             
           </div>
         </div>
       </li>
@@ -263,8 +260,7 @@ exports[`Review deployment Component renders correctly 1`] = `
       style="margin-bottom: -15px;"
     >
       <li
-        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding Mui-disabled emotion-1"
-        disabled=""
+        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-1"
       >
         <div
           class="MuiListItemText-root MuiListItemText-multiline emotion-2"
@@ -277,12 +273,10 @@ exports[`Review deployment Component renders correctly 1`] = `
           <div
             class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-4"
           >
-            <div>
-              <span
-                class="inventory-text"
-              />
-               
-            </div>
+            <span
+              class="inventory-text"
+            />
+             
           </div>
         </div>
       </li>
@@ -291,8 +285,7 @@ exports[`Review deployment Component renders correctly 1`] = `
       style="margin-bottom: -15px;"
     >
       <li
-        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding Mui-disabled emotion-1"
-        disabled=""
+        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-1"
       >
         <div
           class="MuiListItemText-root MuiListItemText-multiline emotion-2"
@@ -306,12 +299,10 @@ exports[`Review deployment Component renders correctly 1`] = `
             class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-4"
             title=""
           >
-            <div>
-              <span
-                class="inventory-text"
-              />
-               
-            </div>
+            <span
+              class="inventory-text"
+            />
+             
           </div>
         </div>
       </li>
@@ -320,8 +311,7 @@ exports[`Review deployment Component renders correctly 1`] = `
       style="margin-bottom: -15px;"
     >
       <li
-        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding Mui-disabled emotion-1"
-        disabled=""
+        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-1"
       >
         <div
           class="MuiListItemText-root MuiListItemText-multiline emotion-2"
@@ -335,14 +325,12 @@ exports[`Review deployment Component renders correctly 1`] = `
             class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-4"
             title="0"
           >
-            <div>
-              <span
-                class="inventory-text"
-              >
-                0
-              </span>
-               
-            </div>
+            <span
+              class="inventory-text"
+            >
+              0
+            </span>
+             
           </div>
         </div>
       </li>
@@ -351,8 +339,7 @@ exports[`Review deployment Component renders correctly 1`] = `
       style="margin-bottom: -15px;"
     >
       <li
-        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding Mui-disabled emotion-1"
-        disabled=""
+        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-1"
       >
         <div
           class="MuiListItemText-root MuiListItemText-multiline emotion-2"
@@ -366,18 +353,16 @@ exports[`Review deployment Component renders correctly 1`] = `
             class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-4"
             title="2019-01-01T13:00:00.900Z"
           >
-            <div>
-              <span
-                class="inventory-text"
+            <span
+              class="inventory-text"
+            >
+              <time
+                datetime="2019-01-01T13:00:00+00:00"
               >
-                <time
-                  datetime="2019-01-01T13:00:00+00:00"
-                >
-                  2019-01-01 13:00
-                </time>
-              </span>
-               
-            </div>
+                2019-01-01 13:00
+              </time>
+            </span>
+             
           </div>
         </div>
       </li>
@@ -386,8 +371,7 @@ exports[`Review deployment Component renders correctly 1`] = `
       style="margin-bottom: -15px;"
     >
       <li
-        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding Mui-disabled emotion-1"
-        disabled=""
+        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-1"
       >
         <div
           class="MuiListItemText-root MuiListItemText-multiline emotion-2"
@@ -401,14 +385,12 @@ exports[`Review deployment Component renders correctly 1`] = `
             class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-4"
             title="-"
           >
-            <div>
-              <span
-                class="inventory-text"
-              >
-                -
-              </span>
-               
-            </div>
+            <span
+              class="inventory-text"
+            >
+              -
+            </span>
+             
           </div>
         </div>
       </li>

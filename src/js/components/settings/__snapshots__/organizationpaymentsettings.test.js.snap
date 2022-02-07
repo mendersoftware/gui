@@ -83,12 +83,11 @@ exports[`OrganizationPaymentSettings Component renders correctly 1`] = `
   border-bottom-width: thin;
 }
 
-<div
+<li
   class="margin-top-small org-settings-item"
 >
-  <li
-    class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding Mui-disabled MuiListItem-alignItemsFlexStart emotion-0"
-    disabled=""
+  <div
+    class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-0"
   >
     <div
       class="MuiListItemText-root MuiListItemText-multiline emotion-1"
@@ -129,6 +128,6 @@ exports[`OrganizationPaymentSettings Component renders correctly 1`] = `
       class="MuiDivider-root MuiDivider-fullWidth emotion-4"
       style="width: 500px;"
     />
-  </li>
-</div>
+  </div>
+</li>
 `;

@@ -2,6 +2,30 @@
 
 exports[`DeviceNotifications Component renders correctly 1`] = `
 .emotion-0 {
+  margin-bottom: 8px;
+  padding: 12px inherit;
+}
+
+.emotion-0.red,
+.emotion-0.green {
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.emotion-0.bordered {
+  border: 1px solid #9e9e9e;
+  background: fade(#757575, 15%);
+}
+
+.emotion-0.bordered.red {
+  border-color: #d32f2f;
+  background: #ef5350;
+}
+
+.emotion-0>span {
+  margin-right: 16px;
+}
+
+.emotion-1 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -18,7 +42,7 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
   font-size: 1.5rem;
 }
 
-.emotion-1 {
+.emotion-2 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -37,15 +61,12 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
 
 <div>
   <div
-    class="flexbox center-aligned padding-small device-detail-notification bordered   clickable"
-    style="margin-bottom: 8px;"
+    class="flexbox center-aligned padding-small emotion-0 bordered   clickable"
   >
-    <span
-      style="margin-right: 16px;"
-    >
+    <span>
       <svg
         aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red emotion-0"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red emotion-1"
         data-testid="ErrorIcon"
         focusable="false"
         viewBox="0 0 24 24"
@@ -69,7 +90,7 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
       <a>
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-1"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-2"
           data-testid="ArrowDropDownCircleOutlinedIcon"
           focusable="false"
           style="margin-bottom: -4px;"
@@ -87,6 +108,30 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
 
 exports[`tiny components renders DeviceOfflineHeaderNotification correctly 1`] = `
 .emotion-0 {
+  margin-bottom: 8px;
+  padding: 12px inherit;
+}
+
+.emotion-0.red,
+.emotion-0.green {
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.emotion-0.bordered {
+  border: 1px solid #9e9e9e;
+  background: fade(#757575, 15%);
+}
+
+.emotion-0.bordered.red {
+  border-color: #d32f2f;
+  background: #ef5350;
+}
+
+.emotion-0>span {
+  margin-right: 16px;
+}
+
+.emotion-1 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -105,15 +150,12 @@ exports[`tiny components renders DeviceOfflineHeaderNotification correctly 1`] =
 
 <div>
   <div
-    class="flexbox center-aligned padding-small device-detail-notification  red column-data "
-    style="margin-bottom: 8px;"
+    class="flexbox center-aligned padding-small emotion-0  red column-data "
   >
-    <span
-      style="margin-right: 16px;"
-    >
+    <span>
       <svg
         aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red emotion-0"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red emotion-1"
         data-testid="ErrorIcon"
         focusable="false"
         viewBox="0 0 24 24"
@@ -127,7 +169,7 @@ exports[`tiny components renders DeviceOfflineHeaderNotification correctly 1`] =
       class="flexbox center-aligned"
     >
       <div
-        class="key text-muted margin-right-small"
+        class="key muted margin-right-small"
       >
         <b>
           Device offline
@@ -145,6 +187,30 @@ exports[`tiny components renders DeviceOfflineHeaderNotification correctly 1`] =
 
 exports[`tiny components renders LastConnection correctly 1`] = `
 .emotion-0 {
+  margin-bottom: 8px;
+  padding: 12px inherit;
+}
+
+.emotion-0.red,
+.emotion-0.green {
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.emotion-0.bordered {
+  border: 1px solid #9e9e9e;
+  background: fade(#757575, 15%);
+}
+
+.emotion-0.bordered.red {
+  border-color: #d32f2f;
+  background: #ef5350;
+}
+
+.emotion-0>span {
+  margin-right: 16px;
+}
+
+.emotion-1 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -163,15 +229,12 @@ exports[`tiny components renders LastConnection correctly 1`] = `
 
 <div>
   <div
-    class="flexbox center-aligned padding-small device-detail-notification bordered red  "
-    style="margin-bottom: 8px;"
+    class="flexbox center-aligned padding-small emotion-0 bordered red  "
   >
-    <span
-      style="margin-right: 16px;"
-    >
+    <span>
       <svg
         aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red emotion-0"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red emotion-1"
         data-testid="ErrorIcon"
         focusable="false"
         viewBox="0 0 24 24"
@@ -197,6 +260,30 @@ exports[`tiny components renders LastConnection correctly 1`] = `
 
 exports[`tiny components renders NoAlertsHeaderNotification correctly 1`] = `
 .emotion-0 {
+  margin-bottom: 8px;
+  padding: 12px inherit;
+}
+
+.emotion-0.red,
+.emotion-0.green {
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.emotion-0.bordered {
+  border: 1px solid #9e9e9e;
+  background: fade(#757575, 15%);
+}
+
+.emotion-0.bordered.red {
+  border-color: #d32f2f;
+  background: #ef5350;
+}
+
+.emotion-0>span {
+  margin-right: 16px;
+}
+
+.emotion-1 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -215,15 +302,12 @@ exports[`tiny components renders NoAlertsHeaderNotification correctly 1`] = `
 
 <div>
   <div
-    class="flexbox center-aligned padding-small device-detail-notification    "
-    style="margin-bottom: 8px;"
+    class="flexbox center-aligned padding-small emotion-0    "
   >
-    <span
-      style="margin-right: 16px;"
-    >
+    <span>
       <svg
         aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium green emotion-0"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium green emotion-1"
         data-testid="CheckCircleIcon"
         focusable="false"
         viewBox="0 0 24 24"
@@ -244,6 +328,30 @@ exports[`tiny components renders NoAlertsHeaderNotification correctly 1`] = `
 
 exports[`tiny components renders ServiceNotification correctly 1`] = `
 .emotion-0 {
+  margin-bottom: 8px;
+  padding: 12px inherit;
+}
+
+.emotion-0.red,
+.emotion-0.green {
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.emotion-0.bordered {
+  border: 1px solid #9e9e9e;
+  background: fade(#757575, 15%);
+}
+
+.emotion-0.bordered.red {
+  border-color: #d32f2f;
+  background: #ef5350;
+}
+
+.emotion-0>span {
+  margin-right: 16px;
+}
+
+.emotion-1 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -260,7 +368,7 @@ exports[`tiny components renders ServiceNotification correctly 1`] = `
   font-size: 1.5rem;
 }
 
-.emotion-1 {
+.emotion-2 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -279,15 +387,12 @@ exports[`tiny components renders ServiceNotification correctly 1`] = `
 
 <div>
   <div
-    class="flexbox center-aligned padding-small device-detail-notification bordered   clickable"
-    style="margin-bottom: 8px;"
+    class="flexbox center-aligned padding-small emotion-0 bordered   clickable"
   >
-    <span
-      style="margin-right: 16px;"
-    >
+    <span>
       <svg
         aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red emotion-0"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red emotion-1"
         data-testid="ErrorIcon"
         focusable="false"
         viewBox="0 0 24 24"
@@ -311,7 +416,7 @@ exports[`tiny components renders ServiceNotification correctly 1`] = `
       <a>
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-1"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-2"
           data-testid="ArrowDropDownCircleOutlinedIcon"
           focusable="false"
           style="margin-bottom: -4px;"

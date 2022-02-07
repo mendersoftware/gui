@@ -88,7 +88,7 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
       </a>
     </div>
     <div
-      class=\\"flexbox center-aligned padding-small tss-lxz8c8-deviceDetailNotification  red column-data \\"
+      class=\\"flexbox center-aligned padding-small tss-vtwvxe-deviceDetailNotification  red column-data \\"
     >
       <span>
         <svg
@@ -273,8 +273,8 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
                   style=\\"align-items: baseline;\\"
                 >
                   <div
-                    class=\\"MuiFormControl-root MuiFormControl-marginDense MuiTextField-root css-4mzek5-MuiFormControl-root-MuiTextField-root\\"
-                    style=\\"min-width: 30px; max-width: 3ch; margin-right: 10px;\\"
+                    class=\\"MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root\\"
+                    style=\\"min-width: 30px; max-width: 3ch; margin-right: 10px; margin-top: 5px;\\"
                   >
                     <div
                       class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root\\"

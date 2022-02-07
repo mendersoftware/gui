@@ -108,7 +108,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           role=\\"group\\"
         >
           <button
-            class=\\"MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary css-1rwt2y5-MuiButtonBase-root-MuiButton-root\\"
+            class=\\"MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary css-1e6y48t-MuiButtonBase-root-MuiButton-root\\"
             style=\\"text-transform: none;\\"
             tabindex=\\"0\\"
             type=\\"button\\"
@@ -119,7 +119,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             />
           </button>
           <button
-            class=\\"MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary css-1k23hlb-MuiButtonBase-root-MuiButton-root\\"
+            class=\\"MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary css-1knaqv7-MuiButtonBase-root-MuiButton-root\\"
             style=\\"text-transform: none;\\"
             tabindex=\\"0\\"
             type=\\"button\\"
@@ -198,13 +198,16 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           />
         </div>
         <li
-          class=\\"heading-lined MuiListSubheader-root css-1uyeyg3-MuiListSubheader-root\\"
-          style=\\"color: rgb(170, 170, 170); height: 48px;\\"
+          class=\\"heading-lined MuiListSubheader-root tss-1ghfz4t-header css-1uyeyg3-MuiListSubheader-root\\"
         >
-          <span>
+          <span
+            class=\\"tss-1nyp150-groupHeading\\"
+          >
             Dynamic
           </span>
-          <div />
+          <div
+            class=\\"tss-1cy4zu-groupBorder\\"
+          />
         </li>
         <div
           class=\\"MuiButtonBase-root grouplist MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-button css-bshv44-MuiButtonBase-root-MuiListItem-root\\"
@@ -225,13 +228,16 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           />
         </div>
         <li
-          class=\\"heading-lined MuiListSubheader-root css-1uyeyg3-MuiListSubheader-root\\"
-          style=\\"color: rgb(170, 170, 170); height: 48px;\\"
+          class=\\"heading-lined MuiListSubheader-root tss-1ghfz4t-header css-1uyeyg3-MuiListSubheader-root\\"
         >
-          <span>
+          <span
+            class=\\"tss-1nyp150-groupHeading\\"
+          >
             Static
           </span>
-          <div />
+          <div
+            class=\\"tss-1cy4zu-groupBorder\\"
+          />
         </li>
         <div
           class=\\"MuiButtonBase-root grouplist MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-button Mui-selected css-bshv44-MuiButtonBase-root-MuiListItem-root\\"
@@ -835,8 +841,8 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                     style=\\"align-items: baseline;\\"
                   >
                     <div
-                      class=\\"MuiFormControl-root MuiFormControl-marginDense MuiTextField-root css-4mzek5-MuiFormControl-root-MuiTextField-root\\"
-                      style=\\"min-width: 30px; max-width: 3ch; margin-right: 10px;\\"
+                      class=\\"MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root\\"
+                      style=\\"min-width: 30px; max-width: 3ch; margin-right: 10px; margin-top: 5px;\\"
                     >
                       <div
                         class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root\\"

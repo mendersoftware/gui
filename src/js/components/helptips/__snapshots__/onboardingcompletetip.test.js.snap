@@ -19,11 +19,47 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
 }
 
 .emotion-1 {
+  opacity: 0.9;
+}
+
+.emotion-2 {
   z-index: 1500;
   pointer-events: auto;
 }
 
-.emotion-2 {
+.emotion-3 {
+  background-color: #1976d2;
+  box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
+  color: #9e9e9e;
+  font-size: 14px;
+  max-width: 350px;
+  padding: 12px 18px;
+  width: 350px;
+}
+
+.emotion-3 a {
+  color: #9e9e9e;
+}
+
+.emotion-3.MuiTooltip-tooltipPlacementTop {
+  margin-left: 30px;
+  margin-bottom: 0;
+  margin-top: calc(30 + 12px);
+}
+
+.emotion-3.MuiTooltip-tooltipPlacementRight {
+  margin-top: 15px;
+}
+
+.emotion-3.MuiTooltip-tooltipPlacementBottom {
+  margin-left: 30px;
+}
+
+.emotion-3.MuiTooltip-tooltipPlacementLeft {
+  margin-top: 15px;
+}
+
+.emotion-4 {
   background-color: rgba(97, 97, 97, 0.92);
   border-radius: 4px;
   color: #fff;
@@ -36,27 +72,27 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
   font-weight: 500;
 }
 
-.MuiTooltip-popper[data-popper-placement*="left"] .emotion-2 {
+.MuiTooltip-popper[data-popper-placement*="left"] .emotion-4 {
   transform-origin: right center;
   margin-right: 14px;
 }
 
-.MuiTooltip-popper[data-popper-placement*="right"] .emotion-2 {
+.MuiTooltip-popper[data-popper-placement*="right"] .emotion-4 {
   transform-origin: left center;
   margin-left: 14px;
 }
 
-.MuiTooltip-popper[data-popper-placement*="top"] .emotion-2 {
+.MuiTooltip-popper[data-popper-placement*="top"] .emotion-4 {
   transform-origin: center bottom;
   margin-bottom: 14px;
 }
 
-.MuiTooltip-popper[data-popper-placement*="bottom"] .emotion-2 {
+.MuiTooltip-popper[data-popper-placement*="bottom"] .emotion-4 {
   transform-origin: center top;
   margin-top: 14px;
 }
 
-.emotion-3 {
+.emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -105,23 +141,23 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
   box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-3::-moz-focus-inner {
+.emotion-5::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-3.Mui-disabled {
+.emotion-5.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-3 {
+  .emotion-5 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-3:hover {
+.emotion-5:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: #1565c0;
@@ -129,26 +165,26 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
 }
 
 @media (hover: none) {
-  .emotion-3:hover {
+  .emotion-5:hover {
     background-color: #1976d2;
   }
 }
 
-.emotion-3:active {
+.emotion-5:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-3.Mui-focusVisible {
+.emotion-5.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-3.Mui-disabled {
+.emotion-5.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-4 {
+.emotion-6 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -160,7 +196,7 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
-.emotion-5 {
+.emotion-7 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -209,23 +245,23 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
   box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-5::-moz-focus-inner {
+.emotion-7::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-5.Mui-disabled {
+.emotion-7.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-5 {
+  .emotion-7 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-5:hover {
+.emotion-7:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: #7b1fa2;
@@ -233,20 +269,20 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
 }
 
 @media (hover: none) {
-  .emotion-5:hover {
+  .emotion-7:hover {
     background-color: #9c27b0;
   }
 }
 
-.emotion-5:active {
+.emotion-7:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-5.Mui-focusVisible {
+.emotion-7.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-5.Mui-disabled {
+.emotion-7.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
@@ -273,7 +309,7 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    class="ForwardRef(Tooltip)-popper-3 MuiTooltip-popper MuiTooltip-popperInteractive emotion-1"
+    class="emotion-1 MuiTooltip-popper MuiTooltip-popperInteractive emotion-2"
     data-popper-escaped=""
     data-popper-placement="bottom"
     data-popper-reference-hidden=""
@@ -282,7 +318,7 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
     style="position: absolute; top: 0px; left: 0px; margin: 0px; transform: translate(0px, 0px);"
   >
     <div
-      class="ForwardRef(Tooltip)-tooltip-2 MuiTooltip-tooltip MuiTooltip-tooltipPlacementBottom emotion-2"
+      class="emotion-3 MuiTooltip-tooltip MuiTooltip-tooltipPlacementBottom emotion-4"
       style="opacity: 1; transform: scale(1, 1); transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,transform 133ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
     >
       <div
@@ -298,14 +334,14 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
             style="margin: 5px 0px;"
           >
             <a
-              class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root button emotion-3"
+              class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root button emotion-5"
               href="http://192.168.10.141:85/index.html?source=http%3A%2F%2Ftest.com"
               tabindex="0"
               target="_blank"
             >
               Go to http://192.168.10.141:85
               <span
-                class="MuiTouchRipple-root emotion-4"
+                class="MuiTouchRipple-root emotion-6"
               />
             </a>
           </div>
@@ -345,13 +381,13 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
             style="flex-grow: 1;"
           />
           <button
-            class="MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-5"
+            class="MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-7"
             tabindex="0"
             type="button"
           >
             Close
             <span
-              class="MuiTouchRipple-root emotion-4"
+              class="MuiTouchRipple-root emotion-6"
             />
           </button>
         </div>

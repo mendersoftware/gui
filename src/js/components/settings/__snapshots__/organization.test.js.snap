@@ -286,12 +286,11 @@ exports[`MyOrganization Component renders correctly 1`] = `
   <ul
     class="MuiList-root MuiList-padding emotion-0"
   >
-    <div
+    <li
       class="margin-top-small org-settings-item"
     >
-      <li
-        class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding Mui-disabled MuiListItem-alignItemsFlexStart emotion-1"
-        disabled=""
+      <div
+        class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-1"
       >
         <div
           class="MuiListItemText-root MuiListItemText-multiline emotion-2"
@@ -318,14 +317,13 @@ exports[`MyOrganization Component renders correctly 1`] = `
           class="MuiDivider-root MuiDivider-fullWidth emotion-5"
           style="width: 500px;"
         />
-      </li>
-    </div>
-    <div
+      </div>
+    </li>
+    <li
       class="margin-top-small org-settings-item"
     >
-      <li
-        class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding Mui-disabled MuiListItem-alignItemsFlexStart emotion-1"
-        disabled=""
+      <div
+        class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-1"
       >
         <div
           class="MuiListItemText-root MuiListItemText-multiline emotion-2"
@@ -365,11 +363,10 @@ exports[`MyOrganization Component renders correctly 1`] = `
             style="display: grid; width: 100%; margin-bottom: 0px;"
           >
             <div
-              style="width: 468px;"
+              style="width: calc(500px - 32px);"
             >
               <div
-                class="attributes MuiListItem-root MuiListItem-padding Mui-disabled emotion-11"
-                disabled=""
+                class="attributes MuiListItem-root MuiListItem-padding emotion-11"
               >
                 <div
                   class="MuiListItemText-root emotion-12"
@@ -378,14 +375,12 @@ exports[`MyOrganization Component renders correctly 1`] = `
                     class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-4"
                     title="test"
                   >
-                    <div>
-                      <span
-                        class="break-all inventory-text tenant-token-text"
-                      >
-                        test
-                      </span>
-                       
-                    </div>
+                    <span
+                      class="inventory-text tenant-token-text"
+                    >
+                      test
+                    </span>
+                     
                   </div>
                 </div>
               </div>
@@ -396,7 +391,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
           class="MuiDivider-root MuiDivider-fullWidth emotion-5"
           style="width: 500px;"
         />
-      </li>
+      </div>
       <div>
         <button
           class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-15"
@@ -427,13 +422,12 @@ exports[`MyOrganization Component renders correctly 1`] = `
           style="height: 30px; padding: 15px;"
         />
       </div>
-    </div>
-    <div
+    </li>
+    <li
       class="margin-top-small org-settings-item"
     >
-      <li
-        class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding Mui-disabled MuiListItem-alignItemsFlexStart emotion-1"
-        disabled=""
+      <div
+        class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-1"
       >
         <div
           class="MuiListItemText-root MuiListItemText-multiline emotion-2"
@@ -466,7 +460,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
           style="width: 500px;"
         />
         <div
-          class="flexbox centered text-muted"
+          class="flexbox centered muted"
         >
           <svg
             aria-hidden="true"
@@ -492,14 +486,13 @@ exports[`MyOrganization Component renders correctly 1`] = `
             </a>
           </span>
         </div>
-      </li>
-    </div>
-    <div
+      </div>
+    </li>
+    <li
       class="margin-top-small org-settings-item"
     >
-      <li
-        class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding Mui-disabled MuiListItem-alignItemsFlexStart emotion-1"
-        disabled=""
+      <div
+        class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-1"
       >
         <div
           class="MuiListItemText-root MuiListItemText-multiline emotion-2"
@@ -529,7 +522,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
           style="width: 500px;"
         />
         <div
-          class="flexbox centered text-muted"
+          class="flexbox centered muted"
         >
           <svg
             aria-hidden="true"
@@ -555,7 +548,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
             </a>
           </span>
         </div>
-      </li>
+      </div>
       <div
         class="margin-left-small margin-bottom"
       >
@@ -583,7 +576,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
           </svg>
         </a>
       </div>
-    </div>
+    </li>
   </ul>
   <p
     class="margin-left-small margin-right-small"
@@ -654,7 +647,7 @@ exports[`smaller components renders DeviceLimitExpansionNotification correctly 1
 }
 
 <div
-  class="flexbox centered text-muted"
+  class="flexbox centered muted"
 >
   <svg
     aria-hidden="true"
@@ -746,7 +739,7 @@ exports[`smaller components renders TrialExpirationNote correctly 1`] = `
 }
 
 <div
-  class="flexbox centered text-muted"
+  class="flexbox centered muted"
 >
   <svg
     aria-hidden="true"

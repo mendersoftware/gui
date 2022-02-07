@@ -242,86 +242,82 @@ exports[`Auditlogs Component renders correctly 1`] = `
         </ul>
       </div>
       <div
-        style=\\"grid-column-start: 2; grid-column-end: 4;\\"
+        style=\\"grid-column-start: 2; grid-column-end: 4; margin-left: -7.5px;\\"
       >
         <div
-          class=\\"margin-left margin-right inline-block\\"
+          class=\\"MuiFormControl-root MuiTextField-root margin-top-none margin-left-small css-1u3bzj6-MuiFormControl-root-MuiTextField-root\\"
         >
-          <div
-            class=\\"MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root\\"
+          <label
+            class=\\"MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled css-1sumxir-MuiFormLabel-root-MuiInputLabel-root\\"
+            data-shrink=\\"true\\"
+            for=\\"mui-1\\"
+            id=\\"mui-1-label\\"
           >
-            <label
-              class=\\"MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled css-1sumxir-MuiFormLabel-root-MuiInputLabel-root\\"
-              data-shrink=\\"true\\"
-              for=\\"mui-1\\"
-              id=\\"mui-1-label\\"
+            From
+          </label>
+          <div
+            class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root\\"
+          >
+            <input
+              aria-invalid=\\"false\\"
+              aria-label=\\"Choose date, selected date is Jan 1, 2019\\"
+              aria-readonly=\\"true\\"
+              class=\\"MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input\\"
+              
+              readonly=\\"\\"
+              type=\\"text\\"
+              value=\\"January 1st\\"
+            />
+            <fieldset
+              aria-hidden=\\"true\\"
+              class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
             >
-              From
-            </label>
-            <div
-              class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root\\"
-            >
-              <input
-                aria-invalid=\\"false\\"
-                aria-label=\\"Choose date, selected date is Jan 1, 2019\\"
-                aria-readonly=\\"true\\"
-                class=\\"MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input\\"
-                
-                readonly=\\"\\"
-                type=\\"text\\"
-                value=\\"01/01/2019\\"
-              />
-              <fieldset
-                aria-hidden=\\"true\\"
-                class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
+              <legend
+                class=\\"css-1z7n62\\"
               >
-                <legend
-                  class=\\"css-1z7n62\\"
-                >
-                  <span>
-                    From
-                  </span>
-                </legend>
-              </fieldset>
-            </div>
+                <span>
+                  From
+                </span>
+              </legend>
+            </fieldset>
           </div>
-          <div
-            class=\\"MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root\\"
+        </div>
+        <div
+          class=\\"MuiFormControl-root MuiTextField-root margin-top-none margin-left-small css-1u3bzj6-MuiFormControl-root-MuiTextField-root\\"
+        >
+          <label
+            class=\\"MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled css-1sumxir-MuiFormLabel-root-MuiInputLabel-root\\"
+            data-shrink=\\"true\\"
+            for=\\"mui-3\\"
+            id=\\"mui-3-label\\"
           >
-            <label
-              class=\\"MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled css-1sumxir-MuiFormLabel-root-MuiInputLabel-root\\"
-              data-shrink=\\"true\\"
-              for=\\"mui-3\\"
-              id=\\"mui-3-label\\"
+            To
+          </label>
+          <div
+            class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root\\"
+          >
+            <input
+              aria-invalid=\\"false\\"
+              aria-label=\\"Choose date, selected date is Jan 1, 2019\\"
+              aria-readonly=\\"true\\"
+              class=\\"MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input\\"
+              
+              readonly=\\"\\"
+              type=\\"text\\"
+              value=\\"January 1st\\"
+            />
+            <fieldset
+              aria-hidden=\\"true\\"
+              class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
             >
-              To
-            </label>
-            <div
-              class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root\\"
-            >
-              <input
-                aria-invalid=\\"false\\"
-                aria-label=\\"Choose date, selected date is Jan 1, 2019\\"
-                aria-readonly=\\"true\\"
-                class=\\"MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input\\"
-                
-                readonly=\\"\\"
-                type=\\"text\\"
-                value=\\"01/01/2019\\"
-              />
-              <fieldset
-                aria-hidden=\\"true\\"
-                class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
+              <legend
+                class=\\"css-1z7n62\\"
               >
-                <legend
-                  class=\\"css-1z7n62\\"
-                >
-                  <span>
-                    To
-                  </span>
-                </legend>
-              </fieldset>
-            </div>
+                <span>
+                  To
+                </span>
+              </legend>
+            </fieldset>
           </div>
         </div>
       </div>
@@ -677,8 +673,8 @@ exports[`Auditlogs Component renders correctly 1`] = `
               style=\\"align-items: baseline;\\"
             >
               <div
-                class=\\"MuiFormControl-root MuiFormControl-marginDense MuiTextField-root css-4mzek5-MuiFormControl-root-MuiTextField-root\\"
-                style=\\"min-width: 30px; max-width: 3ch; margin-right: 10px;\\"
+                class=\\"MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root\\"
+                style=\\"min-width: 30px; max-width: 3ch; margin-right: 10px; margin-top: 5px;\\"
               >
                 <div
                   class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root\\"

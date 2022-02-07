@@ -169,7 +169,6 @@ export const DeviceConfiguration = ({
       // leaving all stats at 0 and giving a false impression of deployment success
       const stats = groupDeploymentStats(deployment);
       const deviceStats = groupDeploymentDevicesStats(deployment);
-
       setUpdateFailed(deployment.created > updated_ts && deployment.finished > reported_ts && (stats.failures || deviceStats.failures));
       setIsUpdatingConfig(false);
     } else if (deployment.status) {
@@ -258,6 +257,7 @@ export const DeviceConfiguration = ({
 
   const onStartEdit = e => {
     e.stopPropagation();
+    setChangedConfig(configured || reported);
     setOpen(true);
     setIsEditingConfig(true);
   };

@@ -167,6 +167,11 @@ exports[`Groups Component renders GroupItem correctly 1`] = `
 
 exports[`Groups Component renders GroupsSubheader correctly 1`] = `
 .emotion-0 {
+  color: #424242;
+  height: 48px;
+}
+
+.emotion-1 {
   box-sizing: border-box;
   line-height: 48px;
   list-style: none;
@@ -176,14 +181,25 @@ exports[`Groups Component renders GroupsSubheader correctly 1`] = `
   font-size: 0.875rem;
 }
 
+.emotion-2 {
+  background: #fff;
+}
+
+.emotion-3 {
+  background: #fafafa;
+}
+
 <li
-  class="heading-lined MuiListSubheader-root emotion-0"
-  style="color: rgb(170, 170, 170); height: 48px;"
+  class="heading-lined MuiListSubheader-root emotion-0 emotion-1"
 >
-  <span>
+  <span
+    class="emotion-2"
+  >
     test
   </span>
-  <div />
+  <div
+    class="emotion-3"
+  />
 </li>
 `;
 

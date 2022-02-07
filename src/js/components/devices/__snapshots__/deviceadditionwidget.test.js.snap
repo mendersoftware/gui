@@ -69,11 +69,10 @@ exports[`DeviceAdditionWidget Component renders correctly 1`] = `
   letter-spacing: 0.02857em;
   text-transform: uppercase;
   min-width: 64px;
-  padding: 5px 15px;
+  padding: 6px 8px;
   border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border: 1px solid rgba(25, 118, 210, 0.5);
   color: #1976d2;
 }
 
@@ -97,7 +96,6 @@ exports[`DeviceAdditionWidget Component renders correctly 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgba(25, 118, 210, 0.04);
-  border: 1px solid #1976d2;
 }
 
 @media (hover: none) {
@@ -108,7 +106,6 @@ exports[`DeviceAdditionWidget Component renders correctly 1`] = `
 
 .emotion-1.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
-  border: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .emotion-2 {
@@ -163,11 +160,10 @@ exports[`DeviceAdditionWidget Component renders correctly 1`] = `
   letter-spacing: 0.02857em;
   text-transform: uppercase;
   min-width: 64px;
-  padding: 3px 9px;
+  padding: 4px 5px;
   border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border: 1px solid rgba(25, 118, 210, 0.5);
   color: #1976d2;
 }
 
@@ -191,7 +187,6 @@ exports[`DeviceAdditionWidget Component renders correctly 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgba(25, 118, 210, 0.04);
-  border: 1px solid #1976d2;
 }
 
 @media (hover: none) {
@@ -202,7 +197,6 @@ exports[`DeviceAdditionWidget Component renders correctly 1`] = `
 
 .emotion-3.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
-  border: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .emotion-4 {
@@ -230,7 +224,7 @@ exports[`DeviceAdditionWidget Component renders correctly 1`] = `
     role="group"
   >
     <button
-      class="MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary emotion-1"
+      class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary emotion-1"
       style="text-transform: none;"
       tabindex="0"
       type="button"
@@ -241,7 +235,7 @@ exports[`DeviceAdditionWidget Component renders correctly 1`] = `
       />
     </button>
     <button
-      class="MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary emotion-3"
+      class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary emotion-3"
       style="text-transform: none;"
       tabindex="0"
       type="button"
