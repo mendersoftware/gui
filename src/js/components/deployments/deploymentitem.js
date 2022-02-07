@@ -89,7 +89,7 @@ export const DeploymentItem = ({ abort: abortDeployment, columnHeaders, deployme
         const ColumnComponent = column.renderer;
         return (
           <div className={column.class} key={`deploy-item-${i}`}>
-            {column.title && <span className="deployment-item-title text-muted">{column.title}</span>}
+            {column.title && <span className="deployment-item-title muted">{column.title}</span>}
             <ColumnComponent {...self.props} className={column.class || ''} deployment={deployment} started={started} {...column.props} />
           </div>
         );

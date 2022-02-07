@@ -40,7 +40,7 @@ export const OrgHeader = () => (
 );
 
 export const TrialExpirationNote = ({ trial_expiration }) => (
-  <div className="flexbox centered text-muted">
+  <div className="flexbox centered muted">
     <ErrorIcon fontSize="small" />
     <span className="margin-left-small">
       Your trial expires in {moment().from(moment(trial_expiration), true)}. <Link to="/settings/upgrade">Upgrade to a paid plan</Link>
@@ -49,7 +49,7 @@ export const TrialExpirationNote = ({ trial_expiration }) => (
 );
 
 export const DeviceLimitExpansionNotification = ({ isTrial }) => (
-  <div className="flexbox centered text-muted">
+  <div className="flexbox centered muted">
     <ErrorIcon fontSize="small" />
     <span className="margin-left-small">
       To increase your device limit,{' '}

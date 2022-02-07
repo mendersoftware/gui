@@ -3,7 +3,7 @@
 exports[`DeploymentItem Component renders correctly 1`] = `
 <div>
   <span
-    class="deployment-item-title text-muted"
+    class="deployment-item-title muted"
   >
     Release
   </span>

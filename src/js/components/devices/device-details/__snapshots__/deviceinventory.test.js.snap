@@ -184,7 +184,7 @@ exports[`DeviceInventory Component renders correctly 1`] = `
         class="break-all two-columns column-data compact multiple"
       >
         <div
-          class="align-right key text-muted"
+          class="align-right key muted"
         >
           <b>
             artifact_name
@@ -213,7 +213,7 @@ exports[`DeviceInventory Component renders correctly 1`] = `
         class="break-all two-columns column-data compact multiple"
       >
         <div
-          class="align-right key text-muted"
+          class="align-right key muted"
         >
           <b>
             device_type

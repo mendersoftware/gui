@@ -48,7 +48,7 @@ export const ConfigUpToDateNote = ({ updated_ts = defaultReportTimeStamp }) => (
       <Typography variant="subtitle2" style={textStyle}>
         Configuration up-to-date on the device
       </Typography>
-      <Typography variant="caption" className="text-muted" style={textStyle}>
+      <Typography variant="caption" className="muted" style={textStyle}>
         Updated: {<Time value={updated_ts} />}
       </Typography>
     </div>
@@ -58,7 +58,7 @@ export const ConfigUpToDateNote = ({ updated_ts = defaultReportTimeStamp }) => (
 export const ConfigEmptyNote = ({ updated_ts = '' }) => (
   <div className="flexbox column margin-small">
     <Typography variant="subtitle2">The device appears to either have an empty configuration or not to have reported a configuration yet.</Typography>
-    <Typography variant="caption" className="text-muted" style={textStyle}>
+    <Typography variant="caption" className="muted" style={textStyle}>
       Updated: {<Time value={updated_ts} />}
     </Typography>
   </div>
@@ -72,7 +72,7 @@ export const ConfigEditingActions = ({ hasDeviceConfig, isSetAsDefault, onSetAsD
         label="Save as default configuration"
         style={{ marginTop: 0 }}
       />
-      <div className="text-muted">You can import these key value pairs when configuring other devices</div>
+      <div className="muted">You can import these key value pairs when configuring other devices</div>
     </div>
     <Button variant="contained" color="primary" onClick={onSubmit} style={buttonStyle}>
       Save and apply to device
@@ -94,7 +94,7 @@ export const ConfigUpdateNote = ({ isUpdatingConfig, isAccepted }) => (
         ? 'Updating configuration on device...'
         : 'Configuration could not be updated on device'}
     </Typography>
-    <Typography variant="caption" className="text-muted" style={textStyle}>
+    <Typography variant="caption" className="muted" style={textStyle}>
       Status: {isUpdatingConfig || !isAccepted ? 'pending' : 'failed'}
     </Typography>
   </div>

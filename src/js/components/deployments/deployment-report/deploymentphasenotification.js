@@ -14,7 +14,7 @@ export const DeploymentPhaseNotification = ({ className = '', deployment = {}, o
   return (
     <div className={`progressStatus flexbox center-aligned margin-bottom clickable ${className}`} onClick={onReviewClick} style={{ padding: 15 }}>
       <PauseIcon />
-      <div className="text-muted">
+      <div className="muted">
         Deployment is <span className="uppercased">paused</span>. <a>Review its status</a> to continue, retry or abort the deployment{' '}
       </div>
       <ScrollDownIcon fontSize="small" className="link-color" style={{ marginLeft: theme.spacing() }} />

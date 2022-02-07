@@ -617,7 +617,7 @@ exports[`DeviceTwin Component renders sub component TwinSyncStatus correctly 1`]
 }
 
 <div
-  class="padding,"
+  class="padding,tss-qbpf0s-root"
 >
   <svg
     aria-hidden="true"
@@ -634,7 +634,7 @@ exports[`DeviceTwin Component renders sub component TwinSyncStatus correctly 1`]
     No difference between desired and reported configuration
   </div>
   <div
-    class="text-muted slightly-smaller"
+    class="muted slightly-smaller"
     style="align-content: flex-end; margin-bottom: -10px;"
   >
     Last synced: 
@@ -690,7 +690,7 @@ exports[`DeviceTwin Component renders sub component TwinSyncStatus correctly 2`]
     between desired and reported configuration
   </div>
   <div
-    class="text-muted slightly-smaller"
+    class="muted slightly-smaller"
     style="align-content: flex-end; margin-bottom: -10px;"
   >
     Last synced: 

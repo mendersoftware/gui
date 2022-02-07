@@ -68,7 +68,7 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
         />
       </svg>
       <div
-        class=\\"key text-muted\\"
+        class=\\"key muted\\"
       >
         <b>
           SSH Daemon is not running
@@ -88,12 +88,9 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
       </a>
     </div>
     <div
-      class=\\"flexbox center-aligned padding-small device-detail-notification  red column-data \\"
-      style=\\"margin-bottom: 8px;\\"
+      class=\\"flexbox center-aligned padding-small tss-lxz8c8-deviceDetailNotification  red column-data \\"
     >
-      <span
-        style=\\"margin-right: 16px;\\"
-      >
+      <span>
         <svg
           aria-hidden=\\"true\\"
           class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red css-i4bv87-MuiSvgIcon-root\\"
@@ -110,7 +107,7 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
         class=\\"flexbox center-aligned\\"
       >
         <div
-          class=\\"key text-muted margin-right-small\\"
+          class=\\"key muted margin-right-small\\"
         >
           <b>
             Device offline
@@ -136,7 +133,7 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
       >
         <div>
           <h4
-            class=\\"text-muted\\"
+            class=\\"muted\\"
           >
             Alert history
           </h4>
@@ -155,7 +152,7 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
               />
             </svg>
             <div
-              class=\\"key text-muted\\"
+              class=\\"key muted\\"
             >
               <b>
                 SSH Daemon is not running
@@ -395,7 +392,7 @@ exports[`tiny components renders DeviceMonitorsMissingNote correctly 1`] = `
 
 <div>
   <div
-    class="flexbox text-muted"
+    class="flexbox muted"
   >
     <svg
       aria-hidden="true"

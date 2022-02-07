@@ -15,7 +15,7 @@ const NameColumnData = ({ device, style }) => {
       className="break-all two-columns column-data compact"
       style={{ ...style, alignItems: 'center', gridTemplateColumns: 'minmax(max-content, 150px) max-content' }}
     >
-      <div className="align-right key text-muted">
+      <div className="align-right key muted">
         <b>Name</b>
       </div>
       <DeviceNameInput device={device} isHovered />

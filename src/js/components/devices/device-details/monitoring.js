@@ -28,7 +28,7 @@ const MonitoringAlert = ({ alert, onDetailsClick, style }) => {
   return (
     <div className="monitoring-alert column-data" style={style}>
       {severityMap[alert.level].icon}
-      <div className="key text-muted">
+      <div className="key muted">
         <b>{alert.name}</b>
       </div>
       <div>{alert.level}</div>
@@ -102,14 +102,14 @@ export const DeviceMonitoring = ({
       title={
         <div className="flexbox center-aligned" ref={innerRef}>
           <h4 className="margin-right">Monitoring</h4>
-          {!!monitors.length && <Time className="text-muted" value={updated_ts} />}
+          {!!monitors.length && <Time className="muted" value={updated_ts} />}
         </div>
       }
     >
       {alerts.length ? (
         <>
           <div>
-            <h4 className="text-muted">Alert history</h4>
+            <h4 className="muted">Alert history</h4>
             {alerts.map(alert => (
               <MonitoringAlert alert={alert} key={alert.id} onDetailsClick={onDetailsClick} />
             ))}
@@ -128,7 +128,7 @@ export const DeviceMonitoring = ({
           </div>
         </>
       ) : (
-        <p className="text-muted margin-left-large" style={{ fontSize: 'larger' }}>
+        <p className="muted margin-left-large" style={{ fontSize: 'larger' }}>
           There are currently no issues reported
         </p>
       )}

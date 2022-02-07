@@ -95,7 +95,7 @@ export const NoAlertsHeaderNotification = () => (
 
 export const DeviceOfflineHeaderNotification = () => (
   <BaseNotification className="column-data" bordered={false} severity={monitoringSeverities.CRITICAL}>
-    <div className="key text-muted margin-right-small">
+    <div className="key muted margin-right-small">
       <b>Device offline</b>
     </div>
     Last check-in over {DEVICE_ONLINE_CUTOFF.interval} {pluralize(DEVICE_ONLINE_CUTOFF.intervalName, DEVICE_ONLINE_CUTOFF.interval)} ago

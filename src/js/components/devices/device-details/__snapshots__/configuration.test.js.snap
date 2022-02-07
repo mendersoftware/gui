@@ -386,7 +386,7 @@ exports[`Configuration Component renders correctly 1`] = `
       style="margin-bottom: 10px;"
     >
       <div
-        class="align-right key text-muted"
+        class="align-right key muted"
       >
         <b>
           uiPasswordRequired
@@ -689,7 +689,7 @@ exports[`tiny components renders ConfigEditingActions correctly 1`] = `
       </span>
     </label>
     <div
-      class="text-muted"
+      class="muted"
     >
       You can import these key value pairs when configuring other devices
     </div>
@@ -737,7 +737,7 @@ exports[`tiny components renders ConfigEmptyNote correctly 1`] = `
       The device appears to either have an empty configuration or not to have reported a configuration yet.
     </h6>
     <span
-      class="MuiTypography-root MuiTypography-caption text-muted emotion-1"
+      class="MuiTypography-root MuiTypography-caption muted emotion-1"
       style="text-transform: capitalize; text-align: left;"
     >
       Updated: 
@@ -811,7 +811,7 @@ exports[`tiny components renders ConfigUpToDateNote correctly 1`] = `
         Configuration up-to-date on the device
       </h6>
       <span
-        class="MuiTypography-root MuiTypography-caption text-muted emotion-2"
+        class="MuiTypography-root MuiTypography-caption muted emotion-2"
         style="text-transform: capitalize; text-align: left;"
       >
         Updated: 
@@ -1008,7 +1008,7 @@ exports[`tiny components renders ConfigUpdateNote correctly 1`] = `
       Updating configuration on device...
     </h6>
     <span
-      class="MuiTypography-root MuiTypography-caption text-muted emotion-1"
+      class="MuiTypography-root MuiTypography-caption muted emotion-1"
       style="text-transform: capitalize; text-align: left;"
     >
       Status: 

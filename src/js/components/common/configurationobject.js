@@ -40,7 +40,7 @@ export const TwoColumnData = ({ className = '', compact, chipLikeKey = true, con
     <div className={`break-all two-columns column-data ${compact ? 'compact' : ''} ${className}`} style={style}>
       {Object.entries(config).map(([key, value]) => (
         <Fragment key={key}>
-          <div className={`align-right ${chipLikeKey ? 'key' : ''} text-muted`}>
+          <div className={`align-right ${chipLikeKey ? 'key' : ''} muted`}>
             <b>{key}</b>
           </div>
           <ValueColumn setSnackbar={setSnackbar} value={value} />

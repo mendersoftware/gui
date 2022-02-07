@@ -71,7 +71,7 @@ export const ProgressChart = ({ currentPhase, currentProgressCount, phases, show
         }
         return (
           <div key={`deployment-phase-${index}`} className="progress-step" style={style}>
-            {showPhaseNumber && <div className="progress-step-number text-muted">{`Phase ${index + 1}`}</div>}
+            {showPhaseNumber && <div className="progress-step-number muted">{`Phase ${index + 1}`}</div>}
             {!!phase.progressWidth && <div className="progress-bar" style={{ width: `${phase.progressWidth}%`, backgroundColor: '#aaa' }} />}
             <div className="flexbox progress-bar" style={{ backgroundColor: 'initial' }}>
               <div className="progress-bar green" style={{ width: `${phase.successWidth}%` }} />
@@ -123,7 +123,7 @@ export const ProgressDisplay = ({ className = '', deployment, status }) => {
   return (
     <div className={`flexbox column progress-chart-container ${className}`}>
       {statusMap[status] && (
-        <span className="flexbox center-aligned small text-muted">
+        <span className="flexbox center-aligned small muted">
           {statusMap[status].icon}
           <span className="margin-left-small">{statusMap[status].description()}</span>
         </span>

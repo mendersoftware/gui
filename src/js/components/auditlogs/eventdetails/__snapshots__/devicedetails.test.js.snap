@@ -28,7 +28,7 @@ exports[`DeviceDetails Component renders correctly 1`] = `
      details
   </b>
   <div
-    class="text-muted two-columns"
+    class="muted two-columns"
     style="grid-template-columns: minmax(max-content, 150px) max-content; row-gap: 20px;"
   >
     <div

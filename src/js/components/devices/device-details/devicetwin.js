@@ -32,7 +32,7 @@ const diffStatusStyle = makeStyles()(theme => ({
 }));
 
 const LastSyncNote = ({ updateTime }) => (
-  <div className="text-muted slightly-smaller" style={{ alignContent: 'flex-end', marginBottom: -10 }}>
+  <div className="muted slightly-smaller" style={{ alignContent: 'flex-end', marginBottom: -10 }}>
     Last synced: <Time value={updateTime} />
   </div>
 );

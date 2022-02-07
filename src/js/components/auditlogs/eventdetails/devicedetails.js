@@ -12,7 +12,7 @@ export const DetailInformation = ({ title, details }) => {
   return (
     <div key={`${title}-details`} className="flexbox column margin-top-small">
       <b className="margin-bottom-small capitalized-start">{title} details</b>
-      <div className="text-muted two-columns" style={{ gridTemplateColumns: 'minmax(max-content, 150px) max-content', rowGap: theme.spacing(2.5) }}>
+      <div className="muted two-columns" style={{ gridTemplateColumns: 'minmax(max-content, 150px) max-content', rowGap: theme.spacing(2.5) }}>
         {Object.entries(details).map(([key, value]) => (
           <Fragment key={key}>
             <div className="align-right">

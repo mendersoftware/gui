@@ -96,15 +96,15 @@ export const RolloutSchedule = ({ deployment, innerRef, onAbort, onUpdateControl
           const startTime = phase.start_ts ?? getPhaseStartTime(phases, index, start_time);
           const phaseObject = {
             'Start time': <Time value={startTime} />,
-            'Batch size': <div className="text-muted">{`${phase.batch_size}%${deviceCountText}`}</div>
+            'Batch size': <div className="muted">{`${phase.batch_size}%${deviceCountText}`}</div>
           };
-          let phaseTitle = status !== DEPLOYMENT_STATES.scheduled ? <div className="text-muted">Complete</div> : null;
+          let phaseTitle = status !== DEPLOYMENT_STATES.scheduled ? <div className="muted">Complete</div> : null;
           let backgroundColor = 'initial';
           if (now.isBefore(startTime)) {
             const duration = moment.duration(moment(startTime).diff(now));
             phaseTitle = <div>{`Begins in ${duration.format('d [days] hh [h] mm [m]')}`}</div>;
           } else if (status === DEPLOYMENT_STATES.inprogress && phase.id === currentPhase.id) {
-            phaseTitle = <div className="text-muted">Current phase</div>;
+            phaseTitle = <div className="muted">Current phase</div>;
             backgroundColor = colors.expansionBackground;
           }
           return (

@@ -45,7 +45,7 @@ const FilterOption = (props, option) => {
     content = (
       <div className="flexbox center-aligned space-between" style={{ width: '100%' }}>
         <div>{content}</div>
-        <div className="text-muted slightly-smaller">({option.scope})</div>
+        <div className="muted slightly-smaller">({option.scope})</div>
       </div>
     );
   }

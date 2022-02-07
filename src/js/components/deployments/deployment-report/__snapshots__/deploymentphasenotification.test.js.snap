@@ -52,7 +52,7 @@ exports[`PhaseProgress Component renders correctly 1`] = `
       />
     </svg>
     <div
-      class="text-muted"
+      class="muted"
     >
       Deployment is 
       <span
