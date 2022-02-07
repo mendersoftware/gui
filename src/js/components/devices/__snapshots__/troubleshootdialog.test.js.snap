@@ -499,6 +499,7 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
             </div>
           </div>
           <div
+            role="button"
             style="position: relative;"
             tabindex="0"
           >
