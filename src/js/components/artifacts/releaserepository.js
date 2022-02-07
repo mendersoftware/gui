@@ -200,7 +200,7 @@ export const ReleaseRepository = ({
       )}
 
       {uploadArtifactOnboardingComponent ? uploadArtifactOnboardingComponent : null}
-      <div style={{ position: 'relative', marginTop: '10px' }}>
+      <div className="relative margin-top margin-right-small">
         {items.length ? (
           <div>
             <div className="release-repo-item repo-item repo-header">

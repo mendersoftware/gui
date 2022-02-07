@@ -96,8 +96,7 @@ exports[`ArtifactPayload Component renders correctly 1`] = `
   >
     <div>
       <li
-        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-divider Mui-disabled emotion-1"
-        disabled=""
+        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-divider emotion-1"
       >
         <div
           class="MuiListItemText-root MuiListItemText-multiline emotion-2"
@@ -111,14 +110,12 @@ exports[`ArtifactPayload Component renders correctly 1`] = `
             class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-4"
             title="secondary text"
           >
-            <div>
-              <span
-                class="inventory-text"
-              >
-                secondary text
-              </span>
-               
-            </div>
+            <span
+              class="inventory-text"
+            >
+              secondary text
+            </span>
+             
           </div>
         </div>
       </li>

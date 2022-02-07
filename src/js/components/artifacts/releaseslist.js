@@ -27,18 +27,20 @@ const ReleaseListItem = ({ data, index, style }) => {
   let isSelected = index === 0;
   isSelected = release && selectedRelease ? release.Name === selectedRelease.Name : isSelected;
   return (
-    <ListItem button selected={isSelected} className="repository-list-item" onClick={() => onSelect(release)} style={style}>
+    <ListItem
+      button
+      selected={isSelected}
+      className="repository-list-item"
+      onClick={() => onSelect(release)}
+      style={style}
+      secondaryAction={<KeyboardArrowRightIcon className={isSelected ? '' : 'indicator'} />}
+    >
       {!release?.Name ? (
         <Loader show />
       ) : (
         <ListItemText>
-          <div className="flexbox">
-            <div className="inline-block">
-              <Typography variant="subtitle2">{release.Name}</Typography>
-              <Typography variant="body2" className="muted">{`${release.Artifacts.length} ${pluralize('Artifact', release.Artifacts.length)}`}</Typography>
-            </div>
-            <KeyboardArrowRightIcon className={isSelected ? '' : 'indicator'} />
-          </div>
+          <Typography variant="subtitle2">{release.Name}</Typography>
+          <Typography variant="body2" className="muted">{`${release.Artifacts.length} ${pluralize('Artifact', release.Artifacts.length)}`}</Typography>
         </ListItemText>
       )}
     </ListItem>
@@ -115,7 +117,7 @@ export const ReleasesList = ({ loading, onSelect, releasesListState, releases, s
         <TextField placeholder="Filter" className="search" onChange={searchUpdated} style={{ marginLeft: 30, marginTop: 0 }} value={searchTerm} />
       </div>
       {searchTerm && searchTotal !== total ? <p className="muted">{`Filtered from ${total} ${pluralize('Release', total)}`}</p> : <div />}
-      <ButtonGroup className="muted" size="small">
+      <ButtonGroup className="muted" size="small" variant="text">
         <Button onClick={handleSortDirection} endIcon={<SortIcon className={`sortIcon ${direction === SORTING_OPTIONS.desc}`} />} style={buttonStyle}>
           {sortingOptions[attribute]}
         </Button>

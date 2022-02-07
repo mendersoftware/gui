@@ -217,17 +217,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
 .emotion-5 .MuiButtonGroup-grouped:not(:first-of-type) {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-  margin-left: -1px;
 }
 
 .emotion-5 .MuiButtonGroup-grouped:not(:last-of-type) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
-  border-right-color: transparent;
-}
-
-.emotion-5 .MuiButtonGroup-grouped:not(:last-of-type):hover {
-  border-right-color: currentColor;
+  border-right: 1px solid rgba(0, 0, 0, 0.23);
+  border-color: rgba(25, 118, 210, 0.5);
 }
 
 .emotion-6 {
@@ -270,11 +266,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
   letter-spacing: 0.02857em;
   text-transform: uppercase;
   min-width: 64px;
-  padding: 3px 9px;
+  padding: 4px 5px;
   border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border: 1px solid rgba(25, 118, 210, 0.5);
   color: #1976d2;
 }
 
@@ -298,7 +293,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgba(25, 118, 210, 0.04);
-  border: 1px solid #1976d2;
 }
 
 @media (hover: none) {
@@ -309,7 +303,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
 
 .emotion-6.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
-  border: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .emotion-7 {
@@ -394,11 +387,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
   </div>
   <div />
   <div
-    class="MuiButtonGroup-root MuiButtonGroup-outlined muted emotion-5"
+    class="MuiButtonGroup-root MuiButtonGroup-text muted emotion-5"
     role="group"
   >
     <button
-      class="MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary emotion-6"
+      class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedText MuiButtonGroup-groupedTextHorizontal MuiButtonGroup-groupedTextPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedText MuiButtonGroup-groupedTextHorizontal MuiButtonGroup-groupedTextPrimary emotion-6"
       style="text-transform: none;"
       tabindex="0"
       type="button"
@@ -424,7 +417,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
       />
     </button>
     <button
-      class="MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary emotion-6"
+      class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedText MuiButtonGroup-groupedTextHorizontal MuiButtonGroup-groupedTextPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedText MuiButtonGroup-groupedTextHorizontal MuiButtonGroup-groupedTextPrimary emotion-6"
       style="text-transform: none;"
       tabindex="0"
       type="button"

@@ -39,7 +39,7 @@ exports[`ReleaseRepository Component renders correctly 1`] = `
     </p>
   </div>
   <div
-    style="position: relative; margin-top: 10px;"
+    class="relative margin-top margin-right-small"
   >
     <div
       class="dashboard-placeholder fadeIn"

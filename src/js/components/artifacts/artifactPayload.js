@@ -2,13 +2,12 @@ import React from 'react';
 import { List, ListItem, ListItemText, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 
 import { FileSize, getFormattedSize } from './../../helpers';
-import { colors } from '../../themes/Mender';
 import Time from '../common/time';
-
-export const inlineHeadingStyle = { position: 'absolute', background: colors.expansionBackground, top: -35, padding: 10 };
+import { makeStyles } from 'tss-react/mui';
 
 const METADATA_SPACING = 2;
-const style = {
+
+const useStyles = makeStyles()(theme => ({
   metadataList: {
     display: 'flex',
     flexDirection: 'row'
@@ -17,15 +16,23 @@ const style = {
     background: 'transparent'
   },
   metadataListItem: {
-    paddingBottom: '11px',
-    borderBottom: `1px solid ${colors.borderColor}`,
+    paddingBottom: 11,
+    borderBottom: `1px solid ${theme.palette.grey[600]}`,
     marginRight: '2vw'
   },
-  payloadHeader: { ...inlineHeadingStyle, background: '#e9e9e9' }
-};
+  payloadHeader: {
+    background: theme.palette.grey[500],
+    margin: 0,
+    padding: 10,
+    position: 'absolute',
+    top: -20
+  }
+}));
+
 const attributes = ['Name', 'Checksum', 'Build date', 'Size (uncompressed)'];
 
 export const ArtifactPayload = ({ index, payload: { files: payloadFiles, meta_data = {}, type_info } }) => {
+  const { classes } = useStyles();
   const files = payloadFiles || [];
   const summedSize = files.reduce((accu, item) => accu + item.size, 0);
   const metaDataObject = meta_data;
@@ -35,10 +42,10 @@ export const ArtifactPayload = ({ index, payload: { files: payloadFiles, meta_da
   ];
   return (
     <div className="file-details">
-      <h4 style={style.payloadHeader}>Payload {index}</h4>
-      <List style={style.metadataList}>
+      <h4 className={classes.payloadHeader}>Payload {index}</h4>
+      <List className={classes.metadataList}>
         {metaData.map((item, index) => (
-          <ListItem disabled={true} style={style.metadataListItem} classes={{ root: 'attributes', disabled: 'opaque' }} key={`metadata-item-${index}`}>
+          <ListItem disabled={true} className={classes.metadataListItem} classes={{ root: 'attributes', disabled: 'opaque' }} key={`metadata-item-${index}`}>
             <ListItemText primary={item.title} secondary={item.value} />
           </ListItem>
         ))}
@@ -54,7 +61,7 @@ export const ArtifactPayload = ({ index, payload: { files: payloadFiles, meta_da
         ) : null}
         <h4>Files</h4>
         {files.length ? (
-          <Table style={style.table}>
+          <Table className={classes.table}>
             <TableHead>
               <TableRow>
                 {attributes.map((item, index) => (
@@ -64,7 +71,7 @@ export const ArtifactPayload = ({ index, payload: { files: payloadFiles, meta_da
                 ))}
               </TableRow>
             </TableHead>
-            <TableBody style={style.table}>
+            <TableBody className={classes.table}>
               {files.map((file, index) => (
                 <TableRow key={index}>
                   <TableCell>{file.name}</TableCell>
