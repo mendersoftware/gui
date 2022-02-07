@@ -36,8 +36,6 @@ body {
     width: 200px;
     overflow-y: auto;
     overflow-x: hidden;
-    background-color: @lightestgrey;
-    border-right: 1px solid @lightergrey;
     ul {
       margin-right: -1px;
     }
@@ -371,29 +369,9 @@ ul.link-list {
 /* Navigation */
 .navLink {
   transition: all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
-  // color: #949495;
-  &.leftNav.active {
-    border-top: 1px solid @lightgrey;
-    border-bottom: 1px solid @lightgrey;
-    transition: all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
-  }
   &.leftNav:first-of-type {
     border-top: none;
   }
-  &.settingsNav.active,
-  &.helpNav.active {
-    background: @lightestgrey;
-  }
-}
-
-.navLink.leftNav > div > span {
-  color: @MuiTextHint;
-}
-.navLink.leftNav.active > div > span {
-  color: @MuiTextPrimary;
-}
-.navLink.leftNav:hover {
-  background-color: rgba(0, 0, 0, 0.08);
 }
 
 /* Header */
