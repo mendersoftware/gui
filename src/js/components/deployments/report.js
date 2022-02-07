@@ -32,6 +32,7 @@ import Confirm from '../common/confirm';
 import DeviceList from './deployment-report/devicelist';
 import DeploymentStatus from './deployment-report/deploymentstatus';
 import DeploymentPhaseNotification from './deployment-report/deploymentphasenotification';
+import LinedHeader from '../common/lined-header';
 
 momentDurationFormatSetup(moment);
 
@@ -196,15 +197,11 @@ export const DeploymentReport = props => {
         <DeploymentOverview creator={creator} deployment={deployment} onScheduleClick={scrollToBottom} />
         {isConfigurationDeployment && (
           <>
-            <h4 className="dashboard-header">
-              <span>Configuration</span>
-            </h4>
+            <LinedHeader heading="Configuration" />
             <ConfigurationObject className="margin-top-small margin-bottom-large" config={config} />
           </>
         )}
-        <h4 className="dashboard-header">
-          <span>Status</span>
-        </h4>
+        <LinedHeader heading="Status" />
         <DeploymentStatus deployment={deployment} />
         <DeviceList {...props} viewLog={viewLog} />
         <RolloutSchedule deployment={deployment} onUpdateControlChange={onUpdateControlChange} onAbort={abort} innerRef={rolloutSchedule} />

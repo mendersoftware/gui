@@ -21,6 +21,7 @@ import FormCheckbox from '../common/forms/formcheckbox';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 
 import { OAuth2Providers } from './oauth2providers';
+import LinedHeader from '../common/lined-header';
 
 const cookies = new Cookies();
 
@@ -95,9 +96,12 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
               </Button>
             ))}
           </div>
-          <h4 className="dashboard-header margin-top-large" style={{ display: 'flex', justifyContent: 'center' }}>
-            <span style={{ padding: 15, top: -24 }}>or your email address</span>
-          </h4>
+          <LinedHeader
+            className="margin-top-large"
+            heading="or your email address"
+            innerStyle={{ padding: 15, top: -24 }}
+            style={{ display: 'flex', justifyContent: 'center' }}
+          />
         </>
       )}
 
@@ -145,7 +149,7 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
               <HelpIcon />
             </MenderTooltipClickable>
           )}
-          <div className="margin-top text-muted">
+          <div className="margin-top muted">
             <div className="flexbox centered">
               Don&#39;t have an account?{' '}
               <Link style={{ marginLeft: '4px' }} to="/signup">

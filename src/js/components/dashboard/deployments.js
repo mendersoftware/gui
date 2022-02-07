@@ -18,6 +18,7 @@ import { BaseWidget } from './widgets/baseWidget';
 import RedirectionWidget from './widgets/redirectionwidget';
 import CompletedDeployments from './widgets/completeddeployments';
 import useWindowSize from '../../utils/resizehook';
+import LinedHeader from '../common/lined-header';
 
 const refreshDeploymentsLength = 30000;
 
@@ -107,9 +108,7 @@ export const Deployments = ({ clickHandle, finishedCount, inprogressCount, onboa
   }
   return (
     <div>
-      <h4 className="dashboard-header">
-        <span>Deployments</span>
-      </h4>
+      <LinedHeader heading="Deployments" />
       <div className="deployments" style={{ marginBottom: 50 }}>
         {loading ? (
           <Loader show={loading} fade={true} />

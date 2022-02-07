@@ -1700,19 +1700,16 @@ span.day {
   align-items: center;
   span {
     position: absolute;
-    background: @defaultBackground;
     padding: 0 @defaultGutterWidth;
     min-width: 6 * @defaultGutterWidth;
   }
   > div {
     width: 100%;
     height: 1px;
-    background: @bordercolor;
   }
 }
 
 .dashboard-header {
-  border-bottom: 1px solid @lightgrey;
   margin-bottom: 3 * @defaultGutterWidth;
   position: relative;
 
@@ -1721,21 +1718,6 @@ span.day {
     background: @defaultBackground;
     padding: 10px @defaultGutterWidth 10px 0;
     top: -19px;
-  }
-
-  h2,
-  h3 {
-    margin: 8px 0;
-  }
-
-  .dashboard-number {
-    margin-left: 10px;
-    color: @grey;
-  }
-
-  svg {
-    vertical-align: middle;
-    margin: 0px 10px 4px 0;
   }
 }
 

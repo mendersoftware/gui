@@ -16,6 +16,7 @@ import { ProgressChart } from '../progressChart';
 import { defaultColumnDataProps } from '../report';
 import { DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
 import PhaseProgress from './phaseprogress';
+import LinedHeader from '../../common/lined-header';
 
 momentDurationFormatSetup(moment);
 
@@ -53,9 +54,7 @@ export const RolloutSchedule = ({ deployment, innerRef, onAbort, onUpdateControl
   const endTime = finished ? <Time value={formatTime(finished)} /> : filterId ? 'N/A' : '-';
   return (
     <>
-      <h4 className="dashboard-header margin-top-large" ref={innerRef}>
-        <span>Schedule details</span>
-      </h4>
+      <LinedHeader className="margin-top-large" heading="Schedule details" innerRef={innerRef} />
       {phases.length > 1 || !update_control_map ? (
         <>
           <div className="flexbox">
