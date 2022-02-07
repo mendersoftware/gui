@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Autorenew, LockOutlined } from '@material-ui/icons';
+import { Autorenew, LockOutlined } from '@mui/icons-material';
 
 import staticImage from '../../../assets/img/static-group-creation.gif';
 import dynamicImage from '../../../assets/img/dynamic-group-creation.gif';

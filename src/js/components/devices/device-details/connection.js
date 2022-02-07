@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Time from 'react-time';
 
-import { Button, Typography } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
-import { ImportExport as ImportExportIcon, InfoOutlined as InfoIcon, Launch as LaunchIcon } from '@material-ui/icons';
+import { Button, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { ImportExport as ImportExportIcon, InfoOutlined as InfoIcon, Launch as LaunchIcon } from '@mui/icons-material';
 import { mdiConsole as ConsoleIcon } from '@mdi/js';
 
-import MaterialDesignIcon from '../../common/materialdesignicon';
 import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
 import { DEVICE_CONNECT_STATES } from '../../../constants/deviceConstants';
-import DeviceDataCollapse from './devicedatacollapse';
+import MaterialDesignIcon from '../../common/materialdesignicon';
 import MenderTooltip from '../../common/mendertooltip';
+import Time from '../../common/time';
+import DeviceDataCollapse from './devicedatacollapse';
 
 const buttonStyle = { textTransform: 'none', textAlign: 'left' };
 export const PortForwardLink = ({ docsVersion }) => (
@@ -38,7 +38,7 @@ export const PortForwardLink = ({ docsVersion }) => (
 export const DeviceConnectionNote = ({ children, style = buttonStyle }) => {
   const theme = useTheme();
   return (
-    <div className="flexbox text-muted">
+    <div className="flexbox muted">
       <InfoIcon fontSize="small" style={{ marginRight: theme.spacing() }} />
       <Typography variant="body1" style={style}>
         {children}
@@ -61,7 +61,7 @@ export const DeviceConnectionMissingNote = ({ docsVersion }) => (
 
 export const DeviceDisconnectedNote = ({ docsVersion, lastConnectionTs }) => (
   <DeviceConnectionNote>
-    The troubleshoot add-on is not currently connected on this device, it was last connected on <Time value={lastConnectionTs} format="YYYY-MM-DD HH:mm" />.
+    The troubleshoot add-on is not currently connected on this device, it was last connected on <Time value={lastConnectionTs} />.
     <br />
     Please{' '}
     <a target="_blank" rel="noopener noreferrer" href={`https://docs.mender.io/${docsVersion}add-ons/remote-terminal`}>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { InfoOutlined as InfoIcon } from '@material-ui/icons';
+import { InfoOutlined as InfoIcon } from '@mui/icons-material';
 
 import { MenderTooltipClickable } from '../common/mendertooltip';
 

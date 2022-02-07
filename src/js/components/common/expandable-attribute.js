@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 // material ui
-import { ListItem, ListItemText, Tooltip } from '@material-ui/core';
+import { ListItem, ListItemText, Tooltip } from '@mui/material';
 
-import { FileCopyOutlined as CopyToClipboardIcon } from '@material-ui/icons';
+import { FileCopyOutlined as CopyToClipboardIcon } from '@mui/icons-material';
 
 import copy from 'copy-to-clipboard';
 
@@ -51,19 +51,19 @@ export const ExpandableAttribute = ({
 
   const currentTextClasses = `${textClasses ? textClasses.secondary : 'inventory-text'}${expanded && overflowActive ? ' expanded-attribute' : ''}`;
   const secondaryText = (
-    <div>
+    <>
       <span className={currentTextClasses} ref={textContent} style={overflowActive ? { marginBottom: '-0.5em' } : {}}>
         {secondary}
       </span>{' '}
       {overflowActive ? <a>show {expanded ? 'less' : 'more'}</a> : null}
-    </div>
+    </>
   );
 
   const cssClasses = { ...defaultClasses, root: `${defaultClasses.root} ${copyToClipboard ? 'copy-to-clipboard' : ''}`.trim() };
 
   return (
     <div onClick={onClick} onMouseEnter={() => setTooltipVisible(true)} onMouseLeave={() => setTooltipVisible(false)} style={style}>
-      <ListItem classes={cssClasses} disableGutters={disableGutters} disabled={true} divider={!dividerDisabled} component={component}>
+      <ListItem classes={cssClasses} disableGutters={disableGutters} divider={!dividerDisabled} component={component}>
         <ListItemText
           primary={primary}
           secondary={secondaryText}

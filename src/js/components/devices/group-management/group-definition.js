@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import validator from 'validator';
 
-import { FormHelperText, TextField } from '@material-ui/core';
-import { Autocomplete, createFilterOptions } from '@material-ui/lab';
+import { FormHelperText, TextField, Autocomplete } from '@mui/material';
+import { createFilterOptions } from '@mui/material/useAutocomplete';
 
 import { fullyDecodeURI } from '../../../helpers';
 

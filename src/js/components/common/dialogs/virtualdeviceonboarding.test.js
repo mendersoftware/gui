@@ -1,11 +1,11 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import VirtualDeviceOnboarding from './virtualdeviceonboarding';
+
 import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import VirtualDeviceOnboarding from './virtualdeviceonboarding';
 
 const mockStore = configureStore([thunk]);
 
@@ -17,11 +17,9 @@ describe('VirtualDeviceOnboarding Component', () => {
 
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <VirtualDeviceOnboarding />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <VirtualDeviceOnboarding />
+      </Provider>
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();

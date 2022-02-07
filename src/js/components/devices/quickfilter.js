@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { MenuItem, Select, TextField } from '@material-ui/core';
+import { MenuItem, Select, TextField } from '@mui/material';
 
 import MenderTooltip from '../common/mendertooltip';
 
@@ -58,7 +58,7 @@ export const QuickFilter = ({ attributes, attributeSetting = { attribute: 'name'
   return (
     <div>
       Quick find Device
-      <Select className="margin-left-small" disableUnderline onChange={onSelectionChange} value={selectedAttribute} style={{ fontSize: 13 }}>
+      <Select className="margin-left-small" inputProps={{ underline: 'false' }} onChange={onSelectionChange} value={selectedAttribute} style={{ fontSize: 13 }}>
         {attributes.map(attribute => (
           <MenuItem key={attribute.key} value={attribute.key}>
             {attribute.value}

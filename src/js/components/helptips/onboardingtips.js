@@ -3,8 +3,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { IconButton } from '@material-ui/core';
-import { ArrowUpward as ArrowUpwardIcon, Close as CloseIcon, Schedule as HelpIcon } from '@material-ui/icons';
+import { IconButton } from '@mui/material';
+import { ArrowUpward as ArrowUpwardIcon, Close as CloseIcon, Schedule as HelpIcon } from '@mui/icons-material';
 
 import { setSnackbar } from '../../actions/appActions';
 import { setShowDismissOnboardingTipsDialog } from '../../actions/onboardingActions';
@@ -29,7 +29,7 @@ const WelcomeSnackTipComponent = ({ progress, setSnackbar }) => {
   };
   return (
     <div className="onboard-snack">
-      <IconButton onClick={onClose}>
+      <IconButton onClick={onClose} size="large">
         <CloseIcon fontSize="small" />
       </IconButton>
       <div className="flexbox">
@@ -65,7 +65,6 @@ const DevicePendingTipComponent = ({ setShowConnectingDialog, setShowDismissOnbo
   <div style={{ display: 'grid', placeItems: 'center' }}>
     <MenderTooltipClickable
       onboarding
-      interactive
       title={
         <>
           <p>It may take a few moments before your device appears.</p>

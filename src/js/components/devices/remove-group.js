@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Dialog, DialogActions, DialogTitle, DialogContent } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogTitle, DialogContent } from '@mui/material';
 
 const RemoveGroup = ({ onRemove, onClose }) => (
   <Dialog open={true}>

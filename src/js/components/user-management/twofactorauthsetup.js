@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
-import { Collapse, Switch } from '@material-ui/core';
+import { Collapse, Switch } from '@mui/material';
 
 import { setSnackbar } from '../../actions/appActions';
 import { disableUser2fa, enableUser2fa, get2FAQRCode, verify2FA, verifyEmailComplete, verifyEmailStart } from '../../actions/userActions';

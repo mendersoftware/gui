@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
-import { BarChart as BarChartIcon } from '@material-ui/icons';
+import { BarChart as BarChartIcon } from '@mui/icons-material';
 
 import ChartAdditionWidget from './widgets/chart-addition';
 import DistributionReport from './widgets/distribution';
@@ -10,6 +10,7 @@ import { getAllDynamicGroupDevices, getAllGroupDevices, selectGroup } from '../.
 import { saveUserSettings } from '../../actions/userActions';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { getIsEnterprise, getUserSettings } from '../../selectors';
+import LinedHeader from '../common/lined-header';
 
 export const defaultReports = [{ group: null, attribute: 'artifact_name', type: 'distribution' }];
 
@@ -70,9 +71,7 @@ export const SoftwareDistribution = ({
     </div>
   ) : (
     <div>
-      <h4 className="dashboard-header">
-        <span>Software distribution</span>
-      </h4>
+      <LinedHeader heading="Software distribution" />
       {hasDevices ? (
         <div className="flexbox" style={{ flexWrap: 'wrap' }}>
           {reports.map((report, index) => {

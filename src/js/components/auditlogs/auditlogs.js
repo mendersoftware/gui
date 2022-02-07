@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
-import { Button, TextField } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import { Button, TextField, Autocomplete } from '@mui/material';
 
 import historyImage from '../../../assets/img/history.png';
 
@@ -23,6 +22,10 @@ const detailsMap = {
 };
 
 let inputDelayTimer;
+
+const getOptionLabel = option => option.title || option.email || option;
+
+const renderOption = (props, option) => <li {...props}>{getOptionLabel(option)}</li>;
 
 export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserList, groups, selectionState, setAuditlogsState, users, ...props }) => {
   const history = useHistory();
@@ -166,17 +169,22 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
   };
   let detailOptions = typeOptionsMap[type] ?? [];
 
+  const autoSelectProps = {
+    autoSelect: true,
+    filterSelectedOptions: true,
+    getOptionLabel,
+    handleHomeEndKeys: true,
+    renderOption
+  };
+
   return (
     <div className="fadeIn margin-left flexbox column" style={{ marginRight: '5%' }}>
       <h3>Audit log</h3>
       <div className="auditlogs-filters margin-bottom margin-top-small">
         <Autocomplete
+          {...autoSelectProps}
           id="audit-log-user-selection"
-          autoSelect
           freeSolo
-          filterSelectedOptions
-          getOptionLabel={option => option.email || option}
-          handleHomeEndKeys
           options={Object.values(users)}
           onChange={onUserFilterChange}
           value={user}
@@ -189,49 +197,34 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
               InputProps={{ ...params.InputProps }}
             />
           )}
-          renderOption={option => option.email || option}
           style={{ maxWidth: 250 }}
         />
         <Autocomplete
+          {...autoSelectProps}
           id="audit-log-type-selection"
           key={`audit-log-type-selection-${filterReset}`}
-          autoSelect
-          filterSelectedOptions
-          getOptionLabel={option => option.title || option}
-          handleHomeEndKeys
           inputValue={type}
           onInputChange={onTypeFilterChange}
           options={AUDIT_LOGS_TYPES}
           renderInput={params => (
             <TextField {...params} label="Filter by change" placeholder="Type" InputLabelProps={{ shrink: true }} InputProps={{ ...params.InputProps }} />
           )}
-          renderOption={option => option.title}
           style={{ marginLeft: 7.5 }}
         />
         <Autocomplete
+          {...autoSelectProps}
           id="audit-log-type-details-selection"
-          autoSelect
           disabled={!type}
-          filterSelectedOptions
-          getOptionLabel={option => option.email || option}
-          handleHomeEndKeys
           inputValue={detail}
           onInputChange={onDetailFilterChange}
           options={detailOptions}
           renderInput={params => <TextField {...params} placeholder={detailsMap[type] || '-'} InputProps={{ ...params.InputProps }} />}
-          renderOption={option => option.email || option}
           style={{ marginRight: 15, marginTop: 16 }}
         />
         <div />
         <TimerangePicker endDate={endDate} onChange={onTimeFilterChange} startDate={startDate} />
-        <div style={{ gridColumnStart: 2, gridColumnEnd: 4 }}>
-          <TimeframePicker
-            classNames="margin-left margin-right inline-block"
-            onChange={onTimeFilterChange}
-            endDate={endDate}
-            startDate={startDate}
-            tonight={tonight}
-          />
+        <div style={{ gridColumnStart: 2, gridColumnEnd: 4, marginLeft: -7.5 }}>
+          <TimeframePicker onChange={onTimeFilterChange} endDate={endDate} startDate={startDate} tonight={tonight} />
         </div>
         {!!(user || type || detail || startDate !== today || endDate !== tonight) && (
           <span className="link margin-bottom-small" onClick={reset} style={{ alignSelf: 'flex-end' }}>

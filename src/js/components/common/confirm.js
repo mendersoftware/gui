@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from '@mui/material/IconButton';
 
-import CancelIcon from '@material-ui/icons/Cancel';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const confirmationType = {
   retry: {
@@ -51,10 +51,10 @@ export const Confirm = ({ action, cancel, classes = '', style, type }) => {
   return (
     <div className={`flexbox center-aligned ${className} ${classes}`} style={{ marginRight: '12px', justifyContent: 'flex-end', ...style }}>
       <span className="bold">{loading ? confirmationType[type].loading : confirmationType[type].message}</span>
-      <IconButton id="confirmAbort" onClick={handleConfirm}>
+      <IconButton id="confirmAbort" onClick={handleConfirm} size="large">
         <CheckCircleIcon className="green" />
       </IconButton>
-      <IconButton onClick={handleCancel}>
+      <IconButton onClick={handleCancel} size="large">
         <CancelIcon className="red" />
       </IconButton>
     </div>

@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import DeviceQuickActions from './devicequickactions';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import DeviceQuickActions from './devicequickactions';
 
 describe('DeviceQuickActions Component', () => {
   it('renders correctly', async () => {

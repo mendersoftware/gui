@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import DeploymentStatus from './deploymentstatus';
+
 import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import DeploymentStatus from './deploymentstatus';
 
 describe('DeploymentStatus Component', () => {
   it('renders correctly', async () => {

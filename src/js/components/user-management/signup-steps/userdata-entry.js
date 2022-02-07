@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 
 import headerLogo from '../../../../assets/img/headerlogo.png';
 import { useradmApiUrl } from '../../../constants/userConstants';
@@ -8,6 +8,7 @@ import Form from '../../common/forms/form';
 import TextInput from '../../common/forms/textinput';
 import PasswordInput from '../../common/forms/passwordinput';
 import { OAuth2Providers } from '../oauth2providers';
+import LinedHeader from '../../common/lined-header';
 
 export class UserDataEntry extends React.Component {
   constructor(props, context) {
@@ -48,9 +49,12 @@ export class UserDataEntry extends React.Component {
             </Button>
           ))}
         </div>
-        <h4 className="dashboard-header margin-top-large" style={{ display: 'flex', justifyContent: 'center' }}>
-          <span style={{ padding: 15, top: -24 }}>or your email address</span>
-        </h4>
+        <LinedHeader
+          className="margin-top-large"
+          heading="or your email address"
+          innerStyle={{ padding: 15, top: -24 }}
+          style={{ display: 'flex', justifyContent: 'center' }}
+        />
         <Form showButtons={true} buttonColor="primary" onSubmit={formdata => self.handleSubmit(formdata)} submitLabel="Sign up" submitButtonId="login_button">
           <TextInput hint="Email *" label="Email *" id="email" required={true} validations="isLength:1,isEmail" value={email} />
           <PasswordInput

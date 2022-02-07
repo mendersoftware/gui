@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { Button } from '@material-ui/core';
-import { CheckCircle as CheckCircleIcon } from '@material-ui/icons';
+import { Button } from '@mui/material';
+import { CheckCircle as CheckCircleIcon } from '@mui/icons-material';
 
 import { getDeviceById, getDevicesByStatus } from '../../actions/deviceActions';
 import { setOnboardingComplete } from '../../actions/onboardingActions';

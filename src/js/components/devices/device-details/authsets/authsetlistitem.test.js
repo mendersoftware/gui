@@ -1,8 +1,9 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import AuthsetListItem, { getConfirmationMessage } from './authsetlistitem';
+
 import { undefineds } from '../../../../../../tests/mockData';
 import { DEVICE_STATES } from '../../../../constants/deviceConstants';
+import { render } from '../../../../../../tests/setupTests';
+import AuthsetListItem, { getConfirmationMessage } from './authsetlistitem';
 
 describe('AuthsetListItem Component', () => {
   it('renders correctly', async () => {

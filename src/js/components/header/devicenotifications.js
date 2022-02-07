@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import pluralize from 'pluralize';
 
 // material ui
-import DeveloperBoardIcon from '@material-ui/icons/DeveloperBoard';
+import DeveloperBoardIcon from '@mui/icons-material/DeveloperBoard';
 
 import { MenderTooltipClickable } from '../common/mendertooltip';
 

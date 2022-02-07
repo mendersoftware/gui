@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 // material ui
-import { Checkbox } from '@material-ui/core';
+import { Checkbox } from '@mui/material';
 import DeviceIdentityDisplay from '../common/deviceidentity';
 
 const DeviceListItem = ({ columnHeaders, device, idAttribute, itemClassName = '', onClick, onRowSelect, selectable, selected }) => {

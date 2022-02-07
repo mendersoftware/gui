@@ -1,13 +1,17 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { prettyDOM } from '@testing-library/dom';
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router-dom';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import AuditLogs from './auditlogs';
+import { LocalizationProvider } from '@mui/lab';
+import AdapterMoment from '@mui/lab/AdapterMoment';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import AuditLogs from './auditlogs';
 
 const mockStore = configureStore([thunk]);
 
@@ -19,11 +23,11 @@ describe('Auditlogs Component', () => {
 
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <MemoryRouter>
+      <LocalizationProvider dateAdapter={AdapterMoment}>
         <Provider store={store}>
           <AuditLogs />
         </Provider>
-      </MemoryRouter>
+      </LocalizationProvider>
     );
     const view = prettyDOM(baseElement.firstChild, 100000, { highlight: false })
       .replace(/id="mui-[0-9]*"/g, '')
@@ -35,11 +39,11 @@ describe('Auditlogs Component', () => {
 
   it('works as expected', async () => {
     render(
-      <MemoryRouter>
+      <LocalizationProvider dateAdapter={AdapterMoment}>
         <Provider store={store}>
           <AuditLogs />
         </Provider>
-      </MemoryRouter>
+      </LocalizationProvider>
     );
     userEvent.click(screen.getByText(/last 7 days/i));
     userEvent.click(screen.getByText(/clear filter/i));
@@ -49,11 +53,13 @@ describe('Auditlogs Component', () => {
 
   it('allows navigating by url as expected', async () => {
     const ui = (
-      <MemoryRouter initialEntries={['/auditlog?start_date=2020-01-01T00:00:00.000Z']}>
-        <Provider store={store}>
-          <AuditLogs />
-        </Provider>
-      </MemoryRouter>
+      <LocalizationProvider dateAdapter={AdapterMoment}>
+        <MemoryRouter initialEntries={['/auditlog?start_date=2020-01-01T00:00:00.000Z']}>
+          <Provider store={store}>
+            <AuditLogs />
+          </Provider>
+        </MemoryRouter>
+      </LocalizationProvider>
     );
     const { rerender } = render(ui);
     await waitFor(() => rerender(ui));

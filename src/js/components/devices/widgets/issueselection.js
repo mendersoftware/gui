@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 // material ui
-import { Checkbox, MenuItem, Select } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
+import { Checkbox, MenuItem, Select } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 import { DEVICE_ISSUE_OPTIONS } from '../../../constants/deviceConstants';
 
@@ -30,8 +30,7 @@ const menuProps = {
   transformOrigin: {
     vertical: 'top',
     horizontal: 'left'
-  },
-  getContentAnchorEl: null
+  }
 };
 
 const DeviceIssuesSelection = ({ onChange, onSelectAll, options, selection }) => {

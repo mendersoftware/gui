@@ -1,9 +1,9 @@
 import React, { memo } from 'react';
 
 // material ui
-import { Checkbox } from '@material-ui/core';
+import { Checkbox } from '@mui/material';
 
-import { Settings as SettingsIcon, Sort as SortIcon } from '@material-ui/icons';
+import { Settings as SettingsIcon, Sort as SortIcon } from '@mui/icons-material';
 
 import { SORTING_OPTIONS } from '../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS, DEVICE_STATES } from '../../constants/deviceConstants';

@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 
-import { ClickAwayListener, Tooltip, withStyles } from '@material-ui/core';
+import { ClickAwayListener, Tooltip } from '@mui/material';
+import { withStyles } from 'tss-react/mui';
 
-export const MenderTooltip = withStyles(({ palette, shadows }) => ({
+export const MenderTooltip = withStyles(Tooltip, ({ palette, shadows }) => ({
   arrow: {
     color: palette.secondary.main
   },
   tooltip: {
     backgroundColor: palette.secondary.main,
     boxShadow: shadows[1],
-    color: palette.text.secondary,
+    color: palette.grey[50],
     fontSize: 'small',
     maxWidth: 600,
     info: {
@@ -18,7 +19,7 @@ export const MenderTooltip = withStyles(({ palette, shadows }) => ({
       backgroundColor: palette.grey[500]
     }
   }
-}))(Tooltip);
+}));
 
 export const MenderTooltipClickable = ({ children, onboarding, startOpen = false, ...remainingProps }) => {
   const [open, setOpen] = useState(startOpen || false);
@@ -43,7 +44,6 @@ export const MenderTooltipClickable = ({ children, onboarding, startOpen = false
     <ClickAwayListener onClickAway={hide}>
       <Component
         arrow={!onboarding}
-        interactive
         open={open}
         disableFocusListener
         disableHoverListener
@@ -60,7 +60,7 @@ export const MenderTooltipClickable = ({ children, onboarding, startOpen = false
 
 const iconWidth = 30;
 
-export const OnboardingTooltip = withStyles(theme => ({
+export const OnboardingTooltip = withStyles(Tooltip, theme => ({
   arrow: {
     color: theme.palette.primary.main
   },
@@ -75,7 +75,7 @@ export const OnboardingTooltip = withStyles(theme => ({
     '& a': {
       color: theme.palette.grey[500]
     },
-    '&.MuiTooltip-tooltipPlacementTop': { marginLeft: iconWidth, marginBottom: 0, marginTop: iconWidth + theme.spacing(1.5) },
+    '&.MuiTooltip-tooltipPlacementTop': { marginLeft: iconWidth, marginBottom: 0, marginTop: `calc(${iconWidth} + ${theme.spacing(1.5)})` },
     '&.MuiTooltip-tooltipPlacementRight': { marginTop: iconWidth / 2 },
     '&.MuiTooltip-tooltipPlacementBottom': { marginLeft: iconWidth },
     '&.MuiTooltip-tooltipPlacementLeft': { marginTop: iconWidth / 2 }
@@ -83,5 +83,5 @@ export const OnboardingTooltip = withStyles(theme => ({
   popper: {
     opacity: 0.9
   }
-}))(Tooltip);
+}));
 export default MenderTooltip;

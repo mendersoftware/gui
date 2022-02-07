@@ -1,13 +1,15 @@
 import React from 'react';
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
+import { render } from '../../../../tests/setupTests';
 import { TablePaginationActions } from './pagination';
 
 describe('Loader Component', () => {
   it('works as expected', async () => {
     jest.useFakeTimers();
     const changeListener = jest.fn();
-    const ui = <TablePaginationActions count={42} page={0} onChangePage={changeListener} />;
+    const ui = <TablePaginationActions count={42} page={0} onPageChange={changeListener} />;
     const { rerender } = render(ui);
     expect(screen.getByDisplayValue(1)).toBeInTheDocument();
     expect(screen.getByText('/ 3')).toBeInTheDocument();
@@ -19,7 +21,7 @@ describe('Loader Component', () => {
     });
     expect(changeListener).toHaveBeenCalledTimes(1);
     expect(screen.getByDisplayValue(2)).toBeInTheDocument();
-    rerender(<TablePaginationActions count={42} page={1} onChangePage={changeListener} />);
+    rerender(<TablePaginationActions count={42} page={1} onPageChange={changeListener} />);
     expect(screen.getAllByRole('button')[0]).not.toBeDisabled();
     expect(screen.getAllByRole('button')[1]).not.toBeDisabled();
     expect(screen.getAllByRole('button')[2]).not.toBeDisabled();
@@ -29,7 +31,7 @@ describe('Loader Component', () => {
       jest.advanceTimersByTime(400);
     });
     expect(changeListener).toHaveBeenCalledTimes(2);
-    rerender(<TablePaginationActions count={42} page={2} onChangePage={changeListener} />);
+    rerender(<TablePaginationActions count={42} page={2} onPageChange={changeListener} />);
     expect(screen.getByDisplayValue(3)).toBeInTheDocument();
     expect(screen.getAllByRole('button')[2]).toBeDisabled();
     expect(screen.getAllByRole('button')[3]).toBeDisabled();
@@ -38,7 +40,7 @@ describe('Loader Component', () => {
       jest.advanceTimersByTime(400);
     });
     expect(changeListener).toHaveBeenCalledTimes(3);
-    rerender(<TablePaginationActions count={42} page={0} onChangePage={changeListener} />);
+    rerender(<TablePaginationActions count={42} page={0} onPageChange={changeListener} />);
     expect(screen.getByDisplayValue(1)).toBeInTheDocument();
     const input = screen.getByDisplayValue(1);
     fireEvent.change(input, { target: { value: 76 } });

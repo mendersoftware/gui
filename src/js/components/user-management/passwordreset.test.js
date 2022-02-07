@@ -1,12 +1,13 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import PasswordReset, { PasswordReset as PasswordResetComponent } from './passwordreset';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import PasswordReset, { PasswordReset as PasswordResetComponent } from './passwordreset';
 
 const mockStore = configureStore([thunk]);
 
@@ -21,11 +22,9 @@ describe('PasswordReset Component', () => {
 
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <PasswordReset match={{ params: { secretHash: '' } }} />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <PasswordReset match={{ params: { secretHash: '' } }} />
+      </Provider>
     );
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
@@ -36,11 +35,7 @@ describe('PasswordReset Component', () => {
     const submitCheck = jest.fn();
     const snackbar = jest.fn();
     const secretHash = 'leHash';
-    const ui = (
-      <MemoryRouter>
-        <PasswordResetComponent match={{ params: { secretHash } }} passwordResetComplete={submitCheck} setSnackbar={snackbar} />
-      </MemoryRouter>
-    );
+    const ui = <PasswordResetComponent match={{ params: { secretHash } }} passwordResetComplete={submitCheck} setSnackbar={snackbar} />;
     const { rerender } = render(ui);
 
     const passwordInput = screen.getByLabelText('Password *');

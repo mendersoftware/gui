@@ -1,6 +1,4 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
@@ -12,6 +10,7 @@ import MyOrganization, {
   CancelSubscriptionButton
 } from './organization';
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
 
 const mockStore = configureStore([thunk]);
 
@@ -59,11 +58,9 @@ describe('MyOrganization Component', () => {
 
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <MyOrganization />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MyOrganization />
+      </Provider>
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
@@ -75,15 +72,13 @@ describe('smaller components', () => {
   [OrgHeader, TrialExpirationNote, DeviceLimitExpansionNotification, CancelSubscriptionAlert, CancelSubscriptionButton].forEach(Component => {
     it(`renders ${Component.displayName || Component.name} correctly`, () => {
       const { baseElement } = render(
-        <MemoryRouter>
-          <Component
-            trial_expiration="2019-10-05T13:00:00.000Z"
-            isTrial={true}
-            handleCancelSubscription={jest.fn}
-            orgName="test"
-            mailBodyTexts={{ billing: 'bill this', upgrade: 'upgrade here' }}
-          />
-        </MemoryRouter>
+        <Component
+          trial_expiration="2019-10-05T13:00:00.000Z"
+          isTrial={true}
+          handleCancelSubscription={jest.fn}
+          orgName="test"
+          mailBodyTexts={{ billing: 'bill this', upgrade: 'upgrade here' }}
+        />
       );
       const view = baseElement.firstChild.firstChild;
       expect(view).toMatchSnapshot();

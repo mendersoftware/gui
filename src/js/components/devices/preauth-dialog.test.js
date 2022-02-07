@@ -1,8 +1,10 @@
 import React from 'react';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import PreauthDialog from './preauth-dialog';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import PreauthDialog from './preauth-dialog';
 
 const errorText = 'test-errortext';
 const dropzone = '.dropzone input';

@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import Alert from './alert';
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import Alert from './alert';
 
 describe('Alert Component', () => {
   it('renders correctly', async () => {

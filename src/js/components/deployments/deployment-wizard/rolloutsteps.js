@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Chip } from '@material-ui/core';
-import { Add as AddIcon, ArrowRight as ArrowRightIcon, PauseCircleOutline as PauseIcon } from '@material-ui/icons';
-import { useTheme } from '@material-ui/core/styles';
+import { Chip } from '@mui/material';
+import { Add as AddIcon, ArrowRight as ArrowRightIcon, PauseCircleOutline as PauseIcon } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
 
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import InfoHint from '../../common/info-hint';

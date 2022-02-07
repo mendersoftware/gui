@@ -5,7 +5,7 @@ exports[`ConfigurationObject Component renders correctly 1`] = `
   class="break-all two-columns column-data  "
 >
   <div
-    class="align-right key text-muted"
+    class="align-right key muted"
   >
     <b>
       uiPasswordRequired
@@ -17,7 +17,7 @@ exports[`ConfigurationObject Component renders correctly 1`] = `
     true
   </div>
   <div
-    class="align-right key text-muted"
+    class="align-right key muted"
   >
     <b>
       foo
@@ -29,7 +29,7 @@ exports[`ConfigurationObject Component renders correctly 1`] = `
     bar
   </div>
   <div
-    class="align-right key text-muted"
+    class="align-right key muted"
   >
     <b>
       timezone

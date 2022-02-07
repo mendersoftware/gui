@@ -1,9 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Deployments Component renders correctly 1`] = `
+.emotion-0 {
+  border-bottom: 1px solid #fafafa;
+}
+
+.emotion-0 span {
+  background: #fff;
+}
+
 <div>
   <h4
-    class="dashboard-header"
+    class="dashboard-header emotion-0 "
   >
     <span>
       Deployments

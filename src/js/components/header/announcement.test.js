@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import Announcement from './announcement';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import Announcement from './announcement';
 
 describe('Announcement Component', () => {
   it('renders correctly', async () => {

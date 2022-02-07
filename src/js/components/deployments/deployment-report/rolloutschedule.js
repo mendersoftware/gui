@@ -1,21 +1,22 @@
 import React from 'react';
-import Time from 'react-time';
 import pluralize from 'pluralize';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
-import { Chip } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
-import { ArrowForward } from '@material-ui/icons';
+import { Chip } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { ArrowForward } from '@mui/icons-material';
 
 import { formatTime, getPhaseDeviceCount, getRemainderPercent, groupDeploymentStats } from '../../../helpers';
 import { colors } from '../../../themes/Mender';
 import { TwoColumnData } from '../../common/configurationobject';
+import Time from '../../common/time';
 import { getPhaseStartTime } from '../createdeployment';
 import { ProgressChart } from '../progressChart';
 import { defaultColumnDataProps } from '../report';
 import { DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
 import PhaseProgress from './phaseprogress';
+import LinedHeader from '../../common/lined-header';
 
 momentDurationFormatSetup(moment);
 
@@ -50,19 +51,17 @@ export const RolloutSchedule = ({ deployment, innerRef, onAbort, onUpdateControl
   if (now.isSameOrAfter(currentPhaseStartTime)) {
     currentPhaseTime = currentPhaseIndex + 1;
   }
-  const endTime = finished ? <Time value={formatTime(finished)} format="YYYY-MM-DD HH:mm" /> : filterId ? 'N/A' : '-';
+  const endTime = finished ? <Time value={formatTime(finished)} /> : filterId ? 'N/A' : '-';
   return (
     <>
-      <h4 className="dashboard-header margin-top-large" ref={innerRef}>
-        <span>Schedule details</span>
-      </h4>
+      <LinedHeader className="margin-top-large" heading="Schedule details" innerRef={innerRef} />
       {phases.length > 1 || !update_control_map ? (
         <>
           <div className="flexbox">
             <TwoColumnData
               {...defaultColumnDataProps}
               config={{
-                'Start time': <Time value={formatTime(creationTime)} format="YYYY-MM-DD HH:mm" />,
+                'Start time': <Time value={formatTime(creationTime)} />,
                 'Current phase': currentPhaseTime
               }}
             />
@@ -96,16 +95,16 @@ export const RolloutSchedule = ({ deployment, innerRef, onAbort, onUpdateControl
           const deviceCountText = !filterId ? ` (${deviceCount} ${pluralize('device', deviceCount)})` : '';
           const startTime = phase.start_ts ?? getPhaseStartTime(phases, index, start_time);
           const phaseObject = {
-            'Start time': <Time value={startTime} format="YYYY-MM-DD HH:mm" />,
-            'Batch size': <div className="text-muted">{`${phase.batch_size}%${deviceCountText}`}</div>
+            'Start time': <Time value={startTime} />,
+            'Batch size': <div className="muted">{`${phase.batch_size}%${deviceCountText}`}</div>
           };
-          let phaseTitle = status !== DEPLOYMENT_STATES.scheduled ? <div className="text-muted">Complete</div> : null;
+          let phaseTitle = status !== DEPLOYMENT_STATES.scheduled ? <div className="muted">Complete</div> : null;
           let backgroundColor = 'initial';
           if (now.isBefore(startTime)) {
             const duration = moment.duration(moment(startTime).diff(now));
             phaseTitle = <div>{`Begins in ${duration.format('d [days] hh [h] mm [m]')}`}</div>;
           } else if (status === DEPLOYMENT_STATES.inprogress && phase.id === currentPhase.id) {
-            phaseTitle = <div className="text-muted">Current phase</div>;
+            phaseTitle = <div className="muted">Current phase</div>;
             backgroundColor = colors.expansionBackground;
           }
           return (

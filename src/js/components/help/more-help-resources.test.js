@@ -1,8 +1,9 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import MoreHelp from './more-help-resources';
-import { helpProps } from './mockData';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import { helpProps } from './mockData';
+import MoreHelp from './more-help-resources';
 
 describe('MoreHelp Component', () => {
   it('renders correctly', async () => {

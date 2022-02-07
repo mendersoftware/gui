@@ -1,12 +1,12 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import DeviceConnectionDialog from './deviceconnectiondialog';
 import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
 
 const mockStore = configureStore([thunk]);
 
@@ -29,11 +29,9 @@ describe('DeviceConnectionDialog Component', () => {
 
   it('works as intended', async () => {
     render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <DeviceConnectionDialog onCancel={jest.fn} />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <DeviceConnectionDialog onCancel={jest.fn} />
+      </Provider>
     );
     userEvent.click(screen.getByText(/get started/i));
     expect(screen.getByText(/Enter your device type/i)).toBeInTheDocument();

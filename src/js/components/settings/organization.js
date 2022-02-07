@@ -5,8 +5,8 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
 
 // material ui
-import { Button, List, LinearProgress } from '@material-ui/core';
-import { Error as ErrorIcon, FileCopy as CopyPasteIcon, Info as InfoIcon, OpenInNew as OpenInNewIcon } from '@material-ui/icons';
+import { Button, List, LinearProgress, useTheme } from '@mui/material';
+import { Error as ErrorIcon, FileCopy as CopyPasteIcon, Info as InfoIcon, OpenInNew as OpenInNewIcon } from '@mui/icons-material';
 
 import { cancelRequest, getUserOrganization } from '../../actions/organizationActions';
 import { ADDONS, PLANS } from '../../constants/appConstants';
@@ -15,7 +15,7 @@ import { colors } from '../../themes/Mender';
 import Alert from '../common/alert';
 import ExpandableAttribute from '../common/expandable-attribute';
 import CancelRequestDialog from './dialogs/cancelrequest';
-import OrganizationSettingsItem, { maxWidth, padding } from './organizationsettingsitem';
+import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
 import OrganizationPaymentSettings from './organizationpaymentsettings';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 
@@ -40,7 +40,7 @@ export const OrgHeader = () => (
 );
 
 export const TrialExpirationNote = ({ trial_expiration }) => (
-  <div className="flexbox centered text-muted">
+  <div className="flexbox centered muted">
     <ErrorIcon fontSize="small" />
     <span className="margin-left-small">
       Your trial expires in {moment().from(moment(trial_expiration), true)}. <Link to="/settings/upgrade">Upgrade to a paid plan</Link>
@@ -49,7 +49,7 @@ export const TrialExpirationNote = ({ trial_expiration }) => (
 );
 
 export const DeviceLimitExpansionNotification = ({ isTrial }) => (
-  <div className="flexbox centered text-muted">
+  <div className="flexbox centered muted">
     <ErrorIcon fontSize="small" />
     <span className="margin-left-small">
       To increase your device limit,{' '}
@@ -91,6 +91,8 @@ export const Organization = ({ cancelRequest, currentPlan = 'os', getUserOrganiz
   const [cancelSubscriptionConfirmation, setCancelSubscriptionConfirmation] = useState(false);
 
   const planName = PLANS[currentPlan].name;
+
+  const theme = useTheme();
 
   const enabledAddOns =
     org.addons?.reduce((accu, addon) => {
@@ -141,10 +143,10 @@ export const Organization = ({ cancelRequest, currentPlan = 'os', getUserOrganiz
               component="div"
               disableGutters
               dividerDisabled
-              style={{ width: maxWidth - 2 * padding }}
+              style={{ width: `calc(${maxWidth}px - ${theme.spacing(4)})` }}
               key="org_token"
               secondary={org.tenant_token}
-              textClasses={{ secondary: 'break-all inventory-text tenant-token-text' }}
+              textClasses={{ secondary: 'inventory-text tenant-token-text' }}
             />
           }
           sideBarContent={

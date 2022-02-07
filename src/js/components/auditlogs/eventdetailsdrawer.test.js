@@ -1,6 +1,6 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
 import EventDetailsDrawer from './eventdetailsdrawer';
 
 describe('EventDetailsDrawer Component', () => {

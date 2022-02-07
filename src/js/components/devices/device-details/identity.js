@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import Time from 'react-time';
 
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { TwoColumnData } from '../../common/configurationobject';
 import DeviceNameInput from '../../common/devicenameinput';
+import Time from '../../common/time';
 import DeviceDataCollapse from './devicedatacollapse';
 
 const style = { maxWidth: '80%', gridTemplateColumns: 'minmax(max-content, 150px) auto' };
@@ -15,7 +15,7 @@ const NameColumnData = ({ device, style }) => {
       className="break-all two-columns column-data compact"
       style={{ ...style, alignItems: 'center', gridTemplateColumns: 'minmax(max-content, 150px) max-content' }}
     >
-      <div className="align-right key text-muted">
+      <div className="align-right key muted">
         <b>Name</b>
       </div>
       <DeviceNameInput device={device} isHovered />
@@ -38,7 +38,7 @@ export const DeviceIdentity = ({ device, setSnackbar }) => {
 
   let extendedContent = remainingIdentity;
   if (created_ts) {
-    const createdTime = <Time value={created_ts} format="YYYY-MM-DD HH:mm" />;
+    const createdTime = <Time value={created_ts} />;
     extendedContent[status === DEVICE_STATES.preauth ? 'Date added' : 'First request'] = createdTime;
   }
 

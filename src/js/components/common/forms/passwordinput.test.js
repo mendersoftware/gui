@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import PasswordInput from './passwordinput';
+
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import PasswordInput from './passwordinput';
 
 describe('PasswordInput Component', () => {
   it('renders correctly', async () => {

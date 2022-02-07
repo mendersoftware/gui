@@ -1,9 +1,9 @@
 import React from 'react';
 import pluralize from 'pluralize';
 
-import { Box, Chip, Tooltip } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
-import { Error as ErrorIcon, ReportProblemOutlined } from '@material-ui/icons';
+import { Box, Chip, Tooltip } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { Error as ErrorIcon, ReportProblemOutlined } from '@mui/icons-material';
 
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 

@@ -1,8 +1,8 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
+
+import { render } from '../../../../../tests/setupTests';
 import DeploymentOverview from './overview';
 
 momentDurationFormatSetup(moment);
@@ -21,17 +21,15 @@ describe('DeploymentOverview Component', () => {
     const elapsedMoment = moment();
     const duration = moment.duration(elapsedMoment.diff(creationMoment));
     const { baseElement } = render(
-      <MemoryRouter>
-        <DeploymentOverview
-          allDevices={[]}
-          deployment={deployment}
-          deviceCount={0}
-          duration={duration}
-          onAbortClick={jest.fn}
-          onRetryClick={jest.fn}
-          viewLog={jest.fn}
-        />
-      </MemoryRouter>
+      <DeploymentOverview
+        allDevices={[]}
+        deployment={deployment}
+        deviceCount={0}
+        duration={duration}
+        onAbortClick={jest.fn}
+        onRetryClick={jest.fn}
+        viewLog={jest.fn}
+      />
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();

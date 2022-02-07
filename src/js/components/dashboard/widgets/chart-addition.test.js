@@ -1,9 +1,10 @@
 import React from 'react';
-import { act, render, screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ChartAdditionWidget from './chart-addition';
+
 import { defaultState, undefineds } from '../../../../../tests/mockData';
-import { selectMaterialUiSelectOption } from '../../../../../tests/setupTests';
+import { render, selectMaterialUiSelectOption } from '../../../../../tests/setupTests';
+import ChartAdditionWidget from './chart-addition';
 
 describe('ChartAdditionWidget Component', () => {
   it('renders correctly', async () => {

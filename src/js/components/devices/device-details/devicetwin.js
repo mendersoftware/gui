@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import Time from 'react-time';
 
-import { Button } from '@material-ui/core';
-import { CheckCircleOutlined, CloudUploadOutlined as CloudUpload, Refresh as RefreshIcon } from '@material-ui/icons';
-import { useTheme, makeStyles } from '@material-ui/core/styles';
+import { Button } from '@mui/material';
+import { CheckCircleOutlined, CloudUploadOutlined as CloudUpload, Refresh as RefreshIcon } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import Editor, { DiffEditor, loader } from '@monaco-editor/react';
 
@@ -14,11 +14,12 @@ import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import { deepCompare, isEmpty } from '../../../helpers';
 import InfoHint from '../../common/info-hint';
 import Loader from '../../common/loader';
+import Time from '../../common/time';
 import DeviceDataCollapse from './devicedatacollapse';
 
 loader.config({ paths: { vs: '/ui/vs' } });
 
-const diffStatusStyle = makeStyles(theme => ({
+const diffStatusStyle = makeStyles()(theme => ({
   root: {
     minHeight: 75,
     display: 'grid',
@@ -31,13 +32,13 @@ const diffStatusStyle = makeStyles(theme => ({
 }));
 
 const LastSyncNote = ({ updateTime }) => (
-  <div className="text-muted slightly-smaller" style={{ alignContent: 'flex-end', marginBottom: -10 }}>
-    Last synced: <Time value={updateTime} format="YYYY-MM-DD HH:mm" />
+  <div className="muted slightly-smaller" style={{ alignContent: 'flex-end', marginBottom: -10 }}>
+    Last synced: <Time value={updateTime} />
   </div>
 );
 
 const NoDiffStatus = ({ updateTime }) => {
-  const classes = diffStatusStyle();
+  const { classes } = diffStatusStyle();
   return (
     <div className={['padding', classes.root]}>
       <CheckCircleOutlined className="green" />

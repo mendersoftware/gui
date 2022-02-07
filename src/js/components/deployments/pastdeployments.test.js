@@ -1,10 +1,13 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import Past from './pastdeployments';
+import { LocalizationProvider } from '@mui/lab';
+import AdapterMoment from '@mui/lab/AdapterMoment';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import Past from './pastdeployments';
 
 const mockStore = configureStore([thunk]);
 
@@ -28,9 +31,11 @@ describe('PastDeployments Component', () => {
 
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <Provider store={store}>
-        <Past past={[]} groups={[]} refreshPast={() => {}} refreshDeployments={jest.fn} />
-      </Provider>
+      <LocalizationProvider dateAdapter={AdapterMoment}>
+        <Provider store={store}>
+          <Past past={[]} groups={[]} refreshPast={() => {}} refreshDeployments={jest.fn} />
+        </Provider>
+      </LocalizationProvider>
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();

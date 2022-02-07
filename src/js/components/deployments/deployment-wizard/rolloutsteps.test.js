@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 import RolloutSteps from './rolloutsteps';
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
 
 describe('RolloutSteps Component', () => {
   it('renders correctly', async () => {

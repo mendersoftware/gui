@@ -1,10 +1,10 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router-dom';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
+
 import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
 import FileTransfer from './filetransfer';
 
 const mockStore = configureStore([thunk]);
@@ -17,11 +17,9 @@ describe('FileTransfer Component', () => {
 
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <FileTransfer item={{ ...defaultState.organization.auditlog.events[2], meta: { path: ['/dev/null'] } }} />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <FileTransfer item={{ ...defaultState.organization.auditlog.events[2], meta: { path: ['/dev/null'] } }} />
+      </Provider>
     );
 
     const view = baseElement.firstChild.firstChild;

@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import UserForm from './userform';
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import UserForm from './userform';
 
 describe('UserForm Component', () => {
   it('renders correctly', async () => {

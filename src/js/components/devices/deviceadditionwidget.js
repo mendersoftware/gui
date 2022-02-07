@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
-import { Button, ButtonGroup, Menu, MenuItem } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
-import { ArrowDropDown as ArrowDropDownIcon, Launch as LaunchIcon } from '@material-ui/icons';
+import { Button, ButtonGroup, Menu, MenuItem } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { ArrowDropDown as ArrowDropDownIcon, Launch as LaunchIcon } from '@mui/icons-material';
 
-const buttonStyle = { border: 'none', textTransform: 'none' };
+const buttonStyle = { textTransform: 'none' };
 
 export const DeviceAdditionWidget = ({ docsVersion, onConnectClick, onPreauthClick }) => {
   const theme = useTheme();
@@ -30,10 +30,10 @@ export const DeviceAdditionWidget = ({ docsVersion, onConnectClick, onPreauthCli
   return (
     <div className="flexbox column center-aligned padding-small device-addition-widget">
       <ButtonGroup className="muted">
-        <Button onClick={options[selectedIndex].action} style={buttonStyle}>
+        <Button onClick={options[selectedIndex].action} variant="text" style={buttonStyle}>
           {options[selectedIndex].title}
         </Button>
-        <Button size="small" onClick={handleToggle} style={buttonStyle}>
+        <Button size="small" onClick={handleToggle} variant="text" style={buttonStyle}>
           <ArrowDropDownIcon />
         </Button>
       </ButtonGroup>

@@ -54,7 +54,7 @@ export const PasswordReset = ({
           </Form>
         </>
       )}
-      <div className="margin-top-large text-muted">
+      <div className="margin-top-large muted">
         <div className="flexbox centered">
           <Link style={{ marginLeft: '4px' }} to="/login">
             Back to the login page

@@ -1,6 +1,6 @@
 import React from 'react';
 import pluralize from 'pluralize';
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@mui/material/styles';
 
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { colors } from '../../themes/Mender';

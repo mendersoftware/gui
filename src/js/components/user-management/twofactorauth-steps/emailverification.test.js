@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import EmailVerification from './emailverification';
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import EmailVerification from './emailverification';
 
 describe('EmailVerification Component', () => {
   it('renders correctly', async () => {

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 // material ui
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
-import { InfoOutlined as InfoIcon } from '@material-ui/icons';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { InfoOutlined as InfoIcon } from '@mui/icons-material';
 
 import FileUpload from '../common/forms/fileupload';
 import KeyValueEditor from '../common/forms/keyvalueeditor';

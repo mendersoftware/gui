@@ -6,15 +6,15 @@ import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
 // material ui
-import { Button, Divider, Drawer, IconButton, Tooltip } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
+import { Button, Divider, Drawer, IconButton, Tooltip } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import {
   Block as BlockIcon,
   CheckCircleOutline as CheckCircleOutlineIcon,
   Close as CloseIcon,
   Link as LinkIcon,
   Refresh as RefreshIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
@@ -32,6 +32,7 @@ import Confirm from '../common/confirm';
 import DeviceList from './deployment-report/devicelist';
 import DeploymentStatus from './deployment-report/deploymentstatus';
 import DeploymentPhaseNotification from './deployment-report/deploymentphasenotification';
+import LinedHeader from '../common/lined-header';
 
 momentDurationFormatSetup(moment);
 
@@ -163,7 +164,7 @@ export const DeploymentReport = props => {
         <div className="flexbox">
           <h3>{`Deployment ${type !== DEPLOYMENT_STATES.scheduled ? 'details' : 'report'}`}</h3>
           <h4 className="margin-left-small margin-right-small">ID: {deployment.id}</h4>
-          <IconButton onClick={copyLinkToClipboard} style={{ alignSelf: 'center' }}>
+          <IconButton onClick={copyLinkToClipboard} style={{ alignSelf: 'center' }} size="large">
             <LinkIcon />
           </IconButton>
         </div>
@@ -185,7 +186,7 @@ export const DeploymentReport = props => {
               <h3>Finished</h3>
             </div>
           )}
-          <IconButton onClick={onClose} aria-label="close">
+          <IconButton onClick={onClose} aria-label="close" size="large">
             <CloseIcon />
           </IconButton>
         </div>
@@ -196,15 +197,11 @@ export const DeploymentReport = props => {
         <DeploymentOverview creator={creator} deployment={deployment} onScheduleClick={scrollToBottom} />
         {isConfigurationDeployment && (
           <>
-            <h4 className="dashboard-header">
-              <span>Configuration</span>
-            </h4>
+            <LinedHeader heading="Configuration" />
             <ConfigurationObject className="margin-top-small margin-bottom-large" config={config} />
           </>
         )}
-        <h4 className="dashboard-header">
-          <span>Status</span>
-        </h4>
+        <LinedHeader heading="Status" />
         <DeploymentStatus deployment={deployment} />
         <DeviceList {...props} viewLog={viewLog} />
         <RolloutSchedule deployment={deployment} onUpdateControlChange={onUpdateControlChange} onAbort={abort} innerRef={rolloutSchedule} />

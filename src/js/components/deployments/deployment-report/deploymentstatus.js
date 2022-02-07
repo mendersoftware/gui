@@ -35,17 +35,17 @@ export const DeploymentStatus = ({ className = '', deployment = {} }) => {
   return (
     <div className={`progressStatus flexbox space-between centered margin-bottom ${className}`}>
       <div className="flexbox column">
-        <div className="text-muted">Status</div>
-        <h3 className="margin-bottom-none text-muted">{statusDescription}</h3>
+        <div className="muted">Status</div>
+        <h3 className="margin-bottom-none muted">{statusDescription}</h3>
       </div>
       <div className="flexbox space-between align-right" style={{ minWidth: '40%' }}>
         <div className="flexbox column">
-          <div className="text-muted margin-bottom-small"># devices</div>
+          <div className="muted margin-bottom-small"># devices</div>
           <div>{statsBasedDeviceCount}</div>
         </div>
         {Object.entries(phasesWithStats).map(([key, phase]) => (
           <div key={key} className={`flexbox column ${phaseStats[key] ? '' : 'disabled'}`}>
-            <div className="text-muted margin-bottom-small">{phase}</div>
+            <div className="muted margin-bottom-small">{phase}</div>
             <div className="status">{phaseStats[key].toLocaleString()}</div>
           </div>
         ))}

@@ -1,8 +1,10 @@
 import React from 'react';
-import { act, render, screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import DeviceAdditionWidget from './deviceadditionwidget';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import DeviceAdditionWidget from './deviceadditionwidget';
 
 describe('DeviceAdditionWidget Component', () => {
   it('renders correctly', async () => {

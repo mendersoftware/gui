@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import DeviceStatus from './device-status';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import DeviceStatus from './device-status';
 
 describe('DeviceStatus Component', () => {
   it('renders correctly', async () => {

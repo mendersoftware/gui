@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import RemoveGroup from './remove-group';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import RemoveGroup from './remove-group';
 
 describe('RemoveGroup Component', () => {
   it('renders correctly', async () => {

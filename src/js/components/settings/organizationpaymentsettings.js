@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
-import { Error as ErrorIcon } from '@material-ui/icons';
+import { Error as ErrorIcon } from '@mui/icons-material';
 
 import { setSnackbar } from '../../actions/appActions';
 import { confirmCardUpdate, getCurrentCard, startCardUpdate } from '../../actions/organizationActions';

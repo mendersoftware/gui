@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import FilterItem from './filteritem';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import FilterItem from './filteritem';
 
 describe('FilterItem Component', () => {
   it('renders correctly', async () => {

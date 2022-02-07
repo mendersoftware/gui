@@ -1,3 +1,10 @@
+import { listItemClasses } from '@mui/material/ListItem';
+import { formLabelClasses } from '@mui/material/FormLabel';
+import { accordionClasses } from '@mui/material/Accordion';
+import { accordionSummaryClasses } from '@mui/material/AccordionSummary';
+
+const secondaryText = 'rgba(0, 0, 0, 0.54)';
+
 /**
  * @param qualitative if set is an ordered set of distinct colors availabe for programatic use.
  * @example Chart dataset colors
@@ -10,6 +17,7 @@ export const palette = {
     main: '#5d0f43'
   },
   error: {
+    light: 'rgba(93, 15, 67, 0.075)',
     main: '#ab1000',
     dark: '#770b00' // hardcode same as darken to match less variables
   },
@@ -21,8 +29,8 @@ export const palette = {
      * color matched from variables.less @text of #404041 but by opacity, same as main
      */
     primary: 'rgba(10, 10, 11, 0.78)',
-    secondary: '#cd9dbd',
-    hint: 'rgba(0, 0, 0, 0.54)'
+    secondary: secondaryText,
+    hint: secondaryText
   },
   brand: {
     mender: '#015969'
@@ -89,7 +97,10 @@ export const colors = {
    * @deprecated use theme.palette.grey[400]
    */
   expansionBackground: '#f7f7f7',
-  disabledColor: 'rgba(0, 0, 0, 0.54)',
+  /**
+   * @deprecated use theme.palette.text.secondary
+   */
+  disabledColor: secondaryText,
   /**
    * @deprecated use theme {@link palette.error.main}
    */
@@ -102,155 +113,221 @@ export const colors = {
   green: '#009e73'
 };
 
+const round = value => Math.round(value * 1e4) / 1e4;
+const htmlFontSize = 16;
+const fontSize = 13;
+const coef = fontSize / 14;
+const pxToRem = size => `${round((size / htmlFontSize) * coef)}rem`;
+
 export const typography = {
-  fontFamily: 'Lato, sans-serif'
+  fontFamily: 'Lato, sans-serif',
+  fontSize, // will be transformed to rem automatically by mui
+  body1: {
+    lineHeight: 1.5
+  },
+  pxToRem
+};
+
+const componentProps = {
+  MuiFormControl: {
+    defaultProps: {
+      variant: 'standard'
+    }
+  },
+  MuiTextField: {
+    defaultProps: {
+      variant: 'standard'
+    }
+  },
+  MuiSelect: {
+    defaultProps: {
+      autoWidth: true,
+      variant: 'standard'
+    }
+  }
 };
 
 export const overrides = {
-  MuiCssBaseline: {
-    '@global': {
-      body: {
-        fontSize: '0.8125rem' // 13px as from variables.less
+  ...componentProps,
+  MuiCheckbox: {
+    styleOverrides: {
+      root: {
+        color: palette.text.primary
       }
     }
   },
   MuiSnackbarContent: {
-    action: {
-      color: '#9E6F8E'
+    styleOverrides: {
+      action: {
+        color: '#9E6F8E'
+      }
     }
   },
   MuiTab: {
-    root: {
-      textTransform: 'none'
+    styleOverrides: {
+      root: {
+        textTransform: 'none'
+      }
     }
   },
   MuiAccordion: {
-    root: {
-      border: 'none',
-      boxShadow: 'none',
-      '&:before': {
-        display: 'none'
-      },
-      padding: 0,
-      '$expanded': {
-        margin: 'auto'
+    styleOverrides: {
+      root: {
+        border: 'none',
+        boxShadow: 'none',
+        '&:before': {
+          display: 'none'
+        },
+        padding: 0,
+        [`&.${accordionClasses.expanded}`]: {
+          backgroundColor: colors.expansionBackground,
+          margin: 'auto'
+        }
       }
     }
   },
   MuiAccordionSummary: {
-    root: {
-      marginBottom: 0,
-      height: 48,
-      '&$expanded': {
+    styleOverrides: {
+      root: {
+        marginBottom: 0,
         height: 48,
-        minHeight: 48
-      }
-    },
-    content: {
-      alignItems: 'center',
-      '&$expanded': {
-        margin: 0
+        [`&.${accordionSummaryClasses.expanded}`]: {
+          height: 48,
+          minHeight: 48
+        }
       },
-      '& > :last-child': {
-        paddingRight: 12
+      content: {
+        alignItems: 'center',
+        [`&.${accordionSummaryClasses.expanded}`]: {
+          margin: 0
+        },
+        '& > :last-child': {
+          paddingRight: 12
+        }
       }
     }
   },
   MuiAccordionDetails: {
-    root: {
-      flexDirection: 'column'
+    styleOverrides: {
+      root: {
+        flexDirection: 'column'
+      }
     }
   },
   MuiInput: {
-    underline: {
-      '&:before': {
-        borderBottom: '1px solid rgb(224, 224, 224)'
-      },
-      '&:hover:not($disabled):before': {
-        borderBottom: `2px solid ${colors.linkgreen} !important`
-      },
-      '&:after': {
-        borderBottom: `2px solid ${colors.linkgreen}`
+    styleOverrides: {
+      underline: {
+        '&:before': {
+          borderBottom: '1px solid rgb(224, 224, 224)'
+        },
+        '&:hover:not($disabled):before': {
+          borderBottom: `2px solid ${colors.linkgreen} !important`
+        },
+        '&:after': {
+          borderBottom: `2px solid ${colors.linkgreen}`
+        }
       }
     }
   },
   MuiFormLabel: {
-    root: {
-      color: palette.text.hint,
-      '&$focused': {
-        color: colors.linkgreen
+    styleOverrides: {
+      root: {
+        color: palette.text.hint,
+        [`&.${formLabelClasses.focused}`]: {
+          color: colors.linkgreen
+        }
       }
     }
   },
   MuiFormControl: {
-    root: {
-      marginTop: '18px',
-      minWidth: '240px'
+    ...componentProps.MuiFormControl,
+    styleOverrides: {
+      root: {
+        marginTop: '18px',
+        minWidth: '240px'
+      }
     }
   },
   MuiFormControlLabel: {
-    root: {
-      marginTop: '18px'
+    styleOverrides: {
+      root: {
+        marginTop: '18px'
+      }
     }
   },
   MuiIconButton: {
-    root: {
-      color: palette.text.hint,
-      fontSize: '1.2rem'
+    styleOverrides: {
+      root: {
+        color: palette.text.hint,
+        fontSize: '1.2rem'
+      }
     }
   },
   MuiButton: {
-    root: {
-      borderRadius: 2,
-      '&:hover': {
-        colors: palette.primary.main
+    styleOverrides: {
+      root: {
+        borderRadius: 2,
+        fontSize: 14,
+        '&:hover': {
+          colors: palette.primary.main
+        }
+      },
+      text: {
+        padding: '10px 15px'
       }
-    },
-    text: {
-      padding: '10px 15px'
     }
   },
   MuiSvgIcon: {
-    root: {
-      iconButton: {
-        marginRight: '8px'
+    styleOverrides: {
+      root: {
+        iconButton: {
+          marginRight: '8px'
+        }
       }
     }
   },
   MuiListItem: {
-    root: {
-      '&$disabled': {
-        opacity: 1
-      },
-      paddingTop: 11,
-      paddingBottom: 11
+    styleOverrides: {
+      root: {
+        paddingTop: 11,
+        paddingBottom: 11,
+        [`&.${listItemClasses.disabled}`]: {
+          opacity: 1
+        }
+      }
     }
   },
   MuiListItemText: {
-    root: {
-      marginTop: 0,
-      marginBottom: 0
+    styleOverrides: {
+      root: {
+        marginTop: 0,
+        marginBottom: 0
+      }
     }
   },
   MuiTableCell: {
-    root: {
-      padding: '0px 24px 0px 24px',
-      height: '48px'
-    },
-    head: {
-      height: '56px',
-      lineHeight: '1.15rem'
-    },
-    paddingCheckbox: {
-      padding: '0 0 0 6px',
-      width: '54px'
+    styleOverrides: {
+      root: {
+        padding: '0px 24px 0px 24px',
+        height: '48px'
+      },
+      head: {
+        height: '56px',
+        lineHeight: '1.15rem'
+      },
+      paddingCheckbox: {
+        padding: '0 0 0 6px',
+        width: '54px'
+      }
     }
   },
   MuiDrawer: {
-    paper: {
-      minWidth: '40vw',
-      maxWidth: '80vw',
-      padding: '30px 75px 5%'
+    styleOverrides: {
+      paper: {
+        minWidth: '40vw',
+        maxWidth: '80vw',
+        padding: '30px 75px 5%'
+      }
     }
   }
 };

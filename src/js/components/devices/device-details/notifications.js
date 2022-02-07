@@ -1,10 +1,12 @@
 import React from 'react';
-import Time from 'react-time';
-
-import { ArrowDropDownCircleOutlined as ScrollDownIcon, CheckCircle as CheckIcon, Error as ErrorIcon, Help as HelpIcon } from '@material-ui/icons';
 import pluralize from 'pluralize';
-import { useTheme } from '@material-ui/core/styles';
+
+import { ArrowDropDownCircleOutlined as ScrollDownIcon, CheckCircle as CheckIcon, Error as ErrorIcon, Help as HelpIcon } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
+
 import { DEVICE_ONLINE_CUTOFF } from '../../../constants/deviceConstants';
+import Time from '../../common/time';
 
 const errorIcon = <ErrorIcon className="red" />;
 const successIcon = <CheckIcon className="green" />;
@@ -24,18 +26,38 @@ export const severityMap = {
   [monitoringSeverities.UNKNOWN]: { className: '', icon: questionIcon }
 };
 
+const useStyles = makeStyles()(theme => ({
+  deviceDetailNotification: {
+    marginBottom: theme.spacing(),
+    padding: theme.spacing(1.5, 'inherit'),
+    '&.red, &.green': {
+      color: theme.palette.text.primary
+    },
+    '&.bordered': {
+      border: `1px solid ${theme.palette.grey[500]}`,
+      background: `fade(${theme.palette.grey[600]}, 15%)`,
+      '&.red': {
+        borderColor: theme.palette.error.main,
+        background: theme.palette.error.light
+      }
+    },
+    '> span': {
+      marginRight: theme.spacing(2)
+    }
+  }
+}));
+
 export const BaseNotification = ({ bordered = true, className = '', children, severity, onClick }) => {
-  const theme = useTheme();
+  const { classes } = useStyles();
   const mappedSeverity = severityMap[severity] ?? severityMap.UNKNOWN;
   return (
     <div
-      className={`flexbox center-aligned padding-small device-detail-notification ${bordered ? 'bordered' : ''} ${mappedSeverity.className} ${className} ${
-        onClick ? 'clickable' : ''
-      }`}
-      style={{ marginBottom: theme.spacing(), padding: theme.spacing(1.5, 'inherit') }}
+      className={`flexbox center-aligned padding-small ${classes.deviceDetailNotification} ${bordered ? 'bordered' : ''} ${
+        mappedSeverity.className
+      } ${className} ${onClick ? 'clickable' : ''}`}
       onClick={onClick}
     >
-      <span style={{ marginRight: theme.spacing(2) }}>{mappedSeverity.icon}</span>
+      <span>{mappedSeverity.icon}</span>
       <div className="flexbox center-aligned">{children}</div>
     </div>
   );
@@ -46,7 +68,7 @@ export const LastConnection = ({ updated_ts }) => {
 
   return (
     <BaseNotification severity={monitoringSeverities.CRITICAL}>
-      Device has not connected to the server since <Time value={updated_ts} format="YYYY-MM-DD HH:mm" style={{ margin: theme.spacing('inherit', 1) }} />
+      Device has not connected to the server since <Time value={updated_ts} style={{ margin: theme.spacing('inherit', 1) }} />
     </BaseNotification>
   );
 };
@@ -73,7 +95,7 @@ export const NoAlertsHeaderNotification = () => (
 
 export const DeviceOfflineHeaderNotification = () => (
   <BaseNotification className="column-data" bordered={false} severity={monitoringSeverities.CRITICAL}>
-    <div className="key text-muted margin-right-small">
+    <div className="key muted margin-right-small">
       <b>Device offline</b>
     </div>
     Last check-in over {DEVICE_ONLINE_CUTOFF.interval} {pluralize(DEVICE_ONLINE_CUTOFF.intervalName, DEVICE_ONLINE_CUTOFF.interval)} ago

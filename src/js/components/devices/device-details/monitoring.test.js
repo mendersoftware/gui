@@ -1,8 +1,9 @@
 import React from 'react';
 import { prettyDOM } from '@testing-library/dom';
-import { render } from '@testing-library/react';
-import DeviceMonitoring, { DeviceMonitorsMissingNote } from './monitoring';
+
 import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import DeviceMonitoring, { DeviceMonitorsMissingNote } from './monitoring';
 
 describe('tiny components', () => {
   [DeviceMonitorsMissingNote].forEach(async Component => {

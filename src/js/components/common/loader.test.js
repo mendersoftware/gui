@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import Loader from './loader';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import Loader from './loader';
 
 describe('Loader Component', () => {
   it('renders correctly', async () => {

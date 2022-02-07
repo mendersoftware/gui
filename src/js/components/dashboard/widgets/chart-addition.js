@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import { Button, FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
-import { Add as AddIcon } from '@material-ui/icons';
+import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { Add as AddIcon } from '@mui/icons-material';
 
 import { defaultReports } from '../software-distribution';
 

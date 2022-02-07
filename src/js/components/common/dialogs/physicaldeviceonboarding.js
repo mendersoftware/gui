@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { TextField } from '@material-ui/core';
-import { Help as HelpIcon, InfoOutlined as InfoIcon } from '@material-ui/icons';
-import { Autocomplete, createFilterOptions } from '@material-ui/lab';
+import { TextField, Autocomplete } from '@mui/material';
+import { Help as HelpIcon, InfoOutlined as InfoIcon } from '@mui/icons-material';
+import { createFilterOptions } from '@mui/material/useAutocomplete';
 
 import CopyCode from '../copy-code';
 import { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType } from '../../../actions/onboardingActions';

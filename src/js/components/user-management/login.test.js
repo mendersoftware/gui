@@ -1,12 +1,12 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Login, { Login as LoginComponent } from './login';
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
 
 const mockStore = configureStore([thunk]);
 
@@ -27,11 +27,9 @@ describe('Login Component', () => {
 
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <Login location={{ state: { from: '' } }} />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <Login location={{ state: { from: '' } }} />
+      </Provider>
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
@@ -40,11 +38,7 @@ describe('Login Component', () => {
 
   it('works as intended', async () => {
     const submitCheck = jest.fn().mockResolvedValue();
-    const ui = (
-      <MemoryRouter>
-        <LoginComponent isHosted={true} currentUser={{}} loginUser={submitCheck} logoutUser={jest.fn} setSnackbar={jest.fn} />
-      </MemoryRouter>
-    );
+    const ui = <LoginComponent isHosted={true} currentUser={{}} loginUser={submitCheck} logoutUser={jest.fn} setSnackbar={jest.fn} />;
     const { rerender } = render(ui);
 
     userEvent.type(screen.queryByLabelText(/your email/i), 'something@example.com');

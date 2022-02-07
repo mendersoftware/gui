@@ -1,11 +1,12 @@
 import React from 'react';
 import { prettyDOM } from '@testing-library/dom';
-import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import DeviceList from './devicelist';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import DeviceList from './devicelist';
 
 const mockStore = configureStore([thunk]);
 

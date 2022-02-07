@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import RolloutSchedule from './rolloutschedule';
+
 import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import RolloutSchedule from './rolloutschedule';
 
 describe('RolloutSchedule Component', () => {
   it('renders correctly', async () => {

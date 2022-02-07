@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import pluralize from 'pluralize';
 
 // material ui
-import { Button } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
+import { Button } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 import { deleteAuthset, updateDeviceAuth } from '../../../../actions/deviceActions';
 import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';

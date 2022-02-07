@@ -7,7 +7,7 @@ import {
   ArrowDownward as ArrowDownwardIcon,
   ArrowForward as ArrowForwardIcon,
   ArrowBack as ArrowBackIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 import { setShowDismissOnboardingTipsDialog } from '../../actions/onboardingActions';
 
@@ -93,7 +93,6 @@ const BaseOnboardingTipComponent = ({
       disableHoverListener
       disableTouchListener
       id={id}
-      interactive
       onClose={hide}
       open={open}
       placement={orientation.placement}

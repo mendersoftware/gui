@@ -12,7 +12,7 @@ import {
   InputLabel,
   MenuItem,
   Select
-} from '@material-ui/core';
+} from '@mui/material';
 
 import Form from '../common/forms/form';
 import FormCheckbox from '../common/forms/formcheckbox';

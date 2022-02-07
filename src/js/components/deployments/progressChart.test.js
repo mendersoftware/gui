@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import ProgressChart from './progressChart';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import ProgressChart from './progressChart';
 
 describe('ProgressChart Component', () => {
   it('renders correctly', async () => {
