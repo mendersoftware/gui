@@ -93,7 +93,6 @@ export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, num
           {phase.batch_size && phase.batch_size < 100 ? (
             <Input
               value={phase.batch_size}
-              margin="dense"
               onChange={event => updateBatchSize(event.target.value, index)}
               endAdornment={
                 <InputAdornment className={deviceCount < 1 ? 'warning' : ''} position="end">
@@ -128,7 +127,6 @@ export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, num
             <div>
               <Input
                 value={phase.delay}
-                margin="dense"
                 onChange={event => updateDelay(event.target.value, index)}
                 inputProps={{
                   step: 1,

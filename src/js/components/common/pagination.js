@@ -59,8 +59,7 @@ export const TablePaginationActions = ({ count, page = 0, onPageChange, rowsPerP
           value={pageNo}
           onChange={onChange}
           onKeyUp={onKeyPress}
-          margin="dense"
-          style={{ minWidth: 30, maxWidth: `${`${pageNo}`.length + 2}ch`, marginRight: 10 }}
+          style={{ minWidth: 30, maxWidth: `${`${pageNo}`.length + 2}ch`, marginRight: 10, marginTop: 5 }}
         />
         {`/ ${pages}`}
       </div>

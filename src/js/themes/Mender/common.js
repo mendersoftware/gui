@@ -17,6 +17,7 @@ export const palette = {
     main: '#5d0f43'
   },
   error: {
+    light: 'rgba(93, 15, 67, 0.075)',
     main: '#ab1000',
     dark: '#770b00' // hardcode same as darken to match less variables
   },

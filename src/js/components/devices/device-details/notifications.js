@@ -38,7 +38,7 @@ const useStyles = makeStyles()(theme => ({
       background: `fade(${theme.palette.grey[600]}, 15%)`,
       '&.red': {
         borderColor: theme.palette.error.main,
-        background: theme.palette.error.dark
+        background: theme.palette.error.light
       }
     },
     '> span': {
