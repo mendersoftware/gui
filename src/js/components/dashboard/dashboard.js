@@ -33,7 +33,7 @@ export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceL
       clearTimeout(timeoutID);
     }
     timeoutID = setTimeout(() => {
-      const notification = getOnboardingComponentFor(onboardingSteps.ONBOARDING_START, onboardingState);
+      const notification = getOnboardingComponentFor(onboardingSteps.ONBOARDING_START, onboardingState, { setSnackbar });
       !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
     }, 400);
   }, [currentUser, JSON.stringify(onboardingState)]);

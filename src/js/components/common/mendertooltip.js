@@ -34,8 +34,11 @@ export const MenderTooltipClickable = ({ children, onboarding, startOpen = false
         PopperProps: {
           disablePortal: true,
           popperOptions: {
-            positionFixed: true,
-            modifiers: { preventOverflow: { boundariesElement: 'window' } }
+            strategy: 'fixed',
+            modifiers: [
+              { name: 'flip', enabled: false },
+              { name: 'preventOverflow', enabled: true, options: { boundary: window, altBoundary: false } }
+            ]
           }
         }
       }

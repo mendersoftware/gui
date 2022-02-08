@@ -6,12 +6,11 @@ import { Link } from 'react-router-dom';
 import { IconButton } from '@mui/material';
 import { ArrowUpward as ArrowUpwardIcon, Close as CloseIcon, Schedule as HelpIcon } from '@mui/icons-material';
 
-import { setSnackbar } from '../../actions/appActions';
 import { setShowDismissOnboardingTipsDialog } from '../../actions/onboardingActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 
-const WelcomeSnackTipComponent = ({ progress, setSnackbar }) => {
+export const WelcomeSnackTip = React.forwardRef(({ progress, setSnackbar }, ref) => {
   const onClose = () => setSnackbar('');
   const messages = {
     1: (
@@ -28,7 +27,7 @@ const WelcomeSnackTipComponent = ({ progress, setSnackbar }) => {
     4: <div>Success!</div>
   };
   return (
-    <div className="onboard-snack">
+    <div className="onboard-snack" ref={ref}>
       <IconButton onClick={onClose} size="large">
         <CloseIcon fontSize="small" />
       </IconButton>
@@ -53,13 +52,8 @@ const WelcomeSnackTipComponent = ({ progress, setSnackbar }) => {
       </div>
     </div>
   );
-};
-
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ setSnackbar }, dispatch);
-};
-
-export const WelcomeSnackTip = connect(null, mapDispatchToProps)(WelcomeSnackTipComponent);
+});
+WelcomeSnackTip.displayName = 'WelcomeSnackTip';
 
 const DevicePendingTipComponent = ({ setShowConnectingDialog, setShowDismissOnboardingTipsDialog }) => (
   <div style={{ display: 'grid', placeItems: 'center' }}>

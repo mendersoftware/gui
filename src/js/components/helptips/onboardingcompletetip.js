@@ -12,6 +12,7 @@ import { MenderTooltipClickable } from '../common/mendertooltip';
 import DeviceConstants from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getDemoDeviceAddress, getDocsVersion } from '../../selectors';
+import { CompletionButton } from './deploymentcompletetip';
 
 export const OnboardingCompleteTip = ({ anchor, docsVersion, getDeviceById, getDevicesByStatus, setOnboardingComplete, url }) => {
   useEffect(() => {
@@ -40,12 +41,12 @@ export const OnboardingCompleteTip = ({ anchor, docsVersion, getDeviceById, getD
               {!url ? (
                 <Loader show={true} />
               ) : (
-                <Button
+                <CompletionButton
                   className="button"
-                  variant="contained"
+                  variant="text"
                   href={`${url}/index.html?source=${encodeURIComponent(window.location)}`}
                   target="_blank"
-                >{`Go to ${url}`}</Button>
+                >{`Go to ${url}`}</CompletionButton>
               )}
             </div>
             you should now see &quot;Hello world&quot; in place of the webpage you saw previously. If you continue to see the webpage you saw previously you

@@ -121,7 +121,7 @@ export const Authorized = props => {
         onDeviceStateSelectionChange(DEVICE_STATES.accepted);
       }
       setTimeout(() => {
-        const notification = getOnboardingComponentFor(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION, onboardingState);
+        const notification = getOnboardingComponentFor(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION, onboardingState, { setSnackbar });
         !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
       }, 400);
     }

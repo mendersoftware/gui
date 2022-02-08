@@ -95,7 +95,9 @@ exports[`BaseOnboardingTip Component renders correctly 1`] = `
 <body>
   <div>
     <div
+      aria-labelledby="test"
       class="onboard-tip"
+      data-mui-internal-clone-element="true"
       style="left: -14px; top: 1px; overflow: initial;"
     >
       <div
@@ -121,7 +123,7 @@ exports[`BaseOnboardingTip Component renders correctly 1`] = `
       data-popper-reference-hidden=""
       id="test"
       role="tooltip"
-      style="position: absolute; top: 0px; left: 0px; margin: 0px; transform: translate(0px, 0px);"
+      style="position: fixed; top: 0px; left: 0px; margin: 0px; transform: translate(0px, 0px);"
     >
       <div
         class="emotion-3 MuiTooltip-tooltip MuiTooltip-tooltipPlacementBottom emotion-4"
