@@ -16,12 +16,13 @@ export const SharedSnackbar = ({ setSnackbar, snackbar }) => {
     setSnackbar('');
   };
 
-  const { maxWidth, onClick, ...snackProps } = snackbar;
+  const { maxWidth, onClick = handleActionClick, ...snackProps } = snackbar;
   return (
     <Snackbar
       {...snackProps}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       style={{ maxWidth, height: 'auto', lineHeight: '28px', padding: 24, whiteSpace: 'pre-line' }}
-      onClick={onClick ? onClick : handleActionClick}
+      onClick={onClick}
       onClose={onCloseSnackbar}
     />
   );
