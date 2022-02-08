@@ -113,6 +113,8 @@ test:unit:
       cobertura: coverage/cobertura-coverage.xml
       junit: junit.xml
     when: always
+  tags:
+    - mender-qa-slave-highcpu
 
 test:docs-links:
   stage: test
