@@ -7,10 +7,10 @@ import Deployments from '../components/deployments/deployments';
 import Devices from '../components/devices/device-groups';
 import Help from '../components/help/help';
 import Settings from '../components/settings/settings';
-import Login from '../components/user-management/login';
-import Password from '../components/user-management/password';
-import PasswordReset from '../components/user-management/passwordreset';
-import Signup from '../components/user-management/signup';
+import Login from '../components/login/login';
+import Password from '../components/login/password';
+import PasswordReset from '../components/login/passwordreset';
+import Signup from '../components/login/signup';
 import AuditLogs from '../components/auditlogs/auditlogs';
 import { DEVICE_STATES } from '../constants/deviceConstants';
 

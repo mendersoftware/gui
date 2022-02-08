@@ -11,11 +11,11 @@ import { Elements } from '@stripe/react-stripe-js';
 import { versionCompare } from '../../helpers';
 import { getCurrentUser, getIsEnterprise, getTenantCapabilities, getUserRoles } from '../../selectors';
 import LeftNav from '../common/left-nav';
-import SelfUserManagement from '../user-management/selfusermanagement';
-import UserManagement from '../user-management/usermanagement';
+import SelfUserManagement from '../settings/user-management/selfusermanagement';
+import UserManagement from '../settings/user-management/usermanagement';
+import Organization from './organization/organization';
 import Global from './global';
 import Integrations from './integrations';
-import Organization from './organization';
 import Roles from './roles';
 import Upgrade from './upgrade';
 

@@ -22,8 +22,8 @@ import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
 import { ExpandDevice } from '../helptips/helptooltips';
 import DeviceList from './devicelist';
-import DeviceQuickActions from './devicequickactions';
-import Filters from './filters';
+import DeviceQuickActions from './widgets/devicequickactions';
+import Filters from './widgets/filters';
 import DeviceIssuesSelection from './widgets/issueselection';
 
 const refreshDeviceLength = 10000;
