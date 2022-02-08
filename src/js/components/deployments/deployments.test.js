@@ -126,13 +126,17 @@ describe('Deployments Component', () => {
     await waitFor(() => rerender(ui));
     const inprogressDeployments = screen.getByText(/in progress now/i).parentElement.parentElement;
     const deployment = within(inprogressDeployments).getAllByText(/test deployment/i)[0].parentElement.parentElement;
-    userEvent.click(within(deployment).getByRole('button', { name: /Abort/i }));
+    act(() => userEvent.click(within(deployment).getByRole('button', { name: /Abort/i })));
     jest.advanceTimersByTime(200);
     await waitFor(() => expect(screen.getByText(/Confirm abort/i)).toBeInTheDocument());
     await act(async () => userEvent.click(document.querySelector('#confirmAbort').nextElementSibling));
+    await waitFor(() => expect(within(deployment).getByRole('button', { name: /View details/i })).toBeVisible());
     await act(async () => userEvent.click(within(deployment).getByRole('button', { name: /View details/i })));
     await waitFor(() => rerender(ui));
-    await waitFor(() => screen.queryByText(/Deployment details/i), { timeout: 2500 });
+    if (!screen.queryByText(/Deployment details/i)) {
+      await act(async () => userEvent.click(within(deployment).getByRole('button', { name: /View details/i })));
+      await waitFor(() => expect(screen.queryByText(/Deployment details/i)).toBeInTheDocument());
+    }
     expect(screen.getByText(/Deployment details/i)).toBeInTheDocument();
     userEvent.click(screen.getByRole('button', { name: /Close/i }));
   }, 30000);
@@ -164,19 +168,17 @@ describe('Deployments Component', () => {
     jest.advanceTimersByTime(1000);
     await waitFor(() => expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument(), { timeout: 3000 });
     const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
-    expect(within(releaseSelect).queryByText(releaseId)).not.toBeInTheDocument();
-    userEvent.click(releaseSelect);
+    expect(within(releaseSelect).queryByDisplayValue(releaseId)).not.toBeInTheDocument();
+    act(() => userEvent.click(releaseSelect));
     fireEvent.keyDown(releaseSelect, { key: 'ArrowDown' });
     fireEvent.keyDown(releaseSelect, { key: 'Enter' });
-    jest.advanceTimersByTime(1000);
-    expect(releaseSelect).toHaveValue(releaseId);
+    jest.advanceTimersByTime(2000);
     const groupSelect = screen.getByPlaceholderText(/Select a device group/i);
-    userEvent.click(groupSelect);
+    act(() => userEvent.click(groupSelect));
     fireEvent.keyDown(groupSelect, { key: 'Enter' });
-
     await waitFor(() => rerender(ui));
     expect(groupSelect).toHaveValue(allDevices);
-    userEvent.click(screen.getByRole('button', { name: 'Next' }));
+    act(() => userEvent.click(screen.getByRole('button', { name: 'Next' })));
     const post = jest.spyOn(GeneralApi, 'post');
     await act(async () => await userEvent.click(screen.getByRole('button', { name: 'Create' })));
     jest.runAllTicks();
@@ -245,35 +247,36 @@ describe('Deployments Component', () => {
     await act(async () => userEvent.click(screen.getByRole('button', { name: /Create a deployment/i })));
     const releaseId = 'release-10';
     jest.runAllTicks();
-    jest.advanceTimersByTime(1000);
+    jest.advanceTimersByTime(2000);
     await waitFor(() => rerender(ui));
+    const groupSelect = screen.getByPlaceholderText(/Select a device group/i);
+    act(() => userEvent.click(groupSelect));
+    fireEvent.keyDown(groupSelect, { key: 'Enter' });
+    expect(groupSelect).toHaveValue(allDevices);
     await waitFor(() => expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument(), { timeout: 3000 });
     const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
-    userEvent.click(releaseSelect);
+    act(() => userEvent.click(releaseSelect));
     fireEvent.keyDown(releaseSelect, { key: 'ArrowDown' });
     fireEvent.keyDown(releaseSelect, { key: 'Enter' });
-    jest.advanceTimersByTime(1000);
-    const groupSelect = screen.getByPlaceholderText(/Select a device group/i);
-    userEvent.click(groupSelect);
-    fireEvent.keyDown(groupSelect, { key: 'Enter' });
+    jest.advanceTimersByTime(2000);
     await waitFor(() => rerender(ui));
-    userEvent.click(screen.getAllByText('Next')[0]);
+    act(() => userEvent.click(screen.getAllByText('Next')[0]));
     await selectMaterialUiSelectOption(screen.getByText(/Single phase: 100%/i), /Custom/i);
     const firstPhase = screen.getByText(/Phase 1/i).parentElement.parentElement.parentElement;
     await selectMaterialUiSelectOption(within(firstPhase).getByText(/hours/i), /minutes/i);
     fireEvent.change(within(firstPhase).getByDisplayValue(20), { target: { value: '50' } });
     fireEvent.change(within(firstPhase).getByDisplayValue('2'), { target: { value: '30' } });
-    userEvent.click(screen.getByText(/Add a phase/i));
+    act(() => userEvent.click(screen.getByText(/Add a phase/i)));
     const secondPhase = screen.getByText(/Phase 2/i).parentElement.parentElement.parentElement;
     await selectMaterialUiSelectOption(within(secondPhase).getByText(/hours/i), /days/i);
     expect(within(secondPhase).getByText(/Phases must have at least 1 device/i)).toBeTruthy();
     fireEvent.change(within(secondPhase).getByDisplayValue(10), { target: { value: '25' } });
     fireEvent.change(within(secondPhase).getByDisplayValue('2'), { target: { value: '25' } });
-    userEvent.click(screen.getAllByText('Next')[0]);
+    act(() => userEvent.click(screen.getAllByText('Next')[0]));
 
-    userEvent.click(screen.getByRole('checkbox', { name: /save as default/i }));
+    act(() => userEvent.click(screen.getByRole('checkbox', { name: /save as default/i })));
     await selectMaterialUiSelectOption(screen.getByText(/don't retry/i), 1);
-    userEvent.click(screen.getAllByText('Next')[0]);
+    act(() => userEvent.click(screen.getAllByText('Next')[0]));
 
     // extra explicit here as the general date mocking seems to be ignored by the moment/ date combination
     jest.setSystemTime(mockDate);

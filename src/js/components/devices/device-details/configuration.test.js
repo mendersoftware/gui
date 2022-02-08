@@ -40,6 +40,7 @@ describe('Configuration Component', () => {
   });
   const reportedTime = '2019-01-01T09:25:01.000Z';
   it('renders correctly', async () => {
+    const setDeviceConfigMock = jest.fn().mockResolvedValue();
     const { baseElement } = render(
       <Provider store={store}>
         <Configuration
@@ -53,11 +54,11 @@ describe('Configuration Component', () => {
             }
           }}
           abortDeployment={jest.fn}
-          applyDeviceConfig={jest.fn}
+          applyDeviceConfig={setDeviceConfigMock}
           getDeviceLog={jest.fn}
           getSingleDeployment={jest.fn}
           saveGlobalSettings={jest.fn}
-          setDeviceConfig={jest.fn}
+          setDeviceConfig={setDeviceConfigMock}
         />
       </Provider>
     );
@@ -135,18 +136,14 @@ describe('Configuration Component', () => {
         />
       </Provider>
     );
+    jest.advanceTimersByTime(2000);
     await waitFor(() => rerender(ui));
-    while (screen.queryByText(/show more/i)) {
-      userEvent.click(screen.getByText(/show more/i));
-      await waitFor(() => rerender(ui));
-    }
+    await waitFor(() => expect(document.querySelector('.loaderContainer')).not.toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/show less/i)).toBeInTheDocument(), { timeout: 3000 });
 
     expect(screen.getByText(/aNumber/i)).toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', { name: /edit/i }));
-    while (screen.queryByRole('button', { name: /edit/i })) {
-      userEvent.click(screen.getByRole('button', { name: /edit/i }));
-      await waitFor(() => rerender(ui));
-    }
+    act(() => userEvent.click(screen.getByRole('button', { name: /edit/i })));
+    await waitFor(() => expect(screen.getByDisplayValue(/something/i)).toBeInTheDocument(), { timeout: 3000 });
     userEvent.type(screen.getByDisplayValue('something'), 'testKey');
     userEvent.type(screen.getByDisplayValue('else'), 'testValue');
     act(() => userEvent.click(screen.getByRole('button', { name: /Cancel/i })));
