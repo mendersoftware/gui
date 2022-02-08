@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { Refresh as RefreshIcon } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, selectDeployment, setDeploymentsState } from '../../actions/deploymentActions';
@@ -11,12 +10,12 @@ import { onboardingSteps } from '../../constants/onboardingConstants';
 import { tryMapDeployments } from '../../helpers';
 import { getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
+import LinedHeader from '../common/lined-header';
 import Loader from '../common/loader';
 import DeploymentsList from './deploymentslist';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
-import useWindowSize from '../../utils/resizehook';
-import LinedHeader from '../common/lined-header';
 
 export const minimalRefreshDeploymentsLength = 2000;
 
@@ -37,7 +36,6 @@ export const Progress = props => {
   const { page: progressPage, perPage: progressPerPage, total: progressCount } = progressState;
   const { page: pendingPage, perPage: pendingPerPage, total: pendingCount } = pendingState;
 
-  const theme = useTheme();
   const [currentRefreshDeploymentLength, setCurrentRefreshDeploymentLength] = useState(refreshDeploymentsLength);
   const [doneLoading, setDoneLoading] = useState(!!(progressCount || pendingCount));
   // eslint-disable-next-line no-unused-vars
@@ -107,7 +105,7 @@ export const Progress = props => {
 
   let onboardingComponent = null;
   if (!onboardingState.complete && inprogressRef.current) {
-    const anchor = { left: inprogressRef.current.offsetWidth - theme.spacing(12), top: inprogressRef.current.offsetTop + inprogressRef.current.offsetHeight };
+    const anchor = { left: inprogressRef.current.offsetWidth - 100, top: inprogressRef.current.offsetTop + inprogressRef.current.offsetHeight };
     onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_INPROGRESS, onboardingState, { anchor });
   }
 

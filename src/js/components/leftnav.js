@@ -5,7 +5,6 @@ import copy from 'copy-to-clipboard';
 
 // material ui
 import { List, ListItem, ListItemText, Tooltip } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../actions/appActions';
@@ -34,7 +33,6 @@ const useStyles = makeStyles()(theme => ({
 
 export const LeftNav = ({ docsVersion, isAdmin, isEnterprise, onboardingState, setSnackbar, versionInformation }) => {
   const releasesRef = useRef();
-  const theme = useTheme();
   const { classes } = useStyles();
 
   const onVersionClick = () => {
@@ -78,7 +76,7 @@ export const LeftNav = ({ docsVersion, isAdmin, isEnterprise, onboardingState, s
   if (releasesRef.current) {
     onboardingComponent = getOnboardingComponentFor(onboardingSteps.APPLICATION_UPDATE_REMINDER_TIP, onboardingState, {
       anchor: {
-        left: releasesRef.current.offsetWidth - theme.spacing(6),
+        left: releasesRef.current.offsetWidth - 48,
         top: releasesRef.current.offsetTop + releasesRef.current.offsetHeight / 2
       },
       place: 'right'

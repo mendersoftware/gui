@@ -71,7 +71,7 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsM
   const getHelptipPosition = ref => {
     const { offsetHeight, offsetLeft, offsetTop } = ref.current.closest('.key-value-container');
     const top = offsetTop + offsetHeight / 3;
-    const left = offsetLeft - theme.spacing(2);
+    const left = offsetLeft - 15;
     return { left, top };
   };
 
