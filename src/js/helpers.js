@@ -335,7 +335,12 @@ export const getFormattedSize = bytes => {
   return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${suffixes[i]}`;
 };
 
-export const FileSize = ({ style, fileSize }) => <div style={style}>{getFormattedSize(fileSize)}</div>;
+export const FileSize = React.forwardRef(({ fileSize, style }, ref) => (
+  <div ref={ref} style={style}>
+    {getFormattedSize(fileSize)}
+  </div>
+));
+FileSize.displayName = 'FileSize';
 
 const collectAddressesFrom = devices =>
   devices.reduce((collector, device) => {
