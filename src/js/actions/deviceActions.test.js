@@ -1,3 +1,5 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { defaultState } from '../../../tests/mockData';
@@ -49,6 +51,11 @@ const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
 const groupUpdateSuccessMessage = 'The group was updated successfully';
+const getGroupSuccessNotification = groupName => (
+  <>
+    {groupUpdateSuccessMessage} - <Link to={`/devices?group=${groupName}`}>click here</Link> to see it.
+  </>
+);
 
 /* eslint-disable sonarjs/no-identical-functions */
 describe('selecting things', () => {
@@ -362,9 +369,7 @@ describe('static grouping related actions', () => {
       { type: DeviceConstants.ADD_TO_GROUP, group: groupName, deviceIds: [defaultState.devices.byId.a1.id] },
       { type: DeviceConstants.ADD_STATIC_GROUP, group: { deviceIds: [], total: 0, filters: [] }, groupName },
       { type: DeviceConstants.SELECT_DEVICE, deviceId: undefined },
-      { type: DeviceConstants.SELECT_GROUP, group: undefined },
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: groupUpdateSuccessMessage } },
-      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: {} },
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: getGroupSuccessNotification(groupName) } },
       { type: DeviceConstants.RECEIVE_GROUPS, groups: { testGroup: defaultState.devices.groups.byId.testGroup } },
       {
         type: DeviceConstants.ADD_DYNAMIC_GROUP,
@@ -494,9 +499,7 @@ describe('dynamic grouping related actions', () => {
         groupName,
         group: { deviceIds: [], total: 0, filters: [{ key: 'group', operator: '$nin', scope: 'system', value: ['testGroup'] }] }
       },
-      { type: DeviceConstants.SELECT_GROUP, group: undefined },
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: groupUpdateSuccessMessage } },
-      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: {} }
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: getGroupSuccessNotification(groupName) } }
     ];
     await store.dispatch(addDynamicGroup(groupName, [{ key: 'group', operator: '$nin', scope: 'system', value: ['testGroup'] }]));
     const storeActions = store.getActions();
@@ -518,12 +521,20 @@ describe('dynamic grouping related actions', () => {
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
   it('should allow dynamic group updates', async () => {
-    const store = mockStore({ ...defaultState });
     const groupName = 'testGroupDynamic';
+    const store = mockStore({
+      ...defaultState,
+      devices: {
+        ...defaultState.devices,
+        groups: {
+          ...defaultState.devices.groups,
+          selectedGroup: groupName
+        }
+      }
+    });
     const expectedActions = [
       { type: DeviceConstants.ADD_DYNAMIC_GROUP, groupName, group: { deviceIds: [], total: 0, filters: [] } },
       { type: DeviceConstants.SET_DEVICE_FILTERS, filters: defaultState.devices.groups.byId.testGroupDynamic.filters },
-      { type: DeviceConstants.SELECT_GROUP, group: groupName },
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: groupUpdateSuccessMessage } }
     ];
     await store.dispatch(updateDynamicGroup(groupName, []));
