@@ -1,3 +1,4 @@
+import React from 'react';
 import axios from 'axios';
 import pluralize from 'pluralize';
 
@@ -12,6 +13,7 @@ import DeviceConstants from '../constants/deviceConstants';
 import { deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
 import { getIdAttribute, getTenantCapabilities } from '../selectors';
 import { getDeviceMonitorConfig, getLatestDeviceAlerts } from './monitorActions';
+import { Link } from 'react-router-dom';
 
 const { DEVICE_STATES, DEVICE_LIST_DEFAULTS } = DeviceConstants;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
@@ -91,6 +93,22 @@ export const removeDevicesFromGroup = (group, deviceIds) => dispatch =>
     ])
   );
 
+const getGroupNotification = (newGroup, selectedGroup) => {
+  const successMessage = 'The group was updated successfully';
+  if (newGroup === selectedGroup) {
+    return [successMessage, 5000];
+  }
+  return [
+    <>
+      {successMessage} - <Link to={`/devices?group=${newGroup}`}>click here</Link> to see it.
+    </>,
+    5000,
+    undefined,
+    undefined,
+    () => {}
+  ];
+};
+
 export const addStaticGroup = (group, deviceIds) => (dispatch, getState) =>
   Promise.resolve(dispatch(addDevicesToGroup(group, deviceIds)))
     .then(() =>
@@ -103,9 +121,8 @@ export const addStaticGroup = (group, deviceIds) => (dispatch, getState) =>
       ).then(() =>
         Promise.all([
           dispatch(selectDevice()),
-          dispatch(selectGroup(group)),
           dispatch(getGroups()),
-          dispatch(setSnackbar('The group was updated successfully', 5000))
+          dispatch(setSnackbar(...getGroupNotification(group, getState().devices.groups.selectedGroup)))
         ])
       )
     )
@@ -189,7 +206,13 @@ export const addDynamicGroup = (groupName, filterPredicates) => (dispatch, getSt
             filters: filterPredicates
           }
         })
-      ).then(() => Promise.all([dispatch(selectGroup(groupName)), dispatch(setSnackbar('The group was updated successfully', 5000))]))
+      ).then(() => {
+        const { cleanedFilters } = getGroupFilters(groupName, getState().devices.groups);
+        return Promise.all([
+          dispatch(setDeviceFilters(cleanedFilters)),
+          dispatch(setSnackbar(...getGroupNotification(groupName, getState().devices.groups.selectedGroup)))
+        ]);
+      })
     )
     .catch(err => commonErrorHandler(err, `Group could not be updated:`, dispatch));
 
@@ -216,22 +239,26 @@ export const removeDynamicGroup = groupName => (dispatch, getState) => {
 /*
  * Device inventory functions
  */
+const getGroupFilters = (group, groupsState, filters = []) => {
+  const groupName = group === DeviceConstants.UNGROUPED_GROUP.id || group === DeviceConstants.UNGROUPED_GROUP.name ? DeviceConstants.UNGROUPED_GROUP.id : group;
+  const selectedGroup = groupsState.byId[groupName];
+  const groupFilterLength = selectedGroup?.filters?.length || 0;
+  const cleanedFilters = groupFilterLength
+    ? (filters.length ? filters : selectedGroup.filters).filter((item, index, array) => array.findIndex(filter => deepCompare(filter, item)) == index)
+    : filters;
+  return { cleanedFilters, groupName, selectedGroup, groupFilterLength };
+};
+
 export const selectGroup =
   (group, filters = []) =>
   (dispatch, getState) => {
-    const groupName =
-      group === DeviceConstants.UNGROUPED_GROUP.id || group === DeviceConstants.UNGROUPED_GROUP.name ? DeviceConstants.UNGROUPED_GROUP.id : group;
+    const { cleanedFilters, groupName, selectedGroup, groupFilterLength } = getGroupFilters(group, getState().devices.groups, filters);
     const state = getState();
-    const selectedGroup = state.devices.groups.byId[groupName];
-    const groupFilterLength = selectedGroup?.filters?.length || 0;
     if (state.devices.groups.selectedGroup === groupName && filters.length === 0 && !groupFilterLength) {
       return;
     }
     let tasks = [];
     if (groupFilterLength) {
-      const cleanedFilters = (filters.length ? filters : selectedGroup.filters).filter(
-        (item, index, array) => array.findIndex(filter => deepCompare(filter, item)) == index
-      );
       tasks.push(dispatch(setDeviceFilters(cleanedFilters)));
     } else {
       tasks.push(dispatch(setDeviceFilters(filters)));
