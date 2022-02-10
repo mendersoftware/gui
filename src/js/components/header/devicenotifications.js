@@ -10,6 +10,24 @@ import { MenderTooltipClickable } from '../common/mendertooltip';
 const DeviceNotifications = ({ total, limit, pending }) => {
   const approaching = limit && total / limit > 0.8;
   const warning = limit && limit <= total;
+  const content = (
+    <>
+      <Link to="/devices" className={warning ? 'warning' : approaching ? 'approaching' : ''}>
+        <span>{total.toLocaleString()}</span>
+        {limit ? <span id="limit">/{limit.toLocaleString()}</span> : null}
+
+        <DeveloperBoardIcon style={{ margin: '0 7px 0 10px', fontSize: '20px' }} />
+      </Link>
+      {pending ? (
+        <Link to="/devices/pending" style={{ marginLeft: '7px' }} className={limit && limit < pending + total ? 'warning' : null}>
+          {pending.toLocaleString()} pending
+        </Link>
+      ) : null}
+    </>
+  );
+  if (!limit) {
+    return <div className="header-section">{content}</div>;
+  }
   return (
     <MenderTooltipClickable
       className="header-section"
@@ -38,19 +56,7 @@ const DeviceNotifications = ({ total, limit, pending }) => {
         </>
       }
     >
-      <>
-        <Link to="/devices" className={warning ? 'warning' : approaching ? 'approaching' : ''}>
-          <span>{total.toLocaleString()}</span>
-          {limit ? <span id="limit">/{limit.toLocaleString()}</span> : null}
-
-          <DeveloperBoardIcon style={{ margin: '0 7px 0 10px', fontSize: '20px' }} />
-        </Link>
-        {pending ? (
-          <Link to="/devices/pending" style={{ marginLeft: '7px' }} className={limit && limit < pending + total ? 'warning' : null}>
-            {pending.toLocaleString()} pending
-          </Link>
-        ) : null}
-      </>
+      {content}
     </MenderTooltipClickable>
   );
 };
