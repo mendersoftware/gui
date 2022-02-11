@@ -25,6 +25,8 @@ import DeviceList from './devicelist';
 import DeviceQuickActions from './widgets/devicequickactions';
 import Filters from './widgets/filters';
 import DeviceIssuesSelection from './widgets/issueselection';
+import ColumnCustomizationDialog from './custom-columns-dialog';
+import ListOptions from './widgets/listoptions';
 
 const refreshDeviceLength = 10000;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
@@ -45,6 +47,7 @@ export const Authorized = props => {
     addDevicesToGroup,
     advanceOnboarding,
     allCount,
+    attributes,
     deleteAuthset,
     deviceCount,
     deviceListState,
@@ -80,6 +83,7 @@ export const Authorized = props => {
   const [isInitialized, setIsInitialized] = useState(!!props.devices.length);
   const [pageLoading, setPageLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
+  const [showCustomization, setShowCustomization] = useState(false);
   const deviceListRef = useRef();
   const authorizeRef = useRef();
   const timer = useRef();
@@ -285,14 +289,14 @@ export const Authorized = props => {
   const EmptyState = currentSelectedState.emptyState;
   const columnHeaders = useMemo(() => {
     return [
-    {
-      title: idAttributeTitleMap[idAttribute.attribute] ?? idAttribute.attribute,
-      customize: openSettingsDialog,
-      attribute: { name: idAttribute.attribute, scope: idAttribute.scope },
-      sortable: true
-    },
-    ...currentSelectedState.defaultHeaders
-  ];
+      {
+        title: idAttributeTitleMap[idAttribute.attribute] ?? idAttribute.attribute,
+        customize: openSettingsDialog,
+        attribute: { name: idAttribute.attribute, scope: idAttribute.scope },
+        sortable: true
+      },
+      ...currentSelectedState.defaultHeaders
+    ];
   }, [idAttribute.attribute]);
 
   const groupLabel = selectedGroup ? decodeURIComponent(selectedGroup) : 'All devices';
@@ -330,6 +334,21 @@ export const Authorized = props => {
     );
   }
 
+  const onToggleCustomizationClick = () => setShowCustomization(!showCustomization);
+
+  const onChangeColumns = changedColumns => {
+    console.log('doing things');
+    console.log(changedColumns);
+    setShowCustomization(false);
+  };
+
+  const onExportClick = () => console.log('heavy exporting');
+
+  const listOptionHandlers = {
+    customize: onToggleCustomizationClick,
+    csvExport: onExportClick
+  };
+
   const isUngroupedGroup = selectedGroup && selectedGroup === UNGROUPED_GROUP.id;
   return (
     <>
@@ -366,13 +385,14 @@ export const Authorized = props => {
               </p>
             )}
           </div>
-          {selectedGroup && !isUngroupedGroup && (
-            <div className="flexbox centered">
+          <div className="flexbox centered">
+            {selectedGroup && !isUngroupedGroup && (
               <Button onClick={onGroupRemoval} startIcon={<DeleteIcon />}>
                 Remove group
               </Button>
-            </div>
-          )}
+            )}
+            <ListOptions handlers={listOptionHandlers} />
+          </div>
         </div>
         <Filters onFilterChange={onFilterChange} onGroupClick={onGroupClick} isModification={!!groupFilters.length} open={showFilters} />
       </div>
@@ -415,6 +435,15 @@ export const Authorized = props => {
           selectedGroup={selectedGroup}
           selectedRows={selectedRows}
           ref={authorizeRef}
+        />
+      )}
+      {showCustomization && (
+        <ColumnCustomizationDialog
+          attributes={attributes}
+          columnHeaders={columnHeaders}
+          idAttribute={idAttribute}
+          onCancel={onToggleCustomizationClick}
+          onSubmit={onChangeColumns}
         />
       )}
     </>

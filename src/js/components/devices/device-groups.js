@@ -47,7 +47,7 @@ import QuickFilter from './widgets/quickfilter';
 import Groups from './groups';
 import DeviceStatusNotification from './devicestatusnotification';
 
-const defaultHeaders = {
+export const defaultHeaders = {
   deviceCreationTime: {
     title: 'First request',
     attribute: { name: 'created_ts', scope: 'system' },
