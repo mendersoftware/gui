@@ -283,7 +283,8 @@ export const Authorized = props => {
 
   const currentSelectedState = states[selectedState] ?? states.devices;
   const EmptyState = currentSelectedState.emptyState;
-  const columnHeaders = [
+  const columnHeaders = useMemo(() => {
+    return [
     {
       title: idAttributeTitleMap[idAttribute.attribute] ?? idAttribute.attribute,
       customize: openSettingsDialog,
@@ -292,6 +293,7 @@ export const Authorized = props => {
     },
     ...currentSelectedState.defaultHeaders
   ];
+  }, [idAttribute.attribute]);
 
   const groupLabel = selectedGroup ? decodeURIComponent(selectedGroup) : 'All devices';
 
