@@ -35,7 +35,6 @@ import PreauthDialog, { DeviceLimitWarning } from './preauth-dialog';
 import {
   AcceptedEmptyState,
   DeviceCreationTime,
-  DeviceExpansion,
   DeviceStatusHeading,
   PendingEmptyState,
   PreauthorizedEmptyState,
@@ -59,12 +58,6 @@ export const defaultHeaders = {
     attribute: { name: 'status', scope: 'identity' },
     render: DeviceStatusHeading,
     sortable: true
-  },
-  deviceExpansion: {
-    title: '',
-    attribute: {},
-    render: DeviceExpansion,
-    sortable: false
   },
   lastCheckIn: {
     title: 'Last check-in',
@@ -96,8 +89,7 @@ const acceptedDevicesRoute = {
       sortable: true
     },
     defaultHeaders.lastCheckIn,
-    defaultHeaders.deviceStatus,
-    defaultHeaders.deviceExpansion
+    defaultHeaders.deviceStatus
   ]
 };
 
@@ -116,7 +108,7 @@ export const routes = {
     route: `${baseDevicesRoute}/${DEVICE_STATES.pending}`,
     title: count => `${DEVICE_STATES.pending}${count ? ` (${count})` : ''}`,
     emptyState: PendingEmptyState,
-    defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn, defaultHeaders.deviceStatus, defaultHeaders.deviceExpansion]
+    defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn, defaultHeaders.deviceStatus]
   },
   [DEVICE_STATES.preauth]: {
     key: DEVICE_STATES.preauth,
@@ -129,8 +121,7 @@ export const routes = {
         ...defaultHeaders.deviceCreationTime,
         title: 'Date added'
       },
-      defaultHeaders.deviceStatus,
-      defaultHeaders.deviceExpansion
+      defaultHeaders.deviceStatus
     ]
   },
   [DEVICE_STATES.rejected]: {
@@ -139,7 +130,7 @@ export const routes = {
     route: `${baseDevicesRoute}/${DEVICE_STATES.rejected}`,
     title: () => DEVICE_STATES.rejected,
     emptyState: RejectedEmptyState,
-    defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn, defaultHeaders.deviceStatus, defaultHeaders.deviceExpansion]
+    defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn, defaultHeaders.deviceStatus]
   }
 };
 
