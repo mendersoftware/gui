@@ -15,7 +15,7 @@ import { SORTING_OPTIONS } from '../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS, DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { duplicateFilter, isEmpty } from '../../helpers';
-import { getIdAttribute, getOnboardingState, getTenantCapabilities } from '../../selectors';
+import { getFilterAttributes, getIdAttribute, getOnboardingState, getTenantCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
@@ -452,6 +452,7 @@ const mapStateToProps = state => {
     return accu;
   }, []);
   return {
+    attributes: getFilterAttributes(state),
     acceptedCount: state.devices.byStatus.accepted.total || 0,
     allCount: state.devices.byStatus.accepted.total + state.devices.byStatus.rejected.total || 0,
     devices,
