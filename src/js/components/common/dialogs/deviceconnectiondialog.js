@@ -117,7 +117,7 @@ export const DeviceConnectionDialog = ({ advanceOnboarding, docsVersion, hasMoni
   }
 
   return (
-    <Dialog open={true} fullWidth={true} maxWidth="sm">
+    <Dialog open={true} PaperProps={{ sx: { maxWidth: '720px' } }}>
       <DialogTitle>Connecting a device</DialogTitle>
       <DialogContent className="onboard-dialog" style={{ margin: '0 30px' }}>
         {content}

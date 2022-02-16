@@ -78,6 +78,13 @@ export const light = {
           color: variantPalette.text.primary
         }
       }
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: '#24444a'
+        }
+      }
     }
   }
 };

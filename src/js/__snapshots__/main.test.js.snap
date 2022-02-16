@@ -102,6 +102,7 @@ exports[`Main Component renders correctly 1`] = `
   color: #337a87;
   border-radius: 2px;
   font-size: 14px;
+  font-weight: bold;
   padding: 10px 15px;
 }
 

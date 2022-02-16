@@ -229,7 +229,7 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
     </div>
     <a
       class="margin-top-small flexbox center-aligned"
-      style="margin-left: 64px;"
+      style="margin-left: 96px;"
     >
       Schedule details 
       <svg

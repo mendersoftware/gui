@@ -36,7 +36,7 @@ export const DeploymentStatus = ({ className = '', deployment = {} }) => {
     <div className={`progressStatus flexbox space-between centered margin-bottom ${className}`}>
       <div className="flexbox column">
         <div className="muted">Status</div>
-        <h3 className="margin-bottom-none muted">{statusDescription}</h3>
+        <h4 className="margin-bottom-none muted">{statusDescription}</h4>
       </div>
       <div className="flexbox space-between align-right" style={{ minWidth: '40%' }}>
         <div className="flexbox column">
