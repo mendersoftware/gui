@@ -25,6 +25,7 @@ window.RTCPeerConnection = () => {
 // Setup requests interception
 let server;
 
+const oldWindowLocalStorage = window.localStorage;
 const oldWindowLocation = window.location;
 const oldWindowSessionStorage = window.sessionStorage;
 
@@ -59,7 +60,13 @@ beforeAll(async () => {
     setItem: jest.fn(),
     removeItem: jest.fn()
   };
-
+  delete window.localStorage;
+  window.localStorage = {
+    ...oldWindowLocalStorage,
+    getItem: jest.fn(),
+    setItem: jest.fn(),
+    removeItem: jest.fn()
+  };
   window.ENV = 'test';
   global.TextEncoder = TextEncoder;
   global.crypto = {
@@ -86,7 +93,8 @@ afterEach(async () => {
 afterAll(async () => {
   // Clean up once the tests are done.
   await server.close();
-  // restore `window.location` to the original `jsdom` `Location` object
+  // restore `window.location` etc. to the original `jsdom` `Location` object
+  window.localStorage = oldWindowLocalStorage;
   window.location = oldWindowLocation;
   window.sessionStorage = oldWindowSessionStorage;
   React.useEffect.mockRestore();

@@ -117,7 +117,10 @@ describe('user reducer', () => {
         .title
     ).toEqual('Releases Manager');
   });
-
+  it('should handle SET_CUSTOM_COLUMNS', async () => {
+    expect(reducer(undefined, { type: UserConstants.SET_CUSTOM_COLUMNS, value: 'test' }).customColumns).toEqual('test');
+    expect(reducer({ ...initialState }, { type: UserConstants.SET_CUSTOM_COLUMNS, value: 'test' }).customColumns).toEqual('test');
+  });
   it('should handle SET_GLOBAL_SETTINGS', async () => {
     expect(reducer(undefined, { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { newSetting: 'test' } }).globalSettings).toEqual({
       ...initialState.globalSettings,

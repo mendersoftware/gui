@@ -101,7 +101,7 @@ const acceptedDevicesRoute = {
   route: `${baseDevicesRoute}/${DEVICE_STATES.accepted}`,
   title: () => DEVICE_STATES.accepted,
   emptyState: AcceptedEmptyState,
-  defaultHeaders: [defaultHeaders.deviceType, defaultHeaders.currentSoftware, defaultHeaders.lastCheckIn, defaultHeaders.deviceStatus]
+  defaultHeaders: [defaultHeaders.deviceType, defaultHeaders.currentSoftware, defaultHeaders.lastCheckIn]
 };
 
 export const routes = {
@@ -119,7 +119,7 @@ export const routes = {
     route: `${baseDevicesRoute}/${DEVICE_STATES.pending}`,
     title: count => `${DEVICE_STATES.pending}${count ? ` (${count})` : ''}`,
     emptyState: PendingEmptyState,
-    defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn, defaultHeaders.deviceStatus]
+    defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn]
   },
   [DEVICE_STATES.preauth]: {
     key: DEVICE_STATES.preauth,
@@ -131,8 +131,7 @@ export const routes = {
       {
         ...defaultHeaders.deviceCreationTime,
         title: 'Date added'
-      },
-      defaultHeaders.deviceStatus
+      }
     ]
   },
   [DEVICE_STATES.rejected]: {
@@ -141,7 +140,7 @@ export const routes = {
     route: `${baseDevicesRoute}/${DEVICE_STATES.rejected}`,
     title: () => DEVICE_STATES.rejected,
     emptyState: RejectedEmptyState,
-    defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn, defaultHeaders.deviceStatus]
+    defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn]
   }
 };
 
@@ -455,7 +454,6 @@ export const DeviceGroups = ({
             refreshDevices={refreshDevices}
             removeDevicesFromGroup={onRemoveDevicesFromGroup}
             showsDialog={showDeviceConnectionDialog || removeGroup || modifyGroupDialog || createGroupExplanation || openIdDialog || openPreauth}
-            states={routes}
           />
         </div>
         {removeGroup && <RemoveGroup onClose={toggleGroupRemoval} onRemove={removeCurrentGroup} />}

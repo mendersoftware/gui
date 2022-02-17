@@ -27,6 +27,7 @@ import {
   setHideAnnouncement,
   setShowConnectingDialog,
   toggleHelptips,
+  updateUserColumnSettings,
   verify2FA
 } from './userActions';
 import OnboardingConstants from '../constants/onboardingConstants';
@@ -129,7 +130,10 @@ describe('user actions', () => {
   });
   it('should verify 2fa codes during 2fa setup', async () => {
     jest.clearAllMocks();
-    const expectedActions = [{ type: UserConstants.RECEIVED_USER, user: defaultState.users.byId[userId] }];
+    const expectedActions = [
+      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId[userId] },
+      { type: UserConstants.SET_CUSTOM_COLUMNS, value: [] }
+    ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(verify2FA({ token2fa: '123456' }));
     const storeActions = store.getActions();
@@ -138,7 +142,10 @@ describe('user actions', () => {
   });
   it('should allow enabling 2fa during 2fa setup', async () => {
     jest.clearAllMocks();
-    const expectedActions = [{ type: UserConstants.RECEIVED_USER, user: defaultState.users.byId.a1 }];
+    const expectedActions = [
+      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId.a1 },
+      { type: UserConstants.SET_CUSTOM_COLUMNS, value: [] }
+    ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(enableUser2fa(defaultState.users.byId.a1.id));
     const storeActions = store.getActions();
@@ -147,7 +154,10 @@ describe('user actions', () => {
   });
   it('should allow disabling 2fa during 2fa setup', async () => {
     jest.clearAllMocks();
-    const expectedActions = [{ type: UserConstants.RECEIVED_USER, user: defaultState.users.byId.a1 }];
+    const expectedActions = [
+      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId.a1 },
+      { type: UserConstants.SET_CUSTOM_COLUMNS, value: [] }
+    ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(disableUser2fa(defaultState.users.byId.a1.id));
     const storeActions = store.getActions();
@@ -168,7 +178,8 @@ describe('user actions', () => {
     jest.clearAllMocks();
     const expectedActions = [
       { type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token },
-      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId[userId] }
+      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId[userId] },
+      { type: UserConstants.SET_CUSTOM_COLUMNS, value: [] }
     ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(loginUser({ email: 'test@example.com', password: 'mysecretpassword' }));
@@ -201,7 +212,10 @@ describe('user actions', () => {
   });
   it('should allow single user retrieval', async () => {
     jest.clearAllMocks();
-    const expectedActions = [{ type: UserConstants.RECEIVED_USER, user: defaultState.users.byId.a1 }];
+    const expectedActions = [
+      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId.a1 },
+      { type: UserConstants.SET_CUSTOM_COLUMNS, value: [] }
+    ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(getUser('a1'));
     const storeActions = store.getActions();
@@ -355,5 +369,21 @@ describe('user actions', () => {
     expect(cookies.set).toHaveBeenCalledTimes(1);
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should store the sizes of columns in local storage', async () => {
+    jest.clearAllMocks();
+    const expectedActions = [{ type: UserConstants.SET_CUSTOM_COLUMNS, value: [{ asd: 'asd' }] }];
+    const store = mockStore({ ...defaultState, users: { ...defaultState.users, customColumns: [{ asd: 'asd' }] } });
+    await store.dispatch(updateUserColumnSettings([{ asd: 'asd' }]));
+    const storeActions = store.getActions();
+    expect(localStorage.getItem).not.toHaveBeenCalled();
+    expect(localStorage.setItem).toHaveBeenCalled();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+
+    jest.clearAllMocks();
+    await store.dispatch(updateUserColumnSettings());
+    expect(localStorage.getItem).toHaveBeenCalledTimes(1);
+    expect(localStorage.setItem).toHaveBeenCalledTimes(1);
   });
 });

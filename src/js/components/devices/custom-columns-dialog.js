@@ -74,7 +74,16 @@ export const ColumnCustomizationDialog = ({ attributes, columnHeaders, idAttribu
     setSelectedAttributes(result);
   };
 
-  const onHandleSubmit = () => onSubmit(selectedAttributes);
+  const onHandleSubmit = () => {
+    const attributes = selectedAttributes.map(attribute => ({
+      id: attribute.id,
+      key: attribute.key,
+      name: attribute.key,
+      scope: attribute.scope,
+      title: attribute.title || attribute.key
+    }));
+    onSubmit(attributes);
+  };
 
   const onRemove = (attribute, index) => {
     let selection = [];
@@ -93,7 +102,10 @@ export const ColumnCustomizationDialog = ({ attributes, columnHeaders, idAttribu
   const onSelect = attribute => {
     if (attribute.key) {
       const existingAttribute = attributeOptions.find(item => item.key === attribute.key && item.scope === attribute.scope) || attribute;
-      setSelectedAttributes([...selectedAttributes, { ...existingAttribute, id: `${attribute.scope}-${attribute.key}` }]);
+      setSelectedAttributes([
+        ...selectedAttributes,
+        { ...existingAttribute, title: existingAttribute.value ?? existingAttribute.key, id: `${attribute.scope}-${attribute.key}` }
+      ]);
       setAttributeOptions(filterAttributes(attributeOptions, attribute));
     }
   };

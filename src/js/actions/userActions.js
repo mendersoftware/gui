@@ -124,8 +124,30 @@ export const getUserList = () => dispatch =>
 
 export const getUser = id => dispatch =>
   GeneralApi.get(`${useradmApiUrl}/users/${id}`).then(({ data: user }) =>
-    Promise.all([dispatch({ type: UserConstants.RECEIVED_USER, user }), dispatch(setHideAnnouncement(false, user.id)), user])
+    Promise.all([
+      dispatch({ type: UserConstants.RECEIVED_USER, user }),
+      dispatch(setHideAnnouncement(false, user.id)),
+      dispatch(updateUserColumnSettings(undefined, user.id)),
+      user
+    ])
   );
+
+export const updateUserColumnSettings = (columns, currentUserId) => (dispatch, getState) => {
+  const userId = currentUserId ?? getCurrentUser(getState()).id;
+  const storageKey = `${userId}-column-widths`;
+  let customColumns = [];
+  if (!columns) {
+    try {
+      customColumns = JSON.parse(window.localStorage.getItem(storageKey)) || customColumns;
+    } catch {
+      // most likely the column info doesn't exist yet or is lost - continue
+    }
+  } else {
+    customColumns = columns;
+  }
+  window.localStorage.setItem(storageKey, JSON.stringify(customColumns));
+  return Promise.resolve(dispatch({ type: UserConstants.SET_CUSTOM_COLUMNS, value: customColumns }));
+};
 
 const actions = {
   create: {

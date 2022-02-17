@@ -5,7 +5,7 @@ import { rolesByName, twoFAStates } from '../constants/userConstants';
 import { getDemoDeviceAddress as getDemoDeviceAddressHelper } from '../helpers';
 
 const getAppDocsVersion = state => state.app.docsVersion;
-const getFeatures = state => state.app.features;
+export const getFeatures = state => state.app.features;
 const getRolesById = state => state.users.rolesById;
 const getOrganization = state => state.organization.organization;
 const getAcceptedDevices = state => state.devices.byStatus.accepted;
