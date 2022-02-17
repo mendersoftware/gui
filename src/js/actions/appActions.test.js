@@ -219,6 +219,19 @@ describe('app actions', () => {
       },
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice },
       { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice },
+      {
+        type: DeviceConstants.SET_DEVICE_LIST_STATE,
+        state: {
+          ...DeviceConstants.DEVICE_LIST_DEFAULTS,
+          deviceIds: [],
+          selectedAttributes: [],
+          selectedIssues: [],
+          selection: [],
+          sort: { columns: [], direction: AppConstants.SORTING_OPTIONS.desc },
+          state: 'accepted',
+          total: 0
+        }
+      },
       { type: UserConstants.SET_SHOW_HELP, show: true },
       {
         type: UserConstants.SET_GLOBAL_SETTINGS,

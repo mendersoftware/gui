@@ -19,10 +19,11 @@ describe('DeviceList Component', () => {
     const { baseElement } = render(
       <Provider store={store}>
         <DeviceList
+          columnHeaders={[{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4 }]}
+          customColumnSizes={[]}
           devices={[]}
           deviceListState={defaultState.devices.deviceList}
           selectedRows={[]}
-          columnHeaders={[{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4 }]}
           pageTotal={50}
         />
       </Provider>

@@ -437,6 +437,32 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
               />
             </button>
+            <button
+              class=\\"MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1e6y48t-MuiButtonBase-root-MuiButton-root\\"
+              style=\\"text-transform: none;\\"
+              tabindex=\\"0\\"
+              type=\\"button\\"
+            >
+              Table options
+              <span
+                class=\\"MuiButton-endIcon MuiButton-iconSizeMedium css-9tj150-MuiButton-endIcon\\"
+              >
+                <svg
+                  aria-hidden=\\"true\\"
+                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
+                  data-testid=\\"ArrowDropDownIcon\\"
+                  focusable=\\"false\\"
+                  viewBox=\\"0 0 24 24\\"
+                >
+                  <path
+                    d=\\"m7 10 5 5 5-5z\\"
+                  />
+                </svg>
+              </span>
+              <span
+                class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+              />
+            </button>
           </div>
         </div>
       </div>
@@ -465,171 +491,232 @@ exports[`DeviceGroups Component renders correctly 1`] = `
       >
         <div
           class=\\"deviceList \\"
+          style=\\"grid-template-columns: 52px minmax(250px, 1fr) minmax(150px, 1.5fr) minmax(150px, 1.5fr) minmax(150px, 1.5fr) minmax(150px, max-content);\\"
         >
           <div
-            class=\\"header deviceListRow columns-6 selectable\\"
+            class=\\"header\\"
           >
-            <span
-              class=\\"MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root\\"
-            >
-              <input
-                class=\\"PrivateSwitchBase-input css-1m9pwf3\\"
-                data-indeterminate=\\"false\\"
-                type=\\"checkbox\\"
-              />
-              <svg
-                aria-hidden=\\"true\\"
-                class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
-                data-testid=\\"CheckBoxOutlineBlankIcon\\"
-                focusable=\\"false\\"
-                viewBox=\\"0 0 24 24\\"
-              >
-                <path
-                  d=\\"M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z\\"
-                />
-              </svg>
-              <span
-                class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
-              />
-            </span>
             <div
-              class=\\"columnHeader\\"
+              class=\\"deviceListRow\\"
             >
-              <svg
-                aria-hidden=\\"true\\"
-                class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon selected true css-i4bv87-MuiSvgIcon-root\\"
-                data-testid=\\"SortIcon\\"
-                focusable=\\"false\\"
-                viewBox=\\"0 0 24 24\\"
+              <div>
+                <span
+                  class=\\"MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root\\"
+                >
+                  <input
+                    class=\\"PrivateSwitchBase-input css-1m9pwf3\\"
+                    data-indeterminate=\\"false\\"
+                    type=\\"checkbox\\"
+                  />
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
+                    data-testid=\\"CheckBoxOutlineBlankIcon\\"
+                    focusable=\\"false\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z\\"
+                    />
+                  </svg>
+                  <span
+                    class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+                  />
+                </span>
+              </div>
+              <div
+                class=\\"columnHeader flexbox space-between relative\\"
               >
-                <path
-                  d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
-                />
-              </svg>
-              <svg
-                aria-hidden=\\"true\\"
-                class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
-                data-testid=\\"SettingsIcon\\"
-                focusable=\\"false\\"
-                style=\\"font-size: 16px; margin-left: auto;\\"
-                viewBox=\\"0 0 24 24\\"
+                <div
+                  class=\\"flexbox center-aligned\\"
+                >
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon selected true css-i4bv87-MuiSvgIcon-root\\"
+                    data-testid=\\"SortIcon\\"
+                    focusable=\\"false\\"
+                    style=\\"font-size: 16px;\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
+                    />
+                  </svg>
+                </div>
+                <div
+                  class=\\"flexbox center-aligned\\"
+                >
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
+                    data-testid=\\"SettingsIcon\\"
+                    focusable=\\"false\\"
+                    style=\\"font-size: 16px; margin-right: 4px;\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z\\"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div
+                class=\\"columnHeader flexbox space-between relative\\"
               >
-                <path
-                  d=\\"M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z\\"
+                <div
+                  class=\\"flexbox center-aligned\\"
+                >
+                  Device type
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-i4bv87-MuiSvgIcon-root\\"
+                    data-testid=\\"SortIcon\\"
+                    focusable=\\"false\\"
+                    style=\\"font-size: 16px;\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
+                    />
+                  </svg>
+                </div>
+                <div
+                  class=\\"flexbox center-aligned\\"
+                >
+                  <span
+                    class=\\"resize-handle\\"
+                  />
+                </div>
+              </div>
+              <div
+                class=\\"columnHeader flexbox space-between relative\\"
+              >
+                <div
+                  class=\\"flexbox center-aligned\\"
+                >
+                  Current software
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-i4bv87-MuiSvgIcon-root\\"
+                    data-testid=\\"SortIcon\\"
+                    focusable=\\"false\\"
+                    style=\\"font-size: 16px;\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
+                    />
+                  </svg>
+                </div>
+                <div
+                  class=\\"flexbox center-aligned\\"
+                >
+                  <span
+                    class=\\"resize-handle\\"
+                  />
+                </div>
+              </div>
+              <div
+                class=\\"columnHeader flexbox space-between relative\\"
+              >
+                <div
+                  class=\\"flexbox center-aligned\\"
+                >
+                  Last check-in
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-i4bv87-MuiSvgIcon-root\\"
+                    data-testid=\\"SortIcon\\"
+                    focusable=\\"false\\"
+                    style=\\"font-size: 16px;\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
+                    />
+                  </svg>
+                </div>
+                <div
+                  class=\\"flexbox center-aligned\\"
                 />
-              </svg>
+              </div>
+              <div
+                class=\\"columnHeader flexbox space-between relative\\"
+              >
+                <div
+                  class=\\"flexbox center-aligned\\"
+                >
+                  Status
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-i4bv87-MuiSvgIcon-root\\"
+                    data-testid=\\"SortIcon\\"
+                    focusable=\\"false\\"
+                    style=\\"font-size: 16px;\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
+                    />
+                  </svg>
+                </div>
+                <div
+                  class=\\"flexbox center-aligned\\"
+                />
+              </div>
             </div>
-            <div
-              class=\\"columnHeader\\"
-            >
-              Device type
-              <svg
-                aria-hidden=\\"true\\"
-                class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-i4bv87-MuiSvgIcon-root\\"
-                data-testid=\\"SortIcon\\"
-                focusable=\\"false\\"
-                viewBox=\\"0 0 24 24\\"
-              >
-                <path
-                  d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
-                />
-              </svg>
-            </div>
-            <div
-              class=\\"columnHeader\\"
-            >
-              Current software
-              <svg
-                aria-hidden=\\"true\\"
-                class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-i4bv87-MuiSvgIcon-root\\"
-                data-testid=\\"SortIcon\\"
-                focusable=\\"false\\"
-                viewBox=\\"0 0 24 24\\"
-              >
-                <path
-                  d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
-                />
-              </svg>
-            </div>
-            <div
-              class=\\"columnHeader\\"
-            >
-              Last check-in
-              <svg
-                aria-hidden=\\"true\\"
-                class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-i4bv87-MuiSvgIcon-root\\"
-                data-testid=\\"SortIcon\\"
-                focusable=\\"false\\"
-                viewBox=\\"0 0 24 24\\"
-              >
-                <path
-                  d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
-                />
-              </svg>
-            </div>
-            <div
-              class=\\"columnHeader\\"
-            >
-              Status
-              <svg
-                aria-hidden=\\"true\\"
-                class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-i4bv87-MuiSvgIcon-root\\"
-                data-testid=\\"SortIcon\\"
-                focusable=\\"false\\"
-                viewBox=\\"0 0 24 24\\"
-              >
-                <path
-                  d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
-                />
-              </svg>
-            </div>
-            <div
-              class=\\"columnHeader\\"
-            >
-              
-            </div>
-            <div
-              style=\\"width: 48px;\\"
-            />
           </div>
           <div
             class=\\"body\\"
           >
             <div
-              class=\\"deviceListRow columns-6 selectable deviceListItem clickable\\"
-              style=\\"align-items: center;\\"
+              class=\\"deviceListRow deviceListItem clickable  \\"
             >
-              <span
-                class=\\"MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root\\"
-              >
-                <input
-                  class=\\"PrivateSwitchBase-input css-1m9pwf3\\"
-                  data-indeterminate=\\"false\\"
-                  type=\\"checkbox\\"
-                />
-                <svg
-                  aria-hidden=\\"true\\"
-                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
-                  data-testid=\\"CheckBoxOutlineBlankIcon\\"
-                  focusable=\\"false\\"
-                  viewBox=\\"0 0 24 24\\"
-                >
-                  <path
-                    d=\\"M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z\\"
-                  />
-                </svg>
+              <div>
                 <span
-                  class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
-                />
-              </span>
+                  class=\\"MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root\\"
+                >
+                  <input
+                    class=\\"PrivateSwitchBase-input css-1m9pwf3\\"
+                    data-indeterminate=\\"false\\"
+                    type=\\"checkbox\\"
+                  />
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
+                    data-testid=\\"CheckBoxOutlineBlankIcon\\"
+                    focusable=\\"false\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z\\"
+                    />
+                  </svg>
+                  <span
+                    class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+                  />
+                </span>
+              </div>
               <div>
                 a1
               </div>
-              <div>
-                raspberrypi4
+              <div
+                title=\\"raspberrypi4\\"
+              >
+                <div
+                  class=\\"text-overflow\\"
+                >
+                  raspberrypi4
+                </div>
               </div>
-              <div>
-                -
+              <div
+                title=\\"-\\"
+              >
+                <div
+                  class=\\"text-overflow\\"
+                >
+                  -
+                </div>
               </div>
               <div>
                 <span
@@ -645,65 +732,61 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 </span>
               </div>
               <div>
-                <div>
-                  accepted
-                </div>
-              </div>
-              <div>
                 <div
-                  class=\\"bold flexbox center-aligned link-color margin-right-small uppercased\\"
-                  style=\\"white-space: nowrap;\\"
+                  class=\\"margin-right-small\\"
                 >
-                  view details 
-                  <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
-                    data-testid=\\"ArrowRightAltIcon\\"
-                    focusable=\\"false\\"
-                    viewBox=\\"0 0 24 24\\"
-                  >
-                    <path
-                      d=\\"M16.01 11H4v2h12.01v3L20 12l-3.99-4z\\"
-                    />
-                  </svg>
+                  accepted
                 </div>
               </div>
             </div>
             <div
-              class=\\"deviceListRow columns-6 selectable deviceListItem clickable\\"
-              style=\\"align-items: center;\\"
+              class=\\"deviceListRow deviceListItem clickable  \\"
             >
-              <span
-                class=\\"MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root\\"
-              >
-                <input
-                  class=\\"PrivateSwitchBase-input css-1m9pwf3\\"
-                  data-indeterminate=\\"false\\"
-                  type=\\"checkbox\\"
-                />
-                <svg
-                  aria-hidden=\\"true\\"
-                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
-                  data-testid=\\"CheckBoxOutlineBlankIcon\\"
-                  focusable=\\"false\\"
-                  viewBox=\\"0 0 24 24\\"
-                >
-                  <path
-                    d=\\"M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z\\"
-                  />
-                </svg>
+              <div>
                 <span
-                  class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
-                />
-              </span>
+                  class=\\"MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root\\"
+                >
+                  <input
+                    class=\\"PrivateSwitchBase-input css-1m9pwf3\\"
+                    data-indeterminate=\\"false\\"
+                    type=\\"checkbox\\"
+                  />
+                  <svg
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
+                    data-testid=\\"CheckBoxOutlineBlankIcon\\"
+                    focusable=\\"false\\"
+                    viewBox=\\"0 0 24 24\\"
+                  >
+                    <path
+                      d=\\"M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z\\"
+                    />
+                  </svg>
+                  <span
+                    class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+                  />
+                </span>
+              </div>
               <div>
                 b1
               </div>
-              <div>
-                qemux86-64
+              <div
+                title=\\"qemux86-64\\"
+              >
+                <div
+                  class=\\"text-overflow\\"
+                >
+                  qemux86-64
+                </div>
               </div>
-              <div>
-                -
+              <div
+                title=\\"-\\"
+              >
+                <div
+                  class=\\"text-overflow\\"
+                >
+                  -
+                </div>
               </div>
               <div>
                 <span
@@ -719,33 +802,16 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 </span>
               </div>
               <div>
-                <div>
-                  accepted
-                </div>
-              </div>
-              <div>
                 <div
-                  class=\\"bold flexbox center-aligned link-color margin-right-small uppercased\\"
-                  style=\\"white-space: nowrap;\\"
+                  class=\\"margin-right-small\\"
                 >
-                  view details 
-                  <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
-                    data-testid=\\"ArrowRightAltIcon\\"
-                    focusable=\\"false\\"
-                    viewBox=\\"0 0 24 24\\"
-                  >
-                    <path
-                      d=\\"M16.01 11H4v2h12.01v3L20 12l-3.99-4z\\"
-                    />
-                  </svg>
+                  accepted
                 </div>
               </div>
             </div>
           </div>
           <div
-            class=\\"flexbox margin-top\\"
+            class=\\"footer flexbox margin-top\\"
           >
             <div
               class=\\"MuiTablePagination-root flexbox margin-top margin-top-none css-jtlhu6-MuiTablePagination-root\\"
