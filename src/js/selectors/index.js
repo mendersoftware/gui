@@ -1,5 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { PLANS } from '../constants/appConstants';
+import { DEVICE_ISSUE_OPTIONS } from '../constants/deviceConstants';
 import { rolesByName, twoFAStates } from '../constants/userConstants';
 import { getDemoDeviceAddress as getDemoDeviceAddressHelper } from '../helpers';
 
@@ -14,6 +15,7 @@ const getDevicesList = state => Object.values(state.devices.byId);
 const getOnboarding = state => state.onboarding;
 const getShowHelptips = state => state.users.showHelptips;
 const getGlobalSettings = state => state.users.globalSettings;
+const getIssueCountsByType = state => state.monitor.issueCounts.byType;
 
 export const getCurrentUser = state => state.users.byId[state.users.currentUser] || {};
 export const getUserSettings = state => state.users.globalSettings[state.users.currentUser] || {};
@@ -116,4 +118,16 @@ export const getTenantCapabilities = createSelector(
     const hasFullFiltering = isEnterprise || plan === PLANS.professional.value;
     return { hasAuditlogs, hasDeviceConfig, hasDeviceConnect, hasFullFiltering, hasMonitor };
   }
+);
+
+export const getAvailableIssueOptionsByType = createSelector(
+  [getFeatures, getTenantCapabilities, getIssueCountsByType],
+  ({ hasReporting }, { hasFullFiltering }, issueCounts) =>
+    Object.values(DEVICE_ISSUE_OPTIONS).reduce((accu, { key, needsFullFiltering, needsReporting, title }) => {
+      if ((needsReporting && !hasReporting) || (needsFullFiltering && !hasFullFiltering)) {
+        return accu;
+      }
+      accu[key] = { count: issueCounts[key].filtered, key, title };
+      return accu;
+    }, {})
 );
