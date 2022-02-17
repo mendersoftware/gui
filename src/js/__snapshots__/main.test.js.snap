@@ -339,8 +339,6 @@ exports[`Main Component renders correctly 1`] = `
       />
       <div
         class="header-section"
-        data-mui-internal-clone-element="true"
-        disabled=""
       >
         <a
           class=""
