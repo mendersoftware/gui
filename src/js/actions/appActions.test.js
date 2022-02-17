@@ -4,7 +4,7 @@ import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
 import { roles } from '../../../tests/__mocks__/userHandlers';
 import { defaultState } from '../../../tests/mockData';
 
-import { commonErrorHandler, initializeAppData, setSnackbar, setFirstLoginAfterSignup, setYesterday } from './appActions';
+import { commonErrorHandler, initializeAppData, setSnackbar, setFirstLoginAfterSignup, setYesterday, setVersionInfo } from './appActions';
 import AppConstants from '../constants/appConstants';
 import DeploymentConstants from '../constants/deploymentConstants';
 import DeviceConstants, { EXTERNAL_PROVIDER } from '../constants/deviceConstants';
@@ -255,6 +255,14 @@ describe('app actions', () => {
       }
     ];
     await store.dispatch(setSnackbar('test', 20));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should set version information', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [{ type: AppConstants.SET_VERSION_INFORMATION, value: { Integration: 'next' } }];
+    await store.dispatch(setVersionInfo({ Integration: 'next' }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

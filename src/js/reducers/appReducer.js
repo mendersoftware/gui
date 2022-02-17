@@ -104,6 +104,12 @@ const appReducer = (state = initialState, action) => {
         uploadProgress: action.uploadProgress
       };
     }
+    case AppConstants.SET_VERSION_INFORMATION: {
+      return {
+        ...state,
+        versionInformation: action.value
+      };
+    }
     default:
       return state;
   }
