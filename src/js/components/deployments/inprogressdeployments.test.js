@@ -1,11 +1,11 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import Progress from './inprogressdeployments';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import Progress from './inprogressdeployments';
 
 const mockStore = configureStore([thunk]);
 
@@ -27,11 +27,9 @@ describe('InProgressDeployments Component', () => {
 
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <Progress />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <Progress />
+      </Provider>
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();

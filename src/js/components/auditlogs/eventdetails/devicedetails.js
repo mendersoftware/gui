@@ -1,17 +1,18 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Launch as LaunchIcon } from '@material-ui/icons';
-
+import { Launch as LaunchIcon } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
+import { colors } from '../../../themes/Mender';
 import DeviceIdentityDisplay from '../../common/deviceidentity';
 import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
-import theme, { colors } from '../../../themes/mender-theme';
 
 export const DetailInformation = ({ title, details }) => {
+  const theme = useTheme();
   return (
     <div key={`${title}-details`} className="flexbox column margin-top-small">
       <b className="margin-bottom-small capitalized-start">{title} details</b>
-      <div className="text-muted two-columns" style={{ gridTemplateColumns: 'minmax(max-content, 150px) max-content', rowGap: theme.spacing(2.5) }}>
+      <div className="muted two-columns" style={{ gridTemplateColumns: 'minmax(max-content, 150px) max-content', rowGap: theme.spacing(2.5) }}>
         {Object.entries(details).map(([key, value]) => (
           <Fragment key={key}>
             <div className="align-right">

@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import ArtifactMetadataList from './artifactmetadatalist';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import ArtifactMetadataList from './artifactmetadatalist';
 
 describe('ArtifactPayload Component', () => {
   it('renders correctly', async () => {

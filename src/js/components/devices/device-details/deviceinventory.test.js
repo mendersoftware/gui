@@ -1,8 +1,8 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
-import DeviceInventory from './deviceinventory';
+
 import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import DeviceInventory from './deviceinventory';
 
 describe('DeviceInventory Component', () => {
   it('renders correctly', async () => {
@@ -17,11 +17,7 @@ describe('DeviceInventory Component', () => {
       'even.more.dots.than.before.version': 'test-5',
       'even.more.dots.than.before.more': 'test-6'
     };
-    const { baseElement } = render(
-      <MemoryRouter>
-        <DeviceInventory device={{ attributes, id: 'a1' }} setSnackbar={jest.fn} />
-      </MemoryRouter>
-    );
+    const { baseElement } = render(<DeviceInventory device={{ attributes, id: 'a1' }} setSnackbar={jest.fn} />);
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

@@ -1,12 +1,13 @@
 import React from 'react';
 import { prettyDOM } from '@testing-library/dom';
-import { cleanup, render, waitFor } from '@testing-library/react';
+import { cleanup, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router-dom';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import DeploymentReport from './report';
+
 import { defaultState } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import DeploymentReport from './report';
 
 const mockStore = configureStore([thunk]);
 
@@ -36,11 +37,9 @@ describe('DeploymentReport Component', () => {
 
   it('renders correctly', async () => {
     const ui = (
-      <MemoryRouter>
-        <Provider store={store}>
-          <DeploymentReport open type="finished" getDeploymentDevices={jest.fn} getDeviceById={jest.fn} getDeviceAuth={jest.fn} />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <DeploymentReport open type="finished" getDeploymentDevices={jest.fn} getDeviceById={jest.fn} getDeviceAuth={jest.fn} />
+      </Provider>
     );
     const { asFragment, rerender } = render(ui);
     jest.advanceTimersByTime(5000);

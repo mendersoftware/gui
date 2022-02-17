@@ -1,13 +1,24 @@
-import React, { memo } from 'react';
-import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import React, { memo, useEffect, useState } from 'react';
 import moment from 'moment';
-import MomentUtils from '@date-io/moment';
 
-const pickerStyle = { width: 160, margin: 7.5, marginTop: 0 };
+import { TextField } from '@mui/material';
+import { DatePicker } from '@mui/lab';
 
-export const TimeframePicker = ({ classNames, endDate, onChange, startDate, tonight }) => {
+const renderInput = params => <TextField className="margin-top-none margin-left-small" {...params} />;
+
+export const TimeframePicker = ({ onChange, ...props }) => {
+  const [tonight, setTonight] = useState(moment(props.tonight));
+  const [endDate, setEndDate] = useState(moment(props.endDate));
+  const [startDate, setStartDate] = useState(moment(props.startDate));
+
+  useEffect(() => {
+    setTonight(moment(props.tonight));
+    setEndDate(moment(props.endDate));
+    setStartDate(moment(props.startDate));
+  }, [props.tonight, props.endDate, props.startDate]);
+
   const handleChangeStartDate = date => {
-    let currentEndDate = moment(endDate);
+    let currentEndDate = endDate.clone();
     if (date > currentEndDate) {
       currentEndDate = date;
       currentEndDate.endOf('day');
@@ -17,7 +28,7 @@ export const TimeframePicker = ({ classNames, endDate, onChange, startDate, toni
   };
 
   const handleChangeEndDate = date => {
-    let currentStartDate = moment(startDate);
+    let currentStartDate = startDate.clone();
     if (date < currentStartDate) {
       currentStartDate = date;
       currentStartDate.startOf('day');
@@ -27,23 +38,30 @@ export const TimeframePicker = ({ classNames, endDate, onChange, startDate, toni
   };
 
   return (
-    <MuiPickersUtilsProvider utils={MomentUtils} className={classNames}>
+    <>
       <DatePicker
-        variant="inline"
         onChange={handleChangeStartDate}
-        autoOk={true}
         label="From"
+        inputFormat="MMMM Do"
         value={startDate}
-        maxDate={endDate || tonight}
-        style={pickerStyle}
+        maxDate={props.endDate ? endDate : tonight}
+        renderInput={renderInput}
       />
-      <DatePicker variant="inline" onChange={handleChangeEndDate} autoOk={true} label="To" value={endDate} maxDate={tonight} style={pickerStyle} />
-    </MuiPickersUtilsProvider>
+      <DatePicker
+        className="margin-left-small"
+        onChange={handleChangeEndDate}
+        label="To"
+        inputFormat="MMMM Do"
+        value={endDate}
+        maxDate={tonight}
+        renderInput={renderInput}
+      />
+    </>
   );
 };
 
 const areEqual = (prevProps, nextProps) => {
-  return !(prevProps.classNames != nextProps.classNames || prevProps.endDate != nextProps.endDate || prevProps.startDate != nextProps.startDate);
+  return !(prevProps.endDate != nextProps.endDate || prevProps.startDate != nextProps.startDate);
 };
 
 export default memo(TimeframePicker, areEqual);

@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
-import Time from 'react-time';
 import pluralize from 'pluralize';
 
-import { Tooltip } from '@material-ui/core';
-import { RotateLeftOutlined, Warning as WarningIcon } from '@material-ui/icons';
+import { Tooltip } from '@mui/material';
+import { RotateLeftOutlined, Warning as WarningIcon } from '@mui/icons-material';
 import { mdiDotsHorizontalCircleOutline as QueuedIcon, mdiSleep as SleepIcon } from '@mdi/js';
 
 import { groupDeploymentStats } from '../../helpers';
 import MaterialDesignIcon from '../common/materialdesignicon';
+import Time from '../common/time';
 
 momentDurationFormatSetup(moment);
 
@@ -71,7 +71,7 @@ export const ProgressChart = ({ currentPhase, currentProgressCount, phases, show
         }
         return (
           <div key={`deployment-phase-${index}`} className="progress-step" style={style}>
-            {showPhaseNumber && <div className="progress-step-number text-muted">{`Phase ${index + 1}`}</div>}
+            {showPhaseNumber && <div className="progress-step-number muted">{`Phase ${index + 1}`}</div>}
             {!!phase.progressWidth && <div className="progress-bar" style={{ width: `${phase.progressWidth}%`, backgroundColor: '#aaa' }} />}
             <div className="flexbox progress-bar" style={{ backgroundColor: 'initial' }}>
               <div className="progress-bar green" style={{ width: `${phase.successWidth}%` }} />
@@ -123,7 +123,7 @@ export const ProgressDisplay = ({ className = '', deployment, status }) => {
   return (
     <div className={`flexbox column progress-chart-container ${className}`}>
       {statusMap[status] && (
-        <span className="flexbox center-aligned small text-muted">
+        <span className="flexbox center-aligned small muted">
           {statusMap[status].icon}
           <span className="margin-left-small">{statusMap[status].description()}</span>
         </span>
@@ -147,7 +147,7 @@ export const ProgressDisplay = ({ className = '', deployment, status }) => {
         {phases.length > 1 && phases.length > currentPhaseIndex + 1 ? (
           <div>
             <span>Time until next phase: </span>
-            <Tooltip title={<Time value={nextPhaseStart.toDate()} format="YYYY-MM-DD HH:mm" />} placement="top">
+            <Tooltip title={<Time value={nextPhaseStart.toDate()} />} placement="top">
               <span>{`${duration.format('d [days] hh [h] mm [m] ss [s]')}`}</span>
             </Tooltip>
           </div>

@@ -1,8 +1,10 @@
 import React from 'react';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import LogDialog from './monitordetailsdialog';
+
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import LogDialog from './monitordetailsdialog';
 
 const alert = {
   name: 'SSH Daemon is not running',

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 
 import { FitAddon } from 'xterm-addon-fit';
 import { SearchAddon } from 'xterm-addon-search';
@@ -8,9 +8,9 @@ import msgpack5 from 'msgpack5';
 import { deviceConnect } from '../../../actions/deviceActions';
 import { blobToString, byteArrayToString } from '../../devices/troubleshoot/terminal';
 import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as MessageProtocols } from '../../../constants/deviceConstants';
-import { CloudDownload, Pause, PlayArrow, Refresh } from '@material-ui/icons';
+import { CloudDownload, Pause, PlayArrow, Refresh } from '@mui/icons-material';
 import XTerm from '../../common/xterm';
-import { colors } from '../../../themes/mender-theme';
+import { colors } from '../../../themes/Mender';
 
 const MessagePack = msgpack5();
 const fitAddon = new FitAddon();

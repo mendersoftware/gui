@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, FormControl, FormControlLabel, Radio, RadioGroup } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 
 const defaultCancelSubscriptionReasons = [
   'Just learning about Mender',

@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import Time from 'react-time';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 // material ui
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Chip, Divider, IconButton, withStyles } from '@material-ui/core';
-import { FileCopy as CopyPasteIcon } from '@material-ui/icons';
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Chip, Divider, IconButton } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import withStyles from '@mui/styles/withStyles';
+import { FileCopy as CopyPasteIcon } from '@mui/icons-material';
 
 import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { formatTime } from '../../../../helpers';
-import theme from '../../../../themes/mender-theme';
 import Loader from '../../../common/loader';
+import Time from '../../../common/time';
 
 const padder = <div key="padder" style={{ flexGrow: 1 }}></div>;
 
@@ -70,6 +71,7 @@ export const getConfirmationMessage = (status, device, authset) => {
 const LF = '\n';
 
 const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loading, onExpand, total }) => {
+  const theme = useTheme();
   const [showKey, setShowKey] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState('');
   const [newStatus, setNewStatus] = useState('');
@@ -154,7 +156,7 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
     content = [
       <div key="content">
         <CopyToClipboard text={endKey} onCopy={onCopied}>
-          <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
+          <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }} size="large">
             <CopyPasteIcon />
           </IconButton>
         </CopyToClipboard>
@@ -203,7 +205,7 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
         {authsetStatus}
         <div className="capitalized">{authset.status}</div>
         {key}
-        <Time value={formatTime(authset.ts)} format="YYYY-MM-DD HH:mm" />
+        <Time value={formatTime(authset.ts)} />
         {loading === authset.id ? (
           <div>
             Updating status <Loader table={true} waiting={true} show={true} style={{ height: '4px', marginLeft: '10px' }} />

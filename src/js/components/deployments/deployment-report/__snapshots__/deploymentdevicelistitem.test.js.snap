@@ -1,11 +1,123 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DeploymentDeviceListItem Component renders correctly 1`] = `
+@keyframes animation-0 {
+  0% {
+    left: -35%;
+    right: 100%;
+  }
+
+  60% {
+    left: 100%;
+    right: -90%;
+  }
+
+  100% {
+    left: 100%;
+    right: -90%;
+  }
+}
+
+@keyframes animation-1 {
+  0% {
+    left: -200%;
+    right: 100%;
+  }
+
+  60% {
+    left: 107%;
+    right: -8%;
+  }
+
+  100% {
+    left: 107%;
+    right: -8%;
+  }
+}
+
+.emotion-0 {
+  color: inherit;
+  display: table-row;
+  vertical-align: middle;
+  outline: 0;
+}
+
+.emotion-0.MuiTableRow-hover:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.emotion-0.Mui-selected {
+  background-color: rgba(25, 118, 210, 0.08);
+}
+
+.emotion-0.Mui-selected:hover {
+  background-color: rgba(25, 118, 210, 0.12);
+}
+
+.emotion-1 {
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.43;
+  letter-spacing: 0.01071em;
+  display: table-cell;
+  vertical-align: inherit;
+  border-bottom: 1px solid rgba(224, 224, 224, 1);
+  text-align: left;
+  padding: 16px;
+}
+
+.emotion-7 {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  height: 4px;
+  z-index: 0;
+  background-color: rgb(167, 202, 237);
+}
+
+@media print {
+  .emotion-7 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-8 {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  -webkit-transition: -webkit-transform 0.2s linear;
+  transition: transform 0.2s linear;
+  transform-origin: left;
+  background-color: #1976d2;
+  width: auto;
+  -webkit-animation: animation-0 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+  animation: animation-0 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+}
+
+.emotion-9 {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  -webkit-transition: -webkit-transform 0.2s linear;
+  transition: transform 0.2s linear;
+  transform-origin: left;
+  background-color: #1976d2;
+  width: auto;
+  -webkit-animation: animation-1 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) 1.15s infinite;
+  animation: animation-1 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) 1.15s infinite;
+}
+
 <tr
-  class="MuiTableRow-root"
+  class="MuiTableRow-root emotion-0"
 >
   <td
-    class="MuiTableCell-root"
+    class="MuiTableCell-root MuiTableCell-sizeMedium emotion-1"
   >
     <a
       href="/devices?id=a1"
@@ -17,48 +129,48 @@ exports[`DeploymentDeviceListItem Component renders correctly 1`] = `
     </a>
   </td>
   <td
-    class="MuiTableCell-root"
+    class="MuiTableCell-root MuiTableCell-sizeMedium emotion-1"
   >
     -
   </td>
   <td
-    class="MuiTableCell-root"
+    class="MuiTableCell-root MuiTableCell-sizeMedium emotion-1"
   >
     -
   </td>
   <td
-    class="MuiTableCell-root"
+    class="MuiTableCell-root MuiTableCell-sizeMedium emotion-1"
   >
     -
   </td>
   <td
-    class="MuiTableCell-root"
+    class="MuiTableCell-root MuiTableCell-sizeMedium emotion-1"
   >
     -
   </td>
   <td
-    class="MuiTableCell-root"
+    class="MuiTableCell-root MuiTableCell-sizeMedium emotion-1"
     style="padding-right: 0px; position: relative; min-width: 200px;"
   >
     installing
     <div
       style="position: absolute; bottom: 0px; width: 100%;"
     >
-      <div
-        class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-indeterminate"
+      <span
+        class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-indeterminate emotion-7"
         role="progressbar"
       >
-        <div
-          class="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Indeterminate"
+        <span
+          class="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Indeterminate emotion-8"
         />
-        <div
-          class="MuiLinearProgress-bar MuiLinearProgress-bar2Indeterminate MuiLinearProgress-barColorPrimary"
+        <span
+          class="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar2Indeterminate emotion-9"
         />
-      </div>
+      </span>
     </div>
   </td>
   <td
-    class="MuiTableCell-root"
+    class="MuiTableCell-root MuiTableCell-sizeMedium emotion-1"
   />
 </tr>
 `;

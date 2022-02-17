@@ -1,14 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import pluralize from 'pluralize';
 
-import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
-import { AddCircle as AddIcon } from '@material-ui/icons';
+import { Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { AddCircle as AddIcon } from '@mui/icons-material';
 
-import AuthorizedDevices from './authorized-devices';
-import CreateGroup from './create-group';
-import Groups from './groups';
-import RemoveGroup from './remove-group';
 import { setSnackbar, setYesterday } from '../../actions/appActions';
 import {
   addDynamicGroup,
@@ -26,11 +23,14 @@ import {
   updateDynamicGroup
 } from '../../actions/deviceActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
-import { getDocsVersion, getIsEnterprise, getLimitMaxed } from '../../selectors';
-import CreateGroupExplainer from './create-group-explainer';
-import Global from '../settings/global';
 import { DEVICE_ISSUE_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
-import { emptyFilter } from './filters';
+import { getDocsVersion, getIsEnterprise, getLimitMaxed } from '../../selectors';
+import Global from '../settings/global';
+import AuthorizedDevices from './authorized-devices';
+import CreateGroup from './group-management/create-group';
+import RemoveGroup from './group-management/remove-group';
+import CreateGroupExplainer from './group-management/create-group-explainer';
+import { emptyFilter } from './widgets/filters';
 import PreauthDialog, { DeviceLimitWarning } from './preauth-dialog';
 import {
   AcceptedEmptyState,
@@ -42,10 +42,10 @@ import {
   RejectedEmptyState,
   RelativeDeviceTime
 } from './base-devices';
-import DeviceAdditionWidget from './deviceadditionwidget';
-import QuickFilter from './quickfilter';
+import DeviceAdditionWidget from './widgets/deviceadditionwidget';
+import QuickFilter from './widgets/quickfilter';
+import Groups from './groups';
 import DeviceStatusNotification from './devicestatusnotification';
-import pluralize from 'pluralize';
 
 const defaultHeaders = {
   deviceCreationTime: {

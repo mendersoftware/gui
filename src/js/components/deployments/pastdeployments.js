@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
-import { RootRef, TextField } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import { Autocomplete, TextField } from '@mui/material';
 
 import historyImage from '../../../assets/img/history.png';
 import { setSnackbar } from '../../actions/appActions';
@@ -97,8 +96,8 @@ export const Past = props => {
       advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION);
     }
     setTimeout(() => {
-      let notification = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION, onboardingState);
-      notification = getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED_NOTIFICATION, onboardingState, {}, notification);
+      let notification = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION, onboardingState, { setSnackbar });
+      notification = getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED_NOTIFICATION, onboardingState, { setSnackbar }, notification);
       !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
     }, 400);
   }, [past, onboardingState.complete]);
@@ -145,7 +144,7 @@ export const Past = props => {
       ? deploymentsRef.current.offsetLeft + detailsButtons[0].offsetLeft + detailsButtons[0].offsetWidth / 2 + 15
       : deploymentsRef.current.offsetWidth;
     let anchor = { left: deploymentsRef.current.offsetWidth / 2, top: deploymentsRef.current.offsetTop };
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor });
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor, setSnackbar });
     onboardingComponent = getOnboardingComponentFor(
       onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE,
       onboardingState,
@@ -182,13 +181,7 @@ export const Past = props => {
     <div className="fadeIn margin-left margin-top-large">
       <div className="datepicker-container">
         <TimerangePicker endDate={endDate} onChange={onTimeFilterChange} startDate={startDate} />
-        <TimeframePicker
-          classNames="margin-left margin-right inline-block"
-          onChange={onTimeFilterChange}
-          endDate={endDate}
-          startDate={startDate}
-          tonight={tonight}
-        />
+        <TimeframePicker onChange={onTimeFilterChange} endDate={endDate} startDate={startDate} tonight={tonight} />
         <Autocomplete
           id="device-group-selection"
           autoHighlight
@@ -223,21 +216,20 @@ export const Past = props => {
         {/* TODO: fix status retrieval for past deployments to decide what to show here - */}
         {!loading && !!past.length && !!onboardingComponent && !isShowingDetails && onboardingComponent}
         {!!past.length && (
-          <RootRef rootRef={deploymentsRef}>
-            <DeploymentsList
-              {...props}
-              componentClass="margin-left-small"
-              count={count}
-              headers={headers}
-              items={past}
-              page={page}
-              onChangeRowsPerPage={newPerPage => refreshPast(1, newPerPage)}
-              onChangePage={refreshPast}
-              pageSize={perPage}
-              showPagination
-              type={type}
-            />
-          </RootRef>
+          <DeploymentsList
+            {...props}
+            componentClass="margin-left-small"
+            count={count}
+            headers={headers}
+            items={past}
+            page={page}
+            onChangeRowsPerPage={newPerPage => refreshPast(1, newPerPage)}
+            onChangePage={refreshPast}
+            pageSize={perPage}
+            rootRef={deploymentsRef}
+            showPagination
+            type={type}
+          />
         )}
         {!(loading || past.length) && (
           <div className="dashboard-placeholder">

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { List } from '@material-ui/core';
+import { List } from '@mui/material';
 
 import ExpandableAttribute from '../common/expandable-attribute';
 

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 
-import { Button, Tab, Tabs } from '@material-ui/core';
+import { Button, Tab, Tabs } from '@mui/material';
 
 import { getGroups, getDynamicGroups } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
@@ -74,13 +74,11 @@ export const Deployments = ({
 
     let finishedState = {};
     const params = new URLSearchParams(location.search);
-    let reportType = 'active';
     let deploymentObject = {};
     if (match) {
-      reportType = match.params.tab;
       if (params.get('open')) {
         if (params.get('id')) {
-          showReport(reportType, params.get('id'));
+          showReport(match.params.tab, params.get('id'));
         } else if (params.get('release')) {
           deploymentObject.release = { ...releases[params.get('release')] };
         } else if (params.get('deviceId')) {
@@ -97,7 +95,7 @@ export const Deployments = ({
     setDeploymentObject(deploymentObject);
     const dialogOpen = Boolean(params.get('open')) && !params.get('id');
     let state = selectionState.state;
-    if (match.params.tab) {
+    if (match?.params.tab) {
       state = updateActive(match.params.tab);
     } else {
       history.replace(state);

@@ -2,11 +2,10 @@ import React from 'react';
 import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
-import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
 
 import CreateDeployment from './createdeployment';
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
 
 const mockStore = configureStore([thunk]);
 
@@ -30,11 +29,9 @@ describe('CreateDeployment Component', () => {
 
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <CreateDeployment deploymentObject={{}} setDeploymentObject={jest.fn} />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <CreateDeployment deploymentObject={{}} setDeploymentObject={jest.fn} />
+      </Provider>
     );
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();

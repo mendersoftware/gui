@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import Time from 'react-time';
+import { useTheme } from '@mui/material/styles';
 
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
-import theme from '../../../themes/mender-theme';
 import Pagination from '../../common/pagination';
 import { DeviceConnectionNote } from './connection';
+import Time from '../../common/time';
 import DeviceDataCollapse from './devicedatacollapse';
 import { DeviceOfflineHeaderNotification, NoAlertsHeaderNotification, severityMap } from './notifications';
 
@@ -27,19 +27,18 @@ const MonitoringAlert = ({ alert, onDetailsClick, style }) => {
   const lines = [...lines_before, line_matching, ...lines_after].filter(i => i);
   return (
     <div className="monitoring-alert column-data" style={style}>
-      {severityMap[alert.level].listIcon}
-      <div className="key text-muted">
+      {severityMap[alert.level].icon}
+      <div className="key muted">
         <b>{alert.name}</b>
       </div>
       <div>{alert.level}</div>
-      <Time value={alert.timestamp} format="YYYY-MM-DD HH:mm" />
+      <Time value={alert.timestamp} />
       {(lines.length || description) && <a onClick={() => onDetailsClick(alert)}>view {lines.length ? 'log' : 'details'}</a>}
     </div>
   );
 };
 
 const paginationCutoff = defaultPerPage;
-
 export const DeviceMonitoring = ({
   alertListState = {},
   alerts,
@@ -53,6 +52,7 @@ export const DeviceMonitoring = ({
   setAlertListState
 }) => {
   const { page: pageNo = defaultPage, perPage: pageLength = defaultPerPage, total: alertCount } = alertListState;
+  const theme = useTheme();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -102,14 +102,14 @@ export const DeviceMonitoring = ({
       title={
         <div className="flexbox center-aligned" ref={innerRef}>
           <h4 className="margin-right">Monitoring</h4>
-          {!!monitors.length && <Time className="text-muted" value={updated_ts} format="YYYY-MM-DD HH:mm" />}
+          {!!monitors.length && <Time className="muted" value={updated_ts} />}
         </div>
       }
     >
       {alerts.length ? (
         <>
           <div>
-            <h4 className="text-muted">Alert history</h4>
+            <h4 className="muted">Alert history</h4>
             {alerts.map(alert => (
               <MonitoringAlert alert={alert} key={alert.id} onDetailsClick={onDetailsClick} />
             ))}
@@ -128,7 +128,7 @@ export const DeviceMonitoring = ({
           </div>
         </>
       ) : (
-        <p className="text-muted margin-left-large" style={{ fontSize: 'larger' }}>
+        <p className="muted margin-left-large" style={{ fontSize: 'larger' }}>
           There are currently no issues reported
         </p>
       )}

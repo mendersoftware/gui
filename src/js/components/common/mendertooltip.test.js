@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 import Tooltip from './mendertooltip';
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
 
 describe('Loader Component', () => {
   it('renders correctly', async () => {
@@ -10,8 +10,8 @@ describe('Loader Component', () => {
         <div>test</div>
       </Tooltip>
     );
-    const view = baseElement;
-    expect(view.innerHTML.includes('WithStyles(ForwardRef(Tooltip))')).toBeTruthy();
+    const view = baseElement.lastChild;
+    expect(view.textContent).toContain('sudo it all');
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 });

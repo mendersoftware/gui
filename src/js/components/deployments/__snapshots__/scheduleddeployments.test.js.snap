@@ -1,6 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ScheduledDeployments Component renders correctly 1`] = `
+.emotion-0 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.5rem;
+}
+
 <div
   class="fadeIn margin-left"
 >
@@ -18,7 +35,8 @@ exports[`ScheduledDeployments Component renders correctly 1`] = `
     </p>
     <svg
       aria-hidden="true"
-      class="MuiSvgIcon-root"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-0"
+      data-testid="RefreshIcon"
       focusable="false"
       style="transform: rotateY(-180deg); fill: #e3e3e3; width: 111px; height: 111px;"
       viewBox="0 0 24 24"

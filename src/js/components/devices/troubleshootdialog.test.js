@@ -1,11 +1,11 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import TroubleshootDialog from './troubleshootdialog';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import TroubleshootDialog from './troubleshootdialog';
 
 const mockStore = configureStore([thunk]);
 
@@ -48,11 +48,9 @@ describe('TroubleshootDialog Component', () => {
   it('renders correctly', async () => {
     const userRoles = { canTroubleshoot: true, hasWriteAccess: true };
     const { baseElement } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <TroubleshootDialog onCancel={jest.fn} onSocketClose={jest.fn} open={true} userRoles={userRoles} />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <TroubleshootDialog onCancel={jest.fn} onSocketClose={jest.fn} open={true} userRoles={userRoles} />
+      </Provider>
     );
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();

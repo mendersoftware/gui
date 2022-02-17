@@ -4,14 +4,15 @@ import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import moment from 'moment';
 
-import { Button, IconButton, ListItemText, ListItemSecondaryAction, Menu, MenuItem, Toolbar } from '@material-ui/core';
+import { Button, IconButton, ListItemText, ListItemSecondaryAction, Menu, MenuItem, Toolbar } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 import {
   AccountCircle as AccountCircleIcon,
   ArrowDropDown as ArrowDropDownIcon,
   ArrowDropUp as ArrowDropUpIcon,
   ExitToApp as ExitIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 import { initializeAppData, setFirstLoginAfterSignup, setSnackbar } from '../../actions/appActions';
 import { getOnboardingState } from '../../actions/onboardingActions';
@@ -27,7 +28,7 @@ import DeploymentNotifications from './deploymentnotifications';
 import TrialNotification from './trialnotification';
 import OfferHeader from './offerheader';
 
-import menderTheme, { colors } from '../../themes/mender-theme';
+import { colors } from '../../themes/Mender';
 import logo from '../../../assets/img/headerlogo.png';
 import enterpriseLogo from '../../../assets/img/headerlogo-enterprise.png';
 import UserConstants from '../../constants/userConstants';
@@ -71,6 +72,7 @@ export const Header = ({
   toggleHelptips,
   user
 }) => {
+  const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
   const [loggingOut, setLoggingOut] = useState(false);
   const [gettingUser, setGettingUser] = useState(false);
@@ -129,18 +131,15 @@ export const Header = ({
   };
 
   const showOffer =
-    isHosted &&
-    moment().isBefore(currentOffer.expires) &&
-    (organization && organization.trial ? currentOffer.trial : currentOffer[organization.plan]) &&
-    !hasOfferCookie;
+    isHosted && moment().isBefore(currentOffer.expires) && (organization.trial ? currentOffer.trial : currentOffer[organization.plan]) && !hasOfferCookie;
   return (
     <Toolbar
       id="fixedHeader"
       className={showOffer ? 'header banner' : 'header'}
       style={{
         minHeight: 'unset',
-        paddingLeft: menderTheme.spacing(4),
-        paddingRight: menderTheme.spacing(5)
+        paddingLeft: theme.spacing(4),
+        paddingRight: theme.spacing(5)
       }}
     >
       {showOffer && <OfferHeader docsVersion={docsVersion} onHide={setHideOffer} />}
@@ -150,13 +149,13 @@ export const Header = ({
         </Link>
         {demo && <DemoNotification docsVersion={docsVersion} />}
         {!!announcement && <Announcement announcement={announcement} onHide={setHideAnnouncement} />}
-        {organization?.trial && <TrialNotification expiration={organization.trial_expiration} />}
+        {organization.trial && <TrialNotification expiration={organization.trial_expiration} />}
         <div style={{ flexGrow: '1' }}></div>
         <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
         <DeploymentNotifications inprogress={inProgress} />
         <Button
           className="header-dropdown"
-          style={{ fontSize: 14, marginLeft: menderTheme.spacing(0.5), textTransform: 'none' }}
+          style={{ fontSize: 14, marginLeft: theme.spacing(0.5), textTransform: 'none' }}
           onClick={e => setAnchorEl(e.currentTarget)}
           startIcon={<AccountCircleIcon style={{ color: menuButtonColor }} />}
           endIcon={anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
@@ -165,7 +164,6 @@ export const Header = ({
         </Button>
         <Menu
           anchorEl={anchorEl}
-          getContentAnchorEl={null}
           onClose={() => setAnchorEl(null)}
           open={Boolean(anchorEl)}
           anchorOrigin={{
@@ -200,7 +198,7 @@ export const Header = ({
           <MenuItem onClick={onLogoutClick}>
             <ListItemText primary="Log out" />
             <ListItemSecondaryAction>
-              <IconButton>
+              <IconButton size="large">
                 <ExitIcon style={{ color: menuButtonColor, fill: menuButtonColor }} />
               </IconButton>
             </ListItemSecondaryAction>

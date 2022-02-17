@@ -151,3 +151,13 @@ export const cancelFileUpload = () => (dispatch, getState) => {
   cancelSource.cancel();
   return Promise.resolve(dispatch({ type: AppConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 }));
 };
+
+export const setVersionInfo = info => (dispatch, getState) => {
+  return dispatch({
+    type: AppConstants.SET_VERSION_INFORMATION,
+    value: {
+      ...getState().app.versionInformation,
+      ...info
+    }
+  });
+};

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { Help as HelpIcon, InfoOutlined as InfoIcon } from '@material-ui/icons';
+import { Help as HelpIcon, InfoOutlined as InfoIcon } from '@mui/icons-material';
 
 import { setSnackbar } from '../../actions/appActions';
 import { toggleHelptips } from '../../actions/userActions';

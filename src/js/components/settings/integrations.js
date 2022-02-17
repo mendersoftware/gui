@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
-import { Button, MenuItem, Select, TextField } from '@material-ui/core';
+import { Button, MenuItem, Select, TextField } from '@mui/material';
 
 import { changeIntegration, createIntegration, deleteIntegration, getIntegrations } from '../../actions/organizationActions';
 import { EXTERNAL_PROVIDER } from '../../constants/deviceConstants';

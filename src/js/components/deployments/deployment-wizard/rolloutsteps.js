@@ -1,14 +1,13 @@
 import React from 'react';
 
-import { Chip } from '@material-ui/core';
-import { Add as AddIcon, ArrowRight as ArrowRightIcon, PauseCircleOutline as PauseIcon } from '@material-ui/icons';
+import { Chip } from '@mui/material';
+import { Add as AddIcon, ArrowRight as ArrowRightIcon, PauseCircleOutline as PauseIcon } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
 
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import InfoHint from '../../common/info-hint';
 import MenderTooltip from '../../common/mendertooltip';
-import theme, { colors } from './../../../themes/mender-theme';
-
-const chipStyle = { marginLeft: theme.spacing(-3), marginRight: theme.spacing(-3) };
+import { colors } from '../../../themes/Mender';
 
 const stepActions = {
   continue: 'continue',
@@ -54,6 +53,7 @@ const defaultSteps = {
 const menderDemoArtifactName = 'mender-demo-artifact';
 
 export const RolloutStepConnector = ({ disabled, step, onStepChange, release = {} }) => {
+  const theme = useTheme();
   const onTogglePauseClick = () => {
     onStepChange({ ...step, action: step.action === stepActions.pause ? stepActions.continue : stepActions.pause });
   };
@@ -61,10 +61,20 @@ export const RolloutStepConnector = ({ disabled, step, onStepChange, release = {
   let stepModifier = { props: {}, toggleButton: undefined };
   if (onStepChange) {
     stepModifier.props = { onDelete: onTogglePauseClick };
-    stepModifier.toggleButton = <Chip icon={<AddIcon />} label="Add a pause" color="primary" onClick={onTogglePauseClick} style={chipStyle} />;
+    stepModifier.toggleButton = (
+      <Chip
+        icon={<AddIcon />}
+        label="Add a pause"
+        color="primary"
+        onClick={onTogglePauseClick}
+        style={{ marginLeft: theme.spacing(-3), marginRight: theme.spacing(-3) }}
+      />
+    );
   }
 
-  const pauseChip = <Chip icon={<PauseIcon />} label="Pause" style={chipStyle} {...stepModifier.props} />;
+  const pauseChip = (
+    <Chip icon={<PauseIcon />} label="Pause" style={{ marginLeft: theme.spacing(-3), marginRight: theme.spacing(-3) }} {...stepModifier.props} />
+  );
   const stepPauseChip =
     step.state === defaultSteps.ArtifactReboot_Enter.state && release.Name?.includes(menderDemoArtifactName) ? (
       <MenderTooltip
@@ -105,6 +115,7 @@ export const RolloutStepConnector = ({ disabled, step, onStepChange, release = {
 };
 
 export const RolloutSteps = ({ disabled, onStepChange, release, steps = {} }) => {
+  const theme = useTheme();
   const mappableSteps = Object.entries(defaultSteps).reduce((accu, [key, step]) => [...accu, { ...step, ...steps[key] }], []);
 
   return (

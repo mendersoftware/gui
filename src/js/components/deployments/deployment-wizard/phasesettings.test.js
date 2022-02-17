@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import PhaseSettings from './phasesettings';
+
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import PhaseSettings from './phasesettings';
 
 describe('PhaseSettings Component', () => {
   it('renders correctly', async () => {

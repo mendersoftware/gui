@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import ArtifactUpload from './artifactupload';
 import ArtifactInformationForm from './artifactinformationform';
 import { onboardingSteps } from '../../../constants/onboardingConstants';

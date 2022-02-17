@@ -1,11 +1,11 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import { render } from '@testing-library/react';
-import Help from './help';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import Help from './help';
 
 const mockStore = configureStore([thunk]);
 
@@ -17,11 +17,9 @@ describe('Help Component', () => {
 
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <Help location={{ pathname: '/help/get-started' }} />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <Help location={{ pathname: '/help/get-started' }} />
+      </Provider>
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();

@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import Distribution from './distribution';
+
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import Distribution from './distribution';
 
 describe('PendingDevices Component', () => {
   it('renders correctly', async () => {

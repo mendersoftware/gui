@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import FileTransfer from './filetransfer';
+
 import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import FileTransfer from './filetransfer';
 
 describe('FileTransfer Component', () => {
   it('renders correctly', async () => {

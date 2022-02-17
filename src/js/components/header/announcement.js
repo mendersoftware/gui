@@ -1,7 +1,7 @@
 import React from 'react';
 import Linkify from 'react-linkify';
 
-import { Announcement as AnnounceIcon, Close as CloseIcon } from '@material-ui/icons';
+import { Announcement as AnnounceIcon, Close as CloseIcon } from '@mui/icons-material';
 
 const Announcement = ({ announcement, onHide }) => (
   <div id="announcement" className="flexbox centered fadeInSlow">

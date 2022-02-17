@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import { PhaseProgress, PhaseProgressDisplay } from './phaseprogress';
+
 import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import { PhaseProgress, PhaseProgressDisplay } from './phaseprogress';
 
 describe('PhaseProgress Component', () => {
   const deployment = defaultState.deployments.byId.d1;

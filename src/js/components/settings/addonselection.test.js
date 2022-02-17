@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import AddOnSelection from './addonselection';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import AddOnSelection from './addonselection';
 
 describe('AddOnSelection component', () => {
   it(`renders correctly`, () => {

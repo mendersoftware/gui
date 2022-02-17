@@ -1,11 +1,12 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
+
+import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
 import Authorized from './authorized-devices';
 import { routes } from './device-groups';
-import { defaultState, undefineds } from '../../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
 

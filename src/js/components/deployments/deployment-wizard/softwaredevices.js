@@ -3,19 +3,18 @@ import { Link } from 'react-router-dom';
 
 import pluralize from 'pluralize';
 
-import { TextField, Tooltip } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
-import { ErrorOutline as ErrorOutlineIcon } from '@material-ui/icons';
+import { TextField, Tooltip, Autocomplete } from '@mui/material';
+import { ErrorOutline as ErrorOutlineIcon } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 import useWindowSize from '../../../utils/resizehook';
 import { allDevices } from '../createdeployment';
-import theme from '../../../themes/mender-theme';
 import AsyncAutocomplete from '../../common/asyncautocomplete';
 import InfoHint from '../../common/info-hint';
 
-export const styles = {
+const useStyles = makeStyles()(theme => ({
   infoStyle: {
     minWidth: 400,
     borderBottom: 'none'
@@ -23,7 +22,10 @@ export const styles = {
   selection: { minWidth: 'min-content', maxWidth: theme.spacing(50), minHeight: 105 },
   selectionTitle: {
     marginBottom: 0
-  },
+  }
+}));
+
+const hardCodedStyle = {
   textField: {
     minWidth: 400
   }
@@ -56,6 +58,7 @@ export const SoftwareDevices = ({
   releaseSelectionLocked,
   setDeploymentSettings
 }) => {
+  const { classes } = useStyles();
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
   const groupRef = useRef();
@@ -162,10 +165,10 @@ export const SoftwareDevices = ({
         <ReleasesWarning />
       ) : (
         <form className="flexbox column margin margin-top-none">
-          <h4 style={styles.selectionTitle}>Select a device group to target</h4>
-          <div ref={groupRef} style={styles.selection}>
+          <h4 className={classes.selectionTitle}>Select a device group to target</h4>
+          <div ref={groupRef} className={classes.selection}>
             {device ? (
-              <TextField value={device.id} label="Device" disabled={true} style={styles.infoStyle} />
+              <TextField value={device.id} label="Device" disabled={true} className={classes.infoStyle} />
             ) : (
               <div>
                 <Autocomplete
@@ -178,7 +181,7 @@ export const SoftwareDevices = ({
                   options={groupItems}
                   onChange={(e, item) => deploymentSettingsUpdate(item, 'group')}
                   renderInput={params => (
-                    <TextField {...params} placeholder="Select a device group" InputProps={{ ...params.InputProps }} style={styles.textField} />
+                    <TextField {...params} placeholder="Select a device group" InputProps={{ ...params.InputProps }} className={classes.textField} />
                   )}
                   value={group}
                 />
@@ -213,10 +216,10 @@ export const SoftwareDevices = ({
             )}
             {onboardingComponent}
           </div>
-          <h4 style={styles.selectionTitle}>Select a Release to deploy</h4>
-          <div ref={releaseRef} style={styles.selection}>
+          <h4 className={classes.selectionTitle}>Select a Release to deploy</h4>
+          <div ref={releaseRef} className={classes.selection}>
             {releaseSelectionLocked ? (
-              <TextField value={deploymentRelease?.Name} label="Release" disabled={true} style={styles.infoStyle} />
+              <TextField value={deploymentRelease?.Name} label="Release" disabled={true} className={classes.infoStyle} />
             ) : (
               <AsyncAutocomplete
                 id="deployment-release-selection"
@@ -228,10 +231,10 @@ export const SoftwareDevices = ({
                 onChange={onReleaseInputChange}
                 onChangeSelection={onReleaseSelectionChange}
                 isLoading={isLoadingReleases}
-                styles={styles}
+                styles={hardCodedStyle}
               />
             )}
-            {!releaseItems.length && hasReleases ? (
+            {!releaseItems.length ? (
               <ReleasesWarning lacksReleases />
             ) : (
               !!releaseDeviceTypes.length && (

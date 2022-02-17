@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import InfoHint from './info-hint';
+
+import { render } from '../../../../tests/setupTests';
 import { undefineds } from '../../../../tests/mockData';
+import InfoHint from './info-hint';
 
 describe('InfoHint Component', () => {
   it('renders correctly', async () => {

@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Time from 'react-time';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { mdiConsole as ConsoleIcon } from '@mdi/js';
 
 import msgpack5 from 'msgpack5';
@@ -15,8 +15,10 @@ import { setSnackbar } from '../../actions/appActions';
 import { getDeviceFileDownloadLink, deviceFileUpload } from '../../actions/deviceActions';
 import { BEGINNING_OF_TIME } from '../../constants/appConstants';
 import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as MessageProtocols } from '../../constants/deviceConstants';
-import theme, { colors } from '../../themes/mender-theme';
+
+import { colors } from '../../themes/Mender';
 import MaterialDesignIcon from '../common/materialdesignicon';
+import Time from '../common/time';
 import Terminal from './troubleshoot/terminal';
 import FileTransfer from './troubleshoot/filetransfer';
 import { apiUrl } from '../../api/general-api';
@@ -27,6 +29,7 @@ const MessagePack = msgpack5();
 let socket = null;
 
 const ConnectionIndicator = isConnected => {
+  const theme = useTheme();
   return (
     <div className="flexbox center-aligned">
       Remote terminal {<MaterialDesignIcon path={ConsoleIcon} style={{ color: isConnected ? colors.green : colors.red, marginLeft: theme.spacing() }} />}
@@ -197,7 +200,7 @@ export const TroubleshootDialog = ({
               <b>Session status:</b> {sessionId ? 'connected' : 'disconnected'}
             </div>
             <div>
-              <b>Connection start:</b> {startTime ? <Time value={startTime} format="YYYY-MM-DD HH:mm" /> : '-'}
+              <b>Connection start:</b> {startTime ? <Time value={startTime} /> : '-'}
             </div>
             <div>
               <b>Duration:</b> {`${duration.format('hh:mm:ss', { trim: false })}`}

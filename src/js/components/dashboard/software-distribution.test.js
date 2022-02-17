@@ -1,11 +1,11 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import SoftwareDistribution from './software-distribution';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import SoftwareDistribution from './software-distribution';
 
 const mockStore = configureStore([thunk]);
 
@@ -29,11 +29,9 @@ describe('Devices Component', () => {
 
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <SoftwareDistribution getAllDevicesByStatus={jest.fn()} />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <SoftwareDistribution getAllDevicesByStatus={jest.fn()} />
+      </Provider>
     );
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();

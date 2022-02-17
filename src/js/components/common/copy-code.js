@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
-import { Button, IconButton } from '@material-ui/core';
+import { Button, IconButton } from '@mui/material';
 
-import CopyPasteIcon from '@material-ui/icons/FileCopy';
+import CopyPasteIcon from '@mui/icons-material/FileCopy';
 
 const buttonStyle = { float: 'right', margin: '-20px 0 0 10px' };
 
@@ -27,7 +27,7 @@ export const CopyCode = ({ code, onCopy, withDescription }) => {
               Copy to clipboard
             </Button>
           ) : (
-            <IconButton style={buttonStyle}>
+            <IconButton style={buttonStyle} size="large">
               <CopyPasteIcon />
             </IconButton>
           )}

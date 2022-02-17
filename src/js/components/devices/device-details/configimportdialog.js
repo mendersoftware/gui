@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 // material ui
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, FormHelperText, Radio, RadioGroup } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, FormHelperText, Radio, RadioGroup } from '@mui/material';
 
 import FileUpload from '../../common/forms/fileupload';
 

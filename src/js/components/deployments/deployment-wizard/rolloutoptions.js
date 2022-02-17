@@ -1,9 +1,8 @@
 import React from 'react';
 
-import { Checkbox, FormControl, FormControlLabel, FormGroup, MenuItem, Select } from '@material-ui/core';
+import { Checkbox, FormControl, FormControlLabel, FormGroup, MenuItem, Select } from '@mui/material';
 
 import RolloutSteps from './rolloutsteps';
-import { styles } from './softwaredevices';
 
 export const RolloutOptions = ({
   deploymentObject = {},
@@ -30,7 +29,7 @@ export const RolloutOptions = ({
 
   return (
     <form className="flexbox column margin margin-top-none" style={{ overflow: 'visible', minHeight: 300 }}>
-      <h4 style={styles.selectionTitle}>Add pauses between update steps</h4>
+      <h4 style={{ marginBottom: 0 }}>Add pauses between update steps</h4>
       <RolloutSteps
         disabled={phases.length > 1 || !isEnterprise}
         docsVersion={docsVersion}

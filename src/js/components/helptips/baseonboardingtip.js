@@ -7,7 +7,7 @@ import {
   ArrowDownward as ArrowDownwardIcon,
   ArrowForward as ArrowForwardIcon,
   ArrowBack as ArrowBackIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 import { setShowDismissOnboardingTipsDialog } from '../../actions/onboardingActions';
 
@@ -52,15 +52,11 @@ export const orientations = {
   }
 };
 
-export const OnboardingIndicator = React.forwardRef(({ className = '', orientation, style = {}, toggle }, ref) => {
-  const { arrow, placement } = orientation;
-
-  return (
-    <div className={className} onClick={toggle} ref={ref} style={style}>
-      <div className={`tooltip onboard-icon ${placement}`}>{arrow}</div>
-    </div>
-  );
-});
+export const OnboardingIndicator = React.forwardRef(({ className = '', orientation: { arrow, placement }, style = {}, toggle, ...props }, ref) => (
+  <div className={className} onClick={toggle} ref={ref} style={style} {...props}>
+    <div className={`tooltip onboard-icon ${placement}`}>{arrow}</div>
+  </div>
+));
 OnboardingIndicator.displayName = 'OnboardingIndicator';
 
 const BaseOnboardingTipComponent = ({
@@ -93,15 +89,17 @@ const BaseOnboardingTipComponent = ({
       disableHoverListener
       disableTouchListener
       id={id}
-      interactive
       onClose={hide}
       open={open}
       placement={orientation.placement}
       PopperProps={{
         disablePortal: true,
         popperOptions: {
-          positionFixed: true,
-          modifiers: { preventOverflow: { boundariesElement: 'window' } }
+          strategy: 'fixed',
+          modifiers: [
+            { name: 'flip', enabled: false },
+            { name: 'preventOverflow', enabled: true, options: { boundary: window, altBoundary: false } }
+          ]
         }
       }}
       title={

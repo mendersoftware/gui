@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import AcceptedDevices from './accepteddevices';
+
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import AcceptedDevices from './accepteddevices';
 
 describe('AcceptedDevices Component', () => {
   it('renders correctly', async () => {

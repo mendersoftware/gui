@@ -35,11 +35,12 @@ export const DeploymentsList = ({
   onChangeRowsPerPage,
   page,
   pageSize,
+  rootRef,
   showPagination,
   type
 }) =>
   !!items.length && (
-    <div className={`fadeIn deploy-table-contain ${componentClass}`}>
+    <div className={`fadeIn deploy-table-contain ${componentClass}`} ref={rootRef}>
       <div className={`deployment-item deployment-header-item muted ${deploymentTypeClasses[type] || ''}`}>
         {headers.map((item, index) => (
           <div key={`${item.title}-${index}`} className={item.class || ''}>

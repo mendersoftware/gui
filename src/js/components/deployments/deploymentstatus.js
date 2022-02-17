@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 
 import successImage from '../../../assets/img/success_status.png';
 import errorImage from '../../../assets/img/error_status.png';

@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
-import { Button } from '@material-ui/core';
-import { InfoOutlined as InfoIcon, Payment } from '@material-ui/icons';
+import { Button } from '@mui/material';
+import { InfoOutlined as InfoIcon, Payment } from '@mui/icons-material';
 import pluralize from 'pluralize';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 

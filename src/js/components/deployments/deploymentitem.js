@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 
 // material ui
-import { Button, IconButton, Tooltip } from '@material-ui/core';
-import { CancelOutlined as CancelOutlinedIcon } from '@material-ui/icons';
+import { Button, IconButton, Tooltip } from '@mui/material';
+import { CancelOutlined as CancelOutlinedIcon } from '@mui/icons-material';
 
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
 import Confirm from '../common/confirm';
-import RelativeTime from '../common/relative-time';
+import { RelativeTime } from '../common/time';
 import ProgressDisplay, { DeploymentStatusNotification } from './progressChart';
 import DeploymentStats from './deploymentstatus';
 import { PhaseProgressDisplay } from './deployment-report/phaseprogress';
 import { getDeploymentState } from '../../helpers';
+import { makeStyles } from 'tss-react/mui';
 
 export const deploymentTypeClasses = {
   finished: 'past-item',
@@ -54,8 +55,22 @@ export const DeploymentStartTime = ({ direction = 'both', started }) => <Relativ
 
 export const DeploymentStatus = ({ deployment }) => <DeploymentStats key="DeploymentStatus" vertical={false} deployment={deployment} />;
 
+const useStyles = makeStyles()(theme => ({
+  detailsButton: {
+    backgroundColor: 'transparent',
+    color: theme.palette.text.primary,
+    justifySelf: 'center',
+    textTransform: 'none',
+    [`&:hover`]: {
+      backgroundColor: 'transparent',
+      color: theme.palette.text.primary
+    }
+  }
+}));
+
 export const DeploymentItem = ({ abort: abortDeployment, columnHeaders, deployment, isEnterprise, openReport, type }) => {
   const [abort, setAbort] = useState(null);
+  const { classes } = useStyles();
 
   const toggleConfirm = id => {
     setTimeout(() => setAbort(abort ? null : id), 150);
@@ -74,21 +89,17 @@ export const DeploymentItem = ({ abort: abortDeployment, columnHeaders, deployme
         const ColumnComponent = column.renderer;
         return (
           <div className={column.class} key={`deploy-item-${i}`}>
-            {column.title && <span className="deployment-item-title text-muted">{column.title}</span>}
+            {column.title && <span className="deployment-item-title muted">{column.title}</span>}
             <ColumnComponent {...self.props} className={column.class || ''} deployment={deployment} started={started} {...column.props} />
           </div>
         );
       })}
-      <Button
-        variant="contained"
-        onClick={() => openReport(type, deployment.id)}
-        style={{ justifySelf: 'center', backgroundColor: 'transparent', textTransform: 'none' }}
-      >
+      <Button className={classes.detailsButton} variant="contained" onClick={() => openReport(type, deployment.id)}>
         View details
       </Button>
       {type !== DEPLOYMENT_STATES.finished && (
         <Tooltip className="columnHeader" title="Abort" placement="top-start">
-          <IconButton onClick={() => toggleConfirm(id)}>
+          <IconButton onClick={() => toggleConfirm(id)} size="large">
             <CancelOutlinedIcon className="cancelButton muted" />
           </IconButton>
         </Tooltip>

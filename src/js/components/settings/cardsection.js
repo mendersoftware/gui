@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import Loader from '../common/loader';
 
 import stripeImage from '../../../assets/img/powered_by_stripe.png';

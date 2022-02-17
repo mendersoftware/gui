@@ -2,10 +2,10 @@ import React from 'react';
 import copy from 'copy-to-clipboard';
 import generator from 'generate-password';
 
-import { Button, FormControl, FormHelperText, IconButton, Input, InputAdornment, InputLabel } from '@material-ui/core';
-import { CheckCircle as CheckIcon, Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon } from '@material-ui/icons';
+import { Button, FormControl, FormHelperText, IconButton, Input, InputAdornment, InputLabel } from '@mui/material';
+import { CheckCircle as CheckIcon, Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon } from '@mui/icons-material';
 
-import { colors } from '../../../themes/mender-theme';
+import { colors } from '../../../themes/Mender';
 
 export default class PasswordInput extends React.Component {
   constructor(props, context) {
@@ -106,7 +106,7 @@ export default class PasswordInput extends React.Component {
             onKeyPress={this.props.handleKeyPress}
             endAdornment={
               <InputAdornment position="end">
-                <IconButton onClick={() => this.setState({ visible: !this.state.visible })}>
+                <IconButton onClick={() => this.setState({ visible: !this.state.visible })} size="large">
                   {this.state.visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
                 </IconButton>
               </InputAdornment>

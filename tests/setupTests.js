@@ -1,10 +1,12 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { TextEncoder } from 'util';
 import '@testing-library/jest-dom/extend-expect';
-import { within, queryByRole } from '@testing-library/react';
+import { render, queryByRole, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
 import crypto from 'crypto';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import handlers from './__mocks__/requestHandlers';
 import { mockDate, token as mockToken } from './mockData';
@@ -106,3 +108,21 @@ export const selectMaterialUiSelectOption = async (element, optionText) => {
   expect(queryByRole(document.documentElement, 'listbox')).not.toBeInTheDocument();
   return Promise.resolve();
 };
+
+const theme = createTheme();
+
+const AllTheProviders = ({ children }) => {
+  return (
+    <ThemeProvider theme={theme}>
+      <MemoryRouter>{children}</MemoryRouter>
+    </ThemeProvider>
+  );
+};
+
+const customRender = (ui, options) => render(ui, { wrapper: AllTheProviders, ...options });
+
+// re-export everything
+export * from '@testing-library/react';
+
+// override render method
+export { customRender as render };

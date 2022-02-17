@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import Dropzone from 'react-dropzone';
 
-import { IconButton, TextField } from '@material-ui/core';
-import { CloudUpload, Delete as DeleteIcon, InfoOutlined as InfoIcon } from '@material-ui/icons';
+import { IconButton, TextField } from '@mui/material';
+import { CloudUpload, Delete as DeleteIcon, InfoOutlined as InfoIcon } from '@mui/icons-material';
 
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { FileSize } from '../../../helpers';
@@ -92,7 +92,7 @@ export const ArtifactUpload = ({
   ) : (
     <div className="file-upload-form">
       <TextField label="File name" key="filename" disabled defaultValue={filename} />
-      <IconButton style={{ margin: 'auto' }} onClick={() => setAcceptedFiles([])}>
+      <IconButton style={{ margin: 'auto' }} onClick={() => setAcceptedFiles([])} size="large">
         <DeleteIcon />
       </IconButton>
       <TextField

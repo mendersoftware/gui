@@ -1,9 +1,11 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import DeviceStatusNotification from './devicestatusnotification';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
+import DeviceStatusNotification from './devicestatusnotification';
 
 describe('DeviceStatusNotification Component', () => {
   it('renders correctly', async () => {

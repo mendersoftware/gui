@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Time from 'react-time';
 
-import { Button, Typography } from '@material-ui/core';
-import { ImportExport as ImportExportIcon, InfoOutlined as InfoIcon, Launch as LaunchIcon } from '@material-ui/icons';
+import { Button, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { ImportExport as ImportExportIcon, InfoOutlined as InfoIcon, Launch as LaunchIcon } from '@mui/icons-material';
 import { mdiConsole as ConsoleIcon } from '@mdi/js';
 
-import MaterialDesignIcon from '../../common/materialdesignicon';
 import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
 import { DEVICE_CONNECT_STATES } from '../../../constants/deviceConstants';
-import theme from '../../../themes/mender-theme';
-import DeviceDataCollapse from './devicedatacollapse';
+import MaterialDesignIcon from '../../common/materialdesignicon';
 import MenderTooltip from '../../common/mendertooltip';
+import Time from '../../common/time';
+import DeviceDataCollapse from './devicedatacollapse';
 
 const buttonStyle = { textTransform: 'none', textAlign: 'left' };
 export const PortForwardLink = ({ docsVersion }) => (
@@ -35,14 +35,17 @@ export const PortForwardLink = ({ docsVersion }) => (
   </MenderTooltip>
 );
 
-export const DeviceConnectionNote = ({ children, style = buttonStyle }) => (
-  <div className="flexbox text-muted">
-    <InfoIcon fontSize="small" style={{ marginRight: theme.spacing() }} />
-    <Typography variant="body1" style={style}>
-      {children}
-    </Typography>
-  </div>
-);
+export const DeviceConnectionNote = ({ children, style = buttonStyle }) => {
+  const theme = useTheme();
+  return (
+    <div className="flexbox muted">
+      <InfoIcon fontSize="small" style={{ marginRight: theme.spacing() }} />
+      <Typography variant="body1" style={style}>
+        {children}
+      </Typography>
+    </div>
+  );
+};
 
 export const DeviceConnectionMissingNote = ({ docsVersion }) => (
   <DeviceConnectionNote>
@@ -58,7 +61,7 @@ export const DeviceConnectionMissingNote = ({ docsVersion }) => (
 
 export const DeviceDisconnectedNote = ({ docsVersion, lastConnectionTs }) => (
   <DeviceConnectionNote>
-    The troubleshoot add-on is not currently connected on this device, it was last connected on <Time value={lastConnectionTs} format="YYYY-MM-DD HH:mm" />.
+    The troubleshoot add-on is not currently connected on this device, it was last connected on <Time value={lastConnectionTs} />.
     <br />
     Please{' '}
     <a target="_blank" rel="noopener noreferrer" href={`https://docs.mender.io/${docsVersion}add-ons/remote-terminal`}>
@@ -68,13 +71,16 @@ export const DeviceDisconnectedNote = ({ docsVersion, lastConnectionTs }) => (
   </DeviceConnectionNote>
 );
 
-export const TroubleshootButton = ({ disabled, item, onClick }) => (
-  <Button onClick={() => onClick(item.key)} disabled={disabled} startIcon={item.icon} style={{ marginRight: theme.spacing(2) }}>
-    <Typography variant="subtitle2" style={buttonStyle}>
-      {item.title}
-    </Typography>
-  </Button>
-);
+export const TroubleshootButton = ({ disabled, item, onClick }) => {
+  const theme = useTheme();
+  return (
+    <Button onClick={() => onClick(item.key)} disabled={disabled} startIcon={item.icon} style={{ marginRight: theme.spacing(2) }}>
+      <Typography variant="subtitle2" style={buttonStyle}>
+        {item.title}
+      </Typography>
+    </Button>
+  );
+};
 
 const troubleshootingTools = [
   {

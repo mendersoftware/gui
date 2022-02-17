@@ -1,26 +1,25 @@
 import React, { useState } from 'react';
 
-import { ClickAwayListener, Tooltip, withStyles } from '@material-ui/core';
+import { ClickAwayListener, Tooltip } from '@mui/material';
+import { withStyles } from 'tss-react/mui';
 
-import theme, { colors } from '../../themes/mender-theme';
-
-export const MenderTooltip = withStyles({
+export const MenderTooltip = withStyles(Tooltip, ({ palette, shadows }) => ({
   arrow: {
-    color: theme.palette.secondary.main
+    color: palette.secondary.main
   },
   tooltip: {
-    backgroundColor: theme.palette.secondary.main,
-    boxShadow: theme.shadows[1],
-    color: colors.tooltipText,
+    backgroundColor: palette.secondary.main,
+    boxShadow: shadows[1],
+    color: palette.grey[50],
     fontSize: 'small',
     maxWidth: 600,
     info: {
       maxWidth: 300,
-      color: colors.mutedText,
-      backgroundColor: colors.placeholder
+      color: palette.text.hint,
+      backgroundColor: palette.grey[500]
     }
   }
-})(Tooltip);
+}));
 
 export const MenderTooltipClickable = ({ children, onboarding, startOpen = false, ...remainingProps }) => {
   const [open, setOpen] = useState(startOpen || false);
@@ -35,8 +34,11 @@ export const MenderTooltipClickable = ({ children, onboarding, startOpen = false
         PopperProps: {
           disablePortal: true,
           popperOptions: {
-            positionFixed: true,
-            modifiers: { preventOverflow: { boundariesElement: 'window' } }
+            strategy: 'fixed',
+            modifiers: [
+              { name: 'flip', enabled: false },
+              { name: 'preventOverflow', enabled: true, options: { boundary: window, altBoundary: false } }
+            ]
           }
         }
       }
@@ -45,7 +47,6 @@ export const MenderTooltipClickable = ({ children, onboarding, startOpen = false
     <ClickAwayListener onClickAway={hide}>
       <Component
         arrow={!onboarding}
-        interactive
         open={open}
         disableFocusListener
         disableHoverListener
@@ -62,22 +63,22 @@ export const MenderTooltipClickable = ({ children, onboarding, startOpen = false
 
 const iconWidth = 30;
 
-export const OnboardingTooltip = withStyles({
+export const OnboardingTooltip = withStyles(Tooltip, theme => ({
   arrow: {
     color: theme.palette.primary.main
   },
   tooltip: {
     backgroundColor: theme.palette.primary.main,
     boxShadow: theme.shadows[1],
-    color: colors.placeholder,
+    color: theme.palette.grey[500],
     fontSize: 14,
     maxWidth: 350,
     padding: '12px 18px',
     width: 350,
     '& a': {
-      color: colors.placeholder
+      color: theme.palette.grey[500]
     },
-    '&.MuiTooltip-tooltipPlacementTop': { marginLeft: iconWidth, marginBottom: 0, marginTop: iconWidth + theme.spacing(1.5) },
+    '&.MuiTooltip-tooltipPlacementTop': { marginLeft: iconWidth, marginBottom: 0, marginTop: `calc(${iconWidth} + ${theme.spacing(1.5)})` },
     '&.MuiTooltip-tooltipPlacementRight': { marginTop: iconWidth / 2 },
     '&.MuiTooltip-tooltipPlacementBottom': { marginLeft: iconWidth },
     '&.MuiTooltip-tooltipPlacementLeft': { marginTop: iconWidth / 2 }
@@ -85,5 +86,5 @@ export const OnboardingTooltip = withStyles({
   popper: {
     opacity: 0.9
   }
-})(Tooltip);
+}));
 export default MenderTooltip;

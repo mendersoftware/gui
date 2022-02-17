@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { TextField } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import { TextField, Autocomplete } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+
 import { useDebounce } from '../../utils/debouncehook';
 import Loader from './loader';
-import theme from '../../themes/mender-theme';
-
-const loaderStyle = { marginTop: theme.spacing(-4) };
 
 export const AsyncAutocomplete = ({
   id,
@@ -20,6 +18,7 @@ export const AsyncAutocomplete = ({
   onChangeSelection,
   options
 }) => {
+  const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState(initialValue);
   const loading = open && isLoading;
@@ -58,7 +57,7 @@ export const AsyncAutocomplete = ({
       autoHighlight
       freeSolo
       getOptionLabel={option => option[labelAttribute]}
-      getOptionSelected={(option, value) => option[selectionAttribute] === value[selectionAttribute]}
+      isOptionEqualToValue={(option, value) => option[selectionAttribute] === value[selectionAttribute]}
       id={id}
       inputValue={inputValue || ''}
       loading={loading}
@@ -78,7 +77,7 @@ export const AsyncAutocomplete = ({
             ...params.InputProps,
             endAdornment: (
               <>
-                {loading && <Loader show small table style={loaderStyle} />}
+                {loading && <Loader show small table style={{ marginTop: theme.spacing(-4) }} />}
                 {params.InputProps.endAdornment}
               </>
             )

@@ -1,7 +1,8 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { waitFor } from '@testing-library/react';
+
 import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
 import { PortForward } from './portforward';
 
 describe('PortForward Component', () => {
@@ -9,14 +10,12 @@ describe('PortForward Component', () => {
     const detailsMock = jest.fn();
     detailsMock.mockResolvedValue({ start: defaultState.organization.auditlog.events[2].time, end: defaultState.organization.auditlog.events[1].time });
     const ui = (
-      <MemoryRouter>
-        <PortForward
-          item={defaultState.organization.auditlog.events[2]}
-          device={defaultState.devices.byId.a1}
-          idAttribute="Device ID"
-          getSessionDetails={detailsMock}
-        />
-      </MemoryRouter>
+      <PortForward
+        item={defaultState.organization.auditlog.events[2]}
+        device={defaultState.devices.byId.a1}
+        idAttribute="Device ID"
+        getSessionDetails={detailsMock}
+      />
     );
     const { baseElement, rerender } = render(ui);
     await waitFor(() => rerender(ui));

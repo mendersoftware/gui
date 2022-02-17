@@ -1,12 +1,11 @@
 import React from 'react';
 import { prettyDOM } from '@testing-library/dom';
-import { render } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import DeviceGroups, { convertQueryToFilterAndGroup, generateBrowserLocation } from './device-groups';
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 
 const mockStore = configureStore([thunk]);
@@ -32,11 +31,9 @@ describe('DeviceGroups Component', () => {
 
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <DeviceGroups />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <DeviceGroups />
+      </Provider>
     );
     // special snapshot handling here to work around unstable ids in mui code...
     const view = prettyDOM(baseElement.firstChild, 100000, { highlight: false })

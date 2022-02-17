@@ -1,8 +1,9 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import DeviceIssuesSelection, { EmptySelection } from './issueselection';
-import { undefineds } from '../../../../../tests/mockData';
+
 import { DEVICE_ISSUE_OPTIONS } from '../../../constants/deviceConstants';
+import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import DeviceIssuesSelection, { EmptySelection } from './issueselection';
 
 describe('DeviceIssuesSelection Component', () => {
   it('renders correctly', async () => {

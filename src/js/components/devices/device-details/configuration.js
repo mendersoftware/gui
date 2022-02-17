@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Time from 'react-time';
 
-import { Button, Checkbox, FormControlLabel, Typography } from '@material-ui/core';
+import { Button, Checkbox, FormControlLabel, Typography } from '@mui/material';
 import {
   Block as BlockIcon,
   CheckCircle as CheckCircleIcon,
@@ -10,7 +9,7 @@ import {
   Error as ErrorIcon,
   Refresh as RefreshIcon,
   SaveAlt as SaveAltIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { deepCompare, groupDeploymentStats, groupDeploymentDevicesStats, isEmpty } from '../../../helpers';
@@ -19,8 +18,9 @@ import ConfigurationObject from '../../common/configurationobject';
 import Confirm from '../../common/confirm';
 import LogDialog from '../../common/dialogs/log';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
-import { ConfigureAddOnTip, ConfigureRaspberryLedTip, ConfigureTimezoneTip } from '../../helptips/helptooltips';
 import Loader from '../../common/loader';
+import Time from '../../common/time';
+import { ConfigureAddOnTip, ConfigureRaspberryLedTip, ConfigureTimezoneTip } from '../../helptips/helptooltips';
 import ConfigImportDialog from './configimportdialog';
 import DeviceDataCollapse from './devicedatacollapse';
 
@@ -48,8 +48,8 @@ export const ConfigUpToDateNote = ({ updated_ts = defaultReportTimeStamp }) => (
       <Typography variant="subtitle2" style={textStyle}>
         Configuration up-to-date on the device
       </Typography>
-      <Typography variant="caption" className="text-muted" style={textStyle}>
-        Updated: {<Time value={updated_ts} format="YYYY-MM-DD HH:mm" />}
+      <Typography variant="caption" className="muted" style={textStyle}>
+        Updated: {<Time value={updated_ts} />}
       </Typography>
     </div>
   </div>
@@ -58,8 +58,8 @@ export const ConfigUpToDateNote = ({ updated_ts = defaultReportTimeStamp }) => (
 export const ConfigEmptyNote = ({ updated_ts = '' }) => (
   <div className="flexbox column margin-small">
     <Typography variant="subtitle2">The device appears to either have an empty configuration or not to have reported a configuration yet.</Typography>
-    <Typography variant="caption" className="text-muted" style={textStyle}>
-      Updated: {<Time value={updated_ts} format="YYYY-MM-DD HH:mm" />}
+    <Typography variant="caption" className="muted" style={textStyle}>
+      Updated: {<Time value={updated_ts} />}
     </Typography>
   </div>
 );
@@ -72,7 +72,7 @@ export const ConfigEditingActions = ({ hasDeviceConfig, isSetAsDefault, onSetAsD
         label="Save as default configuration"
         style={{ marginTop: 0 }}
       />
-      <div className="text-muted">You can import these key value pairs when configuring other devices</div>
+      <div className="muted">You can import these key value pairs when configuring other devices</div>
     </div>
     <Button variant="contained" color="primary" onClick={onSubmit} style={buttonStyle}>
       Save and apply to device
@@ -94,7 +94,7 @@ export const ConfigUpdateNote = ({ isUpdatingConfig, isAccepted }) => (
         ? 'Updating configuration on device...'
         : 'Configuration could not be updated on device'}
     </Typography>
-    <Typography variant="caption" className="text-muted" style={textStyle}>
+    <Typography variant="caption" className="muted" style={textStyle}>
       Status: {isUpdatingConfig || !isAccepted ? 'pending' : 'failed'}
     </Typography>
   </div>
@@ -169,7 +169,6 @@ export const DeviceConfiguration = ({
       // leaving all stats at 0 and giving a false impression of deployment success
       const stats = groupDeploymentStats(deployment);
       const deviceStats = groupDeploymentDevicesStats(deployment);
-
       setUpdateFailed(deployment.created > updated_ts && deployment.finished > reported_ts && (stats.failures || deviceStats.failures));
       setIsUpdatingConfig(false);
     } else if (deployment.status) {
@@ -258,6 +257,7 @@ export const DeviceConfiguration = ({
 
   const onStartEdit = e => {
     e.stopPropagation();
+    setChangedConfig(configured || reported);
     setOpen(true);
     setIsEditingConfig(true);
   };
@@ -266,6 +266,8 @@ export const DeviceConfiguration = ({
     e.stopPropagation();
     setShowConfigImport(true);
   };
+
+  const onAbortClick = () => setIsAborting(!isAborting);
 
   const hasDeviceConfig = !isEmpty(reported);
   let footer = hasDeviceConfig ? <ConfigUpToDateNote updated_ts={reported_ts} /> : <ConfigEmptyNote updated_ts={device.updated_ts} />;
@@ -292,10 +294,10 @@ export const DeviceConfiguration = ({
         {updateFailed ? (
           <ConfigUpdateFailureActions hasLog={hasLog} setShowLog={onShowLog} onSubmit={onSubmit} onCancel={onCancel} />
         ) : isAborting ? (
-          <Confirm cancel={() => setIsAborting(!isAborting)} action={onCancel} type="abort" classes="margin-left-large" />
+          <Confirm cancel={onAbortClick} action={onCancel} type="abort" classes="margin-left-large" />
         ) : (
           <>
-            <Button color="secondary" onClick={() => setIsAborting(!isAborting)} startIcon={<BlockIcon fontSize="small" />} style={buttonStyle}>
+            <Button color="secondary" onClick={onAbortClick} startIcon={<BlockIcon fontSize="small" />} style={buttonStyle}>
               Abort update
             </Button>
             <Button color="secondary" component={Link} to={`/deployments/${deployment.status || 'active'}?open=true&id=${deployment_id}`} style={buttonStyle}>

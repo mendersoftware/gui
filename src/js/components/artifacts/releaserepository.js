@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 
 // material ui
-import { Button, Tooltip, Typography } from '@material-ui/core';
-import { Sort as SortIcon } from '@material-ui/icons';
+import { Button, Tooltip, Typography } from '@mui/material';
+import { Sort as SortIcon } from '@mui/icons-material';
 
 import { setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
@@ -200,7 +200,7 @@ export const ReleaseRepository = ({
       )}
 
       {uploadArtifactOnboardingComponent ? uploadArtifactOnboardingComponent : null}
-      <div style={{ position: 'relative', marginTop: '10px' }}>
+      <div className="relative margin-top margin-right-small">
         {items.length ? (
           <div>
             <div className="release-repo-item repo-item repo-header">
@@ -218,7 +218,7 @@ export const ReleaseRepository = ({
             <Button
               color="primary"
               variant="contained"
-              buttonRef={creationRef}
+              ref={creationRef}
               component={ForwardingLink}
               to={`/deployments/active?open=true&release=${release.Name}`}
               style={{ marginLeft: 20 }}

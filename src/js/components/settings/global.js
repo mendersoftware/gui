@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Button, Checkbox, FormControl, FormControlLabel, FormHelperText, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { Button, Checkbox, FormControl, FormControlLabel, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material';
 
 import { getDeviceAttributes } from '../../actions/deviceActions';
 import { changeNotificationSetting } from '../../actions/monitorActions';

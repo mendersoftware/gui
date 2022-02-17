@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 
-import { Button, IconButton, List, ListItem, ListItemText, TextField, Tooltip } from '@material-ui/core';
+import { Button, IconButton, List, ListItem, ListItemText, TextField, Tooltip } from '@mui/material';
+import { FileCopy as CopyPasteIcon } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
 
-import { FileCopy as CopyPasteIcon } from '@material-ui/icons';
 import FileUpload from '../../common/forms/fileupload';
-
-import theme from '../../../themes/mender-theme';
 
 const tabs = ['upload', 'download'];
 
 const columnStyle = { maxWidth: 400 };
 
 export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUpload, setFile, setDownloadPath, setSnackbar, setUploadPath, uploadPath }) => {
+  const theme = useTheme();
   const [currentTab, setCurrentTab] = useState(tabs[0]);
   const [isValidDestination, setIsValidDestination] = useState(true);
 
@@ -84,7 +84,7 @@ export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUploa
                 value={uploadPath}
               />
               <Tooltip title="Paste" placement="top">
-                <IconButton style={{ alignSelf: 'flex-end' }} onClick={onPasteUploadClick}>
+                <IconButton style={{ alignSelf: 'flex-end' }} onClick={onPasteUploadClick} size="large">
                   <CopyPasteIcon />
                 </IconButton>
               </Tooltip>
@@ -118,7 +118,7 @@ export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUploa
                 style={columnStyle}
               />
               <Tooltip title="Paste" placement="top">
-                <IconButton style={{ alignSelf: 'flex-end' }} onClick={onPasteDownloadClick}>
+                <IconButton style={{ alignSelf: 'flex-end' }} onClick={onPasteDownloadClick} size="large">
                   <CopyPasteIcon />
                 </IconButton>
               </Tooltip>

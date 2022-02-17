@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
-import { Button, Accordion, AccordionDetails, AccordionSummary, IconButton, Input, InputAdornment, List, ListItem, ListItemText } from '@material-ui/core';
-
+import { Button, Accordion, AccordionDetails, AccordionSummary, IconButton, Input, InputAdornment, List, ListItem, ListItemText } from '@mui/material';
 import {
   Add as AddIcon,
   Remove as RemoveIcon,
@@ -13,27 +12,44 @@ import {
   Check as CheckIcon,
   Edit as EditIcon,
   ExitToApp as ExitToAppIcon
-} from '@material-ui/icons';
+} from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 
 import { getArtifactUrl } from '../../actions/releaseActions';
 import { extractSoftwareInformation } from '../../helpers';
-import { colors } from '../../themes/mender-theme';
+import { colors } from '../../themes/Mender';
 import ArtifactPayload from './artifactPayload';
 import ArtifactMetadataList from './artifactmetadatalist';
 
-const styles = {
+const listItemStyle = {
+  color: '#404041',
+  fontSize: 13,
+  marginRight: '2vw',
+  minMidth: 200,
+  padding: 0
+};
+
+const useStyles = makeStyles()(theme => ({
   editButton: {
     color: 'rgba(0, 0, 0, 0.54)',
-    marginBottom: '10px'
+    marginBottom: 10
   },
-  listItemStyle: {
-    color: '#404041',
-    fontSize: '13px',
-    marginRight: '2vw',
-    minMidth: 200,
+  listItemStyle,
+  accordPanel1: {
+    background: theme.palette.grey[500],
+    borderTop: 'none',
+    padding: '0 15px',
+    marginBottom: 30,
+    [`&.Mui-expanded`]: {
+      background: theme.palette.grey[500],
+      marginBottom: 30
+    }
+  },
+  accordSummary: {
+    background: theme.palette.grey[500],
     padding: 0
   }
-};
+}));
 
 const softwareTitleMap = {
   'rootfs-image.version': { title: 'System filesystem', priority: 0 },
@@ -72,6 +88,7 @@ export const transformArtifactMetadata = (metadata = {}) => {
 };
 
 export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExpansion, showRemoveArtifactDialog }) => {
+  const { classes } = useStyles();
   const [descEdit, setDescEdit] = useState(false);
   const [description, setDescription] = useState(artifact.description);
   const [gettingUrl, setGettingUrl] = useState(false);
@@ -113,7 +130,7 @@ export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExp
   return (
     <div className={artifact.name == null ? 'muted' : null}>
       <List style={{ display: 'grid', gridTemplateColumns: 'calc(600px + 2vw) 300px', gridColumnGap: '2vw' }}>
-        <ListItem disabled={true} style={styles.listItemStyle} classes={{ root: 'attributes', disabled: 'opaque' }}>
+        <ListItem className={classes.listItemStyle} classes={{ root: 'attributes', disabled: 'opaque' }}>
           <ListItemText
             primary="Description"
             style={{ marginBottom: -3 }}
@@ -130,7 +147,7 @@ export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExp
                 onChange={e => setDescription(e.target.value)}
                 endAdornment={
                   <InputAdornment position="end">
-                    <IconButton style={styles.editButton} onClick={onToggleEditing}>
+                    <IconButton className={classes.editButton} onClick={onToggleEditing} size="large">
                       {descEdit ? <CheckIcon /> : <EditIcon />}
                     </IconButton>
                   </InputAdornment>
@@ -142,8 +159,7 @@ export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExp
         </ListItem>
         <ListItem
           classes={{ root: 'attributes', disabled: 'opaque' }}
-          disabled={true}
-          style={{ ...styles.listItemStyle, borderBottom: '1px solid', borderBottomColor: colors.borderColor }}
+          style={{ ...listItemStyle, borderBottom: '1px solid', borderBottomColor: colors.borderColor }}
         >
           <ListItemText primary="Signed" secondary={artifact.signed ? <CheckCircleOutlineIcon className="green" /> : <CancelOutlinedIcon className="red" />} />
         </ListItem>
@@ -154,13 +170,13 @@ export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExp
         expanded={showPayloads}
         onChange={() => setShowPayloads(!showPayloads)}
         TransitionProps={{ onEntered: onExpansion, onExited: onExpansion }}
-        style={{ background: '#e9e9e9', borderTop: 'none', padding: '0 15px', margin: '30px 0' }}
+        className={classes.accordPanel1}
       >
-        <AccordionSummary style={{ padding: 0 }}>
+        <AccordionSummary className={classes.accordSummary}>
           <p>Artifact contents</p>
           <div style={{ marginLeft: 'auto' }}>{showPayloads ? <RemoveIcon /> : <AddIcon />}</div>
         </AccordionSummary>
-        <AccordionDetails style={{ padding: 0 }}>
+        <AccordionDetails className={classes.accordSummary}>
           {showPayloads &&
             !!artifact.updates.length &&
             artifact.updates.map((update, index) => <ArtifactPayload index={index} payload={update} key={`artifact-update-${index}`} />)}
@@ -172,21 +188,21 @@ export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExp
           expanded={showProvidesDepends}
           onChange={() => setShowProvidesDepends(!showProvidesDepends)}
           TransitionProps={{ onEntered: onExpansion, onExited: onExpansion }}
-          style={{ background: '#e9e9e9', borderTop: 'none', padding: '0 15px', margin: '30px 0' }}
+          className={classes.accordPanel1}
         >
-          <AccordionSummary style={{ padding: 0 }}>
+          <AccordionSummary className={classes.accordSummary}>
             <p>Provides and Depends</p>
             <div style={{ marginLeft: 'auto' }}>{showProvidesDepends ? <RemoveIcon /> : <AddIcon />}</div>
           </AccordionSummary>
-          <AccordionDetails style={{ padding: 0 }}>
+          <AccordionDetails className={classes.accordSummary}>
             {showProvidesDepends && artifactMetaInfo.map((info, index) => <ArtifactMetadataList metaInfo={info} key={`artifact-info-${index}`} />)}
           </AccordionDetails>
         </Accordion>
       )}
-      <Button href={artifact.url} target="_blank" disabled={!artifact.url} startIcon={<ExitToAppIcon style={{ transform: 'rotateZ(90deg)' }} />}>
-        Download Artifact
-      </Button>
-      <div className="margin-left inline">
+      <div className="two-columns margin-top-small" style={{ maxWidth: 'fit-content' }}>
+        <Button href={artifact.url} target="_blank" disabled={!artifact.url} startIcon={<ExitToAppIcon style={{ transform: 'rotateZ(90deg)' }} />}>
+          Download Artifact
+        </Button>
         <Button onClick={showRemoveArtifactDialog} startIcon={<CancelIcon className="red auth" />}>
           Remove this Artifact?
         </Button>
