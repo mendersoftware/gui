@@ -9,7 +9,7 @@ import { onboardingSteps } from '../constants/onboardingConstants';
 import { extractErrorMessage, preformatWithRequestID } from '../helpers';
 import { getCurrentUser, getUserSettings } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
-import { getDeviceAttributes, getDeviceById, getDevicesByStatus, getDeviceLimit, getDynamicGroups, getGroups } from './deviceActions';
+import { getDeviceAttributes, getDeviceById, getDevicesByStatus, getDeviceLimit, getDynamicGroups, getGroups, setDeviceListState } from './deviceActions';
 import { getDeploymentsByStatus } from './deploymentActions';
 import { getReleases } from './releaseActions';
 import { saveUserSettings, getGlobalSettings, getRoles, saveGlobalSettings } from './userActions';
@@ -51,7 +51,8 @@ export const initializeAppData = () => (dispatch, getState) => {
     const state = getState();
     const user = getCurrentUser(state);
     const userCookie = cookies.get(user.id);
-    let { showHelptips = state.users.showHelptips, trackingConsentGiven: hasTrackingEnabled } = getUserSettings(state);
+    let { columnSelection = [], showHelptips = state.users.showHelptips, trackingConsentGiven: hasTrackingEnabled } = getUserSettings(state);
+    dispatch(setDeviceListState({ selectedAttributes: columnSelection.map(column => ({ attribute: column.key, scope: column.scope })) }));
     // checks if user id is set and if cookie for helptips exists for that user
     if (userCookie && userCookie.help !== 'undefined') {
       const { help, ...crumbles } = userCookie;
