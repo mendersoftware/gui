@@ -20,7 +20,8 @@ const variantPalette = {
     '50': '#d4e9e7'
   },
   background: {
-    default: '#fff'
+    default: '#fff',
+    dark: 'rgb(50, 50, 50)'
   }
 };
 
@@ -76,6 +77,13 @@ export const light = {
         root: {
           ...overrides.MuiListItemText.styleOverrides.root,
           color: variantPalette.text.primary
+        }
+      }
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: variantPalette.background.dark
         }
       }
     }

@@ -268,6 +268,7 @@ export const overrides = {
       root: {
         borderRadius: 2,
         fontSize: 14,
+        fontWeight: 'bold',
         '&:hover': {
           colors: palette.primary.main
         }

@@ -478,16 +478,16 @@ ul.link-list {
 .two-columns {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  column-gap: 2 * @defaultGutterWidth;
+  column-gap: @defaultGutterWidth;
   &.column-data {
-    max-width: 25 * @defaultGutterWidth;
+    max-width: 30 * @defaultGutterWidth;
     row-gap: 5px;
     &.compact {
       grid-template-columns: max-content 1fr;
     }
     &.multiple {
       grid-template-columns: 1fr 1fr;
-      max-width: 25 * @defaultGutterWidth;
+      max-width: 30 * @defaultGutterWidth;
     }
     .key > b {
       padding: 2px 14px;
@@ -500,7 +500,7 @@ ul.link-list {
 .two-columns-multiple {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(max-content, 25vw));
-  column-gap: 2 * @defaultGutterWidth;
+  column-gap: @defaultGutterWidth;
   row-gap: 5px;
 }
 
@@ -985,7 +985,6 @@ table thead.clickable tr > th:first-child {
   background-color: @lightestgrey;
   border-radius: 4px;
   padding: 24px 14px 20px 24px;
-  max-height: 43vh;
   overflow-y: auto;
   position: relative;
   white-space: pre-line;
@@ -1181,7 +1180,6 @@ div:focus {
   border: 1px solid @lightergrey;
   vertical-align: top;
   width: 32%;
-  height: 190px;
   .transition(all 0.2s ease);
   cursor: pointer;
 
@@ -1257,7 +1255,7 @@ div:focus {
   min-width: 1000px;
   .header {
     height: 56px;
-    font-size: 9pt;
+    font-size: 0.8rem;
     color: @textmuted;
   }
   .body > div:last-of-type {
@@ -1901,7 +1899,7 @@ div.waiting-inventory {
     grid-column-gap: 20px;
     .text-overflow {
       display: -webkit-box;
-      -webkit-line-clamp: 3;
+      -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
     }
   }

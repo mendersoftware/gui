@@ -81,7 +81,7 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
   flex-direction: column;
   max-height: calc(100% - 64px);
   max-width: 600px;
-  width: calc(100% - 64px);
+  max-width: 720px;
 }
 
 @media print {
@@ -367,7 +367,7 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
   >
     <div
       aria-labelledby="mui-1"
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation24 MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthSm MuiDialog-paperFullWidth emotion-3"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation24 MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthSm emotion-3"
       role="dialog"
     >
       <h2

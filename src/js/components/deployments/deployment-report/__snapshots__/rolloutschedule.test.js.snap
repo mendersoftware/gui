@@ -13,12 +13,12 @@ exports[`DeploymentStatus Component renders correctly 1`] = `
       >
         Status
       </div>
-      <h3
+      <h4
         class="margin-bottom-none muted"
       >
         Pending
          (awaiting devices)
-      </h3>
+      </h4>
     </div>
     <div
       class="flexbox space-between align-right"
