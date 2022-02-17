@@ -22,6 +22,7 @@ import Time from '../common/time';
 import Terminal from './troubleshoot/terminal';
 import FileTransfer from './troubleshoot/filetransfer';
 import { apiUrl } from '../../api/general-api';
+import { createDownload } from '../../helpers';
 
 momentDurationFormatSetup(moment);
 const MessagePack = msgpack5();
@@ -146,13 +147,8 @@ export const TroubleshootDialog = ({
   const onDownloadClick = path => {
     setDownloadPath(path);
     getDeviceFileDownloadLink(deviceId, path).then(address => {
-      const fileName = path.substring(path.lastIndexOf('/') + 1) || 'file';
-      const link = document.createElement('a');
-      link.setAttribute('href', address);
-      link.setAttribute('download', fileName);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      const filename = path.substring(path.lastIndexOf('/') + 1) || 'file';
+      createDownload(address, filename);
     });
   };
 
