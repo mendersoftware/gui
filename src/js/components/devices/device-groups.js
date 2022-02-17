@@ -34,8 +34,13 @@ import { emptyFilter } from './widgets/filters';
 import PreauthDialog, { DeviceLimitWarning } from './preauth-dialog';
 import {
   AcceptedEmptyState,
+  defaultTextRender,
   DeviceCreationTime,
-  DeviceStatusHeading,
+  DeviceSoftware,
+  DeviceStatusRenderer,
+  DeviceTypes,
+  getDeviceSoftwareText,
+  getDeviceTypeText,
   PendingEmptyState,
   PreauthorizedEmptyState,
   RejectedEmptyState,
@@ -47,22 +52,43 @@ import Groups from './groups';
 import DeviceStatusNotification from './devicestatusnotification';
 
 export const defaultHeaders = {
+  currentSoftware: {
+    title: 'Current software',
+    attribute: { name: 'rootfs-image.version', scope: 'inventory', alternative: 'artifact_name' },
+    component: DeviceSoftware,
+    sortable: true,
+    textRender: getDeviceSoftwareText
+  },
   deviceCreationTime: {
     title: 'First request',
     attribute: { name: 'created_ts', scope: 'system' },
-    render: DeviceCreationTime,
+    component: DeviceCreationTime,
     sortable: true
+  },
+  deviceId: {
+    title: 'Device ID',
+    attribute: { name: 'id', scope: 'identity' },
+    sortable: true,
+    textRender: ({ id }) => id
   },
   deviceStatus: {
     title: 'Status',
     attribute: { name: 'status', scope: 'identity' },
-    render: DeviceStatusHeading,
-    sortable: true
+    component: DeviceStatusRenderer,
+    sortable: true,
+    textRender: defaultTextRender
+  },
+  deviceType: {
+    title: 'Device type',
+    attribute: { name: 'device_type', scope: 'inventory' },
+    component: DeviceTypes,
+    sortable: true,
+    textRender: getDeviceTypeText
   },
   lastCheckIn: {
     title: 'Last check-in',
     attribute: { name: 'updated_ts', scope: 'system' },
-    render: RelativeDeviceTime,
+    component: RelativeDeviceTime,
     sortable: true
   }
 };
@@ -75,22 +101,7 @@ const acceptedDevicesRoute = {
   route: `${baseDevicesRoute}/${DEVICE_STATES.accepted}`,
   title: () => DEVICE_STATES.accepted,
   emptyState: AcceptedEmptyState,
-  defaultHeaders: [
-    {
-      title: 'Device type',
-      attribute: { name: 'device_type', scope: 'inventory' },
-      render: ({ attributes = {} }) => (attributes.device_type?.length ? attributes.device_type.join(',') : '-'),
-      sortable: true
-    },
-    {
-      title: 'Current software',
-      attribute: { name: 'rootfs-image.version', scope: 'inventory', alternative: 'artifact_name' },
-      render: ({ attributes = {} }) => attributes['rootfs-image.version'] || attributes.artifact_name || '-',
-      sortable: true
-    },
-    defaultHeaders.lastCheckIn,
-    defaultHeaders.deviceStatus
-  ]
+  defaultHeaders: [defaultHeaders.deviceType, defaultHeaders.currentSoftware, defaultHeaders.lastCheckIn, defaultHeaders.deviceStatus]
 };
 
 export const routes = {
