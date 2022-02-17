@@ -192,7 +192,7 @@ export const PhysicalDeviceOnboarding = ({
   }, []);
 
   const onSelect = (e, deviceType, reason) => {
-    if (reason === 'select-option') {
+    if (reason === 'selectOption') {
       setOnboardingDeviceType(deviceType.value);
       setSelection(deviceType.value);
     } else if (reason === 'clear') {
