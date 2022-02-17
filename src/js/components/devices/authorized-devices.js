@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
@@ -25,7 +25,7 @@ import DeviceList from './devicelist';
 import DeviceQuickActions from './widgets/devicequickactions';
 import Filters from './widgets/filters';
 import DeviceIssuesSelection from './widgets/issueselection';
-import ColumnCustomizationDialog from './custom-columns-dialog';
+const ColumnCustomizationDialog = lazy(() => import('./custom-columns-dialog'));
 import ListOptions from './widgets/listoptions';
 
 const refreshDeviceLength = 10000;
@@ -438,6 +438,7 @@ export const Authorized = props => {
         />
       )}
       {showCustomization && (
+        <Suspense fallback={<Loader show />}>
         <ColumnCustomizationDialog
           attributes={attributes}
           columnHeaders={columnHeaders}
@@ -445,6 +446,7 @@ export const Authorized = props => {
           onCancel={onToggleCustomizationClick}
           onSubmit={onChangeColumns}
         />
+        </Suspense>
       )}
     </>
   );
