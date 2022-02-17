@@ -68,11 +68,11 @@ const DeviceStatus = ({ device: { auth_sets = [], isOffline, monitor = {}, statu
     label = 'offline';
   }
   return label ? (
-    <Tooltip title={notification} placement="bottom">
-      <Chip variant="outlined" size="small" icon={icon} label={<div className="uppercased">{label}</div>} className="deviceStatus" />
+    <Tooltip arrow title={notification} placement="bottom">
+      <Chip variant="outlined" size="small" icon={icon} label={<div className="uppercased">{label}</div>} className="deviceStatus margin-right-small" />
     </Tooltip>
   ) : (
-    <div>{deviceStatus}</div>
+    <div className="margin-right-small">{deviceStatus}</div>
   );
 };
 
