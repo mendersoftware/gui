@@ -29,6 +29,8 @@ export const validateGroupName = (encodedName, groups = [], selectedGroup, isCre
   return { errortext, invalid, isModification, name };
 };
 
+const GroupOption = (props, option) => <li {...props}>{option.title}</li>;
+
 export const GroupDefinition = ({ isCreationDynamic, groups, newGroup, onInputChange, selectedGroup }) => {
   const [errortext, setErrorText] = useState('');
 
@@ -75,7 +77,7 @@ export const GroupDefinition = ({ isCreationDynamic, groups, newGroup, onInputCh
         options={filteredGroups}
         onInputChange={(e, newValue) => validateName(newValue)}
         renderInput={params => <TextField {...params} label="Select a group, or type to create new" InputProps={{ ...params.InputProps }} />}
-        renderOption={option => option.title}
+        renderOption={GroupOption}
       />
       <FormHelperText>{errortext}</FormHelperText>
       {isCreationDynamic && (

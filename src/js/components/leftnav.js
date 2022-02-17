@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
 import copy from 'copy-to-clipboard';
@@ -7,7 +7,7 @@ import copy from 'copy-to-clipboard';
 import { List, ListItem, ListItemText, Tooltip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { setSnackbar } from '../actions/appActions';
+import { setSnackbar, setVersionInfo } from '../actions/appActions';
 
 import { onboardingSteps } from '../constants/onboardingConstants';
 import { getDocsVersion, getIsEnterprise, getOnboardingState, getUserRoles } from '../selectors';
@@ -31,25 +31,21 @@ const useStyles = makeStyles()(theme => ({
   listItem: { padding: '16px 16px 16px 42px' }
 }));
 
-export const LeftNav = ({ docsVersion, isAdmin, isEnterprise, onboardingState, setSnackbar, versionInformation }) => {
-  const releasesRef = useRef();
-  const { classes } = useStyles();
+const VersionInfo = ({ setSnackbar, setVersionInfo, versionInformation }) => {
+  const [clicks, setClicks] = useState(0);
+  const timer = useRef();
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(timer.current);
+    };
+  }, []);
 
   const onVersionClick = () => {
     copy(JSON.stringify(versionInformation));
     setSnackbar('Version information copied to clipboard');
   };
 
-  const licenseLink = (
-    <a
-      className={classes.licenseLink}
-      href={`https://docs.mender.io/${docsVersion}release-information/open-source-licenses`}
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      License information
-    </a>
-  );
   const versions = (
     <ul className="unstyled" style={{ minWidth: 120 }}>
       {Object.entries(versionInformation).reduce((accu, [key, version]) => {
@@ -65,13 +61,43 @@ export const LeftNav = ({ docsVersion, isAdmin, isEnterprise, onboardingState, s
       }, [])}
     </ul>
   );
-  const versionInfo = (
+
+  const onClick = () => {
+    setClicks(clicks + 1);
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => {
+      setClicks(0);
+    }, 3000);
+    if (clicks > 5) {
+      setVersionInfo({ Integration: 'next' });
+    }
+    onVersionClick();
+  };
+
+  return (
     <Tooltip title={versions} placement="top">
-      <div className="clickable slightly-smaller" onClick={onVersionClick}>
+      <div className="clickable slightly-smaller" onClick={onClick}>
         {versionInformation.Integration ? `Version: ${versionInformation.Integration}` : ''}
       </div>
     </Tooltip>
   );
+};
+
+export const LeftNav = ({ docsVersion, isAdmin, isEnterprise, onboardingState, setSnackbar, setVersionInfo, versionInformation }) => {
+  const releasesRef = useRef();
+  const { classes } = useStyles();
+
+  const licenseLink = (
+    <a
+      className={classes.licenseLink}
+      href={`https://docs.mender.io/${docsVersion}release-information/open-source-licenses`}
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      License information
+    </a>
+  );
+
   let onboardingComponent;
   if (releasesRef.current) {
     onboardingComponent = getOnboardingComponentFor(onboardingSteps.APPLICATION_UPDATE_REMINDER_TIP, onboardingState, {
@@ -111,14 +137,17 @@ export const LeftNav = ({ docsVersion, isAdmin, isEnterprise, onboardingState, s
           <ListItemText primary="Help" />
         </ListItem>
         <ListItem className={classes.listItem}>
-          <ListItemText primary={versionInfo} secondary={licenseLink} />
+          <ListItemText
+            primary={<VersionInfo setSnackbar={setSnackbar} setVersionInfo={setVersionInfo} versionInformation={versionInformation} />}
+            secondary={licenseLink}
+          />
         </ListItem>
       </List>
     </div>
   );
 };
 
-const actionCreators = { setSnackbar };
+const actionCreators = { setSnackbar, setVersionInfo };
 
 const mapStateToProps = state => {
   return {
