@@ -13,9 +13,11 @@ import PasswordInput from '../../common/forms/passwordinput';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import { OAuth2Providers } from '../../login/oauth2providers';
 import TwoFactorAuthSetup from './twofactorauthsetup';
+import { versionCompare } from '../../../helpers';
 
 export const SelfUserManagement = ({
   canHave2FA,
+  canPreview,
   currentUser,
   editUser,
   hasTracking,
@@ -119,10 +121,12 @@ export const SelfUserManagement = ({
             </Form>
           </>
         ))}
-      <div className="clickable flexbox space-between margin-top" onClick={toggleMode}>
-        <p className="help-content">Enable dark theme</p>
-        <Switch checked={mode === 'dark'} />
-      </div>
+      {canPreview && (
+        <div className="clickable flexbox space-between margin-top" onClick={toggleMode}>
+          <p className="help-content">Enable dark theme</p>
+          <Switch checked={mode === 'dark'} />
+        </div>
+      )}
       {!isOAuth2 ? (
         canHave2FA ? (
           <TwoFactorAuthSetup />
@@ -161,6 +165,7 @@ const mapStateToProps = state => {
   const isEnterprise = getIsEnterprise(state);
   return {
     canHave2FA: isEnterprise || (state.app.features.isHosted && plan !== 'os'),
+    canPreview: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
     currentUser: getCurrentUser(state),
     hasTracking: !!state.app.trackerCode,
     hasTrackingConsent: getUserSettings(state).trackingConsentGiven,
