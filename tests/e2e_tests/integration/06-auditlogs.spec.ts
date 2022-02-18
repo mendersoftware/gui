@@ -37,12 +37,12 @@ test.describe('Auditlogs', () => {
     await elementHandle.screenshot({ path: screenShotPath });
     const { pass } = compareImages(expectedPath, screenShotPath);
     expect(pass).toBeTruthy();
-    await page.click(`button :text('Close')`);
+    await page.click(`button:has-text('Close')`);
     await page.click('[aria-label="close"]'); // short-form
     await page.click(`.leftNav.navLink:has-text('Audit log')`);
 
     await page.click(`.auditlogs-list-item :text('CLOSE_TERMINAL')`);
-    await page.click(`button :text('Play')`);
+    await page.click(`button:has-text('Play')`);
     expect(await page.isVisible(`.MuiDrawer-paper a:has-text('Download'), .MuiDrawer-paper button:has-text('Download')`)).toBeTruthy();
     const [download] = await Promise.all([
       page.waitForEvent('download'),
