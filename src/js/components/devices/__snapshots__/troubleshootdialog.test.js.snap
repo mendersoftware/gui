@@ -561,6 +561,9 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
                     class="xterm-cursor-layer"
                     style="z-index: 3;"
                   />
+                  <div
+                    class="xterm-decoration-container"
+                  />
                 </div>
               </div>
             </div>
