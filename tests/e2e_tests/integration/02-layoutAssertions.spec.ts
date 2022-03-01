@@ -43,7 +43,7 @@ test.describe('Layout assertions', () => {
     await page.waitForSelector(`css=.deviceListItem >> text=/release/`, { timeout: 60000 });
     const element = await page.textContent('.deviceListItem');
     expect(element.includes('release')).toBeTruthy();
-    await page.click('.deviceListItem');
+    await page.click(`.deviceListItem div:last-child`);
     expect(await page.isVisible('text=Authentication status')).toBeTruthy();
   });
 
