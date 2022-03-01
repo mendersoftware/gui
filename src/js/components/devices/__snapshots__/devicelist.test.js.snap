@@ -47,6 +47,7 @@ exports[`DeviceList Component renders correctly 1`] = `
           </p>
           <div
             class=\\"MuiInputBase-root MuiInputBase-colorPrimary css-16c50h-MuiInputBase-root-MuiTablePagination-select\\"
+            variant=\\"standard\\"
           >
             <div
               aria-expanded=\\"false\\"
@@ -142,7 +143,7 @@ exports[`DeviceList Component renders correctly 1`] = `
                     class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
                   >
                     <legend
-                      class=\\"css-nnbavb\\"
+                      class=\\"css-hdw1oc\\"
                     >
                       <span
                         class=\\"notranslate\\"

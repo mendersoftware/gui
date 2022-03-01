@@ -2,6 +2,7 @@
 
 exports[`RolloutOptions Component renders correctly 1`] = `
 .emotion-0 {
+  max-width: 100%;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-size: 0.8125rem;
   display: -webkit-inline-box;
@@ -175,6 +176,7 @@ exports[`RolloutOptions Component renders correctly 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
+  max-width: 100%;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-size: 0.8125rem;
   display: -webkit-inline-box;
@@ -615,6 +617,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
 
 .emotion-30 {
   float: unset;
+  overflow: hidden;
   padding: 0;
   line-height: 11px;
   -webkit-transition: width 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
@@ -1084,6 +1087,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
 
 exports[`RolloutOptions Component renders correctly when enterprise is false 1`] = `
 .emotion-0 {
+  max-width: 100%;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-size: 0.8125rem;
   display: -webkit-inline-box;
@@ -1510,6 +1514,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
 
 .emotion-19 {
   float: unset;
+  overflow: hidden;
   padding: 0;
   line-height: 11px;
   -webkit-transition: width 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;

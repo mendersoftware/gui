@@ -190,7 +190,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
                   />
                 </svg>
                 <div
-                  class=\\"MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault margin-left uppercased css-1kqosj6-MuiChip-root\\"
+                  class=\\"MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault margin-left uppercased css-1r1ekxc-MuiChip-root\\"
                   style=\\"opacity: 0.5; font-size: 0.675rem; height: 18px;\\"
                 >
                   <span
@@ -580,6 +580,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
               </p>
               <div
                 class=\\"MuiInputBase-root MuiInputBase-colorPrimary css-16c50h-MuiInputBase-root-MuiTablePagination-select\\"
+                variant=\\"standard\\"
               >
                 <div
                   aria-expanded=\\"false\\"
@@ -675,7 +676,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
                         class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
                       >
                         <legend
-                          class=\\"css-nnbavb\\"
+                          class=\\"css-hdw1oc\\"
                         >
                           <span
                             class=\\"notranslate\\"
@@ -852,7 +853,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
               Complete
             </div>
             <div
-              class=\\"MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault css-1kqosj6-MuiChip-root\\"
+              class=\\"MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault css-1r1ekxc-MuiChip-root\\"
               style=\\"align-self: flex-start; margin: 16px 16px 16px 20px;\\"
             >
               <span

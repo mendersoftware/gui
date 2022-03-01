@@ -52,7 +52,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
             >
               <legend
-                class=\\"css-1z7n62\\"
+                class=\\"css-7nxzgd\\"
               >
                 <span>
                   Filter by user
@@ -125,7 +125,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
             >
               <legend
-                class=\\"css-1z7n62\\"
+                class=\\"css-7nxzgd\\"
               >
                 <span>
                   Filter by change
@@ -189,7 +189,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
             >
               <legend
-                class=\\"css-nnbavb\\"
+                class=\\"css-hdw1oc\\"
               >
                 <span
                   class=\\"notranslate\\"
@@ -273,7 +273,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
             >
               <legend
-                class=\\"css-1z7n62\\"
+                class=\\"css-7nxzgd\\"
               >
                 <span>
                   From
@@ -311,7 +311,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
             >
               <legend
-                class=\\"css-1z7n62\\"
+                class=\\"css-7nxzgd\\"
               >
                 <span>
                   To
@@ -596,6 +596,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
           </p>
           <div
             class=\\"MuiInputBase-root MuiInputBase-colorPrimary css-16c50h-MuiInputBase-root-MuiTablePagination-select\\"
+            variant=\\"standard\\"
           >
             <div
               aria-expanded=\\"false\\"
@@ -691,7 +692,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
                     class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
                   >
                     <legend
-                      class=\\"css-nnbavb\\"
+                      class=\\"css-hdw1oc\\"
                     >
                       <span
                         class=\\"notranslate\\"
