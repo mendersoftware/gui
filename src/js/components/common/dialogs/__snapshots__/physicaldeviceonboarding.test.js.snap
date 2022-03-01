@@ -475,6 +475,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
 
 .emotion-10 {
   float: unset;
+  overflow: hidden;
   display: block;
   width: auto;
   padding: 0;
@@ -1113,6 +1114,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
 
 .emotion-10 {
   float: unset;
+  overflow: hidden;
   display: block;
   width: auto;
   padding: 0;

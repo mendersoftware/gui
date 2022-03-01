@@ -199,6 +199,7 @@ exports[`Roles Component renders correctly 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
+  max-width: 100%;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-size: 0.8125rem;
   display: -webkit-inline-box;
@@ -620,6 +621,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-48:focus::-ms-input-
 
 .emotion-50 {
   float: unset;
+  overflow: hidden;
   display: block;
   width: auto;
   padding: 0;

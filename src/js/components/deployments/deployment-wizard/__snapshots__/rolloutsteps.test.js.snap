@@ -2,6 +2,7 @@
 
 exports[`RolloutSteps Component renders correctly 1`] = `
 .emotion-0 {
+  max-width: 100%;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-size: 0.8125rem;
   display: -webkit-inline-box;
@@ -175,6 +176,7 @@ exports[`RolloutSteps Component renders correctly 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
+  max-width: 100%;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-size: 0.8125rem;
   display: -webkit-inline-box;
@@ -569,6 +571,7 @@ exports[`RolloutSteps Component renders correctly 1`] = `
 
 exports[`RolloutSteps Component renders correctly 2`] = `
 .emotion-0 {
+  max-width: 100%;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-size: 0.8125rem;
   display: -webkit-inline-box;
@@ -742,6 +745,7 @@ exports[`RolloutSteps Component renders correctly 2`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
+  max-width: 100%;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-size: 0.8125rem;
   display: -webkit-inline-box;
@@ -1136,6 +1140,7 @@ exports[`RolloutSteps Component renders correctly 2`] = `
 
 exports[`RolloutSteps Component renders correctly 3`] = `
 .emotion-0 {
+  max-width: 100%;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-size: 0.8125rem;
   display: -webkit-inline-box;
@@ -1309,6 +1314,7 @@ exports[`RolloutSteps Component renders correctly 3`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
+  max-width: 100%;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-size: 0.8125rem;
   display: -webkit-inline-box;

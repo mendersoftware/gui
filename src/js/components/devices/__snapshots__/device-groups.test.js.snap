@@ -16,7 +16,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
       <div>
         Quick find Device
         <div
-          class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary margin-left-small css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root\\"
+          class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary margin-left-small css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root\\"
           style=\\"font-size: 13px;\\"
         >
           <div
@@ -51,7 +51,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
           >
             <legend
-              class=\\"css-nnbavb\\"
+              class=\\"css-hdw1oc\\"
             >
               <span
                 class=\\"notranslate\\"
@@ -83,7 +83,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
               class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
             >
               <legend
-                class=\\"css-nnbavb\\"
+                class=\\"css-hdw1oc\\"
               >
                 <span
                   class=\\"notranslate\\"
@@ -316,7 +316,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             >
               Status:
               <div
-                class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary margin-right css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root\\"
+                class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary margin-right css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root\\"
                 style=\\"font-size: 13px; margin-left: 8px;\\"
               >
                 <div
@@ -350,7 +350,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                   class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
                 >
                   <legend
-                    class=\\"css-nnbavb\\"
+                    class=\\"css-hdw1oc\\"
                   >
                     <span
                       class=\\"notranslate\\"
@@ -764,6 +764,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 </p>
                 <div
                   class=\\"MuiInputBase-root MuiInputBase-colorPrimary css-16c50h-MuiInputBase-root-MuiTablePagination-select\\"
+                  variant=\\"standard\\"
                 >
                   <div
                     aria-expanded=\\"false\\"
@@ -859,7 +860,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                           class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
                         >
                           <legend
-                            class=\\"css-nnbavb\\"
+                            class=\\"css-hdw1oc\\"
                           >
                             <span
                               class=\\"notranslate\\"

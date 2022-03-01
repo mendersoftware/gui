@@ -19,6 +19,7 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
 }
 
 .emotion-2 {
+  max-width: 100%;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-size: 0.8125rem;
   display: -webkit-inline-box;

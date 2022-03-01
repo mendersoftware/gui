@@ -94,6 +94,7 @@ exports[`PhaseSettings Component renders correctly 1`] = `
 }
 
 .emotion-11 {
+  max-width: 100%;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-size: 0.8125rem;
   display: -webkit-inline-box;
@@ -219,6 +220,7 @@ exports[`PhaseSettings Component renders correctly 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
+  max-width: 100%;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-size: 0.8125rem;
   display: -webkit-inline-box;
