@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
 
 // material ui
-import { Autocomplete, IconButton, MenuItem, Select, TextField, FormHelperText } from '@mui/material';
+import { IconButton, MenuItem, Select, TextField, FormHelperText } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { Help as HelpIcon, HighlightOff as HighlightOffIcon } from '@mui/icons-material';
-import { createFilterOptions } from '@mui/material/useAutocomplete';
 
 import { DEVICE_FILTERING_OPTIONS } from '../../../constants/deviceConstants';
 import MenderTooltip from '../../common/mendertooltip';
-import { emptyFilter, getFilterLabelByKey } from './filters';
-
-const optionsFilter = createFilterOptions();
+import { emptyFilter } from './filters';
+import AttributeAutoComplete from './attribute-autocomplete';
 
 const textFieldStyle = { marginTop: 0, marginBottom: 15 };
 
@@ -34,21 +32,6 @@ const filterNotifications = {
       </MenderTooltip>
     );
   }
-};
-
-const getOptionLabel = option => option.value || option.key || option;
-
-const FilterOption = (props, option) => {
-  let content = getOptionLabel(option);
-  if (option.category === 'recently used') {
-    content = (
-      <div className="flexbox center-aligned space-between" style={{ width: '100%' }}>
-        <div>{content}</div>
-        <div className="muted slightly-smaller">({option.scope})</div>
-      </div>
-    );
-  }
-  return <li {...props}>{content}</li>;
 };
 
 export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => {
@@ -94,13 +77,9 @@ export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => 
     );
   }, [key, operator, scope, value]);
 
-  const updateFilterKey = (value, selectedScope) => {
-    if (!value) {
-      return removeFilter();
-    }
-    const { key, scope: fallbackScope } = attributes.find(filter => filter.key === value);
+  const updateFilterKey = ({ key, scope }) => {
     setKey(key);
-    setScope(selectedScope || fallbackScope);
+    setScope(scope);
   };
 
   const updateFilterOperator = ({ target: { value: changedOperator } }) => {
@@ -115,12 +94,7 @@ export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => 
   };
 
   const removeFilter = () => {
-    onRemove({
-      key,
-      operator,
-      scope,
-      value
-    });
+    onRemove({ key, operator, scope, value });
     setReset(!reset);
   };
 
@@ -131,44 +105,7 @@ export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => 
     <>
       <div className="flexbox center-aligned relative">
         {filterNotifications[key]}
-        <Autocomplete
-          autoComplete
-          autoHighlight
-          autoSelect
-          freeSolo
-          filterSelectedOptions
-          filterOptions={(options, params) => {
-            const filtered = optionsFilter(options, params);
-            if (filtered.length !== 1 && params.inputValue !== '') {
-              filtered.push({
-                inputValue: params.inputValue,
-                key: 'custom',
-                value: `Use "${params.inputValue}"`,
-                category: 'custom',
-                priority: 99
-              });
-            }
-            return filtered;
-          }}
-          getOptionLabel={getOptionLabel}
-          groupBy={option => option.category}
-          renderOption={FilterOption}
-          id="filter-selection"
-          includeInputInList={true}
-          onChange={(e, changedValue) => {
-            const { inputValue, key = changedValue, scope } = changedValue || {};
-            if (inputValue) {
-              // only circumvent updateFilterKey if we deal with a custom attribute - those will be treated as inventory attributes
-              setKey(inputValue);
-              return setScope(defaultScope);
-            }
-            updateFilterKey(key, scope);
-          }}
-          options={attributes.sort((a, b) => a.priority - b.priority)}
-          renderInput={params => <TextField {...params} label="Attribute" style={textFieldStyle} />}
-          key={reset}
-          value={getFilterLabelByKey(key, attributes)}
-        />
+        <AttributeAutoComplete attributes={attributes} filter={filter} label="Attribute" onRemove={removeFilter} onSelect={updateFilterKey} />
         <Select className="margin-left-small margin-right-small" onChange={updateFilterOperator} value={operator}>
           {Object.entries(filterOptions).map(([optionKey, option]) => (
             <MenuItem key={optionKey} value={optionKey}>

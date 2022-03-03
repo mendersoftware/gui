@@ -19,7 +19,7 @@ export const emptyFilter = { key: null, value: '', operator: '$eq', scope: 'inve
 
 export const getFilterLabelByKey = (key, attributes) => {
   const attr = attributes.find(attr => attr.key === key);
-  return attr != undefined ? attr.value : key;
+  return attr?.value ?? key ?? '';
 };
 
 const MAX_PREVIOUS_FILTERS_COUNT = 3;
