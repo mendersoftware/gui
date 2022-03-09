@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 // material ui
@@ -43,6 +43,8 @@ const filterAttributes = (list, attribute) => list.filter(item => !(item.key ===
 export const ColumnCustomizationDialog = ({ attributes, columnHeaders, idAttribute, onCancel, onSubmit, ...props }) => {
   const [attributeOptions, setAttributeOptions] = useState([]);
   const [selectedAttributes, setSelectedAttributes] = useState([]);
+  const [isAtColumnLimit, setIsAtColumnLimit] = useState(selectedAttributes.length >= columnLimit);
+  const buttonRef = useRef();
 
   useEffect(() => {
     const { attributeOptions, selectedAttributes } = columnHeaders.reduce(
@@ -63,6 +65,14 @@ export const ColumnCustomizationDialog = ({ attributes, columnHeaders, idAttribu
     setSelectedAttributes(selectedAttributes);
     setAttributeOptions(attributeOptions);
   }, [attributes, columnHeaders]);
+
+  useEffect(() => {
+    const isAtColumnLimit = selectedAttributes.length >= columnLimit;
+    if (isAtColumnLimit && buttonRef.current) {
+      buttonRef.current.focus();
+    }
+    setIsAtColumnLimit(isAtColumnLimit);
+  }, [selectedAttributes.length]);
 
   const onDragEnd = ({ destination, source }) => {
     if (!destination) {
@@ -110,8 +120,6 @@ export const ColumnCustomizationDialog = ({ attributes, columnHeaders, idAttribu
     }
   };
 
-  const isAtColumnLimit = selectedAttributes.length >= columnLimit;
-
   return (
     <Dialog open>
       <DialogTitle>Customize Columns</DialogTitle>
@@ -140,7 +148,7 @@ export const ColumnCustomizationDialog = ({ attributes, columnHeaders, idAttribu
         <Button variant="text" onClick={onCancel}>
           Cancel
         </Button>
-        <Button variant="contained" onClick={onHandleSubmit} color="secondary">
+        <Button variant="contained" onClick={onHandleSubmit} color="secondary" ref={buttonRef}>
           Save
         </Button>
       </DialogActions>
