@@ -1,18 +1,21 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { PLANS } from '../constants/appConstants';
+import { DEVICE_ISSUE_OPTIONS } from '../constants/deviceConstants';
 import { rolesByName, twoFAStates } from '../constants/userConstants';
 import { getDemoDeviceAddress as getDemoDeviceAddressHelper } from '../helpers';
 
 const getAppDocsVersion = state => state.app.docsVersion;
-const getFeatures = state => state.app.features;
+export const getFeatures = state => state.app.features;
 const getRolesById = state => state.users.rolesById;
 const getOrganization = state => state.organization.organization;
 const getAcceptedDevices = state => state.devices.byStatus.accepted;
+const getFilteringAttributes = state => state.devices.filteringAttributes;
 const getDeviceLimit = state => state.devices.limit;
 const getDevicesList = state => Object.values(state.devices.byId);
 const getOnboarding = state => state.onboarding;
 const getShowHelptips = state => state.users.showHelptips;
 const getGlobalSettings = state => state.users.globalSettings;
+const getIssueCountsByType = state => state.monitor.issueCounts.byType;
 
 export const getCurrentUser = state => state.users.byId[state.users.currentUser] || {};
 export const getUserSettings = state => state.users.globalSettings[state.users.currentUser] || {};
@@ -30,6 +33,28 @@ export const getIdAttribute = createSelector([getGlobalSettings], ({ id_attribut
 
 export const getLimitMaxed = createSelector([getAcceptedDevices, getDeviceLimit], ({ total: acceptedDevices = 0 }, deviceLimit) =>
   Boolean(deviceLimit && deviceLimit <= acceptedDevices)
+);
+
+export const getFilterAttributes = createSelector(
+  [getGlobalSettings, getFilteringAttributes],
+  ({ previousFilters }, { identityAttributes, inventoryAttributes, tagAttributes }) => {
+    const deviceNameAttribute = { key: 'name', value: 'Name', scope: 'tags', category: 'tags', priority: 1 };
+    const deviceIdAttribute = { key: 'id', value: 'Device ID', scope: 'identity', category: 'identity', priority: 1 };
+    const attributes = [
+      ...previousFilters.map(item => ({
+        ...item,
+        value: deviceIdAttribute.key === item.key ? deviceIdAttribute.value : item.key,
+        category: 'recently used',
+        priority: 0
+      })),
+      deviceNameAttribute,
+      deviceIdAttribute,
+      ...identityAttributes.map(item => ({ key: item, value: item, scope: 'identity', category: 'identity', priority: 1 })),
+      ...inventoryAttributes.map(item => ({ key: item, value: item, scope: 'inventory', category: 'inventory', priority: 2 })),
+      ...tagAttributes.map(item => ({ key: item, value: item, scope: 'tags', category: 'tags', priority: 3 }))
+    ];
+    return attributes.filter((item, index, array) => array.findIndex(filter => filter.key === item.key && filter.scope === item.scope) == index);
+  }
 );
 
 export const getOnboardingState = createSelector([getOnboarding, getShowHelptips], ({ complete, progress, showTips }, showHelptips) => ({
@@ -93,4 +118,16 @@ export const getTenantCapabilities = createSelector(
     const hasFullFiltering = isEnterprise || plan === PLANS.professional.value;
     return { hasAuditlogs, hasDeviceConfig, hasDeviceConnect, hasFullFiltering, hasMonitor };
   }
+);
+
+export const getAvailableIssueOptionsByType = createSelector(
+  [getFeatures, getTenantCapabilities, getIssueCountsByType],
+  ({ hasReporting }, { hasFullFiltering }, issueCounts) =>
+    Object.values(DEVICE_ISSUE_OPTIONS).reduce((accu, { key, needsFullFiltering, needsReporting, title }) => {
+      if ((needsReporting && !hasReporting) || (needsFullFiltering && !hasFullFiltering)) {
+        return accu;
+      }
+      accu[key] = { count: issueCounts[key].filtered, key, title };
+      return accu;
+    }, {})
 );

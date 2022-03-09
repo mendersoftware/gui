@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
@@ -11,20 +11,33 @@ import { setSnackbar } from '../../actions/appActions';
 import { deleteAuthset, getDevicesByStatus, setDeviceFilters, setDeviceListState, updateDevicesAuth } from '../../actions/deviceActions';
 import { getIssueCountsByType } from '../../actions/monitorActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
+import { saveUserSettings, updateUserColumnSettings } from '../../actions/userActions';
 import { SORTING_OPTIONS } from '../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS, DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { duplicateFilter, isEmpty } from '../../helpers';
-import { getIdAttribute, getOnboardingState, getTenantCapabilities } from '../../selectors';
+import {
+  getAvailableIssueOptionsByType,
+  getFeatures,
+  getFilterAttributes,
+  getIdAttribute,
+  getOnboardingState,
+  getTenantCapabilities,
+  getUserSettings
+} from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
 import { ExpandDevice } from '../helptips/helptooltips';
-import DeviceList from './devicelist';
 import DeviceQuickActions from './widgets/devicequickactions';
 import Filters from './widgets/filters';
 import DeviceIssuesSelection from './widgets/issueselection';
+const ColumnCustomizationDialog = lazy(() => import('./custom-columns-dialog'));
+import ListOptions from './widgets/listoptions';
+import { defaultTextRender, getDeviceIdentityText } from './base-devices';
+import DeviceList, { minCellWidth } from './devicelist';
+import { defaultHeaders, routes as states } from './device-groups';
 
 const refreshDeviceLength = 10000;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
@@ -34,8 +47,33 @@ const idAttributeTitleMap = {
   name: 'Name'
 };
 
-const sortingNotes = {
-  name: 'Sorting by Name will only work properly with devices that already have a device name defined'
+const headersReducer = (accu, header) => {
+  if (header.attribute.scope === accu.column.scope && (header.attribute.name === accu.column.name || header.attribute.alternative === accu.column.name)) {
+    accu.header = { ...accu.header, ...header };
+  }
+  return accu;
+};
+
+const getHeaders = (columnSelection = [], currentStateHeaders, idAttribute, openSettingsDialog) => {
+  const headers = columnSelection.length
+    ? columnSelection.map(column => {
+        let header = { ...column, attribute: { ...column }, textRender: defaultTextRender, sortable: true };
+        header = Object.values(defaultHeaders).reduce(headersReducer, { column, header }).header;
+        header = currentStateHeaders.reduce(headersReducer, { column, header }).header;
+        return header;
+      })
+    : currentStateHeaders;
+  return [
+    {
+      title: idAttributeTitleMap[idAttribute.attribute] ?? idAttribute.attribute,
+      customize: openSettingsDialog,
+      attribute: { name: idAttribute.attribute, scope: idAttribute.scope },
+      sortable: true,
+      textRender: getDeviceIdentityText
+    },
+    ...headers,
+    defaultHeaders.deviceStatus
+  ];
 };
 
 export const Authorized = props => {
@@ -45,6 +83,10 @@ export const Authorized = props => {
     addDevicesToGroup,
     advanceOnboarding,
     allCount,
+    attributes,
+    availableIssueOptions,
+    columnSelection,
+    customColumnSizes,
     deleteAuthset,
     deviceCount,
     deviceListState,
@@ -54,12 +96,10 @@ export const Authorized = props => {
     getDevicesByStatus,
     getIssueCountsByType,
     groupFilters,
-    hasFullFiltering,
     hasMonitor,
     hasReporting,
     highlightHelp,
     idAttribute,
-    issueCounts,
     limitMaxed,
     onboardingState,
     onGroupClick,
@@ -68,33 +108,37 @@ export const Authorized = props => {
     openSettingsDialog,
     pendingCount,
     removeDevicesFromGroup,
+    saveUserSettings,
     selectedGroup,
     setDeviceFilters,
     setDeviceListState,
     showHelptips,
     showsDialog,
-    states = {},
-    updateDevicesAuth
+    updateDevicesAuth,
+    updateUserColumnSettings
   } = props;
+  const {
+    page: pageNo = defaultPage,
+    perPage: pageLength = defaultPerPage,
+    selectedAttributes = [],
+    selectedIssues = [],
+    selection: selectedRows,
+    sort: { direction: sortDown = SORTING_OPTIONS.desc, columns = [] },
+    state: selectedState
+  } = deviceListState;
+  const currentSelectedState = states[selectedState] ?? states.devices;
+  const [columnHeaders, setColumnHeaders] = useState(getHeaders(columnSelection, currentSelectedState.defaultHeaders, idAttribute, openSettingsDialog));
   const [expandedDeviceId, setExpandedDeviceId] = useState();
   const [isInitialized, setIsInitialized] = useState(!!props.devices.length);
   const [pageLoading, setPageLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
+  const [showCustomization, setShowCustomization] = useState(false);
   const deviceListRef = useRef();
   const authorizeRef = useRef();
   const timer = useRef();
 
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
-
-  const {
-    page: pageNo = defaultPage,
-    perPage: pageLength = defaultPerPage,
-    selectedIssues = [],
-    selection: selectedRows,
-    sort: { direction: sortDown = SORTING_OPTIONS.desc, columns = [] },
-    state: selectedState
-  } = deviceListState;
 
   const { column: sortCol, scope: sortScope } = columns.length ? columns[0] : {};
 
@@ -108,6 +152,11 @@ export const Authorized = props => {
       clearAllRetryTimers(setSnackbar);
     };
   }, []);
+
+  useEffect(() => {
+    const columnHeaders = getHeaders(columnSelection, currentSelectedState.defaultHeaders, idAttribute, openSettingsDialog);
+    setColumnHeaders(columnHeaders);
+  }, [columnSelection, currentSelectedState.state, idAttribute.attribute]);
 
   useEffect(() => {
     if (onboardingState.complete || !acceptedCount) {
@@ -146,23 +195,12 @@ export const Authorized = props => {
     clearInterval(timer.current);
     timer.current = setInterval(getDevices, refreshDeviceLength);
     getDevices();
-    availableIssueOptions.map(({ key }) => getIssueCountsByType(key, { filters, group: selectedGroup, state: selectedState }));
-    availableIssueOptions.includes(DEVICE_ISSUE_OPTIONS.authRequests.key)
-      ? getIssueCountsByType(DEVICE_ISSUE_OPTIONS.authRequests.key, { filters: [] })
-      : undefined;
-  }, [filters, pageNo, pageLength, selectedGroup, selectedIssues, selectedState, sortCol, sortDown, sortScope, deviceRefreshTrigger]);
+  }, [filters, pageNo, pageLength, selectedAttributes, selectedGroup, selectedIssues, selectedState, sortCol, sortDown, sortScope, deviceRefreshTrigger]);
 
-  const availableIssueOptions = useMemo(
-    () =>
-      Object.values(DEVICE_ISSUE_OPTIONS).reduce((accu, { key, needsFullFiltering, needsReporting, title }) => {
-        if ((needsReporting && !hasReporting) || (needsFullFiltering && !hasFullFiltering)) {
-          return accu;
-        }
-        accu.push({ count: issueCounts[key].filtered, key, title });
-        return accu;
-      }, []),
-    [hasFullFiltering, hasReporting, issueCounts]
-  );
+  useEffect(() => {
+    Object.keys(availableIssueOptions).map(key => getIssueCountsByType(key, { filters, group: selectedGroup, state: selectedState }));
+    availableIssueOptions[DEVICE_ISSUE_OPTIONS.authRequests.key] ? getIssueCountsByType(DEVICE_ISSUE_OPTIONS.authRequests.key, { filters: [] }) : undefined;
+  }, [selectedIssues, availableIssueOptions, selectedState, selectedGroup]);
 
   const sortingAlternatives = Object.values(states)
     .reduce((accu, item) => [...accu, ...item.defaultHeaders], [])
@@ -186,6 +224,7 @@ export const Authorized = props => {
     getDevicesByStatus(applicableSelectedState, {
       page: pageNo,
       perPage: pageLength,
+      selectedAttributes,
       selectedIssues,
       shouldSelectDevices: true,
       group: selectedGroup,
@@ -281,26 +320,33 @@ export const Authorized = props => {
     setDeviceListState({ selectedIssues, page: 1 });
   };
 
-  const currentSelectedState = states[selectedState] ?? states.devices;
-  const EmptyState = currentSelectedState.emptyState;
-  const columnHeaders = [
-    {
-      title: idAttributeTitleMap[idAttribute.attribute] ?? idAttribute.attribute,
-      customize: openSettingsDialog,
-      attribute: { name: idAttribute.attribute, scope: idAttribute.scope },
-      sortable: true
-    },
-    ...currentSelectedState.defaultHeaders
-  ];
-
-  const groupLabel = selectedGroup ? decodeURIComponent(selectedGroup) : 'All devices';
-
   const onSelectionChange = (selection = []) => {
     if (!onboardingState.complete && selection.length) {
       advanceOnboarding(onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING);
     }
     setDeviceListState({ selection });
   };
+
+  const onToggleCustomizationClick = () => setShowCustomization(!showCustomization);
+
+  const onChangeColumns = changedColumns => {
+    const columnSizes = changedColumns.reduce((accu, column) => {
+      const size = customColumnSizes.find(({ attribute }) => attribute.name === column.key && attribute.scope === column.scope)?.size || minCellWidth;
+      accu.push({ attribute: { name: column.key, scope: column.scope }, size });
+      return accu;
+    }, []);
+    updateUserColumnSettings(columnSizes);
+    saveUserSettings({ columnSelection: changedColumns });
+    setDeviceListState({ selectedAttributes: changedColumns.map(column => ({ attribute: column.key, scope: column.scope })) });
+    const columnHeaders = getHeaders(changedColumns, currentSelectedState.defaultHeaders, idAttribute, openSettingsDialog);
+    setColumnHeaders(columnHeaders);
+    setShowCustomization(false);
+    getDevices();
+  };
+
+  const EmptyState = currentSelectedState.emptyState;
+
+  const groupLabel = selectedGroup ? decodeURIComponent(selectedGroup) : 'All devices';
 
   let onboardingComponent;
   const devicePendingTip = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING_START, onboardingState);
@@ -328,6 +374,13 @@ export const Authorized = props => {
     );
   }
 
+  const onExportClick = () => console.log('heavy exporting');
+
+  const listOptionHandlers = {
+    customize: onToggleCustomizationClick,
+    csvExport: onExportClick
+  };
+
   const isUngroupedGroup = selectedGroup && selectedGroup === UNGROUPED_GROUP.id;
   return (
     <>
@@ -353,7 +406,7 @@ export const Authorized = props => {
               <DeviceIssuesSelection
                 onChange={onDeviceIssuesSelectionChange}
                 onSelectAll={onSelectAllIssues}
-                options={availableIssueOptions}
+                options={Object.values(availableIssueOptions)}
                 selection={selectedIssues}
               />
             )}
@@ -364,13 +417,14 @@ export const Authorized = props => {
               </p>
             )}
           </div>
-          {selectedGroup && !isUngroupedGroup && (
-            <div className="flexbox centered">
+          <div className="flexbox centered">
+            {selectedGroup && !isUngroupedGroup && (
               <Button onClick={onGroupRemoval} startIcon={<DeleteIcon />}>
                 Remove group
               </Button>
-            </div>
-          )}
+            )}
+            <ListOptions handlers={listOptionHandlers} />
+          </div>
         </div>
         <Filters onFilterChange={onFilterChange} onGroupClick={onGroupClick} isModification={!!groupFilters.length} open={showFilters} />
       </div>
@@ -381,15 +435,16 @@ export const Authorized = props => {
             <DeviceList
               {...props}
               columnHeaders={columnHeaders}
+              customColumnSizes={customColumnSizes}
               expandedDeviceId={expandedDeviceId}
               onChangeRowsPerPage={onPageLengthChange}
               onPageChange={handlePageChange}
+              onResizeColumns={updateUserColumnSettings}
               onSelect={onSelectionChange}
               onSort={onSortChange}
               pageLoading={pageLoading}
               pageTotal={deviceCount}
               setExpandedDeviceId={setExpandedDeviceId}
-              sortingNotes={sortingNotes}
             />
             {showHelptips && <ExpandDevice />}
           </div>
@@ -415,6 +470,17 @@ export const Authorized = props => {
           ref={authorizeRef}
         />
       )}
+      {showCustomization && (
+        <Suspense fallback={<Loader show />}>
+          <ColumnCustomizationDialog
+            attributes={attributes}
+            columnHeaders={columnHeaders}
+            idAttribute={idAttribute}
+            onCancel={onToggleCustomizationClick}
+            onSubmit={onChangeColumns}
+          />
+        </Suspense>
+      )}
     </>
   );
 };
@@ -424,14 +490,17 @@ const actionCreators = {
   deleteAuthset,
   getDevicesByStatus,
   getIssueCountsByType,
+  saveUserSettings,
   setDeviceFilters,
   setDeviceListState,
   setSnackbar,
-  updateDevicesAuth
+  updateDevicesAuth,
+  updateUserColumnSettings
 };
 
 const mapStateToProps = state => {
-  const { hasFullFiltering, hasMonitor } = getTenantCapabilities(state);
+  const { hasMonitor } = getTenantCapabilities(state);
+  const { hasReporting } = getFeatures(state);
   let devices = state.devices.deviceList.deviceIds.slice(0, DEVICE_LIST_MAXIMUM_LENGTH);
   let deviceCount = state.devices.deviceList.total;
   let selectedGroup;
@@ -449,19 +518,22 @@ const mapStateToProps = state => {
     }
     return accu;
   }, []);
+  const { columnSelection } = getUserSettings(state);
   return {
+    attributes: getFilterAttributes(state),
     acceptedCount: state.devices.byStatus.accepted.total || 0,
     allCount: state.devices.byStatus.accepted.total + state.devices.byStatus.rejected.total || 0,
+    availableIssueOptions: getAvailableIssueOptionsByType(state),
+    columnSelection,
+    customColumnSizes: state.users.customColumns,
     devices,
     deviceListState: state.devices.deviceList,
     deviceCount,
     filters: state.devices.filters || [],
     groupFilters,
-    hasFullFiltering,
     hasMonitor,
-    hasReporting: state.app.features.hasReporting,
+    hasReporting,
     idAttribute: getIdAttribute(state),
-    issueCounts: state.monitor.issueCounts.byType,
     onboardingState: getOnboardingState(state),
     pendingCount: state.devices.byStatus.pending.total || 0,
     selectedGroup,

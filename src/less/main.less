@@ -176,6 +176,7 @@ ul.link-list {
 .text-overflow {
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .break-all {
@@ -1237,7 +1238,6 @@ div:focus {
 
 /* tables */
 
-.mender-list-item,
 .auditlogs-list-item,
 .deviceListRow,
 .deviceListItem,
@@ -1246,6 +1246,7 @@ div:focus {
   height: 3 * @defaultGutterWidth;
   min-height: 3 * @defaultGutterWidth;
   max-height: 3 * @defaultGutterWidth;
+  align-items: center;
   &:last-of-type {
     border-bottom: transparent;
   }
@@ -1253,107 +1254,56 @@ div:focus {
 
 .deviceList {
   min-width: 1000px;
+  padding-left: 5px;
+  display: grid;
+  grid-template-columns: 52px minmax(250px, max-content) minmax(90px, 1fr) minmax(350px, 1.5fr) minmax(105px, 1fr) minmax(110px, max-content);
+  .footer {
+    grid-column-start: 1;
+    grid-column-end: 4;
+  }
+  .header,
+  .body {
+    display: contents;
+    .deviceListRow {
+      display: contents;
+      & > * {
+        align-items: center;
+        border-bottom: 1px solid @bordercolor;
+        display: flex;
+        padding-left: 1.5 * @defaultGutterWidth;
+        &:first-of-type {
+          padding-left: 9px;
+        }
+      }
+    }
+  }
   .header {
     height: 56px;
     font-size: 0.8rem;
     color: @textmuted;
-  }
-  .body > div:last-of-type {
-    border-bottom: 1px solid @bordercolor;
-  }
-  .deviceListRow {
-    @row-selector-width: 42px;
-    @row-expander-width: 50px;
-    display: grid;
-    grid-column-gap: 1.5 * @defaultGutterWidth;
-    padding-left: @defaultGutterWidth;
-    &.selectable {
-      padding-left: 5px;
-    }
-    &.columns-3 {
-      @columns-3: 1fr 1fr 1fr;
-      grid-template-columns: @columns-3;
-      &.selectable {
-        grid-template-columns: @row-selector-width @columns-3;
-      }
-      &.expandable {
-        grid-template-columns: @columns-3 @row-expander-width;
-      }
-      &.selectable.expandable {
-        grid-template-columns: @row-selector-width @columns-3 @row-expander-width;
-      }
-    }
-    &.columns-4 {
-      @columns-4: 1fr 1fr 1fr 1fr;
-      grid-template-columns: @columns-4;
-      &.selectable {
-        grid-template-columns: @row-selector-width @columns-4;
-      }
-      &.expandable {
-        grid-template-columns: @columns-4 @row-expander-width;
-      }
-      &.selectable.expandable {
-        grid-template-columns: @row-selector-width @columns-4 @row-expander-width;
-      }
-    }
-    &.columns-5 {
-      @columns-5: minmax(250px, 1.5fr) minmax(90px, 1fr) minmax(350px, 1.5fr) minmax(105px, 1fr) minmax(110px, 1fr);
-      grid-template-columns: @columns-5;
-      &.selectable {
-        grid-template-columns: @row-selector-width @columns-5;
-      }
-      &.expandable {
-        grid-template-columns: @columns-5 @row-expander-width;
-      }
-      &.selectable.expandable {
-        grid-template-columns: @row-selector-width @columns-5 @row-expander-width;
-      }
-    }
-    &.columns-6 {
-      @columns-6: minmax(250px, 1fr) minmax(90px, 1fr) minmax(200px, 1fr) minmax(100px, 0.75fr) minmax(105px, 0.75fr) minmax(110px, 1fr);
-      grid-template-columns: @columns-6;
-      &.selectable {
-        grid-template-columns: @row-selector-width @columns-6;
-      }
-      &.expandable {
-        grid-template-columns: @columns-6 @row-expander-width;
-      }
-      &.selectable.expandable {
-        grid-template-columns: @row-selector-width @columns-6 @row-expander-width;
-      }
-    }
-    > div {
-      overflow: hidden;
-      word-break: break-all;
-      max-height: 48px;
-      text-overflow: ellipsis;
+    user-select: none;
+    .resize-handle {
+      position: absolute;
+      cursor: col-resize;
+      width: 3px;
+      right: 0;
+      top: 0;
+      bottom: 0;
     }
   }
-  .deviceListItem {
-    &:hover {
-      background: @lightestgrey;
+  .deviceStatus {
+    border-color: @darkgrey;
+    color: @darkgrey;
+    font-size: 0.8em;
+    line-height: 0.8em;
+    .notificationCounter {
+      width: 14px;
+      height: 14px;
+      background-color: @darkgrey;
+      margin-left: 5px;
+      margin-right: -5px;
+      color: @lightestgrey;
     }
-    .device-actions {
-      position: relative;
-      width: 100%;
-    }
-    .deviceStatus {
-      border-color: @darkgrey;
-      color: @darkgrey;
-      font-size: 0.8em;
-      line-height: 0.8em;
-      .notificationCounter {
-        width: 14px;
-        height: 14px;
-        background-color: @darkgrey;
-        margin-left: 5px;
-        margin-right: -5px;
-        color: @lightestgrey;
-      }
-    }
-  }
-  &.pending .deviceListItem {
-    background: @lightergrey;
   }
 }
 

@@ -15,6 +15,7 @@ import Loader from '../common/loader';
 import TimeframePicker from '../common/timeframe-picker';
 import TimerangePicker from '../common/timerange-picker';
 import AuditLogsList, { defaultRowsPerPage } from './auditlogslist';
+import { createDownload } from '../../helpers';
 
 const detailsMap = {
   Deployment: 'to device group',
@@ -104,12 +105,10 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
   const createCsvDownload = () => {
     setCsvLoading(true);
     getAuditLogsCsvLink(startDate, endDate, user?.id || user, `${type}`.toLowerCase(), detail?.id || detail, sorting).then(address => {
-      const link = document.createElement('a');
-      link.setAttribute('href', encodeURI(address));
-      link.setAttribute('download', `Mender-AuditLog-${moment(startDate).format(moment.HTML5_FMT.DATE)}-${moment(endDate).format(moment.HTML5_FMT.DATE)}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      createDownload(
+        encodeURI(address),
+        `Mender-AuditLog-${moment(startDate).format(moment.HTML5_FMT.DATE)}-${moment(endDate).format(moment.HTML5_FMT.DATE)}.csv`
+      );
       setCsvLoading(false);
     });
   };

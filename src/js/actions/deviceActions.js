@@ -546,11 +546,11 @@ export const setDeviceListState = selectionState => (dispatch, getState) =>
       type: DeviceConstants.SET_DEVICE_LIST_STATE,
       state: {
         ...getState().devices.deviceList,
+        ...selectionState,
         sort: {
           ...getState().devices.deviceList.sort,
           ...selectionState.sort
-        },
-        ...selectionState
+        }
       }
     })
   );
@@ -588,10 +588,11 @@ export const getDevicesByStatus =
       perPage = defaultPerPage,
       shouldSelectDevices = false,
       sortOptions = [],
-      trackSelectionState = false
+      trackSelectionState = false,
+      selectedAttributes = []
     } = options;
     const { applicableFilters, filterTerms } = convertDeviceListStateToFilters({ filters: getState().devices.filters, group, selectedIssues, status });
-    const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
+    const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }, ...selectedAttributes];
     return GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
       page,
       per_page: perPage,

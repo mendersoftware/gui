@@ -3,6 +3,7 @@ import * as UserConstants from '../constants/userConstants';
 export const initialState = {
   byId: {},
   currentUser: null,
+  customColumns: [],
   jwtToken: null,
   qrCode: null,
   globalSettings: {
@@ -108,6 +109,11 @@ const userReducer = (state = initialState, action) => {
             ...action.role
           }
         }
+      };
+    case UserConstants.SET_CUSTOM_COLUMNS:
+      return {
+        ...state,
+        customColumns: action.value
       };
     case UserConstants.SET_GLOBAL_SETTINGS:
       return {

@@ -50,7 +50,7 @@ test.describe('Files', () => {
   test('allows file transfer', async ({ environment, loggedInPage: page }) => {
     test.skip(!['enterprise', 'staging'].includes(environment));
     await page.click(`.leftNav :text('Devices')`);
-    await page.click(`.deviceListItem`);
+    await page.click(`.deviceListItem div:last-child`);
     // the deviceconnect connection might not be established right away
     await page.waitForSelector('text=/file transfer/i', { timeout: 10000 });
     await page.click(`css=.expandedDevice >> text=file transfer`);

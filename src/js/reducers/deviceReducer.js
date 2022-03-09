@@ -22,6 +22,7 @@ export const initialState = {
   deviceList: {
     deviceIds: [],
     ...DeviceConstants.DEVICE_LIST_DEFAULTS,
+    selectedAttributes: [],
     selectedIssues: [],
     selection: [],
     sort: {

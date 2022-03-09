@@ -4,31 +4,91 @@ exports[`DeviceList Component renders correctly 1`] = `
 "<div>
   <div
     class=\\"deviceList \\"
+    style=\\"grid-template-columns: 52px minmax(250px, 1fr) minmax(150px, 1.5fr) minmax(150px, 1.5fr) minmax(150px, max-content);\\"
   >
     <div
-      class=\\"header deviceListRow columns-4 \\"
+      class=\\"header\\"
     >
       <div
-        class=\\"columnHeader\\"
-      />
-      <div
-        class=\\"columnHeader\\"
-      />
-      <div
-        class=\\"columnHeader\\"
-      />
-      <div
-        class=\\"columnHeader\\"
-      />
-      <div
-        style=\\"width: 48px;\\"
-      />
+        class=\\"deviceListRow\\"
+      >
+        <div>
+          <span
+            class=\\"MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root Mui-checked css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root\\"
+          >
+            <input
+              checked=\\"\\"
+              class=\\"PrivateSwitchBase-input css-1m9pwf3\\"
+              data-indeterminate=\\"false\\"
+              type=\\"checkbox\\"
+            />
+            <svg
+              aria-hidden=\\"true\\"
+              class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
+              data-testid=\\"CheckBoxIcon\\"
+              focusable=\\"false\\"
+              viewBox=\\"0 0 24 24\\"
+            >
+              <path
+                d=\\"M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z\\"
+              />
+            </svg>
+            <span
+              class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+            />
+          </span>
+        </div>
+        <div
+          class=\\"columnHeader flexbox space-between relative\\"
+        >
+          <div
+            class=\\"flexbox center-aligned\\"
+          />
+          <div
+            class=\\"flexbox center-aligned\\"
+          />
+        </div>
+        <div
+          class=\\"columnHeader flexbox space-between relative\\"
+        >
+          <div
+            class=\\"flexbox center-aligned\\"
+          />
+          <div
+            class=\\"flexbox center-aligned\\"
+          >
+            <span
+              class=\\"resize-handle\\"
+            />
+          </div>
+        </div>
+        <div
+          class=\\"columnHeader flexbox space-between relative\\"
+        >
+          <div
+            class=\\"flexbox center-aligned\\"
+          />
+          <div
+            class=\\"flexbox center-aligned\\"
+          />
+        </div>
+        <div
+          class=\\"columnHeader flexbox space-between relative\\"
+        >
+          <div
+            class=\\"flexbox center-aligned\\"
+          />
+          <div
+            class=\\"flexbox center-aligned\\"
+          />
+        </div>
+      </div>
     </div>
     <div
       class=\\"body\\"
     />
     <div
-      class=\\"flexbox margin-top\\"
+      class=\\"footer flexbox margin-top\\"
     >
       <div
         class=\\"MuiTablePagination-root flexbox margin-top margin-top-none css-jtlhu6-MuiTablePagination-root\\"

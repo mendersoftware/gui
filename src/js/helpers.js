@@ -535,3 +535,15 @@ export const getDemoDeviceCreationCommand = tenantToken =>
   tenantToken
     ? `TENANT_TOKEN='${tenantToken}'\ndocker run -it -p ${onboardingReducerState.demoArtifactPort}:${onboardingReducerState.demoArtifactPort} -e SERVER_URL='https://${window.location.hostname}' \\\n-e TENANT_TOKEN=$TENANT_TOKEN --pull=always mendersoftware/mender-client-qemu`
     : './demo --client up';
+
+export const createDownload = (target, filename) => {
+  let link = document.createElement('a');
+  link.setAttribute('href', target);
+  link.setAttribute('download', filename);
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+export const createFileDownload = (content, filename) => createDownload('data:text/plain;charset=utf-8,' + encodeURIComponent(content), filename);
