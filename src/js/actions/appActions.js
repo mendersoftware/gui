@@ -204,3 +204,27 @@ export const getLatestReleaseInfo = () => (dispatch, getState) => {
     );
   });
 };
+
+export const setSearchState = searchState => (dispatch, getState) => {
+  const currentState = getState().app.searchState;
+  let nextState = {
+    ...currentState,
+    ...searchState,
+    sort: {
+      ...currentState.sort,
+      ...searchState.sort
+    }
+  };
+  let tasks = [];
+  if (searchState.searchTerm && currentState.searchTerm !== searchState.searchTerm) {
+    nextState.isSearching = true;
+    tasks.push(
+      // dispatch(getDevicesByStatus('any', { page: nextState.page, perPage: 10, sortOptions: nextState.sort })).then(() => {
+      dispatch(getDevicesByStatus('any', { page: nextState.page, perPage: 10, sortOptions: nextState.sort })).finally(() => {
+        dispatch(setSearchState({ isSearching: false }));
+      })
+    );
+  }
+  tasks.push(dispatch({ type: AppConstants.SET_SEARCH_STATE, state: nextState }));
+  return Promise.all(tasks);
+};

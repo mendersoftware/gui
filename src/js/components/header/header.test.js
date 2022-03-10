@@ -7,6 +7,7 @@ import configureStore from 'redux-mock-store';
 import Header from './header';
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
+import AppConstants from '../../constants/appConstants';
 import UserConstants from '../../constants/userConstants';
 
 const mockStore = configureStore([thunk]);
@@ -65,7 +66,7 @@ describe('Header Component', () => {
     await fireEvent.mouseDown(listItem);
     await waitFor(() => rerender(view));
     const storeActions = store.getActions();
-    const expectedActions = [{ type: UserConstants.USER_LOGOUT }];
+    const expectedActions = [{ type: AppConstants.SET_SEARCH_STATE }, { type: UserConstants.USER_LOGOUT }];
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
 });
