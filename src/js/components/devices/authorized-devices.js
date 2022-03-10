@@ -132,6 +132,7 @@ export const Authorized = props => {
   } = props;
   const {
     refreshTrigger,
+    expandedDeviceId,
     selectedIssues = [],
     isLoading: pageLoading,
     selection: selectedRows,
@@ -141,7 +142,6 @@ export const Authorized = props => {
   const currentSelectedState = states[selectedState] ?? states.devices;
   const [columnHeaders, setColumnHeaders] = useState([]);
   const [headerKeys, setHeaderKeys] = useState('');
-  const [expandedDeviceId, setExpandedDeviceId] = useState();
   const [isInitialized, setIsInitialized] = useState(false);
   const [devicesInitialized, setDevicesInitialized] = useState(!!devices.length);
   const [showFilters, setShowFilters] = useState(false);
@@ -332,7 +332,7 @@ export const Authorized = props => {
 
   const onExpandClick = (device = {}) => {
     let { attributes = {}, id, status } = device;
-    setExpandedDeviceId(expandedId => (expandedId === id ? undefined : id));
+    setExpandedDeviceId(expandedDeviceId === id ? undefined : id);
     if (!onboardingState.complete) {
       advanceOnboarding(onboardingSteps.DEVICES_PENDING_ONBOARDING);
       if (status === DEVICE_STATES.accepted && Object.values(attributes).some(value => value)) {
@@ -340,6 +340,8 @@ export const Authorized = props => {
       }
     }
   };
+
+  const setExpandedDeviceId = expandedDeviceId => setDeviceListState({ expandedDeviceId });
 
   let onboardingComponent;
   const devicePendingTip = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING_START, onboardingState);

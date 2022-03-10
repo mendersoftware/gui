@@ -20,7 +20,7 @@ const sortingNotes = {
   name: 'Sorting by Name will only work properly with devices that already have a device name defined'
 };
 
-const HeaderItem = ({ column, columnCount, index, sortCol, sortDown, onSort, onResizeChange, onResizeFinish }) => {
+const HeaderItem = ({ column, columnCount, index, sortCol, sortDown, onSort, onResizeChange, onResizeFinish, resizable }) => {
   const [isHovering, setIsHovering] = useState(false);
   const resizeRef = useRef();
   const ref = useRef();
@@ -30,12 +30,12 @@ const HeaderItem = ({ column, columnCount, index, sortCol, sortDown, onSort, onR
 
   const mouseMove = useCallback(
     e => {
-      if (resizeRef.current) {
+      if (resizable && resizeRef.current) {
         onResizeChange(e, { column, index, prev: resizeRef.current, ref });
         resizeRef.current = e.clientX;
       }
     },
-    [onResizeChange, resizeRef.current]
+    [onResizeChange, resizable, resizeRef.current]
   );
 
   const removeListeners = useCallback(() => {
@@ -68,7 +68,7 @@ const HeaderItem = ({ column, columnCount, index, sortCol, sortDown, onSort, onR
     };
   }, [resizeRef.current, mouseMove, mouseUp, removeListeners]);
 
-  let resizeHandleStyle = isHovering ? { background: '#ccc' } : {};
+  let resizeHandleStyle = resizable && isHovering ? { background: '#ccc' } : {};
   resizeHandleStyle = resizeRef.current ? { background: '#517ea5' } : resizeHandleStyle;
 
   const header = (
@@ -97,10 +97,12 @@ const HeaderItem = ({ column, columnCount, index, sortCol, sortDown, onSort, onR
   );
 };
 
-export const calculateResizeChange = ({ columnElements, columnHeaders, e, index, prev }) => {
+const getRelevantColumns = (columnElements, selectable) => [...columnElements].slice(selectable ? 2 : 1, columnElements.length - 1);
+
+export const calculateResizeChange = ({ columnElements, columnHeaders, e, index, prev, selectable }) => {
   const isShrinkage = prev > e.clientX ? -1 : 1;
   const columnDelta = Math.abs(e.clientX - prev) * isShrinkage;
-  const relevantColumns = [...columnElements].slice(2, columnElements.length - 1);
+  const relevantColumns = getRelevantColumns(columnElements, selectable);
   const canModifyNextColumn = index >= 1 && index + 1 < columnHeaders.length - 1;
 
   return relevantColumns.reduce((accu, element, columnIndex) => {
@@ -117,17 +119,19 @@ export const calculateResizeChange = ({ columnElements, columnHeaders, e, index,
 };
 
 export const minCellWidth = 150;
-const getTemplateColumns = columns => `52px minmax(250px, 1fr) ${columns} minmax(${minCellWidth}px, max-content)`;
+const getTemplateColumns = (columns, selectable) =>
+  selectable
+    ? `52px minmax(250px, 1fr) ${columns} minmax(${minCellWidth}px, max-content)`
+    : `minmax(250px, 1fr) ${columns} minmax(${minCellWidth}px, max-content)`;
 
-const getColumnsStyle = (columns, defaultSize) => {
+const getColumnsStyle = (columns, defaultSize, selectable) => {
   const template = columns.map(({ size }) => `minmax(${minCellWidth}px, ${defaultSize ? defaultSize : `${size}px`})`);
   // applying styles via state changes would lead to less smooth changes, so we set the style directly on the components
-  return getTemplateColumns(template.join(' '));
+  return getTemplateColumns(template.join(' '), selectable);
 };
 
 export const DeviceList = props => {
   const {
-    className = '',
     columnHeaders,
     customColumnSizes,
     devices,
@@ -142,14 +146,13 @@ export const DeviceList = props => {
     onSort,
     pageLoading,
     pageTotal,
-    setSnackbar,
-    showPagination = true
+    setSnackbar
   } = props;
 
   const {
     page: pageNo = defaultPage,
     perPage: pageLength = defaultPerPage,
-    selection: selectedRows,
+    selection: selectedRows = [],
     sort: { direction: sortDown = SORTING_OPTIONS.desc, columns = [] }
   } = deviceListState;
 
@@ -158,6 +161,7 @@ export const DeviceList = props => {
   const selectedRowsRef = useRef(selectedRows);
 
   const size = useWindowSize();
+  const selectable = !!onSelect;
 
   useEffect(() => {
     selectedRowsRef.current = selectedRows;
@@ -167,17 +171,16 @@ export const DeviceList = props => {
     if (!deviceListRef.current) {
       return;
     }
-    const children = [...deviceListRef.current.querySelector('.deviceListRow').children];
-    const relevantColumns = children.slice(2, children.length - 1);
-    deviceListRef.current.style.gridTemplateColumns = getColumnsStyle(relevantColumns, '1.5fr');
-  }, [deviceListRef.current, size.width, headerKeys]);
+    const relevantColumns = getRelevantColumns(deviceListRef.current.querySelector('.deviceListRow').children, selectable);
+    deviceListRef.current.style.gridTemplateColumns = getColumnsStyle(relevantColumns, '1.5fr', selectable);
+  }, [deviceListRef.current, size.width, headerKeys, selectable]);
 
   useEffect(() => {
     if (!deviceListRef.current || !customColumnSizes.length) {
       return;
     }
-    deviceListRef.current.style.gridTemplateColumns = getColumnsStyle(customColumnSizes);
-  }, [deviceListRef.current, customColumnSizes]);
+    deviceListRef.current.style.gridTemplateColumns = getColumnsStyle(customColumnSizes, undefined, selectable);
+  }, [deviceListRef.current, customColumnSizes, selectable]);
 
   const expandRow = (event, rowNumber) => {
     if (event && event.target.closest('input')?.hasOwnProperty('checked')) {
@@ -207,24 +210,26 @@ export const DeviceList = props => {
   };
 
   const handleResizeChange = (e, { index, prev, ref }) => {
-    const changedColumns = calculateResizeChange({ columnElements: [...ref.current.parentElement.children], columnHeaders, e, index, prev });
+    const changedColumns = calculateResizeChange({ columnElements: [...ref.current.parentElement.children], columnHeaders, e, index, prev, selectable });
     // applying styles via state changes would lead to less smooth changes, so we set the style directly on the components
-    deviceListRef.current.style.gridTemplateColumns = getColumnsStyle(changedColumns);
+    deviceListRef.current.style.gridTemplateColumns = getColumnsStyle(changedColumns, undefined, selectable);
   };
 
   const handleResizeFinish = (e, { index, prev, ref }) => {
-    const changedColumns = calculateResizeChange({ columnElements: [...ref.current.parentElement.children], columnHeaders, e, index, prev });
+    const changedColumns = calculateResizeChange({ columnElements: ref.current.parentElement.children, columnHeaders, e, index, prev, selectable });
     onResizeColumns(changedColumns);
   };
 
   const numSelected = (selectedRows || []).length;
   return (
-    <div className={`deviceList ${className}`} ref={deviceListRef}>
+    <div className={`deviceList ${selectable ? 'selectable' : ''}`} ref={deviceListRef}>
       <div className="header">
         <div className="deviceListRow">
-          <div>
-            <Checkbox indeterminate={numSelected > 0 && numSelected < devices.length} checked={numSelected === devices.length} onChange={onSelectAllClick} />
-          </div>
+          {selectable && (
+            <div>
+              <Checkbox indeterminate={numSelected > 0 && numSelected < devices.length} checked={numSelected === devices.length} onChange={onSelectAllClick} />
+            </div>
+          )}
           {columnHeaders.map((item, index) => (
             <HeaderItem
               column={item}
@@ -232,6 +237,7 @@ export const DeviceList = props => {
               index={index}
               key={`columnHeader-${index}`}
               onSort={onSort}
+              resizable={!!onResizeColumns}
               sortCol={sortCol}
               sortDown={sortDown}
               onResizeChange={handleResizeChange}
@@ -250,21 +256,20 @@ export const DeviceList = props => {
             key={device.id}
             onClick={expandRow}
             onRowSelect={onRowSelection}
+            selectable={selectable}
             selected={selectedRows.indexOf(index) !== -1}
           />
         ))}
       </div>
       <div className="footer flexbox margin-top">
-        {showPagination && (
-          <Pagination
-            className="margin-top-none"
-            count={pageTotal}
-            rowsPerPage={pageLength}
-            onChangeRowsPerPage={onChangeRowsPerPage}
-            page={pageNo}
-            onChangePage={onPageChange}
-          />
-        )}
+        <Pagination
+          className="margin-top-none"
+          count={pageTotal}
+          rowsPerPage={pageLength}
+          onChangeRowsPerPage={onChangeRowsPerPage}
+          page={pageNo}
+          onChangePage={onPageChange}
+        />
         {pageLoading && <Loader show small />}
       </div>
     </div>
