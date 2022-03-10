@@ -13,7 +13,7 @@ import {
 } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
-import { initializeAppData, setFirstLoginAfterSignup, setSnackbar } from '../../actions/appActions';
+import { initializeAppData, setFirstLoginAfterSignup, setSearchState, setSnackbar } from '../../actions/appActions';
 import { getOnboardingState } from '../../actions/onboardingActions';
 import { getUser, setHideAnnouncement, logoutUser, toggleHelptips } from '../../actions/userActions';
 import { getToken } from '../../auth';
@@ -30,6 +30,7 @@ import OfferHeader from './offerheader';
 import logo from '../../../assets/img/headerlogo.png';
 import enterpriseLogo from '../../../assets/img/headerlogo-enterprise.png';
 import UserConstants from '../../constants/userConstants';
+import Search from './search';
 
 // Change this when a new feature/offer is introduced
 const currentOffer = {
@@ -92,12 +93,15 @@ export const Header = ({
   inProgress,
   isEnterprise,
   isHosted,
+  isSearching,
   logoutUser,
   multitenancy,
   organization,
   pendingDevices,
+  searchTerm,
   setFirstLoginAfterSignup,
   setHideAnnouncement,
+  setSearchState,
   showHelptips,
   toggleHelptips,
   user
@@ -188,7 +192,7 @@ export const Header = ({
             />
           )}
         </div>
-
+        <Search isSearching={isSearching} searchTerm={searchTerm} setSearchState={setSearchState} />
         <div className="flexbox center-aligned">
           <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
           <DeploymentNotifications inprogress={inProgress} />
@@ -256,6 +260,7 @@ const actionCreators = {
   logoutUser,
   setFirstLoginAfterSignup,
   setSnackbar,
+  setSearchState,
   toggleHelptips
 };
 
@@ -274,7 +279,9 @@ const mapStateToProps = state => {
     inProgress: state.deployments.byStatus.inprogress.total,
     isEnterprise: getIsEnterprise(state),
     isHosted: state.app.features.isHosted,
+    isSearching: state.app.searchState.isSearching,
     multitenancy: state.app.features.hasMultitenancy || state.app.features.isEnterprise || state.app.features.isHosted,
+    searchTerm: state.app.searchState.searchTerm,
     showHelptips: state.users.showHelptips,
     pendingDevices: state.devices.byStatus.pending.total,
     organization,
