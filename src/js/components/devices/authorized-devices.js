@@ -56,7 +56,7 @@ const headersReducer = (accu, header) => {
   return accu;
 };
 
-const getHeaders = (columnSelection = [], currentStateHeaders, idAttribute, openSettingsDialog) => {
+export const getHeaders = (columnSelection = [], currentStateHeaders, idAttribute, openSettingsDialog) => {
   const headers = columnSelection.length
     ? columnSelection.map(column => {
         let header = { ...column, attribute: { ...column }, textRender: defaultTextRender, sortable: true };
@@ -120,6 +120,7 @@ export const Authorized = props => {
     updateUserColumnSettings
   } = props;
   const {
+    expandedDeviceId,
     page: pageNo = defaultPage,
     perPage: pageLength = defaultPerPage,
     selectedAttributes = [],
@@ -130,7 +131,6 @@ export const Authorized = props => {
   } = deviceListState;
   const currentSelectedState = states[selectedState] ?? states.devices;
   const [columnHeaders, setColumnHeaders] = useState(getHeaders(columnSelection, currentSelectedState.defaultHeaders, idAttribute, openSettingsDialog));
-  const [expandedDeviceId, setExpandedDeviceId] = useState();
   const [isInitialized, setIsInitialized] = useState(window.sessionStorage.getItem(settingsKeys.initialized) && !!props.devices.length);
   const [devicesInitialized, setDevicesInitialized] = useState(!!props.devices.length);
   const [columnsInitialized, setColumnsInitialized] = useState(window.sessionStorage.getItem(settingsKeys.initialized));
@@ -362,6 +362,8 @@ export const Authorized = props => {
     setShowCustomization(false);
     getDevices();
   };
+
+  const setExpandedDeviceId = expandedDeviceId => setDeviceListState({ expandedDeviceId });
 
   const EmptyState = currentSelectedState.emptyState;
 

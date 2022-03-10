@@ -281,6 +281,11 @@ export const customSort = (direction, field) => (a, b) => {
 
 export const duplicateFilter = (item, index, array) => array.indexOf(item) == index;
 
+export const attributeDuplicateFilter = (filterableArray, attributeName = 'key') =>
+  filterableArray.filter(
+    (item, index, array) => array.findIndex(filter => filter[attributeName] === item[attributeName] && filter.scope === item.scope) == index
+  );
+
 export const unionizeStrings = (someStrings, someOtherStrings) => {
   const startingPoint = new Set(someStrings.filter(item => item.length));
   const uniqueStrings = someOtherStrings.length

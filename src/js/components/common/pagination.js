@@ -78,7 +78,7 @@ export const TablePaginationActions = ({ count, page = 0, onPageChange, rowsPerP
 };
 
 const Pagination = props => {
-  const { className, onChangeRowsPerPage, onChangePage, page = 0, ...remainingProps } = props;
+  const { className, onChangeRowsPerPage, onChangePage, page = 0, rowsPerPageOptions = defaultRowsPerPageOptions, ...remainingProps } = props;
   // this is required due to the MUI tablepagination being 0-indexed, whereas we work with 1-indexed apis
   // running it without adjustment will lead to warnings from MUI
   const propsPage = Math.max(page - paginationIndex, 0);
@@ -89,7 +89,7 @@ const Pagination = props => {
       component="div"
       labelDisplayedRows={() => ''}
       labelRowsPerPage="Rows"
-      rowsPerPageOptions={defaultRowsPerPageOptions}
+      rowsPerPageOptions={rowsPerPageOptions}
       onRowsPerPageChange={e => onChangeRowsPerPage(e.target.value)}
       page={propsPage}
       onPageChange={onChangePage}

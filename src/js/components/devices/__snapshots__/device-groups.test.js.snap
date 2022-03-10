@@ -490,7 +490,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
         class=\\"padding-bottom\\"
       >
         <div
-          class=\\"deviceList \\"
+          class=\\"deviceList selectable\\"
           style=\\"grid-template-columns: 52px minmax(250px, 1fr) minmax(150px, 1.5fr) minmax(150px, 1.5fr) minmax(150px, 1.5fr) minmax(150px, max-content);\\"
         >
           <div
