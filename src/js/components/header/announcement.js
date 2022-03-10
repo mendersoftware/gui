@@ -3,13 +3,13 @@ import Linkify from 'react-linkify';
 
 import { Announcement as AnnounceIcon, Close as CloseIcon } from '@mui/icons-material';
 
-const Announcement = ({ announcement, onHide }) => (
-  <div id="announcement" className="flexbox centered fadeInSlow">
-    <AnnounceIcon className="red" style={{ marginRight: '4px', height: '18px', minWidth: '24px' }} />
+const Announcement = ({ announcement, errorIconClassName, iconClassName, onHide, sectionClassName }) => (
+  <div className={`flexbox centered fadeInSlow margin-left-small margin-right-small ${sectionClassName}`}>
+    <AnnounceIcon className={errorIconClassName} fontSize="small" style={{ marginRight: 4, minWidth: 24 }} />
     <p>
       <Linkify properties={{ target: '_blank' }}>{announcement}</Linkify>
     </p>
-    <CloseIcon style={{ marginLeft: '4px', height: '16px', cursor: 'pointer' }} onClick={onHide} />
+    <CloseIcon className={iconClassName} style={{ marginLeft: 4, cursor: 'pointer' }} onClick={onHide} />
   </div>
 );
 
