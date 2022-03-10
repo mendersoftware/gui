@@ -4,7 +4,7 @@ import { mapUserRolesToUiPermissions } from '../actions/userActions';
 import { PLANS } from '../constants/appConstants';
 import { DEVICE_ISSUE_OPTIONS, DEVICE_LIST_MAXIMUM_LENGTH } from '../constants/deviceConstants';
 import { rolesByName, twoFAStates, uiPermissionsById } from '../constants/userConstants';
-import { getDemoDeviceAddress as getDemoDeviceAddressHelper } from '../helpers';
+import { attributeDuplicateFilter, getDemoDeviceAddress as getDemoDeviceAddressHelper } from '../helpers';
 
 const getAppDocsVersion = state => state.app.docsVersion;
 export const getFeatures = state => state.app.features;
@@ -74,7 +74,7 @@ export const getFilterAttributes = createSelector(
       ...inventoryAttributes.map(item => ({ key: item, value: item, scope: 'inventory', category: 'inventory', priority: 2 })),
       ...tagAttributes.map(item => ({ key: item, value: item, scope: 'tags', category: 'tags', priority: 3 }))
     ];
-    return attributes.filter((item, index, array) => array.findIndex(filter => filter.key === item.key && filter.scope === item.scope) == index);
+    return attributeDuplicateFilter(attributes, 'key');
   }
 );
 
