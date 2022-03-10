@@ -1,13 +1,14 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Switch, Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 
-import Dashboard from './dashboard';
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import Dashboard from './dashboard';
 
 const mockStore = configureStore([thunk]);
 
@@ -19,11 +20,9 @@ describe('Dashboard Component', () => {
 
   it('renders correctly', async () => {
     const { container } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <Dashboard />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <Dashboard />
+      </Provider>
     );
     expect(container.firstChild).toMatchSnapshot();
     expect(container).toEqual(expect.not.stringMatching(undefineds));
@@ -31,16 +30,14 @@ describe('Dashboard Component', () => {
 
   it('allows navigating to pending devices', async () => {
     render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <Dashboard />
-          <Switch>
-            <Route path="/devices/pending">
-              <div>pendings route</div>
-            </Route>
-          </Switch>
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <Dashboard />
+        <Switch>
+          <Route path="/devices/pending">
+            <div>pendings route</div>
+          </Route>
+        </Switch>
+      </Provider>
     );
     userEvent.click(screen.getByText(/Pending devices/i));
     await waitFor(() => screen.getByText(/pendings route/i));
@@ -49,16 +46,14 @@ describe('Dashboard Component', () => {
 
   it('allows navigating to accepted devices', async () => {
     render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <Dashboard />
-          <Switch>
-            <Route path="/devices">
-              <div>accepted devices route</div>
-            </Route>
-          </Switch>
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <Dashboard />
+        <Switch>
+          <Route path="/devices">
+            <div>accepted devices route</div>
+          </Route>
+        </Switch>
+      </Provider>
     );
     userEvent.click(screen.getByText(/Accepted devices/i));
     await waitFor(() => screen.getByText(/accepted devices route/i));
@@ -67,16 +62,14 @@ describe('Dashboard Component', () => {
 
   it('allows navigating to deployments', async () => {
     const ui = (
-      <MemoryRouter>
-        <Provider store={store}>
-          <Dashboard />
-          <Switch>
-            <Route path="/deployments">
-              <div>deployments route</div>
-            </Route>
-          </Switch>
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <Dashboard />
+        <Switch>
+          <Route path="/deployments">
+            <div>deployments route</div>
+          </Route>
+        </Switch>
+      </Provider>
     );
     const { rerender } = render(ui);
     await waitFor(() => rerender(ui));

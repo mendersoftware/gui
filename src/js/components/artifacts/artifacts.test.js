@@ -1,13 +1,14 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { act, render, screen, waitFor, within } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import Artifacts from './artifacts';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
 import { getConfiguredStore } from '../../reducers';
+import Artifacts from './artifacts';
 
 const mockStore = configureStore([thunk]);
 
@@ -31,11 +32,9 @@ describe('Artifacts Component', () => {
 
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <Artifacts />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <Artifacts />
+      </Provider>
     );
     act(() => jest.advanceTimersByTime(1000));
     const view = baseElement.firstChild;
@@ -61,11 +60,9 @@ describe('Artifacts Component', () => {
     };
     const store = getConfiguredStore({ preloadedState });
     const ui = (
-      <MemoryRouter>
-        <Provider store={store}>
-          <Artifacts />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <Artifacts />
+      </Provider>
     );
     const { rerender } = render(ui);
     await act(async () => jest.advanceTimersByTime(1000));

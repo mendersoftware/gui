@@ -1,15 +1,16 @@
 import React from 'react';
-import Time from 'react-time';
-
-import { ArrowDropDownCircleOutlined as ScrollDownIcon, CheckCircle as CheckIcon, Error as ErrorIcon, Help as HelpIcon } from '@material-ui/icons';
 import pluralize from 'pluralize';
-import theme from '../../../themes/mender-theme';
-import { DEVICE_ONLINE_CUTOFF } from '../../../constants/deviceConstants';
 
-const severityIconStyle = { marginRight: theme.spacing(2) };
-const errorIcon = <ErrorIcon className="red" style={severityIconStyle} />;
-const successIcon = <CheckIcon className="green" style={severityIconStyle} />;
-const questionIcon = <HelpIcon style={severityIconStyle} />;
+import { ArrowDropDownCircleOutlined as ScrollDownIcon, CheckCircle as CheckIcon, Error as ErrorIcon, Help as HelpIcon } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
+
+import { DEVICE_ONLINE_CUTOFF } from '../../../constants/deviceConstants';
+import Time from '../../common/time';
+
+const errorIcon = <ErrorIcon className="red" />;
+const successIcon = <CheckIcon className="green" />;
+const questionIcon = <HelpIcon />;
 
 const monitoringSeverities = {
   CRITICAL: 'CRITICAL',
@@ -19,45 +20,72 @@ const monitoringSeverities = {
 };
 
 export const severityMap = {
-  [monitoringSeverities.CRITICAL]: { className: 'red', icon: errorIcon, listIcon: <ErrorIcon className="red" /> },
-  [monitoringSeverities.CRITICAL_FLAPPING]: { className: '', icon: errorIcon, listIcon: <ErrorIcon className="red" /> },
-  [monitoringSeverities.OK]: { className: '', icon: successIcon, listIcon: <CheckIcon className="green" /> },
-  [monitoringSeverities.UNKNOWN]: { className: '', icon: questionIcon, listIcon: <HelpIcon /> }
+  [monitoringSeverities.CRITICAL]: { className: 'red', icon: errorIcon },
+  [monitoringSeverities.CRITICAL_FLAPPING]: { className: '', icon: errorIcon },
+  [monitoringSeverities.OK]: { className: '', icon: successIcon },
+  [monitoringSeverities.UNKNOWN]: { className: '', icon: questionIcon }
 };
 
+const useStyles = makeStyles()(theme => ({
+  deviceDetailNotification: {
+    marginBottom: theme.spacing(),
+    padding: theme.spacing(1.5, 'inherit'),
+    '&.red, &.green': {
+      color: theme.palette.text.primary
+    },
+    '&.bordered': {
+      border: `1px solid ${theme.palette.grey[500]}`,
+      background: `fade(${theme.palette.grey[600]}, 15%)`,
+      '&.red': {
+        borderColor: theme.palette.error.main,
+        background: theme.palette.error.light
+      }
+    },
+    '> span': {
+      marginRight: theme.spacing(2)
+    }
+  }
+}));
+
 export const BaseNotification = ({ bordered = true, className = '', children, severity, onClick }) => {
+  const { classes } = useStyles();
   const mappedSeverity = severityMap[severity] ?? severityMap.UNKNOWN;
   return (
     <div
-      className={`flexbox center-aligned padding-small device-detail-notification ${bordered ? 'bordered' : ''} ${mappedSeverity.className} ${className} ${
-        onClick ? 'clickable' : ''
-      }`}
-      style={{ marginBottom: theme.spacing(), paddingBottom: theme.spacing(1.5), paddingTop: theme.spacing(1.5) }}
+      className={`flexbox center-aligned padding-small ${classes.deviceDetailNotification} ${bordered ? 'bordered' : ''} ${
+        mappedSeverity.className
+      } ${className} ${onClick ? 'clickable' : ''}`}
       onClick={onClick}
     >
-      {mappedSeverity.icon}
+      <span>{mappedSeverity.icon}</span>
       <div className="flexbox center-aligned">{children}</div>
     </div>
   );
 };
 
-const notificationSpaceStyle = { marginLeft: theme.spacing(), marginRight: theme.spacing() };
+export const LastConnection = ({ updated_ts }) => {
+  const theme = useTheme();
 
-export const LastConnection = ({ updated_ts }) => (
-  <BaseNotification severity={monitoringSeverities.CRITICAL}>
-    Device has not connected to the server since <Time value={updated_ts} format="YYYY-MM-DD HH:mm" style={notificationSpaceStyle} />
-  </BaseNotification>
-);
+  return (
+    <BaseNotification severity={monitoringSeverities.CRITICAL}>
+      Device has not connected to the server since <Time value={updated_ts} style={{ margin: theme.spacing('inherit', 1) }} />
+    </BaseNotification>
+  );
+};
 
-export const ServiceNotification = ({ alerts, onClick }) => (
-  <BaseNotification onClick={onClick} severity={monitoringSeverities.CRITICAL_FLAPPING}>
-    {alerts.length} {pluralize('service', alerts.length)} reported issues. View details in the
-    <a style={notificationSpaceStyle}>monitoring section</a>below
-    <a style={notificationSpaceStyle}>
-      <ScrollDownIcon fontSize="small" style={{ marginBottom: theme.spacing(-0.5) }} />
-    </a>
-  </BaseNotification>
-);
+export const ServiceNotification = ({ alerts, onClick }) => {
+  const theme = useTheme();
+
+  return (
+    <BaseNotification onClick={onClick} severity={monitoringSeverities.CRITICAL_FLAPPING}>
+      {alerts.length} {pluralize('service', alerts.length)} reported issues. View details in the
+      <a style={{ margin: theme.spacing('inherit', 1) }}>monitoring section</a>below
+      <a style={{ margin: theme.spacing('inherit', 1) }}>
+        <ScrollDownIcon fontSize="small" style={{ marginBottom: theme.spacing(-0.5) }} />
+      </a>
+    </BaseNotification>
+  );
+};
 
 export const NoAlertsHeaderNotification = () => (
   <BaseNotification bordered={false} severity={monitoringSeverities.OK}>
@@ -67,7 +95,7 @@ export const NoAlertsHeaderNotification = () => (
 
 export const DeviceOfflineHeaderNotification = () => (
   <BaseNotification className="column-data" bordered={false} severity={monitoringSeverities.CRITICAL}>
-    <div className="key text-muted margin-right-small">
+    <div className="key muted margin-right-small">
       <b>Device offline</b>
     </div>
     Last check-in over {DEVICE_ONLINE_CUTOFF.interval} {pluralize(DEVICE_ONLINE_CUTOFF.intervalName, DEVICE_ONLINE_CUTOFF.interval)} ago

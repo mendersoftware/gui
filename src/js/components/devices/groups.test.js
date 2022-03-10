@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import Groups, { GroupItem, GroupsSubheader } from './groups';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import Groups, { GroupItem, GroupsSubheader } from './groups';
 
 describe('Groups Component', () => {
   it('renders correctly', async () => {

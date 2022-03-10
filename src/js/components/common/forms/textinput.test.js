@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import TextInput from './textinput';
+
+import { render } from '../../../../../tests/setupTests';
 import { undefineds } from '../../../../../tests/mockData';
+import TextInput from './textinput';
 
 describe('TextInput Component', () => {
   it('renders correctly', async () => {

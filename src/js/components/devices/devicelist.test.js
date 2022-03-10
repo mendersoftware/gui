@@ -1,11 +1,12 @@
 import React from 'react';
 import { prettyDOM } from '@testing-library/dom';
-import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import DeviceList from './devicelist';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import DeviceList from './devicelist';
 
 const mockStore = configureStore([thunk]);
 
@@ -18,10 +19,11 @@ describe('DeviceList Component', () => {
     const { baseElement } = render(
       <Provider store={store}>
         <DeviceList
+          columnHeaders={[{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4 }]}
+          customColumnSizes={[]}
           devices={[]}
           deviceListState={defaultState.devices.deviceList}
           selectedRows={[]}
-          columnHeaders={[{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4 }]}
           pageTotal={50}
         />
       </Provider>

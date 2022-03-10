@@ -1,16 +1,12 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
-import GroupDefinition, { validateGroupName } from './group-definition';
+
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import GroupDefinition, { validateGroupName } from './group-definition';
 
 describe('GroupDefinition Component', () => {
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <MemoryRouter>
-        <GroupDefinition groups={[]} isCreationDynamic={true} />
-      </MemoryRouter>
-    );
+    const { baseElement } = render(<GroupDefinition groups={[]} isCreationDynamic={true} />);
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

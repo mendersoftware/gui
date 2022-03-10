@@ -1,12 +1,12 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
-import { MemoryRouter } from 'react-router-dom';
 import thunk from 'redux-thunk';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
 import Configuration, { ConfigEditingActions, ConfigUpdateFailureActions, ConfigEmptyNote, ConfigUpdateNote, ConfigUpToDateNote } from './configuration';
 
 const mockStore = configureStore([thunk]);
@@ -40,6 +40,7 @@ describe('Configuration Component', () => {
   });
   const reportedTime = '2019-01-01T09:25:01.000Z';
   it('renders correctly', async () => {
+    const setDeviceConfigMock = jest.fn().mockResolvedValue();
     const { baseElement } = render(
       <Provider store={store}>
         <Configuration
@@ -53,11 +54,11 @@ describe('Configuration Component', () => {
             }
           }}
           abortDeployment={jest.fn}
-          applyDeviceConfig={jest.fn}
+          applyDeviceConfig={setDeviceConfigMock}
           getDeviceLog={jest.fn}
           getSingleDeployment={jest.fn}
           saveGlobalSettings={jest.fn}
-          setDeviceConfig={jest.fn}
+          setDeviceConfig={setDeviceConfigMock}
         />
       </Provider>
     );
@@ -79,19 +80,17 @@ describe('Configuration Component', () => {
       }
     };
     let ui = (
-      <MemoryRouter>
-        <Provider store={store}>
-          <Configuration
-            device={device}
-            abortDeployment={jest.fn}
-            applyDeviceConfig={applyMock}
-            getDeviceLog={jest.fn}
-            getSingleDeployment={jest.fn}
-            saveGlobalSettings={jest.fn}
-            setDeviceConfig={submitMock}
-          />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <Configuration
+          device={device}
+          abortDeployment={jest.fn}
+          applyDeviceConfig={applyMock}
+          getDeviceLog={jest.fn}
+          getSingleDeployment={jest.fn}
+          saveGlobalSettings={jest.fn}
+          setDeviceConfig={submitMock}
+        />
+      </Provider>
     );
     const { rerender } = render(ui);
     expect(screen.queryByRole('button', { name: /import configuration/i })).not.toBeInTheDocument();
@@ -113,15 +112,20 @@ describe('Configuration Component', () => {
     await waitFor(() => rerender(ui));
     expect(submitMock).toHaveBeenLastCalledWith(defaultState.devices.byId.a1.id, { testKey: 'testValue' });
     expect(applyMock).toHaveBeenLastCalledWith(defaultState.devices.byId.a1.id, { retries: 0 }, true, { testKey: 'testValue' });
-    device.config = {
-      configured: { test: true, something: 'else', aNumber: 42 },
-      reported: { test: true, something: 'else', aNumber: 42 },
-      updated_ts: defaultState.devices.byId.a1.updated_ts,
-      reported_ts: reportedTime
+    device = {
+      ...device,
+      config: {
+        configured: { test: true, something: 'else', aNumber: 42 },
+        deployment_id: defaultState.deployments.byId.d1.id,
+        reported: { test: true, something: 'else', aNumber: 42 },
+        updated_ts: defaultState.devices.byId.a1.updated_ts,
+        reported_ts: reportedTime
+      }
     };
     ui = (
       <Provider store={store}>
         <Configuration
+          deployment={{ ...defaultState.deployments.byId.d1, created: device.config.updated_ts, finished: device.config.updated_ts, status: 'finished' }}
           device={device}
           abortDeployment={jest.fn}
           applyDeviceConfig={applyMock}
@@ -132,15 +136,14 @@ describe('Configuration Component', () => {
         />
       </Provider>
     );
+    jest.advanceTimersByTime(2000);
     await waitFor(() => rerender(ui));
-    while (screen.queryByText(/show more/i)) {
-      userEvent.click(screen.getByText(/show more/i));
-      await waitFor(() => rerender(ui));
-    }
+    await waitFor(() => expect(document.querySelector('.loaderContainer')).not.toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/show less/i)).toBeInTheDocument(), { timeout: 3000 });
 
     expect(screen.getByText(/aNumber/i)).toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', { name: /edit/i }));
-    await waitFor(() => rerender(ui));
+    act(() => userEvent.click(screen.getByRole('button', { name: /edit/i })));
+    await waitFor(() => expect(screen.getByDisplayValue(/something/i)).toBeInTheDocument(), { timeout: 3000 });
     userEvent.type(screen.getByDisplayValue('something'), 'testKey');
     userEvent.type(screen.getByDisplayValue('else'), 'testValue');
     act(() => userEvent.click(screen.getByRole('button', { name: /Cancel/i })));

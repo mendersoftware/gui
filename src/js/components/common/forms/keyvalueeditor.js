@@ -1,13 +1,13 @@
 import React, { createRef, useEffect, useRef, useState } from 'react';
 
-import { Fab, FormControl, FormHelperText, IconButton, Input } from '@material-ui/core';
-import { Add as ContentAddIcon, Clear as ClearIcon } from '@material-ui/icons';
-
-import theme from '../../../themes/mender-theme';
+import { Fab, FormControl, FormHelperText, IconButton, Input } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { Add as ContentAddIcon, Clear as ClearIcon } from '@mui/icons-material';
 
 const emptyInput = { helptip: null, key: '', value: '' };
 
 export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsMap = {}, onInputChange, reset, showHelptips }) => {
+  const theme = useTheme();
   const [inputs, setInputs] = useState([{ ...emptyInput }]);
   const [error, setError] = useState('');
   // need to useRef here to get positioning of
@@ -71,7 +71,7 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsM
   const getHelptipPosition = ref => {
     const { offsetHeight, offsetLeft, offsetTop } = ref.current.closest('.key-value-container');
     const top = offsetTop + offsetHeight / 3;
-    const left = offsetLeft - theme.spacing(2);
+    const left = offsetLeft - 15;
     return { left, top };
   };
 
@@ -92,7 +92,7 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsM
               <Input value={`${input.value}`} placeholder="Value" onChange={e => updateInputs('value', index, e)} type="text" />
             </FormControl>
             {inputs.length > 1 && !hasRemovalDisabled ? (
-              <IconButton disabled={disabled || hasRemovalDisabled} onClick={() => removeInput(index)}>
+              <IconButton disabled={disabled || hasRemovalDisabled} onClick={() => removeInput(index)} size="large">
                 <ClearIcon fontSize="small" />
               </IconButton>
             ) : (

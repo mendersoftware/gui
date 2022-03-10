@@ -1,31 +1,38 @@
 import React from 'react';
 
 // material ui
-import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@material-ui/core';
-import { InfoOutlined as InfoIcon } from '@material-ui/icons';
+import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
+import { InfoOutlined as InfoIcon } from '@mui/icons-material';
 
 import { AddGroup } from '../helptips/helptooltips';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { makeStyles } from 'tss-react/mui';
 
-const styles = {
-  selectedGroup: { backgroundColor: '#e7e7e7' },
-  subheader: { color: '#aaaaaa', height: 48 }
+const useStyles = makeStyles()(theme => ({
+  header: {
+    color: theme.palette.grey[800],
+    height: theme.spacing(6)
+  },
+  groupBorder: {
+    background: theme.palette.grey[50]
+  },
+  groupHeading: {
+    background: theme.palette.background.default
+  }
+}));
+
+export const GroupsSubheader = ({ heading }) => {
+  const { classes } = useStyles();
+  return (
+    <ListSubheader classes={{ root: 'heading-lined' }} className={classes.header} disableGutters disableSticky key="static-groups-sub">
+      <span className={classes.groupHeading}>{heading}</span>
+      <div className={classes.groupBorder}></div>
+    </ListSubheader>
+  );
 };
 
-export const GroupsSubheader = ({ heading }) => (
-  <ListSubheader classes={{ root: 'heading-lined' }} disableGutters disableSticky key="static-groups-sub" style={styles.subheader}>
-    <span>{heading}</span>
-    <div></div>
-  </ListSubheader>
-);
-
 export const GroupItem = ({ changeGroup, groupname, selectedGroup, name }) => (
-  <ListItem
-    classes={{ root: 'grouplist' }}
-    button
-    style={name === selectedGroup || groupname === selectedGroup ? styles.selectedGroup : {}}
-    onClick={() => changeGroup(name)}
-  >
+  <ListItem classes={{ root: 'grouplist' }} button selected={name === selectedGroup || groupname === selectedGroup} onClick={() => changeGroup(name)}>
     <ListItemText primary={decodeURIComponent(name)} />
   </ListItem>
 );
@@ -59,7 +66,7 @@ export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, se
     <>
       <div className="muted margin-bottom-small">Groups</div>
       <List>
-        <ListItem classes={{ root: 'grouplist' }} button key="All" style={!selectedGroup ? styles.selectedGroup : {}} onClick={() => changeGroup()}>
+        <ListItem classes={{ root: 'grouplist' }} button key="All" selected={!selectedGroup} onClick={() => changeGroup()}>
           <ListItemText primary="All devices" />
         </ListItem>
         {!!dynamicGroups.length && <GroupsSubheader heading="Dynamic" />}

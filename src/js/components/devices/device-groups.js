@@ -1,14 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import pluralize from 'pluralize';
 
-import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
-import { AddCircle as AddIcon } from '@material-ui/icons';
+import { Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { AddCircle as AddIcon } from '@mui/icons-material';
 
-import AuthorizedDevices from './authorized-devices';
-import CreateGroup from './create-group';
-import Groups from './groups';
-import RemoveGroup from './remove-group';
 import { setSnackbar, setYesterday } from '../../actions/appActions';
 import {
   addDynamicGroup,
@@ -26,50 +23,72 @@ import {
   updateDynamicGroup
 } from '../../actions/deviceActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
-import { getDocsVersion, getIsEnterprise, getLimitMaxed } from '../../selectors';
-import CreateGroupExplainer from './create-group-explainer';
-import Global from '../settings/global';
 import { DEVICE_ISSUE_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
-import { emptyFilter } from './filters';
+import { getDocsVersion, getIsEnterprise, getLimitMaxed } from '../../selectors';
+import Global from '../settings/global';
+import AuthorizedDevices from './authorized-devices';
+import CreateGroup from './group-management/create-group';
+import RemoveGroup from './group-management/remove-group';
+import CreateGroupExplainer from './group-management/create-group-explainer';
+import { emptyFilter } from './widgets/filters';
 import PreauthDialog, { DeviceLimitWarning } from './preauth-dialog';
 import {
   AcceptedEmptyState,
+  defaultTextRender,
   DeviceCreationTime,
-  DeviceExpansion,
-  DeviceStatusHeading,
+  DeviceSoftware,
+  DeviceStatusRenderer,
+  DeviceTypes,
+  getDeviceSoftwareText,
+  getDeviceTypeText,
   PendingEmptyState,
   PreauthorizedEmptyState,
   RejectedEmptyState,
   RelativeDeviceTime
 } from './base-devices';
-import DeviceAdditionWidget from './deviceadditionwidget';
-import QuickFilter from './quickfilter';
+import DeviceAdditionWidget from './widgets/deviceadditionwidget';
+import QuickFilter from './widgets/quickfilter';
+import Groups from './groups';
 import DeviceStatusNotification from './devicestatusnotification';
-import pluralize from 'pluralize';
 
-const defaultHeaders = {
+export const defaultHeaders = {
+  currentSoftware: {
+    title: 'Current software',
+    attribute: { name: 'rootfs-image.version', scope: 'inventory', alternative: 'artifact_name' },
+    component: DeviceSoftware,
+    sortable: true,
+    textRender: getDeviceSoftwareText
+  },
   deviceCreationTime: {
     title: 'First request',
     attribute: { name: 'created_ts', scope: 'system' },
-    render: DeviceCreationTime,
+    component: DeviceCreationTime,
     sortable: true
+  },
+  deviceId: {
+    title: 'Device ID',
+    attribute: { name: 'id', scope: 'identity' },
+    sortable: true,
+    textRender: ({ id }) => id
   },
   deviceStatus: {
     title: 'Status',
     attribute: { name: 'status', scope: 'identity' },
-    render: DeviceStatusHeading,
-    sortable: true
+    component: DeviceStatusRenderer,
+    sortable: true,
+    textRender: defaultTextRender
   },
-  deviceExpansion: {
-    title: '',
-    attribute: {},
-    render: DeviceExpansion,
-    sortable: false
+  deviceType: {
+    title: 'Device type',
+    attribute: { name: 'device_type', scope: 'inventory' },
+    component: DeviceTypes,
+    sortable: true,
+    textRender: getDeviceTypeText
   },
   lastCheckIn: {
     title: 'Last check-in',
     attribute: { name: 'updated_ts', scope: 'system' },
-    render: RelativeDeviceTime,
+    component: RelativeDeviceTime,
     sortable: true
   }
 };
@@ -82,23 +101,7 @@ const acceptedDevicesRoute = {
   route: `${baseDevicesRoute}/${DEVICE_STATES.accepted}`,
   title: () => DEVICE_STATES.accepted,
   emptyState: AcceptedEmptyState,
-  defaultHeaders: [
-    {
-      title: 'Device type',
-      attribute: { name: 'device_type', scope: 'inventory' },
-      render: ({ attributes = {} }) => (attributes.device_type?.length ? attributes.device_type.join(',') : '-'),
-      sortable: true
-    },
-    {
-      title: 'Current software',
-      attribute: { name: 'rootfs-image.version', scope: 'inventory', alternative: 'artifact_name' },
-      render: ({ attributes = {} }) => attributes['rootfs-image.version'] || attributes.artifact_name || '-',
-      sortable: true
-    },
-    defaultHeaders.lastCheckIn,
-    defaultHeaders.deviceStatus,
-    defaultHeaders.deviceExpansion
-  ]
+  defaultHeaders: [defaultHeaders.deviceType, defaultHeaders.currentSoftware, defaultHeaders.lastCheckIn]
 };
 
 export const routes = {
@@ -116,7 +119,7 @@ export const routes = {
     route: `${baseDevicesRoute}/${DEVICE_STATES.pending}`,
     title: count => `${DEVICE_STATES.pending}${count ? ` (${count})` : ''}`,
     emptyState: PendingEmptyState,
-    defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn, defaultHeaders.deviceStatus, defaultHeaders.deviceExpansion]
+    defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn]
   },
   [DEVICE_STATES.preauth]: {
     key: DEVICE_STATES.preauth,
@@ -128,9 +131,7 @@ export const routes = {
       {
         ...defaultHeaders.deviceCreationTime,
         title: 'Date added'
-      },
-      defaultHeaders.deviceStatus,
-      defaultHeaders.deviceExpansion
+      }
     ]
   },
   [DEVICE_STATES.rejected]: {
@@ -139,7 +140,7 @@ export const routes = {
     route: `${baseDevicesRoute}/${DEVICE_STATES.rejected}`,
     title: () => DEVICE_STATES.rejected,
     emptyState: RejectedEmptyState,
-    defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn, defaultHeaders.deviceStatus, defaultHeaders.deviceExpansion]
+    defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn]
   }
 };
 
@@ -453,7 +454,6 @@ export const DeviceGroups = ({
             refreshDevices={refreshDevices}
             removeDevicesFromGroup={onRemoveDevicesFromGroup}
             showsDialog={showDeviceConnectionDialog || removeGroup || modifyGroupDialog || createGroupExplanation || openIdDialog || openPreauth}
-            states={routes}
           />
         </div>
         {removeGroup && <RemoveGroup onClose={toggleGroupRemoval} onRemove={removeCurrentGroup} />}

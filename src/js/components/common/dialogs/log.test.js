@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import LogDialog from './log';
+
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import LogDialog from './log';
 
 describe('LogDialog Component', () => {
   it('renders correctly', async () => {

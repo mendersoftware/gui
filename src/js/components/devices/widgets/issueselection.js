@@ -1,23 +1,26 @@
 import React, { useState } from 'react';
 
 // material ui
-import { Checkbox, MenuItem, Select } from '@material-ui/core';
+import { Checkbox, MenuItem, Select } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
-import theme from '../../../themes/mender-theme';
 import { DEVICE_ISSUE_OPTIONS } from '../../../constants/deviceConstants';
 
-export const EmptySelection = ({ allSelected, emptySelection, onToggleClick }) => (
-  <MenuItem value="" style={{ fontSize: 13, paddingRight: theme.spacing(3) }}>
-    <Checkbox
-      checked={allSelected}
-      indeterminate={!(allSelected || emptySelection)}
-      style={{ marginLeft: theme.spacing(-1.5) }}
-      size="small"
-      onChange={onToggleClick}
-    />
-    Show only devices requiring attention
-  </MenuItem>
-);
+export const EmptySelection = ({ allSelected, emptySelection, onToggleClick }) => {
+  const theme = useTheme();
+  return (
+    <MenuItem value="" style={{ fontSize: 13, paddingRight: theme.spacing(3) }}>
+      <Checkbox
+        checked={allSelected}
+        indeterminate={!(allSelected || emptySelection)}
+        style={{ marginLeft: theme.spacing(-1.5) }}
+        size="small"
+        onChange={onToggleClick}
+      />
+      Show only devices requiring attention
+    </MenuItem>
+  );
+};
 
 const menuProps = {
   anchorOrigin: {
@@ -27,11 +30,11 @@ const menuProps = {
   transformOrigin: {
     vertical: 'top',
     horizontal: 'left'
-  },
-  getContentAnchorEl: null
+  }
 };
 
 const DeviceIssuesSelection = ({ onChange, onSelectAll, options, selection }) => {
+  const theme = useTheme();
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {

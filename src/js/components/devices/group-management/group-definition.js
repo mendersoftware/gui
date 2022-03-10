@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import validator from 'validator';
 
-import { FormHelperText, TextField } from '@material-ui/core';
-import { Autocomplete, createFilterOptions } from '@material-ui/lab';
+import { FormHelperText, TextField, Autocomplete } from '@mui/material';
+import { createFilterOptions } from '@mui/material/useAutocomplete';
 
 import { fullyDecodeURI } from '../../../helpers';
 
@@ -28,6 +28,8 @@ export const validateGroupName = (encodedName, groups = [], selectedGroup, isCre
   }
   return { errortext, invalid, isModification, name };
 };
+
+const GroupOption = (props, option) => <li {...props}>{option.title}</li>;
 
 export const GroupDefinition = ({ isCreationDynamic, groups, newGroup, onInputChange, selectedGroup }) => {
   const [errortext, setErrorText] = useState('');
@@ -75,7 +77,7 @@ export const GroupDefinition = ({ isCreationDynamic, groups, newGroup, onInputCh
         options={filteredGroups}
         onInputChange={(e, newValue) => validateName(newValue)}
         renderInput={params => <TextField {...params} label="Select a group, or type to create new" InputProps={{ ...params.InputProps }} />}
-        renderOption={option => option.title}
+        renderOption={GroupOption}
       />
       <FormHelperText>{errortext}</FormHelperText>
       {isCreationDynamic && (

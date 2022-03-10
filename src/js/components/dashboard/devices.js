@@ -12,6 +12,7 @@ import useWindowSize from '../../utils/resizehook';
 import AcceptedDevices from './widgets/accepteddevices';
 import PendingDevices from './widgets/pendingdevices';
 import RedirectionWidget from './widgets/redirectionwidget';
+import LinedHeader from '../common/lined-header';
 
 export const Devices = props => {
   const [deltaActivity, setDeltaActivity] = useState(0);
@@ -118,9 +119,7 @@ export const Devices = props => {
   }
   return (
     <div>
-      <h4 className="dashboard-header">
-        <span>Devices</span>
-      </h4>
+      <LinedHeader heading="Devices" />
       <div style={Object.assign({ marginBottom: 30 }, styles)} ref={anchor}>
         {!!pendingDevicesCount && (
           <PendingDevices

@@ -1,6 +1,275 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AuthsetList Component renders correctly 1`] = `
+.emotion-0 {
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.87);
+  -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
+  position: relative;
+  -webkit-transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  overflow-anchor: none;
+}
+
+.emotion-0:before {
+  position: absolute;
+  left: 0;
+  top: -1px;
+  right: 0;
+  height: 1px;
+  content: "";
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.12);
+  -webkit-transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-0:first-of-type:before {
+  display: none;
+}
+
+.emotion-0.Mui-expanded:before {
+  opacity: 0;
+}
+
+.emotion-0.Mui-expanded:first-of-type {
+  margin-top: 0;
+}
+
+.emotion-0.Mui-expanded:last-of-type {
+  margin-bottom: 0;
+}
+
+.emotion-0.Mui-expanded+.emotion-0.Mui-expanded:before {
+  display: none;
+}
+
+.emotion-0.Mui-disabled {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-0.Mui-expanded {
+  margin: 16px 0;
+}
+
+.emotion-1 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  min-height: 48px;
+  padding: 0px 16px;
+  -webkit-transition: min-height 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: min-height 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-1::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-1.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-1 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-1.Mui-focusVisible {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-1.Mui-disabled {
+  opacity: 0.38;
+}
+
+.emotion-1:hover:not(.Mui-disabled) {
+  cursor: pointer;
+}
+
+.emotion-1.Mui-expanded {
+  min-height: 64px;
+}
+
+.emotion-2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  margin: 12px 0;
+  -webkit-transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-2.Mui-expanded {
+  margin: 20px 0;
+}
+
+.emotion-3 {
+  max-width: 100%;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-size: 0.8125rem;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 24px;
+  color: #fff;
+  background-color: #1976d2;
+  border-radius: 16px;
+  white-space: nowrap;
+  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: default;
+  outline: 0;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  border: 0;
+  padding: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.emotion-3.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-3 .MuiChip-avatar {
+  margin-left: 5px;
+  margin-right: -6px;
+  width: 24px;
+  height: 24px;
+  color: #616161;
+  font-size: 0.75rem;
+}
+
+.emotion-3 .MuiChip-avatarColorPrimary {
+  color: #fff;
+  background-color: #1565c0;
+}
+
+.emotion-3 .MuiChip-avatarColorSecondary {
+  color: #fff;
+  background-color: #7b1fa2;
+}
+
+.emotion-3 .MuiChip-avatarSmall {
+  margin-left: 4px;
+  margin-right: -4px;
+  width: 18px;
+  height: 18px;
+  font-size: 0.625rem;
+}
+
+.emotion-3 .MuiChip-icon {
+  color: inherit;
+  margin-left: 4px;
+  margin-right: -4px;
+  font-size: 18px;
+}
+
+.emotion-3 .MuiChip-deleteIcon {
+  -webkit-tap-highlight-color: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  cursor: pointer;
+  margin: 0 5px 0 -6px;
+  margin-right: 4px;
+  margin-left: -4px;
+}
+
+.emotion-3 .MuiChip-deleteIcon:hover {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.emotion-3 .MuiChip-deleteIcon:hover,
+.emotion-3 .MuiChip-deleteIcon:active {
+  color: #fff;
+}
+
+.emotion-4 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 8px;
+  padding-right: 8px;
+  white-space: nowrap;
+}
+
+.emotion-5 {
+  height: 0;
+  overflow: hidden;
+  -webkit-transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  visibility: hidden;
+}
+
+.emotion-6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+}
+
+.emotion-7 {
+  width: 100%;
+}
+
+.emotion-8 {
+  padding: 8px 16px 16px;
+}
+
 <div
   class="authsets"
 >
@@ -36,25 +305,24 @@ exports[`AuthsetList Component renders correctly 1`] = `
     style="position: relative;"
   >
     <div
-      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 ForwardRef(Accordion)-root-1 MuiAccordion-root MuiAccordion-gutters emotion-0"
     >
       <div
-        aria-disabled="false"
         aria-expanded="false"
-        class="MuiButtonBase-root MuiAccordionSummary-root"
+        class="MuiButtonBase-root MuiAccordionSummary-root MuiAccordionSummary-gutters emotion-1"
         role="button"
         style="cursor: default;"
         tabindex="0"
       >
         <div
-          class="MuiAccordionSummary-content"
+          class="MuiAccordionSummary-content MuiAccordionSummary-contentGutters emotion-2"
         >
           <div
-            class="MuiChip-root MuiChip-colorPrimary MuiChip-sizeSmall"
+            class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorPrimary MuiChip-filledPrimary emotion-3"
             style="justify-self: flex-start;"
           >
             <span
-              class="MuiChip-label MuiChip-labelSmall"
+              class="MuiChip-label MuiChip-labelSmall emotion-4"
             >
               new
             </span>
@@ -88,20 +356,21 @@ exports[`AuthsetList Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="MuiCollapse-container MuiCollapse-hidden"
+        class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden emotion-5"
         style="min-height: 0px;"
       >
         <div
-          class="MuiCollapse-wrapper"
+          class="MuiCollapse-wrapper MuiCollapse-vertical emotion-6"
         >
           <div
-            class="MuiCollapse-wrapperInner"
+            class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-7"
           >
             <div
+              class="MuiAccordion-region"
               role="region"
             >
               <div
-                class="MuiAccordionDetails-root"
+                class="MuiAccordionDetails-root emotion-8"
               >
                 <div
                   style="flex-grow: 1;"
@@ -118,25 +387,24 @@ exports[`AuthsetList Component renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 ForwardRef(Accordion)-root-1 MuiAccordion-root MuiAccordion-gutters emotion-0"
     >
       <div
-        aria-disabled="false"
         aria-expanded="false"
-        class="MuiButtonBase-root MuiAccordionSummary-root"
+        class="MuiButtonBase-root MuiAccordionSummary-root MuiAccordionSummary-gutters emotion-1"
         role="button"
         style="cursor: default;"
         tabindex="0"
       >
         <div
-          class="MuiAccordionSummary-content"
+          class="MuiAccordionSummary-content MuiAccordionSummary-contentGutters emotion-2"
         >
           <div
-            class="MuiChip-root MuiChip-colorPrimary MuiChip-sizeSmall"
+            class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorPrimary MuiChip-filledPrimary emotion-3"
             style="justify-self: flex-start;"
           >
             <span
-              class="MuiChip-label MuiChip-labelSmall"
+              class="MuiChip-label MuiChip-labelSmall emotion-4"
             >
               new
             </span>
@@ -170,20 +438,21 @@ exports[`AuthsetList Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="MuiCollapse-container MuiCollapse-hidden"
+        class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden emotion-5"
         style="min-height: 0px;"
       >
         <div
-          class="MuiCollapse-wrapper"
+          class="MuiCollapse-wrapper MuiCollapse-vertical emotion-6"
         >
           <div
-            class="MuiCollapse-wrapperInner"
+            class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-7"
           >
             <div
+              class="MuiAccordion-region"
               role="region"
             >
               <div
-                class="MuiAccordionDetails-root"
+                class="MuiAccordionDetails-root emotion-8"
               >
                 <div
                   style="flex-grow: 1;"
@@ -200,25 +469,24 @@ exports[`AuthsetList Component renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 ForwardRef(Accordion)-root-1 MuiAccordion-root MuiAccordion-gutters emotion-0"
     >
       <div
-        aria-disabled="false"
         aria-expanded="false"
-        class="MuiButtonBase-root MuiAccordionSummary-root"
+        class="MuiButtonBase-root MuiAccordionSummary-root MuiAccordionSummary-gutters emotion-1"
         role="button"
         style="cursor: default;"
         tabindex="0"
       >
         <div
-          class="MuiAccordionSummary-content"
+          class="MuiAccordionSummary-content MuiAccordionSummary-contentGutters emotion-2"
         >
           <div
-            class="MuiChip-root MuiChip-colorPrimary MuiChip-sizeSmall"
+            class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorPrimary MuiChip-filledPrimary emotion-3"
             style="justify-self: flex-start;"
           >
             <span
-              class="MuiChip-label MuiChip-labelSmall"
+              class="MuiChip-label MuiChip-labelSmall emotion-4"
             >
               new
             </span>
@@ -252,20 +520,21 @@ exports[`AuthsetList Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="MuiCollapse-container MuiCollapse-hidden"
+        class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden emotion-5"
         style="min-height: 0px;"
       >
         <div
-          class="MuiCollapse-wrapper"
+          class="MuiCollapse-wrapper MuiCollapse-vertical emotion-6"
         >
           <div
-            class="MuiCollapse-wrapperInner"
+            class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-7"
           >
             <div
+              class="MuiAccordion-region"
               role="region"
             >
               <div
-                class="MuiAccordionDetails-root"
+                class="MuiAccordionDetails-root emotion-8"
               >
                 <div
                   style="flex-grow: 1;"
@@ -282,18 +551,17 @@ exports[`AuthsetList Component renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 ForwardRef(Accordion)-root-1 MuiAccordion-root MuiAccordion-gutters emotion-0"
     >
       <div
-        aria-disabled="false"
         aria-expanded="false"
-        class="MuiButtonBase-root MuiAccordionSummary-root"
+        class="MuiButtonBase-root MuiAccordionSummary-root MuiAccordionSummary-gutters emotion-1"
         role="button"
         style="cursor: default;"
         tabindex="0"
       >
         <div
-          class="MuiAccordionSummary-content"
+          class="MuiAccordionSummary-content MuiAccordionSummary-contentGutters emotion-2"
         >
           <div
             class="capitalized"
@@ -329,20 +597,21 @@ exports[`AuthsetList Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="MuiCollapse-container MuiCollapse-hidden"
+        class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden emotion-5"
         style="min-height: 0px;"
       >
         <div
-          class="MuiCollapse-wrapper"
+          class="MuiCollapse-wrapper MuiCollapse-vertical emotion-6"
         >
           <div
-            class="MuiCollapse-wrapperInner"
+            class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-7"
           >
             <div
+              class="MuiAccordion-region"
               role="region"
             >
               <div
-                class="MuiAccordionDetails-root"
+                class="MuiAccordionDetails-root emotion-8"
               >
                 <div
                   style="flex-grow: 1;"
@@ -359,18 +628,17 @@ exports[`AuthsetList Component renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 ForwardRef(Accordion)-root-1 MuiAccordion-root MuiAccordion-gutters emotion-0"
     >
       <div
-        aria-disabled="false"
         aria-expanded="false"
-        class="MuiButtonBase-root MuiAccordionSummary-root"
+        class="MuiButtonBase-root MuiAccordionSummary-root MuiAccordionSummary-gutters emotion-1"
         role="button"
         style="cursor: default;"
         tabindex="0"
       >
         <div
-          class="MuiAccordionSummary-content"
+          class="MuiAccordionSummary-content MuiAccordionSummary-contentGutters emotion-2"
         >
           <div
             class="capitalized"
@@ -406,20 +674,21 @@ exports[`AuthsetList Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="MuiCollapse-container MuiCollapse-hidden"
+        class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden emotion-5"
         style="min-height: 0px;"
       >
         <div
-          class="MuiCollapse-wrapper"
+          class="MuiCollapse-wrapper MuiCollapse-vertical emotion-6"
         >
           <div
-            class="MuiCollapse-wrapperInner"
+            class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-7"
           >
             <div
+              class="MuiAccordion-region"
               role="region"
             >
               <div
-                class="MuiAccordionDetails-root"
+                class="MuiAccordionDetails-root emotion-8"
               >
                 <div
                   style="flex-grow: 1;"
@@ -436,18 +705,17 @@ exports[`AuthsetList Component renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 ForwardRef(Accordion)-root-1 MuiAccordion-root MuiAccordion-gutters emotion-0"
     >
       <div
-        aria-disabled="false"
         aria-expanded="false"
-        class="MuiButtonBase-root MuiAccordionSummary-root"
+        class="MuiButtonBase-root MuiAccordionSummary-root MuiAccordionSummary-gutters emotion-1"
         role="button"
         style="cursor: default;"
         tabindex="0"
       >
         <div
-          class="MuiAccordionSummary-content"
+          class="MuiAccordionSummary-content MuiAccordionSummary-contentGutters emotion-2"
         >
           <div
             class="capitalized"
@@ -483,20 +751,21 @@ exports[`AuthsetList Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="MuiCollapse-container MuiCollapse-hidden"
+        class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden emotion-5"
         style="min-height: 0px;"
       >
         <div
-          class="MuiCollapse-wrapper"
+          class="MuiCollapse-wrapper MuiCollapse-vertical emotion-6"
         >
           <div
-            class="MuiCollapse-wrapperInner"
+            class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-7"
           >
             <div
+              class="MuiAccordion-region"
               role="region"
             >
               <div
-                class="MuiAccordionDetails-root"
+                class="MuiAccordionDetails-root emotion-8"
               >
                 <div
                   style="flex-grow: 1;"
@@ -513,18 +782,17 @@ exports[`AuthsetList Component renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 ForwardRef(Accordion)-root-1 MuiAccordion-root MuiAccordion-gutters emotion-0"
     >
       <div
-        aria-disabled="false"
         aria-expanded="false"
-        class="MuiButtonBase-root MuiAccordionSummary-root"
+        class="MuiButtonBase-root MuiAccordionSummary-root MuiAccordionSummary-gutters emotion-1"
         role="button"
         style="cursor: default;"
         tabindex="0"
       >
         <div
-          class="MuiAccordionSummary-content"
+          class="MuiAccordionSummary-content MuiAccordionSummary-contentGutters emotion-2"
         >
           <div />
           <div
@@ -556,20 +824,21 @@ exports[`AuthsetList Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="MuiCollapse-container MuiCollapse-hidden"
+        class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden emotion-5"
         style="min-height: 0px;"
       >
         <div
-          class="MuiCollapse-wrapper"
+          class="MuiCollapse-wrapper MuiCollapse-vertical emotion-6"
         >
           <div
-            class="MuiCollapse-wrapperInner"
+            class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-7"
           >
             <div
+              class="MuiAccordion-region"
               role="region"
             >
               <div
-                class="MuiAccordionDetails-root"
+                class="MuiAccordionDetails-root emotion-8"
               >
                 <div
                   style="flex-grow: 1;"
@@ -586,18 +855,17 @@ exports[`AuthsetList Component renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 ForwardRef(Accordion)-root-1 MuiAccordion-root MuiAccordion-gutters emotion-0"
     >
       <div
-        aria-disabled="false"
         aria-expanded="false"
-        class="MuiButtonBase-root MuiAccordionSummary-root"
+        class="MuiButtonBase-root MuiAccordionSummary-root MuiAccordionSummary-gutters emotion-1"
         role="button"
         style="cursor: default;"
         tabindex="0"
       >
         <div
-          class="MuiAccordionSummary-content"
+          class="MuiAccordionSummary-content MuiAccordionSummary-contentGutters emotion-2"
         >
           <div />
           <div
@@ -629,20 +897,21 @@ exports[`AuthsetList Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="MuiCollapse-container MuiCollapse-hidden"
+        class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden emotion-5"
         style="min-height: 0px;"
       >
         <div
-          class="MuiCollapse-wrapper"
+          class="MuiCollapse-wrapper MuiCollapse-vertical emotion-6"
         >
           <div
-            class="MuiCollapse-wrapperInner"
+            class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-7"
           >
             <div
+              class="MuiAccordion-region"
               role="region"
             >
               <div
-                class="MuiAccordionDetails-root"
+                class="MuiAccordionDetails-root emotion-8"
               >
                 <div
                   style="flex-grow: 1;"
@@ -659,18 +928,17 @@ exports[`AuthsetList Component renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 ForwardRef(Accordion)-root-1 MuiAccordion-root MuiAccordion-gutters emotion-0"
     >
       <div
-        aria-disabled="false"
         aria-expanded="false"
-        class="MuiButtonBase-root MuiAccordionSummary-root"
+        class="MuiButtonBase-root MuiAccordionSummary-root MuiAccordionSummary-gutters emotion-1"
         role="button"
         style="cursor: default;"
         tabindex="0"
       >
         <div
-          class="MuiAccordionSummary-content"
+          class="MuiAccordionSummary-content MuiAccordionSummary-contentGutters emotion-2"
         >
           <div />
           <div
@@ -702,20 +970,21 @@ exports[`AuthsetList Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="MuiCollapse-container MuiCollapse-hidden"
+        class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden emotion-5"
         style="min-height: 0px;"
       >
         <div
-          class="MuiCollapse-wrapper"
+          class="MuiCollapse-wrapper MuiCollapse-vertical emotion-6"
         >
           <div
-            class="MuiCollapse-wrapperInner"
+            class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-7"
           >
             <div
+              class="MuiAccordion-region"
               role="region"
             >
               <div
-                class="MuiAccordionDetails-root"
+                class="MuiAccordionDetails-root emotion-8"
               >
                 <div
                   style="flex-grow: 1;"
@@ -732,18 +1001,17 @@ exports[`AuthsetList Component renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 ForwardRef(Accordion)-root-1 MuiAccordion-root MuiAccordion-gutters emotion-0"
     >
       <div
-        aria-disabled="false"
         aria-expanded="false"
-        class="MuiButtonBase-root MuiAccordionSummary-root"
+        class="MuiButtonBase-root MuiAccordionSummary-root MuiAccordionSummary-gutters emotion-1"
         role="button"
         style="cursor: default;"
         tabindex="0"
       >
         <div
-          class="MuiAccordionSummary-content"
+          class="MuiAccordionSummary-content MuiAccordionSummary-contentGutters emotion-2"
         >
           <div />
           <div
@@ -775,20 +1043,21 @@ exports[`AuthsetList Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="MuiCollapse-container MuiCollapse-hidden"
+        class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden emotion-5"
         style="min-height: 0px;"
       >
         <div
-          class="MuiCollapse-wrapper"
+          class="MuiCollapse-wrapper MuiCollapse-vertical emotion-6"
         >
           <div
-            class="MuiCollapse-wrapperInner"
+            class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-7"
           >
             <div
+              class="MuiAccordion-region"
               role="region"
             >
               <div
-                class="MuiAccordionDetails-root"
+                class="MuiAccordionDetails-root emotion-8"
               >
                 <div
                   style="flex-grow: 1;"
@@ -805,18 +1074,17 @@ exports[`AuthsetList Component renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 ForwardRef(Accordion)-root-1 MuiAccordion-root MuiAccordion-gutters emotion-0"
     >
       <div
-        aria-disabled="false"
         aria-expanded="false"
-        class="MuiButtonBase-root MuiAccordionSummary-root"
+        class="MuiButtonBase-root MuiAccordionSummary-root MuiAccordionSummary-gutters emotion-1"
         role="button"
         style="cursor: default;"
         tabindex="0"
       >
         <div
-          class="MuiAccordionSummary-content"
+          class="MuiAccordionSummary-content MuiAccordionSummary-contentGutters emotion-2"
         >
           <div />
           <div
@@ -848,20 +1116,21 @@ exports[`AuthsetList Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="MuiCollapse-container MuiCollapse-hidden"
+        class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden emotion-5"
         style="min-height: 0px;"
       >
         <div
-          class="MuiCollapse-wrapper"
+          class="MuiCollapse-wrapper MuiCollapse-vertical emotion-6"
         >
           <div
-            class="MuiCollapse-wrapperInner"
+            class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-7"
           >
             <div
+              class="MuiAccordion-region"
               role="region"
             >
               <div
-                class="MuiAccordionDetails-root"
+                class="MuiAccordionDetails-root emotion-8"
               >
                 <div
                   style="flex-grow: 1;"
@@ -878,18 +1147,17 @@ exports[`AuthsetList Component renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 ForwardRef(Accordion)-root-1 MuiAccordion-root MuiAccordion-gutters emotion-0"
     >
       <div
-        aria-disabled="false"
         aria-expanded="false"
-        class="MuiButtonBase-root MuiAccordionSummary-root"
+        class="MuiButtonBase-root MuiAccordionSummary-root MuiAccordionSummary-gutters emotion-1"
         role="button"
         style="cursor: default;"
         tabindex="0"
       >
         <div
-          class="MuiAccordionSummary-content"
+          class="MuiAccordionSummary-content MuiAccordionSummary-contentGutters emotion-2"
         >
           <div />
           <div
@@ -921,20 +1189,21 @@ exports[`AuthsetList Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="MuiCollapse-container MuiCollapse-hidden"
+        class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden emotion-5"
         style="min-height: 0px;"
       >
         <div
-          class="MuiCollapse-wrapper"
+          class="MuiCollapse-wrapper MuiCollapse-vertical emotion-6"
         >
           <div
-            class="MuiCollapse-wrapperInner"
+            class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-7"
           >
             <div
+              class="MuiAccordion-region"
               role="region"
             >
               <div
-                class="MuiAccordionDetails-root"
+                class="MuiAccordionDetails-root emotion-8"
               >
                 <div
                   style="flex-grow: 1;"

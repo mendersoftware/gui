@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 import RolloutOptions from './rolloutoptions';
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
 
 describe('RolloutOptions Component', () => {
   it('renders correctly', async () => {

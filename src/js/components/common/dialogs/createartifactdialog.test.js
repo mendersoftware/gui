@@ -1,11 +1,11 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import { render } from '@testing-library/react';
-import CreateArtifactDialog from './createartifactdialog';
+
 import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import CreateArtifactDialog from './createartifactdialog';
 
 const mockStore = configureStore([thunk]);
 
@@ -23,11 +23,9 @@ describe('CreateArtifactDialog Component', () => {
 
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <CreateArtifactDialog />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <CreateArtifactDialog />
+      </Provider>
     );
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();

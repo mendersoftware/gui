@@ -1,6 +1,480 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AuthStatus Component renders correctly 1`] = `
+.emotion-0 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.5rem;
+}
+
+.emotion-1 {
+  max-width: 100%;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-size: 0.8125rem;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 24px;
+  color: #fff;
+  background-color: #1976d2;
+  border-radius: 16px;
+  white-space: nowrap;
+  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: default;
+  outline: 0;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  border: 0;
+  padding: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.emotion-1.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-1 .MuiChip-avatar {
+  margin-left: 5px;
+  margin-right: -6px;
+  width: 24px;
+  height: 24px;
+  color: #616161;
+  font-size: 0.75rem;
+}
+
+.emotion-1 .MuiChip-avatarColorPrimary {
+  color: #fff;
+  background-color: #1565c0;
+}
+
+.emotion-1 .MuiChip-avatarColorSecondary {
+  color: #fff;
+  background-color: #7b1fa2;
+}
+
+.emotion-1 .MuiChip-avatarSmall {
+  margin-left: 4px;
+  margin-right: -4px;
+  width: 18px;
+  height: 18px;
+  font-size: 0.625rem;
+}
+
+.emotion-1 .MuiChip-icon {
+  color: inherit;
+  margin-left: 4px;
+  margin-right: -4px;
+  font-size: 18px;
+}
+
+.emotion-1 .MuiChip-deleteIcon {
+  -webkit-tap-highlight-color: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  cursor: pointer;
+  margin: 0 5px 0 -6px;
+  margin-right: 4px;
+  margin-left: -4px;
+}
+
+.emotion-1 .MuiChip-deleteIcon:hover {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.emotion-1 .MuiChip-deleteIcon:hover,
+.emotion-1 .MuiChip-deleteIcon:active {
+  color: #fff;
+}
+
+.emotion-2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 8px;
+  padding-right: 8px;
+  white-space: nowrap;
+}
+
+.emotion-3 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding: 12px;
+  font-size: 1.75rem;
+}
+
+.emotion-3::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-3.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-3 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-3:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-3:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-3.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-5 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-6 {
+  height: 0;
+  overflow: hidden;
+  -webkit-transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+}
+
+.emotion-8 {
+  width: 100%;
+}
+
+.emotion-9 {
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.87);
+  -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
+  position: relative;
+  -webkit-transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  overflow-anchor: none;
+}
+
+.emotion-9:before {
+  position: absolute;
+  left: 0;
+  top: -1px;
+  right: 0;
+  height: 1px;
+  content: "";
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.12);
+  -webkit-transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-9:first-of-type:before {
+  display: none;
+}
+
+.emotion-9.Mui-expanded:before {
+  opacity: 0;
+}
+
+.emotion-9.Mui-expanded:first-of-type {
+  margin-top: 0;
+}
+
+.emotion-9.Mui-expanded:last-of-type {
+  margin-bottom: 0;
+}
+
+.emotion-9.Mui-expanded+.emotion-9.Mui-expanded:before {
+  display: none;
+}
+
+.emotion-9.Mui-disabled {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-9.Mui-expanded {
+  margin: 16px 0;
+}
+
+.emotion-10 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  min-height: 48px;
+  padding: 0px 16px;
+  -webkit-transition: min-height 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: min-height 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-10::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-10.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-10 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-10.Mui-focusVisible {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-10.Mui-disabled {
+  opacity: 0.38;
+}
+
+.emotion-10:hover:not(.Mui-disabled) {
+  cursor: pointer;
+}
+
+.emotion-10.Mui-expanded {
+  min-height: 64px;
+}
+
+.emotion-11 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  margin: 12px 0;
+  -webkit-transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-11.Mui-expanded {
+  margin: 20px 0;
+}
+
+.emotion-12 {
+  height: 0;
+  overflow: hidden;
+  -webkit-transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  visibility: hidden;
+}
+
+.emotion-15 {
+  padding: 8px 16px 16px;
+}
+
+.emotion-16 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  letter-spacing: 0.02857em;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #9c27b0;
+}
+
+.emotion-16::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-16.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-16 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-16:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgba(156, 39, 176, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-16:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-16.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-18 {
+  margin: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  border-width: 0;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.12);
+  border-bottom-width: thin;
+}
+
 <div
   class="margin-bottom "
 >
@@ -24,21 +498,22 @@ exports[`AuthStatus Component renders correctly 1`] = `
         </div>
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root green"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium green emotion-0"
+          data-testid="CheckCircleIcon"
           focusable="false"
           style="margin: 12px;"
           viewBox="0 0 24 24"
         >
           <path
-            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
           />
         </svg>
       </div>
       <div
-        class="MuiChip-root MuiChip-colorPrimary MuiChip-sizeSmall"
+        class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorPrimary MuiChip-filledPrimary emotion-1"
       >
         <span
-          class="MuiChip-label MuiChip-labelSmall"
+          class="MuiChip-label MuiChip-labelSmall emotion-2"
         >
           new request
         </span>
@@ -48,40 +523,37 @@ exports[`AuthStatus Component renders correctly 1`] = `
       class="flexbox centered"
     >
       <button
-        class="MuiButtonBase-root MuiIconButton-root"
+        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-3"
         tabindex="0"
         type="button"
       >
-        <span
-          class="MuiIconButton-label"
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-0"
+          data-testid="KeyboardArrowUpIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
         >
-          <svg
-            aria-hidden="true"
-            class="MuiSvgIcon-root"
-            focusable="false"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-            />
-          </svg>
-        </span>
+          <path
+            d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+          />
+        </svg>
         <span
-          class="MuiTouchRipple-root"
+          class="MuiTouchRipple-root emotion-5"
         />
       </button>
     </div>
   </div>
   <div />
   <div
-    class="MuiCollapse-container fadeIn"
+    class="MuiCollapse-root MuiCollapse-vertical fadeIn emotion-6"
     style="min-height: 0px; height: 0px; transition-duration: 0ms;"
   >
     <div
-      class="MuiCollapse-wrapper"
+      class="MuiCollapse-wrapper MuiCollapse-vertical emotion-7"
     >
       <div
-        class="MuiCollapse-wrapperInner"
+        class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-8"
       >
         <div
           style="min-width: 700px; margin-bottom: 16px; background-color: rgb(247, 247, 247); border: 1px solid rgb(224, 224, 224); padding: 16px;"
@@ -126,18 +598,17 @@ exports[`AuthStatus Component renders correctly 1`] = `
               style="position: relative;"
             >
               <div
-                class="MuiPaper-root MuiAccordion-root WithStyles(ForwardRef(Accordion))-root-1 MuiPaper-elevation1"
+                class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 ForwardRef(Accordion)-root-1 MuiAccordion-root MuiAccordion-gutters emotion-9"
               >
                 <div
-                  aria-disabled="false"
                   aria-expanded="false"
-                  class="MuiButtonBase-root MuiAccordionSummary-root"
+                  class="MuiButtonBase-root MuiAccordionSummary-root MuiAccordionSummary-gutters emotion-10"
                   role="button"
                   style="cursor: default;"
                   tabindex="0"
                 >
                   <div
-                    class="MuiAccordionSummary-content"
+                    class="MuiAccordionSummary-content MuiAccordionSummary-contentGutters emotion-11"
                   >
                     <div
                       class="capitalized"
@@ -173,20 +644,21 @@ exports[`AuthStatus Component renders correctly 1`] = `
                   </div>
                 </div>
                 <div
-                  class="MuiCollapse-container MuiCollapse-hidden"
+                  class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden emotion-12"
                   style="min-height: 0px;"
                 >
                   <div
-                    class="MuiCollapse-wrapper"
+                    class="MuiCollapse-wrapper MuiCollapse-vertical emotion-7"
                   >
                     <div
-                      class="MuiCollapse-wrapperInner"
+                      class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-8"
                     >
                       <div
+                        class="MuiAccordion-region"
                         role="region"
                       >
                         <div
-                          class="MuiAccordionDetails-root"
+                          class="MuiAccordionDetails-root emotion-15"
                         >
                           <div
                             style="flex-grow: 1;"
@@ -209,17 +681,13 @@ exports[`AuthStatus Component renders correctly 1`] = `
             style="justify-content: flex-end; margin-top: 16px;"
           >
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
+              class="MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-16"
               tabindex="0"
               type="button"
             >
+              Decommission device
               <span
-                class="MuiButton-label"
-              >
-                Decommission device
-              </span>
-              <span
-                class="MuiTouchRipple-root"
+                class="MuiTouchRipple-root emotion-5"
               />
             </button>
           </div>
@@ -231,7 +699,7 @@ exports[`AuthStatus Component renders correctly 1`] = `
     </div>
   </div>
   <hr
-    class="MuiDivider-root"
+    class="MuiDivider-root MuiDivider-fullWidth emotion-18"
     style="margin-top: 24px;"
   />
 </div>

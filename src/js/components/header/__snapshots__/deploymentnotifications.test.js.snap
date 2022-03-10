@@ -1,6 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DeploymentNotifications Component renders correctly 1`] = `
+.emotion-0 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.5rem;
+}
+
 <a
   class="header-section"
   href="/deployments/"
@@ -8,7 +25,8 @@ exports[`DeploymentNotifications Component renders correctly 1`] = `
   <span />
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root flip-horizontal"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium flip-horizontal emotion-0"
+    data-testid="RefreshIcon"
     focusable="false"
     style="color: rgb(199, 199, 199); margin: 0px 7px 0px 10px; top: 5px; font-size: 20px;"
     viewBox="0 0 24 24"

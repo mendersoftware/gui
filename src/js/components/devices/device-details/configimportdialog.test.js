@@ -1,8 +1,10 @@
 import React from 'react';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ConfigImportDialog from './configimportdialog';
+
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import ConfigImportDialog from './configimportdialog';
 
 describe('ConfigImportDialog Component', () => {
   it('renders correctly', async () => {
@@ -20,7 +22,7 @@ describe('ConfigImportDialog Component', () => {
     const { rerender } = render(ui);
     expect(screen.getByText(/the current default/i)).toBeInTheDocument();
     userEvent.click(screen.getByText(/the current default/i));
-    userEvent.click(screen.getByRole('button', { name: /import/i }));
+    userEvent.click(screen.getByRole('button', { name: 'Import' }));
     expect(submitMock).toHaveBeenCalledWith({ importType: 'default', config: null });
 
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work

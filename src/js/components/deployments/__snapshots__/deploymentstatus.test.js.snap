@@ -6,8 +6,9 @@ exports[`DeploymentStatus Component renders correctly 1`] = `
     class="flexbox results-status"
   >
     <div
+      aria-label="Skipped"
       class="disabled"
-      title="Skipped"
+      data-mui-internal-clone-element="true"
     >
       <img
         src="skipped_status.png"
@@ -19,8 +20,9 @@ exports[`DeploymentStatus Component renders correctly 1`] = `
       </span>
     </div>
     <div
+      aria-label="Pending"
       class="disabled"
-      title="Pending"
+      data-mui-internal-clone-element="true"
     >
       <img
         src="pending_status.png"
@@ -32,8 +34,9 @@ exports[`DeploymentStatus Component renders correctly 1`] = `
       </span>
     </div>
     <div
+      aria-label="In progress"
       class="disabled"
-      title="In progress"
+      data-mui-internal-clone-element="true"
     >
       <img
         src="progress_status.png"
@@ -45,8 +48,9 @@ exports[`DeploymentStatus Component renders correctly 1`] = `
       </span>
     </div>
     <div
+      aria-label="Successful"
       class="disabled"
-      title="Successful"
+      data-mui-internal-clone-element="true"
     >
       <img
         src="success_status.png"
@@ -58,8 +62,9 @@ exports[`DeploymentStatus Component renders correctly 1`] = `
       </span>
     </div>
     <div
+      aria-label="Failed"
       class="disabled"
-      title="Failed"
+      data-mui-internal-clone-element="true"
     >
       <img
         src="error_status.png"

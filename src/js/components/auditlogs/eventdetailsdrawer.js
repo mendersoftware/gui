@@ -1,10 +1,9 @@
 import React from 'react';
 
-import { Divider, Drawer } from '@material-ui/core';
-import { HelpOutline as HelpOutlineIcon } from '@material-ui/icons';
+import { Divider, Drawer } from '@mui/material';
+import { HelpOutline as HelpOutlineIcon } from '@mui/icons-material';
 
-import theme from '../../themes/mender-theme';
-
+import { useTheme } from '@mui/material/styles';
 import DeviceConfiguration from './eventdetails/deviceconfiguration';
 import FileTransfer from './eventdetails/filetransfer';
 import PortForward from './eventdetails/portforward';
@@ -55,9 +54,10 @@ const mapChangeToContent = item => {
 };
 
 export const EventDetailsDrawer = ({ eventItem = {}, onClose, open }) => {
+  const theme = useTheme();
   const { title, content: Component } = mapChangeToContent(eventItem);
   return (
-    <Drawer className={`${eventItem ? 'fadeIn' : 'fadeOut'}`} anchor="right" open={open} onClose={onClose}>
+    <Drawer className={`${open ? 'fadeIn' : 'fadeOut'}`} anchor="right" open={open} onClose={onClose}>
       <div className="flexbox space-between margin-top-small margin-bottom">
         <b className="capitalized">{title}</b>
         <HelpOutlineIcon />

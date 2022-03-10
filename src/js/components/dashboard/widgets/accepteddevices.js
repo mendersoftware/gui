@@ -2,9 +2,9 @@ import React from 'react';
 import pluralize from 'pluralize';
 
 // material ui
-import { CheckCircle as CheckIcon, ReportProblem as ReportProblemIcon } from '@material-ui/icons';
+import { CheckCircle as CheckIcon, ReportProblem as ReportProblemIcon } from '@mui/icons-material';
 
-import { colors } from '../../../themes/mender-theme';
+import { colors } from '../../../themes/Mender';
 import { BaseWidget, styles } from './baseWidget';
 
 const notificationStyles = {

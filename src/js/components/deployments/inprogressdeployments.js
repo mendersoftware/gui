@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
-import { Refresh as RefreshIcon } from '@material-ui/icons';
+import { Refresh as RefreshIcon } from '@mui/icons-material';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, selectDeployment, setDeploymentsState } from '../../actions/deploymentActions';
@@ -9,13 +9,13 @@ import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { tryMapDeployments } from '../../helpers';
 import { getOnboardingState } from '../../selectors';
-import theme from '../../themes/mender-theme';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
+import LinedHeader from '../common/lined-header';
 import Loader from '../common/loader';
 import DeploymentsList from './deploymentslist';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
-import useWindowSize from '../../utils/resizehook';
 
 export const minimalRefreshDeploymentsLength = 2000;
 
@@ -105,7 +105,7 @@ export const Progress = props => {
 
   let onboardingComponent = null;
   if (!onboardingState.complete && inprogressRef.current) {
-    const anchor = { left: inprogressRef.current.offsetWidth - theme.spacing(12), top: inprogressRef.current.offsetTop + inprogressRef.current.offsetHeight };
+    const anchor = { left: inprogressRef.current.offsetWidth - 100, top: inprogressRef.current.offsetTop + inprogressRef.current.offsetHeight };
     onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_INPROGRESS, onboardingState, { anchor });
   }
 
@@ -113,31 +113,27 @@ export const Progress = props => {
     <div className="fadeIn">
       {!!progress.length && (
         <div className="margin-left">
-          <h4 className="dashboard-header margin-top-large margin-right">
-            <span>In progress now</span>
-          </h4>
-          <div ref={inprogressRef}>
-            <DeploymentsList
-              {...props}
-              abort={abortDeployment}
-              count={progressCount}
-              items={progress}
-              listClass="margin-right-small"
-              page={progressPage}
-              pageSize={progressPerPage}
-              onChangeRowsPerPage={perPage => refreshDeployments(1, perPage, DEPLOYMENT_STATES.inprogress)}
-              onChangePage={page => refreshDeployments(page, progressPerPage, DEPLOYMENT_STATES.inprogress)}
-              type="progress"
-            />
-          </div>
+          <LinedHeader className="margin-top-large  margin-right" heading="In progress now" />
+          {/* <div ref={inprogressRef}> */}
+          <DeploymentsList
+            {...props}
+            abort={abortDeployment}
+            count={progressCount}
+            items={progress}
+            listClass="margin-right-small"
+            page={progressPage}
+            pageSize={progressPerPage}
+            onChangeRowsPerPage={perPage => refreshDeployments(1, perPage, DEPLOYMENT_STATES.inprogress)}
+            onChangePage={page => refreshDeployments(page, progressPerPage, DEPLOYMENT_STATES.inprogress)}
+            type="progress"
+          />
+          {/* </div> */}
         </div>
       )}
       {!!onboardingComponent && onboardingComponent}
       {!!pending.length && (
         <div className="deployments-pending margin-top margin-bottom-large">
-          <h4 className="dashboard-header margin-small margin-top">
-            <span>Pending</span>
-          </h4>
+          <LinedHeader className="margin-small margin-top" heading="Pending" />
           <DeploymentsList
             {...props}
             abort={abortDeployment}

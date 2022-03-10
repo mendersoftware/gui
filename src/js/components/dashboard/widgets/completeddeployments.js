@@ -1,7 +1,6 @@
 import React from 'react';
-import Time from 'react-time';
 
-// material ui
+import Time from '../../common/time';
 import { BaseWidget } from './baseWidget';
 
 const headerStyle = { justifyContent: 'flex-end' };

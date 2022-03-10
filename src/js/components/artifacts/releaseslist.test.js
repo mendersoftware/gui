@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import ReleasesList from './releaseslist';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import ReleasesList from './releaseslist';
 
 describe('ReleasesList Component', () => {
   it('renders correctly', async () => {

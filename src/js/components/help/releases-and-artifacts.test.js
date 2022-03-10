@@ -1,8 +1,9 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import ReleasesArtifacts from './releases-and-artifacts';
-import { helpProps } from './mockData';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import { helpProps } from './mockData';
+import ReleasesArtifacts from './releases-and-artifacts';
 
 describe('ReleasesArtifacts Component', () => {
   it('renders correctly', async () => {

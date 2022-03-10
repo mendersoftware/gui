@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { NavLink, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 // material ui
-import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@material-ui/core';
-import PaymentIcon from '@material-ui/icons/Payment';
+import { ListItemIcon } from '@mui/material';
+import PaymentIcon from '@mui/icons-material/Payment';
 
 import { Elements } from '@stripe/react-stripe-js';
 
 import { versionCompare } from '../../helpers';
 import { getCurrentUser, getIsEnterprise, getTenantCapabilities, getUserRoles } from '../../selectors';
-import SelfUserManagement from '../user-management/selfusermanagement';
-import UserManagement from '../user-management/usermanagement';
+import LeftNav from '../common/left-nav';
+import SelfUserManagement from '../settings/user-management/selfusermanagement';
+import UserManagement from '../settings/user-management/usermanagement';
+import Organization from './organization/organization';
 import Global from './global';
 import Integrations from './integrations';
-import Organization from './organization';
 import Roles from './roles';
 import Upgrade from './upgrade';
 
@@ -50,6 +51,12 @@ const sectionMap = {
   }
 };
 
+const UpgradeIcon = () => (
+  <ListItemIcon>
+    <PaymentIcon />
+  </ListItemIcon>
+);
+
 export const Settings = ({ currentUser, hasMultitenancy, isEnterprise, isTrial, history, match, stripeAPIKey, tenantCapabilities, userRoles, version }) => {
   const [loadingFinished, setLoadingFinished] = useState(!stripeAPIKey);
 
@@ -81,26 +88,20 @@ export const Settings = ({ currentUser, hasMultitenancy, isEnterprise, isTrial, 
     return sections[section];
   };
 
+  const links = Object.entries(sectionMap).reduce((accu, [key, item]) => {
+    if (!checkDenyAccess(item)) {
+      accu.push({
+        path: `/settings/${key}`,
+        secondaryAction: key === 'upgrade' ? <UpgradeIcon /> : null,
+        title: item.text({ isTrial })
+      });
+    }
+    return accu;
+  }, []);
+
   return (
     <div className="tab-container with-sub-panels" style={{ minHeight: '95%' }}>
-      <List className="leftFixed">
-        <ListSubheader>Settings</ListSubheader>
-        {Object.entries(sectionMap).reduce((accu, [key, item]) => {
-          if (!checkDenyAccess(item)) {
-            accu.push(
-              <ListItem component={NavLink} className="navLink settingsNav" to={`/settings/${key}`} key={key}>
-                <ListItemText>{item.text({ isTrial })}</ListItemText>
-                {key === 'upgrade' ? (
-                  <ListItemIcon>
-                    <PaymentIcon />
-                  </ListItemIcon>
-                ) : null}
-              </ListItem>
-            );
-          }
-          return accu;
-        }, [])}
-      </List>
+      <LeftNav sections={[{ itemClass: 'settingsNav', items: links, title: 'Settings' }]} />
       <div className="rightFluid padding-right">
         {loadingFinished && <Elements stripe={stripePromise}>{getCurrentSection(sectionMap, match.params.section).component}</Elements>}
       </div>

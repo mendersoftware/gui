@@ -1,9 +1,10 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
-import CardSection from './cardsection';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import CardSection from './cardsection';
 
 describe('GlobalSettings Component', () => {
   let stripe;

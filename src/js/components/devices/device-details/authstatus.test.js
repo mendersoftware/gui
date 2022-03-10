@@ -1,10 +1,11 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import AuthStatus from './authstatus';
+
 import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import AuthStatus from './authstatus';
 
 const mockStore = configureStore([thunk]);
 

@@ -1,13 +1,31 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Announcement Component renders correctly 1`] = `
+.emotion-0 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.5rem;
+}
+
 <div
   class="flexbox centered fadeInSlow"
   id="announcement"
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root red"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red emotion-0"
+    data-testid="AnnouncementIcon"
     focusable="false"
     style="margin-right: 4px; height: 18px; min-width: 24px;"
     viewBox="0 0 24 24"
@@ -19,13 +37,14 @@ exports[`Announcement Component renders correctly 1`] = `
   <p />
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-0"
+    data-testid="CloseIcon"
     focusable="false"
     style="margin-left: 4px; height: 16px; cursor: pointer;"
     viewBox="0 0 24 24"
   >
     <path
-      d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+      d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
     />
   </svg>
 </div>

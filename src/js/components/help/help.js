@@ -1,19 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { matchPath } from 'react-router-dom';
-import LeftNav from './left-nav';
-import GetStarted from './getting-started';
-import DeviceSupport from './device-support';
-import Devices from './devices';
-import ReleasesArtifacts from './releases-and-artifacts';
-import BuildDemoArtifact from './releases-and-artifacts/build-demo-artifact';
-import Support from './support';
-import MoreHelp from './more-help-resources';
+
+import { useTheme } from '@mui/material';
 
 import { getUserOrganization } from '../../actions/organizationActions';
 import { getDocsVersion, getIsEnterprise } from '../../selectors';
+import LeftNav from '../common/left-nav';
+import DeviceSupport from './device-support';
+import Devices from './devices';
+import GetStarted from './getting-started';
+import MoreHelp from './more-help-resources';
+import ReleasesArtifacts from './releases-and-artifacts';
+import BuildDemoArtifact from './releases-and-artifacts/build-demo-artifact';
+import Support from './support';
 
-var components = {
+const components = {
   'get-started': {
     title: 'Get started',
     component: GetStarted
@@ -45,6 +47,29 @@ var components = {
   }
 };
 
+const contentWidth = 780;
+
+// build array of link list components
+const eachRecursive = (obj, path, level, accu, isHosted, spacing) =>
+  Object.entries(obj).reduce((bag, [key, value]) => {
+    if (!isHosted && value.hosted) {
+      return bag;
+    }
+    if (typeof value == 'object' && value !== null && key !== 'component') {
+      const this_path = `${path}/${key}`;
+      bag.push({
+        title: value.title,
+        level,
+        path: this_path,
+        hosted: value.hosted,
+        style: { paddingLeft: `calc(${level} * ${spacing})` },
+        exact: true
+      });
+      bag = eachRecursive(value, this_path, level + 1, bag, isHosted, spacing);
+    }
+    return bag;
+  }, accu);
+
 export const Help = ({
   demoArtifactLink,
   docsVersion,
@@ -56,10 +81,15 @@ export const Help = ({
   menderArtifactVersion,
   menderVersion
 }) => {
+  const theme = useTheme();
+  const [links, setLinks] = useState([]);
+
   useEffect(() => {
     if (hasMultitenancy || isEnterprise || isHosted) {
       getUserOrganization();
     }
+    // generate sidebar links
+    setLinks(eachRecursive(components, '/help', 1, [], isHosted, theme.spacing(2)));
   }, []);
 
   let ComponentToShow = GetStarted;
@@ -81,14 +111,12 @@ export const Help = ({
     breadcrumbs = splitsplat[1] ? breadcrumbs + '  >  ' + components[splitsplat[0]][splitsplat[1]].title : breadcrumbs;
   }
 
-  const contentWidth = 780;
-
   return (
     <div className="help-container">
-      <LeftNav isHosted={isHosted} pages={components} />
-      <div>
-        <p style={{ color: 'rgba(0, 0, 0, 0.54)', maxWidth: contentWidth }}>Help {breadcrumbs}</p>
-        <div style={{ position: 'relative', top: '12px', maxWidth: contentWidth }} className="help-content">
+      <LeftNav sections={[{ itemClass: 'helpNav', items: links, title: 'Help topics' }]} />
+      <div style={{ maxWidth: contentWidth }}>
+        <p className="muted">Help {breadcrumbs}</p>
+        <div className="help-content relative margin-top-small">
           <ComponentToShow
             demoArtifactLink={demoArtifactLink}
             docsVersion={docsVersion}

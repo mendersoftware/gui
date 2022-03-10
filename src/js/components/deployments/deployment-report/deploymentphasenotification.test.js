@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import DeploymentPhaseNotification from './deploymentphasenotification';
+
 import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import DeploymentPhaseNotification from './deploymentphasenotification';
 
 describe('PhaseProgress Component', () => {
   const deployment = {

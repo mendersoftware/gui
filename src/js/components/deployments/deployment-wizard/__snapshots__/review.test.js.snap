@@ -1,6 +1,228 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Review deployment Component renders correctly 1`] = `
+.emotion-0 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.emotion-1.Mui-focusVisible {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-1.Mui-selected {
+  background-color: rgba(25, 118, 210, 0.08);
+}
+
+.emotion-1.Mui-selected.Mui-focusVisible {
+  background-color: rgba(25, 118, 210, 0.2);
+}
+
+.emotion-1.Mui-disabled {
+  opacity: 0.38;
+}
+
+.emotion-2 {
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.emotion-3 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: 0.00938em;
+  display: block;
+}
+
+.emotion-4 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.43;
+  letter-spacing: 0.01071em;
+  color: rgba(0, 0, 0, 0.6);
+  display: block;
+}
+
+.emotion-25 {
+  max-width: 100%;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-size: 0.8125rem;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 32px;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  white-space: nowrap;
+  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: default;
+  outline: 0;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  border: 0;
+  padding: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+  background-color: transparent;
+  border: 1px solid #bdbdbd;
+}
+
+.emotion-25.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-25 .MuiChip-avatar {
+  margin-left: 5px;
+  margin-right: -6px;
+  width: 24px;
+  height: 24px;
+  color: #616161;
+  font-size: 0.75rem;
+}
+
+.emotion-25 .MuiChip-avatarColorPrimary {
+  color: #fff;
+  background-color: #1565c0;
+}
+
+.emotion-25 .MuiChip-avatarColorSecondary {
+  color: #fff;
+  background-color: #7b1fa2;
+}
+
+.emotion-25 .MuiChip-avatarSmall {
+  margin-left: 4px;
+  margin-right: -4px;
+  width: 18px;
+  height: 18px;
+  font-size: 0.625rem;
+}
+
+.emotion-25 .MuiChip-icon {
+  color: #616161;
+  margin-left: 5px;
+  margin-right: -6px;
+}
+
+.emotion-25 .MuiChip-deleteIcon {
+  -webkit-tap-highlight-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+  font-size: 22px;
+  cursor: pointer;
+  margin: 0 5px 0 -6px;
+}
+
+.emotion-25 .MuiChip-deleteIcon:hover {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.emotion-25.MuiChip-clickable:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.emotion-25.Mui-focusVisible {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-25 .MuiChip-avatar {
+  margin-left: 4px;
+}
+
+.emotion-25 .MuiChip-avatarSmall {
+  margin-left: 2px;
+}
+
+.emotion-25 .MuiChip-icon {
+  margin-left: 4px;
+}
+
+.emotion-25 .MuiChip-iconSmall {
+  margin-left: 2px;
+}
+
+.emotion-25 .MuiChip-deleteIcon {
+  margin-right: 5px;
+}
+
+.emotion-25 .MuiChip-deleteIconSmall {
+  margin-right: 3px;
+}
+
+.emotion-26 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 12px;
+  padding-right: 12px;
+  white-space: nowrap;
+}
+
+.emotion-27 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.25rem;
+}
+
 <div
   class="margin-small"
 >
@@ -8,32 +230,29 @@ exports[`Review deployment Component renders correctly 1`] = `
     Deployment summary
   </h4>
   <ul
-    class="MuiList-root two-columns MuiList-padding"
+    class="MuiList-root MuiList-padding two-columns emotion-0"
   >
     <div
       style="margin-bottom: -15px;"
     >
       <li
-        class="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
-        disabled=""
+        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-1"
       >
         <div
-          class="MuiListItemText-root MuiListItemText-multiline"
+          class="MuiListItemText-root MuiListItemText-multiline emotion-2"
         >
           <span
-            class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-3"
           >
             Device Group
           </span>
           <div
-            class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+            class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-4"
           >
-            <div>
-              <span
-                class="inventory-text"
-              />
-               
-            </div>
+            <span
+              class="inventory-text"
+            />
+             
           </div>
         </div>
       </li>
@@ -42,26 +261,23 @@ exports[`Review deployment Component renders correctly 1`] = `
       style="margin-bottom: -15px;"
     >
       <li
-        class="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
-        disabled=""
+        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-1"
       >
         <div
-          class="MuiListItemText-root MuiListItemText-multiline"
+          class="MuiListItemText-root MuiListItemText-multiline emotion-2"
         >
           <span
-            class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-3"
           >
             Release
           </span>
           <div
-            class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+            class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-4"
           >
-            <div>
-              <span
-                class="inventory-text"
-              />
-               
-            </div>
+            <span
+              class="inventory-text"
+            />
+             
           </div>
         </div>
       </li>
@@ -70,27 +286,24 @@ exports[`Review deployment Component renders correctly 1`] = `
       style="margin-bottom: -15px;"
     >
       <li
-        class="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
-        disabled=""
+        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-1"
       >
         <div
-          class="MuiListItemText-root MuiListItemText-multiline"
+          class="MuiListItemText-root MuiListItemText-multiline emotion-2"
         >
           <span
-            class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-3"
           >
             Device types compatible
           </span>
           <div
-            class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+            class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-4"
             title=""
           >
-            <div>
-              <span
-                class="inventory-text"
-              />
-               
-            </div>
+            <span
+              class="inventory-text"
+            />
+             
           </div>
         </div>
       </li>
@@ -99,29 +312,26 @@ exports[`Review deployment Component renders correctly 1`] = `
       style="margin-bottom: -15px;"
     >
       <li
-        class="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
-        disabled=""
+        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-1"
       >
         <div
-          class="MuiListItemText-root MuiListItemText-multiline"
+          class="MuiListItemText-root MuiListItemText-multiline emotion-2"
         >
           <span
-            class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-3"
           >
             Number of attempts per device
           </span>
           <div
-            class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+            class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-4"
             title="0"
           >
-            <div>
-              <span
-                class="inventory-text"
-              >
-                0
-              </span>
-               
-            </div>
+            <span
+              class="inventory-text"
+            >
+              0
+            </span>
+             
           </div>
         </div>
       </li>
@@ -130,33 +340,30 @@ exports[`Review deployment Component renders correctly 1`] = `
       style="margin-bottom: -15px;"
     >
       <li
-        class="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
-        disabled=""
+        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-1"
       >
         <div
-          class="MuiListItemText-root MuiListItemText-multiline"
+          class="MuiListItemText-root MuiListItemText-multiline emotion-2"
         >
           <span
-            class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-3"
           >
             Start time
           </span>
           <div
-            class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+            class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-4"
             title="2019-01-01T13:00:00.900Z"
           >
-            <div>
-              <span
-                class="inventory-text"
+            <span
+              class="inventory-text"
+            >
+              <time
+                datetime="2019-01-01T13:00:00+00:00"
               >
-                <time
-                  datetime="2019-01-01T13:00:00+00:00"
-                >
-                  2019-01-01 13:00
-                </time>
-              </span>
-               
-            </div>
+                2019-01-01 13:00
+              </time>
+            </span>
+             
           </div>
         </div>
       </li>
@@ -165,29 +372,26 @@ exports[`Review deployment Component renders correctly 1`] = `
       style="margin-bottom: -15px;"
     >
       <li
-        class="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
-        disabled=""
+        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-1"
       >
         <div
-          class="MuiListItemText-root MuiListItemText-multiline"
+          class="MuiListItemText-root MuiListItemText-multiline emotion-2"
         >
           <span
-            class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-3"
           >
             End time
           </span>
           <div
-            class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+            class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-4"
             title="-"
           >
-            <div>
-              <span
-                class="inventory-text"
-              >
-                -
-              </span>
-               
-            </div>
+            <span
+              class="inventory-text"
+            >
+              -
+            </span>
+             
           </div>
         </div>
       </li>
@@ -208,12 +412,13 @@ exports[`Review deployment Component renders correctly 1`] = `
         class="flexbox margin-top "
       >
         <div
-          class="MuiChip-root MuiChip-outlined"
+          aria-label="The Artifact is downloaded (streamed) to the inactive partition."
+          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-25"
+          data-mui-internal-clone-element="true"
           style="min-width: 88px;"
-          title="The Artifact is downloaded (streamed) to the inactive partition."
         >
           <span
-            class="MuiChip-label"
+            class="MuiChip-label MuiChip-labelMedium emotion-26"
           >
             Download
           </span>
@@ -227,27 +432,29 @@ exports[`Review deployment Component renders correctly 1`] = `
             style="height: 32px; padding-left: 8px; width: 100%;"
           >
             <div
-              style="background-color: rgba(0, 0, 0, 0.3); height: 3px; width: 100%; margin-right: -8px;"
+              style="background-color: rgba(0, 0, 0, 0.54); height: 3px; width: 100%; margin-right: -8px;"
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-27"
+              data-testid="ArrowRightIcon"
               focusable="false"
-              style="color: rgba(0, 0, 0, 0.3);"
+              style="color: rgba(0, 0, 0, 0.54);"
               viewBox="0 0 24 24"
             >
               <path
-                d="M10 17l5-5-5-5v10z"
+                d="m10 17 5-5-5-5v10z"
               />
             </svg>
           </div>
         </div>
         <div
-          class="MuiChip-root MuiChip-outlined"
+          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-25"
+          data-mui-internal-clone-element="true"
           style="min-width: 88px;"
         >
           <span
-            class="MuiChip-label"
+            class="MuiChip-label MuiChip-labelMedium emotion-26"
           >
             Install
           </span>
@@ -261,28 +468,30 @@ exports[`Review deployment Component renders correctly 1`] = `
             style="height: 32px; padding-left: 8px; width: 100%;"
           >
             <div
-              style="background-color: rgba(0, 0, 0, 0.3); height: 3px; width: 100%; margin-right: -8px;"
+              style="background-color: rgba(0, 0, 0, 0.54); height: 3px; width: 100%; margin-right: -8px;"
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-27"
+              data-testid="ArrowRightIcon"
               focusable="false"
-              style="color: rgba(0, 0, 0, 0.3);"
+              style="color: rgba(0, 0, 0, 0.54);"
               viewBox="0 0 24 24"
             >
               <path
-                d="M10 17l5-5-5-5v10z"
+                d="m10 17 5-5-5-5v10z"
               />
             </svg>
           </div>
         </div>
         <div
-          class="MuiChip-root MuiChip-outlined"
+          aria-label="The device will reboot and the installed update will be active when the device boots up again. As changes are not yet committed, the update is not persistent and the device will still roll back again on the next reboot."
+          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-25"
+          data-mui-internal-clone-element="true"
           style="min-width: 88px;"
-          title="The device will reboot and the installed update will be active when the device boots up again. As changes are not yet committed, the update is not persistent and the device will still roll back again on the next reboot."
         >
           <span
-            class="MuiChip-label"
+            class="MuiChip-label MuiChip-labelMedium emotion-26"
           >
             Reboot
           </span>
@@ -296,28 +505,30 @@ exports[`Review deployment Component renders correctly 1`] = `
             style="height: 32px; padding-left: 8px; width: 100%;"
           >
             <div
-              style="background-color: rgba(0, 0, 0, 0.3); height: 3px; width: 100%; margin-right: -8px;"
+              style="background-color: rgba(0, 0, 0, 0.54); height: 3px; width: 100%; margin-right: -8px;"
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-27"
+              data-testid="ArrowRightIcon"
               focusable="false"
-              style="color: rgba(0, 0, 0, 0.3);"
+              style="color: rgba(0, 0, 0, 0.54);"
               viewBox="0 0 24 24"
             >
               <path
-                d="M10 17l5-5-5-5v10z"
+                d="m10 17 5-5-5-5v10z"
               />
             </svg>
           </div>
         </div>
         <div
-          class="MuiChip-root MuiChip-outlined"
+          aria-label="If the update passes integrity checks, Mender will mark the update as successful and continue running from this partition. The commit makes the update persistent."
+          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-25"
+          data-mui-internal-clone-element="true"
           style="min-width: 88px;"
-          title="If the update passes integrity checks, Mender will mark the update as successful and continue running from this partition. The commit makes the update persistent."
         >
           <span
-            class="MuiChip-label"
+            class="MuiChip-label MuiChip-labelMedium emotion-26"
           >
             Commit
           </span>
@@ -329,7 +540,8 @@ exports[`Review deployment Component renders correctly 1`] = `
     >
       <svg
         aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-27"
+        data-testid="InfoOutlinedIcon"
         focusable="false"
         style="vertical-align: middle; margin: 0px 6px 4px 0px;"
         viewBox="0 0 24 24"
@@ -354,7 +566,8 @@ exports[`Review deployment Component renders correctly 1`] = `
   >
     <svg
       aria-hidden="true"
-      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-27"
+      data-testid="InfoOutlinedIcon"
       focusable="false"
       style="vertical-align: middle; margin: 0px 6px 4px 0px;"
       viewBox="0 0 24 24"

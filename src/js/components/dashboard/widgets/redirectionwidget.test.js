@@ -1,17 +1,15 @@
 import React from 'react';
-import { MemoryRouter, Route, Switch } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
+import { Route, Switch } from 'react-router-dom';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import RedirectionWidget from './redirectionwidget';
+
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import RedirectionWidget from './redirectionwidget';
 
 describe('RedirectionWidget Component', () => {
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <MemoryRouter>
-        <RedirectionWidget target="testlocation" buttonContent={<div />} />
-      </MemoryRouter>
-    );
+    const { baseElement } = render(<RedirectionWidget target="testlocation" buttonContent={<div />} />);
     const view = baseElement;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
@@ -22,14 +20,14 @@ describe('RedirectionWidget Component', () => {
     const content = 'test content';
     const submitCheck = jest.fn();
     render(
-      <MemoryRouter>
+      <>
         <RedirectionWidget target="testlocation" buttonContent={buttonContent} content={content} isActive={true} onClick={submitCheck} />
         <Switch>
           <Route path="/testlocation">
             <div>redirected</div>
           </Route>
         </Switch>
-      </MemoryRouter>
+      </>
     );
 
     userEvent.click(screen.getByText(content));

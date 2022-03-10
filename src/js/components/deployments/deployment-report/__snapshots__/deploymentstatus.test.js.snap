@@ -1,9 +1,128 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`RolloutSchedule Component renders correctly 1`] = `
+.emotion-0 {
+  border-bottom: 1px solid #fafafa;
+}
+
+.emotion-0 span {
+  background: #fff;
+}
+
+.emotion-1 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.5rem;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-size: 0.8125rem;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 24px;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  white-space: nowrap;
+  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: default;
+  outline: 0;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  border: 0;
+  padding: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.emotion-2.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-2 .MuiChip-avatar {
+  margin-left: 5px;
+  margin-right: -6px;
+  width: 24px;
+  height: 24px;
+  color: #616161;
+  font-size: 0.75rem;
+}
+
+.emotion-2 .MuiChip-avatarColorPrimary {
+  color: #fff;
+  background-color: #1565c0;
+}
+
+.emotion-2 .MuiChip-avatarColorSecondary {
+  color: #fff;
+  background-color: #7b1fa2;
+}
+
+.emotion-2 .MuiChip-avatarSmall {
+  margin-left: 4px;
+  margin-right: -4px;
+  width: 18px;
+  height: 18px;
+  font-size: 0.625rem;
+}
+
+.emotion-2 .MuiChip-icon {
+  color: #616161;
+  margin-left: 4px;
+  margin-right: -4px;
+  font-size: 18px;
+}
+
+.emotion-2 .MuiChip-deleteIcon {
+  -webkit-tap-highlight-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+  font-size: 16px;
+  cursor: pointer;
+  margin: 0 5px 0 -6px;
+  margin-right: 4px;
+  margin-left: -4px;
+}
+
+.emotion-2 .MuiChip-deleteIcon:hover {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.emotion-3 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 8px;
+  padding-right: 8px;
+  white-space: nowrap;
+}
+
 <div>
   <h4
-    class="dashboard-header margin-top-large"
+    class="dashboard-header emotion-0 margin-top-large"
   >
     <span>
       Schedule details
@@ -17,7 +136,7 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
       style="align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;"
     >
       <div
-        class="align-right  text-muted"
+        class="align-right  muted"
       >
         <b>
           Start time
@@ -33,7 +152,7 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
         </time>
       </div>
       <div
-        class="align-right  text-muted"
+        class="align-right  muted"
       >
         <b>
           Current phase
@@ -47,13 +166,14 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
     </div>
     <svg
       aria-hidden="true"
-      class="MuiSvgIcon-root"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-1"
+      data-testid="ArrowForwardIcon"
       focusable="false"
       style="margin-left: 32px; margin-right: 32px;"
       viewBox="0 0 24 24"
     >
       <path
-        d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+        d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
       />
     </svg>
     <div
@@ -61,7 +181,7 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
       style="align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;"
     >
       <div
-        class="align-right  text-muted"
+        class="align-right  muted"
       >
         <b>
           End time
@@ -92,7 +212,7 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
         style="flex-grow: 1;"
       >
         <div
-          class="progress-step-number text-muted"
+          class="progress-step-number muted"
         >
           Phase 1
         </div>
@@ -120,16 +240,16 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
       style="max-width: 270px; border-radius: 5px; padding-top: 8px; padding-bottom: 24px;"
     >
       <div
-        class="text-muted"
+        class="muted"
       >
         Complete
       </div>
       <div
-        class="MuiChip-root MuiChip-sizeSmall"
+        class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault emotion-2"
         style="align-self: flex-start; margin: 16px 16px 16px 20px;"
       >
         <span
-          class="MuiChip-label MuiChip-labelSmall"
+          class="MuiChip-label MuiChip-labelSmall emotion-3"
         >
           Phase 1
         </span>
@@ -139,7 +259,7 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
         style="align-items: center; align-self: initial; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;"
       >
         <div
-          class="align-right  text-muted"
+          class="align-right  muted"
         >
           <b>
             Start time
@@ -155,7 +275,7 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
           </time>
         </div>
         <div
-          class="align-right  text-muted"
+          class="align-right  muted"
         >
           <b>
             Batch size
@@ -165,7 +285,7 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
           class="flexbox "
         >
           <div
-            class="text-muted"
+            class="muted"
           >
             100% (1 device)
           </div>

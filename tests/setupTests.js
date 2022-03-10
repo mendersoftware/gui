@@ -1,10 +1,12 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { TextEncoder } from 'util';
 import '@testing-library/jest-dom/extend-expect';
-import { within, queryByRole } from '@testing-library/react';
+import { render, queryByRole, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
 import crypto from 'crypto';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import handlers from './__mocks__/requestHandlers';
 import { mockDate, token as mockToken } from './mockData';
@@ -23,6 +25,7 @@ window.RTCPeerConnection = () => {
 // Setup requests interception
 let server;
 
+const oldWindowLocalStorage = window.localStorage;
 const oldWindowLocation = window.location;
 const oldWindowSessionStorage = window.sessionStorage;
 
@@ -57,7 +60,13 @@ beforeAll(async () => {
     setItem: jest.fn(),
     removeItem: jest.fn()
   };
-
+  delete window.localStorage;
+  window.localStorage = {
+    ...oldWindowLocalStorage,
+    getItem: jest.fn(),
+    setItem: jest.fn(),
+    removeItem: jest.fn()
+  };
   window.ENV = 'test';
   global.TextEncoder = TextEncoder;
   global.crypto = {
@@ -84,7 +93,8 @@ afterEach(async () => {
 afterAll(async () => {
   // Clean up once the tests are done.
   await server.close();
-  // restore `window.location` to the original `jsdom` `Location` object
+  // restore `window.location` etc. to the original `jsdom` `Location` object
+  window.localStorage = oldWindowLocalStorage;
   window.location = oldWindowLocation;
   window.sessionStorage = oldWindowSessionStorage;
   React.useEffect.mockRestore();
@@ -106,3 +116,21 @@ export const selectMaterialUiSelectOption = async (element, optionText) => {
   expect(queryByRole(document.documentElement, 'listbox')).not.toBeInTheDocument();
   return Promise.resolve();
 };
+
+const theme = createTheme();
+
+const AllTheProviders = ({ children }) => {
+  return (
+    <ThemeProvider theme={theme}>
+      <MemoryRouter>{children}</MemoryRouter>
+    </ThemeProvider>
+  );
+};
+
+const customRender = (ui, options) => render(ui, { wrapper: AllTheProviders, ...options });
+
+// re-export everything
+export * from '@testing-library/react';
+
+// override render method
+export { customRender as render };

@@ -4,15 +4,15 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-import { Button } from '@material-ui/core';
-import { CalendarToday as CalendarTodayIcon, List as ListIcon, Refresh as RefreshIcon } from '@material-ui/icons';
+import { Button } from '@mui/material';
+import { CalendarToday as CalendarTodayIcon, List as ListIcon, Refresh as RefreshIcon } from '@mui/icons-material';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, selectDeployment, setDeploymentsState } from '../../actions/deploymentActions';
 import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { tryMapDeployments } from '../../helpers';
 import { getIsEnterprise } from '../../selectors';
-import { colors } from '../../themes/mender-theme';
+import { colors } from '../../themes/Mender';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';

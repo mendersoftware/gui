@@ -2,8 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import copy from 'copy-to-clipboard';
 
-import { Button, Divider, Drawer, IconButton } from '@material-ui/core';
-import { Close as CloseIcon, Link as LinkIcon, Replay as ReplayIcon } from '@material-ui/icons';
+import { Button, Divider, Drawer, IconButton } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { Close as CloseIcon, Link as LinkIcon, Replay as ReplayIcon } from '@mui/icons-material';
 
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../actions/deploymentActions';
@@ -20,9 +21,8 @@ import { getDeviceAlerts, setAlertListState } from '../../actions/monitorActions
 import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import ForwardingLink from '../common/forwardlink';
-import RelativeTime from '../common/relative-time';
+import { RelativeTime } from '../common/time';
 import { getDocsVersion, getIsEnterprise, getTenantCapabilities, getUserRoles } from '../../selectors';
-import theme from '../../themes/mender-theme';
 import Tracking from '../../tracking';
 import TroubleshootDialog from './troubleshootdialog';
 import AuthStatus from './device-details/authstatus';
@@ -70,6 +70,7 @@ export const ExpandedDevice = ({
   tenantCapabilities,
   userRoles
 }) => {
+  const theme = useTheme();
   const { isOffline, status = DEVICE_STATES.accepted } = device;
   const [socketClosed, setSocketClosed] = useState(true);
   const [troubleshootType, setTroubleshootType] = useState();
@@ -115,19 +116,19 @@ export const ExpandedDevice = ({
 
   const scrollToMonitor = () => monitoring.current?.scrollIntoView({ behavior: 'smooth' });
 
-  const deviceIdentifier = device?.attributes?.name ?? device?.id ?? '-';
+  const deviceIdentifier = device.attributes?.name ?? device.id ?? '-';
   const isAcceptedDevice = status === DEVICE_STATES.accepted;
   return (
     <Drawer anchor="right" className="expandedDevice" open={open} onClose={onClose} PaperProps={{ style: { minWidth: '67vw' } }}>
       <div className="flexbox center-aligned">
         <h3>Device information for {deviceIdentifier}</h3>
-        <IconButton onClick={copyLinkToClipboard}>
+        <IconButton onClick={copyLinkToClipboard} size="large">
           <LinkIcon />
         </IconButton>
         <div className={`${isOffline ? 'red' : 'muted'} margin-left margin-right`}>
           Last check-in: <RelativeTime updateTime={device.updated_ts} />
         </div>
-        <IconButton style={{ marginLeft: 'auto' }} onClick={onClose} aria-label="close">
+        <IconButton style={{ marginLeft: 'auto' }} onClick={onClose} aria-label="close" size="large">
           <CloseIcon />
         </IconButton>
       </div>

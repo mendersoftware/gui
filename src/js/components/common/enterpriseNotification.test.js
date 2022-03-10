@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import EnterpriseNotification from './enterpriseNotification';
+
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import EnterpriseNotification from './enterpriseNotification';
 
 describe('EnterpriseNotification Component', () => {
   it('renders correctly', async () => {

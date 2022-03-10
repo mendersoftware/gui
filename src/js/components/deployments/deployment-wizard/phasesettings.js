@@ -1,17 +1,16 @@
 import React from 'react';
 import pluralize from 'pluralize';
-import Time from 'react-time';
 
-import Chip from '@material-ui/core/Chip';
-import AddIcon from '@material-ui/icons/Add';
+import { Add as AddIcon, Cancel as CancelIcon } from '@mui/icons-material';
+import { Chip, Table, TableBody, TableCell, TableHead, TableRow, Select, MenuItem, Input, InputAdornment, IconButton } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
-import { Table, TableBody, TableCell, TableHead, TableRow, Select, MenuItem, Input, InputAdornment, IconButton } from '@material-ui/core';
-import CancelIcon from '@material-ui/icons/Cancel';
-import { getPhaseStartTime } from '../createdeployment';
 import { getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
-import theme from '../../../themes/mender-theme';
+import Time from '../../common/time';
+import { getPhaseStartTime } from '../createdeployment';
 
 export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, numberDevices, setDeploymentSettings }) => {
+  const theme = useTheme();
   const { filterId, phases = [] } = deploymentObject;
   const updateDelay = (value, index) => {
     let newPhases = phases;
@@ -94,7 +93,6 @@ export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, num
           {phase.batch_size && phase.batch_size < 100 ? (
             <Input
               value={phase.batch_size}
-              margin="dense"
               onChange={event => updateBatchSize(event.target.value, index)}
               endAdornment={
                 <InputAdornment className={deviceCount < 1 ? 'warning' : ''} position="end">
@@ -122,14 +120,13 @@ export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, num
           {!filterId && deviceCount < 1 && <div className="warning">Phases must have at least 1 device</div>}
         </TableCell>
         <TableCell>
-          <Time value={getPhaseStartTime(phases, index, startTime)} format="YYYY-MM-DD HH:mm" />
+          <Time value={getPhaseStartTime(phases, index, startTime)} />
         </TableCell>
         <TableCell>
           {phase.delay && index !== phases.length - 1 ? (
             <div>
               <Input
                 value={phase.delay}
-                margin="dense"
                 onChange={event => updateDelay(event.target.value, index)}
                 inputProps={{
                   step: 1,
@@ -151,7 +148,7 @@ export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, num
         </TableCell>
         <TableCell>
           {index >= 1 ? (
-            <IconButton onClick={() => removePhase(index)}>
+            <IconButton onClick={() => removePhase(index)} size="large">
               <CancelIcon />
             </IconButton>
           ) : null}

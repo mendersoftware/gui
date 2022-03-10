@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 import Review from './review';
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
 
 describe('Review deployment Component', () => {
   it('renders correctly', async () => {

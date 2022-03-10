@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { List } from '@material-ui/core';
-import { Info as InfoIcon } from '@material-ui/icons';
+import { List } from '@mui/material';
+import { Info as InfoIcon } from '@mui/icons-material';
 
 import Loader from '../../common/loader';
 import { MenderTooltipClickable } from '../../common/mendertooltip';

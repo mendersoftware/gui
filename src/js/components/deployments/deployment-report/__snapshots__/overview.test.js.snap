@@ -1,6 +1,117 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DeploymentOverview Component renders correctly 1`] = `
+.emotion-0 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.25rem;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-size: 0.8125rem;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 24px;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  white-space: nowrap;
+  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  cursor: default;
+  outline: 0;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  border: 0;
+  padding: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.emotion-2.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-2 .MuiChip-avatar {
+  margin-left: 5px;
+  margin-right: -6px;
+  width: 24px;
+  height: 24px;
+  color: #616161;
+  font-size: 0.75rem;
+}
+
+.emotion-2 .MuiChip-avatarColorPrimary {
+  color: #fff;
+  background-color: #1565c0;
+}
+
+.emotion-2 .MuiChip-avatarColorSecondary {
+  color: #fff;
+  background-color: #7b1fa2;
+}
+
+.emotion-2 .MuiChip-avatarSmall {
+  margin-left: 4px;
+  margin-right: -4px;
+  width: 18px;
+  height: 18px;
+  font-size: 0.625rem;
+}
+
+.emotion-2 .MuiChip-icon {
+  color: #616161;
+  margin-left: 4px;
+  margin-right: -4px;
+  font-size: 18px;
+}
+
+.emotion-2 .MuiChip-deleteIcon {
+  -webkit-tap-highlight-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+  font-size: 16px;
+  cursor: pointer;
+  margin: 0 5px 0 -6px;
+  margin-right: 4px;
+  margin-left: -4px;
+}
+
+.emotion-2 .MuiChip-deleteIcon:hover {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.emotion-3 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 8px;
+  padding-right: 8px;
+  white-space: nowrap;
+}
+
 <div
   class="report-container margin-top-large margin-bottom-large"
 >
@@ -9,7 +120,7 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
     style="align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;"
   >
     <div
-      class="align-right  text-muted"
+      class="align-right  muted"
     >
       <b>
         Release
@@ -28,7 +139,8 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
         test
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root margin-left-small MuiSvgIcon-fontSizeSmall"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small emotion-0"
+          data-testid="LaunchIcon"
           focusable="false"
           viewBox="0 0 24 24"
         >
@@ -39,7 +151,7 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
       </a>
     </div>
     <div
-      class="align-right  text-muted"
+      class="align-right  muted"
     >
       <b>
         Target device(s)
@@ -58,7 +170,8 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
         test deployment
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root margin-left-small MuiSvgIcon-fontSizeSmall"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small emotion-0"
+          data-testid="LaunchIcon"
           focusable="false"
           viewBox="0 0 24 24"
         >
@@ -67,11 +180,11 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
           />
         </svg>
         <div
-          class="MuiChip-root margin-left uppercased MuiChip-sizeSmall"
+          class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault margin-left uppercased emotion-2"
           style="opacity: 0.5; font-size: 0.675rem; height: 18px;"
         >
           <span
-            class="MuiChip-label MuiChip-labelSmall"
+            class="MuiChip-label MuiChip-labelSmall emotion-3"
           >
             static
           </span>
@@ -79,7 +192,7 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
       </a>
     </div>
     <div
-      class="align-right  text-muted"
+      class="align-right  muted"
     >
       <b>
         Category
@@ -99,7 +212,7 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
       style="align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;"
     >
       <div
-        class="align-right  text-muted"
+        class="align-right  muted"
       >
         <b>
           Created at
@@ -117,18 +230,19 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
     </div>
     <a
       class="margin-top-small flexbox center-aligned"
-      style="margin-left: 64px;"
+      style="margin-left: 96px;"
     >
       Schedule details 
       <svg
         aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-0"
+        data-testid="ArrowDropDownCircleOutlinedIcon"
         focusable="false"
         style="margin-left: 8px;"
         viewBox="0 0 24 24"
       >
         <path
-          d="M12 4c4.41 0 8 3.59 8 8s-3.59 8-8 8-8-3.59-8-8 3.59-8 8-8m0-2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 13l-4-4h8z"
+          d="M12 4c4.41 0 8 3.59 8 8s-3.59 8-8 8-8-3.59-8-8 3.59-8 8-8m0-2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 13-4-4h8z"
         />
       </svg>
     </a>

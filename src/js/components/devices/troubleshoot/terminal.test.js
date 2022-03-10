@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import Terminal from './terminal';
+
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import Terminal from './terminal';
 
 describe('Terminal Component', () => {
   const oldMatchMedia = window.matchMedia;

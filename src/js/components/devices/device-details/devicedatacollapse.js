@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
-import { Button, Collapse, Divider, IconButton } from '@material-ui/core';
-import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
-
-import theme from '../../../themes/mender-theme';
+import { Button, Collapse, Divider, IconButton } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 
 export const DeviceDataCollapse = ({ children, className = '', disableBottomBorder, header, isAddOn, isOpen, onClick, shouldUnmount = true, title }) => {
+  const theme = useTheme();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export const DeviceDataCollapse = ({ children, className = '', disableBottomBord
             </Button>
           )}
           {onClick ? (
-            <IconButton>{open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}</IconButton>
+            <IconButton size="large">{open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}</IconButton>
           ) : (
             <div style={{ height: theme.spacing(6), width: theme.spacing(6) }} />
           )}

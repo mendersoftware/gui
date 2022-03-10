@@ -10,28 +10,59 @@ exports[`smaller components renders AcceptedEmptyState correctly 1`] = `
 </div>
 `;
 
-exports[`smaller components renders DeviceCreationTime correctly 1`] = `-`;
-
-exports[`smaller components renders DeviceExpansion correctly 1`] = `
+exports[`smaller components renders DefaultAttributeRenderer correctly 1`] = `
 <div
-  class="bold flexbox center-aligned link-color margin-right-small uppercased"
-  style="white-space: nowrap;"
+  title="dc:a6:32:12:ad:bf"
 >
-  view details 
-  <svg
-    aria-hidden="true"
-    class="MuiSvgIcon-root"
-    focusable="false"
-    viewBox="0 0 24 24"
+  <div
+    class="text-overflow"
   >
-    <path
-      d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z"
-    />
-  </svg>
+    dc:a6:32:12:ad:bf
+  </div>
 </div>
 `;
 
-exports[`smaller components renders DeviceStatusHeading correctly 1`] = `<div />`;
+exports[`smaller components renders DeviceCreationTime correctly 1`] = `
+<time
+  datetime="2019-01-01T06:25:00+00:00"
+>
+  2019-01-01 06:25
+</time>
+`;
+
+exports[`smaller components renders DeviceSoftware correctly 1`] = `
+<div
+  title="-"
+>
+  <div
+    class="text-overflow"
+  >
+    -
+  </div>
+</div>
+`;
+
+exports[`smaller components renders DeviceStatusRenderer correctly 1`] = `
+<div>
+  <div
+    class="margin-right-small"
+  >
+    accepted
+  </div>
+</div>
+`;
+
+exports[`smaller components renders DeviceTypes correctly 1`] = `
+<div
+  title="raspberrypi4"
+>
+  <div
+    class="text-overflow"
+  >
+    raspberrypi4
+  </div>
+</div>
+`;
 
 exports[`smaller components renders PendingEmptyState correctly 1`] = `
 <div
@@ -81,10 +112,17 @@ exports[`smaller components renders RejectedEmptyState correctly 1`] = `
 `;
 
 exports[`smaller components renders RelativeDeviceTime correctly 1`] = `
-<div
-  class=""
-  title=""
->
-  -
+<div>
+  <span
+    aria-label="Tue Jan 01 2019 09:25:00 GMT+0000"
+    class=""
+    data-mui-internal-clone-element="true"
+  >
+    <time
+      datetime="2019-01-01T09:25:00+00:00"
+    >
+      2019-01-01 09:25
+    </time>
+  </span>
 </div>
 `;

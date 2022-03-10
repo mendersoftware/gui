@@ -1,17 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Time from 'react-time';
 import pluralize from 'pluralize';
 import isUUID from 'validator/lib/isUUID';
 
-import { Chip } from '@material-ui/core';
-import { ArrowDropDownCircleOutlined as ScrollDownIcon, Launch as LaunchIcon } from '@material-ui/icons';
+import { Chip } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { ArrowDropDownCircleOutlined as ScrollDownIcon, Launch as LaunchIcon } from '@mui/icons-material';
 
 import successImage from '../../../../assets/img/largeSuccess.png';
 import failImage from '../../../../assets/img/largeFail.png';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../../constants/deploymentConstants';
 import { TwoColumnData } from '../../common/configurationobject';
-import theme from '../../../themes/mender-theme';
+import Time from '../../common/time';
 import { defaultColumnDataProps } from '../report';
 
 const defaultLinkProps = {
@@ -22,6 +22,7 @@ const defaultLinkProps = {
 };
 
 export const DeploymentOverview = ({ creator, deployment, onScheduleClick }) => {
+  const theme = useTheme();
   const { artifact_name, devices = {}, filter, stats = {}, status, totalDeviceCount } = deployment;
 
   const finished = deployment.finished || status === DEPLOYMENT_STATES.finished;
@@ -65,7 +66,7 @@ export const DeploymentOverview = ({ creator, deployment, onScheduleClick }) => 
   const createdBy = creator ? { 'Created by': creator } : {};
   const deploymentInfo2 = {
     ...createdBy,
-    'Created at': <Time value={creationTime} format="YYYY-MM-DD HH:mm" />
+    'Created at': <Time value={creationTime} />
   };
 
   return (
@@ -73,7 +74,7 @@ export const DeploymentOverview = ({ creator, deployment, onScheduleClick }) => 
       <TwoColumnData config={deploymentInfo} {...defaultColumnDataProps} />
       <div className="flexbox column">
         <TwoColumnData config={deploymentInfo2} {...defaultColumnDataProps} />
-        <a className="margin-top-small flexbox center-aligned" onClick={onScheduleClick} style={{ ...defaultLinkProps, marginLeft: theme.spacing(8) }}>
+        <a className="margin-top-small flexbox center-aligned" onClick={onScheduleClick} style={{ ...defaultLinkProps, marginLeft: theme.spacing(12) }}>
           Schedule details <ScrollDownIcon fontSize="small" style={{ marginLeft: theme.spacing() }} />
         </a>
       </div>

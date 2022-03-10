@@ -68,6 +68,11 @@ describe('app reducer', () => {
     expect(reducer(initialState, { type: AppConstants.SET_YESTERDAY, value: undefined }).yesterday).toEqual(undefined);
   });
 
+  it('should handle SET_VERSION_INFORMATION', async () => {
+    expect(reducer(undefined, { type: AppConstants.SET_VERSION_INFORMATION, value: 'something' }).versionInformation).toEqual('something');
+    expect(reducer(initialState, { type: AppConstants.SET_VERSION_INFORMATION, value: undefined }).versionInformation).toEqual(undefined);
+  });
+
   it('should handle UPLOAD_PROGRESS', async () => {
     const { uploading, uploadProgress } = reducer(undefined, {
       type: AppConstants.UPLOAD_PROGRESS,

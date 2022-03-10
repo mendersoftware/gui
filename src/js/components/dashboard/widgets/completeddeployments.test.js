@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import CompletedDeployments from './completeddeployments';
+
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import CompletedDeployments from './completeddeployments';
 
 describe('CompletedDeployments Component', () => {
   it('renders correctly', async () => {

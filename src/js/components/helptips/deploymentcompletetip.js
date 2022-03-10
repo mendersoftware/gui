@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import Button from '@material-ui/core/Button';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import Button from '@mui/material/Button';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { withStyles } from 'tss-react/mui';
 
 import { getDeviceById, getDevicesByStatus } from '../../actions/deviceActions';
 import { advanceOnboarding, setOnboardingComplete, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
@@ -13,6 +14,15 @@ import { getDemoDeviceAddress } from '../../selectors';
 import Tracking from '../../tracking';
 import Loader from '../common/loader';
 import { MenderTooltipClickable } from '../common/mendertooltip';
+
+export const CompletionButton = withStyles(Button, ({ palette }) => ({
+  root: {
+    backgroundColor: palette.background.default,
+    '&:hover': {
+      backgroundColor: palette.background.default
+    }
+  }
+}));
 
 export const DeploymentCompleteTip = ({
   advanceOnboarding,
@@ -49,7 +59,9 @@ export const DeploymentCompleteTip = ({
         <div className="content">
           <p>Fantastic! You completed your first deployment!</p>
           <p>Your deployment is finished and your device is now running the updated software!</p>
-          <div className="flexbox centered">{!url ? <Loader show={true} /> : <Button variant="contained" onClick={onClick}>{`Go to ${url}`}</Button>}</div>
+          <div className="flexbox centered">
+            {!url ? <Loader show={true} /> : <CompletionButton variant="text" onClick={onClick}>{`Go to ${url}`}</CompletionButton>}
+          </div>
           <p>and you should see the demo web application actually being run on the device.</p>
           <p>NOTE: if you have local network restrictions, you may need to check them if you have difficulty loading the page.</p>
           <a onClick={onClick}>Visit the web app running your device</a>

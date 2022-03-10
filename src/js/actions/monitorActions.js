@@ -81,6 +81,9 @@ export const getIssueCountsByType =
       .then(res => {
         const total = nonMonitorFilters.length ? state.monitor.issueCounts.byType[type].total : Number(res.headers[headerNames.total]);
         const filtered = nonMonitorFilters.length ? Number(res.headers[headerNames.total]) : total;
+        if (total === state.monitor.issueCounts.byType[type].total && filtered === state.monitor.issueCounts.byType[type].filtered) {
+          return Promise.resolve();
+        }
         return Promise.resolve(
           dispatch({
             counts: { filtered, total },

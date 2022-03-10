@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 
 import { FitAddon } from 'xterm-addon-fit';
 import { SearchAddon } from 'xterm-addon-search';
@@ -8,9 +8,10 @@ import msgpack5 from 'msgpack5';
 import { deviceConnect } from '../../../actions/deviceActions';
 import { blobToString, byteArrayToString } from '../../devices/troubleshoot/terminal';
 import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as MessageProtocols } from '../../../constants/deviceConstants';
-import { CloudDownload, Pause, PlayArrow, Refresh } from '@material-ui/icons';
+import { CloudDownload, Pause, PlayArrow, Refresh } from '@mui/icons-material';
 import XTerm from '../../common/xterm';
-import { colors } from '../../../themes/mender-theme';
+import { colors } from '../../../themes/Mender';
+import { createFileDownload } from '../../../helpers';
 
 const MessagePack = msgpack5();
 const fitAddon = new FitAddon();
@@ -239,13 +240,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
   const onDownloadClick = () => {
     // eslint-disable-next-line no-undef
     const text = generateHtml({ fit: XTERM_FIT_VERSION, search: XTERM_SEARCH_VERSION, xterm: XTERM_VERSION }, buffer);
-    let link = document.createElement('a');
-    link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-    link.setAttribute('download', 'terminalsession.html');
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    createFileDownload(text, 'terminalsession.html');
   };
 
   return (

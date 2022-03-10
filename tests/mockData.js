@@ -183,6 +183,8 @@ export const defaultState = {
       deviceIds: [],
       page: 1,
       perPage: 20,
+      selectedAttributes: [],
+      selectedIssues: [],
       selection: [],
       sort: {
         direction: SORTING_OPTIONS.desc,
@@ -385,6 +387,7 @@ export const defaultState = {
       [userId]: { email: 'a2@b.com', id: userId, created_ts: '2019-01-01T12:30:00.000Z' }
     },
     currentUser: 'a1',
+    customColumns: [],
     globalSettings: { '2fa': 'enabled', id_attribute: undefined, previousFilters: [] },
     jwtToken: null,
     qrCode: null,

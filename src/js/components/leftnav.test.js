@@ -1,11 +1,10 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import LeftNav from './leftnav';
 import { defaultState, undefineds } from '../../../tests/mockData';
+import { render } from '../../../tests/setupTests';
 
 const mockStore = configureStore([thunk]);
 
@@ -18,9 +17,7 @@ describe('LeftNav Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
-        <MemoryRouter>
-          <LeftNav />
-        </MemoryRouter>
+        <LeftNav />
       </Provider>
     );
     const view = baseElement.firstChild.firstChild;
