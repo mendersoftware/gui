@@ -32,6 +32,12 @@ export const defaultState = {
     features: {
       isDemoMode: false
     },
+    searchState: {
+      deviceIds: [],
+      searchTerm: '',
+      searchTotal: 0,
+      sort: {}
+    },
     snackbar: {},
     versionInformation: {}
   },

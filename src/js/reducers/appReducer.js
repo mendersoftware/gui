@@ -56,6 +56,17 @@ export const initialState = {
   hostedAnnouncement: menderEnvironment.hostedAnnouncement,
   docsVersion: isNaN(menderEnvironment.integrationVersion.charAt(0)) ? '' : menderEnvironment.integrationVersion.split('.').slice(0, 2).join('.'),
   recaptchaSiteKey: menderEnvironment.recaptchaSiteKey,
+  searchState: {
+    deviceIds: [],
+    searchTerm: '',
+    searchTotal: 0,
+    sort: {
+      direction: AppConstants.SORTING_OPTIONS.desc,
+      columns: [
+        // { column: null, scope: null }
+      ]
+    }
+  },
   stripeAPIKey: menderEnvironment.stripeAPIKey,
   trackerCode: menderEnvironment.trackerCode,
   uploading: false,
@@ -89,6 +100,11 @@ const appReducer = (state = initialState, action) => {
       return {
         ...state,
         hostedAnnouncement: action.announcement
+      };
+    case AppConstants.SET_SEARCH_STATE:
+      return {
+        ...state,
+        searchState: action.state
       };
     case AppConstants.SET_YESTERDAY:
       return {
