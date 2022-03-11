@@ -86,21 +86,22 @@ test.describe('Settings', () => {
       await page.waitForTimeout(1000);
       await context.clearCookies();
       await page.goto(`${baseUrl}ui/`);
-      expect(await page.isVisible(`button :has-text('Log in')`)).toBeTruthy();
+      await page.pause();
+      expect(await page.isVisible(`button:text('Log in')`)).toBeTruthy();
     });
     test(`prevents from logging in without 2fa code`, async ({ baseUrl, environment, page, password, username }) => {
       test.skip(environment !== 'staging');
       await page.goto(`${baseUrl}ui/`);
-      expect(await page.isVisible(`button :has-text('Log in')`)).toBeTruthy();
+      expect(await page.isVisible(`button:text('Log in')`)).toBeTruthy();
       // enter valid username and password
       await page.fill('[name=email]', username);
       await page.fill('[name=password]', password);
-      await page.click(`button :has-text('Log in')`);
+      await page.click(`button:text('Log in')`);
       await page.waitForTimeout(1000);
       await page.fill('[name=token2fa]', '123456');
-      await page.click(`button :has-text('Log in')`);
+      await page.click(`button:text('Log in')`);
       // still on /login page plus an error is displayed
-      expect(await page.isVisible(`button :has-text('Log in')`)).toBeTruthy();
+      expect(await page.isVisible(`button:text('Log in')`)).toBeTruthy();
       await page.waitForSelector('text=/There was a problem logging in/', { timeout: 2000 });
     });
     test('allows turning 2fa off again', async ({ baseUrl, environment, page, password, username }) => {
@@ -108,10 +109,10 @@ test.describe('Settings', () => {
       await page.goto(`${baseUrl}ui/#/login`);
       await page.fill('[name=email]', username);
       await page.fill('[name=password]', password);
-      await page.click(`button :has-text('Log in')`);
+      await page.click(`button:text('Log in')`);
       const newToken = await generateOtp();
       await page.fill('[name=token2fa]', newToken);
-      await page.click(`button :has-text('Log in')`);
+      await page.click(`button:text('Log in')`);
       await page.waitForSelector('text=License information');
       await page.goto(`${baseUrl}ui/#/settings/my-account`);
       await page.click('text=/Enable Two Factor/');

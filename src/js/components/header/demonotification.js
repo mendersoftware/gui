@@ -4,8 +4,9 @@ import { InfoOutlined as InfoIcon } from '@mui/icons-material';
 
 import { MenderTooltipClickable } from '../common/mendertooltip';
 
-const DemoNotification = ({ docsVersion = 'development/' }) => (
+const DemoNotification = ({ iconClassName, docsVersion = 'development/', sectionClassName }) => (
   <MenderTooltipClickable
+    className={`flexbox centered ${sectionClassName}`}
     title={
       <>
         <h3>Demo mode</h3>
@@ -25,10 +26,10 @@ const DemoNotification = ({ docsVersion = 'development/' }) => (
       </>
     }
   >
-    <div id="demoBox" className="flexbox centered">
-      <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
+    <>
+      <InfoIcon className={iconClassName} style={{ marginRight: 2, verticalAlign: 'bottom' }} />
       <a>Demo mode</a>
-    </div>
+    </>
   </MenderTooltipClickable>
 );
 

@@ -5,14 +5,13 @@ import Cookies from 'universal-cookie';
 import moment from 'moment';
 
 import { Button, IconButton, ListItemText, ListItemSecondaryAction, Menu, MenuItem, Toolbar } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-
 import {
   AccountCircle as AccountCircleIcon,
   ArrowDropDown as ArrowDropDownIcon,
   ArrowDropUp as ArrowDropUpIcon,
   ExitToApp as ExitIcon
 } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 
 import { initializeAppData, setFirstLoginAfterSignup, setSnackbar } from '../../actions/appActions';
 import { getOnboardingState } from '../../actions/onboardingActions';
@@ -28,12 +27,9 @@ import DeploymentNotifications from './deploymentnotifications';
 import TrialNotification from './trialnotification';
 import OfferHeader from './offerheader';
 
-import { colors } from '../../themes/Mender';
 import logo from '../../../assets/img/headerlogo.png';
 import enterpriseLogo from '../../../assets/img/headerlogo-enterprise.png';
 import UserConstants from '../../constants/userConstants';
-
-const menuButtonColor = colors.grey;
 
 // Change this when a new feature/offer is introduced
 const currentOffer = {
@@ -46,6 +42,40 @@ const currentOffer = {
 };
 
 const cookies = new Cookies();
+
+const useStyles = makeStyles()(theme => ({
+  header: {
+    minHeight: 'unset',
+    paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(5),
+    width: '100%',
+    borderBottom: `1px solid ${theme.palette.grey[100]}`,
+    display: 'grid',
+    gridTemplateRows: theme.mixins.toolbar.minHeight
+  },
+  banner: { gridTemplateRows: `1fr ${theme.mixins.toolbar.minHeight}px` },
+  buttonColor: { color: theme.palette.grey[600] },
+  dropDown: { height: '100%', marginLeft: theme.spacing(0.5), textTransform: 'none' },
+  exitIcon: { color: theme.palette.grey[600], fill: theme.palette.grey[600] },
+  demoTrialAnnouncement: {
+    fontSize: 14,
+    height: '100%',
+    maxHeight: theme.mixins.toolbar.minHeight,
+    minWidth: 164,
+    overflow: 'hidden'
+  },
+  demoAnnouncementIcon: {
+    height: 16,
+    color: theme.palette.primary.main,
+    '&.MuiButton-textPrimary': {
+      color: theme.palette.primary.main,
+      height: 'inherit'
+    }
+  },
+  redAnnouncementIcon: {
+    color: theme.palette.error.dark
+  }
+}));
 
 export const Header = ({
   acceptedDevices,
@@ -72,7 +102,7 @@ export const Header = ({
   toggleHelptips,
   user
 }) => {
-  const theme = useTheme();
+  const { classes } = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [loggingOut, setLoggingOut] = useState(false);
   const [gettingUser, setGettingUser] = useState(false);
@@ -133,77 +163,86 @@ export const Header = ({
   const showOffer =
     isHosted && moment().isBefore(currentOffer.expires) && (organization.trial ? currentOffer.trial : currentOffer[organization.plan]) && !hasOfferCookie;
   return (
-    <Toolbar
-      id="fixedHeader"
-      className={showOffer ? 'header banner' : 'header'}
-      style={{
-        minHeight: 'unset',
-        paddingLeft: theme.spacing(4),
-        paddingRight: theme.spacing(5)
-      }}
-    >
+    <Toolbar id="fixedHeader" className={showOffer ? `${classes.header} ${classes.banner}` : classes.header}>
       {showOffer && <OfferHeader docsVersion={docsVersion} onHide={setHideOffer} />}
-      <div className="flexbox">
-        <Link to="/">
-          <img id="logo" src={isEnterprise ? enterpriseLogo : logo} />
-        </Link>
-        {demo && <DemoNotification docsVersion={docsVersion} />}
-        {!!announcement && <Announcement announcement={announcement} onHide={setHideAnnouncement} />}
-        {organization.trial && <TrialNotification expiration={organization.trial_expiration} />}
-        <div style={{ flexGrow: '1' }}></div>
-        <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
-        <DeploymentNotifications inprogress={inProgress} />
-        <Button
-          className="header-dropdown"
-          style={{ fontSize: 14, marginLeft: theme.spacing(0.5), textTransform: 'none' }}
-          onClick={e => setAnchorEl(e.currentTarget)}
-          startIcon={<AccountCircleIcon style={{ color: menuButtonColor }} />}
-          endIcon={anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-        >
-          {user.email}
-        </Button>
-        <Menu
-          anchorEl={anchorEl}
-          onClose={() => setAnchorEl(null)}
-          open={Boolean(anchorEl)}
-          anchorOrigin={{
-            vertical: 'center',
-            horizontal: 'center'
-          }}
-          transformOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center'
-          }}
-        >
-          <MenuItem component={Link} to="/settings">
-            Settings
-          </MenuItem>
-          <MenuItem component={Link} to="/settings/my-profile">
-            My profile
-          </MenuItem>
-          {multitenancy && (
-            <MenuItem component={Link} to="/settings/organization-and-billing">
-              My organization
-            </MenuItem>
+      <div className="flexbox space-between">
+        <div className="flexbox center-aligned">
+          <Link to="/">
+            <img id="logo" src={isEnterprise ? enterpriseLogo : logo} />
+          </Link>
+          {demo && <DemoNotification iconClassName={classes.demoAnnouncementIcon} sectionClassName={classes.demoTrialAnnouncement} docsVersion={docsVersion} />}
+          {!!announcement && (
+            <Announcement
+              announcement={announcement}
+              errorIconClassName={classes.redAnnouncementIcon}
+              iconClassName={classes.demoAnnouncementIcon}
+              sectionClassName={classes.demoTrialAnnouncement}
+              onHide={setHideAnnouncement}
+            />
           )}
-          {allowUserManagement && (
-            <MenuItem component={Link} to="/settings/user-management">
-              User management
-            </MenuItem>
+          {organization.trial && (
+            <TrialNotification
+              expiration={organization.trial_expiration}
+              iconClassName={classes.demoAnnouncementIcon}
+              sectionClassName={classes.demoTrialAnnouncement}
+            />
           )}
-          <MenuItem onClick={toggleHelptips}>{showHelptips ? 'Hide help tooltips' : 'Show help tooltips'}</MenuItem>
-          <MenuItem component={Link} to="/help/get-started">
-            Help
-          </MenuItem>
-          <MenuItem onClick={onLogoutClick}>
-            <ListItemText primary="Log out" />
-            <ListItemSecondaryAction>
-              <IconButton size="large">
-                <ExitIcon style={{ color: menuButtonColor, fill: menuButtonColor }} />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </MenuItem>
-        </Menu>
+        </div>
+
+        <div className="flexbox center-aligned">
+          <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
+          <DeploymentNotifications inprogress={inProgress} />
+          <Button
+            className={`header-dropdown ${classes.dropDown}`}
+            onClick={e => setAnchorEl(e.currentTarget)}
+            startIcon={<AccountCircleIcon className={classes.buttonColor} />}
+            endIcon={anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+          >
+            {user.email}
+          </Button>
+          <Menu
+            anchorEl={anchorEl}
+            onClose={() => setAnchorEl(null)}
+            open={Boolean(anchorEl)}
+            anchorOrigin={{
+              vertical: 'center',
+              horizontal: 'center'
+            }}
+            transformOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center'
+            }}
+          >
+            <MenuItem component={Link} to="/settings">
+              Settings
+            </MenuItem>
+            <MenuItem component={Link} to="/settings/my-profile">
+              My profile
+            </MenuItem>
+            {multitenancy && (
+              <MenuItem component={Link} to="/settings/organization-and-billing">
+                My organization
+              </MenuItem>
+            )}
+            {allowUserManagement && (
+              <MenuItem component={Link} to="/settings/user-management">
+                User management
+              </MenuItem>
+            )}
+            <MenuItem onClick={toggleHelptips}>{showHelptips ? 'Hide help tooltips' : 'Show help tooltips'}</MenuItem>
+            <MenuItem component={Link} to="/help/get-started">
+              Help
+            </MenuItem>
+            <MenuItem onClick={onLogoutClick}>
+              <ListItemText primary="Log out" />
+              <ListItemSecondaryAction>
+                <IconButton>
+                  <ExitIcon className={classes.exitIcon} />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </MenuItem>
+          </Menu>
+        </div>
       </div>
     </Toolbar>
   );
