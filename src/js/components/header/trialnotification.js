@@ -29,19 +29,19 @@ const TrialInformation = () => (
   </>
 );
 
-const TrialNotification = ({ expiration }) => {
+const TrialNotification = ({ iconClassName, sectionClassName, expiration }) => {
   const expirationDate = moment(expiration);
   const duration = moment.duration(expirationDate.diff(moment(today)));
   const daysLeft = Math.floor(duration.asDays());
   return (
-    <div id="trialVersion" className="flexbox centered">
-      <MenderTooltipClickable disableHoverListener={false} title={<TrialInformation />}>
-        <div className="muted margin-right-small">
-          <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
+    <div className={`flexbox centered ${sectionClassName}`}>
+      <MenderTooltipClickable className="flexbox center-aligned muted margin-right-small" disableHoverListener={false} title={<TrialInformation />}>
+        <>
+          <InfoIcon className={iconClassName} style={{ marginRight: 2 }} />
           Trial plan
-        </div>
+        </>
       </MenderTooltipClickable>
-      <Button id="trial-upgrade-now" color="primary" component={Link} startIcon={<Payment />} to="/settings/upgrade">
+      <Button className={iconClassName} component={Link} startIcon={<Payment />} to="/settings/upgrade">
         Upgrade now
       </Button>
 

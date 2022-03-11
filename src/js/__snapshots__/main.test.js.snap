@@ -2,6 +2,16 @@
 
 exports[`Main Component renders correctly 1`] = `
 .emotion-0 {
+  min-height: unset;
+  padding-left: 32px;
+  padding-right: 40px;
+  width: 100%;
+  border-bottom: 1px solid #d8ebe9;
+  display: grid;
+  grid-template-rows: 56px;
+}
+
+.emotion-1 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -17,25 +27,25 @@ exports[`Main Component renders correctly 1`] = `
 }
 
 @media (min-width:600px) {
-  .emotion-0 {
+  .emotion-1 {
     padding-left: 24px;
     padding-right: 24px;
   }
 }
 
 @media (min-width:0px) and (orientation: landscape) {
-  .emotion-0 {
+  .emotion-1 {
     min-height: 48px;
   }
 }
 
 @media (min-width:600px) {
-  .emotion-0 {
+  .emotion-1 {
     min-height: 64px;
   }
 }
 
-.emotion-1 {
+.emotion-2 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -52,11 +62,17 @@ exports[`Main Component renders correctly 1`] = `
   font-size: 1.3929rem;
 }
 
-.emotion-1 iconButton {
+.emotion-2 iconButton {
   margin-right: 8px;
 }
 
-.emotion-3 {
+.emotion-4 {
+  height: 100%;
+  margin-left: 4px;
+  text-transform: none;
+}
+
+.emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -106,67 +122,71 @@ exports[`Main Component renders correctly 1`] = `
   padding: 10px 15px;
 }
 
-.emotion-3::-moz-focus-inner {
+.emotion-5::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-3.Mui-disabled {
+.emotion-5.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-3 {
+  .emotion-5 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-3:hover {
+.emotion-5:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-3:hover {
+  .emotion-5:hover {
     background-color: transparent;
   }
 }
 
-.emotion-3.Mui-disabled {
+.emotion-5.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-3:hover {
+.emotion-5:hover {
   colors: #337a87;
 }
 
-.emotion-3.MuiButton-text {
+.emotion-5.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
-}
-
-.emotion-4 {
-  display: inherit;
-  margin-right: 8px;
-  margin-left: -4px;
-}
-
-.emotion-4>*:nth-of-type(1) {
-  font-size: 20px;
 }
 
 .emotion-6 {
   display: inherit;
-  margin-right: -4px;
-  margin-left: 8px;
+  margin-right: 8px;
+  margin-left: -4px;
 }
 
 .emotion-6>*:nth-of-type(1) {
   font-size: 20px;
 }
 
-.emotion-8 {
+.emotion-7 {
+  color: #cfcfcf;
+}
+
+.emotion-9 {
+  display: inherit;
+  margin-right: -4px;
+  margin-left: 8px;
+}
+
+.emotion-9>*:nth-of-type(1) {
+  font-size: 20px;
+}
+
+.emotion-11 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -178,12 +198,12 @@ exports[`Main Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
-.emotion-9 {
+.emotion-12 {
   background-color: #f7f7f7;
   border-right: 1px solid #e6f2f1;
 }
 
-.emotion-10 {
+.emotion-13 {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -192,7 +212,7 @@ exports[`Main Component renders correctly 1`] = `
   padding-bottom: 8px;
 }
 
-.emotion-11 {
+.emotion-14 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -219,41 +239,41 @@ exports[`Main Component renders correctly 1`] = `
   padding-bottom: 11px;
 }
 
-.emotion-11.Mui-focusVisible {
+.emotion-14.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-11.Mui-selected {
+.emotion-14.Mui-selected {
   background-color: rgba(51, 122, 135, 0.08);
 }
 
-.emotion-11.Mui-selected.Mui-focusVisible {
+.emotion-14.Mui-selected.Mui-focusVisible {
   background-color: rgba(51, 122, 135, 0.2);
 }
 
-.emotion-11.Mui-disabled {
+.emotion-14.Mui-disabled {
   opacity: 0.38;
 }
 
-.emotion-11.Mui-disabled {
+.emotion-14.Mui-disabled {
   opacity: 1;
 }
 
-.emotion-11.active {
+.emotion-14.active {
   background-color: #fff;
 }
 
-.emotion-11.leftNav.active {
+.emotion-14.leftNav.active {
   border-top: 1px solid #d4e9e7;
   border-bottom: 1px solid #d4e9e7;
 }
 
-.emotion-11.navLink,
-.emotion-11.navLink .MuiListItemText-root {
+.emotion-14.navLink,
+.emotion-14.navLink .MuiListItemText-root {
   color: #969696;
 }
 
-.emotion-12 {
+.emotion-15 {
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
@@ -265,7 +285,7 @@ exports[`Main Component renders correctly 1`] = `
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-13 {
+.emotion-16 {
   margin: 0;
   line-height: 1.5;
   font-family: Lato,sans-serif;
@@ -274,7 +294,7 @@ exports[`Main Component renders correctly 1`] = `
   display: block;
 }
 
-.emotion-23 {
+.emotion-26 {
   padding: 0;
   position: absolute;
   bottom: 30px;
@@ -282,11 +302,11 @@ exports[`Main Component renders correctly 1`] = `
   right: 0;
 }
 
-.emotion-25 {
+.emotion-28 {
   padding: 16px 16px 16px 42px;
 }
 
-.emotion-31 {
+.emotion-34 {
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
@@ -298,7 +318,7 @@ exports[`Main Component renders correctly 1`] = `
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-33 {
+.emotion-36 {
   margin: 0;
   font-family: Lato,sans-serif;
   font-weight: 400;
@@ -308,7 +328,7 @@ exports[`Main Component renders correctly 1`] = `
   display: block;
 }
 
-.emotion-34 {
+.emotion-37 {
   font-size: 13px;
   position: relative;
   top: 6px;
@@ -319,179 +339,181 @@ exports[`Main Component renders correctly 1`] = `
   id="app"
 >
   <div
-    class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular header emotion-0"
+    class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular emotion-0 emotion-1"
     id="fixedHeader"
-    style="min-height: unset; padding-left: 32px; padding-right: 40px;"
   >
     <div
-      class="flexbox"
+      class="flexbox space-between"
     >
-      <a
-        href="/"
-      >
-        <img
-          id="logo"
-          src="headerlogo.png"
-        />
-      </a>
       <div
-        style="flex-grow: 1;"
-      />
-      <div
-        class="header-section"
+        class="flexbox center-aligned"
       >
         <a
-          class=""
-          href="/devices"
+          href="/"
+        >
+          <img
+            id="logo"
+            src="headerlogo.png"
+          />
+        </a>
+      </div>
+      <div
+        class="flexbox center-aligned"
+      >
+        <div
+          class="header-section"
+        >
+          <a
+            class=""
+            href="/devices"
+          >
+            <span>
+              0
+            </span>
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-2"
+              data-testid="DeveloperBoardIcon"
+              focusable="false"
+              style="margin: 0px 7px 0px 10px; font-size: 20px;"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M22 9V7h-2V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2v-2h-2V9h2zm-4 10H4V5h14v14zM6 13h5v4H6zm6-6h4v3h-4zM6 7h5v5H6zm6 4h4v6h-4z"
+              />
+            </svg>
+          </a>
+        </div>
+        <a
+          class="header-section"
+          href="/deployments/"
         >
           <span>
             0
           </span>
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-1"
-            data-testid="DeveloperBoardIcon"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium flip-horizontal emotion-2"
+            data-testid="RefreshIcon"
             focusable="false"
-            style="margin: 0px 7px 0px 10px; font-size: 20px;"
+            style="color: rgb(199, 199, 199); margin: 0px 7px 0px 10px; top: 5px; font-size: 20px;"
             viewBox="0 0 24 24"
           >
             <path
-              d="M22 9V7h-2V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2v-2h-2V9h2zm-4 10H4V5h14v14zM6 13h5v4H6zm6-6h4v3h-4zM6 7h5v5H6zm6 4h4v6h-4z"
+              d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
             />
           </svg>
         </a>
-      </div>
-      <a
-        class="header-section"
-        href="/deployments/"
-      >
-        <span>
-          0
-        </span>
-        <svg
-          aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium flip-horizontal emotion-1"
-          data-testid="RefreshIcon"
-          focusable="false"
-          style="color: rgb(199, 199, 199); margin: 0px 7px 0px 10px; top: 5px; font-size: 20px;"
-          viewBox="0 0 24 24"
+        <button
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root header-dropdown emotion-4 emotion-5"
+          tabindex="0"
+          type="button"
         >
-          <path
-            d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+          <span
+            class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-6"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-7 emotion-2"
+              data-testid="AccountCircleIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"
+              />
+            </svg>
+          </span>
+          
+          <span
+            class="MuiButton-endIcon MuiButton-iconSizeMedium emotion-9"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-2"
+              data-testid="ArrowDropDownIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="m7 10 5 5 5-5z"
+              />
+            </svg>
+          </span>
+          <span
+            class="MuiTouchRipple-root emotion-11"
           />
-        </svg>
-      </a>
-      <button
-        class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root header-dropdown emotion-3"
-        style="font-size: 14px; margin-left: 4px; text-transform: none;"
-        tabindex="0"
-        type="button"
-      >
-        <span
-          class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-4"
-        >
-          <svg
-            aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-1"
-            data-testid="AccountCircleIcon"
-            focusable="false"
-            style="color: rgb(199, 199, 199);"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"
-            />
-          </svg>
-        </span>
-        
-        <span
-          class="MuiButton-endIcon MuiButton-iconSizeMedium emotion-6"
-        >
-          <svg
-            aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-1"
-            data-testid="ArrowDropDownIcon"
-            focusable="false"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="m7 10 5 5 5-5z"
-            />
-          </svg>
-        </span>
-        <span
-          class="MuiTouchRipple-root emotion-8"
-        />
-      </button>
+        </button>
+      </div>
     </div>
   </div>
   <div
-    class="leftFixed leftNav emotion-9"
+    class="leftFixed leftNav emotion-12"
   >
     <ul
-      class="MuiList-root MuiList-padding emotion-10"
+      class="MuiList-root MuiList-padding emotion-13"
       style="padding: 0px;"
     >
       <a
         aria-current="page"
-        class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-11 active"
+        class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-14 active"
         href="/"
         style="padding: 22px 16px 22px 42px;"
       >
         <div
-          class="MuiListItemText-root emotion-12"
+          class="MuiListItemText-root emotion-15"
           style="text-transform: uppercase;"
         >
           <span
-            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-13"
+            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-16"
           >
             Dashboard
           </span>
         </div>
       </a>
       <a
-        class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-11"
+        class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-14"
         href="/devices"
         style="padding: 22px 16px 22px 42px;"
       >
         <div
-          class="MuiListItemText-root emotion-12"
+          class="MuiListItemText-root emotion-15"
           style="text-transform: uppercase;"
         >
           <span
-            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-13"
+            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-16"
           >
             Devices
           </span>
         </div>
       </a>
       <a
-        class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-11"
+        class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-14"
         href="/releases"
         style="padding: 22px 16px 22px 42px;"
       >
         <div
-          class="MuiListItemText-root emotion-12"
+          class="MuiListItemText-root emotion-15"
           style="text-transform: uppercase;"
         >
           <span
-            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-13"
+            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-16"
           >
             Releases
           </span>
         </div>
       </a>
       <a
-        class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-11"
+        class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-14"
         href="/deployments"
         style="padding: 22px 16px 22px 42px;"
       >
         <div
-          class="MuiListItemText-root emotion-12"
+          class="MuiListItemText-root emotion-15"
           style="text-transform: uppercase;"
         >
           <span
-            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-13"
+            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-16"
           >
             Deployments
           </span>
@@ -499,30 +521,30 @@ exports[`Main Component renders correctly 1`] = `
       </a>
     </ul>
     <ul
-      class="MuiList-root MuiList-padding emotion-23 emotion-10"
+      class="MuiList-root MuiList-padding emotion-26 emotion-13"
     >
       <a
-        class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-25 emotion-11"
+        class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-28 emotion-14"
         href="/help"
       >
         <div
-          class="MuiListItemText-root emotion-12"
+          class="MuiListItemText-root emotion-15"
         >
           <span
-            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-13"
+            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-16"
           >
             Help
           </span>
         </div>
       </a>
       <li
-        class="MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-25 emotion-11"
+        class="MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-28 emotion-14"
       >
         <div
-          class="MuiListItemText-root MuiListItemText-multiline emotion-31"
+          class="MuiListItemText-root MuiListItemText-multiline emotion-34"
         >
           <span
-            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-13"
+            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-16"
           >
             <div
               class="clickable slightly-smaller"
@@ -532,10 +554,10 @@ exports[`Main Component renders correctly 1`] = `
             </div>
           </span>
           <p
-            class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-33"
+            class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-36"
           >
             <a
-              class="emotion-34"
+              class="emotion-37"
               href="https://docs.mender.io/development/release-information/open-source-licenses"
               rel="noopener noreferrer"
               target="_blank"

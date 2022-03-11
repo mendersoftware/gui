@@ -22,13 +22,6 @@ body {
     'nav main';
   #fixedHeader {
     grid-area: head;
-    width: 100%;
-    border-bottom: 1px solid @bordercolor;
-    display: grid;
-    grid-template-rows: 1fr;
-    &.banner {
-      grid-template-rows: 1fr 1fr;
-    }
   }
   .leftFixed.leftNav {
     grid-area: nav;
@@ -334,30 +327,6 @@ ul.link-list {
   margin-right: 25px;
 }
 
-#demoBox,
-#trialVersion,
-#announcement {
-  font-size: 14px;
-  height: 100%;
-  max-height: 56px;
-  min-width: 164px;
-  overflow: hidden;
-}
-
-#demoBox,
-#announcement {
-  svg {
-    color: @linkgreen !important;
-    &.red {
-      color: @red !important;
-    }
-  }
-}
-
-#trial-upgrade-now {
-  white-space: nowrap;
-}
-
 #announcement {
   padding: 0 @defaultGutterWidth;
 }
@@ -383,7 +352,7 @@ ul.link-list {
   }
 }
 
-.header .header-section {
+.header-section {
   height: 24px;
   font-size: 14px;
   color: @grey;
@@ -393,9 +362,6 @@ ul.link-list {
   border-right: 1px solid @lightergrey;
   display: flex;
   align-items: center;
-  &:first-of-type {
-    border-left: 1px solid @lightergrey;
-  }
 
   &:hover {
     color: darken(@grey, 10%);
