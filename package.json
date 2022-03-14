@@ -10,7 +10,7 @@
     "@mui/icons-material": "^5.4.4",
     "@mui/lab": "^5.0.0-alpha.71",
     "@mui/material": "^5.4.4",
-    "@mui/styles": "^5.4.4",
+    "@mui/styles": "^5.5.0",
     "@reduxjs/toolkit": "^1.8.0",
     "@stripe/react-stripe-js": "^1.7.0",
     "@stripe/stripe-js": "^1.24.0",
