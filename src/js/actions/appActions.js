@@ -10,7 +10,16 @@ import { onboardingSteps } from '../constants/onboardingConstants';
 import { customSort, extractErrorMessage, preformatWithRequestID } from '../helpers';
 import { getCurrentUser, getUserSettings } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
-import { getDeviceAttributes, getDeviceById, getDevicesByStatus, getDeviceLimit, getDynamicGroups, getGroups, setDeviceListState } from './deviceActions';
+import {
+  getDeviceAttributes,
+  getDeviceById,
+  getDevicesByStatus,
+  getDeviceLimit,
+  getDynamicGroups,
+  getGroups,
+  setDeviceListState,
+  searchDevices
+} from './deviceActions';
 import { getDeploymentsByStatus } from './deploymentActions';
 import { getReleases } from './releaseActions';
 import { saveUserSettings, getGlobalSettings, getRoles, saveGlobalSettings } from './userActions';
@@ -219,10 +228,12 @@ export const setSearchState = searchState => (dispatch, getState) => {
   if (searchState.searchTerm && currentState.searchTerm !== searchState.searchTerm) {
     nextState.isSearching = true;
     tasks.push(
-      // dispatch(getDevicesByStatus('any', { page: nextState.page, perPage: 10, sortOptions: nextState.sort })).then(() => {
-      dispatch(getDevicesByStatus('any', { page: nextState.page, perPage: 10, sortOptions: nextState.sort })).finally(() => {
-        dispatch(setSearchState({ isSearching: false }));
-      })
+      dispatch(searchDevices(nextState))
+        .then(results => {
+          const searchResult = results[results.length - 1];
+          return dispatch(setSearchState({ ...searchResult, isSearching: false }));
+        })
+        .catch(() => dispatch(setSearchState({ isSearching: false, searchTotal: 0 })))
     );
   }
   tasks.push(dispatch({ type: AppConstants.SET_SEARCH_STATE, state: nextState }));
