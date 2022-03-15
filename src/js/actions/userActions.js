@@ -290,14 +290,14 @@ export const removeRole = roleId => dispatch =>
 */
 export const getGlobalSettings = () => dispatch =>
   GeneralApi.get(`${useradmApiUrl}/settings`).then(({ data: settings }) => {
-    window.sessionStorage.setItem('settings-initialized', true);
+    window.sessionStorage.setItem(UserConstants.settingsKeys.initialized, true);
     return Promise.resolve(dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings }));
   });
 
 export const saveGlobalSettings =
   (settings, beOptimistic = false, notify = false) =>
   (dispatch, getState) => {
-    if (!window.sessionStorage.getItem('settings-initialized') && !beOptimistic) {
+    if (!window.sessionStorage.getItem(UserConstants.settingsKeys.initialized) && !beOptimistic) {
       return;
     }
     let updatedSettings = { ...getState().users.globalSettings, ...settings };

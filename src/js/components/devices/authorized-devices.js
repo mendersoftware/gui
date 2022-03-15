@@ -39,6 +39,7 @@ import ListOptions from './widgets/listoptions';
 import { defaultTextRender, getDeviceIdentityText } from './base-devices';
 import DeviceList, { minCellWidth } from './devicelist';
 import { defaultHeaders, routes as states } from './device-groups';
+import { settingsKeys } from '../../constants/userConstants';
 
 const refreshDeviceLength = 10000;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
@@ -130,7 +131,9 @@ export const Authorized = props => {
   const currentSelectedState = states[selectedState] ?? states.devices;
   const [columnHeaders, setColumnHeaders] = useState(getHeaders(columnSelection, currentSelectedState.defaultHeaders, idAttribute, openSettingsDialog));
   const [expandedDeviceId, setExpandedDeviceId] = useState();
-  const [isInitialized, setIsInitialized] = useState(!!props.devices.length);
+  const [isInitialized, setIsInitialized] = useState(window.sessionStorage.getItem(settingsKeys.initialized) && !!props.devices.length);
+  const [devicesInitialized, setDevicesInitialized] = useState(!!props.devices.length);
+  const [columnsInitialized, setColumnsInitialized] = useState(window.sessionStorage.getItem(settingsKeys.initialized));
   const [pageLoading, setPageLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
   const [showCustomization, setShowCustomization] = useState(false);
@@ -143,16 +146,31 @@ export const Authorized = props => {
 
   const { column: sortCol, scope: sortScope } = columns.length ? columns[0] : {};
 
+  const checkUserSettings = () => setColumnsInitialized(window.sessionStorage.getItem(settingsKeys.initialized));
+
   useEffect(() => {
     clearAllRetryTimers(setSnackbar);
     if (!filters.length && selectedGroup && groupFilters.length) {
       setDeviceFilters(groupFilters);
     }
+
+    window.addEventListener('storage', checkUserSettings);
     return () => {
+      window.removeEventListener('storage', checkUserSettings);
       clearInterval(timer.current);
       clearAllRetryTimers(setSnackbar);
     };
   }, []);
+
+  useEffect(() => {
+    if (columnsInitialized) {
+      window.removeEventListener('storage', checkUserSettings);
+    }
+  }, [columnsInitialized]);
+
+  useEffect(() => {
+    setIsInitialized(columnsInitialized && devicesInitialized);
+  }, [columnsInitialized, devicesInitialized]);
 
   useEffect(() => {
     const columnHeaders = getHeaders(columnSelection, currentSelectedState.defaultHeaders, idAttribute, openSettingsDialog);
@@ -234,7 +252,7 @@ export const Authorized = props => {
       .catch(err => setRetryTimer(err, 'devices', `Devices couldn't be loaded.`, refreshDeviceLength, setSnackbar))
       // only set state after all devices id data retrieved
       .finally(() => {
-        setIsInitialized(true);
+        setDevicesInitialized(true);
         setPageLoading(false);
       });
   };
