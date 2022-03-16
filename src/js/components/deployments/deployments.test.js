@@ -283,7 +283,10 @@ describe('Deployments Component', () => {
     const secondBatchDate = new Date(new Date(mockDate).setMinutes(mockDate.getMinutes() + 30));
     const thirdBatchDate = new Date(new Date(secondBatchDate).setDate(secondBatchDate.getDate() + 25));
     const post = jest.spyOn(GeneralApi, 'post');
-    await act(async () => userEvent.click(screen.getByText('Create')));
+    const creationButton = screen.getByText('Create');
+    await act(async () => userEvent.click(creationButton));
+    await waitFor(() => rerender(ui));
+    expect(creationButton).toBeDisabled();
     jest.runAllTicks();
     jest.advanceTimersByTime(1000);
     await waitFor(() => rerender(ui));
