@@ -64,6 +64,7 @@ export const CreateDialog = props => {
   } = props;
 
   const [activeStep, setActiveStep] = useState(0);
+  const [isCreating, setIsCreating] = useState(false);
   const [releaseSelectionLocked] = useState(Boolean(deploymentObject.release));
   const [steps, setSteps] = useState(deploymentSteps);
   const [hasNewRetryDefault, setHasNewRetryDefault] = useState(false);
@@ -114,6 +115,7 @@ export const CreateDialog = props => {
   };
 
   const onScheduleSubmitClick = settings => {
+    setIsCreating(true);
     const { deploymentDeviceIds, device, filterId, group, phases, release, retries, update_control_map } = settings;
     const startTime = phases?.length ? phases[0].start_ts || new Date() : new Date();
     const retrySetting = isEnterprise || (isHosted && plan !== PLANS.os.value) ? { retries } : {};
@@ -162,7 +164,7 @@ export const CreateDialog = props => {
     ...deploymentObject,
     filterId: groups[group] ? groups[group].id : undefined
   };
-  const disableSchedule = !validatePhases(phases, deploymentSettings.deploymentDeviceCount, deploymentSettings.filterId);
+  const disableSchedule = isCreating || !validatePhases(phases, deploymentSettings.deploymentDeviceCount, deploymentSettings.filterId);
   const disabled =
     activeStep === 0
       ? !(deploymentSettings.release && (deploymentSettings.deploymentDeviceCount || deploymentSettings.filterId || deploymentSettings.group))
