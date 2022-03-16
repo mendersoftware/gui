@@ -138,24 +138,26 @@ export const CreateDialog = props => {
     if (!isOnboardingComplete) {
       advanceOnboarding(onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES);
     }
-    return createDeployment(newDeployment).then(() => {
-      let newSettings = { retries: hasNewRetryDefault ? retries : globalSettings.retries };
-      if (phases) {
-        const standardPhases = standardizePhases(phases);
-        let previousPhases = globalSettings.previousPhases || [];
-        previousPhases = previousPhases.map(standardizePhases);
-        if (!previousPhases.find(previousPhaseList => previousPhaseList.every(oldPhase => standardPhases.find(phase => deepCompare(phase, oldPhase))))) {
-          previousPhases.push(standardPhases);
+    return createDeployment(newDeployment)
+      .then(() => {
+        let newSettings = { retries: hasNewRetryDefault ? retries : globalSettings.retries };
+        if (phases) {
+          const standardPhases = standardizePhases(phases);
+          let previousPhases = globalSettings.previousPhases || [];
+          previousPhases = previousPhases.map(standardizePhases);
+          if (!previousPhases.find(previousPhaseList => previousPhaseList.every(oldPhase => standardPhases.find(phase => deepCompare(phase, oldPhase))))) {
+            previousPhases.push(standardPhases);
+          }
+          newSettings.previousPhases = previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT);
         }
-        newSettings.previousPhases = previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT);
-      }
-      saveGlobalSettings(newSettings);
-      // track in GA
-      Tracking.event({ category: 'deployments', action: 'create' });
-      // successfully retrieved new deployment
-      cleanUpDeploymentsStatus();
-      onScheduleSubmit();
-    });
+        saveGlobalSettings(newSettings);
+        // track in GA
+        Tracking.event({ category: 'deployments', action: 'create' });
+        // successfully retrieved new deployment
+        cleanUpDeploymentsStatus();
+        onScheduleSubmit();
+      })
+      .catch(() => setIsCreating(false));
   };
 
   const { group, phases } = deploymentObject;
