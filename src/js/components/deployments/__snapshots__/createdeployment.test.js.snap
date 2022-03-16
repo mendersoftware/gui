@@ -1079,9 +1079,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-28:focus::-ms-input-
             >
               <div>
                 <div
-                  aria-expanded="false"
                   class="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon emotion-25"
-                  role="combobox"
                 >
                   <div
                     class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-26"
@@ -1091,12 +1089,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-28:focus::-ms-input-
                     >
                       <input
                         aria-autocomplete="list"
+                        aria-expanded="false"
                         aria-invalid="false"
                         autocapitalize="none"
                         autocomplete="off"
                         class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-28"
                         id="deployment-device-group-selection"
                         placeholder="Select a device group"
+                        role="combobox"
                         spellcheck="false"
                         type="text"
                         value=""
@@ -1155,9 +1155,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-28:focus::-ms-input-
               class="emotion-24"
             >
               <div
-                aria-expanded="false"
                 class="MuiAutocomplete-root emotion-25"
-                role="combobox"
               >
                 <div
                   class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-26"
@@ -1168,12 +1166,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-28:focus::-ms-input-
                   >
                     <input
                       aria-autocomplete="list"
+                      aria-expanded="false"
                       aria-invalid="false"
                       autocapitalize="none"
                       autocomplete="off"
                       class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-28"
                       id="deployment-release-selection"
                       placeholder="Select a Release"
+                      role="combobox"
                       spellcheck="false"
                       type="text"
                       value=""

@@ -855,9 +855,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
       </div>
     </div>
     <div
-      aria-expanded="false"
       class="MuiAutocomplete-root emotion-12"
-      role="combobox"
     >
       <div
         class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-13"
@@ -876,12 +874,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
         >
           <input
             aria-autocomplete="list"
+            aria-expanded="false"
             aria-invalid="false"
             autocapitalize="none"
             autocomplete="off"
             class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-16"
             id="device-group-selection"
             placeholder="Select a group"
+            role="combobox"
             spellcheck="false"
             type="text"
             value=""
@@ -905,9 +905,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
       </div>
     </div>
     <div
-      aria-expanded="false"
       class="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon emotion-12"
-      role="combobox"
     >
       <div
         class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-13"
@@ -926,12 +924,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
         >
           <input
             aria-autocomplete="list"
+            aria-expanded="false"
             aria-invalid="false"
             autocapitalize="none"
             autocomplete="off"
             class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-16"
             id="deployment-type-selection"
             placeholder="Select a type"
+            role="combobox"
             spellcheck="false"
             type="text"
             value=""

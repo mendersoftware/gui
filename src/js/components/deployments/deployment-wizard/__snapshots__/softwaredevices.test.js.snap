@@ -486,9 +486,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
     >
       <div>
         <div
-          aria-expanded="false"
           class="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon emotion-2"
-          role="combobox"
         >
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-3"
@@ -498,12 +496,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
             >
               <input
                 aria-autocomplete="list"
+                aria-expanded="false"
                 aria-invalid="false"
                 autocapitalize="none"
                 autocomplete="off"
                 class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-5"
                 id="deployment-device-group-selection"
                 placeholder="Select a device group"
+                role="combobox"
                 spellcheck="false"
                 type="text"
                 value=""
@@ -562,9 +562,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
       class="emotion-1"
     >
       <div
-        aria-expanded="false"
         class="MuiAutocomplete-root emotion-2"
-        role="combobox"
       >
         <div
           class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-3"
@@ -575,12 +573,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
           >
             <input
               aria-autocomplete="list"
+              aria-expanded="false"
               aria-invalid="false"
               autocapitalize="none"
               autocomplete="off"
               class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-5"
               id="deployment-release-selection"
               placeholder="Select a Release"
+              role="combobox"
               spellcheck="false"
               type="text"
               value=""

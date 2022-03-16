@@ -13,9 +13,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
       class=\\"auditlogs-filters margin-bottom margin-top-small\\"
     >
       <div
-        aria-expanded=\\"false\\"
         class=\\"MuiAutocomplete-root css-16awh2u-MuiAutocomplete-root\\"
-        role=\\"combobox\\"
         style=\\"max-width: 250px;\\"
       >
         <div
@@ -34,12 +32,14 @@ exports[`Auditlogs Component renders correctly 1`] = `
           >
             <input
               aria-autocomplete=\\"list\\"
+              aria-expanded=\\"false\\"
               aria-invalid=\\"false\\"
               autocapitalize=\\"none\\"
               autocomplete=\\"off\\"
               class=\\"MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-nxo287-MuiInputBase-input-MuiOutlinedInput-input\\"
               id=\\"audit-log-user-selection\\"
               placeholder=\\"Select a user\\"
+              role=\\"combobox\\"
               spellcheck=\\"false\\"
               type=\\"text\\"
               value=\\"\\"
@@ -63,9 +63,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        aria-expanded=\\"false\\"
         class=\\"MuiAutocomplete-root MuiAutocomplete-hasPopupIcon css-16awh2u-MuiAutocomplete-root\\"
-        role=\\"combobox\\"
         style=\\"margin-left: 7.5px;\\"
       >
         <div
@@ -84,12 +82,14 @@ exports[`Auditlogs Component renders correctly 1`] = `
           >
             <input
               aria-autocomplete=\\"list\\"
+              aria-expanded=\\"false\\"
               aria-invalid=\\"false\\"
               autocapitalize=\\"none\\"
               autocomplete=\\"off\\"
               class=\\"MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-nxo287-MuiInputBase-input-MuiOutlinedInput-input\\"
               id=\\"audit-log-type-selection\\"
               placeholder=\\"Type\\"
+              role=\\"combobox\\"
               spellcheck=\\"false\\"
               type=\\"text\\"
               value=\\"\\"
@@ -136,9 +136,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        aria-expanded=\\"false\\"
         class=\\"MuiAutocomplete-root MuiAutocomplete-hasPopupIcon css-16awh2u-MuiAutocomplete-root\\"
-        role=\\"combobox\\"
         style=\\"margin-right: 15px; margin-top: 16px;\\"
       >
         <div
@@ -149,6 +147,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
           >
             <input
               aria-autocomplete=\\"list\\"
+              aria-expanded=\\"false\\"
               aria-invalid=\\"false\\"
               autocapitalize=\\"none\\"
               autocomplete=\\"off\\"
@@ -156,6 +155,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               disabled=\\"\\"
               id=\\"audit-log-type-details-selection\\"
               placeholder=\\"-\\"
+              role=\\"combobox\\"
               spellcheck=\\"false\\"
               type=\\"text\\"
               value=\\"\\"
