@@ -13,7 +13,7 @@ import { getIssueCountsByType } from '../../actions/monitorActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { saveUserSettings, updateUserColumnSettings } from '../../actions/userActions';
 import { SORTING_OPTIONS } from '../../constants/appConstants';
-import { DEVICE_LIST_DEFAULTS, DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { DEVICE_LIST_DEFAULTS, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { duplicateFilter, isEmpty } from '../../helpers';
 import {
@@ -21,6 +21,7 @@ import {
   getFeatures,
   getFilterAttributes,
   getIdAttribute,
+  getMappedDevicesList,
   getOnboardingState,
   getTenantCapabilities,
   getUserSettings
@@ -501,7 +502,7 @@ const actionCreators = {
 const mapStateToProps = state => {
   const { hasMonitor } = getTenantCapabilities(state);
   const { hasReporting } = getFeatures(state);
-  let devices = state.devices.deviceList.deviceIds.slice(0, DEVICE_LIST_MAXIMUM_LENGTH);
+  let devices = getMappedDevicesList(state, 'deviceList');
   let deviceCount = state.devices.deviceList.total;
   let selectedGroup;
   let groupFilters = [];
@@ -509,15 +510,9 @@ const mapStateToProps = state => {
     selectedGroup = state.devices.groups.selectedGroup;
     groupFilters = state.devices.groups.byId[selectedGroup].filters || [];
   } else if (!isEmpty(state.devices.selectedDevice)) {
-    devices = [state.devices.selectedDevice];
+    devices = getMappedDevicesList(state, 'selectedDevice');
     deviceCount = 1;
   }
-  devices = devices.reduce((accu, deviceId) => {
-    if (deviceId && state.devices.byId[deviceId]) {
-      accu.push({ auth_sets: [], ...state.devices.byId[deviceId] });
-    }
-    return accu;
-  }, []);
   const { columnSelection } = getUserSettings(state);
   return {
     attributes: getFilterAttributes(state),
