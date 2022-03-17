@@ -62,7 +62,14 @@ export const RelativeDeviceTime = ({ device }) => (
     <RelativeTime updateTime={device.updated_ts} />
   </div>
 );
-export const DeviceCreationTime = ({ device }) => (device.created_ts ? <Time value={device.created_ts} /> : '-');
+export const DeviceCreationTime = ({ device }) =>
+  device.created_ts ? (
+    <div>
+      <Time value={device.created_ts} />
+    </div>
+  ) : (
+    '-'
+  );
 
 export const DeviceStatusRenderer = ({ device }) => (
   <div>
