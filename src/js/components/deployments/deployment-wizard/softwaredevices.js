@@ -10,9 +10,9 @@ import { makeStyles } from 'tss-react/mui';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 import useWindowSize from '../../../utils/resizehook';
-import { allDevices } from '../createdeployment';
 import AsyncAutocomplete from '../../common/asyncautocomplete';
 import InfoHint from '../../common/info-hint';
+import { ALL_DEVICES } from '../../../constants/deviceConstants';
 
 const useStyles = makeStyles()(theme => ({
   infoStyle: {
@@ -80,7 +80,7 @@ export const SoftwareDevices = ({
       if (state.device) {
         deviceIds = [state.device.id];
         deviceCount = deviceIds.length;
-      } else if (state.group === allDevices) {
+      } else if (state.group === ALL_DEVICES) {
         deviceCount = acceptedDeviceCount;
         advanceOnboarding(onboardingSteps.SCHEDULING_ALL_DEVICES_SELECTION);
       }
@@ -110,7 +110,7 @@ export const SoftwareDevices = ({
     </Tooltip>
   );
 
-  const groupItems = [allDevices, ...Object.keys(groups)];
+  const groupItems = [ALL_DEVICES, ...Object.keys(groups)];
   let { groupLink, releaseItems } = useMemo(() => {
     let groupLink = '/devices';
     let releaseItems = releases.map(rel => releasesById[rel]);
@@ -119,7 +119,7 @@ export const SoftwareDevices = ({
       releaseItems = releaseItems.filter(rel => rel.device_types_compatible.some(type => device.attributes.device_type.includes(type)));
       groupLink = `${groupLink}?id=${device.id}`;
     } else {
-      groupLink = group && group !== allDevices ? `${groupLink}?group=${group}` : groupLink;
+      groupLink = group && group !== ALL_DEVICES ? `${groupLink}?group=${group}` : groupLink;
     }
     return { groupLink, releaseItems };
   }, [releases, device, group]);
@@ -205,13 +205,13 @@ export const SoftwareDevices = ({
             {(deploymentDeviceIds.length > 0 || group) && (
               <p className="info">
                 {group ? (
-                  <>All devices{group !== allDevices ? ' in this group' : null}</>
+                  <>All devices{group !== ALL_DEVICES ? ' in this group' : null}</>
                 ) : (
                   <>
                     {deploymentDeviceIds.length} {pluralize('devices', deploymentDeviceIds.length)}
                   </>
                 )}{' '}
-                will be targeted. <Link to={groupLink}>View the {pluralize('devices', group === allDevices ? 2 : deploymentDeviceIds.length)}</Link>
+                will be targeted. <Link to={groupLink}>View the {pluralize('devices', group === ALL_DEVICES ? 2 : deploymentDeviceIds.length)}</Link>
               </p>
             )}
             {onboardingComponent}

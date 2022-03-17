@@ -218,25 +218,6 @@ const deviceReducer = (state = initialState, action) => {
       return { ...state, total: action.count };
     case DeviceConstants.SET_DEVICE_LIMIT:
       return { ...state, limit: action.limit };
-    case DeviceConstants.RECEIVE_DEVICE_AUTH: {
-      const existingDevice = state.byId[action.device.id] || {};
-      const { auth_sets, identity_data, status } = action.device;
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [action.device.id]: {
-            ...existingDevice,
-            identity_data: {
-              ...existingDevice.identity_data,
-              ...identity_data
-            },
-            auth_sets,
-            status
-          }
-        }
-      };
-    }
     case DeviceConstants.RECEIVE_DEVICE:
     case DeviceConstants.RECEIVE_DEVICE_CONFIG:
     case DeviceConstants.RECEIVE_DEVICE_CONNECT:

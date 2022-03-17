@@ -10,7 +10,7 @@ import { getDeploymentsByStatus, selectDeployment, setDeploymentsState } from '.
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { BEGINNING_OF_TIME, SORTING_OPTIONS } from '../../constants/appConstants';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
-import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import Loader from '../common/loader';
 import TimeframePicker from '../common/timeframe-picker';
@@ -252,7 +252,7 @@ const mapStateToProps = state => {
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
-    groups: ['All devices', ...Object.keys(groups)],
+    groups: [ALL_DEVICES, ...Object.keys(groups)],
     onboardingState: getOnboardingState(state),
     past,
     pastSelectionState: state.deployments.selectionState.finished

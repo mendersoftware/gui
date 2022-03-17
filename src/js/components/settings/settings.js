@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 
 // material ui
 import { ListItemIcon } from '@mui/material';
@@ -57,7 +57,7 @@ const UpgradeIcon = () => (
   </ListItemIcon>
 );
 
-export const Settings = ({ currentUser, hasMultitenancy, isEnterprise, isTrial, history, match, stripeAPIKey, tenantCapabilities, userRoles, version }) => {
+export const Settings = ({ currentUser, hasMultitenancy, isEnterprise, isTrial, match, stripeAPIKey, tenantCapabilities, userRoles, version }) => {
   const [loadingFinished, setLoadingFinished] = useState(!stripeAPIKey);
 
   useEffect(() => {
@@ -82,8 +82,7 @@ export const Settings = ({ currentUser, hasMultitenancy, isEnterprise, isTrial, 
 
   const getCurrentSection = (sections, section = match.params.section) => {
     if (!sections.hasOwnProperty(section) || checkDenyAccess(sections[section])) {
-      history.replace('/settings/my-profile');
-      return sections['my-profile'];
+      return;
     }
     return sections[section];
   };
@@ -99,12 +98,14 @@ export const Settings = ({ currentUser, hasMultitenancy, isEnterprise, isTrial, 
     return accu;
   }, []);
 
+  const section = getCurrentSection(sectionMap, match.params.section);
+  if (!section) {
+    return <Redirect to="/settings/my-profile" />;
+  }
   return (
     <div className="tab-container with-sub-panels" style={{ minHeight: '95%' }}>
       <LeftNav sections={[{ itemClass: 'settingsNav', items: links, title: 'Settings' }]} />
-      <div className="rightFluid padding-right">
-        {loadingFinished && <Elements stripe={stripePromise}>{getCurrentSection(sectionMap, match.params.section).component}</Elements>}
-      </div>
+      <div className="rightFluid padding-right">{loadingFinished && <Elements stripe={stripePromise}>{section.component}</Elements>}</div>
     </div>
   );
 };

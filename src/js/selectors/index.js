@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { PLANS } from '../constants/appConstants';
-import { DEVICE_ISSUE_OPTIONS } from '../constants/deviceConstants';
+import { DEVICE_ISSUE_OPTIONS, DEVICE_LIST_MAXIMUM_LENGTH } from '../constants/deviceConstants';
 import { rolesByName, twoFAStates } from '../constants/userConstants';
 import { getDemoDeviceAddress as getDemoDeviceAddressHelper } from '../helpers';
 
@@ -9,6 +9,10 @@ export const getFeatures = state => state.app.features;
 const getRolesById = state => state.users.rolesById;
 const getOrganization = state => state.organization.organization;
 const getAcceptedDevices = state => state.devices.byStatus.accepted;
+const getDevicesById = state => state.devices.byId;
+const getSearchedDevices = state => state.app.searchState.deviceIds;
+const getSelectedDevice = state => state.devices.selectedDevice;
+const getListedDevices = state => state.devices.deviceList.deviceIds;
 const getFilteringAttributes = state => state.devices.filteringAttributes;
 const getDeviceLimit = state => state.devices.limit;
 const getDevicesList = state => Object.values(state.devices.byId);
@@ -27,6 +31,21 @@ export const getHas2FA = createSelector(
 
 export const getDemoDeviceAddress = createSelector([getDevicesList, getOnboarding], (devices, { approach, demoArtifactPort }) => {
   return getDemoDeviceAddressHelper(devices, approach, demoArtifactPort);
+});
+
+const listTypeDeviceIdMap = {
+  deviceList: getListedDevices,
+  search: getSearchedDevices,
+  selectedDevice: state => [getSelectedDevice(state)]
+};
+export const getMappedDevicesList = createSelector([getDevicesById, (state, listType) => listTypeDeviceIdMap[listType](state)], (devicesById, deviceIds) => {
+  let devices = deviceIds.slice(0, DEVICE_LIST_MAXIMUM_LENGTH);
+  return devices.reduce((accu, deviceId) => {
+    if (deviceId && devicesById[deviceId]) {
+      accu.push({ auth_sets: [], ...devicesById[deviceId] });
+    }
+    return accu;
+  }, []);
 });
 
 export const getIdAttribute = createSelector([getGlobalSettings], ({ id_attribute = {} }) => id_attribute);

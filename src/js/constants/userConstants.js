@@ -66,5 +66,8 @@ module.exports = {
     disabled: 'disabled',
     unverified: 'unverified'
   },
+  settingsKeys: {
+    initialized: 'settings-initialized'
+  },
   useradmApiUrl
 };

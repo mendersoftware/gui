@@ -807,13 +807,25 @@ export const getDeviceAuth = id => dispatch =>
     return Promise.resolve();
   });
 
-export const getDevicesWithAuth = devices => dispatch =>
+export const getDevicesWithAuth = devices => (dispatch, getState) =>
   devices.length
     ? GeneralApi.get(`${deviceAuthV2}/devices?id=${devices.map(device => device.id).join('&id=')}`)
         .then(({ data: receivedDevices }) => {
-          let tasks = receivedDevices.map(device => dispatch({ type: DeviceConstants.RECEIVE_DEVICE_AUTH, device }));
-          tasks.push(Promise.resolve(receivedDevices));
-          return Promise.all(tasks);
+          const byIdState = getState().devices.byId;
+          const devicesById = receivedDevices.reduce((accu, device) => {
+            const existingDevice = byIdState[device.id] || {};
+            accu[device.id] = {
+              ...existingDevice,
+              identity_data: {
+                ...existingDevice.identity_data,
+                ...device.identity_data
+              },
+              auth_sets: device.auth_sets,
+              status: device.status
+            };
+            return accu;
+          }, {});
+          return Promise.all([dispatch({ type: DeviceConstants.RECEIVE_DEVICES, devicesById }), Promise.resolve(receivedDevices)]);
         })
         .catch(err => commonErrorHandler(err, `Error: ${err}`, dispatch))
     : Promise.resolve([[], []]);

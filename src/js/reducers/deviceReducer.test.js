@@ -142,19 +142,6 @@ describe('device reducer', () => {
     expect(reducer(undefined, { type: DeviceConstants.RECEIVE_DEVICE, device: defaultState.devices.byId.b1 }).byId.b1).toEqual(defaultState.devices.byId.b1);
     expect(reducer(initialState, { type: DeviceConstants.RECEIVE_DEVICE, device: defaultState.devices.byId.b1 }).byId).not.toBe({});
   });
-  it('should handle RECEIVE_DEVICE_AUTH', async () => {
-    expect(
-      reducer(undefined, {
-        type: DeviceConstants.RECEIVE_DEVICE_AUTH,
-        device: { auth_sets: [], id: defaultState.devices.byId.a1.id, identity_data: {}, status: 'test' }
-      }).byId.a1.status
-    ).toEqual('test');
-    expect(
-      reducer(initialState, { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: { auth_sets: [], id: 'unknown', identity_data: {}, status: 'test' } }).byId
-        .unknown.status
-    ).toEqual('test');
-  });
-
   it('should handle RECEIVE_DEVICES', async () => {
     expect(reducer(undefined, { type: DeviceConstants.RECEIVE_DEVICES, devicesById: defaultState.devices.byId }).byId).toEqual(defaultState.devices.byId);
     expect(reducer(initialState, { type: DeviceConstants.RECEIVE_DEVICES, devicesById: defaultState.devices.byId }).byId).toEqual(defaultState.devices.byId);

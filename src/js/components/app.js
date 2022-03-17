@@ -94,7 +94,14 @@ export const AppRoot = ({
       <div {...containerProps}>
         {getToken() ? (
           <>
-            <IdleTimer element={document} onAction={updateMaxAge} onIdle={onIdle} timeout={timeout} />
+            <IdleTimer
+              crossTab={{ emitOnAllTabs: true, type: 'localStorage' }}
+              element={document}
+              onAction={updateMaxAge}
+              onActive={updateMaxAge}
+              onIdle={onIdle}
+              timeout={timeout}
+            />
             <Header history={history} />
             <LeftNav />
             <div className="rightFluid container">
