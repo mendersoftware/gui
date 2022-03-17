@@ -522,9 +522,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
     style="display: grid; grid-template-columns: max-content 50px 150px; justify-items: center;"
   >
     <div
-      aria-expanded="false"
       class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon emotion-0"
-      role="combobox"
       style="max-width: 300px;"
     >
       <div
@@ -544,12 +542,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         >
           <input
             aria-autocomplete="list"
+            aria-expanded="false"
             aria-invalid="false"
             autocapitalize="none"
             autocomplete="off"
             class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-4"
             id="device-type-selection"
             placeholder="Choose a device type"
+            role="combobox"
             spellcheck="false"
             type="text"
             value=""
@@ -1161,9 +1161,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
     style="display: grid; grid-template-columns: max-content 50px 150px; justify-items: center;"
   >
     <div
-      aria-expanded="false"
       class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon emotion-0"
-      role="combobox"
       style="max-width: 300px;"
     >
       <div
@@ -1183,12 +1181,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         >
           <input
             aria-autocomplete="list"
+            aria-expanded="false"
             aria-invalid="false"
             autocapitalize="none"
             autocomplete="off"
             class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-4"
             id="device-type-selection"
             placeholder="Choose a device type"
+            role="combobox"
             spellcheck="false"
             type="text"
             value="raspberrypi7"

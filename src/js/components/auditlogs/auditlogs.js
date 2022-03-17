@@ -9,7 +9,7 @@ import historyImage from '../../../assets/img/history.png';
 import { getAuditLogs, getAuditLogsCsvLink, setAuditlogsState } from '../../actions/organizationActions';
 import { getUserList } from '../../actions/userActions';
 import { SORTING_OPTIONS } from '../../constants/appConstants';
-import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
 import Loader from '../common/loader';
 import TimeframePicker from '../common/timeframe-picker';
@@ -269,7 +269,7 @@ const mapStateToProps = state => {
   return {
     events: state.organization.auditlog.events,
     selectionState: state.organization.auditlog.selectionState,
-    groups: ['All devices', ...Object.keys(groups).sort()],
+    groups: [ALL_DEVICES, ...Object.keys(groups).sort()],
     users: state.users.byId
   };
 };

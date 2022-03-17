@@ -8,11 +8,11 @@ import { LocalizationProvider } from '@mui/lab';
 import AdapterMoment from '@mui/lab/AdapterMoment';
 
 import Deployments from './deployments';
-import { allDevices } from './createdeployment';
 import GeneralApi from '../../api/general-api';
 import { getConfiguredStore } from './../../reducers';
 import { defaultState, mockDate, undefineds } from '../../../../tests/mockData';
 import { render, selectMaterialUiSelectOption } from '../../../../tests/setupTests';
+import { ALL_DEVICES } from '../../constants/deviceConstants';
 
 const mockStore = configureStore([thunk]);
 const defaultLocationProps = { location: { search: 'from=2019-01-01' }, match: {} };
@@ -177,7 +177,7 @@ describe('Deployments Component', () => {
     act(() => userEvent.click(groupSelect));
     fireEvent.keyDown(groupSelect, { key: 'Enter' });
     await waitFor(() => rerender(ui));
-    expect(groupSelect).toHaveValue(allDevices);
+    expect(groupSelect).toHaveValue(ALL_DEVICES);
     act(() => userEvent.click(screen.getByRole('button', { name: 'Next' })));
     const post = jest.spyOn(GeneralApi, 'post');
     await act(async () => await userEvent.click(screen.getByRole('button', { name: 'Create' })));
@@ -189,7 +189,7 @@ describe('Deployments Component', () => {
       devices: undefined,
       filter_id: undefined,
       group: undefined,
-      name: allDevices,
+      name: ALL_DEVICES,
       phases: undefined,
       update_control_map: undefined
     });
@@ -252,7 +252,7 @@ describe('Deployments Component', () => {
     const groupSelect = screen.getByPlaceholderText(/Select a device group/i);
     act(() => userEvent.click(groupSelect));
     fireEvent.keyDown(groupSelect, { key: 'Enter' });
-    expect(groupSelect).toHaveValue(allDevices);
+    expect(groupSelect).toHaveValue(ALL_DEVICES);
     await waitFor(() => expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument(), { timeout: 3000 });
     const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
     act(() => userEvent.click(releaseSelect));
@@ -283,7 +283,10 @@ describe('Deployments Component', () => {
     const secondBatchDate = new Date(new Date(mockDate).setMinutes(mockDate.getMinutes() + 30));
     const thirdBatchDate = new Date(new Date(secondBatchDate).setDate(secondBatchDate.getDate() + 25));
     const post = jest.spyOn(GeneralApi, 'post');
-    await act(async () => userEvent.click(screen.getByText('Create')));
+    const creationButton = screen.getByText('Create');
+    await act(async () => userEvent.click(creationButton));
+    await waitFor(() => rerender(ui));
+    expect(creationButton).toBeDisabled();
     jest.runAllTicks();
     jest.advanceTimersByTime(1000);
     await waitFor(() => rerender(ui));
@@ -307,7 +310,7 @@ describe('Deployments Component', () => {
       devices: undefined,
       filter_id: undefined,
       group: undefined,
-      name: allDevices,
+      name: ALL_DEVICES,
       phases: [
         { batch_size: 50, delay: 30, delayUnit: 'minutes', start_ts: mockDate.toISOString() },
         { batch_size: 25, delay: 25, delayUnit: 'days', start_ts: secondBatchDate.toISOString() },

@@ -7,6 +7,7 @@ import { VictoryGroup, VictoryLabel, VictoryLegend, VictoryPie } from 'victory';
 import Loader from '../../common/loader';
 import Confirm from '../../common/confirm';
 import { chartColorPalette } from '../../../themes/Mender';
+import { ALL_DEVICES } from '../../../constants/deviceConstants';
 
 const seriesOther = '__OTHER__';
 
@@ -68,7 +69,7 @@ export const DistributionReport = ({ attribute, devices, group, groups, onClick,
       ) : (
         <>
           <div className="flexbox space-between margin-left-small">
-            <h4>{group || 'All devices'}</h4>
+            <h4>{group || ALL_DEVICES}</h4>
             <IconButton className="widgetRemover" onClick={toggleRemoving} style={{ alignSelf: 'flex-end' }} size="large">
               <ClearIcon fontSize="small" />
             </IconButton>

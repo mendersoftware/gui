@@ -618,9 +618,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
       Artifact information
     </h4>
     <div
-      aria-expanded="false"
       class="MuiAutocomplete-root emotion-0"
-      role="combobox"
     >
       <div
         class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root device-types-input emotion-1"
@@ -638,12 +636,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         >
           <input
             aria-autocomplete="list"
+            aria-expanded="false"
             aria-invalid="false"
             autocapitalize="none"
             autocomplete="off"
             class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-4"
             id="compatible-device-type-selection"
             placeholder="Enter all device types this software is compatible with"
+            role="combobox"
             spellcheck="false"
             type="text"
             value=""

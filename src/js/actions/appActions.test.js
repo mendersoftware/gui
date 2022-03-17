@@ -217,8 +217,14 @@ describe('app actions', () => {
         stats: { ...defaultState.deployments.byId.d2.stats },
         deploymentId: defaultState.deployments.byId.d2.id
       },
-      { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice },
-      { type: DeviceConstants.RECEIVE_DEVICE_AUTH, device: expectedDevice },
+      {
+        type: DeviceConstants.RECEIVE_DEVICES,
+        devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1 } }
+      },
+      {
+        type: DeviceConstants.RECEIVE_DEVICES,
+        devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1 } }
+      },
       {
         type: DeviceConstants.SET_DEVICE_LIST_STATE,
         state: {

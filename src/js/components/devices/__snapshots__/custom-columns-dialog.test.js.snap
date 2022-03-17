@@ -1190,9 +1190,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
           class="MuiFormControl-root emotion-21"
         >
           <div
-            aria-expanded="false"
             class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon emotion-22"
-            role="combobox"
           >
             <div
               class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-23"
@@ -1211,11 +1209,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
               >
                 <input
                   aria-autocomplete="both"
+                  aria-expanded="false"
                   aria-invalid="false"
                   autocapitalize="none"
                   autocomplete="off"
                   class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-26"
                   id="filter-selection"
+                  role="combobox"
                   spellcheck="false"
                   type="text"
                   value=""

@@ -409,9 +409,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
 
 <div>
   <div
-    aria-expanded="false"
     class="MuiAutocomplete-root emotion-0"
-    role="combobox"
   >
     <div
       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-1"
@@ -429,11 +427,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
       >
         <input
           aria-autocomplete="list"
+          aria-expanded="false"
           aria-invalid="false"
           autocapitalize="none"
           autocomplete="off"
           class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-4"
           id="group-creation-selection"
+          role="combobox"
           spellcheck="false"
           type="text"
           value=""

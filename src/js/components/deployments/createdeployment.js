@@ -15,14 +15,13 @@ import { advanceOnboarding } from '../../actions/onboardingActions';
 import { getReleases } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { PLANS } from '../../constants/appConstants';
-import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getDocsVersion, getIsEnterprise, getOnboardingState } from '../../selectors';
 
 import Tracking from '../../tracking';
 import { deepCompare, standardizePhases, validatePhases } from '../../helpers';
 
-export const allDevices = 'All devices';
 const MAX_PREVIOUS_PHASES_COUNT = 5;
 
 const deploymentSteps = [
@@ -64,6 +63,7 @@ export const CreateDialog = props => {
   } = props;
 
   const [activeStep, setActiveStep] = useState(0);
+  const isCreating = useRef(false);
   const [releaseSelectionLocked] = useState(Boolean(deploymentObject.release));
   const [steps, setSteps] = useState(deploymentSteps);
   const [hasNewRetryDefault, setHasNewRetryDefault] = useState(false);
@@ -88,7 +88,11 @@ export const CreateDialog = props => {
   }, [isEnterprise, isHosted, plan]);
 
   useEffect(() => {
-    if (deploymentObject.group === allDevices) {
+    if (!deploymentObject.group) {
+      setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: deploymentObject.device ? 1 : 0 });
+      return;
+    }
+    if (deploymentObject.group === ALL_DEVICES) {
       setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: acceptedDeviceCount });
       return;
     }
@@ -114,6 +118,7 @@ export const CreateDialog = props => {
   };
 
   const onScheduleSubmitClick = settings => {
+    isCreating.current = true;
     const { deploymentDeviceIds, device, filterId, group, phases, release, retries, update_control_map } = settings;
     const startTime = phases?.length ? phases[0].start_ts || new Date() : new Date();
     const retrySetting = isEnterprise || (isHosted && plan !== PLANS.os.value) ? { retries } : {};
@@ -121,9 +126,9 @@ export const CreateDialog = props => {
       artifact_name: release.Name,
       devices: (filterId || group) && !device ? undefined : deploymentDeviceIds,
       filter_id: filterId,
-      all_devices: !filterId && group === allDevices,
-      group: group === allDevices || device ? undefined : group,
-      name: device?.id || (group ? decodeURIComponent(group) : 'All devices'),
+      all_devices: !filterId && group === ALL_DEVICES,
+      group: group === ALL_DEVICES || device ? undefined : group,
+      name: device?.id || (group ? decodeURIComponent(group) : ALL_DEVICES),
       phases: phases
         ? phases.map((phase, i, origPhases) => {
             phase.start_ts = getPhaseStartTime(origPhases, i, startTime);
@@ -136,24 +141,28 @@ export const CreateDialog = props => {
     if (!isOnboardingComplete) {
       advanceOnboarding(onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES);
     }
-    return createDeployment(newDeployment).then(() => {
-      let newSettings = { retries: hasNewRetryDefault ? retries : globalSettings.retries };
-      if (phases) {
-        const standardPhases = standardizePhases(phases);
-        let previousPhases = globalSettings.previousPhases || [];
-        previousPhases = previousPhases.map(standardizePhases);
-        if (!previousPhases.find(previousPhaseList => previousPhaseList.every(oldPhase => standardPhases.find(phase => deepCompare(phase, oldPhase))))) {
-          previousPhases.push(standardPhases);
+    return createDeployment(newDeployment)
+      .then(() => {
+        let newSettings = { retries: hasNewRetryDefault ? retries : globalSettings.retries };
+        if (phases) {
+          const standardPhases = standardizePhases(phases);
+          let previousPhases = globalSettings.previousPhases || [];
+          previousPhases = previousPhases.map(standardizePhases);
+          if (!previousPhases.find(previousPhaseList => previousPhaseList.every(oldPhase => standardPhases.find(phase => deepCompare(phase, oldPhase))))) {
+            previousPhases.push(standardPhases);
+          }
+          newSettings.previousPhases = previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT);
         }
-        newSettings.previousPhases = previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT);
-      }
-      saveGlobalSettings(newSettings);
-      // track in GA
-      Tracking.event({ category: 'deployments', action: 'create' });
-      // successfully retrieved new deployment
-      cleanUpDeploymentsStatus();
-      onScheduleSubmit();
-    });
+        saveGlobalSettings(newSettings);
+        // track in GA
+        Tracking.event({ category: 'deployments', action: 'create' });
+        // successfully retrieved new deployment
+        cleanUpDeploymentsStatus();
+        onScheduleSubmit();
+      })
+      .catch(() => {
+        isCreating.current = false;
+      });
   };
 
   const { group, phases } = deploymentObject;
@@ -162,7 +171,7 @@ export const CreateDialog = props => {
     ...deploymentObject,
     filterId: groups[group] ? groups[group].id : undefined
   };
-  const disableSchedule = !validatePhases(phases, deploymentSettings.deploymentDeviceCount, deploymentSettings.filterId);
+  const disableSchedule = isCreating.current || !validatePhases(phases, deploymentSettings.deploymentDeviceCount, deploymentSettings.filterId);
   const disabled =
     activeStep === 0
       ? !(deploymentSettings.release && (deploymentSettings.deploymentDeviceCount || deploymentSettings.filterId || deploymentSettings.group))
