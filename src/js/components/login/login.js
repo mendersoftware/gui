@@ -6,7 +6,7 @@ import Cookies from 'universal-cookie';
 import { Button } from '@mui/material';
 import { Help as HelpIcon } from '@mui/icons-material';
 
-import loginLogo from '../../../assets/img/loginlogo.png';
+import loginLogo from '../../../assets/img/loginlogo.svg';
 import { setSnackbar } from '../../actions/appActions';
 import { loginUser, logoutUser } from '../../actions/userActions';
 import { getToken } from '../../auth';
