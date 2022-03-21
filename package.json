@@ -97,7 +97,7 @@
     "msw": "^0.36.8",
     "postcss": "^8.4.8",
     "postcss-loader": "^6.2.1",
-    "prettier": "^2.5.1",
+    "prettier": "^2.6.0",
     "redux-mock-store": "^1.5.4",
     "util": "^0.12.4",
     "webpack": "^5.70.0",
