@@ -569,7 +569,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
       class="MuiFormControl-root emotion-1"
     >
       <label
-        class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary emotion-2"
+        class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled emotion-2"
         data-shrink="true"
         id="device-id"
       >
@@ -585,17 +585,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
           role="button"
           tabindex="0"
         >
-          <span
-            class="notranslate"
-          >
-            ​
-          </span>
+          Device ID
         </div>
         <input
           aria-hidden="true"
           class="MuiSelect-nativeInput emotion-5"
           tabindex="-1"
-          value=""
+          value="id"
         />
         <svg
           aria-hidden="true"
@@ -624,7 +620,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         </fieldset>
       </div>
       <div
-        class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained info emotion-9"
+        class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained MuiFormHelperText-filled info emotion-9"
       >
         <div
           class="margin-top-small margin-bottom-small"

@@ -530,9 +530,10 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 <div
                   class=\\"flexbox center-aligned\\"
                 >
+                  Device ID
                   <svg
                     aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon selected true css-i4bv87-MuiSvgIcon-root\\"
+                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-i4bv87-MuiSvgIcon-root\\"
                     data-testid=\\"SortIcon\\"
                     focusable=\\"false\\"
                     style=\\"font-size: 16px;\\"
