@@ -257,6 +257,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   padding-left: 5px;
   padding-right: 5px;
   display: inline-block;
+  opacity: 0;
+  visibility: visible;
 }
 
 .emotion-12.Mui-focused .MuiAutocomplete-clearIndicator {
@@ -623,6 +625,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
   padding-left: 5px;
   padding-right: 5px;
   display: inline-block;
+  opacity: 0;
+  visibility: visible;
 }
 
 .emotion-26 {
