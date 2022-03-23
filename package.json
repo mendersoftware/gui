@@ -9,7 +9,7 @@
     "@monaco-editor/react": "^4.3.1",
     "@mui/icons-material": "^5.5.1",
     "@mui/lab": "^5.0.0-alpha.74",
-    "@mui/material": "^5.5.0",
+    "@mui/material": "^5.5.2",
     "@mui/styles": "^5.5.1",
     "@reduxjs/toolkit": "^1.8.0",
     "@stripe/react-stripe-js": "^1.7.0",
