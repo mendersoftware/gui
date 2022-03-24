@@ -11,18 +11,18 @@ import { mdiConsole as ConsoleIcon } from '@mdi/js';
 
 import msgpack5 from 'msgpack5';
 
-import { setSnackbar } from '../../actions/appActions';
-import { getDeviceFileDownloadLink, deviceFileUpload } from '../../actions/deviceActions';
-import { BEGINNING_OF_TIME } from '../../constants/appConstants';
-import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as MessageProtocols } from '../../constants/deviceConstants';
+import { setSnackbar } from '../../../actions/appActions';
+import { getDeviceFileDownloadLink, deviceFileUpload } from '../../../actions/deviceActions';
+import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
+import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as MessageProtocols } from '../../../constants/deviceConstants';
 
-import { colors } from '../../themes/Mender';
-import MaterialDesignIcon from '../common/materialdesignicon';
-import Time from '../common/time';
-import Terminal from './troubleshoot/terminal';
-import FileTransfer from './troubleshoot/filetransfer';
-import { apiUrl } from '../../api/general-api';
-import { createDownload } from '../../helpers';
+import { colors } from '../../../themes/Mender';
+import MaterialDesignIcon from '../../common/materialdesignicon';
+import Time from '../../common/time';
+import Terminal from '../troubleshoot/terminal';
+import FileTransfer from '../troubleshoot/filetransfer';
+import { apiUrl } from '../../../api/general-api';
+import { createDownload } from '../../../helpers';
 
 momentDurationFormatSetup(moment);
 const MessagePack = msgpack5();

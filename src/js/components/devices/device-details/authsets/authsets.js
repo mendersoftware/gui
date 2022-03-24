@@ -10,7 +10,7 @@ import { deleteAuthset, updateDeviceAuth } from '../../../../actions/deviceActio
 import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { getLimitMaxed } from '../../../../selectors';
 import Confirm from './../../../common/confirm';
-import { DeviceLimitWarning } from '../../preauth-dialog';
+import { DeviceLimitWarning } from '../../dialogs/preauth-dialog';
 import Authsetlist from './authsetlist';
 
 export const Authsets = ({

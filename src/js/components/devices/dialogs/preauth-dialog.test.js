@@ -2,8 +2,8 @@ import React from 'react';
 import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { undefineds } from '../../../../tests/mockData';
-import { render } from '../../../../tests/setupTests';
+import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
 import PreauthDialog from './preauth-dialog';
 
 const errorText = 'test-errortext';

@@ -5,9 +5,9 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, IconButton, ListItem } from '@mui/material';
 import { Clear as ClearIcon, DragHandle as DragHandleIcon } from '@mui/icons-material';
 
-import AttributeAutoComplete from './widgets/attribute-autocomplete';
-import { defaultHeaders } from './device-groups';
-import { ATTRIBUTE_SCOPES } from '../../constants/deviceConstants';
+import AttributeAutoComplete from '../widgets/attribute-autocomplete';
+import { defaultHeaders } from '../device-groups';
+import { ATTRIBUTE_SCOPES } from '../../../constants/deviceConstants';
 
 const DraggableListItem = ({ item, index, onRemove }) => {
   const title = useMemo(() => {

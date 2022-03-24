@@ -34,7 +34,7 @@ import { ExpandDevice } from '../helptips/helptooltips';
 import DeviceQuickActions from './widgets/devicequickactions';
 import Filters from './widgets/filters';
 import DeviceIssuesSelection from './widgets/issueselection';
-const ColumnCustomizationDialog = lazy(() => import('./custom-columns-dialog'));
+const ColumnCustomizationDialog = lazy(() => import('./dialogs/custom-columns-dialog'));
 import ListOptions from './widgets/listoptions';
 import { defaultTextRender, getDeviceIdentityText } from './base-devices';
 import DeviceList, { minCellWidth } from './devicelist';

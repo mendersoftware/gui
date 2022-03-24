@@ -31,7 +31,7 @@ import CreateGroup from './group-management/create-group';
 import RemoveGroup from './group-management/remove-group';
 import CreateGroupExplainer from './group-management/create-group-explainer';
 import { emptyFilter } from './widgets/filters';
-import PreauthDialog, { DeviceLimitWarning } from './preauth-dialog';
+import PreauthDialog, { DeviceLimitWarning } from './dialogs/preauth-dialog';
 import {
   AcceptedEmptyState,
   defaultTextRender,

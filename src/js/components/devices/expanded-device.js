@@ -24,7 +24,7 @@ import ForwardingLink from '../common/forwardlink';
 import { RelativeTime } from '../common/time';
 import { getDocsVersion, getIsEnterprise, getTenantCapabilities, getUserRoles } from '../../selectors';
 import Tracking from '../../tracking';
-import TroubleshootDialog from './troubleshootdialog';
+import TroubleshootDialog from './dialogs/troubleshootdialog';
 import AuthStatus from './device-details/authstatus';
 import DeviceConfiguration from './device-details/configuration';
 import DeviceInventory from './device-details/deviceinventory';
