@@ -2,10 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import copy from 'copy-to-clipboard';
 
-import { Button, Divider, Drawer, IconButton } from '@mui/material';
+import { Button, Chip, Divider, Drawer, IconButton } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { Close as CloseIcon, Link as LinkIcon, Replay as ReplayIcon } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 
+import GatewayIcon from '../../../assets/img/gateway.svg';
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../actions/deploymentActions';
 import {
@@ -21,7 +23,9 @@ import { getDeviceAlerts, setAlertListState } from '../../actions/monitorActions
 import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import ForwardingLink from '../common/forwardlink';
+import { MenderTooltipClickable } from '../common/mendertooltip';
 import { RelativeTime } from '../common/time';
+import { getDemoDeviceAddress, stringToBoolean } from '../../helpers';
 import { getDocsVersion, getIsEnterprise, getTenantCapabilities, getUserRoles } from '../../selectors';
 import Tracking from '../../tracking';
 import TroubleshootDialog from './dialogs/troubleshootdialog';
@@ -37,7 +41,40 @@ import MonitorDetailsDialog from './device-details/monitordetailsdialog';
 import DeviceNotifications from './device-details/notifications';
 import DeviceTwin from './device-details/devicetwin';
 
+const useStyles = makeStyles()(theme => ({
+  gatewayChip: {
+    color: theme.palette.grey[900],
+    path: {
+      fill: theme.palette.grey[900]
+    }
+  },
+  gatewayIcon: {
+    width: 20
+  }
+}));
+
 const refreshDeviceLength = 10000;
+
+const GatewayNotification = ({ device, docsVersion }) => {
+  const ipAddress = getDemoDeviceAddress([device]);
+  const { classes } = useStyles();
+  return (
+    <MenderTooltipClickable
+      placement="bottom"
+      title={
+        <div style={{ maxWidth: 350 }}>
+          For information about connecting other devices to this gateway, please refer to the{' '}
+          <a href={`https://docs.mender.io/${docsVersion}server-integration/mender-gateway`} target="_blank" rel="noopener noreferrer">
+            Mender Gateway documentation
+          </a>
+          . This device is reachable via <i>{ipAddress}</i>.
+        </div>
+      }
+    >
+      <Chip className={classes.gatewayChip} icon={<GatewayIcon className={classes.gatewayIcon} />} label="Gateway" />
+    </MenderTooltipClickable>
+  );
+};
 
 export const ExpandedDevice = ({
   abortDeployment,
@@ -58,6 +95,7 @@ export const ExpandedDevice = ({
   isEnterprise,
   latestAlerts,
   onClose,
+  onMakeGatewayClick,
   open,
   refreshDevices,
   saveGlobalSettings,
@@ -70,8 +108,9 @@ export const ExpandedDevice = ({
   tenantCapabilities,
   userRoles
 }) => {
+  const { classes } = useStyles();
   const theme = useTheme();
-  const { isOffline, status = DEVICE_STATES.accepted } = device;
+  const { attributes = {}, isOffline, status = DEVICE_STATES.accepted } = device;
   const [socketClosed, setSocketClosed] = useState(true);
   const [troubleshootType, setTroubleshootType] = useState();
   const [monitorDetails, setMonitorDetails] = useState();
@@ -116,8 +155,9 @@ export const ExpandedDevice = ({
 
   const scrollToMonitor = () => monitoring.current?.scrollIntoView({ behavior: 'smooth' });
 
-  const deviceIdentifier = device.attributes?.name ?? device.id ?? '-';
+  const deviceIdentifier = attributes.name ?? device.id ?? '-';
   const isAcceptedDevice = status === DEVICE_STATES.accepted;
+  const isGateway = stringToBoolean(attributes.mender_is_gateway);
   return (
     <Drawer anchor="right" className="expandedDevice" open={open} onClose={onClose} PaperProps={{ style: { minWidth: '67vw' } }}>
       <div className="flexbox center-aligned">
@@ -128,6 +168,7 @@ export const ExpandedDevice = ({
         <div className={`${isOffline ? 'red' : 'muted'} margin-left margin-right`}>
           Last check-in: <RelativeTime updateTime={device.updated_ts} />
         </div>
+        {isGateway && <GatewayNotification device={device} docsVersion={docsVersion} />}
         <IconButton style={{ marginLeft: 'auto' }} onClick={onClose} aria-label="close" size="large">
           <CloseIcon />
         </IconButton>
@@ -198,6 +239,11 @@ export const ExpandedDevice = ({
           <Button to={`/deployments?open=true&deviceId=${device.id}`} component={ForwardingLink} startIcon={<ReplayIcon />}>
             Create a deployment for this device
           </Button>
+          {!isGateway && (
+            <Button onClick={onMakeGatewayClick} startIcon={<GatewayIcon className={classes.gatewayIcon} />} style={{ marginLeft: 30 }}>
+              Promote to Mender gateway
+            </Button>
+          )}
         </div>
       )}
 
