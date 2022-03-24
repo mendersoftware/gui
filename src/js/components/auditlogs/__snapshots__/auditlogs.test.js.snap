@@ -631,26 +631,11 @@ exports[`Auditlogs Component renders correctly 1`] = `
             class=\\"MuiTablePagination-displayedRows css-levciy-MuiTablePagination-displayedRows\\"
           />
           <div
-            class=\\"flexbox\\"
+            class=\\"flexbox center-aligned\\"
           >
-            <button
-              class=\\"MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root\\"
-              disabled=\\"\\"
-              tabindex=\\"-1\\"
-              type=\\"button\\"
-            >
-              <svg
-                aria-hidden=\\"true\\"
-                class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
-                data-testid=\\"FirstPageIcon\\"
-                focusable=\\"false\\"
-                viewBox=\\"0 0 24 24\\"
-              >
-                <path
-                  d=\\"M18.41 16.59 13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z\\"
-                />
-              </svg>
-            </button>
+            <div>
+              1-3 of 3
+            </div>
             <button
               class=\\"MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root\\"
               disabled=\\"\\"
@@ -669,78 +654,26 @@ exports[`Auditlogs Component renders correctly 1`] = `
                 />
               </svg>
             </button>
-            <div
-              class=\\"flexbox\\"
-              style=\\"align-items: baseline;\\"
-            >
-              <div
-                class=\\"MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root\\"
-                style=\\"min-width: 30px; max-width: 3ch; margin-right: 10px; margin-top: 5px;\\"
+            <div>
+              <button
+                class=\\"MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root\\"
+                disabled=\\"\\"
+                tabindex=\\"-1\\"
+                type=\\"button\\"
               >
-                <div
-                  class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root\\"
+                <svg
+                  aria-hidden=\\"true\\"
+                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
+                  data-testid=\\"KeyboardArrowRightIcon\\"
+                  focusable=\\"false\\"
+                  viewBox=\\"0 0 24 24\\"
                 >
-                  <input
-                    aria-invalid=\\"false\\"
-                    class=\\"MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input\\"
-                    
-                    type=\\"text\\"
-                    value=\\"1\\"
+                  <path
+                    d=\\"M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z\\"
                   />
-                  <fieldset
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
-                  >
-                    <legend
-                      class=\\"css-hdw1oc\\"
-                    >
-                      <span
-                        class=\\"notranslate\\"
-                      >
-                        ​
-                      </span>
-                    </legend>
-                  </fieldset>
-                </div>
-              </div>
-              / 1
+                </svg>
+              </button>
             </div>
-            <button
-              class=\\"MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root\\"
-              disabled=\\"\\"
-              tabindex=\\"-1\\"
-              type=\\"button\\"
-            >
-              <svg
-                aria-hidden=\\"true\\"
-                class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
-                data-testid=\\"KeyboardArrowRightIcon\\"
-                focusable=\\"false\\"
-                viewBox=\\"0 0 24 24\\"
-              >
-                <path
-                  d=\\"M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z\\"
-                />
-              </svg>
-            </button>
-            <button
-              class=\\"MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root\\"
-              disabled=\\"\\"
-              tabindex=\\"-1\\"
-              type=\\"button\\"
-            >
-              <svg
-                aria-hidden=\\"true\\"
-                class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
-                data-testid=\\"LastPageIcon\\"
-                focusable=\\"false\\"
-                viewBox=\\"0 0 24 24\\"
-              >
-                <path
-                  d=\\"M5.59 7.41 10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z\\"
-                />
-              </svg>
-            </button>
           </div>
         </div>
       </div>

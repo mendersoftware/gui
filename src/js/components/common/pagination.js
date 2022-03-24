@@ -1,17 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
-import { FirstPage as FirstPageIcon, LastPage as LastPageIcon, KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
-import { IconButton, TablePagination, TextField } from '@mui/material';
+import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
+import { IconButton, TablePagination } from '@mui/material';
 
 import { DEVICE_LIST_DEFAULTS, DEVICE_LIST_MAXIMUM_LENGTH } from '../../constants/deviceConstants';
+import MenderTooltip from '../common/mendertooltip';
 import { useDebounce } from '../../utils/debouncehook';
 
 const defaultRowsPerPageOptions = [10, 20, DEVICE_LIST_MAXIMUM_LENGTH];
 const { perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 const paginationIndex = 1;
+const paginationLimit = 10000;
+
+const MaybeWrapper = ({ children, disabled }) =>
+  disabled ? (
+    <MenderTooltip arrow placement="top" title="Please refine your filter criteria first in order to proceed.">
+      <div>{children}</div>
+    </MenderTooltip>
+  ) : (
+    <div>{children}</div>
+  );
 
 export const TablePaginationActions = ({ count, page = 0, onPageChange, rowsPerPage = defaultPerPage }) => {
   const [pageNo, setPageNo] = useState(page + paginationIndex);
+  const timer = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(timer.current);
+    };
+  }, []);
 
   useEffect(() => {
     setPageNo(page + paginationIndex);
@@ -26,53 +44,20 @@ export const TablePaginationActions = ({ count, page = 0, onPageChange, rowsPerP
     }
   }, [debouncedPage]);
 
-  const onChange = event => {
-    const input = event.target.value;
-    let value = Number(input);
-    if (isNaN(value)) {
-      value = pageNo;
-    }
-    if (value !== pageNo) {
-      return setPageNo(value);
-    }
-  };
-
-  const onKeyPress = event => {
-    if (event.key == 'Enter') {
-      event.preventDefault();
-      const newPage = Math.min(Math.max(paginationIndex, event.target.value), Math.ceil(count / rowsPerPage));
-      return setPageNo(newPage);
-    }
-  };
-
   const pages = Math.ceil(count / rowsPerPage);
+
+  const isAtPaginationLimit = pageNo >= paginationLimit / rowsPerPage;
   return (
-    <div className="flexbox">
-      <IconButton onClick={() => setPageNo(paginationIndex)} disabled={pageNo === paginationIndex} size="large">
-        <FirstPageIcon />
-      </IconButton>
+    <div className="flexbox center-aligned">
+      <div>{`${(pageNo - paginationIndex) * rowsPerPage + 1}-${Math.min(pageNo * rowsPerPage, count)} of ${count}`}</div>
       <IconButton onClick={() => setPageNo(pageNo - 1)} disabled={pageNo === paginationIndex} size="large">
         <KeyboardArrowLeft />
       </IconButton>
-      <div className="flexbox" style={{ alignItems: 'baseline' }}>
-        <TextField
-          value={pageNo}
-          onChange={onChange}
-          onKeyUp={onKeyPress}
-          style={{ minWidth: 30, maxWidth: `${`${pageNo}`.length + 2}ch`, marginRight: 10, marginTop: 5 }}
-        />
-        {`/ ${pages}`}
-      </div>
-      <IconButton onClick={() => setPageNo(pageNo + 1)} disabled={pageNo >= Math.ceil(count / rowsPerPage)} size="large">
-        <KeyboardArrowRight />
-      </IconButton>
-      <IconButton
-        onClick={() => setPageNo(Math.max(paginationIndex, Math.ceil(count / rowsPerPage)))}
-        disabled={pageNo >= Math.ceil(count / rowsPerPage)}
-        size="large"
-      >
-        <LastPageIcon />
-      </IconButton>
+      <MaybeWrapper disabled={isAtPaginationLimit}>
+        <IconButton onClick={() => setPageNo(pageNo + 1)} disabled={pageNo >= pages || isAtPaginationLimit} size="large">
+          <KeyboardArrowRight />
+        </IconButton>
+      </MaybeWrapper>
     </div>
   );
 };
