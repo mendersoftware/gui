@@ -88,7 +88,7 @@ module.exports = (env, argv) => {
         XTERM_SEARCH_VERSION: JSON.stringify(require('./package.json').dependencies['xterm-addon-search'])
       }),
       new HtmlWebPackPlugin({
-        favicon: './src/favicon.ico',
+        favicon: './src/favicon.svg',
         hash: true,
         template: './src/index.html'
       }),
