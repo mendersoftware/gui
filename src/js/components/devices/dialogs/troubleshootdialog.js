@@ -23,6 +23,8 @@ import Terminal from '../troubleshoot/terminal';
 import FileTransfer from '../troubleshoot/filetransfer';
 import { apiUrl } from '../../../api/general-api';
 import { createDownload } from '../../../helpers';
+import ListOptions from '../widgets/listoptions';
+import { getCode } from './make-gateway-dialog';
 
 momentDurationFormatSetup(moment);
 const MessagePack = msgpack5();
@@ -67,6 +69,7 @@ export const TroubleshootDialog = ({
   const [socketInitialized, setSocketInitialized] = useState(false);
   const [startTime, setStartTime] = useState();
   const [uploadPath, setUploadPath] = useState('');
+  const [terminalInput, setTerminalInput] = useState('');
 
   useEffect(() => {
     if (open) {
@@ -157,6 +160,13 @@ export const TroubleshootDialog = ({
     setSocketClosed();
   };
 
+  const onMakeGatewayClick = () => {
+    const code = getCode();
+    setTerminalInput(code);
+  };
+
+  const commandHandlers = [{ key: 'thing', onClick: onMakeGatewayClick, title: 'Promote to Mender gateway' }];
+
   const duration = moment.duration(elapsed.diff(moment(startTime)));
   const visibilityToggle = !socket ? { maxHeight: 0, overflow: 'hidden' } : {};
   return (
@@ -215,6 +225,7 @@ export const TroubleshootDialog = ({
                   socket={socket}
                   socketInitialized={socketInitialized}
                   style={{ position: 'absolute', width: '100%', height: '100%', ...visibilityToggle }}
+                  textInput={terminalInput}
                 />
               </div>
             )}
@@ -241,7 +252,10 @@ export const TroubleshootDialog = ({
             </Button>
           )}
         </div>
-        <Button onClick={onCancel}>Close</Button>
+        <div>
+          {currentTab === tabs.terminal.value && sessionId && <ListOptions options={commandHandlers} title="Quick commands" />}
+          <Button onClick={onCancel}>Close</Button>
+        </div>
       </DialogActions>
     </Dialog>
   );
