@@ -393,12 +393,7 @@ export const Authorized = props => {
     );
   }
 
-  const onExportClick = () => console.log('heavy exporting');
-
-  const listOptionHandlers = {
-    customize: onToggleCustomizationClick,
-    csvExport: onExportClick
-  };
+  const listOptionHandlers = [{ key: 'customize', title: 'Customize', onClick: onToggleCustomizationClick }];
 
   const isUngroupedGroup = selectedGroup && selectedGroup === UNGROUPED_GROUP.id;
   return (
@@ -442,7 +437,7 @@ export const Authorized = props => {
                 Remove group
               </Button>
             )}
-            <ListOptions handlers={listOptionHandlers} />
+            <ListOptions options={listOptionHandlers} title="Table options" />
           </div>
         </div>
         <Filters onFilterChange={onFilterChange} onGroupClick={onGroupClick} isModification={!!groupFilters.length} open={showFilters} />
