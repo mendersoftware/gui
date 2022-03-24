@@ -647,10 +647,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
   <h3>
     Log in
   </h3>
-  <img
+  <loginlogo.svg
     alt="mender-logo"
     class="margin-bottom-small"
-    src="loginlogo.svg"
   />
   <div
     class="flexbox centered margin-bottom"
