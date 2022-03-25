@@ -1,3 +1,4 @@
+import hashString from 'md5';
 import Cookies from 'universal-cookie';
 
 import { commonErrorFallback, commonErrorHandler, setSnackbar } from './appActions';
@@ -8,7 +9,7 @@ import OnboardingConstants from '../constants/onboardingConstants';
 import UserConstants, { OWN_USER_ID, twoFAStates } from '../constants/userConstants';
 import { getCurrentUser, getOnboardingState, getUserSettings } from '../selectors';
 import { cleanUp, logout } from '../auth';
-import { extractErrorMessage, hashString, preformatWithRequestID } from '../helpers';
+import { extractErrorMessage, preformatWithRequestID } from '../helpers';
 import { clearAllRetryTimers } from '../utils/retrytimer';
 
 const cookies = new Cookies();
