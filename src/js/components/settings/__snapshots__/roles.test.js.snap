@@ -638,6 +638,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-48:focus::-ms-input-
   padding-left: 5px;
   padding-right: 5px;
   display: inline-block;
+  opacity: 0;
+  visibility: visible;
 }
 
 .emotion-57 {

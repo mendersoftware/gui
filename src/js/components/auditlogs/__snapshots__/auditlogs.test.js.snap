@@ -52,7 +52,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
             >
               <legend
-                class=\\"css-7nxzgd\\"
+                class=\\"css-1in441m\\"
               >
                 <span>
                   Filter by user
@@ -125,7 +125,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
             >
               <legend
-                class=\\"css-7nxzgd\\"
+                class=\\"css-1in441m\\"
               >
                 <span>
                   Filter by change
@@ -273,7 +273,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
             >
               <legend
-                class=\\"css-7nxzgd\\"
+                class=\\"css-1in441m\\"
               >
                 <span>
                   From
@@ -311,7 +311,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
             >
               <legend
-                class=\\"css-7nxzgd\\"
+                class=\\"css-1in441m\\"
               >
                 <span>
                   To
