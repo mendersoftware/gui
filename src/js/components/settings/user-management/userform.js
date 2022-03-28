@@ -59,7 +59,7 @@ export const UserRolesSelect = ({ currentUser, onSelect, roles, user }) => {
           ? false
           : roleId === rolesByName.admin ||
             permissions.some(permission => ![rolesByName.deploymentCreation.action].includes(permission.action)) ||
-            uiPermissions.userManagement.some(permission => permission === uiPermissionsById.read.value);
+            uiPermissions.userManagement.includes(uiPermissionsById.read.value);
         if (hasUiApiAccess) {
           return false;
         }
@@ -99,7 +99,7 @@ export const UserRolesSelect = ({ currentUser, onSelect, roles, user }) => {
   );
 };
 
-export const UserForm = ({ closeDialog, currentUser, isAdmin, isEnterprise, roles, submit }) => {
+export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterprise, roles, submit }) => {
   const [hadRoleChanges, setHadRoleChanges] = useState(false);
   const [selectedRoles, setSelectedRoles] = useState();
 
@@ -140,7 +140,7 @@ export const UserForm = ({ closeDialog, currentUser, isAdmin, isEnterprise, role
             required={true}
             autocomplete="off"
           />
-          {isEnterprise && isAdmin && <UserRolesSelect currentUser={currentUser} onSelect={onSelect} roles={roles} user={{}} />}
+          {canManageUsers && isEnterprise && <UserRolesSelect currentUser={currentUser} onSelect={onSelect} roles={roles} user={{}} />}
         </Form>
       </DialogContent>
       <DialogActions />

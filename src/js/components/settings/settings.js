@@ -18,6 +18,7 @@ import Global from './global';
 import Integrations from './integrations';
 import Roles from './roles';
 import Upgrade from './upgrade';
+import { uiPermissionsById } from '../../constants/userConstants';
 
 let stripePromise = null;
 
@@ -32,7 +33,7 @@ const sectionMap = {
   'user-management': {
     component: <UserManagement />,
     text: () => 'User management',
-    canAccess: ({ userRoles: { allowUserManagement } }) => allowUserManagement
+    canAccess: ({ userRoles: { uiPermissions } }) => uiPermissions.userManagement.includes(uiPermissionsById.manage.value)
   },
   'role-management': {
     component: <Roles />,

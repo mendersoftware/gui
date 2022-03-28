@@ -12,7 +12,7 @@ import { TwoColumnData } from '../../common/configurationobject';
 import { OAuth2Providers } from '../../login/oauth2providers';
 import { mapUserRolesToUiPermissions } from '../../../actions/userActions';
 
-export const UserDefinition = ({ currentUser, isAdminCurrentUser, onCancel, onSubmit, onRemove, roles, selectedUser }) => {
+export const UserDefinition = ({ canManageUsers, currentUser, onCancel, onSubmit, onRemove, roles, selectedUser }) => {
   const { email = '', id, login } = selectedUser;
 
   const theme = useTheme();
@@ -85,7 +85,7 @@ export const UserDefinition = ({ currentUser, isAdminCurrentUser, onCancel, onSu
       <div className="flexbox margin-bottom-small space-between">
         <h3>Edit user</h3>
         <div className="flexbox center-aligned">
-          {currentUser.id !== id && isAdminCurrentUser && (
+          {currentUser.id !== id && canManageUsers && (
             <Button className="flexbox center-aligned" color="secondary" onClick={onRemoveClick} style={{ marginRight: theme.spacing(2) }}>
               delete user
             </Button>

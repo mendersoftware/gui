@@ -9,6 +9,7 @@ import { getCurrentUser, getIsEnterprise, getUserRoles } from '../../../selector
 import UserList from './userlist';
 import UserForm from './userform';
 import { UserDefinition } from './userdefinition';
+import { uiPermissionsById } from '../../../constants/userConstants';
 
 const actions = {
   create: 'createUser',
@@ -17,7 +18,7 @@ const actions = {
 };
 
 export const UserManagement = props => {
-  const { currentUser, getUserList, isAdmin, passwordResetStart, roles, setSnackbar, users } = props;
+  const { canManageUsers, currentUser, getUserList, passwordResetStart, roles, setSnackbar, users } = props;
   const [showCreate, setShowCreate] = useState(false);
   const [removeDialog, setRemoveDialog] = useState(false);
   const [user, setUser] = useState({});
@@ -81,8 +82,8 @@ export const UserManagement = props => {
       <UserList {...props} editUser={openEdit} />
       {showCreate && <UserForm {...props} closeDialog={dialogDismiss} submit={submit} />}
       <UserDefinition
+        canManageUsers={canManageUsers}
         currentUser={currentUser}
-        isAdminCurrentUser={isAdmin}
         onRemove={openRemove}
         onCancel={dialogDismiss}
         onSubmit={submit}
@@ -116,13 +117,12 @@ export const UserManagement = props => {
 const actionCreators = { createUser, editUser, getUserList, passwordResetStart, removeUser, setSnackbar };
 
 const mapStateToProps = state => {
-  const { isAdmin } = getUserRoles(state);
+  const canManageUsers = getUserRoles(state).uiPermissions.userManagement.includes(uiPermissionsById.manage.value);
   return {
     currentUser: getCurrentUser(state),
-    isAdmin,
+    canManageUsers,
     isEnterprise: getIsEnterprise(state),
     roles: state.users.rolesById,
-    snackbar: state.app.snackbar,
     users: Object.values(state.users.byId)
   };
 };

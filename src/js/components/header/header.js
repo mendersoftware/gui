@@ -29,7 +29,7 @@ import OfferHeader from './offerheader';
 
 import logo from '../../../assets/img/headerlogo.png';
 import enterpriseLogo from '../../../assets/img/headerlogo-enterprise.png';
-import UserConstants from '../../constants/userConstants';
+import UserConstants, { uiPermissionsById } from '../../constants/userConstants';
 
 // Change this when a new feature/offer is introduced
 const currentOffer = {
@@ -261,7 +261,7 @@ const actionCreators = {
 
 const mapStateToProps = state => {
   const organization = !isEmpty(state.organization.organization) ? state.organization.organization : { plan: 'os', id: null };
-  const { allowUserManagement } = getUserRoles(state);
+  const allowUserManagement = getUserRoles(state).uiPermissions.userManagement.includes(uiPermissionsById.manage.value);
   return {
     acceptedDevices: state.devices.byStatus.accepted.total,
     allowUserManagement,
