@@ -1,4 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
+
+import { mapUserRolesToUiPermissions } from '../actions/userActions';
 import { PLANS } from '../constants/appConstants';
 import { DEVICE_ISSUE_OPTIONS, DEVICE_LIST_MAXIMUM_LENGTH } from '../constants/deviceConstants';
 import { rolesByName, twoFAStates } from '../constants/userConstants';
@@ -97,30 +99,13 @@ export const getIsEnterprise = createSelector(
 export const getUserRoles = createSelector(
   [getCurrentUser, getRolesById, getIsEnterprise, getFeatures, getOrganization],
   (currentUser, rolesById, isEnterprise, { isHosted, hasMultitenancy }, { plan = PLANS.os.value }) => {
-    let isAdmin = !(hasMultitenancy || isEnterprise || (isHosted && plan !== PLANS.os.value));
-    let allowUserManagement = isAdmin;
-    let isGroupRestricted = false;
-    let hasWriteAccess = isAdmin;
-    let canTroubleshoot = isAdmin;
-    if (currentUser.roles) {
-      isAdmin = currentUser.roles.some(role => role === rolesByName.admin);
-      allowUserManagement =
-        isAdmin ||
-        currentUser.roles.some(role =>
-          rolesById[role]?.permissions.some(
-            permission =>
-              permission.action === rolesByName.userManagement.action &&
-              permission.object.value === rolesByName.userManagement.object.value &&
-              [rolesByName.userManagement.object.type].includes(permission.object.type)
-          )
-        );
-      isGroupRestricted =
-        !isAdmin &&
-        currentUser.roles.some(role => rolesById[role]?.permissions.some(permission => permission.object.type === rolesByName.groupAccess.object.type));
-      hasWriteAccess = isAdmin || currentUser.roles.some(role => role === rolesByName.readOnly);
-      canTroubleshoot = isAdmin || currentUser.roles.some(role => role === rolesByName.terminalAccess);
-    }
-    return { allowUserManagement, canTroubleshoot, hasWriteAccess, isAdmin, isGroupRestricted };
+    const isAdmin = currentUser.roles?.length
+      ? currentUser.roles.some(role => role === rolesByName.admin)
+      : !(hasMultitenancy || isEnterprise || (isHosted && plan !== PLANS.os.value));
+    const uiPermissions = isAdmin
+      ? mapUserRolesToUiPermissions([rolesByName.admin], rolesById)
+      : mapUserRolesToUiPermissions(currentUser.roles || [], rolesById);
+    return { isAdmin, uiPermissions };
   }
 );
 

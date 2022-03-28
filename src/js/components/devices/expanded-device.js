@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import copy from 'copy-to-clipboard';
 
@@ -41,6 +41,7 @@ import DeviceNotifications from './device-details/notifications';
 import DeviceTwin from './device-details/devicetwin';
 import DeviceQuickActions from './widgets/devicequickactions';
 import { useHistory } from 'react-router-dom';
+import { uiPermissionsById } from '../../constants/userConstants';
 
 const useStyles = makeStyles()(theme => ({
   gatewayChip: {
@@ -174,6 +175,18 @@ export const ExpandedDevice = ({
     onCreateDeployment: onCreateDeploymentClick
   };
   const selectedStaticGroup = selectedGroup && !groupFilters.length ? selectedGroup : undefined;
+
+  const userRoleDetails = useMemo(() => {
+    const hasWriteAccess = Object.values(userRoles.uiPermissions.groups).some(
+      groupPermissions => groupPermissions.includes(uiPermissionsById.read.value) && groupPermissions.length > 1
+    );
+    const canTroubleshoot = Object.values(userRoles.uiPermissions.groups).some(groupPermissions => groupPermissions.includes(uiPermissionsById.connect.value));
+    const canAuditlog = userRoles.uiPermissions.auditlog.includes(uiPermissionsById.read.value);
+    return { canAuditlog, canTroubleshoot, hasWriteAccess };
+  }, [userRoles.uiPermissions.auditlog, userRoles.uiPermissions.groups]);
+
+  const detailedUserRoles = { ...userRoles, ...userRoleDetails };
+
   return (
     <Drawer anchor="right" className="expandedDevice" open={Boolean(device.id)} onClose={onClose} PaperProps={{ style: { minWidth: '67vw' } }}>
       <div className="flexbox center-aligned">
@@ -246,7 +259,7 @@ export const ExpandedDevice = ({
           socketClosed={socketClosed}
           startTroubleshoot={launchTroubleshoot}
           style={{ marginRight: theme.spacing(2) }}
-          userRoles={userRoles}
+          userRoles={detailedUserRoles}
         />
       )}
       <Divider style={{ marginTop: theme.spacing(3), marginBottom: theme.spacing(2) }} />
@@ -257,6 +270,7 @@ export const ExpandedDevice = ({
         onSocketClose={() => setTimeout(() => setSocketClosed(true), 5000)}
         setSocketClosed={setSocketClosed}
         type={troubleshootType}
+        userRoles={detailedUserRoles}
       />
       {monitorDetails && <MonitorDetailsDialog alert={monitorDetails} onClose={() => setMonitorDetails()} />}
       <DeviceQuickActions actionCallbacks={actionCallbacks} devices={[device]} isSingleDevice selectedGroup={selectedStaticGroup} selectedRows={[0]} />

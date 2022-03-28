@@ -10,15 +10,16 @@ import { makeStyles } from 'tss-react/mui';
 import { getLatestReleaseInfo, setSnackbar, setVersionInfo } from '../actions/appActions';
 
 import { onboardingSteps } from '../constants/onboardingConstants';
-import { getDocsVersion, getFeatures, getIsEnterprise, getOnboardingState, getUserRoles } from '../selectors';
+import { getDocsVersion, getFeatures, getOnboardingState, getUserRoles } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
+import { uiPermissionsById } from '../constants/userConstants';
 
 const listItems = [
-  { route: '/', text: 'Dashboard', isAdmin: false, isEnterprise: false },
-  { route: '/devices', text: 'Devices', isAdmin: false, isEnterprise: false },
-  { route: '/releases', text: 'Releases', isAdmin: false, isEnterprise: false },
-  { route: '/deployments', text: 'Deployments', isAdmin: false, isEnterprise: false },
-  { route: '/auditlog', text: 'Audit log', isAdmin: true, isEnterprise: true }
+  { route: '/', text: 'Dashboard', canAccess: () => true },
+  { route: '/devices', text: 'Devices', canAccess: () => true },
+  { route: '/releases', text: 'Releases', canAccess: () => true },
+  { route: '/deployments', text: 'Deployments', canAccess: () => true },
+  { route: '/auditlog', text: 'Audit log', canAccess: ({ userRoles: { uiPermissions } }) => uiPermissions.auditlog.includes(uiPermissionsById.read.value) }
 ];
 
 const useStyles = makeStyles()(theme => ({
@@ -88,17 +89,7 @@ const VersionInfo = ({ getLatestReleaseInfo, isHosted, setSnackbar, setVersionIn
   );
 };
 
-export const LeftNav = ({
-  docsVersion,
-  getLatestReleaseInfo,
-  isHosted,
-  isAdmin,
-  isEnterprise,
-  onboardingState,
-  setSnackbar,
-  setVersionInfo,
-  versionInformation
-}) => {
+export const LeftNav = ({ docsVersion, onboardingState, setSnackbar, setVersionInfo, userRoles, versionInformation }) => {
   const releasesRef = useRef();
   const { classes } = useStyles();
 
@@ -127,7 +118,7 @@ export const LeftNav = ({
     <div className={`leftFixed leftNav ${classes.list}`}>
       <List style={{ padding: 0 }}>
         {listItems.reduce((accu, item, index) => {
-          if ((item.isEnterprise && !isEnterprise) || (item.isAdmin && !isAdmin)) {
+          if (!item.canAccess({ userRoles })) {
             return accu;
           }
           accu.push(
@@ -176,10 +167,8 @@ const mapStateToProps = state => {
   const { isHosted } = getFeatures(state);
   return {
     docsVersion: getDocsVersion(state),
-    isAdmin: getUserRoles(state).isAdmin,
-    isEnterprise: getIsEnterprise(state),
-    isHosted,
     onboardingState: getOnboardingState(state),
+    userRoles: getUserRoles(state),
     versionInformation: state.app.versionInformation
   };
 };

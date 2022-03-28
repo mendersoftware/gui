@@ -22,7 +22,8 @@ import { getDeploymentDevices, getDeviceLog, getSingleDeployment, updateDeployme
 import { getAuditLogs } from '../../actions/organizationActions';
 import { getRelease } from '../../actions/releaseActions';
 import { deploymentStatesToSubstates, DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
-import { getIdAttribute, getIsEnterprise, getUserRoles } from '../../selectors';
+import { uiPermissionsById } from '../../constants/userConstants';
+import { getIdAttribute, getTenantCapabilities, getUserRoles } from '../../selectors';
 import ConfigurationObject from '../common/configurationobject';
 import LogDialog from '../common/dialogs/log';
 import DeploymentOverview from './deployment-report/overview';
@@ -63,14 +64,14 @@ export const DeploymentAbortButton = ({ abort, deployment }) => {
 export const DeploymentReport = props => {
   const {
     abort,
+    canAuditlog,
     creator,
     deployment,
     getAuditLogs,
     getDeviceLog,
     getRelease,
     getSingleDeployment,
-    isAdmin,
-    isEnterprise,
+    hasAuditlogs,
     open,
     onClose,
     past,
@@ -94,7 +95,7 @@ export const DeploymentReport = props => {
     if ((deployment.type === DEPLOYMENT_TYPES.software || !release.device_types_compatible.length) && deployment.artifact_name) {
       getRelease(deployment.artifact_name);
     }
-    if (isEnterprise && isAdmin) {
+    if (hasAuditlogs && canAuditlog) {
       getAuditLogs({ page: 1, perPage: 100, startDate: undefined, endDate: undefined, user: undefined, type: 'deployment', detail: deployment.name });
     }
     refreshDeployment();
@@ -229,14 +230,15 @@ const mapStateToProps = state => {
   const selectedDevices = state.deployments.selectedDeviceIds.map(deviceId => ({ ...state.devices.byId[deviceId], ...devices[deviceId] }));
   const deployment = state.deployments.byId[state.deployments.selectedDeployment] || {};
   const { actor = {} } = state.organization.auditlog.events.find(event => event.object.id === state.deployments.selectedDeployment) || {};
-  const { isAdmin } = getUserRoles(state);
+  const { hasAuditlogs } = getTenantCapabilities(state);
+  const { canAuditlog } = getUserRoles(state).uiPermissions.auditlog.includes(uiPermissionsById.read.value);
   return {
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
+    canAuditlog,
     creator: actor.email,
     deployment,
+    hasAuditlogs,
     idAttribute: getIdAttribute(state).attribute,
-    isAdmin,
-    isEnterprise: getIsEnterprise(state),
     isHosted: state.app.features.isHosted,
     release:
       deployment.artifact_name && state.releases.byId[deployment.artifact_name]
