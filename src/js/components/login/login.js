@@ -6,7 +6,7 @@ import Cookies from 'universal-cookie';
 import { Button } from '@mui/material';
 import { Help as HelpIcon } from '@mui/icons-material';
 
-import loginLogo from '../../../assets/img/loginlogo.svg';
+import LoginLogo from '../../../assets/img/loginlogo.svg';
 import { setSnackbar } from '../../actions/appActions';
 import { loginUser, logoutUser } from '../../actions/userActions';
 import { getToken } from '../../auth';
@@ -84,7 +84,7 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
   return (
     <div className="flexbox column padding-bottom margin-bottom" id="login-box">
       <h3>Log in</h3>
-      <img src={loginLogo} alt="mender-logo" className="margin-bottom-small" />
+      <LoginLogo alt="mender-logo" className="margin-bottom-small" />
 
       {isHosted && (
         <>

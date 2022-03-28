@@ -337,8 +337,8 @@ export const FileSize = React.forwardRef(({ fileSize, style }, ref) => (
 FileSize.displayName = 'FileSize';
 
 const collectAddressesFrom = devices =>
-  devices.reduce((collector, device) => {
-    const ips = Object.entries(device.attributes).reduce((accu, [name, value]) => {
+  devices.reduce((collector, { attributes = {} }) => {
+    const ips = Object.entries(attributes).reduce((accu, [name, value]) => {
       if (name.startsWith('ipv4')) {
         if (Array.isArray(value)) {
           const texts = value.map(text => text.slice(0, text.indexOf('/')));
@@ -364,10 +364,11 @@ export const getDemoDeviceAddress = (devices, onboardingApproach, port) => {
     }
     return item;
   }, null);
-  targetUrl = `http://${address}:${port}`;
+  targetUrl = `http://${address}`;
   if (!address || (onboardingApproach === 'virtual' && (navigator.appVersion.indexOf('Win') != -1 || navigator.appVersion.indexOf('Mac') != -1))) {
-    targetUrl = `http://localhost:${port}`;
+    targetUrl = `http://localhost`;
   }
+  targetUrl = port ? `${targetUrl}:${port}` : targetUrl;
   return targetUrl;
 };
 

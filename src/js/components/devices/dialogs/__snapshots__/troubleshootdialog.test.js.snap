@@ -586,16 +586,18 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
             />
           </button>
         </div>
-        <button
-          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-16"
-          tabindex="0"
-          type="button"
-        >
-          Close
-          <span
-            class="MuiTouchRipple-root emotion-11"
-          />
-        </button>
+        <div>
+          <button
+            class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-16"
+            tabindex="0"
+            type="button"
+          >
+            Close
+            <span
+              class="MuiTouchRipple-root emotion-11"
+            />
+          </button>
+        </div>
       </div>
     </div>
   </div>

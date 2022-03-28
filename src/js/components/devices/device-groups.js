@@ -31,7 +31,8 @@ import CreateGroup from './group-management/create-group';
 import RemoveGroup from './group-management/remove-group';
 import CreateGroupExplainer from './group-management/create-group-explainer';
 import { emptyFilter } from './widgets/filters';
-import PreauthDialog, { DeviceLimitWarning } from './preauth-dialog';
+import MakeGatewayDialog from './dialogs/make-gateway-dialog';
+import PreauthDialog, { DeviceLimitWarning } from './dialogs/preauth-dialog';
 import {
   AcceptedEmptyState,
   defaultTextRender,
@@ -243,6 +244,7 @@ export const DeviceGroups = ({
   const [modifyGroupDialog, setModifyGroupDialog] = useState(false);
   const [openIdDialog, setOpenIdDialog] = useState(false);
   const [openPreauth, setOpenPreauth] = useState(false);
+  const [showMakeGateway, setShowMakeGateway] = useState(false);
   const [removeGroup, setRemoveGroup] = useState(false);
   const [tmpDevices, setTmpDevices] = useState([]);
   const [isReconciling, setIsReconciling] = useState(false);
@@ -411,6 +413,8 @@ export const DeviceGroups = ({
 
   const refreshDevices = () => setDeviceRefreshTrigger(!deviceRefreshTrigger);
 
+  const toggleMakeGatewayClick = () => setShowMakeGateway(!showMakeGateway);
+
   return (
     <>
       <div className="flexbox space-between margin-right">
@@ -425,7 +429,12 @@ export const DeviceGroups = ({
               {authRequestCount} new device authentication {pluralize('request', authRequestCount)}
             </a>
           )}
-          <DeviceAdditionWidget docsVersion={docsVersion} onConnectClick={setShowConnectingDialog} onPreauthClick={setOpenPreauth} />
+          <DeviceAdditionWidget
+            docsVersion={docsVersion}
+            onConnectClick={setShowConnectingDialog}
+            onMakeGatewayClick={toggleMakeGatewayClick}
+            onPreauthClick={setOpenPreauth}
+          />
         </div>
       </div>
       <div className="tab-container with-sub-panels" style={{ padding: 0, height: '100%' }}>
@@ -449,6 +458,7 @@ export const DeviceGroups = ({
             deviceRefreshTrigger={deviceRefreshTrigger}
             onGroupClick={onGroupClick}
             onGroupRemoval={toggleGroupRemoval}
+            onMakeGatewayClick={toggleMakeGatewayClick}
             onPreauthClick={setOpenPreauth}
             openSettingsDialog={openSettingsDialog}
             refreshDevices={refreshDevices}
@@ -487,6 +497,7 @@ export const DeviceGroups = ({
             setSnackbar={setSnackbar}
           />
         )}
+        {showMakeGateway && <MakeGatewayDialog docsVersion={docsVersion} onCancel={toggleMakeGatewayClick} />}
       </div>
     </>
   );

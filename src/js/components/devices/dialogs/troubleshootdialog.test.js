@@ -3,8 +3,8 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 
-import { defaultState, undefineds } from '../../../../tests/mockData';
-import { render } from '../../../../tests/setupTests';
+import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
 import TroubleshootDialog from './troubleshootdialog';
 
 const mockStore = configureStore([thunk]);

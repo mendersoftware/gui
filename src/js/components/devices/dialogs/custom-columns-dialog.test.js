@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { undefineds } from '../../../../tests/mockData';
-import { render } from '../../../../tests/setupTests';
+import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
 import ColumnCustomizationDialog from './custom-columns-dialog';
 
 describe('ColumnCustomizationDialog Component', () => {
