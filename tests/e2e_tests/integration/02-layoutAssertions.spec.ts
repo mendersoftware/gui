@@ -1,5 +1,4 @@
-import { expect } from '@playwright/test';
-import test from '../fixtures/fixtures';
+import test, { expect } from '../fixtures/fixtures';
 
 test.describe('Layout assertions', () => {
   const navbar = '.leftFixed.leftNav';

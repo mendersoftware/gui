@@ -1,9 +1,8 @@
 import * as fs from 'fs';
-import { expect } from '@playwright/test';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween.js';
 import md5 from 'md5';
-import test from '../fixtures/fixtures';
+import test, { expect } from '../fixtures/fixtures';
 
 dayjs.extend(isBetween);
 

@@ -51,13 +51,14 @@ test:lint:
   artifacts:
     expire_in: 2w
     paths:
+      - coverage
       - screenshots
       - logs
       - junit
     reports:
       junit:
         - junit/results.xml
-    when: on_failure
+    when: always
 
 test:acceptance:
   extends: .template:test:acceptance
@@ -215,22 +216,37 @@ test:staging-deployment:webkit:
   script:
     - npm run test -- --browser=webkit
 
-publish:tests:
+.template:publish:tests:
   stage: publish
-  except:
-    - /^(staging|saas-[a-zA-Z0-9.]+)$/
-  needs:
-    - test:unit
   before_script:
     - export CI_BUILD_REF=${CI_COMMIT_SHA}
     - export CI_BUILD_REF_NAME=${CI_COMMIT_REF_NAME}
     - export CI_BUILD_NAME=${CI_JOB_NAME}
     - export CI_BUILD_ID=${CI_JOB_ID}
     - export CI_MERGE_REQUEST_IID=${CI_COMMIT_BRANCH#pr_}
-    - export COVERALLS_FLAG_NAME=unittests
+    - export COVERALLS_SERVICE_JOB_ID=${CI_JOB_ID}
     - apk add --no-cache git
     - npm i -g coveralls
+
+publish:tests:
+  extends: .template:publish:tests
+  except:
+    - /^(staging|saas-[a-zA-Z0-9.]+)$/
+  needs:
+    - test:unit
   script:
+    - export COVERALLS_FLAG_NAME=unittests
+    - coveralls < coverage/lcov.info
+
+publish:e2e-tests:
+  extends: .template:publish:tests
+  only:
+    - master
+  needs:
+    - test:acceptance:enterprise
+  script:
+    - export COVERALLS_FLAG_NAME=e2etests
+    - sed -i -re 's/(^[SF:]+[../]+)(.*)$/SF:\2/' coverage/lcov.info
     - coveralls < coverage/lcov.info
 
 publish:disclaimer:

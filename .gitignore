@@ -1,6 +1,7 @@
 #directories
-dist/
-node_modules/
+dist
+junit
+node_modules
 videos
 .vscode
 screenshots/**
