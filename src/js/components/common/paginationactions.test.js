@@ -1,55 +1,56 @@
 import React from 'react';
-import { act, fireEvent, screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { render } from '../../../../tests/setupTests';
 import { TablePaginationActions } from './pagination';
 
-describe('Loader Component', () => {
-  it('works as expected', async () => {
+describe('TablePaginationActions Component', () => {
+  it('paginates properly', async () => {
     jest.useFakeTimers();
     const changeListener = jest.fn();
-    const ui = <TablePaginationActions count={42} page={0} onPageChange={changeListener} />;
-    const { rerender } = render(ui);
-    expect(screen.getByDisplayValue(1)).toBeInTheDocument();
-    expect(screen.getByText('/ 3')).toBeInTheDocument();
+    render(<TablePaginationActions count={42} page={0} onPageChange={changeListener} />);
+    expect(screen.getByText('1-20 of 42')).toBeInTheDocument();
     expect(screen.getAllByRole('button')[0]).toBeDisabled();
-    expect(screen.getAllByRole('button')[1]).toBeDisabled();
     await act(async () => {
-      userEvent.click(screen.getAllByRole('button')[2]);
+      userEvent.click(screen.getAllByRole('button')[1]);
       jest.advanceTimersByTime(400);
     });
-    expect(changeListener).toHaveBeenCalledTimes(1);
-    expect(screen.getByDisplayValue(2)).toBeInTheDocument();
-    rerender(<TablePaginationActions count={42} page={1} onPageChange={changeListener} />);
+    expect(changeListener).toHaveBeenCalled();
+    expect(screen.getByText('21-40 of 42')).toBeInTheDocument();
+    jest.useRealTimers();
+  });
+  it('paginates properly backwards', async () => {
+    jest.useFakeTimers();
+    const changeListener = jest.fn();
+    render(<TablePaginationActions count={42} page={1} onPageChange={changeListener} />);
     expect(screen.getAllByRole('button')[0]).not.toBeDisabled();
     expect(screen.getAllByRole('button')[1]).not.toBeDisabled();
-    expect(screen.getAllByRole('button')[2]).not.toBeDisabled();
-    expect(screen.getAllByRole('button')[3]).not.toBeDisabled();
-    await act(async () => {
-      userEvent.click(screen.getAllByRole('button')[3]);
-      jest.advanceTimersByTime(400);
-    });
-    expect(changeListener).toHaveBeenCalledTimes(2);
-    rerender(<TablePaginationActions count={42} page={2} onPageChange={changeListener} />);
-    expect(screen.getByDisplayValue(3)).toBeInTheDocument();
-    expect(screen.getAllByRole('button')[2]).toBeDisabled();
-    expect(screen.getAllByRole('button')[3]).toBeDisabled();
     await act(async () => {
       userEvent.click(screen.getAllByRole('button')[0]);
       jest.advanceTimersByTime(400);
     });
-    expect(changeListener).toHaveBeenCalledTimes(3);
-    rerender(<TablePaginationActions count={42} page={0} onPageChange={changeListener} />);
-    expect(screen.getByDisplayValue(1)).toBeInTheDocument();
-    const input = screen.getByDisplayValue(1);
-    fireEvent.change(input, { target: { value: 76 } });
-    fireEvent.keyUp(input, { key: 'Enter' });
-    expect(screen.queryByDisplayValue(76)).not.toBeInTheDocument();
-    expect(screen.getByDisplayValue(3)).toBeInTheDocument();
-    fireEvent.change(input, { target: { value: -76 } });
-    fireEvent.keyUp(input, { key: 'Enter' });
-    expect(screen.getByDisplayValue(1)).toBeInTheDocument();
+    expect(changeListener).toHaveBeenCalled();
+    jest.useRealTimers();
+  });
+  it('prevents going too far', async () => {
+    const changeListener = jest.fn();
+    render(<TablePaginationActions count={42} page={2} onPageChange={changeListener} />);
+    expect(screen.getByText('41-42 of 42')).toBeInTheDocument();
+    expect(screen.getAllByRole('button')[1]).toBeDisabled();
+  });
+  it('prevents exceeding the pagination limit', async () => {
+    jest.useFakeTimers();
+    const changeListener = jest.fn();
+    render(<TablePaginationActions count={2000000} page={498} onPageChange={changeListener} />);
+    expect(screen.getAllByRole('button')[1]).not.toBeDisabled();
+    await act(async () => {
+      userEvent.click(screen.getAllByRole('button')[1]);
+      jest.advanceTimersByTime(400);
+    });
+    expect(changeListener).toHaveBeenCalled();
+    expect(screen.getByText('9981-10000 of 2000000')).toBeInTheDocument();
+    expect(screen.getAllByRole('button')[1]).toBeDisabled();
     jest.useRealTimers();
   });
 });

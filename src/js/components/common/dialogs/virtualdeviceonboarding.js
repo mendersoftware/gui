@@ -2,9 +2,14 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import { setOnboardingApproach } from '../../../actions/onboardingActions';
-import { getDemoDeviceCreationCommand } from '../../../helpers';
+import { initialState as onboardingReducerState } from '../../../reducers/onboardingReducer';
 import { getDocsVersion } from '../../../selectors';
 import CopyCode from '../copy-code';
+
+export const getDemoDeviceCreationCommand = tenantToken =>
+  tenantToken
+    ? `TENANT_TOKEN='${tenantToken}'\ndocker run -it -p ${onboardingReducerState.demoArtifactPort}:${onboardingReducerState.demoArtifactPort} -e SERVER_URL='https://${window.location.hostname}' \\\n-e TENANT_TOKEN=$TENANT_TOKEN --pull=always mendersoftware/mender-client-qemu`
+    : './demo --client up';
 
 export const VirtualDeviceOnboarding = ({ docsVersion, isHosted, setOnboardingApproach, tenantToken }) => {
   useEffect(() => {
