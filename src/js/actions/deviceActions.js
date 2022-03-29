@@ -52,22 +52,29 @@ export const getGroups = () => (dispatch, getState) =>
       accu[group] = { deviceIds: [], filters: [], total: 0, ...state[group] };
       return accu;
     }, {});
+    const filters = [{ key: 'group', value: res.data, operator: '$nin', scope: 'system' }];
     return Promise.all([
-      dispatch({
-        type: DeviceConstants.RECEIVE_GROUPS,
-        groups
-      }),
-      dispatch({
-        type: DeviceConstants.ADD_DYNAMIC_GROUP,
-        groupName: DeviceConstants.UNGROUPED_GROUP.id,
-        group: {
-          deviceIds: [],
-          total: 0,
-          ...getState().devices.groups.byId[DeviceConstants.UNGROUPED_GROUP.id],
-          filters: [{ key: 'group', value: res.data, operator: '$nin', scope: 'system' }]
-        }
-      })
-    ]);
+      dispatch({ type: DeviceConstants.RECEIVE_GROUPS, groups }),
+      dispatch(getDevicesByStatus(undefined, { filterSelection: filters, page: 1, perPage: 1 }))
+    ]).then(promises => {
+      const ungroupedDevices = promises[promises.length - 1] || [];
+      const result = ungroupedDevices[ungroupedDevices.length - 1] || {};
+      if (!result.total) {
+        return;
+      }
+      return Promise.resolve(
+        dispatch({
+          type: DeviceConstants.ADD_DYNAMIC_GROUP,
+          groupName: DeviceConstants.UNGROUPED_GROUP.id,
+          group: {
+            deviceIds: [],
+            total: 0,
+            ...getState().devices.groups.byId[DeviceConstants.UNGROUPED_GROUP.id],
+            filters: [{ key: 'group', value: res.data, operator: '$nin', scope: 'system' }]
+          }
+        })
+      );
+    });
   });
 
 export const addDevicesToGroup = (group, deviceIds) => dispatch =>
@@ -582,6 +589,7 @@ export const getDevicesByStatus =
   (status, options = {}) =>
   (dispatch, getState) => {
     const {
+      filterSelection,
       group,
       selectedIssues = [],
       page = defaultPage,
@@ -591,7 +599,12 @@ export const getDevicesByStatus =
       trackSelectionState = false,
       selectedAttributes = []
     } = options;
-    const { applicableFilters, filterTerms } = convertDeviceListStateToFilters({ filters: getState().devices.filters, group, selectedIssues, status });
+    const { applicableFilters, filterTerms } = convertDeviceListStateToFilters({
+      filters: filterSelection ?? getState().devices.filters,
+      group,
+      selectedIssues,
+      status
+    });
     const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }, ...selectedAttributes];
     return GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
       page,

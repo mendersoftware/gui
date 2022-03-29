@@ -6,6 +6,7 @@ import { FormHelperText, TextField, Autocomplete } from '@mui/material';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 
 import { fullyDecodeURI } from '../../../helpers';
+import { UNGROUPED_GROUP } from '../../../constants/deviceConstants';
 
 const filter = createFilterOptions();
 
@@ -25,6 +26,9 @@ export const validateGroupName = (encodedName, groups = [], selectedGroup, isCre
   } else if (isModification && isCreationDynamic) {
     invalid = true;
     errortext = 'A group with the same name already exists';
+  } else if (name === UNGROUPED_GROUP.name) {
+    invalid = true;
+    errortext = `A group with the name ${name} is created automatically`;
   }
   return { errortext, invalid, isModification, name };
 };
