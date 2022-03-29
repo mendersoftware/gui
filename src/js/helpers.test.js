@@ -14,13 +14,11 @@ import {
   generateDeploymentGroupDetails,
   getDebConfigurationCode,
   getDemoDeviceAddress,
-  getDemoDeviceCreationCommand,
   getFormattedSize,
   getPhaseDeviceCount,
   getRemainderPercent,
   groupDeploymentDevicesStats,
   groupDeploymentStats,
-  hashString,
   isEmpty,
   mapDeviceAttributes,
   preformatWithRequestID,
@@ -214,31 +212,6 @@ wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type
         `wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type "raspberrypi3" --retry-poll 30 --update-poll 5 --inventory-poll 5 --server-url https://fancy.opensource.on.prem --server-cert=""`
       );
     });
-  });
-});
-
-describe('getDemoDeviceCreationCommand function', () => {
-  const token = `eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZW5kZXIudGVuYW50IjoiNWY5YWI0ZWQ4ZjhhMzc0NmYwYTIxNjU1IiwiaXNzIjoiTWVuZGVyIiwic3`;
-  it('should not contain any template string leftovers', async () => {
-    let code = getDemoDeviceCreationCommand();
-    expect(code).not.toMatch(/\$\{([^}]+)\}/);
-    code = getDemoDeviceCreationCommand(token);
-    expect(code).not.toMatch(/\$\{([^}]+)\}/);
-  });
-  it('should return a sane result', async () => {
-    let code = getDemoDeviceCreationCommand();
-    expect(code).toMatch('./demo --client up');
-    code = getDemoDeviceCreationCommand(token);
-    expect(code).toMatch(
-      `TENANT_TOKEN='${token}'\ndocker run -it -p 85:85 -e SERVER_URL='https://localhost' \\\n-e TENANT_TOKEN=$TENANT_TOKEN --pull=always mendersoftware/mender-client-qemu`
-    );
-  });
-});
-
-describe('hashString function', () => {
-  it('should use md5 hashing internally', async () => {
-    const md5Hash = '098f6bcd4621d373cade4e832627b4f6';
-    expect(hashString('test')).toEqual(md5Hash);
   });
 });
 

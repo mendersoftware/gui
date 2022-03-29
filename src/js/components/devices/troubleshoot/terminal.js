@@ -46,6 +46,7 @@ export const Terminal = ({
   setSocketInitialized,
   socket,
   socketInitialized,
+  textInput,
   ...xtermProps
 }) => {
   const xtermRef = useRef(null);
@@ -128,6 +129,13 @@ export const Terminal = ({
       setDimensions(newDimensions);
     }
   }, [size, isVisible]);
+
+  useEffect(() => {
+    if (!socketInitialized || !term || !textInput) {
+      return;
+    }
+    term.paste(textInput);
+  }, [socketInitialized, term, textInput]);
 
   const onSocketOpen = () => {
     setSnackbar('Connection with the device established.', 5000);

@@ -1,6 +1,5 @@
 import React from 'react';
 import jwtDecode from 'jwt-decode';
-import md5 from 'md5';
 import pluralize from 'pluralize';
 import { getToken } from './auth';
 
@@ -12,7 +11,6 @@ import {
   deploymentStatesToSubstates,
   deploymentStatesToSubstatesWithSkipped
 } from './constants/deploymentConstants';
-import { initialState as onboardingReducerState } from './reducers/onboardingReducer';
 
 const isEncoded = uri => {
   uri = uri || '';
@@ -72,7 +70,7 @@ export const getDeploymentState = deployment => {
   return status;
 };
 
-export function decodeSessionToken(token) {
+export const decodeSessionToken = token => {
   try {
     var decoded = jwtDecode(token);
     return decoded.sub;
@@ -80,7 +78,7 @@ export function decodeSessionToken(token) {
     //console.log(err);
     return;
   }
-}
+};
 
 export const isEmpty = obj => {
   for (const _ in obj) {
@@ -92,7 +90,7 @@ export const isEmpty = obj => {
 export const extractErrorMessage = (err, fallback = '') =>
   err.response?.data?.error?.message || err.response?.data?.error || err.error || err.message || fallback;
 
-export function preformatWithRequestID(res, failMsg) {
+export const preformatWithRequestID = (res, failMsg) => {
   // ellipsis line
   if (failMsg.length > 100) failMsg = `${failMsg.substring(0, 220)}...`;
 
@@ -105,7 +103,7 @@ export function preformatWithRequestID(res, failMsg) {
     console.log('failed to extract request id:', e);
   }
   return failMsg;
-}
+};
 
 export const versionCompare = (v1, v2) => {
   const partsV1 = `${v1}`.split('.');
@@ -237,7 +235,7 @@ export function deepCompare() {
   return true;
 }
 
-export function stringToBoolean(content) {
+export const stringToBoolean = content => {
   if (!content) {
     return false;
   }
@@ -255,11 +253,7 @@ export function stringToBoolean(content) {
     default:
       return Boolean(string);
   }
-}
-
-export function hashString(str) {
-  return md5(str);
-}
+};
 
 export const formatTime = date => {
   if (date && Object.prototype.toString.call(date) === '[object Date]' && !isNaN(date)) {
@@ -343,8 +337,8 @@ export const FileSize = React.forwardRef(({ fileSize, style }, ref) => (
 FileSize.displayName = 'FileSize';
 
 const collectAddressesFrom = devices =>
-  devices.reduce((collector, device) => {
-    const ips = Object.entries(device.attributes).reduce((accu, [name, value]) => {
+  devices.reduce((collector, { attributes = {} }) => {
+    const ips = Object.entries(attributes).reduce((accu, [name, value]) => {
       if (name.startsWith('ipv4')) {
         if (Array.isArray(value)) {
           const texts = value.map(text => text.slice(0, text.indexOf('/')));
@@ -370,10 +364,11 @@ export const getDemoDeviceAddress = (devices, onboardingApproach, port) => {
     }
     return item;
   }, null);
-  targetUrl = `http://${address}:${port}`;
+  targetUrl = `http://${address}`;
   if (!address || (onboardingApproach === 'virtual' && (navigator.appVersion.indexOf('Win') != -1 || navigator.appVersion.indexOf('Mac') != -1))) {
-    targetUrl = `http://localhost:${port}`;
+    targetUrl = `http://localhost`;
   }
+  targetUrl = port ? `${targetUrl}:${port}` : targetUrl;
   return targetUrl;
 };
 
@@ -531,10 +526,6 @@ export const extractSoftwareInformation = (capabilities = {}, softwareTitleMap =
     return accu;
   }, {});
 };
-export const getDemoDeviceCreationCommand = tenantToken =>
-  tenantToken
-    ? `TENANT_TOKEN='${tenantToken}'\ndocker run -it -p ${onboardingReducerState.demoArtifactPort}:${onboardingReducerState.demoArtifactPort} -e SERVER_URL='https://${window.location.hostname}' \\\n-e TENANT_TOKEN=$TENANT_TOKEN --pull=always mendersoftware/mender-client-qemu`
-    : './demo --client up';
 
 export const createDownload = (target, filename) => {
   let link = document.createElement('a');

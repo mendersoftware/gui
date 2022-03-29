@@ -4,10 +4,10 @@ import React, { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { InfoOutlined as InfoIcon } from '@mui/icons-material';
 
-import FileUpload from '../common/forms/fileupload';
-import KeyValueEditor from '../common/forms/keyvalueeditor';
+import FileUpload from '../../common/forms/fileupload';
+import KeyValueEditor from '../../common/forms/keyvalueeditor';
 
-import { isEmpty } from '../../helpers';
+import { isEmpty } from '../../../helpers';
 
 export const DeviceLimitWarning = ({ acceptedDevices, deviceLimit, hasContactInfo }) => (
   <div className="margin-bottom-small margin-top-small warning">

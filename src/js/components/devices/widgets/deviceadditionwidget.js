@@ -6,14 +6,15 @@ import { ArrowDropDown as ArrowDropDownIcon, Launch as LaunchIcon } from '@mui/i
 
 const buttonStyle = { textTransform: 'none' };
 
-export const DeviceAdditionWidget = ({ docsVersion, onConnectClick, onPreauthClick }) => {
+export const DeviceAdditionWidget = ({ docsVersion, onConnectClick, onMakeGatewayClick, onPreauthClick }) => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState();
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const options = [
     { action: onConnectClick, title: 'Connect a new device', value: 'connect' },
-    { action: onPreauthClick, title: 'Preauthorize a device', value: 'preauth' }
+    { action: onPreauthClick, title: 'Preauthorize a device', value: 'preauth' },
+    { action: onMakeGatewayClick, title: 'Promote a device to gateway', value: 'makegateway' }
   ];
 
   const handleToggle = event => {
