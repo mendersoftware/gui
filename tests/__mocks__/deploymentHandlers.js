@@ -42,11 +42,12 @@ export const deploymentHandlers = [
     }
     return res(ctx.status(521));
   }),
-  rest.get(`${deploymentsApiUrl}/deployments/:deploymentId/statistics`, ({ params: { deploymentId } }, res, ctx) => {
-    if (deploymentId === createdDeployment.id) {
-      return res(ctx.json({}));
-    } else if (defaultState.deployments.byId[deploymentId]) {
-      return res(ctx.json(defaultState.deployments.byId[deploymentId].stats));
+  rest.post(`${deploymentsApiUrl}/deployments/statistics/list`, ({ body: { deployment_ids = [] } }, res, ctx) => {
+    if (deployment_ids.includes(createdDeployment.id)) {
+      return res(ctx.json([]));
+    } else if (deployment_ids.every(id => defaultState.deployments.byId[id])) {
+      const stats = deployment_ids.map(id => ({ id, stats: defaultState.deployments.byId[id].stats }));
+      return res(ctx.json(stats));
     }
     return res(ctx.status(522));
   }),

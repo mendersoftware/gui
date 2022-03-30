@@ -73,11 +73,6 @@ const defaultResponseActions = {
     type: DeploymentConstants.SELECT_INPROGRESS_DEPLOYMENTS,
     deploymentIds: Object.keys(defaultState.deployments.byId),
     status: 'inprogress'
-  },
-  stats: {
-    type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS,
-    stats: {},
-    deploymentId: createdDeployment.id
   }
 };
 
@@ -134,7 +129,7 @@ describe('deployment actions', () => {
       },
       { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings, hasDeployments: true } },
       defaultResponseActions.receive,
-      defaultResponseActions.stats
+      defaultResponseActions.receiveMultiple
     ];
     return store.dispatch(createDeployment({ devices: [Object.keys(defaultState.devices.byId)[0]] })).then(() => {
       const storeActions = store.getActions();
@@ -155,7 +150,7 @@ describe('deployment actions', () => {
         }
       },
       defaultResponseActions.receive,
-      defaultResponseActions.stats
+      defaultResponseActions.receiveMultiple
     ];
     return store.dispatch(createDeployment({ filter_id })).then(() => {
       const storeActions = store.getActions();
@@ -176,7 +171,7 @@ describe('deployment actions', () => {
         }
       },
       defaultResponseActions.receive,
-      defaultResponseActions.stats
+      defaultResponseActions.receiveMultiple
     ];
     return store.dispatch(createDeployment({ group })).then(() => {
       const storeActions = store.getActions();
@@ -194,8 +189,13 @@ describe('deployment actions', () => {
         total: defaultState.deployments.byStatus.inprogress.total
       },
       defaultResponseActions.selectMultiple,
-      { ...defaultResponseActions.stats, deploymentId: defaultState.deployments.byId.d1.id, stats: defaultState.deployments.byId.d1.stats },
-      { ...defaultResponseActions.stats, deploymentId: defaultState.deployments.byId.d2.id, stats: defaultState.deployments.byId.d2.stats }
+      {
+        ...defaultResponseActions.receiveMultiple,
+        deployments: {
+          [defaultState.deployments.byId.d1.id]: { ...defaultState.deployments.byId.d1, stats: defaultState.deployments.byId.d1.stats },
+          [defaultState.deployments.byId.d2.id]: { ...defaultState.deployments.byId.d2, stats: defaultState.deployments.byId.d2.stats }
+        }
+      }
     ];
     return store
       .dispatch(getDeploymentsByStatus('inprogress', null, null, undefined, undefined, Object.keys(defaultState.devices.groups.byId)[0], 'configuration', true))
@@ -225,7 +225,7 @@ describe('deployment actions', () => {
   });
   it('should allow updating a deployment to continue the execution', async () => {
     const store = mockStore({ ...defaultState });
-    const expectedActions = [defaultResponseActions.receive, defaultResponseActions.stats];
+    const expectedActions = [defaultResponseActions.receive, defaultResponseActions.receiveMultiple];
     return store.dispatch(updateDeploymentControlMap(createdDeployment.id, { something: 'continue' })).then(() => {
       const storeActions = store.getActions();
       expect(storeActions.length).toEqual(expectedActions.length);
@@ -234,7 +234,7 @@ describe('deployment actions', () => {
   });
   it('should allow selecting a deployment', async () => {
     const store = mockStore({ ...defaultState });
-    const expectedActions = [defaultResponseActions.select, defaultResponseActions.receive, defaultResponseActions.stats];
+    const expectedActions = [defaultResponseActions.select, defaultResponseActions.receive, defaultResponseActions.receiveMultiple];
     return store.dispatch(selectDeployment(createdDeployment.id)).then(() => {
       const storeActions = store.getActions();
       expect(storeActions.length).toEqual(expectedActions.length);

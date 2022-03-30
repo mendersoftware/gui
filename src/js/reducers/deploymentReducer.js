@@ -74,17 +74,6 @@ const deploymentReducer = (state = initialState, action) => {
           [action.deployment.id]: action.deployment
         }
       };
-    case DeploymentConstants.RECEIVE_DEPLOYMENT_STATS:
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [action.deploymentId]: {
-            ...state.byId[action.deploymentId],
-            stats: action.stats
-          }
-        }
-      };
     case DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICES:
       return {
         ...state,

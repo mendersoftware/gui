@@ -41,24 +41,24 @@ export const getDeploymentsByStatus =
     ).then(res => {
       const { deployments, deploymentIds } = transformDeployments(res.data, getState().deployments.byId);
       const total = Number(res.headers[headerNames.total]);
-      let tasks = deploymentIds.reduce(
-        (accu, deploymentId) => {
-          accu.push(dispatch(getSingleDeploymentStats(deploymentId)));
-          if (deployments[deploymentId].type === DeploymentConstants.DEPLOYMENT_TYPES.configuration) {
-            accu.push(dispatch(getSingleDeployment(deploymentId)));
-          }
-          return accu;
-        },
-        [
-          dispatch({ type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments }),
-          dispatch({
-            type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`],
-            deploymentIds,
-            status,
-            total: !(startDate || endDate || group || type) ? total : getState().deployments.byStatus[status].total
-          })
-        ]
-      );
+      let tasks = [
+        dispatch({ type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments }),
+        dispatch({
+          type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`],
+          deploymentIds,
+          status,
+          total: !(startDate || endDate || group || type) ? total : getState().deployments.byStatus[status].total
+        })
+      ];
+      if (deploymentIds.length) {
+        tasks.push(dispatch(getDeploymentsStats(deploymentIds)));
+      }
+      tasks = deploymentIds.reduce((accu, deploymentId) => {
+        if (deployments[deploymentId].type === DeploymentConstants.DEPLOYMENT_TYPES.configuration) {
+          accu.push(dispatch(getSingleDeployment(deploymentId)));
+        }
+        return accu;
+      }, tasks);
       if (shouldSelect) {
         tasks.push(dispatch({ type: DeploymentConstants[`SELECT_${status.toUpperCase()}_DEPLOYMENTS`], deploymentIds, status, total }));
       }
@@ -121,10 +121,15 @@ export const createDeployment = newDeployment => (dispatch, getState) => {
     });
 };
 
-export const getSingleDeploymentStats = id => dispatch =>
-  GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}/statistics`).then(res =>
-    dispatch({ type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS, stats: res.data, deploymentId: id })
-  );
+export const getDeploymentsStats = ids => (dispatch, getState) =>
+  GeneralApi.post(`${deploymentsApiUrl}/deployments/statistics/list`, { deployment_ids: ids }).then(res => {
+    const byIdState = getState().deployments.byId;
+    const deployments = res.data.reduce((accu, item) => {
+      accu[item.id] = { ...byIdState[item.id], stats: item.stats };
+      return accu;
+    }, {});
+    return Promise.resolve(dispatch({ type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments }));
+  });
 
 export const getDeploymentDevices =
   (id, options = {}) =>
@@ -165,7 +170,7 @@ export const getSingleDeployment = id => (dispatch, getState) =>
           name: decodeURIComponent(data.name)
         }
       }),
-      dispatch(getSingleDeploymentStats(id))
+      dispatch(getDeploymentsStats([id]))
     ]);
   });
 

@@ -22,15 +22,6 @@ describe('deployment reducer', () => {
       reducer(initialState, { type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments: { [defaultState.deployments.byId.d1.id]: { stats } } }).byId.d1.stats
     ).toBeTruthy();
   });
-  it('should handle RECEIVE_DEPLOYMENT_STATS', async () => {
-    const { stats } = defaultState.deployments.byId.d1;
-    expect(
-      reducer(undefined, { type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS, deploymentId: defaultState.deployments.byId.d1.id, stats }).byId.d1.stats
-    ).toBeTruthy();
-    expect(
-      reducer(initialState, { type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS, deploymentId: defaultState.deployments.byId.d1.id, stats }).byId.d1.stats
-    ).toBeTruthy();
-  });
   it('should handle RECEIVE_DEPLOYMENT_DEVICE_LOG', async () => {
     const { devices } = defaultState.deployments.byId.d1;
     expect(
