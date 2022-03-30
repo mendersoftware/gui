@@ -163,11 +163,6 @@ describe('app actions', () => {
       },
       { type: DeviceConstants.RECEIVE_GROUPS, groups: { testGroup: defaultState.devices.groups.byId.testGroup } },
       {
-        type: DeviceConstants.ADD_DYNAMIC_GROUP,
-        groupName: DeviceConstants.UNGROUPED_GROUP.id,
-        group: { deviceIds: [], total: 0, filters: [{ key: 'group', value: ['testGroup'], operator: '$nin', scope: 'system' }] }
-      },
-      {
         type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
         value: [
           { connection_string: 'something_else', id: 1, provider: EXTERNAL_PROVIDER['iot-hub'].provider },
@@ -224,6 +219,26 @@ describe('app actions', () => {
       {
         type: DeviceConstants.RECEIVE_DEVICES,
         devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1 } }
+      },
+      {
+        type: DeviceConstants.RECEIVE_DEVICES,
+        devicesById: {
+          [expectedDevice.id]: {
+            ...defaultState.devices.byId.a1,
+            attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
+            identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
+            isOffline: false,
+            monitor: {},
+            tags: {},
+            updated_ts: inventoryDevice.updated_ts
+          }
+        }
+      },
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1 } } },
+      {
+        type: DeviceConstants.ADD_DYNAMIC_GROUP,
+        groupName: DeviceConstants.UNGROUPED_GROUP.id,
+        group: { deviceIds: [], total: 0, filters: [{ key: 'group', value: ['testGroup'], operator: '$nin', scope: 'system' }] }
       },
       {
         type: DeviceConstants.SET_DEVICE_LIST_STATE,
