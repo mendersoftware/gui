@@ -98,16 +98,20 @@ const deploymentReducer = (state = initialState, action) => {
         },
         selectedDeviceIds: action.selectedDeviceIds
       };
+    case DeploymentConstants.RECEIVE_DEPLOYMENTS:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          ...action.deployments
+        }
+      };
     case DeploymentConstants.RECEIVE_INPROGRESS_DEPLOYMENTS:
     case DeploymentConstants.RECEIVE_PENDING_DEPLOYMENTS:
     case DeploymentConstants.RECEIVE_SCHEDULED_DEPLOYMENTS:
     case DeploymentConstants.RECEIVE_FINISHED_DEPLOYMENTS:
       return {
         ...state,
-        byId: {
-          ...state.byId,
-          ...action.deployments
-        },
         byStatus: {
           ...state.byStatus,
           [action.status]: {

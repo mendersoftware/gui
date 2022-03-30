@@ -86,16 +86,16 @@ describe('app actions', () => {
           tagAttributes: []
         }
       },
+      { type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments: defaultState.deployments.byId },
       {
         type: DeploymentConstants.RECEIVE_FINISHED_DEPLOYMENTS,
-        deployments: defaultState.deployments.byId,
         deploymentIds: Object.keys(defaultState.deployments.byId),
         status: 'finished',
         total: Object.keys(defaultState.deployments.byId).length
       },
+      { type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments: defaultState.deployments.byId },
       {
         type: DeploymentConstants.RECEIVE_INPROGRESS_DEPLOYMENTS,
-        deployments: defaultState.deployments.byId,
         deploymentIds: Object.keys(defaultState.deployments.byId),
         status: 'inprogress',
         total: Object.keys(defaultState.deployments.byId).length

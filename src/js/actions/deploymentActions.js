@@ -50,9 +50,9 @@ export const getDeploymentsByStatus =
           return accu;
         },
         [
+          dispatch({ type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments }),
           dispatch({
             type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`],
-            deployments,
             deploymentIds,
             status,
             total: !(startDate || endDate || group || type) ? total : getState().deployments.byStatus[status].total
@@ -219,7 +219,8 @@ export const abortDeployment = deploymentId => (dispatch, getState) =>
       }, {});
       const total = Math.max(state.deployments.byStatus[status].total - 1, 0);
       return Promise.all([
-        dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deployments, deploymentIds, status, total }),
+        dispatch({ type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments }),
+        dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deploymentIds, status, total }),
         dispatch({
           type: DeploymentConstants.REMOVE_DEPLOYMENT,
           deploymentId

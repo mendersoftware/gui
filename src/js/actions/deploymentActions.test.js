@@ -62,7 +62,8 @@ const defaultResponseActions = {
     type: DeploymentConstants.RECEIVE_DEPLOYMENT,
     deployment: createdDeployment
   },
-  receiveInprogress: { type: DeploymentConstants.RECEIVE_INPROGRESS_DEPLOYMENTS, deploymentIds: [], deployments: {}, status: 'inprogress', total: 0 },
+  receiveMultiple: { type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments: {} },
+  receiveInprogress: { type: DeploymentConstants.RECEIVE_INPROGRESS_DEPLOYMENTS, deploymentIds: [], status: 'inprogress', total: 0 },
   remove: { type: DeploymentConstants.REMOVE_DEPLOYMENT, deploymentId: defaultState.deployments.byId.d1.id },
   select: {
     type: DeploymentConstants.SELECT_DEPLOYMENT,
@@ -82,9 +83,10 @@ const defaultResponseActions = {
 
 /* eslint-disable sonarjs/no-identical-functions */
 describe('deployment actions', () => {
-  const store = mockStore({ ...defaultState });
   it('should allow aborting deployments', async () => {
+    const store = mockStore({ ...defaultState });
     const expectedActions = [
+      defaultResponseActions.receiveMultiple,
       defaultResponseActions.receiveInprogress,
       defaultResponseActions.remove,
       {
@@ -102,6 +104,7 @@ describe('deployment actions', () => {
     });
   });
   it(`should reject aborting deployments that don't exist`, () => {
+    const store = mockStore({ ...defaultState });
     const abortedDeployment = store.dispatch(abortDeployment(`${defaultState.deployments.byId.d1.id}-invalid`));
     expect(typeof abortedDeployment === Promise);
     expect(abortedDeployment).rejects.toBeTruthy();
@@ -184,9 +187,9 @@ describe('deployment actions', () => {
   it('should allow deployments retrieval', async () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
+      { ...defaultResponseActions.receiveMultiple, deployments: defaultState.deployments.byId },
       {
         ...defaultResponseActions.receiveInprogress,
-        deployments: defaultState.deployments.byId,
         deploymentIds: Object.keys(defaultState.deployments.byId),
         total: defaultState.deployments.byStatus.inprogress.total
       },
