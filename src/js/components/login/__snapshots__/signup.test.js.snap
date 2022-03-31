@@ -815,11 +815,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
     </div>
   </form>
   <div
-    class="flexbox margin-top"
-    style="color: rgba(0, 0, 0, 0.3); justify-content: center;"
+    class="margin-top flexbox centered"
   >
-    Already have an account?
-     
+    <div
+      class="muted"
+    >
+      Already have an account?
+    </div>
     <a
       href="/login"
       style="margin-left: 4px;"
