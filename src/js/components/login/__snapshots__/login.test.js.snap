@@ -899,20 +899,19 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
     </div>
   </form>
   <div
-    class="margin-top muted"
+    class="margin-top flexbox centered"
   >
     <div
-      class="flexbox centered"
+      class="muted"
     >
       Don't have an account?
-       
-      <a
-        href="/signup"
-        style="margin-left: 4px;"
-      >
-        Sign up here
-      </a>
     </div>
+    <a
+      href="/signup"
+      style="margin-left: 4px;"
+    >
+      Sign up here
+    </a>
   </div>
 </div>
 `;

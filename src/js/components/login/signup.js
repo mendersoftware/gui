@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
 import { Button } from '@mui/material';
@@ -14,6 +14,7 @@ import Loader from '../common/loader';
 import UserDataEntry from './signup-steps/userdata-entry';
 import OrgDataEntry from './signup-steps/orgdata-entry';
 import { OAuth2Providers } from './oauth2providers';
+import { EntryLink } from './login';
 
 const cookies = new Cookies();
 
@@ -133,14 +134,7 @@ export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setF
       ) : (
         <>
           {steps[step]}
-          {step !== 3 && (
-            <div className="flexbox margin-top" style={{ color: 'rgba(0, 0, 0, 0.3)', justifyContent: 'center' }}>
-              Already have an account?{' '}
-              <Link style={{ marginLeft: '4px' }} to="/login">
-                Log in
-              </Link>
-            </div>
-          )}
+          {step !== 3 && <EntryLink target="login" />}
         </>
       )}
     </div>
