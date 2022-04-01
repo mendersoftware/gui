@@ -25,6 +25,20 @@ import LinedHeader from '../common/lined-header';
 
 const cookies = new Cookies();
 
+const entryText = {
+  signup: { linkText: 'Sign up here', question: `Don't have an account?`, target: '/signup' },
+  login: { linkText: 'Log in', question: `Already have an account?`, target: '/login' }
+};
+
+export const EntryLink = ({ target = 'signup' }) => (
+  <div className="margin-top flexbox centered">
+    <div className="muted">{entryText[target].question}</div>
+    <Link style={{ marginLeft: 4 }} to={entryText[target].target}>
+      {entryText[target].linkText}
+    </Link>
+  </div>
+);
+
 export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackbar }) => {
   const [noExpiry] = useState(cookies.get('noExpiry'));
   const [refresh, setRefresh] = useState(false);
@@ -149,14 +163,7 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
               <HelpIcon />
             </MenderTooltipClickable>
           )}
-          <div className="margin-top muted">
-            <div className="flexbox centered">
-              Don&#39;t have an account?{' '}
-              <Link style={{ marginLeft: '4px' }} to="/signup">
-                Sign up here
-              </Link>
-            </div>
-          </div>
+          <EntryLink target="signup" />
         </>
       )}
     </div>

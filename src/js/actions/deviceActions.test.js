@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
 import { defaultState } from '../../../tests/mockData';
 import AppConstants from '../constants/appConstants';
 import DeploymentConstants from '../constants/deploymentConstants';
@@ -354,9 +355,18 @@ describe('static grouping related actions', () => {
     const expectedActions = [
       { type: DeviceConstants.RECEIVE_GROUPS, groups: { testGroup: defaultState.devices.groups.byId.testGroup } },
       {
+        type: DeviceConstants.RECEIVE_DEVICES,
+        devicesById: { [defaultState.devices.byId.a1.id]: { ...defaultState.devices.byId.a1, updated_ts: inventoryDevice.updated_ts } }
+      },
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: defaultState.devices.byId.a1 } },
+      {
         type: DeviceConstants.ADD_DYNAMIC_GROUP,
         groupName: DeviceConstants.UNGROUPED_GROUP.id,
-        group: { deviceIds: [], total: 0, filters: [{ key: 'group', operator: '$nin', scope: 'system', value: ['testGroup'] }] }
+        group: {
+          deviceIds: [],
+          total: 0,
+          filters: [{ key: 'group', operator: '$nin', scope: 'system', value: [Object.keys(defaultState.devices.groups.byId)[0]] }]
+        }
       }
     ];
     await store.dispatch(getGroups());
@@ -374,9 +384,18 @@ describe('static grouping related actions', () => {
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: getGroupSuccessNotification(groupName) } },
       { type: DeviceConstants.RECEIVE_GROUPS, groups: { testGroup: defaultState.devices.groups.byId.testGroup } },
       {
+        type: DeviceConstants.RECEIVE_DEVICES,
+        devicesById: { [defaultState.devices.byId.a1.id]: { ...defaultState.devices.byId.a1, updated_ts: inventoryDevice.updated_ts } }
+      },
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: defaultState.devices.byId.a1 } },
+      {
         type: DeviceConstants.ADD_DYNAMIC_GROUP,
         groupName: DeviceConstants.UNGROUPED_GROUP.id,
-        group: { deviceIds: [], total: 0, filters: [{ key: 'group', operator: '$nin', scope: 'system', value: ['testGroup'] }] }
+        group: {
+          deviceIds: [],
+          total: 0,
+          filters: [{ key: 'group', operator: '$nin', scope: 'system', value: [Object.keys(defaultState.devices.groups.byId)[0]] }]
+        }
       }
     ];
     await store.dispatch(addStaticGroup(groupName, [defaultState.devices.byId.a1.id]));
@@ -413,9 +432,18 @@ describe('static grouping related actions', () => {
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Group was removed successfully' } },
       { type: DeviceConstants.RECEIVE_GROUPS, groups: { testGroup: defaultState.devices.groups.byId.testGroup } },
       {
+        type: DeviceConstants.RECEIVE_DEVICES,
+        devicesById: { [defaultState.devices.byId.a1.id]: { ...defaultState.devices.byId.a1, updated_ts: inventoryDevice.updated_ts } }
+      },
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: defaultState.devices.byId.a1 } },
+      {
         type: DeviceConstants.ADD_DYNAMIC_GROUP,
         groupName: DeviceConstants.UNGROUPED_GROUP.id,
-        group: { deviceIds: [], total: 0, filters: [{ key: 'group', operator: '$nin', scope: 'system', value: ['testGroup'] }] }
+        group: {
+          deviceIds: [],
+          total: 0,
+          filters: [{ key: 'group', operator: '$nin', scope: 'system', value: [Object.keys(defaultState.devices.groups.byId)[0]] }]
+        }
       }
     ];
     await store.dispatch(removeStaticGroup(groupName));

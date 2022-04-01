@@ -170,7 +170,7 @@ export const deviceHandlers = [
     );
     const status = filter?.value || '';
     if (!status || filters.length > 1) {
-      if (filters.find(filter => filter.attribute === 'group' && filter.value === Object.keys(defaultState.devices.groups.byId)[0])) {
+      if (filters.find(filter => filter.attribute === 'group' && filter.value.includes(Object.keys(defaultState.devices.groups.byId)[0]))) {
         return res(ctx.set(headerNames.total, 2), ctx.json([inventoryDevice]));
       }
       return res(ctx.set(headerNames.total, 0), ctx.json([]));
