@@ -153,8 +153,13 @@ export const DeviceList = props => {
 
   const { column: sortCol } = columns.length ? columns[0] : {};
   const deviceListRef = useRef();
+  const selectedRowsRef = useRef(selectedRows);
 
   const size = useWindowSize();
+
+  useEffect(() => {
+    selectedRowsRef.current = selectedRows;
+  }, [selectedRows]);
 
   useEffect(() => {
     if (!deviceListRef.current) {
@@ -193,7 +198,7 @@ export const DeviceList = props => {
   };
 
   const onRowSelection = selectedRow => {
-    let updatedSelection = [...selectedRows];
+    let updatedSelection = [...selectedRowsRef.current];
     const selectedIndex = updatedSelection.indexOf(selectedRow);
     if (selectedIndex === -1) {
       updatedSelection.push(selectedRow);
