@@ -11,7 +11,7 @@
     "@mui/lab": "^5.0.0-alpha.74",
     "@mui/material": "^5.5.3",
     "@mui/styles": "^5.5.3",
-    "@reduxjs/toolkit": "^1.8.0",
+    "@reduxjs/toolkit": "^1.8.1",
     "@stripe/react-stripe-js": "^1.7.0",
     "@stripe/stripe-js": "^1.26.0",
     "axios": "^0.26.1",
