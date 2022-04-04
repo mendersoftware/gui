@@ -13,7 +13,7 @@
     "@mui/styles": "^5.5.1",
     "@reduxjs/toolkit": "^1.8.0",
     "@stripe/react-stripe-js": "^1.7.0",
-    "@stripe/stripe-js": "^1.25.0",
+    "@stripe/stripe-js": "^1.26.0",
     "axios": "^0.26.1",
     "buffer": "^6.0.3",
     "copy-to-clipboard": "^3.3.1",
