@@ -2,8 +2,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import Cookies from 'universal-cookie';
 
-import { defaultState, token, userId } from '../../../tests/mockData';
-import { roles as rbacRoles } from '../../../tests/__mocks__/userHandlers';
+import { defaultState, receivedPermissionSets, receivedRoles, token, userId } from '../../../tests/mockData';
 import {
   createRole,
   createUser,
@@ -28,25 +27,19 @@ import {
   setShowConnectingDialog,
   toggleHelptips,
   updateUserColumnSettings,
-  verify2FA
+  verify2FA,
+  verifyEmailComplete,
+  verifyEmailStart
 } from './userActions';
 import OnboardingConstants from '../constants/onboardingConstants';
 import AppConstants from '../constants/appConstants';
-import UserConstants from '../constants/userConstants';
+import UserConstants, { emptyRole, uiPermissionsById } from '../constants/userConstants';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-const defaultRole = { name: 'test', description: 'test description', groups: [] };
+const defaultRole = { ...emptyRole, name: 'test', description: 'test description' };
 const settings = { test: true };
-
-const receivedRoles = rbacRoles.reduce((accu, role) => {
-  if (role.name.startsWith('RBAC')) {
-    const { name, ...roleRemainder } = role;
-    accu[name] = roleRemainder;
-  }
-  return accu;
-}, {});
 
 /* eslint-disable sonarjs/no-identical-functions */
 describe('user actions', () => {
@@ -164,6 +157,18 @@ describe('user actions', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
+  it('should allow beginning email verification', async () => {
+    jest.clearAllMocks();
+    const expectedActions = [
+      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId[userId] },
+      { type: UserConstants.SET_CUSTOM_COLUMNS, value: [] }
+    ];
+    const store = mockStore({ ...defaultState });
+    await store.dispatch(verifyEmailStart());
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
   it('should allow processing email verification codes', async () => {
     jest.clearAllMocks();
     const expectedActions = [{ type: UserConstants.RECEIVED_ACTIVATION_CODE, code: 'code' }];
@@ -173,7 +178,20 @@ describe('user actions', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
-
+  it('should allow completing email verification', async () => {
+    jest.clearAllMocks();
+    const expectedActions = [
+      { type: UserConstants.RECEIVED_USER, user: defaultState.users.byId[userId] },
+      { type: UserConstants.SET_CUSTOM_COLUMNS, value: [] }
+    ];
+    const store = mockStore({ ...defaultState });
+    await store.dispatch(verifyEmailComplete('superSecret'));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    const result = store.dispatch(verifyEmailComplete('ohNo'));
+    expect(result).rejects.toBeTruthy();
+  });
   it('should allow logging in', async () => {
     jest.clearAllMocks();
     const expectedActions = [
@@ -272,7 +290,10 @@ describe('user actions', () => {
   });
   it('should allow role list retrieval', async () => {
     jest.clearAllMocks();
-    const expectedActions = [{ type: UserConstants.RECEIVED_ROLES, rolesById: { ...defaultState.users.rolesById, ...receivedRoles } }];
+    const expectedActions = [
+      { type: UserConstants.RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
+      { type: UserConstants.RECEIVED_ROLES, value: receivedRoles }
+    ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(getRoles());
     const storeActions = store.getActions();
@@ -283,10 +304,11 @@ describe('user actions', () => {
     jest.clearAllMocks();
     const expectedActions = [
       { type: UserConstants.CREATED_ROLE, role: defaultRole, roleId: defaultRole.name },
-      { type: UserConstants.RECEIVED_ROLES, rolesById: { ...defaultState.users.rolesById, ...receivedRoles } }
+      { type: UserConstants.RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
+      { type: UserConstants.RECEIVED_ROLES, value: receivedRoles }
     ];
     const store = mockStore({ ...defaultState });
-    await store.dispatch(createRole(defaultRole));
+    await store.dispatch(createRole({ ...defaultRole, groups: [{ group: 'testGroup', uiPermissions: [uiPermissionsById.manage.value] }] }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
@@ -294,20 +316,34 @@ describe('user actions', () => {
   it('should allow role edits', async () => {
     jest.clearAllMocks();
     const expectedActions = [
-      { type: UserConstants.UPDATED_ROLE, roleId: 'test', role: { name: 'test', groups: [] } },
-      { type: UserConstants.RECEIVED_ROLES, rolesById: { ...defaultState.users.rolesById, ...receivedRoles } }
+      {
+        type: UserConstants.UPDATED_ROLE,
+        roleId: defaultRole.name,
+        role: {
+          ...defaultRole,
+          uiPermissions: {
+            ...defaultRole.uiPermissions,
+            groups: { ...defaultRole.uiPermissions.groups, testGroup: [uiPermissionsById.manage.value] }
+          }
+        }
+      },
+      { type: UserConstants.RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
+      { type: UserConstants.RECEIVED_ROLES, value: receivedRoles }
     ];
     const store = mockStore({ ...defaultState });
-    await store.dispatch(editRole({ name: 'test', password: 'mySecretPassword', groups: [] }));
+    await store.dispatch(editRole({ name: defaultRole.name, groups: [{ group: 'testGroup', uiPermissions: [uiPermissionsById.manage.value] }] }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
   it('should allow role removal', async () => {
     jest.clearAllMocks();
+    // eslint-disable-next-line no-unused-vars
+    const { test, ...remainder } = defaultState.users.rolesById;
     const expectedActions = [
-      { type: UserConstants.REMOVED_ROLE, roleId: 'test' },
-      { type: UserConstants.RECEIVED_ROLES, rolesById: { ...defaultState.users.rolesById, ...receivedRoles } }
+      { type: UserConstants.REMOVED_ROLE, value: remainder },
+      { type: UserConstants.RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
+      { type: UserConstants.RECEIVED_ROLES, value: receivedRoles }
     ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(removeRole('test'));

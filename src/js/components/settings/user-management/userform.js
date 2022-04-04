@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import pluralize from 'pluralize';
 import {
   Checkbox,
@@ -15,175 +15,137 @@ import {
 } from '@mui/material';
 
 import Form from '../../common/forms/form';
-import FormCheckbox from '../../common/forms/formcheckbox';
 import TextInput from '../../common/forms/textinput';
 import PasswordInput from '../../common/forms/passwordinput';
-import { rolesByName } from '../../../constants/userConstants';
-import { deepCompare } from '../../../helpers';
+import { rolesById, rolesByName, uiPermissionsById } from '../../../constants/userConstants';
 
-import { OAuth2Providers } from '../../login/oauth2providers';
-
-export default class UserForm extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    const isCreation = !Object.keys(props.user).length;
-    this.state = {
-      editPass: isCreation,
-      hadRoleChanges: false,
-      isCreation,
-      selectedRoles: (props.user.roles || []).reduce((accu, role) => {
-        const foundRole = props.roles.find(currentRole => currentRole.id === role);
-        if (foundRole) {
-          accu.push(foundRole);
-        }
-        return accu;
-      }, [])
-    };
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    // TODO: this is needed due to the re-registering of inputs in the form component and should be fixed at some point
-    if (prevState.editPass !== this.state.editPass || prevState.selectedRoles !== this.state.selectedRoles) {
-      this.forceUpdate();
-    }
-  }
-
-  onSelect(role) {
-    const { selectedRoles } = this.state;
-    const {
-      user: { roles = [] }
-    } = this.props;
-    const isSelectedAlready = selectedRoles.some(currentRole => role.id === currentRole.id);
-    let newlySelectedRoles;
-    if (isSelectedAlready) {
-      newlySelectedRoles = selectedRoles.filter(currentRole => role.id !== currentRole.id);
-    } else {
-      newlySelectedRoles = [...selectedRoles, role];
-    }
-    const hadRoleChanges =
-      roles.length !== newlySelectedRoles.length || roles.some(currentRoleId => !newlySelectedRoles.some(role => currentRoleId === role.id));
-    this.setState({ selectedRoles: newlySelectedRoles, hadRoleChanges });
-  }
-
-  onSubmit(data) {
-    const { submit, user } = this.props;
-    const { hadRoleChanges, isCreation } = this.state;
-    if (!isCreation && !hadRoleChanges && data.email == user.email) {
-      return submit(null, 'edit', user.id, data.password_reset ? data.email : null);
-    }
-    const { selectedRoles } = this.state;
-    let submissionData = Object.assign({}, data, hadRoleChanges ? { roles: selectedRoles.map(role => role.id) } : {});
-    delete submissionData['password_new'];
-    submissionData['password'] = data.password_new;
-    submissionData = Object.entries(submissionData).reduce((accu, [key, value]) => {
-      if (!deepCompare(user[key], value)) {
-        accu[key] = value;
+export const UserRolesSelect = ({ currentUser, onSelect, roles, user }) => {
+  const [selectedRoleIds, setSelectedRoleIds] = useState(
+    (user.roles || []).reduce((accu, roleId) => {
+      const foundRole = roles[roleId];
+      if (foundRole) {
+        accu.push(roleId);
       }
       return accu;
-    }, {});
-    return !isCreation ? submit(submissionData, 'edit', user.id, data.password_reset ? data.email : null) : submit(submissionData, 'create');
-  }
+    }, [])
+  );
 
-  render() {
-    const self = this;
-    const { editPass, isCreation, selectedRoles } = self.state;
-    const { closeDialog, currentUser, isAdmin, isEnterprise, roles, user } = self.props;
-    const showRoleUsageNotification = selectedRoles.reduce((accu, item) => {
-      const hasUiApiAccess = [rolesByName.ci].includes(item.id)
-        ? false
-        : item.id === rolesByName.admin || item.permissions.some(permission => ![rolesByName.deploymentCreation.action].includes(permission.action));
-      if (hasUiApiAccess) {
-        return false;
-      }
-      return typeof accu !== 'undefined' ? accu : true;
-    }, undefined);
-    const isOAuth2 = !!user.login;
-    const provider = isOAuth2 ? OAuth2Providers.find(provider => !!user.login[provider.id]) : null;
-    return (
-      <Dialog open={true} fullWidth={true} maxWidth="sm">
-        <DialogTitle>{isCreation ? 'Create new user' : 'Edit user'}</DialogTitle>
-        <DialogContent style={{ overflowY: 'initial' }}>
-          <Form
-            uniqueId={`usereditform-${editPass}`}
-            dialog={true}
-            onSubmit={data => self.onSubmit(data)}
-            handleCancel={closeDialog}
-            submitLabel={isCreation ? 'Create user' : 'Save changes'}
-            submitButtonId="submit_button"
-            showButtons={true}
+  const onInputChange = ({ target: { value } }) => {
+    const { roles = [] } = user;
+    let newlySelectedRoles = value;
+    if (value.includes('')) {
+      newlySelectedRoles = [];
+    }
+    const hadRoleChanges =
+      roles.length !== newlySelectedRoles.length || roles.some(currentRoleId => !newlySelectedRoles.some(roleId => currentRoleId === roleId));
+    setSelectedRoleIds(newlySelectedRoles);
+    onSelect(newlySelectedRoles, hadRoleChanges);
+  };
+
+  const editableRoles = useMemo(
+    () =>
+      Object.entries(roles).map(([id, role]) => {
+        const enabled = selectedRoleIds.some(roleId => id === roleId);
+        return { enabled, id, ...role };
+      }),
+    [roles, selectedRoleIds]
+  );
+
+  const showRoleUsageNotification = useMemo(
+    () =>
+      selectedRoleIds.reduce((accu, roleId) => {
+        const { permissions, uiPermissions } = roles[roleId];
+        const hasUiApiAccess = [rolesByName.ci].includes(roleId)
+          ? false
+          : roleId === rolesByName.admin ||
+            permissions.some(permission => ![rolesByName.deploymentCreation.action].includes(permission.action)) ||
+            uiPermissions.userManagement.includes(uiPermissionsById.read.value);
+        if (hasUiApiAccess) {
+          return false;
+        }
+        return typeof accu !== 'undefined' ? accu : true;
+      }, undefined),
+    [selectedRoleIds]
+  );
+
+  return (
+    <FormControl id="roles-form" style={{ maxWidth: 400 }}>
+      <InputLabel id="roles-selection-label">Roles</InputLabel>
+      <Select
+        labelId="roles-selection-label"
+        id={`roles-selector-${selectedRoleIds.length}`}
+        multiple
+        value={selectedRoleIds}
+        required
+        onChange={onInputChange}
+        renderValue={selected => selected.map(role => roles[role].name).join(', ')}
+      >
+        {editableRoles.map(role => (
+          <MenuItem id={role.id} key={role.id} value={role.id}>
+            <Checkbox id={`${role.id}-checkbox`} checked={role.enabled} />
+            <ListItemText id={`${role.id}-text`} primary={role.name} />
+          </MenuItem>
+        ))}
+      </Select>
+      {showRoleUsageNotification && (
+        <FormHelperText className="info">
+          The selected {pluralize('role', selectedRoleIds.length)} may prevent {currentUser.email === user.email ? 'you' : <i>{user.email}</i>} from using the
+          Mender UI.
+          <br />
+          Consider adding the <i>{rolesById[rolesByName.readOnly].name}</i> role as well.
+        </FormHelperText>
+      )}
+    </FormControl>
+  );
+};
+
+export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterprise, roles, submit }) => {
+  const [hadRoleChanges, setHadRoleChanges] = useState(false);
+  const [selectedRoles, setSelectedRoles] = useState();
+
+  const onSelect = (newlySelectedRoles, hadRoleChanges) => {
+    setSelectedRoles(newlySelectedRoles);
+    setHadRoleChanges(hadRoleChanges);
+  };
+
+  const onSubmit = data => {
+    let submissionData = Object.assign({}, data, hadRoleChanges ? { roles: selectedRoles } : {});
+    delete submissionData['password_new'];
+    submissionData['password'] = data.password_new;
+    return submit(submissionData, 'create');
+  };
+
+  return (
+    <Dialog open={true} fullWidth={true} maxWidth="sm">
+      <DialogTitle>Create new user</DialogTitle>
+      <DialogContent style={{ overflowY: 'initial' }}>
+        <Form
+          uniqueId="usereditform"
+          dialog={true}
+          onSubmit={onSubmit}
+          handleCancel={closeDialog}
+          submitLabel="Create user"
+          submitButtonId="submit_button"
+          showButtons={true}
+          autocomplete="off"
+        >
+          <TextInput hint="Email" label="Email" id="email" validations="isLength:1,isEmail" required autocomplete="off" />
+          <PasswordInput
+            className="edit-pass"
+            id="password_new"
+            label="Password"
+            create={true}
+            validations="isLength:8"
+            edit={false}
+            required={true}
             autocomplete="off"
-          >
-            <TextInput
-              hint="Email"
-              label="Email"
-              id="email"
-              value={user.email}
-              validations="isLength:1,isEmail"
-              required={isCreation}
-              disabled={isOAuth2}
-              autocomplete="off"
-            />
-            {isOAuth2 ? (
-              <div className="flexbox margin-top-small margin-bottom">
-                <div style={{ fontSize: '36px', marginRight: '10px' }}>{provider.icon}</div>
-                <div className="info">
-                  This user logs in using his <strong>{provider.name}</strong> account.
-                  <br />
-                  He can connect to {provider.name} to update his login settings.
-                </div>
-              </div>
-            ) : null}
-            {isCreation ? (
-              <PasswordInput
-                className="edit-pass"
-                id="password_new"
-                label="Password"
-                create={true}
-                validations={`isLength:8,isNot:${user.email}`}
-                edit={false}
-                required={true}
-                autocomplete="off"
-              />
-            ) : null}
-            {!isOAuth2 && !isCreation ? (
-              <FormCheckbox id="password_reset" label="Send an email to the user containing a link to reset the password" checked={false} />
-            ) : null}
-            {isEnterprise && isAdmin ? (
-              <div id="roles-form-container">
-                <FormControl id="roles-form">
-                  <InputLabel id="roles-selection-label">Roles</InputLabel>
-                  <Select
-                    labelId="roles-selection-label"
-                    id={`roles-selector-${selectedRoles.length}`}
-                    multiple
-                    value={selectedRoles}
-                    required={true}
-                    renderValue={selected => selected.map(role => role.title).join(', ')}
-                  >
-                    {roles.map(role => (
-                      <MenuItem key={role.id} value={role} id={role.id} onClick={() => self.onSelect(role)}>
-                        <Checkbox id={`${role.id}-checkbox`} checked={selectedRoles.some(item => role.id === item.id)} />
-                        <ListItemText id={`${role}-text`} primary={role.title} />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {showRoleUsageNotification && (
-                    <FormHelperText className="info">
-                      The selected {pluralize('role', selectedRoles.length)} may prevent {currentUser.email === user.email ? 'you' : <i>{user.email}</i>} from
-                      using the Mender UI.
-                      <br />
-                      Consider adding the <i>Read only</i> role as well.
-                    </FormHelperText>
-                  )}
-                </FormControl>
-              </div>
-            ) : (
-              <></>
-            )}
-          </Form>
-        </DialogContent>
-        <DialogActions />
-      </Dialog>
-    );
-  }
-}
+          />
+          {canManageUsers && isEnterprise && <UserRolesSelect currentUser={currentUser} onSelect={onSelect} roles={roles} user={{}} />}
+        </Form>
+      </DialogContent>
+      <DialogActions />
+    </Dialog>
+  );
+};
+
+export default UserForm;

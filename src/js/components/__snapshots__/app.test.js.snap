@@ -294,7 +294,7 @@ exports[`App Component renders correctly 1`] = `
   display: block;
 }
 
-.emotion-26 {
+.emotion-29 {
   padding: 0;
   position: absolute;
   bottom: 30px;
@@ -302,11 +302,11 @@ exports[`App Component renders correctly 1`] = `
   right: 0;
 }
 
-.emotion-28 {
+.emotion-31 {
   padding: 16px 16px 16px 42px;
 }
 
-.emotion-34 {
+.emotion-37 {
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
@@ -318,7 +318,7 @@ exports[`App Component renders correctly 1`] = `
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-36 {
+.emotion-39 {
   margin: 0;
   font-family: Lato,sans-serif;
   font-weight: 400;
@@ -328,7 +328,7 @@ exports[`App Component renders correctly 1`] = `
   display: block;
 }
 
-.emotion-37 {
+.emotion-40 {
   font-size: 13px;
   position: relative;
   top: 6px;
@@ -534,12 +534,28 @@ exports[`App Component renders correctly 1`] = `
             </span>
           </div>
         </a>
+        <a
+          class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-14"
+          href="/auditlog"
+          style="padding: 22px 16px 22px 42px;"
+        >
+          <div
+            class="MuiListItemText-root emotion-15"
+            style="text-transform: uppercase;"
+          >
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-16"
+            >
+              Audit log
+            </span>
+          </div>
+        </a>
       </ul>
       <ul
-        class="MuiList-root MuiList-padding emotion-26 emotion-13"
+        class="MuiList-root MuiList-padding emotion-29 emotion-13"
       >
         <a
-          class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-28 emotion-14"
+          class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-31 emotion-14"
           href="/help"
         >
           <div
@@ -553,10 +569,10 @@ exports[`App Component renders correctly 1`] = `
           </div>
         </a>
         <li
-          class="MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-28 emotion-14"
+          class="MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-31 emotion-14"
         >
           <div
-            class="MuiListItemText-root MuiListItemText-multiline emotion-34"
+            class="MuiListItemText-root MuiListItemText-multiline emotion-37"
           >
             <span
               class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-16"
@@ -567,10 +583,10 @@ exports[`App Component renders correctly 1`] = `
               />
             </span>
             <p
-              class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-36"
+              class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-39"
             >
               <a
-                class="emotion-37"
+                class="emotion-40"
                 href="https://docs.mender.io/development/release-information/open-source-licenses"
                 rel="noopener noreferrer"
                 target="_blank"
