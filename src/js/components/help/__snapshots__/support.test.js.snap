@@ -1,12 +1,32 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Support Component renders correctly 1`] = `
+.emotion-0 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.25rem;
+}
+
 <div>
   <h2>
-    Support
+    Contact support
   </h2>
   <p>
-    Contact us directly for support with Hosted Mender at:
+    Do you have a paid plan and need to contact support?
+  </p>
+  <p>
+    Send an email to
      
     <a
       href="mailto:support@mender.io"
@@ -15,16 +35,69 @@ exports[`Support Component renders correctly 1`] = `
     >
       support@mender.io
     </a>
-    .
+    , including your organization name and how we can help you.
   </p>
+  <h4>
+    Reporting bugs
+  </h4>
   <p>
-    You can also try our 
-    <a
-      href="/help/more-help-resources"
-    >
-      other resources
-    </a>
-     to find help from our community, our documentation and more.
+    To help us best respond to bug reports, please include:
+    <ul>
+      <li>
+        Which software versions you are using
+      </li>
+      <li>
+        If the issue can be reproduced, what are the steps to reproduce it?
+      </li>
+      <li>
+        In case of a UI issue, any screenshots or screen recordings
+      </li>
+    </ul>
   </p>
+  <h3>
+    Trial or open source users
+  </h3>
+  <div>
+    <p>
+      Find technical help at
+    </p>
+    <a
+      href="https://hub.mender.io"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <span>
+        <img
+          src="mender-hub-logo.png"
+          style="width: 50%;"
+        />
+      </span>
+    </a>
+    <p>
+      Mender Hub is a forum where you can find help, ask technical questions and start discussions with our active and knowledgeable community.
+    </p>
+    <a
+      href="https://hub.mender.io"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <span>
+        Ask a question at Mender Hub
+      </span>
+       
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-0"
+        data-testid="LaunchIcon"
+        focusable="false"
+        style="vertical-align: text-bottom;"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+        />
+      </svg>
+    </a>
+  </div>
 </div>
 `;

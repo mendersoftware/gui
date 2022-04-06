@@ -200,7 +200,7 @@ exports[`LeftNav Component renders correctly 1`] = `
         <span
           class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-4"
         >
-          Help
+          Help & support
         </span>
       </div>
     </a>

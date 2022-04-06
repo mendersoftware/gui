@@ -2,8 +2,9 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 // material ui
-import { List, ListItem, ListSubheader, ListItemText } from '@mui/material';
+import { List, ListItem, ListSubheader, ListItemText, ListItemIcon } from '@mui/material';
 import { listItemTextClasses } from '@mui/material/ListItemText';
+import { Launch as LaunchIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()(theme => ({
@@ -35,17 +36,25 @@ export const LeftNav = ({ sections }) => {
       {sections.map(({ itemClass = '', items = [], title = '' }, index) => (
         <React.Fragment key={`${itemClass}-${index}`}>
           <ListSubheader disableSticky={true}>{title}</ListSubheader>
-          {items.map(({ exact, path, secondaryAction = null, style = {}, title = '' }) => (
+          {items.map(({ exact, path, secondaryAction = null, style = {}, title = '', url }) => (
             <ListItem
               className={`navLink ${itemClass} ${classes.list}`}
-              component={NavLink}
+              component={url ? 'a' : NavLink}
               exact={exact}
+              href={url}
               key={path}
+              rel={url && 'noopener noreferrer'}
               secondaryAction={secondaryAction}
               style={style}
-              to={path}
+              target={url && '_blank'}
+              to={url ? url : path}
             >
-              <ListItemText className={classes.listItem} primary={title} />
+              <ListItemText className={classes.listItem} primary={title} url={url} />
+              {url && (
+                <ListItemIcon>
+                  <LaunchIcon />
+                </ListItemIcon>
+              )}
             </ListItem>
           ))}
         </React.Fragment>
