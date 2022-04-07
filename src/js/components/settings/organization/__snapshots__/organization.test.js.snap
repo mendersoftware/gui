@@ -52,6 +52,12 @@ exports[`MyOrganization Component renders correctly 1`] = `
 }
 
 .emotion-2 {
+  display: grid;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.emotion-3 {
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
@@ -60,7 +66,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
   margin-bottom: 6px;
 }
 
-.emotion-3 {
+.emotion-4 {
   margin: 0;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 400;
@@ -70,7 +76,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
   display: block;
 }
 
-.emotion-4 {
+.emotion-5 {
   margin: 0;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 400;
@@ -81,7 +87,13 @@ exports[`MyOrganization Component renders correctly 1`] = `
   display: block;
 }
 
-.emotion-5 {
+.emotion-6 {
+  margin-bottom: 8px;
+  margin-left: -16px;
+  width: 500px;
+}
+
+.emotion-7 {
   margin: 0;
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
@@ -93,6 +105,12 @@ exports[`MyOrganization Component renders correctly 1`] = `
 }
 
 .emotion-9 {
+  display: grid;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.emotion-12 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -109,7 +127,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
   font-size: 1.5rem;
 }
 
-.emotion-11 {
+.emotion-14 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -132,23 +150,23 @@ exports[`MyOrganization Component renders correctly 1`] = `
   padding-bottom: 8px;
 }
 
-.emotion-11.Mui-focusVisible {
+.emotion-14.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-11.Mui-selected {
+.emotion-14.Mui-selected {
   background-color: rgba(25, 118, 210, 0.08);
 }
 
-.emotion-11.Mui-selected.Mui-focusVisible {
+.emotion-14.Mui-selected.Mui-focusVisible {
   background-color: rgba(25, 118, 210, 0.2);
 }
 
-.emotion-11.Mui-disabled {
+.emotion-14.Mui-disabled {
   opacity: 0.38;
 }
 
-.emotion-12 {
+.emotion-15 {
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
@@ -157,7 +175,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
   margin-bottom: 4px;
 }
 
-.emotion-15 {
+.emotion-19 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -204,49 +222,49 @@ exports[`MyOrganization Component renders correctly 1`] = `
   color: #1976d2;
 }
 
-.emotion-15::-moz-focus-inner {
+.emotion-19::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-15.Mui-disabled {
+.emotion-19.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-15 {
+  .emotion-19 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-15:hover {
+.emotion-19:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgba(25, 118, 210, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-15:hover {
+  .emotion-19:hover {
     background-color: transparent;
   }
 }
 
-.emotion-15.Mui-disabled {
+.emotion-19.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-16 {
+.emotion-20 {
   display: inherit;
   margin-right: 8px;
   margin-left: -4px;
 }
 
-.emotion-16>*:nth-of-type(1) {
+.emotion-20>*:nth-of-type(1) {
   font-size: 20px;
 }
 
-.emotion-18 {
+.emotion-22 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -258,7 +276,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
-.emotion-24 {
+.emotion-30 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -293,17 +311,15 @@ exports[`MyOrganization Component renders correctly 1`] = `
         class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-1"
       >
         <div
-          class="MuiListItemText-root MuiListItemText-multiline emotion-2"
-          style="display: grid; width: 100%; margin-bottom: 8px;"
+          class="MuiListItemText-root MuiListItemText-multiline emotion-2 emotion-3"
         >
           <span
-            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-3"
+            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-4"
           >
             Organization name
           </span>
           <div
-            class="MuiTypography-root MuiTypography-body2 two-columns MuiListItemText-secondary emotion-4"
-            style="display: grid; width: 100%; margin-bottom: 8px;"
+            class="MuiTypography-root MuiTypography-body2 two-columns MuiListItemText-secondary emotion-5"
           >
             <div>
               test
@@ -314,8 +330,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
           </div>
         </div>
         <hr
-          class="MuiDivider-root MuiDivider-fullWidth emotion-5"
-          style="width: 500px;"
+          class="MuiDivider-root MuiDivider-fullWidth emotion-6 emotion-7"
         />
       </div>
     </li>
@@ -326,11 +341,10 @@ exports[`MyOrganization Component renders correctly 1`] = `
         class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-1"
       >
         <div
-          class="MuiListItemText-root MuiListItemText-multiline emotion-2"
-          style="display: grid; width: 100%; margin-bottom: 0px;"
+          class="MuiListItemText-root MuiListItemText-multiline emotion-9 emotion-3"
         >
           <span
-            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-3"
+            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-4"
           >
             <div
               class="flexbox center-aligned"
@@ -346,7 +360,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
               >
                 <svg
                   aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-9"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-12"
                   data-testid="InfoIcon"
                   focusable="false"
                   viewBox="0 0 24 24"
@@ -359,20 +373,19 @@ exports[`MyOrganization Component renders correctly 1`] = `
             </div>
           </span>
           <div
-            class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-4"
-            style="display: grid; width: 100%; margin-bottom: 0px;"
+            class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-5"
           >
             <div
               style="width: calc(500px - 32px);"
             >
               <div
-                class="attributes MuiListItem-root MuiListItem-padding emotion-11"
+                class="attributes MuiListItem-root MuiListItem-padding emotion-14"
               >
                 <div
-                  class="MuiListItemText-root emotion-12"
+                  class="MuiListItemText-root emotion-15"
                 >
                   <div
-                    class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-4"
+                    class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-5"
                     title="test"
                   >
                     <span
@@ -388,22 +401,21 @@ exports[`MyOrganization Component renders correctly 1`] = `
           </div>
         </div>
         <hr
-          class="MuiDivider-root MuiDivider-fullWidth emotion-5"
-          style="width: 500px;"
+          class="MuiDivider-root MuiDivider-fullWidth emotion-6 emotion-7"
         />
       </div>
       <div>
         <button
-          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-15"
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-19"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-16"
+            class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-20"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-9"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-12"
               data-testid="FileCopyIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -415,7 +427,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
           </span>
           Copy to clipboard
           <span
-            class="MuiTouchRipple-root emotion-18"
+            class="MuiTouchRipple-root emotion-22"
           />
         </button>
         <div
@@ -430,17 +442,15 @@ exports[`MyOrganization Component renders correctly 1`] = `
         class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-1"
       >
         <div
-          class="MuiListItemText-root MuiListItemText-multiline emotion-2"
-          style="display: grid; width: 100%; margin-bottom: 8px;"
+          class="MuiListItemText-root MuiListItemText-multiline emotion-2 emotion-3"
         >
           <span
-            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-3"
+            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-4"
           >
             Current plan
           </span>
           <div
-            class="MuiTypography-root MuiTypography-body2 two-columns MuiListItemText-secondary emotion-4"
-            style="display: grid; width: 100%; margin-bottom: 8px;"
+            class="MuiTypography-root MuiTypography-body2 two-columns MuiListItemText-secondary emotion-5"
           >
             <div>
               Trial
@@ -456,15 +466,14 @@ exports[`MyOrganization Component renders correctly 1`] = `
           </div>
         </div>
         <hr
-          class="MuiDivider-root MuiDivider-fullWidth emotion-5"
-          style="width: 500px;"
+          class="MuiDivider-root MuiDivider-fullWidth emotion-6 emotion-7"
         />
         <div
           class="flexbox centered muted"
         >
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-24"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-30"
             data-testid="ErrorIcon"
             focusable="false"
             viewBox="0 0 24 24"
@@ -495,17 +504,15 @@ exports[`MyOrganization Component renders correctly 1`] = `
         class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-1"
       >
         <div
-          class="MuiListItemText-root MuiListItemText-multiline emotion-2"
-          style="display: grid; width: 100%; margin-bottom: 8px;"
+          class="MuiListItemText-root MuiListItemText-multiline emotion-2 emotion-3"
         >
           <span
-            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-3"
+            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-4"
           >
             Current add-ons
           </span>
           <div
-            class="MuiTypography-root MuiTypography-body2 two-columns MuiListItemText-secondary emotion-4"
-            style="display: grid; width: 100%; margin-bottom: 8px;"
+            class="MuiTypography-root MuiTypography-body2 two-columns MuiListItemText-secondary emotion-5"
           >
             <div>
               You currently don't have any add-ons
@@ -518,15 +525,14 @@ exports[`MyOrganization Component renders correctly 1`] = `
           </div>
         </div>
         <hr
-          class="MuiDivider-root MuiDivider-fullWidth emotion-5"
-          style="width: 500px;"
+          class="MuiDivider-root MuiDivider-fullWidth emotion-6 emotion-7"
         />
         <div
           class="flexbox centered muted"
         >
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-24"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-30"
             data-testid="ErrorIcon"
             focusable="false"
             viewBox="0 0 24 24"
@@ -565,7 +571,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
           </div>
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-24"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-30"
             data-testid="OpenInNewIcon"
             focusable="false"
             viewBox="0 0 24 24"
@@ -647,11 +653,11 @@ exports[`smaller components renders DeviceLimitExpansionNotification correctly 1
 }
 
 <div
-  class="flexbox centered muted"
+  class="flexbox centered"
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-0"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall muted margin-right-small emotion-0"
     data-testid="ErrorIcon"
     focusable="false"
     viewBox="0 0 24 24"
@@ -660,18 +666,23 @@ exports[`smaller components renders DeviceLimitExpansionNotification correctly 1
       d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
     />
   </svg>
-  <span
-    class="margin-left-small"
+  <div
+    class="muted"
+    style="margin-right: 4px;"
   >
     To increase your device limit,
      
-    <a
-      href="/settings/upgrade"
-    >
-      upgrade to a paid plan
-    </a>
+  </div>
+  <a
+    href="/settings/upgrade"
+  >
+    upgrade to a paid plan
+  </a>
+  <div
+    class="muted"
+  >
     .
-  </span>
+  </div>
 </div>
 `;
 

@@ -1,13 +1,21 @@
 import React from 'react';
 
 import { Divider, ListItem, ListItemText } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+
+import { makeStyles } from 'tss-react/mui';
 
 const defaultItemProps = { alignItems: 'flex-start' };
 export const maxWidth = 500;
 
+const useStyles = makeStyles()(theme => ({
+  divider: { marginBottom: theme.spacing(), marginLeft: theme.spacing(-2), width: maxWidth },
+  text: { display: 'grid', width: '100%', marginBottom: theme.spacing() },
+  secondary: { display: 'grid', width: '100%', marginBottom: 0 }
+}));
+
 const OrganizationSettingsItem = ({ title, content: { action, description }, secondary, sideBarContent, notification }) => {
-  const theme = useTheme();
+  const { classes } = useStyles();
+
   const secondaryContent = secondary ? (
     secondary
   ) : (
@@ -24,18 +32,17 @@ const OrganizationSettingsItem = ({ title, content: { action, description }, sec
       )}
     </>
   );
-  const style = { display: 'grid', width: '100%', marginBottom: secondary ? 0 : theme.spacing() };
   return (
     <li className="margin-top-small org-settings-item">
       <ListItem {...defaultItemProps} component="div" classes={{ root: 'flexbox column' }}>
         <ListItemText
+          className={secondary ? classes.secondary : classes.text}
           classes={{ secondary: secondary ? '' : 'two-columns' }}
           primary={title}
-          secondaryTypographyProps={{ component: 'div', style }}
+          secondaryTypographyProps={{ component: 'div' }}
           secondary={<>{secondaryContent}</>}
-          style={style}
         />
-        <Divider style={{ margin: theme.spacing('inherit', 'inherit', 1, -2), width: maxWidth }} />
+        <Divider className={classes.divider} />
         {notification}
       </ListItem>
       {sideBarContent}
