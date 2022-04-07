@@ -2,7 +2,6 @@ import React from 'react';
 import pluralize from 'pluralize';
 
 import { ArrowDropDownCircleOutlined as ScrollDownIcon, CheckCircle as CheckIcon, Error as ErrorIcon, Help as HelpIcon } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
 import { DEVICE_ONLINE_CUTOFF } from '../../../constants/deviceConstants';
@@ -29,13 +28,14 @@ export const severityMap = {
 const useStyles = makeStyles()(theme => ({
   deviceDetailNotification: {
     marginBottom: theme.spacing(),
-    padding: theme.spacing(1.5, 'inherit'),
+    paddingBottom: theme.spacing(1.5),
+    paddingTop: theme.spacing(1.5),
     '&.red, &.green': {
       color: theme.palette.text.primary
     },
     '&.bordered': {
       border: `1px solid ${theme.palette.grey[500]}`,
-      background: `fade(${theme.palette.grey[600]}, 15%)`,
+      background: `${theme.palette.grey[600]}15`,
       '&.red': {
         borderColor: theme.palette.error.main,
         background: theme.palette.error.light
@@ -44,6 +44,13 @@ const useStyles = makeStyles()(theme => ({
     '> span': {
       marginRight: theme.spacing(2)
     }
+  },
+  textSpacing: {
+    marginLeft: theme.spacing(0.5),
+    marginRight: theme.spacing(0.5)
+  },
+  downButton: {
+    marginBottom: theme.spacing(-0.5)
   }
 }));
 
@@ -64,24 +71,23 @@ export const BaseNotification = ({ bordered = true, className = '', children, se
 };
 
 export const LastConnection = ({ updated_ts }) => {
-  const theme = useTheme();
+  const { classes } = useStyles();
 
   return (
     <BaseNotification severity={monitoringSeverities.CRITICAL}>
-      Device has not connected to the server since <Time value={updated_ts} style={{ margin: theme.spacing('inherit', 1) }} />
+      Device has not connected to the server since <Time className={classes.textSpacing} value={updated_ts} />
     </BaseNotification>
   );
 };
 
 export const ServiceNotification = ({ alerts, onClick }) => {
-  const theme = useTheme();
+  const { classes } = useStyles();
 
   return (
     <BaseNotification onClick={onClick} severity={monitoringSeverities.CRITICAL_FLAPPING}>
-      {alerts.length} {pluralize('service', alerts.length)} reported issues. View details in the
-      <a style={{ margin: theme.spacing('inherit', 1) }}>monitoring section</a>below
-      <a style={{ margin: theme.spacing('inherit', 1) }}>
-        <ScrollDownIcon fontSize="small" style={{ marginBottom: theme.spacing(-0.5) }} />
+      {alerts.length} {pluralize('service', alerts.length)} reported issues. View details in the <a className={classes.textSpacing}>monitoring section</a> below
+      <a className={classes.textSpacing}>
+        <ScrollDownIcon className={classes.downButton} fontSize="small" />
       </a>
     </BaseNotification>
   );

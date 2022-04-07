@@ -49,19 +49,19 @@ export const TrialExpirationNote = ({ trial_expiration }) => (
 );
 
 export const DeviceLimitExpansionNotification = ({ isTrial }) => (
-  <div className="flexbox centered muted">
-    <ErrorIcon fontSize="small" />
-    <span className="margin-left-small">
+  <div className="flexbox centered">
+    <ErrorIcon className="muted margin-right-small" fontSize="small" />
+    <div className="muted" style={{ marginRight: 4 }}>
       To increase your device limit,{' '}
-      {isTrial ? (
-        <Link to="/settings/upgrade">upgrade to a paid plan</Link>
-      ) : (
-        <a href="mailto:contact@mender.io" target="_blank" rel="noopener noreferrer">
-          contact our sales team
-        </a>
-      )}
-      .
-    </span>
+    </div>
+    {isTrial ? (
+      <Link to="/settings/upgrade">upgrade to a paid plan</Link>
+    ) : (
+      <a href="mailto:contact@mender.io" target="_blank" rel="noopener noreferrer">
+        contact our sales team
+      </a>
+    )}
+    <div className="muted">.</div>
   </div>
 );
 

@@ -88,7 +88,7 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
       </a>
     </div>
     <div
-      class=\\"flexbox center-aligned padding-small tss-vtwvxe-deviceDetailNotification  red column-data \\"
+      class=\\"flexbox center-aligned padding-small tss-1f9zgfv-deviceDetailNotification  red column-data \\"
     >
       <span>
         <svg
