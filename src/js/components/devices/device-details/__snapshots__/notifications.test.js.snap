@@ -3,7 +3,8 @@
 exports[`DeviceNotifications Component renders correctly 1`] = `
 .emotion-0 {
   margin-bottom: 8px;
-  padding: 12px inherit;
+  padding-bottom: 12px;
+  padding-top: 12px;
 }
 
 .emotion-0.red,
@@ -13,7 +14,7 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
 
 .emotion-0.bordered {
   border: 1px solid #9e9e9e;
-  background: fade(#757575, 15%);
+  background: #75757515;
 }
 
 .emotion-0.bordered.red {
@@ -43,6 +44,15 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
 }
 
 .emotion-2 {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.emotion-4 {
+  margin-bottom: -4px;
+}
+
+.emotion-5 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -82,18 +92,21 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
       1
        
       service
-       reported issues. View details in the
-      <a>
+       reported issues. View details in the 
+      <a
+        class="emotion-2"
+      >
         monitoring section
       </a>
-      below
-      <a>
+       below
+      <a
+        class="emotion-2"
+      >
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-2"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-4 emotion-5"
           data-testid="ArrowDropDownCircleOutlinedIcon"
           focusable="false"
-          style="margin-bottom: -4px;"
           viewBox="0 0 24 24"
         >
           <path
@@ -109,7 +122,8 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
 exports[`tiny components renders DeviceOfflineHeaderNotification correctly 1`] = `
 .emotion-0 {
   margin-bottom: 8px;
-  padding: 12px inherit;
+  padding-bottom: 12px;
+  padding-top: 12px;
 }
 
 .emotion-0.red,
@@ -119,7 +133,7 @@ exports[`tiny components renders DeviceOfflineHeaderNotification correctly 1`] =
 
 .emotion-0.bordered {
   border: 1px solid #9e9e9e;
-  background: fade(#757575, 15%);
+  background: #75757515;
 }
 
 .emotion-0.bordered.red {
@@ -188,7 +202,8 @@ exports[`tiny components renders DeviceOfflineHeaderNotification correctly 1`] =
 exports[`tiny components renders LastConnection correctly 1`] = `
 .emotion-0 {
   margin-bottom: 8px;
-  padding: 12px inherit;
+  padding-bottom: 12px;
+  padding-top: 12px;
 }
 
 .emotion-0.red,
@@ -198,7 +213,7 @@ exports[`tiny components renders LastConnection correctly 1`] = `
 
 .emotion-0.bordered {
   border: 1px solid #9e9e9e;
-  background: fade(#757575, 15%);
+  background: #75757515;
 }
 
 .emotion-0.bordered.red {
@@ -227,6 +242,11 @@ exports[`tiny components renders LastConnection correctly 1`] = `
   font-size: 1.5rem;
 }
 
+.emotion-2 {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
 <div>
   <div
     class="flexbox center-aligned padding-small emotion-0 bordered red  "
@@ -249,6 +269,7 @@ exports[`tiny components renders LastConnection correctly 1`] = `
     >
       Device has not connected to the server since 
       <time
+        class="emotion-2"
         datetime="2019-01-01T09:25:00+00:00"
       >
         2019-01-01 09:25
@@ -261,7 +282,8 @@ exports[`tiny components renders LastConnection correctly 1`] = `
 exports[`tiny components renders NoAlertsHeaderNotification correctly 1`] = `
 .emotion-0 {
   margin-bottom: 8px;
-  padding: 12px inherit;
+  padding-bottom: 12px;
+  padding-top: 12px;
 }
 
 .emotion-0.red,
@@ -271,7 +293,7 @@ exports[`tiny components renders NoAlertsHeaderNotification correctly 1`] = `
 
 .emotion-0.bordered {
   border: 1px solid #9e9e9e;
-  background: fade(#757575, 15%);
+  background: #75757515;
 }
 
 .emotion-0.bordered.red {
@@ -329,7 +351,8 @@ exports[`tiny components renders NoAlertsHeaderNotification correctly 1`] = `
 exports[`tiny components renders ServiceNotification correctly 1`] = `
 .emotion-0 {
   margin-bottom: 8px;
-  padding: 12px inherit;
+  padding-bottom: 12px;
+  padding-top: 12px;
 }
 
 .emotion-0.red,
@@ -339,7 +362,7 @@ exports[`tiny components renders ServiceNotification correctly 1`] = `
 
 .emotion-0.bordered {
   border: 1px solid #9e9e9e;
-  background: fade(#757575, 15%);
+  background: #75757515;
 }
 
 .emotion-0.bordered.red {
@@ -369,6 +392,15 @@ exports[`tiny components renders ServiceNotification correctly 1`] = `
 }
 
 .emotion-2 {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.emotion-4 {
+  margin-bottom: -4px;
+}
+
+.emotion-5 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -408,18 +440,21 @@ exports[`tiny components renders ServiceNotification correctly 1`] = `
       2
        
       services
-       reported issues. View details in the
-      <a>
+       reported issues. View details in the 
+      <a
+        class="emotion-2"
+      >
         monitoring section
       </a>
-      below
-      <a>
+       below
+      <a
+        class="emotion-2"
+      >
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-2"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-4 emotion-5"
           data-testid="ArrowDropDownCircleOutlinedIcon"
           focusable="false"
-          style="margin-bottom: -4px;"
           viewBox="0 0 24 24"
         >
           <path

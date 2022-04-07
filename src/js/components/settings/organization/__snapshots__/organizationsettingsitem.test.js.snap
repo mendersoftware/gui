@@ -43,6 +43,12 @@ exports[`OrganizationSettingsItem Component renders correctly 1`] = `
 }
 
 .emotion-1 {
+  display: grid;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
@@ -51,7 +57,7 @@ exports[`OrganizationSettingsItem Component renders correctly 1`] = `
   margin-bottom: 6px;
 }
 
-.emotion-2 {
+.emotion-3 {
   margin: 0;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 400;
@@ -61,7 +67,7 @@ exports[`OrganizationSettingsItem Component renders correctly 1`] = `
   display: block;
 }
 
-.emotion-3 {
+.emotion-4 {
   margin: 0;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 400;
@@ -72,7 +78,13 @@ exports[`OrganizationSettingsItem Component renders correctly 1`] = `
   display: block;
 }
 
-.emotion-4 {
+.emotion-5 {
+  margin-bottom: 8px;
+  margin-left: -16px;
+  width: 500px;
+}
+
+.emotion-6 {
   margin: 0;
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
@@ -90,17 +102,15 @@ exports[`OrganizationSettingsItem Component renders correctly 1`] = `
     class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-0"
   >
     <div
-      class="MuiListItemText-root MuiListItemText-multiline emotion-1"
-      style="display: grid; width: 100%; margin-bottom: 8px;"
+      class="MuiListItemText-root MuiListItemText-multiline emotion-1 emotion-2"
     >
       <span
-        class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-2"
+        class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-3"
       >
         Current plan
       </span>
       <div
-        class="MuiTypography-root MuiTypography-body2 two-columns MuiListItemText-secondary emotion-3"
-        style="display: grid; width: 100%; margin-bottom: 8px;"
+        class="MuiTypography-root MuiTypography-body2 two-columns MuiListItemText-secondary emotion-4"
       >
         <div>
           Trial
@@ -116,8 +126,7 @@ exports[`OrganizationSettingsItem Component renders correctly 1`] = `
       </div>
     </div>
     <hr
-      class="MuiDivider-root MuiDivider-fullWidth emotion-4"
-      style="width: 500px;"
+      class="MuiDivider-root MuiDivider-fullWidth emotion-5 emotion-6"
     />
     upgrade now!
   </div>
