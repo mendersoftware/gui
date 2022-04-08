@@ -102,7 +102,62 @@ exports[`Help Component renders correctly 1`] = `
   display: block;
 }
 
+.emotion-18 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 16px;
+  padding-right: 48px;
+}
+
+.emotion-18>.MuiListItemButton-root {
+  padding-right: 48px;
+}
+
+.emotion-18.Mui-focusVisible {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-18.Mui-selected {
+  background-color: rgba(25, 118, 210, 0.08);
+}
+
+.emotion-18.Mui-selected.Mui-focusVisible {
+  background-color: rgba(25, 118, 210, 0.2);
+}
+
+.emotion-18.Mui-disabled {
+  opacity: 0.38;
+}
+
 .emotion-22 {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.emotion-23 {
   min-width: 56px;
   color: rgba(0, 0, 0, 0.54);
   -webkit-flex-shrink: 0;
@@ -114,7 +169,7 @@ exports[`Help Component renders correctly 1`] = `
   display: inline-flex;
 }
 
-.emotion-23 {
+.emotion-24 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -131,7 +186,7 @@ exports[`Help Component renders correctly 1`] = `
   font-size: 1.5rem;
 }
 
-.emotion-24 {
+.emotion-25 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -162,8 +217,6 @@ exports[`Help Component renders correctly 1`] = `
     <a
       class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink helpNav emotion-2 emotion-3"
       href="/help/get-started"
-      rel=""
-      target=""
     >
       <div
         class="MuiListItemText-root emotion-4 emotion-5"
@@ -175,13 +228,10 @@ exports[`Help Component renders correctly 1`] = `
           Getting started
         </span>
       </div>
-      
     </a>
     <a
       class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink helpNav emotion-2 emotion-3"
       href="/help/support"
-      rel=""
-      target=""
     >
       <div
         class="MuiListItemText-root emotion-4 emotion-5"
@@ -193,13 +243,10 @@ exports[`Help Component renders correctly 1`] = `
           Contact support
         </span>
       </div>
-      
     </a>
     <a
       class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink helpNav emotion-2 emotion-3"
       href="/help/mender-hub"
-      rel=""
-      target=""
     >
       <div
         class="MuiListItemText-root emotion-4 emotion-5"
@@ -211,18 +258,18 @@ exports[`Help Component renders correctly 1`] = `
           Mender Hub
         </span>
       </div>
-      
     </a>
     <a
-      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink helpNav emotion-2 emotion-3"
-      href="https://docs.mender.io"
+      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink helpNav emotion-2 emotion-18"
+      exact="true"
+      href="https://docs.mender.io/"
       rel="noopener noreferrer"
       target="_blank"
-      to="https://docs.mender.io"
+      to="https://docs.mender.io/"
     >
       <div
         class="MuiListItemText-root emotion-4 emotion-5"
-        url="https://docs.mender.io"
+        url="https://docs.mender.io/"
       >
         <span
           class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-6"
@@ -231,19 +278,25 @@ exports[`Help Component renders correctly 1`] = `
         </span>
       </div>
       <div
-        class="MuiListItemIcon-root emotion-22"
+        class="MuiListItemSecondaryAction-root emotion-22"
       >
-        <svg
-          aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-23"
-          data-testid="LaunchIcon"
-          focusable="false"
-          viewBox="0 0 24 24"
+        <div
+          class="MuiListItemIcon-root emotion-23"
+          style="vertical-align: middle;"
         >
-          <path
-            d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
-          />
-        </svg>
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-24"
+            data-testid="LaunchIcon"
+            focusable="false"
+            style="font-size: 1rem;"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+            />
+          </svg>
+        </div>
       </div>
     </a>
   </ul>
@@ -277,7 +330,7 @@ exports[`Help Component renders correctly 1`] = `
             Get Started chapter in our documentation 
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-24"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-25"
               data-testid="LaunchIcon"
               focusable="false"
               style="vertical-align: text-bottom;"
@@ -304,7 +357,7 @@ exports[`Help Component renders correctly 1`] = `
             Client Installation documentation 
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-24"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-25"
               data-testid="LaunchIcon"
               focusable="false"
               style="vertical-align: text-bottom;"
@@ -328,7 +381,7 @@ exports[`Help Component renders correctly 1`] = `
             Mender Hub 
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-24"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-25"
               data-testid="LaunchIcon"
               focusable="false"
               style="vertical-align: text-bottom;"
@@ -354,7 +407,7 @@ exports[`Help Component renders correctly 1`] = `
             Artifact Creation documentation 
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-24"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-25"
               data-testid="LaunchIcon"
               focusable="false"
               style="vertical-align: text-bottom;"

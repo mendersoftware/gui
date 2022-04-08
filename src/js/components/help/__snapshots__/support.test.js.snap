@@ -42,18 +42,18 @@ exports[`Support Component renders correctly 1`] = `
   </h4>
   <p>
     To help us best respond to bug reports, please include:
-    <ul>
-      <li>
-        Which software versions you are using
-      </li>
-      <li>
-        If the issue can be reproduced, what are the steps to reproduce it?
-      </li>
-      <li>
-        In case of a UI issue, any screenshots or screen recordings
-      </li>
-    </ul>
   </p>
+  <ul>
+    <li>
+      Which software versions you are using
+    </li>
+    <li>
+      If the issue can be reproduced, what are the steps to reproduce it?
+    </li>
+    <li>
+      In case of a UI issue, any screenshots or screen recordings
+    </li>
+  </ul>
   <h3>
     Trial or open source users
   </h3>

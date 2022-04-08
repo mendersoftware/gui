@@ -27,7 +27,7 @@ const components = {
   },
   'documentation': {
     title: 'Documentation',
-    url: 'https://docs.mender.io/'
+    url: `https://docs.mender.io/`
   }
 };
 
