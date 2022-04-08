@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { matchPath } from 'react-router-dom';
 
-import { useTheme } from '@mui/material';
+import { useTheme, ListItemIcon } from '@mui/material';
+import { Launch as LaunchIcon } from '@mui/icons-material';
 
 import { getUserOrganization } from '../../actions/organizationActions';
 import { getDocsVersion, getIsEnterprise } from '../../selectors';
@@ -26,11 +27,17 @@ const components = {
   },
   'documentation': {
     title: 'Documentation',
-    url: 'https://docs.mender.io'
+    url: 'https://docs.mender.io/'
   }
 };
 
 const contentWidth = 780;
+
+const LinkIcon = () => (
+  <ListItemIcon style={{ 'verticalAlign': 'middle' }}>
+    <LaunchIcon style={{ 'fontSize': '1rem' }} />
+  </ListItemIcon>
+);
 
 // build array of link list components
 const eachRecursive = (obj, path, level, accu, isHosted, spacing) =>
@@ -47,6 +54,7 @@ const eachRecursive = (obj, path, level, accu, isHosted, spacing) =>
         hosted: value.hosted,
         style: { paddingLeft: `calc(${level} * ${spacing})` },
         exact: true,
+        secondaryAction: value.url ? <LinkIcon /> : null,
         url: value.url ? value.url : ''
       });
       bag = eachRecursive(value, this_path, level + 1, bag, isHosted, spacing);

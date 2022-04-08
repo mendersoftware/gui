@@ -2,9 +2,8 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 // material ui
-import { List, ListItem, ListSubheader, ListItemText, ListItemIcon } from '@mui/material';
+import { List, ListItem, ListSubheader, ListItemText } from '@mui/material';
 import { listItemTextClasses } from '@mui/material/ListItemText';
-import { Launch as LaunchIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()(theme => ({
@@ -36,27 +35,16 @@ export const LeftNav = ({ sections }) => {
       {sections.map(({ itemClass = '', items = [], title = '' }, index) => (
         <React.Fragment key={`${itemClass}-${index}`}>
           <ListSubheader disableSticky={true}>{title}</ListSubheader>
-          {items.map(({ exact, path, secondaryAction = null, style = {}, title = '', url }) => (
-            <ListItem
-              className={`navLink ${itemClass} ${classes.list}`}
-              component={url ? 'a' : NavLink}
-              exact={exact}
-              href={url}
-              key={path}
-              rel={url && 'noopener noreferrer'}
-              secondaryAction={secondaryAction}
-              style={style}
-              target={url && '_blank'}
-              to={url ? url : path}
-            >
-              <ListItemText className={classes.listItem} primary={title} url={url} />
-              {url && (
-                <ListItemIcon>
-                  <LaunchIcon />
-                </ListItemIcon>
-              )}
-            </ListItem>
-          ))}
+          {items.map(({ exact, path, secondaryAction = null, style = {}, title = '', url }) => {
+            const props = url
+              ? { component: 'a', exact: `${exact}`, href: url, rel: 'noopener noreferrer', target: '_blank', to: url }
+              : { component: NavLink, exact, to: path };
+            return (
+              <ListItem className={`navLink ${itemClass} ${classes.list}`} key={path} secondaryAction={secondaryAction} style={style} {...props}>
+                <ListItemText className={classes.listItem} primary={title} url={url} />
+              </ListItem>
+            );
+          })}
         </React.Fragment>
       ))}
     </List>

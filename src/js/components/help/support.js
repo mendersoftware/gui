@@ -14,14 +14,12 @@ const Support = () => (
       , including your organization name and how we can help you.
     </p>
     <h4>Reporting bugs</h4>
-    <p>
-      To help us best respond to bug reports, please include:
-      <ul>
-        <li>Which software versions you are using</li>
-        <li>If the issue can be reproduced, what are the steps to reproduce it?</li>
-        <li>In case of a UI issue, any screenshots or screen recordings</li>
-      </ul>
-    </p>
+    <p>To help us best respond to bug reports, please include:</p>
+    <ul>
+      <li>Which software versions you are using</li>
+      <li>If the issue can be reproduced, what are the steps to reproduce it?</li>
+      <li>In case of a UI issue, any screenshots or screen recordings</li>
+    </ul>
     <h3>Trial or open source users</h3>
     <div>
       <p>Find technical help at</p>
