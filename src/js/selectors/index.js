@@ -3,7 +3,7 @@ import { createSelector } from '@reduxjs/toolkit';
 import { mapUserRolesToUiPermissions } from '../actions/userActions';
 import { PLANS } from '../constants/appConstants';
 import { DEVICE_ISSUE_OPTIONS, DEVICE_LIST_MAXIMUM_LENGTH } from '../constants/deviceConstants';
-import { rolesByName, twoFAStates } from '../constants/userConstants';
+import { rolesByName, twoFAStates, uiPermissionsById } from '../constants/userConstants';
 import { getDemoDeviceAddress as getDemoDeviceAddressHelper } from '../helpers';
 
 const getAppDocsVersion = state => state.app.docsVersion;
@@ -108,6 +108,34 @@ export const getUserRoles = createSelector(
     return { isAdmin, uiPermissions };
   }
 );
+
+export const getUserCapabilities = createSelector([getUserRoles], ({ uiPermissions }) => {
+  const canManageReleases = uiPermissions.releases.includes(uiPermissionsById.manage.value);
+  const canUploadReleases = canManageReleases || uiPermissions.releases.includes(uiPermissionsById.upload.value);
+
+  const canAuditlog = uiPermissions.auditlog.includes(uiPermissionsById.read.value);
+
+  const canManageUsers = uiPermissions.userManagement.includes(uiPermissionsById.manage.value);
+
+  const canWriteDevices = Object.values(uiPermissions.groups).some(
+    groupPermissions => groupPermissions.includes(uiPermissionsById.read.value) && groupPermissions.length > 1
+  );
+  const canTroubleshoot = Object.values(uiPermissions.groups).some(groupPermissions => groupPermissions.includes(uiPermissionsById.connect.value));
+  const canManageDevices = Object.values(uiPermissions.groups).some(groupPermissions => groupPermissions.includes(uiPermissionsById.manage.value));
+
+  const canDeploy = uiPermissions.deployments.includes(uiPermissionsById.deploy.value);
+
+  return {
+    canAuditlog,
+    canDeploy,
+    canManageDevices,
+    canManageReleases,
+    canManageUsers,
+    canTroubleshoot,
+    canUploadReleases,
+    canWriteDevices
+  };
+});
 
 export const getTenantCapabilities = createSelector(
   [getFeatures, getOrganization, getIsEnterprise],
