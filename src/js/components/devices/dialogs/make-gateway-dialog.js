@@ -30,7 +30,7 @@ export const MakeGatewayDialog = ({ docsVersion, isPreRelease, onCancel }) => (
       <CopyCode code={getCode(isPreRelease)} withDescription />
       <p>
         Note: this is only intended for demo or testing purposes. For production installation please refer to the{' '}
-        <a href={`https://docs.mender.io/${docsVersion}server-integration/mender-gateway`} target="_blank" rel="noopener noreferrer">
+        <a href={`https://docs.mender.io/${docsVersion}get-started/mender-gateway`} target="_blank" rel="noopener noreferrer">
           full Mender Gateway documentation
         </a>
       </p>
