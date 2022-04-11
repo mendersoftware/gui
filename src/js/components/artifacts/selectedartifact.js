@@ -20,6 +20,7 @@ import { extractSoftwareInformation } from '../../helpers';
 import { colors } from '../../themes/Mender';
 import ArtifactPayload from './artifactPayload';
 import ArtifactMetadataList from './artifactmetadatalist';
+import { getUserCapabilities } from '../../selectors';
 
 const listItemStyle = {
   color: '#404041',
@@ -87,7 +88,7 @@ export const transformArtifactMetadata = (metadata = {}) => {
   }, []);
 };
 
-export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExpansion, showRemoveArtifactDialog }) => {
+export const SelectedArtifact = ({ artifact, canManageReleases, editArtifact, getArtifactUrl, onExpansion, showRemoveArtifactDialog }) => {
   const { classes } = useStyles();
   const [descEdit, setDescEdit] = useState(false);
   const [description, setDescription] = useState(artifact.description);
@@ -203,9 +204,11 @@ export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExp
         <Button href={artifact.url} target="_blank" disabled={!artifact.url} startIcon={<ExitToAppIcon style={{ transform: 'rotateZ(90deg)' }} />}>
           Download Artifact
         </Button>
-        <Button onClick={showRemoveArtifactDialog} startIcon={<CancelIcon className="red auth" />}>
-          Remove this Artifact?
-        </Button>
+        {canManageReleases && (
+          <Button onClick={showRemoveArtifactDialog} startIcon={<CancelIcon className="red auth" />}>
+            Remove this Artifact?
+          </Button>
+        )}
       </div>
     </div>
   );
@@ -213,4 +216,11 @@ export const SelectedArtifact = ({ artifact, editArtifact, getArtifactUrl, onExp
 
 const actionCreators = { getArtifactUrl };
 
-export default connect(null, actionCreators)(SelectedArtifact);
+const mapStateToProps = state => {
+  const { canManageReleases } = getUserCapabilities(state);
+  return {
+    canManageReleases
+  };
+};
+
+export default connect(mapStateToProps, actionCreators)(SelectedArtifact);

@@ -94,10 +94,10 @@ const troubleshootingTools = [
   { key: 'portForward', component: PortForwardLink, needsWriteAccess: false, needsTroubleshoot: true }
 ];
 
-export const DeviceConnection = ({ device, docsVersion = '', hasAuditlogs, socketClosed, startTroubleshoot, style, userRoles }) => {
+export const DeviceConnection = ({ device, docsVersion = '', hasAuditlogs, socketClosed, startTroubleshoot, style, userCapabilities }) => {
   const [availableTabs, setAvailableTabs] = useState(troubleshootingTools);
 
-  const { canAuditlog, canTroubleshoot, hasWriteAccess } = userRoles;
+  const { canAuditlog, canTroubleshoot, canWriteDevices: hasWriteAccess } = userCapabilities;
 
   useEffect(() => {
     const allowedTabs = troubleshootingTools.reduce((accu, tab) => {

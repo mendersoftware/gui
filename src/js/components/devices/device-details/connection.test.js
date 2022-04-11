@@ -16,20 +16,16 @@ describe('tiny DeviceConnection components', () => {
 });
 
 describe('DeviceConnection Component', () => {
-  const userRoles = { canTroubleshoot: true, hasWriteAccess: true };
+  const userCapabilities = { canTroubleshoot: true, canWriteDevices: true };
   it('renders correctly', async () => {
-    const { baseElement } = render(<DeviceConnection device={defaultState.devices.byId.a1} setSnackbar={jest.fn} userRoles={userRoles} />);
+    const { baseElement } = render(<DeviceConnection device={defaultState.devices.byId.a1} userCapabilities={userCapabilities} />);
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
   it('renders correctly when disconnected', async () => {
     const { baseElement } = render(
-      <DeviceConnection
-        device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.disconnected }}
-        setSnackbar={jest.fn}
-        userRoles={userRoles}
-      />
+      <DeviceConnection device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.disconnected }} userCapabilities={userCapabilities} />
     );
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
@@ -37,11 +33,7 @@ describe('DeviceConnection Component', () => {
   });
   it('renders correctly when connected', async () => {
     const { baseElement } = render(
-      <DeviceConnection
-        device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.connected }}
-        setSnackbar={jest.fn}
-        userRoles={userRoles}
-      />
+      <DeviceConnection device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.connected }} userCapabilities={userCapabilities} />
     );
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();

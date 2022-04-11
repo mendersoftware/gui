@@ -56,10 +56,10 @@ export const TroubleshootDialog = ({
   setSnackbar,
   setSocketClosed,
   type = tabs.terminal.value,
-  userRoles
+  userCapabilities
 }) => {
   const timer = useRef();
-  const { canAuditlog, canTroubleshoot, hasWriteAccess } = userRoles;
+  const { canAuditlog, canTroubleshoot, canWriteDevices: hasWriteAccess } = userCapabilities;
 
   const [currentTab, setCurrentTab] = useState(type);
   const [availableTabs, setAvailableTabs] = useState(Object.values(tabs));

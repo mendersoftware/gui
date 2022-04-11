@@ -24,7 +24,7 @@ import {
 } from '../../actions/deviceActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { DEVICE_ISSUE_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
-import { getDocsVersion, getIsEnterprise, getLimitMaxed } from '../../selectors';
+import { getDocsVersion, getIsEnterprise, getLimitMaxed, getUserCapabilities } from '../../selectors';
 import Global from '../settings/global';
 import AuthorizedDevices from './authorized-devices';
 import CreateGroup from './group-management/create-group';
@@ -203,6 +203,7 @@ export const DeviceGroups = ({
   addDynamicGroup,
   addStaticGroup,
   authRequestCount,
+  canManageDevices,
   deviceLimit,
   deviceListState,
   docsVersion,
@@ -429,12 +430,14 @@ export const DeviceGroups = ({
               {authRequestCount} new device authentication {pluralize('request', authRequestCount)}
             </a>
           )}
-          <DeviceAdditionWidget
-            docsVersion={docsVersion}
-            onConnectClick={setShowConnectingDialog}
-            onMakeGatewayClick={toggleMakeGatewayClick}
-            onPreauthClick={setOpenPreauth}
-          />
+          {canManageDevices && (
+            <DeviceAdditionWidget
+              docsVersion={docsVersion}
+              onConnectClick={setShowConnectingDialog}
+              onMakeGatewayClick={toggleMakeGatewayClick}
+              onPreauthClick={setOpenPreauth}
+            />
+          )}
         </div>
       </div>
       <div className="tab-container with-sub-panels" style={{ padding: 0, height: '100%' }}>
@@ -537,9 +540,11 @@ const mapStateToProps = state => {
     ...state.devices.filteringAttributes.identityAttributes.map(item => ({ key: item, value: item, scope: 'identity', category: 'identity', priority: 1 }))
   ];
   const filteringAttributes = { ...state.devices.filteringAttributes, identityAttributes: [...state.devices.filteringAttributes.identityAttributes, 'id'] };
+  const { canManageDevices } = getUserCapabilities(state);
   return {
     acceptedCount: state.devices.byStatus.accepted.total || 0,
     authRequestCount: state.monitor.issueCounts.byType[DEVICE_ISSUE_OPTIONS.authRequests.key].total,
+    canManageDevices,
     deviceLimit: state.devices.limit,
     deviceListState: state.devices.deviceList,
     docsVersion: getDocsVersion(state),

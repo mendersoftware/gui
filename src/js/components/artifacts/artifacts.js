@@ -9,7 +9,7 @@ import { cancelFileUpload, setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
 import { createArtifact, getReleases, removeArtifact, selectRelease, setReleasesListState, uploadArtifact } from '../../actions/releaseActions';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getOnboardingState } from '../../selectors';
+import { getOnboardingState, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import AddArtifactDialog from './dialogs/addartifact';
 import ReleaseRepository from './releaserepository';
@@ -21,6 +21,7 @@ const refreshArtifactsLength = 60000;
 
 export const Artifacts = props => {
   const {
+    canUpload,
     getReleases,
     history,
     match,
@@ -123,21 +124,26 @@ export const Artifacts = props => {
             setReleasesListState={setReleasesListState}
             onSelect={selectRelease}
           />
-          <Button
-            ref={uploadButtonRef}
-            color="secondary"
-            onClick={onUploadClick}
-            startIcon={<CloudUpload fontSize="small" />}
-            style={{ marginTop: 30, minWidth: 164, justifySelf: 'left' }}
-            variant="contained"
-          >
-            Upload
-          </Button>
-          <p className="info flexbox center-aligned">
-            <InfoIcon fontSize="small" />
-            Upload an Artifact to an existing or new Release
-          </p>
-          {!!uploadArtifactOnboardingComponent && !showAddArtifactDialog && uploadArtifactOnboardingComponent}
+          {canUpload && (
+            <>
+              {' '}
+              <Button
+                ref={uploadButtonRef}
+                color="secondary"
+                onClick={onUploadClick}
+                startIcon={<CloudUpload fontSize="small" />}
+                style={{ marginTop: 30, minWidth: 164, justifySelf: 'left' }}
+                variant="contained"
+              >
+                Upload
+              </Button>
+              <p className="info flexbox center-aligned">
+                <InfoIcon fontSize="small" />
+                Upload an Artifact to an existing or new Release
+              </p>
+              {!!uploadArtifactOnboardingComponent && !showAddArtifactDialog && uploadArtifactOnboardingComponent}
+            </>
+          )}
         </div>
         <ReleaseRepository refreshArtifacts={onGetReleases} loading={!doneLoading} onUpload={onFileUploadClick} />
       </div>
@@ -178,7 +184,9 @@ const mapStateToProps = state => {
     }, accu);
     return accu;
   }, {});
+  const { canUploadReleases: canUpload } = getUserCapabilities(state);
   return {
+    canUpload,
     deviceTypes: Object.keys(deviceTypes),
     onboardingState: getOnboardingState(state),
     pastCount: state.deployments.byStatus.finished.total,

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import copy from 'copy-to-clipboard';
 
@@ -26,7 +26,7 @@ import ForwardingLink from '../common/forwardlink';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 import { RelativeTime } from '../common/time';
 import { getDemoDeviceAddress, stringToBoolean } from '../../helpers';
-import { getDocsVersion, getTenantCapabilities, getUserRoles } from '../../selectors';
+import { getDocsVersion, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import Tracking from '../../tracking';
 import TroubleshootDialog from './dialogs/troubleshootdialog';
 import AuthStatus from './device-details/authstatus';
@@ -40,7 +40,6 @@ import DeviceMonitoring from './device-details/monitoring';
 import MonitorDetailsDialog from './device-details/monitordetailsdialog';
 import DeviceNotifications from './device-details/notifications';
 import DeviceTwin from './device-details/devicetwin';
-import { uiPermissionsById } from '../../constants/userConstants';
 
 const useStyles = makeStyles()(theme => ({
   gatewayChip: {
@@ -106,7 +105,7 @@ export const ExpandedDevice = ({
   setSnackbar,
   showHelptips,
   tenantCapabilities,
-  userRoles
+  userCapabilities
 }) => {
   const { classes } = useStyles();
   const theme = useTheme();
@@ -158,17 +157,6 @@ export const ExpandedDevice = ({
   const deviceIdentifier = attributes.name ?? device.id ?? '-';
   const isAcceptedDevice = status === DEVICE_STATES.accepted;
   const isGateway = stringToBoolean(attributes.mender_is_gateway);
-
-  const userRoleDetails = useMemo(() => {
-    const hasWriteAccess = Object.values(userRoles.uiPermissions.groups).some(
-      groupPermissions => groupPermissions.includes(uiPermissionsById.read.value) && groupPermissions.length > 1
-    );
-    const canTroubleshoot = Object.values(userRoles.uiPermissions.groups).some(groupPermissions => groupPermissions.includes(uiPermissionsById.connect.value));
-    const canAuditlog = userRoles.uiPermissions.auditlog.includes(uiPermissionsById.read.value);
-    return { canAuditlog, canTroubleshoot, hasWriteAccess };
-  }, [userRoles.uiPermissions.auditlog, userRoles.uiPermissions.groups]);
-
-  const detailedUserRoles = { ...userRoles, ...userRoleDetails };
 
   return (
     <Drawer anchor="right" className="expandedDevice" open={open} onClose={onClose} PaperProps={{ style: { minWidth: '67vw' } }}>
@@ -242,7 +230,7 @@ export const ExpandedDevice = ({
           socketClosed={socketClosed}
           startTroubleshoot={launchTroubleshoot}
           style={{ marginRight: theme.spacing(2) }}
-          userRoles={detailedUserRoles}
+          userCapabilities={userCapabilities}
         />
       )}
       <Divider style={{ marginTop: theme.spacing(3), marginBottom: theme.spacing(2) }} />
@@ -267,7 +255,7 @@ export const ExpandedDevice = ({
         onSocketClose={() => setTimeout(() => setSocketClosed(true), 5000)}
         setSocketClosed={setSocketClosed}
         type={troubleshootType}
-        userRoles={detailedUserRoles}
+        userCapabilities={userCapabilities}
       />
       {monitorDetails && <MonitorDetailsDialog alert={monitorDetails} onClose={() => setMonitorDetails()} />}
     </Drawer>
@@ -308,7 +296,7 @@ const mapStateToProps = (state, ownProps) => {
     onboardingComplete: state.onboarding.complete,
     showHelptips: state.users.showHelptips,
     tenantCapabilities: getTenantCapabilities(state),
-    userRoles: getUserRoles(state)
+    userCapabilities: getUserCapabilities(state)
   };
 };
 

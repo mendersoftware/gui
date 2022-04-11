@@ -11,7 +11,7 @@ import { advanceOnboarding } from '../../actions/onboardingActions';
 import { editArtifact, removeArtifact, selectArtifact, selectRelease, uploadArtifact } from '../../actions/releaseActions';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { customSort } from '../../helpers';
-import { getOnboardingState } from '../../selectors';
+import { getOnboardingState, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import { ExpandArtifact } from '../helptips/helptooltips';
@@ -45,7 +45,8 @@ export const ReleaseRepository = ({
   selectRelease,
   setSnackbar,
   showHelptips,
-  uploading
+  uploading,
+  userCapabilities
 }) => {
   const [sortCol, setSortCol] = useState('modified');
   const [sortDown, setSortDown] = useState(true);
@@ -59,6 +60,8 @@ export const ReleaseRepository = ({
   const creationRef = useRef();
   const dropzoneRef = useRef();
   let repoItemAnchor = useRef();
+
+  const { canDeploy, canUploadReleases } = userCapabilities;
 
   useEffect(() => {
     setWasSelectedRecently(true);
@@ -215,17 +218,19 @@ export const ReleaseRepository = ({
               <div style={{ width: 48 }} />
             </div>
             {items}
-            <Button
-              color="primary"
-              variant="contained"
-              ref={creationRef}
-              component={ForwardingLink}
-              to={`/deployments/active?open=true&release=${release.Name}`}
-              style={{ marginLeft: 20 }}
-              onClick={() => onCreateDeploymentFrom(release)}
-            >
-              Create deployment with this release
-            </Button>
+            {canDeploy && (
+              <Button
+                color="primary"
+                variant="contained"
+                ref={creationRef}
+                component={ForwardingLink}
+                to={`/deployments/active?open=true&release=${release.Name}`}
+                style={{ marginLeft: 20 }}
+                onClick={() => onCreateDeploymentFrom(release)}
+              >
+                Create deployment with this release
+              </Button>
+            )}
           </div>
         ) : null}
         {!!onboardingComponent && onboardingComponent}
@@ -242,7 +247,12 @@ export const ReleaseRepository = ({
                   <div {...getRootProps({ className: dropzoneClass })} onClick={() => onUpload()}>
                     <input {...getInputProps()} disabled={uploading} />
                     <p>
-                      There are no Releases yet. <a>Upload an Artifact</a> to create a new Release
+                      There are no Releases yet.{' '}
+                      {canUploadReleases && (
+                        <>
+                          <a>Upload an Artifact</a> to create a new Release
+                        </>
+                      )}
                     </p>
                   </div>
                 )}
@@ -274,7 +284,8 @@ const mapStateToProps = state => {
     releases: Object.values(state.releases.byId),
     selectedArtifact: state.releases.selectedArtifact,
     showHelptips: state.users.showHelptips,
-    uploading: state.app.uploading
+    uploading: state.app.uploading,
+    userCapabilities: getUserCapabilities(state)
   };
 };
 

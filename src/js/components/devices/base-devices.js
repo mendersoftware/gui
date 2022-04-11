@@ -77,13 +77,15 @@ export const AcceptedEmptyState = ({ allCount }) => (
   </div>
 );
 
-export const PreauthorizedEmptyState = ({ limitMaxed, onClick }) => (
+export const PreauthorizedEmptyState = ({ canManageDevices, limitMaxed, onClick }) => (
   <div className="dashboard-placeholder">
     <p>There are no preauthorized devices.</p>
-    <p>
-      {limitMaxed ? 'Preauthorize devices' : <a onClick={onClick}>Preauthorize devices</a>} so that when they come online, they will connect to the server
-      immediately
-    </p>
+    {canManageDevices && (
+      <p>
+        {limitMaxed ? 'Preauthorize devices' : <a onClick={onClick}>Preauthorize devices</a>} so that when they come online, they will connect to the server
+        immediately
+      </p>
+    )}
     <img src={preauthImage} alt="preauthorize" />
   </div>
 );

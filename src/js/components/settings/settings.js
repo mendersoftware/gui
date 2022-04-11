@@ -9,7 +9,7 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import { Elements } from '@stripe/react-stripe-js';
 
 import { versionCompare } from '../../helpers';
-import { getCurrentUser, getIsEnterprise, getTenantCapabilities, getUserRoles } from '../../selectors';
+import { getCurrentUser, getIsEnterprise, getTenantCapabilities, getUserCapabilities, getUserRoles } from '../../selectors';
 import LeftNav from '../common/left-nav';
 import SelfUserManagement from '../settings/user-management/selfusermanagement';
 import UserManagement from '../settings/user-management/usermanagement';
@@ -18,7 +18,6 @@ import Global from './global';
 import Integrations from './integrations';
 import Roles from './roles';
 import Upgrade from './upgrade';
-import { uiPermissionsById } from '../../constants/userConstants';
 
 let stripePromise = null;
 
@@ -33,7 +32,7 @@ const sectionMap = {
   'user-management': {
     component: <UserManagement />,
     text: () => 'User management',
-    canAccess: ({ userRoles: { uiPermissions } }) => uiPermissions.userManagement.includes(uiPermissionsById.manage.value)
+    canAccess: ({ userCapabilities: { canManageUsers } }) => canManageUsers
   },
   'role-management': {
     component: <Roles />,
@@ -58,7 +57,18 @@ const UpgradeIcon = () => (
   </ListItemIcon>
 );
 
-export const Settings = ({ currentUser, hasMultitenancy, isEnterprise, isTrial, match, stripeAPIKey, tenantCapabilities, userRoles, version }) => {
+export const Settings = ({
+  currentUser,
+  hasMultitenancy,
+  isEnterprise,
+  isTrial,
+  match,
+  stripeAPIKey,
+  tenantCapabilities,
+  userCapabilities,
+  userRoles,
+  version
+}) => {
   const [loadingFinished, setLoadingFinished] = useState(!stripeAPIKey);
 
   useEffect(() => {
@@ -79,7 +89,8 @@ export const Settings = ({ currentUser, hasMultitenancy, isEnterprise, isTrial, 
     }
   }, []);
 
-  const checkDenyAccess = item => !item.canAccess({ currentUser, hasMultitenancy, isEnterprise, isTrial, tenantCapabilities, userRoles, version });
+  const checkDenyAccess = item =>
+    !item.canAccess({ currentUser, hasMultitenancy, isEnterprise, isTrial, tenantCapabilities, userCapabilities, userRoles, version });
 
   const getCurrentSection = (sections, section = match.params.section) => {
     if (!sections.hasOwnProperty(section) || checkDenyAccess(sections[section])) {
@@ -120,6 +131,7 @@ const mapStateToProps = state => {
     isTrial,
     stripeAPIKey: state.app.stripeAPIKey,
     tenantCapabilities: getTenantCapabilities(state),
+    userCapabilities: getUserCapabilities(state),
     userRoles: getUserRoles(state),
     version: state.app.versionInformation.Integration
   };
