@@ -92,7 +92,6 @@ export const ExpandedDevice = ({
   getDeviceTwin,
   getSingleDeployment,
   integrations,
-  isEnterprise,
   latestAlerts,
   onClose,
   onMakeGatewayClick,
@@ -249,13 +248,11 @@ export const ExpandedDevice = ({
 
       <TroubleshootDialog
         deviceId={device.id}
-        isEnterprise={isEnterprise}
         open={Boolean(troubleshootType)}
         onCancel={() => setTroubleshootType()}
         onSocketClose={() => setTimeout(() => setSocketClosed(true), 5000)}
         setSocketClosed={setSocketClosed}
         type={troubleshootType}
-        userRoles={userRoles}
       />
       {monitorDetails && <MonitorDetailsDialog alert={monitorDetails} onClose={() => setMonitorDetails()} />}
     </Drawer>

@@ -6,11 +6,16 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/
 import { getToken } from '../../../auth';
 import CopyCode from '../../common/copy-code';
 
-export const getCode = () => `JWT_TOKEN='${getToken()}'
+export const getCode = isPreRelease => {
+  const { target, flags } = isPreRelease
+    ? { target: 'https://get.mender.io/staging', flags: ' -c --experimental' }
+    : { target: 'https://get.mender.io', flags: '' };
+  return `JWT_TOKEN='${getToken()}'
 
-wget -O- https://get.mender.io | sudo bash -s -- --jwt-token $JWT_TOKEN mender-gateway --demo`;
+wget -O- ${target} | sudo bash -s -- --jwt-token $JWT_TOKEN mender-gateway --demo${flags}`;
+};
 
-export const MakeGatewayDialog = ({ docsVersion, onCancel }) => (
+export const MakeGatewayDialog = ({ docsVersion, isPreRelease, onCancel }) => (
   <Dialog open fullWidth maxWidth="md">
     <DialogTitle>Promoting a device to a gateway</DialogTitle>
     <DialogContent className="onboard-dialog dialog-content">
@@ -22,7 +27,7 @@ export const MakeGatewayDialog = ({ docsVersion, onCancel }) => (
         </a>{' '}
         if mender-connect is enabled on the device.
       </p>
-      <CopyCode code={getCode()} withDescription />
+      <CopyCode code={getCode(isPreRelease)} withDescription />
       <p>
         Note: this is only intended for demo or testing purposes. For production installation please refer to the{' '}
         <a href={`https://docs.mender.io/${docsVersion}server-integration/mender-gateway`} target="_blank" rel="noopener noreferrer">

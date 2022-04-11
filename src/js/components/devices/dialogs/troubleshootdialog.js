@@ -22,9 +22,10 @@ import Time from '../../common/time';
 import Terminal from '../troubleshoot/terminal';
 import FileTransfer from '../troubleshoot/filetransfer';
 import { apiUrl } from '../../../api/general-api';
-import { createDownload } from '../../../helpers';
+import { createDownload, versionCompare } from '../../../helpers';
 import ListOptions from '../widgets/listoptions';
 import { getCode } from './make-gateway-dialog';
+import { getIsEnterprise, getUserRoles } from '../../../selectors';
 
 momentDurationFormatSetup(moment);
 const MessagePack = msgpack5();
@@ -46,6 +47,7 @@ const tabs = {
 };
 
 export const TroubleshootDialog = ({
+  canPreview,
   deviceId,
   deviceFileUpload,
   getDeviceFileDownloadLink,
@@ -161,7 +163,7 @@ export const TroubleshootDialog = ({
   };
 
   const onMakeGatewayClick = () => {
-    const code = getCode();
+    const code = getCode(canPreview);
     setTerminalInput(code);
   };
 
@@ -263,4 +265,12 @@ export const TroubleshootDialog = ({
 
 const actionCreators = { getDeviceFileDownloadLink, deviceFileUpload, setSnackbar };
 
-export default connect(undefined, actionCreators)(TroubleshootDialog);
+const mapStateToProps = state => {
+  return {
+    canPreview: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
+    isEnterprise: getIsEnterprise(state),
+    userRoles: getUserRoles(state)
+  };
+};
+
+export default connect(mapStateToProps, actionCreators)(TroubleshootDialog);

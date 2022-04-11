@@ -51,6 +51,7 @@ import DeviceAdditionWidget from './widgets/deviceadditionwidget';
 import QuickFilter from './widgets/quickfilter';
 import Groups from './groups';
 import DeviceStatusNotification from './devicestatusnotification';
+import { versionCompare } from '../../helpers';
 
 export const defaultHeaders = {
   currentSoftware: {
@@ -203,6 +204,7 @@ export const DeviceGroups = ({
   addDynamicGroup,
   addStaticGroup,
   authRequestCount,
+  canPreview,
   deviceLimit,
   deviceListState,
   docsVersion,
@@ -497,7 +499,7 @@ export const DeviceGroups = ({
             setSnackbar={setSnackbar}
           />
         )}
-        {showMakeGateway && <MakeGatewayDialog docsVersion={docsVersion} onCancel={toggleMakeGatewayClick} />}
+        {showMakeGateway && <MakeGatewayDialog docsVersion={docsVersion} isPreRelease={canPreview} onCancel={toggleMakeGatewayClick} />}
       </div>
     </>
   );
@@ -540,6 +542,7 @@ const mapStateToProps = state => {
   return {
     acceptedCount: state.devices.byStatus.accepted.total || 0,
     authRequestCount: state.monitor.issueCounts.byType[DEVICE_ISSUE_OPTIONS.authRequests.key].total,
+    canPreview: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
     deviceLimit: state.devices.limit,
     deviceListState: state.devices.deviceList,
     docsVersion: getDocsVersion(state),
