@@ -11,7 +11,7 @@ import { abortDeployment, selectDeployment, setDeploymentsState } from '../../ac
 import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getIsEnterprise, getOnboardingState } from '../../selectors';
+import { getIsEnterprise, getOnboardingState, getUserCapabilities } from '../../selectors';
 
 import CreateDialog from './createdeployment';
 import Progress from './inprogressdeployments';
@@ -45,6 +45,7 @@ export const defaultRefreshDeploymentsLength = 30000;
 export const Deployments = ({
   abortDeployment,
   advanceOnboarding,
+  canDeploy,
   devicesById,
   getDynamicGroups,
   getGroups,
@@ -198,9 +199,11 @@ export const Deployments = ({
               <Tab component={Link} key={route.route} label={route.title} to={route.route} value={route.route} />
             ))}
           </Tabs>
-          <Button color="secondary" variant="contained" onClick={onCreationShow} style={{ height: '100%' }}>
-            Create a deployment
-          </Button>
+          {canDeploy && (
+            <Button color="secondary" variant="contained" onClick={onCreationShow} style={{ height: '100%' }}>
+              Create a deployment
+            </Button>
+          )}
         </div>
         <ComponentToShow abort={onAbortDeployment} createClick={onCreationShow} openReport={showReport} isShowingDetails={reportDialog} />
       </div>
@@ -231,7 +234,9 @@ const actionCreators = {
 const mapStateToProps = state => {
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
+  const { canDeploy } = getUserCapabilities(state);
   return {
+    canDeploy,
     devicesById: state.devices.byId,
     groupsById: groups,
     isEnterprise: getIsEnterprise(state),

@@ -90,10 +90,6 @@ exports[`smaller components renders PreauthorizedEmptyState correctly 1`] = `
   <p>
     There are no preauthorized devices.
   </p>
-  <p>
-    Preauthorize devices
-     so that when they come online, they will connect to the server immediately
-  </p>
   <img
     alt="preauthorize"
     src="preauthorize.png"

@@ -8,7 +8,7 @@ import { getDeploymentsByStatus, selectDeployment, setDeploymentsState } from '.
 import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { tryMapDeployments } from '../../helpers';
-import { getOnboardingState } from '../../selectors';
+import { getOnboardingState, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
@@ -22,6 +22,7 @@ export const minimalRefreshDeploymentsLength = 2000;
 export const Progress = props => {
   const {
     abort,
+    canDeploy,
     createClick,
     getDeploymentsByStatus,
     onboardingState,
@@ -151,9 +152,11 @@ export const Progress = props => {
       {!(progressCount || pendingCount) && (
         <div className="dashboard-placeholder">
           <p>Pending and ongoing deployments will appear here. </p>
-          <p>
-            <a onClick={createClick}>Create a deployment</a> to get started
-          </p>
+          {canDeploy && (
+            <p>
+              <a onClick={createClick}>Create a deployment</a> to get started
+            </p>
+          )}
           <RefreshIcon style={{ transform: 'rotateY(-180deg)', fill: '#e3e3e3', width: 111, height: 111 }} />
         </div>
       )}
@@ -168,7 +171,9 @@ const actionCreators = { getDeploymentsByStatus, setDeploymentsState, setSnackba
 const mapStateToProps = state => {
   const progress = state.deployments.selectionState.inprogress.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   const pending = state.deployments.selectionState.pending.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
+  const { canDeploy } = getUserCapabilities(state);
   return {
+    canDeploy,
     onboardingState: getOnboardingState(state),
     pastDeploymentsCount: state.deployments.byStatus.finished.total,
     pending,

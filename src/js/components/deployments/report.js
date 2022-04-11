@@ -22,8 +22,7 @@ import { getDeploymentDevices, getDeviceLog, getSingleDeployment, updateDeployme
 import { getAuditLogs } from '../../actions/organizationActions';
 import { getRelease } from '../../actions/releaseActions';
 import { deploymentStatesToSubstates, DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
-import { uiPermissionsById } from '../../constants/userConstants';
-import { getIdAttribute, getTenantCapabilities, getUserRoles } from '../../selectors';
+import { getIdAttribute, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import ConfigurationObject from '../common/configurationobject';
 import LogDialog from '../common/dialogs/log';
 import DeploymentOverview from './deployment-report/overview';
@@ -231,7 +230,7 @@ const mapStateToProps = state => {
   const deployment = state.deployments.byId[state.deployments.selectedDeployment] || {};
   const { actor = {} } = state.organization.auditlog.events.find(event => event.object.id === state.deployments.selectedDeployment) || {};
   const { hasAuditlogs } = getTenantCapabilities(state);
-  const { canAuditlog } = getUserRoles(state).uiPermissions.auditlog.includes(uiPermissionsById.read.value);
+  const { canAuditlog } = getUserCapabilities(state);
   return {
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
     canAuditlog,

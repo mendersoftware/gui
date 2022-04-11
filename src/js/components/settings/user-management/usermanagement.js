@@ -5,11 +5,10 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/
 
 import { setSnackbar } from '../../../actions/appActions';
 import { createUser, editUser, getUserList, passwordResetStart, removeUser } from '../../../actions/userActions';
-import { getCurrentUser, getIsEnterprise, getUserRoles } from '../../../selectors';
+import { getCurrentUser, getIsEnterprise, getUserCapabilities } from '../../../selectors';
 import UserList from './userlist';
 import UserForm from './userform';
 import { UserDefinition } from './userdefinition';
-import { uiPermissionsById } from '../../../constants/userConstants';
 
 const actions = {
   create: 'createUser',
@@ -62,12 +61,11 @@ export const UserManagement = props => {
         }
         dialogDismiss();
       });
-    } else {
-      if (passwordResetEmail) {
-        passwordResetStart(passwordResetEmail);
-      }
-      return dialogDismiss();
     }
+    if (passwordResetEmail) {
+      passwordResetStart(passwordResetEmail);
+    }
+    return dialogDismiss();
   };
 
   return (
@@ -117,7 +115,7 @@ export const UserManagement = props => {
 const actionCreators = { createUser, editUser, getUserList, passwordResetStart, removeUser, setSnackbar };
 
 const mapStateToProps = state => {
-  const canManageUsers = getUserRoles(state).uiPermissions.userManagement.includes(uiPermissionsById.manage.value);
+  const { canManageUsers } = getUserCapabilities(state);
   return {
     currentUser: getCurrentUser(state),
     canManageUsers,

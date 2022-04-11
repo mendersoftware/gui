@@ -11,7 +11,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, selectDeployment, setDeploymentsState } from '../../actions/deploymentActions';
 import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { tryMapDeployments } from '../../helpers';
-import { getIsEnterprise } from '../../selectors';
+import { getIsEnterprise, getUserCapabilities } from '../../selectors';
 import { colors } from '../../themes/Mender';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import EnterpriseNotification from '../common/enterpriseNotification';
@@ -49,7 +49,7 @@ export const Scheduled = props => {
   const [tabIndex, setTabIndex] = useState(tabs.list.index);
   const timer = useRef();
 
-  const { abort, createClick, getDeploymentsByStatus, isEnterprise, items, openReport, scheduledState, setDeploymentsState, setSnackbar } = props;
+  const { abort, canDeploy, createClick, getDeploymentsByStatus, isEnterprise, items, openReport, scheduledState, setDeploymentsState, setSnackbar } = props;
   const { page, perPage, total: count } = scheduledState;
 
   useEffect(() => {
@@ -147,9 +147,11 @@ export const Scheduled = props => {
           {isEnterprise ? (
             <>
               <p>Scheduled deployments will appear here. </p>
-              <p>
-                <a onClick={createClick}>Create a deployment</a> to get started
-              </p>
+              {canDeploy && (
+                <p>
+                  <a onClick={createClick}>Create a deployment</a> to get started
+                </p>
+              )}
             </>
           ) : (
             <div className="flexbox centered">
@@ -168,7 +170,9 @@ const actionCreators = { getDeploymentsByStatus, setSnackbar, setDeploymentsStat
 const mapStateToProps = state => {
   const scheduled = state.deployments.selectionState.scheduled.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   const { plan = 'os' } = state.organization.organization;
+  const { canDeploy } = getUserCapabilities(state);
   return {
+    canDeploy,
     // TODO: isEnterprise is misleading here, but is passed down to the DeploymentListItem, this should be renamed
     isEnterprise: getIsEnterprise(state) || plan !== 'os',
     items: scheduled,

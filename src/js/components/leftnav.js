@@ -10,16 +10,15 @@ import { makeStyles } from 'tss-react/mui';
 import { getLatestReleaseInfo, setSnackbar, setVersionInfo } from '../actions/appActions';
 
 import { onboardingSteps } from '../constants/onboardingConstants';
-import { getDocsVersion, getFeatures, getOnboardingState, getUserRoles } from '../selectors';
+import { getDocsVersion, getFeatures, getOnboardingState, getUserCapabilities } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
-import { uiPermissionsById } from '../constants/userConstants';
 
 const listItems = [
   { route: '/', text: 'Dashboard', canAccess: () => true },
   { route: '/devices', text: 'Devices', canAccess: () => true },
   { route: '/releases', text: 'Releases', canAccess: () => true },
   { route: '/deployments', text: 'Deployments', canAccess: () => true },
-  { route: '/auditlog', text: 'Audit log', canAccess: ({ userRoles: { uiPermissions } }) => uiPermissions.auditlog.includes(uiPermissionsById.read.value) }
+  { route: '/auditlog', text: 'Audit log', canAccess: ({ userCapabilities: { canAuditlog } }) => canAuditlog }
 ];
 
 const useStyles = makeStyles()(theme => ({
@@ -89,7 +88,7 @@ const VersionInfo = ({ getLatestReleaseInfo, isHosted, setSnackbar, setVersionIn
   );
 };
 
-export const LeftNav = ({ docsVersion, onboardingState, setSnackbar, setVersionInfo, userRoles, versionInformation }) => {
+export const LeftNav = ({ docsVersion, isHosted, onboardingState, setSnackbar, setVersionInfo, userCapabilities, versionInformation }) => {
   const releasesRef = useRef();
   const { classes } = useStyles();
 
@@ -118,7 +117,7 @@ export const LeftNav = ({ docsVersion, onboardingState, setSnackbar, setVersionI
     <div className={`leftFixed leftNav ${classes.list}`}>
       <List style={{ padding: 0 }}>
         {listItems.reduce((accu, item, index) => {
-          if (!item.canAccess({ userRoles })) {
+          if (!item.canAccess({ userCapabilities })) {
             return accu;
           }
           accu.push(
@@ -167,8 +166,9 @@ const mapStateToProps = state => {
   const { isHosted } = getFeatures(state);
   return {
     docsVersion: getDocsVersion(state),
+    isHosted,
     onboardingState: getOnboardingState(state),
-    userRoles: getUserRoles(state),
+    userCapabilities: getUserCapabilities(state),
     versionInformation: state.app.versionInformation
   };
 };

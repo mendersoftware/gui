@@ -56,7 +56,8 @@ exports[`ReleaseRepository Component renders correctly 1`] = `
           type="file"
         />
         <p>
-          There are no Releases yet. 
+          There are no Releases yet.
+           
           <a>
             Upload an Artifact
           </a>
