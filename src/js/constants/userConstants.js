@@ -269,7 +269,8 @@ const rolesById = Object.freeze({
       ...emptyUiPermissions,
       deployments: [uiPermissionsById.read.value],
       groups: { [ALL_DEVICES]: [uiPermissionsById.read.value] },
-      releases: [uiPermissionsById.read.value]
+      releases: [uiPermissionsById.read.value],
+      userManagement: [uiPermissionsById.read.value]
     }
   },
   [staticRolesByName.ci]: {
