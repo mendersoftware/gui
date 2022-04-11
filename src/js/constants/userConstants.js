@@ -169,7 +169,7 @@ const uiPermissionsByArea = {
   auditlog: {
     endpoints: [{ path: /\/(auditlog)/i, types: [PermissionTypes.Get], uiPermissions: [uiPermissionsById.read] }],
     explanation:
-      'Granting access to the audit log will allow tracing changes to devices, releases and user accounts, as well provide information about deployments.',
+      'Granting access to the audit log will allow tracing changes to devices, releases and user accounts, as well as providing information about deployments.',
     uiPermissions: [uiPermissionsById.read],
     title: 'System audit log'
   },

@@ -1413,7 +1413,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-
         System audit log
         <svg
           aria-hidden="true"
-          aria-label="Granting access to the audit log will allow tracing changes to devices, releases and user accounts, as well provide information about deployments."
+          aria-label="Granting access to the audit log will allow tracing changes to devices, releases and user accounts, as well as providing information about deployments."
           class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small muted emotion-23"
           data-mui-internal-clone-element="true"
           data-testid="InfoOutlinedIcon"
