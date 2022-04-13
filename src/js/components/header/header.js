@@ -231,7 +231,7 @@ export const Header = ({
             )}
             <MenuItem onClick={toggleHelptips}>{showHelptips ? 'Hide help tooltips' : 'Show help tooltips'}</MenuItem>
             <MenuItem component={Link} to="/help/get-started">
-              Help
+              Help & support
             </MenuItem>
             <MenuItem onClick={onLogoutClick}>
               <ListItemText primary="Log out" />

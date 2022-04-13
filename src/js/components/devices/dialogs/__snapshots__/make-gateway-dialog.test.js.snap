@@ -445,7 +445,7 @@ wget -O- https://get.mender.io | sudo bash -s -- --jwt-token $JWT_TOKEN mender-g
           Note: this is only intended for demo or testing purposes. For production installation please refer to the
            
           <a
-            href="https://docs.mender.io/server-integration/mender-gateway"
+            href="https://docs.mender.io/get-started/mender-gateway"
             rel="noopener noreferrer"
             target="_blank"
           >

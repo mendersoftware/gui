@@ -548,7 +548,7 @@ exports[`App Component renders correctly 1`] = `
             <span
               class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-16"
             >
-              Help
+              Help & support
             </span>
           </div>
         </a>

@@ -35,19 +35,16 @@ export const LeftNav = ({ sections }) => {
       {sections.map(({ itemClass = '', items = [], title = '' }, index) => (
         <React.Fragment key={`${itemClass}-${index}`}>
           <ListSubheader disableSticky={true}>{title}</ListSubheader>
-          {items.map(({ exact, path, secondaryAction = null, style = {}, title = '' }) => (
-            <ListItem
-              className={`navLink ${itemClass} ${classes.list}`}
-              component={NavLink}
-              exact={exact}
-              key={path}
-              secondaryAction={secondaryAction}
-              style={style}
-              to={path}
-            >
-              <ListItemText className={classes.listItem} primary={title} />
-            </ListItem>
-          ))}
+          {items.map(({ exact, path, secondaryAction = null, style = {}, title = '', url }) => {
+            const props = url
+              ? { component: 'a', exact: `${exact}`, href: url, rel: 'noopener noreferrer', target: '_blank', to: url }
+              : { component: NavLink, exact, to: path };
+            return (
+              <ListItem className={`navLink ${itemClass} ${classes.list}`} key={path} secondaryAction={secondaryAction} style={style} {...props}>
+                <ListItemText className={classes.listItem} primary={title} url={url} />
+              </ListItem>
+            );
+          })}
         </React.Fragment>
       ))}
     </List>

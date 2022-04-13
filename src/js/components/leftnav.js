@@ -134,7 +134,7 @@ export const LeftNav = ({ docsVersion, isAdmin, isEnterprise, onboardingState, s
       {onboardingComponent ? onboardingComponent : null}
       <List className={classes.infoList}>
         <ListItem className={`navLink leftNav ${classes.listItem}`} component={Link} to="/help">
-          <ListItemText primary="Help" />
+          <ListItemText primary="Help & support" />
         </ListItem>
         <ListItem className={classes.listItem}>
           <ListItemText

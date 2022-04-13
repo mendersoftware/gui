@@ -2,52 +2,42 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { matchPath } from 'react-router-dom';
 
-import { useTheme } from '@mui/material';
+import { useTheme, ListItemIcon } from '@mui/material';
+import { Launch as LaunchIcon } from '@mui/icons-material';
 
 import { getUserOrganization } from '../../actions/organizationActions';
 import { getDocsVersion, getIsEnterprise } from '../../selectors';
 import LeftNav from '../common/left-nav';
-import DeviceSupport from './device-support';
-import Devices from './devices';
-import GetStarted from './getting-started';
-import MoreHelp from './more-help-resources';
-import ReleasesArtifacts from './releases-and-artifacts';
-import BuildDemoArtifact from './releases-and-artifacts/build-demo-artifact';
 import Support from './support';
+import GetStarted from './getting-started';
+import MenderHub from './mender-hub';
 
 const components = {
   'get-started': {
-    title: 'Get started',
+    title: 'Getting started',
     component: GetStarted
   },
-  devices: {
-    title: 'Devices and device groups',
-    component: Devices
+  'support': {
+    title: 'Contact support',
+    component: Support
   },
-  'device-and-os-support': {
-    title: 'Device and Operating System support',
-    component: DeviceSupport
+  'mender-hub': {
+    title: 'Mender Hub',
+    component: MenderHub
   },
-  'releases-artifacts': {
-    title: 'Releases and artifacts',
-    component: ReleasesArtifacts,
-    'build-demo-artifact': {
-      title: 'Building a demo application update Artifact',
-      component: BuildDemoArtifact
-    }
-  },
-  support: {
-    title: 'Support',
-    component: Support,
-    hosted: true
-  },
-  'more-help-resources': {
-    title: 'More resources',
-    component: MoreHelp
+  'documentation': {
+    title: 'Documentation',
+    url: `https://docs.mender.io/`
   }
 };
 
 const contentWidth = 780;
+
+const LinkIcon = () => (
+  <ListItemIcon style={{ 'verticalAlign': 'middle' }}>
+    <LaunchIcon style={{ 'fontSize': '1rem' }} />
+  </ListItemIcon>
+);
 
 // build array of link list components
 const eachRecursive = (obj, path, level, accu, isHosted, spacing) =>
@@ -63,24 +53,16 @@ const eachRecursive = (obj, path, level, accu, isHosted, spacing) =>
         path: this_path,
         hosted: value.hosted,
         style: { paddingLeft: `calc(${level} * ${spacing})` },
-        exact: true
+        exact: true,
+        secondaryAction: value.url ? <LinkIcon /> : null,
+        url: value.url ? value.url : ''
       });
       bag = eachRecursive(value, this_path, level + 1, bag, isHosted, spacing);
     }
     return bag;
   }, accu);
 
-export const Help = ({
-  demoArtifactLink,
-  docsVersion,
-  getUserOrganization,
-  hasMultitenancy,
-  isEnterprise,
-  isHosted,
-  location,
-  menderArtifactVersion,
-  menderVersion
-}) => {
+export const Help = ({ docsVersion, getUserOrganization, hasMultitenancy, isEnterprise, isHosted, location, menderVersion }) => {
   const theme = useTheme();
   const [links, setLinks] = useState([]);
 
@@ -113,18 +95,11 @@ export const Help = ({
 
   return (
     <div className="help-container">
-      <LeftNav sections={[{ itemClass: 'helpNav', items: links, title: 'Help topics' }]} />
+      <LeftNav sections={[{ itemClass: 'helpNav', items: links, title: 'Help & support' }]} />
       <div style={{ maxWidth: contentWidth }}>
-        <p className="muted">Help {breadcrumbs}</p>
+        <p className="muted">Help & support {breadcrumbs}</p>
         <div className="help-content relative margin-top-small">
-          <ComponentToShow
-            demoArtifactLink={demoArtifactLink}
-            docsVersion={docsVersion}
-            isHosted={isHosted}
-            isEnterprise={isEnterprise}
-            menderVersion={menderVersion}
-            menderArtifactVersion={menderArtifactVersion}
-          />
+          <ComponentToShow docsVersion={docsVersion} isHosted={isHosted} menderVersion={menderVersion} />
         </div>
       </div>
     </div>
@@ -135,12 +110,10 @@ const actionCreators = { getUserOrganization };
 
 const mapStateToProps = state => {
   return {
-    demoArtifactLink: state.app.demoArtifactLink,
     docsVersion: getDocsVersion(state),
     isHosted: state.app.features.isHosted,
     isEnterprise: getIsEnterprise(state),
-    menderVersion: state.app.versionInformation['Mender-Client'],
-    menderArtifactVersion: state.app.versionInformation['Mender-Artifact']
+    menderVersion: state.app.versionInformation['Mender-Client']
   };
 };
 
