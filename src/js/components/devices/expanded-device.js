@@ -64,7 +64,7 @@ const GatewayNotification = ({ device, docsVersion }) => {
       title={
         <div style={{ maxWidth: 350 }}>
           For information about connecting other devices to this gateway, please refer to the{' '}
-          <a href={`https://docs.mender.io/${docsVersion}server-integration/mender-gateway`} target="_blank" rel="noopener noreferrer">
+          <a href={`https://docs.mender.io/${docsVersion}get-started/mender-gateway`} target="_blank" rel="noopener noreferrer">
             Mender Gateway documentation
           </a>
           . This device is reachable via <i>{ipAddress}</i>.
@@ -92,7 +92,6 @@ export const ExpandedDevice = ({
   getDeviceTwin,
   getSingleDeployment,
   integrations,
-  isEnterprise,
   latestAlerts,
   onClose,
   onMakeGatewayClick,
@@ -249,13 +248,11 @@ export const ExpandedDevice = ({
 
       <TroubleshootDialog
         deviceId={device.id}
-        isEnterprise={isEnterprise}
         open={Boolean(troubleshootType)}
         onCancel={() => setTroubleshootType()}
         onSocketClose={() => setTimeout(() => setSocketClosed(true), 5000)}
         setSocketClosed={setSocketClosed}
         type={troubleshootType}
-        userRoles={userRoles}
       />
       {monitorDetails && <MonitorDetailsDialog alert={monitorDetails} onClose={() => setMonitorDetails()} />}
     </Drawer>
