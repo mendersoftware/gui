@@ -6,7 +6,7 @@ import { Button, TextField, Autocomplete } from '@mui/material';
 
 import historyImage from '../../../assets/img/history.png';
 
-import { getAuditLogs, getAuditLogsCsvLink, setAuditlogsState } from '../../actions/organizationActions';
+import { getAuditLogsCsvLink, setAuditlogsState } from '../../actions/organizationActions';
 import { getUserList } from '../../actions/userActions';
 import { SORTING_OPTIONS } from '../../constants/appConstants';
 import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
@@ -16,33 +16,50 @@ import TimeframePicker from '../common/timeframe-picker';
 import TimerangePicker from '../common/timerange-picker';
 import AuditLogsList, { defaultRowsPerPage } from './auditlogslist';
 import { createDownload } from '../../helpers';
+import { useDebounce } from '../../utils/debouncehook';
 
 const detailsMap = {
   Deployment: 'to device group',
   User: 'email'
 };
 
-let inputDelayTimer;
-
 const getOptionLabel = option => option.title || option.email || option;
 
 const renderOption = (props, option) => <li {...props}>{getOptionLabel(option)}</li>;
 
-export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserList, groups, selectionState, setAuditlogsState, users, ...props }) => {
+const autoSelectProps = {
+  autoSelect: true,
+  filterSelectedOptions: true,
+  getOptionLabel,
+  handleHomeEndKeys: true,
+  renderOption
+};
+
+export const AuditLogs = ({ events, getAuditLogsCsvLink, getUserList, groups, selectionState, setAuditlogsState, users, ...props }) => {
   const history = useHistory();
   const [csvLoading, setCsvLoading] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [locationChange, setLocationChange] = useState(true);
   const [filterReset, setFilterReset] = useState(false);
   const [date] = useState({ today: new Date(new Date().setHours(0, 0, 0)).toISOString(), tonight: new Date(new Date().setHours(23, 59, 59)).toISOString() });
   const { today, tonight } = date;
 
-  const { detail, page, perPage, endDate, user, sorting, startDate, total, type } = selectionState;
+  const [detailValue, setDetailValue] = useState('');
+  const [userValue, setUserValue] = useState('');
+  const [typeValue, setTypeValue] = useState('');
+
+  const debouncedDetail = useDebounce(detailValue, 700);
+  const debouncedType = useDebounce(typeValue, 700);
+  const debouncedUser = useDebounce(userValue, 700);
+
+  useEffect(() => {
+    setAuditlogsState({ page: 1, detail: debouncedDetail, type: debouncedType, user: debouncedUser });
+  }, [debouncedDetail, debouncedType, debouncedUser]);
+
+  const { detail, isLoading, perPage, endDate, user, sort, startDate, total, type } = selectionState;
 
   useEffect(() => {
     getUserList();
     trackLocationChange(history.location);
-    refresh();
     history.listen(trackLocationChange);
   }, []);
 
@@ -58,7 +75,7 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
       type,
       detail: params.get('object_id') || '',
       user: params.get('user_id') || '',
-      sorting: params.get('sort') || SORTING_OPTIONS.desc,
+      sort: params.get('sort') || SORTING_OPTIONS.desc,
       startDate: params.get('start_date') ?? today,
       endDate: params.get('end_date') ?? tonight
     };
@@ -79,32 +96,9 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
     history.push('/auditlog');
   };
 
-  const refresh = (
-    currentPage = page,
-    currentPerPage = perPage,
-    currentStartDate = startDate,
-    currentEndDate = endDate,
-    userFilter = user,
-    typeFilter = type,
-    detailFilter = detail,
-    currentSorting = sorting
-  ) => {
-    setLoading(true);
-    getAuditLogs(
-      currentPage,
-      currentPerPage,
-      currentStartDate,
-      currentEndDate,
-      userFilter?.id || userFilter,
-      `${typeFilter}`.toLowerCase(),
-      detailFilter?.id || detailFilter,
-      currentSorting
-    ).then(() => setLoading(false));
-  };
-
   const createCsvDownload = () => {
     setCsvLoading(true);
-    getAuditLogsCsvLink(startDate, endDate, user?.id || user, `${type}`.toLowerCase(), detail?.id || detail, sorting).then(address => {
+    getAuditLogsCsvLink().then(address => {
       createDownload(
         encodeURI(address),
         `Mender-AuditLog-${moment(startDate).format(moment.HTML5_FMT.DATE)}-${moment(endDate).format(moment.HTML5_FMT.DATE)}.csv`
@@ -114,52 +108,35 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
   };
 
   const onChangeSorting = () => {
-    const currentSorting = sorting === SORTING_OPTIONS.desc ? SORTING_OPTIONS.asc : SORTING_OPTIONS.desc;
-    setAuditlogsState({ page: 1, sorting: currentSorting });
-    refresh(page, perPage, startDate, endDate, user, type, detail, currentSorting);
-  };
-
-  const onFilterUpdate = (...args) => {
-    clearTimeout(inputDelayTimer);
-    inputDelayTimer = setTimeout(() => refresh(...args), 700);
+    const currentSorting = sort === SORTING_OPTIONS.desc ? SORTING_OPTIONS.asc : SORTING_OPTIONS.desc;
+    setAuditlogsState({ page: 1, sort: currentSorting });
   };
 
   const onUserFilterChange = (e, value, reason) => {
     if (!e || reason === 'blur') {
       return;
     }
-    setAuditlogsState({ page: 1, user: value });
-    onFilterUpdate(1, perPage, startDate, endDate, value);
+    setUserValue(value);
   };
 
   const onTypeFilterChange = (e, value) => {
     if (!e) {
       return;
     }
-    setAuditlogsState({ page: 1, type: value });
-    onFilterUpdate(1, perPage, startDate, endDate, user, value, '');
+    setTypeValue(value);
   };
 
   const onDetailFilterChange = (e, value) => {
     if (!e) {
       return;
     }
-    setAuditlogsState({ detail: value, page: 1 });
-    onFilterUpdate(1, perPage, startDate, endDate, user, type, value);
+    setDetailValue(value);
   };
 
-  const onTimeFilterChange = (currentStartDate = startDate, currentEndDate = endDate) => {
+  const onTimeFilterChange = (currentStartDate = startDate, currentEndDate = endDate) =>
     setAuditlogsState({ page: 1, startDate: currentStartDate, endDate: currentEndDate });
-    refresh(1, perPage, currentStartDate, currentEndDate);
-  };
 
-  const onChangePagination = (page, currentPerPage = perPage) => {
-    setAuditlogsState({
-      page,
-      perPage: currentPerPage
-    });
-    refresh(1, perPage);
-  };
+  const onChangePagination = (page, currentPerPage = perPage) => setAuditlogsState({ page, perPage: currentPerPage });
 
   const typeOptionsMap = {
     Deployment: groups,
@@ -167,14 +144,6 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
     Device: []
   };
   let detailOptions = typeOptionsMap[type] ?? [];
-
-  const autoSelectProps = {
-    autoSelect: true,
-    filterSelectedOptions: true,
-    getOptionLabel,
-    handleHomeEndKeys: true,
-    renderOption
-  };
 
   return (
     <div className="fadeIn margin-left flexbox column" style={{ marginRight: '5%' }}>
@@ -241,7 +210,7 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
         <AuditLogsList
           {...props}
           items={events}
-          loading={loading}
+          loading={isLoading}
           locationChange={locationChange}
           onChangePage={onChangePagination}
           onChangeRowsPerPage={newPerPage => onChangePagination(1, newPerPage)}
@@ -250,7 +219,7 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
           setAuditlogsState={setAuditlogsState}
         />
       )}
-      {!(loading || total) && (
+      {!(isLoading || total) && (
         <div className="dashboard-placeholder">
           <p>No log entries were found.</p>
           <p>Try adjusting the filters.</p>
@@ -261,7 +230,7 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getAuditLogs, getUserLi
   );
 };
 
-const actionCreators = { getAuditLogs, getAuditLogsCsvLink, getUserList, setAuditlogsState };
+const actionCreators = { getAuditLogsCsvLink, getUserList, setAuditlogsState };
 
 const mapStateToProps = state => {
   // eslint-disable-next-line no-unused-vars
