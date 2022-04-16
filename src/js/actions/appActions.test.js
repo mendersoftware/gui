@@ -4,7 +4,7 @@ import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
 import { roles } from '../../../tests/__mocks__/userHandlers';
 import { defaultState } from '../../../tests/mockData';
 
-import { commonErrorHandler, initializeAppData, setSnackbar, setFirstLoginAfterSignup, setYesterday, setVersionInfo } from './appActions';
+import { commonErrorHandler, getLatestReleaseInfo, initializeAppData, setSnackbar, setFirstLoginAfterSignup, setYesterday, setVersionInfo } from './appActions';
 import AppConstants from '../constants/appConstants';
 import DeploymentConstants from '../constants/deploymentConstants';
 import DeviceConstants, { EXTERNAL_PROVIDER } from '../constants/deviceConstants';
@@ -301,6 +301,30 @@ describe('app actions', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
+  it('should not get the latest release info when not hosted', async () => {
+    const store = mockStore({ ...defaultState });
+    await store.dispatch(getLatestReleaseInfo());
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(0);
+  });
+  it('should get the latest release info when hosted', async () => {
+    const store = mockStore({
+      ...defaultState,
+      app: {
+        ...defaultState.app,
+        features: {
+          ...defaultState.app.features,
+          isHosted: true
+        }
+      }
+    });
+    const expectedActions = [{ type: AppConstants.SET_VERSION_INFORMATION, value: { backend: 'saas-v2022.03.10', GUI: 'saas-v2022.03.10' } }];
+    await store.dispatch(getLatestReleaseInfo());
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+
   it('should store first login after Signup', async () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [

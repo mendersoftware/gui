@@ -7,7 +7,60 @@ import { auditLogsApiUrl, tenantadmApiUrlv1, tenantadmApiUrlv2 } from '../../src
 import { headerNames } from '../../src/js/api/general-api';
 import { EXTERNAL_PROVIDER } from '../../src/js/constants/deviceConstants';
 
+const releasesSample = {
+  lts: ['3.3'],
+  releases: {
+    '3.2': {
+      '3.2.1': {
+        release_date: '2022-02-02',
+        release: '3.2.1',
+        repos: [
+          { name: 'service', version: '3.0.0' },
+          { name: 'other-service', version: '1.1.0' }
+        ]
+      },
+      '3.2.0': {
+        release_date: '2022-01-24',
+        release: '3.2.0',
+        repos: [
+          { name: 'service', version: '3.0.0' },
+          { name: 'another-service', version: '4.1.0' }
+        ]
+      }
+    },
+    '2.7': {
+      '2.7.2': {
+        release_date: '2021-11-04',
+        release: '2.7.2',
+        repos: [
+          { name: 'service', version: '1.1.0' },
+          { name: 'more-service', version: '1.0.2' }
+        ]
+      }
+    },
+    '1.0': {
+      supported_until: '2018-02',
+      '1.0.1': {
+        release_date: '2017-04-03',
+        release: '1.0.1',
+        repos: [{ name: 'service', version: '1.0.1' }]
+      },
+      '1.0.0': {
+        release_date: '2017-02-16',
+        release: '1.0.0',
+        repos: [{ name: 'mono-service', version: '1.0.0' }]
+      }
+    }
+  },
+  saas: [
+    { tag: 'saas-v2022.03.10', date: '2022-03-09' },
+    { tag: 'saas-v2020.09.25', date: '2020-09-24' },
+    { tag: 'saas-v2020.07.09', date: '2020-07-09' }
+  ]
+};
+
 export const organizationHandlers = [
+  rest.get('/versions.json', (req, res, ctx) => res(ctx.json(releasesSample))),
   rest.get(`${tenantadmApiUrlv1}/user/tenant`, (req, res, ctx) => res(ctx.json(defaultState.organization.organization))),
   rest.post(`${tenantadmApiUrlv2}/tenants/:tenantId/cancel`, (req, res, ctx) => res(ctx.status(200))),
   rest.post(`${tenantadmApiUrlv2}/tenants/trial`, ({ body: signup }, res, ctx) => {
