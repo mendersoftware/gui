@@ -226,10 +226,10 @@ label+.emotion-8 {
 }
 
 .emotion-8.Mui-focused:after {
-  -webkit-transform: scaleX(1);
-  -moz-transform: scaleX(1);
-  -ms-transform: scaleX(1);
-  transform: scaleX(1);
+  -webkit-transform: scaleX(1) translateX(0);
+  -moz-transform: scaleX(1) translateX(0);
+  -ms-transform: scaleX(1) translateX(0);
+  transform: scaleX(1) translateX(0);
 }
 
 .emotion-8.Mui-error:after {

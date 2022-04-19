@@ -410,10 +410,10 @@ exports[`ReleaseRepositoryItem Component renders correctly 1`] = `
 }
 
 .emotion-16.Mui-focused:after {
-  -webkit-transform: scaleX(1);
-  -moz-transform: scaleX(1);
-  -ms-transform: scaleX(1);
-  transform: scaleX(1);
+  -webkit-transform: scaleX(1) translateX(0);
+  -moz-transform: scaleX(1) translateX(0);
+  -ms-transform: scaleX(1) translateX(0);
+  transform: scaleX(1) translateX(0);
 }
 
 .emotion-16.Mui-error:after {
