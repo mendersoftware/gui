@@ -132,10 +132,10 @@ exports[`SelectedArtifact Component renders correctly 1`] = `
 }
 
 .emotion-6.Mui-focused:after {
-  -webkit-transform: scaleX(1);
-  -moz-transform: scaleX(1);
-  -ms-transform: scaleX(1);
-  transform: scaleX(1);
+  -webkit-transform: scaleX(1) translateX(0);
+  -moz-transform: scaleX(1) translateX(0);
+  -ms-transform: scaleX(1) translateX(0);
+  transform: scaleX(1) translateX(0);
 }
 
 .emotion-6.Mui-error:after {
