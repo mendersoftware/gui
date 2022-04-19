@@ -560,7 +560,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class=\\"loaderContainer\\"
+        class=\\"loaderContainer shrunk\\"
       >
         <div
           class=\\"  loader\\"

@@ -95,7 +95,7 @@ export const DeploymentReport = props => {
       getRelease(deployment.artifact_name);
     }
     if (isEnterprise && isAdmin) {
-      getAuditLogs(1, 100, undefined, undefined, undefined, 'deployment', deployment.name);
+      getAuditLogs({ page: 1, perPage: 100, startDate: undefined, endDate: undefined, user: undefined, type: 'deployment', detail: deployment.name });
     }
     refreshDeployment();
     return () => {
