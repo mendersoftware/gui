@@ -423,35 +423,36 @@ export const standardizePhases = phases =>
     return standardizedPhase;
   });
 
-export const getDebConfigurationCode = ({ ipAddress, isHosted, isEnterprise, isDemoMode, tenantToken, deviceType = 'generic-armv6', isPreRelease }) => {
-  let envVars = ``;
-  let installScriptArgs = `--demo`;
-  if (isPreRelease) {
-    installScriptArgs = `${installScriptArgs} -c experimental`;
-  }
-  if (isHosted) {
-    const jwtToken = getToken();
-    envVars = `${envVars}JWT_TOKEN="${jwtToken}"\n`;
-    installScriptArgs = `${installScriptArgs} --commercial --jwt-token $JWT_TOKEN`;
-  }
+const getInstallScriptArgs = ({ isHosted, isPreRelease }) => {
+  let installScriptArgs = '--demo';
+  installScriptArgs = isPreRelease ? `${installScriptArgs} -c experimental` : installScriptArgs;
+  installScriptArgs = isHosted ? `${installScriptArgs} --commercial --jwt-token $JWT_TOKEN` : installScriptArgs;
+  return installScriptArgs;
+};
+
+const getSetupArgs = ({ deviceType = 'generic-armv6', ipAddress, isDemoMode, isEnterprise, isHosted, isOnboarding }) => {
   let menderSetupArgs = `--quiet --device-type "${deviceType}"`;
-  if (isHosted || isEnterprise) {
-    envVars = `${envVars}TENANT_TOKEN="${tenantToken}"\n`;
-    menderSetupArgs = `${menderSetupArgs} --tenant-token $TENANT_TOKEN`;
-  }
+  menderSetupArgs = isHosted || isEnterprise ? `${menderSetupArgs} --tenant-token $TENANT_TOKEN` : menderSetupArgs;
+  // in production we use polling intervals from the client examples: https://github.com/mendersoftware/mender/blob/master/examples/mender.conf.production
+  menderSetupArgs = isDemoMode || isOnboarding ? `${menderSetupArgs} --demo` : `${menderSetupArgs} --retry-poll 300 --update-poll 1800 --inventory-poll 28800`;
   if (isHosted) {
-    menderSetupArgs = `${menderSetupArgs} --demo --hosted-mender`;
+    menderSetupArgs = `${menderSetupArgs} --hosted-mender`;
   } else if (isDemoMode) {
     // Demo installation, either OS os Enterprise. Install demo cert and add IP to /etc/hosts
-    menderSetupArgs = `${menderSetupArgs} --demo${ipAddress ? ` --server-ip ${ipAddress}` : ''}`;
+    menderSetupArgs = `${menderSetupArgs}${ipAddress ? ` --server-ip ${ipAddress}` : ''}`;
   } else {
     // Production installation, either OS or Enterprise
-    menderSetupArgs = `${menderSetupArgs} --retry-poll 30 --update-poll 5 --inventory-poll 5 --server-url https://${window.location.hostname} --server-cert=""`;
+    menderSetupArgs = `${menderSetupArgs} --server-url https://${window.location.hostname} --server-cert=""`;
   }
-  let scriptUrl = `https://get.mender.io`;
-  if (isPreRelease) {
-    scriptUrl = `${scriptUrl}/staging`;
-  }
+  return menderSetupArgs;
+};
+
+export const getDebConfigurationCode = props => {
+  const { isHosted, isEnterprise, tenantToken, isPreRelease } = props;
+  const envVars = isHosted || isEnterprise ? `JWT_TOKEN="${getToken()}"\nTENANT_TOKEN="${tenantToken}"\n` : '';
+  const installScriptArgs = getInstallScriptArgs(props);
+  const scriptUrl = isPreRelease ? 'https://get.mender.io/staging' : 'https://get.mender.io';
+  const menderSetupArgs = getSetupArgs(props);
   return `${envVars}wget -O- ${scriptUrl} | sudo bash -s -- ${installScriptArgs} -- ${menderSetupArgs}`;
 };
 
