@@ -7,10 +7,10 @@ import copy from 'copy-to-clipboard';
 import { List, ListItem, ListItemText, Tooltip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { setSnackbar, setVersionInfo } from '../actions/appActions';
+import { getLatestReleaseInfo, setSnackbar, setVersionInfo } from '../actions/appActions';
 
 import { onboardingSteps } from '../constants/onboardingConstants';
-import { getDocsVersion, getIsEnterprise, getOnboardingState, getUserRoles } from '../selectors';
+import { getDocsVersion, getFeatures, getIsEnterprise, getOnboardingState, getUserRoles } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 
 const listItems = [
@@ -31,11 +31,12 @@ const useStyles = makeStyles()(theme => ({
   listItem: { padding: '16px 16px 16px 42px' }
 }));
 
-const VersionInfo = ({ setSnackbar, setVersionInfo, versionInformation }) => {
+const VersionInfo = ({ getLatestReleaseInfo, isHosted, setSnackbar, setVersionInfo, versionInformation }) => {
   const [clicks, setClicks] = useState(0);
   const timer = useRef();
 
   useEffect(() => {
+    getLatestReleaseInfo();
     return () => {
       clearTimeout(timer.current);
     };
@@ -74,16 +75,30 @@ const VersionInfo = ({ setSnackbar, setVersionInfo, versionInformation }) => {
     onVersionClick();
   };
 
+  let title = versionInformation.Integration ? `Version: ${versionInformation.Integration}` : '';
+  if (isHosted && versionInformation.Integration !== 'next') {
+    title = 'latest';
+  }
   return (
     <Tooltip title={versions} placement="top">
       <div className="clickable slightly-smaller" onClick={onClick}>
-        {versionInformation.Integration ? `Version: ${versionInformation.Integration}` : ''}
+        {title}
       </div>
     </Tooltip>
   );
 };
 
-export const LeftNav = ({ docsVersion, isAdmin, isEnterprise, onboardingState, setSnackbar, setVersionInfo, versionInformation }) => {
+export const LeftNav = ({
+  docsVersion,
+  getLatestReleaseInfo,
+  isHosted,
+  isAdmin,
+  isEnterprise,
+  onboardingState,
+  setSnackbar,
+  setVersionInfo,
+  versionInformation
+}) => {
   const releasesRef = useRef();
   const { classes } = useStyles();
 
@@ -138,7 +153,15 @@ export const LeftNav = ({ docsVersion, isAdmin, isEnterprise, onboardingState, s
         </ListItem>
         <ListItem className={classes.listItem}>
           <ListItemText
-            primary={<VersionInfo setSnackbar={setSnackbar} setVersionInfo={setVersionInfo} versionInformation={versionInformation} />}
+            primary={
+              <VersionInfo
+                getLatestReleaseInfo={getLatestReleaseInfo}
+                isHosted={isHosted}
+                setSnackbar={setSnackbar}
+                setVersionInfo={setVersionInfo}
+                versionInformation={versionInformation}
+              />
+            }
             secondary={licenseLink}
           />
         </ListItem>
@@ -147,13 +170,15 @@ export const LeftNav = ({ docsVersion, isAdmin, isEnterprise, onboardingState, s
   );
 };
 
-const actionCreators = { setSnackbar, setVersionInfo };
+const actionCreators = { getLatestReleaseInfo, setSnackbar, setVersionInfo };
 
 const mapStateToProps = state => {
+  const { isHosted } = getFeatures(state);
   return {
     docsVersion: getDocsVersion(state),
     isAdmin: getUserRoles(state).isAdmin,
     isEnterprise: getIsEnterprise(state),
+    isHosted,
     onboardingState: getOnboardingState(state),
     versionInformation: state.app.versionInformation
   };

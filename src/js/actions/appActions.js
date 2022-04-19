@@ -1,12 +1,13 @@
 import Cookies from 'universal-cookie';
 
+import GeneralApi from '../api/general-api';
 import { getToken } from '../auth';
 import AppConstants from '../constants/appConstants';
 import { DEVICE_ONLINE_CUTOFF, DEVICE_STATES } from '../constants/deviceConstants';
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { SET_SHOW_HELP } from '../constants/userConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
-import { extractErrorMessage, preformatWithRequestID } from '../helpers';
+import { customSort, extractErrorMessage, preformatWithRequestID } from '../helpers';
 import { getCurrentUser, getUserSettings } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import { getDeviceAttributes, getDeviceById, getDevicesByStatus, getDeviceLimit, getDynamicGroups, getGroups, setDeviceListState } from './deviceActions';
@@ -153,12 +154,53 @@ export const cancelFileUpload = () => (dispatch, getState) => {
   return Promise.resolve(dispatch({ type: AppConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 }));
 };
 
-export const setVersionInfo = info => (dispatch, getState) => {
-  return dispatch({
-    type: AppConstants.SET_VERSION_INFORMATION,
-    value: {
-      ...getState().app.versionInformation,
-      ...info
-    }
+export const setVersionInfo = info => (dispatch, getState) =>
+  Promise.resolve(
+    dispatch({
+      type: AppConstants.SET_VERSION_INFORMATION,
+      value: {
+        ...getState().app.versionInformation,
+        ...info
+      }
+    })
+  );
+
+const getLatestRelease = thing => {
+  const latestKey = Object.keys(thing).sort().reverse()[0];
+  return thing[latestKey];
+};
+
+const repoKeyMap = {
+  integration: 'Integration',
+  mender: 'Mender-Client',
+  'mender-artifact': 'Mender-Artifact'
+};
+
+export const getLatestReleaseInfo = () => (dispatch, getState) => {
+  if (!getState().app.features.isHosted) {
+    return Promise.resolve();
+  }
+  return GeneralApi.get('/versions.json').then(({ data }) => {
+    const { releases, saas } = data;
+    const latestRelease = getLatestRelease(getLatestRelease(releases));
+    const latestVersions = latestRelease.repos.reduce((accu, item) => {
+      if (repoKeyMap[item.name]) {
+        accu[repoKeyMap[item.name]] = item.version;
+      }
+      return accu;
+    }, {});
+    const latestSaasRelease = saas.sort(customSort(true, 'date'))[0];
+    const info = latestSaasRelease.date > latestRelease.release_date ? latestSaasRelease.tag : latestRelease.release;
+    return Promise.resolve(
+      dispatch({
+        type: AppConstants.SET_VERSION_INFORMATION,
+        value: {
+          ...getState().app.versionInformation,
+          ...latestVersions,
+          backend: info,
+          GUI: info
+        }
+      })
+    );
   });
 };
