@@ -318,7 +318,12 @@ describe('app actions', () => {
         }
       }
     });
-    const expectedActions = [{ type: AppConstants.SET_VERSION_INFORMATION, value: { backend: 'saas-v2022.03.10', GUI: 'saas-v2022.03.10' } }];
+    const expectedActions = [
+      {
+        type: AppConstants.SET_VERSION_INFORMATION,
+        value: { backend: 'saas-v2022.03.10', GUI: 'saas-v2022.03.10', Integration: '1.2.3', 'Mender-Client': '3.2.1', 'Mender-Artifact': '1.3.7' }
+      }
+    ];
     await store.dispatch(getLatestReleaseInfo());
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);

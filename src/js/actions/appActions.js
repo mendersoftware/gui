@@ -170,6 +170,12 @@ const getLatestRelease = thing => {
   return thing[latestKey];
 };
 
+const repoKeyMap = {
+  integration: 'Integration',
+  mender: 'Mender-Client',
+  'mender-artifact': 'Mender-Artifact'
+};
+
 export const getLatestReleaseInfo = () => (dispatch, getState) => {
   if (!getState().app.features.isHosted) {
     return Promise.resolve();
@@ -177,6 +183,12 @@ export const getLatestReleaseInfo = () => (dispatch, getState) => {
   return GeneralApi.get('/versions.json').then(({ data }) => {
     const { releases, saas } = data;
     const latestRelease = getLatestRelease(getLatestRelease(releases));
+    const latestVersions = latestRelease.repos.reduce((accu, item) => {
+      if (repoKeyMap[item.name]) {
+        accu[repoKeyMap[item.name]] = item.version;
+      }
+      return accu;
+    }, {});
     const latestSaasRelease = saas.sort(customSort(true, 'date'))[0];
     const info = latestSaasRelease.date > latestRelease.release_date ? latestSaasRelease.tag : latestRelease.release;
     return Promise.resolve(
@@ -184,6 +196,7 @@ export const getLatestReleaseInfo = () => (dispatch, getState) => {
         type: AppConstants.SET_VERSION_INFORMATION,
         value: {
           ...getState().app.versionInformation,
+          ...latestVersions,
           backend: info,
           GUI: info
         }
