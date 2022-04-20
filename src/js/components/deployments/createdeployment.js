@@ -229,7 +229,7 @@ export const mapStateToProps = state => {
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
     acceptedDeviceCount: state.devices.byStatus.accepted.total,
-    createdGroup: Object.keys(groups),
+    createdGroup: Object.keys(groups).length ? Object.keys(groups)[0] : undefined,
     docsVersion: getDocsVersion(state),
     globalSettings: state.users.globalSettings,
     groups,
