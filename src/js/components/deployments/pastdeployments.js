@@ -100,7 +100,7 @@ export const Past = props => {
       notification = getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED_NOTIFICATION, onboardingState, { setSnackbar }, notification);
       !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
     }, 400);
-  }, [past, onboardingState.complete]);
+  }, [past.length, onboardingState.complete]);
 
   /*
   / refresh only finished deployments
