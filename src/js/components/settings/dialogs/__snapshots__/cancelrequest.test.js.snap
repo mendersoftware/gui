@@ -383,10 +383,10 @@ label+.emotion-72 {
 }
 
 .emotion-72.Mui-focused:after {
-  -webkit-transform: scaleX(1);
-  -moz-transform: scaleX(1);
-  -ms-transform: scaleX(1);
-  transform: scaleX(1);
+  -webkit-transform: scaleX(1) translateX(0);
+  -moz-transform: scaleX(1) translateX(0);
+  -ms-transform: scaleX(1) translateX(0);
+  transform: scaleX(1) translateX(0);
 }
 
 .emotion-72.Mui-error:after {
@@ -570,10 +570,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-73:focus::-ms-input-
 }
 
 .emotion-74.Mui-focused:after {
-  -webkit-transform: scaleX(1);
-  -moz-transform: scaleX(1);
-  -ms-transform: scaleX(1);
-  transform: scaleX(1);
+  -webkit-transform: scaleX(1) translateX(0);
+  -moz-transform: scaleX(1) translateX(0);
+  -ms-transform: scaleX(1) translateX(0);
+  transform: scaleX(1) translateX(0);
 }
 
 .emotion-74.Mui-error:after {

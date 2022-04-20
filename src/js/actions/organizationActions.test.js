@@ -242,7 +242,7 @@ describe('organization actions', () => {
         total: defaultState.organization.auditlog.selectionState.total
       }
     ];
-    const request = store.dispatch(getAuditLogs());
+    const request = store.dispatch(getAuditLogs({ page: 1, perPage: 20 }));
     expect(request).resolves.toBeTruthy();
     await request.then(() => {
       const storeActions = store.getActions();

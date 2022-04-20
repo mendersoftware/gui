@@ -3,6 +3,7 @@ import Cookies from 'universal-cookie';
 import Api, { apiUrl, headerNames } from '../api/general-api';
 import { SORTING_OPTIONS } from '../constants/appConstants';
 import OrganizationConstants from '../constants/organizationConstants';
+import { deepCompare } from '../helpers';
 import { getTenantCapabilities } from '../selectors';
 import { commonErrorFallback, commonErrorHandler, setSnackbar } from './appActions';
 import { iotManagerBaseURL } from './deviceActions';
@@ -86,45 +87,51 @@ export const completeUpgrade = (tenantId, plan) => dispatch =>
     .catch(err => commonErrorHandler(err, `There was an error upgrading your account:`, dispatch))
     .then(() => Promise.resolve(dispatch(getUserOrganization())));
 
-export const getAuditLogs =
-  (page, perPage, startDate, endDate, userId, type, detail, sort = SORTING_OPTIONS.desc) =>
-  (dispatch, getState) => {
-    const { hasAuditlogs } = getTenantCapabilities(getState());
-    if (!hasAuditlogs) {
-      return Promise.resolve();
-    }
-    const createdAfter = startDate ? `&created_after=${Math.round(Date.parse(startDate) / 1000)}` : '';
-    const createdBefore = endDate ? `&created_before=${Math.round(Date.parse(endDate) / 1000)}` : '';
-    const typeSearch = type ? `&object_type=${type}` : '';
-    const userSearch = userId ? `&actor_id=${userId}` : '';
-    const queryParameter = type && detail ? OrganizationConstants.AUDIT_LOGS_TYPES.find(typeObject => typeObject.value === type).queryParameter : '';
-    const objectSearch = detail ? `&${queryParameter}=${encodeURIComponent(detail)}` : '';
-    return Api.get(
-      `${auditLogsApiUrl}/logs?page=${page}&per_page=${perPage}${createdAfter}${createdBefore}${userSearch}${typeSearch}${objectSearch}&sort=${sort}`
-    )
-      .then(res => {
-        let total = res.headers[headerNames.total];
-        total = Number(total || res.data.length);
-        return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_AUDIT_LOGS, events: res.data, total }));
-      })
-      .catch(err => commonErrorHandler(err, `There was an error retrieving audit logs:`, dispatch));
-  };
+const prepareAuditlogQuery = ({ startDate, endDate, user: userFilter, type, detail: detailFilter, sort = SORTING_OPTIONS.desc }) => {
+  const userId = userFilter?.id || userFilter;
+  const detail = detailFilter?.id || detailFilter;
+  const createdAfter = endDate ? `&created_after=${Math.round(Date.parse(startDate) / 1000)}` : '';
+  const createdBefore = startDate ? `&created_before=${Math.round(Date.parse(endDate) / 1000)}` : '';
+  const typeSearch = type ? `&object_type=${type}`.toLowerCase() : '';
+  const userSearch = userId ? `&actor_id=${userId}` : '';
+  const queryParameter = type && detail ? OrganizationConstants.AUDIT_LOGS_TYPES.find(typeObject => typeObject.value === type).queryParameter : '';
+  const objectSearch = detail ? `&${queryParameter}=${encodeURIComponent(detail)}` : '';
+  return `${createdAfter}${createdBefore}${userSearch}${typeSearch}${objectSearch}&sort=${sort}`;
+};
 
-export const getAuditLogsCsvLink =
-  (startDate, endDate, userId, type, detail, sort = SORTING_OPTIONS.desc) =>
-  () => {
-    const createdAfter = endDate ? `&created_after=${Math.round(Date.parse(startDate) / 1000)}` : '';
-    const createdBefore = startDate ? `&created_before=${Math.round(Date.parse(endDate) / 1000)}` : '';
-    const typeSearch = type ? `&object_type=${type}` : '';
-    const userSearch = userId ? `&actor_id=${userId}` : '';
-    const objectSearch = detail ? `&object_id=${encodeURIComponent(detail)}` : '';
-    return Promise.resolve(`${auditLogsApiUrl}/logs/export?limit=20000${createdAfter}${createdBefore}${userSearch}${typeSearch}${objectSearch}&sort=${sort}`);
-  };
+export const getAuditLogs = selectionState => (dispatch, getState) => {
+  const { page, perPage } = selectionState;
+  const { hasAuditlogs } = getTenantCapabilities(getState());
+  if (!hasAuditlogs) {
+    return Promise.resolve();
+  }
+  return Api.get(`${auditLogsApiUrl}/logs?page=${page}&per_page=${perPage}${prepareAuditlogQuery(selectionState)}`)
+    .then(res => {
+      let total = res.headers[headerNames.total];
+      total = Number(total || res.data.length);
+      return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_AUDIT_LOGS, events: res.data, total }));
+    })
+    .catch(err => commonErrorHandler(err, `There was an error retrieving audit logs:`, dispatch));
+};
 
-export const setAuditlogsState = selectionState => (dispatch, getState) =>
-  Promise.resolve(
-    dispatch({ type: OrganizationConstants.SET_AUDITLOG_STATE, state: { ...getState().organization.auditlog.selectionState, ...selectionState } })
-  );
+export const getAuditLogsCsvLink = () => (dispatch, getState) =>
+  Promise.resolve(`${auditLogsApiUrl}/logs/export?limit=20000${prepareAuditlogQuery(getState().organization.auditlog.selectionState)}`);
+
+export const setAuditlogsState = selectionState => (dispatch, getState) => {
+  const currentState = getState().organization.auditlog.selectionState;
+  let nextState = { ...currentState, ...selectionState };
+  let tasks = [];
+  // eslint-disable-next-line no-unused-vars
+  const { isLoading: currentLoading, selectedIssue: currentIssue, ...currentRequestState } = currentState;
+  // eslint-disable-next-line no-unused-vars
+  const { isLoading: selectionLoading, selectedIssue: selectionIssue, ...selectionRequestState } = selectionState;
+  if (deepCompare(currentRequestState, selectionRequestState)) {
+    nextState.isLoading = true;
+    tasks.push(dispatch(getAuditLogs(nextState)).finally(() => dispatch(setAuditlogsState({ isLoading: false }))));
+  }
+  tasks.push(dispatch({ type: OrganizationConstants.SET_AUDITLOG_STATE, state: nextState }));
+  return Promise.all(tasks);
+};
 
 /*
   Tenant management + Hosted Mender
