@@ -258,7 +258,15 @@ describe('organization actions', () => {
         type: OrganizationConstants.SET_AUDITLOG_STATE,
         state: {
           ...defaultState.organization.auditlog.selectionState,
+          isLoading: true,
           sorting: 'something'
+        }
+      },
+      {
+        type: OrganizationConstants.SET_AUDITLOG_STATE,
+        state: {
+          ...defaultState.organization.auditlog.selectionState,
+          isLoading: false
         }
       }
     ];

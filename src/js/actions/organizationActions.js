@@ -124,8 +124,8 @@ export const setAuditlogsState = selectionState => (dispatch, getState) => {
   // eslint-disable-next-line no-unused-vars
   const { isLoading: currentLoading, selectedIssue: currentIssue, ...currentRequestState } = currentState;
   // eslint-disable-next-line no-unused-vars
-  const { isLoading: selectionLoading, selectedIssue: selectionIssue, ...selectionRequestState } = selectionState;
-  if (deepCompare(currentRequestState, selectionRequestState)) {
+  const { isLoading: selectionLoading, selectedIssue: selectionIssue, ...selectionRequestState } = nextState;
+  if (!deepCompare(currentRequestState, selectionRequestState)) {
     nextState.isLoading = true;
     tasks.push(dispatch(getAuditLogs(nextState)).finally(() => dispatch(setAuditlogsState({ isLoading: false }))));
   }

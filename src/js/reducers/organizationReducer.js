@@ -18,6 +18,7 @@ export const initialState = {
       ...DEVICE_LIST_DEFAULTS,
       detail: '',
       endDate: undefined,
+      reset: false,
       selectedIssue: undefined,
       sorting: SORTING_OPTIONS.desc,
       startDate: undefined,
