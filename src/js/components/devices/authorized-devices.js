@@ -415,6 +415,7 @@ export const Authorized = props => {
 
   const groupLabel = selectedGroup ? decodeURIComponent(selectedGroup) : ALL_DEVICES;
   const isUngroupedGroup = selectedGroup && selectedGroup === UNGROUPED_GROUP.id;
+  const selectedStaticGroup = selectedGroup && !groupFilters.length ? selectedGroup : undefined;
   return (
     <>
       <div className="margin-left-small">
@@ -507,7 +508,7 @@ export const Authorized = props => {
         <DeviceQuickActions
           actionCallbacks={{ onAddDevicesToGroup, onAuthorizationChange, onDeviceDismiss, onRemoveDevicesFromGroup }}
           devices={devices}
-          selectedGroup={selectedGroup}
+          selectedGroup={selectedStaticGroup}
           selectedRows={selectedRows}
           ref={authorizeRef}
         />
