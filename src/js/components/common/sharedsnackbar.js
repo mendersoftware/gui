@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Snackbar } from '@mui/material';
 import copy from 'copy-to-clipboard';
 
@@ -28,4 +28,11 @@ export const SharedSnackbar = ({ setSnackbar, snackbar }) => {
   );
 };
 
-export default SharedSnackbar;
+const areEqual = (prevProps, nextProps) => {
+  if (prevProps.snackbar.open != nextProps.snackbar.open || prevProps.snackbar.message != nextProps.snackbar.message) {
+    return false;
+  }
+  return prevProps.snackbar.children != nextProps.snackbar.children;
+};
+
+export default memo(SharedSnackbar, areEqual);
