@@ -55,10 +55,11 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getUserList, groups, se
     setAuditlogsState({ page: 1, detail: debouncedDetail, type: debouncedType, user: debouncedUser });
   }, [debouncedDetail, debouncedType, debouncedUser]);
 
-  const { detail, isLoading, perPage, endDate, user, sort, startDate, total, type } = selectionState;
+  const { detail, isLoading, perPage, endDate, user, reset: resetList, sort, startDate, total, type } = selectionState;
 
   useEffect(() => {
     getUserList();
+    setAuditlogsState({ reset: !resetList });
     trackLocationChange(history.location);
     history.listen(trackLocationChange);
   }, []);
@@ -85,12 +86,13 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getUserList, groups, se
 
   const reset = () => {
     setAuditlogsState({
-      page: 1,
-      type: '',
       detail: '',
-      user: '',
+      endDate: tonight,
+      page: 1,
+      reset: !resetList,
       startDate: today,
-      endDate: tonight
+      type: '',
+      user: ''
     });
     setFilterReset(!filterReset);
     history.push('/auditlog');

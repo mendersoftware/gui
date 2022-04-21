@@ -2,7 +2,7 @@ import reducer, { initialState } from './deploymentReducer';
 import DeploymentConstants from '../constants/deploymentConstants';
 import { defaultState } from '../../../tests/mockData';
 
-describe('device reducer', () => {
+describe('deployment reducer', () => {
   it('should return the initial state', async () => {
     expect(reducer(undefined, {})).toEqual(initialState);
   });
@@ -15,13 +15,11 @@ describe('device reducer', () => {
       defaultState.deployments.byId.d1
     );
   });
-  it('should handle RECEIVE_DEPLOYMENT_STATS', async () => {
+  it('should handle RECEIVE_DEPLOYMENTS', async () => {
     const { stats } = defaultState.deployments.byId.d1;
+    expect(reducer(undefined, { type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments: { plain: 'passing' } }).byId.plain).toBeTruthy();
     expect(
-      reducer(undefined, { type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS, deploymentId: defaultState.deployments.byId.d1.id, stats }).byId.d1.stats
-    ).toBeTruthy();
-    expect(
-      reducer(initialState, { type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS, deploymentId: defaultState.deployments.byId.d1.id, stats }).byId.d1.stats
+      reducer(initialState, { type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments: { [defaultState.deployments.byId.d1.id]: { stats } } }).byId.d1.stats
     ).toBeTruthy();
   });
   it('should handle RECEIVE_DEPLOYMENT_DEVICE_LOG', async () => {

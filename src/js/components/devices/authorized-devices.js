@@ -370,7 +370,7 @@ export const Authorized = props => {
   let onboardingComponent;
   const devicePendingTip = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING_START, onboardingState);
   if (deviceListRef.current) {
-    const element = deviceListRef.current.getElementsByClassName('body')[0];
+    const element = deviceListRef.current.querySelector('body .deviceListItem > div');
     const anchor = { left: 200, top: element ? element.offsetTop + element.offsetHeight : 170 };
     onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING, onboardingState, { anchor }, onboardingComponent);
     onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor }, onboardingComponent);

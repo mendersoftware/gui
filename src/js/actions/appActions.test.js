@@ -86,16 +86,16 @@ describe('app actions', () => {
           tagAttributes: []
         }
       },
+      { type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments: defaultState.deployments.byId },
       {
         type: DeploymentConstants.RECEIVE_FINISHED_DEPLOYMENTS,
-        deployments: defaultState.deployments.byId,
         deploymentIds: Object.keys(defaultState.deployments.byId),
         status: 'finished',
         total: Object.keys(defaultState.deployments.byId).length
       },
+      { type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments: defaultState.deployments.byId },
       {
         type: DeploymentConstants.RECEIVE_INPROGRESS_DEPLOYMENTS,
-        deployments: defaultState.deployments.byId,
         deploymentIds: Object.keys(defaultState.deployments.byId),
         status: 'inprogress',
         total: Object.keys(defaultState.deployments.byId).length
@@ -193,24 +193,18 @@ describe('app actions', () => {
       },
       { type: OrganizationConstants.SET_ORGANIZATION, organization: defaultState.organization.organization },
       {
-        type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS,
-        stats: { ...defaultState.deployments.byId.d1.stats },
-        deploymentId: defaultState.deployments.byId.d1.id
+        type: DeploymentConstants.RECEIVE_DEPLOYMENTS,
+        deployments: {
+          [defaultState.deployments.byId.d1.id]: { ...defaultState.deployments.byId.d1, stats: { ...defaultState.deployments.byId.d1.stats } },
+          [defaultState.deployments.byId.d2.id]: { ...defaultState.deployments.byId.d2, stats: { ...defaultState.deployments.byId.d2.stats } }
+        }
       },
       {
-        type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS,
-        stats: { ...defaultState.deployments.byId.d2.stats },
-        deploymentId: defaultState.deployments.byId.d2.id
-      },
-      {
-        type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS,
-        stats: { ...defaultState.deployments.byId.d1.stats },
-        deploymentId: defaultState.deployments.byId.d1.id
-      },
-      {
-        type: DeploymentConstants.RECEIVE_DEPLOYMENT_STATS,
-        stats: { ...defaultState.deployments.byId.d2.stats },
-        deploymentId: defaultState.deployments.byId.d2.id
+        type: DeploymentConstants.RECEIVE_DEPLOYMENTS,
+        deployments: {
+          [defaultState.deployments.byId.d1.id]: { ...defaultState.deployments.byId.d1, stats: { ...defaultState.deployments.byId.d1.stats } },
+          [defaultState.deployments.byId.d2.id]: { ...defaultState.deployments.byId.d2, stats: { ...defaultState.deployments.byId.d2.stats } }
+        }
       },
       {
         type: DeviceConstants.RECEIVE_DEVICES,
