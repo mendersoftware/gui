@@ -37,10 +37,10 @@ describe('ExpandedDevice Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
-        <ExpandedDevice device={{ id: 'a1', status: 'accepted', attributes: [], auth_sets: [] }} attrs={[]} />
+        <ExpandedDevice deviceId={defaultState.devices.byId.a1.id} />
       </Provider>
     );
-    const view = baseElement.firstChild.firstChild;
+    const view = baseElement;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });

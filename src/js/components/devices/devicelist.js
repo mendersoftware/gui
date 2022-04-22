@@ -6,11 +6,9 @@ import { Checkbox } from '@mui/material';
 import { Settings as SettingsIcon, Sort as SortIcon } from '@mui/icons-material';
 
 import { SORTING_OPTIONS } from '../../constants/appConstants';
-import { DEVICE_LIST_DEFAULTS, DEVICE_STATES } from '../../constants/deviceConstants';
-import { onboardingSteps } from '../../constants/onboardingConstants';
+import { DEVICE_LIST_DEFAULTS } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
-import ExpandedDevice from './expanded-device';
 import DeviceListItem from './devicelistitem';
 import { deepCompare } from '../../helpers';
 import MenderTooltip from '../common/mendertooltip';
@@ -123,23 +121,20 @@ const getTemplateColumns = columns => `52px minmax(250px, 1fr) ${columns} minmax
 
 export const DeviceList = props => {
   const {
-    advanceOnboarding,
     className = '',
     columnHeaders,
     customColumnSizes,
-    expandedDeviceId,
     devices,
     deviceListState,
     idAttribute,
-    onboardingState,
     onChangeRowsPerPage,
+    onExpandClick,
     onResizeColumns,
     onPageChange,
     onSelect,
     onSort,
     pageLoading,
     pageTotal,
-    setExpandedDeviceId,
     setSnackbar,
     showPagination = true
   } = props;
@@ -184,17 +179,7 @@ export const DeviceList = props => {
       return;
     }
     setSnackbar('');
-    let device = devices[rowNumber];
-    if (!device || expandedDeviceId === device.id) {
-      device = undefined;
-    }
-    if (!onboardingState.complete) {
-      advanceOnboarding(onboardingSteps.DEVICES_PENDING_ONBOARDING);
-      if (device && device.status === DEVICE_STATES.accepted && Object.values(device.attributes).some(value => value)) {
-        advanceOnboarding(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION);
-      }
-    }
-    setExpandedDeviceId(device ? device.id : undefined);
+    onExpandClick(devices[rowNumber]);
   };
 
   const onRowSelection = selectedRow => {
@@ -214,11 +199,6 @@ export const DeviceList = props => {
       newSelectedRows = [];
     }
     onSelect(newSelectedRows);
-  };
-
-  const handlePageChange = page => {
-    onPageChange(page);
-    setExpandedDeviceId(undefined);
   };
 
   const handleResizeChange = (e, { index, prev, ref }) => {
@@ -278,13 +258,11 @@ export const DeviceList = props => {
             rowsPerPage={pageLength}
             onChangeRowsPerPage={onChangeRowsPerPage}
             page={pageNo}
-            onChangePage={handlePageChange}
+            onChangePage={onPageChange}
           />
         )}
         {pageLoading && <Loader show small />}
       </div>
-
-      <ExpandedDevice {...props} deviceId={expandedDeviceId} open={Boolean(expandedDeviceId)} onClose={() => expandRow()} />
     </div>
   );
 };
@@ -293,11 +271,9 @@ const areEqual = (prevProps, nextProps) => {
   if (
     prevProps.pageTotal != nextProps.pageTotal ||
     prevProps.pageLoading != nextProps.pageLoading ||
-    prevProps.expandedDeviceId != nextProps.expandedDeviceId ||
     prevProps.idAttribute != nextProps.idAttribute ||
     !deepCompare(prevProps.columnHeaders, nextProps.columnHeaders) ||
     !deepCompare(prevProps.customColumnSizes, nextProps.customColumnSizes) ||
-    !deepCompare(prevProps.onboardingState, nextProps.onboardingState) ||
     !deepCompare(prevProps.devices, nextProps.devices)
   ) {
     return false;

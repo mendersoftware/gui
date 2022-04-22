@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 // material ui
 import { IconButton, MenuItem, Select, TextField, FormHelperText } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { Help as HelpIcon, HighlightOff as HighlightOffIcon } from '@mui/icons-material';
 
 import { DEVICE_FILTERING_OPTIONS } from '../../../constants/deviceConstants';
@@ -22,16 +21,13 @@ const filterOptionsByPlan = {
 const defaultScope = 'inventory';
 
 const filterNotifications = {
-  name() {
-    const theme = useTheme();
-    return (
-      <MenderTooltip arrow placement="bottom" title="Filtering by name is limited to devices with a previously defined name.">
-        <div className="tooltip help" style={{ top: theme.spacing(2.5), left: theme.spacing(-1.5) }}>
-          <HelpIcon />
-        </div>
-      </MenderTooltip>
-    );
-  }
+  name: (
+    <MenderTooltip arrow placement="bottom" title="Filtering by name is limited to devices with a previously defined name.">
+      <div className="tooltip help" style={{ top: 20, left: -12 }}>
+        <HelpIcon />
+      </div>
+    </MenderTooltip>
+  )
 };
 
 export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => {
