@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import copy from 'copy-to-clipboard';
 
-import { Button, Chip, Divider, Drawer, IconButton } from '@mui/material';
+import { Chip, Divider, Drawer, IconButton } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { Close as CloseIcon, Link as LinkIcon, Replay as ReplayIcon } from '@mui/icons-material';
+import { Close as CloseIcon, Link as LinkIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
 import GatewayIcon from '../../../assets/img/gateway.svg';
@@ -22,11 +22,10 @@ import {
 import { getDeviceAlerts, setAlertListState } from '../../actions/monitorActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
-import ForwardingLink from '../common/forwardlink';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 import { RelativeTime } from '../common/time';
 import { getDemoDeviceAddress, stringToBoolean } from '../../helpers';
-import { getDocsVersion, getIsEnterprise, getTenantCapabilities, getUserRoles } from '../../selectors';
+import { getDocsVersion, getTenantCapabilities, getUserRoles } from '../../selectors';
 import Tracking from '../../tracking';
 import TroubleshootDialog from './dialogs/troubleshootdialog';
 import AuthStatus from './device-details/authstatus';
@@ -40,6 +39,8 @@ import DeviceMonitoring from './device-details/monitoring';
 import MonitorDetailsDialog from './device-details/monitordetailsdialog';
 import DeviceNotifications from './device-details/notifications';
 import DeviceTwin from './device-details/devicetwin';
+import DeviceQuickActions from './widgets/devicequickactions';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles()(theme => ({
   gatewayChip: {
@@ -91,13 +92,18 @@ export const ExpandedDevice = ({
   getDeviceLog,
   getDeviceTwin,
   getSingleDeployment,
+  groupFilters,
   integrations,
   latestAlerts,
+  onAddDevicesToGroup,
+  onAuthorizationChange,
   onClose,
+  onDeviceDismiss,
   onMakeGatewayClick,
-  open,
+  onRemoveDevicesFromGroup,
   refreshDevices,
   saveGlobalSettings,
+  selectedGroup,
   setAlertListState,
   setDeviceConfig,
   setDeviceTags,
@@ -107,7 +113,6 @@ export const ExpandedDevice = ({
   tenantCapabilities,
   userRoles
 }) => {
-  const { classes } = useStyles();
   const theme = useTheme();
   const { attributes = {}, isOffline, status = DEVICE_STATES.accepted } = device;
   const [socketClosed, setSocketClosed] = useState(true);
@@ -115,6 +120,7 @@ export const ExpandedDevice = ({
   const [monitorDetails, setMonitorDetails] = useState();
   const monitoring = useRef();
   const timer = useRef();
+  const history = useHistory();
 
   const { hasAuditlogs, hasDeviceConfig, hasDeviceConnect, hasMonitor } = tenantCapabilities;
 
@@ -154,11 +160,22 @@ export const ExpandedDevice = ({
 
   const scrollToMonitor = () => monitoring.current?.scrollIntoView({ behavior: 'smooth' });
 
+  const onCreateDeploymentClick = () => history.push(`/deployments?open=true&deviceId=${device.id}`);
+
   const deviceIdentifier = attributes.name ?? device.id ?? '-';
   const isAcceptedDevice = status === DEVICE_STATES.accepted;
   const isGateway = stringToBoolean(attributes.mender_is_gateway);
+  const actionCallbacks = {
+    onAddDevicesToGroup,
+    onAuthorizationChange,
+    onDeviceDismiss,
+    onRemoveDevicesFromGroup,
+    onPromoteGateway: onMakeGatewayClick,
+    onCreateDeployment: onCreateDeploymentClick
+  };
+  const selectedStaticGroup = selectedGroup && !groupFilters.length ? selectedGroup : undefined;
   return (
-    <Drawer anchor="right" className="expandedDevice" open={open} onClose={onClose} PaperProps={{ style: { minWidth: '67vw' } }}>
+    <Drawer anchor="right" className="expandedDevice" open={Boolean(device.id)} onClose={onClose} PaperProps={{ style: { minWidth: '67vw' } }}>
       <div className="flexbox center-aligned">
         <h3>Device information for {deviceIdentifier}</h3>
         <IconButton onClick={copyLinkToClipboard} size="large">
@@ -233,19 +250,6 @@ export const ExpandedDevice = ({
         />
       )}
       <Divider style={{ marginTop: theme.spacing(3), marginBottom: theme.spacing(2) }} />
-      {isAcceptedDevice && (
-        <div className="flexbox center-aligned">
-          <Button to={`/deployments?open=true&deviceId=${device.id}`} component={ForwardingLink} startIcon={<ReplayIcon />}>
-            Create a deployment for this device
-          </Button>
-          {!isGateway && (
-            <Button onClick={onMakeGatewayClick} startIcon={<GatewayIcon className={classes.gatewayIcon} />} style={{ marginLeft: 30 }}>
-              Promote to Mender gateway
-            </Button>
-          )}
-        </div>
-      )}
-
       <TroubleshootDialog
         deviceId={device.id}
         open={Boolean(troubleshootType)}
@@ -255,6 +259,7 @@ export const ExpandedDevice = ({
         type={troubleshootType}
       />
       {monitorDetails && <MonitorDetailsDialog alert={monitorDetails} onClose={() => setMonitorDetails()} />}
+      <DeviceQuickActions actionCallbacks={actionCallbacks} devices={[device]} isSingleDevice selectedGroup={selectedStaticGroup} selectedRows={[0]} />
     </Drawer>
   );
 };
@@ -281,6 +286,12 @@ const mapStateToProps = (state, ownProps) => {
   const { config = {} } = device;
   const { deployment_id: configDeploymentId } = config;
   const { alerts = [], latest = [] } = state.monitor.alerts.byDeviceId[ownProps.deviceId] || {};
+  let selectedGroup;
+  let groupFilters = [];
+  if (state.devices.groups.selectedGroup && state.devices.groups.byId[state.devices.groups.selectedGroup]) {
+    selectedGroup = state.devices.groups.selectedGroup;
+    groupFilters = state.devices.groups.byId[selectedGroup].filters || [];
+  }
   return {
     alertListState: state.monitor.alerts.alertList,
     alerts: alerts,
@@ -288,10 +299,11 @@ const mapStateToProps = (state, ownProps) => {
     device,
     deviceConfigDeployment: state.deployments.byId[configDeploymentId] || {},
     docsVersion: getDocsVersion(state),
+    groupFilters,
     integrations: state.organization.externalDeviceIntegrations.filter(integration => integration.id),
-    isEnterprise: getIsEnterprise(state),
     latestAlerts: latest,
     onboardingComplete: state.onboarding.complete,
+    selectedGroup,
     showHelptips: state.users.showHelptips,
     tenantCapabilities: getTenantCapabilities(state),
     userRoles: getUserRoles(state)

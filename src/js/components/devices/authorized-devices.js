@@ -40,6 +40,7 @@ import { defaultTextRender, getDeviceIdentityText } from './base-devices';
 import DeviceList, { minCellWidth } from './devicelist';
 import { defaultHeaders, routes as states } from './device-groups';
 import { settingsKeys } from '../../constants/userConstants';
+import ExpandedDevice from './expanded-device';
 
 const refreshDeviceLength = 10000;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
@@ -106,9 +107,11 @@ export const Authorized = props => {
     onboardingState,
     onGroupClick,
     onGroupRemoval,
+    onMakeGatewayClick,
     onPreauthClick,
     openSettingsDialog,
     pendingCount,
+    refreshDevices,
     removeDevicesFromGroup,
     saveUserSettings,
     selectedGroup,
@@ -257,50 +260,55 @@ export const Authorized = props => {
       });
   };
 
-  const onAddDevicesToGroup = rows => {
-    const mappedDevices = rows.map(row => devices[row].id);
-    addDevicesToGroup(mappedDevices);
+  const devicesToIds = devices => devices.map(device => device.id);
+
+  const onAddDevicesToGroup = devices => {
+    const deviceIds = devicesToIds(devices);
+    addDevicesToGroup(deviceIds);
   };
 
-  const onRemoveDevicesFromGroup = rows => {
-    const removedDevices = rows.map(row => devices[row].id);
-    removeDevicesFromGroup(removedDevices);
+  const onRemoveDevicesFromGroup = devices => {
+    const deviceIds = devicesToIds(devices);
+    removeDevicesFromGroup(deviceIds);
     // if devices.length = number on page but < deviceCount
     // move page back to pageNO 1
-    if (devices.length === removedDevices.length) {
+    if (devices.length === deviceIds.length) {
       handlePageChange(1);
     }
   };
 
-  const onAuthorizationChange = (rows, changedState) => {
+  const onAuthorizationChange = (devices, changedState) => {
+    const deviceIds = devicesToIds(devices);
     setPageLoading(true);
-    const deviceIds = rows.map(row => devices[row].id);
     return updateDevicesAuth(deviceIds, changedState).then(() => {
       onSelectionChange([]);
       getDevices();
     });
   };
 
-  const onDeviceDismiss = rows => {
+  const onDeviceDismiss = devices => {
     setPageLoading(true);
-    const mappedDevices = rows.reduce((accu, row) => {
-      if (devices[row].auth_sets?.length) {
-        accu.push({ deviceId: devices[row].id, authId: devices[row].auth_sets[0].id });
+    const deleteRequests = devices.reduce((accu, device) => {
+      if (device.auth_sets?.length) {
+        accu.push(deleteAuthset(devices.id, devices.auth_sets[0].id));
       }
       return accu;
     }, []);
-    Promise.all(mappedDevices.map(({ deviceId, authId }) => deleteAuthset(deviceId, authId)))
-      // on finish, change "loading" back to null
-      .then(() => {
-        onSelectionChange([]);
-        getDevices();
-      })
-      .finally(() => setPageLoading(false));
+    return (
+      Promise.all(deleteRequests)
+        // on finish, change "loading" back to null
+        .then(() => {
+          onSelectionChange([]);
+          getDevices();
+        })
+        .finally(() => setPageLoading(false))
+    );
   };
 
   const handlePageChange = page => {
     setPageLoading(true);
     setDeviceListState({ page });
+    setExpandedDeviceId(undefined);
   };
 
   const onPageLengthChange = perPage => {
@@ -363,9 +371,17 @@ export const Authorized = props => {
     getDevices();
   };
 
-  const EmptyState = currentSelectedState.emptyState;
-
-  const groupLabel = selectedGroup ? decodeURIComponent(selectedGroup) : ALL_DEVICES;
+  const onExpandClick = (device = {}) => {
+    let { attributes = {}, id, status } = device;
+    setExpandedDeviceId(expandedId => (expandedId === id ? undefined : id));
+    if (!onboardingState.complete) {
+      advanceOnboarding(onboardingSteps.DEVICES_PENDING_ONBOARDING);
+      if (status === DEVICE_STATES.accepted && Object.values(attributes).some(value => value)) {
+        advanceOnboarding(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION);
+      }
+    }
+    setExpandedDeviceId(id);
+  };
 
   let onboardingComponent;
   const devicePendingTip = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING_START, onboardingState);
@@ -395,7 +411,11 @@ export const Authorized = props => {
 
   const listOptionHandlers = [{ key: 'customize', title: 'Customize', onClick: onToggleCustomizationClick }];
 
+  const EmptyState = currentSelectedState.emptyState;
+
+  const groupLabel = selectedGroup ? decodeURIComponent(selectedGroup) : ALL_DEVICES;
   const isUngroupedGroup = selectedGroup && selectedGroup === UNGROUPED_GROUP.id;
+  const selectedStaticGroup = selectedGroup && !groupFilters.length ? selectedGroup : undefined;
   return (
     <>
       <div className="margin-left-small">
@@ -450,15 +470,14 @@ export const Authorized = props => {
               {...props}
               columnHeaders={columnHeaders}
               customColumnSizes={customColumnSizes}
-              expandedDeviceId={expandedDeviceId}
               onChangeRowsPerPage={onPageLengthChange}
+              onExpandClick={onExpandClick}
               onPageChange={handlePageChange}
               onResizeColumns={updateUserColumnSettings}
               onSelect={onSelectionChange}
               onSort={onSortChange}
               pageLoading={pageLoading}
               pageTotal={deviceCount}
-              setExpandedDeviceId={setExpandedDeviceId}
             />
             {showHelptips && <ExpandDevice />}
           </div>
@@ -474,12 +493,22 @@ export const Authorized = props => {
       ) : (
         <div />
       )}
+      <ExpandedDevice
+        deviceId={expandedDeviceId}
+        onAddDevicesToGroup={onAddDevicesToGroup}
+        onAuthorizationChange={onAuthorizationChange}
+        onClose={() => setExpandedDeviceId(undefined)}
+        onDeviceDismiss={onDeviceDismiss}
+        onMakeGatewayClick={onMakeGatewayClick}
+        onRemoveDevicesFromGroup={onRemoveDevicesFromGroup}
+        refreshDevices={refreshDevices}
+      />
       {!expandedDeviceId && onboardingComponent ? onboardingComponent : null}
       {!!selectedRows.length && (
         <DeviceQuickActions
           actionCallbacks={{ onAddDevicesToGroup, onAuthorizationChange, onDeviceDismiss, onRemoveDevicesFromGroup }}
           devices={devices}
-          selectedGroup={selectedGroup}
+          selectedGroup={selectedStaticGroup}
           selectedRows={selectedRows}
           ref={authorizeRef}
         />
