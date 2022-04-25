@@ -1,4 +1,5 @@
 import * as AppConstants from '../constants/appConstants';
+import UserConstants from '../constants/userConstants';
 import { stringToBoolean } from '../helpers';
 
 const menderEnvironment = {
@@ -72,6 +73,14 @@ export const initialState = {
   },
   yesterday: undefined
 };
+
+// exclude 'pendings-redirect' since this is expected to persist refreshes - the rest should be better to be redone
+const keys = ['sessionDeploymentChecker', UserConstants.settingsKeys.initialized];
+const resetEnvironment = () => {
+  keys.map(key => window.sessionStorage.removeItem(key));
+};
+
+resetEnvironment();
 
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
