@@ -1,8 +1,10 @@
 import React from 'react';
+import { createMocks } from 'react-idle-timer';
 import { MemoryRouter } from 'react-router-dom';
 import { TextEncoder } from 'util';
+import { MessageChannel } from 'worker_threads';
 import '@testing-library/jest-dom/extend-expect';
-import { render, queryByRole, within } from '@testing-library/react';
+import { cleanup, render, queryByRole, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
 import crypto from 'crypto';
@@ -68,12 +70,14 @@ beforeAll(async () => {
     removeItem: jest.fn()
   };
   window.ENV = 'test';
+  global.MessageChannel = MessageChannel;
   global.TextEncoder = TextEncoder;
   global.crypto = {
     subtle: {
       digest: (_, data) => Promise.resolve(crypto.createHash('sha256').update(data))
     }
   };
+  createMocks();
   server = setupServer(...handlers);
   await server.listen();
   Object.defineProperty(navigator, 'appVersion', { value: 'Test', writable: true });
@@ -98,6 +102,7 @@ afterAll(async () => {
   window.location = oldWindowLocation;
   window.sessionStorage = oldWindowSessionStorage;
   React.useEffect.mockRestore();
+  cleanup();
 });
 
 export const selectMaterialUiSelectOption = async (element, optionText) => {
