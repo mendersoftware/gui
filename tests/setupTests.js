@@ -98,7 +98,6 @@ afterAll(async () => {
   window.location = oldWindowLocation;
   window.sessionStorage = oldWindowSessionStorage;
   React.useEffect.mockRestore();
-  jest.useRealTimers();
 });
 
 export const selectMaterialUiSelectOption = async (element, optionText) => {

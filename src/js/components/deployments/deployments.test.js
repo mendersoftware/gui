@@ -52,12 +52,7 @@ describe('Deployments Component', () => {
     }
   };
 
-  beforeEach(() => {
-    jest.useFakeTimers();
-  });
-
   afterEach(() => {
-    jest.useRealTimers();
     jest.clearAllMocks();
   });
 
