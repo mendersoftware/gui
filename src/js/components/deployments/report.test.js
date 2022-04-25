@@ -12,8 +12,6 @@ import DeploymentReport from './report';
 const mockStore = configureStore([thunk]);
 
 describe('DeploymentReport Component', () => {
-  jest.useFakeTimers();
-
   let store;
   beforeEach(() => {
     store = mockStore({

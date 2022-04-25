@@ -19,11 +19,6 @@ describe('ReleaseRepository Component', () => {
         byId: {}
       }
     });
-    jest.useFakeTimers();
-  });
-
-  afterEach(() => {
-    jest.useRealTimers();
   });
 
   it('renders correctly', async () => {

@@ -46,7 +46,6 @@ describe('AuthorizedDevices Component', () => {
     const setUserSettingsMock = jest.fn();
     const setListStateMock = jest.fn();
     const getDevicesMock = jest.fn().mockResolvedValue();
-    jest.useFakeTimers();
     const testKey = 'testKey';
     const attributeNames = {
       artifact: 'rootfs-image.version',
@@ -127,6 +126,5 @@ describe('AuthorizedDevices Component', () => {
         { id: 'inventory-testKey', key: testKey, name: testKey, scope: 'inventory', title: testKey }
       ]
     });
-    jest.useRealTimers();
   });
 });

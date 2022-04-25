@@ -88,6 +88,7 @@
     "husky": "^7.0.4",
     "jest": "^28.0.0",
     "jest-canvas-mock": "^2.3.1",
+    "jest-environment-jsdom": "^28.0.0",
     "jest-junit": "^13.2.0",
     "jest-resolve": "~28.0.0",
     "jest-watch-typeahead": "1.1.0",
@@ -153,10 +154,12 @@
       "<rootDir>/src/**/__tests__/**/*.js",
       "<rootDir>/src/**/*.{spec,test}.js"
     ],
-    "timers": "fake",
+    "fakeTimers": {
+      "enableGlobally": true
+    },
     "transform": {
-      "^.+\\.[j|t]sx?$": "babel-jest",
-      "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/tests/assetsTransformer.js"
+      "\\.[j|t]sx?$": "babel-jest",
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/tests/assetsTransformer.js"
     },
     "transformIgnorePatterns": [
       "<rootDir>/node_modules/(?!xterm-for-react)"

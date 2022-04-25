@@ -16,7 +16,6 @@ describe('Artifacts Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({ ...defaultState });
-    jest.useFakeTimers();
     jest.mock(
       'react-virtualized-auto-sizer',
       () =>
@@ -26,7 +25,6 @@ describe('Artifacts Component', () => {
   });
 
   afterEach(() => {
-    jest.useRealTimers();
     jest.unmock('react-virtualized-auto-sizer');
   });
 
