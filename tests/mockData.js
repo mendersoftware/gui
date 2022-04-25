@@ -405,6 +405,7 @@ export const defaultState = {
       RBAC_ROLE_CI: { title: 'Releases Manager', allowUserManagement: false, groups: [], description: '', editable: false, permissions: [] },
       test: { title: 'test', description: 'test description', groups: ['testgroup'], editable: true }
     },
+    settingsInitialized: true,
     showHelptips: true
   }
 };
