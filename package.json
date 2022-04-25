@@ -70,7 +70,7 @@
     "assert": "^2.0.0",
     "autoprefixer": "^10.4.5",
     "axios-mock-adapter": "^1.20.0",
-    "babel-jest": "~27.5.1",
+    "babel-jest": "~28.0.0",
     "child_process": "^1.0.2",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^10.2.4",
