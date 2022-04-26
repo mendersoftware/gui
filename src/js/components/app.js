@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import IdleTimer from 'react-idle-timer';
+import { useIdleTimer, workerTimers } from 'react-idle-timer';
 import Cookies from 'universal-cookie';
 
 import { LinearProgress, IconButton, Tooltip } from '@mui/material';
@@ -85,6 +85,8 @@ export const AppRoot = ({
     }
   };
 
+  useIdleTimer({ crossTab: true, onAction: updateMaxAge, onActive: updateMaxAge, onIdle, syncTimers: 400, timeout, timers: workerTimers });
+
   const onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_CREATION_DIALOG, onboardingState);
   const containerProps = getToken() ? { id: 'app' } : { className: 'flexbox centered', style: { minHeight: '100vh' } };
   const theme = createTheme(mode === 'dark' ? darkTheme : lightTheme);
@@ -94,14 +96,6 @@ export const AppRoot = ({
       <div {...containerProps}>
         {getToken() ? (
           <>
-            <IdleTimer
-              crossTab={{ emitOnAllTabs: true, type: 'localStorage' }}
-              element={document}
-              onAction={updateMaxAge}
-              onActive={updateMaxAge}
-              onIdle={onIdle}
-              timeout={timeout}
-            />
             <Header history={history} />
             <LeftNav />
             <div className="rightFluid container">
