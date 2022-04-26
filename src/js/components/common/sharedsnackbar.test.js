@@ -20,7 +20,7 @@ describe('SharedSnackbar Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
-        <SharedSnackbar snackbar={{ maxWidth: 200, message: 'test' }} setSnackbar={jest.fn} />
+        <SharedSnackbar snackbar={{ maxWidth: 200, open: true, message: 'test' }} setSnackbar={jest.fn} />
       </Provider>
     );
     const view = baseElement.firstChild.firstChild;

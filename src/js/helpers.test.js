@@ -97,30 +97,33 @@ describe('versionCompare function', () => {
   });
 });
 
+const oldHostname = window.location.hostname;
+const postTestCleanUp = () => {
+  window.location = {
+    ...window.location,
+    hostname: oldHostname
+  };
+};
 describe('getDebConfigurationCode function', () => {
   let code;
-  beforeEach(() => {
-    code = getDebConfigurationCode({ ipAddress: '192.168.7.41', isDemoMode: true, deviceType: 'raspberrypi3' });
+  describe('configuring devices for hosted mender', () => {
+    beforeEach(() => {
+      code = getDebConfigurationCode({ ipAddress: '192.168.7.41', isDemoMode: true, deviceType: 'raspberrypi3' });
+    });
+    afterEach(postTestCleanUp);
+    it('should not contain any template string leftovers', async () => {
+      expect(code).not.toMatch(/\$\{([^}]+)\}/);
+    });
+    it('should return a sane result', async () => {
+      expect(code).toMatch(`wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type "raspberrypi3" --demo --server-ip 192.168.7.41`);
+    });
+    it('should not contain tenant information for OS calls', async () => {
+      expect(code).not.toMatch(/tenant/);
+      expect(code).not.toMatch(/token/);
+      expect(code).not.toMatch(/TENANT/);
+      expect(code).not.toMatch(/TOKEN/);
+    });
   });
-  it('should not contain any template string leftovers', async () => {
-    expect(code).not.toMatch(/\$\{([^}]+)\}/);
-  });
-  it('should return a sane result', async () => {
-    expect(code).toMatch(`wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type "raspberrypi3" --demo --server-ip 192.168.7.41`);
-  });
-  it('should not contain tenant information for OS calls', async () => {
-    expect(code).not.toMatch(/tenant/);
-    expect(code).not.toMatch(/token/);
-    expect(code).not.toMatch(/TENANT/);
-    expect(code).not.toMatch(/TOKEN/);
-  });
-  const oldHostname = window.location.hostname;
-  const postTestCleanUp = () => {
-    window.location = {
-      ...window.location,
-      hostname: oldHostname
-    };
-  };
   describe('configuring devices for hosted mender', () => {
     beforeEach(() => {
       window.location = {
@@ -135,7 +138,7 @@ describe('getDebConfigurationCode function', () => {
     afterEach(postTestCleanUp);
 
     it('should contain sane information for hosted calls', async () => {
-      code = getDebConfigurationCode({ isHosted: true, tenantToken: 'token', deviceType: 'raspberrypi3' });
+      code = getDebConfigurationCode({ isHosted: true, isOnboarding: true, tenantToken: 'token', deviceType: 'raspberrypi3' });
       expect(code).toMatch(
         `JWT_TOKEN="omnomnom"
 TENANT_TOKEN="token"
@@ -157,7 +160,7 @@ wget -O- https://get.mender.io | sudo bash -s -- --demo --commercial --jwt-token
     afterEach(postTestCleanUp);
 
     it('should contain sane information for staging preview calls', async () => {
-      code = getDebConfigurationCode({ isHosted: true, isDemoMode: true, tenantToken: 'token', deviceType: 'raspberrypi3', isPreRelease: true });
+      code = getDebConfigurationCode({ isHosted: true, isOnboarding: true, tenantToken: 'token', deviceType: 'raspberrypi3', isPreRelease: true });
       expect(code).toMatch(
         `JWT_TOKEN="omnomnom"
 TENANT_TOKEN="token"
@@ -189,7 +192,7 @@ wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type
       code = getDebConfigurationCode({ ipAddress: '1.2.3.4', isEnterprise: true, isDemoMode: false, tenantToken: 'token', deviceType: 'raspberrypi3' });
       expect(code).toMatch(
         `TENANT_TOKEN="token"
-wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type "raspberrypi3" --tenant-token $TENANT_TOKEN --retry-poll 30 --update-poll 5 --inventory-poll 5 --server-url https://fancy.enterprise.on.prem --server-cert=""`
+wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type "raspberrypi3" --tenant-token $TENANT_TOKEN --retry-poll 300 --update-poll 1800 --inventory-poll 28800 --server-url https://fancy.enterprise.on.prem --server-cert=""`
       );
     });
   });
@@ -209,7 +212,7 @@ wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type
     it('should contain sane information for OS production on-prem calls', async () => {
       code = getDebConfigurationCode({ ipAddress: '1.2.3.4', isDemoMode: false, tenantToken: 'token', deviceType: 'raspberrypi3' });
       expect(code).toMatch(
-        `wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type "raspberrypi3" --retry-poll 30 --update-poll 5 --inventory-poll 5 --server-url https://fancy.opensource.on.prem --server-cert=""`
+        `wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type "raspberrypi3" --retry-poll 300 --update-poll 1800 --inventory-poll 28800 --server-url https://fancy.opensource.on.prem --server-cert=""`
       );
     });
   });

@@ -1,4 +1,6 @@
 import React from 'react';
+import 'jsdom-worker';
+import { act } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
@@ -62,6 +64,6 @@ describe('App Component', () => {
         <App />
       </Provider>
     );
-    jest.advanceTimersByTime(900500);
+    await act(async () => jest.advanceTimersByTime(900500));
   });
 });

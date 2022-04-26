@@ -1,4 +1,5 @@
 import React from 'react';
+import 'jsdom-worker';
 // eslint-disable-next-line import/default
 import router from 'react-router-dom';
 import { undefineds } from '../../tests/mockData';
