@@ -8,7 +8,7 @@ import userEvent from '@testing-library/user-event';
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import Authorized, { Authorized as AuthorizedDevices } from './authorized-devices';
-import { routes } from './device-groups';
+import { routes } from './base-devices';
 
 const mockStore = configureStore([thunk]);
 

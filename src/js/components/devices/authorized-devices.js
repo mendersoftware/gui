@@ -13,7 +13,7 @@ import { getIssueCountsByType } from '../../actions/monitorActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { saveUserSettings, updateUserColumnSettings } from '../../actions/userActions';
 import { SORTING_OPTIONS } from '../../constants/appConstants';
-import { ALL_DEVICES, DEVICE_ISSUE_OPTIONS, DEVICE_LIST_DEFAULTS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { ALL_DEVICES, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { duplicateFilter, isEmpty } from '../../helpers';
 import {
@@ -36,9 +36,8 @@ import Filters from './widgets/filters';
 import DeviceIssuesSelection from './widgets/issueselection';
 const ColumnCustomizationDialog = lazy(() => import('./dialogs/custom-columns-dialog'));
 import ListOptions from './widgets/listoptions';
-import { defaultTextRender, getDeviceIdentityText } from './base-devices';
+import { defaultHeaders, routes as states, defaultTextRender, getDeviceIdentityText } from './base-devices';
 import DeviceList, { minCellWidth } from './devicelist';
-import { defaultHeaders, routes as states } from './device-groups';
 import ExpandedDevice from './expanded-device';
 
 const refreshDeviceLength = 10000;
@@ -212,16 +211,6 @@ export const Authorized = props => {
     Object.keys(availableIssueOptions).map(key => getIssueCountsByType(key, { filters, group: selectedGroup, state: selectedState }));
     availableIssueOptions[DEVICE_ISSUE_OPTIONS.authRequests.key] ? getIssueCountsByType(DEVICE_ISSUE_OPTIONS.authRequests.key, { filters: [] }) : undefined;
   }, [selectedIssues, availableIssueOptions, selectedState, selectedGroup]);
-
-  const sortingAlternatives = Object.values(states)
-    .reduce((accu, item) => [...accu, ...item.defaultHeaders], [])
-    .reduce((accu, item) => {
-      if (item.attribute.alternative) {
-        accu[item.attribute.name] = item.attribute.alternative;
-        accu[item.attribute.alternative] = item.attribute.name;
-      }
-      return accu;
-    }, {});
 
   /*
    * Devices

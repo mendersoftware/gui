@@ -33,118 +33,12 @@ import CreateGroupExplainer from './group-management/create-group-explainer';
 import { emptyFilter } from './widgets/filters';
 import MakeGatewayDialog from './dialogs/make-gateway-dialog';
 import PreauthDialog, { DeviceLimitWarning } from './dialogs/preauth-dialog';
-import {
-  AcceptedEmptyState,
-  defaultTextRender,
-  DeviceCreationTime,
-  DeviceSoftware,
-  DeviceStatusRenderer,
-  DeviceTypes,
-  getDeviceSoftwareText,
-  getDeviceTypeText,
-  PendingEmptyState,
-  PreauthorizedEmptyState,
-  RejectedEmptyState,
-  RelativeDeviceTime
-} from './base-devices';
 import DeviceAdditionWidget from './widgets/deviceadditionwidget';
 import QuickFilter from './widgets/quickfilter';
 import Groups from './groups';
 import DeviceStatusNotification from './devicestatusnotification';
 import { versionCompare } from '../../helpers';
-
-export const defaultHeaders = {
-  currentSoftware: {
-    title: 'Current software',
-    attribute: { name: 'rootfs-image.version', scope: 'inventory', alternative: 'artifact_name' },
-    component: DeviceSoftware,
-    sortable: true,
-    textRender: getDeviceSoftwareText
-  },
-  deviceCreationTime: {
-    title: 'First request',
-    attribute: { name: 'created_ts', scope: 'system' },
-    component: DeviceCreationTime,
-    sortable: true
-  },
-  deviceId: {
-    title: 'Device ID',
-    attribute: { name: 'id', scope: 'identity' },
-    sortable: true,
-    textRender: ({ id }) => id
-  },
-  deviceStatus: {
-    title: 'Status',
-    attribute: { name: 'status', scope: 'identity' },
-    component: DeviceStatusRenderer,
-    sortable: true,
-    textRender: defaultTextRender
-  },
-  deviceType: {
-    title: 'Device type',
-    attribute: { name: 'device_type', scope: 'inventory' },
-    component: DeviceTypes,
-    sortable: true,
-    textRender: getDeviceTypeText
-  },
-  lastCheckIn: {
-    title: 'Last check-in',
-    attribute: { name: 'updated_ts', scope: 'system' },
-    component: RelativeDeviceTime,
-    sortable: true
-  }
-};
-
-const baseDevicesRoute = '/devices';
-
-const acceptedDevicesRoute = {
-  key: DEVICE_STATES.accepted,
-  groupRestricted: false,
-  route: `${baseDevicesRoute}/${DEVICE_STATES.accepted}`,
-  title: () => DEVICE_STATES.accepted,
-  emptyState: AcceptedEmptyState,
-  defaultHeaders: [defaultHeaders.deviceType, defaultHeaders.currentSoftware, defaultHeaders.lastCheckIn]
-};
-
-export const routes = {
-  allDevices: {
-    ...acceptedDevicesRoute,
-    route: baseDevicesRoute,
-    key: 'any',
-    title: () => 'any'
-  },
-  devices: acceptedDevicesRoute,
-  [DEVICE_STATES.accepted]: acceptedDevicesRoute,
-  [DEVICE_STATES.pending]: {
-    key: DEVICE_STATES.pending,
-    groupRestricted: true,
-    route: `${baseDevicesRoute}/${DEVICE_STATES.pending}`,
-    title: count => `${DEVICE_STATES.pending}${count ? ` (${count})` : ''}`,
-    emptyState: PendingEmptyState,
-    defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn]
-  },
-  [DEVICE_STATES.preauth]: {
-    key: DEVICE_STATES.preauth,
-    groupRestricted: true,
-    route: `${baseDevicesRoute}/${DEVICE_STATES.preauth}`,
-    title: () => DEVICE_STATES.preauth,
-    emptyState: PreauthorizedEmptyState,
-    defaultHeaders: [
-      {
-        ...defaultHeaders.deviceCreationTime,
-        title: 'Date added'
-      }
-    ]
-  },
-  [DEVICE_STATES.rejected]: {
-    key: DEVICE_STATES.rejected,
-    groupRestricted: true,
-    route: `${baseDevicesRoute}/${DEVICE_STATES.rejected}`,
-    title: () => DEVICE_STATES.rejected,
-    emptyState: RejectedEmptyState,
-    defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn]
-  }
-};
+import { routes } from './base-devices';
 
 export const convertQueryToFilterAndGroup = (query, filteringAttributes, currentFilters) => {
   const queryParams = new URLSearchParams(query);

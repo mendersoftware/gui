@@ -6,7 +6,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl,
 import { Clear as ClearIcon, DragHandle as DragHandleIcon } from '@mui/icons-material';
 
 import AttributeAutoComplete from '../widgets/attribute-autocomplete';
-import { defaultHeaders } from '../device-groups';
+import { defaultHeaders } from '../base-devices';
 import { ATTRIBUTE_SCOPES } from '../../../constants/deviceConstants';
 
 const DraggableListItem = ({ item, index, onRemove }) => {

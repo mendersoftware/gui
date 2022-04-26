@@ -4,6 +4,7 @@ import pluralize from 'pluralize';
 
 import preauthImage from '../../../assets/img/preauthorize.png';
 
+import { DEVICE_STATES } from '../../constants/deviceConstants';
 import Time, { RelativeTime } from '../common/time';
 import DeviceStatus from './device-status';
 
@@ -108,3 +109,106 @@ export const RejectedEmptyState = ({ filters }) => (
     <p>{filters.length ? `There are no rejected devices matching the selected ${pluralize('filters', filters.length)}` : 'There are no rejected devices'}</p>
   </div>
 );
+
+export const defaultHeaders = {
+  currentSoftware: {
+    title: 'Current software',
+    attribute: { name: 'rootfs-image.version', scope: 'inventory', alternative: 'artifact_name' },
+    component: DeviceSoftware,
+    sortable: true,
+    textRender: getDeviceSoftwareText
+  },
+  deviceCreationTime: {
+    title: 'First request',
+    attribute: { name: 'created_ts', scope: 'system' },
+    component: DeviceCreationTime,
+    sortable: true
+  },
+  deviceId: {
+    title: 'Device ID',
+    attribute: { name: 'id', scope: 'identity' },
+    sortable: true,
+    textRender: ({ id }) => id
+  },
+  deviceStatus: {
+    title: 'Status',
+    attribute: { name: 'status', scope: 'identity' },
+    component: DeviceStatusRenderer,
+    sortable: true,
+    textRender: defaultTextRender
+  },
+  deviceType: {
+    title: 'Device type',
+    attribute: { name: 'device_type', scope: 'inventory' },
+    component: DeviceTypes,
+    sortable: true,
+    textRender: getDeviceTypeText
+  },
+  lastCheckIn: {
+    title: 'Last check-in',
+    attribute: { name: 'updated_ts', scope: 'system' },
+    component: RelativeDeviceTime,
+    sortable: true
+  }
+};
+
+const baseDevicesRoute = '/devices';
+
+const acceptedDevicesRoute = {
+  key: DEVICE_STATES.accepted,
+  groupRestricted: false,
+  route: `${baseDevicesRoute}/${DEVICE_STATES.accepted}`,
+  title: () => DEVICE_STATES.accepted,
+  emptyState: AcceptedEmptyState,
+  defaultHeaders: [defaultHeaders.deviceType, defaultHeaders.currentSoftware, defaultHeaders.lastCheckIn]
+};
+
+export const routes = {
+  allDevices: {
+    ...acceptedDevicesRoute,
+    route: baseDevicesRoute,
+    key: 'any',
+    title: () => 'any'
+  },
+  devices: acceptedDevicesRoute,
+  [DEVICE_STATES.accepted]: acceptedDevicesRoute,
+  [DEVICE_STATES.pending]: {
+    key: DEVICE_STATES.pending,
+    groupRestricted: true,
+    route: `${baseDevicesRoute}/${DEVICE_STATES.pending}`,
+    title: count => `${DEVICE_STATES.pending}${count ? ` (${count})` : ''}`,
+    emptyState: PendingEmptyState,
+    defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn]
+  },
+  [DEVICE_STATES.preauth]: {
+    key: DEVICE_STATES.preauth,
+    groupRestricted: true,
+    route: `${baseDevicesRoute}/${DEVICE_STATES.preauth}`,
+    title: () => DEVICE_STATES.preauth,
+    emptyState: PreauthorizedEmptyState,
+    defaultHeaders: [
+      {
+        ...defaultHeaders.deviceCreationTime,
+        title: 'Date added'
+      }
+    ]
+  },
+  [DEVICE_STATES.rejected]: {
+    key: DEVICE_STATES.rejected,
+    groupRestricted: true,
+    route: `${baseDevicesRoute}/${DEVICE_STATES.rejected}`,
+    title: () => DEVICE_STATES.rejected,
+    emptyState: RejectedEmptyState,
+    defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn]
+  }
+};
+
+export const sortingAlternatives = Object.values(routes)
+  .reduce((accu, item) => [...accu, ...item.defaultHeaders], [])
+  .reduce((accu, item) => {
+    if (item.attribute.alternative) {
+      accu[item.attribute.name] = item.attribute.alternative;
+      accu[item.attribute.alternative] = item.attribute.name;
+    }
+    return accu;
+  }, {});
