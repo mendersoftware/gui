@@ -194,7 +194,7 @@ export const TroubleshootDialog = ({
               <b>Duration:</b> {`${duration.format('hh:mm:ss', { trim: false })}`}
             </div>
           </div>
-          <Dropzone activeClassName="active" rejectClassName="active" multiple={false} onDrop={onDrop}>
+          <Dropzone activeClassName="active" rejectClassName="active" multiple={false} onDrop={onDrop} noClick>
             {({ getRootProps }) => (
               <div {...getRootProps()} style={{ position: 'relative', ...visibilityToggle }}>
                 <Terminal
