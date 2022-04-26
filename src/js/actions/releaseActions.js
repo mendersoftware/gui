@@ -211,7 +211,7 @@ const releaseListRetrieval = (config, queryGenerator) => {
   const { attribute, direction } = sort;
 
   const perPageQuery = perPage ? `&per_page=${perPage}` : '';
-  const sorting = attribute ? `&sort=${attribute}:${direction}`.toLowerCase() : '';
+  const sorting = attribute ? `&sort=${attribute}%3A${direction}`.toLowerCase() : '';
   const searchQuery = queryGenerator.next().value ?? '';
   return GeneralApi.get(`${deploymentsApiUrl}/deployments/releases/list?page=${page}${perPageQuery}${searchQuery}${sorting}`);
 };
