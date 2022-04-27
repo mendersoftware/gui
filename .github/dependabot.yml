@@ -1,19 +1,19 @@
 version: 2
 updates:
   - commit-message:
-      prefix: 'Changelog:All'
+      prefix: 'chore: '
     directory: /
     package-ecosystem: npm
     schedule:
       interval: weekly
   - commit-message:
-      prefix: 'Changelog:All'
+      prefix: 'chore: '
     directory: /
     package-ecosystem: docker
     schedule:
       interval: weekly
   - commit-message:
-      prefix: 'Changelog:All'
+      prefix: 'chore: '
     directory: /tests/e2e_tests
     package-ecosystem: npm
     schedule:
