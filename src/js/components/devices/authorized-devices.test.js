@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import { act, fireEvent, screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
@@ -45,7 +45,6 @@ describe('AuthorizedDevices Component', () => {
     const submitMock = jest.fn();
     const setUserSettingsMock = jest.fn();
     const setListStateMock = jest.fn().mockResolvedValue();
-    const getDevicesMock = jest.fn().mockResolvedValue();
     const testKey = 'testKey';
     const attributeNames = {
       artifact: 'rootfs-image.version',
@@ -68,7 +67,6 @@ describe('AuthorizedDevices Component', () => {
           deviceListState={{ selectedState: 'accepted', selection: [], sort: {} }}
           devices={[]}
           filters={[]}
-          getDevicesByStatus={getDevicesMock}
           getIssueCountsByType={jest.fn}
           groupFilters={[]}
           hasMonitor={true}
@@ -84,6 +82,7 @@ describe('AuthorizedDevices Component', () => {
           selectedGroup={undefined}
           setDeviceFilters={jest.fn}
           setDeviceListState={setListStateMock}
+          setSnackbar={jest.fn}
           showHelptips={jest.fn}
           updateDevicesAuth={jest.fn}
           updateUserColumnSettings={submitMock}
@@ -99,10 +98,12 @@ describe('AuthorizedDevices Component', () => {
     expect(screen.getByText(/Customize Columns/i)).toBeVisible();
     const attributeSelect = screen.getByLabelText(/add a column/i);
     act(() => userEvent.paste(attributeSelect, testKey));
-    act(() => fireEvent.keyDown(attributeSelect, { key: 'Enter' }));
+    act(() => userEvent.type(attributeSelect, '{enter}'));
     jest.advanceTimersByTime(5000);
     await waitFor(() => expect(screen.getByLabelText(/add a column/i)).toBeVisible());
-    act(() => userEvent.click(screen.getByRole('button', { name: /Save/i })));
+    const button = screen.getByRole('button', { name: /Save/i });
+    expect(button).not.toBeDisabled();
+    act(() => userEvent.click(button));
 
     expect(submitMock).toHaveBeenCalledWith([
       { attribute: { name: attributeNames.deviceType, scope: 'inventory' }, size: 150 },
@@ -111,7 +112,6 @@ describe('AuthorizedDevices Component', () => {
       { attribute: { name: testKey, scope: 'inventory' }, size: 150 }
     ]);
     expect(setListStateMock).toHaveBeenCalledWith({
-      refreshTrigger: true,
       selectedAttributes: [
         { attribute: attributeNames.deviceType, scope: 'inventory' },
         { attribute: attributeNames.artifact, scope: 'inventory' },

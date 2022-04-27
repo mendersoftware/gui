@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
@@ -34,7 +34,7 @@ import { ExpandDevice } from '../helptips/helptooltips';
 import DeviceQuickActions from './widgets/devicequickactions';
 import Filters from './widgets/filters';
 import DeviceIssuesSelection from './widgets/issueselection';
-const ColumnCustomizationDialog = lazy(() => import('./dialogs/custom-columns-dialog'));
+import ColumnCustomizationDialog from './dialogs/custom-columns-dialog';
 import ListOptions from './widgets/listoptions';
 import { defaultHeaders, routes as states, defaultTextRender, getDeviceIdentityText } from './base-devices';
 import DeviceList, { minCellWidth } from './devicelist';
@@ -307,16 +307,21 @@ export const Authorized = props => {
   const onToggleCustomizationClick = () => setShowCustomization(!showCustomization);
 
   const onChangeColumns = changedColumns => {
-    const columnSizes = changedColumns.reduce((accu, column) => {
-      const size = customColumnSizes.find(({ attribute }) => attribute.name === column.key && attribute.scope === column.scope)?.size || minCellWidth;
-      accu.push({ attribute: { name: column.key, scope: column.scope }, size });
-      return accu;
-    }, []);
+    const { columnSizes, selectedAttributes } = changedColumns.reduce(
+      (accu, column) => {
+        const size = customColumnSizes.find(({ attribute }) => attribute.name === column.key && attribute.scope === column.scope)?.size || minCellWidth;
+        accu.columnSizes.push({ attribute: { name: column.key, scope: column.scope }, size });
+        accu.selectedAttributes.push({ attribute: column.key, scope: column.scope });
+        return accu;
+      },
+      { columnSizes: [], selectedAttributes: [] }
+    );
     updateUserColumnSettings(columnSizes);
     saveUserSettings({ columnSelection: changedColumns });
-    setDeviceListState({ selectedAttributes: changedColumns.map(column => ({ attribute: column.key, scope: column.scope })), refreshTrigger: !refreshTrigger });
-    const columnHeaders = getHeaders(changedColumns, currentSelectedState.defaultHeaders, idAttribute, openSettingsDialog);
-    setColumnHeaders(columnHeaders);
+    const headers = getHeaders(changedColumns, currentSelectedState.defaultHeaders, idAttribute, openSettingsDialog);
+    setColumnHeaders(headers);
+    // we don't need an explicit refresh trigger here, since the selectedAttributes will be different anyway & otherwise the shown list should still be valid
+    setDeviceListState({ selectedAttributes });
     setShowCustomization(false);
   };
 
@@ -462,17 +467,14 @@ export const Authorized = props => {
           ref={authorizeRef}
         />
       )}
-      {showCustomization && (
-        <Suspense fallback={<Loader show />}>
-          <ColumnCustomizationDialog
-            attributes={attributes}
-            columnHeaders={columnHeaders}
-            idAttribute={idAttribute}
-            onCancel={onToggleCustomizationClick}
-            onSubmit={onChangeColumns}
-          />
-        </Suspense>
-      )}
+      <ColumnCustomizationDialog
+        attributes={attributes}
+        columnHeaders={columnHeaders}
+        idAttribute={idAttribute}
+        open={showCustomization}
+        onCancel={onToggleCustomizationClick}
+        onSubmit={onChangeColumns}
+      />
     </>
   );
 };
@@ -529,7 +531,7 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps, actionCreators)(Authorized);
 
-const DeviceStateSelection = ({ onStateChange, selectedState, states }) => {
+const DeviceStateSelection = ({ onStateChange, selectedState = '', states }) => {
   const theme = useTheme();
   const availableStates = useMemo(() => Object.values(states).filter(duplicateFilter), [states]);
 
