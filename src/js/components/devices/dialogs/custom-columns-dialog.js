@@ -6,7 +6,7 @@ import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 import Loader from '../../common/loader';
 const Content = lazy(() => import('./custom-columns-dialog-content'));
 
-export const ColumnCustomizationDialog = ({ open, onCancel, onSubmit, ...props }) => {
+export const ColumnCustomizationDialog = ({ customColumnSizes, open, onCancel, onSubmit, ...props }) => {
   const [selectedAttributes, setSelectedAttributes] = useState([]);
   const buttonRef = useRef();
 
@@ -18,7 +18,7 @@ export const ColumnCustomizationDialog = ({ open, onCancel, onSubmit, ...props }
       scope: attribute.scope,
       title: attribute.title || attribute.key
     }));
-    onSubmit(attributes);
+    onSubmit(attributes, customColumnSizes);
   };
 
   return (

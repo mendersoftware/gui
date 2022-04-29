@@ -76,6 +76,17 @@ const getHeaders = (columnSelection = [], currentStateHeaders, idAttribute, open
   ];
 };
 
+const calculateColumnSelectionSize = (changedColumns, customColumnSizes) =>
+  changedColumns.reduce(
+    (accu, column) => {
+      const size = customColumnSizes.find(({ attribute }) => attribute.name === column.key && attribute.scope === column.scope)?.size || minCellWidth;
+      accu.columnSizes.push({ attribute: { name: column.key, scope: column.scope }, size });
+      accu.selectedAttributes.push({ attribute: column.key, scope: column.scope });
+      return accu;
+    },
+    { columnSizes: [], selectedAttributes: [] }
+  );
+
 export const Authorized = props => {
   const theme = useTheme();
   const {
@@ -308,16 +319,8 @@ export const Authorized = props => {
 
   const onToggleCustomizationClick = () => setShowCustomization(!showCustomization);
 
-  const onChangeColumns = changedColumns => {
-    const { columnSizes, selectedAttributes } = changedColumns.reduce(
-      (accu, column) => {
-        const size = customColumnSizes.find(({ attribute }) => attribute.name === column.key && attribute.scope === column.scope)?.size || minCellWidth;
-        accu.columnSizes.push({ attribute: { name: column.key, scope: column.scope }, size });
-        accu.selectedAttributes.push({ attribute: column.key, scope: column.scope });
-        return accu;
-      },
-      { columnSizes: [], selectedAttributes: [] }
-    );
+  const onChangeColumns = (changedColumns, customColumnSizes) => {
+    const { columnSizes, selectedAttributes } = calculateColumnSelectionSize(changedColumns, customColumnSizes);
     updateUserColumnSettings(columnSizes);
     saveUserSettings({ columnSelection: changedColumns });
     // we don't need an explicit refresh trigger here, since the selectedAttributes will be different anyway & otherwise the shown list should still be valid
@@ -471,6 +474,7 @@ export const Authorized = props => {
       <ColumnCustomizationDialog
         attributes={attributes}
         columnHeaders={columnHeaders}
+        customColumnSizes={customColumnSizes}
         idAttribute={idAttribute}
         open={showCustomization}
         onCancel={onToggleCustomizationClick}
