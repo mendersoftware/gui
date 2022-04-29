@@ -44,7 +44,7 @@ describe('AuthorizedDevices Component', () => {
   it('behaves as expected', async () => {
     const submitMock = jest.fn();
     const setUserSettingsMock = jest.fn();
-    const setListStateMock = jest.fn();
+    const setListStateMock = jest.fn().mockResolvedValue();
     const getDevicesMock = jest.fn().mockResolvedValue();
     const testKey = 'testKey';
     const attributeNames = {
@@ -111,6 +111,7 @@ describe('AuthorizedDevices Component', () => {
       { attribute: { name: testKey, scope: 'inventory' }, size: 150 }
     ]);
     expect(setListStateMock).toHaveBeenCalledWith({
+      refreshTrigger: true,
       selectedAttributes: [
         { attribute: attributeNames.deviceType, scope: 'inventory' },
         { attribute: attributeNames.artifact, scope: 'inventory' },

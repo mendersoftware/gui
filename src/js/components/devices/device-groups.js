@@ -135,7 +135,6 @@ export const DeviceGroups = ({
   updateDynamicGroup
 }) => {
   const [createGroupExplanation, setCreateGroupExplanation] = useState(false);
-  const [deviceRefreshTrigger, setDeviceRefreshTrigger] = useState();
   const [fromFilters, setFromFilters] = useState(false);
   const [modifyGroupDialog, setModifyGroupDialog] = useState(false);
   const [openIdDialog, setOpenIdDialog] = useState(false);
@@ -146,7 +145,7 @@ export const DeviceGroups = ({
   const [isReconciling, setIsReconciling] = useState(false);
   const deviceTimer = useRef();
 
-  const { state: selectedState } = deviceListState;
+  const { refreshTrigger, state: selectedState } = deviceListState;
 
   useEffect(() => {
     const { filters: filterQuery = '', status = '' } = match.params;
@@ -162,7 +161,6 @@ export const DeviceGroups = ({
     deviceTimer.current = setInterval(getAllDeviceCounts, refreshLength);
 
     setYesterday();
-    setDeviceRefreshTrigger(!deviceRefreshTrigger);
     return () => {
       clearInterval(deviceTimer.current);
     };
@@ -278,26 +276,26 @@ export const DeviceGroups = ({
 
   const onPreauthSaved = addMore => {
     setOpenPreauth(!addMore);
-    setDeviceRefreshTrigger(!deviceRefreshTrigger);
+    setDeviceListState({ page: 1, refreshTrigger: !refreshTrigger });
   };
 
   const onFilterDevices = (value, key, scope = 'identity') => {
-    setDeviceListState({ state: routes.allDevices.key });
     if (key) {
       selectGroup(undefined, [{ scope, key, operator: '$eq', value }]);
     } else {
       setDeviceFilters([]);
     }
+    setDeviceListState({ state: routes.allDevices.key });
   };
 
   const onShowDeviceStateClick = state => {
-    setDeviceListState({ state });
     selectGroup();
+    setDeviceListState({ state });
   };
 
   const onGroupSelect = groupName => {
-    setDeviceListState({ page: 1 });
     selectGroup(groupName);
+    setDeviceListState({ page: 1, refreshTrigger: !refreshTrigger });
   };
 
   const onShowAuthRequestDevicesClick = () => {
@@ -306,8 +304,6 @@ export const DeviceGroups = ({
   };
 
   const toggleGroupRemoval = () => setRemoveGroup(!removeGroup);
-
-  const refreshDevices = () => setDeviceRefreshTrigger(!deviceRefreshTrigger);
 
   const toggleMakeGatewayClick = () => setShowMakeGateway(!showMakeGateway);
 
@@ -351,13 +347,11 @@ export const DeviceGroups = ({
           )}
           <AuthorizedDevices
             addDevicesToGroup={addDevicesToGroup}
-            deviceRefreshTrigger={deviceRefreshTrigger}
             onGroupClick={onGroupClick}
             onGroupRemoval={toggleGroupRemoval}
             onMakeGatewayClick={toggleMakeGatewayClick}
             onPreauthClick={setOpenPreauth}
             openSettingsDialog={openSettingsDialog}
-            refreshDevices={refreshDevices}
             removeDevicesFromGroup={onRemoveDevicesFromGroup}
             showsDialog={showDeviceConnectionDialog || removeGroup || modifyGroupDialog || createGroupExplanation || openIdDialog || openPreauth}
           />

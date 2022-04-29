@@ -8,7 +8,7 @@ import { Button, MenuItem, Select } from '@mui/material';
 import { Autorenew as AutorenewIcon, Delete as DeleteIcon, FilterList as FilterListIcon, LockOutlined } from '@mui/icons-material';
 
 import { setSnackbar } from '../../actions/appActions';
-import { deleteAuthset, getDevicesByStatus, setDeviceFilters, setDeviceListState, updateDevicesAuth } from '../../actions/deviceActions';
+import { deleteAuthset, setDeviceFilters, setDeviceListState, updateDevicesAuth } from '../../actions/deviceActions';
 import { getIssueCountsByType } from '../../actions/monitorActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { saveUserSettings, updateUserColumnSettings } from '../../actions/userActions';
@@ -41,7 +41,6 @@ import DeviceList, { minCellWidth } from './devicelist';
 import ExpandedDevice from './expanded-device';
 
 const refreshDeviceLength = 10000;
-const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
 const idAttributeTitleMap = {
   id: 'Device ID',
@@ -91,10 +90,8 @@ export const Authorized = props => {
     deleteAuthset,
     deviceCount,
     deviceListState,
-    deviceRefreshTrigger,
     devices,
     filters,
-    getDevicesByStatus,
     getIssueCountsByType,
     groupFilters,
     hasMonitor,
@@ -109,7 +106,6 @@ export const Authorized = props => {
     onPreauthClick,
     openSettingsDialog,
     pendingCount,
-    refreshDevices,
     removeDevicesFromGroup,
     saveUserSettings,
     selectedGroup,
@@ -122,10 +118,9 @@ export const Authorized = props => {
     updateUserColumnSettings
   } = props;
   const {
-    page: pageNo = defaultPage,
-    perPage: pageLength = defaultPerPage,
-    selectedAttributes = [],
+    refreshTrigger,
     selectedIssues = [],
+    isLoading: pageLoading,
     selection: selectedRows,
     sort: { direction: sortDown = SORTING_OPTIONS.desc, columns = [] },
     state: selectedState
@@ -134,8 +129,7 @@ export const Authorized = props => {
   const [columnHeaders, setColumnHeaders] = useState(getHeaders(columnSelection, currentSelectedState.defaultHeaders, idAttribute, openSettingsDialog));
   const [expandedDeviceId, setExpandedDeviceId] = useState();
   const [isInitialized, setIsInitialized] = useState(false);
-  const [devicesInitialized, setDevicesInitialized] = useState(!!props.devices.length);
-  const [pageLoading, setPageLoading] = useState(true);
+  const [devicesInitialized, setDevicesInitialized] = useState(!!devices.length);
   const [showFilters, setShowFilters] = useState(false);
   const [showCustomization, setShowCustomization] = useState(false);
   const deviceListRef = useRef();
@@ -145,14 +139,13 @@ export const Authorized = props => {
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
 
-  const { column: sortCol, scope: sortScope } = columns.length ? columns[0] : {};
+  const { column: sortCol } = columns.length ? columns[0] : {};
 
   useEffect(() => {
     clearAllRetryTimers(setSnackbar);
     if (!filters.length && selectedGroup && groupFilters.length) {
       setDeviceFilters(groupFilters);
     }
-
     return () => {
       clearInterval(timer.current);
       clearAllRetryTimers(setSnackbar);
@@ -169,7 +162,16 @@ export const Authorized = props => {
   }, [columnSelection, currentSelectedState.state, idAttribute.attribute]);
 
   useEffect(() => {
-    if (onboardingState.complete || !acceptedCount) {
+    // only set state after all devices id data retrieved
+    setDevicesInitialized(!!(pendingCount || acceptedCount));
+    if (onboardingState.complete) {
+      return;
+    }
+    if (pendingCount) {
+      advanceOnboarding(onboardingSteps.DEVICES_PENDING_ONBOARDING_START);
+      return;
+    }
+    if (!acceptedCount) {
       return;
     }
     advanceOnboarding(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING);
@@ -184,28 +186,25 @@ export const Authorized = props => {
         !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
       }, 400);
     }
-  }, [acceptedCount, onboardingState.complete]);
-
-  useEffect(() => {
-    if (onboardingState.complete || !pendingCount) {
-      return;
-    }
-    advanceOnboarding(onboardingSteps.DEVICES_PENDING_ONBOARDING_START);
-  }, [pendingCount, onboardingState.complete]);
+  }, [acceptedCount, pendingCount, onboardingState.complete]);
 
   useEffect(() => {
     setShowFilters(false);
   }, [selectedGroup]);
 
   useEffect(() => {
-    if (deviceRefreshTrigger === undefined) {
+    if (!devicesInitialized) {
       return;
     }
-    onSelectionChange([]);
     clearInterval(timer.current);
-    timer.current = setInterval(getDevices, refreshDeviceLength);
-    getDevices();
-  }, [filters, pageNo, pageLength, selectedAttributes, selectedGroup, selectedIssues, selectedState, sortCol, sortDown, sortScope, deviceRefreshTrigger]);
+    timer.current = setInterval(
+      () =>
+        setDeviceListState({ refreshTrigger: !refreshTrigger }).catch(err =>
+          setRetryTimer(err, 'devices', `Devices couldn't be loaded.`, refreshDeviceLength, setSnackbar)
+        ),
+      refreshDeviceLength
+    );
+  }, [devicesInitialized, refreshTrigger]);
 
   useEffect(() => {
     Object.keys(availableIssueOptions).map(key => getIssueCountsByType(key, { filters, group: selectedGroup, state: selectedState }));
@@ -215,29 +214,6 @@ export const Authorized = props => {
   /*
    * Devices
    */
-  const getDevices = () => {
-    const sortBy = sortCol ? [{ attribute: sortCol, order: sortDown, scope: sortScope }] : undefined;
-    if (sortCol && sortingAlternatives[sortCol]) {
-      sortBy.push({ ...sortBy[0], attribute: sortingAlternatives[sortCol] });
-    }
-    const applicableSelectedState = selectedState === states.allDevices.key ? undefined : selectedState;
-    getDevicesByStatus(applicableSelectedState, {
-      page: pageNo,
-      perPage: pageLength,
-      selectedAttributes,
-      selectedIssues,
-      shouldSelectDevices: true,
-      group: selectedGroup,
-      sortOptions: sortBy
-    })
-      .catch(err => setRetryTimer(err, 'devices', `Devices couldn't be loaded.`, refreshDeviceLength, setSnackbar))
-      // only set state after all devices id data retrieved
-      .finally(() => {
-        setDevicesInitialized(true);
-        setPageLoading(false);
-      });
-  };
-
   const devicesToIds = devices => devices.map(device => device.id);
 
   const onAddDevicesToGroup = devices => {
@@ -257,41 +233,34 @@ export const Authorized = props => {
 
   const onAuthorizationChange = (devices, changedState) => {
     const deviceIds = devicesToIds(devices);
-    setPageLoading(true);
-    return updateDevicesAuth(deviceIds, changedState).then(() => {
-      onSelectionChange([]);
-      getDevices();
-    });
+    return setDeviceListState({ isLoading: true })
+      .then(() => updateDevicesAuth(deviceIds, changedState))
+      .then(() => onSelectionChange([]));
   };
 
-  const onDeviceDismiss = devices => {
-    setPageLoading(true);
-    const deleteRequests = devices.reduce((accu, device) => {
-      if (device.auth_sets?.length) {
-        accu.push(deleteAuthset(devices.id, devices.auth_sets[0].id));
-      }
-      return accu;
-    }, []);
-    return (
-      Promise.all(deleteRequests)
-        // on finish, change "loading" back to null
-        .then(() => {
-          onSelectionChange([]);
-          getDevices();
-        })
-        .finally(() => setPageLoading(false))
-    );
-  };
+  const onDeviceDismiss = devices =>
+    setDeviceListState({ isLoading: true })
+      .then(() => {
+        const deleteRequests = devices.reduce((accu, device) => {
+          if (device.auth_sets?.length) {
+            accu.push(deleteAuthset(devices.id, devices.auth_sets[0].id));
+          }
+          return accu;
+        }, []);
+        return Promise.all(deleteRequests);
+      })
+      .then(() => onSelectionChange([]));
 
   const handlePageChange = page => {
-    setPageLoading(true);
-    setDeviceListState({ page });
+    setDeviceListState({ page, refreshTrigger: !refreshTrigger });
     setExpandedDeviceId(undefined);
   };
 
   const onPageLengthChange = perPage => {
-    setDeviceListState({ perPage, page: 1 });
+    setDeviceListState({ perPage, page: 1, refreshTrigger: !refreshTrigger });
   };
+
+  const refreshDevices = () => setDeviceListState({ refreshTrigger: !refreshTrigger });
 
   const onSortChange = attribute => {
     let changedSortCol = attribute.name;
@@ -299,17 +268,20 @@ export const Authorized = props => {
     if (changedSortCol !== sortCol) {
       changedSortDown = SORTING_OPTIONS.desc;
     }
-    setDeviceListState({ sort: { direction: changedSortDown, columns: [{ column: changedSortCol, scope: attribute.scope }] } });
+    setDeviceListState({
+      sort: { direction: changedSortDown, columns: [{ column: changedSortCol, scope: attribute.scope }] },
+      refreshTrigger: !refreshTrigger
+    });
   };
 
   const onFilterChange = () => handlePageChange(1);
 
   const onDeviceStateSelectionChange = newState => {
-    setDeviceListState({ state: newState, page: 1 });
+    setDeviceListState({ state: newState, page: 1, refreshTrigger: !refreshTrigger });
   };
 
   const onDeviceIssuesSelectionChange = ({ target: { value: selectedIssues } }) => {
-    setDeviceListState({ selectedIssues, page: 1 });
+    setDeviceListState({ selectedIssues, page: 1, refreshTrigger: !refreshTrigger });
   };
 
   const onSelectAllIssues = shouldSelectAll => {
@@ -322,7 +294,7 @@ export const Authorized = props => {
           return accu;
         }, [])
       : [];
-    setDeviceListState({ selectedIssues, page: 1 });
+    setDeviceListState({ selectedIssues, page: 1, refreshTrigger: !refreshTrigger });
   };
 
   const onSelectionChange = (selection = []) => {
@@ -342,11 +314,10 @@ export const Authorized = props => {
     }, []);
     updateUserColumnSettings(columnSizes);
     saveUserSettings({ columnSelection: changedColumns });
-    setDeviceListState({ selectedAttributes: changedColumns.map(column => ({ attribute: column.key, scope: column.scope })) });
+    setDeviceListState({ selectedAttributes: changedColumns.map(column => ({ attribute: column.key, scope: column.scope })), refreshTrigger: !refreshTrigger });
     const columnHeaders = getHeaders(changedColumns, currentSelectedState.defaultHeaders, idAttribute, openSettingsDialog);
     setColumnHeaders(columnHeaders);
     setShowCustomization(false);
-    getDevices();
   };
 
   const onExpandClick = (device = {}) => {
@@ -509,7 +480,6 @@ export const Authorized = props => {
 const actionCreators = {
   advanceOnboarding,
   deleteAuthset,
-  getDevicesByStatus,
   getIssueCountsByType,
   saveUserSettings,
   setDeviceFilters,

@@ -14,6 +14,7 @@ import { deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttribut
 import { getIdAttribute, getTenantCapabilities } from '../selectors';
 import { getDeviceMonitorConfig, getLatestDeviceAlerts } from './monitorActions';
 import { Link } from 'react-router-dom';
+import { routes, sortingAlternatives } from '../components/devices/base-devices';
 
 const { DEVICE_STATES, DEVICE_LIST_DEFAULTS } = DeviceConstants;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
@@ -547,20 +548,48 @@ export const getDeviceLimit = () => dispatch =>
     })
   );
 
-export const setDeviceListState = selectionState => (dispatch, getState) =>
-  Promise.resolve(
-    dispatch({
-      type: DeviceConstants.SET_DEVICE_LIST_STATE,
-      state: {
-        ...getState().devices.deviceList,
-        ...selectionState,
-        sort: {
-          ...getState().devices.deviceList.sort,
-          ...selectionState.sort
-        }
+export const setDeviceListState =
+  (selectionState, shouldSelectDevices = true) =>
+  (dispatch, getState) => {
+    const currentState = getState().devices.deviceList;
+    let nextState = {
+      ...currentState,
+      ...selectionState,
+      sort: {
+        ...currentState.sort,
+        ...selectionState.sort
       }
-    })
-  );
+    };
+    let tasks = [];
+    // eslint-disable-next-line no-unused-vars
+    const { isLoading: currentLoading, deviceIds: currentDevices, selection: currentSelection, ...currentRequestState } = currentState;
+    // eslint-disable-next-line no-unused-vars
+    const { isLoading: nextLoading, deviceIds: nextDevices, selection: nextSelection, ...nextRequestState } = nextState;
+    if (!deepCompare(currentRequestState, nextRequestState)) {
+      const { direction: sortDown = AppConstants.SORTING_OPTIONS.desc, columns = [] } = nextState.sort;
+      const { column: sortCol, scope: sortScope } = columns.length ? columns[0] : {};
+      const sortBy = sortCol ? [{ attribute: sortCol, order: sortDown, scope: sortScope }] : undefined;
+      if (sortCol && sortingAlternatives[sortCol]) {
+        sortBy.push({ ...sortBy[0], attribute: sortingAlternatives[sortCol] });
+      }
+      const applicableSelectedState = nextState.state === routes.allDevices.key ? undefined : nextState.state;
+      nextState.isLoading = true;
+      tasks.push(
+        dispatch(getDevicesByStatus(applicableSelectedState, { ...nextState, sortOptions: sortBy }))
+          .then(results => {
+            const { deviceAccu, total } = results[results.length - 1];
+            const devicesState = shouldSelectDevices
+              ? { ...nextState, deviceIds: deviceAccu.ids, total, isLoading: false }
+              : { ...nextState, isLoading: false };
+            return Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_LIST_STATE, state: devicesState }));
+          })
+          // whatever happens, change "loading" back to null
+          .catch(() => Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_LIST_STATE, state: { ...nextState, isLoading: false } })))
+      );
+    }
+    tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_LIST_STATE, state: nextState }));
+    return Promise.all(tasks);
+  };
 
 const convertIssueOptionsToFilters = issuesSelection =>
   issuesSelection.map(item => {
@@ -588,17 +617,11 @@ export const convertDeviceListStateToFilters = ({ filters = [], group, selectedI
 export const getDevicesByStatus =
   (status, options = {}) =>
   (dispatch, getState) => {
-    const {
-      filterSelection,
-      group,
-      selectedIssues = [],
-      page = defaultPage,
-      perPage = defaultPerPage,
-      shouldSelectDevices = false,
-      sortOptions = [],
-      trackSelectionState = false,
-      selectedAttributes = []
-    } = options;
+    const { filterSelection, selectedIssues = [], page = defaultPage, perPage = defaultPerPage, sortOptions = [], selectedAttributes = [] } = options;
+    let group = undefined;
+    if (options) {
+      group = options.filters?.length ? undefined : options.group ?? getState().devices.groups.selectedGroup;
+    }
     const { applicableFilters, filterTerms } = convertDeviceListStateToFilters({
       filters: filterSelection ?? getState().devices.filters,
       group,
@@ -641,25 +664,6 @@ export const getDevicesByStatus =
         if (receivedDevices.length) {
           tasks.push(dispatch(getDevicesWithAuth(receivedDevices)));
         }
-        if (shouldSelectDevices || trackSelectionState) {
-          tasks.push(
-            dispatch(
-              setDeviceListState({
-                deviceIds: shouldSelectDevices ? deviceAccu.ids : state.devices.deviceList.deviceIds,
-                page,
-                perPage,
-                sort: {
-                  direction: sortOptions.length ? sortOptions[0].order : state.devices.deviceList.sort.direction,
-                  columns: sortOptions.length
-                    ? sortOptions.map(option => ({ column: option.attribute, scope: option.scope }))
-                    : state.devices.deviceList.sort.columns
-                },
-                total: Number(response.headers[headerNames.total])
-              })
-            )
-          );
-        }
-
         tasks.push(Promise.resolve({ deviceAccu, total: Number(response.headers[headerNames.total]) }));
         return Promise.all(tasks);
       })
