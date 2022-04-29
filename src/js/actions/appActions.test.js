@@ -255,6 +255,8 @@ describe('app actions', () => {
           id_attribute: { attribute: 'mac', scope: 'identity' },
           [defaultState.users.currentUser]: {
             ...defaultState.users.globalSettings[defaultState.users.currentUser],
+            columnSelection: [],
+            onboarding: {},
             showHelptips: true
           }
         }

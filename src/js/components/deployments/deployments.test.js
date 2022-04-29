@@ -288,6 +288,7 @@ describe('Deployments Component', () => {
     expect(post).toHaveBeenCalledWith('/api/management/v1/useradm/settings', {
       '2fa': 'enabled',
       a1: {
+        columnSelection: [],
         onboarding: {
           complete: false,
           demoArtifactPort: 85,
