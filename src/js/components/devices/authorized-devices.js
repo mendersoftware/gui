@@ -54,7 +54,7 @@ const headersReducer = (accu, header) => {
   return accu;
 };
 
-const getHeaders = (columnSelection = [], currentStateHeaders, idAttribute, openSettingsDialog) => {
+export const getHeaders = (columnSelection = [], currentStateHeaders, idAttribute, openSettingsDialog) => {
   const headers = columnSelection.length
     ? columnSelection.map(column => {
         let header = { ...column, attribute: { ...column }, textRender: defaultTextRender, sortable: true };

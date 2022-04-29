@@ -51,10 +51,14 @@ describe('AuthorizedDevices Component', () => {
       deviceType: 'device_type',
       updateTime: 'updated_ts'
     };
+    const devices = defaultState.devices.byStatus.accepted.deviceIds.map(id => defaultState.devices.byId[id]);
+    const pageTotal = devices.length;
+    const deviceListState = { isLoading: false, selectedState: 'accepted', selection: [], sort: {} };
+    store = mockStore({ ...defaultState });
     let ui = (
       <Provider store={store}>
         <AuthorizedDevices
-          acceptedCount={10}
+          acceptedCount={pageTotal}
           addDevicesToGroup={jest.fn}
           advanceOnboarding={jest.fn}
           allCount={40}
@@ -64,9 +68,9 @@ describe('AuthorizedDevices Component', () => {
           currentUser={defaultState.users.byId[defaultState.users.currentUser]}
           customColumnSizes={[{ attribute: { name: attributeNames.updateTime, scope: 'system' }, size: 220 }]}
           deleteAuthset={jest.fn}
-          deviceCount={24}
-          deviceListState={{ selectedState: 'accepted', selection: [], sort: {} }}
-          devices={[]}
+          deviceCount={pageTotal}
+          deviceListState={deviceListState}
+          devices={devices}
           filters={[]}
           getIssueCountsByType={jest.fn}
           groupFilters={[]}
@@ -84,6 +88,7 @@ describe('AuthorizedDevices Component', () => {
           setDeviceFilters={jest.fn}
           setDeviceListState={setListStateMock}
           setSnackbar={jest.fn}
+          settingsInitialized={true}
           showHelptips={jest.fn}
           updateDevicesAuth={jest.fn}
           updateUserColumnSettings={submitMock}
@@ -91,7 +96,10 @@ describe('AuthorizedDevices Component', () => {
       </Provider>
     );
     const { rerender } = render(ui);
-    await waitFor(() => rerender(ui));
+    act(() => userEvent.click(screen.getAllByRole('checkbox')[0]));
+    expect(setListStateMock).toHaveBeenCalledWith({ page: 1, refreshTrigger: true, selectedIssues: [] });
+    act(() => userEvent.click(screen.getAllByRole('checkbox')[1]));
+    expect(setListStateMock).toHaveBeenCalledWith({ selection: [0, 1] });
     act(() => userEvent.click(screen.getByRole('button', { name: /table options/i })));
     await waitFor(() => rerender(ui));
     act(() => userEvent.click(screen.getByRole('menuitem', { name: /customize/i })));
