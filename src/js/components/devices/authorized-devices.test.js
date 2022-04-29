@@ -61,6 +61,7 @@ describe('AuthorizedDevices Component', () => {
           attributes={[]}
           availableIssueOptions={[]}
           columnSelection={[]}
+          currentUser={defaultState.users.byId[defaultState.users.currentUser]}
           customColumnSizes={[{ attribute: { name: attributeNames.updateTime, scope: 'system' }, size: 220 }]}
           deleteAuthset={jest.fn}
           deviceCount={24}

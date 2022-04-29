@@ -126,7 +126,8 @@ export const Authorized = props => {
     state: selectedState
   } = deviceListState;
   const currentSelectedState = states[selectedState] ?? states.devices;
-  const [columnHeaders, setColumnHeaders] = useState(getHeaders(columnSelection, currentSelectedState.defaultHeaders, idAttribute, openSettingsDialog));
+  const [columnHeaders, setColumnHeaders] = useState([]);
+  const [headerKeys, setHeaderKeys] = useState('');
   const [expandedDeviceId, setExpandedDeviceId] = useState();
   const [isInitialized, setIsInitialized] = useState(false);
   const [devicesInitialized, setDevicesInitialized] = useState(!!devices.length);
@@ -153,13 +154,14 @@ export const Authorized = props => {
   }, []);
 
   useEffect(() => {
-    setIsInitialized(settingsInitialized && devicesInitialized);
-  }, [settingsInitialized, devicesInitialized]);
-
-  useEffect(() => {
     const columnHeaders = getHeaders(columnSelection, currentSelectedState.defaultHeaders, idAttribute, openSettingsDialog);
     setColumnHeaders(columnHeaders);
-  }, [columnSelection, currentSelectedState.state, idAttribute.attribute]);
+    setHeaderKeys(columnHeaders.map(({ attribute: { name, scope } }) => `${name}-${scope}`).join('-'));
+  }, [columnSelection, selectedState, idAttribute.attribute]);
+
+  useEffect(() => {
+    setIsInitialized(settingsInitialized && devicesInitialized);
+  }, [settingsInitialized, devicesInitialized]);
 
   useEffect(() => {
     // only set state after all devices id data retrieved
@@ -318,8 +320,6 @@ export const Authorized = props => {
     );
     updateUserColumnSettings(columnSizes);
     saveUserSettings({ columnSelection: changedColumns });
-    const headers = getHeaders(changedColumns, currentSelectedState.defaultHeaders, idAttribute, openSettingsDialog);
-    setColumnHeaders(headers);
     // we don't need an explicit refresh trigger here, since the selectedAttributes will be different anyway & otherwise the shown list should still be valid
     setDeviceListState({ selectedAttributes });
     setShowCustomization(false);
@@ -424,6 +424,7 @@ export const Authorized = props => {
               {...props}
               columnHeaders={columnHeaders}
               customColumnSizes={customColumnSizes}
+              headerKeys={headerKeys}
               onChangeRowsPerPage={onPageLengthChange}
               onExpandClick={onExpandClick}
               onPageChange={handlePageChange}
@@ -505,7 +506,7 @@ const mapStateToProps = state => {
     devices = getMappedDevicesList(state, 'selectedDevice');
     deviceCount = 1;
   }
-  const { columnSelection } = getUserSettings(state);
+  const { columnSelection = [] } = getUserSettings(state);
   return {
     attributes: getFilterAttributes(state),
     acceptedCount: state.devices.byStatus.accepted.total || 0,

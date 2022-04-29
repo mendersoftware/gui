@@ -132,6 +132,7 @@ export const DeviceList = props => {
     customColumnSizes,
     devices,
     deviceListState,
+    headerKeys,
     idAttribute,
     onChangeRowsPerPage,
     onExpandClick,
@@ -169,7 +170,7 @@ export const DeviceList = props => {
     const children = [...deviceListRef.current.querySelector('.deviceListRow').children];
     const relevantColumns = children.slice(2, children.length - 1);
     deviceListRef.current.style.gridTemplateColumns = getColumnsStyle(relevantColumns, '1.5fr');
-  }, [deviceListRef.current, size.width]);
+  }, [deviceListRef.current, size.width, headerKeys]);
 
   useEffect(() => {
     if (!deviceListRef.current || !customColumnSizes.length) {
